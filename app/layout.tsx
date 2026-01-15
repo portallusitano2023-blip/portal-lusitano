@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-// Importamos o nosso componente novo!
-import Navbar from "../components/Navbar"; 
+// Importar as duas peças: Menu e Rodapé
+import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";  // <--- Muda de ".." para "."
 
 export const metadata: Metadata = {
-  title: "Portal Lusitano | Cavalos Premium",
-  description: "O maior marketplace de Cavalos Lusitanos.",
+  title: "Portal Lusitano",
+  description: "Cavalos Lusitanos de Elite",
 };
 
 export default function RootLayout({
@@ -15,23 +16,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt">
-      <body className="bg-zinc-950 text-zinc-200 antialiased">
+      <body className="bg-black text-white min-h-screen flex flex-col">
         
-        {/* AQUI ESTÁ ELA: A Navbar Componentizada */}
+        {/* 1. O Menu fica fixo no topo */}
         <Navbar />
-
-        {/* O children é a página que estás a ver (Home, Detalhes, etc) */}
+        
+        {/* 2. O conteúdo do site carrega aqui */}
         {children}
-
-        {/* RODAPÉ (Podes componentizar este depois também!) */}
-        <footer className="bg-black py-12 text-center border-t border-zinc-900 mt-20">
-          <p className="text-zinc-600 text-sm">
-            &copy; 2023 Portal Lusitano. Todos os direitos reservados.
-          </p>
-          <p className="text-zinc-800 text-xs mt-2">
-            Desenvolvido por Portal Lusitano
-          </p>
-        </footer>
+        
+        {/* 3. O Rodapé fica no fundo */}
+        <Footer />
+        
       </body>
     </html>
   );

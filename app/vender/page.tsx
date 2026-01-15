@@ -51,21 +51,53 @@ export default function VenderPage() {
 
       </section>
 
-      {/* --- CTA / CONTACTO --- */}
-      <section className="bg-white text-black py-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-serif mb-6">Pronto para valorizar a sua criação?</h2>
-          <p className="text-zinc-600 mb-10 max-w-lg mx-auto">
-            Envie-nos os detalhes do seu cavalo via WhatsApp. A nossa equipa responderá em menos de 24 horas com uma proposta de avaliação.
-          </p>
+
+      {/* --- MUDANÇA AQUI: NOVO FORMULÁRIO DE CONTACTO --- */}
+      <section className="bg-white text-black py-20" id="contact-form">
+        <div className="max-w-2xl mx-auto px-4">
           
-          <a 
-            href="https://wa.me/351910000000?text=Olá,%20tenho%20um%20cavalo%20para%20vender%20e%20gostaria%20de%20saber%20como%20funciona%20o%20Portal%20Lusitano." 
-            target="_blank"
-            className="inline-block px-10 py-5 bg-black text-white font-bold uppercase tracking-widest hover:bg-yellow-600 hover:text-black transition-colors"
-          >
-            Falar com a Equipa
-          </a>
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-serif mb-4">Inicie o Processo de Venda</h2>
+            <p className="text-zinc-600">
+              Preencha o formulário abaixo. A nossa equipa entrará em contacto para agendar a avaliação do animal.
+            </p>
+          </div>
+
+          <form className="space-y-6 bg-zinc-50 p-8 border border-zinc-200 shadow-lg">
+            
+            {/* Nome e Email */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">O seu Nome</label>
+                <input type="text" className="w-full bg-white border border-zinc-300 p-3 text-sm focus:border-yellow-600 focus:outline-none" placeholder="João Silva" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Email</label>
+                <input type="email" className="w-full bg-white border border-zinc-300 p-3 text-sm focus:border-yellow-600 focus:outline-none" placeholder="joao@exemplo.com" />
+              </div>
+            </div>
+
+            {/* Telemóvel */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Telemóvel</label>
+              <input type="tel" className="w-full bg-white border border-zinc-300 p-3 text-sm focus:border-yellow-600 focus:outline-none" placeholder="+351 91..." />
+            </div>
+
+            {/* Sobre o Cavalo */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Detalhes do Cavalo</label>
+              <textarea rows={4} className="w-full bg-white border border-zinc-300 p-3 text-sm focus:border-yellow-600 focus:outline-none" placeholder="Nome, Idade, Nível de Ensino, Preço pretendido..."></textarea>
+            </div>
+
+            <button type="submit" className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-yellow-600 hover:text-black transition-colors">
+              Enviar Pedido de Avaliação
+            </button>
+
+            <p className="text-center text-xs text-zinc-400 mt-4">
+              * Ao enviar, concorda em ser contactado pelo Portal Lusitano.
+            </p>
+          </form>
+
         </div>
       </section>
 
