@@ -1,5 +1,8 @@
 import { getProducts } from "../../lib/shopify";
 
+// 👇 ESTA É A LINHA QUE FALTAVA PARA O VERCEL NÃO DAR ERRO 👇
+export const dynamic = 'force-dynamic';
+
 export default async function LojaPage() {
   const products = await getProducts();
 

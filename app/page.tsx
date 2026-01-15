@@ -1,7 +1,10 @@
 import { client } from "@/lib/client";
-import { getProducts } from "../lib/shopify"; // Importa os produtos do Shopify
+import { getProducts } from "../lib/shopify"; 
 import Image from "next/image";
 import Link from "next/link";
+
+// 👇 ESTA LINHA É OBRIGATÓRIA PARA O VERCEL FUNCIONAR 👇
+export const dynamic = 'force-dynamic';
 
 const QUERY = `*[_type == "cavalo"] | order(_createdAt desc) {
   _id, nome, preco, localizacao, disciplina, "slug": slug.current, "imagemUrl": fotografiaPrincipal.asset->url
@@ -13,7 +16,6 @@ export default async function Home() {
   const destaque = cavalos[0];
 
   // 2. Buscar Produtos (Shopify)
-  // Se não houver produtos, evita erro com um array vazio
   const products = (await getProducts()) || [];
 
   return (
@@ -33,7 +35,6 @@ export default async function Home() {
                  priority 
                />
              )}
-             {/* Gradiente para o texto se ler melhor */}
              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
           </div>
 
@@ -58,9 +59,7 @@ export default async function Home() {
       {products.length > 0 && (
         <section className="py-32 px-4 max-w-7xl mx-auto">
           
-          {/* Cabeçalho da Secção */}
           <div className="text-center mb-20 space-y-4">
-            {/* MUDANÇA AQUI: Texto corrigido para português e com classe */}
             <span className="text-gray-500 text-xs font-bold tracking-[0.3em] uppercase">
               Coleção Exclusiva
             </span>
@@ -70,7 +69,6 @@ export default async function Home() {
             <div className="w-24 h-px bg-gradient-to-r from-transparent via-[#C5A059] to-transparent mx-auto opacity-50"></div>
           </div>
 
-          {/* Grelha de Produtos (Mostra apenas os 3 primeiros) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {products.slice(0, 3).map((item: any) => {
                const product = item.node;
@@ -85,7 +83,6 @@ export default async function Home() {
                    target="_blank" 
                    className="group block bg-[#0a0a0a] border border-gray-900 hover:border-[#C5A059]/50 transition-all duration-500"
                  >
-                   {/* Imagem */}
                    <div className="relative aspect-[4/5] overflow-hidden">
                      {image ? (
                        <img 
@@ -99,7 +96,6 @@ export default async function Home() {
                        </div>
                      )}
                      
-                     {/* Botão Overlay */}
                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
                         <span className="bg-white text-black px-6 py-2 text-xs font-bold uppercase tracking-widest">
                           Comprar
@@ -107,7 +103,6 @@ export default async function Home() {
                      </div>
                    </div>
                    
-                   {/* Informação */}
                    <div className="p-8 text-center">
                      <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-2 group-hover:text-white transition-colors">
                        {product.title}
@@ -121,7 +116,6 @@ export default async function Home() {
             })}
           </div>
 
-          {/* Botão Ver Toda a Loja */}
           <div className="text-center mt-20">
             <Link href="/loja">
               <button className="border border-white/20 text-white px-10 py-4 uppercase tracking-[0.2em] text-xs font-bold hover:bg-white hover:text-black transition duration-300">
