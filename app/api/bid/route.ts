@@ -8,28 +8,27 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { nome, email, telefone, valor, cavalo } = body;
 
-    // DIAGNÓSTICO DE ENGENHARIA (Aparecerá nos logs da Vercel)
-    console.log("--- INÍCIO DO PROCESSAMENTO ---");
-    console.log("Verificando variáveis de ambiente no servidor...");
-    
-    // Tentamos ler as chaves de todas as formas possíveis
-    const resendKey = process.env.RESEND_API_KEY || process.env['RESEND_API_KEY'];
-    const sanityToken = process.env.SANITY_API_WRITE_TOKEN || process.env['SANITY_API_WRITE_TOKEN'];
+    // DEBUG DE SEGURANÇA (Apenas visível nos logs da Vercel)
+    const apiKey = process.env.RESEND_API_KEY;
+    console.log("--- DEBUG LOG PORTAL LUSITANO ---");
+    console.log("Chave detetada?", !!apiKey);
+    if (apiKey) console.log("Comprimento da chave:", apiKey.length);
 
-    if (!resendKey) {
-      console.error("ERRO CRÍTICO: RESEND_API_KEY não foi encontrada pelo servidor Vercel.");
+    if (!apiKey) {
       return NextResponse.json({ 
-        error: "O servidor não detetou a chave do Resend. Verifica se a variável está ligada ao PROJETO no Vercel e faz Redeploy." 
+        error: "O servidor Vercel não detetou a variável RESEND_API_KEY. Verifica se a adicionaste ao PROJETO e fizeste REDEPLOY." 
       }, { status: 500 });
     }
 
-    const resend = new Resend(resendKey);
+    const resend = new Resend(apiKey);
 
     // 1. REGISTAR NO SANITY
     let sanityId;
     try {
-      // Configuramos o cliente com o token explicitamente para este pedido
-      const sanityResult = await client.withConfig({ token: sanityToken }).create({
+      const sanityResult = await client.withConfig({ 
+        token: process.env.SANITY_API_WRITE_TOKEN,
+        useCdn: false 
+      }).create({
         _type: 'licitacao',
         nome,
         email,
@@ -41,8 +40,8 @@ export async function POST(req: Request) {
       sanityId = sanityResult._id;
       console.log("Sucesso: Licitação guardada no Sanity.");
     } catch (sError) {
-      console.error("Erro no Sanity:", sError.message);
-      return NextResponse.json({ error: `Erro na base de dados: ${sError.message}` }, { status: 500 });
+      console.error("Erro Sanity:", sError.message);
+      return NextResponse.json({ error: `Erro na base de dados (Sanity): ${sError.message}` }, { status: 500 });
     }
 
     // 2. ENVIAR E-MAIL
@@ -64,7 +63,7 @@ export async function POST(req: Request) {
       });
       console.log("Sucesso: E-mail enviado.");
     } catch (eError) {
-      console.error("Erro no Resend:", eError.message);
+      console.error("Erro Resend:", eError.message);
       return NextResponse.json({ error: `Erro no envio de e-mail: ${eError.message}` }, { status: 500 });
     }
 
