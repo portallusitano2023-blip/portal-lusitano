@@ -5,8 +5,24 @@ import { notFound } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
-// Função para buscar o cavalo ao Sanity
-async function getCavalo(slug: string) {
+// --- DEFINIÇÃO DO TIPO (Para o TypeScript não dar erro) ---
+interface Cavalo {
+  _id: string;
+  nome: string;
+  preco?: number;
+  idade?: string;
+  altura?: number;
+  genero?: string;
+  localizacao?: string;
+  disciplina?: string;
+  descricao?: string;
+  imagemUrl?: string;
+  galeria?: string[];
+  slug?: string;
+}
+
+// --- BUSCAR DADOS ---
+async function getCavalo(slug: string): Promise<Cavalo | null> {
   const query = `*[_type == "cavalo" && slug.current == $slug][0]{
     _id,
     nome,
@@ -18,21 +34,16 @@ async function getCavalo(slug: string) {
     disciplina,
     descricao,
     "imagemUrl": fotografiaPrincipal.asset->url,
-    "galeria": galeria[].asset->url
+    "galeria": galeria[].asset->url,
+    "slug": slug.current
   }`;
   
-  // Aqui passamos o parâmetro para a query
   return client.fetch(query, { slug });
 }
 
-// CORREÇÃO AQUI: Definimos params como uma Promise
+// --- PÁGINA PRINCIPAL ---
 export default async function CavaloPage({ params }: { params: Promise<{ slug: string }> }) {
-  
-  // 1. AWAIT PARAMS (Obrigatório no Next.js 15/16)
-  // Temos de "esperar" que o parâmetro chegue antes de o usar
   const { slug } = await params;
-
-  // 2. Agora já podemos buscar o cavalo com o slug certo
   const cavalo = await getCavalo(slug);
 
   if (!cavalo) {
@@ -42,7 +53,7 @@ export default async function CavaloPage({ params }: { params: Promise<{ slug: s
   return (
     <main className="min-h-screen bg-[#050505] text-gray-300 selection:bg-[#C5A059] selection:text-black font-sans pb-20">
       
-      {/* === HEADER COM IMAGEM DE FUNDO (Efeito Blur) === */}
+      {/* === HEADER === */}
       <div className="relative h-[60vh] w-full overflow-hidden">
         {cavalo.imagemUrl && (
           <>
@@ -56,14 +67,12 @@ export default async function CavaloPage({ params }: { params: Promise<{ slug: s
           </>
         )}
         
-        {/* Botão Voltar */}
         <div className="absolute top-32 left-4 md:left-10 z-20">
           <Link href="/" className="flex items-center gap-2 text-white/60 hover:text-[#C5A059] transition uppercase text-xs tracking-widest font-bold">
             ← Voltar ao Início
           </Link>
         </div>
 
-        {/* Título Principal */}
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-10 flex flex-col md:flex-row items-end justify-between gap-6">
           <div>
             <span className="text-[#C5A059] tracking-[0.4em] uppercase text-xs font-bold pl-1 block mb-2">
@@ -83,9 +92,8 @@ export default async function CavaloPage({ params }: { params: Promise<{ slug: s
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
         
-        {/* === COLUNA ESQUERDA: FOTO PRINCIPAL & GALERIA === */}
+        {/* === COLUNA ESQUERDA === */}
         <div className="lg:col-span-7 space-y-8">
-          {/* Foto Principal Limpa */}
           <div className="relative aspect-[4/3] rounded-sm overflow-hidden border border-gray-800 shadow-2xl">
             {cavalo.imagemUrl ? (
               <Image
@@ -101,11 +109,10 @@ export default async function CavaloPage({ params }: { params: Promise<{ slug: s
             )}
           </div>
 
-          {/* Galeria (Placeholder se não houver fotos extra) */}
           {cavalo.galeria && cavalo.galeria.length > 0 && (
             <div className="grid grid-cols-3 gap-4">
               {cavalo.galeria.map((img: string, idx: number) => (
-                <div key={idx} className="relative aspect-square border border-gray-800 overflow-hidden cursor-pointer hover:opacity-80 transition">
+                <div key={idx} className="relative aspect-square border border-gray-800 overflow-hidden hover:opacity-80 transition">
                   <Image src={img} alt={`Galeria ${idx}`} fill className="object-cover" />
                 </div>
               ))}
@@ -113,10 +120,8 @@ export default async function CavaloPage({ params }: { params: Promise<{ slug: s
           )}
         </div>
 
-        {/* === COLUNA DIREITA: DETALHES TÉCNICOS === */}
+        {/* === COLUNA DIREITA === */}
         <div className="lg:col-span-5 space-y-10">
-          
-          {/* Ficha Técnica */}
           <div className="bg-[#0a0a0a] border border-gray-900 p-8 md:p-10">
             <h3 className="text-white font-serif text-2xl mb-8 flex items-center gap-3">
               <span className="w-8 h-px bg-[#C5A059]"></span>
@@ -129,7 +134,7 @@ export default async function CavaloPage({ params }: { params: Promise<{ slug: s
                 <dd className="text-white text-lg">{cavalo.idade || "—"}</dd>
               </div>
               <div>
-                <dt className="text-gray-500 uppercase text-[10px] tracking-widest mb-1">Altura (Garrote)</dt>
+                <dt className="text-gray-500 uppercase text-[10px] tracking-widest mb-1">Altura</dt>
                 <dd className="text-white text-lg">{cavalo.altura ? `${cavalo.altura} m` : "—"}</dd>
               </div>
               <div>
@@ -149,7 +154,6 @@ export default async function CavaloPage({ params }: { params: Promise<{ slug: s
             </dl>
           </div>
 
-          {/* Botões de Contacto */}
           <div className="space-y-4">
             <a 
               href={`https://wa.me/351939513151?text=Olá, estou interessado no cavalo ${cavalo.nome}.`}
@@ -165,10 +169,6 @@ export default async function CavaloPage({ params }: { params: Promise<{ slug: s
               Pedir Mais Informações
             </a>
           </div>
-
-          <p className="text-xs text-center text-gray-600 px-4">
-            Nota: Todos os exames veterinários e Raio-X podem ser disponibilizados sob pedido.
-          </p>
         </div>
       </div>
     </main>
