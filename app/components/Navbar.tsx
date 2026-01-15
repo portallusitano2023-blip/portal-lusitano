@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image"; // <--- Importante para carregar a imagem
+import Image from "next/image";
 
 export function Navbar() {
   return (
@@ -7,21 +7,17 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex items-center justify-between h-full">
           
-          {/* --- LOGÓTIPO (Imagem) & NOME --- */}
+          {/* --- LOGÓTIPO & NOME --- */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center gap-3 group">
-              
-              {/* AQUI ESTÁ A TUA IMAGEM */}
-              {/* Ajusta o width/height se achares pequeno ou grande */}
               <div className="relative w-8 h-8">
                 <Image 
-                  src="/logo.png"       // <--- TENS DE TER ESTE FICHEIRO NA PASTA PUBLIC
+                  src="/logo.png" 
                   alt="Logo Portal Lusitano" 
                   fill
                   className="object-contain group-hover:scale-110 transition duration-300"
                 />
               </div>
-              
               <div className="flex items-center gap-1 font-serif text-lg tracking-widest">
                 <span className="text-white font-medium">PORTAL</span>
                 <span className="text-[#C5A059] font-bold">LUSITANO</span>
@@ -29,11 +25,17 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* --- LINKS DO MENU (Centrados) --- */}
+          {/* --- LINKS DO MENU --- */}
           <div className="hidden md:flex items-center space-x-8">
             <Link href="/" className="text-xs font-bold uppercase tracking-[0.15em] text-gray-300 hover:text-[#C5A059] transition hover:underline underline-offset-4">
               Início
             </Link>
+
+            {/* --- NOVO BOTÃO LOJA ADICIONADO AQUI --- */}
+            <Link href="/loja" className="text-xs font-bold uppercase tracking-[0.15em] text-white hover:text-[#C5A059] transition hover:underline underline-offset-4">
+              Loja
+            </Link>
+
             <Link href="/leiloes" className="text-xs font-bold uppercase tracking-[0.15em] text-gray-300 hover:text-[#C5A059] transition hover:underline underline-offset-4">
               Leilões
             </Link>
