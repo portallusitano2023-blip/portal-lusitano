@@ -1,63 +1,42 @@
-import Link from "next/link";
-import { artigos } from "@/data/blog";
+// @ts-nocheck
+import { client } from "@/lib/client";
+import { PortableText } from "@portabletext/react";
+// DOIS níveis para cima para achar a pasta components a partir de [id]
+import Newsletter from "../../components/Newsletter";
 
-export default async function PaginaArtigo({ params }: { params: Promise<{ id: string }> }) {
-  
+export default async function BlogPost({ params }) {
   const { id } = await params;
-  const artigo = artigos.find((a) => a.id === Number(id));
+  const post = await client.fetch(`*[_type == "post" && slug.current == $id][0]{
+    title,
+    mainImage,
+    body,
+    publishedAt,
+    "authorName": author->name,
+    "imageUrl": mainImage.asset->url
+  }`, { id });
 
-  if (!artigo) {
-    return <div className="p-20 text-center text-white">Artigo não encontrado.</div>;
-  }
+  if (!post) return <div className="pt-40 text-center text-white font-serif">Artigo não encontrado.</div>;
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-200 pt-32 pb-20">
-      
-      {/* Artigo Centralizado */}
-      <article className="max-w-3xl mx-auto px-4">
-        
-        <Link href="/blog" className="text-zinc-500 text-sm hover:text-white mb-8 block">
-            &larr; Voltar às Notícias
-        </Link>
-
-        <span className="text-yellow-600 font-bold uppercase tracking-widest text-sm mb-4 block">
-            {artigo.categoria} • {artigo.data}
-        </span>
-
-        <h1 className="text-4xl md:text-5xl font-serif text-white mb-8 leading-tight">
-            {artigo.titulo}
-        </h1>
-
-        <div className="h-[400px] w-full mb-12">
-            <img 
-                src={artigo.imagem} 
-                alt={artigo.titulo} 
-                className="w-full h-full object-cover"
-            />
-            <p className="text-right text-zinc-600 text-xs mt-2 italic">Escrito por {artigo.autor}</p>
+    <main className="min-h-screen bg-[#050505] text-gray-300 pb-20">
+      <div className="h-[60vh] relative overflow-hidden">
+        {post.imageUrl && <img src={post.imageUrl} className="w-full h-full object-cover opacity-60" alt={post.title} />}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+        <div className="absolute bottom-10 left-0 w-full px-6 md:px-20">
+           <span className="text-[#C5A059] uppercase tracking-[0.4em] text-xs font-bold mb-4 block">Cultura Lusitana</span>
+           <h1 className="text-4xl md:text-7xl font-serif text-white max-w-4xl leading-tight">{post.title}</h1>
         </div>
-
-        <div className="prose prose-invert prose-lg text-zinc-300 leading-loose">
-            {/* Aqui simulamos parágrafos dividindo o texto */}
-            <p>{artigo.conteudo}</p>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
+      </div>
+      <div className="max-w-3xl mx-auto px-6 mt-20">
+        <article className="prose prose-invert prose-gold max-w-none 
+          first-letter:text-7xl first-letter:font-serif first-letter:text-[#C5A059] 
+          first-letter:mr-3 first-letter:float-left leading-relaxed text-lg text-gray-400">
+          <PortableText value={post.body} />
+        </article>
+        <div className="mt-32 pt-20 border-t border-gray-900">
+          <Newsletter />
         </div>
-
-        {/* Autor */}
-        <div className="mt-16 pt-8 border-t border-zinc-800 flex items-center gap-4">
-            <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center text-xl">
-                👤
-            </div>
-            <div>
-                <p className="text-white font-bold text-sm">Escrito por {artigo.autor}</p>
-                <p className="text-zinc-500 text-xs">Equipa Portal Lusitano</p>
-            </div>
-        </div>
-
-      </article>
+      </div>
     </main>
   );
 }
