@@ -1,34 +1,37 @@
 // @ts-nocheck
 import { Resend } from 'resend';
-import { client } from "@/lib/client";
+import { createClient } from "next-sanity";
 import { NextResponse } from 'next/server';
+
+// CONFIGURAÇÃO DIRETA (Evita erros de importação)
+const sanityClient = createClient({
+  projectId: "ofrzpaxa", // O teu ID
+  dataset: "production",
+  apiVersion: "2024-01-01",
+  useCdn: false,
+  token: process.env.SANITY_API_WRITE_TOKEN,
+});
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { nome, email, telefone, valor, cavalo } = body;
 
-    // DEBUG DE SEGURANÇA (Apenas visível nos logs da Vercel)
+    // 1. VERIFICAÇÃO DA CHAVE DO RESEND
     const apiKey = process.env.RESEND_API_KEY;
-    console.log("--- DEBUG LOG PORTAL LUSITANO ---");
-    console.log("Chave detetada?", !!apiKey);
-    if (apiKey) console.log("Comprimento da chave:", apiKey.length);
-
     if (!apiKey) {
+      console.error("ERRO: RESEND_API_KEY não encontrada no servidor.");
       return NextResponse.json({ 
-        error: "O servidor Vercel não detetou a variável RESEND_API_KEY. Verifica se a adicionaste ao PROJETO e fizeste REDEPLOY." 
+        error: "O servidor não detetou a chave. Verifica se ligaste a variável ao PROJETO no Vercel (campo 'Link to Projects')." 
       }, { status: 500 });
     }
 
     const resend = new Resend(apiKey);
 
-    // 1. REGISTAR NO SANITY
+    // 2. REGISTAR NO SANITY
     let sanityId;
     try {
-      const sanityResult = await client.withConfig({ 
-        token: process.env.SANITY_API_WRITE_TOKEN,
-        useCdn: false 
-      }).create({
+      const sanityResult = await sanityClient.create({
         _type: 'licitacao',
         nome,
         email,
@@ -40,11 +43,11 @@ export async function POST(req: Request) {
       sanityId = sanityResult._id;
       console.log("Sucesso: Licitação guardada no Sanity.");
     } catch (sError) {
-      console.error("Erro Sanity:", sError.message);
-      return NextResponse.json({ error: `Erro na base de dados (Sanity): ${sError.message}` }, { status: 500 });
+      console.error("Erro no Sanity:", sError.message);
+      return NextResponse.json({ error: `Erro na base de dados: ${sError.message}` }, { status: 500 });
     }
 
-    // 2. ENVIAR E-MAIL
+    // 3. ENVIAR E-MAIL
     try {
       await resend.emails.send({
         from: 'Portal Lusitano <info@portal-lusitano.pt>',
@@ -63,7 +66,7 @@ export async function POST(req: Request) {
       });
       console.log("Sucesso: E-mail enviado.");
     } catch (eError) {
-      console.error("Erro Resend:", eError.message);
+      console.error("Erro no Resend:", eError.message);
       return NextResponse.json({ error: `Erro no envio de e-mail: ${eError.message}` }, { status: 500 });
     }
 
