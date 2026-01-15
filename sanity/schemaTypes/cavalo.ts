@@ -1,160 +1,83 @@
-import { defineType, defineField } from 'sanity'
+import { defineField, defineType } from 'sanity'
 
-export const cavalo = defineType({
+export default defineType({
   name: 'cavalo',
-  title: 'Cavalo',
+  title: 'Cavalos',
   type: 'document',
-  groups: [
-    {name: 'identificacao', title: 'Identificação'},
-    {name: 'detalhes', title: 'Detalhes Técnicos'},
-    {name: 'comercial', title: 'Dados Comerciais'},
-    {name: 'genealogia', title: 'Genealogia'},
-    {name: 'multimedia', title: 'Multimédia'},
-  ],
   fields: [
-    // --- GRUPO: IDENTIFICAÇÃO ---
     defineField({
       name: 'nome',
       title: 'Nome do Cavalo',
       type: 'string',
-      group: 'identificacao',
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'slug',
-      title: 'Slug (Link)',
+      title: 'Slug (Link do Site)',
       type: 'slug',
-      group: 'identificacao',
-      options: { source: 'nome', maxLength: 96 },
+      options: {
+        source: 'nome',
+        maxLength: 96,
+      },
       validation: (rule) => rule.required(),
     }),
-
-    // --- GRUPO: DETALHES TÉCNICOS ---
     defineField({
-      name: 'disciplina',
-      title: 'Disciplina Principal',
-      type: 'string',
-      group: 'detalhes',
+      name: 'fotografiaPrincipal',
+      title: 'Fotografia Principal',
+      type: 'image',
       options: {
-        list: [
-          { title: 'Adestramento (Dressage)', value: 'adestramento' },
-          { title: 'Equitação de Trabalho', value: 'trabalho' },
-          { title: 'Saltos', value: 'saltos' },
-          { title: 'Atrelagem', value: 'atrelagem' },
-          { title: 'Modelo e Andamentos', value: 'modelo' },
-          { title: 'Lazer', value: 'lazer' },
-        ],
+        hotspot: true,
       },
+      validation: (rule) => rule.required(),
     }),
+    // === NOVOS CAMPOS ADICIONADOS ===
     defineField({
-      name: 'sexo',
-      title: 'Sexo',
-      type: 'string',
-      group: 'detalhes',
-      options: {
-        list: [
-          { title: 'Garanhão', value: 'garahnao' },
-          { title: 'Égua', value: 'egua' },
-          { title: 'Castrado', value: 'castrado' },
-        ],
-        layout: 'radio',
-      },
-    }),
-    defineField({
-      name: 'dataNascimento',
-      title: 'Data de Nascimento',
-      description: 'A idade será calculada automaticamente no site.',
-      type: 'date',
-      group: 'detalhes',
-    }),
-    defineField({
-      name: 'altura',
-      title: 'Altura (em metros)',
-      description: 'Exemplo: 1.65',
-      type: 'number',
-      group: 'detalhes',
-    }),
-
-    // --- GRUPO: DADOS COMERCIAIS ---
-    defineField({
-      name: 'estado',
-      title: 'Estado',
-      type: 'string',
-      group: 'comercial',
-      options: {
-        list: [
-          { title: 'À Venda', value: 'venda' },
-          { title: 'Vendido', value: 'vendido' },
-          { title: 'Reprodutor', value: 'reprodutor' },
-        ],
-      },
+      name: 'galeria',
+      title: 'Galeria de Fotos (Extra)',
+      type: 'array',
+      of: [{ type: 'image' }],
     }),
     defineField({
       name: 'preco',
-      title: 'Preço (€)',
+      title: 'Preço (Ex: 15000)',
       type: 'number',
-      group: 'comercial',
-      description: 'Deixa em branco se for "Preço sob consulta"',
+    }),
+    defineField({
+      name: 'idade',
+      title: 'Ano de Nascimento (Ex: 2019)',
+      type: 'string',
+    }),
+    defineField({
+      name: 'altura',
+      title: 'Altura (Ex: 1.65)',
+      type: 'number',
+    }),
+    defineField({
+      name: 'genero',
+      title: 'Género',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Macho (Garanhão)', value: 'Macho' },
+          { title: 'Égua', value: 'Égua' },
+          { title: 'Castrado', value: 'Castrado' },
+        ],
+      },
     }),
     defineField({
       name: 'localizacao',
-      title: 'Localização (Cidade, País)',
+      title: 'Localização (Ex: Lisboa, Portugal)',
       type: 'string',
-      group: 'comercial',
-      initialValue: 'Golegã, Portugal',
     }),
     defineField({
-      name: 'coudelaria',
-      title: 'Coudelaria / Criador',
-      type: 'reference',
-      group: 'comercial',
-      to: [{ type: 'empresa' }],
-    }),
-
-    // --- GRUPO: GENEALOGIA ---
-    defineField({
-      name: 'pai',
-      title: 'Pai',
-      type: 'reference',
-      group: 'genealogia',
-      to: [{ type: 'cavalo' }],
-    }),
-    defineField({
-      name: 'mae',
-      title: 'Mãe',
-      type: 'reference',
-      group: 'genealogia',
-      to: [{ type: 'cavalo' }],
-    }),
-
-    // --- GRUPO: MULTIMÉDIA ---
-    defineField({
-      name: 'fotografiaPrincipal',
-      title: 'Fotografia de Capa',
-      type: 'image',
-      group: 'multimedia',
-      options: { hotspot: true },
-    }),
-    defineField({
-      name: 'galeria',
-      title: 'Galeria de Fotos',
-      type: 'array',
-      group: 'multimedia',
-      of: [{ type: 'image', options: { hotspot: true } }],
-      options: { layout: 'grid' },
-    }),
-    defineField({
-      name: 'video',
-      title: 'Link do Vídeo',
-      type: 'url',
-      group: 'multimedia',
+      name: 'disciplina',
+      title: 'Disciplina (Ex: Dressage, Lazer)',
+      type: 'string',
     }),
     defineField({
       name: 'descricao',
-      title: 'Descrição',
-      type: 'array',
-      group: 'multimedia',
-      of: [{type: 'block'}]
+      title: 'Descrição Completa / História',
+      type: 'text',
     }),
   ],
 })
