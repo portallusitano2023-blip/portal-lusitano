@@ -1,10 +1,11 @@
 // @ts-nocheck
 import { client } from "@/lib/client";
 import Link from "next/link";
+// CORREÇÃO: Apenas um nível ( ../ ) para sair de leiloes e entrar em components
+import Countdown from "../components/Countdown";
 
 export const dynamic = 'force-dynamic';
 
-// 1. Função para buscar os leilões reais do Sanity
 async function getLeiloes() {
   const query = `*[_type == "leilao" && ativo == true] | order(dataFecho asc) {
     _id,
@@ -46,7 +47,6 @@ export default async function Leiloes() {
             </div>
           ) : (
             leiloes.map((item) => (
-              /* CARTÃO DE LEILÃO DINÂMICO */
               <div key={item._id} className="bg-zinc-900 border border-zinc-800 p-8 md:p-12 relative overflow-hidden group hover:border-yellow-600 transition-all text-left">
                   <div className="absolute top-0 right-0 bg-yellow-600 text-black font-bold px-6 py-2 text-sm uppercase tracking-wider">
                       A Decorrer
@@ -66,12 +66,10 @@ export default async function Leiloes() {
                             {item.descricaoCavalo || `Leilão do exemplar ${item.cavaloNome}. Lance inicial de ${item.lanceInicial}€.`}
                           </p>
                           
-                          <div className="flex justify-between items-center border-t border-zinc-800 pt-6">
+                          <div className="flex justify-between items-end border-t border-zinc-800 pt-6">
                               <div>
-                                  <span className="block text-xs text-zinc-500 uppercase">Termina em</span>
-                                  <span className="text-yellow-600 font-bold text-lg">
-                                    {new Date(item.dataFecho).toLocaleDateString('pt-PT')}
-                                  </span>
+                                  <span className="block text-[10px] text-zinc-500 uppercase tracking-widest mb-2">Termina em:</span>
+                                  <Countdown targetDate={item.dataFecho} />
                               </div>
                               <Link href={`/cavalo/${item.cavaloSlug}`}>
                                 <button className="px-6 py-3 bg-white text-black font-bold uppercase text-[10px] tracking-widest hover:bg-yellow-600 transition-colors">
