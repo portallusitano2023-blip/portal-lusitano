@@ -1,6 +1,7 @@
 import { defineField, defineType } from 'sanity'
 
-export default defineType({
+// Mudamos de "export default" para "export const cavalo"
+export const cavalo = defineType({
   name: 'cavalo',
   title: 'Cavalos',
   type: 'document',
@@ -30,7 +31,6 @@ export default defineType({
       },
       validation: (rule) => rule.required(),
     }),
-    // === NOVOS CAMPOS ADICIONADOS ===
     defineField({
       name: 'galeria',
       title: 'Galeria de Fotos (Extra)',
