@@ -1,8 +1,9 @@
 export async function getProducts() {
+  // O endereço da tua loja
   const domain = "irdip0-dq.myshopify.com";
   
-  // --- AQUI: Apaga o process.env... e cola o teu token entre aspas! ---
-  const token = "COLA_AQUI_O_TEU_TOKEN_GIGANTE"; 
+  // A TUA CHAVE DE STOREFRONT (Já inserida aqui - a correta!)
+  const token = "5566f8155086c19776145d6ff669019b"; 
   
   const URL = `https://${domain}/api/2024-01/graphql.json`;
 
@@ -41,10 +42,12 @@ export async function getProducts() {
           }
         `,
       }),
+      // Isto garante que os dados são sempre frescos e evita erros do Vercel
       cache: "no-store", 
     });
 
     if (!response.ok) {
+      // Se der erro, mostramos no log qual foi
       console.error("Erro no Shopify:", response.statusText);
       return [];
     }
