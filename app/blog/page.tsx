@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { client } from "@/lib/client";
 import { PortableText } from "@portabletext/react";
-// Corrigido o caminho para garantir que o Vercel encontra o componente
-import Newsletter from "../../../components/Newsletter";
+// CORREÇÃO: Apenas dois níveis ( ../../ ) para sair de [id] e blog
+import Newsletter from "../../components/Newsletter";
 
 export default async function BlogPost({ params }) {
   // 1. O 'id' vem do nome da pasta [id] no teu VS Code
