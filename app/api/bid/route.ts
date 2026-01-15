@@ -8,87 +8,70 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { nome, email, telefone, valor, cavalo } = body;
 
-    // --- DEBUG DE ENGENHARIA ---
-    // Isto vai imprimir no log da Vercel se as chaves existem (sem mostrar o valor secreto)
-    console.log("Verificando chaves de ambiente...");
-    console.log("RESEND_API_KEY presente?", !!process.env.RESEND_API_KEY);
-    console.log("SANITY_API_WRITE_TOKEN presente?", !!process.env.SANITY_API_WRITE_TOKEN);
+    // DIAGNÓSTICO DE ENGENHARIA (Aparecerá nos logs da Vercel)
+    console.log("--- INÍCIO DO PROCESSAMENTO ---");
+    console.log("Verificando variáveis de ambiente no servidor...");
+    
+    // Tentamos ler as chaves de todas as formas possíveis
+    const resendKey = process.env.RESEND_API_KEY || process.env['RESEND_API_KEY'];
+    const sanityToken = process.env.SANITY_API_WRITE_TOKEN || process.env['SANITY_API_WRITE_TOKEN'];
 
-    // 1. VERIFICAÇÃO DE SEGURANÇA: RESEND
-    const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
-      console.error("ERRO: RESEND_API_KEY não configurada no Vercel");
+    if (!resendKey) {
+      console.error("ERRO CRÍTICO: RESEND_API_KEY não foi encontrada pelo servidor Vercel.");
       return NextResponse.json({ 
-        error: "Configuração incompleta: RESEND_API_KEY em falta no servidor Vercel." 
+        error: "O servidor não detetou a chave do Resend. Verifica se a variável está ligada ao PROJETO no Vercel e faz Redeploy." 
       }, { status: 500 });
     }
-    
-    const resend = new Resend(apiKey);
 
-    // 2. REGISTAR NO SANITY (Base de dados para o teu Dashboard)
+    const resend = new Resend(resendKey);
+
+    // 1. REGISTAR NO SANITY
     let sanityId;
     try {
-      const sanityResult = await client.create({
+      // Configuramos o cliente com o token explicitamente para este pedido
+      const sanityResult = await client.withConfig({ token: sanityToken }).create({
         _type: 'licitacao',
-        nome: nome,
-        email: email,
-        telefone: telefone,
+        nome,
+        email,
+        telefone,
         valor: Number(valor),
-        cavalo: cavalo,
+        cavalo,
         dataHora: new Date().toISOString(),
       });
       sanityId = sanityResult._id;
-      console.log("Sucesso no Sanity: Documento criado.");
+      console.log("Sucesso: Licitação guardada no Sanity.");
     } catch (sError) {
-      console.error("Erro Sanity:", sError.message);
-      return NextResponse.json({ 
-        error: `Erro ao gravar no Sanity: ${sError.message}. Verifica se o token tem permissão de Editor.` 
-      }, { status: 500 });
+      console.error("Erro no Sanity:", sError.message);
+      return NextResponse.json({ error: `Erro na base de dados: ${sError.message}` }, { status: 500 });
     }
 
-    // 3. ENVIAR E-MAIL VIA RESEND
+    // 2. ENVIAR E-MAIL
     try {
-      const emailResult = await resend.emails.send({
+      await resend.emails.send({
         from: 'Portal Lusitano <info@portal-lusitano.pt>',
         to: ['portal.lusitano2023@gmail.com'],
         subject: `NOVA LICITAÇÃO: ${cavalo} - ${valor}€`,
         replyTo: email,
         html: `
-          <div style="font-family: serif; max-width: 600px; margin: 0 auto; border: 1px solid #C5A059; padding: 40px; background-color: #fff; color: #000;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="letter-spacing: 5px; text-transform: uppercase; margin: 0;">Portal Lusitano</h1>
-              <p style="color: #C5A059; text-transform: uppercase; letter-spacing: 2px; font-size: 10px;">Excelência Equestre</p>
-            </div>
-            <hr style="border: 0; border-top: 1px solid #C5A059; margin-bottom: 30px;" />
-            <h2 style="font-style: italic;">Nova Proposta de Aquisição</h2>
-            <p><strong>Exemplar:</strong> ${cavalo}</p>
-            <p><strong>Valor:</strong> ${Number(valor).toLocaleString('pt-PT')} €</p>
-            <div style="background-color: #f9f9f9; padding: 20px; margin-top: 20px; border-left: 4px solid #C5A059;">
-              <p style="margin: 5px 0;"><strong>Investidor:</strong> ${nome}</p>
-              <p style="margin: 5px 0;"><strong>Contacto:</strong> ${telefone}</p>
-              <p style="margin: 5px 0;"><strong>E-mail:</strong> ${email}</p>
-            </div>
+          <div style="font-family: serif; border: 1px solid #C5A059; padding: 20px;">
+            <h1 style="text-align: center;">Portal Lusitano</h1>
+            <hr />
+            <p><strong>Nova proposta recebida:</strong></p>
+            <p>Cavalo: ${cavalo} | Valor: ${valor}€</p>
+            <p>Investidor: ${nome} | Tel: ${telefone}</p>
           </div>
         `
       });
-      console.log("Sucesso no Resend: E-mail enviado.");
+      console.log("Sucesso: E-mail enviado.");
     } catch (eError) {
-      console.error("Erro Resend:", eError.message);
-      return NextResponse.json({ 
-        error: `Erro ao enviar e-mail: ${eError.message}. Verifica se o domínio está verificado no painel do Resend.` 
-      }, { status: 500 });
+      console.error("Erro no Resend:", eError.message);
+      return NextResponse.json({ error: `Erro no envio de e-mail: ${eError.message}` }, { status: 500 });
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      sanityId: sanityId
-    });
+    return NextResponse.json({ success: true, sanityId });
 
   } catch (error) {
-    console.error('Erro Crítico no Servidor:', error);
-    return NextResponse.json(
-      { error: 'Falha crítica no processamento. Verifica os logs da Vercel.' }, 
-      { status: 500 }
-    );
+    console.error("Erro Geral:", error);
+    return NextResponse.json({ error: "Erro interno no servidor." }, { status: 500 });
   }
 }
