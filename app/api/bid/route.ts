@@ -3,13 +3,13 @@ import { Resend } from 'resend';
 import { createClient } from "next-sanity";
 import { NextResponse } from 'next/server';
 
-// CONFIGURAÇÃO DIRETA (Evita erros de importação de ficheiros externos)
+// CONFIGURAÇÃO DIRETA DO SANITY
 const sanityClient = createClient({
-  projectId: "ofrzpaxa", // O teu ID da imagem d9c62d.png
+  projectId: "ofrzpaxa", // Do teu ficheiro local
   dataset: "production",
   apiVersion: "2024-01-01",
   useCdn: false,
-  token: process.env.SANITY_API_WRITE_TOKEN,
+  token: "sk7A0Gf0q2GvNsy8wP95TgNruFrLcej1ZwBrFWrxpE2958742", // Token da tua imagem
 });
 
 export async function POST(req: Request) {
@@ -17,24 +17,18 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { nome, email, telefone, valor, cavalo } = body;
 
-    const apiKey = process.env.RESEND_API_KEY;
+    // TESTE HARDCODED: Substituímos o process.env pela chave real só para testar
+    // Copiei exatamente da tua imagem
+    const CHAVE_TESTE = "re_cPTyybFU_EbRvBA6oCJ9a6LWGMJ8gjqDi"; 
     
-    // Log de diagnóstico para o teu painel Vercel
-    if (!apiKey) {
-      console.error("ERRO: O servidor ainda não detetou a RESEND_API_KEY.");
-      return NextResponse.json({ error: "Configuração incompleta no Vercel: Variável não ligada ao projeto." }, { status: 500 });
-    }
+    const resend = new Resend(CHAVE_TESTE);
 
-    const resend = new Resend(apiKey);
+    console.log("A iniciar teste com chave hardcoded...");
 
-    // 1. GRAVAR NO SANITY
+    // 1. REGISTAR NO SANITY
     const sanityResult = await sanityClient.create({
       _type: 'licitacao',
-      nome,
-      email,
-      telefone,
-      valor: Number(valor),
-      cavalo,
+      nome, email, telefone, valor: Number(valor), cavalo,
       dataHora: new Date().toISOString(),
     });
 
@@ -42,23 +36,14 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: 'Portal Lusitano <info@portal-lusitano.pt>',
       to: ['portal.lusitano2023@gmail.com'],
-      subject: `NOVA LICITAÇÃO: ${cavalo} - ${valor}€`,
-      replyTo: email,
-      html: `
-        <div style="font-family: serif; border: 1px solid #C5A059; padding: 20px;">
-          <h1 style="text-align: center;">Portal Lusitano</h1>
-          <hr />
-          <p><strong>Nova proposta recebida:</strong></p>
-          <p>Cavalo: ${cavalo} | Valor: ${valor}€</p>
-          <p>Investidor: ${nome} | Tel: ${telefone}</p>
-        </div>
-      `
+      subject: `TESTE REAL: ${cavalo} - ${valor}€`,
+      html: `<p>Nova proposta de ${nome} no valor de ${valor}€</p>`
     });
 
     return NextResponse.json({ success: true, sanityId: sanityResult._id });
 
   } catch (error) {
-    console.error("Erro Crítico:", error.message);
-    return NextResponse.json({ error: `Erro no servidor: ${error.message}` }, { status: 500 });
+    console.error("ERRO NO TESTE:", error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
