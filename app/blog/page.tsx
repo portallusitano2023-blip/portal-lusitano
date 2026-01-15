@@ -1,66 +1,60 @@
-import Link from "next/link";
-import { artigos } from "@/data/blog"; // Importamos os dados novos
+// @ts-nocheck
+import { client } from "@/lib/client";
+import { PortableText } from "@portabletext/react";
+import Newsletter from "@/components/Newsletter";
 
-export default function BlogPage() {
+export default async function BlogPost({ params }) {
+  // 1. Aqui usamos 'id' porque é o nome da tua pasta
+  const { id } = await params;
+
+  // 2. Fazemos a busca no Sanity usando esse ID (que na verdade é o slug do post)
+  const post = await client.fetch(`*[_type == "post" && slug.current == $id][0]{
+    title,
+    mainImage,
+    body,
+    publishedAt,
+    "authorName": author->name,
+    "imageUrl": mainImage.asset->url
+  }`, { id });
+
+  if (!post) return <div className="pt-40 text-center">Artigo não encontrado.</div>;
+
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-200 pt-32 pb-20">
-      
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Cabeçalho */}
-        <div className="text-center mb-16">
-          <span className="text-yellow-600 tracking-widest uppercase text-sm font-bold mb-4 block">
-            Jornal Lusitano
-          </span>
-          <h1 className="text-5xl md:text-6xl font-serif text-white mb-6">
-            Notícias & Artigos
-          </h1>
-          <p className="text-zinc-400 max-w-2xl mx-auto">
-            Acompanhe as últimas novidades do mundo equestre, dicas de saúde e histórias da nossa tradição.
-          </p>
+    <main className="min-h-screen bg-[#050505] text-gray-300 pb-20">
+      {/* Hero do Artigo */}
+      <div className="h-[60vh] relative overflow-hidden">
+        {post.imageUrl && (
+          <img src={post.imageUrl} className="w-full h-full object-cover opacity-60" alt={post.title} />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+        <div className="absolute bottom-10 left-0 w-full px-6 md:px-20 text-center md:text-left">
+           <span className="text-[#C5A059] uppercase tracking-[0.4em] text-xs font-bold mb-4 block">Cultura Lusitana</span>
+           <h1 className="text-4xl md:text-7xl font-serif text-white max-w-4xl leading-tight">{post.title}</h1>
+        </div>
+      </div>
+
+      {/* Conteúdo Editorial */}
+      <div className="max-w-3xl mx-auto px-6 mt-20">
+        <div className="flex items-center gap-4 mb-12 pb-8 border-b border-gray-900">
+           <div className="text-xs text-gray-500 uppercase tracking-widest">
+             Escrito por <span className="text-white">{post.authorName || "Francisco Gaspar"}</span>
+           </div>
+           <div className="h-1 w-1 rounded-full bg-[#C5A059]" />
+           <div className="text-xs text-gray-500 uppercase tracking-widest">
+             {new Date(post.publishedAt).toLocaleDateString('pt-PT')}
+           </div>
         </div>
 
-        {/* Grelha de Artigos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {artigos.map((artigo) => (
-            <article key={artigo.id} className="group bg-zinc-900 border border-zinc-800 flex flex-col hover:border-zinc-600 transition-colors">
-              {/* Imagem */}
-              <div className="h-60 overflow-hidden relative">
-                 <div className="absolute top-4 left-4 bg-yellow-600 text-black text-xs font-bold px-3 py-1 uppercase tracking-wider z-10">
-                    {artigo.categoria}
-                 </div>
-                 <img 
-                    src={artigo.imagem} 
-                    alt={artigo.titulo} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                 />
-              </div>
+        <article className="prose prose-invert prose-gold max-w-none 
+          first-letter:text-7xl first-letter:font-serif first-letter:text-[#C5A059] 
+          first-letter:mr-3 first-letter:float-left leading-relaxed text-lg text-gray-400">
+          <PortableText value={post.body} />
+        </article>
 
-              {/* Texto */}
-              <div className="p-8 flex-1 flex flex-col">
-                <div className="text-zinc-500 text-xs uppercase tracking-widest mb-3 flex justify-between">
-                    <span>{artigo.data}</span>
-                    <span>{artigo.autor}</span>
-                </div>
-                
-                <h2 className="text-2xl font-serif text-white mb-4 leading-tight group-hover:text-yellow-600 transition-colors">
-                    {artigo.titulo}
-                </h2>
-                
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6 flex-1">
-                    {artigo.resumo}
-                </p>
-
-                <Link 
-                    href={`/blog/${artigo.id}`} 
-                    className="text-white border-b border-zinc-700 pb-1 self-start hover:border-yellow-600 hover:text-yellow-600 transition-all text-sm uppercase tracking-widest"
-                >
-                    Ler Artigo &rarr;
-                </Link>
-              </div>
-            </article>
-          ))}
+        {/* Newsletter Automática no fim */}
+        <div className="mt-32 pt-20 border-t border-gray-900">
+          <Newsletter />
         </div>
-
       </div>
     </main>
   );
