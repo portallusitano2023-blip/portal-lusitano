@@ -4,11 +4,12 @@
 import { client } from "@/lib/client";
 import { useEffect, useState } from "react";
 import Countdown from "../../components/Countdown";
-import BiddingForm from "../../components/BiddingForm"; // Importação do novo componente
+import BiddingForm from "../../components/BiddingForm";
 import Link from "next/link";
 
 export default function CavaloPage({ params }) {
   const [data, setData] = useState(null);
+  const [relacionados, setRelacionados] = useState([]); // Novo estado para outros cavalos
   const [fotoAtiva, setFotoAtiva] = useState(null);
   const [slug, setSlug] = useState(null);
 
@@ -20,31 +21,37 @@ export default function CavaloPage({ params }) {
     if (!slug) return;
 
     const fetchData = async () => {
+      // Query Dupla: Busca o cavalo atual E outros 3 cavalos aleatórios
       const result = await client.fetch(`
-        *[_type == "cavalo" && slug.current == $slug][0]{
-          nome,
-          idade,
-          ferro,
-          genealogia,
-          descricao,
-          "imageUrl": fotografiaPrincipal.asset->url,
-          "galeriaUrls": galeria[].asset->url,
-          "leilao": *[_type == "leilao" && cavalo._ref == ^._id][0]{
-            dataFecho,
-            lanceInicial,
-            ativo
+        {
+          "atual": *[_type == "cavalo" && slug.current == $slug][0]{
+            nome, idade, ferro, genealogia, descricao,
+            "imageUrl": fotografiaPrincipal.asset->url,
+            "galeriaUrls": galeria[].asset->url,
+            "leilao": *[_type == "leilao" && cavalo._ref == ^._id][0]{
+              dataFecho, lanceInicial, ativo
+            }
+          },
+          "relacionados": *[_type == "cavalo" && slug.current != $slug][0...3]{
+            nome,
+            "slug": slug.current,
+            "imageUrl": fotografiaPrincipal.asset->url,
+            idade
           }
         }
       `, { slug });
       
-      setData(result);
-      if (result) setFotoAtiva(result.imageUrl);
+      if (result.atual) {
+        setData(result.atual);
+        setFotoAtiva(result.atual.imageUrl);
+        setRelacionados(result.relacionados);
+      }
     };
 
     fetchData();
   }, [slug]);
 
-  if (!data) return <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white italic">Carregando exemplar...</div>;
+  if (!data) return <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white italic">Carregando exemplar de elite...</div>;
 
   const numeroTelemovel = "351939513151"; 
   const mensagem = `Olá Francisco! Estou interessado no cavalo *${data.nome}* que vi no Portal Lusitano.`;
@@ -61,32 +68,25 @@ export default function CavaloPage({ params }) {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          
-          {/* GALERIA */}
+          {/* GALERIA INTERATIVA */}
           <div className="space-y-4">
             <div className="aspect-[4/5] overflow-hidden border border-zinc-900 bg-zinc-900 shadow-2xl">
               <img src={fotoAtiva} alt={data.nome} className="w-full h-full object-cover transition-all duration-500" />
             </div>
-            
             <div className="grid grid-cols-4 gap-2 no-print">
               {todasAsFotos.map((url, idx) => (
-                <button 
-                  key={idx} 
-                  onClick={() => setFotoAtiva(url)}
-                  className={`aspect-square border-2 transition-all ${fotoAtiva === url ? 'border-[#C5A059]' : 'border-transparent opacity-50 hover:opacity-100'}`}
-                >
+                <button key={idx} onClick={() => setFotoAtiva(url)} className={`aspect-square border-2 transition-all ${fotoAtiva === url ? 'border-[#C5A059]' : 'border-transparent opacity-50 hover:opacity-100'}`}>
                   <img src={url} className="w-full h-full object-cover" alt={`Miniatura ${idx}`} />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* CONTEÚDO */}
+          {/* DETALHES E LICITAÇÃO */}
           <div className="flex flex-col">
             <span className="text-[#C5A059] uppercase tracking-[0.3em] text-sm mb-2 font-bold">Puro Sangue Lusitano</span>
             <h1 className="text-6xl font-serif mb-6">{data.nome}</h1>
             
-            {/* BOX DE LICITAÇÃO E INFO */}
             <div className="bg-zinc-900/50 border border-[#C5A059]/30 p-8 mb-10 shadow-2xl backdrop-blur-sm">
               <div className="flex justify-between items-center mb-8">
                 <div>
@@ -99,26 +99,15 @@ export default function CavaloPage({ params }) {
                 </div>
               </div>
 
-              {/* INTEGRADO: FORMULÁRIO DE LICITAÇÃO OFICIAL */}
-              <div className="mb-6 no-print">
+              {/* FORMULÁRIO DE LICITAÇÃO OFICIAL */}
+              <div className="mb-6">
                 <BiddingForm cavaloNome={data.nome} />
               </div>
 
-              {/* Ações Secundárias: WhatsApp e PDF */}
               <div className="flex flex-col gap-3 no-print">
-                <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="w-full py-4 bg-zinc-900 border border-[#25D366]/30 text-[#25D366] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#25D366] hover:text-black transition-all text-center flex items-center justify-center gap-2">
+                <a href={linkWhatsApp} target="_blank" className="w-full py-4 bg-zinc-900 border border-[#25D366]/30 text-[#25D366] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#25D366] hover:text-black transition-all text-center">
                   Dúvidas por WhatsApp
                 </a>
-                
-                <button 
-                  onClick={() => window.print()}
-                  className="w-full py-3 border border-zinc-800 text-zinc-500 font-bold uppercase text-[10px] tracking-[0.2em] hover:text-white transition-all text-center flex items-center justify-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Gerar PDF do Exemplar
-                </button>
               </div>
             </div>
 
@@ -127,10 +116,6 @@ export default function CavaloPage({ params }) {
               <div className="grid grid-cols-2 gap-y-4 border-t border-zinc-800 pt-6">
                 <p><span className="text-zinc-500 uppercase tracking-tighter block mb-1">Idade</span> {data.idade} anos</p>
                 <p><span className="text-zinc-500 uppercase tracking-tighter block mb-1">Ferro</span> {data.ferro}</p>
-                <div className="col-span-2 border-t border-zinc-900 pt-4">
-                  <span className="text-zinc-500 uppercase tracking-tighter block mb-1">Genealogia</span>
-                  <p className="italic text-zinc-300 font-serif text-base">{data.genealogia}</p>
-                </div>
               </div>
               <div className="border-t border-zinc-800 pt-6">
                 <span className="text-zinc-500 uppercase tracking-tighter block mb-2">Descrição Editorial</span>
@@ -139,6 +124,26 @@ export default function CavaloPage({ params }) {
             </div>
           </div>
         </div>
+
+        {/* SECÇÃO: EXEMPLARES RELACIONADOS (A Magia do Retenção) */}
+        {relacionados.length > 0 && (
+          <div className="mt-32 pt-20 border-t border-zinc-900">
+            <h3 className="font-serif text-3xl mb-12 text-center text-white">Outros <span className="text-[#C5A059]">Exemplares de Elite</span></h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {relacionados.map((rel) => (
+                <Link key={rel.slug} href={`/cavalo/${rel.slug}`} className="group block">
+                  <div className="aspect-[4/5] overflow-hidden bg-zinc-900 mb-4 border border-zinc-800 group-hover:border-[#C5A059] transition-all">
+                    <img src={rel.imageUrl} alt={rel.nome} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
+                  </div>
+                  <p className="text-[#C5A059] uppercase tracking-widest text-[10px] mb-1 font-bold">Puro Sangue Lusitano</p>
+                  <h4 className="text-xl font-serif text-white group-hover:text-[#C5A059] transition-colors">{rel.nome}</h4>
+                  <p className="text-zinc-500 text-xs mt-1">{rel.idade} anos</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </main>
   );
