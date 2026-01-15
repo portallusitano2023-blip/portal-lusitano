@@ -4,6 +4,7 @@
 import { client } from "@/lib/client";
 import { useEffect, useState } from "react";
 import Countdown from "../../components/Countdown";
+import BiddingForm from "../../components/BiddingForm"; // Importação do novo componente
 import Link from "next/link";
 
 export default function CavaloPage({ params }) {
@@ -61,6 +62,7 @@ export default function CavaloPage({ params }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           
+          {/* GALERIA */}
           <div className="space-y-4">
             <div className="aspect-[4/5] overflow-hidden border border-zinc-900 bg-zinc-900 shadow-2xl">
               <img src={fotoAtiva} alt={data.nome} className="w-full h-full object-cover transition-all duration-500" />
@@ -79,10 +81,12 @@ export default function CavaloPage({ params }) {
             </div>
           </div>
 
+          {/* CONTEÚDO */}
           <div className="flex flex-col">
             <span className="text-[#C5A059] uppercase tracking-[0.3em] text-sm mb-2 font-bold">Puro Sangue Lusitano</span>
             <h1 className="text-6xl font-serif mb-6">{data.nome}</h1>
             
+            {/* BOX DE LICITAÇÃO E INFO */}
             <div className="bg-zinc-900/50 border border-[#C5A059]/30 p-8 mb-10 shadow-2xl backdrop-blur-sm">
               <div className="flex justify-between items-center mb-8">
                 <div>
@@ -95,24 +99,30 @@ export default function CavaloPage({ params }) {
                 </div>
               </div>
 
-              {/* Ações: WhatsApp e PDF */}
+              {/* INTEGRADO: FORMULÁRIO DE LICITAÇÃO OFICIAL */}
+              <div className="mb-6 no-print">
+                <BiddingForm cavaloNome={data.nome} />
+              </div>
+
+              {/* Ações Secundárias: WhatsApp e PDF */}
               <div className="flex flex-col gap-3 no-print">
-                <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="w-full py-4 bg-[#25D366] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-white transition-all text-center flex items-center justify-center gap-2">
-                  Contactar Especialista
+                <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="w-full py-4 bg-zinc-900 border border-[#25D366]/30 text-[#25D366] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#25D366] hover:text-black transition-all text-center flex items-center justify-center gap-2">
+                  Dúvidas por WhatsApp
                 </a>
                 
                 <button 
                   onClick={() => window.print()}
-                  className="w-full py-4 border border-zinc-700 text-white font-bold uppercase text-xs tracking-[0.2em] hover:bg-white hover:text-black transition-all text-center flex items-center justify-center gap-2"
+                  className="w-full py-3 border border-zinc-800 text-zinc-500 font-bold uppercase text-[10px] tracking-[0.2em] hover:text-white transition-all text-center flex items-center justify-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  Descarregar Catálogo PDF
+                  Gerar PDF do Exemplar
                 </button>
               </div>
             </div>
 
+            {/* FICHA TÉCNICA */}
             <div className="space-y-6 text-sm">
               <div className="grid grid-cols-2 gap-y-4 border-t border-zinc-800 pt-6">
                 <p><span className="text-zinc-500 uppercase tracking-tighter block mb-1">Idade</span> {data.idade} anos</p>
