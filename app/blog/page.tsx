@@ -2,6 +2,7 @@
 import { client } from "@/lib/client";
 import Link from "next/link";
 import Newsletter from "../components/Newsletter";
+export const dynamic = 'force-dynamic';
 
 export default async function BlogListPage() {
   const posts = await client.fetch(`*[_type == "post"] | order(publishedAt desc) {
