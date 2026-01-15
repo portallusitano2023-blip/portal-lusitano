@@ -1,9 +1,8 @@
 export async function getProducts() {
-  // --- CORREÇÃO: Escrevemos o domínio diretamente aqui ---
-  const domain = "irdip0-dq.myshopify.com"; 
+  const domain = "irdip0-dq.myshopify.com";
   
-  // O token continua a vir das chaves secretas (segurança)
-  const token = process.env.NEXT_PUBLIC_SHOPIFY_TOKEN;
+  // --- AQUI: Apaga o process.env... e cola o teu token entre aspas! ---
+  const token = "COLA_AQUI_O_TEU_TOKEN_GIGANTE"; 
   
   const URL = `https://${domain}/api/2024-01/graphql.json`;
 
@@ -12,7 +11,7 @@ export async function getProducts() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token": token!,
+        "X-Shopify-Storefront-Access-Token": token,
       },
       body: JSON.stringify({
         query: `
@@ -42,7 +41,6 @@ export async function getProducts() {
           }
         `,
       }),
-      // Isto garante que os dados são sempre frescos
       cache: "no-store", 
     });
 
