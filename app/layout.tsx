@@ -2,10 +2,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-// ENGENHARIA SEO: Bloqueia o site no Google imediatamente
 export const metadata: Metadata = {
   title: "Portal Lusitano | Private Access",
-  description: "Mercado de Elite do Cavalo Lusitano",
+  // ENGENHARIA SEO: Remove o site do Google
   robots: {
     index: false,
     follow: false,
@@ -23,9 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt">
-      <body className="bg-black antialiased selection:bg-[#C5A059] selection:text-black">
-        {children}
-      </body>
+      <body className="bg-black antialiased">{children}</body>
     </html>
   );
 }

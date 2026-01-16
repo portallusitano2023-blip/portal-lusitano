@@ -16,7 +16,6 @@ export async function shopifyFetch({ query, variables = {} }) {
     const result = await response.json();
     return result.data;
   } catch (error) {
-    console.error("Falha técnica de comunicação:", error);
     return null;
   }
 }
@@ -29,24 +28,12 @@ export async function getProducts(tag = "") {
           id
           title
           handle
-          priceRange { 
-            minVariantPrice { 
-              amount 
-              currencyCode 
-            } 
-          }
-          images(first: 1) { 
-            edges { 
-              node { 
-                url 
-              } 
-            } 
-          }
+          priceRange { minVariantPrice { amount } }
+          images(first: 1) { edges { node { url } } }
         }
       }
     }
   }`;
-  
   const res = await shopifyFetch({ query });
   return res?.products?.edges?.map(edge => edge.node) || [];
 }
