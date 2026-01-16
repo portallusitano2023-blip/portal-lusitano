@@ -2,7 +2,6 @@
 import { getProducts } from "@/lib/shopify";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ dev?: string }> }) {
-  // NOVIDADE TÉCNICA: Nas versões recentes do Next.js, temos de fazer await disto
   const sParams = await searchParams;
   const isDev = sParams?.dev === "true";
 
@@ -24,37 +23,39 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ d
     );
   }
 
-  // ÁREA DE TRABALHO PRIVADA (Só o Francisco vê)
-  const products = await getProducts();
+  // ÁREA DE TRABALHO DO FRANCISCO (Só tu vês com ?dev=true)
+  // Filtramos pela tag 'loja' que acabaste de criar
+  const products = await getProducts("loja");
   
   return (
-    <main className="min-h-screen bg-black text-white pt-40 px-10">
-      <header className="mb-20 border-b border-zinc-900 pb-10 flex justify-between items-end">
-        <div>
-          <p className="text-[#C5A059] text-[10px] uppercase font-bold mb-2 italic">Dashboard de Engenharia</p>
-          <h1 className="text-6xl font-serif italic">Portal Lusitano</h1>
-        </div>
-        <p className="text-zinc-500 text-[9px] uppercase tracking-widest">Modo Dev Ativo</p>
+    <main className="min-h-screen bg-black text-white pt-40 px-10 pb-20">
+      <header className="mb-24 border-b border-zinc-900 pb-10">
+        <p className="text-[#C5A059] text-[10px] uppercase font-bold mb-2 italic">Modo de Engenharia Ativo</p>
+        <h1 className="text-6xl font-serif italic">Lifestyle Collection</h1>
       </header>
 
       {products.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-32">
           {products.map((p) => (
-            <div key={p.id} className="border border-zinc-900 p-8 hover:border-[#C5A059]/30 transition-all duration-700">
-              <div className="aspect-square bg-zinc-950 mb-6 overflow-hidden">
-                <img src={p.images?.[0]?.url || p.images?.edges?.[0]?.node?.url} alt={p.title} className="w-full h-full object-cover opacity-80" />
+            <div key={p.id} className="group cursor-default">
+              <div className="aspect-[4/5] bg-zinc-950 overflow-hidden border border-zinc-900 group-hover:border-[#C5A059]/30 transition-all duration-1000">
+                <img 
+                  src={p.images?.[0]?.url || p.images?.edges?.[0]?.node?.url} 
+                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" 
+                />
               </div>
-              <h2 className="text-2xl font-serif mb-4 italic">{p.title}</h2>
-              <p className="text-[#C5A059] font-serif text-xl">
-                {Number(p.priceRange?.minVariantPrice?.amount || 0).toLocaleString('pt-PT')} €
-              </p>
+              <div className="mt-8 flex justify-between items-baseline border-b border-zinc-900 pb-4">
+                <h2 className="font-serif text-2xl italic">{p.title}</h2>
+                <p className="text-[#C5A059] font-serif text-xl">
+                  {Number(p.priceRange?.minVariantPrice?.amount || 0).toLocaleString('pt-PT')} €
+                </p>
+              </div>
             </div>
           ))}
         </div>
       ) : (
         <div className="text-center py-40 border border-zinc-900 bg-zinc-950/20">
-          <p className="text-zinc-500 italic">O catálogo está vazio ou a ligação ao Shopify falhou.</p>
-          <p className="text-[9px] uppercase tracking-widest mt-4">Verifica se o Token Private está ativo no Shopify</p>
+          <p className="text-zinc-500 italic">Nenhum produto com a tag "loja" encontrado.</p>
         </div>
       )}
     </main>

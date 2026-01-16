@@ -8,7 +8,7 @@ export async function shopifyFetch({ query, variables = {} }) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Shopify-Storefront-Private-Token': privateToken, // Header para tokens shpat_
+        'Shopify-Storefront-Private-Token': privateToken,
       },
       body: JSON.stringify({ query, variables }),
       cache: 'no-store',
@@ -19,9 +19,12 @@ export async function shopifyFetch({ query, variables = {} }) {
   }
 }
 
-export async function getProducts() {
+export async function getProducts(tag = "") {
+  // Construímos o filtro de tag para o Shopify
+  const filter = tag ? `query: "tag:${tag}"` : "";
+  
   const query = `{
-    products(first: 20) {
+    products(first: 20, ${filter}) {
       edges {
         node {
           id
@@ -33,6 +36,7 @@ export async function getProducts() {
       }
     }
   }`;
+  
   const res = await shopifyFetch({ query });
   return res?.data?.products?.edges?.map(edge => edge.node) || [];
 }

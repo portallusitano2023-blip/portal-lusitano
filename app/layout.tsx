@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+// ENGENHARIA SEO: Remove a descrição e bloqueia o Google
 export const metadata: Metadata = {
   title: "Portal Lusitano",
   description: "Acesso Privado", 
