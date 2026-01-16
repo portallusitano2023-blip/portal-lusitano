@@ -2,17 +2,18 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+// ENGENHARIA SEO: Substitui a frase antiga e bloqueia o Google
 export const metadata: Metadata = {
-  // Título e descrição neutros para não atrair atenção
-  title: "Portal Lusitano | Em Manutenção",
-  description: "Plataforma em desenvolvimento. Brevemente disponível para acesso privado.",
-  // Mantemos o bloqueio total aos motores de busca
+  title: "Portal Lusitano",
+  description: "Acesso Privado", 
   robots: {
     index: false,
     follow: false,
+    nocache: true,
     googleBot: {
       index: false,
       follow: false,
+      noimageindex: true,
     },
   },
 };
@@ -24,7 +25,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt">
-      {/* Adicionei a cor de fundo preta aqui para garantir que não há flashes brancos */}
       <body className="bg-black antialiased selection:bg-[#C5A059] selection:text-black">
         {children}
       </body>
