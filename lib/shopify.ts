@@ -1,11 +1,11 @@
 // @ts-nocheck
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN;
-const accessToken = process.env.NEXT_PUBLIC_SHOPIFY_TOKEN;
+const privateToken = process.env.SHOPIFY_PRIVATE_TOKEN; 
 
 export async function shopifyFetch({ query, variables = {} }) {
   try {
-    if (!domain || !accessToken) {
-      console.error("Erro: Variáveis do Shopify não configuradas.");
+    if (!domain || !privateToken) {
+      console.error("Configuração Headless em falta no Vercel.");
       return null;
     }
 
@@ -13,28 +13,56 @@ export async function shopifyFetch({ query, variables = {} }) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': accessToken,
+        // Cabeçalho correto para o Token Privado (shpat_...)
+        'Shopify-Storefront-Private-Token': privateToken,
       },
       body: JSON.stringify({ query, variables }),
+      cache: 'no-store', 
     });
 
     const result = await response.json();
 
     if (result.errors) {
-      console.error("Erro na API do Shopify:", result.errors);
+      console.error("Erro Shopify API:", result.errors);
       return null;
     }
 
     return result.data;
   } catch (error) {
-    console.error("Falha na ligação ao Shopify:", error);
+    console.error("Falha na ligação Headless:", error);
     return null;
   }
 }
 
-// Exemplo para os produtos (ajusta conforme as tu.as necessidades)
 export async function getProducts() {
-  const query = `{ products(first: 10) { edges { node { id title handle } } } }`;
-  const data = await shopifyFetch({ query });
-  return data?.products?.edges?.map(edge => edge.node) || [];
+  const query = `{
+    products(first: 20) {
+      edges {
+        node {
+          id
+          title
+          handle
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          images(first: 1) {
+            edges {
+              node {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }`;
+
+  const res = await shopifyFetch({ query });
+  
+  // PROTEÇÃO: Retorna lista vazia [] se a API der erro 401
+  // Evita o erro de 'undefined' na página da loja
+  return res?.products?.edges?.map(edge => edge.node) || [];
 }

@@ -1,36 +1,61 @@
 // @ts-nocheck
-export const dynamic = 'force-dynamic';
-
 import { getProducts } from "@/lib/shopify";
 import Link from "next/link";
 
-export default async function HomePage() {
-  // Tentamos obter os produtos, mas se falhar (401), o site não crasha
-  const products = await getProducts() || [];
+export const dynamic = 'force-dynamic';
+
+export default async function LojaPage() {
+  const products = await getProducts();
 
   return (
-    <main className="min-h-screen bg-black text-white">
-      {/* CABEÇALHO */}
-      <section className="pt-40 pb-20 px-6 text-center">
-        <h1 className="text-6xl font-serif italic mb-6">Portal Lusitano</h1>
-        <p className="text-zinc-500 uppercase tracking-[0.5em] text-[10px]">Excelência Equestre</p>
-      </section>
+    <main className="min-h-screen bg-black text-white pt-32 px-6 pb-20">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-16 border-b border-zinc-900 pb-8">
+          <span className="text-[#C5A059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-2">Shopping</span>
+          <h1 className="text-5xl font-serif italic text-white">Loja Portal Lusitano</h1>
+        </div>
+        
+        {products && products.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {products.map((product) => (
+              <div key={product.id} className="group border border-zinc-900 p-6 hover:border-[#C5A059] transition-all duration-500">
+                <div className="aspect-square bg-zinc-950 mb-6 overflow-hidden">
+                  {product.images?.edges[0]?.node?.url ? (
+                    <img 
+                      src={product.images.edges[0].node.url} 
+                      alt={product.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-zinc-800 text-xs uppercase tracking-widest">Sem Imagem</div>
+                  )}
+                </div>
+                
+                <h2 className="font-serif text-xl mb-2 text-white">{product.title}</h2>
+                
+                {/* PREÇO COM SEGURANÇA TOTAL (Evita o erro priceRange) */}
+                <p className="text-[#C5A059] font-bold text-lg mb-6">
+                  {product.priceRange?.minVariantPrice?.amount 
+                    ? `${Number(product.priceRange.minVariantPrice.amount).toLocaleString('pt-PT')} €`
+                    : "Preço sob consulta"}
+                </p>
 
-      {/* PRODUTOS / CAVALOS */}
-      <section className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 pb-20">
-        {products.length > 0 ? (
-          products.map((product) => (
-            <div key={product.id} className="border border-zinc-900 p-6 hover:border-[#C5A059] transition-all">
-              <h3 className="font-serif text-xl">{product.title}</h3>
-              <Link href={`/cavalos/${product.handle}`} className="text-[#C5A059] text-[10px] uppercase mt-4 block">Ver Detalhes</Link>
-            </div>
-          ))
+                <Link 
+                  href={`/loja/${product.handle}`} 
+                  className="inline-block border border-zinc-800 px-8 py-3 text-[10px] uppercase tracking-[0.3em] hover:bg-[#C5A059] hover:text-black hover:border-[#C5A059] transition-all duration-300"
+                >
+                  Ver Detalhes
+                </Link>
+              </div>
+            ))}
+          </div>
         ) : (
-          <div className="col-span-3 text-center py-20 border border-dashed border-zinc-800">
-            <p className="text-zinc-600 font-serif italic">Catálogo temporariamente indisponível.</p>
+          <div className="text-center py-32 border border-zinc-900 bg-zinc-950/30">
+            <p className="text-zinc-500 font-serif italic text-xl mb-4">O catálogo está a ser sincronizado.</p>
+            <p className="text-[9px] text-zinc-700 uppercase tracking-widest">Ligação Headless em atualização</p>
           </div>
         )}
-      </section>
+      </div>
     </main>
   );
 }
