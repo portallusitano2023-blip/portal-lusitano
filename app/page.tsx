@@ -29,24 +29,28 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ d
   
   return (
     <main className="min-h-screen bg-black text-white pt-40 px-10 pb-20">
-      <header className="mb-24 border-b border-zinc-900 pb-10">
-        <p className="text-[#C5A059] text-[10px] uppercase font-bold mb-2 italic">Modo de Engenharia Ativo</p>
-        <h1 className="text-6xl font-serif italic">Lifestyle Collection</h1>
+      <header className="mb-16 border-b border-zinc-900 pb-8 flex items-end justify-between">
+        <div>
+            <h1 className="text-5xl font-serif italic">Lifestyle Collection</h1>
+        </div>
+        <p className="text-[#C5A059] text-[10px] uppercase font-bold mb-2 italic tracking-widest">Modo de Engenharia Ativo</p>
       </header>
 
       {products.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-32">
+        // GRELHA CORRIGIDA: 3 colunas e espaçamento equilibrado
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8">
           {products.map((p) => (
             <div key={p.id} className="group cursor-default">
-              <div className="aspect-[4/5] bg-zinc-950 overflow-hidden border border-zinc-900 group-hover:border-[#C5A059]/30 transition-all duration-1000">
+              {/* Imagem quadrada e mais pequena */}
+              <div className="aspect-square bg-zinc-950 overflow-hidden border border-zinc-900 group-hover:border-[#C5A059]/30 transition-all duration-1000">
                 <img 
                   src={p.images?.[0]?.url || p.images?.edges?.[0]?.node?.url} 
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" 
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-700" 
                 />
               </div>
-              <div className="mt-8 flex justify-between items-baseline border-b border-zinc-900 pb-4">
-                <h2 className="font-serif text-2xl italic">{p.title}</h2>
-                <p className="text-[#C5A059] font-serif text-xl">
+              <div className="mt-4 flex justify-between items-baseline border-b border-zinc-900 pb-3">
+                <h2 className="font-serif text-xl italic">{p.title}</h2>
+                <p className="text-[#C5A059] font-serif text-lg">
                   {Number(p.priceRange?.minVariantPrice?.amount || 0).toLocaleString('pt-PT')} €
                 </p>
               </div>
