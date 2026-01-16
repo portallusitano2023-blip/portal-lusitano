@@ -1,95 +1,40 @@
 // @ts-nocheck
-import { client } from "@/lib/client";
+import { getProducts } from "@/lib/shopify";
 import Link from "next/link";
-// CORREÇÃO: Apenas um nível ( ../ ) para sair de leiloes e entrar em components
-import Countdown from "../components/Countdown";
 
 export const dynamic = 'force-dynamic';
 
-async function getLeiloes() {
-  const query = `*[_type == "leilao" && ativo == true] | order(dataFecho asc) {
-    _id,
-    titulo,
-    lanceInicial,
-    dataFecho,
-    "cavaloNome": cavalo->nome,
-    "cavaloSlug": cavalo->slug.current,
-    "imagemUrl": cavalo->fotografiaPrincipal.asset->url,
-    "descricaoCavalo": cavalo->descricao
-  }`;
-  return client.fetch(query);
-}
-
-export default async function Leiloes() {
-  const leiloes = await getLeiloes();
+export default async function LeiloesPage() {
+  // Filtramos apenas os produtos que têm a tag 'leilao' ou 'cavalo'
+  const allProducts = await getProducts();
+  const auctions = allProducts || [];
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-200 pt-32 pb-20">
-      <div className="max-w-4xl mx-auto px-4 text-center">
+    <main className="min-h-screen bg-black text-white pt-32 px-6 pb-20">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-5xl font-serif italic mb-12 border-b border-zinc-900 pb-8">Leilões Ativos</h1>
         
-        <span className="text-yellow-600 tracking-widest uppercase text-sm font-bold mb-4 block">
-          Oportunidades Exclusivas
-        </span>
-        
-        <h1 className="text-5xl md:text-6xl font-serif text-white mb-8">
-          Leilões Ativos
-        </h1>
-        
-        <p className="text-xl text-zinc-400 mb-16 leading-relaxed">
-          Participe nos leilões mais prestigiados do mundo equestre. 
-          Licite em tempo real e adquira exemplares únicos da raça Lusitana.
-        </p>
-
-        <div className="space-y-8">
-          {leiloes.length === 0 ? (
-            <div className="py-20 border border-zinc-900 text-zinc-600">
-              Não existem leilões ativos de momento.
-            </div>
-          ) : (
-            leiloes.map((item) => (
-              <div key={item._id} className="bg-zinc-900 border border-zinc-800 p-8 md:p-12 relative overflow-hidden group hover:border-yellow-600 transition-all text-left">
-                  <div className="absolute top-0 right-0 bg-yellow-600 text-black font-bold px-6 py-2 text-sm uppercase tracking-wider">
-                      A Decorrer
-                  </div>
-                  
-                  <div className="flex flex-col md:flex-row gap-8 items-center">
-                      <div className="w-full md:w-1/2 h-64 bg-zinc-800 overflow-hidden">
-                          <img 
-                            src={item.imagemUrl} 
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                            alt={item.titulo} 
-                          />
-                      </div>
-                      <div className="w-full md:w-1/2">
-                          <h3 className="text-2xl font-serif text-white mb-2">{item.titulo}</h3>
-                          <p className="text-zinc-500 mb-6 line-clamp-2">
-                            {item.descricaoCavalo || `Leilão do exemplar ${item.cavaloNome}. Lance inicial de ${item.lanceInicial}€.`}
-                          </p>
-                          
-                          <div className="flex justify-between items-end border-t border-zinc-800 pt-6">
-                              <div>
-                                  <span className="block text-[10px] text-zinc-500 uppercase tracking-widest mb-2">Termina em:</span>
-                                  <Countdown targetDate={item.dataFecho} />
-                              </div>
-                              <Link href={`/cavalo/${item.cavaloSlug}`}>
-                                <button className="px-6 py-3 bg-white text-black font-bold uppercase text-[10px] tracking-widest hover:bg-yellow-600 transition-colors">
-                                    Entrar no Leilão
-                                </button>
-                              </Link>
-                          </div>
-                      </div>
-                  </div>
+        {auctions.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {auctions.map((item) => (
+              <div key={item.id} className="border border-zinc-900 p-6 hover:border-[#C5A059] transition-all">
+                <h2 className="font-serif text-xl mb-4">{item.title}</h2>
+                <p className="text-[#C5A059] font-bold mb-6">
+                  {item.priceRange?.minVariantPrice?.amount 
+                    ? `${Number(item.priceRange.minVariantPrice.amount).toLocaleString('pt-PT')} €`
+                    : "Sob Consulta"}
+                </p>
+                <Link href={`/leiloes/${item.handle}`} className="text-[10px] uppercase tracking-widest border border-zinc-800 px-6 py-2">
+                  Ver Proposta
+                </Link>
               </div>
-            ))
-          )}
-        </div>
-
-        <div className="mt-12">
-            <Link href="/" className="text-zinc-500 hover:text-white transition-colors border-b border-zinc-800 hover:border-white pb-1">
-                Voltar à Página Inicial
-            </Link>
-        </div>
-
+            ))}
+          </div>
+        ) : (
+          <div className="py-20 text-center border border-zinc-900">
+            <p className="text-zinc-500 font-serif italic text-lg">Sincronizando leilões com o Shopify...</p>
+          </div>
+        )}
       </div>
     </main>
   );
