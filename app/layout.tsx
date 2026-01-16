@@ -2,7 +2,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-// ENGENHARIA SEO: Substitui a frase antiga e bloqueia o Google
 export const metadata: Metadata = {
   title: "Portal Lusitano",
   description: "Acesso Privado", 
@@ -18,11 +17,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt">
       <body className="bg-black antialiased selection:bg-[#C5A059] selection:text-black">
