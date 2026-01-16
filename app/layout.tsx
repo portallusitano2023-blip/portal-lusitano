@@ -2,10 +2,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+// ENGENHARIA SEO: Bloqueia o site no Google imediatamente
 export const metadata: Metadata = {
   title: "Portal Lusitano | Private Access",
   description: "Mercado de Elite do Cavalo Lusitano",
-  // ENGENHARIA SEO: Bloqueia o site no Google imediatamente
   robots: {
     index: false,
     follow: false,
