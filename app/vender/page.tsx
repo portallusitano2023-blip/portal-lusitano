@@ -2,12 +2,18 @@
 "use client";
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// Nova forma de criar o cliente no browser (Client Component)
+import { createBrowserClient } from "@supabase/ssr"; 
 
 export default function VenderPage() {
   const [file, setFile] = useState(null);
   const [status, setStatus] = useState("");
-  const supabase = createClientComponentClient();
+
+  // Inicializa o cliente usando as variáveis de ambiente que já tens
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   async function handleSubmit(e) {
     e.preventDefault();
