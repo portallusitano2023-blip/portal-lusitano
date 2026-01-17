@@ -1,44 +1,57 @@
 // @ts-nocheck
 import { supabase } from "@/lib/supabase";
+import Navbar from "@/components/Navbar";
+import Link from "next/link";
 
-// Dentro da tua função DetalheCavaloPage, busca os depoimentos:
-const { data: depoimentos } = await supabase
-  .from('depoimentos_cavalos')
-  .select('*')
-  .eq('cavalo_id', id)
-  .eq('status', 'aprovado');
+// Em Next.js 15/16, params e searchParams são Promises
+export default async function DetalheCavaloPage({ params, searchParams }) {
+  // PASSO DE ENGENHARIA: Precisas de fazer await dos params para extrair o id
+  const resolvedParams = await params;
+  const id = resolvedParams?.id; 
 
-// No final do ficheiro (antes do fecho do main), adiciona este código:
-<section className="max-w-7xl mx-auto px-6 mt-32 border-t border-zinc-900 pt-24">
-  <div className="text-center mb-16">
-    <span className="text-[#C5A059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Credibilidade</span>
-    <h2 className="text-4xl font-serif italic">Depoimentos de Especialistas</h2>
-  </div>
+  const sParams = await searchParams;
+  const isDev = sParams?.dev === "true";
 
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24">
-    {depoimentos?.map((d) => (
-      <div key={d.id} className="bg-zinc-950/30 p-10 border-l border-[#C5A059]/30">
-        <p className="text-zinc-400 font-serif italic text-lg mb-8 leading-relaxed">"{d.mensagem}"</p>
-        <div>
-          <p className="text-white font-bold uppercase tracking-widest text-xs">{d.autor_nome}</p>
-          <p className="text-[#C5A059] text-[9px] uppercase mt-1 italic">{d.autor_cargo}</p>
+  // Verificação de segurança: se o id não existir, o build não rebenta
+  if (!id) return null;
+
+  // Busca os dados do cavalo específico no Supabase
+  const { data: cavalo } = await supabase
+    .from('cavalos_venda')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (!cavalo) {
+    return (
+      <main className="min-h-screen bg-black flex items-center justify-center text-white font-serif italic">
+        Exemplar não encontrado ou indisponível.
+      </main>
+    );
+  }
+
+  return (
+    <>
+      <Navbar dev={isDev} />
+      <main className="min-h-screen bg-black text-white pt-40 pb-20 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20">
+          <div className="relative aspect-square border border-zinc-900 bg-zinc-950">
+            {cavalo.image_url && (
+              <img src={cavalo.image_url} alt={cavalo.nome_cavalo} className="w-full h-full object-cover" />
+            )}
+          </div>
+          <div className="flex flex-col justify-center">
+            <h1 className="text-7xl font-serif italic mb-6">{cavalo.nome_cavalo}</h1>
+            <p className="text-[#C5A059] text-4xl font-serif mb-10">
+              {Number(cavalo.preco).toLocaleString('pt-PT')} €
+            </p>
+            <div className="border-t border-zinc-900 pt-10 space-y-4">
+              <p className="uppercase tracking-widest text-xs text-zinc-500">Linhagem: <span className="text-white ml-2">{cavalo.linhagem}</span></p>
+              <p className="uppercase tracking-widest text-xs text-zinc-500">Estado: <span className="text-[#C5A059] ml-2">{cavalo.status}</span></p>
+            </div>
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
-
-  {/* FORMULÁRIO DE TESTEMUNHO DISCRETO */}
-  <div className="max-w-2xl mx-auto bg-zinc-950/20 p-12 border border-zinc-900">
-    <h3 className="text-center font-serif italic text-xl mb-10 text-zinc-300">Deixar Testemunho sobre o Exemplar</h3>
-    <form className="space-y-6">
-      <div className="grid grid-cols-2 gap-6">
-        <input placeholder="Nome Completo" className="bg-transparent border-b border-zinc-800 p-3 outline-none focus:border-[#C5A059] text-sm transition-all" />
-        <input placeholder="Cargo / Relação (Ex: Treinador)" className="bg-transparent border-b border-zinc-800 p-3 outline-none focus:border-[#C5A059] text-sm transition-all" />
-      </div>
-      <textarea placeholder="A sua análise técnica sobre este cavalo..." rows={4} className="w-full bg-transparent border-b border-zinc-800 p-3 outline-none focus:border-[#C5A059] text-sm transition-all" />
-      <button className="w-full border border-[#C5A059]/40 text-[#C5A059] py-4 text-[9px] uppercase font-bold tracking-[0.3em] hover:bg-[#C5A059] hover:text-black transition-all duration-700">
-        Submeter para Validação
-      </button>
-    </form>
-  </div>
-</section>
+      </main>
+    </>
+  );
+}
