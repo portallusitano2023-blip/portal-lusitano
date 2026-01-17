@@ -1,67 +1,37 @@
 // @ts-nocheck
-import { getProducts } from "@/lib/shopify";
+import Navbar from "@/components/Navbar";
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ dev?: string }> }) {
+export default async function HomePage({ searchParams }) {
   const sParams = await searchParams;
   const isDev = sParams?.dev === "true";
 
   if (!isDev) {
-    // LAYOUT DE MANUTENÇÃO (O que o mundo vê)
     return (
-      <main className="min-h-screen bg-black flex flex-col items-center justify-center text-white px-6">
-        <div className="text-center">
-          <span className="text-[#C5A059] uppercase tracking-[0.8em] text-[10px] font-bold block mb-8">
-            Portal Lusitano
-          </span>
-          <h1 className="text-5xl font-serif italic mb-8">The Future of Elite</h1>
-          <div className="w-16 h-[1px] bg-[#C5A059] mx-auto mb-12 opacity-40"></div>
-          <p className="text-zinc-500 font-light tracking-[0.4em] text-[9px] uppercase">
-            Private Preview — Opening 2026
-          </p>
-        </div>
+      <main className="min-h-screen bg-black flex flex-col items-center justify-center text-white p-6">
+        <span className="text-[#C5A059] uppercase tracking-[0.8em] text-[10px] font-bold mb-8 animate-pulse">Portal Lusitano</span>
+        <h1 className="text-4xl md:text-6xl font-serif italic mb-8">The Future of Elite</h1>
+        <p className="text-zinc-500 font-light tracking-[0.4em] text-[9px] uppercase">Private Preview — 2026</p>
       </main>
     );
   }
 
-  // ÁREA DE TRABALHO DO FRANCISCO (Só tu vês com ?dev=true)
-  // Filtramos pela tag 'loja' que acabaste de criar
-  const products = await getProducts("loja");
-  
   return (
-    <main className="min-h-screen bg-black text-white pt-40 px-10 pb-20">
-      <header className="mb-16 border-b border-zinc-900 pb-8 flex items-end justify-between">
-        <div>
-            <h1 className="text-5xl font-serif italic">Lifestyle Collection</h1>
+    <>
+      <Navbar dev={true} />
+      <main className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Imagem de Fundo de Luxo */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=2071')] bg-cover bg-center opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
+        
+        <div className="relative z-10 text-center px-6">
+          <span className="text-[#C5A059] uppercase tracking-[0.6em] text-[12px] font-bold block mb-6">Bem-vindo ao</span>
+          <h1 className="text-7xl md:text-9xl font-serif italic tracking-tighter mb-12">Portal Lusitano</h1>
+          <div className="flex gap-6 justify-center">
+            <Link href="/leiloes?dev=true" className="bg-[#C5A059] text-black px-12 py-4 text-[10px] uppercase font-bold tracking-widest hover:bg-white transition-all">Ver Leilões</Link>
+            <Link href="/loja?dev=true" className="border border-white/20 px-12 py-4 text-[10px] uppercase font-bold tracking-widest hover:bg-white hover:text-black transition-all">Explorar Loja</Link>
+          </div>
         </div>
-        <p className="text-[#C5A059] text-[10px] uppercase font-bold mb-2 italic tracking-widest">Modo de Engenharia Ativo</p>
-      </header>
-
-      {products.length > 0 ? (
-        // GRELHA CORRIGIDA: 3 colunas e espaçamento equilibrado
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8">
-          {products.map((p) => (
-            <div key={p.id} className="group cursor-default">
-              {/* Imagem quadrada e mais pequena */}
-              <div className="aspect-square bg-zinc-950 overflow-hidden border border-zinc-900 group-hover:border-[#C5A059]/30 transition-all duration-1000">
-                <img 
-                  src={p.images?.[0]?.url || p.images?.edges?.[0]?.node?.url} 
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-700" 
-                />
-              </div>
-              <div className="mt-4 flex justify-between items-baseline border-b border-zinc-900 pb-3">
-                <h2 className="font-serif text-xl italic">{p.title}</h2>
-                <p className="text-[#C5A059] font-serif text-lg">
-                  {Number(p.priceRange?.minVariantPrice?.amount || 0).toLocaleString('pt-PT')} €
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-40 border border-zinc-900 bg-zinc-950/20">
-          <p className="text-zinc-500 italic">Nenhum produto com a tag "loja" encontrado.</p>
-        </div>
-      )}
-    </main>
+      </main>
+    </>
   );
 }

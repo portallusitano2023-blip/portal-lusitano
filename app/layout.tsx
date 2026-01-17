@@ -1,27 +1,18 @@
 // @ts-nocheck
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from "@/components/Navbar"; // Vamos criar este componente abaixo
 
-// ENGENHARIA SEO: Remove a descrição e bloqueia o Google
 export const metadata: Metadata = {
-  title: "Portal Lusitano",
-  description: "Acesso Privado", 
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-    googleBot: {
-      index: false,
-      follow: false,
-      noimageindex: true,
-    },
-  },
+  title: "Portal Lusitano | Private Access",
+  robots: { index: false, follow: false }, // Bloqueio total de Google
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt">
-      <body className="bg-black antialiased selection:bg-[#C5A059] selection:text-black">
+      <body className="bg-black text-white antialiased">
+        {/* A Navbar só deve aparecer no site real, trataremos isso nas páginas */}
         {children}
       </body>
     </html>
