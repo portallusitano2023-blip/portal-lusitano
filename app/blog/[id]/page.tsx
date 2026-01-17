@@ -2,7 +2,7 @@
 import { client } from "@/lib/client";
 import { PortableText } from "@portabletext/react";
 // DOIS níveis para cima para achar a pasta components a partir de [id]
-import Newsletter from "../../components/Newsletter";
+import Newsletter from "../../../components/Newsletter";
 
 export default async function BlogPost({ params }) {
   const { id } = await params;

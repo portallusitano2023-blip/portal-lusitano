@@ -3,8 +3,8 @@
 
 import { client } from "@/lib/client";
 import { useEffect, useState } from "react";
-import Countdown from "../../components/Countdown";
-import BiddingForm from "../../components/BiddingForm";
+import Countdown from "../../../components/Countdown";
+import BiddingForm from "../../../components/BiddingForm";
 import Link from "next/link";
 
 export default function CavaloPage({ params }) {

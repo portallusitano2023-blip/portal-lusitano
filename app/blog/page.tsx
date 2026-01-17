@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { client } from "@/lib/client";
 import Link from "next/link";
-import Newsletter from "../components/Newsletter";
+import Newsletter from "../../components/Newsletter";
 export const dynamic = 'force-dynamic';
 
 export default async function BlogListPage() {
