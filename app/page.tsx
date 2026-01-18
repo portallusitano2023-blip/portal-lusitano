@@ -2,9 +2,10 @@
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 
-export default function Home({ searchParams }) {
-  // Verificação de modo dev para consistência
-  const isDev = searchParams?.dev === "true";
+export default async function Home({ searchParams }) {
+  // Await é necessário em Next.js 15+ para searchParams
+  const sParams = await searchParams;
+  const isDev = sParams?.dev === "true";
   const query = isDev ? "?dev=true" : "";
 
   return (
@@ -164,24 +165,6 @@ export default function Home({ searchParams }) {
         </footer>
 
       </main>
-      
-      {/* Animações CSS */}
-      <style jsx global>{`
-        @keyframes slow-zoom {
-          0% { transform: scale(1); }
-          100% { transform: scale(1.1); }
-        }
-        .animate-slow-zoom {
-          animation: slow-zoom 20s linear infinite alternate;
-        }
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-      `}</style>
     </>
   );
 }
