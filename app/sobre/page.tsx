@@ -11,79 +11,64 @@ export default async function SobrePage({ searchParams }) {
       <main className="min-h-screen bg-black text-white pt-48 pb-40 selection:bg-[#C5A059] selection:text-black">
         <div className="max-w-6xl mx-auto px-6">
           
-          {/* INTRODUÇÃO: O CAVALO DE SELA MAIS ANTIGO DO MUNDO */}
-          <header className="mb-40 border-l-2 border-[#C5A059] pl-12">
-            <span className="text-[#C5A059] uppercase tracking-[0.8em] text-[10px] font-bold block mb-6">Tratado de Excelência</span>
-            <h1 className="text-6xl md:text-9xl font-serif italic tracking-tighter leading-none mb-12">
-              Puro Sangue <br /> <span className="text-[#C5A059]">Lusitano</span>
+          <header className="mb-40">
+            <span className="text-[#C5A059] uppercase tracking-[1em] text-[10px] font-bold block mb-8">Tratado de Morfologia e Funcionalidade</span>
+            <h1 className="text-7xl md:text-9xl font-serif italic tracking-tighter leading-none mb-16">
+              A Excelência <br /> <span className="text-[#C5A059]">Morfométrica</span>
             </h1>
-            <p className="max-w-3xl text-zinc-400 text-xl font-light leading-relaxed italic">
-              "O Lusitano não se explica pela força, mas pela harmonia de tensões e pela inteligência de resposta."
-            </p>
           </header>
 
-          {/* SECÇÃO TÉCNICA 1: MORFOLOGIA E BIOMECÂNICA */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-24 mb-48">
+          {/* ANÁLISE PROFUNDA: CABEÇA E PESCOÇO */}
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-24 mb-48 border-t border-zinc-900 pt-20">
             <div className="space-y-12">
-              <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold">I. Precisão Morfométrica</h2>
-              <div className="space-y-6 text-zinc-300 font-light leading-relaxed text-lg">
+              <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold italic">Capítulo I: A Nobreza do Perfil</h2>
+              <div className="space-y-8 text-zinc-300 font-light leading-relaxed text-lg">
                 <p>
-                  O standard do PSL define um cavalo de sela de peso médio, com um perfil **sub-convexo** (traço de nobreza ancestral) e formas arredondadas. A sua estrutura é inscrita num quadrado, garantindo uma agilidade biomecânica superior.
+                  A cabeça do Lusitano é o seu principal distintivo de raça. O perfil **sub-convexo** (traço andaluz-árabe) deve apresentar uma fronte larga e orelhas finas, expressivas e paralelas.
                 </p>
-                <ul className="space-y-4 border-t border-zinc-900 pt-8">
-                  <li className="flex justify-between border-b border-zinc-900/50 pb-2">
-                    <span className="text-zinc-500 uppercase text-[10px] tracking-widest">Pescoço</span>
-                    <span className="italic font-serif">De comprimento médio, em forma de cisne</span>
-                  </li>
-                  <li className="flex justify-between border-b border-zinc-900/50 pb-2">
-                    <span className="text-zinc-500 uppercase text-[10px] tracking-widest">Dorso-Lombo</span>
-                    <span className="italic font-serif">Curto, largo e ligeiramente convexo</span>
-                  </li>
-                  <li className="flex justify-between border-b border-zinc-900/50 pb-2">
-                    <span className="text-zinc-500 uppercase text-[10px] tracking-widest">Membros</span>
-                    <span className="italic font-serif">Canelas curtas e jarretes fortes</span>
-                  </li>
-                </ul>
+                <div className="p-8 bg-zinc-950 border border-zinc-900 rounded-sm">
+                  <h4 className="text-white font-serif italic mb-4">A Angulação Craneana</h4>
+                  <p className="text-sm text-zinc-500">
+                    Matematicamente, a beleza do perfil é ditada pela harmonia entre a linha nasal e a arcada orbital. Em exemplares de elite, o ângulo de inserção da cabeça no pescoço permite uma flexão de nuca que facilita a **reunião** sem compressão das vias respiratórias.
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="bg-zinc-950 p-1 bg-[url('https://images.unsplash.com/photo-1599411993215-381c00223594?q=80&w=1974')] bg-cover bg-center grayscale opacity-40 hover:opacity-80 transition-all duration-[2s]">
-              {/* Espaço para imagem técnica de anatomia equestre */}
+            <div className="space-y-8">
+               <h3 className="font-serif text-3xl italic">Mecânica do Pescoço</h3>
+               <p className="text-zinc-400 font-light">O pescoço deve ser de comprimento médio, com crineira delgada e inserção estreita na cabeça, mas larga na base da espádua. Esta estrutura é o "balancé" natural do cavalo, permitindo a transferência de massa instantânea para os posteriores.</p>
+               <div className="bg-zinc-900/10 p-6 border-l-2 border-[#C5A059]">
+                 <p className="text-[#C5A059] font-mono text-xs uppercase tracking-tighter">Variável Técnica: Centro de Gravidade Longitudinal</p>
+                 <p className="text-2xl font-serif mt-2">$$ CG = \int_{0}^{L} x \cdot \rho(x) \, dx $$</p>
+               </div>
             </div>
           </section>
 
-          {/* SECÇÃO TÉCNICA 2: AS LINHAGENS FUNDAMENTAIS */}
-          <section className="mb-48 bg-zinc-950/20 p-16 border-y border-zinc-900">
-            <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold mb-20 text-center">II. A Genética da Aristocracia</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-              <div className="space-y-6 text-center">
-                <h3 className="font-serif italic text-3xl">Veiga</h3>
-                <p className="text-zinc-500 text-sm font-light">
-                  A linhagem do "Cavalo de Toureio". Conhecidos pela sua reatividade explosiva, coragem indómita e a morfologia típica de **Sorraia**.
+          {/* O SISTEMA DE LINHAGENS: ANÁLISE GENÉTICA */}
+          <section className="mb-48">
+            <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold mb-20 text-center">Capítulo II: O Legado das Bloodlines</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="border border-zinc-900 p-12 space-y-6 hover:bg-zinc-950/50 transition-all">
+                <h3 className="text-4xl font-serif italic text-[#C5A059]">Veiga (MV)</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed">
+                  A linhagem do "sangue vivo". Criados no Casal do Branco, os Veiga preservam o tipo mais primitivo e funcional para o toureio. São cavalos de formas arredondadas, garupa derribada e uma reatividade sináptica inigualável.
                 </p>
               </div>
-              <div className="space-y-6 text-center">
-                <h3 className="font-serif italic text-3xl">Andrade</h3>
-                <p className="text-zinc-500 text-sm font-light">
-                  Focada na funcionalidade desportiva. Cavalos mais altos, com andamentos mais largos, ideais para o **Dressage** e Equitação de Trabalho.
-                </p>
-              </div>
-              <div className="space-y-6 text-center">
-                <h3 className="font-serif italic text-3xl">Alter-Real</h3>
-                <p className="text-zinc-500 text-sm font-light">
-                  O Cavalo Real. Preserva a elegância da Escola Portuguesa de Arte Equestre, com foco na cadência e nos ares de escola.
+              <div className="border border-zinc-900 p-12 space-y-6 hover:bg-zinc-950/50 transition-all">
+                <h3 className="text-4xl font-serif italic text-[#C5A059]">Andrade (SA)</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed">
+                  A linhagem da estrutura e amplitude. Ruy d’Andrade selecionou animais com maior estatura (meso-dolicomorfos) e membros mais longos, resultando na base genética que hoje domina o Grand Prix internacional.
                 </p>
               </div>
             </div>
           </section>
 
-          {/* MANIFESTO DE ELEVAÇÃO GLOBAL */}
-          <section className="max-w-3xl mx-auto text-center space-y-16">
-            <h2 className="text-5xl font-serif italic">Elevar o Perfil Global</h2>
+          {/* O PSICOGRAMA: TEMPERAMENTO E INTELIGÊNCIA */}
+          <section className="mb-48 text-center max-w-4xl mx-auto space-y-12">
+            <h2 className="text-5xl font-serif italic">O Psicograma do Lusitano</h2>
             <p className="text-zinc-400 font-light text-xl leading-relaxed italic">
-              O **Portal Lusitano** não é apenas uma plataforma de transações. É um guardião do Stud-Book. O nosso propósito é projetar o perfil do PSL para os cinco continentes, garantindo que o mundo reconheça a versatilidade única deste cavalo: desde o Grand Prix de Dressage à bravura do Campo.
+              "Um cavalo dócil, mas ardente." A inteligência do Lusitano permite uma aprendizagem acelerada dos exercícios de Alta Escola. A sua generosidade sob pressão é o que o distingue de qualquer outra raça de sela no mundo.
             </p>
-            <div className="w-px h-32 bg-gradient-to-b from-[#C5A059] to-transparent mx-auto"></div>
-            <p className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold italic">Preservar. Valorizar. Expandir.</p>
           </section>
 
         </div>
