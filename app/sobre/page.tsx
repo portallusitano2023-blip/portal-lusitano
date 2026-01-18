@@ -1,6 +1,10 @@
 // @ts-nocheck
 import Navbar from "@/components/Navbar";
 
+// SOLUÇÃO DE ENGENHARIA: Declarar as fórmulas como strings constantes fora do componente
+const FORMULA_IMPULSAO = "$$ \\vec{F}_{res} = \\sum \\vec{F}_{post} \\cdot \\cos(\\theta) - \\mu \\cdot \\vec{N} $$";
+const FORMULA_EQUILIBRIO = "$$ \\Phi = \\frac{A+B}{A} \\approx 1.618 $$";
+
 export default async function SobrePage({ searchParams }) {
   const sParams = await searchParams;
   if (sParams?.dev !== "true") return null;
@@ -11,71 +15,83 @@ export default async function SobrePage({ searchParams }) {
       <main className="min-h-screen bg-black text-white pt-48 pb-60 selection:bg-[#C5A059] selection:text-black">
         <div className="max-w-7xl mx-auto px-6">
           
-          {/* CAMADA I: A GÉNESE DO MITO (O Início Simples) */}
-          <header className="mb-64">
-            <span className="text-[#C5A059] uppercase tracking-[1.5em] text-[10px] font-bold block mb-12 italic text-center">I. A Gesta do Cavalo de Reis</span>
-            <h1 className="text-7xl md:text-[14rem] font-serif italic tracking-tighter leading-none mb-20 text-center">
-              Puro Sangue <br /> <span className="text-[#C5A059]">Lusitano</span>
+          {/* FASE 1: A GÉNISE (O SIMPLES) */}
+          <header className="mb-64 border-b border-zinc-900 pb-20">
+            <span className="text-[#C5A059] uppercase tracking-[1.5em] text-[9px] font-bold block mb-10 italic">I. Da Poeira dos Milénios</span>
+            <h1 className="text-8xl md:text-[14rem] font-serif italic tracking-tighter leading-none mb-20">
+              O Mito <br /> <span className="text-[#C5A059]">Vivo</span>
             </h1>
-            <p className="max-w-4xl mx-auto text-zinc-500 text-2xl font-light leading-relaxed italic text-center">
-              "Um legado de cinco milénios que moldou a alma de Portugal, unindo a força do cavalo de guerra à elegância da corte." [cite: 2026-01-18]
+            <p className="max-w-4xl text-zinc-500 text-2xl font-light leading-relaxed italic">
+              "O Cavalo Lusitano é a ponte entre o mundo antigo e a equitação do futuro. Uma simbiose perfeita entre a coragem indómita e a inteligência de corte."
             </p>
-            <div className="w-px h-40 bg-gradient-to-b from-[#C5A059] to-transparent mx-auto mt-20"></div>
           </header>
 
-          {/* CAMADA II: AS QUATRO LINHAGENS FUNDAMENTAIS (A Base Técnica) */}
-          <section className="mb-64 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1px bg-zinc-900 border border-zinc-900">
-            {[
-              { t: "Veiga (MV)", d: "O expoente da reatividade sináptica. Criado para o toureio, apresenta o perfil sub-convexo mais pronunciado e uma agilidade felina indómita." },
-              { t: "Andrade (SA)", d: "A base da funcionalidade desportiva. Cavalos de alçada superior e andamentos elásticos, fundamentais para a Dressage internacional." },
-              { t: "Alter-Real (AR)", d: "A aristocracia da Alta Escola. Fundada em 1748, preserva a cadência majestosa e a baía castanha da Corte Portuguesa." },
-              { t: "C. Nacional (CN)", d: "O guardião do equilíbrio morfológico. Repositório genético que garante a homogeneidade e a pureza do standard oficial." }
-            ].map((l, i) => (
-              <div key={i} className="bg-black p-12 space-y-6">
-                <h3 className="text-[#C5A059] font-serif italic text-2xl">{l.t}</h3>
-                <p className="text-zinc-500 text-sm font-light leading-relaxed">{l.d} [cite: 2026-01-16, 2026-01-18]</p>
+          {/* FASE 2: AS QUATRO LINHAGENS (CONHECIMENTO BASE) */}
+          <section className="mb-64">
+            <h2 className="text-[#C5A059] uppercase tracking-[0.8em] text-xs font-bold mb-24 text-center">II. As Fontes do Sangue Real</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-zinc-900 border border-zinc-900">
+              <div className="bg-black p-16 space-y-8">
+                <h3 className="text-4xl font-serif italic text-white">Veiga (MV)</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed font-light">
+                  A linhagem do fogo. Selecionada para a reatividade explosiva no toureio, apresenta o perfil sub-convexo mais puro e uma biomecânica de pivots instantâneos.
+                </p>
               </div>
-            ))}
+              <div className="bg-black p-16 space-y-8">
+                <h3 className="text-4xl font-serif italic text-white">Andrade (SA)</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed font-light">
+                  A linhagem da funcionalidade. Cavalos de alçada superior e andamentos elásticos, fundamentais para a projeção do Lusitano no Grand Prix de Dressage internacional.
+                </p>
+              </div>
+              <div className="bg-black p-16 space-y-8">
+                <h3 className="text-4xl font-serif italic text-white">Alter-Real (AR)</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed font-light">
+                  A aristocracia preservada. Fundada em 1748, mantém a cadência majestosa e a elegância rítmica da Escola Portuguesa de Arte Equestre.
+                </p>
+              </div>
+              <div className="bg-black p-16 space-y-8">
+                <h3 className="text-4xl font-serif italic text-white">C. Nacional (CN)</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed font-light">
+                  O fiel da balança. O repositório genético que garante a homogeneidade e a pureza morfológica do Stud-Book oficial.
+                </p>
+              </div>
+            </div>
           </section>
 
-          {/* CAMADA III: TRATADO DE HIPOMETRIA AVANÇADA (A Complexidade Máxima) */}
+          {/* FASE 3: COMPLEXIDADE MÁXIMA (A CIÊNCIA) */}
           <section className="mb-64 space-y-32">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-40 items-center">
               <div className="space-y-16">
-                <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold border-l-4 border-[#C5A059] pl-10">III. Antropometria e Biomecânica Vectorial</h2>
-                <div className="space-y-8 text-zinc-300 font-light leading-relaxed text-xl">
+                <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold border-l-4 border-[#C5A059] pl-10">III. Antropometria e Vectores de Reunião</h2>
+                <div className="space-y-10 text-zinc-300 font-light leading-relaxed text-2xl">
                   <p>
-                    Analisamos a **Equação de Impulsão Longitudinal**, onde a resultante das forças nos posteriores ($\vec{F}$) é convertida em elevação através do ângulo de engajamento ($\theta$). [cite: 2026-01-18]
+                    Analisamos a **Equação de Impulsão Dinâmica**, onde a resultante das forças nos posteriores é transposta para a elevação vertical do terço anterior.
                   </p>
-                  {/* FIX: Fórmulas envoltas em strings para evitar ReferenceError */}
                   <div className="p-12 bg-zinc-950 border border-zinc-900 font-serif text-[#C5A059] shadow-2xl">
-                    <p className="text-[10px] uppercase tracking-widest mb-8 opacity-60">Resultante de Forças de Reunião</p>
-                    <p className="text-3xl">
-                      {"$$ \\vec{F}_{res} = \\sum \\vec{F}_{post} \\cdot \\cos(\\theta) - \\mu \\cdot \\vec{N} $$"}
-                    </p>
+                    <p className="text-[10px] uppercase tracking-widest mb-8 opacity-60">Resultante de Força de Reunião</p>
+                    <p className="text-3xl">{FORMULA_IMPULSAO}</p>
                   </div>
                 </div>
               </div>
-              <div className="space-y-12 border-l border-zinc-900 pl-20">
-                <h3 className="text-4xl font-serif italic">O Índice Cefálico e o Perfil</h3>
-                <p className="text-zinc-500 font-light leading-relaxed text-lg italic">
-                  "O perfil sub-convexo do Lusitano facilita a flexão cervical de nuca, reduzindo a tensão no ligamento nucal e permitindo a leveza absoluta." [cite: 2026-01-18]
+              <div className="space-y-12">
+                <h3 className="text-5xl font-serif italic">A Geometria de Phi ($\Phi$)</h3>
+                <p className="text-zinc-400 font-light text-xl leading-relaxed">
+                  O Lusitano é o único cavalo que se inscreve num quadrado perfeito. Esta proporção áurea permite que o centro de gravidade se desloque sem perda de balanço.
                 </p>
-                <div className="grid grid-cols-2 gap-8 text-[9px] uppercase tracking-widest text-zinc-600 font-bold">
-                  <div className="border border-zinc-900 p-6">Ângulo Escápulo-Humeral: 60º-65º</div>
-                  <div className="border border-zinc-900 p-6">Ângulo Coxo-Femoral: 90º</div>
+                <div className="p-8 border border-zinc-900 text-white italic text-center text-3xl">
+                   {FORMULA_EQUILIBRIO}
                 </div>
               </div>
             </div>
           </section>
 
-          {/* CAMADA IV: A SINGULARIDADE PORTAL LUSITANO (O Nunca Visto) */}
+          {/* FASE 4: O NUNCA VISTO (A VISÃO PORTAL LUSITANO) */}
           <section className="py-60 text-center space-y-20 border-t border-zinc-900">
-            <h2 className="text-6xl md:text-8xl font-serif italic">Onde o Sangue encontra o <span className="text-[#C5A059]">Dígito</span>.</h2>
+            <span className="text-[#C5A059] uppercase tracking-[1em] text-[10px] font-bold block mb-12">IV. A Singularidade Portal Lusitano</span>
+            <h2 className="text-7xl md:text-9xl font-serif italic leading-tight">Sangue <br /> & <span className="text-[#C5A059]">Algoritmo</span></h2>
             <p className="max-w-4xl mx-auto text-zinc-400 text-xl font-light italic leading-loose">
-              "O Portal Lusitano não é um marketplace. É a primeira plataforma de inteligência equestre do mundo que utiliza análise biométrica e algoritmos de nobreza para projetar o Lusitano ao topo da exclusividade global." [cite: 2026-01-15, 2026-01-18]
+              "Não estamos a construir um marketplace. Estamos a construir o primeiro repositório de Inteligência Hipológica Global. Onde a tradição milenar das coudelarias encontra a precisão analítica do século XXI."
             </p>
-            <div className="w-px h-40 bg-gradient-to-b from-[#C5A059] to-transparent mx-auto"></div>
+            <div className="w-px h-60 bg-gradient-to-b from-[#C5A059] to-transparent mx-auto"></div>
           </section>
 
         </div>
