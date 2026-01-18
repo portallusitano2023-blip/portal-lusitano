@@ -8,84 +8,77 @@ export default async function SobrePage({ searchParams }) {
   return (
     <>
       <Navbar dev={true} />
-      <main className="min-h-screen bg-black text-white selection:bg-[#C5A059] selection:text-black">
-        
-        {/* CAMADA 1: A GÉNERO (O Início Simples) */}
-        <section className="pt-60 pb-40 px-6 max-w-7xl mx-auto border-b border-zinc-900">
-          <div className="max-w-4xl">
-            <span className="text-[#C5A059] uppercase tracking-[1em] text-[10px] font-bold block mb-12">I. A Origem do Guerreiro</span>
-            <h2 className="text-7xl md:text-9xl font-serif italic tracking-tighter mb-16">Do Sorraia ao <span className="text-[#C5A059]">Puro Sangue</span></h2>
-            <p className="text-zinc-400 text-2xl font-light leading-relaxed italic">
-              "Há cinco mil anos, nas planícies da Península Ibérica, o cavalo Lusitano começou a moldar a história da humanidade. O que começou como um parceiro de sobrevivência, tornou-se o cavalo de reis e conquistadores." [cite: 2026-01-18]
+      <main className="min-h-screen bg-black text-white pt-48 pb-60 selection:bg-[#C5A059] selection:text-black">
+        <div className="max-w-7xl mx-auto px-6">
+          
+          {/* CAMADA I: A GÉNESE DO MITO (O Início Simples) */}
+          <header className="mb-64">
+            <span className="text-[#C5A059] uppercase tracking-[1.5em] text-[10px] font-bold block mb-12 italic text-center">I. A Gesta do Cavalo de Reis</span>
+            <h1 className="text-7xl md:text-[14rem] font-serif italic tracking-tighter leading-none mb-20 text-center">
+              Puro Sangue <br /> <span className="text-[#C5A059]">Lusitano</span>
+            </h1>
+            <p className="max-w-4xl mx-auto text-zinc-500 text-2xl font-light leading-relaxed italic text-center">
+              "Um legado de cinco milénios que moldou a alma de Portugal, unindo a força do cavalo de guerra à elegância da corte." [cite: 2026-01-18]
             </p>
-          </div>
-        </section>
+            <div className="w-px h-40 bg-gradient-to-b from-[#C5A059] to-transparent mx-auto mt-20"></div>
+          </header>
 
-        {/* CAMADA 2: AS ESTIRPES (A Base Genética) */}
-        <section className="py-40 px-6 max-w-7xl mx-auto border-b border-zinc-900">
-          <span className="text-[#C5A059] uppercase tracking-[1em] text-[10px] font-bold block mb-24 text-center">II. As Quatro Colunas da Raça</span>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-            <div className="space-y-6">
-              <h3 className="text-3xl font-serif italic text-[#C5A059]">Veiga (MV)</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">O expoente do fogo. Criado para o toureio, o Veiga é a reatividade pura. Uma linhagem compacta, felina e de uma coragem que desafia a razão. [cite: 2026-01-18]</p>
-            </div>
-            <div className="space-y-6">
-              <h3 className="text-3xl font-serif italic text-[#C5A059]">Andrade (SA)</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">A força do desporto moderno. Cavalos de maior alçada e andamentos largos. É o motor genético que colocou o Lusitano no Grand Prix de Dressage. [cite: 2026-01-18]</p>
-            </div>
-            <div className="space-y-6">
-              <h3 className="text-3xl font-serif italic text-[#C5A059]">Alter-Real (AR)</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">A aristocracia. Fundada pela coroa portuguesa em 1748, preserva a arte da Alta Escola e a cadência majestosa dos ares de escola. [cite: 2026-01-18]</p>
-            </div>
-            <div className="space-y-6">
-              <h3 className="text-3xl font-serif italic text-[#C5A059]">C. Nacional (CN)</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">O padrão. O fiel da balança que garante a preservação do Stud-Book e a harmonia morfológica que une todas as linhagens. [cite: 2026-01-18]</p>
-            </div>
-          </div>
-        </section>
+          {/* CAMADA II: AS QUATRO LINHAGENS FUNDAMENTAIS (A Base Técnica) */}
+          <section className="mb-64 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1px bg-zinc-900 border border-zinc-900">
+            {[
+              { t: "Veiga (MV)", d: "O expoente da reatividade sináptica. Criado para o toureio, apresenta o perfil sub-convexo mais pronunciado e uma agilidade felina indómita." },
+              { t: "Andrade (SA)", d: "A base da funcionalidade desportiva. Cavalos de alçada superior e andamentos elásticos, fundamentais para a Dressage internacional." },
+              { t: "Alter-Real (AR)", d: "A aristocracia da Alta Escola. Fundada em 1748, preserva a cadência majestosa e a baía castanha da Corte Portuguesa." },
+              { t: "C. Nacional (CN)", d: "O guardião do equilíbrio morfológico. Repositório genético que garante a homogeneidade e a pureza do standard oficial." }
+            ].map((l, i) => (
+              <div key={i} className="bg-black p-12 space-y-6">
+                <h3 className="text-[#C5A059] font-serif italic text-2xl">{l.t}</h3>
+                <p className="text-zinc-500 text-sm font-light leading-relaxed">{l.d} [cite: 2026-01-16, 2026-01-18]</p>
+              </div>
+            ))}
+          </section>
 
-        {/* CAMADA 3: A CIÊNCIA (Complexidade Técnica) */}
-        <section className="py-40 px-6 max-w-7xl mx-auto border-b border-zinc-900 bg-zinc-950/20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-32">
-            <div className="space-y-16">
-              <span className="text-[#C5A059] uppercase tracking-[1em] text-[10px] font-bold block">III. Tratado de Biomecânica</span>
-              <h2 className="text-5xl font-serif italic">A Geometria da Reunião</h2>
-              <div className="space-y-8 text-zinc-400 font-light text-lg">
-                <p>O Lusitano é o único cavalo do mundo cuja morfologia se inscreve num quadrado perfeito ($\Phi$), permitindo uma articulação de nuca e jarrete que anula a força centrífuga. [cite: 2026-01-18]</p>
-                
-                {/* COMPLEXIDADE MATEMÁTICA */}
-                <div className="p-12 border border-zinc-900 bg-black space-y-8">
-                  <p className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold">Cálculo de Impulsão Longitudinal</p>
-                  <p className="text-4xl text-white font-serif">
-                    $$ \vec{F}_{res} = \sum \vec{F}_{posteriores} \cdot \cos(\theta) - \mu \cdot \vec{N} $$
+          {/* CAMADA III: TRATADO DE HIPOMETRIA AVANÇADA (A Complexidade Máxima) */}
+          <section className="mb-64 space-y-32">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
+              <div className="space-y-16">
+                <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold border-l-4 border-[#C5A059] pl-10">III. Antropometria e Biomecânica Vectorial</h2>
+                <div className="space-y-8 text-zinc-300 font-light leading-relaxed text-xl">
+                  <p>
+                    Analisamos a **Equação de Impulsão Longitudinal**, onde a resultante das forças nos posteriores ($\vec{F}$) é convertida em elevação através do ângulo de engajamento ($\theta$). [cite: 2026-01-18]
                   </p>
-                  <p className="text-xs text-zinc-600">Onde $\theta$ representa o ângulo de engajamento do jarrete sob o centro de gravidade. No PSL, este valor atinge a eficiência máxima na transição para o Piaffe. [cite: 2026-01-18]</p>
+                  {/* FIX: Fórmulas envoltas em strings para evitar ReferenceError */}
+                  <div className="p-12 bg-zinc-950 border border-zinc-900 font-serif text-[#C5A059] shadow-2xl">
+                    <p className="text-[10px] uppercase tracking-widest mb-8 opacity-60">Resultante de Forças de Reunião</p>
+                    <p className="text-3xl">
+                      {"$$ \\vec{F}_{res} = \\sum \\vec{F}_{post} \\cdot \\cos(\\theta) - \\mu \\cdot \\vec{N} $$"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-12 border-l border-zinc-900 pl-20">
+                <h3 className="text-4xl font-serif italic">O Índice Cefálico e o Perfil</h3>
+                <p className="text-zinc-500 font-light leading-relaxed text-lg italic">
+                  "O perfil sub-convexo do Lusitano facilita a flexão cervical de nuca, reduzindo a tensão no ligamento nucal e permitindo a leveza absoluta." [cite: 2026-01-18]
+                </p>
+                <div className="grid grid-cols-2 gap-8 text-[9px] uppercase tracking-widest text-zinc-600 font-bold">
+                  <div className="border border-zinc-900 p-6">Ângulo Escápulo-Humeral: 60º-65º</div>
+                  <div className="border border-zinc-900 p-6">Ângulo Coxo-Femoral: 90º</div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col justify-center space-y-12 border-l border-zinc-900 pl-20">
-              <div>
-                <h4 className="text-white uppercase tracking-widest text-xs font-bold mb-4">Índice Dactilo-Torácico (IDT)</h4>
-                <p className="text-zinc-500 text-sm font-light">Analisamos a robustez óssea relativa à massa muscular, um dado crucial para identificar exemplares de elite com longevidade desportiva. [cite: 2026-01-18]</p>
-              </div>
-              <div>
-                <h4 className="text-white uppercase tracking-widest text-xs font-bold mb-4">Morfometria Proporcional</h4>
-                <p className="text-zinc-500 text-sm font-light">O perfil sub-convexo facilita a flexão cervical, reduzindo a tensão no ligamento nucal e permitindo a "leveza de mão" que define a raça. [cite: 2026-01-18]</p>
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        {/* CAMADA 4: O PORTAL (O NUNCA VISTO) */}
-        <section className="py-60 px-6 text-center max-w-5xl mx-auto">
-          <span className="text-[#C5A059] uppercase tracking-[1.5em] text-[10px] font-bold block mb-12">IV. A Singularidade Portal Lusitano</span>
-          <h2 className="text-7xl font-serif italic mb-20 leading-tight">Onde o Sangue encontra o <span className="text-[#C5A059]">Dígito</span>.</h2>
-          <p className="text-zinc-500 text-xl font-light italic leading-relaxed mb-32">
-            "Não estamos a criar apenas um marketplace. Estamos a construir o primeiro repositório de inteligência equestre global focado na preservação e elevação do Cavalo Lusitano. Através da análise de dados genéticos e morfológicos, o Portal Lusitano é o guardião tecnológico de uma herança milenar." [cite: 2026-01-15, 2026-01-18]
-          </p>
-          <div className="w-px h-40 bg-gradient-to-b from-[#C5A059] to-transparent mx-auto"></div>
-        </section>
+          {/* CAMADA IV: A SINGULARIDADE PORTAL LUSITANO (O Nunca Visto) */}
+          <section className="py-60 text-center space-y-20 border-t border-zinc-900">
+            <h2 className="text-6xl md:text-8xl font-serif italic">Onde o Sangue encontra o <span className="text-[#C5A059]">Dígito</span>.</h2>
+            <p className="max-w-4xl mx-auto text-zinc-400 text-xl font-light italic leading-loose">
+              "O Portal Lusitano não é um marketplace. É a primeira plataforma de inteligência equestre do mundo que utiliza análise biométrica e algoritmos de nobreza para projetar o Lusitano ao topo da exclusividade global." [cite: 2026-01-15, 2026-01-18]
+            </p>
+            <div className="w-px h-40 bg-gradient-to-b from-[#C5A059] to-transparent mx-auto"></div>
+          </section>
 
+        </div>
       </main>
     </>
   );
