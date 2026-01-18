@@ -1,85 +1,100 @@
 // @ts-nocheck
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
+import Pedigree from "@/components/Pedigree";
+import Link from "next/link";
 
-// Componente do Gráfico de Aptidão
-function AptidaoGraph({ stats }) {
-  // Transformamos os valores de 0-100 em coordenadas SVG
-  return (
-    <div className="relative w-full aspect-square max-w-[400px] mx-auto">
-      <svg viewBox="0 0 200 200" className="w-full h-full">
-        {/* Teia de Fundo */}
-        <polygon points="100,20 180,80 150,170 50,170 20,80" fill="none" stroke="#27272a" strokeWidth="0.5" />
-        <polygon points="100,60 140,90 125,135 75,135 60,90" fill="none" stroke="#27272a" strokeWidth="0.5" />
-        
-        {/* Eixos */}
-        <line x1="100" y1="100" x2="100" y2="20" stroke="#27272a" strokeWidth="0.5" />
-        <line x1="100" y1="100" x2="180" y2="80" stroke="#27272a" strokeWidth="0.5" />
-        <line x1="100" y1="100" x2="150" y2="170" stroke="#27272a" strokeWidth="0.5" />
-        <line x1="100" y1="100" x2="50" y2="170" stroke="#27272a" strokeWidth="0.5" />
-        <line x1="100" y1="100" x2="20" y2="80" stroke="#27272a" strokeWidth="0.5" />
-
-        {/* ÁREA DE PERFORMANCE (Dinamizada pelos dados) */}
-        <polygon 
-          points={`
-            100,${100 - stats.dressage * 0.8} 
-            ${100 + stats.toureio * 0.8},${100 - stats.toureio * 0.2} 
-            ${100 + stats.trabalho * 0.5},${100 + stats.trabalho * 0.7} 
-            ${100 - stats.obstaculos * 0.5},${100 + stats.obstaculos * 0.7} 
-            ${100 - stats.modelo * 0.8},${100 - stats.modelo * 0.2}
-          `}
-          fill="rgba(197, 160, 89, 0.3)"
-          stroke="#C5A059"
-          strokeWidth="2"
-        />
-      </svg>
-      {/* Legendas */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 text-[8px] uppercase font-bold tracking-widest">Dressage</div>
-      <div className="absolute top-[35%] right-0 text-[8px] uppercase font-bold tracking-widest">Toureio</div>
-      <div className="absolute bottom-0 right-1/4 text-[8px] uppercase font-bold tracking-widest">Equi. Trabalho</div>
-      <div className="absolute bottom-0 left-1/4 text-[8px] uppercase font-bold tracking-widest">Obstáculos</div>
-      <div className="absolute top-[35%] left-0 text-[8px] uppercase font-bold tracking-widest">Modelo</div>
-    </div>
-  );
-}
-
-export default async function DetalhePage({ params }) {
+export default async function DetalheCavaloPage({ params }) {
   const { id } = await params;
-  const { data: c } = await supabase.from('cavalos_venda').select('*').eq('id', id).single();
+  
+  // Buscar dados reais
+  const { data: cavalo } = await supabase
+    .from('cavalos_venda')
+    .select('*')
+    .eq('id', id)
+    .single();
 
-  if (!c) return null;
+  if (!cavalo) return null;
 
   return (
     <>
       <Navbar dev={true} />
-      <main className="min-h-screen bg-black text-white pt-40 px-10 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 max-w-7xl mx-auto">
-          {/* FOTO E INFO BÁSICA */}
-          <div className="space-y-12">
-            <img src={c.image_url} className="w-full aspect-square object-cover grayscale" />
-            <h1 className="text-6xl font-serif italic">{c.nome_cavalo}</h1>
-          </div>
-
-          {/* ANÁLISE TÉCNICA E GRÁFICO */}
-          <div className="bg-zinc-950 p-12 border border-zinc-900 flex flex-col justify-center">
-            <h3 className="text-[#C5A059] text-[10px] uppercase tracking-widest font-bold mb-10 text-center">Gráfico de Aptidão Funcional</h3>
-            
-            <AptidaoGraph stats={{
-              dressage: c.score_dressage || 80,
-              toureio: c.score_toureio || 60,
-              trabalho: c.score_trabalho || 90,
-              obstaculos: c.score_obstaculos || 40,
-              modelo: c.pontuacao_apsl || 70
-            }} />
-
-            <div className="mt-16 border-t border-zinc-900 pt-10 text-center">
-               <p className="text-zinc-500 font-serif italic text-lg leading-relaxed">
-                 "Exemplar com elevado índice de submissão e impulsão, ideal para progressão em Dressage nível Médio/Avançado."
-               </p>
-            </div>
+      
+      <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
+        
+        {/* LADO ESQUERDO: A IMAGEM FIXA (Visual Hero) */}
+        <div className="lg:w-1/2 h-[50vh] lg:h-screen lg:fixed lg:top-0 lg:left-0 relative border-r border-zinc-900 z-0">
+          <img 
+            src={cavalo.image_url} 
+            alt={cavalo.nome_cavalo} 
+            className="w-full h-full object-cover grayscale brightness-75"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90 lg:hidden"></div>
+          
+          {/* Marca d'água de luxo */}
+          <div className="absolute top-10 left-10 hidden lg:block">
+            <span className="text-white/20 font-serif text-9xl italic leading-none opacity-10 select-none">PL</span>
           </div>
         </div>
-      </main>
+
+        {/* LADO DIREITO: O DOSSIER TÉCNICO (Scrollable) */}
+        <div className="lg:w-1/2 lg:ml-[50%] bg-black relative z-10">
+          <div className="px-8 py-20 lg:p-24 max-w-3xl mx-auto space-y-20">
+            
+            {/* CABEÇALHO */}
+            <header className="space-y-6 border-b border-zinc-900 pb-12">
+              <div className="flex items-center gap-4">
+                 <span className="px-3 py-1 border border-[#C5A059] text-[#C5A059] text-[9px] uppercase tracking-widest font-bold">
+                   {cavalo.linhagem || "Linhagem Pura"}
+                 </span>
+                 <span className="text-zinc-500 text-[9px] uppercase tracking-widest">ID: #{cavalo.id.slice(0,4)}</span>
+              </div>
+              <h1 className="text-6xl md:text-7xl font-serif italic text-white">{cavalo.nome_cavalo}</h1>
+              <p className="text-3xl text-[#C5A059] font-serif">
+                {Number(cavalo.preco).toLocaleString('pt-PT')} €
+              </p>
+            </header>
+
+            {/* ESPECIFICAÇÕES BIOMÉTRICAS */}
+            <section className="grid grid-cols-2 gap-8 text-zinc-400">
+               <div>
+                 <span className="text-[10px] uppercase tracking-widest block mb-2 text-zinc-600">Idade</span>
+                 <p className="text-2xl text-white font-serif">{cavalo.idade} Anos</p>
+               </div>
+               <div>
+                 <span className="text-[10px] uppercase tracking-widest block mb-2 text-zinc-600">Localização</span>
+                 <p className="text-2xl text-white font-serif">{cavalo.localizacao}</p>
+               </div>
+               <div className="col-span-2">
+                 <span className="text-[10px] uppercase tracking-widest block mb-2 text-zinc-600">Descrição Técnica</span>
+                 <p className="font-light leading-relaxed text-sm">
+                   {cavalo.descricao || "Exemplar de estrutura sólida, com excelentes aprumos e uma mecânica de movimentos elástica. Apresenta um carácter dócil e aptidão para Dressage."}
+                 </p>
+               </div>
+            </section>
+
+            {/* A ÁRVORE GENEALÓGICA VISUAL (O NUNCA VISTO) */}
+            <section>
+              <h3 className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold mb-8">Certificado de Sangue</h3>
+              <Pedigree cavalo={cavalo} />
+              <p className="text-center text-[9px] text-zinc-600 mt-4 uppercase tracking-widest">
+                Dados validados pelo Stud-Book da APSL
+              </p>
+            </section>
+
+            {/* CALL TO ACTION */}
+            <div className="pt-10 sticky bottom-0 bg-black/90 backdrop-blur-md py-6 border-t border-zinc-900">
+              <button className="w-full bg-[#C5A059] text-black py-6 text-[11px] uppercase font-bold tracking-[0.4em] hover:bg-white transition-all duration-500">
+                Solicitar Dossier & Visita
+              </button>
+              <p className="text-center text-[8px] text-zinc-500 mt-4 uppercase">
+                A reserva requer aprovação prévia de perfil.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </>
   );
 }
