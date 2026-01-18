@@ -2,19 +2,41 @@
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Pedigree from "@/components/Pedigree";
-import Link from "next/link";
 
 export default async function DetalheCavaloPage({ params }) {
-  const { id } = await params;
+  const resolvedParams = await params; // Next.js 15+ requer await
+  const { id } = resolvedParams;
   
-  // Buscar dados reais
-  const { data: cavalo } = await supabase
-    .from('cavalos_venda')
-    .select('*')
-    .eq('id', id)
-    .single();
+  let cavalo;
 
-  if (!cavalo) return null;
+  // --- MODO DEMO (Para visualizares sem base de dados) ---
+  if (id === 'demo') {
+    cavalo = {
+      id: "demo-123",
+      nome_cavalo: "Imperador do Lagar",
+      preco: 45000,
+      idade: 6,
+      localizacao: "Golegã, Capital do Cavalo",
+      linhagem: "Veiga (MV)",
+      descricao: "Garanhão de pelagem ruça, com 1.64m ao garrote. Aprovado com 76 pontos. Apresenta uma mecânica de movimentos excecional, com facilidade natural para o Piaffe e Passage. Temperamento de fogo mas colaborante, típico da linhagem Veiga antiga.",
+      image_url: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=2071",
+      pai: "Sultão (MV)",
+      mae: "Duquesa (MV)",
+      pontuacao_apsl: 76
+    };
+  } 
+  // --- MODO REAL (Supabase) ---
+  else {
+    const { data } = await supabase
+      .from('cavalos_venda')
+      .select('*')
+      .eq('id', id)
+      .single();
+    cavalo = data;
+  }
+
+  // Se não houver cavalo (nem demo nem real), não mostra nada
+  if (!cavalo) return <div className="text-white pt-40 text-center">Exemplar não encontrado.</div>;
 
   return (
     <>
@@ -47,7 +69,7 @@ export default async function DetalheCavaloPage({ params }) {
                  <span className="px-3 py-1 border border-[#C5A059] text-[#C5A059] text-[9px] uppercase tracking-widest font-bold">
                    {cavalo.linhagem || "Linhagem Pura"}
                  </span>
-                 <span className="text-zinc-500 text-[9px] uppercase tracking-widest">ID: #{cavalo.id.slice(0,4)}</span>
+                 <span className="text-zinc-500 text-[9px] uppercase tracking-widest">REG: {cavalo.id.slice(0,4).toUpperCase()}</span>
               </div>
               <h1 className="text-6xl md:text-7xl font-serif italic text-white">{cavalo.nome_cavalo}</h1>
               <p className="text-3xl text-[#C5A059] font-serif">
@@ -65,30 +87,34 @@ export default async function DetalheCavaloPage({ params }) {
                  <span className="text-[10px] uppercase tracking-widest block mb-2 text-zinc-600">Localização</span>
                  <p className="text-2xl text-white font-serif">{cavalo.localizacao}</p>
                </div>
-               <div className="col-span-2">
-                 <span className="text-[10px] uppercase tracking-widest block mb-2 text-zinc-600">Descrição Técnica</span>
-                 <p className="font-light leading-relaxed text-sm">
-                   {cavalo.descricao || "Exemplar de estrutura sólida, com excelentes aprumos e uma mecânica de movimentos elástica. Apresenta um carácter dócil e aptidão para Dressage."}
+               <div>
+                 <span className="text-[10px] uppercase tracking-widest block mb-2 text-zinc-600">Pontuação APSL</span>
+                 <p className="text-2xl text-white font-serif">{cavalo.pontuacao_apsl || "N/A"} pts</p>
+               </div>
+               <div className="col-span-2 mt-8">
+                 <span className="text-[10px] uppercase tracking-widest block mb-4 text-[#C5A059] font-bold">Parecer Técnico</span>
+                 <p className="font-light leading-relaxed text-lg italic text-zinc-300">
+                   "{cavalo.descricao}"
                  </p>
                </div>
             </section>
 
-            {/* A ÁRVORE GENEALÓGICA VISUAL (O NUNCA VISTO) */}
-            <section>
-              <h3 className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold mb-8">Certificado de Sangue</h3>
+            {/* A ÁRVORE GENEALÓGICA VISUAL */}
+            <section className="py-10 border-t border-zinc-900">
+              <h3 className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold mb-12">Certificado de Sangue</h3>
               <Pedigree cavalo={cavalo} />
-              <p className="text-center text-[9px] text-zinc-600 mt-4 uppercase tracking-widest">
-                Dados validados pelo Stud-Book da APSL
+              <p className="text-center text-[9px] text-zinc-600 mt-6 uppercase tracking-widest">
+                Dados verificados via Stud-Book Digital
               </p>
             </section>
 
             {/* CALL TO ACTION */}
-            <div className="pt-10 sticky bottom-0 bg-black/90 backdrop-blur-md py-6 border-t border-zinc-900">
+            <div className="pt-10 sticky bottom-0 bg-black/95 backdrop-blur-md py-6 border-t border-zinc-900">
               <button className="w-full bg-[#C5A059] text-black py-6 text-[11px] uppercase font-bold tracking-[0.4em] hover:bg-white transition-all duration-500">
-                Solicitar Dossier & Visita
+                Solicitar Dossier Completo
               </button>
-              <p className="text-center text-[8px] text-zinc-500 mt-4 uppercase">
-                A reserva requer aprovação prévia de perfil.
+              <p className="text-center text-[8px] text-zinc-500 mt-4 uppercase tracking-widest">
+                Exclusivo para membros Portal Lusitano
               </p>
             </div>
 
