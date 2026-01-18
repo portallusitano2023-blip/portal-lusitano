@@ -1,46 +1,62 @@
 // @ts-nocheck
+"use client";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 
-export default async function LeiloesPage({ searchParams }) {
-  const sParams = await searchParams;
-  const isDev = sParams?.dev === "true";
+export default function LeiloesPage({ searchParams }) {
+  // Estado para o cronómetro (Ex: termina em 4 dias)
+  const [timeLeft, setTimeLeft] = useState({ dias: 4, horas: 12, minutos: 45, segundos: 0 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev.segundos > 0) return { ...prev, segundos: prev.segundos - 1 };
+        return { ...prev, segundos: 59, minutos: prev.minutos - 1 };
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <>
-      <Navbar dev={isDev} />
+      <Navbar dev={true} />
       <main className="min-h-screen bg-black text-white pt-48 px-6 pb-20">
         <div className="max-w-7xl mx-auto">
-          <header className="mb-20">
-            <h1 className="text-7xl font-serif italic mb-4">Próximos <span className="text-[#C5A059]">Leilões</span></h1>
-            <p className="text-zinc-500 uppercase tracking-[0.4em] text-[10px]">Lances exclusivos para membros Portal Lusitano</p>
+          <header className="mb-24 text-center">
+            <span className="text-[#C5A059] uppercase tracking-[0.8em] text-[10px] font-bold block mb-4 animate-pulse">Live Auction</span>
+            <h1 className="text-7xl font-serif italic mb-4 text-white">Próximos <span className="text-[#C5A059]">Eventos</span></h1>
           </header>
 
-          {/* CARD DE LEILÃO EM DESTAQUE */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 bg-zinc-950 border border-zinc-900 group">
-            <div className="aspect-square bg-zinc-900 overflow-hidden relative">
-               <img src="https://images.unsplash.com/photo-1598974357801-cbca100e65d3?q=80&w=1974" className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-all duration-[3s]" />
-               <div className="absolute top-10 left-10 bg-[#C5A059] text-black px-6 py-2 text-[10px] font-bold uppercase tracking-widest">Brevemente</div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 bg-zinc-950 border border-zinc-900 overflow-hidden">
+            <div className="aspect-square bg-zinc-900 relative group">
+               <img src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=2071" className="w-full h-full object-cover opacity-40 group-hover:scale-110 transition-all duration-[4s]" />
+               <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent opacity-60"></div>
             </div>
-            <div className="p-16 flex flex-col justify-center">
-              <span className="text-[#C5A059] text-[9px] uppercase tracking-[0.5em] mb-4 font-bold">Lote #001 — Coudelaria de Elite</span>
-              <h2 className="text-5xl font-serif italic mb-10">Exemplar Puro Sangue</h2>
+            
+            <div className="p-20 flex flex-col justify-center bg-zinc-950">
+              <span className="text-[#C5A059] text-[9px] uppercase tracking-[0.6em] mb-6 font-bold">Lote #001 — Ouro Lusitano</span>
+              <h2 className="text-5xl font-serif italic mb-12">Garanhão de Elite</h2>
               
-              <div className="grid grid-cols-3 gap-8 mb-16 border-y border-zinc-900 py-10">
+              <div className="grid grid-cols-4 gap-6 mb-16 border-y border-zinc-900 py-12">
                 <div className="text-center">
-                  <p className="text-3xl font-serif text-white">04</p>
+                  <p className="text-4xl font-serif text-white">{timeLeft.dias}</p>
                   <p className="text-[8px] uppercase text-zinc-600 tracking-widest mt-2">Dias</p>
                 </div>
                 <div className="text-center border-x border-zinc-900">
-                  <p className="text-3xl font-serif text-white">12</p>
+                  <p className="text-4xl font-serif text-white">{timeLeft.horas}</p>
                   <p className="text-[8px] uppercase text-zinc-600 tracking-widest mt-2">Horas</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-3xl font-serif text-white">45</p>
+                  <p className="text-4xl font-serif text-white">{timeLeft.minutos}</p>
                   <p className="text-[8px] uppercase text-zinc-600 tracking-widest mt-2">Minutos</p>
+                </div>
+                <div className="text-center border-l border-zinc-900">
+                  <p className="text-4xl font-serif text-[#C5A059]">{timeLeft.segundos}</p>
+                  <p className="text-[8px] uppercase text-zinc-600 tracking-widest mt-2">Segs</p>
                 </div>
               </div>
 
-              <button className="w-full border border-[#C5A059]/30 text-[#C5A059] py-6 text-[10px] uppercase font-bold tracking-[0.5em] hover:bg-[#C5A059] hover:text-black transition-all duration-700">
+              <button className="w-full bg-[#C5A059] text-black py-7 text-[11px] font-bold uppercase tracking-[0.6em] hover:bg-white transition-all duration-700">
                 Registar para Licitar
               </button>
             </div>
