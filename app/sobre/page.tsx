@@ -8,88 +8,141 @@ export default async function SobrePage({ searchParams }) {
   return (
     <>
       <Navbar dev={true} />
-      <main className="min-h-screen bg-black text-white selection:bg-[#C5A059] selection:text-black font-sans">
+      <main className="min-h-screen bg-black text-white selection:bg-[#C5A059] selection:text-black font-light">
         
-        {/* SECÇÃO I: A EMOÇÃO (O Início Simples) */}
-        <section className="pt-64 pb-40 px-6 max-w-7xl mx-auto">
-          <div className="max-w-4xl">
-            <span className="text-[#C5A059] uppercase tracking-[1em] text-[10px] font-bold block mb-12 italic">A Génese do Cavalo de Reis</span>
-            <h1 className="text-7xl md:text-[11rem] font-serif italic tracking-tighter leading-none mb-20">
-              A Alma <br /> <span className="text-[#C5A059]">Lusitana</span>
+        {/* I. HERO: A SOBERANIA (Impacto Visual Puro) */}
+        <section className="relative pt-60 pb-40 px-6 border-b border-zinc-900">
+          <div className="max-w-7xl mx-auto text-center">
+            <span className="text-[#C5A059] uppercase tracking-[1.2em] text-[10px] font-bold block mb-12 animate-pulse">Est. 5000 A.C.</span>
+            <h1 className="text-8xl md:text-[13rem] font-serif italic tracking-tighter leading-none mb-16 text-white mix-blend-difference">
+              Soberano <br /> <span className="text-[#C5A059]">Absoluto</span>
             </h1>
-            <p className="text-zinc-400 text-3xl font-light leading-relaxed italic border-l border-[#C5A059]/30 pl-12">
-              "Há cinco milénios, o cavalo Lusitano começou a moldar a história. O que começou como um parceiro de guerra, tornou-se o expoente máximo da elegância nas cortes europeias." [cite: 2026-01-18]
+            <p className="max-w-3xl mx-auto text-zinc-400 text-2xl leading-relaxed italic font-serif">
+              "Antes de ser arte, o Lusitano foi guerreiro. Antes de pisar os picadeiros reais, dominou os campos de batalha da Ibéria. Esta é a história do cavalo mais antigo do mundo."
             </p>
           </div>
         </section>
 
-        {/* SECÇÃO II: A FORMA (Morfologia e Padrão) */}
-        <section className="py-40 px-6 bg-zinc-950/50 border-y border-zinc-900">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
-            <div className="space-y-12">
-              <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold">II. O Standard da Perfeição</h2>
-              <div className="space-y-8 text-zinc-300 font-light text-xl leading-relaxed">
-                <p>
-                  O Lusitano é um cavalo **eumétrico** e **mesomorfo**. A sua silhueta inscreve-se num quadrado perfeito, garantindo um equilíbrio natural que nenhuma outra raça consegue replicar. [cite: 2026-01-18]
-                </p>
-                <ul className="space-y-6 pt-10">
-                  <li className="flex gap-6 border-b border-zinc-900 pb-6">
-                    <span className="text-[#C5A059] font-serif italic text-2xl">01.</span>
-                    <p className="text-sm uppercase tracking-widest leading-loose">
-                      <strong className="text-white block mb-2">Perfil Sub-Convexo</strong>
-                      A curvatura nobre do crânio facilita a flexão da nuca, permitindo uma submissão leve e harmoniosa. [cite: 2026-01-18]
-                    </p>
-                  </li>
-                  <li className="flex gap-6 border-b border-zinc-900 pb-6">
-                    <span className="text-[#C5A059] font-serif italic text-2xl">02.</span>
-                    <p className="text-sm uppercase tracking-widest leading-loose">
-                      <strong className="text-white block mb-2">Garupa Derribada</strong>
-                      Essencial para o engajamento dos posteriores, convertendo força em elevação para os ares de escola. [cite: 2026-01-18]
-                    </p>
-                  </li>
-                </ul>
-              </div>
+        {/* II. A HISTÓRIA: A GINETA E A GUERRA */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+          <div className="border-r border-zinc-900 p-20 flex flex-col justify-center space-y-12">
+            <span className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold">Capítulo I: A Origem Bélica</span>
+            <h2 className="text-6xl font-serif italic">A Monta à Gineta</h2>
+            <div className="space-y-8 text-zinc-400 text-lg leading-relaxed">
+              <p>
+                A superioridade do Lusitano nasceu na necessidade de sobrevivência. A técnica de guerra ibérica — a <strong>Gineta</strong> — exigia um cavalo capaz de paragens instantâneas e piruetas fulminantes para o combate corpo-a-corpo.
+              </p>
+              <p>
+                Enquanto o resto da Europa usava cavalos pesados e lentos, o Lusitano vencia pela agilidade mental e física. Foi esta seleção natural pelo combate que criou a <strong>reatividade</strong> que hoje admiramos no toureio e na Dressage.
+              </p>
             </div>
-            <div className="aspect-[4/5] bg-zinc-900/20 border border-zinc-900 overflow-hidden group">
-               <img 
-                src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=2071" 
-                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-[3s] grayscale" 
-               />
+          </div>
+          <div className="bg-zinc-950 p-20 flex flex-col justify-center relative overflow-hidden">
+            {/* Elemento Decorativo: Citação Histórica */}
+            <blockquote className="relative z-10 text-3xl font-serif italic text-white/80 leading-loose text-center">
+              "O cavalo de Portugal é o mais nobre, o mais generoso e o mais digno de ser montado por um Rei nos dias de triunfo."
+              <footer className="text-[#C5A059] text-[10px] uppercase tracking-widest mt-8 not-italic">— William Cavendish, Duque de Newcastle (1667)</footer>
+            </blockquote>
+            <div className="absolute top-0 right-0 p-10 opacity-10 font-serif text-[20rem] leading-none text-[#C5A059] pointer-events-none">”</div>
+          </div>
+        </section>
+
+        {/* III. A BIOMECÂNICA: O QUADRADO PERFEITO */}
+        <section className="py-40 border-y border-zinc-900 bg-black">
+          <div className="max-w-7xl mx-auto px-6">
+             <div className="mb-24 text-center">
+               <span className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold">Capítulo II: Engenharia Natural</span>
+               <h2 className="text-5xl md:text-7xl font-serif italic mt-6">O Cavalo "Mesomorfo"</h2>
+             </div>
+
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+               <div className="p-10 border border-zinc-900 hover:border-[#C5A059] transition-colors duration-700 group">
+                 <h3 className="text-2xl font-serif italic text-white mb-6 group-hover:text-[#C5A059]">O Perfil Sub-Convexo</h3>
+                 <p className="text-zinc-500 text-sm leading-relaxed">
+                   A nobreza da cabeça. A curvatura nasal é a assinatura da raça, permitindo uma inserção cabeça-pescoço que facilita a <strong>reunião</strong> (o engajamento dos posteriores) sem esforço.
+                 </p>
+               </div>
+               <div className="p-10 border border-zinc-900 hover:border-[#C5A059] transition-colors duration-700 group">
+                 <h3 className="text-2xl font-serif italic text-white mb-6 group-hover:text-[#C5A059]">A Garupa Derribada</h3>
+                 <p className="text-zinc-500 text-sm leading-relaxed">
+                   A biomecânica da elevação. Ao contrário dos cavalos de corrida, a garupa inclinada do Lusitano funciona como uma mola, permitindo os ares altos (Levade, Cabriole) naturais da raça.
+                 </p>
+               </div>
+               <div className="p-10 border border-zinc-900 hover:border-[#C5A059] transition-colors duration-700 group">
+                 <h3 className="text-2xl font-serif italic text-white mb-6 group-hover:text-[#C5A059]">O Caráter (Areté)</h3>
+                 <p className="text-zinc-500 text-sm leading-relaxed">
+                   Ardente mas submisso. A inteligência superior do Lusitano permite-lhe distinguir o momento de explodir em energia do momento de quietude absoluta.
+                 </p>
+               </div>
+             </div>
+          </div>
+        </section>
+
+        {/* IV. AS DINASTIAS GENÉTICAS (Detalhe Profundo) */}
+        <section className="min-h-screen flex flex-col">
+          <div className="py-20 px-6 border-b border-zinc-900">
+            <span className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold">Capítulo III: As Fontes do Sangue</span>
+            <h2 className="text-5xl font-serif italic mt-6">As Quatro Dinastias</h2>
+          </div>
+          
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-4">
+            {/* VEIGA */}
+            <div className="border-r border-zinc-900 p-10 hover:bg-zinc-950 transition-all duration-500 group">
+              <span className="text-zinc-700 font-bold text-6xl opacity-20 group-hover:opacity-50 group-hover:text-[#C5A059]">MV</span>
+              <h3 className="text-3xl font-serif italic mt-8 mb-4">Veiga</h3>
+              <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-6 font-bold">O Guerreiro</p>
+              <p className="text-zinc-500 text-sm leading-relaxed">
+                A linhagem mais típica e antiga. Cavalos de porte mais pequeno, extremamente reativos e valentes. Selecionados funcionalmente para o toureio a cavalo, onde o erro é fatal.
+              </p>
+            </div>
+
+            {/* ANDRADE */}
+            <div className="border-r border-zinc-900 p-10 hover:bg-zinc-950 transition-all duration-500 group">
+              <span className="text-zinc-700 font-bold text-6xl opacity-20 group-hover:opacity-50 group-hover:text-[#C5A059]">SA</span>
+              <h3 className="text-3xl font-serif italic mt-8 mb-4">Andrade</h3>
+              <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-6 font-bold">O Atleta</p>
+              <p className="text-zinc-500 text-sm leading-relaxed">
+                Ruy d'Andrade procurou estrutura e força. Criou cavalos mais altos, com garupas fortes e andamentos amplos, desenhados para a funcionalidade desportiva e a Dressage de competição.
+              </p>
+            </div>
+
+            {/* ALTER REAL */}
+            <div className="border-r border-zinc-900 p-10 hover:bg-zinc-950 transition-all duration-500 group">
+              <span className="text-zinc-700 font-bold text-6xl opacity-20 group-hover:opacity-50 group-hover:text-[#C5A059]">AR</span>
+              <h3 className="text-3xl font-serif italic mt-8 mb-4">Alter-Real</h3>
+              <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-6 font-bold">O Artista</p>
+              <p className="text-zinc-500 text-sm leading-relaxed">
+                Fundada em 1748 por D. João V. Cavalos exclusivamente de pelagem castanha, criados para a Picaria Real. São os guardiões da Alta Escola Portuguesa e da elegância barroca.
+              </p>
+            </div>
+
+            {/* COUDELARIA NACIONAL */}
+            <div className="p-10 hover:bg-zinc-950 transition-all duration-500 group">
+              <span className="text-zinc-700 font-bold text-6xl opacity-20 group-hover:opacity-50 group-hover:text-[#C5A059]">CN</span>
+              <h3 className="text-3xl font-serif italic mt-8 mb-4">C. Nacional</h3>
+              <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-6 font-bold">O Padrão</p>
+              <p className="text-zinc-500 text-sm leading-relaxed">
+                A antiga Coudelaria de Roscas. Funciona como o repositório genético da raça, mantendo as características morfológicas mais puras e servindo de base para cruzar com outras linhagens.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* SECÇÃO III: O SANGUE (Linhagens - Complexidade Técnica) */}
-        <section className="py-60 px-6 max-w-7xl mx-auto">
-          <h2 className="text-center text-[#C5A059] uppercase tracking-[0.8em] text-[10px] font-bold mb-32">III. As Quatro Estirpes Fundamentais</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-zinc-900 border border-zinc-900 shadow-2xl">
-            <div className="bg-black p-20 space-y-8 hover:bg-zinc-950 transition-colors">
-              <h3 className="text-4xl font-serif italic text-white">Veiga <span className="text-[#C5A059] text-sm block mt-2 uppercase tracking-widest not-italic">O Fogo Reativo</span></h3>
-              <p className="text-zinc-500 font-light leading-relaxed">Considerada a linhagem mais pura para o combate. Animais de formas arredondadas e reatividade felina, selecionados para a coragem absoluta perante o perigo. [cite: 2026-01-18]</p>
-            </div>
-            <div className="bg-black p-20 space-y-8 hover:bg-zinc-950 transition-colors">
-              <h3 className="text-4xl font-serif italic text-white">Andrade <span className="text-[#C5A059] text-sm block mt-2 uppercase tracking-widest not-italic">A Amplitude Moderna</span></h3>
-              <p className="text-zinc-500 font-light leading-relaxed">A base do Lusitano de desporto. Com maior estatura e andamentos elásticos, esta linhagem é a responsável pelo sucesso mundial do cavalo em Dressage. [cite: 2026-01-18]</p>
-            </div>
-            <div className="bg-black p-20 space-y-8 hover:bg-zinc-950 transition-colors">
-              <h3 className="text-4xl font-serif italic text-white">Alter-Real <span className="text-[#C5A059] text-sm block mt-2 uppercase tracking-widest not-italic">A Nobreza Real</span></h3>
-              <p className="text-zinc-500 font-light leading-relaxed">Preservada desde 1748 para servir a Corte. Especialistas na cadência majestosa e nos exercícios de Alta Escola que definem a Arte Equestre. [cite: 2026-01-18]</p>
-            </div>
-            <div className="bg-black p-20 space-y-8 hover:bg-zinc-950 transition-colors">
-              <h3 className="text-4xl font-serif italic text-white">C. Nacional <span className="text-[#C5A059] text-sm block mt-2 uppercase tracking-widest not-italic">O Repositório</span></h3>
-              <p className="text-zinc-500 font-light leading-relaxed">O fiel da balança. Garante a homogeneidade do Stud-Book, assegurando que as características ancestrais se mantêm intactas para as gerações futuras. [cite: 2026-01-18]</p>
+        {/* V. O MANIFESTO FINAL (A Visão) */}
+        <section className="py-60 px-6 bg-zinc-950 text-center">
+          <div className="max-w-4xl mx-auto space-y-12">
+            <h2 className="text-4xl md:text-6xl font-serif italic leading-tight text-white">
+              "O Portal Lusitano não vende apenas cavalos. <br /> <span className="text-[#C5A059]">Nós curamos História.</span>"
+            </h2>
+            <p className="text-zinc-500 text-lg font-light leading-relaxed">
+              Através de uma análise rigorosa de linhagens, morfologia e temperamento, elevamos o padrão de exigência. Cada cavalo no nosso portal é um embaixador de cinco milénios de seleção genética.
+            </p>
+            <div className="pt-20">
+               <span className="text-[#C5A059] text-[9px] uppercase tracking-[0.4em] border border-[#C5A059] px-8 py-3 hover:bg-[#C5A059] hover:text-black transition-all cursor-pointer">
+                 Entrar no Marketplace de Elite
+               </span>
             </div>
           </div>
-        </section>
-
-        {/* SECÇÃO IV: A MISSÃO (O Portal) */}
-        <section className="py-60 px-6 text-center max-w-5xl mx-auto border-t border-zinc-900">
-          <span className="text-[#C5A059] uppercase tracking-[1em] text-[10px] font-bold block mb-12">IV. A Visão Portal Lusitano</span>
-          <h2 className="text-6xl md:text-8xl font-serif italic leading-tight mb-20">Elevar o Legado ao <br /> <span className="text-[#C5A059]">Palco Mundial</span></h2>
-          <p className="text-zinc-500 text-xl font-light italic leading-loose max-w-3xl mx-auto mb-32">
-            "Não somos apenas um marketplace. Somos curadores de uma herança. O Portal Lusitano nasce para unir o conhecimento hipológico profundo à tecnologia do século XXI, garantindo que o mundo reconheça a singularidade do Puro Sangue Lusitano." [cite: 2026-01-15, 2026-01-18]
-          </p>
-          <div className="w-px h-60 bg-gradient-to-b from-[#C5A059] to-transparent mx-auto"></div>
         </section>
 
       </main>
