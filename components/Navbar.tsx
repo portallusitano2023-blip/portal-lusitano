@@ -17,12 +17,13 @@ export default function Navbar({ dev }: { dev: boolean }) {
         </div>
       </Link>
       
-      {/* NAVEGAÇÃO COMPLETA */}
+      {/* MENU DE ELITE ATUALIZADO */}
       <div className="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.3em] font-bold text-white/70">
-        <Link href={`/${query}`} className="hover:text-white transition-all text-[#C5A059]">Início</Link>
+        <Link href={`/${query}`} className="hover:text-[#C5A059] transition-all">Início</Link>
         <Link href={`/comprar${query}`} className="hover:text-[#C5A059] transition-all">Comprar</Link>
-        <Link href={`/loja${query}`} className="hover:text-[#C5A059] transition-all">Loja</Link>
         <Link href={`/leiloes${query}`} className="hover:text-[#C5A059] transition-all">Leilões</Link>
+        <Link href={`/loja${query}`} className="hover:text-[#C5A059] transition-all">Loja</Link>
+        <Link href={`/sobre${query}`} className="text-[#C5A059] border-b border-[#C5A059]/30 pb-1">Sobre</Link>
         <Link href={`/vender${query}`} className="hover:text-[#C5A059] transition-all">Vender</Link>
       </div>
 
