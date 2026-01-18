@@ -1,6 +1,5 @@
 // @ts-nocheck
 import Navbar from "@/components/Navbar";
-import Link from "next/link";
 
 export default async function SobrePage({ searchParams }) {
   const sParams = await searchParams;
@@ -9,41 +8,82 @@ export default async function SobrePage({ searchParams }) {
   return (
     <>
       <Navbar dev={true} />
-      <main className="min-h-screen bg-black text-white pt-48 pb-32 selection:bg-[#C5A059] selection:text-black">
-        <div className="max-w-5xl mx-auto px-6">
+      <main className="min-h-screen bg-black text-white pt-48 pb-40 selection:bg-[#C5A059] selection:text-black">
+        <div className="max-w-6xl mx-auto px-6">
           
-          <header className="mb-32 text-center">
-            <span className="text-[#C5A059] uppercase tracking-[0.7em] text-[11px] font-bold block mb-6 italic">Manifesto de Prestígio</span>
-            <h1 className="text-6xl md:text-8xl font-serif italic tracking-tighter leading-tight">
-              Uma Paixão sem <span className="text-[#C5A059]">Fronteiras</span>
+          {/* INTRODUÇÃO: O CAVALO DE SELA MAIS ANTIGO DO MUNDO */}
+          <header className="mb-40 border-l-2 border-[#C5A059] pl-12">
+            <span className="text-[#C5A059] uppercase tracking-[0.8em] text-[10px] font-bold block mb-6">Tratado de Excelência</span>
+            <h1 className="text-6xl md:text-9xl font-serif italic tracking-tighter leading-none mb-12">
+              Puro Sangue <br /> <span className="text-[#C5A059]">Lusitano</span>
             </h1>
+            <p className="max-w-3xl text-zinc-400 text-xl font-light leading-relaxed italic">
+              "O Lusitano não se explica pela força, mas pela harmonia de tensões e pela inteligência de resposta."
+            </p>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center mb-40">
-            <div className="space-y-10">
-              <h2 className="text-3xl font-serif italic text-white/90">Elevar o Cavalo de Reis ao Mundo</h2>
-              <p className="text-zinc-400 font-light leading-relaxed text-xl">
-                O cavalo Lusitano é o expoente máximo da nobreza equestre. A nossa missão no **Portal Lusitano** é simples, mas audaciosa: retirar este ícone das sombras da tradição local e colocá-lo no palco principal do luxo mundial.
-              </p>
-              <p className="text-zinc-500 font-light leading-relaxed">
-                Queremos que cada investidor, de Nova Iorque a Dubai, reconheça no Lusitano não apenas um animal, mas um legado de inteligência, coragem e elegância incomparável.
-              </p>
+          {/* SECÇÃO TÉCNICA 1: MORFOLOGIA E BIOMECÂNICA */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-24 mb-48">
+            <div className="space-y-12">
+              <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold">I. Precisão Morfométrica</h2>
+              <div className="space-y-6 text-zinc-300 font-light leading-relaxed text-lg">
+                <p>
+                  O standard do PSL define um cavalo de sela de peso médio, com um perfil **sub-convexo** (traço de nobreza ancestral) e formas arredondadas. A sua estrutura é inscrita num quadrado, garantindo uma agilidade biomecânica superior.
+                </p>
+                <ul className="space-y-4 border-t border-zinc-900 pt-8">
+                  <li className="flex justify-between border-b border-zinc-900/50 pb-2">
+                    <span className="text-zinc-500 uppercase text-[10px] tracking-widest">Pescoço</span>
+                    <span className="italic font-serif">De comprimento médio, em forma de cisne</span>
+                  </li>
+                  <li className="flex justify-between border-b border-zinc-900/50 pb-2">
+                    <span className="text-zinc-500 uppercase text-[10px] tracking-widest">Dorso-Lombo</span>
+                    <span className="italic font-serif">Curto, largo e ligeiramente convexo</span>
+                  </li>
+                  <li className="flex justify-between border-b border-zinc-900/50 pb-2">
+                    <span className="text-zinc-500 uppercase text-[10px] tracking-widest">Membros</span>
+                    <span className="italic font-serif">Canelas curtas e jarretes fortes</span>
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div className="aspect-[3/4] border border-zinc-900 overflow-hidden relative group">
-              <img 
-                src="https://images.unsplash.com/photo-1598974357801-cbca100e65d3?q=80&w=1974" 
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-[2s] grayscale group-hover:grayscale-0"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+            <div className="bg-zinc-950 p-1 bg-[url('https://images.unsplash.com/photo-1599411993215-381c00223594?q=80&w=1974')] bg-cover bg-center grayscale opacity-40 hover:opacity-80 transition-all duration-[2s]">
+              {/* Espaço para imagem técnica de anatomia equestre */}
             </div>
-          </div>
+          </section>
 
-          <section className="bg-zinc-950/40 p-16 border border-zinc-900 text-center space-y-8">
-            <h3 className="text-4xl font-serif italic">Compromisso com a Excelência</h3>
-            <p className="max-w-2xl mx-auto text-zinc-400 font-light italic text-lg leading-relaxed">
-              "A minha vontade é ver o Cavalo Lusitano ocupar o lugar que lhe é devido: o topo do mundo. O Portal Lusitano é a ferramenta tecnológica desenhada para tornar essa visão uma realidade incontestável."
+          {/* SECÇÃO TÉCNICA 2: AS LINHAGENS FUNDAMENTAIS */}
+          <section className="mb-48 bg-zinc-950/20 p-16 border-y border-zinc-900">
+            <h2 className="text-[#C5A059] uppercase tracking-widest text-xs font-bold mb-20 text-center">II. A Genética da Aristocracia</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+              <div className="space-y-6 text-center">
+                <h3 className="font-serif italic text-3xl">Veiga</h3>
+                <p className="text-zinc-500 text-sm font-light">
+                  A linhagem do "Cavalo de Toureio". Conhecidos pela sua reatividade explosiva, coragem indómita e a morfologia típica de **Sorraia**.
+                </p>
+              </div>
+              <div className="space-y-6 text-center">
+                <h3 className="font-serif italic text-3xl">Andrade</h3>
+                <p className="text-zinc-500 text-sm font-light">
+                  Focada na funcionalidade desportiva. Cavalos mais altos, com andamentos mais largos, ideais para o **Dressage** e Equitação de Trabalho.
+                </p>
+              </div>
+              <div className="space-y-6 text-center">
+                <h3 className="font-serif italic text-3xl">Alter-Real</h3>
+                <p className="text-zinc-500 text-sm font-light">
+                  O Cavalo Real. Preserva a elegância da Escola Portuguesa de Arte Equestre, com foco na cadência e nos ares de escola.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* MANIFESTO DE ELEVAÇÃO GLOBAL */}
+          <section className="max-w-3xl mx-auto text-center space-y-16">
+            <h2 className="text-5xl font-serif italic">Elevar o Perfil Global</h2>
+            <p className="text-zinc-400 font-light text-xl leading-relaxed italic">
+              O **Portal Lusitano** não é apenas uma plataforma de transações. É um guardião do Stud-Book. O nosso propósito é projetar o perfil do PSL para os cinco continentes, garantindo que o mundo reconheça a versatilidade única deste cavalo: desde o Grand Prix de Dressage à bravura do Campo.
             </p>
-            <span className="text-[#C5A059] text-[10px] uppercase tracking-[0.4em] font-bold">— Francisco Gaspar, Fundador</span>
+            <div className="w-px h-32 bg-gradient-to-b from-[#C5A059] to-transparent mx-auto"></div>
+            <p className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold italic">Preservar. Valorizar. Expandir.</p>
           </section>
 
         </div>
