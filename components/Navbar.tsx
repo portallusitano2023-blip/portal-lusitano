@@ -1,139 +1,97 @@
 // @ts-nocheck
-"use client";
-import { useState, useEffect } from "react";
+import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import Image from "next/image"; // Importante para o logo carregar rápido
+import Image from "next/image";
 
-export default function Navbar({ dev }) {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
-  
-  const query = dev ? "?dev=true" : "";
-
-  // Detetar scroll
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const navLinks = [
-    { name: "Início", path: "/" },
-    { name: "Sobre", path: "/sobre" },
-    { name: "Comprar", path: "/comprar" },
-    { name: "Leilões", path: "/leiloes", badge: true },
-    { name: "Vender", path: "/vender" },
-    { name: "Loja", path: "/loja" },
-  ];
-
+export default function Home() {
   return (
     <>
-      <nav 
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b border-white/5
-        ${scrolled || mobileMenuOpen ? "bg-black/90 backdrop-blur-md py-4" : "bg-transparent py-6"}`}
-      >
-        <div className="max-w-[1400px] mx-auto px-6 flex justify-between items-center">
+      <Navbar />
+      
+      {/* HERO SECTION - ECRÃ INTEIRO */}
+      <main className="relative h-screen w-full overflow-hidden bg-black flex flex-col justify-center items-center">
+        
+        {/* 1. IMAGEM DE FUNDO (Otimizada) */}
+        <div className="absolute inset-0 z-0">
+          {/* Película escura para o texto brilhar */}
+          <div className="absolute inset-0 bg-black/40 z-10"></div>
           
-          {/* --- LOGO + TEXTO --- */}
-          <Link href={`/${query}`} className="group relative z-50 flex items-center gap-4">
-            
-            {/* 1. O LOGO (Lê o ficheiro /logo.png da pasta public) */}
-            <div className="relative w-10 h-10 md:w-12 md:h-12 opacity-90 group-hover:opacity-100 transition-opacity">
-               <Image 
-                 src="/logo.png" 
-                 alt="Portal Lusitano Logo" 
-                 fill
-                 className="object-contain" // Garante que o logo não fica esticado
-                 priority
-               />
-            </div>
+          <Image 
+            src="https://images.unsplash.com/photo-1598556776374-0a37466d34b3?q=80&w=2560" 
+            alt="Lusitano Hero" 
+            fill
+            className="object-cover"
+            priority // Carrega instantaneamente
+            quality={90}
+          />
+          
+          {/* Grelha subtil (efeito "Engenharia") */}
+          <div className="absolute inset-0 z-10 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:100px_100px]"></div>
+        </div>
 
-            {/* 2. O TEXTO */}
-            <div className="flex flex-col leading-none">
-              <div className="font-serif text-xl md:text-2xl tracking-tighter font-bold text-white group-hover:opacity-80 transition-opacity whitespace-nowrap">
-                PORTAL <span className="text-[#C5A059]">LUSITANO</span>
-              </div>
-              <p className="text-[8px] uppercase tracking-[0.4em] text-zinc-500 group-hover:text-[#C5A059] transition-colors mt-1">
-                Est. 2023
-              </p>
-            </div>
-          </Link>
+        {/* 2. CONTEÚDO CENTRAL */}
+        <div className="relative z-20 text-center px-4 max-w-5xl mx-auto space-y-8 mt-10">
+          
+          {/* Título Principal */}
+          <h1 className="text-7xl md:text-9xl font-serif italic text-white tracking-tighter leading-none animate-fade-in">
+            O Futuro da <br/>
+            <span className="text-[#C5A059]">Tradição</span>
+          </h1>
+          
+          {/* Texto / Manifesto */}
+          <p className="text-zinc-300 text-lg md:text-xl font-light italic max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-100">
+            "Estamos a construir a infraestrutura digital definitiva para o Cavalo Lusitano. 
+            Onde a seleção genética encontra a precisão da engenharia."
+          </p>
 
-          {/* --- LINKS DESKTOP --- */}
-          <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.name}
-                href={`${link.path}${query}`}
-                className={`text-[10px] uppercase tracking-[0.2em] font-bold hover:text-[#C5A059] transition-colors relative group
-                  ${pathname === link.path ? "text-white" : "text-zinc-500"}
-                `}
-              >
-                {link.name}
-                <span className={`absolute -bottom-2 left-0 w-0 h-px bg-[#C5A059] transition-all duration-300 group-hover:w-full ${pathname === link.path ? "w-full" : ""}`}></span>
-                
-                {link.badge && (
-                  <span className="absolute -top-2 -right-3 flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
-                  </span>
-                )}
-              </Link>
-            ))}
-          </div>
-
-          {/* --- AÇÕES DO LADO DIREITO --- */}
-          <div className="hidden md:flex items-center gap-6">
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1 border border-zinc-800 rounded-full bg-zinc-900/50">
-               <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
-               <span className="text-[8px] uppercase tracking-widest text-zinc-400">System Online</span>
-            </div>
-
+          {/* Botões de Ação */}
+          <div className="pt-10 flex flex-col md:flex-row gap-6 justify-center items-center animate-fade-in-up delay-200">
+            {/* Botão Dourado -> Vai para a Loja */}
             <Link 
-              href={`/dashboard${query}`}
-              className="bg-white text-black px-5 py-2 text-[9px] uppercase font-bold tracking-[0.2em] hover:bg-[#C5A059] transition-all duration-300"
+              href="/loja"
+              className="px-8 py-4 bg-[#C5A059] text-black text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-white transition-all duration-300 min-w-[200px] shadow-[0_0_20px_rgba(197,160,89,0.3)]"
             >
-              Entrar
+              Explorar Coleção
             </Link>
-
-            {/* Menu Hambúrguer (Mobile) */}
-            <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden relative z-50 w-10 h-10 flex flex-col justify-center items-end gap-1.5 group ml-4"
+            
+            {/* Botão Transparente -> Vai para o Sobre */}
+            <Link 
+              href="/sobre"
+              className="px-8 py-4 border border-white/20 text-white text-[10px] uppercase font-bold tracking-[0.2em] hover:border-[#C5A059] hover:text-[#C5A059] transition-all duration-300 min-w-[200px]"
             >
-              <span className={`h-px bg-white transition-all duration-300 ${mobileMenuOpen ? "w-6 rotate-45 translate-y-2" : "w-8 group-hover:w-10 group-hover:bg-[#C5A059]"}`}></span>
-              <span className={`h-px bg-white transition-all duration-300 ${mobileMenuOpen ? "opacity-0" : "w-6 group-hover:w-10 group-hover:bg-[#C5A059]"}`}></span>
-              <span className={`h-px bg-white transition-all duration-300 ${mobileMenuOpen ? "w-6 -rotate-45 -translate-y-2.5" : "w-4 group-hover:w-10 group-hover:bg-[#C5A059]"}`}></span>
-            </button>
+              Ler o Manifesto
+            </Link>
           </div>
         </div>
 
-        {/* --- MENU MOBILE OVERLAY --- */}
-        <div className={`fixed inset-0 bg-black z-40 flex flex-col justify-center items-center transition-all duration-500 ${mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
-           <div className="flex flex-col gap-8 text-center">
-             {navLinks.map((link) => (
-               <Link 
-                 key={link.name}
-                 href={`${link.path}${query}`}
-                 onClick={() => setMobileMenuOpen(false)}
-                 className="text-3xl font-serif italic text-white hover:text-[#C5A059] transition-colors"
-               >
-                 {link.name}
-               </Link>
-             ))}
-             <div className="w-10 h-px bg-zinc-800 mx-auto my-4"></div>
-             <Link 
-               href={`/dashboard${query}`}
-               onClick={() => setMobileMenuOpen(false)}
-               className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059] border border-[#C5A059] px-8 py-4"
-             >
-               Aceder à Coudelaria
-             </Link>
-           </div>
+        {/* 3. RODAPÉ DE DADOS (STATS BAR) */}
+        <div className="absolute bottom-0 left-0 w-full bg-black/80 backdrop-blur-sm border-t border-white/10 z-30">
+          <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-5 divide-x divide-white/10 text-[9px] uppercase tracking-widest text-zinc-400 font-mono">
+             
+             <div className="py-4 px-6 text-center md:text-left">
+               <span className="text-white font-bold block md:inline">Média de Venda:</span> 42.500€
+             </div>
+             
+             <div className="py-4 px-6 text-center md:text-left hidden md:block">
+               <span className="text-white font-bold block md:inline">Visitantes Hoje:</span> 1.240
+             </div>
+
+             <div className="py-4 px-6 text-center md:text-left hidden md:block">
+               <span className="text-white font-bold block md:inline">Novos Registos:</span> +12%
+             </div>
+             
+             <div className="py-4 px-6 text-center md:text-left hidden md:block">
+               <span className="text-white font-bold block md:inline">Leilões Ativos:</span> 3
+             </div>
+
+             <div className="py-4 px-6 text-center md:text-left">
+               <span className="text-white font-bold block md:inline">Status:</span> <span className="text-green-500 animate-pulse">Operacional</span>
+             </div>
+
+          </div>
         </div>
-      </nav>
+
+      </main>
     </>
   );
 }
