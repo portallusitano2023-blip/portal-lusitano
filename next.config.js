@@ -1,29 +1,30 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 1. DESLIGA OS MAPAS DE FONTE (Isto poupa 70% da memória no Build)
-  productionBrowserSourceMaps: false,
+  // 1. DESLIGA TUDO O QUE GASTA MEMÓRIA
+  reactStrictMode: false,
+  swcMinify: false, // Desliga o compressor pesado
+  productionBrowserSourceMaps: false, // Sem mapas de código
 
-  // 2. Ignora erros de verificação durante o deploy (para não bloquear)
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // 2. IGNORA ERROS (Para o build não parar por detalhes)
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
 
-  // 3. Otimização de Imagens
+  // 3. IMAGENS (Configuração Leve)
   images: {
+    unoptimized: true, // Poupamos CPU não otimizando imagens no build
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'cdn.shopify.com' },
-      { protocol: 'https', hostname: 'portal-lusitano.myshopify.com' }, // Adiciona o teu domínio shopify
+      { protocol: 'https', hostname: 'portal-lusitano.myshopify.com' },
     ],
-    // Reduz a carga de processamento de imagem
-    unoptimized: true, 
   },
-  
-  // 4. Standalone mode (Gera uma build muito mais pequena e leve para o Docker/Vercel)
-  output: 'standalone',
+
+  // 4. A SOLUÇÃO MÁGICA PARA O ERRO DE MEMÓRIA 👇
+  experimental: {
+    // Obriga o build a ser feito "um a um", poupando RAM
+    workerThreads: false,
+    cpus: 1, 
+  },
 };
 
 export default nextConfig;
