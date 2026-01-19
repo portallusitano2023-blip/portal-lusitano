@@ -1,30 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 1. Evita gerar mapas de código (Poupa gigabytes de RAM)
-  productionBrowserSourceMaps: false,
-
-  // 2. Desliga a compressão pesada
-  swcMinify: false,
-
-  // 3. Ignora verificações para o build passar rápido
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-
-  // 4. Imagens não otimizadas durante o build
+  // 1. DESLIGA OTIMIZAÇÃO DE IMAGENS (O GRANDE CULPADO)
   images: {
-    unoptimized: true,
+    unoptimized: true, // Isto desativa o processamento pesado de imagens
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'cdn.shopify.com' },
-      { protocol: 'https', hostname: 'portal-lusitano.myshopify.com' },
     ],
   },
+
+  // 2. DESLIGA VERIFICAÇÕES
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
   
-  // NOTA: Removi o "output: standalone" e o "experimental" para deixar o Vercel gerir isso.
+  // 3. DESLIGA COMPRESSÃO E MAPAS
+  swcMinify: false,
+  productionBrowserSourceMaps: false,
+  
+  // 4. FORÇA O MODO DINÂMICO (Impede geração estática pesada)
+  staticPageGenerationTimeout: 1000,
 };
 
 export default nextConfig;
