@@ -1,30 +1,30 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 1. DESLIGA TUDO O QUE GASTA MEMÓRIA
-  reactStrictMode: false,
-  swcMinify: false, // Desliga o compressor pesado
-  productionBrowserSourceMaps: false, // Sem mapas de código
+  // 1. Evita gerar mapas de código (Poupa gigabytes de RAM)
+  productionBrowserSourceMaps: false,
 
-  // 2. IGNORA ERROS (Para o build não parar por detalhes)
-  typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
+  // 2. Desliga a compressão pesada
+  swcMinify: false,
 
-  // 3. IMAGENS (Configuração Leve)
+  // 3. Ignora verificações para o build passar rápido
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
+  // 4. Imagens não otimizadas durante o build
   images: {
-    unoptimized: true, // Poupamos CPU não otimizando imagens no build
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'cdn.shopify.com' },
       { protocol: 'https', hostname: 'portal-lusitano.myshopify.com' },
     ],
   },
-
-  // 4. A SOLUÇÃO MÁGICA PARA O ERRO DE MEMÓRIA 👇
-  experimental: {
-    // Obriga o build a ser feito "um a um", poupando RAM
-    workerThreads: false,
-    cpus: 1, 
-  },
+  
+  // NOTA: Removi o "output: standalone" e o "experimental" para deixar o Vercel gerir isso.
 };
 
 export default nextConfig;
