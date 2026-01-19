@@ -108,10 +108,60 @@ export default async function DetalheCavaloPage({ params }) {
               </p>
             </section>
 
+            {/* SECÇÃO BLOCKCHAIN / INOVAÇÃO (NOVA) */}
+            <section className="py-12 border-t border-zinc-900">
+              <div className="flex items-center gap-4 mb-8">
+                <h3 className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold">Digital Asset</h3>
+                <div className="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 text-[8px] uppercase tracking-widest rounded-full animate-pulse">
+                  Blockchain Verified
+                </div>
+              </div>
+
+              <div className="bg-zinc-950 border border-zinc-800 p-8 relative overflow-hidden group hover:border-blue-500/30 transition-all duration-500">
+                {/* Efeito de Código de Fundo */}
+                <div className="absolute top-0 right-0 p-4 opacity-10 font-mono text-[10px] text-blue-400 pointer-events-none select-none">
+                  0x71C...9A21
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                  <div>
+                    <h4 className="text-white font-serif italic text-2xl mb-2">Certificado NFT #8829</h4>
+                    <p className="text-zinc-500 text-xs font-light leading-relaxed mb-6">
+                      Este exemplar possui um Gémeo Digital registado na rede Polygon. A propriedade é transferida via Smart Contract no momento da venda, garantindo autenticidade e histórico imutável.
+                    </p>
+                    <div className="flex gap-4 font-mono text-[9px] text-zinc-400">
+                       <div>
+                         <span className="block text-zinc-600 uppercase">Token ID</span>
+                         <span className="text-white">8829304...</span>
+                       </div>
+                       <div>
+                         <span className="block text-zinc-600 uppercase">Contract</span>
+                         <span className="text-[#C5A059]">0xPort...Lusi</span>
+                       </div>
+                       <div>
+                         <span className="block text-zinc-600 uppercase">Standard</span>
+                         <span className="text-white">ERC-721</span>
+                       </div>
+                    </div>
+                  </div>
+                  
+                  {/* Visualização do Smart Contract (Simulada) */}
+                  <div className="bg-black border border-zinc-900 p-4 font-mono text-[8px] text-zinc-500 leading-loose rounded overflow-hidden">
+                    <p><span className="text-blue-400">function</span> <span className="text-yellow-400">transferOwnership</span>(address _newOwner) <span className="text-blue-400">public</span> &#123;</p>
+                    <p className="pl-4">require(msg.sender == owner);</p>
+                    <p className="pl-4">owner = _newOwner;</p>
+                    <p className="pl-4 text-green-500">// Royalties automáticos de 5%</p>
+                    <p className="pl-4">payable(creator).transfer(msg.value * 0.05);</p>
+                    <p>&#125;</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* CALL TO ACTION */}
             <div className="pt-10 sticky bottom-0 bg-black/95 backdrop-blur-md py-6 border-t border-zinc-900">
-              <button className="w-full bg-[#C5A059] text-black py-6 text-[11px] uppercase font-bold tracking-[0.4em] hover:bg-white transition-all duration-500">
-                Solicitar Dossier Completo
+              <button className="w-full bg-[#C5A059] text-black py-6 text-[11px] uppercase font-bold tracking-[0.4em] hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(197,160,89,0.3)]">
+                Solicitar Dossier & Visita
               </button>
               <p className="text-center text-[8px] text-zinc-500 mt-4 uppercase tracking-widest">
                 Exclusivo para membros Portal Lusitano
