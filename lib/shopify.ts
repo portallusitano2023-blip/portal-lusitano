@@ -1,40 +1,44 @@
 // @ts-nocheck
-// 1. Ler as variáveis exatamente como estão no teu ficheiro .env
-const domain = process.env.SHOPIFY_DOMAIN || "irdip0-dq.myshopify.com";
-const publicToken = process.env.SHOPIFY_TOKEN; // Antes estava SHOPIFY_PRIVATE_TOKEN
+
+// 👇 1. ESTOU A USAR OS DADOS DIRETOS DO TEU PRINT
+const domain = "irdip0-dq.myshopify.com";
+const publicToken = "5566f8155086c19776145d6ff669019b";
 
 export async function shopifyFetch({ query, variables = {} }) {
+  const endpoint = `https://${domain}/api/2024-01/graphql.json`;
+  
   try {
-    const response = await fetch(`https://${domain}/api/2024-01/graphql.json`, {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 2. CORREÇÃO: Usar o cabeçalho para tokens públicos (o que tu tens)
-        'X-Shopify-Storefront-Access-Token': publicToken, 
+        'X-Shopify-Storefront-Access-Token': publicToken,
       },
       body: JSON.stringify({ query, variables }),
-      cache: 'no-store',
+      cache: 'no-store', // Garante que não guarda cache velha
     });
-    
+
     const data = await response.json();
-    
-    // Pequeno log para te ajudar a ver se funcionou no terminal
+
+    // 👇 LOG DE DEBUG: Vai aparecer no teu terminal (onde corres o npm run dev)
+    console.log("--- DEBUG SHOPIFY ---");
     if (data.errors) {
-      console.error("Erro Shopify:", data.errors);
+      console.error("ERRO NA API:", JSON.stringify(data.errors, null, 2));
+    } else {
+      console.log("Produtos encontrados:", data?.data?.products?.edges?.length || 0);
     }
-    
+    console.log("---------------------");
+
     return data;
   } catch (e) {
-    console.error("Erro Fetch:", e);
+    console.error("ERRO CRÍTICO FETCH:", e);
     return null;
   }
 }
 
-export async function getProducts(tag = "") {
-  const filter = tag ? `query: "tag:${tag}"` : "";
-
+export async function getProducts() {
   const query = `{
-    products(first: 20, ${filter}) {
+    products(first: 10) {
       edges {
         node {
           id
@@ -49,6 +53,5 @@ export async function getProducts(tag = "") {
   }`;
 
   const res = await shopifyFetch({ query });
-  // Garante que devolve um array vazio se não houver produtos, para não dar erro
   return res?.data?.products?.edges?.map(edge => edge.node) || [];
 }
