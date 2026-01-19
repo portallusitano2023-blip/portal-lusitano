@@ -1,24 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 1. DESLIGA OTIMIZAÇÃO DE IMAGENS (O GRANDE CULPADO)
+  // 1. A IMAGEM É A CULPADA: Isto desliga o processamento de imagem no servidor
   images: {
-    unoptimized: true, // Isto desativa o processamento pesado de imagens
+    unoptimized: true, 
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'cdn.shopify.com' },
     ],
   },
 
-  // 2. DESLIGA VERIFICAÇÕES
-  typescript: { ignoreBuildErrors: true },
+  // 2. DESLIGAR VERIFICAÇÕES
   eslint: { ignoreDuringBuilds: true },
-  
-  // 3. DESLIGA COMPRESSÃO E MAPAS
-  swcMinify: false,
-  productionBrowserSourceMaps: false,
-  
-  // 4. FORÇA O MODO DINÂMICO (Impede geração estática pesada)
-  staticPageGenerationTimeout: 1000,
+  typescript: { ignoreBuildErrors: true },
+
+  // 3. POUPAR MEMÓRIA NO BUILD (CRÍTICO)
+  swcMinify: false, // Desliga a compressão pesada
+  productionBrowserSourceMaps: false, // Não gera mapas
+  reactStrictMode: false,
 };
 
 export default nextConfig;
