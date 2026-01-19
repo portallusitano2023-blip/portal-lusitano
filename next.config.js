@@ -1,13 +1,17 @@
-module.exports = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
-    domains: ['cdn.sanity.io', 'cdn.shopify.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.shopify.com',
+      },
+    ],
   },
-  // Esta linha força o Next.js a ignorar verificações de tipos no build
-  swcMinify: true,
 };
+
+export default nextConfig;

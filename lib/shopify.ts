@@ -9,11 +9,11 @@ export async function shopifyFetch({ query, variables = {} }) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // Esta é a chave pública que mostraste no print
       'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
     },
     body: JSON.stringify({ query, variables }),
-    cache: 'no-store',
+    // 👇 A MAGIA: Guarda em cache por 1 hora (3600 segundos)
+    next: { revalidate: 3600 } 
   });
 
   return response.json();
@@ -28,27 +28,13 @@ export async function getProducts() {
           title
           handle
           availableForSale
-          description
-          priceRange {
-            minVariantPrice {
-              amount
-              currencyCode
-            }
-          }
-          images(first: 1) {
-            edges {
-              node {
-                url
-                altText
-              }
-            }
-          }
+          priceRange { minVariantPrice { amount currencyCode } }
+          images(first: 1) { edges { node { url } } }
         }
       }
     }
   }`;
 
   const response = await shopifyFetch({ query });
-  // Se der erro, devolve array vazio para não partir o site
   return response?.data?.products?.edges?.map(edge => edge.node) || [];
 }
