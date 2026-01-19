@@ -2,101 +2,103 @@
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 
-// 👇 1. IMPORTANTE: Confirma se o caminho da tua função está correto aqui
-// Se guardaste em lib/shopify.ts, isto deve funcionar:
-import { getProducts } from "@/lib/shopify"; 
-
-export default async function LojaPage() {
-  
-  // 👇 2. Busca os produtos reais ao teu Shopify
-  const products = await getProducts(); 
-
+export default function Home() {
   return (
     <>
-      <Navbar dev={true} />
-      <main className="min-h-screen bg-black text-white pt-40 pb-20 px-6">
+      <Navbar />
+      
+      {/* --- HERO SECTION (O CINEMA) --- */}
+      <main className="relative h-screen w-full overflow-hidden bg-black text-white">
         
-        {/* HERO SECTION (Mantém o design de luxo) */}
-        <header className="max-w-7xl mx-auto mb-32 text-center border-b border-zinc-900 pb-20">
-          <span className="text-[#C5A059] uppercase tracking-[1em] text-[10px] font-bold block mb-8 animate-pulse">
-            Merchandising Oficial
+        {/* VIDEO / IMAGEM DE FUNDO */}
+        <div className="absolute inset-0 z-0">
+          {/* Estou a usar uma imagem de alta qualidade. Se tiveres vídeo, substituímos depois */}
+          <img 
+            src="https://images.unsplash.com/photo-1598556776374-0a37466d34b3?q=80&w=2560" 
+            alt="Cavalo Lusitano Hero" 
+            className="w-full h-full object-cover opacity-60 grayscale"
+          />
+          {/* Gradiente para o texto brilhar */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+        </div>
+
+        {/* CONTEÚDO PRINCIPAL */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+          
+          <span className="text-[#C5A059] uppercase tracking-[0.5em] text-xs md:text-sm font-bold mb-6 animate-pulse">
+            Est. 2026 • Portugal
           </span>
-          <h1 className="text-6xl md:text-9xl font-serif italic tracking-tighter mb-10">
-            Lifestyle & <span className="text-[#C5A059]">Legado</span>
+          
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif italic tracking-tighter mb-8">
+            Portal <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#C5A059] to-[#8A6E36]">Lusitano</span>
           </h1>
-          <p className="text-zinc-500 text-xl font-light italic max-w-2xl mx-auto">
-            "A coleção exclusiva do Portal Lusitano. Integrada com o nosso armazém global."
+          
+          <p className="max-w-xl text-zinc-300 text-lg md:text-xl font-light italic mb-12 leading-relaxed">
+            "Onde a tradição secular encontra a inovação digital. 
+            O palco mundial do Cavalo Puro Sangue Lusitano."
           </p>
-        </header>
 
-        {/* GRELHA DE PRODUTOS (Com dados Reais) */}
-        {products && products.length > 0 ? (
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-px bg-zinc-800 border border-zinc-800">
+          {/* BOTÕES DE AÇÃO */}
+          <div className="flex flex-col md:flex-row gap-6">
+            <Link 
+              href="/comprar"
+              className="px-8 py-4 bg-[#C5A059] text-black text-xs uppercase font-bold tracking-[0.2em] hover:bg-white transition-all duration-500"
+            >
+              Explorar Coleção
+            </Link>
             
-            {products.map((product) => {
-              // Preparação de dados (para evitar erros se faltar imagem)
-              const image = product.featuredImage?.url || product.images?.edges?.[0]?.node?.url || "";
-              const price = product.priceRange?.minVariantPrice?.amount || "---";
-              const currency = product.priceRange?.minVariantPrice?.currencyCode === "EUR" ? "€" : "€";
-
-              return (
-                <Link 
-                  key={product.id} 
-                  href={`/loja/${product.handle}`} // Assume que tens uma página de detalhe
-                  className="group bg-black p-10 hover:bg-zinc-950 transition-colors relative flex flex-col"
-                >
-                  
-                  {/* TAG DE STOCK */}
-                  <div className="absolute top-6 left-6 z-10">
-                    <span className="bg-white text-black text-[9px] uppercase font-bold px-3 py-1 tracking-widest">
-                      {product.availableForSale ? "Disponível" : "Esgotado"}
-                    </span>
-                  </div>
-
-                  {/* IMAGEM DO PRODUTO */}
-                  <div className="aspect-square overflow-hidden mb-8 relative grayscale group-hover:grayscale-0 transition-all duration-700">
-                    {image ? (
-                      <img 
-                        src={image} 
-                        alt={product.title} 
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[2s]" 
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-zinc-900 flex items-center justify-center text-zinc-700 text-xs">Sem Imagem</div>
-                    )}
-                  </div>
-
-                  {/* INFORMAÇÃO */}
-                  <div className="mt-auto">
-                    <div className="flex justify-between items-end mb-4">
-                      <h3 className="text-2xl font-serif italic text-white line-clamp-1">
-                        {product.title}
-                      </h3>
-                      <p className="text-xl font-light text-zinc-400">
-                        {price} {currency}
-                      </p>
-                    </div>
-                    
-                    <button className="w-full border border-zinc-800 text-white py-4 text-[10px] uppercase font-bold tracking-[0.3em] group-hover:bg-[#C5A059] group-hover:text-black group-hover:border-[#C5A059] transition-all duration-300">
-                      Ver Detalhes
-                    </button>
-                  </div>
-
-                </Link>
-              );
-            })}
+            <Link 
+              href="/leiloes"
+              className="px-8 py-4 border border-white/20 text-white text-xs uppercase font-bold tracking-[0.2em] hover:border-[#C5A059] hover:text-[#C5A059] transition-all duration-500 backdrop-blur-sm"
+            >
+              Leilões ao Vivo
+            </Link>
           </div>
-        ) : (
-          // ESTADO DE ERRO OU CARREGAMENTO
-          <div className="text-center py-20 border border-dashed border-zinc-800 bg-zinc-900/20">
-            <p className="text-white text-lg font-serif italic mb-2">A carregar coleção...</p>
-            <p className="text-zinc-600 text-xs font-mono">
-              Se isto demorar, verifica se a função <code>getProducts()</code> está a devolver dados corretamente.
-            </p>
+        </div>
+
+        {/* RODAPÉ DO HERO (Dados de Mercado) */}
+        <div className="absolute bottom-10 left-0 w-full px-10 hidden md:flex justify-between items-end text-[10px] text-zinc-500 uppercase tracking-widest font-mono">
+          <div>
+            <span className="block text-zinc-700">Market Cap</span>
+            <span className="text-white">€12.4M Volume</span>
           </div>
-        )}
+          <div className="text-center animate-bounce">
+            Scroll para descobrir
+          </div>
+          <div className="text-right">
+            <span className="block text-zinc-700">Membros Ativos</span>
+            <span className="text-white">1,240 Investidores</span>
+          </div>
+        </div>
 
       </main>
+
+      {/* --- SEGUNDA SECÇÃO (O MANIFESTO) --- */}
+      <section className="bg-black py-32 px-6 border-t border-zinc-900">
+        <div className="max-w-4xl mx-auto text-center space-y-12">
+           <h2 className="text-4xl md:text-5xl font-serif text-white">
+             Mais do que uma plataforma, <br/> 
+             <span className="italic text-[#C5A059]">um legado.</span>
+           </h2>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-12">
+             <div className="space-y-4">
+               <div className="text-[#C5A059] text-3xl">🏛️</div>
+               <h3 className="text-white font-bold uppercase tracking-widest text-xs">História</h3>
+               <p className="text-zinc-500 text-sm leading-relaxed">Preservamos as linhagens mais antigas, conectando o passado ao futuro através da tecnologia blockchain.</p>
+             </div>
+             <div className="space-y-4">
+               <div className="text-[#C5A059] text-3xl">💎</div>
+               <h3 className="text-white font-bold uppercase tracking-widest text-xs">Exclusividade</h3>
+               <p className="text-zinc-500 text-sm leading-relaxed">Acesso restrito aos melhores exemplares da raça. Cada cavalo é selecionado rigorosamente.</p>
+             </div>
+             <div className="space-y-4">
+               <div className="text-[#C5A059] text-3xl">🌍</div>
+               <h3 className="text-white font-bold uppercase tracking-widest text-xs">Alcance Global</h3>
+               <p className="text-zinc-500 text-sm leading-relaxed">Levamos o Cavalo Lusitano aos 4 cantos do mundo, facilitando a exportação e a burocracia.</p>
+             </div>
+           </div>
+        </div>
+      </section>
     </>
   );
 }
