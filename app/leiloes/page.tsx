@@ -1,7 +1,7 @@
 // @ts-nocheck
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
-
+export const dynamic = 'force-dynamic';
 export default function LeiloesPage() {
   return (
     <>

@@ -2,7 +2,8 @@
 import Navbar from "@/components/Navbar";
 import { getProducts } from "@/lib/shopify";
 import Image from "next/image"; // Importar componente Image
-
+// Adiciona logo a seguir aos imports
+export const dynamic = 'force-dynamic';
 export default async function LojaPage() {
   const products = await getProducts();
 
