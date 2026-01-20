@@ -1,8 +1,19 @@
 // @ts-nocheck
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
+import Maintenance from "@/components/Maintenance"; // Importamos a proteção
 
-export default function SobrePage() {
+export default function Home() {
+  // --- LÓGICA DE PROTEÇÃO ---
+  // Se o site estiver na Vercel (production), mostra o ecrã preto.
+  // Se estiver no teu PC (development), mostra o site real.
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (isProduction) {
+    return <Maintenance />;
+  }
+
+  // --- O TEU SITE REAL (Visível apenas para ti) ---
   return (
     <>
       <Navbar />
@@ -42,7 +53,7 @@ export default function SobrePage() {
         <section className="py-32 px-6 bg-zinc-950 border-t border-zinc-900">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
             
-            {/* Foto do Fundador (Placeholder - depois metes a tua) */}
+            {/* Foto do Fundador */}
             <div className="w-full md:w-1/2 relative aspect-[3/4] border border-zinc-800 p-4">
               <div className="relative w-full h-full overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
                 <Image 
