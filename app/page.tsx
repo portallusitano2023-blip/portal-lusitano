@@ -1,108 +1,92 @@
 // @ts-nocheck
-// import Navbar from "@/components/Navbar";  <-- DESLIGUEI AQUI NO INÍCIO
-import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <>
-      {/* <Navbar /> */}  {/* <-- DESLIGUEI AQUI NO VISUAL */}
+      <Navbar />
       
-      <main className="min-h-screen bg-black text-white">
+      {/* HERO SECTION - ECRÃ INTEIRO */}
+      <main className="relative h-screen w-full overflow-hidden bg-black flex flex-col justify-center items-center">
         
-        {/* --- HERO SECTION: O MANIFESTO --- */}
-        <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <Image 
-              src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=2560" 
-              alt="Lusitano Eye" 
-              fill
-              className="object-cover opacity-40 grayscale"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black"></div>
-          </div>
+        {/* 1. IMAGEM DE FUNDO (Agora usa <img> normal para funcionar sempre) */}
+        <div className="absolute inset-0 z-0">
+          {/* Película escura para o texto brilhar */}
+          <div className="absolute inset-0 bg-black/40 z-10"></div>
+          
+          {/* AQUI ESTÁ A MUDANÇA: Usamos <img> normal do HTML */}
+          <img 
+            src="https://images.unsplash.com/photo-1598556776374-0a37466d34b3?q=80&w=2560" 
+            alt="Lusitano Hero" 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          
+          {/* Grelha subtil (efeito "Engenharia") */}
+          <div className="absolute inset-0 z-10 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:100px_100px]"></div>
+        </div>
 
-          <div className="relative z-10 text-center max-w-4xl px-6">
-            <span className="text-[#C5A059] uppercase tracking-[0.5em] text-xs font-bold mb-6 block animate-pulse">
-              O Nosso Manifesto
-            </span>
-            <h1 className="text-5xl md:text-7xl font-serif italic leading-tight mb-8">
-              "Não vendemos cavalos. <br/> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A059] to-[#F2D088]">
-                Preservamos História.
-              </span>"
-            </h1>
-            <p className="text-xl text-zinc-300 font-light leading-relaxed">
-              O Portal Lusitano nasceu para elevar o Cavalo Puro Sangue Lusitano ao estatuto de obra de arte global. Unimos a tradição secular das Coudelarias portuguesas à inovação tecnológica do século XXI.
-            </p>
-          </div>
-        </section>
+        {/* 2. CONTEÚDO CENTRAL */}
+        <div className="relative z-20 text-center px-4 max-w-5xl mx-auto space-y-8 mt-10">
+          
+          {/* Título Principal */}
+          <h1 className="text-7xl md:text-9xl font-serif italic text-white tracking-tighter leading-none animate-fade-in">
+            O Futuro da <br/>
+            <span className="text-[#C5A059]">Tradição</span>
+          </h1>
+          
+          {/* Texto / Manifesto */}
+          <p className="text-zinc-300 text-lg md:text-xl font-light italic max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-100">
+            "Estamos a construir a infraestrutura digital definitiva para o Cavalo Lusitano. 
+            Onde a seleção genética encontra a precisão da engenharia."
+          </p>
 
-        {/* --- SECÇÃO DO FUNDADOR --- */}
-        <section className="py-32 px-6 bg-zinc-950 border-t border-zinc-900">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
+          {/* Botões de Ação */}
+          <div className="pt-10 flex flex-col md:flex-row gap-6 justify-center items-center animate-fade-in-up delay-200">
+            {/* Botão Dourado -> Vai para a Loja */}
+            <Link 
+              href="/loja"
+              className="px-8 py-4 bg-[#C5A059] text-black text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-white transition-all duration-300 min-w-[200px] shadow-[0_0_20px_rgba(197,160,89,0.3)]"
+            >
+              Explorar Coleção
+            </Link>
             
-            <div className="w-full md:w-1/2 relative aspect-[3/4] border border-zinc-800 p-4">
-              <div className="relative w-full h-full overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
-                <Image 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800" 
-                  alt="Francisco Gaspar" 
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-6 -right-6 bg-black border border-[#C5A059] px-8 py-4 z-20">
-                <p className="text-[#C5A059] font-serif italic text-2xl">Francisco Gaspar</p>
-                <p className="text-zinc-500 text-[10px] uppercase tracking-widest">Fundador & CEO</p>
-              </div>
-            </div>
+            {/* Botão Transparente -> Vai para o Sobre */}
+            <Link 
+              href="/sobre"
+              className="px-8 py-4 border border-white/20 text-white text-[10px] uppercase font-bold tracking-[0.2em] hover:border-[#C5A059] hover:text-[#C5A059] transition-all duration-300 min-w-[200px]"
+            >
+              Ler o Manifesto
+            </Link>
+          </div>
+        </div>
 
-            <div className="w-full md:w-1/2 space-y-8">
-              <h2 className="text-4xl font-serif text-white">
-                Uma visão nascida em <br/> 
-                <span className="text-[#C5A059] italic">2026.</span>
-              </h2>
-              <div className="space-y-6 text-zinc-400 font-light leading-relaxed">
-                <p>
-                  "O meu nome é Francisco Gaspar. Como estudante de Engenharia Informática e apaixonado pelo mundo equestre, percebi que existia um fosso gigante entre a qualidade dos nossos cavalos e a forma como eram apresentados ao mundo."
-                </p>
-                <p>
-                  "O Portal Lusitano não é apenas um marketplace. É um ecossistema digital que garante segurança, transparência e prestígio a quem compra e a quem vende."
-                </p>
-              </div>
+        {/* 3. RODAPÉ DE DADOS (STATS BAR) */}
+        <div className="absolute bottom-0 left-0 w-full bg-black/80 backdrop-blur-sm border-t border-white/10 z-30">
+          <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-5 divide-x divide-white/10 text-[9px] uppercase tracking-widest text-zinc-400 font-mono">
               
-              <div className="pt-8 opacity-50">
-                <span className="font-script text-4xl text-white">Francisco Gaspar</span>
-              </div>
-            </div>
+             <div className="py-4 px-6 text-center md:text-left">
+               <span className="text-white font-bold block md:inline">Média de Venda:</span> 42.500€
+             </div>
+             
+             <div className="py-4 px-6 text-center md:text-left hidden md:block">
+               <span className="text-white font-bold block md:inline">Visitantes Hoje:</span> 1.240
+             </div>
+
+             <div className="py-4 px-6 text-center md:text-left hidden md:block">
+               <span className="text-white font-bold block md:inline">Novos Registos:</span> +12%
+             </div>
+             
+             <div className="py-4 px-6 text-center md:text-left hidden md:block">
+               <span className="text-white font-bold block md:inline">Leilões Ativos:</span> 3
+             </div>
+
+             <div className="py-4 px-6 text-center md:text-left">
+               <span className="text-white font-bold block md:inline">Status:</span> <span className="text-green-500 animate-pulse">Operacional</span>
+             </div>
 
           </div>
-        </section>
-
-        {/* --- OS PILARES --- */}
-        <section className="py-32 px-6 bg-black">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-            
-            <div className="p-10 border border-zinc-900 hover:border-[#C5A059] transition-colors group">
-              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform">💎</div>
-              <h3 className="text-white uppercase tracking-widest text-sm font-bold mb-4">Seleção Rigorosa</h3>
-              <p className="text-zinc-500 text-sm">Apenas aceitamos cavalos com registo no Livro Genealógico (Stud-book) e exames veterinários aprovados.</p>
-            </div>
-
-            <div className="p-10 border border-zinc-900 hover:border-[#C5A059] transition-colors group">
-              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform">🛡️</div>
-              <h3 className="text-white uppercase tracking-widest text-sm font-bold mb-4">Segurança Blockchain</h3>
-              <p className="text-zinc-500 text-sm">Cada transação é registada digitalmente, garantindo a autenticidade e o histórico de propriedade.</p>
-            </div>
-
-            <div className="p-10 border border-zinc-900 hover:border-[#C5A059] transition-colors group">
-              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform">🌍</div>
-              <h3 className="text-white uppercase tracking-widest text-sm font-bold mb-4">Exportação Global</h3>
-              <p className="text-zinc-500 text-sm">Tratamos de toda a burocracia, quarentena e transporte aéreo para qualquer parte do mundo.</p>
-            </div>
-
-          </div>
-        </section>
+        </div>
 
       </main>
     </>
