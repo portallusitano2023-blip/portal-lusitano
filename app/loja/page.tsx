@@ -1,75 +1,40 @@
 // @ts-nocheck
-import Navbar from "@/components/Navbar";
 import { getProducts } from "@/lib/shopify";
-import Image from "next/image"; // Importar componente Image
-// Adiciona logo a seguir aos imports
-export const dynamic = 'force-dynamic';
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
 export default async function LojaPage() {
   const products = await getProducts();
 
   return (
     <>
-      <Navbar dev={true} />
-      <main className="min-h-screen bg-black text-white pt-40 pb-20 px-6">
-        
-        <header className="max-w-7xl mx-auto mb-20 text-center border-b border-zinc-900 pb-10">
-          <span className="text-[#C5A059] uppercase tracking-[1em] text-[10px] font-bold block mb-8 animate-pulse">
-            Loja Oficial
-          </span>
-          <h1 className="text-5xl font-serif italic text-white mb-4">
-            Portal <span className="text-[#C5A059]">Collection</span>
-          </h1>
-        </header>
-
-        {products.length > 0 ? (
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-px bg-zinc-800 border border-zinc-800">
-            {products.map((product) => {
-              const image = product.images?.edges?.[0]?.node?.url;
-              const price = product.priceRange?.minVariantPrice?.amount;
-
-              return (
-                <div key={product.id} className="group bg-black p-10 hover:bg-zinc-950 transition-colors relative flex flex-col">
-                  <div className="absolute top-6 left-6 z-10">
-                    <span className={`text-[9px] uppercase font-bold px-3 py-1 tracking-widest ${product.availableForSale ? 'bg-white text-black' : 'bg-red-900 text-white'}`}>
-                      {product.availableForSale ? "Disponível" : "Esgotado"}
-                    </span>
-                  </div>
-
-                  {/* IMAGEM OTIMIZADA NEXT.JS */}
-                  <div className="aspect-square overflow-hidden mb-8 relative grayscale group-hover:grayscale-0 transition-all duration-700">
-                    {image ? (
-                      <Image 
-                        src={image} 
-                        alt={product.title} 
-                        fill // Ocupa o quadrado
-                        sizes="(max-width: 768px) 100vw, 33vw" // Diz ao browser qual o tamanho real
-                        className="object-cover transform group-hover:scale-110 transition-transform duration-[2s]" 
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-zinc-900 flex items-center justify-center text-zinc-600 text-xs">Sem Imagem</div>
-                    )}
-                  </div>
-
-                  <div className="mt-auto">
-                    <div className="flex justify-between items-end mb-4">
-                      <h3 className="text-xl font-serif italic text-white line-clamp-1">{product.title}</h3>
-                      <p className="text-lg text-zinc-400">{Number(price).toFixed(2)} €</p>
-                    </div>
-                    <button className="w-full border border-zinc-800 text-white py-4 text-[10px] uppercase font-bold tracking-[0.3em] group-hover:bg-[#C5A059] group-hover:text-black group-hover:border-[#C5A059] transition-all duration-300">
-                      Ver Detalhes
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center py-20 bg-zinc-900/20 border border-dashed border-zinc-800">
-            <p className="text-zinc-500">A carregar inventário...</p>
-          </div>
-        )}
-
+      <Navbar />
+      <main className="min-h-screen bg-black text-white pt-40 pb-20">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
+          {products.map((product) => (
+            <div key={product.id} className="border border-zinc-900 p-10 flex flex-col items-center group">
+              <div className="aspect-square w-full bg-zinc-900 mb-8 overflow-hidden border border-zinc-800 group-hover:border-[#C5A059]/50 transition-all">
+                <img 
+                  src={product.images[0]?.url} 
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" 
+                />
+              </div>
+              <h3 className="text-2xl font-serif italic mb-2">{product.title}</h3>
+              <p className="text-[#C5A059] font-serif mb-8">
+                {Number(product.priceRange.minVariantPrice.amount).toFixed(2)} €
+              </p>
+              
+              <a 
+                href={`/loja/${product.handle}`} 
+                className="bg-white text-black px-12 py-4 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-[#C5A059] transition-all"
+              >
+                Ver Detalhes
+              </a>
+            </div>
+          ))}
+        </div>
       </main>
+      <Footer />
     </>
   );
 }

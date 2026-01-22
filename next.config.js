@@ -8,7 +8,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'cdn.sanity.io', // Já deixamos preparado para o futuro
+        hostname: 'cdn.shopify.com', // <--- AQUI ESTÁ A CHAVE DE ACESSO DO SHOPIFY
       },
     ],
   },

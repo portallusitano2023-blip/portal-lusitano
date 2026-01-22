@@ -1,13 +1,13 @@
 // @ts-nocheck
 import Navbar from "@/components/Navbar";
 
-export default async function SobrePage({ searchParams }) {
-  const sParams = await searchParams;
-  if (sParams?.dev !== "true") return null;
+// Removi o 'searchParams' porque já não precisamos de verificar a password
+export default function SobrePage() { 
 
   return (
     <>
-      <Navbar dev={true} />
+      <Navbar />
+      
       <main className="min-h-screen bg-black text-white selection:bg-[#C5A059] selection:text-black font-light">
         
         {/* I. HERO: A SOBERANIA */}
@@ -95,7 +95,7 @@ export default async function SobrePage({ searchParams }) {
           </div>
         </section>
 
-        {/* IV. AS DINASTIAS GENÉTICAS (COM IMAGENS REPRESENTATIVAS) */}
+        {/* IV. AS DINASTIAS GENÉTICAS */}
         <section className="min-h-screen flex flex-col bg-black">
           <div className="py-20 px-6 border-b border-zinc-900 bg-black z-10">
             <span className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold">Capítulo III: As Fontes do Sangue</span>
@@ -104,7 +104,7 @@ export default async function SobrePage({ searchParams }) {
           
           <div className="flex-1 grid grid-cols-1 lg:grid-cols-4">
             
-            {/* VEIGA: Imagem focada na expressão/cabeça (Reatividade) */}
+            {/* VEIGA */}
             <div className="border-r border-zinc-900 p-10 transition-all duration-700 group relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=2071" className="absolute inset-0 w-full h-full object-cover grayscale opacity-20 group-hover:opacity-40 transition-all duration-700 scale-110 group-hover:scale-100" />
               <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-all duration-700"></div>
@@ -118,7 +118,7 @@ export default async function SobrePage({ searchParams }) {
               </div>
             </div>
 
-            {/* ANDRADE: Imagem de corpo inteiro/movimento (Atleta) */}
+            {/* ANDRADE */}
             <div className="border-r border-zinc-900 p-10 transition-all duration-700 group relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1598974357801-cbca100e65d3?q=80&w=1974" className="absolute inset-0 w-full h-full object-cover grayscale opacity-20 group-hover:opacity-40 transition-all duration-700 scale-110 group-hover:scale-100" />
               <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-all duration-700"></div>
@@ -132,7 +132,7 @@ export default async function SobrePage({ searchParams }) {
               </div>
             </div>
 
-            {/* ALTER REAL: Imagem de um cavalo CASTANHO/BAY (Mandatório) */}
+            {/* ALTER REAL */}
             <div className="border-r border-zinc-900 p-10 transition-all duration-700 group relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1551884831-bbf3ddd77535?q=80&w=2070" className="absolute inset-0 w-full h-full object-cover grayscale opacity-20 group-hover:opacity-40 transition-all duration-700 scale-110 group-hover:scale-100" />
               <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-all duration-700"></div>
@@ -146,7 +146,7 @@ export default async function SobrePage({ searchParams }) {
               </div>
             </div>
 
-            {/* C. NACIONAL: Imagem clássica/perfil (Padrão) */}
+            {/* C. NACIONAL */}
             <div className="p-10 transition-all duration-700 group relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1629814407986-e63f538350d7?q=80&w=1974" className="absolute inset-0 w-full h-full object-cover grayscale opacity-20 group-hover:opacity-40 transition-all duration-700 scale-110 group-hover:scale-100" />
               <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-all duration-700"></div>
@@ -177,7 +177,7 @@ export default async function SobrePage({ searchParams }) {
               "O Portal Lusitano não vende apenas cavalos. <br /> <span className="text-[#C5A059]">Nós curamos História.</span>"
             </h2>
             <div className="pt-20">
-               <a href="/comprar?dev=true" className="inline-block text-[#C5A059] text-[9px] uppercase tracking-[0.4em] border border-[#C5A059]/50 px-10 py-4 hover:bg-[#C5A059] hover:text-black transition-all duration-500 cursor-pointer backdrop-blur-sm">
+               <a href="/loja" className="inline-block text-[#C5A059] text-[9px] uppercase tracking-[0.4em] border border-[#C5A059]/50 px-10 py-4 hover:bg-[#C5A059] hover:text-black transition-all duration-500 cursor-pointer backdrop-blur-sm">
                  Entrar no Marketplace de Elite
                </a>
             </div>
