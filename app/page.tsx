@@ -1,11 +1,11 @@
 // @ts-nocheck
-import Navbar from "@/components/Navbar";
+// import Navbar from "@/components/Navbar";  <-- DESLIGUEI AQUI NO INÍCIO
 import Image from "next/image";
 
 export default function Home() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}  {/* <-- DESLIGUEI AQUI NO VISUAL */}
       
       <main className="min-h-screen bg-black text-white">
         
@@ -70,6 +70,7 @@ export default function Home() {
                   "O Portal Lusitano não é apenas um marketplace. É um ecossistema digital que garante segurança, transparência e prestígio a quem compra e a quem vende."
                 </p>
               </div>
+              
               <div className="pt-8 opacity-50">
                 <span className="font-script text-4xl text-white">Francisco Gaspar</span>
               </div>
@@ -77,6 +78,32 @@ export default function Home() {
 
           </div>
         </section>
+
+        {/* --- OS PILARES --- */}
+        <section className="py-32 px-6 bg-black">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+            
+            <div className="p-10 border border-zinc-900 hover:border-[#C5A059] transition-colors group">
+              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform">💎</div>
+              <h3 className="text-white uppercase tracking-widest text-sm font-bold mb-4">Seleção Rigorosa</h3>
+              <p className="text-zinc-500 text-sm">Apenas aceitamos cavalos com registo no Livro Genealógico (Stud-book) e exames veterinários aprovados.</p>
+            </div>
+
+            <div className="p-10 border border-zinc-900 hover:border-[#C5A059] transition-colors group">
+              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform">🛡️</div>
+              <h3 className="text-white uppercase tracking-widest text-sm font-bold mb-4">Segurança Blockchain</h3>
+              <p className="text-zinc-500 text-sm">Cada transação é registada digitalmente, garantindo a autenticidade e o histórico de propriedade.</p>
+            </div>
+
+            <div className="p-10 border border-zinc-900 hover:border-[#C5A059] transition-colors group">
+              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform">🌍</div>
+              <h3 className="text-white uppercase tracking-widest text-sm font-bold mb-4">Exportação Global</h3>
+              <p className="text-zinc-500 text-sm">Tratamos de toda a burocracia, quarentena e transporte aéreo para qualquer parte do mundo.</p>
+            </div>
+
+          </div>
+        </section>
+
       </main>
     </>
   );
