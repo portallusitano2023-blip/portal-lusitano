@@ -1,56 +1,61 @@
-// @ts-nocheck
+import type { Metadata } from "next";
+import { Playfair_Display, Lato } from "next/font/google";
 import "./globals.css";
-import { Inter, Playfair_Display } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CartDrawer from "@/components/CartDrawer";
-import ScrollToTop from "@/components/ScrollToTop";
+
+// --- IMPORTS DOS CONTEXTOS (O que faltava) ---
 import { CartProvider } from "@/context/CartContext";
+import { LanguageProvider } from "@/context/LanguageContext"; 
 
-// Configuração das fontes para o look de luxo
-const inter = Inter({ 
-  subsets: ["latin"], 
-  variable: "--font-inter",
-  display: 'swap',
-});
+// --- IMPORTS DOS COMPONENTES GLOBAIS ---
+import Navbar from "@/components/Navbar";
+import CartDrawer from "@/components/CartDrawer";
+import Footer from "@/components/Footer";
 
+// Configuração das Fontes
 const playfair = Playfair_Display({ 
   subsets: ["latin"], 
-  variable: "--font-playfair",
-  display: 'swap',
+  variable: "--font-serif",
+  display: "swap",
 });
 
-export const metadata = {
-  title: "Portal Lusitano | A Nobreza da Raça",
-  description: "A plataforma definitiva para a cultura, comércio e linhagem do cavalo Lusitano.",
+const lato = Lato({ 
+  weight: ["300", "400", "700"],
+  subsets: ["latin"], 
+  variable: "--font-sans",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: "Portal Lusitano | O Nobre Legado",
+  description: "A primeira plataforma digital de elite dedicada ao Cavalo Lusitano.",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="pt" className={`${inter.variable} ${playfair.variable} scroll-smooth`}>
-      <body className="bg-[#050505] text-white antialiased min-h-screen flex flex-col">
-        {/* O CartProvider envolve tudo para que o carrinho funcione em qualquer parte do site */}
-        <CartProvider>
-          <Navbar />
+    <html lang="pt" className={`${playfair.variable} ${lato.variable}`}>
+      <body className="bg-[#050505] text-white antialiased">
+        
+        {/* 1. O Cérebro do Idioma */}
+        <LanguageProvider>
           
-          {/* Painel lateral do carrinho (invisível até ser aberto) */}
-          <CartDrawer />
-          
-          {/* Onde o conteúdo das páginas (Home, Loja, Sobre, etc.) é injetado */}
-          <div className="flex-grow">
+          {/* 2. O Cérebro do Carrinho */}
+          <CartProvider>
+            
+            <Navbar />
+            <CartDrawer />
+            
+            {/* O conteúdo das tuas páginas entra aqui */}
             {children}
-          </div>
-          
-          {/* Rodapé de elite com ícones sociais e links jurídicos */}
-          <Footer />
-          
-          {/* Botão flutuante para voltar ao topo */}
-          <ScrollToTop />
-        </CartProvider>
+            
+            <Footer />
+
+          </CartProvider>
+        </LanguageProvider>
+        
       </body>
     </html>
   );
