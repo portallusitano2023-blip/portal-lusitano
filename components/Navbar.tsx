@@ -25,13 +25,13 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* MENU DESKTOP (Sem Coudelarias) */}
+        {/* MENU DESKTOP */}
         <div className="hidden md:flex items-center gap-12">
           {[
             { name: t.nav.home, href: "/" },
             { name: t.nav.shop, href: "/loja" },
-            // REMOVIDO: { name: t.nav.studs, href: "/coudelarias" },
             { name: t.nav.about, href: "/sobre" },
+            { name: t.nav.journal, href: "/jornal" },
           ].map((item) => (
             <Link
               key={item.href}
@@ -55,9 +55,11 @@ export default function Navbar() {
             <span className={language === 'en' ? "text-[#C5A059]" : ""}>EN</span>
           </button>
 
-          <button className="text-zinc-400 hover:text-[#C5A059] transition-colors">
+          {/* --- MUDANÇA AQUI: O ÍCONE AGORA É UM LINK --- */}
+          <Link href="/minha-conta" className="text-zinc-400 hover:text-[#C5A059] transition-colors">
             <User size={20} strokeWidth={1.5} />
-          </button>
+          </Link>
+          {/* ------------------------------------------- */}
 
           <button 
             onClick={openCart} 

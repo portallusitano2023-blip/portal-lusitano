@@ -1,117 +1,122 @@
-// @ts-nocheck
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { X, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
 export default function CartDrawer() {
-  const { cart, isOpen, closeCart, removeItem } = useCart();
+  // AGORA JÁ PODEMOS IMPORTAR updateQuantity E checkoutUrl SEM ERRO
+  const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart, checkoutUrl } = useCart();
+  const { t, language } = useLanguage();
+
+  const cartText = {
+    pt: {
+      title: "O Seu Saco",
+      empty: "O seu saco está vazio.",
+      empty_cta: "Explorar a Coleção",
+      subtotal: "Subtotal",
+      shipping_note: "Envio e impostos calculados no checkout.",
+      checkout: "Finalizar Compra"
+    },
+    en: {
+      title: "Your Bag",
+      empty: "Your bag is empty.",
+      empty_cta: "Explore the Collection",
+      subtotal: "Subtotal",
+      shipping_note: "Shipping and taxes calculated at checkout.",
+      checkout: "Checkout"
+    }
+  };
+
+  const ct = cartText[language];
 
   return (
-    <>
-      {/* Overlay Escuro */}
+    <div className={`fixed inset-0 z-[100] ${isCartOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+      
       <div 
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity duration-500 ${
-          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500 ease-in-out ${
+          isCartOpen ? "opacity-100" : "opacity-0"
         }`}
         onClick={closeCart}
       />
 
-      {/* Painel Lateral */}
-      <aside 
-        className={`fixed top-0 right-0 h-screen w-full md:w-[450px] bg-[#050505] z-[101] border-l border-zinc-900 shadow-2xl transition-transform duration-500 ease-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+      <div 
+        className={`absolute top-0 right-0 h-full w-full md:w-[450px] bg-[#050505] border-l border-white/10 shadow-2xl transform transition-transform duration-700 ease-out ${
+          isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex flex-col h-full">
-          
-          {/* Cabeçalho */}
-          <div className="p-8 border-b border-zinc-900 flex justify-between items-center">
-            <div className="flex items-center gap-3">
+        
+        <div className="h-full flex flex-col p-8">
+          <div className="flex items-center justify-between mb-12 pb-6 border-b border-white/10">
+            <div className="flex items-center gap-4">
               <ShoppingBag size={20} className="text-[#C5A059]" />
-              <h2 className="text-xl font-serif italic text-white">O Seu Saco</h2>
+              <h2 className="text-2xl font-serif italic text-white">{ct.title}</h2>
             </div>
-            <button onClick={closeCart} className="text-zinc-500 hover:text-white transition-colors">
-              <X size={24} />
+            <button onClick={closeCart} className="text-zinc-400 hover:text-white transition-colors p-2">
+              <X size={24} strokeWidth={1} />
             </button>
           </div>
 
-          {/* Lista de Itens */}
-          <div className="flex-grow overflow-y-auto p-8 space-y-8 custom-scrollbar">
-            {cart?.lines?.edges?.length > 0 ? (
-              cart.lines.edges.map((item: any) => (
-                <div key={item.node.id} className="flex gap-6 group">
-                  <div className="w-24 h-32 bg-zinc-900 flex-shrink-0 overflow-hidden border border-zinc-800">
-                    <img 
-                      src={item.node.merchandise.image?.url} 
-                      alt={item.node.merchandise.product.title}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                    />
-                  </div>
-                  <div className="flex flex-col justify-between py-1 flex-grow">
-                    <div>
-                      <h3 className="text-white font-serif italic text-lg leading-tight">
-                        {item.node.merchandise.product.title}
-                      </h3>
-                      <p className="text-zinc-500 text-[10px] uppercase tracking-widest mt-1">
-                        Tamanho/Variante: {item.node.merchandise.title}
-                      </p>
-                      <p className="text-[#C5A059] font-mono text-sm mt-2">
-                        {Number(item.node.merchandise.price.amount).toFixed(2)} €
-                      </p>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-zinc-600 text-[10px] uppercase tracking-tighter">Qtd: {item.node.quantity}</span>
-                      <button 
-                        onClick={() => removeItem(item.node.id)}
-                        className="text-zinc-700 hover:text-red-500 transition-colors flex items-center gap-1"
-                      >
-                        <Trash2 size={14} />
-                        <span className="text-[9px] uppercase tracking-widest font-bold">Remover</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
-                <div className="w-16 h-16 border border-zinc-800 rounded-full flex items-center justify-center text-zinc-800">
-                  <ShoppingBag size={24} />
-                </div>
-                <p className="text-zinc-500 font-light text-sm italic">O seu saco está vazio.</p>
-                <button 
+          <div className="flex-grow overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
+            {cart.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center text-center space-y-6 opacity-60">
+                <ShoppingBag size={48} strokeWidth={1} className="text-zinc-600" />
+                <p className="text-zinc-400 font-serif text-xl">{ct.empty}</p>
+                <Link 
+                  href="/loja" 
                   onClick={closeCart}
-                  className="text-[#C5A059] text-[10px] uppercase tracking-[0.3em] font-bold border-b border-[#C5A059]/30 pb-1 hover:border-[#C5A059] transition-all"
+                  className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] border-b border-[#C5A059] pb-1 hover:text-white transition-colors"
                 >
-                  Continuar a Explorar
-                </button>
+                  {ct.empty_cta}
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-8">
+                {cart.map((item) => (
+                  <div key={item.id} className="flex gap-6 animate-fade-in">
+                    <div className="w-24 h-32 flex-shrink-0 bg-[#0a0a0a] border border-white/5 overflow-hidden relative">
+                       <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-grow flex flex-col justify-between py-1">
+                      <div>
+                        <div className="flex justify-between items-start">
+                          <h3 className="text-lg font-serif text-white leading-tight pr-4">{item.title}</h3>
+                          <button onClick={() => removeFromCart(item.id)} className="text-zinc-600 hover:text-red-400 text-xs uppercase">Remover</button>
+                        </div>
+                        <p className="text-[#C5A059] font-serif text-md mt-2">{Number(item.price).toFixed(2)} EUR</p>
+                      </div>
+                      <div className="flex items-center gap-4 border border-white/10 bg-white/5 w-fit px-3 py-2 mt-4">
+                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="text-zinc-400 hover:text-white"><Minus size={14} /></button>
+                        <span className="text-white font-serif w-6 text-center text-sm">{item.quantity}</span>
+                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="text-zinc-400 hover:text-white"><Plus size={14} /></button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
 
-          {/* Rodapé do Carrinho */}
-          {cart?.lines?.edges?.length > 0 && (
-            <div className="p-8 border-t border-zinc-900 bg-black/50">
-              <div className="flex justify-between items-end mb-8">
-                <span className="text-zinc-500 text-[10px] uppercase tracking-widest">Subtotal</span>
-                <span className="text-2xl font-serif text-white italic">
-                  {Number(cart.cost?.totalAmount?.amount || 0).toFixed(2)} €
-                </span>
+          {cart.length > 0 && (
+            <div className="border-t border-white/10 pt-8 mt-8 space-y-6">
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-2">{ct.subtotal}</p>
+                  <p className="text-xs text-zinc-600 font-serif italic">{ct.shipping_note}</p>
+                </div>
+                <p className="text-3xl font-serif text-white">
+                  {cart.reduce((total, item) => total + Number(item.price) * item.quantity, 0).toFixed(2)} <span className="text-sm text-zinc-500">EUR</span>
+                </p>
               </div>
-              <a 
-                href={cart.checkoutUrl}
-                className="w-full py-5 bg-[#C5A059] text-black text-center font-bold uppercase text-[10px] tracking-[0.3em] hover:bg-white transition-all duration-500 flex items-center justify-center gap-3"
-              >
-                Finalizar Compra <ArrowRight size={14} />
+              {/* AQUI ESTÁ A CORREÇÃO: USAMOS checkoutUrl DO CONTEXTO */}
+              <a href={checkoutUrl || "#"} className="block w-full bg-[#C5A059] text-black text-center text-xs uppercase tracking-[0.3em] py-5 font-bold hover:bg-white transition-colors">
+                {ct.checkout}
               </a>
-              <p className="text-center text-zinc-600 text-[8px] uppercase tracking-widest mt-6">
-                Taxas e Portes calculados no checkout
-              </p>
             </div>
           )}
         </div>
-      </aside>
-    </>
+      </div>
+    </div>
   );
 }

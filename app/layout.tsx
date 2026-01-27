@@ -1,33 +1,29 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Lato } from "next/font/google";
+import { Playfair_Display, Montserrat } from "next/font/google";
 import "./globals.css";
-
-// --- IMPORTS DOS CONTEXTOS (O que faltava) ---
-import { CartProvider } from "@/context/CartContext";
-import { LanguageProvider } from "@/context/LanguageContext"; 
-
-// --- IMPORTS DOS COMPONENTES GLOBAIS ---
 import Navbar from "@/components/Navbar";
-import CartDrawer from "@/components/CartDrawer";
 import Footer from "@/components/Footer";
+import { Providers } from "./providers";
 
-// Configuração das Fontes
-const playfair = Playfair_Display({ 
-  subsets: ["latin"], 
+// --- A PEÇA QUE FALTAVA ---
+import CartDrawer from "@/components/CartDrawer"; 
+// --------------------------
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
   variable: "--font-serif",
   display: "swap",
 });
 
-const lato = Lato({ 
-  weight: ["300", "400", "700"],
-  subsets: ["latin"], 
+const montserrat = Montserrat({
+  subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Portal Lusitano | O Nobre Legado",
-  description: "A primeira plataforma digital de elite dedicada ao Cavalo Lusitano.",
+  title: "Portal Lusitano | Heritage & Equestrian Legacy",
+  description: "A união perfeita entre a tradição equestre secular e o design contemporâneo.",
 };
 
 export default function RootLayout({
@@ -36,26 +32,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt" className={`${playfair.variable} ${lato.variable}`}>
-      <body className="bg-[#050505] text-white antialiased">
-        
-        {/* 1. O Cérebro do Idioma */}
-        <LanguageProvider>
+    <html lang="pt" className={`${playfair.variable} ${montserrat.variable} dark`}>
+      <body className="bg-[#050505] text-white antialiased selection:bg-[#C5A059] selection:text-black">
+        <Providers>
+          <Navbar />
           
-          {/* 2. O Cérebro do Carrinho */}
-          <CartProvider>
-            
-            <Navbar />
-            <CartDrawer />
-            
-            {/* O conteúdo das tuas páginas entra aqui */}
-            {children}
-            
-            <Footer />
+          {/* --- AQUI É ONDE A GAVETA TEM DE ESTAR --- */}
+          {/* Sem isto, o botão do saco grita para o vazio. */}
+          <CartDrawer /> 
+          {/* ----------------------------------------- */}
 
-          </CartProvider>
-        </LanguageProvider>
-        
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

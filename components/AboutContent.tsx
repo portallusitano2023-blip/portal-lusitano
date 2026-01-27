@@ -39,7 +39,7 @@ export default function AboutContent() {
                     <p className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] mb-2">
                         {t.about.founder}
                     </p>
-                    <p className="font-serif italic text-lg text-white">Francisco Gaspar</p>
+                    <p className="font-serif italic text-lg text-white">Portal Lusitano</p>
                 </div>
             </div>
 

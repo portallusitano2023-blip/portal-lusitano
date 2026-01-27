@@ -4,6 +4,7 @@ const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_TOKEN;
 
 async function shopifyFetch({ query, variables = {} }) {
   const endpoint = `https://${domain}/api/2024-01/graphql.json`;
+  if (!domain || !storefrontAccessToken) return { data: null };
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -20,14 +21,12 @@ async function shopifyFetch({ query, variables = {} }) {
   }
 }
 
-// BUSCAR TODOS OS PRODUTOS
 export async function getProducts() {
   const query = `query { products(first: 20) { edges { node { id handle title images(first: 1) { edges { node { url } } } priceRange { minVariantPrice { amount } } } } } }`;
   const res = await shopifyFetch({ query });
   return res.data?.products.edges.map(edge => ({ ...edge.node, images: edge.node.images.edges.map(img => img.node) })) || [];
 }
 
-// BUSCAR UM PRODUTO PELO HANDLE
 export async function getProduct(handle) {
   const query = `
     query getProduct($handle: String!) {
@@ -42,6 +41,7 @@ export async function getProduct(handle) {
             node {
               id
               title
+              availableForSale
               price { amount }
               image { url }
             }
@@ -60,7 +60,8 @@ export async function getProduct(handle) {
   };
 }
 
-// FUNÇÕES DE CARRINHO (PARA O BUILD NÃO FALHAR)
+// --- FUNÇÕES DE CARRINHO ---
+
 export async function createCart() {
   const query = `mutation { cartCreate { cart { id checkoutUrl totalQuantity } } }`;
   const res = await shopifyFetch({ query });
@@ -83,4 +84,30 @@ export async function removeFromCart(cartId, lineId) {
   const query = `mutation($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { id checkoutUrl totalQuantity } } }`;
   const res = await shopifyFetch({ query, variables: { cartId, lineIds: [lineId] } });
   return res.data?.cartLinesRemove?.cart;
+}
+
+// ESTA ERA A FUNÇÃO QUE FALTAVA PARA MUDAR QUANTIDADES
+export async function updateCartLines(cartId, lineId, quantity) {
+  const query = `mutation($cartId: ID!, $lines: [CartLineUpdateInput!]!) { cartLinesUpdate(cartId: $cartId, lines: $lines) { cart { id checkoutUrl totalQuantity } } }`;
+  const res = await shopifyFetch({ query, variables: { cartId, lines: [{ id: lineId, quantity }] } });
+  return res.data?.cartLinesUpdate?.cart;
+}
+
+// --- CLIENTE ---
+
+const customerQuery = `
+  query getCustomer($accessToken: String!) {
+    customer(customerAccessToken: $accessToken) {
+      id firstName lastName email phone
+      defaultAddress { address1 city country zip }
+      orders(first: 5, reverse: true) {
+        edges { node { id orderNumber processedAt financialStatus fulfillmentStatus totalPrice { amount currencyCode } lineItems(first: 5) { edges { node { title quantity } } } } }
+      }
+    }
+  }
+`;
+
+export async function getCustomer(accessToken) {
+  const res = await shopifyFetch({ query: customerQuery, variables: { accessToken } });
+  return res.data?.customer;
 }
