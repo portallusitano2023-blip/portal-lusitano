@@ -1,88 +1,107 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "@/context/CartContext";
-import { useLanguage } from "@/context/LanguageContext";
-import { ShoppingBag, User, Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { ShoppingBag, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const navItems = [
+  { name: "Início", href: "/" },
+  { name: "Loja", href: "/loja" },
+  { name: "Jornal", href: "/jornal" },
+];
 
 export default function Navbar() {
-  const { totalQuantity, openCart } = useCart();
-  const { language, toggleLanguage, t } = useLanguage();
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed w-full z-50 bg-[#050505]/95 backdrop-blur-md border-b border-white/5 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-6 h-28 flex items-center justify-between">
+    <nav className="fixed top-0 w-full z-50 bg-[#050505]/80 backdrop-blur-md border-b border-white/5">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         
-        {/* LOGÓTIPO */}
-        <Link href="/" className="flex flex-col justify-center group">
-          <span className="text-2xl md:text-3xl font-serif text-white tracking-wide group-hover:text-[#C5A059] transition-colors leading-none">
-            PORTAL LUSITANO
-          </span>
-          <span className="text-[10px] uppercase tracking-[0.4em] text-zinc-500 mt-2 group-hover:text-[#C5A059]/70 transition-colors leading-none">
-            EST. 2023
-          </span>
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative w-10 h-10 overflow-hidden rounded-full border border-[#C5A059]/30 group-hover:border-[#C5A059] transition-all duration-500">
+            <img 
+              src="/logo-image.png" // Certifica-te que tens a imagem do cavalo aqui
+              alt="Portal Lusitano"
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-white font-serif text-lg tracking-wider leading-none group-hover:text-[#C5A059] transition-colors">PORTAL</span>
+            <span className="text-[#C5A059] text-[10px] tracking-[0.3em] font-light">LUSITANO</span>
+          </div>
         </Link>
 
-        {/* MENU DESKTOP */}
-        <div className="hidden md:flex items-center gap-12">
-          {[
-            { name: t.nav.home, href: "/" },
-            { name: t.nav.shop, href: "/loja" },
-            { name: t.nav.about, href: "/sobre" },
-            { name: t.nav.journal, href: "/jornal" },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors relative group"
-            >
-              {item.name}
-              <span className="absolute -bottom-2 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-          ))}
+        {/* DESKTOP MENU */}
+        <div className="hidden md:flex items-center gap-8">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-xs uppercase tracking-[0.15em] transition-all duration-300 relative py-2 ${
+                  isActive ? "text-[#C5A059]" : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                {item.name}
+                {isActive && (
+                  <motion.div
+                    layoutId="underline"
+                    className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C5A059]"
+                  />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
-        {/* ÍCONES E IDIOMA */}
-        <div className="flex items-center gap-6 md:gap-10">
-          <button 
-            onClick={toggleLanguage}
-            className="hidden md:flex text-xs font-bold tracking-widest text-zinc-500 hover:text-white transition-colors border border-transparent hover:border-zinc-800 px-3 py-1 rounded-sm"
-          >
-            <span className={language === 'pt' ? "text-[#C5A059]" : ""}>PT</span>
-            <span className="mx-2 opacity-30 text-zinc-600">|</span>
-            <span className={language === 'en' ? "text-[#C5A059]" : ""}>EN</span>
-          </button>
-
-          {/* --- MUDANÇA AQUI: O ÍCONE AGORA É UM LINK --- */}
-          <Link href="/minha-conta" className="text-zinc-400 hover:text-[#C5A059] transition-colors">
-            <User size={20} strokeWidth={1.5} />
+        {/* CART & MOBILE TOGGLE */}
+        <div className="flex items-center gap-6">
+          <Link href="/carrinho" className="relative text-zinc-400 hover:text-[#C5A059] transition-colors">
+            <ShoppingBag size={20} />
+            {/* Opcional: Contador de itens */}
+            {/* <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#C5A059] rounded-full text-[8px] text-black flex items-center justify-center font-bold">2</span> */}
           </Link>
-          {/* ------------------------------------------- */}
 
           <button 
-            onClick={openCart} 
-            className="flex items-center gap-3 text-zinc-400 hover:text-[#C5A059] transition-colors group"
+            className="md:hidden text-zinc-400 hover:text-white"
+            onClick={() => setIsOpen(!isOpen)}
           >
-            <div className="relative">
-              <ShoppingBag size={20} strokeWidth={1.5} />
-              {totalQuantity > 0 && (
-                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#C5A059] rounded-full flex items-center justify-center text-[9px] text-black font-bold">
-                  {totalQuantity}
-                </span>
-              )}
-            </div>
-            <span className="hidden md:block text-[10px] uppercase tracking-widest group-hover:text-white font-medium">
-              {t.cart} ({totalQuantity})
-            </span>
-          </button>
-
-          <button className="md:hidden text-white" onClick={() => setIsMobileOpen(!isMobileOpen)}>
-            {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
+
+      {/* MOBILE MENU OVERLAY */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-20 left-0 w-full bg-[#0a0a0a] border-b border-white/10 md:hidden"
+          >
+            <div className="flex flex-col p-6 space-y-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`text-sm uppercase tracking-widest py-3 border-b border-white/5 ${
+                     pathname === item.href ? "text-[#C5A059]" : "text-zinc-400"
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
