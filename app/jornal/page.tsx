@@ -3,66 +3,24 @@
 import Link from "next/link";
 import { ArrowRight, Clock, BookOpen } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { articlesDataPT, articlesDataEN } from "@/data/articlesData";
 
 export default function JornalPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
-  const articles = [
-    {
-      id: 1,
-      category: "Historia & Genetica",
-      title: "Tratado Historico: A Genese do Cavalo Iberico",
-      excerpt: "Da sobrevivencia glaciar a diferenciacao das linhagens fundamentais (Veiga, Andrade, CN). Uma analise profunda sobre a selecao.",
-      date: "25 JAN 2026",
-      readTime: "35 min",
-      image: "https://images.unsplash.com/photo-1598556776374-2c35e3b5e43a?q=80&w=1200&auto=format&fit=crop"
-    },
-    {
-      id: 2,
-      category: "Biomecanica",
-      title: "A Fisica da Reuniao e a Superioridade do Lusitano",
-      excerpt: "Uma dissertacao tecnica sobre alavancas, centros de massa e a vantagem anatomica do Lusitano sobre os Warmbloods.",
-      date: "18 JAN 2026",
-      readTime: "40 min",
-      image: "https://images.unsplash.com/photo-1551884831-bbf3ddd77501?q=80&w=1200&auto=format&fit=crop"
-    },
-    {
-      id: 3,
-      category: "Morfologia",
-      title: "O Standard Oficial (APSL): Manual de Julgamento",
-      excerpt: "Disseccao ponto por ponto do padrao racial. O que os juizes procuram e os defeitos eliminatorios.",
-      date: "15 JAN 2026",
-      readTime: "30 min",
-      image: "https://images.unsplash.com/photo-1447993661623-28b9c8a994a5?q=80&w=1200&auto=format&fit=crop"
-    },
-    {
-      id: 4,
-      category: "Genetica & Pelagens",
-      title: "A Ciencia das Cores: Genetica de Pelagens no PSL",
-      excerpt: "Locus Extension, Agouti e o gene da Diluicao Creme. A explicacao cientifica para a variedade cromatica da raca.",
-      date: "12 JAN 2026",
-      readTime: "25 min",
-      image: "https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop"
-    },
-    {
-      id: 5,
-      category: "Funcionalidade",
-      title: "Toricidade: A Selecao pelo Combate",
-      excerpt: "Como a Tauromaquia moldou a psique do Lusitano. O conceito de 'Bravura' e a 'Vontade de Agradar' sob pressao de morte.",
-      date: "08 JAN 2026",
-      readTime: "28 min",
-      image: "https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop"
-    },
-    {
-      id: 6,
-      category: "Desporto Moderno",
-      title: "De Novilheiro a Rubi: A Revolucao Olimpica",
-      excerpt: "A ascensao do Lusitano no ranking da FEI e o fim do preconceito contra o cavalo Barroco no Dressage internacional.",
-      date: "02 JAN 2026",
-      readTime: "32 min",
-      image: "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop"
-    }
-  ];
+  // Seleciona os dados baseado no idioma
+  const articlesData = language === 'pt' ? articlesDataPT : articlesDataEN;
+
+  // Converte o objeto em array para listagem
+  const articles = Object.entries(articlesData).map(([id, article]) => ({
+    id: parseInt(id),
+    category: article.category,
+    title: article.title,
+    excerpt: article.subtitle,
+    date: article.date,
+    readTime: article.readTime,
+    image: article.image
+  }));
 
   return (
     <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
