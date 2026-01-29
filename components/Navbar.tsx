@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { ShoppingBag, User, Menu, X, Search } from "lucide-react";
+import { ShoppingBag, User, Menu, X, Search, Heart } from "lucide-react";
 import { useState } from "react";
 import { SearchModal } from "./Search";
+import { useWishlist } from "@/context/WishlistContext";
 
 export default function Navbar() {
   const { totalQuantity, openCart } = useCart();
   const { language, toggleLanguage, t } = useLanguage();
+  const { wishlist } = useWishlist();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -66,6 +68,20 @@ export default function Navbar() {
             <span className="mx-2 opacity-30 text-zinc-600">|</span>
             <span className={language === 'en' ? "text-[#C5A059]" : ""}>EN</span>
           </button>
+
+          {/* Favoritos */}
+          <Link
+            href="/favoritos"
+            className="text-zinc-400 hover:text-[#C5A059] transition-colors p-2 relative"
+            aria-label={language === 'pt' ? 'Favoritos' : 'Wishlist'}
+          >
+            <Heart size={20} strokeWidth={1.5} />
+            {wishlist.length > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#C5A059] rounded-full flex items-center justify-center text-[9px] text-black font-bold">
+                {wishlist.length}
+              </span>
+            )}
+          </Link>
 
           {/* Conta */}
           <Link

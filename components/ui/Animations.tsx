@@ -3,35 +3,35 @@
 import { motion, Variants, HTMLMotionProps } from "framer-motion";
 import { ReactNode } from "react";
 
-// Variantes de animacao reutilizaveis
+// Variantes de animacao reutilizaveis - otimizadas para performance
 export const fadeIn: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
+  visible: { opacity: 1, transition: { duration: 0.3 } },
 };
 
 export const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
 };
 
 export const fadeInDown: Variants = {
-  hidden: { opacity: 0, y: -20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, y: -15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
 };
 
 export const fadeInLeft: Variants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, x: -15 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.35 } },
 };
 
 export const fadeInRight: Variants = {
-  hidden: { opacity: 0, x: 20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, x: 15 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.35 } },
 };
 
 export const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
+  hidden: { opacity: 0, scale: 0.97 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.25 } },
 };
 
 export const staggerContainer: Variants = {
@@ -39,15 +39,15 @@ export const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
+      staggerChildren: 0.06,
+      delayChildren: 0.05,
     },
   },
 };
 
 export const staggerItem: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
 };
 
 // Componente de Page Wrapper com animacao
@@ -81,16 +81,17 @@ export function AnimatedSection({ children, delay = 0, className = "", ...props 
     <motion.section
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: "-50px" }}
       variants={{
-        hidden: { opacity: 0, y: 30 },
+        hidden: { opacity: 0, y: 20 },
         visible: {
           opacity: 1,
           y: 0,
-          transition: { duration: 0.6, delay },
+          transition: { duration: 0.4, delay },
         },
       }}
       className={className}
+      style={{ willChange: "transform, opacity" }}
       {...props}
     >
       {children}
@@ -136,11 +137,12 @@ interface TextRevealProps {
 export function TextReveal({ children, className = "", delay = 0 }: TextRevealProps) {
   return (
     <motion.span
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay }}
+      transition={{ duration: 0.35, delay }}
       className={`inline-block ${className}`}
+      style={{ willChange: "transform, opacity" }}
     >
       {children}
     </motion.span>
@@ -162,14 +164,15 @@ export function AnimatedImage({ src, alt, className = "", containerClassName = "
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.4 }}
     >
       <motion.img
         src={src}
         alt={alt}
         className={className}
-        whileHover={{ scale: 1.05 }}
-        transition={{ duration: 0.6 }}
+        whileHover={{ scale: 1.03 }}
+        transition={{ duration: 0.3 }}
+        style={{ willChange: "transform" }}
       />
     </motion.div>
   );
@@ -213,11 +216,12 @@ export function AnimatedCard({ children, className = "" }: AnimatedCardProps) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ y: -5, transition: { duration: 0.3 } }}
-      transition={{ duration: 0.5 }}
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      transition={{ duration: 0.35 }}
+      style={{ willChange: "transform, opacity" }}
     >
       {children}
     </motion.div>
@@ -263,8 +267,8 @@ export function AnimatedLine({ className = "", direction = "horizontal" }: Anima
       initial={{ scaleX: direction === "horizontal" ? 0 : 1, scaleY: direction === "vertical" ? 0 : 1 }}
       whileInView={{ scaleX: 1, scaleY: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      style={{ originX: 0, originY: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      style={{ originX: 0, originY: 0, willChange: "transform" }}
     />
   );
 }
@@ -279,9 +283,10 @@ export function HeroTitle({ children, className = "" }: HeroTextProps) {
   return (
     <motion.h1
       className={className}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 25 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      style={{ willChange: "transform, opacity" }}
     >
       {children}
     </motion.h1>
@@ -292,9 +297,10 @@ export function HeroSubtitle({ children, className = "" }: HeroTextProps) {
   return (
     <motion.p
       className={className}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+      transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
+      style={{ willChange: "transform, opacity" }}
     >
       {children}
     </motion.p>
