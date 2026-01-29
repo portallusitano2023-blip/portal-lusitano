@@ -1,294 +1,268 @@
-import { Microscope, Dna, FlaskConical, Shield, Swords, ChevronRight, Flame, Award, Globe, Activity, CheckCircle2, AlertTriangle, Zap, Star, Brain, Beaker, Ruler, Landmark, Eye, Trophy, Crown } from "lucide-react";
+import type { ReactNode } from "react";
+import { Microscope, Dna, Shield, Swords, Flame, Award, Activity, CheckCircle2, AlertTriangle, Zap, Brain, Eye, Trophy } from "lucide-react";
+import { ArticleImage, ArticleInfoBox, ArticleSection, ArticleStatCard, ArticleWarningBox, ArticlePillarCard, articleTextClasses } from "@/components/journal/ArticleComponents";
 
-// Componente para imagens ilustrativas dentro dos artigos
-export const ArticleImage = ({ src, alt, caption }: { src: string; alt: string; caption?: string }) => (
-  <figure className="my-12">
-    <div className="relative overflow-hidden rounded-sm border border-white/10">
-      <img
-        src={src}
-        alt={alt}
-        className="w-full h-[400px] object-cover"
-      />
-    </div>
-    {caption && (
-      <figcaption className="mt-4 text-center text-sm text-zinc-500 italic">
-        {caption}
-      </figcaption>
-    )}
-  </figure>
-);
+// Tipos para os artigos
+export interface Article {
+  title: string;
+  subtitle: string;
+  description?: string;
+  keywords?: string[];
+  date: string;
+  readTime: string;
+  category: string;
+  image: string;
+  content: ReactNode;
+}
 
-// ARTIGOS EM PORTUGUES
-export const articlesDataPT: Record<string, any> = {
+// Re-exportar para compatibilidade
+export { ArticleImage };
+
+// ARTIGOS EM PORTUGUÊS
+export const articlesDataPT: Record<string, Article> = {
   "1": {
-    title: "Tratado Historico: A Genese do Cavalo Iberico",
-    subtitle: "5000 anos de selecao continua: Do Refugio Glaciar a Gineta de Guerra. Uma tese sobre a sobrevivencia do cavalo mais influente da historia.",
+    title: "Tratado Histórico: A Génese do Cavalo Ibérico",
+    subtitle: "5000 anos de seleção contínua: Do Refúgio Glaciar à Gineta de Guerra. Uma tese sobre a sobrevivência do cavalo mais influente da história.",
+    description: "Estudos de ADN mitocondrial identificaram o Haplogrupo D1 como marcador exclusivo da Península Ibérica. A teoria do Refúgio Glaciar e a evolução do cavalo Lusitano.",
+    keywords: ["Lusitano", "genética equina", "Haplogrupo D1", "Península Ibérica", "história do cavalo"],
     date: "25 JAN 2026",
     readTime: "120 min",
-    category: "Historia & Arqueologia",
+    category: "História & Arqueologia",
     image: "https://images.unsplash.com/photo-1551884831-bbf3ddd77501?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">A</span>
-          narrativa tradicional de que o cavalo chegou a Peninsula Iberica vindo do Oriente (Teoria das Estepes) foi definitivamente refutada pela ciencia moderna. Estudos de ADN mitocondrial (Jansen et al., 2002; CIES, 2010) identificaram o <strong>Haplogrupo D1</strong> como um marcador exclusivo da Peninsula Iberica, presente em mais de 70% dos cavalos Lusitanos testados.
+        <p className={articleTextClasses.lead}>
+          <span className={articleTextClasses.dropCap}>A</span>
+          narrativa tradicional de que o cavalo chegou à Península Ibérica vindo do Oriente (Teoria das Estepes) foi definitivamente refutada pela ciência moderna. Estudos de ADN mitocondrial (Jansen et al., 2002; CIES, 2010) identificaram o <strong>Haplogrupo D1</strong> como um marcador exclusivo da Península Ibérica, presente em mais de 70% dos cavalos Lusitanos testados.
         </p>
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
-          Isto confirma a teoria do "Refugio Glaciar". Durante o Ultimo Maximo Glacial (ha cerca de 20.000 anos), enquanto o norte da Europa estava coberto por gelo, a Peninsula Iberica manteve um microclima temperado. O <em>Equus ferus ibericus</em> nao so sobreviveu aqui, como foi domesticado localmente nas bacias do Tejo e Sado.
+        <p className={articleTextClasses.body}>
+          Isto confirma a teoria do "Refúgio Glaciar". Durante o Último Máximo Glacial (há cerca de 20.000 anos), enquanto o norte da Europa estava coberto por gelo, a Península Ibérica manteve um microclima temperado. O <em>Equus ferus ibericus</em> não só sobreviveu aqui, como foi domesticado localmente nas bacias do Tejo e Sado.
         </p>
 
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-16 rounded-sm shadow-2xl">
-          <h4 className="text-[#C5A059] font-bold text-2xl mb-6 flex items-center gap-3">
-            <Microscope size={24} /> EVIDENCIA ARQUEOLOGICA ESTRATIFICADA
-          </h4>
+        <ArticleInfoBox title="EVIDÊNCIA ARQUEOLÓGICA ESTRATIFICADA" icon={Microscope}>
           <div className="space-y-6">
             <div className="border-l-2 border-zinc-700 pl-6">
               <h5 className="text-white font-bold mb-2 text-lg">Gruta do Escoural (Montemor-o-Novo)</h5>
-              <p className="text-zinc-400 text-sm mb-3">Datacao: 20.000-18.000 BP (Before Present)</p>
+              <p className="text-zinc-400 text-sm mb-3">Datação: 20.000-18.000 BP (Before Present)</p>
               <p className="text-zinc-300 leading-relaxed">
-                Pinturas rupestres com cavalos de perfil subconvexo, pescoco arqueado e garupa arredondada. A analise morfometrica das representacoes revela uma correspondencia de 87% com o padrao morfologico do Lusitano moderno.
+                Pinturas rupestres com cavalos de perfil subconvexo, pescoço arqueado e garupa arredondada. A análise morfométrica das representações revela uma correspondência de 87% com o padrão morfológico do Lusitano moderno.
               </p>
             </div>
             <div className="border-l-2 border-zinc-700 pl-6">
               <h5 className="text-white font-bold mb-2 text-lg">Concheiros de Muge (Vale do Tejo)</h5>
-              <p className="text-zinc-400 text-sm mb-3">Datacao: 5.500-3.000 a.C. | Cultura Mesolitica</p>
+              <p className="text-zinc-400 text-sm mb-3">Datação: 5.500-3.000 a.C. | Cultura Mesolítica</p>
               <p className="text-zinc-300 leading-relaxed">
-                Evidencias osteologicas de cavalos domesticados encontradas em Moita do Sebastiao e Cabeco da Arruda. A analise de isotopos estaveis revelou padroes de alimentacao controlada.
+                Evidências osteológicas de cavalos domesticados encontradas em Moita do Sebastião e Cabeço da Arruda. A análise de isótopos estáveis revelou padrões de alimentação controlada.
               </p>
             </div>
           </div>
-        </div>
+        </ArticleInfoBox>
 
         <ArticleImage
           src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1200&auto=format&fit=crop"
-          alt="Cavalos ibericos"
-          caption="Representacao artistica de cavalos ibericos primitivos"
+          alt="Cavalos ibéricos em representação artística"
+          caption="Representação artística de cavalos ibéricos primitivos"
         />
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. A Revolucao Genetica: Haplogrupos e Filogeografia</h3>
-
-        <p className="text-lg text-zinc-300 leading-relaxed mb-6">
-          O estudo revolucionario de <strong>Jansen et al. (2002)</strong> sequenciou o ADN mitocondrial de 652 cavalos de 37 racas. Os resultados foram inequivocos:
-        </p>
-
-        <div className="bg-zinc-900 p-10 rounded-sm border border-white/5 my-12">
-          <h4 className="text-white text-xl font-bold mb-6 flex items-center gap-3">
-            <Dna className="text-[#C5A059]" size={24} />
-            Distribuicao de Haplogrupos por Regiao Geografica
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-black/40 p-6 rounded-sm border-l-4 border-[#C5A059]">
-              <h5 className="text-[#C5A059] font-bold mb-2">HAPLOGRUPO D1</h5>
-              <p className="text-3xl font-bold text-white mb-2">72.3%</p>
-              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-3">Peninsula Iberica</p>
-              <p className="text-sm text-zinc-400">
-                Presente em Lusitanos, PRE, Alter Real. <strong>Ausente em todas as racas do norte europeu</strong>.
-              </p>
-            </div>
-            <div className="bg-black/40 p-6 rounded-sm border-l-4 border-zinc-600">
-              <h5 className="text-white font-bold mb-2">HAPLOGRUPO A</h5>
-              <p className="text-3xl font-bold text-white mb-2">68.1%</p>
-              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-3">Europa Central/Norte</p>
-              <p className="text-sm text-zinc-400">Dominante em Warmbloods, Hannoverianos.</p>
-            </div>
-            <div className="bg-black/40 p-6 rounded-sm border-l-4 border-zinc-600">
-              <h5 className="text-white font-bold mb-2">HAPLOGRUPO B</h5>
-              <p className="text-3xl font-bold text-white mb-2">51.7%</p>
-              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-3">Asia Central</p>
-              <p className="text-sm text-zinc-400">Presente em Arabes, Turcomanos, Akhal-Teke.</p>
-            </div>
-          </div>
-        </div>
-
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. A Escola de Gineta vs. A Brida</h3>
-
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
-          A morfologia do Lusitano foi esculpida por uma necessidade militar especifica: o <strong>combate de guerrilha em terreno acidentado</strong>.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 my-16">
-          <div className="bg-zinc-900 p-10 rounded-sm border-l-4 border-zinc-600">
-            <h4 className="text-white text-2xl font-serif mb-6 flex items-center gap-3">
-              <Shield size={24} className="text-zinc-500" />
-              A Brida (Norte da Europa)
-            </h4>
-            <div className="space-y-4 mb-6">
-              <p className="text-zinc-400 text-sm"><strong className="text-white">Morfologia:</strong> Cavalos pesados (600-700kg)</p>
-              <p className="text-zinc-400 text-sm"><strong className="text-white">Tatica:</strong> Choque frontal em formacao cerrada</p>
-            </div>
-          </div>
-
-          <div className="bg-zinc-900 p-10 rounded-sm border-l-4 border-[#C5A059] shadow-xl">
-            <h4 className="text-[#C5A059] text-2xl font-serif mb-6 flex items-center gap-3">
-              <Swords size={24} />
-              A Gineta (Iberia)
-            </h4>
-            <div className="space-y-4 mb-6">
-              <p className="text-zinc-300 text-sm"><strong className="text-white">Morfologia:</strong> Cavalos medios (450-550kg)</p>
-              <p className="text-zinc-300 text-sm"><strong className="text-white">Tatica:</strong> Hit-and-run, falsas retiradas</p>
-            </div>
-          </div>
-        </div>
-
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">III. O Saque Napoleonico (1807)</h3>
-
-        <div className="my-12 bg-gradient-to-r from-red-950/30 to-transparent p-12 rounded-sm border-l-4 border-red-800 shadow-2xl">
-          <h4 className="text-red-400 text-2xl font-serif mb-6 flex items-center gap-3">
-            <Flame size={28} /> A Perda Irreparavel
-          </h4>
-          <p className="text-zinc-300 leading-relaxed mb-6 text-lg">
-            Durante as Invasoes Francesas (1807-1814), o General Junot ordenou o roubo sistematico dos melhores garanhoes da Coudelaria de Alter Real.
+        <ArticleSection title="I. A Revolução Genética: Haplogrupos e Filogeografia">
+          <p className="text-lg text-zinc-300 leading-relaxed mb-6">
+            O estudo revolucionário de <strong>Jansen et al. (2002)</strong> sequenciou o ADN mitocondrial de 652 cavalos de 37 raças. Os resultados foram inequívocos:
           </p>
-          <ul className="space-y-3 text-zinc-400">
-            <li><strong className="text-white">317 garanhoes</strong> registados em Alter (1807) → <strong className="text-red-400">41 sobreviventes</strong> (1814)</li>
-            <li><strong className="text-white">89%</strong> das eguas reprodutoras foram abatidas</li>
-          </ul>
-        </div>
+
+          <section className="bg-zinc-900 p-10 rounded-sm border border-white/5 my-12" aria-labelledby="haplogrupos">
+            <h4 id="haplogrupos" className="text-white text-xl font-bold mb-6 flex items-center gap-3">
+              <Dna className="text-[#C5A059]" size={24} />
+              Distribuição de Haplogrupos por Região Geográfica
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <ArticleStatCard title="HAPLOGRUPO D1" value="72.3%" subtitle="Península Ibérica" highlight description={<>Presente em Lusitanos, PRE, Alter Real. <strong>Ausente em todas as raças do norte europeu</strong>.</>} />
+              <ArticleStatCard title="HAPLOGRUPO A" value="68.1%" subtitle="Europa Central/Norte" description="Dominante em Warmbloods, Hannoverianos." />
+              <ArticleStatCard title="HAPLOGRUPO B" value="51.7%" subtitle="Ásia Central" description="Presente em Árabes, Turcomanos, Akhal-Teke." />
+            </div>
+          </section>
+        </ArticleSection>
+
+        <ArticleSection title="II. A Escola de Gineta vs. A Brida">
+          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+            A morfologia do Lusitano foi esculpida por uma necessidade militar específica: o <strong>combate de guerrilha em terreno acidentado</strong>.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 my-16">
+            <article className="bg-zinc-900 p-10 rounded-sm border-l-4 border-zinc-600">
+              <h4 className="text-white text-2xl font-serif mb-6 flex items-center gap-3">
+                <Shield size={24} className="text-zinc-500" />
+                A Brida (Norte da Europa)
+              </h4>
+              <div className="space-y-4 mb-6">
+                <p className="text-zinc-400 text-sm"><strong className="text-white">Morfologia:</strong> Cavalos pesados (600-700kg)</p>
+                <p className="text-zinc-400 text-sm"><strong className="text-white">Tática:</strong> Choque frontal em formação cerrada</p>
+              </div>
+            </article>
+
+            <article className="bg-zinc-900 p-10 rounded-sm border-l-4 border-[#C5A059] shadow-xl">
+              <h4 className="text-[#C5A059] text-2xl font-serif mb-6 flex items-center gap-3">
+                <Swords size={24} />
+                A Gineta (Ibéria)
+              </h4>
+              <div className="space-y-4 mb-6">
+                <p className="text-zinc-300 text-sm"><strong className="text-white">Morfologia:</strong> Cavalos médios (450-550kg)</p>
+                <p className="text-zinc-300 text-sm"><strong className="text-white">Tática:</strong> Hit-and-run, falsas retiradas</p>
+              </div>
+            </article>
+          </div>
+        </ArticleSection>
+
+        <ArticleSection title="III. O Saque Napoleónico (1807)">
+          <ArticleWarningBox title="A Perda Irreparável" icon={Flame}>
+            <p className="text-zinc-300 leading-relaxed mb-6 text-lg">
+              Durante as Invasões Francesas (1807-1814), o General Junot ordenou o roubo sistemático dos melhores garanhões da Coudelaria de Alter Real.
+            </p>
+            <ul className="space-y-3 text-zinc-400">
+              <li><strong className="text-white">317 garanhões</strong> registados em Alter (1807) → <strong className="text-red-400">41 sobreviventes</strong> (1814)</li>
+              <li><strong className="text-white">89%</strong> das éguas reprodutoras foram abatidas</li>
+            </ul>
+          </ArticleWarningBox>
+        </ArticleSection>
       </>
     )
   },
 
   "2": {
-    title: "Biomecanica Avancada: A Fisica da Reuniao",
-    subtitle: "Analise vetorial do movimento: Do angulo lombo-sacral a elasticidade tendinosa.",
+    title: "Biomecânica Avançada: A Física da Reunião",
+    subtitle: "Análise vetorial do movimento: Do ângulo lombo-sacral à elasticidade tendinosa.",
+    description: "A Reunião no hipismo: definição biomecânica, geometria do jarrete e bioquímica das fibras musculares no Cavalo Lusitano.",
+    keywords: ["biomecânica equina", "Reunião", "jarrete", "fibras musculares", "Lusitano"],
     date: "18 JAN 2026",
     readTime: "110 min",
-    category: "Zootecnia & Fisica",
+    category: "Zootecnia & Física",
     image: "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">N</span>
-          o hipismo de alta competicao, a <strong>"Reuniao"</strong> e o Santo Graal. Definicao cientifica: <em>alteracao do equilibrio estatico e dinamico atraves do deslocamento caudal do Centro de Massa</em>.
+        <p className={articleTextClasses.lead}>
+          <span className={articleTextClasses.dropCap}>N</span>
+          o hipismo de alta competição, a <strong>"Reunião"</strong> é o Santo Graal. Definição científica: <em>alteração do equilíbrio estático e dinâmico através do deslocamento caudal do Centro de Massa</em>.
         </p>
 
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm shadow-2xl">
-          <h4 className="text-[#C5A059] font-bold text-2xl mb-6 flex items-center gap-3">
-            <Activity size={24} /> DEFINICAO BIOMECANICA FORMAL
-          </h4>
+        <ArticleInfoBox title="DEFINIÇÃO BIOMECÂNICA FORMAL" icon={Activity}>
           <p className="text-zinc-300 leading-relaxed text-lg mb-6">
-            A <strong>Reuniao</strong> (Collection) e o resultado de:
+            A <strong>Reunião</strong> (Collection) é o resultado de:
           </p>
           <ol className="space-y-4 text-zinc-400">
-            <li><strong className="text-white">1. Flexao dos Posteriores</strong> - Reducao dos angulos articulares</li>
-            <li><strong className="text-white">2. Elevacao da Base do Pescoco</strong> - Ativacao muscular</li>
-            <li><strong className="text-white">3. Engagement dos Abdominais</strong> - Rotacao pelvica</li>
+            <li><strong className="text-white">1. Flexão dos Posteriores</strong> - Redução dos ângulos articulares</li>
+            <li><strong className="text-white">2. Elevação da Base do Pescoço</strong> - Ativação muscular</li>
+            <li><strong className="text-white">3. Engagement dos Abdominais</strong> - Rotação pélvica</li>
           </ol>
-        </div>
+        </ArticleInfoBox>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. A Geometria do Jarrete</h3>
+        <ArticleSection title="I. A Geometria do Jarrete">
+          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+            O jarrete do cavalo funciona como um sistema de alavancas classe III. A eficiência mecânica é determinada pelo <strong>ângulo de repouso</strong> e pela <strong>capacidade de flexão</strong>.
+          </p>
 
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
-          O jarrete do cavalo funciona como um sistema de alavancas classe III. A eficiencia mecanica e determinada pelo <strong>angulo de repouso</strong> e pela <strong>capacidade de flexao</strong>.
-        </p>
+          <div className="bg-zinc-900 p-12 rounded-sm border border-white/5 my-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <article className="space-y-6">
+                <h4 className="text-[#C5A059] text-2xl font-serif mb-4 flex items-center gap-3">
+                  <CheckCircle2 size={24} />
+                  Jarrete Angulado (Lusitano 142-148)
+                </h4>
+                <p className="text-zinc-400 text-sm leading-relaxed">
+                  Funciona como uma <strong>mola pré-comprimida</strong>. Permite "fechar" o jarrete com <strong>40% menos esforço muscular</strong>.
+                </p>
+              </article>
 
-        <div className="bg-zinc-900 p-12 rounded-sm border border-white/5 my-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <h4 className="text-[#C5A059] text-2xl font-serif mb-4 flex items-center gap-3">
-                <CheckCircle2 size={24} />
-                Jarrete Angulado (Lusitano 142-148)
-              </h4>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                Funciona como uma <strong>mola pre-comprimida</strong>. Permite "fechar" o jarrete com <strong>40% menos esforco muscular</strong>.
-              </p>
+              <article className="space-y-6">
+                <h4 className="text-white text-2xl font-serif mb-4 flex items-center gap-3">
+                  <AlertTriangle size={24} className="text-yellow-500" />
+                  Jarrete Reto (Warmblood 152-160)
+                </h4>
+                <p className="text-zinc-400 text-sm leading-relaxed">
+                  Maximiza a <strong>propulsão horizontal</strong> mas luta contra a física para reunir.
+                </p>
+              </article>
             </div>
-
-            <div className="space-y-6">
-              <h4 className="text-white text-2xl font-serif mb-4 flex items-center gap-3">
-                <AlertTriangle size={24} className="text-yellow-500" />
-                Jarrete Reto (Warmblood 152-160)
-              </h4>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                Maximiza a <strong>propulsao horizontal</strong> mas luta contra a fisica para reunir.
-              </p>
-            </div>
           </div>
-        </div>
+        </ArticleSection>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. Bioquimica Muscular: Fibras Tipo IIb</h3>
+        <ArticleSection title="II. Bioquímica Muscular: Fibras Tipo IIb">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
+            <article className="bg-zinc-900 p-8 rounded-sm border-t-4 border-red-500">
+              <h5 className="text-red-400 font-bold mb-4 text-lg">TIPO I (Slow Twitch)</h5>
+              <p className="text-zinc-400 text-sm">Metabolismo aeróbio, fadiga lenta</p>
+            </article>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-          <div className="bg-zinc-900 p-8 rounded-sm border-t-4 border-red-500">
-            <h5 className="text-red-400 font-bold mb-4 text-lg">TIPO I (Slow Twitch)</h5>
-            <p className="text-zinc-400 text-sm">Metabolismo aerobio, fadiga lenta</p>
+            <article className="bg-zinc-900 p-8 rounded-sm border-t-4 border-yellow-500">
+              <h5 className="text-yellow-400 font-bold mb-4 text-lg">TIPO IIa (Fast Oxidative)</h5>
+              <p className="text-zinc-400 text-sm">Metabolismo misto, fadiga moderada</p>
+            </article>
+
+            <article className="bg-zinc-900 p-8 rounded-sm border-t-4 border-[#C5A059]">
+              <h5 className="text-[#C5A059] font-bold mb-4 text-lg">TIPO IIb (Fast Glycolytic)</h5>
+              <p className="text-zinc-300 text-sm"><strong>Explosão máxima</strong> - Presente em Lusitanos</p>
+            </article>
           </div>
-
-          <div className="bg-zinc-900 p-8 rounded-sm border-t-4 border-yellow-500">
-            <h5 className="text-yellow-400 font-bold mb-4 text-lg">TIPO IIa (Fast Oxidative)</h5>
-            <p className="text-zinc-400 text-sm">Metabolismo misto, fadiga moderada</p>
-          </div>
-
-          <div className="bg-zinc-900 p-8 rounded-sm border-t-4 border-[#C5A059]">
-            <h5 className="text-[#C5A059] font-bold mb-4 text-lg">TIPO IIb (Fast Glycolytic)</h5>
-            <p className="text-zinc-300 text-sm"><strong>Explosao maxima</strong> - Presente em Lusitanos</p>
-          </div>
-        </div>
+        </ArticleSection>
       </>
     )
   },
 
   "3": {
     title: "O Standard Oficial (APSL): Manual de Julgamento",
-    subtitle: "Disseccao ponto por ponto do padrao racial aprovado pela APSL.",
+    subtitle: "Dissecção ponto por ponto do padrão racial aprovado pela APSL.",
+    description: "Standard oficial do Puro-Sangue Lusitano: características da cabeça, defeitos eliminatórios e critérios de julgamento APSL.",
+    keywords: ["APSL", "Standard Lusitano", "morfologia", "julgamento", "Puro-Sangue"],
     date: "15 JAN 2026",
     readTime: "30 min",
     category: "Morfologia & Standard",
     image: "https://images.unsplash.com/photo-1447993661623-28b9c8a994a5?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">O</span>
-          Standard oficial do Puro-Sangue Lusitano, mantido pela <strong>APSL</strong>, e um documento tecnico que define com precisao as caracteristicas ideais da raca.
+        <p className={articleTextClasses.lead}>
+          <span className={articleTextClasses.dropCap}>O</span>
+          Standard oficial do Puro-Sangue Lusitano, mantido pela <strong>APSL</strong>, é um documento técnico que define com precisão as características ideais da raça.
         </p>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. A Cabeca: Espelho da Raca</h3>
+        <ArticleSection title="I. A Cabeça: Espelho da Raça">
+          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+            A cabeça do Lusitano deve ser <strong>seca, de comprimento médio, e bem proporcionada</strong>. O perfil deve ser <strong>subconvexo</strong>.
+          </p>
 
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
-          A cabeca do Lusitano deve ser <strong>seca, de comprimento medio, e bem proporcionada</strong>. O perfil deve ser <strong>subconvexo</strong>.
-        </p>
-
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm shadow-2xl">
-          <h4 className="text-[#C5A059] font-bold text-2xl mb-6 flex items-center gap-3">
-            <Eye size={24} /> CARACTERISTICAS DA CABECA
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="border-l-2 border-zinc-700 pl-4">
-                <h5 className="text-white font-bold mb-2">Olhos</h5>
-                <p className="text-zinc-400 text-sm">Grandes, vivos, expressivos e elipticos.</p>
+          <ArticleInfoBox title="CARACTERÍSTICAS DA CABEÇA" icon={Eye}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="border-l-2 border-zinc-700 pl-4">
+                  <h5 className="text-white font-bold mb-2">Olhos</h5>
+                  <p className="text-zinc-400 text-sm">Grandes, vivos, expressivos e elípticos.</p>
+                </div>
+                <div className="border-l-2 border-zinc-700 pl-4">
+                  <h5 className="text-white font-bold mb-2">Orelhas</h5>
+                  <p className="text-zinc-400 text-sm">Médias, finas, bem inseridas e paralelas.</p>
+                </div>
               </div>
-              <div className="border-l-2 border-zinc-700 pl-4">
-                <h5 className="text-white font-bold mb-2">Orelhas</h5>
-                <p className="text-zinc-400 text-sm">Medias, finas, bem inseridas e paralelas.</p>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="border-l-2 border-zinc-700 pl-4">
-                <h5 className="text-white font-bold mb-2">Chanfro</h5>
-                <p className="text-zinc-400 text-sm">Perfil subconvexo caracteristico.</p>
-              </div>
-              <div className="border-l-2 border-zinc-700 pl-4">
-                <h5 className="text-white font-bold mb-2">Narinas</h5>
-                <p className="text-zinc-400 text-sm">Amplas e flexiveis.</p>
+              <div className="space-y-4">
+                <div className="border-l-2 border-zinc-700 pl-4">
+                  <h5 className="text-white font-bold mb-2">Chanfro</h5>
+                  <p className="text-zinc-400 text-sm">Perfil subconvexo característico.</p>
+                </div>
+                <div className="border-l-2 border-zinc-700 pl-4">
+                  <h5 className="text-white font-bold mb-2">Narinas</h5>
+                  <p className="text-zinc-400 text-sm">Amplas e flexíveis.</p>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </ArticleInfoBox>
+        </ArticleSection>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. Defeitos Eliminatorios</h3>
-
-        <div className="bg-gradient-to-r from-red-950/30 to-transparent p-10 rounded-sm border-l-4 border-red-800 my-12">
-          <h4 className="text-red-400 font-bold text-xl mb-6 flex items-center gap-3">
-            <AlertTriangle size={24} /> DEFEITOS QUE IMPEDEM REGISTO
-          </h4>
-          <ul className="space-y-3 text-zinc-300">
-            <li>• Prognatismo ou retrognatismo acentuado</li>
-            <li>• Criptorquidismo (machos)</li>
-            <li>• Pelagens nao reconhecidas pela APSL</li>
-            <li>• Altura inferior a 1,50m (machos) aos 6 anos</li>
-          </ul>
-        </div>
+        <ArticleSection title="II. Defeitos Eliminatórios">
+          <ArticleWarningBox title="DEFEITOS QUE IMPEDEM REGISTO" icon={AlertTriangle}>
+            <ul className="space-y-3 text-zinc-300">
+              <li>• Prognatismo ou retrognatismo acentuado</li>
+              <li>• Criptorquidismo (machos)</li>
+              <li>• Pelagens não reconhecidas pela APSL</li>
+              <li>• Altura inferior a 1,50m (machos) aos 6 anos</li>
+            </ul>
+          </ArticleWarningBox>
+        </ArticleSection>
       </>
     )
   },
@@ -352,119 +326,106 @@ export const articlesDataPT: Record<string, any> = {
   },
 
   "5": {
-    title: "Toricidade: A Selecao pelo Combate",
+    title: "Toricidade: A Seleção pelo Combate",
     subtitle: "Como a Tauromaquia moldou a psique do Lusitano.",
+    description: "Toricidade: bravura, inteligência tática, explosão controlada e vontade de agradar no Cavalo Lusitano.",
+    keywords: ["Toricidade", "tauromaquia", "temperamento Lusitano", "bravura equina"],
     date: "08 JAN 2026",
     readTime: "28 min",
     category: "Funcionalidade & Temperamento",
     image: "https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">A</span>
-          <strong>"Toricidade"</strong> e o conjunto de caracteristicas psicologicas e fisicas que permitem a um cavalo trabalhar frente a um touro bravo.
+        <p className={articleTextClasses.lead}>
+          <span className={articleTextClasses.dropCap}>A</span>
+          <strong>"Toricidade"</strong> é o conjunto de características psicológicas e físicas que permitem a um cavalo trabalhar frente a um touro bravo.
         </p>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. Os Pilares da Toricidade</h3>
+        <ArticleSection title="I. Os Pilares da Toricidade">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
+            <ArticlePillarCard icon={Flame} title="Bravura">
+              A capacidade de enfrentar o perigo sem hesitação. Uma <strong>coragem controlada</strong>.
+            </ArticlePillarCard>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
-            <Flame className="text-[#C5A059] mb-4" size={32} />
-            <h4 className="text-white font-bold text-xl mb-4">Bravura</h4>
-            <p className="text-zinc-400 text-sm leading-relaxed">
-              A capacidade de enfrentar o perigo sem hesitacao. Uma <strong>coragem controlada</strong>.
-            </p>
-          </div>
-
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
-            <Brain className="text-[#C5A059] mb-4" size={32} />
-            <h4 className="text-white font-bold text-xl mb-4">Inteligencia Tatica</h4>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+            <ArticlePillarCard icon={Brain} title="Inteligência Tática">
               O cavalo deve <strong>antecipar</strong> os movimentos do touro.
-            </p>
-          </div>
+            </ArticlePillarCard>
 
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
-            <Zap className="text-[#C5A059] mb-4" size={32} />
-            <h4 className="text-white font-bold text-xl mb-4">Explosao Controlada</h4>
-            <p className="text-zinc-400 text-sm leading-relaxed">
-              Arranques instantaneos de 0 a 35 km/h.
-            </p>
-          </div>
+            <ArticlePillarCard icon={Zap} title="Explosão Controlada">
+              Arranques instantâneos de 0 a 35 km/h.
+            </ArticlePillarCard>
 
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
-            <Award className="text-[#C5A059] mb-4" size={32} />
-            <h4 className="text-white font-bold text-xl mb-4">Vontade de Agradar</h4>
-            <p className="text-zinc-400 text-sm leading-relaxed">
-              Mantem a <strong>ligacao com o cavaleiro</strong> mesmo sob stress extremo.
-            </p>
+            <ArticlePillarCard icon={Award} title="Vontade de Agradar">
+              Mantém a <strong>ligação com o cavaleiro</strong> mesmo sob stress extremo.
+            </ArticlePillarCard>
           </div>
-        </div>
+        </ArticleSection>
       </>
     )
   },
 
   "6": {
-    title: "De Novilheiro a Rubi: A Revolucao Olimpica",
-    subtitle: "A ascensao do Lusitano no ranking da FEI.",
+    title: "De Novilheiro a Rubi: A Revolução Olímpica",
+    subtitle: "A ascensão do Lusitano no ranking da FEI.",
+    description: "Novilheiro e Rubi AR: a revolução do Cavalo Lusitano no Dressage internacional e nos Jogos Olímpicos.",
+    keywords: ["Novilheiro", "Rubi AR", "Dressage", "FEI", "Jogos Olímpicos", "Lusitano"],
     date: "02 JAN 2026",
     readTime: "32 min",
-    category: "Desporto & Competicao",
+    category: "Desporto & Competição",
     image: "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">D</span>
-          urante decadas, o Cavalo Lusitano foi considerado "inadequado" para o Dressage de alta competicao. Tudo mudou com <strong>Novilheiro</strong>.
+        <p className={articleTextClasses.lead}>
+          <span className={articleTextClasses.dropCap}>D</span>
+          urante décadas, o Cavalo Lusitano foi considerado "inadequado" para o Dressage de alta competição. Tudo mudou com <strong>Novilheiro</strong>.
         </p>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. O Pioneiro: Novilheiro</h3>
+        <ArticleSection title="I. O Pioneiro: Novilheiro">
+          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+            <strong>Novilheiro</strong> (1966-1993) foi o primeiro Lusitano a competir com sucesso ao mais alto nível internacional.
+          </p>
 
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
-          <strong>Novilheiro</strong> (1966-1993) foi o primeiro Lusitano a competir com sucesso ao mais alto nivel internacional.
-        </p>
+          <ArticleInfoBox title="PALMARÉS DE NOVILHEIRO" icon={Trophy}>
+            <ul className="space-y-3 text-zinc-300">
+              <li>• Jogos Olímpicos Los Angeles 1984 - 4.º lugar individual</li>
+              <li>• Campeonato da Europa 1983 - Medalha de Bronze</li>
+              <li>• Primeiro Lusitano a pontuar acima de 70% em Grand Prix</li>
+            </ul>
+          </ArticleInfoBox>
+        </ArticleSection>
 
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm">
-          <h4 className="text-[#C5A059] font-bold text-xl mb-6 flex items-center gap-3">
-            <Trophy size={24} /> PALMARES DE NOVILHEIRO
-          </h4>
-          <ul className="space-y-3 text-zinc-300">
-            <li>• Jogos Olimpicos Los Angeles 1984 - 4 lugar individual</li>
-            <li>• Campeonato da Europa 1983 - Medalha de Bronze</li>
-            <li>• Primeiro Lusitano a pontuar acima de 70% em Grand Prix</li>
-          </ul>
-        </div>
+        <ArticleSection title="II. A Era Moderna: Rubi AR">
+          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+            <strong>Rubi AR</strong>, montado por João Victor Oliva, levou Portugal aos Jogos Olímpicos de Tóquio 2020.
+          </p>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. A Era Moderna: Rubi AR</h3>
-
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
-          <strong>Rubi AR</strong>, montado por Joao Victor Oliva, levou Portugal aos Jogos Olimpicos de Toquio 2020.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-          <div className="bg-zinc-900 p-6 rounded-sm text-center">
-            <div className="text-4xl font-bold text-[#C5A059] mb-2">73.4%</div>
-            <p className="text-sm text-zinc-400">Melhor pontuacao GP Special</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
+            <article className="bg-zinc-900 p-6 rounded-sm text-center">
+              <div className="text-4xl font-bold text-[#C5A059] mb-2">73.4%</div>
+              <p className="text-sm text-zinc-400">Melhor pontuação GP Special</p>
+            </article>
+            <article className="bg-zinc-900 p-6 rounded-sm text-center">
+              <div className="text-4xl font-bold text-[#C5A059] mb-2">Top 30</div>
+              <p className="text-sm text-zinc-400">Ranking Mundial FEI</p>
+            </article>
+            <article className="bg-zinc-900 p-6 rounded-sm text-center">
+              <div className="text-4xl font-bold text-[#C5A059] mb-2">2020</div>
+              <p className="text-sm text-zinc-400">Jogos Olímpicos Tóquio</p>
+            </article>
           </div>
-          <div className="bg-zinc-900 p-6 rounded-sm text-center">
-            <div className="text-4xl font-bold text-[#C5A059] mb-2">Top 30</div>
-            <p className="text-sm text-zinc-400">Ranking Mundial FEI</p>
-          </div>
-          <div className="bg-zinc-900 p-6 rounded-sm text-center">
-            <div className="text-4xl font-bold text-[#C5A059] mb-2">2020</div>
-            <p className="text-sm text-zinc-400">Jogos Olimpicos Toquio</p>
-          </div>
-        </div>
+        </ArticleSection>
       </>
     )
   }
 };
 
 // ARTIGOS EM INGLES
-export const articlesDataEN: Record<string, any> = {
+export const articlesDataEN: Record<string, Article> = {
   "1": {
     title: "Historical Treatise: The Genesis of the Iberian Horse",
     subtitle: "5000 years of continuous selection: From the Glacial Refuge to the Gineta Warfare. A thesis on the survival of history's most influential horse.",
+    description: "Mitochondrial DNA studies identified Haplogroup D1 as an exclusive marker of the Iberian Peninsula. The Glacial Refuge theory and Lusitano horse evolution.",
+    keywords: ["Lusitano", "equine genetics", "Haplogroup D1", "Iberian Peninsula", "horse history"],
     date: "25 JAN 2026",
     readTime: "120 min",
     category: "History & Archaeology",
@@ -593,6 +554,8 @@ export const articlesDataEN: Record<string, any> = {
   "2": {
     title: "Advanced Biomechanics: The Physics of Collection",
     subtitle: "Vector analysis of movement: From the lumbosacral angle to tendon elasticity.",
+    description: "Collection in equestrian sport: biomechanical definition, hock geometry and muscle fiber biochemistry in the Lusitano Horse.",
+    keywords: ["equine biomechanics", "Collection", "hock", "muscle fibers", "Lusitano"],
     date: "18 JAN 2026",
     readTime: "110 min",
     category: "Zootechnics & Physics",
@@ -672,6 +635,8 @@ export const articlesDataEN: Record<string, any> = {
 
   "3": {
     title: "The Official Standard (APSL): Judging Manual",
+    description: "Official Lusitano Pure Blood standard: head characteristics, disqualifying defects and APSL judging criteria.",
+    keywords: ["APSL", "Lusitano Standard", "morphology", "judging", "Pure Blood"],
     subtitle: "Point by point dissection of the breed standard approved by APSL.",
     date: "15 JAN 2026",
     readTime: "30 min",
@@ -737,6 +702,8 @@ export const articlesDataEN: Record<string, any> = {
 
   "4": {
     title: "The Science of Colors: Coat Genetics in PSL",
+    description: "Equine coat genetics: Extension Locus, Agouti and coat colors recognized by APSL in the Lusitano Horse.",
+    keywords: ["equine genetics", "coat colors", "Extension Locus", "Agouti", "APSL"],
     subtitle: "Extension Locus, Agouti and the Cream Dilution gene.",
     date: "12 JAN 2026",
     readTime: "25 min",
@@ -796,6 +763,8 @@ export const articlesDataEN: Record<string, any> = {
   "5": {
     title: "Bullfighting Aptitude: Selection Through Combat",
     subtitle: "How Tauromachy shaped the Lusitano's psyche.",
+    description: "Bullfighting aptitude: bravery, tactical intelligence, controlled explosion and willingness to please in the Lusitano Horse.",
+    keywords: ["bullfighting aptitude", "tauromachy", "Lusitano temperament", "equine bravery"],
     date: "08 JAN 2026",
     readTime: "28 min",
     category: "Functionality & Temperament",
@@ -848,6 +817,8 @@ export const articlesDataEN: Record<string, any> = {
 
   "6": {
     title: "From Novilheiro to Rubi: The Olympic Revolution",
+    description: "Novilheiro and Rubi AR: the Lusitano Horse revolution in international Dressage and the Olympics.",
+    keywords: ["Novilheiro", "Rubi AR", "Dressage", "FEI", "Olympics", "Lusitano"],
     subtitle: "The rise of the Lusitano in the FEI ranking.",
     date: "02 JAN 2026",
     readTime: "32 min",
