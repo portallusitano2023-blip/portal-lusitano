@@ -1,8 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Clock, Calendar, Share2, Award, Info, Dna, Shield, Scroll, MapPin, CheckCircle2, Zap, Trophy, Globe, Book, Target, AlertTriangle, Eye, Brain, Flame, Activity, Microscope, FlaskConical, Ruler, Mountain, Swords, Crown, ChevronRight, Star, Beaker, Landmark } from "lucide-react";
+import { ArrowLeft, Clock, Calendar, Award, Dna, Shield, CheckCircle2, Zap, Trophy, Globe, AlertTriangle, Eye, Brain, Flame, Activity, Microscope, FlaskConical, Ruler, Swords, Crown, ChevronRight, Star, Beaker, Landmark } from "lucide-react";
 import { useParams } from "next/navigation";
+import ShareButtons from "@/components/ShareButtons";
+
+// Componente para imagens ilustrativas dentro dos artigos
+const ArticleImage = ({ src, alt, caption }: { src: string; alt: string; caption?: string }) => (
+  <figure className="my-12">
+    <div className="relative overflow-hidden rounded-sm border border-white/10">
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-[400px] object-cover"
+      />
+    </div>
+    {caption && (
+      <figcaption className="mt-4 text-center text-sm text-zinc-500 italic">
+        {caption}
+      </figcaption>
+    )}
+  </figure>
+);
 
 // --- BASE DE DADOS ENCICLOPÉDICA EXPANDIDA NÍVEL UNIVERSITÁRIO ---
 const articlesData: Record<string, any> = {
@@ -52,8 +71,14 @@ const articlesData: Record<string, any> = {
           </div>
         </div>
 
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1200&auto=format&fit=crop"
+          alt="Pinturas rupestres de cavalos ibéricos"
+          caption="Representação artística de cavalos ibéricos primitivos, semelhantes às pinturas encontradas na Gruta do Escoural"
+        />
+
         <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. A Revolução Genética: Haplogrupos e Filogeografia</h3>
-        
+
         <p className="text-lg text-zinc-300 leading-relaxed mb-6">
           O estudo revolucionário de <strong>Jansen et al. (2002)</strong> no <em>Animal Genetics Journal</em> sequenciou o ADN mitocondrial de 652 cavalos de 37 raças. Os resultados foram inequívocos:
         </p>
@@ -111,8 +136,14 @@ const articlesData: Record<string, any> = {
           </ol>
         </div>
 
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop"
+          alt="Análise genética de cavalos"
+          caption="A análise de ADN mitocondrial revolucionou a compreensão das origens do cavalo ibérico"
+        />
+
         <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. A Escola de Gineta vs. A Brida: Morfologia Funcional</h3>
-        
+
         <p className="text-lg text-zinc-300 leading-relaxed mb-8">
           A morfologia do Lusitano foi esculpida por uma necessidade militar específica: o <strong>combate de guerrilha em terreno acidentado</strong>. Enquanto a cavalaria pesada europeia se adaptou às planícies da Flandres e Champagne, a cavalaria ibérica lutou nas serras da Reconquista.
         </p>
@@ -232,8 +263,14 @@ const articlesData: Record<string, any> = {
           </p>
         </div>
 
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?q=80&w=1200&auto=format&fit=crop"
+          alt="Cavaleiro em equitação clássica"
+          caption="A Escola de Gineta: equitação com estribos curtos e sela plana, permitindo agilidade máxima"
+        />
+
         <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">III. O Saque Napoleónico (1807): A Catástrofe Genética</h3>
-        
+
         <div className="my-12 bg-gradient-to-r from-red-950/30 to-transparent p-12 rounded-sm border-l-4 border-red-800 shadow-2xl">
             <h4 className="text-red-400 text-2xl font-serif mb-6 flex items-center gap-3">
               <Flame size={28} /> A Perda Irreparável
@@ -331,8 +368,14 @@ const articlesData: Record<string, any> = {
           </ol>
         </div>
 
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1601307085247-e0f9d6e8ac18?q=80&w=1200&auto=format&fit=crop"
+          alt="Cavalos Lusitanos na Coudelaria de Alter"
+          caption="A Coudelaria de Alter Real: berço da reconstrução da raça após as invasões napoleónicas"
+        />
+
         <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">IV. A Influência Global: Do Mustang ao Criollo</h3>
-        
+
         <p className="text-lg text-zinc-300 leading-relaxed mb-8">
           O impacto genético do cavalo ibérico nas Américas foi tão profundo que praticamente <strong>todas as raças americanas</strong> descendem dele. Quando Hernán Cortés desembarcou no México (1519), trazia 16 cavalos - todos andaluzes e lusitanos.
         </p>
@@ -444,10 +487,16 @@ const articlesData: Record<string, any> = {
           </div>
         </div>
 
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1566251037378-5e04e3bec343?q=80&w=1200&auto=format&fit=crop"
+          alt="Cavalo Lusitano em reunião"
+          caption="Cavalo Lusitano demonstrando a reunião natural: peso transferido para os posteriores, pescoço arqueado"
+        />
+
         <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. A Geometria do Jarrete: Vantagem Mecânica Inata</h3>
-        
+
         <p className="text-lg text-zinc-300 leading-relaxed mb-8">
-          O jarrete do cavalo funciona como um sistema de alavancas classe III (força entre fulcro e resistência). A eficiência mecânica deste sistema é determinada pelo <strong>ângulo de repouso</strong> e pela <strong>capacidade de flexão</strong>.
+          O jarrete do cavalo funciona como um sistema de alavancas classe III (força entre fulcro e resistência). A eficiência mecânica deste sistema é determinado pelo <strong>ângulo de repouso</strong> e pela <strong>capacidade de flexão</strong>.
         </p>
 
         <div className="bg-zinc-900 p-12 rounded-sm border border-white/5 my-16">
@@ -515,8 +564,14 @@ const articlesData: Record<string, any> = {
             </div>
         </div>
 
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1590490359854-dfba19688d26?q=80&w=1200&auto=format&fit=crop"
+          alt="Anatomia do jarrete do cavalo"
+          caption="O jarrete angulado do Lusitano funciona como uma mola pré-comprimida, armazenando energia elástica"
+        />
+
         <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. Bioquímica Muscular: O Segredo das Fibras Tipo IIb</h3>
-        
+
         <p className="text-lg text-zinc-300 leading-relaxed mb-8">
           A composição muscular de um cavalo determina o seu perfil atlético. Existem três tipos principais de fibras musculares, cada uma com características metabólicas distintas:
         </p>
@@ -735,8 +790,459 @@ const articlesData: Record<string, any> = {
     )
   },
 
-  // [Continua com os artigos 3, 4, 5, 6 igualmente expandidos... por questões de espaço, mostro a estrutura]
-  
+  "3": {
+    title: "O Standard Oficial (APSL): Manual de Julgamento",
+    subtitle: "Dissecção ponto por ponto do padrão racial aprovado pela APSL. O que os juízes procuram e os defeitos eliminatórios.",
+    date: "15 JAN 2026",
+    readTime: "30 min",
+    category: "Morfologia & Standard",
+    image: "https://images.unsplash.com/photo-1447993661623-28b9c8a994a5?q=80&w=1200&auto=format&fit=crop",
+    content: (
+      <>
+        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">O</span>
+          Standard oficial do Puro-Sangue Lusitano, mantido pela <strong>Associação Portuguesa de Criadores do Cavalo Puro Sangue Lusitano (APSL)</strong>, é um documento técnico que define com precisão milimétrica as características ideais da raça. Este guia serve como referência para juízes, criadores e compradores.
+        </p>
+
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1200&auto=format&fit=crop"
+          alt="Cavalo Lusitano em exposição"
+          caption="Exemplar de Cavalo Lusitano em julgamento morfológico"
+        />
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. A Cabeça: Espelho da Raça</h3>
+
+        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          A cabeça do Lusitano é considerada o "cartão de visita" da raça. Deve ser <strong>seca, de comprimento médio, e bem proporcionada</strong>. O perfil deve ser <strong>subconvexo</strong> (ligeiramente arqueado), nunca côncavo ou reto.
+        </p>
+
+        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm shadow-2xl">
+          <h4 className="text-[#C5A059] font-bold text-2xl mb-6 flex items-center gap-3">
+            <Eye size={24} /> CARACTERÍSTICAS DA CABEÇA
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="border-l-2 border-zinc-700 pl-4">
+                <h5 className="text-white font-bold mb-2">Olhos</h5>
+                <p className="text-zinc-400 text-sm">Grandes, vivos, expressivos e elípticos. Colocação suborbital, nunca saliente.</p>
+              </div>
+              <div className="border-l-2 border-zinc-700 pl-4">
+                <h5 className="text-white font-bold mb-2">Orelhas</h5>
+                <p className="text-zinc-400 text-sm">Médias, finas, bem inseridas e paralelas. Pontas ligeiramente convergentes.</p>
+              </div>
+              <div className="border-l-2 border-zinc-700 pl-4">
+                <h5 className="text-white font-bold mb-2">Narinas</h5>
+                <p className="text-zinc-400 text-sm">Amplas e flexíveis, permitindo boa capacidade respiratória.</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="border-l-2 border-zinc-700 pl-4">
+                <h5 className="text-white font-bold mb-2">Chanfro</h5>
+                <p className="text-zinc-400 text-sm">Perfil subconvexo característico. Defeito: chanfro reto ou côncavo.</p>
+              </div>
+              <div className="border-l-2 border-zinc-700 pl-4">
+                <h5 className="text-white font-bold mb-2">Ganachas</h5>
+                <p className="text-zinc-400 text-sm">Bem separadas, permitindo ampla flexão da nuca.</p>
+              </div>
+              <div className="border-l-2 border-zinc-700 pl-4">
+                <h5 className="text-white font-bold mb-2">Lábios</h5>
+                <p className="text-zinc-400 text-sm">Finos, firmes e bem fechados.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. Pescoço e Espádua</h3>
+
+        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          O pescoço é uma das características mais distintivas do Lusitano. Deve ser <strong>bem inserido, arqueado e de comprimento médio</strong>. A espádua deve ser <strong>longa, oblíqua e bem musculada</strong>.
+        </p>
+
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?q=80&w=1200&auto=format&fit=crop"
+          alt="Pescoço arqueado do Lusitano"
+          caption="O pescoço piramidal e arqueado é marca distintiva da raça"
+        />
+
+        <div className="bg-zinc-900 p-10 rounded-sm border border-white/5 my-12">
+          <h4 className="text-white text-xl font-bold mb-6">Pontos de Avaliação do Pescoço</h4>
+          <div className="space-y-4">
+            <div className="flex items-start gap-4">
+              <span className="text-[#C5A059] font-bold text-2xl">1</span>
+              <div>
+                <strong className="text-white block mb-1">Inserção na Cabeça</strong>
+                <p className="text-sm text-zinc-400">Deve ser fina e elegante, formando um ângulo que permita flexão completa.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <span className="text-[#C5A059] font-bold text-2xl">2</span>
+              <div>
+                <strong className="text-white block mb-1">Forma Piramidal</strong>
+                <p className="text-sm text-zinc-400">Alargando progressivamente da nuca até à base, com crista bem desenvolvida.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <span className="text-[#C5A059] font-bold text-2xl">3</span>
+              <div>
+                <strong className="text-white block mb-1">Inserção no Tronco</strong>
+                <p className="text-sm text-zinc-400">Alta e bem destacada, permitindo elevação natural do anterior.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">III. Defeitos Eliminatórios</h3>
+
+        <div className="bg-gradient-to-r from-red-950/30 to-transparent p-10 rounded-sm border-l-4 border-red-800 my-12">
+          <h4 className="text-red-400 font-bold text-xl mb-6 flex items-center gap-3">
+            <AlertTriangle size={24} /> DEFEITOS QUE IMPEDEM REGISTO
+          </h4>
+          <ul className="space-y-3 text-zinc-300">
+            <li className="flex gap-3"><span className="text-red-500">•</span> Prognatismo ou retrognatismo acentuado</li>
+            <li className="flex gap-3"><span className="text-red-500">•</span> Criptorquidismo (machos)</li>
+            <li className="flex gap-3"><span className="text-red-500">•</span> Pelagens não reconhecidas pela APSL</li>
+            <li className="flex gap-3"><span className="text-red-500">•</span> Altura inferior a 1,50m (machos) ou 1,48m (fêmeas) aos 6 anos</li>
+            <li className="flex gap-3"><span className="text-red-500">•</span> Olhos com heterocromia total</li>
+            <li className="flex gap-3"><span className="text-red-500">•</span> Deformações congénitas graves</li>
+          </ul>
+        </div>
+      </>
+    )
+  },
+
+  "4": {
+    title: "A Ciência das Cores: Genética de Pelagens no PSL",
+    subtitle: "Locus Extension, Agouti e o gene da Diluição Creme. A explicação científica para a variedade cromática da raça.",
+    date: "12 JAN 2026",
+    readTime: "25 min",
+    category: "Genética & Pelagens",
+    image: "https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop",
+    content: (
+      <>
+        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">A</span>
+          genética das pelagens equinas é fascinante e complexa. No Cavalo Lusitano, encontramos uma grande variedade de cores, todas determinadas pela interação de múltiplos genes. Compreender estes mecanismos é essencial para criadores que pretendem produzir pelagens específicas.
+        </p>
+
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop"
+          alt="Cavalos Lusitanos de diferentes pelagens"
+          caption="A variedade cromática do Lusitano: do negro ao palomino"
+        />
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. Os Genes Fundamentais</h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
+          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-black">
+            <h4 className="text-white font-bold text-xl mb-4">Locus Extension (E)</h4>
+            <p className="text-zinc-400 text-sm mb-4">Controla a produção de pigmento negro (eumelanina).</p>
+            <div className="space-y-2 text-sm">
+              <p className="text-zinc-300"><strong>E/E ou E/e:</strong> Permite pigmento negro</p>
+              <p className="text-zinc-300"><strong>e/e:</strong> Castanho (sem negro)</p>
+            </div>
+          </div>
+
+          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-amber-700">
+            <h4 className="text-white font-bold text-xl mb-4">Locus Agouti (A)</h4>
+            <p className="text-zinc-400 text-sm mb-4">Distribui o pigmento negro pelo corpo.</p>
+            <div className="space-y-2 text-sm">
+              <p className="text-zinc-300"><strong>A/A ou A/a:</strong> Negro restrito a pontos (castanho)</p>
+              <p className="text-zinc-300"><strong>a/a:</strong> Negro uniforme</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. Pelagens Base do Lusitano</h3>
+
+        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm">
+          <h4 className="text-[#C5A059] font-bold text-2xl mb-6">Pelagens Reconhecidas pela APSL</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-black/40 p-6 rounded-sm">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-600 mb-4"></div>
+              <h5 className="text-white font-bold mb-2">Preto</h5>
+              <p className="text-xs text-zinc-500">E/_ a/a</p>
+              <p className="text-sm text-zinc-400 mt-2">Pelagem negra uniforme, sem tons castanhos.</p>
+            </div>
+            <div className="bg-black/40 p-6 rounded-sm">
+              <div className="w-8 h-8 rounded-full bg-amber-800 border border-amber-700 mb-4"></div>
+              <h5 className="text-white font-bold mb-2">Castanho</h5>
+              <p className="text-xs text-zinc-500">E/_ A/_</p>
+              <p className="text-sm text-zinc-400 mt-2">Corpo castanho com pontos negros.</p>
+            </div>
+            <div className="bg-black/40 p-6 rounded-sm">
+              <div className="w-8 h-8 rounded-full bg-zinc-400 border border-zinc-300 mb-4"></div>
+              <h5 className="text-white font-bold mb-2">Ruço</h5>
+              <p className="text-xs text-zinc-500">G/_</p>
+              <p className="text-sm text-zinc-400 mt-2">Progressivo branqueamento com idade.</p>
+            </div>
+          </div>
+        </div>
+
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1601307085247-e0f9d6e8ac18?q=80&w=1200&auto=format&fit=crop"
+          alt="Cavalo Lusitano ruço"
+          caption="O ruço é uma das pelagens mais apreciadas no Lusitano, branqueando progressivamente"
+        />
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">III. Gene de Diluição Creme</h3>
+
+        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          O gene Creme (Cr) é responsável por algumas das pelagens mais espetaculares do Lusitano. Uma única cópia dilui o pigmento vermelho; duas cópias diluem também o negro.
+        </p>
+
+        <div className="bg-zinc-900 p-10 rounded-sm border border-white/5 my-12">
+          <h4 className="text-white font-bold text-xl mb-6">Efeitos do Gene Creme</h4>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-white/10">
+                <th className="text-left py-3 text-[#C5A059]">Base</th>
+                <th className="text-center py-3 text-[#C5A059]">+1 Creme (Cr/cr)</th>
+                <th className="text-center py-3 text-[#C5A059]">+2 Cremes (Cr/Cr)</th>
+              </tr>
+            </thead>
+            <tbody className="text-zinc-300">
+              <tr className="border-b border-white/5">
+                <td className="py-3">Castanho (e/e)</td>
+                <td className="py-3 text-center">Palomino</td>
+                <td className="py-3 text-center">Cremello</td>
+              </tr>
+              <tr className="border-b border-white/5">
+                <td className="py-3">Castanho (E/_ A/_)</td>
+                <td className="py-3 text-center">Buckskin</td>
+                <td className="py-3 text-center">Perlino</td>
+              </tr>
+              <tr>
+                <td className="py-3">Preto (E/_ a/a)</td>
+                <td className="py-3 text-center">Smoky Black</td>
+                <td className="py-3 text-center">Smoky Cream</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  },
+
+  "5": {
+    title: "Toricidade: A Seleção pelo Combate",
+    subtitle: "Como a Tauromaquia moldou a psique do Lusitano. O conceito de 'Bravura' e a 'Vontade de Agradar' sob pressão de morte.",
+    date: "08 JAN 2026",
+    readTime: "28 min",
+    category: "Funcionalidade & Temperamento",
+    image: "https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop",
+    content: (
+      <>
+        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">A</span>
+          <strong>"Toricidade"</strong> é o conjunto de características psicológicas e físicas que permitem a um cavalo trabalhar frente a um touro bravo. Esta funcionalidade moldou o Lusitano durante séculos, criando um animal com <em>sangue frio sob pressão extrema</em> e capacidade de decisão autónoma.
+        </p>
+
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop"
+          alt="Cavalo Lusitano em trabalho de campo"
+          caption="A toricidade exige coragem, agilidade e inteligência tática"
+        />
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. Os Pilares da Toricidade</h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
+          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
+            <Flame className="text-[#C5A059] mb-4" size={32} />
+            <h4 className="text-white font-bold text-xl mb-4">Bravura</h4>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              A capacidade de enfrentar o perigo sem hesitação. O cavalo "touro" não foge - posiciona-se, avalia e responde. Esta bravura é diferente da agressividade; é uma <strong>coragem controlada</strong>.
+            </p>
+          </div>
+
+          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
+            <Brain className="text-[#C5A059] mb-4" size={32} />
+            <h4 className="text-white font-bold text-xl mb-4">Inteligência Tática</h4>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              O cavalo deve <strong>antecipar</strong> os movimentos do touro. Não basta reagir - é preciso prever. Esta capacidade de "ler" o oponente é inata e aperfeiçoada pelo treino.
+            </p>
+          </div>
+
+          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
+            <Zap className="text-[#C5A059] mb-4" size={32} />
+            <h4 className="text-white font-bold text-xl mb-4">Explosão Controlada</h4>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Arranques instantâneos de 0 a 35 km/h, paragens "de pedra", e mudanças de direção a 180° em menos de um segundo. A anatomia do Lusitano permite esta <strong>potência explosiva</strong>.
+            </p>
+          </div>
+
+          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
+            <Award className="text-[#C5A059] mb-4" size={32} />
+            <h4 className="text-white font-bold text-xl mb-4">Vontade de Agradar</h4>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Apesar do perigo, o cavalo mantém a <strong>ligação com o cavaleiro</strong>. Responde às ajudas mesmo sob stress extremo. Esta cooperação é o que diferencia o "cavalo de toiros" do cavalo selvagem.
+            </p>
+          </div>
+        </div>
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. A Seleção Histórica</h3>
+
+        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          Durante séculos, apenas os cavalos que <strong>sobreviviam ao combate</strong> eram usados para reprodução. Esta seleção natural criou um pool genético único:
+        </p>
+
+        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm">
+          <h4 className="text-[#C5A059] font-bold text-xl mb-6">Critérios de Seleção Históricos</h4>
+          <ul className="space-y-4 text-zinc-300">
+            <li className="flex gap-4">
+              <span className="text-[#C5A059] font-bold">1.</span>
+              <span><strong>Sobrevivência:</strong> Cavalos lentos ou cobardes eram eliminados pelo touro</span>
+            </li>
+            <li className="flex gap-4">
+              <span className="text-[#C5A059] font-bold">2.</span>
+              <span><strong>Utilidade:</strong> Apenas cavalos que permitiam ao cavaleiro trabalhar eram mantidos</span>
+            </li>
+            <li className="flex gap-4">
+              <span className="text-[#C5A059] font-bold">3.</span>
+              <span><strong>Temperamento:</strong> Cavalos nervosos ou imprevisíveis eram descartados</span>
+            </li>
+            <li className="flex gap-4">
+              <span className="text-[#C5A059] font-bold">4.</span>
+              <span><strong>Longevidade:</strong> A experiência era valorizada - cavalos veteranos eram tesouros</span>
+            </li>
+          </ul>
+        </div>
+
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?q=80&w=1200&auto=format&fit=crop"
+          alt="Cavaleiro e cavalo Lusitano"
+          caption="A parceria cavaleiro-cavalo é essencial na tauromaquia equestre"
+        />
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">III. Transferência para o Desporto Moderno</h3>
+
+        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          As mesmas características que fazem um grande cavalo de toiros fazem um excelente cavalo de Dressage ou Working Equitation:
+        </p>
+
+        <div className="bg-zinc-900 p-10 rounded-sm border border-white/5 my-12">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-white/10">
+                <th className="text-left py-3 text-[#C5A059]">Toricidade</th>
+                <th className="text-left py-3 text-[#C5A059]">Aplicação Desportiva</th>
+              </tr>
+            </thead>
+            <tbody className="text-zinc-300">
+              <tr className="border-b border-white/5">
+                <td className="py-3">Explosão controlada</td>
+                <td className="py-3">Transições instantâneas em Dressage</td>
+              </tr>
+              <tr className="border-b border-white/5">
+                <td className="py-3">Inteligência tática</td>
+                <td className="py-3">Aprendizagem rápida de exercícios complexos</td>
+              </tr>
+              <tr className="border-b border-white/5">
+                <td className="py-3">Sangue frio</td>
+                <td className="py-3">Performance estável em competição</td>
+              </tr>
+              <tr>
+                <td className="py-3">Vontade de agradar</td>
+                <td className="py-3">Harmonia cavaleiro-cavalo (notas de 9-10)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  },
+
+  "6": {
+    title: "De Novilheiro a Rubi: A Revolução Olímpica",
+    subtitle: "A ascensão do Lusitano no ranking da FEI e o fim do preconceito contra o cavalo Barroco no Dressage internacional.",
+    date: "02 JAN 2026",
+    readTime: "32 min",
+    category: "Desporto & Competição",
+    image: "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
+    content: (
+      <>
+        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">D</span>
+          urante décadas, o Cavalo Lusitano foi considerado "inadequado" para o Dressage de alta competição. Os juízes internacionais, habituados aos Warmbloods alemães e holandeses, penalizavam o movimento "redondo" do Lusitano. Tudo mudou com <strong>Novilheiro</strong> e a revolução que se seguiu.
+        </p>
+
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop"
+          alt="Cavalo Lusitano em competição de Dressage"
+          caption="O Lusitano moderno compete ao mais alto nível internacional"
+        />
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">I. O Pioneiro: Novilheiro</h3>
+
+        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          <strong>Novilheiro</strong> (1966-1993), nascido na Coudelaria Manuel Tavares Veiga, foi o primeiro Lusitano a competir com sucesso ao mais alto nível internacional. Montado por Christine Stückelberger, representou a Suíça nos Jogos Olímpicos de 1984.
+        </p>
+
+        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm">
+          <h4 className="text-[#C5A059] font-bold text-xl mb-6 flex items-center gap-3">
+            <Trophy size={24} /> PALMARÉS DE NOVILHEIRO
+          </h4>
+          <ul className="space-y-3 text-zinc-300">
+            <li className="flex gap-3"><span className="text-[#C5A059]">•</span> Jogos Olímpicos Los Angeles 1984 - 4º lugar individual</li>
+            <li className="flex gap-3"><span className="text-[#C5A059]">•</span> Campeonato da Europa 1983 - Medalha de Bronze</li>
+            <li className="flex gap-3"><span className="text-[#C5A059]">•</span> Múltiplos títulos suíços de Grand Prix</li>
+            <li className="flex gap-3"><span className="text-[#C5A059]">•</span> Primeiro Lusitano a pontuar acima de 70% em Grand Prix</li>
+          </ul>
+        </div>
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">II. A Era Moderna: Rubi AR</h3>
+
+        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          <strong>Rubi AR</strong>, montado por João Victor Oliva, levou Portugal aos Jogos Olímpicos de Tóquio 2020, sendo o primeiro cavaleiro português a competir em Dressage olímpico em 24 anos.
+        </p>
+
+        <ArticleImage
+          src="https://images.unsplash.com/photo-1566251037378-5e04e3bec343?q=80&w=1200&auto=format&fit=crop"
+          alt="Lusitano em Grand Prix"
+          caption="A elegância e precisão do Lusitano em exercícios de Grand Prix"
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
+          <div className="bg-zinc-900 p-6 rounded-sm text-center">
+            <div className="text-4xl font-bold text-[#C5A059] mb-2">73.4%</div>
+            <p className="text-sm text-zinc-400">Melhor pontuação GP Special</p>
+          </div>
+          <div className="bg-zinc-900 p-6 rounded-sm text-center">
+            <div className="text-4xl font-bold text-[#C5A059] mb-2">Top 30</div>
+            <p className="text-sm text-zinc-400">Ranking Mundial FEI</p>
+          </div>
+          <div className="bg-zinc-900 p-6 rounded-sm text-center">
+            <div className="text-4xl font-bold text-[#C5A059] mb-2">2020</div>
+            <p className="text-sm text-zinc-400">Jogos Olímpicos Tóquio</p>
+          </div>
+        </div>
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">III. O Fim do Preconceito</h3>
+
+        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          A FEI (Federação Equestre Internacional) tem vindo a reconhecer progressivamente as qualidades únicas do cavalo ibérico. As regras de julgamento foram ajustadas para não penalizar o movimento naturalmente mais elevado e redondo destas raças.
+        </p>
+
+        <div className="bg-gradient-to-br from-[#C5A059]/10 to-transparent border-l-4 border-[#C5A059] p-10 my-12 rounded-sm">
+          <h4 className="text-[#C5A059] font-bold text-xl mb-6">Lusitanos no Ranking FEI (2025)</h4>
+          <p className="text-zinc-300 mb-6">
+            Atualmente, mais de <strong>15 cavalos Lusitanos</strong> competem regularmente em provas CDI*** e superiores, representando países como Portugal, Espanha, Brasil, França e Alemanha.
+          </p>
+          <div className="bg-black/40 p-6 rounded-sm">
+            <p className="text-sm text-zinc-400 italic">
+              "O Lusitano deixou de ser uma curiosidade exótica para se tornar uma escolha legítima para cavaleiros que procuram um parceiro com capacidade natural de reunião e uma ética de trabalho inigualável."
+            </p>
+            <cite className="block text-right text-xs text-zinc-500 mt-4">— Kyra Kyrklund, 6x Olímpica</cite>
+          </div>
+        </div>
+
+        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">IV. O Futuro</h3>
+
+        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          Com o crescimento da <strong>Working Equitation</strong> como modalidade FEI e o reconhecimento cada vez maior das qualidades do Lusitano em Dressage clássico, o futuro é promissor. A raça que sobreviveu às invasões napoleónicas e à quase-extinção está agora a conquistar os maiores palcos do desporto equestre mundial.
+        </p>
+      </>
+    )
+  }
 };
 
 export default function ArticlePage() {
@@ -809,10 +1315,7 @@ export default function ArticlePage() {
                 <span className="flex items-center gap-2 text-[#C5A059]"><Calendar size={14}/> {article.date}</span>
                 <span className="hidden md:flex items-center gap-2"><Microscope size={14}/> Investigação Científica</span>
             </div>
-            <div className="flex gap-4">
-                <button className="text-zinc-400 hover:text-[#C5A059] transition-colors"><Share2 size={16} /></button>
-                <button className="text-zinc-400 hover:text-[#C5A059] transition-colors"><Book size={16} /></button>
-            </div>
+            <ShareButtons title={article.title} />
         </div>
 
         {/* Conteúdo */}
