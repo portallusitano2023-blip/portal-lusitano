@@ -1,22 +1,27 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Clock, BookOpen } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function JornalPage() {
+  const { t } = useLanguage();
+
   const articles = [
     {
       id: 1,
-      category: "História & Genética",
-      title: "Tratado Histórico: A Génese do Cavalo Ibérico",
-      excerpt: "Da sobrevivência glaciar à diferenciação das linhagens fundamentais (Veiga, Andrade, CN). Uma análise profunda sobre a seleção.",
+      category: "Historia & Genetica",
+      title: "Tratado Historico: A Genese do Cavalo Iberico",
+      excerpt: "Da sobrevivencia glaciar a diferenciacao das linhagens fundamentais (Veiga, Andrade, CN). Uma analise profunda sobre a selecao.",
       date: "25 JAN 2026",
       readTime: "35 min",
       image: "https://images.unsplash.com/photo-1598556776374-2c35e3b5e43a?q=80&w=1200&auto=format&fit=crop"
     },
     {
       id: 2,
-      category: "Biomecânica",
-      title: "A Física da Reunião e a Superioridade do Lusitano",
-      excerpt: "Uma dissertação técnica sobre alavancas, centros de massa e a vantagem anatómica do Lusitano sobre os Warmbloods.",
+      category: "Biomecanica",
+      title: "A Fisica da Reuniao e a Superioridade do Lusitano",
+      excerpt: "Uma dissertacao tecnica sobre alavancas, centros de massa e a vantagem anatomica do Lusitano sobre os Warmbloods.",
       date: "18 JAN 2026",
       readTime: "40 min",
       image: "https://images.unsplash.com/photo-1551884831-bbf3ddd77501?q=80&w=1200&auto=format&fit=crop"
@@ -25,16 +30,16 @@ export default function JornalPage() {
       id: 3,
       category: "Morfologia",
       title: "O Standard Oficial (APSL): Manual de Julgamento",
-      excerpt: "Dissecção ponto por ponto do padrão racial. O que os juízes procuram e os defeitos eliminatórios.",
+      excerpt: "Disseccao ponto por ponto do padrao racial. O que os juizes procuram e os defeitos eliminatorios.",
       date: "15 JAN 2026",
       readTime: "30 min",
       image: "https://images.unsplash.com/photo-1447993661623-28b9c8a994a5?q=80&w=1200&auto=format&fit=crop"
     },
     {
       id: 4,
-      category: "Genética & Pelagens",
-      title: "A Ciência das Cores: Genética de Pelagens no PSL",
-      excerpt: "Locus Extension, Agouti e o gene da Diluição Creme. A explicação científica para a variedade cromática da raça.",
+      category: "Genetica & Pelagens",
+      title: "A Ciencia das Cores: Genetica de Pelagens no PSL",
+      excerpt: "Locus Extension, Agouti e o gene da Diluicao Creme. A explicacao cientifica para a variedade cromatica da raca.",
       date: "12 JAN 2026",
       readTime: "25 min",
       image: "https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop"
@@ -42,8 +47,8 @@ export default function JornalPage() {
     {
       id: 5,
       category: "Funcionalidade",
-      title: "Toricidade: A Seleção pelo Combate",
-      excerpt: "Como a Tauromaquia moldou a psique do Lusitano. O conceito de 'Bravura' e a 'Vontade de Agradar' sob pressão de morte.",
+      title: "Toricidade: A Selecao pelo Combate",
+      excerpt: "Como a Tauromaquia moldou a psique do Lusitano. O conceito de 'Bravura' e a 'Vontade de Agradar' sob pressao de morte.",
       date: "08 JAN 2026",
       readTime: "28 min",
       image: "https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop"
@@ -51,8 +56,8 @@ export default function JornalPage() {
     {
       id: 6,
       category: "Desporto Moderno",
-      title: "De Novilheiro a Rubi: A Revolução Olímpica",
-      excerpt: "A ascensão do Lusitano no ranking da FEI e o fim do preconceito contra o cavalo Barroco no Dressage internacional.",
+      title: "De Novilheiro a Rubi: A Revolucao Olimpica",
+      excerpt: "A ascensao do Lusitano no ranking da FEI e o fim do preconceito contra o cavalo Barroco no Dressage internacional.",
       date: "02 JAN 2026",
       readTime: "32 min",
       image: "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop"
@@ -61,31 +66,31 @@ export default function JornalPage() {
 
   return (
     <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
-      
-      {/* 1. CABEÇALHO */}
+
+      {/* 1. CABECALHO */}
       <div className="text-center mb-16 max-w-4xl mx-auto">
         <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
-          Arquivo Editorial
+          {t.journal.archive}
         </span>
         <h1 className="text-5xl md:text-7xl font-serif text-white mb-6">
-          Enciclopédia Lusitana
+          {t.journal.title}
         </h1>
         <p className="text-zinc-400 font-serif italic text-lg">
-          "Investigação profunda sobre a história, ciência e arte do cavalo português."
+          "{t.journal.subtitle}"
         </p>
       </div>
 
-      {/* 2. DESTAQUE (Último artigo lançado) */}
+      {/* 2. DESTAQUE */}
       <div className="max-w-7xl mx-auto mb-20">
         <Link href={`/jornal/${articles[0].id}`}>
           <div className="group relative w-full h-[600px] overflow-hidden border border-white/10 rounded-sm cursor-pointer">
-            <img 
-              src={articles[0].image} 
+            <img
+              src={articles[0].image}
               alt={articles[0].title}
               className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-            
+
             <div className="absolute bottom-0 left-0 p-8 md:p-16 w-full md:w-2/3">
               <span className="inline-block bg-[#C5A059] text-black px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
                 {articles[0].category}
@@ -97,7 +102,7 @@ export default function JornalPage() {
                 {articles[0].excerpt}
               </p>
               <div className="flex items-center gap-6 text-xs text-zinc-400 uppercase tracking-wider">
-                <div className="flex items-center gap-2"><BookOpen size={14} /> Leitura Técnica</div>
+                <div className="flex items-center gap-2"><BookOpen size={14} /> {t.journal.technical_read}</div>
                 <div className="flex items-center gap-2"><Clock size={14} /> {articles[0].readTime}</div>
               </div>
             </div>
@@ -111,8 +116,8 @@ export default function JornalPage() {
           <Link href={`/jornal/${article.id}`} key={article.id}>
             <article className="group cursor-pointer h-full flex flex-col border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02]">
               <div className="w-full h-64 overflow-hidden relative">
-                <img 
-                  src={article.image} 
+                <img
+                  src={article.image}
                   alt={article.title}
                   className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
                 />
@@ -120,7 +125,7 @@ export default function JornalPage() {
                   {article.category}
                 </div>
               </div>
-              
+
               <div className="p-8 flex flex-col flex-grow">
                 <div className="mb-4 text-[#C5A059] text-[10px] uppercase tracking-widest flex justify-between">
                   <span>{article.date}</span>
@@ -134,7 +139,7 @@ export default function JornalPage() {
                 </p>
                 <div className="border-t border-white/10 pt-4 mt-auto">
                   <span className="flex items-center gap-2 text-white text-xs uppercase tracking-widest group-hover:gap-4 transition-all">
-                    Ler Estudo <ArrowRight size={14} className="text-[#C5A059]" />
+                    {t.journal.read_study} <ArrowRight size={14} className="text-[#C5A059]" />
                   </span>
                 </div>
               </div>

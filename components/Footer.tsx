@@ -1,8 +1,18 @@
-// @ts-nocheck
+"use client";
+
 import Link from "next/link";
 import { Instagram, Music2, Mail, MapPin, ArrowUpRight } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
+
+  const navItems = [
+    { name: t.nav.home, href: "/" },
+    { name: t.nav.shop, href: "/loja" },
+    { name: t.nav.journal, href: "/jornal" }
+  ];
+
   return (
     <footer className="bg-[#050505] border-t border-zinc-900 pt-32 pb-12 px-6 mt-20 relative overflow-hidden">
       {/* Efeito de luz dourada subtil no fundo */}
@@ -10,7 +20,7 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
-          
+
           {/* IDENTIDADE E MANIFESTO */}
           <div className="md:col-span-5 space-y-8">
             <Link href="/" className="inline-block group">
@@ -22,9 +32,9 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-zinc-500 text-base font-light leading-relaxed max-w-md">
-              A primeira plataforma digital de elite dedicada à preservação, cultura e comércio do cavalo Lusitano. Criado para unir a tradição secular à inovação global.
+              {t.home.manifesto}
             </p>
-            
+
             {/* REDES SOCIAIS COM ICONS */}
             <div className="flex gap-5 pt-4">
               <a href="https://instagram.com/portal_lusitano" target="_blank" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
@@ -39,24 +49,28 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* NAVEGAÇÃO RÁPIDA */}
+          {/* NAVEGACAO RAPIDA */}
           <div className="md:col-span-3 space-y-8">
-            <h4 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">Navegação</h4>
+            <h4 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
+              {t.nav.home === "Home" ? "Navigation" : "Navegacao"}
+            </h4>
             <ul className="space-y-4">
-              {['Inicio','Loja', 'Jornal'].map((item) => (
-                <li key={item}>
-                  <Link href={`/${item.toLowerCase()}`} className="text-zinc-500 hover:text-white text-sm font-light transition-colors flex items-center gap-2 group">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="text-zinc-500 hover:text-white text-sm font-light transition-colors flex items-center gap-2 group">
                     <span className="w-0 group-hover:w-4 h-[1px] bg-[#C5A059] transition-all duration-300"></span>
-                    {item}
+                    {item.name}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* CONTACTOS E LOCALIZAÇÃO */}
+          {/* CONTACTOS E LOCALIZACAO */}
           <div className="md:col-span-4 space-y-8">
-            <h4 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">Contacto Oficial</h4>
+            <h4 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
+              {t.nav.home === "Home" ? "Official Contact" : "Contacto Oficial"}
+            </h4>
             <div className="space-y-6">
               <div className="flex items-start gap-4 group">
                 <MapPin className="text-[#C5A059] mt-1" size={16} />
@@ -66,7 +80,7 @@ export default function Footer() {
                 </div>
               </div>
               <Link href="/minha-conta" className="inline-flex items-center gap-2 text-[#C5A059] text-[10px] uppercase tracking-widest font-bold border-b border-[#C5A059]/30 pb-1 hover:border-[#C5A059] transition-all">
-                Aceder ao Portal ID <ArrowUpRight size={12} />
+                {t.nav.home === "Home" ? "Access Portal ID" : "Aceder ao Portal ID"} <ArrowUpRight size={12} />
               </Link>
             </div>
           </div>
@@ -76,12 +90,12 @@ export default function Footer() {
         <div className="pt-12 border-t border-zinc-900/50 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-col md:flex-row items-center gap-2 md:gap-8">
             <p className="text-zinc-700 text-[9px] uppercase tracking-[0.2em]">
-              © 2026 Portal Lusitano. Created by <span className="text-zinc-500">Portal Lusitano</span>.
+              © 2026 Portal Lusitano. {t.footer.rights}.
             </p>
           </div>
           <div className="flex gap-10">
-            <Link href="/privacidade" className="text-zinc-700 hover:text-white text-[9px] uppercase tracking-[0.2em] transition-colors">Privacidade</Link>
-            <Link href="/termos" className="text-zinc-700 hover:text-white text-[9px] uppercase tracking-[0.2em] transition-colors">Termos</Link>
+            <Link href="/privacidade" className="text-zinc-700 hover:text-white text-[9px] uppercase tracking-[0.2em] transition-colors">{t.footer.privacy}</Link>
+            <Link href="/termos" className="text-zinc-700 hover:text-white text-[9px] uppercase tracking-[0.2em] transition-colors">{t.footer.terms}</Link>
           </div>
         </div>
       </div>
