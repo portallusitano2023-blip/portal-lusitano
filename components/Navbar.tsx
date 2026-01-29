@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { ShoppingBag, User, Menu, X } from "lucide-react";
+import { ShoppingBag, User, Menu, X, Search } from "lucide-react";
 import { useState } from "react";
+import { SearchModal } from "./Search";
 
 export default function Navbar() {
   const { totalQuantity, openCart } = useCart();
   const { language, toggleLanguage, t } = useLanguage();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
     <nav className="fixed w-full z-50 bg-[#050505]/95 backdrop-blur-md border-b border-white/5 transition-all duration-300">
@@ -43,26 +45,42 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* ÍCONES E IDIOMA */}
-        <div className="flex items-center gap-6 md:gap-10">
-          <button 
+        {/* ICONES E IDIOMA */}
+        <div className="flex items-center gap-4 md:gap-8">
+          {/* Pesquisa */}
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="text-zinc-400 hover:text-[#C5A059] transition-colors p-2"
+            aria-label={language === 'pt' ? 'Pesquisar' : 'Search'}
+          >
+            <Search size={20} strokeWidth={1.5} />
+          </button>
+
+          {/* Idioma */}
+          <button
             onClick={toggleLanguage}
             className="hidden md:flex text-xs font-bold tracking-widest text-zinc-500 hover:text-white transition-colors border border-transparent hover:border-zinc-800 px-3 py-1 rounded-sm"
+            aria-label={language === 'pt' ? 'Mudar idioma' : 'Change language'}
           >
             <span className={language === 'pt' ? "text-[#C5A059]" : ""}>PT</span>
             <span className="mx-2 opacity-30 text-zinc-600">|</span>
             <span className={language === 'en' ? "text-[#C5A059]" : ""}>EN</span>
           </button>
 
-          {/* --- MUDANÇA AQUI: O ÍCONE AGORA É UM LINK --- */}
-          <Link href="/minha-conta" className="text-zinc-400 hover:text-[#C5A059] transition-colors">
+          {/* Conta */}
+          <Link
+            href="/minha-conta"
+            className="text-zinc-400 hover:text-[#C5A059] transition-colors p-2"
+            aria-label={language === 'pt' ? 'Minha conta' : 'My account'}
+          >
             <User size={20} strokeWidth={1.5} />
           </Link>
-          {/* ------------------------------------------- */}
 
-          <button 
-            onClick={openCart} 
+          {/* Carrinho */}
+          <button
+            onClick={openCart}
             className="flex items-center gap-3 text-zinc-400 hover:text-[#C5A059] transition-colors group"
+            aria-label={`${language === 'pt' ? 'Carrinho' : 'Cart'} (${totalQuantity} ${language === 'pt' ? 'itens' : 'items'})`}
           >
             <div className="relative">
               <ShoppingBag size={20} strokeWidth={1.5} />
@@ -77,11 +95,51 @@ export default function Navbar() {
             </span>
           </button>
 
-          <button className="md:hidden text-white" onClick={() => setIsMobileOpen(!isMobileOpen)}>
+          {/* Menu Mobile */}
+          <button
+            className="md:hidden text-white p-2"
+            onClick={() => setIsMobileOpen(!isMobileOpen)}
+            aria-label={isMobileOpen ? (language === 'pt' ? 'Fechar menu' : 'Close menu') : (language === 'pt' ? 'Abrir menu' : 'Open menu')}
+            aria-expanded={isMobileOpen}
+          >
             {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
+
+      {/* Menu Mobile Expandido */}
+      {isMobileOpen && (
+        <div className="md:hidden bg-[#050505] border-t border-white/5 px-6 py-8">
+          <div className="flex flex-col gap-6">
+            {[
+              { name: t.nav.home, href: "/" },
+              { name: t.nav.shop, href: "/loja" },
+              { name: t.nav.journal, href: "/jornal" },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsMobileOpen(false)}
+                className="text-lg text-zinc-300 hover:text-[#C5A059] transition-colors"
+              >
+                {item.name}
+              </Link>
+            ))}
+            <button
+              onClick={() => {
+                toggleLanguage();
+                setIsMobileOpen(false);
+              }}
+              className="text-left text-lg text-zinc-300 hover:text-[#C5A059] transition-colors"
+            >
+              {language === 'pt' ? 'English' : 'Portugues'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Pesquisa */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </nav>
   );
 }

@@ -229,12 +229,15 @@ const translations = {
       next: "Proximo",
       previous: "Anterior",
       search: "Pesquisar",
+      search_placeholder: "Pesquisar artigos, produtos...",
       filter: "Filtrar",
       sort: "Ordenar",
       all: "Todos",
       none: "Nenhum",
       yes: "Sim",
-      no: "Nao"
+      no: "Nao",
+      close: "Fechar",
+      home: "Inicio"
     },
 
     // FOOTER
@@ -471,12 +474,15 @@ const translations = {
       next: "Next",
       previous: "Previous",
       search: "Search",
+      search_placeholder: "Search articles, products...",
       filter: "Filter",
       sort: "Sort",
       all: "All",
       none: "None",
       yes: "Yes",
-      no: "No"
+      no: "No",
+      close: "Close",
+      home: "Home"
     },
 
     // FOOTER

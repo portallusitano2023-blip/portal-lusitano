@@ -1,14 +1,37 @@
 "use client";
 
+import { useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
 export default function CartDrawer() {
-  // AGORA JÁ PODEMOS IMPORTAR updateQuantity E checkoutUrl SEM ERRO
   const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart, checkoutUrl } = useCart();
   const { t, language } = useLanguage();
+
+  // Fechar com tecla Escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isCartOpen) {
+        closeCart();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
+    // Bloquear scroll do body quando aberto
+    if (isCartOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [isCartOpen, closeCart]);
 
   const cartText = {
     pt: {
@@ -53,7 +76,11 @@ export default function CartDrawer() {
               <ShoppingBag size={20} className="text-[#C5A059]" />
               <h2 className="text-2xl font-serif italic text-white">{ct.title}</h2>
             </div>
-            <button onClick={closeCart} className="text-zinc-400 hover:text-white transition-colors p-2">
+            <button
+              onClick={closeCart}
+              className="text-zinc-400 hover:text-white transition-colors p-2"
+              aria-label={language === 'pt' ? 'Fechar carrinho' : 'Close cart'}
+            >
               <X size={24} strokeWidth={1} />
             </button>
           </div>

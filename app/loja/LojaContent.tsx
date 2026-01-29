@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { motion } from "framer-motion";
 
 interface Product {
   id: string;
@@ -10,6 +11,26 @@ interface Product {
   priceRange: { minVariantPrice: { amount: string } };
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6 },
+  },
+};
+
 export default function LojaContent({ products }: { products: Product[] }) {
   const { t } = useLanguage();
 
@@ -18,27 +39,61 @@ export default function LojaContent({ products }: { products: Product[] }) {
       <div className="max-w-7xl mx-auto px-6">
 
         {/* CABECALHO EDITORIAL DE LUXO */}
-        <div className="flex flex-col items-center text-center mb-32 relative">
-           {/* Linha vertical decorativa */}
-           <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-[#C5A059] to-transparent mb-8 opacity-50"></div>
+        <motion.div
+          className="flex flex-col items-center text-center mb-32 relative"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          {/* Linha vertical decorativa */}
+          <motion.div
+            className="w-[1px] h-16 bg-gradient-to-b from-transparent via-[#C5A059] to-transparent mb-8 opacity-50"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          />
 
-           <span className="text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-[#C5A059] mb-6 ml-1">
-             {t.shop.collection}
-           </span>
+          <motion.span
+            className="text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-[#C5A059] mb-6 ml-1"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            {t.shop.collection}
+          </motion.span>
 
-           <h1 className="text-5xl md:text-7xl font-serif italic text-white mb-8 tracking-wide opacity-90 selection:bg-[#C5A059] selection:text-black">
-             {t.shop.legacy}
-           </h1>
+          <motion.h1
+            className="text-5xl md:text-7xl font-serif italic text-white mb-8 tracking-wide opacity-90 selection:bg-[#C5A059] selection:text-black"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            {t.shop.legacy}
+          </motion.h1>
 
-           <p className="text-[9px] uppercase tracking-[0.3em] text-zinc-600 max-w-lg leading-relaxed">
-             {t.shop.legacy_subtitle}
-           </p>
-        </div>
+          <motion.p
+            className="text-[9px] uppercase tracking-[0.3em] text-zinc-600 max-w-lg leading-relaxed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
+            {t.shop.legacy_subtitle}
+          </motion.p>
+        </motion.div>
 
         {/* GRELHA DE PRODUTOS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-28 md:gap-y-32">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-28 md:gap-y-32"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {products.map((product) => (
-            <div key={product.id} className="flex flex-col items-center">
+            <motion.div
+              key={product.id}
+              className="flex flex-col items-center"
+              variants={itemVariants}
+            >
               <a
                 href={`/loja/${product.handle}`}
                 className="group block w-full max-w-[380px]"
@@ -47,10 +102,12 @@ export default function LojaContent({ products }: { products: Product[] }) {
                 <div className="aspect-[4/5] w-full bg-zinc-900 border border-zinc-800 overflow-hidden relative mb-6">
                   <div className="absolute inset-0 z-10 shadow-[inset_0_0_40px_rgba(0,0,0,0.2)] pointer-events-none transition-opacity duration-700 group-hover:opacity-40"></div>
 
-                  <img
+                  <motion.img
                     src={product.images[0]?.url}
                     alt={product.title}
-                    className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+                    className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.8 }}
                   />
                 </div>
 
@@ -68,9 +125,9 @@ export default function LojaContent({ products }: { products: Product[] }) {
                   </span>
                 </div>
               </a>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </main>
   );
