@@ -43,7 +43,7 @@ export default function Footer() {
           <div className="md:col-span-3 space-y-8">
             <h4 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">Navegação</h4>
             <ul className="space-y-4">
-              {['Loja', 'Coudelarias', 'Jornal', 'Sobre'].map((item) => (
+              {['Inicio','Loja', 'Jornal'].map((item) => (
                 <li key={item}>
                   <Link href={`/${item.toLowerCase()}`} className="text-zinc-500 hover:text-white text-sm font-light transition-colors flex items-center gap-2 group">
                     <span className="w-0 group-hover:w-4 h-[1px] bg-[#C5A059] transition-all duration-300"></span>
