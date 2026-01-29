@@ -82,39 +82,6 @@ export default function Navbar() {
           </button>
         </div>
       </div>
-
-      {/* MENU MOBILE */}
-      <div
-        className={`md:hidden absolute top-full left-0 w-full bg-[#050505]/98 backdrop-blur-md border-b border-white/5 transition-all duration-300 overflow-hidden ${
-          isMobileOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="px-6 py-6 flex flex-col gap-6">
-          {[
-            { name: t.nav.home, href: "/" },
-            { name: t.nav.shop, href: "/loja" },
-            { name: t.nav.journal, href: "/jornal" },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setIsMobileOpen(false)}
-              className="text-sm uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors"
-            >
-              {item.name}
-            </Link>
-          ))}
-
-          <button
-            onClick={toggleLanguage}
-            className="flex text-xs font-bold tracking-widest text-zinc-500 hover:text-white transition-colors mt-2"
-          >
-            <span className={language === 'pt' ? "text-[#C5A059]" : ""}>PT</span>
-            <span className="mx-2 opacity-30 text-zinc-600">|</span>
-            <span className={language === 'en' ? "text-[#C5A059]" : ""}>EN</span>
-          </button>
-        </div>
-      </div>
     </nav>
   );
 }

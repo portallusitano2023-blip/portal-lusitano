@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { createCheckout } from "@/lib/shopify";
+import { createCart, addToCart } from "@/lib/shopify";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -17,14 +17,24 @@ export async function POST(request: Request) {
   }
 
   try {
-    // 2. Pedir ao Shopify para criar o carrinho
-    console.log("⏳ A contactar Shopify...");
-    const checkoutUrl = await createCheckout(variantId);
-    
-    console.log("✅ Resposta Shopify:", checkoutUrl ? "Sucesso" : "Vazia");
+    // 2. Criar um carrinho novo
+    console.log("⏳ A criar carrinho no Shopify...");
+    const cart = await createCart();
+
+    if (!cart || !cart.id) {
+      throw new Error("Shopify não devolveu carrinho");
+    }
+
+    // 3. Adicionar o produto ao carrinho
+    console.log("⏳ A adicionar produto ao carrinho...");
+    const updatedCart = await addToCart(cart.id, variantId);
+
+    const checkoutUrl = updatedCart?.checkoutUrl || cart.checkoutUrl;
+
+    console.log("✅ Checkout URL:", checkoutUrl ? "Sucesso" : "Vazia");
 
     if (!checkoutUrl) {
-        throw new Error("Shopify não devolveu URL");
+      throw new Error("Shopify não devolveu URL de checkout");
     }
 
     return NextResponse.json({ checkoutUrl });
