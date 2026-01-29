@@ -7,16 +7,21 @@ import { Providers } from "./providers";
 import CartDrawer from "@/components/CartDrawer";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 
+// Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
   subsets: ["latin"],
+  weight: ["400", "600", "700"],
   variable: "--font-serif",
   display: "swap",
+  preload: true,
 });
 
 const montserrat = Montserrat({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
   display: "swap",
+  preload: true,
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portallusitano.com";

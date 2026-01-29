@@ -1,12 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { ShoppingBag, User, Menu, X, Search, Heart } from "lucide-react";
 import { useState } from "react";
-import { SearchModal } from "./Search";
 import { useWishlist } from "@/context/WishlistContext";
+
+// Lazy load - SearchModal só carrega quando o utilizador abre a pesquisa
+const SearchModal = dynamic(
+  () => import("./Search").then((mod) => ({ default: mod.SearchModal })),
+  { ssr: false }
+);
 
 export default function Navbar() {
   const { totalQuantity, openCart } = useCart();

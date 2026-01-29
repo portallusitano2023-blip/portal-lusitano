@@ -1,47 +1,36 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock, BookOpen } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
-import { articlesDataPT, articlesDataEN } from "@/data/articlesData";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
+import { articlesListPT, articlesListEN } from "@/data/articlesList";
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
+      staggerChildren: 0.08,
+      delayChildren: 0.15,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 15 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5 },
+    transition: { duration: 0.4 },
   },
 };
 
 export default function JornalPage() {
   const { t, language } = useLanguage();
 
-  // Seleciona os dados baseado no idioma
-  const articlesData = language === 'pt' ? articlesDataPT : articlesDataEN;
-
-  // Converte o objeto em array para listagem
-  const articles = Object.entries(articlesData).map(([id, article]) => ({
-    id: parseInt(id),
-    category: article.category,
-    title: article.title,
-    excerpt: article.subtitle,
-    date: article.date,
-    readTime: article.readTime,
-    image: article.image
-  }));
+  const articles = language === "pt" ? articlesListPT : articlesListEN;
 
   return (
     <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
@@ -88,12 +77,13 @@ export default function JornalPage() {
       >
         <Link href={`/jornal/${articles[0].id}`}>
           <div className="group relative w-full h-[600px] overflow-hidden border border-white/10 rounded-sm cursor-pointer">
-            <motion.img
+            <Image
               src={articles[0].image}
               alt={articles[0].title}
-              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-1000"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 1 }}
+              fill
+              className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+              sizes="100vw"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
 
@@ -110,7 +100,7 @@ export default function JornalPage() {
                 {articles[0].title}
               </h2>
               <p className="text-zinc-300 text-lg mb-6 font-serif italic">
-                {articles[0].excerpt}
+                {articles[0].subtitle}
               </p>
               <div className="flex items-center gap-6 text-xs text-zinc-400 uppercase tracking-wider">
                 <div className="flex items-center gap-2"><BookOpen size={14} /> {t.journal.technical_read}</div>
@@ -155,7 +145,7 @@ export default function JornalPage() {
                     {article.title}
                   </h3>
                   <p className="text-zinc-500 text-sm leading-relaxed mb-6 flex-grow font-serif">
-                    {article.excerpt}
+                    {article.subtitle}
                   </p>
                   <div className="border-t border-white/10 pt-4 mt-auto">
                     <span className="flex items-center gap-2 text-white text-xs uppercase tracking-widest group-hover:gap-4 transition-all">

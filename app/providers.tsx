@@ -1,17 +1,19 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { CartProvider } from "@/context/CartContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { ReactNode } from "react";
 
-// Componentes globais
 import CustomCursor from "@/components/CustomCursor";
 import Preloader from "@/components/Preloader";
-import CookieConsent from "@/components/CookieConsent";
-import NewsletterPopup from "@/components/NewsletterPopup";
-import ScrollToTop from "@/components/ScrollToTop";
+
+// Lazy load - carregam apenas quando necessários (reduz bundle inicial)
+const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
+const CookieConsent = dynamic(() => import("@/components/CookieConsent"), { ssr: false });
+const NewsletterPopup = dynamic(() => import("@/components/NewsletterPopup"), { ssr: false });
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
@@ -19,16 +21,9 @@ export function Providers({ children }: { children: ReactNode }) {
       <ToastProvider>
         <CartProvider>
           <WishlistProvider>
-            {/* Preloader inicial */}
             <Preloader />
-
-            {/* Cursor personalizado */}
             <CustomCursor />
-
-            {/* Conteudo principal */}
             {children}
-
-            {/* Componentes globais */}
             <ScrollToTop />
             <CookieConsent />
             <NewsletterPopup />

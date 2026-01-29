@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
@@ -13,16 +14,18 @@ export default function Home() {
       {/* 1. IMAGEM DE FUNDO (HERO BACKGROUND) */}
       <motion.div
         className="absolute inset-0 z-0"
-        initial={{ scale: 1.05, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        style={{ willChange: "transform, opacity" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1920&auto=format&fit=crop"
           alt="Nobreza Lusitana"
-          className="w-full h-full object-cover opacity-50"
+          fill
+          className="object-cover opacity-50"
           style={{ objectPosition: "center 30%" }}
+          priority
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-black/40"></div>
       </motion.div>

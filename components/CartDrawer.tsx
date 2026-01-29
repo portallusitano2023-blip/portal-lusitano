@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -101,9 +102,9 @@ export default function CartDrawer() {
             ) : (
               <div className="space-y-8">
                 {cart.map((item) => (
-                  <div key={item.id} className="flex gap-6 animate-fade-in">
+                    <div key={item.id} className="flex gap-6 animate-fade-in">
                     <div className="w-24 h-32 flex-shrink-0 bg-[#0a0a0a] border border-white/5 overflow-hidden relative">
-                       <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                       <Image src={item.image} alt={item.title} fill className="object-cover" sizes="96px" />
                     </div>
                     <div className="flex-grow flex flex-col justify-between py-1">
                       <div>
