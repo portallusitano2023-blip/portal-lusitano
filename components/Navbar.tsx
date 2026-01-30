@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { ShoppingBag, User, Menu, X, Search, Heart, Crown } from "lucide-react";
+import { ShoppingBag, User, Menu, X, Search, Heart, Crown, Gift } from "lucide-react";
 import { useState } from "react";
 import { useWishlist } from "@/context/WishlistContext";
 
@@ -51,6 +51,14 @@ export default function Navbar() {
               <span className="absolute -bottom-2 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-300 group-hover:w-full"></span>
             </Link>
           ))}
+          {/* Free Ebook Link */}
+          <Link
+            href="/ebook-gratis"
+            className="flex items-center gap-2 bg-green-600/20 border border-green-500/30 text-green-400 px-4 py-2 text-[10px] uppercase tracking-[0.15em] font-bold hover:bg-green-600/30 transition-colors"
+          >
+            <Gift size={14} />
+            Ebook Grátis
+          </Link>
           {/* PRO Link */}
           <Link
             href="/pro"
@@ -155,6 +163,14 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
+            <Link
+              href="/ebook-gratis"
+              onClick={() => setIsMobileOpen(false)}
+              className="flex items-center gap-2 bg-green-600/20 border border-green-500/30 text-green-400 px-4 py-3 text-sm uppercase tracking-widest font-bold w-fit"
+            >
+              <Gift size={16} />
+              Ebook Grátis
+            </Link>
             <Link
               href="/pro"
               onClick={() => setIsMobileOpen(false)}
