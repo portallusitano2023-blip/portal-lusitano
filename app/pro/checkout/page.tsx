@@ -23,10 +23,10 @@ const plans = {
     price: { monthly: 9.99, yearly: 99.90 },
     color: "from-zinc-600 to-zinc-800",
     features: [
-      "Acesso a 5 Ebooks exclusivos",
+      "5 Ebooks exclusivos por mês",
       "Newsletter semanal premium",
-      "Comunidade privada",
-      "Desconto 10% na loja",
+      "Comunidade online privada",
+      "Guias PDF descargáveis",
     ],
   },
   criador: {
@@ -36,11 +36,11 @@ const plans = {
     color: "from-[#C5A059] to-[#8B6914]",
     features: [
       "Tudo do plano Aficionado",
-      "Biblioteca completa de Ebooks",
-      "Cursos em vídeo ilimitados",
-      "Templates e ferramentas",
-      "Webinars mensais ao vivo",
-      "Certificações oficiais",
+      "Biblioteca completa (50+ Ebooks)",
+      "Templates e documentos PRO",
+      "Planners de gestão",
+      "Consultoria por email (2x/mês)",
+      "Certificados digitais",
     ],
   },
   elite: {
@@ -50,10 +50,10 @@ const plans = {
     color: "from-purple-600 to-purple-900",
     features: [
       "Tudo do plano Criador",
-      "Consultoria ilimitada",
-      "Acesso antecipado a cavalos",
-      "Networking com criadores",
-      "Visitas a coudelarias VIP",
+      "Consultoria ilimitada (email/chat)",
+      "Análise de linhagens personalizada",
+      "Networking com criadores elite",
+      "Conteúdo exclusivo mensal",
       "Suporte prioritário 24/7",
     ],
   },
@@ -262,56 +262,40 @@ export default function CheckoutPage() {
               {/* Payment Methods */}
               <div className="text-center">
                 <p className="text-zinc-600 text-xs mb-3">Métodos de pagamento aceites</p>
-                <div className="flex items-center justify-center gap-3 flex-wrap">
+                <div className="flex items-center justify-center gap-2 flex-wrap">
                   {/* Visa */}
-                  <img
-                    src="https://cdn.jsdelivr.net/gh/nicepay-payments/payment-icons/static/visa.png"
-                    alt="Visa"
-                    className="h-8 w-auto"
-                  />
+                  <div className="bg-[#1A1F71] rounded px-3 py-1.5 flex items-center">
+                    <span className="text-white font-bold text-sm tracking-wider">VISA</span>
+                  </div>
+
                   {/* Mastercard */}
-                  <img
-                    src="https://cdn.jsdelivr.net/gh/nicepay-payments/payment-icons/static/mastercard.png"
-                    alt="Mastercard"
-                    className="h-8 w-auto"
-                  />
+                  <div className="bg-[#EB001B] rounded px-3 py-1.5 flex items-center">
+                    <span className="text-white font-bold text-sm">Mastercard</span>
+                  </div>
+
                   {/* American Express */}
-                  <img
-                    src="https://cdn.jsdelivr.net/gh/nicepay-payments/payment-icons/static/amex.png"
-                    alt="American Express"
-                    className="h-8 w-auto"
-                  />
+                  <div className="bg-[#006FCF] rounded px-3 py-1.5 flex items-center">
+                    <span className="text-white font-bold text-xs tracking-wide">AMERICAN EXPRESS</span>
+                  </div>
+
                   {/* Apple Pay */}
-                  <img
-                    src="https://cdn.jsdelivr.net/gh/nicepay-payments/payment-icons/static/applepay.png"
-                    alt="Apple Pay"
-                    className="h-8 w-auto"
-                  />
+                  <div className="bg-black rounded px-3 py-1.5 flex items-center">
+                    <span className="text-white font-semibold text-sm"> Apple Pay</span>
+                  </div>
+
                   {/* Google Pay */}
-                  <img
-                    src="https://cdn.jsdelivr.net/gh/nicepay-payments/payment-icons/static/googlepay.png"
-                    alt="Google Pay"
-                    className="h-8 w-auto"
-                  />
+                  <div className="bg-white rounded px-3 py-1.5 flex items-center border border-gray-200">
+                    <span className="font-semibold text-sm"><span className="text-[#4285F4]">G</span><span className="text-[#EA4335]">o</span><span className="text-[#FBBC04]">o</span><span className="text-[#4285F4]">g</span><span className="text-[#34A853]">l</span><span className="text-[#EA4335]">e</span> <span className="text-[#5F6368]">Pay</span></span>
+                  </div>
+
                   {/* PayPal */}
-                  <img
-                    src="https://cdn.jsdelivr.net/gh/nicepay-payments/payment-icons/static/paypal.png"
-                    alt="PayPal"
-                    className="h-8 w-auto"
-                  />
-                  {/* MB WAY - Logo oficial */}
-                  <div className="bg-white rounded px-3 py-1 h-8 flex items-center">
-                    <img
-                      src="https://www.mbway.pt/wp-content/uploads/2020/03/mbway-logo.png"
-                      alt="MB WAY"
-                      className="h-5 w-auto"
-                      onError={(e) => {
-                        // Fallback se a imagem não carregar
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        target.parentElement!.innerHTML = '<span class="text-[#D4213D] font-bold text-sm">MB WAY</span>';
-                      }}
-                    />
+                  <div className="bg-[#0070BA] rounded px-3 py-1.5 flex items-center">
+                    <span className="text-white font-bold text-sm">PayPal</span>
+                  </div>
+
+                  {/* MB WAY */}
+                  <div className="bg-white rounded px-3 py-1.5 flex items-center border border-gray-200">
+                    <span className="text-[#D4213D] font-black text-sm tracking-wide">MB WAY</span>
                   </div>
                 </div>
                 {/* Stripe Badge */}

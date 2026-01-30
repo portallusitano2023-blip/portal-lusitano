@@ -120,7 +120,7 @@ export default function RootLayout({
           <Navbar />
           <CartDrawer />
           <main id="main-content">
-            {children}
+            {children} 
           </main>
           <Footer />
           <ServiceWorkerRegistration />
