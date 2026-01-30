@@ -1,5 +1,14 @@
+import bundleAnalyzer from '@next/bundle-analyzer';
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Output standalone para Docker
+  output: 'standalone',
+
   // Otimização: tree-shake lucide-react (reduz bundle)
   experimental: {
     optimizePackageImports: ['lucide-react'],
@@ -57,4 +66,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

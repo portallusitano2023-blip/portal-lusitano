@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # ===== Portal Lusitano App =====
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portal-lusitano
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+      - NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN=${NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}
+      - NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN=${NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - portal-network
+
+  # ===== Nginx Reverse Proxy (opcional) =====
+  nginx:
+    image: nginx:alpine
+    container_name: portal-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    networks:
+      - portal-network
+    profiles:
+      - with-nginx
+
+networks:
+  portal-network:
+    driver: bridge

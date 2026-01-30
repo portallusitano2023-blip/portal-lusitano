@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { ShoppingBag, User, Menu, X, Search, Heart } from "lucide-react";
+import { ShoppingBag, User, Menu, X, Search, Heart, Crown } from "lucide-react";
 import { useState } from "react";
 import { useWishlist } from "@/context/WishlistContext";
 
@@ -51,6 +51,14 @@ export default function Navbar() {
               <span className="absolute -bottom-2 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-300 group-hover:w-full"></span>
             </Link>
           ))}
+          {/* PRO Link */}
+          <Link
+            href="/pro"
+            className="flex items-center gap-2 bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] text-black px-4 py-2 text-[10px] uppercase tracking-[0.15em] font-bold hover:opacity-90 transition-opacity"
+          >
+            <Crown size={14} />
+            PRO
+          </Link>
         </div>
 
         {/* ICONES E IDIOMA */}
@@ -147,6 +155,14 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
+            <Link
+              href="/pro"
+              onClick={() => setIsMobileOpen(false)}
+              className="flex items-center gap-2 bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] text-black px-4 py-3 text-sm uppercase tracking-widest font-bold w-fit"
+            >
+              <Crown size={16} />
+              PRO
+            </Link>
             <button
               onClick={() => {
                 toggleLanguage();
