@@ -253,7 +253,7 @@ function getPaymentSuccessEmail(
           </tr>
           <tr>
             <td><strong>Valor:</strong></td>
-            <td style="text-align: right;">€${amount.toFixed(2)}</td>
+            <td style="text-align: right;">€${amount}</td>
           </tr>
           <tr>
             <td><strong>Data:</strong></td>
