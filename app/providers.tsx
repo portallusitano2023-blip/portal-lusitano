@@ -7,7 +7,7 @@ import { ToastProvider } from "@/context/ToastContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { ReactNode } from "react";
 
-import CustomCursor from "@/components/CustomCursor";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import Preloader from "@/components/Preloader";
 
 // Lazy load - carregam apenas quando necessários (reduz bundle inicial)
@@ -17,19 +17,20 @@ const NewsletterPopup = dynamic(() => import("@/components/NewsletterPopup"), { 
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <LanguageProvider>
-      <ToastProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <Preloader />
-            <CustomCursor />
-            {children}
-            <ScrollToTop />
-            <CookieConsent />
-            <NewsletterPopup />
-          </WishlistProvider>
-        </CartProvider>
-      </ToastProvider>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <ToastProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <Preloader />
+              {children}
+              <ScrollToTop />
+              <CookieConsent />
+              <NewsletterPopup />
+            </WishlistProvider>
+          </CartProvider>
+        </ToastProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   );
 }

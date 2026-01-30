@@ -22,7 +22,7 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <nav className="fixed w-full z-50 bg-[#050505]/95 backdrop-blur-md border-b border-white/5 transition-all duration-300">
+    <nav id="main-navigation" role="navigation" aria-label="Navegação principal" className="fixed w-full z-50 bg-[#050505]/95 backdrop-blur-md border-b border-white/5 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 h-28 flex items-center justify-between">
         
         {/* LOGÓTIPO */}

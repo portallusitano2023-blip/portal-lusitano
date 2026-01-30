@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Montserrat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import { Providers } from "./providers";
 import CartDrawer from "@/components/CartDrawer";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
+import SkipLinks from "@/components/SkipLinks";
+import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -26,7 +28,20 @@ const montserrat = Montserrat({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portallusitano.com";
 
+export const viewport: Viewport = {
+  themeColor: "#C5A059",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Portal Lusitano",
+  },
   metadataBase: new URL(siteUrl),
   title: {
     default: "Portal Lusitano | Cavalos Lusitanos de Elite",
@@ -101,10 +116,14 @@ export default function RootLayout({
       </head>
       <body className="bg-[#050505] text-white antialiased selection:bg-[#C5A059] selection:text-black">
         <Providers>
+          <SkipLinks />
           <Navbar />
           <CartDrawer />
-          {children}
+          <main id="main-content">
+            {children}
+          </main>
           <Footer />
+          <ServiceWorkerRegistration />
         </Providers>
       </body>
     </html>
