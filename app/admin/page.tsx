@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import AdminLogoutButton from "@/components/AdminLogoutButton";
 
 interface DashboardStats {
   totalMembers: number;
@@ -94,7 +95,7 @@ export default function AdminDashboard() {
                 Portal Lusitano PRO - Visão Geral
               </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               <Link
                 href="/admin/consultoria"
                 className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition"
@@ -107,6 +108,7 @@ export default function AdminDashboard() {
               >
                 Ver Site
               </Link>
+              <AdminLogoutButton className="bg-red-100 text-red-700 px-4 py-2 rounded-lg hover:bg-red-200 transition" />
             </div>
           </div>
         </div>

@@ -24,6 +24,10 @@ CREATE TABLE IF NOT EXISTS public.leads (
 
 CREATE INDEX IF NOT EXISTS idx_leads_email ON public.leads(email);
 CREATE INDEX IF NOT EXISTS idx_leads_sequence ON public.leads(sequence_step, status);
+CREATE INDEX IF NOT EXISTS idx_leads_source ON public.leads(source);
+CREATE INDEX IF NOT EXISTS idx_leads_created_at ON public.leads(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_leads_utm_source ON public.leads(utm_source) WHERE utm_source IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_leads_active ON public.leads(status, converted_to_pro) WHERE status = 'active';
 
 -- 2. SUBSCRIPTIONS (PRO Members)
 CREATE TABLE IF NOT EXISTS public.subscriptions (
@@ -49,6 +53,9 @@ CREATE TABLE IF NOT EXISTS public.subscriptions (
 
 CREATE INDEX IF NOT EXISTS idx_subscriptions_email ON public.subscriptions(email);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON public.subscriptions(status);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_stripe_customer ON public.subscriptions(stripe_customer_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_created_at ON public.subscriptions(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_plan ON public.subscriptions(plan_id, status);
 
 -- 3. CONSULTATION_TICKETS
 CREATE TABLE IF NOT EXISTS public.consultation_tickets (
@@ -69,6 +76,9 @@ CREATE TABLE IF NOT EXISTS public.consultation_tickets (
 );
 
 CREATE INDEX IF NOT EXISTS idx_tickets_status ON public.consultation_tickets(status);
+CREATE INDEX IF NOT EXISTS idx_tickets_user_email ON public.consultation_tickets(user_email);
+CREATE INDEX IF NOT EXISTS idx_tickets_created_at ON public.consultation_tickets(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_tickets_priority ON public.consultation_tickets(priority, status);
 
 -- 4. PAYMENTS
 CREATE TABLE IF NOT EXISTS public.payments (
@@ -81,6 +91,10 @@ CREATE TABLE IF NOT EXISTS public.payments (
   description TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS idx_payments_email ON public.payments(email);
+CREATE INDEX IF NOT EXISTS idx_payments_status ON public.payments(status);
+CREATE INDEX IF NOT EXISTS idx_payments_created_at ON public.payments(created_at DESC);
 
 -- 5. Auto-update timestamps
 CREATE OR REPLACE FUNCTION update_updated_at()

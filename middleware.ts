@@ -1,7 +1,44 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
+// Verify admin token using Web Crypto API (Edge compatible)
+async function verifyAdminToken(token: string): Promise<boolean> {
+  try {
+    const [data, signature] = token.split(".");
+    if (!data || !signature) return false;
+
+    const secret = process.env.ADMIN_SECRET || "change-this-in-production";
+    const encoder = new TextEncoder();
+
+    // Import key for HMAC
+    const key = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+
+    // Generate expected signature
+    const signatureBytes = await crypto.subtle.sign("HMAC", key, encoder.encode(data));
+    const expectedSignature = btoa(String.fromCharCode(...new Uint8Array(signatureBytes)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    if (signature !== expectedSignature) return false;
+
+    // Parse and check expiration
+    const payload = JSON.parse(atob(data.replace(/-/g, "+").replace(/_/g, "/")));
+    if (Date.now() > payload.exp) return false;
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   // Additional security headers (beyond next.config.js)
@@ -12,16 +49,19 @@ export function middleware(request: NextRequest) {
 
   // CORS headers for API routes
   if (request.nextUrl.pathname.startsWith("/api/")) {
-    response.headers.set("Access-Control-Allow-Credentials", "true");
-    response.headers.set("Access-Control-Allow-Origin", process.env.NEXT_PUBLIC_APP_URL || "*");
-    response.headers.set(
-      "Access-Control-Allow-Methods",
-      "GET,DELETE,PATCH,POST,PUT,OPTIONS"
-    );
-    response.headers.set(
-      "Access-Control-Allow-Headers",
-      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
-    );
+    const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL;
+    if (allowedOrigin) {
+      response.headers.set("Access-Control-Allow-Credentials", "true");
+      response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
+      response.headers.set(
+        "Access-Control-Allow-Methods",
+        "GET,DELETE,PATCH,POST,PUT,OPTIONS"
+      );
+      response.headers.set(
+        "Access-Control-Allow-Headers",
+        "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
+      );
+    }
 
     // Handle preflight requests
     if (request.method === "OPTIONS") {
@@ -37,11 +77,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  // Protect admin routes
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    const token = request.cookies.get("auth-token");
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", request.url));
+  // Protect admin routes (except login page)
+  if (request.nextUrl.pathname.startsWith("/admin") && !request.nextUrl.pathname.startsWith("/admin/login")) {
+    const token = request.cookies.get("auth-token")?.value;
+
+    if (!token || !(await verifyAdminToken(token))) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
     }
   }
 

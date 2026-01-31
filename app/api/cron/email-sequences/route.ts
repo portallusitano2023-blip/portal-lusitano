@@ -29,9 +29,15 @@ import {
  */
 
 export async function GET(request: NextRequest) {
-  // Verify cron secret (security)
-  const cronSecret = request.headers.get("x-cron-secret");
+  // Verify cron secret (security) - required in production
+  const cronSecret = request.headers.get("x-cron-secret") || request.headers.get("authorization")?.replace("Bearer ", "");
   const expectedSecret = process.env.CRON_SECRET;
+
+  // In production, CRON_SECRET must be set and match
+  if (process.env.NODE_ENV === "production" && !expectedSecret) {
+    console.error("CRON_SECRET is not configured in production");
+    return NextResponse.json({ error: "Server misconfigured" }, { status: 500 });
+  }
 
   if (expectedSecret && cronSecret !== expectedSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
