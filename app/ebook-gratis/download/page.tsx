@@ -17,6 +17,7 @@ import {
   Gift,
   FileText,
   Users,
+  Eye,
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -37,6 +38,10 @@ export default function DownloadPage() {
       window.open("/downloads/introducao-lusitano.pdf", "_blank");
       setDownloading(false);
     }, 500);
+  };
+
+  const handleViewOnline = () => {
+    window.open("/downloads/introducao-lusitano.html", "_blank");
   };
 
   const handleSocialShare = (platform: string) => {
@@ -181,8 +186,18 @@ export default function DownloadPage() {
             )}
           </motion.button>
 
+          <motion.button
+            onClick={handleViewOnline}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-flex items-center gap-2 text-[#C5A059] hover:text-white transition-colors mb-4 ml-4"
+          >
+            <Eye size={18} />
+            Ver Online
+          </motion.button>
+
           <p className="text-zinc-600 text-sm">
-            Formato PDF • 30 Páginas • 2.4 MB
+            PDF 2.2 MB • HTML interativo disponível
           </p>
         </motion.div>
       </section>
