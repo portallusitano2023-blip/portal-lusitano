@@ -23,9 +23,6 @@ export function reportWebVitals(metric: Metric) {
     case 'CLS': // Cumulative Layout Shift - deve ser < 0.1
       sendToAnalytics(metric);
       break;
-    case 'FID': // First Input Delay - deve ser < 100ms
-      sendToAnalytics(metric);
-      break;
     case 'FCP': // First Contentful Paint - deve ser < 1.8s
       sendToAnalytics(metric);
       break;
@@ -35,7 +32,7 @@ export function reportWebVitals(metric: Metric) {
     case 'TTFB': // Time to First Byte - deve ser < 800ms
       sendToAnalytics(metric);
       break;
-    case 'INP': // Interaction to Next Paint - deve ser < 200ms
+    case 'INP': // Interaction to Next Paint - deve ser < 200ms (substitui FID)
       sendToAnalytics(metric);
       break;
     default:
@@ -46,10 +43,9 @@ export function reportWebVitals(metric: Metric) {
 // Inicializar Web Vitals
 export async function initWebVitals() {
   if (typeof window !== 'undefined') {
-    const { onCLS, onFID, onFCP, onLCP, onTTFB, onINP } = await import('web-vitals');
+    const { onCLS, onFCP, onLCP, onTTFB, onINP } = await import('web-vitals');
 
     onCLS(reportWebVitals);
-    onFID(reportWebVitals);
     onFCP(reportWebVitals);
     onLCP(reportWebVitals);
     onTTFB(reportWebVitals);
