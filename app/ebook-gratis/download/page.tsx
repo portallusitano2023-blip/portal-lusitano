@@ -19,10 +19,16 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { trackEbookFunnel, trackSocialShare } from "@/lib/analytics";
 
 export default function DownloadPage() {
   const [downloading, setDownloading] = useState(false);
+
+  // Track download page view
+  useEffect(() => {
+    trackEbookFunnel("download_pdf");
+  }, []);
 
   const handleDownload = () => {
     setDownloading(true);
@@ -31,6 +37,10 @@ export default function DownloadPage() {
       window.open("/downloads/introducao-lusitano.pdf", "_blank");
       setDownloading(false);
     }, 500);
+  };
+
+  const handleSocialShare = (platform: string) => {
+    trackSocialShare(platform, "ebook", "introducao-lusitano");
   };
 
   const nextSteps = [

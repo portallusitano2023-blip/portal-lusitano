@@ -8,6 +8,7 @@ import CartDrawer from "@/components/CartDrawer";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import AnalyticsScripts from "@/components/AnalyticsScripts";
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -113,6 +114,7 @@ export default function RootLayout({
       <head>
         <OrganizationSchema />
         <WebsiteSchema />
+        <AnalyticsScripts />
       </head>
       <body className="bg-[#050505] text-white antialiased selection:bg-[#C5A059] selection:text-black">
         <Providers>

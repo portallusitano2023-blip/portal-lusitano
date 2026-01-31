@@ -1,9 +1,35 @@
-// Google Analytics / Plausible / Custom Analytics
+/**
+ * ANALYTICS & CONVERSION TRACKING
+ *
+ * Sistema unificado para tracking de conversões:
+ * - Google Analytics 4 (GA4)
+ * - Meta Pixel (Facebook/Instagram)
+ * - Eventos customizados
+ */
+
+// ============================================================================
+// CONFIGURAÇÃO
+// ============================================================================
+
+const isBrowser = typeof window !== "undefined";
+const DEBUG_MODE = process.env.NODE_ENV === "development";
+
+function debugLog(action: string, data: unknown) {
+  if (DEBUG_MODE) {
+    console.log(`[Analytics] ${action}:`, data);
+  }
+}
+
+// ============================================================================
+// GOOGLE ANALYTICS 4
+// ============================================================================
+
 export const pageview = (url: string) => {
-  if (typeof window !== "undefined" && (window as any).gtag) {
+  if (isBrowser && (window as any).gtag) {
     (window as any).gtag("config", process.env.NEXT_PUBLIC_GA_ID, {
       page_path: url,
     });
+    debugLog("GA4 Pageview", { url });
   }
 };
 
@@ -18,14 +44,41 @@ export const event = ({
   label?: string;
   value?: number;
 }) => {
-  if (typeof window !== "undefined" && (window as any).gtag) {
+  if (isBrowser && (window as any).gtag) {
     (window as any).gtag("event", action, {
       event_category: category,
       event_label: label,
       value: value,
     });
+    debugLog("GA4 Event", { action, category, label, value });
   }
 };
+
+// Enviar evento GA4 com parâmetros flexíveis
+export function sendGA4Event(eventName: string, params?: Record<string, unknown>) {
+  if (isBrowser && (window as any).gtag) {
+    (window as any).gtag("event", eventName, params);
+    debugLog("GA4 Event", { eventName, params });
+  }
+}
+
+// ============================================================================
+// META PIXEL (FACEBOOK/INSTAGRAM)
+// ============================================================================
+
+export function sendMetaEvent(eventName: string, params?: Record<string, unknown>) {
+  if (isBrowser && (window as any).fbq) {
+    (window as any).fbq("track", eventName, params);
+    debugLog("Meta Pixel Event", { eventName, params });
+  }
+}
+
+export function sendMetaCustomEvent(eventName: string, params?: Record<string, unknown>) {
+  if (isBrowser && (window as any).fbq) {
+    (window as any).fbq("trackCustom", eventName, params);
+    debugLog("Meta Pixel Custom", { eventName, params });
+  }
+}
 
 // Track specific events
 export const trackEvent = {
@@ -136,3 +189,139 @@ export const trackEvent = {
     });
   },
 };
+
+// ============================================================================
+// EVENTOS ESPECÍFICOS DO PORTAL LUSITANO
+// ============================================================================
+
+/**
+ * Track download do ebook gratuito
+ */
+export function trackEbookDownload(ebookId: string, ebookType: "free" | "pro" = "free") {
+  // GA4
+  sendGA4Event("generate_lead", {
+    currency: "EUR",
+    value: ebookType === "free" ? 0 : 9.99,
+    lead_source: "ebook_download",
+    ebook_id: ebookId,
+  });
+
+  // Meta
+  sendMetaEvent("Lead", {
+    content_name: ebookId,
+    content_category: ebookType === "free" ? "Free Ebook" : "PRO Ebook",
+    value: ebookType === "free" ? 0 : 9.99,
+    currency: "EUR",
+  });
+}
+
+/**
+ * Track subscrição email (lead capture)
+ */
+export function trackEmailSubscription(source: string) {
+  sendGA4Event("sign_up", { method: "email", source });
+  sendMetaEvent("CompleteRegistration", { content_name: source, status: "subscribed" });
+}
+
+/**
+ * Track início checkout PRO
+ */
+export function trackBeginCheckout(planId: string, planName: string, price: number) {
+  sendGA4Event("begin_checkout", {
+    currency: "EUR",
+    value: price,
+    items: [{ item_id: planId, item_name: planName, price, quantity: 1 }],
+  });
+
+  sendMetaEvent("InitiateCheckout", {
+    content_ids: [planId],
+    content_name: planName,
+    value: price,
+    currency: "EUR",
+  });
+}
+
+/**
+ * Track subscrição PRO concluída
+ */
+export function trackProSubscription(planId: string, planName: string, price: number, transactionId?: string) {
+  sendGA4Event("purchase", {
+    transaction_id: transactionId || `PRO_${Date.now()}`,
+    currency: "EUR",
+    value: price,
+    items: [{ item_id: planId, item_name: planName, price, quantity: 1 }],
+  });
+
+  sendMetaEvent("Purchase", {
+    content_ids: [planId],
+    content_name: planName,
+    value: price,
+    currency: "EUR",
+  });
+
+  sendMetaEvent("Subscribe", {
+    value: price,
+    currency: "EUR",
+    predicted_ltv: price * 12,
+  });
+}
+
+/**
+ * Track etapas do funil ebook
+ */
+export function trackEbookFunnel(step: "view_landing" | "start_form" | "submit_form" | "download_pdf") {
+  const stepData = {
+    view_landing: { name: "Ebook Landing View", num: 1 },
+    start_form: { name: "Ebook Form Started", num: 2 },
+    submit_form: { name: "Ebook Form Submitted", num: 3 },
+    download_pdf: { name: "Ebook Downloaded", num: 4 },
+  };
+
+  sendGA4Event("funnel_step", {
+    funnel_name: "free_ebook",
+    step_name: stepData[step].name,
+    step_number: stepData[step].num,
+  });
+
+  sendMetaCustomEvent("EbookFunnel", { step, step_number: stepData[step].num });
+}
+
+/**
+ * Track etapas do funil PRO
+ */
+export function trackProFunnel(step: "view_plans" | "select_plan" | "start_checkout" | "complete_payment") {
+  const stepData = {
+    view_plans: { name: "PRO Plans Viewed", num: 1 },
+    select_plan: { name: "PRO Plan Selected", num: 2 },
+    start_checkout: { name: "PRO Checkout Started", num: 3 },
+    complete_payment: { name: "PRO Payment Completed", num: 4 },
+  };
+
+  sendGA4Event("funnel_step", {
+    funnel_name: "pro_subscription",
+    step_name: stepData[step].name,
+    step_number: stepData[step].num,
+  });
+
+  sendMetaCustomEvent("ProFunnel", { step, step_number: stepData[step].num });
+}
+
+/**
+ * Track uso de cupão de desconto
+ */
+export function trackCouponUsed(couponCode: string, discountValue: number) {
+  sendGA4Event("select_promotion", {
+    promotion_id: couponCode,
+    discount: discountValue,
+  });
+
+  sendMetaCustomEvent("CouponUsed", { coupon_code: couponCode, discount: discountValue });
+}
+
+/**
+ * Track partilha social
+ */
+export function trackSocialShare(platform: string, contentType: string, contentId: string) {
+  sendGA4Event("share", { method: platform, content_type: contentType, item_id: contentId });
+  sendMetaCustomEvent("Share", { platform, content_type: contentType, content_id: contentId });
+}

@@ -13,7 +13,8 @@
     "analyze": "ANALYZE=true next build",
     "prepare": "husky",
     "type-check": "tsc --noEmit",
-    "generate-pdf": "node scripts/generate-ebook-pdf.js"
+    "generate-pdf": "node scripts/generate-ebook-pdf.js",
+    "generate-pdf:premium": "node scripts/generate-ebook-pdf-premium.js"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -61,7 +62,7 @@
     "eslint-config-next": "16.1.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "md-to-pdf": "^6.0.0",
+    "md-to-pdf": "^5.2.5",
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
     "typescript": "^5"

@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/lib/resend";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, nome } = await request.json();
+    const body = await request.json();
+    const { email, nome } = body;
 
     // Validate inputs
     if (!email || !nome) {
@@ -20,6 +22,51 @@ export async function POST(request: NextRequest) {
         { error: "Email inválido" },
         { status: 400 }
       );
+    }
+
+    // Validate input lengths (security)
+    if (nome.length > 100 || email.length > 255) {
+      return NextResponse.json(
+        { error: "Dados inválidos" },
+        { status: 400 }
+      );
+    }
+
+    // Get metadata from request
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const userAgent = request.headers.get("user-agent") || "";
+    const referer = request.headers.get("referer") || "";
+
+    // Parse UTM params from referer
+    let utmSource = null, utmMedium = null, utmCampaign = null;
+    try {
+      const refUrl = new URL(referer);
+      utmSource = refUrl.searchParams.get("utm_source");
+      utmMedium = refUrl.searchParams.get("utm_medium");
+      utmCampaign = refUrl.searchParams.get("utm_campaign");
+    } catch {
+      // Referer not a valid URL, ignore
+    }
+
+    // Save lead to Supabase
+    const { error: dbError } = await supabase.from("leads").upsert(
+      {
+        email: email.toLowerCase().trim(),
+        name: nome.trim(),
+        source: "free-ebook",
+        sequence_step: 0,
+        status: "active",
+        ip_address: ip,
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: utmCampaign,
+      },
+      { onConflict: "email" }
+    );
+
+    if (dbError) {
+      console.error("Failed to save lead:", dbError);
+      // Continue anyway - don't block email send if DB fails
     }
 
     // Send email with ebook download link
@@ -39,15 +86,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    // TODO: Save to database/newsletter service (Mailchimp, ConvertKit, etc)
-    // Example with Supabase:
-    // await supabase.from('newsletter_subscribers').insert({
-    //   email,
-    //   name: nome,
-    //   source: 'free-ebook',
-    //   subscribed_at: new Date().toISOString(),
-    // });
 
     return NextResponse.json({
       success: true,

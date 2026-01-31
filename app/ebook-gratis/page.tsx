@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { trackEbookFunnel, trackEmailSubscription, trackEbookDownload } from "@/lib/analytics";
 import {
   BookOpen,
   Download,
@@ -25,6 +26,20 @@ export default function EbookGratisPage() {
   const [nome, setNome] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const formStartedRef = useRef(false);
+
+  // Track page view on mount
+  useEffect(() => {
+    trackEbookFunnel("view_landing");
+  }, []);
+
+  // Track form start when user begins typing
+  const handleFormStart = () => {
+    if (!formStartedRef.current) {
+      formStartedRef.current = true;
+      trackEbookFunnel("start_form");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +59,11 @@ export default function EbookGratisPage() {
       if (!response.ok) {
         throw new Error(data.error || "Erro ao processar pedido");
       }
+
+      // Track conversão
+      trackEbookFunnel("submit_form");
+      trackEmailSubscription("free-ebook");
+      trackEbookDownload("introducao-lusitano", "free");
 
       setLoading(false);
       setSubmitted(true);
@@ -232,6 +252,7 @@ export default function EbookGratisPage() {
                     type="text"
                     value={nome}
                     onChange={(e) => setNome(e.target.value)}
+                    onFocus={handleFormStart}
                     placeholder="O teu nome"
                     required
                     className="w-full bg-zinc-900/50 border border-white/10 text-white px-6 py-4 focus:outline-none focus:border-[#C5A059] transition-colors"
@@ -242,6 +263,7 @@ export default function EbookGratisPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onFocus={handleFormStart}
                     placeholder="O teu melhor email"
                     required
                     className="w-full bg-zinc-900/50 border border-white/10 text-white px-6 py-4 focus:outline-none focus:border-[#C5A059] transition-colors"
