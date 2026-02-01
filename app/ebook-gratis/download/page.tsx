@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import {
-  Download,
   Check,
   Mail,
   BookOpen,
@@ -17,30 +16,18 @@ import {
   Gift,
   FileText,
   Users,
-  Eye,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { trackEbookFunnel, trackSocialShare } from "@/lib/analytics";
 
 export default function DownloadPage() {
-  const [downloading, setDownloading] = useState(false);
-
   // Track download page view
   useEffect(() => {
     trackEbookFunnel("download_pdf");
   }, []);
 
-  const handleDownload = () => {
-    setDownloading(true);
-    // Download do PDF
-    setTimeout(() => {
-      window.open("/downloads/introducao-lusitano.pdf", "_blank");
-      setDownloading(false);
-    }, 500);
-  };
-
-  const handleViewOnline = () => {
+  const handleViewEbook = () => {
     window.open("/downloads/introducao-lusitano.html", "_blank");
   };
 
@@ -161,43 +148,23 @@ export default function DownloadPage() {
           </h1>
 
           <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
-            O teu ebook gratuito está pronto para download.
-            Também enviámos uma cópia para o teu email.
+            O teu ebook gratuito está pronto para leres.
+            Também enviámos o link para o teu email.
           </p>
 
-          {/* Download Button */}
+          {/* View Ebook Button */}
           <motion.button
-            onClick={handleDownload}
-            disabled={downloading}
+            onClick={handleViewEbook}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 bg-[#C5A059] text-black px-10 py-5 text-sm font-bold uppercase tracking-widest hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-4"
+            className="inline-flex items-center gap-3 bg-[#C5A059] text-black px-10 py-5 text-sm font-bold uppercase tracking-widest hover:bg-white transition-colors mb-4"
           >
-            {downloading ? (
-              <>
-                <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-                A descarregar...
-              </>
-            ) : (
-              <>
-                <Download size={20} />
-                Descarregar Ebook Agora
-              </>
-            )}
-          </motion.button>
-
-          <motion.button
-            onClick={handleViewOnline}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center gap-2 text-[#C5A059] hover:text-white transition-colors mb-4 ml-4"
-          >
-            <Eye size={18} />
-            Ver Online
+            <BookOpen size={20} />
+            Ler Ebook Agora
           </motion.button>
 
           <p className="text-zinc-600 text-sm">
-            PDF 2.2 MB • HTML interativo disponível
+            Versão interativa otimizada para browser
           </p>
         </motion.div>
       </section>
