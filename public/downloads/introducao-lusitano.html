@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Introdução ao Cavalo Lusitano - Portal Lusitano</title>
+  <meta name="description" content="Descobre o fascinante mundo do Cavalo Lusitano - uma das raças mais nobres e antigas do mundo. Ebook gratuito do Portal Lusitano.">
+  <meta property="og:title" content="Introdução ao Cavalo Lusitano - Ebook Gratuito">
+  <meta property="og:description" content="O guia essencial para iniciantes no mundo do Cavalo Lusitano.">
+  <link rel="icon" href="/favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -19,6 +23,54 @@
       --cream: #FAF8F5;
       --cream-dark: #F0EDE8;
       --white: #FFFFFF;
+
+      /* Theme variables */
+      --bg-primary: var(--white);
+      --bg-secondary: var(--cream);
+      --text-primary: var(--gray);
+      --text-heading: var(--dark);
+    }
+
+    /* Dark Mode */
+    [data-theme="dark"] {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #141414;
+      --text-primary: #b0b0b0;
+      --text-heading: #e0e0e0;
+      --cream: #1a1a1a;
+      --cream-dark: #252525;
+    }
+
+    [data-theme="dark"] .page {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    [data-theme="dark"] h1,
+    [data-theme="dark"] h2,
+    [data-theme="dark"] h3,
+    [data-theme="dark"] h4 {
+      color: var(--text-heading);
+    }
+
+    [data-theme="dark"] .card,
+    [data-theme="dark"] .info-box,
+    [data-theme="dark"] .facts-box,
+    [data-theme="dark"] blockquote {
+      background: var(--bg-secondary);
+    }
+
+    [data-theme="dark"] table {
+      background: var(--bg-secondary);
+    }
+
+    [data-theme="dark"] tbody tr:nth-child(even) {
+      background: rgba(255,255,255,0.03);
+    }
+
+    [data-theme="dark"] .morph-item,
+    [data-theme="dark"] .stats-row {
+      background: var(--bg-secondary);
     }
 
     * {
@@ -33,14 +85,1203 @@
     }
 
     @media print {
-      .cover, .page, .chapter-opener {
-        break-after: page;
-        page-break-after: always;
+      .cover, .page, .chapter-opener, .back-cover {
+        break-after: page !important;
+        page-break-after: always !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        height: 297mm !important;
+        max-height: 297mm !important;
+        overflow: hidden !important;
       }
-      .back-cover {
-        break-before: page;
-        page-break-before: always;
+      .reading-progress, .nav-sidebar, .scroll-top, .toc-floating {
+        display: none !important;
       }
+    }
+
+    /* ===== INTERACTIVE ELEMENTS (ONLINE ONLY) ===== */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      z-index: 9999;
+      transition: width 0.1s ease-out;
+      box-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    .nav-sidebar {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-sidebar.visible {
+      opacity: 1;
+    }
+
+    .nav-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(197, 160, 89, 0.3);
+      border: 2px solid var(--gold);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-dot:hover {
+      background: var(--gold);
+      transform: scale(1.3);
+    }
+
+    .nav-dot.active {
+      background: var(--gold);
+      box-shadow: 0 0 15px var(--gold-glow);
+    }
+
+    .nav-dot::after {
+      content: attr(data-label);
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--black);
+      color: var(--gold);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-dot:hover::after {
+      opacity: 1;
+    }
+
+    .scroll-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-top:hover {
+      background: var(--white);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    /* Fade-in animation on scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-in-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .fade-in-right {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Stagger delay for children */
+    .stagger-children > *:nth-child(1) { transition-delay: 0.1s; }
+    .stagger-children > *:nth-child(2) { transition-delay: 0.2s; }
+    .stagger-children > *:nth-child(3) { transition-delay: 0.3s; }
+    .stagger-children > *:nth-child(4) { transition-delay: 0.4s; }
+    .stagger-children > *:nth-child(5) { transition-delay: 0.5s; }
+    .stagger-children > *:nth-child(6) { transition-delay: 0.6s; }
+
+    /* Interactive hover effects */
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(197, 160, 89, 0.15);
+      border-color: var(--gold);
+    }
+
+    .fact-item:hover {
+      background: var(--gold-glow);
+      transform: translateX(5px);
+    }
+
+    .timeline-item:hover .timeline-content {
+      border-color: var(--gold);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    /* Floating table of contents */
+    .toc-floating {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(13, 13, 13, 0.95);
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      z-index: 1000;
+      max-width: 200px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .toc-floating.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .toc-toggle {
+      position: fixed;
+      left: 20px;
+      top: 20px;
+      width: 44px;
+      height: 44px;
+      background: var(--black);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toc-toggle.visible {
+      opacity: 1;
+    }
+
+    .toc-toggle:hover {
+      background: var(--gold);
+    }
+
+    .toc-toggle svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--gold);
+      transition: fill 0.3s ease;
+    }
+
+    .toc-toggle:hover svg {
+      fill: var(--black);
+    }
+
+    .toc-floating h4 {
+      color: var(--gold);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+    }
+
+    .toc-floating a {
+      display: block;
+      color: var(--gray-light);
+      text-decoration: none;
+      font-size: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: color 0.2s ease;
+    }
+
+    .toc-floating a:hover,
+    .toc-floating a.active {
+      color: var(--gold);
+    }
+
+    .toc-floating a:last-child {
+      border-bottom: none;
+    }
+
+    /* Responsive adjustments for online viewing */
+    @media (max-width: 900px) {
+      .nav-sidebar, .toc-floating, .toc-toggle {
+        display: none;
+      }
+    }
+
+    /* ===== ADVANCED VISUAL EFFECTS ===== */
+
+    /* Animated Gold Particles Container */
+    .particles-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      animation: float-particle 15s infinite;
+    }
+
+    @keyframes float-particle {
+      0% { opacity: 0; transform: translateY(100vh) rotate(0deg); }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { opacity: 0; transform: translateY(-100vh) rotate(720deg); }
+    }
+
+    /* Glowing Gold Effect */
+    .glow-text {
+      text-shadow: 0 0 20px var(--gold-glow), 0 0 40px var(--gold-glow), 0 0 60px rgba(197, 160, 89, 0.1);
+      animation: glow-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { text-shadow: 0 0 20px var(--gold-glow), 0 0 40px var(--gold-glow); }
+      50% { text-shadow: 0 0 30px var(--gold), 0 0 60px var(--gold-glow), 0 0 80px rgba(197, 160, 89, 0.2); }
+    }
+
+    /* Shimmer Effect for Gold Elements */
+    .shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer-slide 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer-slide {
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
+    }
+
+    /* Typewriter Effect */
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--gold);
+      animation: typing 3s steps(30) forwards, blink-cursor 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink-cursor {
+      50% { border-color: transparent; }
+    }
+
+    /* Reveal on Scroll Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Scale Animation */
+    .scale-in {
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .scale-in.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Magnetic Hover Effect on Cards */
+    .magnetic {
+      transition: transform 0.3s ease;
+    }
+
+    /* Gradient Border Animation */
+    .gradient-border {
+      position: relative;
+      background: var(--cream);
+    }
+
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--gold), var(--gold-light), var(--gold-dark), var(--gold));
+      background-size: 300% 300%;
+      z-index: -1;
+      animation: gradient-rotate 4s ease infinite;
+      border-radius: inherit;
+    }
+
+    @keyframes gradient-rotate {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Floating Animation */
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Rotating Icon */
+    .rotating {
+      animation: rotating 20s linear infinite;
+    }
+
+    @keyframes rotating {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Counter Animation */
+    .counter {
+      transition: all 0.3s ease;
+    }
+
+    /* Parallax Layers */
+    .parallax-container {
+      perspective: 1px;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .parallax-layer {
+      transform-style: preserve-3d;
+    }
+
+    /* Text Gradient Effect */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: text-gradient-flow 3s linear infinite;
+    }
+
+    @keyframes text-gradient-flow {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* Underline Animation */
+    .animated-underline {
+      position: relative;
+      display: inline-block;
+    }
+
+    .animated-underline::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      transition: width 0.3s ease;
+    }
+
+    .animated-underline:hover::after {
+      width: 100%;
+    }
+
+    /* Glass Morphism Effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Neon Glow for Dark Sections */
+    .neon-glow {
+      box-shadow: 0 0 5px var(--gold), 0 0 10px var(--gold), 0 0 20px var(--gold), 0 0 40px var(--gold-dark);
+    }
+
+    /* Ripple Effect on Click */
+    .ripple {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ripple-effect {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(197, 160, 89, 0.3);
+      transform: scale(0);
+      animation: ripple-animation 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-animation {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* Morphing Shape Background */
+    .morph-bg {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(45deg, var(--gold-glow), rgba(197, 160, 89, 0.05));
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      animation: morph 8s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    @keyframes morph {
+      0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+      50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    }
+
+    /* Loading Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--cream) 25%, var(--cream-dark) 50%, var(--cream) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite;
+    }
+
+    @keyframes skeleton-loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Enhanced Chapter Number */
+    .chapter-number-large {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 120pt;
+      font-weight: 300;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--gold);
+      opacity: 0.3;
+      line-height: 1;
+      position: relative;
+    }
+
+    .chapter-number-large::after {
+      content: attr(data-number);
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      opacity: 0;
+      animation: number-reveal 1s ease-out forwards;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes number-reveal {
+      to { opacity: 0.6; }
+    }
+
+    /* Cursor Glow Effect on Dark Sections */
+    .cover::after,
+    .chapter-opener::after,
+    .back-cover::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(197, 160, 89, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      left: var(--mouse-x, 50%);
+      top: var(--mouse-y, 50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .cover:hover::after,
+    .chapter-opener:hover::after,
+    .back-cover:hover::after {
+      opacity: 1;
+    }
+
+    /* Chapter Opener Animation */
+    .chapter-opener {
+      transition: transform 0.5s ease;
+    }
+
+    .chapter-opener.animate-in .chapter-number-large {
+      animation: number-slide-in 0.8s ease-out forwards;
+    }
+
+    .chapter-opener.animate-in .chapter-title {
+      animation: title-fade-in 0.8s ease-out 0.3s forwards;
+      opacity: 0;
+    }
+
+    .chapter-opener.animate-in .chapter-desc {
+      animation: desc-fade-in 0.8s ease-out 0.5s forwards;
+      opacity: 0;
+    }
+
+    @keyframes number-slide-in {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 0.3; transform: scale(1); }
+    }
+
+    @keyframes title-fade-in {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes desc-fade-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 0.8; transform: translateY(0); }
+    }
+
+    /* Enhanced Timeline Styling */
+    .timeline-item {
+      position: relative;
+    }
+
+    .timeline-item::before {
+      transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover::before {
+      background: var(--gold);
+      box-shadow: 0 0 20px var(--gold-glow);
+      transform: scale(1.3);
+    }
+
+    .timeline-item:hover .timeline-date {
+      color: var(--gold);
+      transform: translateX(5px);
+    }
+
+    .timeline-date {
+      transition: all 0.3s ease;
+    }
+
+    /* Enhanced Card 3D Effect */
+    .card {
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
+
+    /* Text Selection Style */
+    ::selection {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    ::-moz-selection {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--black);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gold-light);
+    }
+
+    /* Focus Styles for Accessibility */
+    a:focus,
+    button:focus {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    /* Print Optimization for Interactive Elements */
+    @media print {
+      .particles-container,
+      .morph-bg,
+      .scroll-indicator,
+      .control-panel,
+      .keyboard-help,
+      .bookmark-indicator,
+      .quiz-modal,
+      .cinematic-intro {
+        display: none !important;
+      }
+
+      .cover::after,
+      .chapter-opener::after,
+      .back-cover::after {
+        display: none;
+      }
+    }
+
+    /* ===== CONTROL PANEL ===== */
+    .control-panel {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+
+    .control-panel.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .control-btn {
+      width: 44px;
+      height: 44px;
+      background: rgba(13, 13, 13, 0.9);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      color: var(--gold);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .control-btn:hover {
+      background: var(--gold);
+      color: var(--black);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(197, 160, 89, 0.3);
+    }
+
+    .control-btn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--black);
+      color: var(--gold);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      margin-bottom: 8px;
+    }
+
+    .control-btn:hover::after {
+      opacity: 1;
+    }
+
+    .control-btn.active {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    /* ===== KEYBOARD SHORTCUTS HELP ===== */
+    .keyboard-help {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: rgba(13, 13, 13, 0.98);
+      border: 1px solid var(--gold);
+      border-radius: 16px;
+      padding: 40px;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .keyboard-help.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .keyboard-help h3 {
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .shortcut-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .shortcut-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .shortcut-key {
+      background: var(--charcoal);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: var(--gold);
+      font-family: monospace;
+      font-size: 12px;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .shortcut-desc {
+      color: var(--gray-light);
+      font-size: 12px;
+    }
+
+    .keyboard-help-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-size: 24px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .keyboard-help-close:hover {
+      opacity: 1;
+    }
+
+    /* ===== BOOKMARK INDICATOR ===== */
+    .bookmark-indicator {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: var(--gold);
+      color: var(--black);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+    }
+
+    .bookmark-indicator.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ===== CUSTOM CURSOR ===== */
+    .custom-cursor {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, border-color 0.2s ease, width 0.2s ease, height 0.2s ease;
+      transform: translate(-50%, -50%);
+    }
+
+    .custom-cursor.hover {
+      width: 40px;
+      height: 40px;
+      border-color: var(--gold-light);
+      background: rgba(197, 160, 89, 0.1);
+    }
+
+    .custom-cursor-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+
+    @media (max-width: 768px) {
+      .custom-cursor,
+      .custom-cursor-dot {
+        display: none;
+      }
+    }
+
+    /* ===== QUIZ MODAL ===== */
+    .quiz-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .quiz-modal.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .quiz-container {
+      background: var(--dark);
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      padding: 50px;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .quiz-title {
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .quiz-subtitle {
+      color: var(--gray-light);
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    .quiz-question {
+      color: var(--white);
+      font-size: 18px;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .quiz-option {
+      background: var(--charcoal);
+      border: 1px solid var(--gray);
+      border-radius: 10px;
+      padding: 15px 20px;
+      color: var(--white);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--gold);
+      transform: translateX(5px);
+    }
+
+    .quiz-option.correct {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22c55e;
+    }
+
+    .quiz-option.wrong {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+    }
+
+    .quiz-progress {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .quiz-progress-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--charcoal);
+      border: 1px solid var(--gold);
+    }
+
+    .quiz-progress-dot.answered {
+      background: var(--gold);
+    }
+
+    .quiz-progress-dot.current {
+      box-shadow: 0 0 10px var(--gold);
+    }
+
+    .quiz-score {
+      font-size: 48px;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      margin-bottom: 15px;
+    }
+
+    .quiz-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    /* ===== CINEMATIC INTRO ===== */
+    .cinematic-intro {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--black);
+      z-index: 5000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1s ease;
+    }
+
+    .cinematic-intro.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .cinematic-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      color: var(--gold);
+      opacity: 0;
+      animation: cinematic-fade 2s ease forwards;
+    }
+
+    .cinematic-tagline {
+      color: var(--gold-light);
+      font-size: 14px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-top: 20px;
+      opacity: 0;
+      animation: cinematic-fade 2s ease 0.5s forwards;
+    }
+
+    .cinematic-skip {
+      position: absolute;
+      bottom: 40px;
+      color: var(--gray-light);
+      font-size: 12px;
+      opacity: 0;
+      animation: cinematic-fade 1s ease 2s forwards;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .cinematic-skip:hover {
+      color: var(--gold);
+    }
+
+    @keyframes cinematic-fade {
+      to { opacity: 1; }
+    }
+
+    /* ===== READING STATS BAR ===== */
+    .reading-stats {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: rgba(13, 13, 13, 0.95);
+      border-top: 1px solid rgba(197, 160, 89, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      font-size: 11px;
+      color: var(--gray-light);
+      z-index: 999;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .reading-stats.visible {
+      transform: translateY(0);
+    }
+
+    .reading-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reading-stat-value {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ===== EASTER EGG STYLES ===== */
+    .easter-egg-found {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--black);
+      padding: 30px 50px;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      z-index: 4000;
+      animation: easter-egg-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+      text-align: center;
+    }
+
+    @keyframes easter-egg-pop {
+      to { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      z-index: 3999;
+      animation: confetti-fall 3s ease-out forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
 
     body {
@@ -99,7 +1340,7 @@
 
     /* ===== COVER PAGE ===== */
     .cover {
-      min-height: 297mm;
+      min-height: 100vh;
       background: var(--black);
       position: relative;
       display: flex;
@@ -263,17 +1504,57 @@
       font-size: 8pt;
       letter-spacing: 3px;
       text-transform: uppercase;
+    }
+
+    .scroll-indicator {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      animation: pulse 2s infinite;
+    }
+
+    .scroll-indicator span {
+      font-size: 9pt;
+      letter-spacing: 2px;
+      color: var(--gold);
+      opacity: 0.7;
+    }
+
+    .scroll-arrow {
+      font-size: 24px;
+      color: var(--gold);
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
       color: rgba(255,255,255,0.3);
     }
 
     /* ===== PAGE LAYOUT ===== */
     .page {
-      min-height: 297mm;
-      padding: 50px 60px 80px 60px;
+      min-height: 100vh;
+      padding: 80px 60px 100px 60px;
       position: relative;
       background: var(--white);
       page-break-after: always;
       box-sizing: border-box;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 60px 30px 80px 30px;
+      }
     }
 
     .page-header {
@@ -320,17 +1601,23 @@
 
     /* ===== CHAPTER OPENER ===== */
     .chapter-opener {
-      min-height: 297mm;
+      min-height: 100vh;
       background: linear-gradient(135deg, var(--black) 0%, var(--dark) 50%, var(--charcoal) 100%);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 60px;
+      padding: 80px 60px;
       position: relative;
       page-break-after: always;
       box-sizing: border-box;
+    }
+
+    @media (max-width: 768px) {
+      .chapter-opener {
+        padding: 60px 30px;
+      }
     }
 
     .chapter-opener-bg {
@@ -514,6 +1801,20 @@
       display: flex;
       align-items: flex-start;
       gap: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .fact-item:hover {
+      background: rgba(197, 160, 89, 0.1);
+      transform: translateX(8px);
+    }
+
+    .fact-item:hover .fact-icon {
+      background: var(--gold);
+      transform: scale(1.1);
     }
 
     .fact-icon {
@@ -521,6 +1822,7 @@
       height: 32px;
       background: rgba(197, 160, 89, 0.15);
       border-radius: 6px;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -555,11 +1857,25 @@
       padding: 25px;
       position: relative;
       border-left: 3px solid var(--gold);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(197, 160, 89, 0.2);
+      border-left-color: var(--gold-dark);
+      background: var(--white);
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.2);
     }
 
     .card-icon {
       font-size: 22pt;
       margin-bottom: 12px;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .card h4 {
@@ -698,6 +2014,15 @@
       background: var(--cream);
     }
 
+    tbody tr {
+      transition: all 0.3s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(197, 160, 89, 0.15);
+      transform: scale(1.01);
+    }
+
     .rating {
       color: var(--gold);
       letter-spacing: 1px;
@@ -708,9 +2033,17 @@
     blockquote {
       background: linear-gradient(135deg, var(--cream) 0%, var(--white) 100%);
       border-left: 3px solid var(--gold);
-      padding: 20px 25px;
-      margin: 25px 0;
+      padding: 25px 30px;
+      margin: 30px 0;
       position: relative;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    blockquote:hover {
+      transform: translateX(5px);
+      box-shadow: 0 8px 30px rgba(197, 160, 89, 0.15);
+      border-left-width: 5px;
     }
 
     blockquote::before {
@@ -894,7 +2227,7 @@
 
     /* ===== BACK COVER ===== */
     .back-cover {
-      min-height: 297mm;
+      min-height: 100vh;
       background: var(--black);
       display: flex;
       flex-direction: column;
@@ -904,6 +2237,7 @@
       position: relative;
       box-sizing: border-box;
       page-break-before: always;
+      padding: 80px 60px;
     }
 
     .back-cover-frame {
@@ -1035,9 +2369,115 @@
 </head>
 <body>
 
+  <!-- ===== CINEMATIC INTRO ===== -->
+  <div class="cinematic-intro" id="cinematicIntro">
+    <div class="cinematic-logo">Portal Lusitano</div>
+    <div class="cinematic-tagline">Apresenta</div>
+    <div class="cinematic-skip" onclick="skipIntro()">Pressiona qualquer tecla para continuar</div>
+  </div>
+
+  <!-- ===== CUSTOM CURSOR ===== -->
+  <div class="custom-cursor" id="cursor"></div>
+  <div class="custom-cursor-dot" id="cursorDot"></div>
+
+  <!-- ===== CONTROL PANEL ===== -->
+  <div class="control-panel" id="controlPanel">
+    <button class="control-btn" id="themeToggle" data-tooltip="Modo Escuro/Claro">🌓</button>
+    <button class="control-btn" id="soundToggle" data-tooltip="Som On/Off">🔇</button>
+    <button class="control-btn" id="bookmarkBtn" data-tooltip="Guardar Posição">🔖</button>
+    <button class="control-btn" id="keyboardBtn" data-tooltip="Atalhos (?)">⌨️</button>
+    <button class="control-btn" id="quizBtn" data-tooltip="Quiz Lusitano">🧠</button>
+  </div>
+
+  <!-- ===== BOOKMARK INDICATOR ===== -->
+  <div class="bookmark-indicator" id="bookmarkIndicator">📍 Posição guardada!</div>
+
+  <!-- ===== READING STATS BAR ===== -->
+  <div class="reading-stats" id="readingStats">
+    <div class="reading-stat">
+      <span>📖</span>
+      <span class="reading-stat-value" id="statProgress">0%</span>
+      <span>lido</span>
+    </div>
+    <div class="reading-stat">
+      <span>⏱️</span>
+      <span class="reading-stat-value" id="statTime">0:00</span>
+      <span>tempo</span>
+    </div>
+    <div class="reading-stat">
+      <span>📑</span>
+      <span>Capítulo</span>
+      <span class="reading-stat-value" id="statChapter">Capa</span>
+    </div>
+  </div>
+
+  <!-- ===== KEYBOARD SHORTCUTS HELP ===== -->
+  <div class="keyboard-help" id="keyboardHelp">
+    <button class="keyboard-help-close" onclick="toggleKeyboardHelp()">×</button>
+    <h3>⌨️ Atalhos de Teclado</h3>
+    <div class="shortcut-list">
+      <div class="shortcut-item">
+        <span class="shortcut-key">↑/↓</span>
+        <span class="shortcut-desc">Navegar</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-key">J/K</span>
+        <span class="shortcut-desc">Scroll suave</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-key">Home</span>
+        <span class="shortcut-desc">Início</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-key">End</span>
+        <span class="shortcut-desc">Fim</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-key">D</span>
+        <span class="shortcut-desc">Modo escuro</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-key">B</span>
+        <span class="shortcut-desc">Bookmark</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-key">Q</span>
+        <span class="shortcut-desc">Quiz</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-key">?</span>
+        <span class="shortcut-desc">Esta ajuda</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-key">1-4</span>
+        <span class="shortcut-desc">Ir ao capítulo</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-key">Esc</span>
+        <span class="shortcut-desc">Fechar modal</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ MODAL ===== -->
+  <div class="quiz-modal" id="quizModal">
+    <button class="quiz-close" onclick="closeQuiz()">×</button>
+    <div class="quiz-container">
+      <h2 class="quiz-title">🐴 Quiz Lusitano</h2>
+      <p class="quiz-subtitle">Testa os teus conhecimentos!</p>
+      <div class="quiz-progress" id="quizProgress"></div>
+      <p class="quiz-question" id="quizQuestion"></p>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-score" id="quizScore" style="display: none;"></div>
+    </div>
+  </div>
+
   <!-- ===== COVER ===== -->
-  <div class="cover">
+  <div class="cover" id="cover">
     <div class="cover-bg-pattern"></div>
+    <div class="particles-container" id="particles"></div>
+    <div class="morph-bg" style="top: 20%; left: 10%;"></div>
+    <div class="morph-bg" style="bottom: 20%; right: 10%; animation-delay: -4s;"></div>
     <div class="cover-frame"></div>
     <div class="cover-frame-inner"></div>
     <div class="cover-corner cover-corner-tl"></div>
@@ -1052,7 +2492,7 @@
         <span>🐴</span>
       </div>
 
-      <h1 class="cover-title">Introdução ao<br><em>Cavalo Lusitano</em></h1>
+      <h1 class="cover-title glow-text">Introdução ao<br><em class="text-gradient">Cavalo Lusitano</em></h1>
 
       <p class="cover-subtitle">O Guia Essencial Para Iniciantes</p>
 
@@ -1078,6 +2518,10 @@
 
     <div class="cover-footer">
       <p>Ebook Gratuito · Edição 2025 · portal-lusitano.pt</p>
+      <div class="scroll-indicator">
+        <span>Scroll para começar</span>
+        <div class="scroll-arrow">↓</div>
+      </div>
     </div>
   </div>
 
@@ -1134,7 +2578,7 @@
   </div>
 
   <!-- ===== CHAPTER 1 OPENER ===== -->
-  <div class="chapter-opener">
+  <div class="chapter-opener" id="cap1">
     <div class="chapter-opener-bg"></div>
     <span class="chapter-number-large">01</span>
     <span class="chapter-label">Capítulo Um</span>
@@ -1201,7 +2645,7 @@
           <div class="fact-icon">🌍</div>
           <div>
             <div class="fact-label">População</div>
-            <div class="fact-value">~200.000 cavalos em 42 países</div>
+            <div class="fact-value">~40.000 cavalos em 50+ países</div>
           </div>
         </div>
         <div class="fact-item">
@@ -1268,7 +2712,7 @@
     <div class="two-col">
       <ul class="check-list">
         <li><strong>Dressage/Alta Escola</strong> — movimentos elevados naturais</li>
-        <li><strong>Working Equitation</strong> — domina mundialmente (80%+ campeões)</li>
+        <li><strong>Working Equitation</strong> — domina mundialmente (55%+ dos competidores, Top 7 mundial)</li>
         <li><strong>Toureio</strong> — coragem excecional</li>
       </ul>
       <ul class="check-list">
@@ -1314,7 +2758,7 @@
   </div>
 
   <!-- ===== CHAPTER 2 OPENER ===== -->
-  <div class="chapter-opener">
+  <div class="chapter-opener" id="cap2">
     <div class="chapter-opener-bg"></div>
     <span class="chapter-number-large">02</span>
     <span class="chapter-label">Capítulo Dois</span>
@@ -1376,13 +2820,13 @@
       </div>
       <div class="timeline-item">
         <div class="timeline-date">1967</div>
-        <div class="timeline-title">Salvação: Fundação APSL</div>
-        <p class="timeline-desc">Criadores fundam a APSL. Livro genealógico oficial e programa de conservação salvam a raça.</p>
+        <div class="timeline-title">Criação do Stud-Book</div>
+        <p class="timeline-desc">Primeiro livro genealógico oficial da raça. Em 1989, nasce a APSL — dedicada exclusivamente ao Lusitano.</p>
       </div>
       <div class="timeline-item">
         <div class="timeline-date">1980 - Hoje</div>
         <div class="timeline-title">Renascimento Global</div>
-        <p class="timeline-desc">Exportação para 42 países. Domínio em Working Equitation. População: ~200.000 cavalos. Raça SALVA!</p>
+        <p class="timeline-desc">Exportação para 50+ países. Domínio em Working Equitation. População mundial: ~40.000 cavalos. Raça SALVA!</p>
       </div>
     </div>
 
@@ -1393,7 +2837,7 @@
   </div>
 
   <!-- ===== CHAPTER 3 OPENER ===== -->
-  <div class="chapter-opener">
+  <div class="chapter-opener" id="cap3">
     <div class="chapter-opener-bg"></div>
     <span class="chapter-number-large">03</span>
     <span class="chapter-label">Capítulo Três</span>
@@ -1523,7 +2967,7 @@
         <tr>
           <td><strong>Working Equitation</strong></td>
           <td class="rating">★★★★★</td>
-          <td>Criado para isto! 82% dos campeões mundiais são Lusitanos.</td>
+          <td>Domínio total! Top 7 do Mundial 2022 foram todos Lusitanos.</td>
         </tr>
         <tr>
           <td><strong>Toureio Português</strong></td>
@@ -1584,7 +3028,7 @@
   </div>
 
   <!-- ===== CHAPTER 4 OPENER ===== -->
-  <div class="chapter-opener">
+  <div class="chapter-opener" id="cap4">
     <div class="chapter-opener-bg"></div>
     <span class="chapter-number-large">04</span>
     <span class="chapter-label">Capítulo Quatro</span>
@@ -1723,6 +3167,18 @@
 
     <p style="text-align: center; font-size: 14pt; margin-top: 25px;"><strong>Serás tu um desses guardiões? 🐴👑</strong></p>
 
+    <div class="info-box" style="margin-top: 40px; background: var(--cream-dark);">
+      <h4>📚 Fontes e Referências</h4>
+      <p style="font-size: 8pt; line-height: 1.6;">
+        <strong>APSL</strong> — Associação Portuguesa de Criadores do Cavalo Puro Sangue Lusitano (cavalo-lusitano.com)<br>
+        <strong>Wikipedia</strong> — Puro Sangue Lusitano<br>
+        <strong>Lusitano World</strong> — Working Equitation World Championships 2022<br>
+        <strong>FEI</strong> — Fédération Equestre Internationale Rankings<br>
+        <strong>Mad Barn</strong> — Lusitano Horse Breed Guide<br>
+        Este ebook foi verificado com fontes oficiais e estudos académicos.
+      </p>
+    </div>
+
     <div class="page-footer">
       <span>portal-lusitano.pt</span>
       <span>13</span>
@@ -1730,7 +3186,7 @@
   </div>
 
   <!-- ===== BACK COVER ===== -->
-  <div class="back-cover">
+  <div class="back-cover" id="conclusao">
     <div class="back-cover-frame"></div>
 
     <div class="back-cover-logo serif">Portal Lusitano</div>
@@ -1745,13 +3201,369 @@
       Esperamos que seja o início de uma bela jornada.
     </p>
 
-    <p class="back-cover-url">www.portal-lusitano.pt</p>
+    <a href="https://portal-lusitano.pt/pro" class="back-cover-url" style="text-decoration: none; display: inline-block; background: var(--gold); color: var(--black); padding: 15px 40px; font-weight: 600; margin-bottom: 20px; transition: all 0.3s ease;" onmouseover="this.style.background='white'" onmouseout="this.style.background='var(--gold)'">
+      Explorar Portal Lusitano PRO →
+    </a>
 
     <p class="back-cover-copyright">
       © 2025 Portal Lusitano · Ebook Gratuito "Introdução ao Lusitano" · v2.0<br>
       Distribuição livre autorizada
     </p>
   </div>
+
+  <!-- Reading Progress Bar -->
+  <div class="reading-progress" id="readingProgress"></div>
+
+  <!-- Navigation Sidebar -->
+  <nav class="nav-sidebar" id="navSidebar">
+    <div class="nav-dot" data-target="cover" data-label="Capa"></div>
+    <div class="nav-dot" data-target="cap1" data-label="Cap 1: A Raça"></div>
+    <div class="nav-dot" data-target="cap2" data-label="Cap 2: História"></div>
+    <div class="nav-dot" data-target="cap3" data-label="Cap 3: Características"></div>
+    <div class="nav-dot" data-target="cap4" data-label="Cap 4: Próximos Passos"></div>
+    <div class="nav-dot" data-target="conclusao" data-label="Conclusão"></div>
+  </nav>
+
+  <!-- Table of Contents Toggle -->
+  <button class="toc-toggle" id="tocToggle" title="Índice">
+    <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+
+  <!-- Floating Table of Contents -->
+  <div class="toc-floating" id="tocFloating">
+    <h4>Índice</h4>
+    <a href="#cover">Capa</a>
+    <a href="#cap1">1. O Que É o Lusitano?</a>
+    <a href="#cap2">2. A História</a>
+    <a href="#cap3">3. Características</a>
+    <a href="#cap4">4. Próximos Passos</a>
+    <a href="#conclusao">Conclusão</a>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-top" id="scrollTop" title="Voltar ao topo">↑</button>
+
+  <script>
+    // ===== READING PROGRESS =====
+    const progressBar = document.getElementById('readingProgress');
+
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      progressBar.style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress);
+
+    // ===== NAVIGATION SIDEBAR =====
+    const navSidebar = document.getElementById('navSidebar');
+    const navDots = document.querySelectorAll('.nav-dot');
+    const sections = ['cover', 'cap1', 'cap2', 'cap3', 'cap4', 'conclusao'];
+
+    // Show sidebar after scrolling
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        navSidebar.classList.add('visible');
+      } else {
+        navSidebar.classList.remove('visible');
+      }
+
+      // Update active dot
+      sections.forEach((id, index) => {
+        const section = document.getElementById(id);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+            navDots.forEach(dot => dot.classList.remove('active'));
+            navDots[index].classList.add('active');
+          }
+        }
+      });
+    });
+
+    // Click navigation
+    navDots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const target = document.getElementById(dot.dataset.target);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // ===== SCROLL TO TOP =====
+    const scrollTopBtn = document.getElementById('scrollTop');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) {
+        scrollTopBtn.classList.add('visible');
+      } else {
+        scrollTopBtn.classList.remove('visible');
+      }
+    });
+
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ===== TABLE OF CONTENTS =====
+    const tocToggle = document.getElementById('tocToggle');
+    const tocFloating = document.getElementById('tocFloating');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        tocToggle.classList.add('visible');
+      } else {
+        tocToggle.classList.remove('visible');
+        tocFloating.classList.remove('visible');
+      }
+    });
+
+    tocToggle.addEventListener('click', () => {
+      tocFloating.classList.toggle('visible');
+    });
+
+    // Close TOC when clicking a link
+    tocFloating.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        tocFloating.classList.remove('visible');
+      });
+    });
+
+    // ===== FADE IN ANIMATIONS =====
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Add fade-in class to elements
+    document.querySelectorAll('.card, .fact-item, .timeline-item, .stats-row .stat-item, blockquote, h1, h2, .info-box, .facts-box').forEach(el => {
+      el.classList.add('fade-in');
+      observer.observe(el);
+    });
+
+    // Add stagger effect to grids
+    document.querySelectorAll('.cards-grid, .facts-grid, .compare-grid, .stats-row').forEach(grid => {
+      grid.classList.add('stagger-children');
+    });
+
+    // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // ===== KEYBOARD NAVIGATION =====
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'j') {
+        window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp' || e.key === 'k') {
+        window.scrollBy({ top: -window.innerHeight * 0.8, behavior: 'smooth' });
+      } else if (e.key === 'Home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (e.key === 'End') {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }
+    });
+
+    // Initial call
+    updateProgress();
+
+    // ===== PARTICLE SYSTEM =====
+    function createParticles() {
+      const container = document.getElementById('particles');
+      if (!container) return;
+
+      const particleCount = 30;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+
+        // Random position and animation delay
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+
+        // Random size
+        const size = 2 + Math.random() * 4;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+
+        container.appendChild(particle);
+      }
+    }
+
+    createParticles();
+
+    // ===== REVEAL ON SCROLL =====
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .scale-in').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // ===== COUNTER ANIMATION =====
+    function animateCounter(element, target, duration = 2000) {
+      let start = 0;
+      const increment = target / (duration / 16);
+
+      function updateCounter() {
+        start += increment;
+        if (start < target) {
+          element.textContent = Math.floor(start).toLocaleString('pt-PT');
+          requestAnimationFrame(updateCounter);
+        } else {
+          element.textContent = target.toLocaleString('pt-PT');
+        }
+      }
+
+      updateCounter();
+    }
+
+    // Animate stat numbers when they come into view
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.animated) {
+          entry.target.dataset.animated = 'true';
+          const text = entry.target.textContent;
+          const match = text.match(/(\d+)/);
+          if (match) {
+            const target = parseInt(match[1]);
+            animateCounter(entry.target, target);
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-number').forEach(el => {
+      statObserver.observe(el);
+    });
+
+    // ===== RIPPLE EFFECT =====
+    document.querySelectorAll('.card, .fact-item, .cta-section').forEach(el => {
+      el.classList.add('ripple');
+      el.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple-effect');
+
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+
+        this.appendChild(ripple);
+
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    // ===== MAGNETIC HOVER EFFECT =====
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+
+        card.style.transform = `translateY(-8px) scale(1.02) rotateX(${-y / 20}deg) rotateY(${x / 20}deg)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+
+    // ===== CHAPTER TRANSITION =====
+    const chapterOpeners = document.querySelectorAll('.chapter-opener');
+    const chapterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    chapterOpeners.forEach(opener => chapterObserver.observe(opener));
+
+    // ===== PARALLAX SCROLL EFFECT =====
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+
+      // Parallax for cover elements
+      const coverContent = document.querySelector('.cover-content');
+      if (coverContent && scrolled < window.innerHeight) {
+        coverContent.style.transform = `translateY(${scrolled * 0.3}px)`;
+        coverContent.style.opacity = 1 - (scrolled / window.innerHeight);
+      }
+
+      // Parallax for morph backgrounds
+      document.querySelectorAll('.morph-bg').forEach((bg, index) => {
+        const speed = 0.1 + (index * 0.05);
+        bg.style.transform = `translateY(${scrolled * speed}px)`;
+      });
+    });
+
+    // ===== ENHANCED TIMELINE ANIMATION =====
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    const timelineObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateX(0)';
+          }, index * 100);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    timelineItems.forEach((item, index) => {
+      item.style.opacity = '0';
+      item.style.transform = index % 2 === 0 ? 'translateX(-30px)' : 'translateX(30px)';
+      item.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+      timelineObserver.observe(item);
+    });
+
+    // ===== CURSOR GLOW EFFECT ON DARK SECTIONS =====
+    document.querySelectorAll('.cover, .chapter-opener, .back-cover').forEach(section => {
+      section.addEventListener('mousemove', (e) => {
+        const rect = section.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        section.style.setProperty('--mouse-x', x + 'px');
+        section.style.setProperty('--mouse-y', y + 'px');
+      });
+    });
+
+    // ===== READING TIME ESTIMATE =====
+    const content = document.body.innerText;
+    const wordCount = content.split(/\s+/).length;
+    const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
+    console.log(`📖 Tempo estimado de leitura: ${readingTime} minutos`);
+  </script>
 
 </body>
 </html>

@@ -49,16 +49,35 @@ async function generatePDF() {
     // Emulate print media
     await page.emulateMediaType('print');
 
+    // Inject page break styles via JavaScript to force proper pagination
+    await page.evaluate(() => {
+      const sections = document.querySelectorAll('.cover, .page, .chapter-opener, .back-cover');
+      sections.forEach((section, index) => {
+        section.style.height = '297mm';
+        section.style.maxHeight = '297mm';
+        section.style.overflow = 'hidden';
+        section.style.pageBreakAfter = 'always';
+        section.style.breakAfter = 'page';
+        section.style.pageBreakInside = 'avoid';
+        section.style.breakInside = 'avoid';
+        // Add a wrapper div to ensure page isolation
+        if (index < sections.length - 1) {
+          section.style.marginBottom = '0';
+        }
+      });
+    });
+
     // Extra wait for rendering
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     console.log('🖨️  A gerar PDF...');
 
-    // Generate PDF
+    // Generate PDF with preferCSSPageSize to respect CSS page breaks
     await page.pdf({
       path: outputPath,
       format: 'A4',
       printBackground: true,
+      preferCSSPageSize: true,
       margin: {
         top: '0mm',
         right: '0mm',
