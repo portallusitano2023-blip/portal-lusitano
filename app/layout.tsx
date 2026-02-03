@@ -10,6 +10,7 @@ import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -49,8 +50,8 @@ export const metadata: Metadata = {
     default: "Portal Lusitano | Cavalos Lusitanos de Elite",
     template: "%s | Portal Lusitano"
   },
-  description: "Marketplace premium de cavalos Lusitanos. Loja equestre, leilões exclusivos, coudelarias certificadas e o maior arquivo editorial sobre o cavalo Português.",
-  keywords: ["cavalo lusitano", "cavalos portugueses", "equitação", "dressage", "coudelaria", "PRE", "cavalo ibérico", "leilão cavalos", "equestre portugal"],
+  description: "Marketplace premium de cavalos Lusitanos. Loja equestre, coudelarias certificadas e o maior arquivo editorial sobre o cavalo Portugues.",
+  keywords: ["cavalo lusitano", "cavalos portugueses", "equitação", "dressage", "coudelaria", "PRE", "cavalo ibérico", "comprar cavalo", "equestre portugal"],
   authors: [{ name: "Portal Lusitano" }],
   creator: "Portal Lusitano",
   publisher: "Portal Lusitano",
@@ -66,7 +67,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Portal Lusitano",
     title: "Portal Lusitano | Cavalos Lusitanos de Elite",
-    description: "Marketplace premium de cavalos Lusitanos. Loja equestre, leilões exclusivos e arquivo editorial.",
+    description: "Marketplace premium de cavalos Lusitanos. Loja equestre, coudelarias certificadas e arquivo editorial.",
     images: [
       {
         url: "/og-image.jpg",
@@ -79,7 +80,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Portal Lusitano | Cavalos Lusitanos de Elite",
-    description: "Marketplace premium de cavalos Lusitanos. Loja equestre, leilões exclusivos e arquivo editorial.",
+    description: "Marketplace premium de cavalos Lusitanos. Loja equestre, coudelarias certificadas e arquivo editorial.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -133,6 +134,7 @@ export default function RootLayout({
             {children} 
           </main>
           <Footer />
+          <WhatsAppButton />
           <ServiceWorkerRegistration />
         </Providers>
       </body>

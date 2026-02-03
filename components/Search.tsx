@@ -97,8 +97,9 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
     // Pesquisa em paginas
     const pages = [
       { title: language === "pt" ? "Loja" : "Shop", url: "/loja" },
-      { title: language === "pt" ? "Leiloes" : "Auctions", url: "/leiloes" },
+      { title: language === "pt" ? "Marketplace" : "Marketplace", url: "/marketplace" },
       { title: language === "pt" ? "Coudelarias" : "Studs", url: "/coudelarias" },
+      { title: language === "pt" ? "Eventos" : "Events", url: "/eventos" },
       { title: language === "pt" ? "Blog" : "Blog", url: "/blog" },
       { title: language === "pt" ? "Jornal" : "Journal", url: "/jornal" },
     ];

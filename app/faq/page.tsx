@@ -25,8 +25,8 @@ const faqData = {
       answer: "Sim, aceitamos devolucoes ate 14 dias apos a rececao do produto, desde que esteja nas condicoes originais. Os custos de devolucao sao da responsabilidade do cliente, exceto em caso de defeito.",
     },
     {
-      question: "Como funciona o sistema de leiloes?",
-      answer: "Os nossos leiloes funcionam em tempo real. Registe-se, faca a sua oferta e acompanhe o leilao. O lance mais alto no final do tempo estipulado vence. Recebera notificacoes por email sobre o estado do leilao.",
+      question: "Como funciona o Marketplace de cavalos?",
+      answer: "No nosso Marketplace pode encontrar cavalos Lusitanos de diversas coudelarias certificadas. Cada anuncio inclui fotos, videos, linhagem e contacto direto com o vendedor.",
     },
     {
       question: "Os cavalos a venda tem documentacao?",
@@ -59,8 +59,8 @@ const faqData = {
       answer: "Yes, we accept returns up to 14 days after receiving the product, as long as it is in original condition. Return costs are the customer's responsibility, except in case of defects.",
     },
     {
-      question: "How does the auction system work?",
-      answer: "Our auctions work in real-time. Register, place your bid, and follow the auction. The highest bid at the end of the stipulated time wins. You will receive email notifications about the auction status.",
+      question: "How does the Horse Marketplace work?",
+      answer: "In our Marketplace you can find Lusitano horses from various certified stud farms. Each listing includes photos, videos, lineage and direct contact with the seller.",
     },
     {
       question: "Do the horses for sale have documentation?",

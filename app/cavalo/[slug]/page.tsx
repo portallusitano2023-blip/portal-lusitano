@@ -1,15 +1,13 @@
 // @ts-nocheck
-'use client'; 
+'use client';
 
 import { client } from "@/lib/client";
 import { useEffect, useState } from "react";
-import Countdown from "../../../components/Countdown";
-import BiddingForm from "../../../components/BiddingForm";
 import Link from "next/link";
 
 export default function CavaloPage({ params }) {
   const [data, setData] = useState(null);
-  const [relacionados, setRelacionados] = useState([]); // Novo estado para outros cavalos
+  const [relacionados, setRelacionados] = useState([]);
   const [fotoAtiva, setFotoAtiva] = useState(null);
   const [slug, setSlug] = useState(null);
 
@@ -21,16 +19,12 @@ export default function CavaloPage({ params }) {
     if (!slug) return;
 
     const fetchData = async () => {
-      // Query Dupla: Busca o cavalo atual E outros 3 cavalos aleatórios
       const result = await client.fetch(`
         {
           "atual": *[_type == "cavalo" && slug.current == $slug][0]{
-            nome, idade, ferro, genealogia, descricao,
+            nome, idade, ferro, genealogia, descricao, preco,
             "imageUrl": fotografiaPrincipal.asset->url,
-            "galeriaUrls": galeria[].asset->url,
-            "leilao": *[_type == "leilao" && cavalo._ref == ^._id][0]{
-              dataFecho, lanceInicial, ativo
-            }
+            "galeriaUrls": galeria[].asset->url
           },
           "relacionados": *[_type == "cavalo" && slug.current != $slug][0...3]{
             nome,
@@ -40,7 +34,7 @@ export default function CavaloPage({ params }) {
           }
         }
       `, { slug });
-      
+
       if (result.atual) {
         setData(result.atual);
         setFotoAtiva(result.atual.imageUrl);
@@ -53,8 +47,8 @@ export default function CavaloPage({ params }) {
 
   if (!data) return <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white italic">Carregando exemplar de elite...</div>;
 
-  const numeroTelemovel = "351939513151"; 
-  const mensagem = `Olá Francisco! Estou interessado no cavalo *${data.nome}* que vi no Portal Lusitano.`;
+  const numeroTelemovel = "351939513151";
+  const mensagem = `Ola! Estou interessado no cavalo *${data.nome}* que vi no Portal Lusitano.`;
   const linkWhatsApp = `https://wa.me/${numeroTelemovel}?text=${encodeURIComponent(mensagem)}`;
 
   const todasAsFotos = [data.imageUrl, ...(data.galeriaUrls || [])];
@@ -62,9 +56,9 @@ export default function CavaloPage({ params }) {
   return (
     <main className="min-h-screen bg-[#050505] text-white pt-24 pb-20">
       <div className="max-w-6xl mx-auto px-6">
-        
-        <Link href="/leiloes" className="inline-flex items-center text-zinc-500 hover:text-white mb-8 text-xs uppercase tracking-[0.2em] transition-colors no-print">
-          &larr; Voltar aos Leilões
+
+        <Link href="/marketplace" className="inline-flex items-center text-zinc-500 hover:text-white mb-8 text-xs uppercase tracking-[0.2em] transition-colors no-print">
+          &larr; Voltar ao Marketplace
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -82,50 +76,58 @@ export default function CavaloPage({ params }) {
             </div>
           </div>
 
-          {/* DETALHES E LICITAÇÃO */}
+          {/* DETALHES */}
           <div className="flex flex-col">
             <span className="text-[#C5A059] uppercase tracking-[0.3em] text-sm mb-2 font-bold">Puro Sangue Lusitano</span>
             <h1 className="text-6xl font-serif mb-6">{data.nome}</h1>
-            
-            <div className="bg-zinc-900/50 border border-[#C5A059]/30 p-8 mb-10 shadow-2xl backdrop-blur-sm">
-              <div className="flex justify-between items-center mb-8">
-                <div>
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-widest mb-1">Valor de Referência</p>
-                  <p className="text-3xl font-serif text-[#C5A059]">{data.leilao?.lanceInicial || "Sob Consulta"} €</p>
-                </div>
-                <div className="text-right no-print">
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-widest mb-1">Tempo Restante</p>
-                  {data.leilao?.dataFecho ? <Countdown targetDate={data.leilao.dataFecho} /> : <span className="text-zinc-400 font-bold uppercase text-xs">Venda Direta</span>}
-                </div>
-              </div>
 
-              {/* FORMULÁRIO DE LICITAÇÃO OFICIAL */}
-              <div className="mb-6">
-                <BiddingForm cavaloNome={data.nome} />
+            <div className="bg-zinc-900/50 border border-[#C5A059]/30 p-8 mb-10 shadow-2xl backdrop-blur-sm">
+              <div className="mb-8">
+                <p className="text-zinc-500 text-[10px] uppercase tracking-widest mb-1">Preco</p>
+                <p className="text-3xl font-serif text-[#C5A059]">
+                  {data.preco ? `${data.preco.toLocaleString('pt-PT')} €` : "Sob Consulta"}
+                </p>
               </div>
 
               <div className="flex flex-col gap-3 no-print">
-                <a href={linkWhatsApp} target="_blank" className="w-full py-4 bg-zinc-900 border border-[#25D366]/30 text-[#25D366] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#25D366] hover:text-black transition-all text-center">
-                  Dúvidas por WhatsApp
+                <a
+                  href={linkWhatsApp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 bg-[#25D366] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#20bd5a] transition-all text-center"
+                >
+                  Contactar por WhatsApp
+                </a>
+                <a
+                  href="mailto:portal.lusitano2023@gmail.com"
+                  className="w-full py-4 bg-zinc-900 border border-[#C5A059]/30 text-[#C5A059] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#C5A059] hover:text-black transition-all text-center"
+                >
+                  Enviar Email
                 </a>
               </div>
             </div>
 
-            {/* FICHA TÉCNICA */}
+            {/* FICHA TECNICA */}
             <div className="space-y-6 text-sm">
               <div className="grid grid-cols-2 gap-y-4 border-t border-zinc-800 pt-6">
                 <p><span className="text-zinc-500 uppercase tracking-tighter block mb-1">Idade</span> {data.idade} anos</p>
                 <p><span className="text-zinc-500 uppercase tracking-tighter block mb-1">Ferro</span> {data.ferro}</p>
               </div>
+              {data.genealogia && (
+                <div className="border-t border-zinc-800 pt-6">
+                  <span className="text-zinc-500 uppercase tracking-tighter block mb-2">Genealogia</span>
+                  <p className="text-zinc-400">{data.genealogia}</p>
+                </div>
+              )}
               <div className="border-t border-zinc-800 pt-6">
-                <span className="text-zinc-500 uppercase tracking-tighter block mb-2">Descrição Editorial</span>
+                <span className="text-zinc-500 uppercase tracking-tighter block mb-2">Descricao</span>
                 <p className="text-zinc-400 leading-relaxed text-base italic font-serif">{data.descricao}</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* SECÇÃO: EXEMPLARES RELACIONADOS (A Magia do Retenção) */}
+        {/* EXEMPLARES RELACIONADOS */}
         {relacionados.length > 0 && (
           <div className="mt-32 pt-20 border-t border-zinc-900">
             <h3 className="font-serif text-3xl mb-12 text-center text-white">Outros <span className="text-[#C5A059]">Exemplares de Elite</span></h3>

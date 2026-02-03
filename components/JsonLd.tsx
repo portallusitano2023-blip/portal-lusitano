@@ -206,14 +206,17 @@ export function FAQSchema({ items }: { items: FAQItem[] }) {
   );
 }
 
-// Schema de Evento (para leiloes)
+// Schema de Evento
 interface EventSchemaProps {
   name: string;
   description: string;
   startDate: string;
   endDate?: string;
   location?: string;
+  address?: string;
   image?: string;
+  price?: string;
+  organizer?: string;
 }
 
 export function EventSchema({
@@ -221,8 +224,11 @@ export function EventSchema({
   description,
   startDate,
   endDate,
-  location = "Online",
+  location,
+  address,
   image,
+  price,
+  organizer = "Portal Lusitano",
 }: EventSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
@@ -230,19 +236,149 @@ export function EventSchema({
     name,
     description,
     startDate,
-    endDate,
-    eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+    endDate: endDate || startDate,
     eventStatus: "https://schema.org/EventScheduled",
-    location: {
+    eventAttendanceMode: location
+      ? "https://schema.org/OfflineEventAttendanceMode"
+      : "https://schema.org/OnlineEventAttendanceMode",
+    location: location ? {
+      "@type": "Place",
+      name: location,
+      address: address || location,
+    } : {
       "@type": "VirtualLocation",
       url: siteUrl,
     },
     organizer: {
       "@type": "Organization",
-      name: "Portal Lusitano",
+      name: organizer,
       url: siteUrl,
     },
     image,
+    offers: price ? {
+      "@type": "Offer",
+      price: price === "Gratuito" ? "0" : price.replace(/[^0-9]/g, ""),
+      priceCurrency: "EUR",
+      availability: "https://schema.org/InStock",
+    } : undefined,
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema de Local Business (para coudelarias)
+interface LocalBusinessSchemaProps {
+  name: string;
+  description: string;
+  address: string;
+  telephone?: string;
+  email?: string;
+  website?: string;
+  image?: string;
+  rating?: number;
+  reviewCount?: number;
+}
+
+export function LocalBusinessSchema({
+  name,
+  description,
+  address,
+  telephone,
+  email,
+  website,
+  image,
+  rating,
+  reviewCount,
+}: LocalBusinessSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${siteUrl}/directorio/${name.toLowerCase().replace(/\s+/g, "-")}`,
+    name,
+    description,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: address,
+      addressCountry: "PT",
+    },
+    telephone,
+    email,
+    url: website || siteUrl,
+    image,
+    aggregateRating: rating && reviewCount ? {
+      "@type": "AggregateRating",
+      ratingValue: rating,
+      reviewCount: reviewCount,
+      bestRating: 5,
+      worstRating: 1,
+    } : undefined,
+    priceRange: "€€€",
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema de Cavalo à Venda
+interface HorseSchemaProps {
+  name: string;
+  description: string;
+  image?: string;
+  price?: number;
+  breed?: string;
+  age?: number;
+  color?: string;
+  seller?: string;
+  location?: string;
+}
+
+export function HorseSchema({
+  name,
+  description,
+  image,
+  price,
+  breed = "Lusitano",
+  age,
+  color,
+  seller,
+  location,
+}: HorseSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name,
+    description,
+    image,
+    brand: {
+      "@type": "Brand",
+      name: breed,
+    },
+    category: "Horses",
+    additionalProperty: [
+      age ? { "@type": "PropertyValue", name: "Age", value: `${age} years` } : null,
+      color ? { "@type": "PropertyValue", name: "Color", value: color } : null,
+      { "@type": "PropertyValue", name: "Breed", value: breed },
+    ].filter(Boolean),
+    offers: {
+      "@type": "Offer",
+      price: price || undefined,
+      priceCurrency: "EUR",
+      availability: "https://schema.org/InStock",
+      seller: {
+        "@type": "Organization",
+        name: seller || "Portal Lusitano",
+        address: location,
+      },
+    },
   };
 
   return (
