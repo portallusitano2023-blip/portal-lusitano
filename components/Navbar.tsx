@@ -65,59 +65,85 @@ export default function Navbar() {
 
           {/* Lusitano Dropdown */}
           <div
-            className="relative"
+            className="relative group"
             onMouseEnter={() => setIsLusitanoOpen(true)}
             onMouseLeave={() => setIsLusitanoOpen(false)}
           >
-            <button className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors">
+            <button className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors py-2">
               Lusitano
               <ChevronDown size={14} className={`transition-transform ${isLusitanoOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isLusitanoOpen && (
-              <div className="absolute top-full left-0 mt-2 w-56 bg-[#0a0a0a] border border-white/10 shadow-xl py-2">
-                <Link href="/directorio" className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors">
-                  <Crown size={16} className="text-[#C5A059]" />
-                  <div>
-                    <div className="text-sm font-medium">Coudelarias</div>
-                    <div className="text-[10px] text-zinc-500">Diretório completo</div>
-                  </div>
-                </Link>
-                <Link href="/mapa" className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors">
-                  <MapPin size={16} className="text-[#C5A059]" />
-                  <div>
-                    <div className="text-sm font-medium">Mapa</div>
-                    <div className="text-[10px] text-zinc-500">Mapa interativo</div>
-                  </div>
-                </Link>
-                <Link href="/marketplace" className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors">
-                  <ShoppingCart size={16} className="text-[#C5A059]" />
-                  <div>
-                    <div className="text-sm font-medium">Marketplace</div>
-                    <div className="text-[10px] text-zinc-500">Cavalos à venda</div>
-                  </div>
-                </Link>
-                <Link href="/eventos" className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors">
-                  <Calendar size={16} className="text-[#C5A059]" />
-                  <div>
-                    <div className="text-sm font-medium">Eventos</div>
-                    <div className="text-[10px] text-zinc-500">Feiras e competições</div>
-                  </div>
-                </Link>
-                <Link href="/linhagens" className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors">
-                  <BookOpen size={16} className="text-[#C5A059]" />
-                  <div>
-                    <div className="text-sm font-medium">Linhagens</div>
-                    <div className="text-[10px] text-zinc-500">Guia das linhagens</div>
-                  </div>
-                </Link>
-                <Link href="/quiz" className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors">
-                  <HelpCircle size={16} className="text-[#C5A059]" />
-                  <div>
-                    <div className="text-sm font-medium">Quiz</div>
-                    <div className="text-[10px] text-zinc-500">Encontre o seu Lusitano</div>
-                  </div>
-                </Link>
+              <div className="absolute top-full left-0 pt-2 w-56">
+                <div className="bg-[#0a0a0a] border border-white/10 shadow-xl py-2">
+                  <Link
+                    href="/directorio"
+                    onClick={() => setIsLusitanoOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors"
+                  >
+                    <Crown size={16} className="text-[#C5A059]" />
+                    <div>
+                      <div className="text-sm font-medium">Coudelarias</div>
+                      <div className="text-[10px] text-zinc-500">Diretorio completo</div>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/mapa"
+                    onClick={() => setIsLusitanoOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors"
+                  >
+                    <MapPin size={16} className="text-[#C5A059]" />
+                    <div>
+                      <div className="text-sm font-medium">Mapa</div>
+                      <div className="text-[10px] text-zinc-500">Mapa interativo</div>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/marketplace"
+                    onClick={() => setIsLusitanoOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors"
+                  >
+                    <ShoppingCart size={16} className="text-[#C5A059]" />
+                    <div>
+                      <div className="text-sm font-medium">Marketplace</div>
+                      <div className="text-[10px] text-zinc-500">Cavalos a venda</div>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/eventos"
+                    onClick={() => setIsLusitanoOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors"
+                  >
+                    <Calendar size={16} className="text-[#C5A059]" />
+                    <div>
+                      <div className="text-sm font-medium">Eventos</div>
+                      <div className="text-[10px] text-zinc-500">Feiras e competicoes</div>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/linhagens"
+                    onClick={() => setIsLusitanoOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors"
+                  >
+                    <BookOpen size={16} className="text-[#C5A059]" />
+                    <div>
+                      <div className="text-sm font-medium">Linhagens</div>
+                      <div className="text-[10px] text-zinc-500">Guia das linhagens</div>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/quiz"
+                    onClick={() => setIsLusitanoOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors"
+                  >
+                    <HelpCircle size={16} className="text-[#C5A059]" />
+                    <div>
+                      <div className="text-sm font-medium">Quiz</div>
+                      <div className="text-[10px] text-zinc-500">Encontre o seu Lusitano</div>
+                    </div>
+                  </Link>
+                </div>
               </div>
             )}
           </div>

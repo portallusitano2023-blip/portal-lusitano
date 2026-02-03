@@ -13,6 +13,9 @@ import {
   Tag,
   ExternalLink,
   Star,
+  CheckCircle,
+  RefreshCw,
+  AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -35,6 +38,7 @@ interface Evento {
   imagem_capa?: string;
   tags?: string[];
   destaque: boolean;
+  confirmado?: "confirmado" | "anual" | "provisorio";
 }
 
 const tiposEvento = [
@@ -143,6 +147,34 @@ export default function EventosPage() {
 
   function getTipoIcon(tipo: string) {
     return tiposEvento.find((t) => t.value === tipo)?.icon || "📅";
+  }
+
+  function getConfirmacaoBadge(confirmado?: string) {
+    switch (confirmado) {
+      case "confirmado":
+        return {
+          icon: CheckCircle,
+          label: "Confirmado",
+          color: "text-green-400",
+          bg: "bg-green-500/10",
+        };
+      case "anual":
+        return {
+          icon: RefreshCw,
+          label: "Evento Anual",
+          color: "text-blue-400",
+          bg: "bg-blue-500/10",
+        };
+      case "provisorio":
+        return {
+          icon: AlertCircle,
+          label: "Data Provisória",
+          color: "text-amber-400",
+          bg: "bg-amber-500/10",
+        };
+      default:
+        return null;
+    }
   }
 
   return (
@@ -294,7 +326,7 @@ export default function EventosPage() {
                 ×
               </button>
 
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center flex-wrap gap-3 mb-4">
                 <span className="text-3xl">{getTipoIcon(selectedEvento.tipo)}</span>
                 <span className={`px-3 py-1 text-xs uppercase tracking-wider border ${getTipoColor(selectedEvento.tipo)}`}>
                   {selectedEvento.tipo}
@@ -304,6 +336,16 @@ export default function EventosPage() {
                     <Star size={14} /> Destaque
                   </span>
                 )}
+                {(() => {
+                  const badge = getConfirmacaoBadge(selectedEvento.confirmado);
+                  if (!badge) return null;
+                  const Icon = badge.icon;
+                  return (
+                    <span className={`flex items-center gap-1 ${badge.color} text-sm ${badge.bg} px-2 py-1 rounded`}>
+                      <Icon size={14} /> {badge.label}
+                    </span>
+                  );
+                })()}
               </div>
 
               <h3 className="text-2xl font-serif text-white mb-4">
@@ -449,6 +491,19 @@ function EventoCard({
     return colors[tipo] || "bg-zinc-500/20 text-zinc-400";
   }
 
+  function getConfirmacaoIcon(confirmado?: string) {
+    switch (confirmado) {
+      case "confirmado":
+        return <CheckCircle size={12} className="text-green-400" title="Confirmado" />;
+      case "anual":
+        return <RefreshCw size={12} className="text-blue-400" title="Evento Anual" />;
+      case "provisorio":
+        return <AlertCircle size={12} className="text-amber-400" title="Data Provisória" />;
+      default:
+        return null;
+    }
+  }
+
   return (
     <motion.button
       onClick={onClick}
@@ -458,11 +513,16 @@ function EventoCard({
       transition={{ delay: index * 0.05 }}
     >
       {/* Data */}
-      <div className="w-24 flex-shrink-0 bg-zinc-800/50 flex flex-col items-center justify-center p-4 border-r border-white/10">
+      <div className="w-24 flex-shrink-0 bg-zinc-800/50 flex flex-col items-center justify-center p-4 border-r border-white/10 relative">
         <span className="text-3xl font-serif text-[#C5A059]">{date.getDate()}</span>
         <span className="text-xs uppercase text-zinc-500">
           {date.toLocaleDateString("pt-PT", { month: "short" })}
         </span>
+        {evento.confirmado === "provisorio" && (
+          <span className="absolute top-2 right-2">
+            {getConfirmacaoIcon(evento.confirmado)}
+          </span>
+        )}
       </div>
 
       {/* Conteúdo */}
@@ -474,6 +534,7 @@ function EventoCard({
           {evento.destaque && (
             <Star size={14} className="text-[#C5A059]" />
           )}
+          {evento.confirmado && evento.confirmado !== "provisorio" && getConfirmacaoIcon(evento.confirmado)}
         </div>
         <h3 className="text-lg font-serif text-white group-hover:text-[#C5A059] transition-colors mb-1">
           {evento.titulo}
