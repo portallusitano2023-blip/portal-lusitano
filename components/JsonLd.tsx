@@ -1,6 +1,6 @@
 // Componentes de JSON-LD para SEO estruturado
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portallusitano.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
 // Schema da Organizacao
 export function OrganizationSchema() {
@@ -18,8 +18,8 @@ export function OrganizationSchema() {
       availableLanguage: ["Portuguese", "English"],
     },
     sameAs: [
-      "https://instagram.com/portallusitano",
-      "https://tiktok.com/@portallusitano",
+      "https://instagram.com/portal_lusitano",
+      "https://tiktok.com/@portal_lusitano",
     ],
   };
 

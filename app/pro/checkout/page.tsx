@@ -5,75 +5,42 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Crown,
-  BookOpen,
-  Sparkles,
   Check,
   Lock,
   CreditCard,
   Shield,
   ArrowLeft,
   Loader2,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 
-const plans = {
-  aficionado: {
-    name: "Aficionado",
-    icon: BookOpen,
-    price: { monthly: 9.99, yearly: 99.90 },
-    color: "from-zinc-600 to-zinc-800",
-    features: [
-      "5 Ebooks exclusivos por mês",
-      "Newsletter semanal premium",
-      "Comunidade online privada",
-      "Guias PDF descargáveis",
-    ],
-  },
-  criador: {
-    name: "Criador",
-    icon: Crown,
-    price: { monthly: 49.99, yearly: 499.90 },
-    color: "from-[#C5A059] to-[#8B6914]",
-    features: [
-      "Tudo do plano Aficionado",
-      "Biblioteca completa (50+ Ebooks)",
-      "Templates e documentos PRO",
-      "Planners de gestão",
-      "Consultoria por email (2x/mês)",
-      "Certificados digitais",
-    ],
-  },
-  elite: {
-    name: "Elite",
-    icon: Sparkles,
-    price: { monthly: 199, yearly: 1990 },
-    color: "from-purple-600 to-purple-900",
-    features: [
-      "Tudo do plano Criador",
-      "Consultoria ilimitada (email/chat)",
-      "Análise de linhagens personalizada",
-      "Networking com criadores elite",
-      "Conteúdo exclusivo mensal",
-      "Suporte prioritário 24/7",
-    ],
-  },
-};
-
-type PlanId = keyof typeof plans;
 type Period = "monthly" | "yearly";
+
+const plan = {
+  name: "PRO Destaque",
+  icon: Crown,
+  price: { monthly: 29.99, yearly: 299.90 },
+  color: "from-[#C5A059] to-[#8B6914]",
+  features: [
+    "Listagem no topo do diretório",
+    "Badge de Criador Verificado",
+    "Até 10 anúncios de cavalos em destaque",
+    "Prioridade nos resultados de pesquisa",
+    "Contacto direto visível para compradores",
+    "Ativação instantânea automática",
+  ],
+};
 
 export default function CheckoutPage() {
   const searchParams = useSearchParams();
-  const planId = (searchParams.get("plan") as PlanId) || "criador";
   const period = (searchParams.get("period") as Period) || "monthly";
 
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const plan = plans[planId];
   const price = plan.price[period];
-  const Icon = plan.icon;
 
   const handleCheckout = async () => {
     if (!email) {
@@ -88,7 +55,7 @@ export default function CheckoutPage() {
       const response = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId, period, email }),
+        body: JSON.stringify({ planId: "destaque", period, email }),
       });
 
       const data = await response.json();
@@ -118,7 +85,7 @@ export default function CheckoutPage() {
           className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-8 transition-colors"
         >
           <ArrowLeft size={16} />
-          Voltar aos planos
+          Voltar
         </Link>
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -134,11 +101,11 @@ export default function CheckoutPage() {
             <div className={`bg-gradient-to-b ${plan.color} rounded-xl p-6 mb-6`}>
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center">
-                  <Icon className="text-white" size={24} />
+                  <Crown className="text-white" size={24} />
                 </div>
                 <div>
                   <h3 className="text-xl font-serif text-white">
-                    Plano {plan.name}
+                    {plan.name}
                   </h3>
                   <p className="text-white/60 text-sm">
                     Faturação {period === "monthly" ? "mensal" : "anual"}
@@ -161,7 +128,7 @@ export default function CheckoutPage() {
             {/* Pricing Breakdown */}
             <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-6">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-zinc-400">Plano {plan.name}</span>
+                <span className="text-zinc-400">{plan.name}</span>
                 <span className="text-white">€{price.toFixed(2)}</span>
               </div>
 
@@ -183,6 +150,14 @@ export default function CheckoutPage() {
                       /{period === "monthly" ? "mês" : "ano"}
                     </span>
                   </div>
+                </div>
+              </div>
+
+              {/* Auto badge */}
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="flex items-center gap-2 text-green-500 text-sm">
+                  <Zap size={14} />
+                  <span>Ativação 100% automática após pagamento</span>
                 </div>
               </div>
             </div>
@@ -271,26 +246,6 @@ export default function CheckoutPage() {
                   {/* Mastercard */}
                   <div className="bg-[#EB001B] rounded px-3 py-1.5 flex items-center">
                     <span className="text-white font-bold text-sm">Mastercard</span>
-                  </div>
-
-                  {/* American Express */}
-                  <div className="bg-[#006FCF] rounded px-3 py-1.5 flex items-center">
-                    <span className="text-white font-bold text-xs tracking-wide">AMERICAN EXPRESS</span>
-                  </div>
-
-                  {/* Apple Pay */}
-                  <div className="bg-black rounded px-3 py-1.5 flex items-center">
-                    <span className="text-white font-semibold text-sm"> Apple Pay</span>
-                  </div>
-
-                  {/* Google Pay */}
-                  <div className="bg-white rounded px-3 py-1.5 flex items-center border border-gray-200">
-                    <span className="font-semibold text-sm"><span className="text-[#4285F4]">G</span><span className="text-[#EA4335]">o</span><span className="text-[#FBBC04]">o</span><span className="text-[#4285F4]">g</span><span className="text-[#34A853]">l</span><span className="text-[#EA4335]">e</span> <span className="text-[#5F6368]">Pay</span></span>
-                  </div>
-
-                  {/* PayPal */}
-                  <div className="bg-[#0070BA] rounded px-3 py-1.5 flex items-center">
-                    <span className="text-white font-bold text-sm">PayPal</span>
                   </div>
 
                   {/* MB WAY */}

@@ -179,7 +179,7 @@ export default function FAQPage() {
               : "Didn't find what you were looking for?"}
           </p>
           <a
-            href="mailto:info@portallusitano.com"
+            href="mailto:portal.lusitano2023@gmail.com"
             className="inline-block text-[#C5A059] hover:text-white transition-colors text-sm uppercase tracking-widest"
           >
             {language === "pt" ? "Contacte-nos" : "Contact us"} →

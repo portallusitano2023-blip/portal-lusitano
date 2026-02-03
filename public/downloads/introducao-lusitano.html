@@ -7,6 +7,28 @@
   <meta name="description" content="Descobre o fascinante mundo do Cavalo Lusitano - uma das raças mais nobres e antigas do mundo. Ebook gratuito do Portal Lusitano.">
   <meta property="og:title" content="Introdução ao Cavalo Lusitano - Ebook Gratuito">
   <meta property="og:description" content="O guia essencial para iniciantes no mundo do Cavalo Lusitano.">
+
+  <!-- Legal & Copyright Meta Tags -->
+  <meta name="author" content="Portal Lusitano">
+  <meta name="copyright" content="Compilação © 2026 Portal Lusitano. Informação de fontes públicas.">
+  <meta name="robots" content="index, follow">
+  <meta name="rights" content="Este ebook é gratuito para distribuição não comercial na sua forma original.">
+  <meta property="og:type" content="book">
+  <meta property="book:author" content="Portal Lusitano">
+  <meta property="book:release_date" content="2026-01-01">
+  <meta property="book:isbn" content="">
+
+  <!-- Dublin Core Metadata (Standard for Digital Publications) -->
+  <meta name="DC.title" content="Introdução ao Cavalo Lusitano">
+  <meta name="DC.creator" content="Portal Lusitano">
+  <meta name="DC.publisher" content="Portal Lusitano">
+  <meta name="DC.date" content="2026">
+  <meta name="DC.type" content="Text">
+  <meta name="DC.format" content="text/html">
+  <meta name="DC.language" content="pt-PT">
+  <meta name="DC.rights" content="Compilação © 2026 Portal Lusitano. Informação pertence às fontes originais citadas (APSL, FEI, etc.). Distribuição livre para fins educativos.">
+  <meta name="DC.description" content="Ebook educativo sobre o Cavalo Lusitano - história, características e aptidões da raça.">
+
   <link rel="icon" href="/favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -155,7 +177,7 @@
     }
 
     .nav-dot::after {
-      content: attr(data-label);
+      content: attr(data-current-label);
       position: absolute;
       right: 24px;
       top: 50%;
@@ -680,31 +702,6 @@
       to { opacity: 0.6; }
     }
 
-    /* Cursor Glow Effect on Dark Sections */
-    .cover::after,
-    .chapter-opener::after,
-    .back-cover::after {
-      content: '';
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(197, 160, 89, 0.15) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      left: var(--mouse-x, 50%);
-      top: var(--mouse-y, 50%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 1;
-    }
-
-    .cover:hover::after,
-    .chapter-opener:hover::after,
-    .back-cover:hover::after {
-      opacity: 1;
-    }
-
     /* Chapter Opener Animation */
     .chapter-opener {
       transition: transform 0.5s ease;
@@ -993,44 +990,6 @@
       transform: translateX(0);
     }
 
-    /* ===== CUSTOM CURSOR ===== */
-    .custom-cursor {
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--gold);
-      border-radius: 50%;
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
-      transition: transform 0.15s ease, border-color 0.2s ease, width 0.2s ease, height 0.2s ease;
-      transform: translate(-50%, -50%);
-    }
-
-    .custom-cursor.hover {
-      width: 40px;
-      height: 40px;
-      border-color: var(--gold-light);
-      background: rgba(197, 160, 89, 0.1);
-    }
-
-    .custom-cursor-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--gold);
-      border-radius: 50%;
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-    }
-
-    @media (max-width: 768px) {
-      .custom-cursor,
-      .custom-cursor-dot {
-        display: none;
-      }
-    }
-
     /* ===== QUIZ MODAL ===== */
     .quiz-modal {
       position: fixed;
@@ -1123,6 +1082,32 @@
       margin-bottom: 20px;
     }
 
+    .quiz-result {
+      color: var(--cream);
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+
+    .quiz-next {
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+    }
+
+    .quiz-next:hover {
+      background: var(--white);
+      transform: translateY(-2px);
+    }
+
     .quiz-progress-dot {
       width: 10px;
       height: 10px;
@@ -1173,9 +1158,11 @@
       transition: opacity 1s ease;
     }
 
-    .cinematic-intro.fade-out {
+    .cinematic-intro.fade-out,
+    .cinematic-intro.hidden {
       opacity: 0;
       pointer-events: none;
+      visibility: hidden;
     }
 
     .cinematic-logo {
@@ -1412,6 +1399,10 @@
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
     }
 
     .cover-icon {
@@ -2255,6 +2246,10 @@
       font-weight: 400;
       color: var(--gold);
       margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
     }
 
     .back-cover-tagline {
@@ -2372,16 +2367,13 @@
   <!-- ===== CINEMATIC INTRO ===== -->
   <div class="cinematic-intro" id="cinematicIntro">
     <div class="cinematic-logo">Portal Lusitano</div>
-    <div class="cinematic-tagline">Apresenta</div>
-    <div class="cinematic-skip" onclick="skipIntro()">Pressiona qualquer tecla para continuar</div>
+    <div class="cinematic-tagline" data-i18n="cinematicTagline">Apresenta</div>
+    <div class="cinematic-skip" onclick="skipIntro()" data-i18n="cinematicSkip">Pressiona qualquer tecla para continuar</div>
   </div>
-
-  <!-- ===== CUSTOM CURSOR ===== -->
-  <div class="custom-cursor" id="cursor"></div>
-  <div class="custom-cursor-dot" id="cursorDot"></div>
 
   <!-- ===== CONTROL PANEL ===== -->
   <div class="control-panel" id="controlPanel">
+    <button class="control-btn" id="langToggle" data-tooltip="PT/EN">🌐</button>
     <button class="control-btn" id="themeToggle" data-tooltip="Modo Escuro/Claro">🌓</button>
     <button class="control-btn" id="soundToggle" data-tooltip="Som On/Off">🔇</button>
     <button class="control-btn" id="bookmarkBtn" data-tooltip="Guardar Posição">🔖</button>
@@ -2390,7 +2382,10 @@
   </div>
 
   <!-- ===== BOOKMARK INDICATOR ===== -->
-  <div class="bookmark-indicator" id="bookmarkIndicator">📍 Posição guardada!</div>
+  <div class="bookmark-indicator" id="bookmarkIndicator"><span>📖 Posição guardada!</span></div>
+
+  <!-- ===== EASTER EGG CONTAINER ===== -->
+  <div class="easter-egg-container" id="easterEggContainer"></div>
 
   <!-- ===== READING STATS BAR ===== -->
   <div class="reading-stats" id="readingStats">
@@ -2413,32 +2408,32 @@
 
   <!-- ===== KEYBOARD SHORTCUTS HELP ===== -->
   <div class="keyboard-help" id="keyboardHelp">
-    <button class="keyboard-help-close" onclick="toggleKeyboardHelp()">×</button>
-    <h3>⌨️ Atalhos de Teclado</h3>
+    <button class="keyboard-help-close" id="closeKeyboardHelp">×</button>
+    <h3 data-i18n="keyboardTitle">⌨️ Atalhos de Teclado</h3>
     <div class="shortcut-list">
       <div class="shortcut-item">
         <span class="shortcut-key">↑/↓</span>
-        <span class="shortcut-desc">Navegar</span>
+        <span class="shortcut-desc" data-i18n="keyNavigate">Navegar</span>
       </div>
       <div class="shortcut-item">
         <span class="shortcut-key">J/K</span>
-        <span class="shortcut-desc">Scroll suave</span>
+        <span class="shortcut-desc" data-i18n="keySmoothScroll">Scroll suave</span>
       </div>
       <div class="shortcut-item">
         <span class="shortcut-key">Home</span>
-        <span class="shortcut-desc">Início</span>
+        <span class="shortcut-desc" data-i18n="keyStart">Início</span>
       </div>
       <div class="shortcut-item">
         <span class="shortcut-key">End</span>
-        <span class="shortcut-desc">Fim</span>
+        <span class="shortcut-desc" data-i18n="keyEnd">Fim</span>
       </div>
       <div class="shortcut-item">
         <span class="shortcut-key">D</span>
-        <span class="shortcut-desc">Modo escuro</span>
+        <span class="shortcut-desc" data-i18n="keyDarkMode">Modo escuro</span>
       </div>
       <div class="shortcut-item">
         <span class="shortcut-key">B</span>
-        <span class="shortcut-desc">Bookmark</span>
+        <span class="shortcut-desc" data-i18n="keyBookmark">Bookmark</span>
       </div>
       <div class="shortcut-item">
         <span class="shortcut-key">Q</span>
@@ -2446,38 +2441,35 @@
       </div>
       <div class="shortcut-item">
         <span class="shortcut-key">?</span>
-        <span class="shortcut-desc">Esta ajuda</span>
+        <span class="shortcut-desc" data-i18n="keyHelp">Esta ajuda</span>
       </div>
       <div class="shortcut-item">
         <span class="shortcut-key">1-4</span>
-        <span class="shortcut-desc">Ir ao capítulo</span>
+        <span class="shortcut-desc" data-i18n="keyChapter">Ir ao capítulo</span>
       </div>
       <div class="shortcut-item">
         <span class="shortcut-key">Esc</span>
-        <span class="shortcut-desc">Fechar modal</span>
+        <span class="shortcut-desc" data-i18n="keyClose">Fechar modal</span>
       </div>
     </div>
   </div>
 
   <!-- ===== QUIZ MODAL ===== -->
   <div class="quiz-modal" id="quizModal">
-    <button class="quiz-close" onclick="closeQuiz()">×</button>
+    <button class="quiz-close" id="closeQuiz">×</button>
     <div class="quiz-container">
-      <h2 class="quiz-title">🐴 Quiz Lusitano</h2>
-      <p class="quiz-subtitle">Testa os teus conhecimentos!</p>
-      <div class="quiz-progress" id="quizProgress"></div>
+      <h2 class="quiz-title" data-i18n="quizTitle">🧠 Quiz: Testa os Teus Conhecimentos!</h2>
+      <div class="quiz-progress" id="quizProgressDots"></div>
       <p class="quiz-question" id="quizQuestion"></p>
       <div class="quiz-options" id="quizOptions"></div>
-      <div class="quiz-score" id="quizScore" style="display: none;"></div>
+      <div class="quiz-result" id="quizResult"></div>
+      <button class="quiz-next" id="quizNext" style="display: none;" data-i18n="quizNext">Próxima →</button>
     </div>
   </div>
 
   <!-- ===== COVER ===== -->
   <div class="cover" id="cover">
     <div class="cover-bg-pattern"></div>
-    <div class="particles-container" id="particles"></div>
-    <div class="morph-bg" style="top: 20%; left: 10%;"></div>
-    <div class="morph-bg" style="bottom: 20%; right: 10%; animation-delay: -4s;"></div>
     <div class="cover-frame"></div>
     <div class="cover-frame-inner"></div>
     <div class="cover-corner cover-corner-tl"></div>
@@ -2486,15 +2478,17 @@
     <div class="cover-corner cover-corner-br"></div>
 
     <div class="cover-content">
-      <div class="cover-brand">Portal Lusitano</div>
-
-      <div class="cover-icon">
-        <span>🐴</span>
+      <div class="cover-brand">
+        <img src="../logo.png" alt="Portal Lusitano" style="height: 150px; width: auto; filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.6));">
       </div>
 
-      <h1 class="cover-title glow-text">Introdução ao<br><em class="text-gradient">Cavalo Lusitano</em></h1>
+      <div class="cover-icon" style="display: none;">
+        <!-- Logo já inclui o ícone -->
+      </div>
 
-      <p class="cover-subtitle">O Guia Essencial Para Iniciantes</p>
+      <h1 class="cover-title glow-text" data-i18n="coverTitle">Introdução ao<br><em class="text-gradient">Cavalo Lusitano</em></h1>
+
+      <p class="cover-subtitle" data-i18n="coverSubtitle">O Guia Essencial Para Iniciantes</p>
 
       <div class="ornament-line">
         <span>◆</span>
@@ -2503,23 +2497,23 @@
       <div class="cover-meta">
         <div class="cover-meta-item">
           <div class="cover-meta-value">4</div>
-          <div class="cover-meta-label">Capítulos</div>
+          <div class="cover-meta-label" data-i18n="coverMetaChapters">Capítulos</div>
         </div>
         <div class="cover-meta-item">
           <div class="cover-meta-value">5000+</div>
-          <div class="cover-meta-label">Anos de História</div>
+          <div class="cover-meta-label" data-i18n="coverMetaHistory">Anos de História</div>
         </div>
         <div class="cover-meta-item">
           <div class="cover-meta-value">1</div>
-          <div class="cover-meta-label">Raça Única</div>
+          <div class="cover-meta-label" data-i18n="coverMetaBreed">Raça Única</div>
         </div>
       </div>
     </div>
 
     <div class="cover-footer">
-      <p>Ebook Gratuito · Edição 2025 · portal-lusitano.pt</p>
+      <p data-i18n="coverFooter">Ebook Gratuito · Edição 2026 · portal-lusitano.pt</p>
       <div class="scroll-indicator">
-        <span>Scroll para começar</span>
+        <span data-i18n="coverScroll">Scroll para começar</span>
         <div class="scroll-arrow">↓</div>
       </div>
     </div>
@@ -2533,43 +2527,47 @@
     </div>
 
     <div class="intro-section">
-      <h2 class="serif">Bem-Vindo ao Mundo do Lusitano</h2>
+      <h2 class="serif" data-i18n="introWelcome">Bem-Vindo ao Mundo do Lusitano</h2>
       <div class="ornament">◈ ◈ ◈</div>
-      <p style="text-align: center; font-size: 11pt;">Obrigado por descarregares este ebook. Se estás aqui, é porque algo te atraiu ao <strong>Cavalo Lusitano</strong> — e fizeste muito bem em seguir essa curiosidade.</p>
+      <p style="text-align: center; font-size: 11pt;" data-i18n="introThanks">Obrigado por descarregares este ebook. Se estás aqui, é porque algo te atraiu ao <strong>Cavalo Lusitano</strong> — e fizeste muito bem em seguir essa curiosidade.</p>
     </div>
 
-    <p>O Lusitano é uma das raças equinas mais <strong>antigas</strong>, <strong>nobres</strong> e <strong>versáteis</strong> do mundo. Mas é também uma das mais mal compreendidas. Este ebook é o teu <strong>primeiro passo</strong> numa jornada fascinante.</p>
+    <p data-i18n="introText">O Lusitano é uma das raças equinas mais <strong>antigas</strong>, <strong>nobres</strong> e <strong>versáteis</strong> do mundo. Mas é também uma das mais mal compreendidas. Este ebook é o teu <strong>primeiro passo</strong> numa jornada fascinante.</p>
 
-    <h2>O Que Vais Descobrir</h2>
+    <h2 data-i18n="ch1WhatDiscover">O Que Vais Descobrir</h2>
 
     <div class="cards-grid">
       <div class="card">
         <div class="card-icon">🏛️</div>
-        <h4>Capítulo 1 · A Raça</h4>
-        <p>Descobre o que torna o Lusitano único entre todas as raças de cavalos do mundo.</p>
+        <h4 data-i18n="card1Title">Capítulo 1 · A Raça</h4>
+        <p data-i18n="card1Text">Descobre o que torna o Lusitano único entre todas as raças de cavalos do mundo.</p>
       </div>
       <div class="card">
         <div class="card-icon">⏳</div>
-        <h4>Capítulo 2 · A História</h4>
-        <p>5.000 anos de história incrível resumidos de forma envolvente.</p>
+        <h4 data-i18n="card2Title">Capítulo 2 · A História</h4>
+        <p data-i18n="card2Text">5.000 anos de história incrível resumidos de forma envolvente.</p>
       </div>
       <div class="card">
         <div class="card-icon">⭐</div>
-        <h4>Capítulo 3 · Características</h4>
-        <p>Morfologia, temperamento e aptidões que não encontras em mais nenhum cavalo.</p>
+        <h4 data-i18n="card3Title">Capítulo 3 · Características</h4>
+        <p data-i18n="card3Text">Morfologia, temperamento e aptidões que não encontras em mais nenhum cavalo.</p>
       </div>
       <div class="card">
         <div class="card-icon">🚀</div>
-        <h4>Capítulo 4 · Próximos Passos</h4>
-        <p>Como continuar a tua jornada se te apaixonares pelo Lusitano.</p>
+        <h4 data-i18n="card4Title">Capítulo 4 · Próximos Passos</h4>
+        <p data-i18n="card4Text">Como continuar a tua jornada se te apaixonares pelo Lusitano.</p>
       </div>
     </div>
 
     <blockquote>
-      <p>O Cavalo Lusitano não é apenas uma raça — é 5.000 anos de história portuguesa a galopar até hoje.</p>
+      <p data-i18n="introQuote">O Cavalo Lusitano não é apenas uma raça — é 5.000 anos de história portuguesa a galopar até hoje.</p>
     </blockquote>
 
-    <p style="text-align: center; font-size: 13pt; margin-top: 30px;"><strong>Vamos começar? 🐴</strong></p>
+    <p style="text-align: center; font-size: 13pt; margin-top: 30px;" data-i18n="introStart"><strong>Vamos começar? 🐴</strong></p>
+
+    <p style="text-align: center; font-size: 7pt; color: var(--gray-light); margin-top: 40px;" data-i18n="originalContent">
+      <em>Compilação educativa © 2026 Portal Lusitano · Informação de fontes públicas</em>
+    </p>
 
     <div class="page-footer">
       <span>portal-lusitano.pt</span>
@@ -2581,9 +2579,9 @@
   <div class="chapter-opener" id="cap1">
     <div class="chapter-opener-bg"></div>
     <span class="chapter-number-large">01</span>
-    <span class="chapter-label">Capítulo Um</span>
-    <h2 class="chapter-title">O Que É o<br>Cavalo Lusitano?</h2>
-    <p class="chapter-desc">Conhece a raça em 60 segundos e descobre o que a torna verdadeiramente única.</p>
+    <span class="chapter-label" data-i18n="cap1Label">Capítulo Um</span>
+    <h2 class="chapter-title" data-i18n="cap1Title">O Que É o<br>Cavalo Lusitano?</h2>
+    <p class="chapter-desc" data-i18n="cap1Desc">Conhece a raça em 60 segundos e descobre o que a torna verdadeiramente única.</p>
     <div class="chapter-ornament">◆ ◆ ◆</div>
   </div>
 
@@ -2594,94 +2592,94 @@
       <span class="page-header-chapter">Capítulo 1 · A Raça</span>
     </div>
 
-    <h1>A Raça em 60 Segundos</h1>
+    <h1 data-i18n="ch1RaceIn60">A Raça em 60 Segundos</h1>
 
     <div class="facts-box">
-      <h3 class="serif">Puro Sangue Lusitano (PSL)</h3>
+      <h3 class="serif" data-i18n="factsTitle">Puro Sangue Lusitano (PSL)</h3>
       <div class="facts-grid">
         <div class="fact-item">
           <div class="fact-icon">📍</div>
           <div>
-            <div class="fact-label">Origem</div>
-            <div class="fact-value">Portugal (Península Ibérica)</div>
+            <div class="fact-label" data-i18n="factOriginLabel">Origem</div>
+            <div class="fact-value" data-i18n="factOriginValue">Portugal (Península Ibérica)</div>
           </div>
         </div>
         <div class="fact-item">
           <div class="fact-icon">📅</div>
           <div>
-            <div class="fact-label">Idade da Raça</div>
-            <div class="fact-value">5.000+ anos (das mais antigas!)</div>
+            <div class="fact-label" data-i18n="factAgeLabel">Idade da Raça</div>
+            <div class="fact-value" data-i18n="factAgeValue">5.000+ anos (das mais antigas!)</div>
           </div>
         </div>
         <div class="fact-item">
           <div class="fact-icon">📏</div>
           <div>
-            <div class="fact-label">Altura</div>
-            <div class="fact-value">155-170cm (compacto mas poderoso)</div>
+            <div class="fact-label" data-i18n="factHeightLabel">Altura</div>
+            <div class="fact-value" data-i18n="factHeightValue">155-170cm (compacto mas poderoso)</div>
           </div>
         </div>
         <div class="fact-item">
           <div class="fact-icon">🎨</div>
           <div>
-            <div class="fact-label">Pelagens</div>
-            <div class="fact-value">Tordilho, castanho, alazão, preto</div>
+            <div class="fact-label" data-i18n="factCoatsLabel">Pelagens</div>
+            <div class="fact-value" data-i18n="factCoatsValue">Tordilho, castanho, alazão, preto</div>
           </div>
         </div>
         <div class="fact-item">
           <div class="fact-icon">❤️</div>
           <div>
-            <div class="fact-label">Temperamento</div>
-            <div class="fact-value">Corajoso, dócil, inteligente</div>
+            <div class="fact-label" data-i18n="factTempLabel">Temperamento</div>
+            <div class="fact-value" data-i18n="factTempValue">Corajoso, dócil, inteligente</div>
           </div>
         </div>
         <div class="fact-item">
           <div class="fact-icon">🏆</div>
           <div>
-            <div class="fact-label">Aptidões</div>
-            <div class="fact-value">Dressage, Working Equitation, Alta Escola</div>
+            <div class="fact-label" data-i18n="factAbilitiesLabel">Aptidões</div>
+            <div class="fact-value" data-i18n="factAbilitiesValue">Dressage, Working Equitation, Alta Escola</div>
           </div>
         </div>
         <div class="fact-item">
           <div class="fact-icon">🌍</div>
           <div>
-            <div class="fact-label">População</div>
-            <div class="fact-value">~40.000 cavalos em 50+ países</div>
+            <div class="fact-label" data-i18n="factPopLabel">População</div>
+            <div class="fact-value" data-i18n="factPopValue">~40.000 cavalos em 50+ países</div>
           </div>
         </div>
         <div class="fact-item">
           <div class="fact-icon">💰</div>
           <div>
-            <div class="fact-label">Preço Médio</div>
-            <div class="fact-value">€5.000 - €40.000+</div>
+            <div class="fact-label" data-i18n="factPriceLabel">Preço Médio</div>
+            <div class="fact-value" data-i18n="factPriceValue">€5.000 - €40.000+</div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="info-box">
-      <h4>💡 Curiosidade</h4>
-      <p>A Escola Portuguesa de Arte Equestre, em Lisboa, utiliza <strong>exclusivamente</strong> cavalos Lusitanos nas suas demonstrações de Alta Escola!</p>
+      <h4 data-i18n="curiosityTitle">💡 Curiosidade</h4>
+      <p data-i18n="curiosity1">A Escola Portuguesa de Arte Equestre, em Lisboa, utiliza <strong>exclusivamente</strong> cavalos Lusitanos nas suas demonstrações de Alta Escola!</p>
     </div>
 
-    <h2>Por Que "Lusitano"?</h2>
-    <p><strong>LUSITÂNIA</strong> era o nome romano da região que hoje é Portugal. Quando os Romanos conquistaram a Península Ibérica (século I a.C.), ficaram impressionados com os cavalos locais — rápidos, ágeis e corajosos em batalha. Chamaram-lhes <strong>"Equus Lusitanus"</strong> (Cavalo da Lusitânia). 2.000 anos depois, o nome mantém-se!</p>
+    <h2 data-i18n="ch1WhyLusitano">Por Que "Lusitano"?</h2>
+    <p data-i18n="whyLusitanoText"><strong>LUSITÂNIA</strong> era o nome romano da região que hoje é Portugal. Quando os Romanos conquistaram a Península Ibérica (século I a.C.), ficaram impressionados com os cavalos locais — rápidos, ágeis e corajosos em batalha. Chamaram-lhes <strong>"Equus Lusitanus"</strong> (Cavalo da Lusitânia). 2.000 anos depois, o nome mantém-se!</p>
 
-    <h2>Lusitano vs Andaluz vs Ibérico</h2>
+    <h2 data-i18n="ch1VsAndaluz">Lusitano vs Andaluz vs Ibérico</h2>
     <div class="compare-grid">
       <div class="compare-item">
         <h4>🇵🇹 Lusitano</h4>
-        <p>Nascido em Portugal, registado na APSL</p>
+        <p data-i18n="lusitanoDesc">Nascido em Portugal, registado na APSL</p>
       </div>
       <div class="compare-item">
         <h4>🇪🇸 Andaluz / PRE</h4>
-        <p>Nascido em Espanha, registado na ANCCE</p>
+        <p data-i18n="andaluzDesc">Nascido em Espanha, registado na ANCCE</p>
       </div>
       <div class="compare-item">
         <h4>🌍 Ibérico</h4>
-        <p>Termo "guarda-chuva" para ambos</p>
+        <p data-i18n="ibericoDesc">Termo "guarda-chuva" para ambos</p>
       </div>
     </div>
-    <p><strong>Geneticamente:</strong> Muito similares (mesma origem). O Lusitano é ligeiramente mais compacto.</p>
+    <p data-i18n="geneticallyText"><strong>Geneticamente:</strong> Muito similares (mesma origem). O Lusitano é ligeiramente mais compacto.</p>
 
     <div class="page-footer">
       <span>portal-lusitano.pt</span>
@@ -2695,61 +2693,61 @@
       <span class="page-header-chapter">Capítulo 1 · O Que Torna Especial</span>
     </div>
 
-    <h1>O Que Torna o Lusitano Especial?</h1>
+    <h1 data-i18n="ch1WhatMakesSpecial">O Que Torna o Lusitano Especial?</h1>
 
-    <h2>1. História Milenar</h2>
+    <h2 data-i18n="ch1MillenialHistory">1. História Milenar</h2>
     <ul class="check-list">
-      <li>5.000 anos de seleção natural e humana</li>
-      <li>Usado por Celtas, Romanos, Mouros, Cavaleiros Medievais e Reis</li>
-      <li>Participou nos Descobrimentos e batalhas históricas</li>
-      <li>Sobreviveu guerras, invasões e modernização</li>
+      <li data-i18n="historyList1">5.000 anos de seleção natural e humana</li>
+      <li data-i18n="historyList2">Usado por Celtas, Romanos, Mouros, Cavaleiros Medievais e Reis</li>
+      <li data-i18n="historyList3">Participou nos Descobrimentos e batalhas históricas</li>
+      <li data-i18n="historyList4">Sobreviveu guerras, invasões e modernização</li>
     </ul>
-    <p><strong>Resultado:</strong> Uma raça resiliente, forjada pela história.</p>
+    <p data-i18n="historyResult"><strong>Resultado:</strong> Uma raça resiliente, forjada pela história.</p>
 
-    <h2>2. Versatilidade Única</h2>
-    <p>A maioria das raças é especializada (Quarter Horse → gado; PSI → corridas; Warmblood → desporto). O <strong>LUSITANO faz TUDO bem</strong>:</p>
+    <h2 data-i18n="ch1UniqueVersatility">2. Versatilidade Única</h2>
+    <p data-i18n="versatilityIntro">A maioria das raças é especializada (Quarter Horse → gado; PSI → corridas; Warmblood → desporto). O <strong>LUSITANO faz TUDO bem</strong>:</p>
 
     <div class="two-col">
       <ul class="check-list">
-        <li><strong>Dressage/Alta Escola</strong> — movimentos elevados naturais</li>
-        <li><strong>Working Equitation</strong> — domina mundialmente (55%+ dos competidores, Top 7 mundial)</li>
-        <li><strong>Toureio</strong> — coragem excecional</li>
+        <li data-i18n="versatility1"><strong>Dressage/Alta Escola</strong> — movimentos elevados naturais</li>
+        <li data-i18n="versatility2"><strong>Working Equitation</strong> — domina mundialmente (55%+ dos competidores, Top 7 mundial)</li>
+        <li data-i18n="versatility3"><strong>Toureio</strong> — coragem excecional</li>
       </ul>
       <ul class="check-list">
-        <li><strong>Lazer/Turismo</strong> — dócil e seguro</li>
-        <li><strong>Terapia Equina</strong> — temperamento calmo</li>
-        <li><strong>Trabalho de Campo</strong> — ágil e resistente</li>
+        <li data-i18n="versatility4"><strong>Lazer/Turismo</strong> — dócil e seguro</li>
+        <li data-i18n="versatility5"><strong>Terapia Equina</strong> — temperamento calmo</li>
+        <li data-i18n="versatility6"><strong>Trabalho de Campo</strong> — ágil e resistente</li>
       </ul>
     </div>
 
     <div class="info-box">
-      <p style="text-align: center;"><strong>Nenhuma outra raça é tão versátil!</strong></p>
+      <p style="text-align: center;" data-i18n="versatilityNote"><strong>Nenhuma outra raça é tão versátil!</strong></p>
     </div>
 
-    <h2>3. Temperamento Dourado</h2>
+    <h2 data-i18n="ch1GoldenTemperament">3. Temperamento Dourado</h2>
 
     <div class="equation-box">
       <div class="equation">
-        <span><span class="icon">🦁</span><span class="label">Coragem</span></span>
+        <span><span class="icon">🦁</span><span class="label" data-i18n="tempCourage">Coragem</span></span>
         <span class="operator">+</span>
-        <span><span class="icon">🕊️</span><span class="label">Docilidade</span></span>
+        <span><span class="icon">🕊️</span><span class="label" data-i18n="tempDocility">Docilidade</span></span>
         <span class="operator">+</span>
-        <span><span class="icon">🧠</span><span class="label">Inteligência</span></span>
+        <span><span class="icon">🧠</span><span class="label" data-i18n="tempIntelligence">Inteligência</span></span>
         <span class="operator">=</span>
         <span class="result"><span class="icon">👑</span><span class="label">Lusitano</span></span>
       </div>
     </div>
 
-    <p>A maioria das raças tem 1-2 destas qualidades. O Lusitano tem as 3! É adequado para iniciantes (dócil) MAS também para profissionais (coragem, performance).</p>
+    <p data-i18n="tempText">A maioria das raças tem 1-2 destas qualidades. O Lusitano tem as 3! É adequado para iniciantes (dócil) MAS também para profissionais (coragem, performance).</p>
 
-    <h2>4. Beleza Intemporal</h2>
-    <p><strong>Tipo Barroco:</strong> Pescoço arqueado e nobre, garupa arredondada e poderosa, movimentos elevados ("dança"), porte aristocrático. Se viste quadros renascentistas com cavalos elegantes — eram Lusitanos!</p>
+    <h2 data-i18n="ch1TimelessBeauty">4. Beleza Intemporal</h2>
+    <p data-i18n="beautyText"><strong>Tipo Barroco:</strong> Pescoço arqueado e nobre, garupa arredondada e poderosa, movimentos elevados ("dança"), porte aristocrático. Se viste quadros renascentistas com cavalos elegantes — eram Lusitanos!</p>
 
-    <h2>5. Conexão Emocional</h2>
+    <h2 data-i18n="ch1EmotionalConnection">5. Conexão Emocional</h2>
     <blockquote>
-      <p>"Não é um cavalo. É um parceiro." — "Ele entende-me." — "Nunca conheci um cavalo tão generoso."</p>
+      <p data-i18n="connectionQuote">"Não é um cavalo. É um parceiro." — "Ele entende-me." — "Nunca conheci um cavalo tão generoso."</p>
     </blockquote>
-    <p><strong>Muitos donos de Lusitano nunca mudam de raça. Ficam "viciados"!</strong></p>
+    <p data-i18n="connectionText"><strong>Muitos donos de Lusitano nunca mudam de raça. Ficam "viciados"!</strong></p>
 
     <div class="page-footer">
       <span>portal-lusitano.pt</span>
@@ -2761,9 +2759,9 @@
   <div class="chapter-opener" id="cap2">
     <div class="chapter-opener-bg"></div>
     <span class="chapter-number-large">02</span>
-    <span class="chapter-label">Capítulo Dois</span>
-    <h2 class="chapter-title">História em<br>10 Minutos</h2>
-    <p class="chapter-desc">Uma jornada épica de 20.000 a.C. até aos dias de hoje.</p>
+    <span class="chapter-label" data-i18n="cap2Label">Capítulo Dois</span>
+    <h2 class="chapter-title" data-i18n="cap2Title">História em<br>10 Minutos</h2>
+    <p class="chapter-desc" data-i18n="cap2Desc">Uma jornada épica de 20.000 a.C. até aos dias de hoje.</p>
     <div class="chapter-ornament">◆ ◆ ◆</div>
   </div>
 
@@ -2774,59 +2772,59 @@
       <span class="page-header-chapter">Capítulo 2 · História</span>
     </div>
 
-    <h1>Uma Jornada de 5.000 Anos</h1>
-    <p>O Cavalo Lusitano não apareceu do nada. É o resultado de milénios de evolução, seleção e história.</p>
+    <h1 data-i18n="ch2Journey5000">Uma Jornada de 5.000 Anos</h1>
+    <p data-i18n="timelineIntro">O Cavalo Lusitano não apareceu do nada. É o resultado de milénios de evolução, seleção e história.</p>
 
     <div class="timeline">
       <div class="timeline-item">
-        <div class="timeline-date">20.000 a.C.</div>
-        <div class="timeline-title">Cavalos Selvagens Ibéricos</div>
-        <p class="timeline-desc">Pinturas rupestres em Altamira e Escoural mostram cavalos primitivos com características que o Lusitano moderno ainda mantém.</p>
+        <div class="timeline-date" data-i18n="timeline1Date">20.000 a.C.</div>
+        <div class="timeline-title" data-i18n="timeline1Title">Cavalos Selvagens Ibéricos</div>
+        <p class="timeline-desc" data-i18n="timeline1Desc">Pinturas rupestres em Altamira e Escoural mostram cavalos primitivos com características que o Lusitano moderno ainda mantém.</p>
       </div>
       <div class="timeline-item">
-        <div class="timeline-date">1.000 a.C.</div>
-        <div class="timeline-title">Celtas e Seleção Inicial</div>
-        <p class="timeline-desc">Os Celtas domesticam cavalos para guerra, caça e transporte. Cavalos Ibéricos ganham reputação na Europa.</p>
+        <div class="timeline-date" data-i18n="timeline2Date">1.000 a.C.</div>
+        <div class="timeline-title" data-i18n="timeline2Title">Celtas e Seleção Inicial</div>
+        <p class="timeline-desc" data-i18n="timeline2Desc">Os Celtas domesticam cavalos para guerra, caça e transporte. Cavalos Ibéricos ganham reputação na Europa.</p>
       </div>
       <div class="timeline-item">
-        <div class="timeline-date">100 a.C. - 400 d.C.</div>
-        <div class="timeline-title">Roma: Fama Internacional</div>
-        <p class="timeline-desc">Romanos descobrem os "Equus Lusitanus" e ficam impressionados. Usam-nos na cavalaria e exportam para Roma.</p>
+        <div class="timeline-date" data-i18n="timeline3Date">100 a.C. - 400 d.C.</div>
+        <div class="timeline-title" data-i18n="timeline3Title">Roma: Fama Internacional</div>
+        <p class="timeline-desc" data-i18n="timeline3Desc">Romanos descobrem os "Equus Lusitanus" e ficam impressionados. Usam-nos na cavalaria e exportam para Roma.</p>
       </div>
       <div class="timeline-item">
-        <div class="timeline-date">711 - 1249</div>
-        <div class="timeline-title">Ocupação Mourisca</div>
-        <p class="timeline-desc">500 anos de influência árabe trazem novos métodos de treino. A genética Lusitana mantém-se distinta.</p>
+        <div class="timeline-date" data-i18n="timeline4Date">711 - 1249</div>
+        <div class="timeline-title" data-i18n="timeline4Title">Ocupação Mourisca</div>
+        <p class="timeline-desc" data-i18n="timeline4Desc">500 anos de influência árabe trazem novos métodos de treino. A genética Lusitana mantém-se distinta.</p>
       </div>
       <div class="timeline-item">
-        <div class="timeline-date">1249 - 1415</div>
-        <div class="timeline-title">Reconquista: Cavalo de Guerra</div>
-        <p class="timeline-desc">O Lusitano torna-se o cavalo de guerra medieval por excelência. Seleção para coragem e força.</p>
+        <div class="timeline-date" data-i18n="timeline5Date">1249 - 1415</div>
+        <div class="timeline-title" data-i18n="timeline5Title">Reconquista: Cavalo de Guerra</div>
+        <p class="timeline-desc" data-i18n="timeline5Desc">O Lusitano torna-se o cavalo de guerra medieval por excelência. Seleção para coragem e força.</p>
       </div>
       <div class="timeline-item">
-        <div class="timeline-date">1415 - 1700</div>
-        <div class="timeline-title">Era dos Descobrimentos</div>
-        <p class="timeline-desc">Portugal domina os mares. Lusitanos são transportados para Brasil, África e Ásia em caravelas.</p>
+        <div class="timeline-date" data-i18n="timeline6Date">1415 - 1700</div>
+        <div class="timeline-title" data-i18n="timeline6Title">Era dos Descobrimentos</div>
+        <p class="timeline-desc" data-i18n="timeline6Desc">Portugal domina os mares. Lusitanos são transportados para Brasil, África e Ásia em caravelas.</p>
       </div>
       <div class="timeline-item">
-        <div class="timeline-date">1748</div>
-        <div class="timeline-title">Coudelaria Real de Alter</div>
-        <p class="timeline-desc">Rei D. João V funda a Real Coudelaria de Alter do Chão. Ainda existe hoje — 276 anos depois!</p>
+        <div class="timeline-date" data-i18n="timeline7Date">1748</div>
+        <div class="timeline-title" data-i18n="timeline7Title">Coudelaria Real de Alter</div>
+        <p class="timeline-desc" data-i18n="timeline7Desc">Rei D. João V funda a Real Coudelaria de Alter do Chão. Ainda existe hoje — 276 anos depois!</p>
       </div>
       <div class="timeline-item">
-        <div class="timeline-date">1800 - 1950</div>
-        <div class="timeline-title">Guerras e Quase Extinção</div>
-        <p class="timeline-desc">Guerras Napoleónicas e mecanização devastam a população. De 50.000 restam apenas 5.000 cavalos.</p>
+        <div class="timeline-date" data-i18n="timeline8Date">1800 - 1950</div>
+        <div class="timeline-title" data-i18n="timeline8Title">Guerras e Quase Extinção</div>
+        <p class="timeline-desc" data-i18n="timeline8Desc">Guerras Napoleónicas e mecanização devastam a população. De 50.000 restam apenas 5.000 cavalos.</p>
       </div>
       <div class="timeline-item">
-        <div class="timeline-date">1967</div>
-        <div class="timeline-title">Criação do Stud-Book</div>
-        <p class="timeline-desc">Primeiro livro genealógico oficial da raça. Em 1989, nasce a APSL — dedicada exclusivamente ao Lusitano.</p>
+        <div class="timeline-date" data-i18n="timeline9Date">1967</div>
+        <div class="timeline-title" data-i18n="timeline9Title">Criação do Stud-Book</div>
+        <p class="timeline-desc" data-i18n="timeline9Desc">Primeiro livro genealógico oficial da raça. Em 1989, nasce a APSL — dedicada exclusivamente ao Lusitano.</p>
       </div>
       <div class="timeline-item">
-        <div class="timeline-date">1980 - Hoje</div>
-        <div class="timeline-title">Renascimento Global</div>
-        <p class="timeline-desc">Exportação para 50+ países. Domínio em Working Equitation. População mundial: ~40.000 cavalos. Raça SALVA!</p>
+        <div class="timeline-date" data-i18n="timeline10Date">1980 - Hoje</div>
+        <div class="timeline-title" data-i18n="timeline10Title">Renascimento Global</div>
+        <p class="timeline-desc" data-i18n="timeline10Desc">Exportação para 50+ países. Domínio em Working Equitation. População mundial: ~40.000 cavalos. Raça SALVA!</p>
       </div>
     </div>
 
@@ -2840,9 +2838,9 @@
   <div class="chapter-opener" id="cap3">
     <div class="chapter-opener-bg"></div>
     <span class="chapter-number-large">03</span>
-    <span class="chapter-label">Capítulo Três</span>
-    <h2 class="chapter-title">Características<br>Únicas</h2>
-    <p class="chapter-desc">Morfologia, temperamento e aptidões em detalhe.</p>
+    <span class="chapter-label" data-i18n="cap3Label">Capítulo Três</span>
+    <h2 class="chapter-title" data-i18n="cap3Title">Características<br>Únicas</h2>
+    <p class="chapter-desc" data-i18n="cap3Desc">Morfologia, temperamento e aptidões em detalhe.</p>
     <div class="chapter-ornament">◆ ◆ ◆</div>
   </div>
 
@@ -2853,86 +2851,86 @@
       <span class="page-header-chapter">Capítulo 3 · Morfologia</span>
     </div>
 
-    <h1>Morfologia: O Visual Lusitano</h1>
-    <p>O Lusitano pertence ao <strong>tipo Barroco</strong> — elegante, compacto e poderoso.</p>
+    <h1 data-i18n="ch3Morphology">Morfologia: O Visual Lusitano</h1>
+    <p data-i18n="morphIntro">O Lusitano pertence ao <strong>tipo Barroco</strong> — elegante, compacto e poderoso.</p>
 
     <div class="morph-grid">
       <div class="morph-item">
-        <h4>🎭 Cabeça</h4>
-        <p>Perfil subconvexo ("romano"), olhos grandes e expressivos, orelhas médias. Visual aristocrático.</p>
+        <h4 data-i18n="morphHead">🎭 Cabeça</h4>
+        <p data-i18n="morphHeadDesc">Perfil subconvexo ("romano"), olhos grandes e expressivos, orelhas médias. Visual aristocrático.</p>
       </div>
       <div class="morph-item">
-        <h4>🦢 Pescoço</h4>
-        <p>Médio/longo, arqueado ("cisne"), musculado. Facilita movimentos elevados.</p>
+        <h4 data-i18n="morphNeck">🦢 Pescoço</h4>
+        <p data-i18n="morphNeckDesc">Médio/longo, arqueado ("cisne"), musculado. Facilita movimentos elevados.</p>
       </div>
       <div class="morph-item">
-        <h4>💪 Tronco</h4>
-        <p>Dorso curto e forte, peito largo e profundo. Visual compacto e poderoso.</p>
+        <h4 data-i18n="morphBody">💪 Tronco</h4>
+        <p data-i18n="morphBodyDesc">Dorso curto e forte, peito largo e profundo. Visual compacto e poderoso.</p>
       </div>
       <div class="morph-item">
-        <h4>🍑 Garupa</h4>
-        <p>Arredondada, musculada, ligeiramente inclinada. Impulsão e agilidade.</p>
+        <h4 data-i18n="morphCroup">🍑 Garupa</h4>
+        <p data-i18n="morphCroupDesc">Arredondada, musculada, ligeiramente inclinada. Impulsão e agilidade.</p>
       </div>
       <div class="morph-item">
-        <h4>🦵 Membros</h4>
-        <p>Proporcionais, ossatura forte, cascos duros. Estrutura atlética e resistente.</p>
+        <h4 data-i18n="morphLegs">🦵 Membros</h4>
+        <p data-i18n="morphLegsDesc">Proporcionais, ossatura forte, cascos duros. Estrutura atlética e resistente.</p>
       </div>
       <div class="morph-item">
-        <h4>📏 Altura</h4>
-        <p>Machos: 160-168cm · Fêmeas: 155-163cm. Tamanho médio ideal.</p>
+        <h4 data-i18n="morphSize">📏 Altura</h4>
+        <p data-i18n="morphSizeDesc">Machos: 160-168cm · Fêmeas: 155-163cm. Tamanho médio ideal.</p>
       </div>
     </div>
 
-    <h2>Pelagens</h2>
+    <h2 data-i18n="ch3Coats">Pelagens</h2>
     <table>
       <thead>
         <tr>
-          <th>Pelagem</th>
-          <th>Frequência</th>
-          <th>Características</th>
+          <th data-i18n="coatHeader">Pelagem</th>
+          <th data-i18n="coatFreqHeader">Frequência</th>
+          <th data-i18n="coatCharHeader">Características</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>Tordilho</strong></td>
-          <td>60-70%</td>
-          <td>Nasce escuro, clareia com idade. Branco aos 10-15 anos.</td>
+          <td><strong data-i18n="coatGrey">Tordilho</strong></td>
+          <td data-i18n="coatGreyFreq">60-70%</td>
+          <td data-i18n="coatGreyDesc">Nasce escuro, clareia com idade. Branco aos 10-15 anos.</td>
         </tr>
         <tr>
-          <td><strong>Castanho</strong></td>
-          <td>20-25%</td>
-          <td>Castanho escuro/claro com crinas mais escuras.</td>
+          <td><strong data-i18n="coatBay">Castanho</strong></td>
+          <td data-i18n="coatBayFreq">20-25%</td>
+          <td data-i18n="coatBayDesc">Castanho escuro/claro com crinas mais escuras.</td>
         </tr>
         <tr>
-          <td><strong>Alazão</strong></td>
-          <td>5-10%</td>
-          <td>Castanho avermelhado, crinas iguais ou loiras.</td>
+          <td><strong data-i18n="coatChestnut">Alazão</strong></td>
+          <td data-i18n="coatChestnutFreq">5-10%</td>
+          <td data-i18n="coatChestnutDesc">Castanho avermelhado, crinas iguais ou loiras.</td>
         </tr>
         <tr>
-          <td><strong>Preto</strong></td>
-          <td>3-5%</td>
-          <td>Preto sólido — raro e muito procurado!</td>
+          <td><strong data-i18n="coatBlack">Preto</strong></td>
+          <td data-i18n="coatBlackFreq">3-5%</td>
+          <td data-i18n="coatBlackDesc">Preto sólido — raro e muito procurado!</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>Temperamento: 5 Qualidades Obrigatórias</h2>
+    <h2 data-i18n="ch3Temperament">Temperamento: 5 Qualidades Obrigatórias</h2>
     <div class="cards-grid">
       <div class="card">
-        <h4>🦁 Coragem</h4>
-        <p>Não espanta facilmente, enfrenta novidade com confiança.</p>
+        <h4 data-i18n="tempCourageCard">🦁 Coragem</h4>
+        <p data-i18n="tempCourageCardDesc">Não espanta facilmente, enfrenta novidade com confiança.</p>
       </div>
       <div class="card">
-        <h4>👑 Nobreza</h4>
-        <p>Porte altivo, expressão confiante. "Sabe que é especial."</p>
+        <h4 data-i18n="tempNobilityCard">👑 Nobreza</h4>
+        <p data-i18n="tempNobilityCardDesc">Porte altivo, expressão confiante. "Sabe que é especial."</p>
       </div>
       <div class="card">
-        <h4>🧠 Inteligência</h4>
-        <p>Aprende 3-5x mais rápido. Memoriza percursos após 2-3 vezes.</p>
+        <h4 data-i18n="tempIntelCard">🧠 Inteligência</h4>
+        <p data-i18n="tempIntelCardDesc">Aprende 3-5x mais rápido. Memoriza percursos após 2-3 vezes.</p>
       </div>
       <div class="card">
-        <h4>❤️ Generosidade</h4>
-        <p>Dá tudo pelo cavaleiro, não desiste, perdoa erros.</p>
+        <h4 data-i18n="tempGenerosityCard">❤️ Generosidade</h4>
+        <p data-i18n="tempGenerosityCardDesc">Dá tudo pelo cavaleiro, não desiste, perdoa erros.</p>
       </div>
     </div>
 
@@ -2948,77 +2946,77 @@
       <span class="page-header-chapter">Capítulo 3 · Aptidões</span>
     </div>
 
-    <h1>Aptidões: O Que Pode Fazer?</h1>
+    <h1 data-i18n="ch3Abilities">Aptidões: O Que Pode Fazer?</h1>
 
     <table>
       <thead>
         <tr>
-          <th>Disciplina</th>
-          <th>Avaliação</th>
-          <th>Porquê</th>
+          <th data-i18n="abilityDiscipline">Disciplina</th>
+          <th data-i18n="abilityRating">Avaliação</th>
+          <th data-i18n="abilityWhy">Porquê</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>Dressage / Alta Escola</strong></td>
+          <td><strong data-i18n="abilityDressage">Dressage / Alta Escola</strong></td>
           <td class="rating">★★★★★</td>
-          <td>Movimentos elevados naturais (piaffe, passage). Até Grand Prix!</td>
+          <td data-i18n="abilityDressageWhy">Movimentos elevados naturais (piaffe, passage). Até Grand Prix!</td>
         </tr>
         <tr>
-          <td><strong>Working Equitation</strong></td>
+          <td><strong data-i18n="abilityWE">Working Equitation</strong></td>
           <td class="rating">★★★★★</td>
-          <td>Domínio total! Top 7 do Mundial 2022 foram todos Lusitanos.</td>
+          <td data-i18n="abilityWEWhy">Domínio total! Top 7 do Mundial 2022 foram todos Lusitanos.</td>
         </tr>
         <tr>
-          <td><strong>Toureio Português</strong></td>
+          <td><strong data-i18n="abilityBull">Toureio Português</strong></td>
           <td class="rating">★★★★★</td>
-          <td>Coragem extrema, agilidade, inteligência.</td>
+          <td data-i18n="abilityBullWhy">Coragem extrema, agilidade, inteligência.</td>
         </tr>
         <tr>
-          <td><strong>Lazer / Turismo</strong></td>
+          <td><strong data-i18n="abilityLeisure">Lazer / Turismo</strong></td>
           <td class="rating">★★★★★</td>
-          <td>Dócil, seguro, confortável, resistente, belo.</td>
+          <td data-i18n="abilityLeisureWhy">Dócil, seguro, confortável, resistente, belo.</td>
         </tr>
         <tr>
-          <td><strong>Terapia Equina</strong></td>
+          <td><strong data-i18n="abilityTherapy">Terapia Equina</strong></td>
           <td class="rating">★★★★★</td>
-          <td>Temperamento calmo, sensibilidade emocional alta.</td>
+          <td data-i18n="abilityTherapyWhy">Temperamento calmo, sensibilidade emocional alta.</td>
         </tr>
         <tr>
-          <td><strong>Saltos</strong></td>
+          <td><strong data-i18n="abilityJumping">Saltos</strong></td>
           <td class="rating">★★★☆☆</td>
-          <td>Consegue 1,10-1,20m mas não é especialidade.</td>
+          <td data-i18n="abilityJumpingWhy">Consegue 1,10-1,20m mas não é especialidade.</td>
         </tr>
         <tr>
-          <td><strong>Corridas</strong></td>
+          <td><strong data-i18n="abilityRacing">Corridas</strong></td>
           <td class="rating">★☆☆☆☆</td>
-          <td>~50km/h (vs PSI 70km/h) — não adequado.</td>
+          <td data-i18n="abilityRacingWhy">~50km/h (vs PSI 70km/h) — não adequado.</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>Saúde e Longevidade</h2>
+    <h2 data-i18n="ch3Health">Saúde e Longevidade</h2>
 
     <div class="stats-row">
       <div class="stat-item">
         <div class="stat-number">25-30</div>
-        <div class="stat-label">Anos Vida (média)</div>
+        <div class="stat-label" data-i18n="healthYearsAvg">Anos Vida (média)</div>
       </div>
       <div class="stat-item">
         <div class="stat-number">30-35</div>
-        <div class="stat-label">Anos (muitos atingem!)</div>
+        <div class="stat-label" data-i18n="healthYearsMany">Anos (muitos atingem!)</div>
       </div>
       <div class="stat-item">
-        <div class="stat-number">Saudável</div>
-        <div class="stat-label">Poucos Problemas Genéticos</div>
+        <div class="stat-number" data-i18n="healthHealthy">Saudável</div>
+        <div class="stat-label" data-i18n="healthGenetics">Poucos Problemas Genéticos</div>
       </div>
     </div>
 
-    <p><strong>Porquê vive mais:</strong> Genética robusta (séculos seleção natural), estrutura equilibrada (menos lesões), uso variado (não desgaste extremo).</p>
+    <p data-i18n="healthWhyLive"><strong>Porquê vive mais:</strong> Genética robusta (séculos seleção natural), estrutura equilibrada (menos lesões), uso variado (não desgaste extremo).</p>
 
     <div class="info-box">
-      <h4>🩺 A Conhecer</h4>
-      <p><strong>Melanoma (Tordilhos):</strong> 70-80% >15 anos (geralmente benigno) · <strong>Laminite:</strong> Prevenção com controlo peso · <strong>Cólica:</strong> Emergência veterinária</p>
+      <h4 data-i18n="healthKnowTitle">🩺 A Conhecer</h4>
+      <p data-i18n="healthKnowText"><strong>Melanoma (Tordilhos):</strong> 70-80% >15 anos (geralmente benigno) · <strong>Laminite:</strong> Prevenção com controlo peso · <strong>Cólica:</strong> Emergência veterinária</p>
     </div>
 
     <div class="page-footer">
@@ -3031,9 +3029,9 @@
   <div class="chapter-opener" id="cap4">
     <div class="chapter-opener-bg"></div>
     <span class="chapter-number-large">04</span>
-    <span class="chapter-label">Capítulo Quatro</span>
-    <h2 class="chapter-title">Próximos<br>Passos</h2>
-    <p class="chapter-desc">Como continuar a tua jornada com o Lusitano.</p>
+    <span class="chapter-label" data-i18n="cap4Label">Capítulo Quatro</span>
+    <h2 class="chapter-title" data-i18n="cap4Title">Próximos<br>Passos</h2>
+    <p class="chapter-desc" data-i18n="cap4Desc">Como continuar a tua jornada com o Lusitano.</p>
     <div class="chapter-ornament">◆ ◆ ◆</div>
   </div>
 
@@ -3044,77 +3042,77 @@
       <span class="page-header-chapter">Capítulo 4 · Próximos Passos</span>
     </div>
 
-    <h1>Apaixonaste-te pelo Lusitano?</h1>
-    <p>Se chegaste aqui, provável que sim! Aqui está o que podes fazer a seguir:</p>
+    <h1 data-i18n="ch4FallInLove">Apaixonaste-te pelo Lusitano?</h1>
+    <p data-i18n="ch4Intro">Se chegaste aqui, provável que sim! Aqui está o que podes fazer a seguir:</p>
 
-    <h2>Passo 1: Aprende Mais</h2>
+    <h2 data-i18n="ch4Step1">Passo 1: Aprende Mais</h2>
     <div class="two-col">
       <div>
-        <h3>📺 YouTube</h3>
+        <h3 data-i18n="ch4Youtube">📺 YouTube</h3>
         <ul>
           <li>"Escola Portuguesa de Arte Equestre"</li>
           <li>"Working Equitation Championships"</li>
         </ul>
       </div>
       <div>
-        <h3>🌐 Websites</h3>
+        <h3 data-i18n="ch4Websites">🌐 Websites</h3>
         <ul>
-          <li><strong>APSL</strong> (apsl.pt) — Oficial</li>
-          <li><strong>Portal Lusitano</strong> — Conteúdo PT</li>
+          <li data-i18n="ch4OfficialAPSL"><strong>APSL</strong> (apsl.pt) — Oficial</li>
+          <li data-i18n="ch4PortalLusitano"><strong>Portal Lusitano</strong> — Conteúdo PT</li>
         </ul>
       </div>
     </div>
 
-    <h2>Passo 2: Vê ao Vivo</h2>
+    <h2 data-i18n="ch4Step2">Passo 2: Vê ao Vivo</h2>
     <table>
       <thead>
         <tr>
-          <th>Local</th>
-          <th>O Que Ver</th>
-          <th>Preço</th>
+          <th data-i18n="step2Location">Local</th>
+          <th data-i18n="step2WhatSee">O Que Ver</th>
+          <th data-i18n="step2Price">Preço</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>Escola Portuguesa Arte Equestre</strong></td>
-          <td>Galas de Alta Escola — OBRIGATÓRIO!</td>
+          <td><strong data-i18n="step2EPAEName">Escola Portuguesa Arte Equestre</strong></td>
+          <td data-i18n="step2EPAE">Galas de Alta Escola — OBRIGATÓRIO!</td>
           <td>€15-30</td>
         </tr>
         <tr>
-          <td><strong>Feira Golegã</strong> (Novembro)</td>
-          <td>Maior evento! 200.000+ visitantes</td>
-          <td>Gratuito</td>
+          <td><strong data-i18n="step2GolegaName">Feira Golegã</strong> (<span data-i18n="step2November">Novembro</span>)</td>
+          <td data-i18n="step2Golega">Maior evento! 200.000+ visitantes</td>
+          <td data-i18n="step2Free">Gratuito</td>
         </tr>
         <tr>
-          <td><strong>Competições Working Equitation</strong></td>
-          <td>Lusitanos em ação</td>
-          <td>Gratuito</td>
+          <td><strong data-i18n="step2WEName">Competições Working Equitation</strong></td>
+          <td data-i18n="step2WE">Lusitanos em ação</td>
+          <td data-i18n="step2Free2">Gratuito</td>
         </tr>
         <tr>
-          <td><strong>Coudelaria de Alter</strong></td>
-          <td>120+ cavalos, história viva</td>
+          <td><strong data-i18n="step2AlterName">Coudelaria de Alter</strong></td>
+          <td data-i18n="step2Alter">120+ cavalos, história viva</td>
           <td>€5</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>Passo 3: Experimenta Montar</h2>
-    <p>Procura um centro hípico com Lusitanos. <strong>Aulas:</strong> €15-30/hora · <strong>Pacotes:</strong> €80-150/mês</p>
+    <h2 data-i18n="ch4Step3">Passo 3: Experimenta Montar</h2>
+    <p data-i18n="step3Text">Procura um centro hípico com Lusitanos. <strong>Aulas:</strong> €15-30/hora · <strong>Pacotes:</strong> €80-150/mês</p>
 
-    <h2>Passo 4: Considera Comprar</h2>
+    <h2 data-i18n="ch4Step4">Passo 4: Considera Comprar</h2>
     <table>
       <thead>
-        <tr><th>Categoria</th><th>Valor</th></tr>
+        <tr><th data-i18n="step4Category">Categoria</th><th data-i18n="step4Value">Valor</th></tr>
       </thead>
       <tbody>
-        <tr><td>Poldro 1-2 anos</td><td>€5.000 - €10.000</td></tr>
-        <tr><td>Cavalo treinado 5-8 anos</td><td>€10.000 - €25.000</td></tr>
-        <tr><td>Custos anuais (pensão, vet, ferrador)</td><td>€3.000 - €7.000</td></tr>
+        <tr><td data-i18n="step4Foal">Poldro 1-2 anos</td><td>€5.000 - €10.000</td></tr>
+        <tr><td data-i18n="step4Trained">Cavalo treinado 5-8 anos</td><td>€10.000 - €25.000</td></tr>
+        <tr><td data-i18n="step4Annual">Custos anuais (pensão, vet, ferrador)</td><td>€3.000 - €7.000</td></tr>
       </tbody>
     </table>
 
     <div class="info-box">
-      <p style="text-align: center;"><strong>⚠️ Compromisso:</strong> Um cavalo = 20-30 anos de responsabilidade!</p>
+      <p style="text-align: center;" data-i18n="step4Warning"><strong>⚠️ Compromisso:</strong> Um cavalo = 20-30 anos de responsabilidade!</p>
     </div>
 
     <div class="page-footer">
@@ -3129,25 +3127,25 @@
       <span class="page-header-chapter">Capítulo 4 · Upgrade PRO</span>
     </div>
 
-    <h1>Quer Mais Conhecimento?</h1>
-    <p style="text-align: center; font-size: 12pt;">Este ebook gratuito é apenas o <strong>INÍCIO</strong>!</p>
+    <h1 data-i18n="ch4WantMore">Quer Mais Conhecimento?</h1>
+    <p style="text-align: center; font-size: 12pt;" data-i18n="proSubtitle">Este ebook gratuito é apenas o <strong>INÍCIO</strong>!</p>
 
     <div class="cta-section">
-      <h3 class="serif">Portal Lusitano PRO</h3>
-      <p>Conteúdo exclusivo para verdadeiros aficionados</p>
+      <h3 class="serif" data-i18n="proTitle">Portal Lusitano PRO</h3>
+      <p data-i18n="proTagline">Conteúdo exclusivo para verdadeiros aficionados</p>
 
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 450px; margin: 25px auto; text-align: left;">
-        <div style="color: var(--gold-light);">✓ 50+ Ebooks (150-200p cada)</div>
-        <div style="color: var(--gold-light);">✓ Manual do Criador</div>
-        <div style="color: var(--gold-light);">✓ Linhagens de Elite</div>
-        <div style="color: var(--gold-light);">✓ Treino de Dressage A-Z</div>
-        <div style="color: var(--gold-light);">✓ Templates Profissionais</div>
-        <div style="color: var(--gold-light);">✓ Vídeos Exclusivos</div>
-        <div style="color: var(--gold-light);">✓ Comunidade Privada</div>
-        <div style="color: var(--gold-light);">✓ Consultoria Expert</div>
+        <div style="color: var(--gold-light);" data-i18n="proBenefit1">✓ 50+ Ebooks (150-200p cada)</div>
+        <div style="color: var(--gold-light);" data-i18n="proBenefit2">✓ Manual do Criador</div>
+        <div style="color: var(--gold-light);" data-i18n="proBenefit3">✓ Linhagens de Elite</div>
+        <div style="color: var(--gold-light);" data-i18n="proBenefit4">✓ Treino de Dressage A-Z</div>
+        <div style="color: var(--gold-light);" data-i18n="proBenefit5">✓ Templates Profissionais</div>
+        <div style="color: var(--gold-light);" data-i18n="proBenefit6">✓ Vídeos Exclusivos</div>
+        <div style="color: var(--gold-light);" data-i18n="proBenefit7">✓ Comunidade Privada</div>
+        <div style="color: var(--gold-light);" data-i18n="proBenefit8">✓ Consultoria Expert</div>
       </div>
 
-      <p style="margin-top: 20px;">Usa o código para 20% de desconto:</p>
+      <p style="margin-top: 20px;" data-i18n="proCode">Usa o código para 20% de desconto:</p>
       <div class="cta-code">LUSITANO20</div>
       <p class="cta-url">www.portal-lusitano.pt/pro</p>
     </div>
@@ -3156,26 +3154,40 @@
       <span>◆</span>
     </div>
 
-    <h2 style="text-align: center; justify-content: center;">Mensagem Final</h2>
+    <h2 style="text-align: center; justify-content: center;" data-i18n="finalTitle">Mensagem Final</h2>
     <h2 style="display: none;"></h2>
 
     <blockquote>
-      <p>O Cavalo Lusitano é mais que uma raça — é <strong>património cultural</strong>, <strong>história viva</strong>, <strong>arte em movimento</strong>. Cada vez que montas, treinas, ou simplesmente admiras um Lusitano, estás a conectar-te com 5.000 anos de história.</p>
+      <p data-i18n="finalQuote">O Cavalo Lusitano é mais que uma raça — é <strong>património cultural</strong>, <strong>história viva</strong>, <strong>arte em movimento</strong>. Cada vez que montas, treinas, ou simplesmente admiras um Lusitano, estás a conectar-te com 5.000 anos de história.</p>
     </blockquote>
 
-    <p style="text-align: center;"><strong>O Lusitano precisa de guardiões.</strong> Cada geração tem a responsabilidade de preservar esta raça para a próxima.</p>
+    <p style="text-align: center;" data-i18n="finalGuardians"><strong>O Lusitano precisa de guardiões.</strong> Cada geração tem a responsabilidade de preservar esta raça para a próxima.</p>
 
-    <p style="text-align: center; font-size: 14pt; margin-top: 25px;"><strong>Serás tu um desses guardiões? 🐴👑</strong></p>
+    <p style="text-align: center; font-size: 14pt; margin-top: 25px;" data-i18n="finalQuestion"><strong>Serás tu um desses guardiões? 🐴👑</strong></p>
 
     <div class="info-box" style="margin-top: 40px; background: var(--cream-dark);">
-      <h4>📚 Fontes e Referências</h4>
-      <p style="font-size: 8pt; line-height: 1.6;">
-        <strong>APSL</strong> — Associação Portuguesa de Criadores do Cavalo Puro Sangue Lusitano (cavalo-lusitano.com)<br>
-        <strong>Wikipedia</strong> — Puro Sangue Lusitano<br>
-        <strong>Lusitano World</strong> — Working Equitation World Championships 2022<br>
-        <strong>FEI</strong> — Fédération Equestre Internationale Rankings<br>
-        <strong>Mad Barn</strong> — Lusitano Horse Breed Guide<br>
-        Este ebook foi verificado com fontes oficiais e estudos académicos.
+      <h4 data-i18n="sourcesTitle">📚 Fontes e Referências</h4>
+      <p style="font-size: 8pt; line-height: 1.6;" data-i18n="sourcesText">
+        <strong>Informação baseada em fontes públicas:</strong><br>
+        • <strong>APSL</strong> — Associação Portuguesa de Criadores do Cavalo Puro Sangue Lusitano (cavalo-lusitano.com)<br>
+        • <strong>FEI</strong> — Fédération Equestre Internationale<br>
+        • <strong>WAWE</strong> — World Association for Working Equitation<br>
+        • <strong>Coudelaria de Alter</strong> — Companhia das Lezírias<br>
+        • Publicações académicas e literatura equestre especializada<br><br>
+        <em>Este ebook é uma compilação educativa de informação pública disponível nas fontes acima citadas. Os dados apresentados são de natureza factual e de domínio público.</em>
+      </p>
+    </div>
+
+    <!-- LEGAL DISCLAIMER -->
+    <div class="info-box" style="margin-top: 20px; background: var(--cream-dark); border-left: 3px solid var(--gold);">
+      <h4 data-i18n="legalTitle">⚖️ Aviso Legal</h4>
+      <p style="font-size: 7pt; line-height: 1.5; color: var(--gray-light);" data-i18n="legalText">
+        <strong>IMPORTANTE - Propriedade da Informação:</strong><br>
+        O Portal Lusitano <strong>NÃO é proprietário</strong> da informação contida neste ebook. Toda a informação foi retirada de fontes públicas (APSL, FEI, Wikipedia, publicações académicas, etc.) e pertence aos seus respetivos autores e organizações. O Portal Lusitano apenas compilou e organizou esta informação num formato educativo.<br><br>
+        <strong>Natureza do Conteúdo:</strong> Este ebook é uma compilação gratuita de informação pública e factual sobre o Cavalo Lusitano. Os dados, estatísticas e factos históricos apresentados são de domínio público e estão disponíveis nas fontes citadas.<br><br>
+        <strong>Uso Livre:</strong> Este ebook é gratuito e pode ser partilhado livremente para fins educativos. A informação aqui contida pode ser encontrada nas fontes originais citadas.<br><br>
+        <strong>Isenção de Responsabilidade:</strong> As informações são de caráter educativo e informativo. Não substituem aconselhamento veterinário, profissional equestre ou financeiro. Consulte sempre as fontes oficiais e profissionais qualificados.<br><br>
+        <strong>Créditos:</strong> Toda a informação factual pertence às fontes citadas (APSL, FEI, WAWE, Coudelaria de Alter, publicações académicas). O Portal Lusitano agradece a estas organizações pela disponibilização pública desta informação.
       </p>
     </div>
 
@@ -3189,25 +3201,29 @@
   <div class="back-cover" id="conclusao">
     <div class="back-cover-frame"></div>
 
-    <div class="back-cover-logo serif">Portal Lusitano</div>
-    <p class="back-cover-tagline">O Mundo do Cavalo Lusitano</p>
+    <div class="back-cover-logo">
+      <img src="../logo.png" alt="Portal Lusitano" style="height: 120px; width: auto; filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.6));">
+    </div>
+    <p class="back-cover-tagline" data-i18n="backCoverTagline">O Mundo do Cavalo Lusitano</p>
 
-    <div class="back-cover-icon">🐴</div>
+    <div class="back-cover-icon" style="display: none;">
+      <!-- Logo já inclui o ícone -->
+    </div>
 
     <div class="back-cover-divider"></div>
 
-    <p style="color: var(--gold-light); font-size: 10pt; max-width: 300px; margin-bottom: 30px;">
+    <p style="color: var(--gold-light); font-size: 10pt; max-width: 300px; margin-bottom: 30px;" data-i18n="backCoverThanks">
       Obrigado por leres este ebook.<br>
       Esperamos que seja o início de uma bela jornada.
     </p>
 
-    <a href="https://portal-lusitano.pt/pro" class="back-cover-url" style="text-decoration: none; display: inline-block; background: var(--gold); color: var(--black); padding: 15px 40px; font-weight: 600; margin-bottom: 20px; transition: all 0.3s ease;" onmouseover="this.style.background='white'" onmouseout="this.style.background='var(--gold)'">
+    <a href="https://portal-lusitano.pt/pro" class="back-cover-url" style="text-decoration: none; display: inline-block; background: var(--gold); color: var(--black); padding: 15px 40px; font-weight: 600; margin-bottom: 20px; transition: all 0.3s ease;" onmouseover="this.style.background='white'" onmouseout="this.style.background='var(--gold)'" data-i18n="backCoverCta">
       Explorar Portal Lusitano PRO →
     </a>
 
-    <p class="back-cover-copyright">
-      © 2025 Portal Lusitano · Ebook Gratuito "Introdução ao Lusitano" · v2.0<br>
-      Distribuição livre autorizada
+    <p class="back-cover-copyright" data-i18n="backCoverCopyright">
+      Compilação © 2026 Portal Lusitano · Ebook Gratuito · v2.0<br>
+      Informação de fontes públicas · Distribuição livre
     </p>
   </div>
 
@@ -3216,145 +3232,153 @@
 
   <!-- Navigation Sidebar -->
   <nav class="nav-sidebar" id="navSidebar">
-    <div class="nav-dot" data-target="cover" data-label="Capa"></div>
-    <div class="nav-dot" data-target="cap1" data-label="Cap 1: A Raça"></div>
-    <div class="nav-dot" data-target="cap2" data-label="Cap 2: História"></div>
-    <div class="nav-dot" data-target="cap3" data-label="Cap 3: Características"></div>
-    <div class="nav-dot" data-target="cap4" data-label="Cap 4: Próximos Passos"></div>
-    <div class="nav-dot" data-target="conclusao" data-label="Conclusão"></div>
+    <div class="nav-dot" data-target="cover" data-label="Capa" data-label-en="Cover"></div>
+    <div class="nav-dot" data-target="cap1" data-label="Cap 1: A Raça" data-label-en="Ch 1: The Breed"></div>
+    <div class="nav-dot" data-target="cap2" data-label="Cap 2: História" data-label-en="Ch 2: History"></div>
+    <div class="nav-dot" data-target="cap3" data-label="Cap 3: Características" data-label-en="Ch 3: Features"></div>
+    <div class="nav-dot" data-target="cap4" data-label="Cap 4: Próximos Passos" data-label-en="Ch 4: Next Steps"></div>
+    <div class="nav-dot" data-target="conclusao" data-label="Conclusão" data-label-en="Conclusion"></div>
   </nav>
 
   <!-- Table of Contents Toggle -->
-  <button class="toc-toggle" id="tocToggle" title="Índice">
+  <button class="toc-toggle" id="tocToggle" title="Índice" data-title-en="Contents">
     <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
   </button>
 
   <!-- Floating Table of Contents -->
   <div class="toc-floating" id="tocFloating">
-    <h4>Índice</h4>
-    <a href="#cover">Capa</a>
-    <a href="#cap1">1. O Que É o Lusitano?</a>
-    <a href="#cap2">2. A História</a>
-    <a href="#cap3">3. Características</a>
-    <a href="#cap4">4. Próximos Passos</a>
-    <a href="#conclusao">Conclusão</a>
+    <h4 data-i18n="tocTitle">Índice</h4>
+    <a href="#cover" data-i18n="navCover">Capa</a>
+    <a href="#cap1" data-i18n="tocCap1">1. O Que É o Lusitano?</a>
+    <a href="#cap2" data-i18n="tocCap2">2. A História</a>
+    <a href="#cap3" data-i18n="tocCap3">3. Características</a>
+    <a href="#cap4" data-i18n="tocCap4">4. Próximos Passos</a>
+    <a href="#conclusao" data-i18n="navConclusion">Conclusão</a>
   </div>
 
   <!-- Scroll to Top Button -->
-  <button class="scroll-top" id="scrollTop" title="Voltar ao topo">↑</button>
+  <button class="scroll-top" id="scrollTop" title="Voltar ao topo" data-title-en="Back to top">↑</button>
 
   <script>
-    // ===== READING PROGRESS =====
-    const progressBar = document.getElementById('readingProgress');
-
-    function updateProgress() {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (scrollTop / docHeight) * 100;
-      progressBar.style.width = progress + '%';
+    // ===== PERFORMANCE OPTIMIZATIONS =====
+    // Throttle function for scroll events
+    function throttle(func, limit) {
+      let inThrottle;
+      return function(...args) {
+        if (!inThrottle) {
+          func.apply(this, args);
+          inThrottle = true;
+          setTimeout(() => inThrottle = false, limit);
+        }
+      };
     }
 
-    window.addEventListener('scroll', updateProgress);
-
-    // ===== NAVIGATION SIDEBAR =====
+    // Cache DOM elements once
+    const progressBar = document.getElementById('readingProgress');
     const navSidebar = document.getElementById('navSidebar');
     const navDots = document.querySelectorAll('.nav-dot');
     const sections = ['cover', 'cap1', 'cap2', 'cap3', 'cap4', 'conclusao'];
+    const scrollTopBtn = document.getElementById('scrollTop');
+    const tocToggle = document.getElementById('tocToggle');
+    const tocFloating = document.getElementById('tocFloating');
 
-    // Show sidebar after scrolling
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) {
-        navSidebar.classList.add('visible');
-      } else {
-        navSidebar.classList.remove('visible');
+    // Pre-cache section elements
+    const sectionElements = sections.map(id => document.getElementById(id));
+
+    // ===== SINGLE OPTIMIZED SCROLL HANDLER =====
+    let lastScrollY = 0;
+    let ticking = false;
+
+    function onScroll() {
+      const scrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollY / docHeight) * 100;
+      const windowHeight = window.innerHeight;
+
+      // Update progress bar
+      if (progressBar) progressBar.style.width = progress + '%';
+
+      // Show/hide navigation elements based on scroll position
+      const showNav = scrollY > 300;
+      const showScrollTop = scrollY > 500;
+
+      if (navSidebar) navSidebar.classList.toggle('visible', showNav);
+      if (scrollTopBtn) scrollTopBtn.classList.toggle('visible', showScrollTop);
+      if (tocToggle) {
+        tocToggle.classList.toggle('visible', showNav);
+        if (!showNav && tocFloating) tocFloating.classList.remove('visible');
       }
 
-      // Update active dot
-      sections.forEach((id, index) => {
-        const section = document.getElementById(id);
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-            navDots.forEach(dot => dot.classList.remove('active'));
-            navDots[index].classList.add('active');
+      // Update active nav dot (only check if sidebar is visible)
+      if (showNav) {
+        for (let i = 0; i < sectionElements.length; i++) {
+          const section = sectionElements[i];
+          if (section) {
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= windowHeight / 2 && rect.bottom >= windowHeight / 2) {
+              navDots.forEach(dot => dot.classList.remove('active'));
+              if (navDots[i]) navDots[i].classList.add('active');
+              break;
+            }
           }
         }
-      });
-    });
+      }
+
+      ticking = false;
+    }
+
+    // Use requestAnimationFrame for smooth updates
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    }
+
+    // Single passive scroll listener
+    window.addEventListener('scroll', requestTick, { passive: true });
 
     // Click navigation
     navDots.forEach(dot => {
       dot.addEventListener('click', () => {
         const target = document.getElementById(dot.dataset.target);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
       });
     });
 
-    // ===== SCROLL TO TOP =====
-    const scrollTopBtn = document.getElementById('scrollTop');
-
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 500) {
-        scrollTopBtn.classList.add('visible');
-      } else {
-        scrollTopBtn.classList.remove('visible');
-      }
-    });
-
-    scrollTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    // Scroll to top button
+    if (scrollTopBtn) {
+      scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
 
     // ===== TABLE OF CONTENTS =====
-    const tocToggle = document.getElementById('tocToggle');
-    const tocFloating = document.getElementById('tocFloating');
-
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) {
-        tocToggle.classList.add('visible');
-      } else {
-        tocToggle.classList.remove('visible');
-        tocFloating.classList.remove('visible');
-      }
-    });
-
-    tocToggle.addEventListener('click', () => {
-      tocFloating.classList.toggle('visible');
-    });
-
-    // Close TOC when clicking a link
-    tocFloating.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        tocFloating.classList.remove('visible');
+    if (tocToggle) {
+      tocToggle.addEventListener('click', () => {
+        tocFloating?.classList.toggle('visible');
       });
-    });
+    }
 
-    // ===== FADE IN ANIMATIONS =====
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1
-    };
+    if (tocFloating) {
+      tocFloating.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => tocFloating.classList.remove('visible'));
+      });
+    }
 
+    // ===== FADE IN ANIMATIONS (Using IntersectionObserver - more efficient) =====
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          observer.unobserve(entry.target); // Stop observing once visible
         }
       });
-    }, observerOptions);
+    }, { rootMargin: '50px', threshold: 0.1 });
 
-    // Add fade-in class to elements
     document.querySelectorAll('.card, .fact-item, .timeline-item, .stats-row .stat-item, blockquote, h1, h2, .info-box, .facts-box').forEach(el => {
       el.classList.add('fade-in');
       observer.observe(el);
-    });
-
-    // Add stagger effect to grids
-    document.querySelectorAll('.cards-grid, .facts-grid, .compare-grid, .stats-row').forEach(grid => {
-      grid.classList.add('stagger-children');
     });
 
     // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
@@ -3362,54 +3386,33 @@
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
       });
     });
 
     // ===== KEYBOARD NAVIGATION =====
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'j') {
-        window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
-      } else if (e.key === 'ArrowUp' || e.key === 'k') {
-        window.scrollBy({ top: -window.innerHeight * 0.8, behavior: 'smooth' });
-      } else if (e.key === 'Home') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (e.key === 'End') {
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      const scrollAmount = window.innerHeight * 0.8;
+      switch(e.key) {
+        case 'ArrowDown':
+        case 'j':
+          window.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+          break;
+        case 'ArrowUp':
+        case 'k':
+          window.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
+          break;
+        case 'Home':
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          break;
+        case 'End':
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+          break;
       }
     });
 
-    // Initial call
-    updateProgress();
-
-    // ===== PARTICLE SYSTEM =====
-    function createParticles() {
-      const container = document.getElementById('particles');
-      if (!container) return;
-
-      const particleCount = 30;
-
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-
-        // Random position and animation delay
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 15 + 's';
-        particle.style.animationDuration = (10 + Math.random() * 10) + 's';
-
-        // Random size
-        const size = 2 + Math.random() * 4;
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-
-        container.appendChild(particle);
-      }
-    }
-
-    createParticles();
+    // Initial scroll state
+    onScroll();
 
     // ===== REVEAL ON SCROLL =====
     const revealObserver = new IntersectionObserver((entries) => {
@@ -3481,50 +3484,18 @@
       });
     });
 
-    // ===== MAGNETIC HOVER EFFECT =====
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-
-        card.style.transform = `translateY(-8px) scale(1.02) rotateX(${-y / 20}deg) rotateY(${x / 20}deg)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-      });
-    });
-
     // ===== CHAPTER TRANSITION =====
     const chapterOpeners = document.querySelectorAll('.chapter-opener');
     const chapterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('animate-in');
+          chapterObserver.unobserve(entry.target);
         }
       });
     }, { threshold: 0.3 });
 
     chapterOpeners.forEach(opener => chapterObserver.observe(opener));
-
-    // ===== PARALLAX SCROLL EFFECT =====
-    window.addEventListener('scroll', () => {
-      const scrolled = window.scrollY;
-
-      // Parallax for cover elements
-      const coverContent = document.querySelector('.cover-content');
-      if (coverContent && scrolled < window.innerHeight) {
-        coverContent.style.transform = `translateY(${scrolled * 0.3}px)`;
-        coverContent.style.opacity = 1 - (scrolled / window.innerHeight);
-      }
-
-      // Parallax for morph backgrounds
-      document.querySelectorAll('.morph-bg').forEach((bg, index) => {
-        const speed = 0.1 + (index * 0.05);
-        bg.style.transform = `translateY(${scrolled * speed}px)`;
-      });
-    });
 
     // ===== ENHANCED TIMELINE ANIMATION =====
     const timelineItems = document.querySelectorAll('.timeline-item');
@@ -3546,23 +3517,1397 @@
       timelineObserver.observe(item);
     });
 
-    // ===== CURSOR GLOW EFFECT ON DARK SECTIONS =====
-    document.querySelectorAll('.cover, .chapter-opener, .back-cover').forEach(section => {
-      section.addEventListener('mousemove', (e) => {
-        const rect = section.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        section.style.setProperty('--mouse-x', x + 'px');
-        section.style.setProperty('--mouse-y', y + 'px');
-      });
-    });
-
     // ===== READING TIME ESTIMATE =====
     const content = document.body.innerText;
     const wordCount = content.split(/\s+/).length;
     const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
     console.log(`📖 Tempo estimado de leitura: ${readingTime} minutos`);
+
+    // =====================================================
+    // ===== ENGINEER-LEVEL ADVANCED FEATURES =====
+    // =====================================================
+
+    // ===== CINEMATIC INTRO =====
+    const cinematicIntro = document.getElementById('cinematicIntro');
+    let introSkipped = sessionStorage.getItem('introSkipped') === 'true';
+
+    function skipIntro() {
+      if (cinematicIntro) {
+        cinematicIntro.classList.add('hidden');
+        document.body.style.overflow = '';
+        document.body.style.overflowX = 'hidden';
+        introSkipped = true;
+        sessionStorage.setItem('introSkipped', 'true');
+        // Show control panel after intro
+        setTimeout(() => {
+          document.getElementById('controlPanel')?.classList.add('visible');
+          // Completely remove intro from DOM after animation
+          cinematicIntro.style.display = 'none';
+        }, 500);
+      }
+    }
+
+    // Make skipIntro global
+    window.skipIntro = skipIntro;
+
+    if (cinematicIntro && !introSkipped) {
+      document.body.style.overflow = 'hidden';
+      // Auto-skip after 2 seconds (faster)
+      setTimeout(skipIntro, 2000);
+      // Skip on any key or click
+      document.addEventListener('keydown', skipIntro, { once: true });
+      cinematicIntro.addEventListener('click', skipIntro, { once: true });
+    } else {
+      // Already skipped before - remove intro immediately
+      if (cinematicIntro) {
+        cinematicIntro.style.display = 'none';
+      }
+      document.body.style.overflow = '';
+      document.body.style.overflowX = 'hidden';
+      document.getElementById('controlPanel')?.classList.add('visible');
+    }
+
+    // ===== DARK/LIGHT MODE TOGGLE =====
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('ebook-theme') || 'light';
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('ebook-theme', theme);
+      if (themeToggle) {
+        themeToggle.textContent = theme === 'dark' ? '☀️' : '🌓';
+      }
+    }
+
+    setTheme(savedTheme);
+
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    }
+
+    // ===== SOUND TOGGLE (Preparado para sons futuros) =====
+    const soundToggle = document.getElementById('soundToggle');
+    let soundEnabled = localStorage.getItem('ebook-sound') !== 'false';
+
+    function updateSoundIcon() {
+      if (soundToggle) {
+        soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
+      }
+    }
+    updateSoundIcon();
+
+    if (soundToggle) {
+      soundToggle.addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        localStorage.setItem('ebook-sound', soundEnabled);
+        updateSoundIcon();
+      });
+    }
+
+    // ===== BOOKMARK SYSTEM =====
+    const bookmarkBtn = document.getElementById('bookmarkBtn');
+    const bookmarkIndicator = document.getElementById('bookmarkIndicator');
+    let savedPosition = localStorage.getItem('ebook-bookmark');
+
+    function showBookmarkIndicator(message) {
+      if (bookmarkIndicator) {
+        bookmarkIndicator.querySelector('span').textContent = message;
+        bookmarkIndicator.classList.add('show');
+        setTimeout(() => bookmarkIndicator.classList.remove('show'), 2500);
+      }
+    }
+
+    // Restore bookmark on load
+    if (savedPosition && parseInt(savedPosition) > 100) {
+      const restore = confirm('📖 Tens uma posição guardada. Queres continuar de onde paraste?');
+      if (restore) {
+        window.scrollTo({ top: parseInt(savedPosition), behavior: 'smooth' });
+      }
+    }
+
+    if (bookmarkBtn) {
+      bookmarkBtn.addEventListener('click', () => {
+        localStorage.setItem('ebook-bookmark', window.scrollY);
+        showBookmarkIndicator('📖 Posição guardada! Podes fechar e voltar.');
+      });
+    }
+
+    // ===== KEYBOARD SHORTCUTS HELP =====
+    const keyboardBtn = document.getElementById('keyboardBtn');
+    const keyboardHelp = document.getElementById('keyboardHelp');
+    const closeKeyboardHelp = document.getElementById('closeKeyboardHelp');
+
+    if (keyboardBtn && keyboardHelp) {
+      keyboardBtn.addEventListener('click', () => {
+        keyboardHelp.classList.add('show');
+      });
+    }
+
+    if (closeKeyboardHelp) {
+      closeKeyboardHelp.addEventListener('click', () => {
+        keyboardHelp.classList.remove('show');
+      });
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        keyboardHelp?.classList.remove('show');
+        quizModal?.classList.remove('show');
+      }
+      // Open keyboard help with ?
+      if (e.key === '?' && !e.shiftKey) {
+        e.preventDefault();
+        keyboardHelp?.classList.toggle('show');
+      }
+      // Toggle dark mode with D
+      if (e.key === 'd' || e.key === 'D') {
+        const current = document.documentElement.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      }
+      // Save bookmark with B
+      if (e.key === 'b' || e.key === 'B') {
+        localStorage.setItem('ebook-bookmark', window.scrollY);
+        showBookmarkIndicator('📖 Posição guardada!');
+      }
+    });
+
+    // ===== INTERACTIVE QUIZ =====
+    const quizBtn = document.getElementById('quizBtn');
+    const quizModal = document.getElementById('quizModal');
+    const closeQuiz = document.getElementById('closeQuiz');
+    const quizQuestionEl = document.getElementById('quizQuestion');
+    const quizOptionsEl = document.getElementById('quizOptions');
+    const quizResultEl = document.getElementById('quizResult');
+    const quizNextBtn = document.getElementById('quizNext');
+    const quizProgressDots = document.getElementById('quizProgressDots');
+
+    const quizQuestions = [
+      {
+        question: "Qual é a origem mais provável do Cavalo Lusitano?",
+        options: ["Cavalos Ibéricos da Idade do Gelo", "Cavalos Árabes importados", "Cavalos Mongóis", "Cavalos da América do Norte"],
+        correct: 0,
+        explanation: "Os Lusitanos descendem dos cavalos ibéricos nativos que habitavam a Península há milhares de anos."
+      },
+      {
+        question: "Qual foi o papel do Lusitano durante a Reconquista?",
+        options: ["Transporte de mercadorias", "Cavalo de guerra", "Agricultura", "Corridas"],
+        correct: 1,
+        explanation: "O Lusitano foi selecionado pela sua coragem e agilidade como cavalo de guerra durante a Reconquista."
+      },
+      {
+        question: "Quando foi fundada a Coudelaria de Alter do Chão?",
+        options: ["1648", "1748", "1848", "1948"],
+        correct: 1,
+        explanation: "A Real Coudelaria de Alter foi fundada pelo Rei D. João V em 1748 e ainda existe hoje!"
+      },
+      {
+        question: "Qual a pelagem mais comum nos Lusitanos?",
+        options: ["Preto", "Alazão", "Tordilho", "Castanho"],
+        correct: 2,
+        explanation: "60-70% dos Lusitanos são tordilhos. Nascem escuros e clareiam com a idade."
+      },
+      {
+        question: "Em que disciplina os Lusitanos dominam completamente?",
+        options: ["Corridas", "Working Equitation", "Polo", "Saltos de Obstáculos"],
+        correct: 1,
+        explanation: "No Mundial de Working Equitation 2022, os 7 primeiros lugares foram todos Lusitanos!"
+      },
+      {
+        question: "Qual é a esperança média de vida de um Lusitano?",
+        options: ["15-20 anos", "20-25 anos", "25-30 anos", "35-40 anos"],
+        correct: 2,
+        explanation: "Os Lusitanos vivem em média 25-30 anos, com muitos a atingirem 30-35 anos."
+      },
+      {
+        question: "O que distingue a cabeça do Lusitano?",
+        options: ["Perfil côncavo", "Perfil subconvexo (romano)", "Perfil reto", "Perfil longo"],
+        correct: 1,
+        explanation: "O perfil subconvexo ou 'romano' é uma característica distintiva do Lusitano."
+      },
+      {
+        question: "Quantos cavalos Lusitanos existem aproximadamente no mundo?",
+        options: ["10.000", "40.000", "100.000", "200.000"],
+        correct: 1,
+        explanation: "Existem aproximadamente 40.000 Lusitanos registados em mais de 50 países."
+      }
+    ];
+
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+    let quizAnswered = false;
+
+    function renderQuizProgress() {
+      if (!quizProgressDots) return;
+      quizProgressDots.innerHTML = '';
+      quizQuestions.forEach((_, i) => {
+        const dot = document.createElement('span');
+        dot.className = 'quiz-dot' + (i === currentQuizIndex ? ' active' : '') + (i < currentQuizIndex ? ' completed' : '');
+        quizProgressDots.appendChild(dot);
+      });
+    }
+
+    function renderQuizQuestion() {
+      const q = quizQuestions[currentQuizIndex];
+      quizQuestionEl.textContent = `${currentQuizIndex + 1}. ${q.question}`;
+      quizOptionsEl.innerHTML = '';
+      quizResultEl.textContent = '';
+      quizAnswered = false;
+      quizNextBtn.style.display = 'none';
+
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => selectAnswer(i));
+        quizOptionsEl.appendChild(btn);
+      });
+
+      renderQuizProgress();
+    }
+
+    function selectAnswer(index) {
+      if (quizAnswered) return;
+      quizAnswered = true;
+
+      const q = quizQuestions[currentQuizIndex];
+      const buttons = quizOptionsEl.querySelectorAll('.quiz-option');
+
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.correct) btn.classList.add('correct');
+        if (i === index && i !== q.correct) btn.classList.add('wrong');
+      });
+
+      if (index === q.correct) {
+        quizScore++;
+        quizResultEl.innerHTML = `<span style="color: #4ade80;">✓ Correto!</span> ${q.explanation}`;
+      } else {
+        quizResultEl.innerHTML = `<span style="color: #f87171;">✗ Incorreto.</span> ${q.explanation}`;
+      }
+
+      quizNextBtn.style.display = 'inline-block';
+      quizNextBtn.textContent = currentQuizIndex === quizQuestions.length - 1 ? 'Ver Resultado' : 'Próxima →';
+    }
+
+    function nextQuestion() {
+      currentQuizIndex++;
+      if (currentQuizIndex >= quizQuestions.length) {
+        showQuizResult();
+      } else {
+        renderQuizQuestion();
+      }
+    }
+
+    function showQuizResult() {
+      const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+      let message = '';
+      let emoji = '';
+
+      if (percentage === 100) {
+        emoji = '🏆';
+        message = 'PERFEITO! És um verdadeiro especialista em Lusitanos!';
+      } else if (percentage >= 75) {
+        emoji = '🎉';
+        message = 'Excelente! Tens grande conhecimento sobre o Lusitano!';
+      } else if (percentage >= 50) {
+        emoji = '👍';
+        message = 'Bom trabalho! Continua a aprender sobre esta raça magnífica.';
+      } else {
+        emoji = '📚';
+        message = 'Há muito para descobrir! Relê o ebook e tenta novamente.';
+      }
+
+      quizQuestionEl.innerHTML = `<span style="font-size: 48px;">${emoji}</span><br>Resultado Final`;
+      quizOptionsEl.innerHTML = '';
+      quizResultEl.innerHTML = `
+        <div style="font-size: 36px; font-weight: bold; margin: 20px 0;">${quizScore}/${quizQuestions.length}</div>
+        <div style="font-size: 18px; margin-bottom: 20px;">${percentage}% correto</div>
+        <div>${message}</div>
+      `;
+      quizNextBtn.textContent = 'Recomeçar Quiz';
+      quizNextBtn.onclick = () => {
+        currentQuizIndex = 0;
+        quizScore = 0;
+        quizNextBtn.onclick = nextQuestion;
+        renderQuizQuestion();
+      };
+    }
+
+    if (quizBtn && quizModal) {
+      quizBtn.addEventListener('click', () => {
+        currentQuizIndex = 0;
+        quizScore = 0;
+        renderQuizQuestion();
+        quizModal.classList.add('show');
+      });
+    }
+
+    if (closeQuiz) {
+      closeQuiz.addEventListener('click', () => {
+        quizModal.classList.remove('show');
+      });
+    }
+
+    if (quizNextBtn) {
+      quizNextBtn.addEventListener('click', nextQuestion);
+    }
+
+    // ===== READING STATS BAR =====
+    const readingStats = document.getElementById('readingStats');
+    const statProgress = document.getElementById('statProgress');
+    const statTime = document.getElementById('statTime');
+    const statChapter = document.getElementById('statChapter');
+    let readingStartTime = Date.now();
+
+    function updateReadingStats() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = Math.round((scrollTop / docHeight) * 100);
+
+      // Update progress
+      if (statProgress) statProgress.textContent = `${progress}%`;
+
+      // Update reading time
+      const elapsed = Math.floor((Date.now() - readingStartTime) / 60000);
+      if (statTime) statTime.textContent = `${elapsed} min`;
+
+      // Update current chapter
+      const chapters = ['Capa', 'Cap. 1', 'Cap. 2', 'Cap. 3', 'Cap. 4', 'Fim'];
+      sections.forEach((id, index) => {
+        const section = document.getElementById(id);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= window.innerHeight / 2 && rect.bottom > 0) {
+            if (statChapter) statChapter.textContent = chapters[index];
+          }
+        }
+      });
+
+      // Show stats bar after scrolling
+      if (readingStats) {
+        if (scrollTop > 500) {
+          readingStats.classList.add('visible');
+        } else {
+          readingStats.classList.remove('visible');
+        }
+      }
+    }
+
+    window.addEventListener('scroll', updateReadingStats);
+
+    // ===== EASTER EGGS =====
+    // Konami Code: ↑↑↓↓←→←→BA
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let konamiIndex = 0;
+
+    // Secret word: LUSITANO
+    const secretWord = 'lusitano';
+    let secretIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+      // Konami Code
+      if (e.key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          triggerEasterEgg('konami');
+          konamiIndex = 0;
+        }
+      } else {
+        konamiIndex = 0;
+      }
+
+      // Secret Word
+      if (e.key.toLowerCase() === secretWord[secretIndex]) {
+        secretIndex++;
+        if (secretIndex === secretWord.length) {
+          triggerEasterEgg('lusitano');
+          secretIndex = 0;
+        }
+      } else {
+        secretIndex = 0;
+      }
+    });
+
+    // Triple-click easter egg
+    let clickCount = 0;
+    let clickTimer = null;
+
+    document.querySelector('.cover-logo')?.addEventListener('click', () => {
+      clickCount++;
+      if (clickCount === 3) {
+        triggerEasterEgg('logo');
+        clickCount = 0;
+      }
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => clickCount = 0, 500);
+    });
+
+    function triggerEasterEgg(type) {
+      const container = document.getElementById('easterEggContainer');
+      if (!container) return;
+
+      container.classList.add('active');
+
+      // Create confetti
+      const colors = ['#D4AF37', '#C9A227', '#FFD700', '#B8860B', '#FFA500'];
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+        container.appendChild(confetti);
+      }
+
+      // Show message
+      const messages = {
+        konami: '🎮 Código Konami Desbloqueado! És um verdadeiro gamer!',
+        lusitano: '🐴 Palavra secreta encontrada! O Lusitano agradece!',
+        logo: '✨ Triplo clique secreto! Tens bom olho!'
+      };
+
+      const messageEl = document.createElement('div');
+      messageEl.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #D4AF37, #B8860B);
+        color: #1a1a2e;
+        padding: 30px 50px;
+        border-radius: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        z-index: 10002;
+        animation: bounceIn 0.5s ease;
+        box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4);
+      `;
+      messageEl.textContent = messages[type];
+      container.appendChild(messageEl);
+
+      // Cleanup
+      setTimeout(() => {
+        container.classList.remove('active');
+        container.innerHTML = '';
+      }, 4000);
+    }
+
+    // Add bounceIn animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes bounceIn {
+        0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        50% { transform: translate(-50%, -50%) scale(1.1); }
+        100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      }
+      .quiz-option.correct { background: #22c55e !important; border-color: #22c55e !important; color: white !important; }
+      .quiz-option.wrong { background: #ef4444 !important; border-color: #ef4444 !important; color: white !important; }
+      .quiz-option:disabled { cursor: not-allowed; opacity: 0.8; }
+      .quiz-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); display: inline-block; margin: 0 4px; transition: all 0.3s; }
+      .quiz-dot.active { background: #D4AF37; transform: scale(1.3); }
+      .quiz-dot.completed { background: #22c55e; }
+    `;
+    document.head.appendChild(style);
+
+    // ===== MULTI-LANGUAGE SYSTEM (PT/EN) =====
+    const translations = {
+      pt: {
+        // Cinematic Intro
+        cinematicTagline: 'Apresenta',
+        cinematicSkip: 'Pressiona qualquer tecla para continuar',
+
+        // Control Panel Tooltips
+        langTooltip: 'Idioma',
+        themeTooltip: 'Modo Escuro/Claro',
+        soundTooltip: 'Som On/Off',
+        bookmarkTooltip: 'Guardar Posição',
+        keyboardTooltip: 'Atalhos (?)',
+        quizTooltip: 'Quiz Lusitano',
+
+        // Cover
+        coverSubtitle: 'O Guia Essencial Para Iniciantes',
+        coverTitle: 'Introdução ao<br><em class="text-gradient">Cavalo Lusitano</em>',
+        coverTagline: 'A raça de cavalos mais antiga do mundo,<br>o orgulho de Portugal',
+        coverScroll: 'Scroll para começar',
+        coverMetaChapters: 'Capítulos',
+        coverMetaHistory: 'Anos de História',
+        coverMetaBreed: 'Raça Única',
+        coverFooter: 'Ebook Gratuito · Edição 2026 · portal-lusitano.pt',
+
+        // Navigation
+        navCover: 'Capa',
+        navCap1: 'Cap 1: A Raça',
+        navCap2: 'Cap 2: História',
+        navCap3: 'Cap 3: Características',
+        navCap4: 'Cap 4: Próximos Passos',
+        navConclusion: 'Conclusão',
+        tocTitle: 'Índice',
+        tocCap1: '1. O Que É o Lusitano?',
+        tocCap2: '2. A História',
+        tocCap3: '3. Características',
+        tocCap4: '4. Próximos Passos',
+
+        // Chapter 1
+        cap1Label: 'Capítulo Um',
+        cap1Title: 'O Que É o<br>Cavalo Lusitano?',
+        cap1Desc: 'Conhece a raça em 60 segundos e descobre o que a torna verdadeiramente única.',
+        cap1Intro: 'Se estás a ler isto, parabéns — acabaste de dar o primeiro passo para conhecer uma das raças de cavalos mais <strong>impressionantes do mundo</strong>.',
+        cap1Who: 'O que vais descobrir:',
+        cap1WhoItems: ['A história épica de 5.000+ anos', 'Porque é chamado "o cavalo dos reis"', 'Características únicas que o distinguem', 'Como podes começar a tua jornada'],
+        cap1Define: 'Definição Oficial',
+        cap1DefineText: 'O Cavalo Lusitano (ou Puro Sangue Lusitano — PSL) é uma raça ibérica originária de Portugal, reconhecida mundialmente pela sua elegância, inteligência e versatilidade.',
+        cap1Quick: 'Dados Rápidos',
+        cap1Origin: 'Origem',
+        cap1Population: 'População',
+        cap1Specialty: 'Especialidade',
+        cap1Longevity: 'Longevidade',
+
+        // Chapter 2
+        cap2Label: 'Capítulo Dois',
+        cap2Title: 'História em<br>10 Minutos',
+        cap2Desc: 'Uma jornada épica de 20.000 a.C. até aos dias de hoje.',
+
+        // Chapter 3
+        cap3Label: 'Capítulo Três',
+        cap3Title: 'Características<br>Únicas',
+        cap3Desc: 'Morfologia, temperamento e aptidões em detalhe.',
+
+        // Chapter 4
+        cap4Label: 'Capítulo Quatro',
+        cap4Title: 'Próximos<br>Passos',
+        cap4Desc: 'Como continuar a tua jornada com o Lusitano.',
+
+        // Back Cover
+        backCoverTagline: 'O Mundo do Cavalo Lusitano',
+        backCoverThanks: 'Obrigado por leres este ebook.<br>Esperamos que seja o início de uma bela jornada.',
+        backCoverCta: 'Explorar Portal Lusitano PRO →',
+        backCoverCopyright: 'Compilação © 2026 Portal Lusitano · Ebook Gratuito · v2.0<br>Informação de fontes públicas · Distribuição livre',
+
+        // Keyboard Help
+        keyboardTitle: '⌨️ Atalhos de Teclado',
+        keyNavigate: 'Navegar',
+        keySmoothScroll: 'Scroll suave',
+        keyStart: 'Início',
+        keyEnd: 'Fim',
+        keyDarkMode: 'Modo escuro',
+        keyBookmark: 'Bookmark',
+        keyHelp: 'Esta ajuda',
+        keyChapter: 'Ir ao capítulo',
+        keyClose: 'Fechar modal',
+
+        // Quiz
+        quizTitle: '🧠 Quiz: Testa os Teus Conhecimentos!',
+        quizCorrect: '✓ Correto!',
+        quizWrong: '✗ Incorreto.',
+        quizNext: 'Próxima →',
+        quizResult: 'Ver Resultado',
+        quizRestart: 'Recomeçar Quiz',
+        quizPerfect: 'PERFEITO! És um verdadeiro especialista em Lusitanos!',
+        quizExcellent: 'Excelente! Tens grande conhecimento sobre o Lusitano!',
+        quizGood: 'Bom trabalho! Continua a aprender sobre esta raça magnífica.',
+        quizLearn: 'Há muito para descobrir! Relê o ebook e tenta novamente.',
+
+        // Reading Stats
+        statRead: 'lido',
+        statTime: 'tempo',
+        statChapter: 'Capítulo',
+
+        // Bookmark
+        bookmarkSaved: '📖 Posição guardada!',
+        bookmarkRestore: 'Tens uma posição guardada. Queres continuar de onde paraste?',
+
+        // Easter Eggs
+        easterKonami: '🎮 Código Konami Desbloqueado! És um verdadeiro gamer!',
+        easterLusitano: '🐴 Palavra secreta encontrada! O Lusitano agradece!',
+        easterLogo: '✨ Triplo clique secreto! Tens bom olho!',
+
+        // Content Headings - Chapter 1
+        ch1WhatDiscover: 'O Que Vais Descobrir',
+        ch1RaceIn60: 'A Raça em 60 Segundos',
+        ch1WhyLusitano: 'Por Que "Lusitano"?',
+        ch1VsAndaluz: 'Lusitano vs Andaluz vs Ibérico',
+        ch1WhatMakesSpecial: 'O Que Torna o Lusitano Especial?',
+        ch1MillenialHistory: '1. História Milenar',
+        ch1UniqueVersatility: '2. Versatilidade Única',
+        ch1GoldenTemperament: '3. Temperamento Dourado',
+        ch1TimelessBeauty: '4. Beleza Intemporal',
+        ch1EmotionalConnection: '5. Conexão Emocional',
+
+        // Content Headings - Chapter 2
+        ch2Journey5000: 'Uma Jornada de 5.000 Anos',
+
+        // Content Headings - Chapter 3
+        ch3Morphology: 'Morfologia: O Visual Lusitano',
+        ch3Coats: 'Pelagens',
+        ch3Temperament: 'Temperamento: 5 Qualidades Obrigatórias',
+        ch3Abilities: 'Aptidões: O Que Pode Fazer?',
+        ch3Health: 'Saúde e Longevidade',
+
+        // Content Headings - Chapter 4
+        ch4FallInLove: 'Apaixonaste-te pelo Lusitano?',
+        ch4Step1: 'Passo 1: Aprende Mais',
+        ch4Step2: 'Passo 2: Vê ao Vivo',
+        ch4Step3: 'Passo 3: Experimenta Montar',
+        ch4Step4: 'Passo 4: Considera Comprar',
+        ch4WantMore: 'Quer Mais Conhecimento?',
+
+        // ===== FULL CONTENT TRANSLATIONS =====
+        // Introduction
+        introWelcome: 'Bem-Vindo ao Mundo do Lusitano',
+        introThanks: 'Obrigado por descarregares este ebook. Se estás aqui, é porque algo te atraiu ao <strong>Cavalo Lusitano</strong> — e fizeste muito bem em seguir essa curiosidade.',
+        introText: 'O Lusitano é uma das raças equinas mais <strong>antigas</strong>, <strong>nobres</strong> e <strong>versáteis</strong> do mundo. Mas é também uma das mais mal compreendidas. Este ebook é o teu <strong>primeiro passo</strong> numa jornada fascinante.',
+        introQuote: 'O Cavalo Lusitano não é apenas uma raça — é 5.000 anos de história portuguesa a galopar até hoje.',
+        introStart: 'Vamos começar? 🐴',
+        originalContent: '<em>Compilação educativa © 2026 Portal Lusitano · Informação de fontes públicas</em>',
+
+        // Chapter Cards
+        card1Title: 'Capítulo 1 · A Raça',
+        card1Text: 'Descobre o que torna o Lusitano único entre todas as raças de cavalos do mundo.',
+        card2Title: 'Capítulo 2 · A História',
+        card2Text: '5.000 anos de história incrível resumidos de forma envolvente.',
+        card3Title: 'Capítulo 3 · Características',
+        card3Text: 'Morfologia, temperamento e aptidões que não encontras em mais nenhum cavalo.',
+        card4Title: 'Capítulo 4 · Próximos Passos',
+        card4Text: 'Como continuar a tua jornada se te apaixonares pelo Lusitano.',
+
+        // Facts Box
+        factsTitle: 'Puro Sangue Lusitano (PSL)',
+        factOriginLabel: 'Origem',
+        factOriginValue: 'Portugal (Península Ibérica)',
+        factAgeLabel: 'Idade da Raça',
+        factAgeValue: '5.000+ anos (das mais antigas!)',
+        factHeightLabel: 'Altura',
+        factHeightValue: '155-170cm (compacto mas poderoso)',
+        factCoatsLabel: 'Pelagens',
+        factCoatsValue: 'Tordilho, castanho, alazão, preto',
+        factTempLabel: 'Temperamento',
+        factTempValue: 'Corajoso, dócil, inteligente',
+        factAbilitiesLabel: 'Aptidões',
+        factAbilitiesValue: 'Dressage, Working Equitation, Alta Escola',
+        factPopLabel: 'População',
+        factPopValue: '~40.000 cavalos em 50+ países',
+        factPriceLabel: 'Preço Médio',
+        factPriceValue: '€5.000 - €40.000+',
+
+        // Curiosity
+        curiosityTitle: '💡 Curiosidade',
+        curiosity1: 'A Escola Portuguesa de Arte Equestre, em Lisboa, utiliza <strong>exclusivamente</strong> cavalos Lusitanos nas suas demonstrações de Alta Escola!',
+
+        // Why Lusitano
+        whyLusitanoText: '<strong>LUSITÂNIA</strong> era o nome romano da região que hoje é Portugal. Quando os Romanos conquistaram a Península Ibérica (século I a.C.), ficaram impressionados com os cavalos locais — rápidos, ágeis e corajosos em batalha. Chamaram-lhes <strong>"Equus Lusitanus"</strong> (Cavalo da Lusitânia). 2.000 anos depois, o nome mantém-se!',
+
+        // Comparison
+        lusitanoDesc: 'Nascido em Portugal, registado na APSL',
+        andaluzDesc: 'Nascido em Espanha, registado na ANCCE',
+        ibericoDesc: 'Termo "guarda-chuva" para ambos',
+        geneticallyText: '<strong>Geneticamente:</strong> Muito similares (mesma origem). O Lusitano é ligeiramente mais compacto.',
+
+        // What makes special
+        historyList1: '5.000 anos de seleção natural e humana',
+        historyList2: 'Usado por Celtas, Romanos, Mouros, Cavaleiros Medievais e Reis',
+        historyList3: 'Participou nos Descobrimentos e batalhas históricas',
+        historyList4: 'Sobreviveu guerras, invasões e modernização',
+        historyResult: '<strong>Resultado:</strong> Uma raça resiliente, forjada pela história.',
+
+        versatilityIntro: 'A maioria das raças é especializada (Quarter Horse → gado; PSI → corridas; Warmblood → desporto). O <strong>LUSITANO faz TUDO bem</strong>:',
+        versatility1: '<strong>Dressage/Alta Escola</strong> — movimentos elevados naturais',
+        versatility2: '<strong>Working Equitation</strong> — domina mundialmente (55%+ dos competidores, Top 7 mundial)',
+        versatility3: '<strong>Toureio</strong> — coragem excecional',
+        versatility4: '<strong>Lazer/Turismo</strong> — dócil e seguro',
+        versatility5: '<strong>Terapia Equina</strong> — temperamento calmo',
+        versatility6: '<strong>Trabalho de Campo</strong> — ágil e resistente',
+        versatilityNote: '<strong>Nenhuma outra raça é tão versátil!</strong>',
+
+        tempCourage: 'Coragem',
+        tempDocility: 'Docilidade',
+        tempIntelligence: 'Inteligência',
+        tempText: 'A maioria das raças tem 1-2 destas qualidades. O Lusitano tem as 3! É adequado para iniciantes (dócil) MAS também para profissionais (coragem, performance).',
+
+        beautyText: '<strong>Tipo Barroco:</strong> Pescoço arqueado e nobre, garupa arredondada e poderosa, movimentos elevados ("dança"), porte aristocrático. Se viste quadros renascentistas com cavalos elegantes — eram Lusitanos!',
+
+        connectionQuote: '"Não é um cavalo. É um parceiro." — "Ele entende-me." — "Nunca conheci um cavalo tão generoso."',
+        connectionText: '<strong>Muitos donos de Lusitano nunca mudam de raça. Ficam "viciados"!</strong>',
+
+        // Chapter 2 - Timeline
+        timelineIntro: 'O Cavalo Lusitano não apareceu do nada. É o resultado de milénios de evolução, seleção e história.',
+        timeline1Date: '20.000 a.C.',
+        timeline1Title: 'Cavalos Selvagens Ibéricos',
+        timeline1Desc: 'Pinturas rupestres em Altamira e Escoural mostram cavalos primitivos com características que o Lusitano moderno ainda mantém.',
+        timeline2Date: '1.000 a.C.',
+        timeline2Title: 'Celtas e Seleção Inicial',
+        timeline2Desc: 'Os Celtas domesticam cavalos para guerra, caça e transporte. Cavalos Ibéricos ganham reputação na Europa.',
+        timeline3Date: '100 a.C. - 400 d.C.',
+        timeline3Title: 'Roma: Fama Internacional',
+        timeline3Desc: 'Romanos descobrem os "Equus Lusitanus" e ficam impressionados. Usam-nos na cavalaria e exportam para Roma.',
+        timeline4Date: '711 - 1249',
+        timeline4Title: 'Ocupação Mourisca',
+        timeline4Desc: '500 anos de influência árabe trazem novos métodos de treino. A genética Lusitana mantém-se distinta.',
+        timeline5Date: '1249 - 1415',
+        timeline5Title: 'Reconquista: Cavalo de Guerra',
+        timeline5Desc: 'O Lusitano torna-se o cavalo de guerra medieval por excelência. Seleção para coragem e força.',
+        timeline6Date: '1415 - 1700',
+        timeline6Title: 'Era dos Descobrimentos',
+        timeline6Desc: 'Portugal domina os mares. Lusitanos são transportados para Brasil, África e Ásia em caravelas.',
+        timeline7Date: '1748',
+        timeline7Title: 'Coudelaria Real de Alter',
+        timeline7Desc: 'Rei D. João V funda a Real Coudelaria de Alter do Chão. Ainda existe hoje — 276 anos depois!',
+        timeline8Date: '1800 - 1950',
+        timeline8Title: 'Guerras e Quase Extinção',
+        timeline8Desc: 'Guerras Napoleónicas e mecanização devastam a população. De 50.000 restam apenas 5.000 cavalos.',
+        timeline9Date: '1967',
+        timeline9Title: 'Criação do Stud-Book',
+        timeline9Desc: 'Primeiro livro genealógico oficial da raça. Em 1989, nasce a APSL — dedicada exclusivamente ao Lusitano.',
+        timeline10Date: '1980 - Hoje',
+        timeline10Title: 'Renascimento Global',
+        timeline10Desc: 'Exportação para 50+ países. Domínio em Working Equitation. População mundial: ~40.000 cavalos. Raça SALVA!',
+
+        // Chapter 3 - Morphology
+        morphIntro: 'O Lusitano pertence ao <strong>tipo Barroco</strong> — elegante, compacto e poderoso.',
+        morphHead: '🎭 Cabeça',
+        morphHeadDesc: 'Perfil subconvexo ("romano"), olhos grandes e expressivos, orelhas médias. Visual aristocrático.',
+        morphNeck: '🦢 Pescoço',
+        morphNeckDesc: 'Médio/longo, arqueado ("cisne"), musculado. Facilita movimentos elevados.',
+        morphBody: '💪 Tronco',
+        morphBodyDesc: 'Dorso curto e forte, peito largo e profundo. Visual compacto e poderoso.',
+        morphCroup: '🍑 Garupa',
+        morphCroupDesc: 'Arredondada, musculada, ligeiramente inclinada. Impulsão e agilidade.',
+        morphLegs: '🦵 Membros',
+        morphLegsDesc: 'Proporcionais, ossatura forte, cascos duros. Estrutura atlética e resistente.',
+        morphSize: '📏 Altura',
+        morphSizeDesc: 'Machos: 160-168cm · Fêmeas: 155-163cm. Tamanho médio ideal.',
+
+        // Coats table
+        coatGrey: 'Tordilho',
+        coatGreyFreq: '60-70%',
+        coatGreyDesc: 'Nasce escuro, clareia com idade. Branco aos 10-15 anos.',
+        coatBay: 'Castanho',
+        coatBayFreq: '20-25%',
+        coatBayDesc: 'Castanho escuro/claro com crinas mais escuras.',
+        coatChestnut: 'Alazão',
+        coatChestnutFreq: '5-10%',
+        coatChestnutDesc: 'Castanho avermelhado, crinas iguais ou loiras.',
+        coatBlack: 'Preto',
+        coatBlackFreq: '3-5%',
+        coatBlackDesc: 'Preto sólido — raro e muito procurado!',
+
+        // Temperament cards
+        tempCourageCard: '🦁 Coragem',
+        tempCourageCardDesc: 'Não espanta facilmente, enfrenta novidade com confiança.',
+        tempNobilityCard: '👑 Nobreza',
+        tempNobilityCardDesc: 'Porte altivo, expressão confiante. "Sabe que é especial."',
+        tempIntelCard: '🧠 Inteligência',
+        tempIntelCardDesc: 'Aprende 3-5x mais rápido. Memoriza percursos após 2-3 vezes.',
+        tempGenerosityCard: '❤️ Generosidade',
+        tempGenerosityCardDesc: 'Dá tudo pelo cavaleiro, não desiste, perdoa erros.',
+
+        // Abilities table headers
+        abilityDiscipline: 'Disciplina',
+        abilityRating: 'Avaliação',
+        abilityWhy: 'Porquê',
+
+        // Health
+        healthYearsAvg: 'Anos Vida (média)',
+        healthYearsMany: 'Anos (muitos atingem!)',
+        healthGenetics: 'Poucos Problemas Genéticos',
+        healthWhyLive: '<strong>Porquê vive mais:</strong> Genética robusta (séculos seleção natural), estrutura equilibrada (menos lesões), uso variado (não desgaste extremo).',
+        healthKnowTitle: '🩺 A Conhecer',
+        healthKnowText: '<strong>Melanoma (Tordilhos):</strong> 70-80% >15 anos (geralmente benigno) · <strong>Laminite:</strong> Prevenção com controlo peso · <strong>Cólica:</strong> Emergência veterinária',
+
+        // Chapter 4
+        ch4Intro: 'Se chegaste aqui, provável que sim! Aqui está o que podes fazer a seguir:',
+        ch4Youtube: '📺 YouTube',
+        ch4Websites: '🌐 Websites',
+        ch4OfficialAPSL: '<strong>APSL</strong> (apsl.pt) — Oficial',
+        ch4PortalLusitano: '<strong>Portal Lusitano</strong> — Conteúdo PT',
+
+        // Step 2 table
+        step2Location: 'Local',
+        step2WhatSee: 'O Que Ver',
+        step2Price: 'Preço',
+        step2EPAE: 'Galas de Alta Escola — OBRIGATÓRIO!',
+        step2Golega: 'Maior evento! 200.000+ visitantes',
+        step2WE: 'Lusitanos em ação',
+        step2Alter: '120+ cavalos, história viva',
+
+        // Step 3
+        step3Text: 'Procura um centro hípico com Lusitanos. <strong>Aulas:</strong> €15-30/hora · <strong>Pacotes:</strong> €80-150/mês',
+
+        // Step 4
+        step4Category: 'Categoria',
+        step4Value: 'Valor',
+        step4Foal: 'Poldro 1-2 anos',
+        step4Trained: 'Cavalo treinado 5-8 anos',
+        step4Annual: 'Custos anuais (pensão, vet, ferrador)',
+        step4Warning: '<strong>⚠️ Compromisso:</strong> Um cavalo = 20-30 anos de responsabilidade!',
+
+        // PRO section
+        proSubtitle: 'Este ebook gratuito é apenas o <strong>INÍCIO</strong>!',
+        proTitle: 'Portal Lusitano PRO',
+        proTagline: 'Conteúdo exclusivo para verdadeiros aficionados',
+        proCode: 'Usa o código para 20% de desconto:',
+
+        // Final message
+        finalTitle: 'Mensagem Final',
+        finalQuote: 'O Cavalo Lusitano é mais que uma raça — é <strong>património cultural</strong>, <strong>história viva</strong>, <strong>arte em movimento</strong>. Cada vez que montas, treinas, ou simplesmente admiras um Lusitano, estás a conectar-te com 5.000 anos de história.',
+        finalGuardians: '<strong>O Lusitano precisa de guardiões.</strong> Cada geração tem a responsabilidade de preservar esta raça para a próxima.',
+        finalQuestion: 'Serás tu um desses guardiões? 🐴👑',
+
+        // Sources
+        sourcesTitle: '📚 Fontes e Referências',
+        sourcesText: '<strong>Informação baseada em fontes públicas:</strong><br>• <strong>APSL</strong> — Associação Portuguesa de Criadores do Cavalo Puro Sangue Lusitano (cavalo-lusitano.com)<br>• <strong>FEI</strong> — Fédération Equestre Internationale<br>• <strong>WAWE</strong> — World Association for Working Equitation<br>• <strong>Coudelaria de Alter</strong> — Companhia das Lezírias<br>• Publicações académicas e literatura equestre especializada<br><br><em>Este ebook é uma compilação educativa de informação pública disponível nas fontes acima citadas. Os dados apresentados são de natureza factual e de domínio público.</em>',
+
+        // Coat Table Headers
+        coatHeader: 'Pelagem',
+        coatFreqHeader: 'Frequência',
+        coatCharHeader: 'Características',
+
+        // Abilities Table
+        abilityDressage: 'Dressage / Alta Escola',
+        abilityDressageWhy: 'Movimentos elevados naturais (piaffe, passage). Até Grand Prix!',
+        abilityWE: 'Working Equitation',
+        abilityWEWhy: 'Domínio total! Top 7 do Mundial 2022 foram todos Lusitanos.',
+        abilityBull: 'Toureio Português',
+        abilityBullWhy: 'Coragem extrema, agilidade, inteligência.',
+        abilityLeisure: 'Lazer / Turismo',
+        abilityLeisureWhy: 'Dócil, seguro, confortável, resistente, belo.',
+        abilityTherapy: 'Terapia Equina',
+        abilityTherapyWhy: 'Temperamento calmo, sensibilidade emocional alta.',
+        abilityJumping: 'Saltos',
+        abilityJumpingWhy: 'Consegue 1,10-1,20m mas não é especialidade.',
+        abilityRacing: 'Corridas',
+        abilityRacingWhy: '~50km/h (vs PSI 70km/h) — não adequado.',
+
+        // Health
+        healthHealthy: 'Saudável',
+
+        // Step 2 Locations
+        step2EPAEName: 'Escola Portuguesa Arte Equestre',
+        step2GolegaName: 'Feira Golegã',
+        step2November: 'Novembro',
+        step2Free: 'Gratuito',
+        step2Free2: 'Gratuito',
+        step2WEName: 'Competições Working Equitation',
+        step2AlterName: 'Coudelaria de Alter',
+
+        // PRO Benefits
+        proBenefit1: '✓ 50+ Ebooks (150-200p cada)',
+        proBenefit2: '✓ Manual do Criador',
+        proBenefit3: '✓ Linhagens de Elite',
+        proBenefit4: '✓ Treino de Dressage A-Z',
+        proBenefit5: '✓ Templates Profissionais',
+        proBenefit6: '✓ Vídeos Exclusivos',
+        proBenefit7: '✓ Comunidade Privada',
+        proBenefit8: '✓ Consultoria Expert',
+
+        // Legal Disclaimer
+        legalTitle: '⚖️ Aviso Legal',
+        legalText: '<strong>IMPORTANTE - Propriedade da Informação:</strong><br>O Portal Lusitano <strong>NÃO é proprietário</strong> da informação contida neste ebook. Toda a informação foi retirada de fontes públicas (APSL, FEI, Wikipedia, publicações académicas, etc.) e pertence aos seus respetivos autores e organizações. O Portal Lusitano apenas compilou e organizou esta informação num formato educativo.<br><br><strong>Natureza do Conteúdo:</strong> Este ebook é uma compilação gratuita de informação pública e factual sobre o Cavalo Lusitano. Os dados, estatísticas e factos históricos apresentados são de domínio público e estão disponíveis nas fontes citadas.<br><br><strong>Uso Livre:</strong> Este ebook é gratuito e pode ser partilhado livremente para fins educativos. A informação aqui contida pode ser encontrada nas fontes originais citadas.<br><br><strong>Isenção de Responsabilidade:</strong> As informações são de caráter educativo e informativo. Não substituem aconselhamento veterinário, profissional equestre ou financeiro. Consulte sempre as fontes oficiais e profissionais qualificados.<br><br><strong>Créditos:</strong> Toda a informação factual pertence às fontes citadas (APSL, FEI, WAWE, Coudelaria de Alter, publicações académicas). O Portal Lusitano agradece a estas organizações pela disponibilização pública desta informação.',
+
+        // Quiz Questions
+        quizQuestions: [
+          { question: "Qual é a origem mais provável do Cavalo Lusitano?", options: ["Cavalos Ibéricos da Idade do Gelo", "Cavalos Árabes importados", "Cavalos Mongóis", "Cavalos da América do Norte"], correct: 0, explanation: "Os Lusitanos descendem dos cavalos ibéricos nativos que habitavam a Península há milhares de anos." },
+          { question: "Qual foi o papel do Lusitano durante a Reconquista?", options: ["Transporte de mercadorias", "Cavalo de guerra", "Agricultura", "Corridas"], correct: 1, explanation: "O Lusitano foi selecionado pela sua coragem e agilidade como cavalo de guerra durante a Reconquista." },
+          { question: "Quando foi fundada a Coudelaria de Alter do Chão?", options: ["1648", "1748", "1848", "1948"], correct: 1, explanation: "A Real Coudelaria de Alter foi fundada pelo Rei D. João V em 1748 e ainda existe hoje!" },
+          { question: "Qual a pelagem mais comum nos Lusitanos?", options: ["Preto", "Alazão", "Tordilho", "Castanho"], correct: 2, explanation: "60-70% dos Lusitanos são tordilhos. Nascem escuros e clareiam com a idade." },
+          { question: "Em que disciplina os Lusitanos dominam completamente?", options: ["Corridas", "Working Equitation", "Polo", "Saltos de Obstáculos"], correct: 1, explanation: "No Mundial de Working Equitation 2022, os 7 primeiros lugares foram todos Lusitanos!" },
+          { question: "Qual é a esperança média de vida de um Lusitano?", options: ["15-20 anos", "20-25 anos", "25-30 anos", "35-40 anos"], correct: 2, explanation: "Os Lusitanos vivem em média 25-30 anos, com muitos a atingirem 30-35 anos." },
+          { question: "O que distingue a cabeça do Lusitano?", options: ["Perfil côncavo", "Perfil subconvexo (romano)", "Perfil reto", "Perfil longo"], correct: 1, explanation: "O perfil subconvexo ou 'romano' é uma característica distintiva do Lusitano." },
+          { question: "Quantos cavalos Lusitanos existem aproximadamente no mundo?", options: ["10.000", "40.000", "100.000", "200.000"], correct: 1, explanation: "Existem aproximadamente 40.000 Lusitanos registados em mais de 50 países." }
+        ]
+      },
+      en: {
+        // Cinematic Intro
+        cinematicTagline: 'Presents',
+        cinematicSkip: 'Press any key to continue',
+
+        // Control Panel Tooltips
+        langTooltip: 'Language',
+        themeTooltip: 'Dark/Light Mode',
+        soundTooltip: 'Sound On/Off',
+        bookmarkTooltip: 'Save Position',
+        keyboardTooltip: 'Shortcuts (?)',
+        quizTooltip: 'Lusitano Quiz',
+
+        // Cover
+        coverSubtitle: 'The Essential Guide for Beginners',
+        coverTitle: 'Introduction to the<br><em class="text-gradient">Lusitano Horse</em>',
+        coverTagline: 'The oldest horse breed in the world,<br>the pride of Portugal',
+        coverScroll: 'Scroll to begin',
+        coverMetaChapters: 'Chapters',
+        coverMetaHistory: 'Years of History',
+        coverMetaBreed: 'Unique Breed',
+        coverFooter: 'Free Ebook · 2026 Edition · portal-lusitano.pt',
+
+        // Navigation
+        navCover: 'Cover',
+        navCap1: 'Ch 1: The Breed',
+        navCap2: 'Ch 2: History',
+        navCap3: 'Ch 3: Characteristics',
+        navCap4: 'Ch 4: Next Steps',
+        navConclusion: 'Conclusion',
+        tocTitle: 'Contents',
+        tocCap1: '1. What Is the Lusitano?',
+        tocCap2: '2. The History',
+        tocCap3: '3. Characteristics',
+        tocCap4: '4. Next Steps',
+
+        // Chapter 1
+        cap1Label: 'Chapter One',
+        cap1Title: 'What Is the<br>Lusitano Horse?',
+        cap1Desc: 'Get to know the breed in 60 seconds and discover what makes it truly unique.',
+        cap1Intro: 'If you\'re reading this, congratulations — you\'ve just taken the first step to learning about one of the most <strong>impressive horse breeds in the world</strong>.',
+        cap1Who: 'What you\'ll discover:',
+        cap1WhoItems: ['The epic 5,000+ year history', 'Why it\'s called "the horse of kings"', 'Unique characteristics that set it apart', 'How you can start your journey'],
+        cap1Define: 'Official Definition',
+        cap1DefineText: 'The Lusitano Horse (or Puro Sangue Lusitano — PSL) is an Iberian breed originating from Portugal, recognized worldwide for its elegance, intelligence, and versatility.',
+        cap1Quick: 'Quick Facts',
+        cap1Origin: 'Origin',
+        cap1Population: 'Population',
+        cap1Specialty: 'Specialty',
+        cap1Longevity: 'Longevity',
+
+        // Chapter 2
+        cap2Label: 'Chapter Two',
+        cap2Title: 'History in<br>10 Minutes',
+        cap2Desc: 'An epic journey from 20,000 BC to present day.',
+
+        // Chapter 3
+        cap3Label: 'Chapter Three',
+        cap3Title: 'Unique<br>Characteristics',
+        cap3Desc: 'Morphology, temperament, and abilities in detail.',
+
+        // Chapter 4
+        cap4Label: 'Chapter Four',
+        cap4Title: 'Next<br>Steps',
+        cap4Desc: 'How to continue your journey with the Lusitano.',
+
+        // Back Cover
+        backCoverTagline: 'The World of the Lusitano Horse',
+        backCoverThanks: 'Thank you for reading this ebook.<br>We hope this is the beginning of a beautiful journey.',
+        backCoverCta: 'Explore Portal Lusitano PRO →',
+        backCoverCopyright: 'Compilation © 2026 Portal Lusitano · Free Ebook · v2.0<br>Information from public sources · Free distribution',
+
+        // Keyboard Help
+        keyboardTitle: '⌨️ Keyboard Shortcuts',
+        keyNavigate: 'Navigate',
+        keySmoothScroll: 'Smooth scroll',
+        keyStart: 'Start',
+        keyEnd: 'End',
+        keyDarkMode: 'Dark mode',
+        keyBookmark: 'Bookmark',
+        keyHelp: 'This help',
+        keyChapter: 'Go to chapter',
+        keyClose: 'Close modal',
+
+        // Quiz
+        quizTitle: '🧠 Quiz: Test Your Knowledge!',
+        quizCorrect: '✓ Correct!',
+        quizWrong: '✗ Incorrect.',
+        quizNext: 'Next →',
+        quizResult: 'See Result',
+        quizRestart: 'Restart Quiz',
+        quizPerfect: 'PERFECT! You\'re a true Lusitano expert!',
+        quizExcellent: 'Excellent! You have great knowledge about the Lusitano!',
+        quizGood: 'Good job! Keep learning about this magnificent breed.',
+        quizLearn: 'There\'s much to discover! Re-read the ebook and try again.',
+
+        // Reading Stats
+        statRead: 'read',
+        statTime: 'time',
+        statChapter: 'Chapter',
+
+        // Bookmark
+        bookmarkSaved: '📖 Position saved!',
+        bookmarkRestore: 'You have a saved position. Do you want to continue where you left off?',
+
+        // Easter Eggs
+        easterKonami: '🎮 Konami Code Unlocked! You\'re a true gamer!',
+        easterLusitano: '🐴 Secret word found! The Lusitano thanks you!',
+        easterLogo: '✨ Secret triple click! Good eye!',
+
+        // Content Headings - Chapter 1
+        ch1WhatDiscover: 'What You Will Discover',
+        ch1RaceIn60: 'The Breed in 60 Seconds',
+        ch1WhyLusitano: 'Why "Lusitano"?',
+        ch1VsAndaluz: 'Lusitano vs Andalusian vs Iberian',
+        ch1WhatMakesSpecial: 'What Makes the Lusitano Special?',
+        ch1MillenialHistory: '1. Millennial History',
+        ch1UniqueVersatility: '2. Unique Versatility',
+        ch1GoldenTemperament: '3. Golden Temperament',
+        ch1TimelessBeauty: '4. Timeless Beauty',
+        ch1EmotionalConnection: '5. Emotional Connection',
+
+        // Content Headings - Chapter 2
+        ch2Journey5000: 'A 5,000-Year Journey',
+
+        // Content Headings - Chapter 3
+        ch3Morphology: 'Morphology: The Lusitano Look',
+        ch3Coats: 'Coat Colors',
+        ch3Temperament: 'Temperament: 5 Essential Qualities',
+        ch3Abilities: 'Abilities: What Can It Do?',
+        ch3Health: 'Health and Longevity',
+
+        // Content Headings - Chapter 4
+        ch4FallInLove: 'Did You Fall in Love with the Lusitano?',
+        ch4Step1: 'Step 1: Learn More',
+        ch4Step2: 'Step 2: See Live',
+        ch4Step3: 'Step 3: Try Riding',
+        ch4Step4: 'Step 4: Consider Buying',
+        ch4WantMore: 'Want More Knowledge?',
+
+        // ===== FULL CONTENT TRANSLATIONS (ENGLISH) =====
+        // Introduction
+        introWelcome: 'Welcome to the World of the Lusitano',
+        introThanks: 'Thank you for downloading this ebook. If you\'re here, it\'s because something attracted you to the <strong>Lusitano Horse</strong> — and you did well to follow that curiosity.',
+        introText: 'The Lusitano is one of the <strong>oldest</strong>, <strong>noblest</strong>, and most <strong>versatile</strong> horse breeds in the world. But it\'s also one of the most misunderstood. This ebook is your <strong>first step</strong> on a fascinating journey.',
+        introQuote: 'The Lusitano Horse is not just a breed — it\'s 5,000 years of Portuguese history galloping into today.',
+        introStart: 'Shall we begin? 🐴',
+        originalContent: '<em>Educational compilation © 2026 Portal Lusitano · Information from public sources</em>',
+
+        // Chapter Cards
+        card1Title: 'Chapter 1 · The Breed',
+        card1Text: 'Discover what makes the Lusitano unique among all horse breeds in the world.',
+        card2Title: 'Chapter 2 · The History',
+        card2Text: '5,000 years of incredible history summarized in an engaging way.',
+        card3Title: 'Chapter 3 · Characteristics',
+        card3Text: 'Morphology, temperament, and abilities you won\'t find in any other horse.',
+        card4Title: 'Chapter 4 · Next Steps',
+        card4Text: 'How to continue your journey if you fall in love with the Lusitano.',
+
+        // Facts Box
+        factsTitle: 'Puro Sangue Lusitano (PSL)',
+        factOriginLabel: 'Origin',
+        factOriginValue: 'Portugal (Iberian Peninsula)',
+        factAgeLabel: 'Breed Age',
+        factAgeValue: '5,000+ years (one of the oldest!)',
+        factHeightLabel: 'Height',
+        factHeightValue: '155-170cm (compact but powerful)',
+        factCoatsLabel: 'Coat Colors',
+        factCoatsValue: 'Grey, bay, chestnut, black',
+        factTempLabel: 'Temperament',
+        factTempValue: 'Brave, docile, intelligent',
+        factAbilitiesLabel: 'Abilities',
+        factAbilitiesValue: 'Dressage, Working Equitation, Haute École',
+        factPopLabel: 'Population',
+        factPopValue: '~40,000 horses in 50+ countries',
+        factPriceLabel: 'Average Price',
+        factPriceValue: '€5,000 - €40,000+',
+
+        // Curiosity
+        curiosityTitle: '💡 Fun Fact',
+        curiosity1: 'The Portuguese School of Equestrian Art in Lisbon uses <strong>exclusively</strong> Lusitano horses in their Haute École demonstrations!',
+
+        // Why Lusitano
+        whyLusitanoText: '<strong>LUSITANIA</strong> was the Roman name for the region that is now Portugal. When the Romans conquered the Iberian Peninsula (1st century BC), they were impressed with the local horses — fast, agile, and brave in battle. They called them <strong>"Equus Lusitanus"</strong> (Horse of Lusitania). 2,000 years later, the name remains!',
+
+        // Comparison
+        lusitanoDesc: 'Born in Portugal, registered with APSL',
+        andaluzDesc: 'Born in Spain, registered with ANCCE',
+        ibericoDesc: '"Umbrella" term for both',
+        geneticallyText: '<strong>Genetically:</strong> Very similar (same origin). The Lusitano is slightly more compact.',
+
+        // What makes special
+        historyList1: '5,000 years of natural and human selection',
+        historyList2: 'Used by Celts, Romans, Moors, Medieval Knights, and Kings',
+        historyList3: 'Participated in the Age of Discovery and historic battles',
+        historyList4: 'Survived wars, invasions, and modernization',
+        historyResult: '<strong>Result:</strong> A resilient breed, forged by history.',
+
+        versatilityIntro: 'Most breeds are specialized (Quarter Horse → cattle; Thoroughbred → racing; Warmblood → sport). The <strong>LUSITANO does EVERYTHING well</strong>:',
+        versatility1: '<strong>Dressage/Haute École</strong> — natural elevated movements',
+        versatility2: '<strong>Working Equitation</strong> — dominates worldwide (55%+ competitors, World Top 7)',
+        versatility3: '<strong>Bullfighting</strong> — exceptional courage',
+        versatility4: '<strong>Leisure/Tourism</strong> — docile and safe',
+        versatility5: '<strong>Equine Therapy</strong> — calm temperament',
+        versatility6: '<strong>Field Work</strong> — agile and resistant',
+        versatilityNote: '<strong>No other breed is this versatile!</strong>',
+
+        tempCourage: 'Courage',
+        tempDocility: 'Docility',
+        tempIntelligence: 'Intelligence',
+        tempText: 'Most breeds have 1-2 of these qualities. The Lusitano has all 3! Suitable for beginners (docile) BUT also for professionals (courage, performance).',
+
+        beautyText: '<strong>Baroque Type:</strong> Arched and noble neck, rounded and powerful croup, elevated movements ("dancing"), aristocratic bearing. If you\'ve seen Renaissance paintings with elegant horses — they were Lusitanos!',
+
+        connectionQuote: '"It\'s not a horse. It\'s a partner." — "He understands me." — "I\'ve never known such a generous horse."',
+        connectionText: '<strong>Many Lusitano owners never change breeds. They become "addicted"!</strong>',
+
+        // Chapter 2 - Timeline
+        timelineIntro: 'The Lusitano Horse didn\'t appear from nowhere. It\'s the result of millennia of evolution, selection, and history.',
+        timeline1Date: '20,000 BC',
+        timeline1Title: 'Wild Iberian Horses',
+        timeline1Desc: 'Cave paintings in Altamira and Escoural show primitive horses with characteristics the modern Lusitano still maintains.',
+        timeline2Date: '1,000 BC',
+        timeline2Title: 'Celts and Initial Selection',
+        timeline2Desc: 'The Celts domesticate horses for war, hunting, and transport. Iberian horses gain reputation in Europe.',
+        timeline3Date: '100 BC - 400 AD',
+        timeline3Title: 'Rome: International Fame',
+        timeline3Desc: 'Romans discover "Equus Lusitanus" and are impressed. They use them in cavalry and export to Rome.',
+        timeline4Date: '711 - 1249',
+        timeline4Title: 'Moorish Occupation',
+        timeline4Desc: '500 years of Arab influence bring new training methods. Lusitano genetics remain distinct.',
+        timeline5Date: '1249 - 1415',
+        timeline5Title: 'Reconquista: War Horse',
+        timeline5Desc: 'The Lusitano becomes the medieval war horse par excellence. Selection for courage and strength.',
+        timeline6Date: '1415 - 1700',
+        timeline6Title: 'Age of Discovery',
+        timeline6Desc: 'Portugal dominates the seas. Lusitanos are transported to Brazil, Africa, and Asia in caravels.',
+        timeline7Date: '1748',
+        timeline7Title: 'Royal Alter Stud Farm',
+        timeline7Desc: 'King João V founds the Royal Alter do Chão Stud Farm. Still exists today — 276 years later!',
+        timeline8Date: '1800 - 1950',
+        timeline8Title: 'Wars and Near Extinction',
+        timeline8Desc: 'Napoleonic Wars and mechanization devastate the population. From 50,000 only 5,000 horses remain.',
+        timeline9Date: '1967',
+        timeline9Title: 'Stud-Book Creation',
+        timeline9Desc: 'First official breed registry. In 1989, APSL is born — dedicated exclusively to the Lusitano.',
+        timeline10Date: '1980 - Today',
+        timeline10Title: 'Global Renaissance',
+        timeline10Desc: 'Export to 50+ countries. Dominance in Working Equitation. World population: ~40,000 horses. Breed SAVED!',
+
+        // Chapter 3 - Morphology
+        morphIntro: 'The Lusitano belongs to the <strong>Baroque type</strong> — elegant, compact, and powerful.',
+        morphHead: '🎭 Head',
+        morphHeadDesc: 'Subconvex ("Roman") profile, large expressive eyes, medium ears. Aristocratic look.',
+        morphNeck: '🦢 Neck',
+        morphNeckDesc: 'Medium/long, arched ("swan"), muscled. Facilitates elevated movements.',
+        morphBody: '💪 Body',
+        morphBodyDesc: 'Short strong back, broad deep chest. Compact and powerful look.',
+        morphCroup: '🍑 Croup',
+        morphCroupDesc: 'Rounded, muscled, slightly sloped. Impulsion and agility.',
+        morphLegs: '🦵 Legs',
+        morphLegsDesc: 'Proportional, strong bone, hard hooves. Athletic and resistant structure.',
+        morphSize: '📏 Height',
+        morphSizeDesc: 'Males: 160-168cm · Females: 155-163cm. Ideal medium size.',
+
+        // Coats table
+        coatGrey: 'Grey',
+        coatGreyFreq: '60-70%',
+        coatGreyDesc: 'Born dark, lightens with age. White at 10-15 years.',
+        coatBay: 'Bay',
+        coatBayFreq: '20-25%',
+        coatBayDesc: 'Dark/light bay with darker mane.',
+        coatChestnut: 'Chestnut',
+        coatChestnutFreq: '5-10%',
+        coatChestnutDesc: 'Reddish brown, same or flaxen mane.',
+        coatBlack: 'Black',
+        coatBlackFreq: '3-5%',
+        coatBlackDesc: 'Solid black — rare and highly sought after!',
+
+        // Temperament cards
+        tempCourageCard: '🦁 Courage',
+        tempCourageCardDesc: 'Doesn\'t spook easily, faces novelty with confidence.',
+        tempNobilityCard: '👑 Nobility',
+        tempNobilityCardDesc: 'Proud bearing, confident expression. "Knows it\'s special."',
+        tempIntelCard: '🧠 Intelligence',
+        tempIntelCardDesc: 'Learns 3-5x faster. Memorizes courses after 2-3 times.',
+        tempGenerosityCard: '❤️ Generosity',
+        tempGenerosityCardDesc: 'Gives everything for the rider, never quits, forgives mistakes.',
+
+        // Abilities table headers
+        abilityDiscipline: 'Discipline',
+        abilityRating: 'Rating',
+        abilityWhy: 'Why',
+
+        // Health
+        healthYearsAvg: 'Lifespan (average)',
+        healthYearsMany: 'Years (many reach!)',
+        healthGenetics: 'Few Genetic Problems',
+        healthWhyLive: '<strong>Why they live longer:</strong> Robust genetics (centuries of natural selection), balanced structure (fewer injuries), varied use (no extreme wear).',
+        healthKnowTitle: '🩺 Good to Know',
+        healthKnowText: '<strong>Melanoma (Greys):</strong> 70-80% >15 years (usually benign) · <strong>Laminitis:</strong> Prevention with weight control · <strong>Colic:</strong> Veterinary emergency',
+
+        // Chapter 4
+        ch4Intro: 'If you made it here, probably yes! Here\'s what you can do next:',
+        ch4Youtube: '📺 YouTube',
+        ch4Websites: '🌐 Websites',
+        ch4OfficialAPSL: '<strong>APSL</strong> (apsl.pt) — Official',
+        ch4PortalLusitano: '<strong>Portal Lusitano</strong> — PT Content',
+
+        // Step 2 table
+        step2Location: 'Location',
+        step2WhatSee: 'What to See',
+        step2Price: 'Price',
+        step2EPAE: 'Haute École Galas — A MUST!',
+        step2Golega: 'Biggest event! 200,000+ visitors',
+        step2WE: 'Lusitanos in action',
+        step2Alter: '120+ horses, living history',
+
+        // Step 3
+        step3Text: 'Find an equestrian center with Lusitanos. <strong>Lessons:</strong> €15-30/hour · <strong>Packages:</strong> €80-150/month',
+
+        // Step 4
+        step4Category: 'Category',
+        step4Value: 'Value',
+        step4Foal: 'Foal 1-2 years',
+        step4Trained: 'Trained horse 5-8 years',
+        step4Annual: 'Annual costs (board, vet, farrier)',
+        step4Warning: '<strong>⚠️ Commitment:</strong> A horse = 20-30 years of responsibility!',
+
+        // PRO section
+        proSubtitle: 'This free ebook is just the <strong>BEGINNING</strong>!',
+        proTitle: 'Portal Lusitano PRO',
+        proTagline: 'Exclusive content for true aficionados',
+        proCode: 'Use the code for 20% discount:',
+
+        // Final message
+        finalTitle: 'Final Message',
+        finalQuote: 'The Lusitano Horse is more than a breed — it\'s <strong>cultural heritage</strong>, <strong>living history</strong>, <strong>art in motion</strong>. Every time you ride, train, or simply admire a Lusitano, you\'re connecting with 5,000 years of history.',
+        finalGuardians: '<strong>The Lusitano needs guardians.</strong> Each generation has the responsibility to preserve this breed for the next.',
+        finalQuestion: 'Will you be one of those guardians? 🐴👑',
+
+        // Sources
+        sourcesTitle: '📚 Sources and References',
+        sourcesText: '<strong>Information based on public sources:</strong><br>• <strong>APSL</strong> — Portuguese Association of Puro Sangue Lusitano Horse Breeders (cavalo-lusitano.com)<br>• <strong>FEI</strong> — Fédération Equestre Internationale<br>• <strong>WAWE</strong> — World Association for Working Equitation<br>• <strong>Alter Stud Farm</strong> — Companhia das Lezírias<br>• Academic publications and specialized equestrian literature<br><br><em>This ebook is an educational compilation of public information available from the sources cited above. The data presented is factual in nature and in the public domain.</em>',
+
+        // Coat Table Headers
+        coatHeader: 'Coat',
+        coatFreqHeader: 'Frequency',
+        coatCharHeader: 'Characteristics',
+
+        // Abilities Table
+        abilityDressage: 'Dressage / Haute École',
+        abilityDressageWhy: 'Natural elevated movements (piaffe, passage). Up to Grand Prix!',
+        abilityWE: 'Working Equitation',
+        abilityWEWhy: 'Total dominance! Top 7 at 2022 World Championship were all Lusitanos.',
+        abilityBull: 'Portuguese Bullfighting',
+        abilityBullWhy: 'Extreme courage, agility, intelligence.',
+        abilityLeisure: 'Leisure / Tourism',
+        abilityLeisureWhy: 'Docile, safe, comfortable, resistant, beautiful.',
+        abilityTherapy: 'Equine Therapy',
+        abilityTherapyWhy: 'Calm temperament, high emotional sensitivity.',
+        abilityJumping: 'Show Jumping',
+        abilityJumpingWhy: 'Can do 1.10-1.20m but not a specialty.',
+        abilityRacing: 'Racing',
+        abilityRacingWhy: '~50km/h (vs Thoroughbred 70km/h) — not suitable.',
+
+        // Health
+        healthHealthy: 'Healthy',
+
+        // Step 2 Locations
+        step2EPAEName: 'Portuguese School of Equestrian Art',
+        step2GolegaName: 'Golegã Fair',
+        step2November: 'November',
+        step2Free: 'Free',
+        step2Free2: 'Free',
+        step2WEName: 'Working Equitation Competitions',
+        step2AlterName: 'Alter Stud Farm',
+
+        // PRO Benefits
+        proBenefit1: '✓ 50+ Ebooks (150-200p each)',
+        proBenefit2: '✓ Breeder\'s Manual',
+        proBenefit3: '✓ Elite Bloodlines',
+        proBenefit4: '✓ Dressage Training A-Z',
+        proBenefit5: '✓ Professional Templates',
+        proBenefit6: '✓ Exclusive Videos',
+        proBenefit7: '✓ Private Community',
+        proBenefit8: '✓ Expert Consulting',
+
+        // Legal Disclaimer
+        legalTitle: '⚖️ Legal Notice',
+        legalText: '<strong>IMPORTANT - Information Ownership:</strong><br>Portal Lusitano <strong>DOES NOT own</strong> the information contained in this ebook. All information was taken from public sources (APSL, FEI, Wikipedia, academic publications, etc.) and belongs to their respective authors and organizations. Portal Lusitano has only compiled and organized this information into an educational format.<br><br><strong>Nature of Content:</strong> This ebook is a free compilation of public and factual information about the Lusitano Horse. The data, statistics, and historical facts presented are in the public domain and are available from the cited sources.<br><br><strong>Free Use:</strong> This ebook is free and may be shared freely for educational purposes. The information contained here can be found in the original cited sources.<br><br><strong>Disclaimer:</strong> The information is educational and informational in nature. It does not replace veterinary, equestrian professional, or financial advice. Always consult official sources and qualified professionals.<br><br><strong>Credits:</strong> All factual information belongs to the cited sources (APSL, FEI, WAWE, Alter Stud Farm, academic publications). Portal Lusitano thanks these organizations for making this information publicly available.',
+
+        // Quiz Questions (English)
+        quizQuestions: [
+          { question: "What is the most likely origin of the Lusitano Horse?", options: ["Ice Age Iberian horses", "Imported Arabian horses", "Mongolian horses", "North American horses"], correct: 0, explanation: "Lusitanos descend from native Iberian horses that inhabited the Peninsula thousands of years ago." },
+          { question: "What was the Lusitano's role during the Reconquista?", options: ["Transport of goods", "War horse", "Agriculture", "Racing"], correct: 1, explanation: "The Lusitano was selected for its courage and agility as a war horse during the Reconquista." },
+          { question: "When was the Alter do Chão Stud Farm founded?", options: ["1648", "1748", "1848", "1948"], correct: 1, explanation: "The Royal Alter Stud Farm was founded by King João V in 1748 and still exists today!" },
+          { question: "What is the most common coat color in Lusitanos?", options: ["Black", "Chestnut", "Grey", "Bay"], correct: 2, explanation: "60-70% of Lusitanos are grey. They are born dark and lighten with age." },
+          { question: "In which discipline do Lusitanos completely dominate?", options: ["Racing", "Working Equitation", "Polo", "Show Jumping"], correct: 1, explanation: "At the 2022 Working Equitation World Championship, all top 7 places were Lusitanos!" },
+          { question: "What is the average life expectancy of a Lusitano?", options: ["15-20 years", "20-25 years", "25-30 years", "35-40 years"], correct: 2, explanation: "Lusitanos live an average of 25-30 years, with many reaching 30-35 years." },
+          { question: "What distinguishes the Lusitano's head?", options: ["Concave profile", "Subconvex (Roman) profile", "Straight profile", "Long profile"], correct: 1, explanation: "The subconvex or 'Roman' profile is a distinctive characteristic of the Lusitano." },
+          { question: "Approximately how many Lusitano horses exist in the world?", options: ["10,000", "40,000", "100,000", "200,000"], correct: 1, explanation: "There are approximately 40,000 registered Lusitanos in more than 50 countries." }
+        ]
+      }
+    };
+
+    let currentLang = localStorage.getItem('ebook-lang') || 'pt';
+    const langToggle = document.getElementById('langToggle');
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('ebook-lang', lang);
+      document.documentElement.setAttribute('data-lang', lang);
+
+      // Update lang toggle button
+      if (langToggle) {
+        langToggle.textContent = lang === 'pt' ? '🇵🇹' : '🇬🇧';
+        langToggle.setAttribute('data-tooltip', translations[lang].langTooltip);
+      }
+
+      // Update all translatable elements
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.innerHTML = translations[lang][key];
+        }
+      });
+
+      // Update tooltips
+      document.getElementById('themeToggle')?.setAttribute('data-tooltip', translations[lang].themeTooltip);
+      document.getElementById('soundToggle')?.setAttribute('data-tooltip', translations[lang].soundTooltip);
+      document.getElementById('bookmarkBtn')?.setAttribute('data-tooltip', translations[lang].bookmarkTooltip);
+      document.getElementById('keyboardBtn')?.setAttribute('data-tooltip', translations[lang].keyboardTooltip);
+      document.getElementById('quizBtn')?.setAttribute('data-tooltip', translations[lang].quizTooltip);
+
+      // Update navigation dot labels
+      document.querySelectorAll('.nav-dot').forEach(dot => {
+        const labelPt = dot.getAttribute('data-label');
+        const labelEn = dot.getAttribute('data-label-en');
+        if (labelPt && labelEn) {
+          dot.setAttribute('data-current-label', lang === 'pt' ? labelPt : labelEn);
+        }
+      });
+
+      // Update elements with data-title-en
+      document.querySelectorAll('[data-title-en]').forEach(el => {
+        const titlePt = el.getAttribute('title') || el.getAttribute('data-title-pt');
+        const titleEn = el.getAttribute('data-title-en');
+        if (!el.getAttribute('data-title-pt')) {
+          el.setAttribute('data-title-pt', el.getAttribute('title'));
+        }
+        el.setAttribute('title', lang === 'pt' ? el.getAttribute('data-title-pt') : titleEn);
+      });
+
+      // Update quiz questions array
+      quizQuestions.length = 0;
+      quizQuestions.push(...translations[lang].quizQuestions);
+    }
+
+    // Initialize language
+    setLanguage(currentLang);
+
+    if (langToggle) {
+      langToggle.addEventListener('click', () => {
+        setLanguage(currentLang === 'pt' ? 'en' : 'pt');
+      });
+    }
+
+    // ===== PRINT-FRIENDLY MODE =====
+    window.addEventListener('beforeprint', () => {
+      document.documentElement.setAttribute('data-theme', 'light');
+    });
+
+    console.log(`
+    ╔═══════════════════════════════════════════════════════╗
+    ║                                                       ║
+    ║   🐴 EBOOK INTERATIVO - PORTAL LUSITANO 🐴           ║
+    ║                                                       ║
+    ║   Easter Eggs escondidos:                            ║
+    ║   • Konami Code: ↑↑↓↓←→←→BA                          ║
+    ║   • Escreve "lusitano" no teclado                    ║
+    ║   • Triplo clique no logo da capa                    ║
+    ║                                                       ║
+    ║   Atalhos: ? (ajuda) | D (tema) | B (bookmark)       ║
+    ║                                                       ║
+    ╚═══════════════════════════════════════════════════════╝
+    `);
   </script>
 
 </body>

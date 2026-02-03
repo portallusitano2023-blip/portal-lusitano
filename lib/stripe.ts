@@ -6,53 +6,45 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   typescript: true,
 });
 
-// Planos de subscrição
+// Planos PRO para Coudelarias
 export const PLANS = {
-  aficionado: {
-    name: "Aficionado",
-    description: "Para quem ama o Lusitano e quer aprender mais",
+  pro: {
+    name: "PRO Diretório",
+    description: "Apareça em destaque no diretório de coudelarias",
     prices: {
-      monthly: process.env.STRIPE_PRICE_AFICIONADO_MONTHLY!,
-      yearly: process.env.STRIPE_PRICE_AFICIONADO_YEARLY!,
+      monthly: process.env.STRIPE_PRICE_PRO_MONTHLY!,
+      yearly: process.env.STRIPE_PRICE_PRO_YEARLY!,
+    },
+    priceValue: {
+      monthly: 29.99,
+      yearly: 299.90,
     },
     features: [
-      "Acesso a 5 Ebooks exclusivos",
-      "Newsletter semanal premium",
-      "Comunidade privada",
-      "Desconto 10% na loja",
+      "Aparecer no TOPO do diretório",
+      "Badge de Verificado",
+      "Contactos visíveis (tel, email, site)",
+      "Até 10 fotos da coudelaria",
+      "Link para Instagram",
+      "Descrição completa",
     ],
   },
-  criador: {
-    name: "Criador",
-    description: "Para criadores e profissionais do sector",
+  pro_instagram: {
+    name: "PRO + Instagram",
+    description: "Diretório + promoção no Instagram (19k seguidores)",
     prices: {
-      monthly: process.env.STRIPE_PRICE_CRIADOR_MONTHLY!,
-      yearly: process.env.STRIPE_PRICE_CRIADOR_YEARLY!,
+      monthly: process.env.STRIPE_PRICE_PRO_INSTAGRAM_MONTHLY!,
+      yearly: process.env.STRIPE_PRICE_PRO_INSTAGRAM_YEARLY!,
+    },
+    priceValue: {
+      monthly: 49.99,
+      yearly: 499.90,
     },
     features: [
-      "Tudo do plano Aficionado",
-      "Biblioteca completa de Ebooks",
-      "Cursos em vídeo ilimitados",
-      "Templates e ferramentas",
-      "Webinars mensais ao vivo",
-      "Certificações oficiais",
-    ],
-  },
-  elite: {
-    name: "Elite",
-    description: "Acesso total + suporte personalizado",
-    prices: {
-      monthly: process.env.STRIPE_PRICE_ELITE_MONTHLY!,
-      yearly: process.env.STRIPE_PRICE_ELITE_YEARLY!,
-    },
-    features: [
-      "Tudo do plano Criador",
-      "Consultoria ilimitada",
-      "Acesso antecipado a cavalos",
-      "Networking com criadores",
-      "Visitas a coudelarias VIP",
-      "Suporte prioritário 24/7",
-      "Badge Elite verificado",
+      "TUDO do plano PRO",
+      "1 post mensal no Instagram",
+      "Exposição a 19.000 seguidores",
+      "Stories de destaque",
+      "Maior visibilidade online",
     ],
   },
 } as const;

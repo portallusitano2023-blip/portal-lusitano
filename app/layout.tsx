@@ -28,7 +28,7 @@ const montserrat = Montserrat({
   preload: true,
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portallusitano.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
 export const viewport: Viewport = {
   themeColor: "#C5A059",
