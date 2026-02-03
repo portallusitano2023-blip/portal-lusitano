@@ -1,42 +1,54 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-// Eventos CONFIRMADOS oficialmente para 2026
+// Eventos CONFIRMADOS oficialmente para 2026 (com fontes verificadas)
 const eventosConfirmados2026 = [
-  "iii-salao-cavalo-lusitano-2026",           // Equisport confirmou
-  "feira-cavalo-ponte-lima-2026",              // Anunciado na Golegã 2025
-  "feira-nacional-cavalo-golega-2026",         // Tradição centenária - São Martinho
-  "galas-epae-2026",                           // Programa contínuo confirmado
+  "iii-salao-cavalo-lusitano-2026",  // Confirmado APSL + Equisport
+  "feira-cavalo-ponte-lima-2026",     // Cartaz apresentado na Golegã 2025
+  "galas-epae-2026",                  // Programa contínuo oficial
 ];
 
-// Eventos ANUAIS (acontecem sempre, datas baseadas em padrão histórico)
-const eventosAnuais2026 = [
-  "feira-trofa-2026",                          // Sempre final Fev/início Mar
-  "leilao-alter-real-2026",                    // Sempre 24 Abril
-  "expo-egua-2026",                            // Sempre Maio
-  "festival-internacional-cavalo-lusitano-2026", // Sempre final Junho
-  "sicab-2026-sevilha",                        // Sempre 3ª semana Novembro
-];
-
-// Eventos PROVISÓRIOS (datas estimadas, aguardam confirmação oficial)
-const eventosProvisórios2026 = [
+// Eventos a ELIMINAR (não confirmados oficialmente para 2026)
+const eventosParaEliminar2026 = [
+  "feira-trofa-2026",
   "aprovacao-eguas-norte-2026",
+  "leilao-alter-real-2026",
+  "expo-egua-2026",
+  "festival-internacional-cavalo-lusitano-2026",
   "campeonato-nacional-equitacao-trabalho-2026",
   "taca-portugal-equitacao-trabalho-2026",
   "cdi-alter-chao-2026",
   "campeonato-cavalos-novos-2026",
+  "feira-nacional-cavalo-golega-2026",
+  "sicab-2026-sevilha",
+  // Duplicados e eventos sem confirmação
+  "evento-apsl-shp-2026",
+  "campeonato-mundial-equitacao-trabalho-2026",
 ];
 
 export async function POST() {
   try {
     const results = {
       confirmados: 0,
-      anuais: 0,
-      provisorios: 0,
+      eliminados: 0,
       errors: [] as string[],
     };
 
-    // Marcar eventos confirmados
+    // 1. ELIMINAR eventos 2026 não confirmados
+    for (const slug of eventosParaEliminar2026) {
+      const { error } = await supabase
+        .from("eventos")
+        .delete()
+        .eq("slug", slug);
+
+      if (error) {
+        results.errors.push(`Erro ao eliminar ${slug}: ${error.message}`);
+      } else {
+        results.eliminados++;
+      }
+    }
+
+    // 2. Marcar eventos 2026 confirmados
     for (const slug of eventosConfirmados2026) {
       const { error } = await supabase
         .from("eventos")
@@ -50,35 +62,7 @@ export async function POST() {
       }
     }
 
-    // Marcar eventos anuais
-    for (const slug of eventosAnuais2026) {
-      const { error } = await supabase
-        .from("eventos")
-        .update({ confirmado: "anual" })
-        .eq("slug", slug);
-
-      if (error) {
-        results.errors.push(`Erro em ${slug}: ${error.message}`);
-      } else {
-        results.anuais++;
-      }
-    }
-
-    // Marcar eventos provisórios
-    for (const slug of eventosProvisórios2026) {
-      const { error } = await supabase
-        .from("eventos")
-        .update({ confirmado: "provisorio" })
-        .eq("slug", slug);
-
-      if (error) {
-        results.errors.push(`Erro em ${slug}: ${error.message}`);
-      } else {
-        results.provisorios++;
-      }
-    }
-
-    // Marcar todos os eventos de 2025 como confirmados (já passaram ou estão a decorrer)
+    // 3. Marcar todos os eventos de 2025 como confirmados (já passaram)
     const { error: error2025 } = await supabase
       .from("eventos")
       .update({ confirmado: "confirmado" })
@@ -90,7 +74,7 @@ export async function POST() {
 
     return NextResponse.json({
       success: true,
-      message: "Status de confirmação atualizado",
+      message: "Eventos atualizados - apenas confirmados mantidos",
       results,
     });
   } catch (error) {
