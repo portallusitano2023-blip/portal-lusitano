@@ -2,480 +2,395 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Plus, X, Scale, Trophy, Heart, Ruler, Calendar, MapPin, Euro, Star } from "lucide-react";
+import { ArrowLeft, Plus, X, Scale, Trophy, Heart, Ruler, Calendar, Euro, Star, Crown, Dna, Activity, Medal, TrendingUp, BarChart3 } from "lucide-react";
 
-interface HorseToCompare {
+// Tipos
+interface Cavalo {
   id: string;
   nome: string;
   idade: number;
-  sexo: "Macho" | "Fêmea" | "Castrado";
-  altura: number; // em cm
-  peso: number; // em kg
-  cor: string;
-  linhagem: "Desconhecida" | "Registada" | "Premium" | "Elite";
-  nivel_treino: "Desbravado" | "Iniciado" | "Intermédio" | "Avançado" | "Alta Escola";
-  temperamento: number; // 1-10
-  saude: number; // 1-10
+  sexo: string;
+  altura: number;
+  peso: number;
+  pelagem: string;
+  linhagem: string;
+  treino: string;
+  temperamento: number;
+  saude: number;
+  conformacao: number;
+  andamentos: number;
   competicoes: number;
   premios: number;
   preco: number;
-  localizacao: string;
+  blup: number;
 }
 
-const emptyHorse: HorseToCompare = {
-  id: "",
-  nome: "",
-  idade: 5,
-  sexo: "Macho",
-  altura: 160,
-  peso: 500,
-  cor: "Ruço",
-  linhagem: "Registada",
-  nivel_treino: "Iniciado",
-  temperamento: 7,
-  saude: 8,
-  competicoes: 0,
-  premios: 0,
-  preco: 15000,
-  localizacao: "",
-};
+const criarCavalo = (id: string, nome: string): Cavalo => ({
+  id, nome, idade: 8, sexo: "Garanhão", altura: 162, peso: 500,
+  pelagem: "Ruço", linhagem: "Registada", treino: "Elementar",
+  temperamento: 7, saude: 8, conformacao: 7, andamentos: 7,
+  competicoes: 0, premios: 0, preco: 20000, blup: 100
+});
 
-const cores = ["Ruço", "Castanho", "Preto", "Alazão", "Baio", "Palomino", "Tordilho", "Malhado"];
-const linhagens = ["Desconhecida", "Registada", "Premium", "Elite"];
-const niveis_treino = ["Desbravado", "Iniciado", "Intermédio", "Avançado", "Alta Escola"];
-const sexos = ["Macho", "Fêmea", "Castrado"];
+const PELAGENS = ["Ruço", "Castanho", "Preto", "Alazão", "Baio", "Palomino"];
+const LINHAGENS = ["Desconhecida", "Registada", "Certificada", "Premium", "Elite"];
+const TREINOS = ["Potro", "Desbravado", "Iniciado", "Elementar", "Médio", "Avançado", "Alta Escola", "Grand Prix"];
+const SEXOS = ["Garanhão", "Égua", "Castrado"];
 
-export default function ComparadorCavalosPage() {
-  const [cavalos, setCavalos] = useState<HorseToCompare[]>([
-    { ...emptyHorse, id: "1", nome: "Cavalo A" },
-    { ...emptyHorse, id: "2", nome: "Cavalo B" },
-  ]);
+// Componente Radar Chart
+const RadarChart = ({ cavalos, labels }: { cavalos: { nome: string; valores: number[]; cor: string }[]; labels: string[] }) => {
+  const size = 220;
+  const center = size / 2;
+  const radius = size * 0.38;
+  const angleStep = (2 * Math.PI) / labels.length;
 
-  const adicionarCavalo = () => {
-    if (cavalos.length >= 4) return;
-    const novoId = String(Date.now());
-    setCavalos([...cavalos, { ...emptyHorse, id: novoId, nome: `Cavalo ${String.fromCharCode(65 + cavalos.length)}` }]);
-  };
-
-  const removerCavalo = (id: string) => {
-    if (cavalos.length <= 2) return;
-    setCavalos(cavalos.filter((c) => c.id !== id));
-  };
-
-  const atualizarCavalo = (id: string, campo: keyof HorseToCompare, valor: any) => {
-    setCavalos(cavalos.map((c) => (c.id === id ? { ...c, [campo]: valor } : c)));
-  };
-
-  const getMelhorValor = (campo: keyof HorseToCompare, maiorMelhor = true) => {
-    const valores = cavalos.map((c) => c[campo] as number);
-    return maiorMelhor ? Math.max(...valores) : Math.min(...valores);
-  };
-
-  const getClassePontuacao = (valor: number, melhor: number, maiorMelhor = true) => {
-    if (maiorMelhor) {
-      return valor === melhor ? "text-green-400 font-bold" : valor < melhor * 0.7 ? "text-red-400" : "text-zinc-300";
-    }
-    return valor === melhor ? "text-green-400 font-bold" : valor > melhor * 1.3 ? "text-red-400" : "text-zinc-300";
-  };
-
-  const calcularPontuacaoGlobal = (cavalo: HorseToCompare): number => {
-    let pontuacao = 0;
-
-    // Idade (ideal entre 6-12 anos)
-    if (cavalo.idade >= 6 && cavalo.idade <= 12) pontuacao += 10;
-    else if (cavalo.idade >= 4 && cavalo.idade <= 15) pontuacao += 7;
-    else pontuacao += 4;
-
-    // Altura (ideal 155-165cm)
-    if (cavalo.altura >= 155 && cavalo.altura <= 165) pontuacao += 10;
-    else if (cavalo.altura >= 150 && cavalo.altura <= 170) pontuacao += 7;
-    else pontuacao += 4;
-
-    // Linhagem
-    const linhagemPontos = { Desconhecida: 2, Registada: 5, Premium: 8, Elite: 10 };
-    pontuacao += linhagemPontos[cavalo.linhagem];
-
-    // Nível de treino
-    const treinoPontos = { Desbravado: 2, Iniciado: 4, Intermédio: 6, Avançado: 8, "Alta Escola": 10 };
-    pontuacao += treinoPontos[cavalo.nivel_treino];
-
-    // Temperamento e saúde
-    pontuacao += cavalo.temperamento;
-    pontuacao += cavalo.saude;
-
-    // Competições e prémios (bónus)
-    pontuacao += Math.min(cavalo.competicoes * 0.5, 5);
-    pontuacao += Math.min(cavalo.premios * 1, 5);
-
-    return Math.round(pontuacao);
+  const getPoint = (value: number, index: number) => {
+    const angle = index * angleStep - Math.PI / 2;
+    const r = (value / 10) * radius;
+    return { x: center + r * Math.cos(angle), y: center + r * Math.sin(angle) };
   };
 
   return (
-    <main className="min-h-screen bg-black text-white pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">
+    <svg width={size} height={size} className="mx-auto">
+      {/* Grid */}
+      {[2, 4, 6, 8, 10].map(level => (
+        <polygon key={level} points={labels.map((_, i) => {
+          const p = getPoint(level, i);
+          return `${p.x},${p.y}`;
+        }).join(" ")} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      ))}
+      {/* Axes */}
+      {labels.map((_, i) => {
+        const p = getPoint(10, i);
+        return <line key={i} x1={center} y1={center} x2={p.x} y2={p.y} stroke="rgba(255,255,255,0.15)" strokeWidth="1" />;
+      })}
+      {/* Data polygons */}
+      {cavalos.map((cavalo, ci) => (
+        <polygon key={ci} points={cavalo.valores.map((v, i) => {
+          const p = getPoint(v, i);
+          return `${p.x},${p.y}`;
+        }).join(" ")} fill={`${cavalo.cor}30`} stroke={cavalo.cor} strokeWidth="2" />
+      ))}
+      {/* Labels */}
+      {labels.map((label, i) => {
+        const p = getPoint(11.5, i);
+        return <text key={i} x={p.x} y={p.y} fill="white" fontSize="9" textAnchor="middle" dominantBaseline="middle">{label}</text>;
+      })}
+    </svg>
+  );
+};
+
+export default function ComparadorCavalosPage() {
+  const [cavalos, setCavalos] = useState<Cavalo[]>([
+    criarCavalo("1", "Cavalo A"),
+    criarCavalo("2", "Cavalo B"),
+  ]);
+  const [showAnalise, setShowAnalise] = useState(false);
+
+  const cores = ["#22c55e", "#3b82f6", "#f59e0b", "#ec4899"];
+
+  const adicionar = () => {
+    if (cavalos.length >= 4) return;
+    const id = String(Date.now());
+    setCavalos([...cavalos, criarCavalo(id, `Cavalo ${String.fromCharCode(65 + cavalos.length)}`)]);
+  };
+
+  const remover = (id: string) => {
+    if (cavalos.length <= 2) return;
+    setCavalos(cavalos.filter(c => c.id !== id));
+  };
+
+  const update = (id: string, campo: keyof Cavalo, valor: Cavalo[keyof Cavalo]) => {
+    setCavalos(cavalos.map(c => c.id === id ? { ...c, [campo]: valor } : c));
+  };
+
+  const calcularScore = (c: Cavalo): number => {
+    let score = 0;
+    // Idade (ideal 6-12)
+    score += c.idade >= 6 && c.idade <= 12 ? 10 : c.idade >= 4 && c.idade <= 15 ? 7 : 4;
+    // Altura (ideal 155-165)
+    score += c.altura >= 155 && c.altura <= 165 ? 10 : c.altura >= 150 && c.altura <= 170 ? 7 : 5;
+    // Linhagem
+    const linPoints: Record<string, number> = { Desconhecida: 2, Registada: 5, Certificada: 7, Premium: 9, Elite: 10 };
+    score += linPoints[c.linhagem] || 5;
+    // Treino
+    const treinoPoints: Record<string, number> = { Potro: 2, Desbravado: 3, Iniciado: 4, Elementar: 5, Médio: 6, Avançado: 8, "Alta Escola": 9, "Grand Prix": 10 };
+    score += treinoPoints[c.treino] || 5;
+    // Outros
+    score += c.temperamento;
+    score += c.saude;
+    score += c.conformacao;
+    score += c.andamentos;
+    score += Math.min(c.premios, 10);
+    return score;
+  };
+
+  const getMelhor = (campo: keyof Cavalo, maior = true) => {
+    const vals = cavalos.map(c => c[campo] as number);
+    return maior ? Math.max(...vals) : Math.min(...vals);
+  };
+
+  const getClasse = (val: number, melhor: number, maior = true) => {
+    if (maior) return val === melhor ? "text-green-400 font-bold" : val < melhor * 0.7 ? "text-red-400" : "";
+    return val === melhor ? "text-green-400 font-bold" : val > melhor * 1.3 ? "text-red-400" : "";
+  };
+
+  const vencedor = cavalos.reduce((a, b) => calcularScore(a) > calcularScore(b) ? a : b);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-zinc-900 to-black text-white">
       {/* Header */}
-      <div className="max-w-7xl mx-auto mb-8 sm:mb-12">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#C5A059] transition-colors mb-6 touch-manipulation"
-        >
-          <ArrowLeft size={18} />
-          <span className="text-sm">Voltar</span>
-        </Link>
-
-        <div className="text-center">
-          <span className="text-[#C5A059] uppercase tracking-[0.3em] text-[9px] sm:text-[10px] font-bold block mb-2">
-            Ferramentas Lusitano
-          </span>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif italic mb-4">
-            Comparador de Cavalos
-          </h1>
-          <p className="text-zinc-400 text-sm sm:text-base max-w-2xl mx-auto">
-            Compare até 4 cavalos lado a lado para tomar a melhor decisão na sua compra ou criação.
-          </p>
-        </div>
-      </div>
-
-      {/* Adicionar Cavalo Button */}
-      {cavalos.length < 4 && (
-        <div className="max-w-7xl mx-auto mb-6">
-          <button
-            onClick={adicionarCavalo}
-            className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059]/30 transition-all touch-manipulation"
-          >
-            <Plus size={18} />
-            <span className="text-sm">Adicionar Cavalo</span>
+      <div className="bg-zinc-900/80 border-b border-zinc-800 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 text-zinc-400 hover:text-white">
+            <ArrowLeft className="w-5 h-5" /><span>Voltar</span>
+          </Link>
+          <div className="flex items-center gap-3">
+            <Scale className="w-8 h-8 text-blue-500" />
+            <div>
+              <h1 className="text-xl font-bold">Comparador de Cavalos</h1>
+              <p className="text-xs text-zinc-500">Análise Comparativa Profissional</p>
+            </div>
+          </div>
+          <button onClick={adicionar} disabled={cavalos.length >= 4}
+            className="px-4 py-2 bg-blue-600 rounded-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500">
+            <Plus className="w-4 h-4" />Adicionar
           </button>
         </div>
-      )}
+      </div>
 
-      {/* Comparison Grid - Horizontal scroll on mobile */}
-      <div className="max-w-7xl mx-auto overflow-x-auto pb-4">
-        <div className="min-w-[640px] grid gap-4" style={{ gridTemplateColumns: `200px repeat(${cavalos.length}, minmax(180px, 1fr))` }}>
-
-          {/* Header Row - Names */}
-          <div className="bg-zinc-900/50 rounded-lg p-4 flex items-center justify-center">
-            <Scale className="text-[#C5A059]" size={24} />
-          </div>
-          {cavalos.map((cavalo) => (
-            <div key={cavalo.id} className="bg-zinc-900/50 rounded-lg p-4 relative">
-              {cavalos.length > 2 && (
-                <button
-                  onClick={() => removerCavalo(cavalo.id)}
-                  className="absolute top-2 right-2 p-1 text-zinc-500 hover:text-red-400 transition-colors"
-                >
-                  <X size={16} />
-                </button>
-              )}
-              <input
-                type="text"
-                value={cavalo.nome}
-                onChange={(e) => atualizarCavalo(cavalo.id, "nome", e.target.value)}
-                className="w-full bg-transparent text-center font-serif text-lg text-white border-b border-zinc-700 focus:border-[#C5A059] outline-none pb-1"
-                placeholder="Nome do Cavalo"
-              />
-            </div>
-          ))}
-
-          {/* Idade */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <Calendar size={18} className="text-zinc-500 flex-shrink-0" />
-            <span className="text-sm text-zinc-300">Idade</span>
-          </div>
-          {cavalos.map((cavalo) => (
-            <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-              <input
-                type="number"
-                value={cavalo.idade}
-                onChange={(e) => atualizarCavalo(cavalo.id, "idade", parseInt(e.target.value) || 0)}
-                className="w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm"
-                min={0}
-                max={35}
-              />
-              <span className="block text-center text-xs text-zinc-500 mt-1">anos</span>
-            </div>
-          ))}
-
-          {/* Sexo */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <span className="text-zinc-500 flex-shrink-0">♂♀</span>
-            <span className="text-sm text-zinc-300">Sexo</span>
-          </div>
-          {cavalos.map((cavalo) => (
-            <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-              <select
-                value={cavalo.sexo}
-                onChange={(e) => atualizarCavalo(cavalo.id, "sexo", e.target.value)}
-                className="w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm"
-              >
-                {sexos.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </div>
-          ))}
-
-          {/* Altura */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <Ruler size={18} className="text-zinc-500 flex-shrink-0" />
-            <span className="text-sm text-zinc-300">Altura</span>
-          </div>
-          {cavalos.map((cavalo) => {
-            const melhor = getMelhorValor("altura");
-            return (
-              <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-                <input
-                  type="number"
-                  value={cavalo.altura}
-                  onChange={(e) => atualizarCavalo(cavalo.id, "altura", parseInt(e.target.value) || 0)}
-                  className="w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm"
-                  min={140}
-                  max={180}
-                />
-                <span className="block text-center text-xs text-zinc-500 mt-1">cm</span>
-              </div>
-            );
-          })}
-
-          {/* Cor */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <span className="w-4 h-4 rounded-full bg-gradient-to-br from-amber-200 to-amber-800 flex-shrink-0" />
-            <span className="text-sm text-zinc-300">Pelagem</span>
-          </div>
-          {cavalos.map((cavalo) => (
-            <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-              <select
-                value={cavalo.cor}
-                onChange={(e) => atualizarCavalo(cavalo.id, "cor", e.target.value)}
-                className="w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm"
-              >
-                {cores.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-          ))}
-
-          {/* Linhagem */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <Star size={18} className="text-zinc-500 flex-shrink-0" />
-            <span className="text-sm text-zinc-300">Linhagem</span>
-          </div>
-          {cavalos.map((cavalo) => {
-            const linhagemIndex = linhagens.indexOf(cavalo.linhagem);
-            const melhorIndex = Math.max(...cavalos.map((c) => linhagens.indexOf(c.linhagem)));
-            const classe = linhagemIndex === melhorIndex ? "text-green-400" : linhagemIndex < melhorIndex - 1 ? "text-red-400" : "";
-            return (
-              <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-                <select
-                  value={cavalo.linhagem}
-                  onChange={(e) => atualizarCavalo(cavalo.id, "linhagem", e.target.value)}
-                  className={`w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm ${classe}`}
-                >
-                  {linhagens.map((l) => (
-                    <option key={l} value={l}>{l}</option>
-                  ))}
-                </select>
-              </div>
-            );
-          })}
-
-          {/* Nível de Treino */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <Trophy size={18} className="text-zinc-500 flex-shrink-0" />
-            <span className="text-sm text-zinc-300">Nível Treino</span>
-          </div>
-          {cavalos.map((cavalo) => {
-            const treinoIndex = niveis_treino.indexOf(cavalo.nivel_treino);
-            const melhorIndex = Math.max(...cavalos.map((c) => niveis_treino.indexOf(c.nivel_treino)));
-            const classe = treinoIndex === melhorIndex ? "text-green-400" : treinoIndex < melhorIndex - 1 ? "text-red-400" : "";
-            return (
-              <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-                <select
-                  value={cavalo.nivel_treino}
-                  onChange={(e) => atualizarCavalo(cavalo.id, "nivel_treino", e.target.value)}
-                  className={`w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm ${classe}`}
-                >
-                  {niveis_treino.map((n) => (
-                    <option key={n} value={n}>{n}</option>
-                  ))}
-                </select>
-              </div>
-            );
-          })}
-
-          {/* Temperamento */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <Heart size={18} className="text-zinc-500 flex-shrink-0" />
-            <span className="text-sm text-zinc-300">Temperamento</span>
-          </div>
-          {cavalos.map((cavalo) => {
-            const melhor = getMelhorValor("temperamento");
-            return (
-              <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-                <input
-                  type="range"
-                  value={cavalo.temperamento}
-                  onChange={(e) => atualizarCavalo(cavalo.id, "temperamento", parseInt(e.target.value))}
-                  className="w-full accent-[#C5A059]"
-                  min={1}
-                  max={10}
-                />
-                <span className={`block text-center text-sm mt-1 ${getClassePontuacao(cavalo.temperamento, melhor)}`}>
-                  {cavalo.temperamento}/10
-                </span>
-              </div>
-            );
-          })}
-
-          {/* Saúde */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <span className="text-zinc-500 flex-shrink-0">🏥</span>
-            <span className="text-sm text-zinc-300">Saúde</span>
-          </div>
-          {cavalos.map((cavalo) => {
-            const melhor = getMelhorValor("saude");
-            return (
-              <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-                <input
-                  type="range"
-                  value={cavalo.saude}
-                  onChange={(e) => atualizarCavalo(cavalo.id, "saude", parseInt(e.target.value))}
-                  className="w-full accent-[#C5A059]"
-                  min={1}
-                  max={10}
-                />
-                <span className={`block text-center text-sm mt-1 ${getClassePontuacao(cavalo.saude, melhor)}`}>
-                  {cavalo.saude}/10
-                </span>
-              </div>
-            );
-          })}
-
-          {/* Competições */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <Trophy size={18} className="text-zinc-500 flex-shrink-0" />
-            <span className="text-sm text-zinc-300">Competições</span>
-          </div>
-          {cavalos.map((cavalo) => {
-            const melhor = getMelhorValor("competicoes");
-            return (
-              <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-                <input
-                  type="number"
-                  value={cavalo.competicoes}
-                  onChange={(e) => atualizarCavalo(cavalo.id, "competicoes", parseInt(e.target.value) || 0)}
-                  className={`w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm ${getClassePontuacao(cavalo.competicoes, melhor)}`}
-                  min={0}
-                />
-              </div>
-            );
-          })}
-
-          {/* Prémios */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <span className="text-zinc-500 flex-shrink-0">🏆</span>
-            <span className="text-sm text-zinc-300">Prémios</span>
-          </div>
-          {cavalos.map((cavalo) => {
-            const melhor = getMelhorValor("premios");
-            return (
-              <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-                <input
-                  type="number"
-                  value={cavalo.premios}
-                  onChange={(e) => atualizarCavalo(cavalo.id, "premios", parseInt(e.target.value) || 0)}
-                  className={`w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm ${getClassePontuacao(cavalo.premios, melhor)}`}
-                  min={0}
-                />
-              </div>
-            );
-          })}
-
-          {/* Preço */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <Euro size={18} className="text-zinc-500 flex-shrink-0" />
-            <span className="text-sm text-zinc-300">Preço</span>
-          </div>
-          {cavalos.map((cavalo) => {
-            const melhor = getMelhorValor("preco", false);
-            return (
-              <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-                <input
-                  type="number"
-                  value={cavalo.preco}
-                  onChange={(e) => atualizarCavalo(cavalo.id, "preco", parseInt(e.target.value) || 0)}
-                  className={`w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm ${getClassePontuacao(cavalo.preco, melhor, false)}`}
-                  min={0}
-                  step={1000}
-                />
-                <span className="block text-center text-xs text-zinc-500 mt-1">€</span>
-              </div>
-            );
-          })}
-
-          {/* Localização */}
-          <div className="bg-zinc-900/30 rounded-lg p-4 flex items-center gap-3">
-            <MapPin size={18} className="text-zinc-500 flex-shrink-0" />
-            <span className="text-sm text-zinc-300">Localização</span>
-          </div>
-          {cavalos.map((cavalo) => (
-            <div key={cavalo.id} className="bg-zinc-900/30 rounded-lg p-4">
-              <input
-                type="text"
-                value={cavalo.localizacao}
-                onChange={(e) => atualizarCavalo(cavalo.id, "localizacao", e.target.value)}
-                className="w-full bg-zinc-800 rounded px-3 py-2 text-center text-sm"
-                placeholder="Ex: Lisboa"
-              />
-            </div>
-          ))}
-
-          {/* Pontuação Global */}
-          <div className="bg-[#C5A059]/10 rounded-lg p-4 flex items-center gap-3 border border-[#C5A059]/30">
-            <Star size={18} className="text-[#C5A059] flex-shrink-0" />
-            <span className="text-sm text-[#C5A059] font-semibold">Pontuação</span>
-          </div>
-          {cavalos.map((cavalo) => {
-            const pontuacao = calcularPontuacaoGlobal(cavalo);
-            const pontuacoes = cavalos.map((c) => calcularPontuacaoGlobal(c));
-            const melhor = Math.max(...pontuacoes);
-            const isMelhor = pontuacao === melhor;
-            return (
-              <div
-                key={cavalo.id}
-                className={`rounded-lg p-4 text-center ${
-                  isMelhor ? "bg-[#C5A059]/20 border border-[#C5A059]/50" : "bg-zinc-900/50"
-                }`}
-              >
-                <div className={`text-2xl font-bold ${isMelhor ? "text-[#C5A059]" : "text-zinc-300"}`}>
-                  {pontuacao}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Cards dos Cavalos */}
+        <div className={`grid gap-4 mb-8 ${cavalos.length === 2 ? "grid-cols-2" : cavalos.length === 3 ? "grid-cols-3" : "grid-cols-4"}`}>
+          {cavalos.map((c, i) => (
+            <div key={c.id} className="bg-zinc-800/50 rounded-2xl border border-zinc-700 overflow-hidden">
+              {/* Header do Card */}
+              <div className="p-4 border-b border-zinc-700" style={{ borderTopColor: cores[i], borderTopWidth: 3 }}>
+                <div className="flex items-center justify-between">
+                  <input type="text" value={c.nome} onChange={e => update(c.id, "nome", e.target.value)}
+                    className="bg-transparent text-lg font-bold outline-none flex-1" />
+                  {cavalos.length > 2 && (
+                    <button onClick={() => remover(c.id)} className="text-zinc-500 hover:text-red-400">
+                      <X className="w-5 h-5" />
+                    </button>
+                  )}
                 </div>
-                <div className="text-xs text-zinc-500">de 60 pontos</div>
-                {isMelhor && cavalos.length > 1 && (
-                  <div className="mt-2 text-xs text-[#C5A059] font-medium">⭐ Melhor escolha</div>
+                {c.id === vencedor.id && showAnalise && (
+                  <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 rounded text-amber-400 text-xs">
+                    <Crown className="w-3 h-3" />Melhor Avaliação
+                  </div>
                 )}
               </div>
-            );
-          })}
-        </div>
-      </div>
 
-      {/* Info */}
-      <div className="max-w-7xl mx-auto mt-12">
-        <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-6">
-          <h3 className="text-lg font-semibold mb-4 text-[#C5A059]">Como funciona a pontuação?</h3>
-          <ul className="space-y-2 text-sm text-zinc-400">
-            <li>• <strong className="text-zinc-300">Idade ideal:</strong> Cavalos entre 6-12 anos recebem pontuação máxima</li>
-            <li>• <strong className="text-zinc-300">Altura ideal:</strong> Entre 155-165cm para Lusitanos</li>
-            <li>• <strong className="text-zinc-300">Linhagem:</strong> Quanto mais documentada, maior a pontuação</li>
-            <li>• <strong className="text-zinc-300">Treino:</strong> Cavalos com maior nível de doma pontuam mais</li>
-            <li>• <strong className="text-zinc-300">Bónus:</strong> Competições e prémios adicionam pontos extra</li>
-          </ul>
-          <p className="mt-4 text-xs text-zinc-500">
-            * Esta ferramenta é apenas orientativa. Recomendamos sempre uma avaliação presencial por um veterinário e especialista.
-          </p>
+              {/* Campos */}
+              <div className="p-4 space-y-3 text-sm">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-zinc-500">Idade</label>
+                    <input type="number" min="1" max="30" value={c.idade} onChange={e => update(c.id, "idade", +e.target.value || 1)}
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-zinc-500">Altura (cm)</label>
+                    <input type="number" min="140" max="180" value={c.altura} onChange={e => update(c.id, "altura", +e.target.value || 160)}
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs text-zinc-500">Sexo</label>
+                  <select value={c.sexo} onChange={e => update(c.id, "sexo", e.target.value)}
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5">
+                    {SEXOS.map(s => <option key={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-zinc-500">Pelagem</label>
+                  <select value={c.pelagem} onChange={e => update(c.id, "pelagem", e.target.value)}
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5">
+                    {PELAGENS.map(p => <option key={p}>{p}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-zinc-500">Linhagem</label>
+                  <select value={c.linhagem} onChange={e => update(c.id, "linhagem", e.target.value)}
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5">
+                    {LINHAGENS.map(l => <option key={l}>{l}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-zinc-500">Nível de Treino</label>
+                  <select value={c.treino} onChange={e => update(c.id, "treino", e.target.value)}
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5">
+                    {TREINOS.map(t => <option key={t}>{t}</option>)}
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-zinc-500">Conformação: {c.conformacao}</label>
+                    <input type="range" min="1" max="10" value={c.conformacao} onChange={e => update(c.id, "conformacao", +e.target.value)}
+                      className="w-full accent-green-500" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-zinc-500">Andamentos: {c.andamentos}</label>
+                    <input type="range" min="1" max="10" value={c.andamentos} onChange={e => update(c.id, "andamentos", +e.target.value)}
+                      className="w-full accent-green-500" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-zinc-500">Temperamento: {c.temperamento}</label>
+                    <input type="range" min="1" max="10" value={c.temperamento} onChange={e => update(c.id, "temperamento", +e.target.value)}
+                      className="w-full accent-green-500" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-zinc-500">Saúde: {c.saude}</label>
+                    <input type="range" min="1" max="10" value={c.saude} onChange={e => update(c.id, "saude", +e.target.value)}
+                      className="w-full accent-green-500" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-zinc-500">Prémios</label>
+                    <input type="number" min="0" value={c.premios} onChange={e => update(c.id, "premios", +e.target.value || 0)}
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-zinc-500">BLUP</label>
+                    <input type="number" min="50" max="150" value={c.blup} onChange={e => update(c.id, "blup", +e.target.value || 100)}
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs text-zinc-500">Preço (€)</label>
+                  <input type="number" min="0" step="1000" value={c.preco} onChange={e => update(c.id, "preco", +e.target.value || 0)}
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
+                </div>
+              </div>
+
+              {/* Score */}
+              {showAnalise && (
+                <div className="p-4 bg-zinc-900/50 border-t border-zinc-700">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-zinc-400">Score Total</span>
+                    <span className="text-2xl font-bold" style={{ color: cores[i] }}>{calcularScore(c)}</span>
+                  </div>
+                  <div className="mt-2 text-xs text-zinc-500">
+                    Valor/Ponto: {(c.preco / calcularScore(c)).toFixed(0)}€
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
+
+        {/* Botão Analisar */}
+        <button onClick={() => setShowAnalise(true)}
+          className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl font-bold text-lg flex items-center justify-center gap-2 mb-8">
+          <BarChart3 className="w-6 h-6" />Analisar Comparação
+        </button>
+
+        {/* Análise */}
+        {showAnalise && (
+          <div className="space-y-6">
+            {/* Gráfico Radar */}
+            <div className="bg-zinc-800/50 rounded-2xl p-6 border border-zinc-700">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Activity className="w-5 h-5 text-blue-500" />
+                Comparação Visual
+              </h3>
+              <div className="flex flex-col items-center">
+                <RadarChart
+                  cavalos={cavalos.map((c, i) => ({
+                    nome: c.nome,
+                    valores: [c.conformacao, c.andamentos, c.temperamento, c.saude, Math.min(c.premios, 10), c.blup / 15],
+                    cor: cores[i]
+                  }))}
+                  labels={["Conform.", "Andam.", "Temper.", "Saúde", "Prémios", "BLUP"]}
+                />
+                <div className="flex gap-4 mt-4">
+                  {cavalos.map((c, i) => (
+                    <div key={c.id} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cores[i] }} />
+                      <span className="text-sm">{c.nome}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Tabela Comparativa */}
+            <div className="bg-zinc-800/50 rounded-2xl p-6 border border-zinc-700 overflow-x-auto">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Scale className="w-5 h-5 text-blue-500" />
+                Tabela Comparativa
+              </h3>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-zinc-400 border-b border-zinc-700">
+                    <th className="text-left py-2">Parâmetro</th>
+                    {cavalos.map((c, i) => (
+                      <th key={c.id} className="text-center py-2" style={{ color: cores[i] }}>{c.nome}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { label: "Idade", campo: "idade" as const, maior: false },
+                    { label: "Altura", campo: "altura" as const, maior: false },
+                    { label: "Conformação", campo: "conformacao" as const, maior: true },
+                    { label: "Andamentos", campo: "andamentos" as const, maior: true },
+                    { label: "Temperamento", campo: "temperamento" as const, maior: true },
+                    { label: "Saúde", campo: "saude" as const, maior: true },
+                    { label: "Prémios", campo: "premios" as const, maior: true },
+                    { label: "BLUP", campo: "blup" as const, maior: true },
+                    { label: "Preço", campo: "preco" as const, maior: false },
+                  ].map(({ label, campo, maior }) => (
+                    <tr key={campo} className="border-b border-zinc-800">
+                      <td className="py-2 text-zinc-400">{label}</td>
+                      {cavalos.map(c => (
+                        <td key={c.id} className={`text-center py-2 ${getClasse(c[campo] as number, getMelhor(campo, maior), maior)}`}>
+                          {campo === "preco" ? `${(c[campo] as number).toLocaleString("pt-PT")}€` : c[campo]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                  <tr className="border-t-2 border-zinc-600">
+                    <td className="py-3 font-bold">SCORE TOTAL</td>
+                    {cavalos.map((c, i) => (
+                      <td key={c.id} className="text-center py-3 text-xl font-bold" style={{ color: cores[i] }}>
+                        {calcularScore(c)}
+                        {c.id === vencedor.id && <Crown className="w-4 h-4 inline ml-1 text-amber-400" />}
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Recomendação */}
+            <div className="bg-gradient-to-br from-amber-900/30 to-zinc-900 rounded-2xl p-6 border border-amber-500/30">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-amber-500" />
+                Recomendação
+              </h3>
+              <div className="flex items-center gap-4">
+                <div className="p-4 bg-amber-500/20 rounded-xl">
+                  <Crown className="w-8 h-8 text-amber-400" />
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-amber-400">{vencedor.nome}</p>
+                  <p className="text-sm text-zinc-400">
+                    Score: {calcularScore(vencedor)} | Valor/Ponto: {(vencedor.preco / calcularScore(vencedor)).toFixed(0)}€
+                  </p>
+                  <p className="text-sm text-zinc-500 mt-1">
+                    Melhor relação qualidade/preço entre os cavalos comparados
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </main>
+    </div>
   );
 }
