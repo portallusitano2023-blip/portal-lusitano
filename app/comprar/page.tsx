@@ -2,6 +2,7 @@
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import HorseCard from "@/components/HorseCard";
+import Link from "next/link";
 
 export default async function ComprarPage({ searchParams }) {
   // PASSO DE ENGENHARIA: Em Next.js 15/16, searchParams é uma Promise
@@ -41,6 +42,24 @@ export default async function ComprarPage({ searchParams }) {
             </p>
           )}
         </header>
+
+        {/* Sell CTA Banner */}
+        <div className="mb-8 sm:mb-12 bg-gradient-to-r from-[#C5A059]/20 via-[#C5A059]/10 to-transparent border border-[#C5A059]/30 rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h2 className="text-lg sm:text-xl font-serif mb-1">Quer vender o seu Lusitano?</h2>
+              <p className="text-sm text-zinc-400">
+                Anuncie no maior marketplace de cavalos Lusitanos em Portugal. Verificação de documentação incluída.
+              </p>
+            </div>
+            <Link
+              href="/vender-cavalo"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#C5A059] text-black font-semibold rounded-lg hover:bg-[#D4AF6A] transition-colors touch-manipulation whitespace-nowrap"
+            >
+              Vender Cavalo
+            </Link>
+          </div>
+        </div>
 
         {/* Grid - Mobile: 2 cols, Tablet: 3 cols, Desktop: 4 cols */}
         {cavalos && cavalos.length > 0 ? (
