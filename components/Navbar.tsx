@@ -221,14 +221,14 @@ export default function Navbar() {
                       </div>
                     </Link>
                     <Link
-                      href="/quiz"
+                      href="/analise-perfil"
                       onClick={() => setIsLusitanoOpen(false)}
                       className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
                     >
                       <HelpCircle size={16} className="text-[#C5A059]" />
                       <div>
-                        <div className="text-sm font-medium">Quiz</div>
-                        <div className="text-[10px] text-zinc-500">Encontre o seu Lusitano</div>
+                        <div className="text-sm font-medium">Análise de Perfil</div>
+                        <div className="text-[10px] text-zinc-500">Descubra o seu perfil equestre</div>
                       </div>
                     </Link>
                   </div>
@@ -392,7 +392,7 @@ export default function Navbar() {
                   { href: "/calculadora-valor", icon: Calculator, label: "Calculadora" },
                   { href: "/comparador-cavalos", icon: Scale, label: "Comparador" },
                   { href: "/verificador-compatibilidade", icon: Dna, label: "Compatibilidade" },
-                  { href: "/quiz", icon: HelpCircle, label: "Quiz" },
+                  { href: "/analise-perfil", icon: HelpCircle, label: "Análise" },
                 ].map((item) => (
                   <Link
                     key={item.href}

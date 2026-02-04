@@ -57,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: `${siteUrl}/quiz`,
+      url: `${siteUrl}/analise-perfil`,
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.6,

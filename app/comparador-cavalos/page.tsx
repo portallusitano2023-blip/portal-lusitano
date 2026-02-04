@@ -2,44 +2,123 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Plus, X, Scale, Trophy, Heart, Ruler, Calendar, Euro, Star, Crown, Dna, Activity, Medal, TrendingUp, BarChart3 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowLeft, Plus, X, Scale, Trophy, Heart, Ruler, Calendar, Euro, Star,
+  Crown, Dna, Activity, Medal, TrendingUp, BarChart3, ChevronRight,
+  RefreshCw, Info, Target, Zap, Award, Check, Sparkles, GitBranch
+} from "lucide-react";
 
-// Tipos
+// ============================================
+// TIPOS
+// ============================================
+
 interface Cavalo {
   id: string;
   nome: string;
   idade: number;
   sexo: string;
   altura: number;
-  peso: number;
   pelagem: string;
   linhagem: string;
+  linhagemFamosa: string;
   treino: string;
   temperamento: number;
   saude: number;
   conformacao: number;
   andamentos: number;
-  competicoes: number;
+  elevacao: number;
+  regularidade: number;
+  competicoes: string;
   premios: number;
   preco: number;
   blup: number;
+  registoAPSL: boolean;
 }
 
+// ============================================
+// DADOS PROFISSIONAIS
+// ============================================
+
 const criarCavalo = (id: string, nome: string): Cavalo => ({
-  id, nome, idade: 8, sexo: "Garanhão", altura: 162, peso: 500,
-  pelagem: "Ruço", linhagem: "Registada", treino: "Elementar",
-  temperamento: 7, saude: 8, conformacao: 7, andamentos: 7,
-  competicoes: 0, premios: 0, preco: 20000, blup: 100
+  id,
+  nome,
+  idade: 8,
+  sexo: "Garanhão",
+  altura: 162,
+  pelagem: "Ruço",
+  linhagem: "Certificada",
+  linhagemFamosa: "veiga",
+  treino: "Elementar",
+  temperamento: 7,
+  saude: 8,
+  conformacao: 7,
+  andamentos: 7,
+  elevacao: 7,
+  regularidade: 7,
+  competicoes: "Nenhuma",
+  premios: 0,
+  preco: 25000,
+  blup: 100,
+  registoAPSL: true
 });
 
-const PELAGENS = ["Ruço", "Castanho", "Preto", "Alazão", "Baio", "Palomino"];
-const LINHAGENS = ["Desconhecida", "Registada", "Certificada", "Premium", "Elite"];
-const TREINOS = ["Potro", "Desbravado", "Iniciado", "Elementar", "Médio", "Avançado", "Alta Escola", "Grand Prix"];
-const SEXOS = ["Garanhão", "Égua", "Castrado"];
+const PELAGENS = [
+  { value: "Ruço", label: "Ruço" },
+  { value: "Castanho", label: "Castanho" },
+  { value: "Preto", label: "Preto" },
+  { value: "Alazão", label: "Alazão" },
+  { value: "Baio", label: "Baio" },
+  { value: "Palomino", label: "Palomino" },
+  { value: "Isabelo", label: "Isabelo" }
+];
 
-// Componente Radar Chart
+const LINHAGENS = [
+  { value: "Desconhecida", label: "Desconhecida", mult: 0.7 },
+  { value: "Registada", label: "Registada APSL", mult: 1.0 },
+  { value: "Certificada", label: "Certificada", mult: 1.2 },
+  { value: "Premium", label: "Premium", mult: 1.5 },
+  { value: "Elite", label: "Elite", mult: 2.0 }
+];
+
+const LINHAGENS_FAMOSAS = [
+  { value: "veiga", label: "Veiga" },
+  { value: "andrade", label: "Andrade" },
+  { value: "alter", label: "Alter Real" },
+  { value: "coudelaria_nacional", label: "Coudelaria Nacional" },
+  { value: "outra", label: "Outra" }
+];
+
+const TREINOS = [
+  { value: "Potro", label: "Potro", nivel: 1 },
+  { value: "Desbravado", label: "Desbravado", nivel: 2 },
+  { value: "Iniciado", label: "Iniciado", nivel: 3 },
+  { value: "Elementar", label: "Elementar", nivel: 4 },
+  { value: "Médio", label: "Médio (M)", nivel: 5 },
+  { value: "Avançado", label: "Avançado (S)", nivel: 6 },
+  { value: "Alta Escola", label: "Alta Escola", nivel: 7 },
+  { value: "Grand Prix", label: "Grand Prix", nivel: 8 }
+];
+
+const SEXOS = [
+  { value: "Garanhão", label: "Garanhão" },
+  { value: "Égua", label: "Égua" },
+  { value: "Castrado", label: "Castrado" }
+];
+
+const COMPETICOES = [
+  { value: "Nenhuma", label: "Nenhuma", mult: 1.0 },
+  { value: "Regional", label: "Regional", mult: 1.1 },
+  { value: "Nacional", label: "Nacional", mult: 1.25 },
+  { value: "Internacional", label: "Internacional", mult: 1.5 }
+];
+
+// ============================================
+// COMPONENTE RADAR CHART
+// ============================================
+
 const RadarChart = ({ cavalos, labels }: { cavalos: { nome: string; valores: number[]; cor: string }[]; labels: string[] }) => {
-  const size = 220;
+  const size = 280;
   const center = size / 2;
   const radius = size * 0.38;
   const angleStep = (2 * Math.PI) / labels.length;
@@ -52,42 +131,85 @@ const RadarChart = ({ cavalos, labels }: { cavalos: { nome: string; valores: num
 
   return (
     <svg width={size} height={size} className="mx-auto">
-      {/* Grid */}
+      {/* Grid circles */}
       {[2, 4, 6, 8, 10].map(level => (
-        <polygon key={level} points={labels.map((_, i) => {
-          const p = getPoint(level, i);
-          return `${p.x},${p.y}`;
-        }).join(" ")} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+        <polygon
+          key={level}
+          points={labels.map((_, i) => {
+            const p = getPoint(level, i);
+            return `${p.x},${p.y}`;
+          }).join(" ")}
+          fill="none"
+          stroke="rgba(255,255,255,0.08)"
+          strokeWidth="1"
+        />
       ))}
       {/* Axes */}
       {labels.map((_, i) => {
         const p = getPoint(10, i);
-        return <line key={i} x1={center} y1={center} x2={p.x} y2={p.y} stroke="rgba(255,255,255,0.15)" strokeWidth="1" />;
+        return (
+          <line
+            key={i}
+            x1={center}
+            y1={center}
+            x2={p.x}
+            y2={p.y}
+            stroke="rgba(255,255,255,0.1)"
+            strokeWidth="1"
+          />
+        );
       })}
       {/* Data polygons */}
       {cavalos.map((cavalo, ci) => (
-        <polygon key={ci} points={cavalo.valores.map((v, i) => {
-          const p = getPoint(v, i);
-          return `${p.x},${p.y}`;
-        }).join(" ")} fill={`${cavalo.cor}30`} stroke={cavalo.cor} strokeWidth="2" />
+        <motion.polygon
+          key={ci}
+          points={cavalo.valores.map((v, i) => {
+            const p = getPoint(v, i);
+            return `${p.x},${p.y}`;
+          }).join(" ")}
+          fill={`${cavalo.cor}20`}
+          stroke={cavalo.cor}
+          strokeWidth="2"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: ci * 0.2 }}
+        />
       ))}
       {/* Labels */}
       {labels.map((label, i) => {
-        const p = getPoint(11.5, i);
-        return <text key={i} x={p.x} y={p.y} fill="white" fontSize="9" textAnchor="middle" dominantBaseline="middle">{label}</text>;
+        const p = getPoint(12, i);
+        return (
+          <text
+            key={i}
+            x={p.x}
+            y={p.y}
+            fill="rgba(255,255,255,0.6)"
+            fontSize="10"
+            textAnchor="middle"
+            dominantBaseline="middle"
+          >
+            {label}
+          </text>
+        );
       })}
     </svg>
   );
 };
+
+// ============================================
+// COMPONENTE PRINCIPAL
+// ============================================
 
 export default function ComparadorCavalosPage() {
   const [cavalos, setCavalos] = useState<Cavalo[]>([
     criarCavalo("1", "Cavalo A"),
     criarCavalo("2", "Cavalo B"),
   ]);
+  const [step, setStep] = useState(0); // 0 = intro
   const [showAnalise, setShowAnalise] = useState(false);
+  const [editandoCavalo, setEditandoCavalo] = useState<string | null>(null);
 
-  const cores = ["#22c55e", "#3b82f6", "#f59e0b", "#ec4899"];
+  const cores = ["#C5A059", "#3b82f6", "#ec4899", "#22c55e"];
 
   const adicionar = () => {
     if (cavalos.length >= 4) return;
@@ -106,23 +228,53 @@ export default function ComparadorCavalosPage() {
 
   const calcularScore = (c: Cavalo): number => {
     let score = 0;
-    // Idade (ideal 6-12)
+
+    // Idade (ideal 6-12) - 10pts
     score += c.idade >= 6 && c.idade <= 12 ? 10 : c.idade >= 4 && c.idade <= 15 ? 7 : 4;
-    // Altura (ideal 155-165)
-    score += c.altura >= 155 && c.altura <= 165 ? 10 : c.altura >= 150 && c.altura <= 170 ? 7 : 5;
-    // Linhagem
-    const linPoints: Record<string, number> = { Desconhecida: 2, Registada: 5, Certificada: 7, Premium: 9, Elite: 10 };
-    score += linPoints[c.linhagem] || 5;
-    // Treino
-    const treinoPoints: Record<string, number> = { Potro: 2, Desbravado: 3, Iniciado: 4, Elementar: 5, Médio: 6, Avançado: 8, "Alta Escola": 9, "Grand Prix": 10 };
-    score += treinoPoints[c.treino] || 5;
-    // Outros
-    score += c.temperamento;
-    score += c.saude;
+
+    // Altura (ideal 158-168) - 8pts
+    score += c.altura >= 158 && c.altura <= 168 ? 8 : c.altura >= 155 && c.altura <= 170 ? 6 : 4;
+
+    // Linhagem - 15pts
+    const linPoints: Record<string, number> = { Desconhecida: 3, Registada: 8, Certificada: 11, Premium: 13, Elite: 15 };
+    score += linPoints[c.linhagem] || 8;
+
+    // Treino - 15pts
+    const treino = TREINOS.find(t => t.value === c.treino);
+    score += treino ? Math.round(treino.nivel * 1.9) : 5;
+
+    // Conformação - 10pts
     score += c.conformacao;
+
+    // Andamentos - 10pts
     score += c.andamentos;
-    score += Math.min(c.premios, 10);
-    return score;
+
+    // Elevação e Regularidade - 5pts cada
+    score += Math.round(c.elevacao / 2);
+    score += Math.round(c.regularidade / 2);
+
+    // Temperamento - 7pts
+    score += Math.round(c.temperamento * 0.7);
+
+    // Saúde - 7pts
+    score += Math.round(c.saude * 0.7);
+
+    // Competições - 8pts
+    const comp = COMPETICOES.find(co => co.value === c.competicoes);
+    score += comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
+
+    // BLUP bónus - 5pts
+    score += c.blup > 110 ? 5 : c.blup > 100 ? 3 : 1;
+
+    // Registo APSL bónus
+    if (c.registoAPSL) score += 3;
+
+    return Math.min(score, 100);
+  };
+
+  const calcularValorPorPonto = (c: Cavalo): number => {
+    const score = calcularScore(c);
+    return score > 0 ? Math.round(c.preco / score) : 0;
   };
 
   const getMelhor = (campo: keyof Cavalo, maior = true) => {
@@ -130,267 +282,600 @@ export default function ComparadorCavalosPage() {
     return maior ? Math.max(...vals) : Math.min(...vals);
   };
 
-  const getClasse = (val: number, melhor: number, maior = true) => {
-    if (maior) return val === melhor ? "text-green-400 font-bold" : val < melhor * 0.7 ? "text-red-400" : "";
-    return val === melhor ? "text-green-400 font-bold" : val > melhor * 1.3 ? "text-red-400" : "";
+  const getClasseCor = (val: number, melhor: number, maior = true) => {
+    if (maior) {
+      return val === melhor ? "text-emerald-400 font-semibold" : val < melhor * 0.8 ? "text-red-400" : "text-zinc-300";
+    }
+    return val === melhor ? "text-emerald-400 font-semibold" : val > melhor * 1.2 ? "text-red-400" : "text-zinc-300";
   };
 
   const vencedor = cavalos.reduce((a, b) => calcularScore(a) > calcularScore(b) ? a : b);
+  const melhorValor = cavalos.reduce((a, b) => calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b);
+
+  const resetar = () => {
+    setStep(0);
+    setShowAnalise(false);
+    setCavalos([criarCavalo("1", "Cavalo A"), criarCavalo("2", "Cavalo B")]);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-900 to-black text-white">
+    <main className="min-h-screen bg-[#050505] text-white">
       {/* Header */}
-      <div className="bg-zinc-900/80 border-b border-zinc-800 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-zinc-400 hover:text-white">
-            <ArrowLeft className="w-5 h-5" /><span>Voltar</span>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-xl border-b border-zinc-900">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3 text-zinc-400 hover:text-white transition-colors">
+            <ArrowLeft size={18} />
+            <span className="text-sm font-medium hidden sm:block">Portal Lusitano</span>
           </Link>
+
           <div className="flex items-center gap-3">
-            <Scale className="w-8 h-8 text-blue-500" />
-            <div>
-              <h1 className="text-xl font-bold">Comparador de Cavalos</h1>
-              <p className="text-xs text-zinc-500">Análise Comparativa Profissional</p>
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+              <Scale size={18} className="text-white" />
+            </div>
+            <div className="hidden sm:block">
+              <span className="text-sm font-medium text-white block leading-tight">Comparador de Cavalos</span>
+              <span className="text-xs text-zinc-500">Análise Comparativa PSL</span>
             </div>
           </div>
-          <button onClick={adicionar} disabled={cavalos.length >= 4}
-            className="px-4 py-2 bg-blue-600 rounded-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500">
-            <Plus className="w-4 h-4" />Adicionar
-          </button>
+
+          <div className="flex items-center gap-3">
+            {step > 0 && (
+              <button
+                onClick={adicionar}
+                disabled={cavalos.length >= 4}
+                className="px-4 py-2 bg-blue-600 rounded-lg flex items-center gap-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500 transition-colors"
+              >
+                <Plus size={16} />
+                <span className="hidden sm:inline">Adicionar</span>
+              </button>
+            )}
+            {showAnalise && (
+              <button onClick={resetar} className="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2">
+                <RefreshCw size={14} />
+                <span className="hidden sm:inline">Nova comparação</span>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Cards dos Cavalos */}
-        <div className={`grid gap-4 mb-8 ${cavalos.length === 2 ? "grid-cols-2" : cavalos.length === 3 ? "grid-cols-3" : "grid-cols-4"}`}>
-          {cavalos.map((c, i) => (
-            <div key={c.id} className="bg-zinc-800/50 rounded-2xl border border-zinc-700 overflow-hidden">
-              {/* Header do Card */}
-              <div className="p-4 border-b border-zinc-700" style={{ borderTopColor: cores[i], borderTopWidth: 3 }}>
-                <div className="flex items-center justify-between">
-                  <input type="text" value={c.nome} onChange={e => update(c.id, "nome", e.target.value)}
-                    className="bg-transparent text-lg font-bold outline-none flex-1" />
-                  {cavalos.length > 2 && (
-                    <button onClick={() => remover(c.id)} className="text-zinc-500 hover:text-red-400">
-                      <X className="w-5 h-5" />
-                    </button>
-                  )}
+      <div className="pt-16">
+        {/* ==================== INTRO ==================== */}
+        <AnimatePresence mode="wait">
+          {step === 0 && (
+            <motion.div
+              key="intro"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              {/* Hero Section */}
+              <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center opacity-30"
+                    style={{
+                      backgroundImage: "url('https://images.unsplash.com/photo-1534307671554-9a6d81f4d629?q=80&w=1920')",
+                      backgroundPosition: "center 40%"
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-black/60" />
                 </div>
-                {c.id === vencedor.id && showAnalise && (
-                  <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 rounded text-amber-400 text-xs">
-                    <Crown className="w-3 h-3" />Melhor Avaliação
-                  </div>
-                )}
-              </div>
 
-              {/* Campos */}
-              <div className="p-4 space-y-3 text-sm">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs text-zinc-500">Idade</label>
-                    <input type="number" min="1" max="30" value={c.idade} onChange={e => update(c.id, "idade", +e.target.value || 1)}
-                      className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-zinc-500">Altura (cm)</label>
-                    <input type="number" min="140" max="180" value={c.altura} onChange={e => update(c.id, "altura", +e.target.value || 160)}
-                      className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs text-zinc-500">Sexo</label>
-                  <select value={c.sexo} onChange={e => update(c.id, "sexo", e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5">
-                    {SEXOS.map(s => <option key={s}>{s}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-xs text-zinc-500">Pelagem</label>
-                  <select value={c.pelagem} onChange={e => update(c.id, "pelagem", e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5">
-                    {PELAGENS.map(p => <option key={p}>{p}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-xs text-zinc-500">Linhagem</label>
-                  <select value={c.linhagem} onChange={e => update(c.id, "linhagem", e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5">
-                    {LINHAGENS.map(l => <option key={l}>{l}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-xs text-zinc-500">Nível de Treino</label>
-                  <select value={c.treino} onChange={e => update(c.id, "treino", e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5">
-                    {TREINOS.map(t => <option key={t}>{t}</option>)}
-                  </select>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs text-zinc-500">Conformação: {c.conformacao}</label>
-                    <input type="range" min="1" max="10" value={c.conformacao} onChange={e => update(c.id, "conformacao", +e.target.value)}
-                      className="w-full accent-green-500" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-zinc-500">Andamentos: {c.andamentos}</label>
-                    <input type="range" min="1" max="10" value={c.andamentos} onChange={e => update(c.id, "andamentos", +e.target.value)}
-                      className="w-full accent-green-500" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs text-zinc-500">Temperamento: {c.temperamento}</label>
-                    <input type="range" min="1" max="10" value={c.temperamento} onChange={e => update(c.id, "temperamento", +e.target.value)}
-                      className="w-full accent-green-500" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-zinc-500">Saúde: {c.saude}</label>
-                    <input type="range" min="1" max="10" value={c.saude} onChange={e => update(c.id, "saude", +e.target.value)}
-                      className="w-full accent-green-500" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs text-zinc-500">Prémios</label>
-                    <input type="number" min="0" value={c.premios} onChange={e => update(c.id, "premios", +e.target.value || 0)}
-                      className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-zinc-500">BLUP</label>
-                    <input type="number" min="50" max="150" value={c.blup} onChange={e => update(c.id, "blup", +e.target.value || 100)}
-                      className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs text-zinc-500">Preço (€)</label>
-                  <input type="number" min="0" step="1000" value={c.preco} onChange={e => update(c.id, "preco", +e.target.value || 0)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1.5" />
-                </div>
-              </div>
+                <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+                  <motion.span
+                    className="inline-block px-4 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    Ferramenta de Análise
+                  </motion.span>
 
-              {/* Score */}
-              {showAnalise && (
-                <div className="p-4 bg-zinc-900/50 border-t border-zinc-700">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-zinc-400">Score Total</span>
-                    <span className="text-2xl font-bold" style={{ color: cores[i] }}>{calcularScore(c)}</span>
-                  </div>
-                  <div className="mt-2 text-xs text-zinc-500">
-                    Valor/Ponto: {(c.preco / calcularScore(c)).toFixed(0)}€
-                  </div>
+                  <motion.h1
+                    className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    Comparador de
+                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mt-2">
+                      Cavalos Lusitanos
+                    </span>
+                  </motion.h1>
+
+                  <motion.p
+                    className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    "Compare até 4 cavalos lado a lado com análise detalhada de conformação,
+                    andamentos, treino e valor de mercado."
+                  </motion.p>
+
+                  <motion.p
+                    className="text-sm text-zinc-500 max-w-xl mx-auto mb-10"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    Gráficos radar, tabelas comparativas e análise de custo-benefício
+                    para ajudar na tomada de decisão.
+                  </motion.p>
+
+                  <motion.button
+                    onClick={() => setStep(1)}
+                    className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-400 hover:to-blue-500 transition-all shadow-lg shadow-blue-500/20"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Scale size={20} />
+                    Iniciar Comparação
+                    <ChevronRight size={18} />
+                  </motion.button>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
+              </section>
 
-        {/* Botão Analisar */}
-        <button onClick={() => setShowAnalise(true)}
-          className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl font-bold text-lg flex items-center justify-center gap-2 mb-8">
-          <BarChart3 className="w-6 h-6" />Analisar Comparação
-        </button>
-
-        {/* Análise */}
-        {showAnalise && (
-          <div className="space-y-6">
-            {/* Gráfico Radar */}
-            <div className="bg-zinc-800/50 rounded-2xl p-6 border border-zinc-700">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-blue-500" />
-                Comparação Visual
-              </h3>
-              <div className="flex flex-col items-center">
-                <RadarChart
-                  cavalos={cavalos.map((c, i) => ({
-                    nome: c.nome,
-                    valores: [c.conformacao, c.andamentos, c.temperamento, c.saude, Math.min(c.premios, 10), c.blup / 15],
-                    cor: cores[i]
-                  }))}
-                  labels={["Conform.", "Andam.", "Temper.", "Saúde", "Prémios", "BLUP"]}
-                />
-                <div className="flex gap-4 mt-4">
-                  {cavalos.map((c, i) => (
-                    <div key={c.id} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cores[i] }} />
-                      <span className="text-sm">{c.nome}</span>
+              {/* Features */}
+              <section className="py-16 px-6">
+                <div className="max-w-6xl mx-auto">
+                  <motion.div
+                    className="grid md:grid-cols-3 gap-6"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                  >
+                    <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+                      <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
+                        <BarChart3 className="text-blue-400" size={24} />
+                      </div>
+                      <h3 className="text-lg font-serif text-white mb-2">Gráfico Radar</h3>
+                      <p className="text-sm text-zinc-400">
+                        Visualização intuitiva das características de cada cavalo
+                        em múltiplas dimensões de qualidade.
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
 
-            {/* Tabela Comparativa */}
-            <div className="bg-zinc-800/50 rounded-2xl p-6 border border-zinc-700 overflow-x-auto">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Scale className="w-5 h-5 text-blue-500" />
-                Tabela Comparativa
-              </h3>
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-zinc-400 border-b border-zinc-700">
-                    <th className="text-left py-2">Parâmetro</th>
-                    {cavalos.map((c, i) => (
-                      <th key={c.id} className="text-center py-2" style={{ color: cores[i] }}>{c.nome}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { label: "Idade", campo: "idade" as const, maior: false },
-                    { label: "Altura", campo: "altura" as const, maior: false },
-                    { label: "Conformação", campo: "conformacao" as const, maior: true },
-                    { label: "Andamentos", campo: "andamentos" as const, maior: true },
-                    { label: "Temperamento", campo: "temperamento" as const, maior: true },
-                    { label: "Saúde", campo: "saude" as const, maior: true },
-                    { label: "Prémios", campo: "premios" as const, maior: true },
-                    { label: "BLUP", campo: "blup" as const, maior: true },
-                    { label: "Preço", campo: "preco" as const, maior: false },
-                  ].map(({ label, campo, maior }) => (
-                    <tr key={campo} className="border-b border-zinc-800">
-                      <td className="py-2 text-zinc-400">{label}</td>
-                      {cavalos.map(c => (
-                        <td key={c.id} className={`text-center py-2 ${getClasse(c[campo] as number, getMelhor(campo, maior), maior)}`}>
-                          {campo === "preco" ? `${(c[campo] as number).toLocaleString("pt-PT")}€` : c[campo]}
-                        </td>
+                    <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+                      <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-4">
+                        <Scale className="text-emerald-400" size={24} />
+                      </div>
+                      <h3 className="text-lg font-serif text-white mb-2">Tabela Comparativa</h3>
+                      <p className="text-sm text-zinc-400">
+                        Comparação detalhada parâmetro a parâmetro com
+                        destaque automático para os melhores valores.
+                      </p>
+                    </div>
+
+                    <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+                      <div className="w-12 h-12 bg-amber-500/10 rounded-lg flex items-center justify-center mb-4">
+                        <Euro className="text-amber-400" size={24} />
+                      </div>
+                      <h3 className="text-lg font-serif text-white mb-2">Análise de Valor</h3>
+                      <p className="text-sm text-zinc-400">
+                        Cálculo de custo por ponto de qualidade para identificar
+                        o melhor investimento.
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
+              </section>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ==================== COMPARAÇÃO ==================== */}
+        <AnimatePresence mode="wait">
+          {step === 1 && (
+            <motion.div
+              key="compare"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="max-w-7xl mx-auto px-4 py-8"
+            >
+              {/* Cards dos Cavalos */}
+              <div className={`grid gap-4 mb-8 ${
+                cavalos.length === 2 ? "md:grid-cols-2" :
+                cavalos.length === 3 ? "md:grid-cols-3" : "md:grid-cols-4"
+              }`}>
+                {cavalos.map((c, i) => (
+                  <motion.div
+                    key={c.id}
+                    className="bg-zinc-900/50 rounded-2xl border border-zinc-800 overflow-hidden"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    {/* Header do Card */}
+                    <div
+                      className="p-4 border-b border-zinc-800"
+                      style={{ borderTopWidth: 3, borderTopColor: cores[i] }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <input
+                          type="text"
+                          value={c.nome}
+                          onChange={e => update(c.id, "nome", e.target.value)}
+                          className="bg-transparent text-lg font-semibold outline-none flex-1 text-white"
+                          placeholder="Nome do cavalo"
+                        />
+                        {cavalos.length > 2 && (
+                          <button
+                            onClick={() => remover(c.id)}
+                            className="text-zinc-500 hover:text-red-400 transition-colors"
+                          >
+                            <X size={18} />
+                          </button>
+                        )}
+                      </div>
+                      {showAnalise && (
+                        <div className="mt-2 flex gap-2">
+                          {c.id === vencedor.id && (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 rounded text-amber-400 text-xs">
+                              <Crown size={12} />Melhor Score
+                            </span>
+                          )}
+                          {c.id === melhorValor.id && (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-500/20 rounded text-emerald-400 text-xs">
+                              <Euro size={12} />Melhor Valor
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Campos */}
+                    <div className="p-4 space-y-4 text-sm">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-xs text-zinc-500 block mb-1">Idade</label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="30"
+                            value={c.idade}
+                            onChange={e => update(c.id, "idade", +e.target.value || 1)}
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-zinc-500 block mb-1">Altura (cm)</label>
+                          <input
+                            type="number"
+                            min="140"
+                            max="180"
+                            value={c.altura}
+                            onChange={e => update(c.id, "altura", +e.target.value || 160)}
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-xs text-zinc-500 block mb-1">Sexo</label>
+                        <select
+                          value={c.sexo}
+                          onChange={e => update(c.id, "sexo", e.target.value)}
+                          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                        >
+                          {SEXOS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                        </select>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-xs text-zinc-500 block mb-1">Pelagem</label>
+                          <select
+                            value={c.pelagem}
+                            onChange={e => update(c.id, "pelagem", e.target.value)}
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          >
+                            {PELAGENS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-zinc-500 block mb-1">Linhagem</label>
+                          <select
+                            value={c.linhagem}
+                            onChange={e => update(c.id, "linhagem", e.target.value)}
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          >
+                            {LINHAGENS.map(l => <option key={l.value} value={l.value}>{l.label}</option>)}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-xs text-zinc-500 block mb-1">Nível de Treino</label>
+                        <select
+                          value={c.treino}
+                          onChange={e => update(c.id, "treino", e.target.value)}
+                          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                        >
+                          {TREINOS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                        </select>
+                      </div>
+
+                      {/* Sliders */}
+                      {[
+                        { field: "conformacao" as const, label: "Conformação" },
+                        { field: "andamentos" as const, label: "Andamentos" },
+                        { field: "temperamento" as const, label: "Temperamento" },
+                        { field: "saude" as const, label: "Saúde" }
+                      ].map(({ field, label }) => (
+                        <div key={field}>
+                          <div className="flex justify-between mb-1">
+                            <label className="text-xs text-zinc-500">{label}</label>
+                            <span className="text-xs font-medium" style={{ color: cores[i] }}>{c[field]}/10</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="1"
+                            max="10"
+                            value={c[field]}
+                            onChange={e => update(c.id, field, +e.target.value)}
+                            className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer"
+                            style={{ accentColor: cores[i] }}
+                          />
+                        </div>
                       ))}
-                    </tr>
-                  ))}
-                  <tr className="border-t-2 border-zinc-600">
-                    <td className="py-3 font-bold">SCORE TOTAL</td>
-                    {cavalos.map((c, i) => (
-                      <td key={c.id} className="text-center py-3 text-xl font-bold" style={{ color: cores[i] }}>
-                        {calcularScore(c)}
-                        {c.id === vencedor.id && <Crown className="w-4 h-4 inline ml-1 text-amber-400" />}
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
 
-            {/* Recomendação */}
-            <div className="bg-gradient-to-br from-amber-900/30 to-zinc-900 rounded-2xl p-6 border border-amber-500/30">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-amber-500" />
-                Recomendação
-              </h3>
-              <div className="flex items-center gap-4">
-                <div className="p-4 bg-amber-500/20 rounded-xl">
-                  <Crown className="w-8 h-8 text-amber-400" />
-                </div>
-                <div>
-                  <p className="text-xl font-bold text-amber-400">{vencedor.nome}</p>
-                  <p className="text-sm text-zinc-400">
-                    Score: {calcularScore(vencedor)} | Valor/Ponto: {(vencedor.preco / calcularScore(vencedor)).toFixed(0)}€
-                  </p>
-                  <p className="text-sm text-zinc-500 mt-1">
-                    Melhor relação qualidade/preço entre os cavalos comparados
-                  </p>
-                </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-xs text-zinc-500 block mb-1">Competições</label>
+                          <select
+                            value={c.competicoes}
+                            onChange={e => update(c.id, "competicoes", e.target.value)}
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          >
+                            {COMPETICOES.map(co => <option key={co.value} value={co.value}>{co.label}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-zinc-500 block mb-1">BLUP</label>
+                          <input
+                            type="number"
+                            min="50"
+                            max="150"
+                            value={c.blup}
+                            onChange={e => update(c.id, "blup", +e.target.value || 100)}
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-xs text-zinc-500 block mb-1">Preço (€)</label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="1000"
+                          value={c.preco}
+                          onChange={e => update(c.id, "preco", +e.target.value || 0)}
+                          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                        />
+                      </div>
+
+                      <button
+                        onClick={() => update(c.id, "registoAPSL", !c.registoAPSL)}
+                        className={`w-full py-2 px-3 rounded-lg border text-xs font-medium transition-all flex items-center justify-center gap-2 ${
+                          c.registoAPSL
+                            ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
+                            : "border-zinc-700 text-zinc-400 hover:border-zinc-600"
+                        }`}
+                      >
+                        {c.registoAPSL && <Check size={14} />}
+                        Registo APSL
+                      </button>
+                    </div>
+
+                    {/* Score Preview */}
+                    {showAnalise && (
+                      <div className="p-4 bg-zinc-800/50 border-t border-zinc-800">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm text-zinc-400">Score Total</span>
+                          <span className="text-2xl font-bold" style={{ color: cores[i] }}>
+                            {calcularScore(c)}
+                          </span>
+                        </div>
+                        <div className="text-xs text-zinc-500">
+                          Valor/Ponto: <span className="text-zinc-300">{calcularValorPorPonto(c).toLocaleString("pt-PT")}€</span>
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
               </div>
-            </div>
-          </div>
-        )}
+
+              {/* Botão Analisar */}
+              {!showAnalise && (
+                <button
+                  onClick={() => setShowAnalise(true)}
+                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-500/20"
+                >
+                  <BarChart3 size={22} />
+                  Analisar Comparação
+                </button>
+              )}
+
+              {/* Análise */}
+              {showAnalise && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6"
+                >
+                  {/* Gráfico Radar */}
+                  <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800">
+                    <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
+                      <Activity className="text-blue-400" size={20} />
+                      Comparação Visual
+                    </h3>
+                    <div className="flex flex-col items-center">
+                      <RadarChart
+                        cavalos={cavalos.map((c, i) => ({
+                          nome: c.nome,
+                          valores: [
+                            c.conformacao,
+                            c.andamentos,
+                            c.temperamento,
+                            c.saude,
+                            Math.min(c.blup / 12, 10),
+                            TREINOS.find(t => t.value === c.treino)?.nivel || 4
+                          ],
+                          cor: cores[i]
+                        }))}
+                        labels={["Conform.", "Andam.", "Temper.", "Saúde", "BLUP", "Treino"]}
+                      />
+                      <div className="flex flex-wrap justify-center gap-4 mt-6">
+                        {cavalos.map((c, i) => (
+                          <div key={c.id} className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cores[i] }} />
+                            <span className="text-sm text-zinc-300">{c.nome}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tabela Comparativa */}
+                  <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800 overflow-x-auto">
+                    <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
+                      <Scale className="text-blue-400" size={20} />
+                      Tabela Comparativa
+                    </h3>
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-zinc-400 border-b border-zinc-800">
+                          <th className="text-left py-3 px-2">Parâmetro</th>
+                          {cavalos.map((c, i) => (
+                            <th key={c.id} className="text-center py-3 px-2" style={{ color: cores[i] }}>
+                              {c.nome}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { label: "Idade", campo: "idade" as const, maior: false, suffix: " anos" },
+                          { label: "Altura", campo: "altura" as const, maior: false, suffix: " cm" },
+                          { label: "Conformação", campo: "conformacao" as const, maior: true, suffix: "/10" },
+                          { label: "Andamentos", campo: "andamentos" as const, maior: true, suffix: "/10" },
+                          { label: "Temperamento", campo: "temperamento" as const, maior: true, suffix: "/10" },
+                          { label: "Saúde", campo: "saude" as const, maior: true, suffix: "/10" },
+                          { label: "BLUP", campo: "blup" as const, maior: true, suffix: "" },
+                          { label: "Preço", campo: "preco" as const, maior: false, suffix: "€" },
+                        ].map(({ label, campo, maior, suffix }) => (
+                          <tr key={campo} className="border-b border-zinc-800/50">
+                            <td className="py-3 px-2 text-zinc-400">{label}</td>
+                            {cavalos.map(c => (
+                              <td
+                                key={c.id}
+                                className={`text-center py-3 px-2 ${getClasseCor(c[campo] as number, getMelhor(campo, maior), maior)}`}
+                              >
+                                {campo === "preco"
+                                  ? `${(c[campo] as number).toLocaleString("pt-PT")}${suffix}`
+                                  : `${c[campo]}${suffix}`
+                                }
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                        <tr className="border-t-2 border-zinc-700">
+                          <td className="py-4 px-2 font-semibold text-white">SCORE TOTAL</td>
+                          {cavalos.map((c, i) => (
+                            <td key={c.id} className="text-center py-4 px-2">
+                              <span className="text-2xl font-bold" style={{ color: cores[i] }}>
+                                {calcularScore(c)}
+                              </span>
+                              {c.id === vencedor.id && (
+                                <Crown className="inline ml-2 text-amber-400" size={16} />
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                        <tr className="border-t border-zinc-800">
+                          <td className="py-3 px-2 text-zinc-400">Valor/Ponto</td>
+                          {cavalos.map((c, i) => (
+                            <td
+                              key={c.id}
+                              className={`text-center py-3 px-2 ${
+                                c.id === melhorValor.id ? "text-emerald-400 font-semibold" : "text-zinc-300"
+                              }`}
+                            >
+                              {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Recomendação */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="bg-gradient-to-br from-amber-900/30 to-zinc-900 rounded-2xl p-6 border border-amber-500/30">
+                      <h3 className="text-lg font-serif mb-4 flex items-center gap-3">
+                        <Trophy className="text-amber-400" size={20} />
+                        Melhor Qualidade
+                      </h3>
+                      <div className="flex items-center gap-4">
+                        <div className="p-4 bg-amber-500/20 rounded-xl">
+                          <Crown className="text-amber-400" size={28} />
+                        </div>
+                        <div>
+                          <p className="text-xl font-bold text-amber-400">{vencedor.nome}</p>
+                          <p className="text-sm text-zinc-400">
+                            Score: {calcularScore(vencedor)} pontos
+                          </p>
+                          <p className="text-xs text-zinc-500 mt-1">
+                            {vencedor.treino} • {vencedor.linhagem}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-emerald-900/30 to-zinc-900 rounded-2xl p-6 border border-emerald-500/30">
+                      <h3 className="text-lg font-serif mb-4 flex items-center gap-3">
+                        <Euro className="text-emerald-400" size={20} />
+                        Melhor Custo-Benefício
+                      </h3>
+                      <div className="flex items-center gap-4">
+                        <div className="p-4 bg-emerald-500/20 rounded-xl">
+                          <TrendingUp className="text-emerald-400" size={28} />
+                        </div>
+                        <div>
+                          <p className="text-xl font-bold text-emerald-400">{melhorValor.nome}</p>
+                          <p className="text-sm text-zinc-400">
+                            {calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")}€ por ponto
+                          </p>
+                          <p className="text-xs text-zinc-500 mt-1">
+                            {melhorValor.preco.toLocaleString("pt-PT")}€ • Score {calcularScore(melhorValor)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Disclaimer */}
+                  <div className="p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
+                    <p className="text-xs text-zinc-500 leading-relaxed">
+                      <strong className="text-zinc-400">Nota:</strong> Esta comparação é uma ferramenta de apoio
+                      à decisão baseada nos dados fornecidos. O score é calculado considerando múltiplos
+                      factores de qualidade segundo padrões APSL. A decisão final deve incluir
+                      avaliação presencial e exame veterinário.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </div>
+    </main>
   );
 }
