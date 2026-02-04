@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { ShoppingBag, User, Menu, X, Search, Heart, Crown, Gift, ChevronDown, MapPin, Calendar, ShoppingCart, BookOpen, HelpCircle, Home, Store, Calculator, Scale, Dna, Users, Trophy, Euro } from "lucide-react";
+import { ShoppingBag, User, Menu, X, Search, Heart, Crown, Gift, ChevronDown, MapPin, Calendar, ShoppingCart, BookOpen, HelpCircle, Home, Store, Calculator, Scale, Dna, Users, Trophy, Euro, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
@@ -156,6 +156,17 @@ export default function Navbar() {
                       <div>
                         <div className="text-sm font-medium">Linhagens</div>
                         <div className="text-[10px] text-zinc-500">Guia das linhagens</div>
+                      </div>
+                    </Link>
+                    <Link
+                      href="/piroplasmose"
+                      onClick={() => setIsLusitanoOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
+                    >
+                      <Shield size={16} className="text-[#C5A059]" />
+                      <div>
+                        <div className="text-sm font-medium">Piroplasmose</div>
+                        <div className="text-[10px] text-zinc-500">Saúde e exportação</div>
                       </div>
                     </Link>
                   </div>
@@ -364,6 +375,7 @@ export default function Navbar() {
                   { href: "/mapa", icon: MapPin, label: "Mapa" },
                   { href: "/eventos", icon: Calendar, label: "Eventos" },
                   { href: "/linhagens", icon: BookOpen, label: "Linhagens" },
+                  { href: "/piroplasmose", icon: Shield, label: "Piroplasmose" },
                 ].map((item) => (
                   <Link
                     key={item.href}

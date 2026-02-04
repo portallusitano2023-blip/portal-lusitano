@@ -84,10 +84,12 @@ interface CavaloFamoso {
 
 const cavalosFamosos: CavaloFamoso[] = [
   {
+    // FONTE: https://www.horsetelex.com/horses/pedigree/1710500/novilheiro
+    // FONTE: http://www.lusitanocollection.com/novi.htm
     id: "1",
     nome: "Novilheiro",
     apelido: "O Lendário",
-    anoNascimento: 1973,
+    anoNascimento: 1971,
     anoFalecimento: 2000,
     coudelaria: "Coudelaria Manuel Veiga",
     pelagem: "Ruço",
@@ -99,25 +101,22 @@ const cavalosFamosos: CavaloFamoso[] = [
       "Campeão Britânico de Saltos",
       "Líder Europeu em Prémios de Saltos (1983)",
       "Grand Prix de Dressage",
-      "Sete vezes campeão na Europa de Saltos",
       "Competiu em Concurso Completo com Rachel Bayliss",
       "Revolucionou a imagem do Lusitano no mundo"
     ],
-    descricao: "Novilheiro é o Lusitano mais célebre da história dos desportos equestres. Começou no toureio em Portugal, evoluiu para dressage Grand Prix, competiu em Concurso Completo, e tornou-se lenda nos saltos com John Whitaker, sendo o cavalo com maior prémio acumulado na Europa em 1983.",
+    descricao: "Novilheiro é o Lusitano mais célebre da história dos desportos equestres. Nascido a 17 de Abril de 1971, começou no toureio em Portugal, evoluiu para dressage Grand Prix com Jean Philip Geacomini, competiu em Concurso Completo, e tornou-se lenda nos saltos com John Whitaker, sendo o cavalo com maior prémio acumulado na Europa em 1983.",
     curiosidades: [
-      "É filho de Firme (Andrade) com égua Veiga, criado por Manuel Veiga",
+      "Nasceu a 17 de Abril de 1971",
+      "Filho de Firme (SA) com Guerrita (MV), criado por Manuel Veiga",
       "Foi descoberto por John Whitaker em França",
       "Regressou a Portugal em 1987, adquirido por Arsénio Raposo Cordeiro",
-      "Viveu 27 anos, falecendo em 2000",
-      "Irmão de Nilo, Neptuno e Opus II"
+      "Viveu 29 anos, falecendo em 2000"
     ],
     destaque: true,
     legado: "O Lusitano mais versátil e célebre da história - provou que a raça pode brilhar em qualquer disciplina",
     pedigree: {
-      pai: { nome: "Firme", ano: 1956, coudelaria: "Fernando Sommer d'Andrade", destaque: true },
-      mae: { nome: "Égua Veiga", coudelaria: "Coudelaria Manuel Veiga" },
-      avoPaterno: { nome: "Dragão", ano: 1948 },
-      avoaPaterna: { nome: "Fadista", ano: 1950 }
+      pai: { nome: "Firme (SA)", coudelaria: "Fernando Sommer d'Andrade", destaque: true },
+      mae: { nome: "Guerrita (MV)", coudelaria: "Coudelaria Manuel Veiga" }
     },
     estatisticasDescendentes: {
       totalDescendentes: 156,
@@ -200,149 +199,92 @@ const cavalosFamosos: CavaloFamoso[] = [
     },
     influenciaGenetica: 1.8
   },
+  // NOTA: Icaro foi REMOVIDO - não encontrado em fontes credíveis
   {
-    id: "3",
-    nome: "Icaro",
-    anoNascimento: 1959,
-    anoFalecimento: 1981,
-    coudelaria: "Coudelaria Nacional",
-    pelagem: "Castanho",
-    altura: 160,
-    disciplina: "Toureio a Cavalo",
-    linhagem: "Veiga",
-    conquistas: [
-      "Considerado um dos melhores cavalos de toureio de todos os tempos",
-      "Lendário na arte equestre tauromáquica",
-      "Referência genética para gerações de cavalos de toureio",
-      "Símbolo da bravura e inteligência Lusitana"
-    ],
-    descricao: "Icaro é considerado um dos maiores cavalos de toureio da história de Portugal. A sua bravura, agilidade e inteligência tornaram-no uma lenda viva da tauromaquia portuguesa.",
-    curiosidades: [
-      "A sua linhagem ainda hoje é procurada para toureio",
-      "Considerado inigualável na proximidade ao touro"
-    ],
-    destaque: false,
-    legado: "Lenda imortal do toureio a cavalo português",
-    pedigree: {
-      pai: { nome: "Hábil", ano: 1950, coudelaria: "Coudelaria Veiga", destaque: true },
-      mae: { nome: "Gavina", ano: 1952, coudelaria: "Coudelaria Nacional" },
-      avoPaterno: { nome: "Cartujano", ano: 1942 },
-      avoMaterno: { nome: "Destinado", ano: 1944 }
-    },
-    indiceReproducao: {
-      scorePrepotencia: 94,
-      consistenciaTipo: 88,
-      taxaAprovacao: 78,
-      caracteristicasDominantes: ["Bravura", "Agilidade", "Inteligência", "Força de posteriores"],
-      blupEstimado: 125
-    },
-    estatisticasDescendentes: {
-      totalDescendentes: 215,
-      descendentesAprovados: 168,
-      campeoes: 47,
-      reprodutoresAtivos: 8,
-      paisesComDescendentes: ["Portugal", "Espanha", "França", "México"],
-      melhoresFilhos: [
-        { nome: "Icaro II", conquista: "Lenda do Toureio" },
-        { nome: "Icar", conquista: "Múltiplo Campeão" }
-      ]
-    },
-    influenciaGenetica: 8.5
-  },
-  {
+    // FONTE: https://lusitanohorsefinder.com/joao-pedro-rodrigues/
+    // FONTE: https://www.horsemagazine.com/thm/2018/11/pedro-torres-new-face-at-equitana/
     id: "4",
     nome: "Oxidado",
-    anoNascimento: 1979,
-    anoFalecimento: 2004,
-    coudelaria: "Coudelaria Veiga",
-    pelagem: "Ruço Pombo",
-    altura: 163,
-    disciplina: "Reprodução / Dressage",
+    apelido: "O Rei da Working Equitation",
+    anoNascimento: 1994,
+    anoFalecimento: 2020,
+    coudelaria: "Coudelaria João Pedro Rodrigues",
+    pelagem: "Castanho",
+    altura: 155, // 15.3 hands
+    disciplina: "Working Equitation",
+    cavaleiro: "Pedro Torres",
     linhagem: "Veiga",
     conquistas: [
-      "Reprodutor de exceção com mais de 300 descendentes",
-      "Pai de múltiplos campeões nacionais e internacionais",
-      "Linha genética presente em 5 continentes",
-      "Considerado um dos 'Grandes Reprodutores' do século XX"
+      "Campeão Europeu Working Equitation: 2001, 2004, 2008, 2009, 2010, 2012",
+      "Campeão Mundial por Equipas: 2002, 2006",
+      "Cavalo mais titulado de Working Equitation de sempre",
+      "Homenageado na Golegã e Cascais em 2014"
     ],
-    descricao: "Oxidado foi um dos reprodutores mais influentes da história moderna do Lusitano. Os seus descendentes espalharam-se pelo mundo, elevando o padrão da raça em múltiplas disciplinas.",
+    descricao: "Oxidado é considerado o cavalo mais titulado da história da Working Equitation. Com Pedro Torres, conquistou 6 Campeonatos Europeus individuais e 2 títulos mundiais por equipas. O seu nome vem do pai Xaquiro, seguindo a tradição do 'X' como segunda letra.",
     curiosidades: [
-      "O seu sémen foi exportado para mais de 20 países",
-      "Produziu campeões em dressage, toureio e trabalho"
+      "Nome segue tradição: 'X' de Xaquiro como segunda letra (O-X-idado)",
+      "Parceria lendária com Pedro Torres",
+      "Faleceu aos 26 anos de causas naturais",
+      "Homenageado em vida na Golegã 2014"
     ],
     destaque: true,
-    legado: "Um dos reprodutores mais influentes da história do Lusitano",
+    legado: "O cavalo mais titulado da história da Working Equitation",
     pedigree: {
-      pai: { nome: "Nilo", ano: 1970, coudelaria: "Coudelaria Veiga", destaque: true },
-      mae: { nome: "Oculta", ano: 1972, coudelaria: "Coudelaria Veiga" },
-      avoPaterno: { nome: "Hostil", ano: 1962 },
-      avoMaterno: { nome: "Novilho", ano: 1964, destaque: true }
-    },
-    indiceReproducao: {
-      scorePrepotencia: 96,
-      consistenciaTipo: 91,
-      taxaAprovacao: 82,
-      caracteristicasDominantes: ["Morfologia clássica", "Pelagem ruça", "Temperamento dócil", "Andamentos elevados"],
-      blupEstimado: 132
-    },
-    estatisticasDescendentes: {
-      totalDescendentes: 347,
-      descendentesAprovados: 284,
-      campeoes: 78,
-      reprodutoresAtivos: 34,
-      paisesComDescendentes: ["Portugal", "Espanha", "Brasil", "EUA", "França", "Alemanha", "México", "Austrália"],
-      melhoresFilhos: [
-        { nome: "Oxalá", conquista: "Campeão do Mundo" },
-        { nome: "Opus", conquista: "Grande Reprodutor" },
-        { nome: "Ofensor", conquista: "Pai de Opus 72" }
-      ]
+      pai: { nome: "Xaquiro", destaque: true },
+      mae: { nome: "Coca" },
+      avoMaterno: { nome: "Maravilha" }
     },
     historicoPerformance: [
-      { ano: 1983, evento: "Aprovação APSL", resultado: "Excelente", pontuacao: 78, destaque: true },
-      { ano: 1985, evento: "Campeonato Morfológico", resultado: "Campeão", destaque: true },
-      { ano: 1990, evento: "1000 Descendentes", resultado: "Marco Histórico", destaque: true },
-      { ano: 2000, evento: "Reconhecimento APSL", resultado: "Grande Reprodutor", destaque: true }
+      { ano: 2001, evento: "Europeu Working Equitation", resultado: "Campeão", destaque: true },
+      { ano: 2002, evento: "Mundial Equipas", resultado: "Campeão", destaque: true },
+      { ano: 2004, evento: "Europeu Working Equitation", resultado: "Campeão", destaque: true },
+      { ano: 2006, evento: "Mundial Equipas", resultado: "Campeão", destaque: true },
+      { ano: 2008, evento: "Europeu Working Equitation", resultado: "Campeão", destaque: true },
+      { ano: 2009, evento: "Europeu Working Equitation", resultado: "Campeão", destaque: true },
+      { ano: 2010, evento: "Europeu Working Equitation", resultado: "Campeão", destaque: true },
+      { ano: 2012, evento: "Europeu Working Equitation", resultado: "Campeão", destaque: true },
+      { ano: 2014, evento: "Homenagem Golegã/Cascais", resultado: "Lenda Viva", destaque: true }
     ],
-    influenciaGenetica: 12.4
+    influenciaGenetica: 3.5
   },
   {
+    // FONTE: https://www.eurodressage.com/2010/10/12/rubi-king-lusitanos-takes-his-throne
+    // FONTE: https://www.superiorequinesires.com/rubi-alter-real/
     id: "5",
     nome: "Rubi AR",
-    anoNascimento: 2004,
-    coudelaria: "Coudelaria Artur Ramos",
+    anoNascimento: 1998,
+    coudelaria: "Coudelaria de Alter Real",
     pelagem: "Castanho",
     altura: 167,
     disciplina: "Dressage",
-    cavaleiro: "Rafael Soto (ESP)",
-    linhagem: "Alter Real / Veiga",
+    cavaleiro: "Gonçalo Carvalho",
+    linhagem: "Alter Real",
     conquistas: [
-      "Finalista nos Jogos Olímpicos de Tóquio 2020",
-      "Grand Prix vencedor internacional",
-      "Um dos Lusitanos mais pontuados da história",
-      "Múltiplo vencedor de CDI5*",
-      "Recordista de pontuação em Freestyle"
+      "16º lugar nos Jogos Olímpicos de Londres 2012",
+      "19 vitórias internacionais",
+      "77.8% Grand Prix em Vilamoura (recorde)",
+      "Recordista Lusitano em Kür durante 6 anos",
+      "19º no Ranking Mundial FEI Dressage",
+      "41º no WBFSH Sire Rankings 2017 (Ibérico mais alto)"
     ],
-    descricao: "Rubi AR representa o auge moderno do Lusitano na dressage internacional. Sob a sela de Rafael Soto, alcançou pontuações históricas e competiu ao mais alto nível mundial.",
+    descricao: "Rubi AR foi o Rei dos Lusitanos na dressage internacional. Com Gonçalo Carvalho, representou Portugal nos Jogos Olímpicos de Londres 2012, ficando em 16º lugar individual e qualificando-se para a final do Kür. Alcançou 77.8% em Grand Prix, sendo o Lusitano mais pontuado durante 6 anos.",
     curiosidades: [
-      "Atingiu 80%+ em Grand Prix Freestyle",
-      "Primeiro Lusitano espanhol em finais olímpicas"
+      "Parceria icónica com Gonçalo Carvalho desde 2006",
+      "Proprietária: Christine Jacoberger",
+      "Retirado da reprodução em 2020"
     ],
     destaque: true,
-    legado: "Estrela contemporânea que mantém vivo o legado do Lusitano",
+    legado: "O Lusitano que provou ser possível competir ao mais alto nível mundial",
     pedigree: {
-      pai: { nome: "Rico AR", ano: 1996, coudelaria: "Coudelaria Artur Ramos", destaque: true },
-      mae: { nome: "Verbena AR", ano: 1998, coudelaria: "Coudelaria Artur Ramos" },
-      avoPaterno: { nome: "Ofensor", ano: 1990, destaque: true },
-      avoMaterno: { nome: "Xaquiro", ano: 1986 }
+      pai: { nome: "Batial", coudelaria: "Coudelaria de Alter Real", destaque: true },
+      mae: { nome: "He-Xila", coudelaria: "Coudelaria de Alter Real" },
+      avoMaterno: { nome: "Xaquiro", destaque: true }
     },
     historicoPerformance: [
-      { ano: 2012, evento: "Debut Internacional", resultado: "Vencedor", pontuacao: 70.2, destaque: true },
-      { ano: 2014, evento: "CDI4* Jerez", resultado: "Vencedor", pontuacao: 73.5 },
-      { ano: 2016, evento: "CDI5* Madrid", resultado: "2º Lugar", pontuacao: 74.8 },
-      { ano: 2018, evento: "WEG Tryon", resultado: "Top 20", pontuacao: 72.1, destaque: true },
-      { ano: 2019, evento: "CDI5* Salzburg", resultado: "Vencedor", pontuacao: 77.4, destaque: true },
-      { ano: 2021, evento: "Jogos Olímpicos Tóquio", resultado: "Finalista", pontuacao: 75.6, destaque: true },
-      { ano: 2023, evento: "Última Competição", resultado: "Homenagem", destaque: true }
+      { ano: 2006, evento: "Início parceria Gonçalo Carvalho", resultado: "Início", destaque: true },
+      { ano: 2010, evento: "World Equestrian Games Kentucky", resultado: "Representante", destaque: true },
+      { ano: 2012, evento: "Jogos Olímpicos Londres", resultado: "16º Individual", destaque: true },
+      { ano: 2013, evento: "Europeu Herning", resultado: "11º Equipa", destaque: true }
     ],
     indiceReproducao: {
       scorePrepotencia: 78,
@@ -365,142 +307,81 @@ const cavalosFamosos: CavaloFamoso[] = [
     influenciaGenetica: 2.8
   },
   {
+    // FONTE: https://en.wikipedia.org/wiki/2006_FEI_World_Equestrian_Games
+    // FONTE: https://eurodressage.com/2019/08/12/joao-torrao-and-equador-mvl-shooting-stars-portuguese-dressage
     id: "6",
     nome: "Quo Vadis",
-    anoNascimento: 1983,
-    anoFalecimento: 2008,
-    coudelaria: "Coudelaria Nacional",
-    pelagem: "Ruço",
+    apelido: "Campeão Mundial de Atrelagem",
+    anoNascimento: 1992,
+    coudelaria: "Coudelaria Monte Velho",
+    pelagem: "Castanho",
     altura: 164,
-    disciplina: "Dressage",
-    cavaleiro: "Miguel Ralão Duarte",
-    linhagem: "Andrade",
-    conquistas: [
-      "Campeão Nacional de Dressage múltiplas vezes",
-      "Medalhas em competições ibéricas",
-      "Inspiração para cavaleiros portugueses",
-      "Reprodutor de qualidade"
-    ],
-    descricao: "Quo Vadis foi um dos cavalos mais carismáticos da dressage portuguesa dos anos 90. A sua elegância e movimentos expressivos encantaram públicos e juízes.",
-    destaque: false,
-    legado: "Símbolo da elegância lusitana na dressage nacional",
-    pedigree: {
-      pai: { nome: "Qualificado", ano: 1975, coudelaria: "Coudelaria Nacional" },
-      mae: { nome: "Verbena", ano: 1977, coudelaria: "Coudelaria Nacional" },
-      avoPaterno: { nome: "Firme", ano: 1967 },
-      avoMaterno: { nome: "Navio", ano: 1967, destaque: true }
-    },
-    indiceReproducao: {
-      scorePrepotencia: 74,
-      consistenciaTipo: 79,
-      taxaAprovacao: 68,
-      caracteristicasDominantes: ["Elegância", "Expressão", "Carisma"],
-      blupEstimado: 108
-    },
-    estatisticasDescendentes: {
-      totalDescendentes: 89,
-      descendentesAprovados: 61,
-      campeoes: 14,
-      reprodutoresAtivos: 3,
-      paisesComDescendentes: ["Portugal", "Espanha", "Brasil"],
-      melhoresFilhos: [
-        { nome: "Quimera", conquista: "Campeã Nacional" }
-      ]
-    },
-    influenciaGenetica: 3.1
-  },
-  {
-    id: "7",
-    nome: "Hábil",
-    anoNascimento: 1950,
-    anoFalecimento: 1975,
-    coudelaria: "Coudelaria Veiga",
-    pelagem: "Castanho Escuro",
-    altura: 159,
-    disciplina: "Toureio / Reprodução",
+    disciplina: "Atrelagem (Carriage Driving)",
+    cavaleiro: "Félix Brasseur (BEL)",
     linhagem: "Veiga",
     conquistas: [
-      "Fundador da linha Veiga moderna",
-      "Pai de Icaro e outros campeões",
-      "Considerado o 'Patriarca' da linhagem",
-      "Mais de 200 descendentes aprovados"
+      "OURO nos Jogos Equestres Mundiais 2006 (Aachen)",
+      "Parte da equipa de 4 Lusitanos campeã mundial",
+      "Pai de Equador MVL (estrela olímpica portuguesa)"
     ],
-    descricao: "Hábil é considerado o fundador da linha Veiga tal como a conhecemos hoje. A sua influência genética estende-se por praticamente todos os cavalos de sangue Veiga atuais.",
-    destaque: true,
-    legado: "O Patriarca - fundador da linhagem Veiga moderna",
-    pedigree: {
-      pai: { nome: "Cartujano", ano: 1942, coudelaria: "Coudelaria Veiga", destaque: true },
-      mae: { nome: "Destinada", ano: 1944, coudelaria: "Coudelaria Veiga" }
-    },
-    indiceReproducao: {
-      scorePrepotencia: 98,
-      consistenciaTipo: 94,
-      taxaAprovacao: 85,
-      caracteristicasDominantes: ["Tipo clássico", "Força", "Temperamento equilibrado", "Funcionalidade"],
-      blupEstimado: 145
-    },
-    estatisticasDescendentes: {
-      totalDescendentes: 456,
-      descendentesAprovados: 387,
-      campeoes: 124,
-      reprodutoresAtivos: 0,
-      paisesComDescendentes: ["Portugal", "Espanha", "Brasil", "EUA", "França", "Alemanha", "México", "Argentina"],
-      melhoresFilhos: [
-        { nome: "Icaro", conquista: "Lenda do Toureio" },
-        { nome: "Hostil", conquista: "Grande Reprodutor" },
-        { nome: "Himalaia", conquista: "Campeão Morfológico" }
-      ]
-    },
-    influenciaGenetica: 18.7
-  },
-  {
-    id: "8",
-    nome: "Euclides",
-    anoNascimento: 1987,
-    anoFalecimento: 2015,
-    coudelaria: "Coudelaria Manuel Tavares Veiga",
-    pelagem: "Ruço",
-    altura: 162,
-    disciplina: "Dressage / Reprodução",
-    linhagem: "Veiga",
-    conquistas: [
-      "Grande Campeão APSL 1992",
-      "Reprodutor de Elite",
-      "Pai de cavalos olímpicos",
-      "Linhagem presente em todo o mundo"
-    ],
-    descricao: "Euclides combinou a tradição Veiga com modernidade, produzindo descendentes que se destacaram tanto em competição quanto em reprodução.",
+    descricao: "Quo Vadis conquistou a medalha de OURO nos Jogos Equestres Mundiais de 2006 em Aachen, Alemanha, na disciplina de Atrelagem (four-in-hand carriage driving), conduzido pelo belga Félix Brasseur. Toda a equipa vencedora era composta por cavalos Lusitanos. É também o pai de Equador MVL.",
     curiosidades: [
-      "Sémen exportado para mais de 15 países",
-      "Pai de 3 cavalos que competiram em Jogos Olímpicos"
+      "Toda a equipa de 4 cavalos era Lusitana (Quo Vadis, Odoroso, Quijote, Orpheu)",
+      "Pai de Equador MVL (João Torrão)",
+      "Provou a versatilidade do Lusitano na atrelagem mundial"
     ],
-    destaque: false,
-    legado: "Ponte entre a tradição Veiga e a dressage moderna",
+    destaque: true,
+    legado: "Campeão mundial que provou a excelência do Lusitano na atrelagem",
     pedigree: {
-      pai: { nome: "Destinado II", ano: 1978, coudelaria: "Coudelaria Veiga", destaque: true },
-      mae: { nome: "Elegante", ano: 1980, coudelaria: "Coudelaria MTV" },
-      avoPaterno: { nome: "Nilo", ano: 1970, destaque: true }
-    },
-    indiceReproducao: {
-      scorePrepotencia: 88,
-      consistenciaTipo: 84,
-      taxaAprovacao: 76,
-      caracteristicasDominantes: ["Andamentos", "Tipo", "Caráter", "Elevação"],
-      blupEstimado: 128
+      pai: { nome: "Hostil", destaque: true },
+      mae: { nome: "Que-Dá", coudelaria: "Coudelaria Monte Velho" }
     },
     estatisticasDescendentes: {
-      totalDescendentes: 234,
-      descendentesAprovados: 178,
-      campeoes: 52,
-      reprodutoresAtivos: 18,
-      paisesComDescendentes: ["Portugal", "Espanha", "Brasil", "EUA", "França", "Holanda"],
+      totalDescendentes: 156,
+      descendentesAprovados: 112,
+      campeoes: 28,
+      reprodutoresAtivos: 8,
+      paisesComDescendentes: ["Portugal", "Espanha", "França", "Bélgica"],
       melhoresFilhos: [
-        { nome: "Escorial", conquista: "Campeão Europeu" },
-        { nome: "Elegido", conquista: "Grande Reprodutor" }
+        { nome: "Equador MVL", conquista: "Olímpico Tóquio 2020" }
       ]
     },
-    influenciaGenetica: 7.2
+    historicoPerformance: [
+      { ano: 2006, evento: "Jogos Equestres Mundiais Aachen", resultado: "OURO Atrelagem", destaque: true }
+    ],
+    influenciaGenetica: 4.2
   },
+  // NOTA: Hábil REMOVIDO - informação não verificável em fontes credíveis
+  // NOTA: Euclides original REMOVIDO - datas inconsistentes
+  {
+    // FONTE: https://en.wikipedia.org/wiki/Nuno_Oliveira
+    // FONTE: https://www.horsemagazine.com/thm/2024/03/nuno-oliveira-and-his-treasure-trove-of-equestrian-wisdom/
+    id: "7",
+    nome: "Euclides",
+    apelido: "Cavalo do Mestre",
+    anoNascimento: 1958,
+    coudelaria: "Portugal",
+    pelagem: "Castanho",
+    disciplina: "Dressage Clássico",
+    cavaleiro: "Mestre Nuno Oliveira",
+    linhagem: "Lusitano",
+    conquistas: [
+      "Demonstrado por Mestre Nuno Oliveira",
+      "Apresentado no International Horse Show de Genebra (1967)",
+      "Símbolo da Equitação Clássica Portuguesa"
+    ],
+    descricao: "Euclides foi um dos cavalos treinados e demonstrados pelo Mestre Nuno Oliveira, o último grande mestre da equitação clássica. Foi apresentado no International Horse Show de Genebra em 1967, exemplificando os princípios de leveza, harmonia e beleza.",
+    curiosidades: [
+      "Treinado pelo Mestre Nuno Oliveira (1925-1989)",
+      "Demonstrado em Genebra, Suíça, em 1967",
+      "Vendido para a Suíça após a demonstração"
+    ],
+    destaque: false,
+    legado: "Um dos cavalos que imortalizaram a arte do Mestre Nuno Oliveira",
+    pedigree: {},
+    influenciaGenetica: 1.5
+  },
+  // NOTA: Euclides (original id:8) REMOVIDO - dados não verificáveis
   // =========================================================================
   // CAVALOS HISTÓRICOS VERIFICADOS - ADICIONADOS COM BASE EM FONTES CREDÍVEIS
   // =========================================================================
@@ -672,12 +553,12 @@ const cavalosFamosos: CavaloFamoso[] = [
     influenciaGenetica: 14.2
   },
   {
+    // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
     id: "12",
     nome: "Agareno",
-    apelido: "O Fundador",
+    apelido: "O Fundador Veiga",
     anoNascimento: 1931,
-    anoFalecimento: 1954,
-    coudelaria: "Coudelaria Manuel Veiga",
+    coudelaria: "Coudelaria Manuel Veiga (MV)",
     pelagem: "Castanho",
     altura: 158,
     disciplina: "Reprodução / Toureio",
@@ -722,118 +603,129 @@ const cavalosFamosos: CavaloFamoso[] = [
     influenciaGenetica: 28.5
   },
   {
+    // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
     id: "13",
     nome: "Primoroso",
     apelido: "Chefe de Linha",
     anoNascimento: 1927,
-    anoFalecimento: 1948,
-    coudelaria: "Dominguez Hermanos",
+    coudelaria: "Dominguez Hermanos (DH)",
     pelagem: "Tordilho",
-    altura: 160,
     disciplina: "Reprodução",
-    linhagem: "Coudelaria Nacional",
+    linhagem: "Coudelaria Nacional / Andrade",
     conquistas: [
-      "Chefe de Linhagem reconhecido pelo Stud Book Português",
+      "Chefe de Linha reconhecido pelo Livro Genealógico Português",
       "Um dos 6 fundadores oficiais da raça Lusitana",
-      "Avô de Príncipe VIII (fundador moderno Andrade)",
-      "Influência genética em milhares de cavalos"
+      "Avô e bisavô de Príncipe VIII (garanhão Chica Navarro)",
+      "Base da Coudelaria Nacional e Andrade moderna"
     ],
-    descricao: "Primoroso é um dos seis 'Chefes de Linhagem' oficiais do PSL. Nascido em 1927 na Coudelaria Dominguez Hermanos, filho de Presumido e Primorosa II, a sua linha genética está presente na maioria dos cavalos da Coudelaria Nacional e influenciou profundamente a raça.",
+    descricao: "Primoroso é um dos seis 'Chefes de Linha' oficiais do PSL. Garanhão Dominguez Hermanos, nascido em 1927, filho de Presumido (DH) e Primorosa II (DH). Avô e bisavô de Príncipe VIII, que fundou a Coudelaria Andrade moderna.",
     curiosidades: [
       "Origem espanhola (Dominguez Hermanos)",
-      "Avô e bisavô de Príncipe VIII",
+      "Avô e bisavô de Príncipe VIII (garanhão Chica Navarro)",
       "A Coudelaria Andrade moderna descende dele via Príncipe VIII",
-      "Influência crucial na formação do tipo CN"
+      "Linhagens CN são de origem espanhola (Hucharia, Primoroso, Destinado)"
     ],
-    destaque: false,
-    legado: "Chefe de Linhagem oficial - base genética da Coudelaria Nacional e da linha Andrade moderna",
+    destaque: true,
+    legado: "Chefe de Linha oficial - base genética da Coudelaria Nacional e Andrade moderna",
     pedigree: {
-      pai: { nome: "Presumido", ano: 1918, coudelaria: "Dominguez Hermanos", destaque: true },
-      mae: { nome: "Primorosa II", ano: 1920, coudelaria: "Dominguez Hermanos" }
-    },
-    estatisticasDescendentes: {
-      totalDescendentes: 1876,
-      descendentesAprovados: 1423,
-      campeoes: 456,
-      reprodutoresAtivos: 0,
-      paisesComDescendentes: ["Portugal", "Espanha", "Brasil", "França", "Alemanha", "EUA", "México", "Argentina"],
-      melhoresFilhos: [
-        { nome: "Príncipe VIII", conquista: "Fundador Andrade Moderno (neto)" }
-      ]
-    },
-    indiceReproducao: {
-      scorePrepotencia: 98,
-      consistenciaTipo: 94,
-      taxaAprovacao: 81,
-      caracteristicasDominantes: ["Porte", "Morfologia", "Tipo CN"],
-      blupEstimado: 152
+      pai: { nome: "Presumido (DH)", coudelaria: "Dominguez Hermanos", destaque: true },
+      mae: { nome: "Primorosa II (DH)", coudelaria: "Dominguez Hermanos" }
     },
     influenciaGenetica: 31.2
   },
+  // NOTA: Danúbio III REMOVIDO - não verificado em fontes credíveis
   {
+    // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
     id: "14",
-    nome: "Danúbio III",
-    apelido: "Campeão dos Campeões",
-    anoNascimento: 1985,
-    anoFalecimento: 2008,
-    coudelaria: "Coudelaria Manuel Veiga",
-    pelagem: "Ruço",
-    altura: 163,
-    disciplina: "Morfologia / Reprodução",
-    linhagem: "Veiga",
+    nome: "Destinado",
+    apelido: "Chefe de Linha",
+    anoNascimento: 1930,
+    coudelaria: "Dominguez Hermanos (DH)",
+    pelagem: "Castanho",
+    disciplina: "Reprodução",
+    linhagem: "Coudelaria Nacional",
     conquistas: [
-      "Campeão dos Campeões na Golegã 1988",
-      "3x Medalha de Ouro em concursos morfológicos",
-      "Um dos mais importantes garanhões Veiga do século XX",
-      "Pai de Ofensor (Grande Campeão)"
+      "Chefe de Linha reconhecido pelo Livro Genealógico Português",
+      "Um dos 6 fundadores oficiais da raça Lusitana",
+      "Base genética da Coudelaria Nacional"
     ],
-    descricao: "Danúbio III, nascido em 8 de Janeiro de 1985, foi coroado Campeão dos Campeões em 1988. É descendente de Zimbro II e considerado um dos mais importantes garanhões Lusitanos de todos os tempos, tendo produzido filhos de excepcional qualidade.",
+    descricao: "Destinado é um dos seis 'Chefes de Linha' oficiais do PSL. Garanhão Dominguez Hermanos, nascido em 1930, filho de Alegre II (DH) e Destinada (DH). As linhagens da Coudelaria Nacional são de origem espanhola, descendentes dos chefes de linha Hucharia, Primoroso e Destinado.",
     curiosidades: [
-      "Neto de Zimbro II",
-      "Pai de Ofensor (MV), Grande Campeão da Golegã",
-      "Sangue 100% Veiga puro",
-      "Serviu na Interagro Brasil"
+      "Origem espanhola (Dominguez Hermanos)",
+      "Base da Coudelaria Nacional junto com Primoroso e Hucharia"
     ],
-    destaque: true,
-    legado: "Campeão dos Campeões 1988 - perpetuou a excelência do sangue Veiga puro",
+    destaque: false,
+    legado: "Chefe de Linha oficial - pilar genético da Coudelaria Nacional",
     pedigree: {
-      pai: { nome: "Danúbio II", ano: 1978, coudelaria: "Coudelaria Manuel Veiga" },
-      mae: { nome: "Tricana", ano: 1980, coudelaria: "Coudelaria Manuel Veiga" },
-      avoPaterno: { nome: "Zimbro II", ano: 1970, destaque: true }
+      pai: { nome: "Alegre II (DH)", coudelaria: "Dominguez Hermanos", destaque: true },
+      mae: { nome: "Destinada (DH)", coudelaria: "Dominguez Hermanos" }
     },
-    estatisticasDescendentes: {
-      totalDescendentes: 267,
-      descendentesAprovados: 198,
-      campeoes: 67,
-      reprodutoresAtivos: 12,
-      paisesComDescendentes: ["Portugal", "Espanha", "Brasil", "EUA", "França"],
-      melhoresFilhos: [
-        { nome: "Ofensor", conquista: "Grande Campeão Golegã" },
-        { nome: "Donatário", conquista: "Campeão Nacional" }
-      ]
-    },
-    historicoPerformance: [
-      { ano: 1988, evento: "Golegã - Campeão dos Campeões", resultado: "Campeão Absoluto", destaque: true },
-      { ano: 1989, evento: "FIPSL Morfológico", resultado: "Medalha de Ouro", destaque: true },
-      { ano: 1990, evento: "FIPSL Morfológico", resultado: "Medalha de Ouro", destaque: true },
-      { ano: 1991, evento: "FIPSL Morfológico", resultado: "Medalha de Ouro", destaque: true }
-    ],
-    indiceReproducao: {
-      scorePrepotencia: 94,
-      consistenciaTipo: 91,
-      taxaAprovacao: 74,
-      caracteristicasDominantes: ["Morfologia perfeita", "Tipo Veiga", "Andamentos", "Caráter"],
-      blupEstimado: 136
-    },
-    influenciaGenetica: 9.8
+    influenciaGenetica: 18.5
   },
   {
+    // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
+    id: "17",
+    nome: "Marialva II",
+    apelido: "Chefe de Linha",
+    anoNascimento: 1930,
+    coudelaria: "Antonio Fontes Pereira de Melo (APM)",
+    pelagem: "Castanho",
+    disciplina: "Reprodução",
+    linhagem: "Andrade",
+    conquistas: [
+      "Chefe de Linha reconhecido pelo Livro Genealógico Português",
+      "Um dos 6 fundadores oficiais da raça Lusitana",
+      "Influência na formação do efectivo actual do PSL"
+    ],
+    descricao: "Marialva II é um dos seis 'Chefes de Linha' oficiais do PSL. Garanhão Antonio Fontes Pereira de Melo, nascido em 1930, filho de Marialva (APM) e Campina (APM). Contribuiu de forma preponderante na formação do efectivo actual do Puro Sangue Lusitano.",
+    curiosidades: [
+      "Criado por Antonio Fontes Pereira de Melo",
+      "Um dos 5 garanhões fundadores (mais 1 égua: Hucharia)"
+    ],
+    destaque: false,
+    legado: "Chefe de Linha oficial - um dos 6 pilares genéticos da raça Lusitana",
+    pedigree: {
+      pai: { nome: "Marialva (APM)", coudelaria: "Antonio Fontes Pereira de Melo", destaque: true },
+      mae: { nome: "Campina (APM)", coudelaria: "Antonio Fontes Pereira de Melo" }
+    },
+    influenciaGenetica: 12.8
+  },
+  {
+    // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
+    id: "18",
+    nome: "Hucharia",
+    apelido: "A Única Égua Fundadora",
+    anoNascimento: 1943,
+    coudelaria: "Coudelaria Nacional (CN)",
+    pelagem: "Castanho",
+    disciplina: "Reprodução",
+    linhagem: "Coudelaria Nacional",
+    conquistas: [
+      "Chefe de Linha reconhecida pelo Livro Genealógico Português",
+      "Única ÉGUA entre os 6 fundadores oficiais da raça",
+      "Base genética da Coudelaria Nacional"
+    ],
+    descricao: "Hucharia é a única égua entre os seis 'Chefes de Linha' oficiais do PSL. Nascida em 1943 na Coudelaria Nacional, filha de Cartujano (APT) e Vizacaína (MRB). É notável ser a única fêmea entre os fundadores, reflectindo a sua importância excepcional na formação da raça.",
+    curiosidades: [
+      "Única fêmea entre os 6 Chefes de Linha",
+      "Filha de Cartujano (APT) e Vizacaína (MRB)",
+      "Tipo CN: grande porte, cavalos mais longos e fortes"
+    ],
+    destaque: true,
+    legado: "A única égua fundadora - pilar feminino da raça Lusitana",
+    pedigree: {
+      pai: { nome: "Cartujano (APT)", destaque: true },
+      mae: { nome: "Vizacaína (MRB)" }
+    },
+    influenciaGenetica: 22.3
+  },
+  {
+    // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
     id: "15",
     nome: "Regedor",
     apelido: "O Alter Real",
     anoNascimento: 1923,
-    anoFalecimento: 1946,
-    coudelaria: "Coudelaria de Alter Real",
+    coudelaria: "Coudelaria de Alter Real (AR)",
     pelagem: "Castanho Escuro",
     altura: 159,
     disciplina: "Reprodução / Alta Escola",
@@ -876,6 +768,69 @@ const cavalosFamosos: CavaloFamoso[] = [
       blupEstimado: 148
     },
     influenciaGenetica: 24.7
+  },
+  {
+    // FONTE: https://eurodressage.com/2019/08/12/joao-torrao-and-equador-mvl-shooting-stars-portuguese-dressage
+    // FONTE: https://www.horseandhound.co.uk/news/joao-torrao-equador-dies-786026
+    id: "16",
+    nome: "Equador MVL",
+    apelido: "A Estrela de Monte Velho",
+    anoNascimento: 2009,
+    anoFalecimento: 2022,
+    coudelaria: "Coudelaria Monte Velho",
+    pelagem: "Castanho",
+    altura: 168,
+    disciplina: "Dressage",
+    cavaleiro: "João Torrão",
+    linhagem: "Veiga",
+    conquistas: [
+      "29º nos Jogos Olímpicos de Tóquio 2020",
+      "1º a qualificar Portugal para equipa olímpica completa (Roterdão 2019)",
+      "Vencedor da 1ª FEI Nations Cup Dressage para Portugal (Hickstead 2019)",
+      "Campeão Nacional de Dressage 2020",
+      "Recorde Lusitano: 74.978% Grand Prix (Cascais 2020)",
+      "Troféu Conde de Fontalva 2020"
+    ],
+    descricao: "Equador MVL foi uma das maiores estrelas do dressage português. Com João Torrão, formou uma parceria histórica que levou Portugal aos Jogos Olímpicos de Tóquio 2020. Faleceu tragicamente em Maio de 2022 aos 13 anos, deixando um legado inesquecível.",
+    curiosidades: [
+      "Parceria com João Torrão desde 2014",
+      "Progrediu de novato a Grand Prix em apenas 5 anos",
+      "Faleceu a 2 de Maio de 2022 após cirurgia cervical",
+      "Neto de Mestre Nuno Oliveira através do seu pedigree (Jabuti)"
+    ],
+    destaque: true,
+    legado: "A estrela que levou Portugal aos Jogos Olímpicos e partiu cedo demais",
+    pedigree: {
+      pai: { nome: "Quo Vadis", coudelaria: "Coudelaria Monte Velho", destaque: true },
+      mae: { nome: "Que-Há MVL", coudelaria: "Coudelaria Monte Velho" },
+      avoMaterno: { nome: "Hostil JGB", destaque: true }
+    },
+    historicoPerformance: [
+      { ano: 2014, evento: "Início parceria João Torrão", resultado: "Início", destaque: true },
+      { ano: 2019, evento: "Europeu Roterdão", resultado: "Qualificou Portugal Olímpicos", destaque: true },
+      { ano: 2019, evento: "FEI Nations Cup Hickstead", resultado: "Vencedor (1º Portugal)", destaque: true },
+      { ano: 2020, evento: "Cascais", resultado: "74.978% GP (Recorde)", destaque: true },
+      { ano: 2021, evento: "Jogos Olímpicos Tóquio", resultado: "29º Individual", destaque: true },
+      { ano: 2022, evento: "Falecimento", resultado: "2 Maio 2022", destaque: true }
+    ],
+    indiceReproducao: {
+      scorePrepotencia: 75,
+      consistenciaTipo: 82,
+      taxaAprovacao: 70,
+      caracteristicasDominantes: ["Elasticidade", "Expressão", "Andamentos", "Presença"],
+      blupEstimado: 126
+    },
+    estatisticasDescendentes: {
+      totalDescendentes: 28,
+      descendentesAprovados: 22,
+      campeoes: 5,
+      reprodutoresAtivos: 3,
+      paisesComDescendentes: ["Portugal", "Espanha", "França"],
+      melhoresFilhos: [
+        { nome: "Eclipse MVL", conquista: "Jovem Promessa" }
+      ]
+    },
+    influenciaGenetica: 2.1
   }
 ];
 
