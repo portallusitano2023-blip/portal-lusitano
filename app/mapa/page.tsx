@@ -19,7 +19,6 @@ import {
   Search,
   Sparkles,
   Crown,
-  Award,
   Map,
   Layers,
   Eye,
@@ -219,7 +218,6 @@ export default function MapaPage() {
     total: coudelarias.length,
     regioes: Object.keys(coudelariasPorRegiao).length,
     destaque: coudelarias.filter(c => c.destaque).length,
-    pro: coudelarias.filter(c => c.is_pro).length,
   }), [coudelarias, coudelariasPorRegiao]);
 
   const handleZoom = useCallback((dir: "in" | "out") => {
@@ -251,7 +249,6 @@ export default function MapaPage() {
             <StatCard icon={MapPin} label="Coudelarias" value={stats.total} color="from-[#C5A059] to-[#E8D5A3]" />
             <StatCard icon={Map} label="Regiões" value={stats.regioes} color="from-emerald-500 to-emerald-300" />
             <StatCard icon={Crown} label="Destaque" value={stats.destaque} color="from-purple-500 to-purple-300" />
-            <StatCard icon={Award} label="PRO" value={stats.pro} color="from-blue-500 to-blue-300" />
           </div>
         </div>
       </section>

@@ -5,16 +5,13 @@ import {
   Check,
   Mail,
   BookOpen,
-  ArrowRight,
   Share2,
   Facebook,
   Twitter,
   Linkedin,
   MessageCircle,
   Sparkles,
-  Crown,
   Gift,
-  FileText,
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -31,10 +28,6 @@ export default function DownloadPage() {
     window.open("/downloads/introducao-lusitano.html", "_blank");
   };
 
-  const handleSocialShare = (platform: string) => {
-    trackSocialShare(platform, "ebook", "introducao-lusitano");
-  };
-
   const nextSteps = [
     {
       icon: Mail,
@@ -47,9 +40,9 @@ export default function DownloadPage() {
       description: "Dedica 20 minutos para ler e absorver o conhecimento essencial sobre Lusitanos.",
     },
     {
-      icon: Crown,
-      title: "Explora a Biblioteca PRO",
-      description: "Se gostaste, temos 50+ ebooks completos na nossa biblioteca premium.",
+      icon: Users,
+      title: "Explora o Portal",
+      description: "Descobre cavalos à venda, eventos, coudelarias e muito mais conteúdo.",
     },
   ];
 
@@ -61,41 +54,18 @@ export default function DownloadPage() {
     },
     {
       icon: Gift,
-      title: "Desconto Exclusivo",
-      description: "20% OFF na primeira subscrição PRO (código no email)",
+      title: "Conteúdo Exclusivo",
+      description: "Acesso a artigos e guias especiais para subscritores",
     },
     {
       icon: Users,
-      title: "Comunidade Privada",
-      description: "Acesso ao grupo de aficionados (link no próximo email)",
-    },
-  ];
-
-  const proEbooks = [
-    {
-      title: "Manual do Criador Profissional",
-      pages: 200,
-      category: "Criação",
-    },
-    {
-      title: "Linhagens de Elite",
-      pages: 150,
-      category: "Genética",
-    },
-    {
-      title: "Treino de Dressage",
-      pages: 180,
-      category: "Treino",
-    },
-    {
-      title: "Saúde Equina Essencial",
-      pages: 90,
-      category: "Saúde",
+      title: "Comunidade",
+      description: "Faz parte da comunidade de aficionados do Cavalo Lusitano",
     },
   ];
 
   const shareUrl = "https://portal-lusitano.com/ebook-gratis";
-  const shareText = "Acabei de descarregar um ebook gratuito incrível sobre o Cavalo Lusitano! 🐴";
+  const shareText = "Acabei de descarregar um ebook gratuito incrível sobre o Cavalo Lusitano!";
 
   const socialShare = [
     {
@@ -144,7 +114,7 @@ export default function DownloadPage() {
           </motion.div>
 
           <h1 className="text-5xl md:text-6xl font-serif text-white mb-6">
-            Parabéns! 🎉
+            Parabéns!
           </h1>
 
           <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
@@ -217,7 +187,7 @@ export default function DownloadPage() {
             </span>
           </div>
           <h2 className="text-3xl font-serif text-white mb-4">
-            Mas Espera, Há Mais! 🎁
+            Mas Espera, Há Mais!
           </h2>
           <p className="text-zinc-400 max-w-2xl mx-auto">
             Ao descarregares este ebook, também ganhaste acesso a:
@@ -277,89 +247,6 @@ export default function DownloadPage() {
         </motion.div>
       </section>
 
-      {/* Upgrade to PRO */}
-      <section className="max-w-6xl mx-auto px-6 py-20 border-t border-white/5">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <div className="inline-flex items-center gap-2 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-full px-4 py-2 mb-4">
-            <Crown className="text-[#C5A059]" size={16} />
-            <span className="text-[#C5A059] text-sm font-medium">
-              Leva o Teu Conhecimento ao Próximo Nível
-            </span>
-          </div>
-          <h2 className="text-4xl font-serif text-white mb-4">
-            Gostaste? Temos Muito Mais!
-          </h2>
-          <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-            Este ebook gratuito é apenas o início. A nossa biblioteca PRO contém
-            50+ ebooks completos sobre todos os aspectos do cavalo Lusitano.
-          </p>
-        </motion.div>
-
-        {/* Sample PRO Ebooks */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {proEbooks.map((ebook, index) => (
-            <motion.div
-              key={ebook.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-zinc-900/50 border border-white/5 p-6 hover:border-[#C5A059]/30 transition-colors group"
-            >
-              <div className="w-12 h-12 bg-[#C5A059]/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-[#C5A059]/20 transition-colors">
-                <FileText className="text-[#C5A059]" size={24} />
-              </div>
-              <div className="text-xs text-[#C5A059] uppercase tracking-wider mb-2">
-                {ebook.category}
-              </div>
-              <h3 className="text-lg font-serif text-white mb-2">{ebook.title}</h3>
-              <div className="text-sm text-zinc-500">{ebook.pages} páginas</div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* PRO CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/30 rounded-2xl p-12 text-center"
-        >
-          <h3 className="text-3xl font-serif text-white mb-4">
-            Usa o Código <span className="text-[#C5A059]">LUSITANO20</span>
-          </h3>
-          <p className="text-xl text-zinc-400 mb-8">
-            Recebe 20% de desconto na primeira subscrição PRO
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/pro/checkout?plan=criador&period=monthly&coupon=LUSITANO20"
-              className="inline-flex items-center gap-3 bg-[#C5A059] text-black px-10 py-5 text-sm font-bold uppercase tracking-widest hover:bg-white transition-colors"
-            >
-              <Crown size={20} />
-              Upgrade para PRO
-            </Link>
-            <Link
-              href="/pro"
-              className="inline-flex items-center gap-2 text-white hover:text-[#C5A059] transition-colors"
-            >
-              Ver Todos os Planos
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-
-          <p className="text-zinc-600 text-sm mt-6">
-            A partir de €49.99/mês • Cancela quando quiseres • Garantia 30 dias
-          </p>
-        </motion.div>
-      </section>
-
       {/* Final Message */}
       <section className="max-w-4xl mx-auto px-6 text-center">
         <motion.div
@@ -375,7 +262,7 @@ export default function DownloadPage() {
             href="/faq"
             className="text-[#C5A059] hover:text-white transition-colors"
           >
-            Visita a nossa página de FAQ →
+            Visita a nossa página de FAQ
           </Link>
         </motion.div>
       </section>

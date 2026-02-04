@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -61,7 +62,15 @@ export default function HomeContent({ products }: { products: any[] }) {
             <Link key={product.id} href={`/loja/${product.handle}`} className="group block">
               <div className="aspect-[4/5] w-full bg-[#0a0a0a] border border-zinc-900 overflow-hidden relative mb-8">
                 <div className="absolute inset-0 z-10 shadow-[inset_0_0_50px_rgba(0,0,0,0.5)] pointer-events-none transition-opacity duration-700 group-hover:opacity-30"></div>
-                <img src={product.images[0]?.url} alt={product.title} className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105" />
+                {product.images[0]?.url && (
+                  <Image
+                    src={product.images[0].url}
+                    alt={product.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                  />
+                )}
               </div>
               <div className="text-center">
                 <h3 className="text-2xl font-serif italic text-white mb-2 group-hover:text-[#C5A059] transition-colors">

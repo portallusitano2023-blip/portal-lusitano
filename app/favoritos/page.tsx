@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Heart, Trash2, ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
@@ -112,11 +113,15 @@ export default function FavoritosPage() {
                 {/* Imagem */}
                 <Link href={`/loja/${item.handle}`} className="block">
                   <div className="aspect-[4/5] bg-zinc-900 overflow-hidden relative">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                    />
+                    {item.image && (
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                      />
+                    )}
                   </div>
                 </Link>
 

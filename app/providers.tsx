@@ -5,6 +5,7 @@ import { CartProvider } from "@/context/CartContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { WishlistProvider } from "@/context/WishlistContext";
+import { HorseFavoritesProvider } from "@/context/HorseFavoritesContext";
 import { ReactNode } from "react";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -22,11 +23,13 @@ export function Providers({ children }: { children: ReactNode }) {
         <ToastProvider>
           <CartProvider>
             <WishlistProvider>
-              <Preloader />
-              {children}
-              <ScrollToTop />
-              <CookieConsent />
-              <NewsletterPopup />
+              <HorseFavoritesProvider>
+                <Preloader />
+                {children}
+                <ScrollToTop />
+                <CookieConsent />
+                <NewsletterPopup />
+              </HorseFavoritesProvider>
             </WishlistProvider>
           </CartProvider>
         </ToastProvider>

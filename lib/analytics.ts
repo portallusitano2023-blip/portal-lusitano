@@ -197,11 +197,11 @@ export const trackEvent = {
 /**
  * Track download do ebook gratuito
  */
-export function trackEbookDownload(ebookId: string, ebookType: "free" | "pro" = "free") {
+export function trackEbookDownload(ebookId: string, ebookType: "free" = "free") {
   // GA4
   sendGA4Event("generate_lead", {
     currency: "EUR",
-    value: ebookType === "free" ? 0 : 9.99,
+    value: 0,
     lead_source: "ebook_download",
     ebook_id: ebookId,
   });
@@ -209,8 +209,8 @@ export function trackEbookDownload(ebookId: string, ebookType: "free" | "pro" = 
   // Meta
   sendMetaEvent("Lead", {
     content_name: ebookId,
-    content_category: ebookType === "free" ? "Free Ebook" : "PRO Ebook",
-    value: ebookType === "free" ? 0 : 9.99,
+    content_category: "Free Ebook",
+    value: 0,
     currency: "EUR",
   });
 }
@@ -223,48 +223,6 @@ export function trackEmailSubscription(source: string) {
   sendMetaEvent("CompleteRegistration", { content_name: source, status: "subscribed" });
 }
 
-/**
- * Track início checkout PRO
- */
-export function trackBeginCheckout(planId: string, planName: string, price: number) {
-  sendGA4Event("begin_checkout", {
-    currency: "EUR",
-    value: price,
-    items: [{ item_id: planId, item_name: planName, price, quantity: 1 }],
-  });
-
-  sendMetaEvent("InitiateCheckout", {
-    content_ids: [planId],
-    content_name: planName,
-    value: price,
-    currency: "EUR",
-  });
-}
-
-/**
- * Track subscrição PRO concluída
- */
-export function trackProSubscription(planId: string, planName: string, price: number, transactionId?: string) {
-  sendGA4Event("purchase", {
-    transaction_id: transactionId || `PRO_${Date.now()}`,
-    currency: "EUR",
-    value: price,
-    items: [{ item_id: planId, item_name: planName, price, quantity: 1 }],
-  });
-
-  sendMetaEvent("Purchase", {
-    content_ids: [planId],
-    content_name: planName,
-    value: price,
-    currency: "EUR",
-  });
-
-  sendMetaEvent("Subscribe", {
-    value: price,
-    currency: "EUR",
-    predicted_ltv: price * 12,
-  });
-}
 
 /**
  * Track etapas do funil ebook
@@ -286,37 +244,6 @@ export function trackEbookFunnel(step: "view_landing" | "start_form" | "submit_f
   sendMetaCustomEvent("EbookFunnel", { step, step_number: stepData[step].num });
 }
 
-/**
- * Track etapas do funil PRO
- */
-export function trackProFunnel(step: "view_plans" | "select_plan" | "start_checkout" | "complete_payment") {
-  const stepData = {
-    view_plans: { name: "PRO Plans Viewed", num: 1 },
-    select_plan: { name: "PRO Plan Selected", num: 2 },
-    start_checkout: { name: "PRO Checkout Started", num: 3 },
-    complete_payment: { name: "PRO Payment Completed", num: 4 },
-  };
-
-  sendGA4Event("funnel_step", {
-    funnel_name: "pro_subscription",
-    step_name: stepData[step].name,
-    step_number: stepData[step].num,
-  });
-
-  sendMetaCustomEvent("ProFunnel", { step, step_number: stepData[step].num });
-}
-
-/**
- * Track uso de cupão de desconto
- */
-export function trackCouponUsed(couponCode: string, discountValue: number) {
-  sendGA4Event("select_promotion", {
-    promotion_id: couponCode,
-    discount: discountValue,
-  });
-
-  sendMetaCustomEvent("CouponUsed", { coupon_code: couponCode, discount: discountValue });
-}
 
 /**
  * Track partilha social

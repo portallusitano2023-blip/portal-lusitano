@@ -1,0 +1,572 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Calendar,
+  MapPin,
+  Clock,
+  Euro,
+  ArrowLeft,
+  ExternalLink,
+  Share2,
+  Download,
+  Tag,
+  Users,
+  CheckCircle,
+  RefreshCw,
+  AlertCircle,
+  Star,
+  Eye,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Copy,
+  Check,
+} from "lucide-react";
+
+interface Evento {
+  id: string;
+  titulo: string;
+  slug: string;
+  descricao: string;
+  descricao_completa?: string;
+  tipo: string;
+  data_inicio: string;
+  data_fim?: string;
+  hora_inicio?: string;
+  hora_fim?: string;
+  localizacao: string;
+  regiao?: string;
+  organizador?: string;
+  website?: string;
+  preco_entrada?: string;
+  imagem_capa?: string;
+  tags?: string[];
+  destaque: boolean;
+  confirmado?: "confirmado" | "anual" | "provisorio";
+  views_count?: number;
+}
+
+interface EventoRelacionado {
+  id: string;
+  titulo: string;
+  slug: string;
+  tipo: string;
+  data_inicio: string;
+  localizacao: string;
+  imagem_capa?: string;
+}
+
+const tiposEvento: Record<string, { label: string; icon: string; color: string }> = {
+  feira: { label: "Feira", icon: "🎠", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
+  competicao: { label: "Competição", icon: "🏆", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+  leilao: { label: "Leilão", icon: "🔨", color: "bg-green-500/20 text-green-400 border-green-500/30" },
+  exposicao: { label: "Exposição", icon: "🎨", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
+  workshop: { label: "Workshop", icon: "📚", color: "bg-pink-500/20 text-pink-400 border-pink-500/30" },
+};
+
+export default function EventoPage() {
+  const params = useParams();
+  const router = useRouter();
+  const slug = params?.slug as string;
+
+  const [evento, setEvento] = useState<Evento | null>(null);
+  const [relacionados, setRelacionados] = useState<EventoRelacionado[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+
+  useEffect(() => {
+    async function fetchEvento() {
+      if (!slug) return;
+
+      try {
+        const res = await fetch(`/api/eventos/${slug}`);
+        if (!res.ok) {
+          if (res.status === 404) {
+            setError("Evento não encontrado");
+          } else {
+            setError("Erro ao carregar evento");
+          }
+          return;
+        }
+
+        const data = await res.json();
+        setEvento(data.evento);
+        setRelacionados(data.relacionados || []);
+      } catch (err) {
+        console.error("Erro:", err);
+        setError("Erro ao carregar evento");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchEvento();
+  }, [slug]);
+
+  function formatDateRange(start: string, end?: string) {
+    const startDate = new Date(start);
+    if (!end || start === end) {
+      return startDate.toLocaleDateString("pt-PT", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    }
+    const endDate = new Date(end);
+    if (startDate.getMonth() === endDate.getMonth()) {
+      return `${startDate.getDate()} a ${endDate.toLocaleDateString("pt-PT", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })}`;
+    }
+    return `${startDate.toLocaleDateString("pt-PT", { day: "numeric", month: "short" })} - ${endDate.toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" })}`;
+  }
+
+  function generateICS() {
+    if (!evento) return;
+
+    const startDate = new Date(evento.data_inicio);
+    const endDate = evento.data_fim ? new Date(evento.data_fim) : startDate;
+
+    // Ajustar para o formato ICS (YYYYMMDD)
+    const formatICSDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, "").split("T")[0];
+    };
+
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Portal Lusitano//Eventos//PT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:${formatICSDate(startDate)}
+DTEND;VALUE=DATE:${formatICSDate(new Date(endDate.getTime() + 86400000))}
+SUMMARY:${evento.titulo}
+DESCRIPTION:${evento.descricao.replace(/\n/g, "\\n")}
+LOCATION:${evento.localizacao}
+URL:${evento.website || window.location.href}
+STATUS:${evento.confirmado === "provisorio" ? "TENTATIVE" : "CONFIRMED"}
+END:VEVENT
+END:VCALENDAR`;
+
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${evento.slug}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  function shareOnSocial(platform: string) {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(evento?.titulo || "");
+
+    const urls: Record<string, string> = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      twitter: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+    };
+
+    window.open(urls[platform], "_blank", "width=600,height=400");
+    setShowShareMenu(false);
+  }
+
+  function getConfirmacaoBadge(confirmado?: string) {
+    switch (confirmado) {
+      case "confirmado":
+        return { icon: CheckCircle, label: "Confirmado", color: "text-green-400", bg: "bg-green-500/10 border-green-500/30" };
+      case "anual":
+        return { icon: RefreshCw, label: "Evento Anual", color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/30" };
+      case "provisorio":
+        return { icon: AlertCircle, label: "Data Provisória", color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/30" };
+      default:
+        return null;
+    }
+  }
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#050505] pt-32">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="animate-pulse space-y-6">
+            <div className="h-8 bg-zinc-800 rounded w-1/4" />
+            <div className="h-64 bg-zinc-800 rounded" />
+            <div className="h-12 bg-zinc-800 rounded w-3/4" />
+            <div className="h-32 bg-zinc-800 rounded" />
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !evento) {
+    return (
+      <main className="min-h-screen bg-[#050505] pt-32">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h1 className="text-3xl font-serif text-white mb-4">
+            {error || "Evento não encontrado"}
+          </h1>
+          <p className="text-zinc-400 mb-8">
+            O evento que procura não existe ou foi removido.
+          </p>
+          <Link
+            href="/eventos"
+            className="inline-flex items-center gap-2 text-[#C5A059] hover:underline"
+          >
+            <ArrowLeft size={18} />
+            Voltar aos eventos
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  const tipoInfo = tiposEvento[evento.tipo] || { label: evento.tipo, icon: "📅", color: "bg-zinc-500/20 text-zinc-400" };
+  const confirmacaoBadge = getConfirmacaoBadge(evento.confirmado);
+
+  return (
+    <main className="min-h-screen bg-[#050505]">
+      {/* Hero com imagem ou gradiente */}
+      <section className="relative pt-24 pb-12">
+        {evento.imagem_capa ? (
+          <div className="absolute inset-0 h-96">
+            <Image
+              src={evento.imagem_capa}
+              alt={evento.titulo}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-[#050505]" />
+          </div>
+        ) : (
+          <div className="absolute inset-0 h-96 bg-gradient-to-b from-[#C5A059]/10 to-transparent" />
+        )}
+
+        <div className="relative max-w-4xl mx-auto px-6 pt-16">
+          {/* Breadcrumb */}
+          <motion.nav
+            className="flex items-center gap-2 text-sm text-zinc-400 mb-8"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Link href="/eventos" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">
+              <ArrowLeft size={16} />
+              Eventos
+            </Link>
+            <span>/</span>
+            <span className="text-zinc-500 truncate">{evento.titulo}</span>
+          </motion.nav>
+
+          {/* Badges */}
+          <motion.div
+            className="flex flex-wrap items-center gap-3 mb-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <span className={`px-3 py-1.5 text-sm border ${tipoInfo.color} flex items-center gap-2`}>
+              <span>{tipoInfo.icon}</span>
+              {tipoInfo.label}
+            </span>
+
+            {evento.destaque && (
+              <span className="flex items-center gap-1.5 text-[#C5A059] bg-[#C5A059]/10 border border-[#C5A059]/30 px-3 py-1.5 text-sm">
+                <Star size={14} /> Destaque
+              </span>
+            )}
+
+            {confirmacaoBadge && (
+              <span className={`flex items-center gap-1.5 ${confirmacaoBadge.color} ${confirmacaoBadge.bg} border px-3 py-1.5 text-sm`}>
+                <confirmacaoBadge.icon size={14} />
+                {confirmacaoBadge.label}
+              </span>
+            )}
+
+            {evento.views_count && evento.views_count > 0 && (
+              <span className="flex items-center gap-1.5 text-zinc-500 text-sm">
+                <Eye size={14} />
+                {evento.views_count} visualizações
+              </span>
+            )}
+          </motion.div>
+
+          {/* Título */}
+          <motion.h1
+            className="text-3xl md:text-5xl font-serif text-white mb-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            {evento.titulo}
+          </motion.h1>
+
+          {/* Info Principal */}
+          <motion.div
+            className="grid md:grid-cols-2 gap-4 mb-8"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className="flex items-center gap-3 text-zinc-300">
+              <div className="w-10 h-10 bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center">
+                <Calendar size={20} className="text-[#C5A059]" />
+              </div>
+              <div>
+                <span className="text-xs text-zinc-500 uppercase tracking-wider">Data</span>
+                <p className="capitalize">{formatDateRange(evento.data_inicio, evento.data_fim)}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 text-zinc-300">
+              <div className="w-10 h-10 bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center">
+                <MapPin size={20} className="text-[#C5A059]" />
+              </div>
+              <div>
+                <span className="text-xs text-zinc-500 uppercase tracking-wider">Local</span>
+                <p>{evento.localizacao}</p>
+              </div>
+            </div>
+
+            {evento.hora_inicio && (
+              <div className="flex items-center gap-3 text-zinc-300">
+                <div className="w-10 h-10 bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center">
+                  <Clock size={20} className="text-[#C5A059]" />
+                </div>
+                <div>
+                  <span className="text-xs text-zinc-500 uppercase tracking-wider">Horário</span>
+                  <p>{evento.hora_inicio}{evento.hora_fim && ` - ${evento.hora_fim}`}</p>
+                </div>
+              </div>
+            )}
+
+            {evento.preco_entrada && (
+              <div className="flex items-center gap-3 text-zinc-300">
+                <div className="w-10 h-10 bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center">
+                  <Euro size={20} className="text-[#C5A059]" />
+                </div>
+                <div>
+                  <span className="text-xs text-zinc-500 uppercase tracking-wider">Entrada</span>
+                  <p>{evento.preco_entrada}</p>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Conteúdo Principal */}
+      <section className="max-w-4xl mx-auto px-6 pb-20">
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Descrição */}
+          <motion.div
+            className="md:col-span-2 space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <div className="bg-zinc-900/50 border border-white/10 p-6">
+              <h2 className="text-xl font-serif text-white mb-4">Sobre o Evento</h2>
+              <div className="prose prose-invert prose-zinc max-w-none">
+                <p className="text-zinc-300 whitespace-pre-line leading-relaxed">
+                  {evento.descricao_completa || evento.descricao}
+                </p>
+              </div>
+            </div>
+
+            {/* Tags */}
+            {evento.tags && evento.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {evento.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="flex items-center gap-1.5 text-sm bg-zinc-800/50 text-zinc-400 px-3 py-1.5 border border-white/5"
+                  >
+                    <Tag size={12} />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Organizador */}
+            {evento.organizador && (
+              <div className="bg-zinc-900/50 border border-white/10 p-6">
+                <h3 className="text-lg font-serif text-white mb-2 flex items-center gap-2">
+                  <Users size={18} className="text-[#C5A059]" />
+                  Organizador
+                </h3>
+                <p className="text-zinc-400">{evento.organizador}</p>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Sidebar */}
+          <motion.aside
+            className="space-y-4"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            {/* Ações */}
+            <div className="bg-zinc-900/50 border border-white/10 p-4 space-y-3">
+              {/* Adicionar ao Calendário */}
+              <button
+                onClick={generateICS}
+                className="w-full flex items-center justify-center gap-2 bg-[#C5A059] text-black py-3 font-bold uppercase tracking-wider hover:bg-white transition-colors"
+              >
+                <Download size={18} />
+                Adicionar ao Calendário
+              </button>
+
+              {/* Website */}
+              {evento.website && (
+                <a
+                  href={evento.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 bg-zinc-800 text-white py-3 font-medium hover:bg-zinc-700 transition-colors border border-white/10"
+                >
+                  <ExternalLink size={18} />
+                  Site Oficial
+                </a>
+              )}
+
+              {/* Partilhar */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                  className="w-full flex items-center justify-center gap-2 bg-zinc-800 text-white py-3 font-medium hover:bg-zinc-700 transition-colors border border-white/10"
+                >
+                  <Share2 size={18} />
+                  Partilhar
+                </button>
+
+                {showShareMenu && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-800 border border-white/10 p-2 z-10">
+                    <button
+                      onClick={() => shareOnSocial("facebook")}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-zinc-700 transition-colors text-sm"
+                    >
+                      <Facebook size={16} className="text-blue-500" />
+                      Facebook
+                    </button>
+                    <button
+                      onClick={() => shareOnSocial("twitter")}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-zinc-700 transition-colors text-sm"
+                    >
+                      <Twitter size={16} className="text-sky-400" />
+                      Twitter
+                    </button>
+                    <button
+                      onClick={() => shareOnSocial("linkedin")}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-zinc-700 transition-colors text-sm"
+                    >
+                      <Linkedin size={16} className="text-blue-600" />
+                      LinkedIn
+                    </button>
+                    <button
+                      onClick={copyLink}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-zinc-700 transition-colors text-sm"
+                    >
+                      {copied ? (
+                        <>
+                          <Check size={16} className="text-green-400" />
+                          Copiado!
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={16} />
+                          Copiar Link
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Região */}
+            {evento.regiao && (
+              <div className="bg-zinc-900/50 border border-white/10 p-4">
+                <span className="text-xs text-zinc-500 uppercase tracking-wider">Região</span>
+                <p className="text-white font-medium mt-1">{evento.regiao}</p>
+              </div>
+            )}
+          </motion.aside>
+        </div>
+
+        {/* Eventos Relacionados */}
+        {relacionados.length > 0 && (
+          <motion.section
+            className="mt-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <h2 className="text-2xl font-serif text-white mb-6">Eventos Relacionados</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {relacionados.map((rel) => {
+                const relTipo = tiposEvento[rel.tipo] || { icon: "📅", color: "bg-zinc-500/20 text-zinc-400" };
+                return (
+                  <Link
+                    key={rel.id}
+                    href={`/eventos/${rel.slug}`}
+                    className="group bg-zinc-900/50 border border-white/10 hover:border-[#C5A059]/50 transition-all overflow-hidden"
+                  >
+                    {rel.imagem_capa ? (
+                      <div className="relative h-32">
+                        <Image
+                          src={rel.imagem_capa}
+                          alt={rel.titulo}
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
+                      </div>
+                    ) : (
+                      <div className="h-32 bg-gradient-to-br from-[#C5A059]/10 to-transparent flex items-center justify-center">
+                        <span className="text-4xl">{relTipo.icon}</span>
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <span className={`inline-block px-2 py-0.5 text-xs ${relTipo.color} mb-2`}>
+                        {rel.tipo}
+                      </span>
+                      <h3 className="font-serif text-white group-hover:text-[#C5A059] transition-colors mb-2 line-clamp-2">
+                        {rel.titulo}
+                      </h3>
+                      <p className="text-zinc-500 text-sm flex items-center gap-1">
+                        <Calendar size={12} />
+                        {new Date(rel.data_inicio).toLocaleDateString("pt-PT", {
+                          day: "numeric",
+                          month: "short",
+                        })}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.section>
+        )}
+      </section>
+    </main>
+  );
+}

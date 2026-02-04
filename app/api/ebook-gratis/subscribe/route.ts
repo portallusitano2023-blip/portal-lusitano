@@ -333,8 +333,7 @@ function getEbookDownloadEmail(name: string, email: string, baseUrl: string) {
         <h3 style="margin-top: 0;">🎁 Bónus Incluídos:</h3>
         <ul style="margin: 10px 0; padding-left: 20px;">
           <li><strong>Newsletter Semanal:</strong> Dicas e artigos exclusivos no teu email</li>
-          <li><strong>Desconto PRO:</strong> 20% OFF com o código <strong>LUSITANO20</strong></li>
-          <li><strong>Acesso à Comunidade:</strong> Grupo privado de aficionados (link em breve)</li>
+          <li><strong>Acesso à Comunidade:</strong> Grupo privado de aficionados</li>
         </ul>
       </div>
 
@@ -344,30 +343,19 @@ function getEbookDownloadEmail(name: string, email: string, baseUrl: string) {
         <li><strong>Descarrega o ebook</strong> usando o botão acima</li>
         <li><strong>Lê com calma</strong> (leva apenas 20 minutos)</li>
         <li><strong>Aplica o conhecimento</strong> na tua jornada com Lusitanos</li>
-        <li><strong>Explora a biblioteca PRO</strong> se quiseres aprofundar (50+ ebooks)</li>
+        <li><strong>Explora o portal</strong> para descobrir cavalos, eventos e coudelarias</li>
       </ol>
 
       <hr class="divider">
 
-      <!-- Upgrade CTA -->
-      <h3>💎 Queres Mais?</h3>
-      <p>Este ebook gratuito é apenas o início! A nossa <strong>Biblioteca PRO</strong> contém:</p>
+      <!-- Explore Portal CTA -->
+      <h3>🔍 Explora o Portal:</h3>
       <ul class="feature-list" style="margin-bottom: 20px;">
-        <li>50+ Ebooks completos (criação, linhagens, treino, saúde)</li>
-        <li>Templates profissionais (contratos, fichas, planners)</li>
-        <li>Consultoria expert por email</li>
-        <li>Comunidade exclusiva de criadores</li>
+        <li><a href="${baseUrl}/cavalos-venda" style="color: #C5A059;">Cavalos à Venda</a></li>
+        <li><a href="${baseUrl}/eventos" style="color: #C5A059;">Eventos</a></li>
+        <li><a href="${baseUrl}/directorio" style="color: #C5A059;">Diretório de Coudelarias</a></li>
+        <li><a href="${baseUrl}/linhagens" style="color: #C5A059;">Linhagens</a></li>
       </ul>
-
-      <p style="text-align: center;">
-        <a href="${baseUrl}/pro" class="button">
-          👑 Explorar Portal Lusitano PRO
-        </a>
-      </p>
-
-      <p style="text-align: center; color: #666; font-size: 14px;">
-        Usa o código <strong style="color: #C5A059;">LUSITANO20</strong> para 20% de desconto na primeira subscrição
-      </p>
 
       <hr class="divider">
 

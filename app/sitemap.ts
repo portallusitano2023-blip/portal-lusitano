@@ -63,12 +63,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     },
     {
-      url: `${siteUrl}/pro`,
-      lastModified: currentDate,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
       url: `${siteUrl}/ebook-gratis`,
       lastModified: currentDate,
       changeFrequency: "monthly",

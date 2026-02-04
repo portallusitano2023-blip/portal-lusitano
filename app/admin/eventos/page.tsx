@@ -13,6 +13,7 @@ import {
   MapPin,
   X,
 } from "lucide-react";
+import ImageUpload from "@/components/ImageUpload";
 
 interface Evento {
   id: string;
@@ -25,6 +26,7 @@ interface Evento {
   localizacao: string;
   regiao?: string;
   preco_entrada?: string;
+  imagem_capa?: string;
   destaque: boolean;
   status: string;
   views_count: number;
@@ -56,6 +58,7 @@ export default function AdminEventosPage() {
     organizador: "",
     website: "",
     preco_entrada: "",
+    imagem_capa: "",
     destaque: false,
   });
 
@@ -130,6 +133,7 @@ export default function AdminEventosPage() {
       organizador: "",
       website: "",
       preco_entrada: evento.preco_entrada || "",
+      imagem_capa: evento.imagem_capa || "",
       destaque: evento.destaque,
     });
     setShowForm(true);
@@ -151,6 +155,7 @@ export default function AdminEventosPage() {
       organizador: "",
       website: "",
       preco_entrada: "",
+      imagem_capa: "",
       destaque: false,
     });
   }
@@ -462,6 +467,18 @@ export default function AdminEventosPage() {
                     required
                     rows={3}
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-amber-500 focus:border-amber-500"
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Imagem de Capa
+                  </label>
+                  <ImageUpload
+                    currentImage={formData.imagem_capa}
+                    onUpload={(url) => setFormData({ ...formData, imagem_capa: url })}
+                    folder="eventos"
+                    aspectRatio="video"
                   />
                 </div>
 

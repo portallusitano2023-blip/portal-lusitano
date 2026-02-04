@@ -6,19 +6,9 @@ import Link from "next/link";
 import AdminLogoutButton from "@/components/AdminLogoutButton";
 
 interface DashboardStats {
-  totalMembers: number;
-  aficionadoMembers: number;
-  criadorMembers: number;
-  eliteMembers: number;
-  monthlyRevenue: number;
-  yearlyRevenue: number;
-  pendingConsultations: number;
   totalLeads: number;
   convertedLeads: number;
   conversionRate: number;
-  churnRate: number;
-  newMembersThisMonth: number;
-  cancelledThisMonth: number;
   totalCavalos: number;
   activeCavalos: number;
   soldCavalos: number;
@@ -28,7 +18,6 @@ interface DashboardStats {
   futureEventos: number;
   eventosViews: number;
   totalCoudelarias: number;
-  proCoudelarias: number;
   featuredCoudelarias: number;
   totalReviews: number;
   pendingReviews: number;
@@ -57,19 +46,9 @@ export default function AdminDashboard() {
       setError("Erro ao carregar dados. Verifique a conexão com Supabase.");
       // Fallback para dados de demonstração
       setStats({
-        totalMembers: 0,
-        aficionadoMembers: 0,
-        criadorMembers: 0,
-        eliteMembers: 0,
-        monthlyRevenue: 0,
-        yearlyRevenue: 0,
-        pendingConsultations: 0,
         totalLeads: 0,
         convertedLeads: 0,
         conversionRate: 0,
-        churnRate: 0,
-        newMembersThisMonth: 0,
-        cancelledThisMonth: 0,
         totalCavalos: 0,
         activeCavalos: 0,
         soldCavalos: 0,
@@ -79,7 +58,6 @@ export default function AdminDashboard() {
         futureEventos: 0,
         eventosViews: 0,
         totalCoudelarias: 0,
-        proCoudelarias: 0,
         featuredCoudelarias: 0,
         totalReviews: 0,
         pendingReviews: 0,
@@ -88,13 +66,6 @@ export default function AdminDashboard() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-PT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
   };
 
   const formatNumber = (value: number) => {
@@ -130,12 +101,6 @@ export default function AdminDashboard() {
             </div>
             <div className="flex gap-4 items-center">
               <Link
-                href="/admin/consultoria"
-                className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition"
-              >
-                Consultorias
-              </Link>
-              <Link
                 href="/"
                 className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
               >
@@ -165,7 +130,7 @@ export default function AdminDashboard() {
             <p className="text-sm opacity-90">Coudelarias</p>
             <p className="text-4xl font-bold mt-2">{stats.totalCoudelarias}</p>
             <p className="text-sm mt-2">
-              {stats.proCoudelarias} PRO | {stats.featuredCoudelarias} destaque
+              {stats.featuredCoudelarias} em destaque
             </p>
           </motion.div>
 
@@ -213,89 +178,16 @@ export default function AdminDashboard() {
         </div>
 
         {/* Segunda linha de stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Membros PRO */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-white rounded-lg shadow-lg p-6"
-          >
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Membros PRO</h3>
-            <p className="text-4xl font-bold text-blue-600">{stats.totalMembers}</p>
-            <div className="mt-4 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Aficionado</span>
-                <span className="font-semibold">{stats.aficionadoMembers}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Criador</span>
-                <span className="font-semibold">{stats.criadorMembers}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Elite</span>
-                <span className="font-semibold">{stats.eliteMembers}</span>
-              </div>
-            </div>
-            <div className="mt-4 pt-4 border-t">
-              <div className="flex justify-between text-sm">
-                <span className="text-green-600">+{stats.newMembersThisMonth} novos</span>
-                <span className="text-red-600">-{stats.cancelledThisMonth} cancelados</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Receita */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="bg-white rounded-lg shadow-lg p-6"
-          >
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Receita PRO</h3>
-            <p className="text-4xl font-bold text-green-600">
-              {formatCurrency(stats.monthlyRevenue)}
-            </p>
-            <p className="text-sm text-gray-500 mt-1">MRR (Mensal Recorrente)</p>
-            <div className="mt-4 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">ARR (Anual)</span>
-                <span className="font-semibold">{formatCurrency(stats.yearlyRevenue)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Churn Rate</span>
-                <span className={`font-semibold ${stats.churnRate < 5 ? "text-green-600" : "text-red-600"}`}>
-                  {stats.churnRate}%
-                </span>
-              </div>
-              {stats.totalMembers > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">LTV Médio</span>
-                  <span className="font-semibold">
-                    {formatCurrency((stats.monthlyRevenue / stats.totalMembers) * 12)}
-                  </span>
-                </div>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Reviews & Consultorias */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* Reviews */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             className="bg-white rounded-lg shadow-lg p-6"
           >
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Atividade</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Reviews</h3>
             <div className="space-y-4">
-              <div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Consultorias Pendentes</span>
-                  <span className={`text-2xl font-bold ${stats.pendingConsultations > 0 ? "text-amber-600" : "text-green-600"}`}>
-                    {stats.pendingConsultations}
-                  </span>
-                </div>
-              </div>
               <div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Reviews Pendentes</span>
@@ -346,25 +238,7 @@ export default function AdminDashboard() {
           <h2 className="text-xl font-bold text-gray-900 mb-4">
             Acoes Rapidas
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link
-              href="/admin/consultoria"
-              className="bg-amber-100 hover:bg-amber-200 rounded-lg p-4 text-center transition"
-            >
-              <p className="text-3xl mb-2">📧</p>
-              <p className="font-semibold text-gray-900">Consultorias</p>
-              <p className="text-sm text-gray-600">{stats.pendingConsultations} pendentes</p>
-            </Link>
-
-            <Link
-              href="/admin/subscriptions"
-              className="bg-blue-100 hover:bg-blue-200 rounded-lg p-4 text-center transition"
-            >
-              <p className="text-3xl mb-2">👥</p>
-              <p className="font-semibold text-gray-900">Subscricoes</p>
-              <p className="text-sm text-gray-600">{stats.totalMembers} ativos</p>
-            </Link>
-
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <Link
               href="/admin/reviews"
               className="bg-yellow-100 hover:bg-yellow-200 rounded-lg p-4 text-center transition"
@@ -439,14 +313,6 @@ export default function AdminDashboard() {
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
               <div>
                 <p className="font-semibold text-gray-900">Supabase</p>
-                <p className="text-sm text-gray-500">Operacional</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <div>
-                <p className="font-semibold text-gray-900">Stripe</p>
                 <p className="text-sm text-gray-500">Operacional</p>
               </div>
             </div>

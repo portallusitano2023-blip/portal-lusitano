@@ -74,7 +74,6 @@ export async function POST(request: NextRequest) {
       instagram,
       num_cavalos,
       especialidades,
-      plan,
     } = body;
 
     // Validações básicas
@@ -99,10 +98,6 @@ export async function POST(request: NextRequest) {
       slug = `${slug}-${Date.now()}`;
     }
 
-    // Determinar se é PRO
-    const isPro = plan === "pro" || plan === "pro_instagram";
-    const hasInstagramPromo = plan === "pro_instagram";
-
     // Inserir na base de dados
     const { data, error } = await supabase
       .from("coudelarias")
@@ -112,17 +107,14 @@ export async function POST(request: NextRequest) {
         descricao,
         localizacao,
         regiao,
-        telefone: isPro ? telefone : null,
-        email: isPro ? email : null,
-        website: isPro ? website : null,
-        instagram: isPro ? instagram : null,
-        num_cavalos: isPro ? num_cavalos : null,
+        telefone: telefone || null,
+        email: email || null,
+        website: website || null,
+        instagram: instagram || null,
+        num_cavalos: num_cavalos || null,
         especialidades: especialidades || [],
         fotos: [],
-        is_pro: isPro,
-        has_instagram_promo: hasInstagramPromo,
-        plan,
-        status: isPro ? "active" : "pending", // Gratuitos ficam pendentes para revisão
+        status: "pending", // Ficam pendentes para revisão
       })
       .select()
       .single();
@@ -138,9 +130,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       coudelaria: data,
-      message: isPro
-        ? "Coudelaria registada e ativa!"
-        : "Coudelaria submetida para revisão",
+      message: "Coudelaria submetida para revisão",
     });
   } catch (error) {
     console.error("Erro:", error);

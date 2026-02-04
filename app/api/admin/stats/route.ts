@@ -4,17 +4,6 @@ import { supabase } from "@/lib/supabase";
 export async function GET() {
   try {
     const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const startOfMonthISO = startOfMonth.toISOString();
-
-    // Buscar todas as subscrições
-    const { data: subscriptions, error: subError } = await supabase
-      .from("subscriptions")
-      .select("*");
-
-    if (subError) {
-      console.error("Erro ao buscar subscriptions:", subError);
-    }
 
     // Buscar leads (ebooks)
     const { data: leads, error: leadsError } = await supabase
@@ -23,16 +12,6 @@ export async function GET() {
 
     if (leadsError) {
       console.error("Erro ao buscar leads:", leadsError);
-    }
-
-    // Buscar consultorias pendentes
-    const { data: consultations, error: consultError } = await supabase
-      .from("consultation_tickets")
-      .select("*")
-      .in("status", ["pending", "in_progress"]);
-
-    if (consultError) {
-      console.error("Erro ao buscar consultorias:", consultError);
     }
 
     // Buscar cavalos
@@ -47,7 +26,7 @@ export async function GET() {
     // Buscar eventos
     const { data: eventos, error: eventosError } = await supabase
       .from("eventos")
-      .select("id, destaque, data, views_count");
+      .select("id, destaque, data_inicio, views_count");
 
     if (eventosError) {
       console.error("Erro ao buscar eventos:", eventosError);
@@ -56,7 +35,7 @@ export async function GET() {
     // Buscar coudelarias
     const { data: coudelarias, error: coudError } = await supabase
       .from("coudelarias")
-      .select("id, is_pro, destaque");
+      .select("id, destaque");
 
     if (coudError) {
       console.error("Erro ao buscar coudelarias:", coudError);
@@ -71,43 +50,9 @@ export async function GET() {
       console.error("Erro ao buscar reviews:", reviewsError);
     }
 
-    // Calcular estatísticas de subscrições
-    const activeSubscriptions = subscriptions?.filter(s => s.status === "active") || [];
-    const cancelledThisMonth = subscriptions?.filter(s =>
-      s.cancelled_at && new Date(s.cancelled_at) >= startOfMonth
-    ).length || 0;
-    const newThisMonth = subscriptions?.filter(s =>
-      s.created_at && new Date(s.created_at) >= startOfMonth && s.status === "active"
-    ).length || 0;
-
-    // Contar por plano
-    const aficionadoMembers = activeSubscriptions.filter(s =>
-      s.plan_name?.toLowerCase().includes("aficionado") || s.amount <= 1500
-    ).length;
-    const criadorMembers = activeSubscriptions.filter(s =>
-      s.plan_name?.toLowerCase().includes("criador") || (s.amount > 1500 && s.amount <= 6000)
-    ).length;
-    const eliteMembers = activeSubscriptions.filter(s =>
-      s.plan_name?.toLowerCase().includes("elite") || s.amount > 6000
-    ).length;
-
-    // Calcular receita mensal (em cêntimos para EUR)
-    const monthlyRevenue = activeSubscriptions.reduce((sum, s) => {
-      if (s.billing_period === "yearly") {
-        return sum + (s.amount || 0) / 12;
-      }
-      return sum + (s.amount || 0);
-    }, 0) / 100; // Converter de cêntimos para EUR
-
-    // Calcular churn rate
-    const totalMembers = activeSubscriptions.length;
-    const churnRate = totalMembers > 0
-      ? ((cancelledThisMonth / totalMembers) * 100).toFixed(1)
-      : 0;
-
     // Stats de leads/ebooks
     const totalLeads = leads?.length || 0;
-    const convertedLeads = leads?.filter(l => l.converted_to_pro).length || 0;
+    const convertedLeads = leads?.filter(l => l.converted).length || 0;
 
     // Stats de cavalos
     const totalCavalos = cavalos?.length || 0;
@@ -118,12 +63,11 @@ export async function GET() {
     // Stats de eventos
     const totalEventos = eventos?.length || 0;
     const featuredEventos = eventos?.filter(e => e.destaque).length || 0;
-    const futureEventos = eventos?.filter(e => new Date(e.data) > now).length || 0;
+    const futureEventos = eventos?.filter(e => new Date(e.data_inicio) > now).length || 0;
     const eventosViews = eventos?.reduce((sum, e) => sum + (e.views_count || 0), 0) || 0;
 
     // Stats de coudelarias
     const totalCoudelarias = coudelarias?.length || 0;
-    const proCoudelarias = coudelarias?.filter(c => c.is_pro).length || 0;
     const featuredCoudelarias = coudelarias?.filter(c => c.destaque).length || 0;
 
     // Stats de reviews
@@ -132,27 +76,11 @@ export async function GET() {
     const approvedReviews = reviews?.filter(r => r.status === "approved").length || 0;
 
     const stats = {
-      // Membros PRO
-      totalMembers,
-      aficionadoMembers,
-      criadorMembers,
-      eliteMembers,
-      newMembersThisMonth: newThisMonth,
-      cancelledThisMonth,
-      churnRate: parseFloat(churnRate as string) || 0,
-
-      // Receitas
-      monthlyRevenue,
-      yearlyRevenue: monthlyRevenue * 12,
-
-      // Consultorias
-      pendingConsultations: consultations?.length || 0,
-
       // Leads/Ebooks
       totalLeads,
       convertedLeads,
       conversionRate: totalLeads > 0
-        ? ((convertedLeads / totalLeads) * 100).toFixed(1)
+        ? parseFloat(((convertedLeads / totalLeads) * 100).toFixed(1))
         : 0,
 
       // Cavalos
@@ -169,7 +97,6 @@ export async function GET() {
 
       // Coudelarias
       totalCoudelarias,
-      proCoudelarias,
       featuredCoudelarias,
 
       // Reviews

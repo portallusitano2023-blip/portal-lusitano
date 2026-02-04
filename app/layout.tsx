@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import { Providers } from "./providers";
 import CartDrawer from "@/components/CartDrawer";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
@@ -134,6 +135,7 @@ export default function RootLayout({
             {children} 
           </main>
           <Footer />
+          <MobileBottomNav />
           <WhatsAppButton />
           <ServiceWorkerRegistration />
         </Providers>

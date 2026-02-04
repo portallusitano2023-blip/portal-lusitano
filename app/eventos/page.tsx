@@ -399,17 +399,25 @@ export default function EventosPage() {
                 </div>
               )}
 
-              {selectedEvento.website && (
-                <a
-                  href={selectedEvento.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
+              <div className="flex flex-col gap-3">
+                <Link
+                  href={`/eventos/${selectedEvento.slug}`}
                   className="flex items-center justify-center gap-2 w-full bg-[#C5A059] text-black py-3 font-bold uppercase tracking-wider hover:bg-white transition-colors"
                 >
-                  <ExternalLink size={18} />
-                  Mais Informações
-                </a>
-              )}
+                  Ver Página Completa
+                </Link>
+                {selectedEvento.website && (
+                  <a
+                    href={selectedEvento.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full bg-zinc-800 text-white py-3 font-medium hover:bg-zinc-700 transition-colors border border-white/10"
+                  >
+                    <ExternalLink size={18} />
+                    Site Oficial
+                  </a>
+                )}
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -437,6 +445,13 @@ function EventoDestaqueCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
     >
+      {evento.imagem_capa && (
+        <img
+          src={evento.imagem_capa}
+          alt={evento.titulo}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/20 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
       <div className="absolute inset-0 border border-[#C5A059]/30 group-hover:border-[#C5A059] transition-colors" />
@@ -494,11 +509,11 @@ function EventoCard({
   function getConfirmacaoIcon(confirmado?: string) {
     switch (confirmado) {
       case "confirmado":
-        return <CheckCircle size={12} className="text-green-400" title="Confirmado" />;
+        return <span title="Confirmado"><CheckCircle size={12} className="text-green-400" /></span>;
       case "anual":
-        return <RefreshCw size={12} className="text-blue-400" title="Evento Anual" />;
+        return <span title="Evento Anual"><RefreshCw size={12} className="text-blue-400" /></span>;
       case "provisorio":
-        return <AlertCircle size={12} className="text-amber-400" title="Data Provisória" />;
+        return <span title="Data Provisória"><AlertCircle size={12} className="text-amber-400" /></span>;
       default:
         return null;
     }

@@ -11,15 +11,12 @@ import {
   Award,
   Users,
   Clock,
-  ArrowRight,
   Sparkles,
   Gift,
   Mail,
   FileText,
-  TrendingUp,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function EbookGratisPage() {
   const [email, setEmail] = useState("");
@@ -193,12 +190,12 @@ export default function EbookGratisPage() {
   return (
     <main className="min-h-screen bg-[#050505]">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-24 sm:pt-32 pb-12 sm:pb-20 overflow-hidden">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 via-transparent to-transparent" />
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Left Column - Text */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -206,27 +203,27 @@ export default function EbookGratisPage() {
               transition={{ duration: 0.6 }}
             >
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-full px-4 py-2 mb-6">
-                <Gift className="text-[#C5A059]" size={16} />
-                <span className="text-[#C5A059] text-sm font-medium">
+              <div className="inline-flex items-center gap-2 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+                <Gift className="text-[#C5A059]" size={14} />
+                <span className="text-[#C5A059] text-xs sm:text-sm font-medium">
                   Ebook Gratuito
                 </span>
               </div>
 
-              <h1 className="text-5xl md:text-6xl font-serif text-white mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-4 sm:mb-6 leading-tight">
                 Introdução ao{" "}
                 <span className="bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] bg-clip-text text-transparent">
                   Cavalo Lusitano
                 </span>
               </h1>
 
-              <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-zinc-400 mb-6 sm:mb-8 leading-relaxed">
                 O guia essencial para quem quer conhecer a raça mais nobre da Península Ibérica.
                 <strong className="text-white"> 30 páginas de puro conhecimento, 100% grátis.</strong>
               </p>
 
-              {/* Stats Row */}
-              <div className="grid grid-cols-4 gap-4 mb-10">
+              {/* Stats Row - Responsive */}
+              <div className="grid grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-10">
                 {stats.map((stat, index) => (
                   <motion.div
                     key={stat.label}
@@ -235,18 +232,18 @@ export default function EbookGratisPage() {
                     transition={{ delay: index * 0.1 }}
                     className="text-center"
                   >
-                    <div className="text-2xl font-bold text-[#C5A059] mb-1">
+                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#C5A059] mb-0.5 sm:mb-1">
                       {stat.value}
                     </div>
-                    <div className="text-xs text-zinc-500 uppercase tracking-wider">
+                    <div className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-wider">
                       {stat.label}
                     </div>
                   </motion.div>
                 ))}
               </div>
 
-              {/* Email Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Email Form - Mobile Optimized */}
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 <div>
                   <input
                     type="text"
@@ -255,7 +252,8 @@ export default function EbookGratisPage() {
                     onFocus={handleFormStart}
                     placeholder="O teu nome"
                     required
-                    className="w-full bg-zinc-900/50 border border-white/10 text-white px-6 py-4 focus:outline-none focus:border-[#C5A059] transition-colors"
+                    autoComplete="name"
+                    className="w-full bg-zinc-900/50 border border-white/10 text-white px-4 sm:px-6 py-4 text-base focus:outline-none focus:border-[#C5A059] focus:ring-2 focus:ring-[#C5A059]/20 transition-all rounded-lg touch-manipulation"
                   />
                 </div>
                 <div>
@@ -266,29 +264,31 @@ export default function EbookGratisPage() {
                     onFocus={handleFormStart}
                     placeholder="O teu melhor email"
                     required
-                    className="w-full bg-zinc-900/50 border border-white/10 text-white px-6 py-4 focus:outline-none focus:border-[#C5A059] transition-colors"
+                    autoComplete="email"
+                    inputMode="email"
+                    className="w-full bg-zinc-900/50 border border-white/10 text-white px-4 sm:px-6 py-4 text-base focus:outline-none focus:border-[#C5A059] focus:ring-2 focus:ring-[#C5A059]/20 transition-all rounded-lg touch-manipulation"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#C5A059] text-black py-5 text-sm font-bold uppercase tracking-widest hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                  className="w-full bg-[#C5A059] text-black py-4 sm:py-5 text-sm font-bold uppercase tracking-widest hover:bg-white active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3 rounded-lg touch-manipulation min-h-[56px]"
                 >
                   {loading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-                      A processar...
+                      <span className="text-xs sm:text-sm">A processar...</span>
                     </>
                   ) : (
                     <>
-                      <Download size={20} />
-                      Descarregar Ebook Grátis
+                      <Download size={18} />
+                      <span className="text-xs sm:text-sm">Descarregar Ebook Grátis</span>
                     </>
                   )}
                 </button>
               </form>
 
-              <p className="text-zinc-600 text-xs mt-4 text-center">
+              <p className="text-zinc-600 text-[10px] sm:text-xs mt-3 sm:mt-4 text-center">
                 Sem spam. Cancela a qualquer momento. Os teus dados estão seguros.
               </p>
             </motion.div>
@@ -315,7 +315,7 @@ export default function EbookGratisPage() {
                     O Guia Essencial Para Iniciantes
                   </p>
                   <div className="text-xs text-zinc-600 uppercase tracking-widest">
-                    Portal Lusitano PRO
+                    Portal Lusitano
                   </div>
                 </div>
               </div>
@@ -516,30 +516,6 @@ export default function EbookGratisPage() {
             </div>
           </motion.div>
 
-          {/* Upgrade hint */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="mt-12 text-center"
-          >
-            <p className="text-zinc-500 mb-4">
-              Gostaste deste ebook gratuito?
-            </p>
-            <Link
-              href="/pro"
-              className="inline-flex items-center gap-2 text-[#C5A059] hover:text-white transition-colors group"
-            >
-              <span className="font-medium">
-                Descobre a biblioteca completa com 50+ ebooks PRO
-              </span>
-              <ArrowRight
-                className="group-hover:translate-x-1 transition-transform"
-                size={16}
-              />
-            </Link>
-          </motion.div>
         </div>
       </section>
     </main>
