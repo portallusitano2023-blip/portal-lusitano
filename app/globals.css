@@ -143,6 +143,17 @@ body {
   transform: translateZ(0);
 }
 
+/* Content containment para isolamento de layout */
+.contain-layout {
+  contain: layout style;
+}
+
+/* Off-screen content pode ser diferido pelo browser */
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
 /* ===== SCROLLBAR PERSONALIZADA ===== */
 ::-webkit-scrollbar {
   width: 8px;
@@ -281,6 +292,12 @@ html, body {
   overflow: hidden;
 }
 
+/* Gentle bounce para indicadores interactivos */
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
 /* Fade-in animation for mobile */
 @keyframes fade-in-up {
   from {
@@ -296,6 +313,31 @@ html, body {
 .animate-fade-in-up {
   animation: fade-in-up 0.5s ease-out forwards;
 }
+
+/* Stagger children - cada filho anima em cascata */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Aplica delay crescente a cada filho directo */
+[class*="animate-[fadeSlideIn"] > *:nth-child(1) { animation-delay: 0s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(2) { animation-delay: 0.04s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(3) { animation-delay: 0.08s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(4) { animation-delay: 0.12s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(5) { animation-delay: 0.16s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(6) { animation-delay: 0.2s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(7) { animation-delay: 0.24s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(8) { animation-delay: 0.28s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(9) { animation-delay: 0.32s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(10) { animation-delay: 0.36s; }
+[class*="animate-[fadeSlideIn"] > *:nth-child(n+11) { animation-delay: 0.4s; }
 
 /* Mobile card shadow */
 @media (max-width: 768px) {

@@ -7,6 +7,7 @@ import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { ShoppingBag, User, Menu, X, Search, Heart, Crown, Gift, ChevronDown, MapPin, Calendar, ShoppingCart, BookOpen, HelpCircle, Home, Store, Calculator, Scale, Dna, Users, Trophy, Euro, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 
@@ -21,10 +22,16 @@ export default function Navbar() {
   const { language, toggleLanguage, t } = useLanguage();
   const { wishlist } = useWishlist();
   const { favoritesCount } = useHorseFavorites();
+  const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLusitanoOpen, setIsLusitanoOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  // Fechar menu mobile quando a página muda (evita click-through para o carrinho)
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
 
   // Detect scroll for better mobile UX
   useEffect(() => {
@@ -227,7 +234,7 @@ export default function Navbar() {
                     >
                       <Trophy size={16} className="text-[#C5A059]" />
                       <div>
-                        <div className="text-sm font-medium">Cavalos Famosos</div>
+                        <div className="text-sm font-medium">Lusitanos Notáveis</div>
                         <div className="text-[10px] text-zinc-500">Galeria de honra</div>
                       </div>
                     </Link>
@@ -354,7 +361,6 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setIsMobileOpen(false)}
                 className="flex items-center gap-4 py-4 px-3 text-lg text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
               >
                 <item.icon size={20} className="text-zinc-500" />
@@ -380,7 +386,6 @@ export default function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setIsMobileOpen(false)}
                     className={`flex items-center gap-3 py-3 px-3 text-sm transition-colors rounded-lg active:scale-[0.98] touch-manipulation ${
                       (item as any).highlight
                         ? "text-green-400 bg-green-500/10 border border-green-500/30"
@@ -409,7 +414,6 @@ export default function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setIsMobileOpen(false)}
                     className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
                   >
                     <item.icon size={18} className="text-[#C5A059]/70" />
@@ -427,12 +431,11 @@ export default function Navbar() {
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { href: "/profissionais", icon: Users, label: "Profissionais" },
-                  { href: "/cavalos-famosos", icon: Trophy, label: "Cavalos Famosos" },
+                  { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis" },
                 ].map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setIsMobileOpen(false)}
                     className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
                   >
                     <item.icon size={18} className="text-[#C5A059]/70" />
@@ -447,7 +450,6 @@ export default function Navbar() {
               <div className="grid grid-cols-2 gap-2">
                 <Link
                   href="/cavalos-favoritos"
-                  onClick={() => setIsMobileOpen(false)}
                   className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
                 >
                   <Heart size={18} className="text-red-400" />
@@ -460,7 +462,6 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/favoritos"
-                  onClick={() => setIsMobileOpen(false)}
                   className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
                 >
                   <Heart size={18} className="text-pink-400" />
@@ -478,14 +479,12 @@ export default function Navbar() {
             <div className="border-t border-white/10 pt-4 mt-4 space-y-2">
               <Link
                 href="/instagram"
-                onClick={() => setIsMobileOpen(false)}
                 className="flex items-center gap-4 py-3 px-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
               >
                 Publicidade / Instagram
               </Link>
               <Link
                 href="/minha-conta"
-                onClick={() => setIsMobileOpen(false)}
                 className="flex items-center gap-4 py-3 px-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
               >
                 <User size={18} className="text-zinc-500" />
@@ -497,7 +496,6 @@ export default function Navbar() {
             <div className="border-t border-white/10 pt-4 mt-4 space-y-3">
               <Link
                 href="/ebook-gratis"
-                onClick={() => setIsMobileOpen(false)}
                 className="flex items-center justify-center gap-3 bg-green-600/20 border border-green-500/30 text-green-400 px-4 py-4 text-sm uppercase tracking-widest font-bold w-full rounded-lg active:scale-[0.98] touch-manipulation"
               >
                 <Gift size={18} />

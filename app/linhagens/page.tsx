@@ -437,12 +437,12 @@ function LinhagemModal({
             )}
           </div>
 
-          {/* Cavalos Famosos */}
+          {/* Lusitanos Notáveis */}
           {linhagem.cavalos_famosos && linhagem.cavalos_famosos.length > 0 && (
             <div className="mb-8">
               <h3 className="text-lg font-serif text-white mb-3 flex items-center gap-2">
                 <Award size={18} className="text-[#C5A059]" />
-                Cavalos Famosos
+                Lusitanos Notáveis
               </h3>
               <div className="space-y-3">
                 {linhagem.cavalos_famosos.map((cavalo, i) => (
