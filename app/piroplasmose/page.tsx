@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import {
   ArrowLeft, AlertTriangle, Bug, Globe, Shield, Thermometer,
   FileText, ChevronDown, MapPin, Activity, Syringe,
@@ -52,12 +51,32 @@ interface SeccaoExpandivel {
   conteudo: React.ReactNode;
 }
 
+// Hook: detectar entrada no viewport uma vez (IntersectionObserver nativo)
+function useInViewOnce(ref: React.RefObject<HTMLElement | null>, margin = "-40px") {
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); observer.disconnect(); } },
+      { rootMargin: margin }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [margin]);
+  return inView;
+}
+
 function SeccaoCard({ seccao, aberta, onToggle, indice, total, primeiraFechada }: { seccao: SeccaoExpandivel; aberta: boolean; onToggle: () => void; indice: number; total: number; primeiraFechada: boolean }) {
   const Icone = seccao.icone;
   const isLast = indice === total - 1;
-  const prefersReduced = useReducedMotion();
   const seccaoRef = useRef<HTMLDivElement>(null);
   const prevAberta = useRef(aberta);
+  const hasBeenOpened = useRef(aberta);
+  const inView = useInViewOnce(seccaoRef);
+
+  // Lazy-mount: só renderiza conteúdo depois de abrir pelo menos uma vez
+  if (aberta) hasBeenOpened.current = true;
 
   // Auto-scroll suave para a secção quando abre
   useEffect(() => {
@@ -71,17 +90,15 @@ function SeccaoCard({ seccao, aberta, onToggle, indice, total, primeiraFechada }
   }, [aberta]);
 
   return (
-    <motion.div
+    <div
       ref={seccaoRef}
-      className="relative flex gap-4 sm:gap-6 scroll-mt-24"
-      initial={prefersReduced ? false : { opacity: 0, x: -30 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5, delay: indice * 0.06 }}
+      className={`relative flex gap-4 sm:gap-6 scroll-mt-24 transition-all duration-500 ease-out ${
+        inView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+      }`}
+      style={{ transitionDelay: `${indice * 60}ms` }}
     >
       {/* Timeline - linha e marcador */}
       <div className="flex flex-col items-center flex-shrink-0">
-        {/* Marcador/dot - CSS transitions (sem motion.button) */}
         <button
           onClick={onToggle}
           className={`relative z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center touch-manipulation transition-all duration-200 hover:scale-110 active:scale-90 ${
@@ -96,15 +113,13 @@ function SeccaoCard({ seccao, aberta, onToggle, indice, total, primeiraFechada }
             <span className="absolute inset-0 rounded-full border-2 border-[#C5A059]/40 animate-ping" />
           )}
         </button>
-        {/* Linha vertical */}
+        {/* Linha vertical - CSS transition nativa */}
         {!isLast && (
-          <motion.div
-            className={`w-[2px] flex-1 transition-colors duration-150 ${aberta ? 'bg-gradient-to-b from-[#C5A059]/40 to-zinc-800/40' : 'bg-zinc-800/60'}`}
-            initial={prefersReduced ? false : { scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5, delay: indice * 0.06 + 0.15 }}
-            style={{ transformOrigin: "top" }}
+          <div
+            className={`w-[2px] flex-1 origin-top transition-all duration-500 ease-out ${
+              inView ? 'scale-y-100' : 'scale-y-0'
+            } ${aberta ? 'bg-gradient-to-b from-[#C5A059]/40 to-zinc-800/40' : 'bg-zinc-800/60'}`}
+            style={{ transitionDelay: `${indice * 60 + 150}ms` }}
           />
         )}
       </div>
@@ -147,13 +162,15 @@ function SeccaoCard({ seccao, aberta, onToggle, indice, total, primeiraFechada }
           style={{ gridTemplateRows: aberta ? '1fr' : '0fr' }}
         >
           <div className="overflow-hidden">
-            <div className={`mt-5 sm:mt-6 bg-zinc-900/50 border border-zinc-800/60 rounded-xl p-5 sm:p-7 transition-opacity duration-200 ${aberta ? 'opacity-100' : 'opacity-0'}`}>
-              {seccao.conteudo}
-            </div>
+            {hasBeenOpened.current && (
+              <div className={`mt-5 sm:mt-6 bg-zinc-900/50 border border-zinc-800/60 rounded-xl p-5 sm:p-7 transition-opacity duration-200 ${aberta ? 'opacity-100' : 'opacity-0'}`}>
+                {seccao.conteudo}
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -1009,9 +1026,18 @@ export default function PiroplasmosePage() {
     }
   ];
 
-  // Scroll progress - barra dourada no topo (único hook de scroll)
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 400, damping: 40, mass: 0.3 });
+  // Progress bar - manipulação directa do DOM, zero re-renders React
+  const progressRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const bar = progressRef.current;
+    if (!bar) return;
+    const onScroll = () => {
+      const h = document.documentElement;
+      bar.style.transform = `scaleX(${h.scrollTop / (h.scrollHeight - h.clientHeight)})`;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Secção activa baseada no scroll (para o indicador flutuante)
   const [seccaoActiva, setSeccaoActiva] = useState("");
@@ -1042,10 +1068,11 @@ export default function PiroplasmosePage() {
 
   return (
     <main className="min-h-screen bg-black text-white pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">
-      {/* Barra de progresso de leitura - fixa no topo */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#C5A059] via-[#d4b76a] to-[#C5A059] z-[9999] origin-left"
-        style={{ scaleX }}
+      {/* Barra de progresso - manipulação directa do DOM, zero re-renders */}
+      <div
+        ref={progressRef}
+        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#C5A059] via-[#d4b76a] to-[#C5A059] z-[9999] origin-left will-change-transform"
+        style={{ transform: "scaleX(0)" }}
       />
 
       {/* Indicador flutuante da secção actual - CSS transitions */}
@@ -1054,7 +1081,7 @@ export default function PiroplasmosePage() {
           seccaoActiva ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
         }`}
       >
-        <div className="bg-black/80 backdrop-blur-md border border-[#C5A059]/30 rounded-full px-4 py-2 shadow-lg shadow-black/50">
+        <div className="bg-black/95 border border-[#C5A059]/30 rounded-full px-4 py-2 shadow-lg shadow-black/50">
           <span className="text-[11px] sm:text-xs text-[#C5A059] font-medium tracking-wide">
             {seccaoActiva || "\u00A0"}
           </span>
