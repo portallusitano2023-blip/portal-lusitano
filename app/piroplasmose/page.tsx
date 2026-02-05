@@ -115,9 +115,12 @@ export default function PiroplasmosePage() {
               <div>
                 <p className="text-red-300 font-medium mb-1">Dados Importantes</p>
                 <ul className="space-y-1 text-zinc-400 text-xs">
-                  <li>Mais de <strong className="text-white">90% da populaçao equina mundial</strong> vive em zonas endémicas</li>
-                  <li>Mortalidade pode atingir <strong className="text-white">50%</strong> em casos não tratados</li>
-                  <li>Cavalos sobreviventes tornam-se <strong className="text-white">portadores crónicos</strong> para toda a vida</li>
+                  {/* FONTE: PMC11349644, Frontiers Vet Sci 2024 - "Almost 90% of the world equid population" */}
+                  <li>Cerca de <strong className="text-white">90% da população equina mundial</strong> vive em zonas endémicas</li>
+                  {/* FONTE: PMC11349644 - "5-10% in endemic areas", ">50% in naive animals" */}
+                  <li>Mortalidade de <strong className="text-white">5-10%</strong> em zonas endémicas; pode ultrapassar <strong className="text-white">50%</strong> em animais sem exposição prévia</li>
+                  {/* FONTE: PMC11349644 - T. equi "persistent infections"; B. caballi "can be naturally cleared" */}
+                  <li>Cavalos infectados com <em>T. equi</em> tornam-se <strong className="text-white">portadores crónicos persistentes</strong>; infecções por <em>B. caballi</em> podem ser eliminadas naturalmente</li>
                   <li>Não existe vacina disponível</li>
                 </ul>
               </div>
@@ -189,38 +192,36 @@ export default function PiroplasmosePage() {
 
           <h3 className="text-white font-semibold mt-4">Estudos Científicos em Portugal</h3>
           {/* FONTE: ScienceDirect, PubMed, Frontiers */}
+          {/* FONTE: Cabete et al. 2024 (DOI: 10.1016/j.vetpar.2024.110378, PMID: 39721257) - 3063 registos */}
+          {/* FONTE: Ribeiro et al. 2013 (DOI: 10.1007/s00436-013-3429-9, PMID: 23591484) - 162 cavalos */}
+          {/* FONTE: Fuehrer et al. 2020 (Frontiers Vet Sci, DOI: 10.3389/fvets.2020.591943) - 101 cavalos militares Lisboa */}
           <div className="grid sm:grid-cols-2 gap-3">
             <EstudoCard
-              regiao="Portugal (estudo 5 anos, cELISA)"
+              regiao="Portugal (estudo 5 anos, cELISA, n=3063)"
               tEqui="32.7%"
               bCaballi="15.7%"
-              fonte="ScienceDirect, 2024"
+              fonte="Cabete et al., Veterinary Parasitology, 2024"
             />
             <EstudoCard
-              regiao="PSL Vila Viçosa (Sul)"
-              tEqui="53.4%"
-              bCaballi="—"
-              fonte="Estudo serológico PSL"
-            />
-            <EstudoCard
-              regiao="Alentejo (154 cavalos)"
-              tEqui="85.1%"
-              bCaballi="65.6%"
-              fonte="Análise serológica regional"
-            />
-            <EstudoCard
-              regiao="Norte de Portugal"
+              regiao="Norte de Portugal (n=162)"
               tEqui="17.9%"
               bCaballi="11.1%"
-              fonte="PubMed, 2013"
+              fonte="Ribeiro et al., Parasitology Research, 2013"
+            />
+            <EstudoCard
+              regiao="Cavalos Militares, Lisboa (qPCR, n=101)"
+              tEqui="32.7%"
+              bCaballi="0%"
+              fonte="Fuehrer et al., Frontiers Vet Sci, 2020"
             />
           </div>
 
           <div className="bg-zinc-800/60 rounded-lg p-4 mt-4">
             <p className="text-xs text-zinc-400">
+              {/* FONTE: Cabete et al. 2024 - "location was found to play a significant role" */}
               <strong className="text-white">Nota:</strong> A prevalência varia significativamente por região.
-              O Sul de Portugal (Alentejo, Vila Viçosa) apresenta taxas muito mais elevadas que o Norte,
-              reflectindo a maior presença de carraças vectoras em climas mais quentes e secos.
+              O estudo de Cabete et al. (2024) confirma que a localização geográfica é um factor significativo
+              na seroprevalência. A co-infecção por ambos os parasitas foi registada em 7.4% dos casos analisados.
             </p>
           </div>
 
@@ -244,13 +245,22 @@ export default function PiroplasmosePage() {
             para <em>T. equi</em> e <em>B. caballi</em> antes de permitirem a entrada.
           </p>
 
-          <h3 className="text-white font-semibold">Países com Política &quot;Piro-Free&quot;</h3>
+          {/* FONTE: PMC11349644 lista USA, Canada, Japan, New Zealand como piro-free */}
+          {/* FONTE: Lusitano Horse Finder lista também Australia, UK, Ireland, Iceland */}
+          {/* FONTE: Lusitano World lista China, Thailand, Mexico como tendo políticas de importação restritivas (mas NÃO são piro-free) */}
+          <h3 className="text-white font-semibold">Países Não-Endémicos (Exigem Teste Negativo)</h3>
           <div className="flex flex-wrap gap-2">
-            {["Estados Unidos", "Canadá", "Austrália", "Nova Zelândia", "Japão", "China", "Tailândia", "México"].map(pais => (
+            {["Estados Unidos", "Canadá", "Austrália", "Nova Zelândia", "Japão", "Reino Unido", "Irlanda", "Islândia"].map(pais => (
               <span key={pais} className="px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full text-xs text-red-300">
                 <Ban size={10} className="inline mr-1" />{pais}
               </span>
             ))}
+          </div>
+          <div className="bg-zinc-800/60 rounded-lg p-3 mt-2">
+            <p className="text-[10px] text-zinc-500">
+              <strong className="text-zinc-400">Nota:</strong> Outros países como China, Tailândia e México também exigem testes negativos
+              para importação, apesar de terem populações de carraças endémicas.
+            </p>
           </div>
 
           <h3 className="text-white font-semibold mt-4">Testes de Exportação</h3>
@@ -308,14 +318,15 @@ export default function PiroplasmosePage() {
       icone: Activity,
       conteudo: (
         <div className="space-y-4 text-sm text-zinc-300 leading-relaxed">
-          {/* FONTE: Olympics.com */}
+          {/* FONTE: Olympics.com - Beijing 2008 equestrian events moved to Hong Kong */}
+          {/* NOTA: A transferência foi por preocupações gerais de doenças equinas, NÃO especificamente piroplasmose */}
           <h3 className="text-white font-semibold">Jogos Olímpicos Pequim 2008</h3>
           <div className="bg-zinc-800/60 rounded-lg p-4">
             <p className="text-xs text-zinc-400">
               As provas equestres dos Jogos Olímpicos de 2008 foram transferidas de Pequim para <strong className="text-white">Hong Kong</strong>,
-              após os organizadores declararem que não podiam garantir uma zona livre de doenças para os cavalos perto de Pequim.
-              Hong Kong foi seleccionada pela sua indústria de corridas, que proporcionava medidas de quarentena e
-              protocolos de gestão de doenças rigorosos. Todos os cavalos tiveram de testar negativo para piroplasmose equina.
+              devido a preocupações gerais com doenças equinas na China continental, incluindo a piroplasmose.
+              Hong Kong foi seleccionada pela sua infraestrutura de corridas de cavalos, herdada da era colonial britânica,
+              que proporcionava instalações de quarentena e protocolos de biossegurança rigorosos já estabelecidos.
             </p>
           </div>
 
@@ -446,8 +457,10 @@ export default function PiroplasmosePage() {
             <ul className="space-y-1 text-xs text-zinc-400">
               <li>Piroplasmose equina é <strong className="text-white">doença de notificação obrigatória</strong></li>
               <li>Regulada pelo Capítulo 12.7 do Código Sanitário para Animais Terrestres</li>
-              <li>Países importadores devem exigir testes de diagnóstico negativos nos 30 dias antes do envio</li>
-              <li>Animais devem ser mantidos livres de carraças durante 30 dias antes do envio</li>
+              {/* FONTE: WOAH Artigo 12.7.5 - "blood sample taken within the 14 days prior to shipment" */}
+              <li>Países importadores devem exigir testes de diagnóstico negativos nos <strong className="text-white">14 dias</strong> antes do envio</li>
+              {/* FONTE: WOAH - 30 dias livres de carraças antes da colheita de sangue, e desde a colheita até ao envio */}
+              <li>Animais devem ser mantidos livres de carraças durante <strong className="text-white">30 dias antes da colheita de sangue</strong> e desde a colheita até ao envio</li>
             </ul>
           </div>
 
@@ -473,10 +486,10 @@ export default function PiroplasmosePage() {
             </p>
           </div>
 
-          <h3 className="text-white font-semibold mt-4">Países Oficialmente &quot;Piro-Free&quot;</h3>
-          {/* FONTE: WOAH */}
+          <h3 className="text-white font-semibold mt-4">Países Considerados Não-Endémicos</h3>
+          {/* FONTE: PMC11349644 (USA, Canada, Japan, New Zealand), Lusitano Horse Finder (+ Australia, UK, Ireland, Iceland) */}
           <div className="flex flex-wrap gap-2">
-            {["Canadá", "Japão", "Islândia", "Irlanda", "Nova Zelândia"].map(pais => (
+            {["EUA", "Canadá", "Austrália", "Nova Zelândia", "Japão", "Reino Unido", "Irlanda", "Islândia"].map(pais => (
               <span key={pais} className="px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-xs text-green-300">
                 <Shield size={10} className="inline mr-1" />{pais}
               </span>
