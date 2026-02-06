@@ -70,6 +70,7 @@ export default function AdminDashboard() {
   const [recentMessages, setRecentMessages] = useState<RecentMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [setupNeeded, setSetupNeeded] = useState(false);
 
   useEffect(() => {
     loadAllData();
@@ -105,7 +106,12 @@ export default function AdminDashboard() {
   const loadFinancial = async () => {
     try {
       const response = await fetch("/api/admin/financeiro/overview");
-      if (!response.ok) throw new Error("Erro ao carregar dados financeiros");
+      if (!response.ok) {
+        if (response.status === 500 || response.status === 404) {
+          setSetupNeeded(true);
+        }
+        throw new Error("Erro ao carregar dados financeiros");
+      }
       const data = await response.json();
       setFinancial(data.overview);
     } catch (err) {
@@ -116,7 +122,12 @@ export default function AdminDashboard() {
   const loadMessages = async () => {
     try {
       const response = await fetch("/api/admin/messages/stats");
-      if (!response.ok) throw new Error("Erro ao carregar mensagens");
+      if (!response.ok) {
+        if (response.status === 500 || response.status === 404) {
+          setSetupNeeded(true);
+        }
+        throw new Error("Erro ao carregar mensagens");
+      }
       const data = await response.json();
       setMessages(data.stats.byStatus);
     } catch (err) {
@@ -218,7 +229,7 @@ export default function AdminDashboard() {
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Aviso se dados não carregarem */}
-        {(!financial || !messages) && (
+        {setupNeeded && (
           <div className="mb-6 p-6 bg-orange-500/10 border-2 border-orange-500/30 rounded-lg">
             <div className="flex items-start gap-4">
               <div className="text-3xl">⚠️</div>
