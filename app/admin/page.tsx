@@ -549,7 +549,7 @@ export default function AdminDashboard() {
         {/* DASHBOARDS ESPECIALIZADOS */}
         <div className="bg-gradient-to-br from-[#C5A059]/10 to-[#C5A059]/5 border border-[#C5A059]/20 rounded-lg p-6">
           <h2 className="text-2xl font-bold text-white mb-4">🚀 Dashboards Especializados</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <Link
               href="/admin/financeiro"
               className="bg-[#0A0A0A] border border-white/10 hover:border-[#C5A059]/50 rounded-lg p-6 transition-all hover:scale-105"
@@ -599,6 +599,19 @@ export default function AdminDashboard() {
               </div>
               <p className="text-sm text-gray-400">
                 Gestão de tarefas, lembretes e follow-ups de clientes
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/crm"
+              className="bg-[#0A0A0A] border border-white/10 hover:border-orange-500/50 rounded-lg p-6 transition-all hover:scale-105"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <FiTrendingUp className="text-orange-500" size={28} />
+                <h3 className="text-lg font-bold text-white">CRM Pipeline</h3>
+              </div>
+              <p className="text-sm text-gray-400">
+                Pipeline visual de vendas com drag-and-drop
               </p>
             </Link>
           </div>
