@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     // 1. FONTES DE TRÁFEGO (UTM da tabela leads)
     const { data: leads, error: leadsError } = await supabase
       .from("leads")
-      .select("utm_source, utm_medium, utm_campaign, created_at");
+      .select("email, utm_source, utm_medium, utm_campaign, created_at");
 
     if (leadsError) throw leadsError;
 

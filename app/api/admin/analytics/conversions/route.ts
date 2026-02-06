@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     // 3. CLIENTES PAGOS (pessoas que compraram algo)
     const { data: payments, error: paymentsError } = await supabase
       .from("payments")
-      .select("email")
+      .select("email, amount, created_at")
       .eq("status", "succeeded");
 
     if (paymentsError) throw paymentsError;
