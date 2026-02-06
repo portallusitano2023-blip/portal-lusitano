@@ -1,9 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import Link from "next/link";
-import AdminLogoutButton from "@/components/AdminLogoutButton";
+import { useRouter } from "next/navigation";
+import {
+  FiDollarSign,
+  FiTrendingUp,
+  FiRepeat,
+  FiShoppingCart,
+  FiMail,
+  FiEye,
+  FiUsers,
+  FiCalendar,
+  FiStar,
+  FiBarChart2,
+  FiLogOut,
+  FiExternalLink,
+} from "react-icons/fi";
 
 interface DashboardStats {
   totalLeads: number;
@@ -24,314 +37,544 @@ interface DashboardStats {
   approvedReviews: number;
 }
 
+interface FinancialOverview {
+  totalRevenue: number;
+  thisMonthRevenue: number;
+  growthPercentage: number;
+  mrr: number;
+  averageTicket: number;
+  totalTransactions: number;
+}
+
+interface MessagesStats {
+  total: number;
+  novo: number;
+  lido: number;
+  respondido: number;
+}
+
+interface RecentMessage {
+  id: string;
+  name: string;
+  email: string;
+  form_type: string;
+  status: string;
+  created_at: string;
+}
+
 export default function AdminDashboard() {
+  const router = useRouter();
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [financial, setFinancial] = useState<FinancialOverview | null>(null);
+  const [messages, setMessages] = useState<MessagesStats | null>(null);
+  const [recentMessages, setRecentMessages] = useState<RecentMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadStats();
+    loadAllData();
   }, []);
+
+  const loadAllData = async () => {
+    try {
+      await Promise.all([
+        loadStats(),
+        loadFinancial(),
+        loadMessages(),
+        loadRecentMessages(),
+      ]);
+    } catch (err) {
+      console.error("Erro ao carregar dados:", err);
+      setError("Erro ao carregar alguns dados");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const loadStats = async () => {
     try {
       const response = await fetch("/api/admin/stats");
-      if (!response.ok) {
-        throw new Error("Erro ao carregar estatísticas");
-      }
+      if (!response.ok) throw new Error("Erro ao carregar estatísticas");
       const data = await response.json();
       setStats(data);
     } catch (err) {
-      console.error("Erro:", err);
-      setError("Erro ao carregar dados. Verifique a conexão com Supabase.");
-      // Fallback para dados de demonstração
-      setStats({
-        totalLeads: 0,
-        convertedLeads: 0,
-        conversionRate: 0,
-        totalCavalos: 0,
-        activeCavalos: 0,
-        soldCavalos: 0,
-        cavalosViews: 0,
-        totalEventos: 0,
-        featuredEventos: 0,
-        futureEventos: 0,
-        eventosViews: 0,
-        totalCoudelarias: 0,
-        featuredCoudelarias: 0,
-        totalReviews: 0,
-        pendingReviews: 0,
-        approvedReviews: 0,
-      });
-    } finally {
-      setIsLoading(false);
+      console.error("Erro stats:", err);
     }
+  };
+
+  const loadFinancial = async () => {
+    try {
+      const response = await fetch("/api/admin/financeiro/overview");
+      if (!response.ok) throw new Error("Erro ao carregar dados financeiros");
+      const data = await response.json();
+      setFinancial(data.overview);
+    } catch (err) {
+      console.error("Erro financial:", err);
+    }
+  };
+
+  const loadMessages = async () => {
+    try {
+      const response = await fetch("/api/admin/messages/stats");
+      if (!response.ok) throw new Error("Erro ao carregar mensagens");
+      const data = await response.json();
+      setMessages(data.stats.byStatus);
+    } catch (err) {
+      console.error("Erro messages:", err);
+    }
+  };
+
+  const loadRecentMessages = async () => {
+    try {
+      const response = await fetch("/api/admin/messages?limit=5&page=1");
+      if (!response.ok) throw new Error("Erro ao carregar mensagens recentes");
+      const data = await response.json();
+      setRecentMessages(data.messages);
+    } catch (err) {
+      console.error("Erro recent messages:", err);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/admin/login");
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
+  };
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("pt-PT", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value);
   };
 
   const formatNumber = (value: number) => {
     return new Intl.NumberFormat("pt-PT").format(value);
   };
 
+  const getFormTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      vender_cavalo: "Vender Cavalo",
+      publicidade: "Publicidade",
+      instagram: "Instagram",
+      contact_general: "Contacto Geral",
+    };
+    return labels[type] || type;
+  };
+
+  const getStatusColor = (status: string) => {
+    const colors: Record<string, string> = {
+      novo: "bg-blue-500/10 text-blue-500",
+      lido: "bg-yellow-500/10 text-yellow-500",
+      respondido: "bg-green-500/10 text-green-500",
+      arquivado: "bg-gray-500/10 text-gray-500",
+    };
+    return colors[status] || "bg-gray-500/10 text-gray-500";
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4">A carregar dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C5A059] mx-auto"></div>
+          <p className="text-gray-400 mt-4">A carregar dashboard...</p>
         </div>
       </div>
     );
   }
 
-  if (!stats) return null;
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#050505]">
       {/* Header */}
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
+      <div className="border-b border-white/10 bg-[#0A0A0A]">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Dashboard Administrativo
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Portal Lusitano - Visão Geral
-              </p>
+              <h1 className="text-3xl font-bold text-white">Dashboard Administrativo</h1>
+              <p className="text-gray-400 mt-1">Portal Lusitano - Visão Geral Completa</p>
             </div>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-3">
               <Link
                 href="/"
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg transition-colors"
               >
+                <FiExternalLink size={16} />
                 Ver Site
               </Link>
-              <AdminLogoutButton className="bg-red-100 text-red-700 px-4 py-2 rounded-lg hover:bg-red-200 transition" />
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-lg transition-colors"
+              >
+                <FiLogOut size={16} />
+                Sair
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {error && (
-          <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-yellow-800">{error}</p>
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Aviso se dados não carregarem */}
+        {(!financial || !messages) && (
+          <div className="mb-6 p-6 bg-orange-500/10 border-2 border-orange-500/30 rounded-lg">
+            <div className="flex items-start gap-4">
+              <div className="text-3xl">⚠️</div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-orange-500 mb-2">
+                  Setup Necessário
+                </h3>
+                <p className="text-gray-300 mb-3">
+                  Alguns dados não estão disponíveis porque as tabelas SQL ainda não foram criadas.
+                </p>
+                <div className="bg-black/30 p-4 rounded-lg border border-white/10">
+                  <p className="text-sm text-gray-300 font-mono mb-2">
+                    📋 Siga estes passos:
+                  </p>
+                  <ol className="text-sm text-gray-400 space-y-1 ml-4 list-decimal">
+                    <li>Abra o ficheiro <code className="text-[#C5A059]">INSTALAR_ADMIN.md</code></li>
+                    <li>Siga as instruções para executar o SQL no Supabase</li>
+                    <li>Recarregue esta página (F5)</li>
+                  </ol>
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  ⏱️ Demora apenas 5 minutos e depois terás acesso completo ao dashboard financeiro e inbox de mensagens!
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Stats Grid Principal */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Total Coudelarias */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white"
-          >
-            <p className="text-sm opacity-90">Coudelarias</p>
-            <p className="text-4xl font-bold mt-2">{stats.totalCoudelarias}</p>
-            <p className="text-sm mt-2">
-              {stats.featuredCoudelarias} em destaque
-            </p>
-          </motion.div>
-
-          {/* Cavalos */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-lg p-6 text-white"
-          >
-            <p className="text-sm opacity-90">Cavalos no Marketplace</p>
-            <p className="text-4xl font-bold mt-2">{stats.totalCavalos}</p>
-            <p className="text-sm mt-2">
-              {stats.activeCavalos} ativos | {stats.soldCavalos} vendidos
-            </p>
-          </motion.div>
-
-          {/* Eventos */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white"
-          >
-            <p className="text-sm opacity-90">Eventos</p>
-            <p className="text-4xl font-bold mt-2">{stats.totalEventos}</p>
-            <p className="text-sm mt-2">
-              {stats.futureEventos} futuros | {stats.featuredEventos} destaque
-            </p>
-          </motion.div>
-
-          {/* Leads */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white"
-          >
-            <p className="text-sm opacity-90">Leads (Ebook Grátis)</p>
-            <p className="text-4xl font-bold mt-2">{stats.totalLeads}</p>
-            <p className="text-sm mt-2">
-              {stats.convertedLeads} convertidos ({stats.conversionRate}%)
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Segunda linha de stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Reviews */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="bg-white rounded-lg shadow-lg p-6"
-          >
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Reviews</h3>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Reviews Pendentes</span>
-                  <span className={`text-2xl font-bold ${stats.pendingReviews > 0 ? "text-amber-600" : "text-green-600"}`}>
-                    {stats.pendingReviews}
-                  </span>
-                </div>
-              </div>
-              <div className="pt-2 border-t">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Reviews Aprovados</span>
-                  <span className="font-semibold">{stats.approvedReviews}</span>
-                </div>
-                <div className="flex justify-between text-sm mt-1">
-                  <span className="text-gray-600">Total Reviews</span>
-                  <span className="font-semibold">{stats.totalReviews}</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Views Stats */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Visualizações
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center p-4 bg-amber-50 rounded-lg">
-              <p className="text-3xl font-bold text-amber-600">{formatNumber(stats.cavalosViews)}</p>
-              <p className="text-gray-600 mt-1">Views Cavalos</p>
-            </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <p className="text-3xl font-bold text-purple-600">{formatNumber(stats.eventosViews)}</p>
-              <p className="text-gray-600 mt-1">Views Eventos</p>
-            </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <p className="text-3xl font-bold text-blue-600">
-                {formatNumber(stats.cavalosViews + stats.eventosViews)}
-              </p>
-              <p className="text-gray-600 mt-1">Total Views</p>
-            </div>
+        {error && (
+          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+            <p className="text-yellow-500">{error}</p>
           </div>
-        </div>
+        )}
 
-        {/* Quick Actions */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Acoes Rapidas
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {/* SECÇÃO FINANCEIRA */}
+        {financial && (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">💰 Financeiro</h2>
+              <Link
+                href="/admin/financeiro"
+                className="text-[#C5A059] hover:text-[#d4b469] text-sm font-medium transition-colors"
+              >
+                Ver Dashboard Completo →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              {/* Receita Total */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-[#C5A059]/30 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-400">Receita Total</h3>
+                  <FiDollarSign className="text-[#C5A059]" size={20} />
+                </div>
+                <p className="text-3xl font-bold text-white">
+                  {formatCurrency(financial.totalRevenue)}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">Desde o início</p>
+              </div>
+
+              {/* Receita Este Mês */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-green-500/30 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-400">Este Mês</h3>
+                  <FiTrendingUp className="text-green-500" size={20} />
+                </div>
+                <p className="text-3xl font-bold text-white">
+                  {formatCurrency(financial.thisMonthRevenue)}
+                </p>
+                <p className={`text-xs mt-1 ${
+                  financial.growthPercentage >= 0 ? "text-green-500" : "text-red-500"
+                }`}>
+                  {financial.growthPercentage >= 0 ? "+" : ""}
+                  {financial.growthPercentage.toFixed(1)}% vs mês passado
+                </p>
+              </div>
+
+              {/* MRR */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-[#C5A059]/30 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-400">MRR</h3>
+                  <FiRepeat className="text-[#C5A059]" size={20} />
+                </div>
+                <p className="text-3xl font-bold text-white">
+                  {formatCurrency(financial.mrr)}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">Receita recorrente</p>
+              </div>
+
+              {/* Transações */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-[#C5A059]/30 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-400">Transações</h3>
+                  <FiShoppingCart className="text-[#C5A059]" size={20} />
+                </div>
+                <p className="text-3xl font-bold text-white">
+                  {financial.totalTransactions}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Ticket médio: {formatCurrency(financial.averageTicket)}
+                </p>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* SECÇÃO MENSAGENS */}
+        {messages && (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">📨 Mensagens & Contactos</h2>
+              <Link
+                href="/admin/mensagens"
+                className="text-[#C5A059] hover:text-[#d4b469] text-sm font-medium transition-colors"
+              >
+                Ver Inbox Completo →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+              {/* Stats de Mensagens */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <FiMail className="text-[#C5A059]" size={24} />
+                  <h3 className="text-lg font-semibold text-white">Status das Mensagens</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Novas</span>
+                    <span className="text-2xl font-bold text-blue-500">{messages.novo}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Lidas</span>
+                    <span className="text-xl font-semibold text-yellow-500">{messages.lido}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Respondidas</span>
+                    <span className="text-xl font-semibold text-green-500">{messages.respondido}</span>
+                  </div>
+                  <div className="pt-3 border-t border-white/10">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-400 font-medium">Total</span>
+                      <span className="text-xl font-bold text-white">{messages.total}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mensagens Recentes */}
+              <div className="lg:col-span-2 bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">Mensagens Recentes</h3>
+                <div className="space-y-3">
+                  {recentMessages.length > 0 ? (
+                    recentMessages.map((msg) => (
+                      <Link
+                        key={msg.id}
+                        href={`/admin/mensagens?id=${msg.id}`}
+                        className="block p-3 bg-white/5 hover:bg-white/10 border border-white/5 rounded-lg transition-colors"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="font-medium text-white">{msg.name}</p>
+                              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(msg.status)}`}>
+                                {msg.status}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-400">{msg.email}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {getFormTypeLabel(msg.form_type)} • {new Date(msg.created_at).toLocaleDateString("pt-PT")}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <p className="text-center text-gray-500 py-8">Nenhuma mensagem recente</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* SECÇÃO ANALYTICS */}
+        {stats && (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">📊 Analytics & Performance</h2>
+              <Link
+                href="/admin/analytics"
+                className="text-[#C5A059] hover:text-[#d4b469] text-sm font-medium transition-colors"
+              >
+                Ver Analytics Completo →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              {/* Views Totais */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-blue-500/30 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-400">Total Views</h3>
+                  <FiEye className="text-blue-500" size={20} />
+                </div>
+                <p className="text-3xl font-bold text-white">
+                  {formatNumber(stats.cavalosViews + stats.eventosViews)}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {formatNumber(stats.cavalosViews)} cavalos • {formatNumber(stats.eventosViews)} eventos
+                </p>
+              </div>
+
+              {/* Leads */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-green-500/30 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-400">Leads (Ebook)</h3>
+                  <FiUsers className="text-green-500" size={20} />
+                </div>
+                <p className="text-3xl font-bold text-white">{stats.totalLeads}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {stats.conversionRate}% taxa conversão
+                </p>
+              </div>
+
+              {/* Reviews */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-yellow-500/30 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-400">Reviews</h3>
+                  <FiStar className="text-yellow-500" size={20} />
+                </div>
+                <p className="text-3xl font-bold text-white">{stats.totalReviews}</p>
+                <p className="text-xs text-yellow-500 mt-1">
+                  {stats.pendingReviews} pendentes aprovação
+                </p>
+              </div>
+
+              {/* Eventos */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-purple-500/30 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-400">Eventos</h3>
+                  <FiCalendar className="text-purple-500" size={20} />
+                </div>
+                <p className="text-3xl font-bold text-white">{stats.totalEventos}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {stats.futureEventos} futuros
+                </p>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* GESTÃO DE CONTEÚDO */}
+        {stats && (
+          <>
+            <h2 className="text-2xl font-bold text-white mb-6">🎯 Gestão de Conteúdo</h2>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+              <Link
+                href="/admin/cavalos"
+                className="bg-gradient-to-br from-orange-500/10 to-orange-600/10 border border-orange-500/20 hover:border-orange-500/40 rounded-lg p-4 text-center transition-all hover:scale-105"
+              >
+                <p className="text-3xl mb-2">🐴</p>
+                <p className="font-semibold text-white">Marketplace</p>
+                <p className="text-sm text-gray-400">{stats.totalCavalos} cavalos</p>
+              </Link>
+
+              <Link
+                href="/admin/eventos"
+                className="bg-gradient-to-br from-pink-500/10 to-pink-600/10 border border-pink-500/20 hover:border-pink-500/40 rounded-lg p-4 text-center transition-all hover:scale-105"
+              >
+                <p className="text-3xl mb-2">📅</p>
+                <p className="font-semibold text-white">Eventos</p>
+                <p className="text-sm text-gray-400">{stats.totalEventos} eventos</p>
+              </Link>
+
+              <Link
+                href="/directorio"
+                className="bg-gradient-to-br from-teal-500/10 to-teal-600/10 border border-teal-500/20 hover:border-teal-500/40 rounded-lg p-4 text-center transition-all hover:scale-105"
+              >
+                <p className="text-3xl mb-2">🏠</p>
+                <p className="font-semibold text-white">Coudelarias</p>
+                <p className="text-sm text-gray-400">{stats.totalCoudelarias} registadas</p>
+              </Link>
+
+              <Link
+                href="/admin/reviews"
+                className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border border-yellow-500/20 hover:border-yellow-500/40 rounded-lg p-4 text-center transition-all hover:scale-105"
+              >
+                <p className="text-3xl mb-2">⭐</p>
+                <p className="font-semibold text-white">Reviews</p>
+                <p className="text-sm text-gray-400">{stats.pendingReviews} pendentes</p>
+              </Link>
+
+              <Link
+                href="/admin/instagram"
+                className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/20 hover:border-purple-500/40 rounded-lg p-4 text-center transition-all hover:scale-105"
+              >
+                <p className="text-3xl mb-2">📸</p>
+                <p className="font-semibold text-white">Instagram</p>
+                <p className="text-sm text-gray-400">Uploads</p>
+              </Link>
+
+              <Link
+                href="/linhagens"
+                className="bg-gradient-to-br from-indigo-500/10 to-indigo-600/10 border border-indigo-500/20 hover:border-indigo-500/40 rounded-lg p-4 text-center transition-all hover:scale-105"
+              >
+                <p className="text-3xl mb-2">🧬</p>
+                <p className="font-semibold text-white">Linhagens</p>
+                <p className="text-sm text-gray-400">Genealogia</p>
+              </Link>
+            </div>
+          </>
+        )}
+
+        {/* DASHBOARDS ESPECIALIZADOS */}
+        <div className="bg-gradient-to-br from-[#C5A059]/10 to-[#C5A059]/5 border border-[#C5A059]/20 rounded-lg p-6">
+          <h2 className="text-2xl font-bold text-white mb-4">🚀 Dashboards Especializados</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
-              href="/admin/reviews"
-              className="bg-yellow-100 hover:bg-yellow-200 rounded-lg p-4 text-center transition"
+              href="/admin/financeiro"
+              className="bg-[#0A0A0A] border border-white/10 hover:border-[#C5A059]/50 rounded-lg p-6 transition-all hover:scale-105"
             >
-              <p className="text-3xl mb-2">⭐</p>
-              <p className="font-semibold text-gray-900">Reviews</p>
-              <p className="text-sm text-gray-600">{stats.pendingReviews} pendentes</p>
+              <div className="flex items-center gap-3 mb-3">
+                <FiDollarSign className="text-[#C5A059]" size={28} />
+                <h3 className="text-lg font-bold text-white">Dashboard Financeiro</h3>
+              </div>
+              <p className="text-sm text-gray-400">
+                Receitas, MRR, gráficos, transações e exportação CSV
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/mensagens"
+              className="bg-[#0A0A0A] border border-white/10 hover:border-blue-500/50 rounded-lg p-6 transition-all hover:scale-105"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <FiMail className="text-blue-500" size={28} />
+                <h3 className="text-lg font-bold text-white">Inbox de Mensagens</h3>
+              </div>
+              <p className="text-sm text-gray-400">
+                Gestão centralizada de todos os contactos e formulários
+              </p>
             </Link>
 
             <Link
               href="/admin/analytics"
-              className="bg-green-100 hover:bg-green-200 rounded-lg p-4 text-center transition"
+              className="bg-[#0A0A0A] border border-white/10 hover:border-green-500/50 rounded-lg p-6 transition-all hover:scale-105"
             >
-              <p className="text-3xl mb-2">📊</p>
-              <p className="font-semibold text-gray-900">Analytics</p>
-              <p className="text-sm text-gray-600">Ver relatorios</p>
-            </Link>
-          </div>
-        </div>
-
-        {/* Content Management */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Gestao de Conteudo
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link
-              href="/admin/cavalos"
-              className="bg-orange-100 hover:bg-orange-200 rounded-lg p-4 text-center transition"
-            >
-              <p className="text-3xl mb-2">🐴</p>
-              <p className="font-semibold text-gray-900">Marketplace</p>
-              <p className="text-sm text-gray-600">{stats.totalCavalos} cavalos</p>
-            </Link>
-
-            <Link
-              href="/admin/eventos"
-              className="bg-pink-100 hover:bg-pink-200 rounded-lg p-4 text-center transition"
-            >
-              <p className="text-3xl mb-2">📅</p>
-              <p className="font-semibold text-gray-900">Eventos</p>
-              <p className="text-sm text-gray-600">{stats.totalEventos} eventos</p>
-            </Link>
-
-            <Link
-              href="/directorio"
-              className="bg-teal-100 hover:bg-teal-200 rounded-lg p-4 text-center transition"
-            >
-              <p className="text-3xl mb-2">🏠</p>
-              <p className="font-semibold text-gray-900">Coudelarias</p>
-              <p className="text-sm text-gray-600">{stats.totalCoudelarias} registadas</p>
-            </Link>
-
-            <Link
-              href="/linhagens"
-              className="bg-indigo-100 hover:bg-indigo-200 rounded-lg p-4 text-center transition"
-            >
-              <p className="text-3xl mb-2">🧬</p>
-              <p className="font-semibold text-gray-900">Linhagens</p>
-              <p className="text-sm text-gray-600">Genealogia</p>
-            </Link>
-          </div>
-        </div>
-
-        {/* System Status */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Status do Sistema
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <div>
-                <p className="font-semibold text-gray-900">Supabase</p>
-                <p className="text-sm text-gray-500">Operacional</p>
+              <div className="flex items-center gap-3 mb-3">
+                <FiBarChart2 className="text-green-500" size={28} />
+                <h3 className="text-lg font-bold text-white">Analytics Completo</h3>
               </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <div>
-                <p className="font-semibold text-gray-900">Resend</p>
-                <p className="text-sm text-gray-500">Operacional</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <div>
-                <p className="font-semibold text-gray-900">Shopify</p>
-                <p className="text-sm text-gray-500">Operacional</p>
-              </div>
-            </div>
+              <p className="text-sm text-gray-400">
+                Tráfego, conversões, performance e análise de leads
+              </p>
+            </Link>
           </div>
         </div>
       </div>

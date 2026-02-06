@@ -1,0 +1,117 @@
+import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
+import { verifySession } from "@/lib/auth";
+
+export async function GET(req: NextRequest) {
+  try {
+    // Verificar autenticação
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const searchParams = req.nextUrl.searchParams;
+
+    // Parâmetros de filtro (mesmos da API de transactions)
+    const productType = searchParams.get("product_type");
+    const status = searchParams.get("status");
+    const startDate = searchParams.get("start_date");
+    const endDate = searchParams.get("end_date");
+    const search = searchParams.get("search");
+
+    // Construir query (sem paginação, todos os resultados)
+    let query = supabase
+      .from("payments")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    // Aplicar filtros
+    if (productType && productType !== "all") {
+      query = query.eq("product_type", productType);
+    }
+
+    if (status && status !== "all") {
+      query = query.eq("status", status);
+    }
+
+    if (startDate) {
+      query = query.gte("created_at", `${startDate}T00:00:00`);
+    }
+
+    if (endDate) {
+      query = query.lte("created_at", `${endDate}T23:59:59`);
+    }
+
+    if (search) {
+      query = query.or(
+        `email.ilike.%${search}%,description.ilike.%${search}%,stripe_payment_intent_id.ilike.%${search}%`
+      );
+    }
+
+    const { data: transactions, error } = await query;
+
+    if (error) throw error;
+
+    // Gerar CSV
+    const csvRows: string[] = [];
+
+    // Cabeçalho
+    const headers = [
+      "Data",
+      "Email",
+      "Tipo de Produto",
+      "Valor (€)",
+      "Moeda",
+      "Status",
+      "Descrição",
+      "Stripe Payment ID",
+      "Stripe Session ID",
+    ];
+    csvRows.push(headers.join(","));
+
+    // Dados
+    transactions?.forEach((transaction) => {
+      const productLabels: Record<string, string> = {
+        cavalo_anuncio: "Anúncio de Cavalo",
+        instagram_ad: "Instagram",
+        publicidade: "Publicidade",
+      };
+
+      const statusLabels: Record<string, string> = {
+        succeeded: "Sucesso",
+        pending: "Pendente",
+        failed: "Falhado",
+      };
+
+      const row = [
+        new Date(transaction.created_at).toLocaleString("pt-PT"),
+        transaction.email || "",
+        productLabels[transaction.product_type || ""] || "Outros",
+        (transaction.amount / 100).toFixed(2),
+        transaction.currency?.toUpperCase() || "EUR",
+        statusLabels[transaction.status] || transaction.status,
+        `"${(transaction.description || "").replace(/"/g, '""')}"`, // Escapar aspas
+        transaction.stripe_payment_intent_id || "",
+        transaction.stripe_session_id || "",
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const csvContent = csvRows.join("\n");
+
+    // Retornar CSV com headers apropriados
+    return new NextResponse(csvContent, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": `attachment; filename="transacoes_${new Date().toISOString().split("T")[0]}.csv"`,
+      },
+    });
+  } catch (error: any) {
+    console.error("CSV export error:", error);
+    return NextResponse.json(
+      { error: error.message || "Erro ao exportar CSV" },
+      { status: 500 }
+    );
+  }
+}
