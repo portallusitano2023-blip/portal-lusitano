@@ -29,6 +29,7 @@
     ]
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.3.2",
     "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.22.0",

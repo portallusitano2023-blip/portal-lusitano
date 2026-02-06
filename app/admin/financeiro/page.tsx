@@ -12,6 +12,7 @@ import {
   FiSearch,
   FiChevronLeft,
   FiChevronRight,
+  FiFileText,
 } from "react-icons/fi";
 
 interface OverviewData {
@@ -87,6 +88,11 @@ export default function AdminFinanceiroPage() {
   // Estado da paginação
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(10);
+
+  // Estado do relatório PDF
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 
   // Verificar autenticação
   useEffect(() => {
@@ -201,6 +207,35 @@ export default function AdminFinanceiroPage() {
     }
   };
 
+  // Gerar Relatório PDF
+  const generatePDFReport = async () => {
+    setIsGeneratingPDF(true);
+    try {
+      const params = new URLSearchParams({
+        month: selectedMonth.toString(),
+        year: selectedYear.toString(),
+      });
+
+      const res = await fetch(`/api/admin/reports/generate?${params}`);
+      if (!res.ok) throw new Error("Failed to generate PDF");
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `portal-lusitano-relatorio-${selectedYear}-${String(selectedMonth).padStart(2, "0")}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("PDF error:", error);
+      alert("Erro ao gerar relatório PDF");
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   // Mudar página
   const changePage = (newPage: number) => {
     setCurrentPage(newPage);
@@ -247,6 +282,95 @@ export default function AdminFinanceiroPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Relatórios PDF */}
+        <div className="bg-gradient-to-r from-[#C5A059]/10 to-[#C5A059]/5 border border-[#C5A059]/20 rounded-lg p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <FiFileText className="text-[#C5A059]" size={20} />
+                Relatórios Mensais em PDF
+              </h3>
+              <p className="text-sm text-gray-400 mt-1">
+                Descarregue relatórios profissionais com todas as métricas do mês
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-end gap-4">
+            {/* Selector de Mês */}
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+                Mês
+              </label>
+              <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                className="w-full px-4 py-2.5 bg-black/30 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#C5A059] transition-colors"
+              >
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </div>
+
+            {/* Selector de Ano */}
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+                Ano
+              </label>
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                className="w-full px-4 py-2.5 bg-black/30 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#C5A059] transition-colors"
+              >
+                {Array.from({ length: 5 }, (_, i) => {
+                  const year = new Date().getFullYear() - i;
+                  return (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            {/* Botão Gerar */}
+            <button
+              onClick={generatePDFReport}
+              disabled={isGeneratingPDF}
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-2.5 bg-[#C5A059] hover:bg-[#d4b469] text-black font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#C5A059]"
+            >
+              {isGeneratingPDF ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
+                  A gerar...
+                </>
+              ) : (
+                <>
+                  <FiDownload size={16} />
+                  Descarregar Relatório PDF
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Info adicional */}
+          <div className="mt-4 pt-4 border-t border-[#C5A059]/20">
+            <p className="text-xs text-gray-500">
+              📊 O relatório inclui: Resumo Executivo, Receitas por Produto, Top 5 Cavalos Mais Vistos, Análise de Leads e ROI por Canal de Marketing
+            </p>
+          </div>
+        </div>
+
         {/* Overview Cards */}
         {overviewData && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
