@@ -15,6 +15,7 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import Link from "next/link";
+import WhatsAppButton from "@/components/admin/WhatsAppButton";
 
 interface Lead {
   id: string;
@@ -423,6 +424,15 @@ export default function CRMPage() {
                           )}
                         </div>
                         <div className="flex gap-1">
+                          {lead.telefone && (
+                            <WhatsAppButton
+                              phone={lead.telefone}
+                              name={lead.name}
+                              preMessage={`Olá ${lead.name},\n\nRecebi o seu contacto através do Portal Lusitano.\n\n${lead.interests ? `Interesse: ${lead.interests}\n\n` : ''}Como posso ajudar?\n\nCumprimentos,\nPortal Lusitano`}
+                              variant="icon"
+                              className="p-1"
+                            />
+                          )}
                           <button
                             onClick={() => openModal(lead)}
                             className="p-1 hover:bg-white/10 rounded transition-colors"

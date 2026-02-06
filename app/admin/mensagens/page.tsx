@@ -21,6 +21,7 @@ import {
   Calendar,
   MessageSquare,
 } from "lucide-react";
+import WhatsAppButton from "@/components/admin/WhatsAppButton";
 
 interface Message {
   id: string;
@@ -544,8 +545,20 @@ export default function MensagensPage() {
                     className="flex items-center gap-2 bg-[#C5A059] hover:bg-[#B39049] text-black px-4 py-2 rounded-lg font-medium transition-colors"
                   >
                     <Send size={16} />
-                    Responder
+                    Responder Email
                   </button>
+
+                  {selectedMessage.telefone && (
+                    <WhatsAppButton
+                      phone={selectedMessage.telefone}
+                      name={selectedMessage.name}
+                      context={{
+                        type: selectedMessage.form_type,
+                        details: JSON.stringify(selectedMessage.form_data),
+                      }}
+                      variant="button"
+                    />
+                  )}
 
                   {selectedMessage.status !== "respondido" && (
                     <button
