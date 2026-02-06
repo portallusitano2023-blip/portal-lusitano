@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Instagram,
   Users,
@@ -105,23 +104,32 @@ export default function InstagramPage() {
     setIsSubmitting(true);
 
     try {
-      // Enviar para API (email)
-      const response = await fetch("/api/instagram-inquiry", {
+      // Criar checkout Stripe
+      const response = await fetch("/api/instagram/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...formData,
-          pacote: selectedPackage,
+          packageId: selectedPackage,
+          nome: formData.nome,
+          empresa: formData.empresa,
+          email: formData.email,
+          instagram: formData.instagram,
+          mensagem: formData.mensagem,
           preco: packages.find(p => p.id === selectedPackage)?.price,
         }),
       });
 
-      if (response.ok) {
-        setSubmitted(true);
+      const data = await response.json();
+
+      if (!data.url) {
+        throw new Error(data.error || "Erro ao criar checkout");
       }
-    } catch (error) {
-      console.error("Erro ao enviar:", error);
-    } finally {
+
+      // Redirecionar para Stripe
+      window.location.href = data.url;
+    } catch (error: any) {
+      console.error("Erro ao processar:", error);
+      alert(`Erro: ${error.message}`);
       setIsSubmitting(false);
     }
   };
@@ -130,10 +138,8 @@ export default function InstagramPage() {
     <main className="min-h-screen bg-[#050505] pt-32 pb-20">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
+          className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
         >
           <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Instagram className="text-white" size={40} />
@@ -147,14 +153,12 @@ export default function InstagramPage() {
           <p className="text-zinc-400 max-w-2xl mx-auto">
             Alcance milhares de entusiastas do mundo equestre através da nossa comunidade no Instagram
           </p>
-        </motion.div>
+        </div>
 
         {/* Stats */}
-        <motion.div
-          className="grid grid-cols-3 gap-4 mb-16 max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+        <div
+          className="grid grid-cols-3 gap-4 mb-16 max-w-2xl mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.1s" }}
         >
           {stats.map((stat, index) => (
             <div key={index} className="text-center p-6 bg-zinc-900/50 border border-white/5">
@@ -163,14 +167,12 @@ export default function InstagramPage() {
               <div className="text-sm text-zinc-500">{stat.label}</div>
             </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Instagram Preview */}
-        <motion.div
-          className="mb-16 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+        <div
+          className="mb-16 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.2s" }}
         >
           <a
             href="https://instagram.com/portal_lusitano"
@@ -182,14 +184,12 @@ export default function InstagramPage() {
             @portal_lusitano
             <ArrowRight size={16} />
           </a>
-        </motion.div>
+        </div>
 
         {/* Packages */}
-        <motion.div
-          className="mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+        <div
+          className="mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.3s" }}
         >
           <h2 className="text-2xl font-serif text-white text-center mb-8">
             Escolha o Pacote
@@ -227,15 +227,13 @@ export default function InstagramPage() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Contact Form */}
         {!submitted ? (
-          <motion.div
-            className="max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+          <div
+            className="max-w-2xl mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.4s" }}
           >
             <div className="bg-zinc-900/50 border border-white/10 p-8">
               <h2 className="text-2xl font-serif text-white mb-6 text-center">
@@ -346,27 +344,25 @@ export default function InstagramPage() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="animate-spin" size={18} />
-                      A enviar...
+                      A processar...
                     </>
                   ) : (
                     <>
                       <Send size={18} />
-                      Enviar Pedido
+                      Continuar para Pagamento
                     </>
                   )}
                 </button>
 
                 <p className="text-center text-zinc-500 text-sm">
-                  Resposta em menos de 24 horas
+                  Pagamento seguro via Stripe
                 </p>
               </form>
             </div>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            className="max-w-xl mx-auto text-center"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+          <div
+            className="max-w-xl mx-auto text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <Check className="text-green-500" size={40} />
@@ -380,15 +376,13 @@ export default function InstagramPage() {
             <p className="text-[#C5A059]">
               Pacote selecionado: {packages.find(p => p.id === selectedPackage)?.name} - €{packages.find(p => p.id === selectedPackage)?.price}
             </p>
-          </motion.div>
+          </div>
         )}
 
         {/* Why Us */}
-        <motion.div
-          className="mt-20 max-w-3xl mx-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+        <div
+          className="mt-20 max-w-3xl mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.5s" }}
         >
           <h2 className="text-2xl font-serif text-white text-center mb-8">
             Porquê Promover Connosco?
@@ -422,7 +416,7 @@ export default function InstagramPage() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </main>
   );

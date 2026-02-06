@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Home, ArrowLeft, Search } from "lucide-react";
 
 export default function NotFound() {
@@ -15,53 +14,42 @@ export default function NotFound() {
 
       <div className="relative z-10 text-center max-w-2xl">
         {/* Numero 404 */}
-        <motion.div
-          className="relative mb-8"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
+        <div
+          className="relative mb-8 opacity-0 animate-[scaleIn_0.8s_ease-out_forwards]"
         >
           <span className="text-[180px] md:text-[250px] font-serif text-transparent bg-clip-text bg-gradient-to-b from-zinc-800 to-transparent leading-none select-none">
             404
           </span>
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
+          <div
+            className="absolute inset-0 flex items-center justify-center opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
+            style={{ animationDelay: "0.3s" }}
           >
             <span className="text-6xl md:text-8xl font-serif text-[#C5A059]">404</span>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Titulo */}
-        <motion.h1
-          className="text-3xl md:text-4xl font-serif text-white mb-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
+        <h1
+          className="text-3xl md:text-4xl font-serif text-white mb-4 opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
+          style={{ animationDelay: "0.4s" }}
         >
           Pagina Nao Encontrada
-        </motion.h1>
+        </h1>
 
         {/* Descricao */}
-        <motion.p
-          className="text-zinc-500 mb-12 font-serif italic"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
+        <p
+          className="text-zinc-500 mb-12 font-serif italic opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
+          style={{ animationDelay: "0.5s" }}
         >
           O caminho que procura perdeu-se nas pastagens lusitanas.
           <br />
           Permita-nos guia-lo de volta.
-        </motion.p>
+        </p>
 
         {/* Botoes */}
-        <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
+        <div
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
+          style={{ animationDelay: "0.6s" }}
         >
           <Link
             href="/"
@@ -78,31 +66,27 @@ export default function NotFound() {
             <Search size={16} />
             Explorar Loja
           </Link>
-        </motion.div>
+        </div>
 
         {/* Link de voltar */}
-        <motion.button
+        <button
           onClick={() => window.history.back()}
-          className="mt-12 inline-flex items-center gap-2 text-zinc-600 hover:text-[#C5A059] transition-colors text-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
+          className="mt-12 inline-flex items-center gap-2 text-zinc-600 hover:text-[#C5A059] transition-colors text-sm opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+          style={{ animationDelay: "0.8s" }}
         >
           <ArrowLeft size={14} />
           Voltar a pagina anterior
-        </motion.button>
+        </button>
 
         {/* Decoracao inferior */}
-        <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.3 }}
-          transition={{ delay: 1 }}
+        <div
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+          style={{ animationDelay: "1s" }}
         >
           <div className="w-12 h-[1px] bg-[#C5A059]" />
           <span className="text-[8px] uppercase tracking-[0.3em] text-zinc-600">Portal Lusitano</span>
           <div className="w-12 h-[1px] bg-[#C5A059]" />
-        </motion.div>
+        </div>
       </div>
     </main>
   );

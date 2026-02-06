@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, Suspense } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+
 import {
   ChevronRight,
   ChevronLeft,
@@ -499,8 +499,8 @@ function RadarChart({ data }: RadarChartProps) {
       <svg viewBox="0 0 300 300" className="w-full h-auto">
         {[0.25, 0.5, 0.75, 1].map(l => <polygon key={l} points={labels.map((_, i) => { const a = (Math.PI * 2 * i) / labels.length - Math.PI / 2; return `${cX + l * mR * Math.cos(a)},${cY + l * mR * Math.sin(a)}`; }).join(' ')} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />)}
         {labels.map((_, i) => { const a = (Math.PI * 2 * i) / labels.length - Math.PI / 2; return <line key={i} x1={cX} y1={cY} x2={cX + mR * Math.cos(a)} y2={cY + mR * Math.sin(a)} stroke="rgba(255,255,255,0.1)" strokeWidth="1" />; })}
-        <motion.path d={path} fill="rgba(197, 160, 89, 0.2)" stroke="#C5A059" strokeWidth="2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} />
-        {pts.map((p, i) => <motion.circle key={i} cx={p.x} cy={p.y} r="5" fill="#C5A059" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5 + i * 0.1, duration: 0.3 }} />)}
+        <path d={path} fill="rgba(197, 160, 89, 0.2)" stroke="#C5A059" strokeWidth="2" style={{ opacity: 0, animation: "fadeSlideIn 0.8s ease-out forwards" }} />
+        {pts.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="5" fill="#C5A059" style={{ opacity: 0, animation: "scaleIn 0.3s ease-out forwards", animationDelay: `${0.5 + i * 0.1}s`, transformOrigin: "center" }} />)}
         {pts.map((p, i) => <text key={i} x={p.lX} y={p.lY} textAnchor="middle" dominantBaseline="middle" className="fill-zinc-400 text-[10px]">{p.label}</text>)}
       </svg>
     </div>
@@ -767,16 +767,16 @@ function AnalisePerfilContent() {
 
   return (
     <main className="min-h-screen bg-[#050505]">
-      <AnimatePresence mode="wait">
+
         {showIntro ? (
-          <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-screen">
+          <div key="intro" className="min-h-screen animate-[fadeSlideIn_0.4s_ease-out_forwards]">
             <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0">
                 <Image src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1920&auto=format&fit=crop" alt="Cavalo Lusitano" fill className="object-cover opacity-40" priority />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/70 to-[#050505]/40" />
               </div>
               <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                <div className="opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]">
                   <span className="inline-flex items-center gap-2 text-[#C5A059] text-xs uppercase tracking-[0.3em] mb-6"><ClipboardCheck size={14} />Analise Personalizada<ClipboardCheck size={14} /></span>
                   <h1 className="text-5xl md:text-7xl font-serif text-white mb-6 leading-tight">Analise de Perfil<span className="block text-[#C5A059] italic">do Cavaleiro</span></h1>
                   <p className="text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-8 leading-relaxed">Uma analise desenvolvida por especialistas para identificar o perfil de cavalo Puro Sangue Lusitano que melhor se adequa aos seus objectivos.</p>
@@ -785,9 +785,9 @@ function AnalisePerfilContent() {
                     <div className="flex items-center gap-2"><BookOpen size={16} className="text-[#C5A059]" /><span>15 perguntas</span></div>
                     <div className="flex items-center gap-2"><Target size={16} className="text-[#C5A059]" /><span>Resultado detalhado</span></div>
                   </div>
-                  <motion.button onClick={startQuiz} className="group inline-flex items-center gap-3 bg-[#C5A059] text-black px-10 py-5 text-sm uppercase tracking-[0.2em] font-bold hover:bg-white transition-all" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>Iniciar Analise<ChevronRight className="group-hover:translate-x-1 transition-transform" /></motion.button>
-                </motion.div>
-                <motion.div className="absolute bottom-10 left-1/2 -translate-x-1/2" animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}><ChevronDown className="text-white/30" size={32} /></motion.div>
+                  <button onClick={startQuiz} className="group inline-flex items-center gap-3 bg-[#C5A059] text-black px-10 py-5 text-sm uppercase tracking-[0.2em] font-bold hover:bg-white transition-all hover:scale-[1.02] active:scale-[0.98] transition-transform">Iniciar Analise<ChevronRight className="group-hover:translate-x-1 transition-transform" /></button>
+                </div>
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-[gentle-bounce_2s_ease-in-out_infinite]"><ChevronDown className="text-white/30" size={32} /></div>
               </div>
             </section>
             <section className="py-20 border-t border-white/5">
@@ -795,18 +795,18 @@ function AnalisePerfilContent() {
                 <h2 className="text-center text-2xl font-serif text-white mb-12">O que vai descobrir</h2>
                 <div className="grid md:grid-cols-4 gap-8">
                   {[{ icon: Target, title: "Perfil Equestre", desc: "Competidor, Tradicional, Criador ou Lazer" }, { icon: Feather, title: "Cavalo Ideal", desc: "Idade, altura, treino e temperamento" }, { icon: DollarSign, title: "Custos Estimados", desc: "Investimento anual por perfil" }, { icon: Trophy, title: "Referencias", desc: "Cavalos famosos do seu perfil" }].map((f, i) => (
-                    <motion.div key={f.title} className="text-center" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+                    <div key={f.title} className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.1}s` }}>
                       <div className="w-14 h-14 mx-auto bg-[#C5A059]/10 rounded-full flex items-center justify-center mb-4"><f.icon className="text-[#C5A059]" size={24} /></div>
                       <h3 className="text-white font-medium mb-2">{f.title}</h3>
                       <p className="text-sm text-zinc-500">{f.desc}</p>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>
             </section>
-          </motion.div>
+          </div>
         ) : !showResult ? (
-          <motion.div key="quiz" ref={quizRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-screen pt-24 pb-20">
+          <div key="quiz" ref={quizRef} className="min-h-screen pt-24 pb-20 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
             <div className="max-w-3xl mx-auto px-6">
               <div className="text-center mb-8">
                 <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-2">{questions[currentQuestion].category}</span>
@@ -814,11 +814,11 @@ function AnalisePerfilContent() {
               </div>
               <div className="mb-10">
                 <div className="flex justify-between text-sm text-zinc-500 mb-3"><span>Pergunta {currentQuestion + 1} de {questions.length}</span><span>{Math.round(progress)}%</span></div>
-                <div className="h-1.5 bg-zinc-800/50 rounded-full overflow-hidden"><motion.div className="h-full bg-gradient-to-r from-[#C5A059] to-[#E8D5A3]" initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.5 }} /></div>
+                <div className="h-1.5 bg-zinc-800/50 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] transition-all duration-500" style={{ width: `${progress}%` }} /></div>
                 <div className="flex justify-between mt-3">{questions.map((_, i) => <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < currentQuestion ? "bg-[#C5A059]" : i === currentQuestion ? "bg-[#C5A059]/50 ring-2 ring-[#C5A059]/30" : "bg-zinc-800"}`} />)}</div>
               </div>
-              <AnimatePresence mode="wait">
-                <motion.div key={currentQuestion} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+
+                <div key={currentQuestion} className="animate-[fadeSlideIn_0.3s_ease-out_forwards]">
                   <div className="bg-gradient-to-b from-zinc-900/80 to-zinc-900/40 border border-white/10 p-8 md:p-10 mb-6">
                     <div className="flex items-start gap-4 mb-6">
                       <div className="w-12 h-12 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0">{questions[currentQuestion].icon}</div>
@@ -826,12 +826,12 @@ function AnalisePerfilContent() {
                     </div>
                     <div className="space-y-3">
                       {questions[currentQuestion].options.map((opt, idx) => (
-                        <motion.button key={opt.value} onClick={() => handleAnswer(opt)} className="w-full text-left p-5 bg-zinc-800/30 border border-white/5 hover:border-[#C5A059]/50 hover:bg-[#C5A059]/5 transition-all group" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }} whileHover={{ x: 4 }}>
+                        <button key={opt.value} onClick={() => handleAnswer(opt)} className="w-full text-left p-5 bg-zinc-800/30 border border-white/5 hover:border-[#C5A059]/50 hover:bg-[#C5A059]/5 transition-all group hover:translate-x-1 transition-transform opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${idx * 0.08}s` }}>
                           <div className="flex items-center justify-between">
                             <div><span className="text-white group-hover:text-[#C5A059] transition-colors font-medium">{opt.text}</span>{opt.description && <p className="text-sm text-zinc-500 mt-1">{opt.description}</p>}</div>
                             <ChevronRight className="text-zinc-600 group-hover:text-[#C5A059] group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
                           </div>
-                        </motion.button>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -839,17 +839,17 @@ function AnalisePerfilContent() {
                     {currentQuestion > 0 ? <button onClick={goBack} className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={18} />Anterior</button> : <div />}
                     <button onClick={resetQuiz} className="text-zinc-600 hover:text-zinc-400 text-sm">Reiniciar</button>
                   </div>
-                </motion.div>
-              </AnimatePresence>
+                </div>
+
             </div>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen">
+          <div key="result" className="min-h-screen animate-[fadeSlideIn_0.4s_ease-out_forwards]">
             {result && (
               <>
                 <section className={`relative pt-32 pb-16 bg-gradient-to-b ${result.color} to-transparent`}>
                   <div className="max-w-4xl mx-auto px-6 text-center">
-                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+                    <div className="opacity-0 animate-[scaleIn_0.5s_ease-out_forwards]">
                       <div className="w-24 h-24 mx-auto bg-zinc-900/50 border border-[#C5A059]/30 rounded-full flex items-center justify-center mb-6">{result.icon}</div>
                       <span className="text-[#C5A059] text-xs uppercase tracking-[0.3em] block mb-3">O seu perfil equestre e</span>
                       <h1 className="text-4xl md:text-5xl font-serif text-white mb-2">{result.title}</h1>
@@ -879,7 +879,7 @@ function AnalisePerfilContent() {
                           </div>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   </div>
                 </section>
                 <section className="py-12 border-b border-white/5">
@@ -890,10 +890,10 @@ function AnalisePerfilContent() {
                         <h3 className="text-sm uppercase tracking-wider text-zinc-500 mb-6">Distribuicao do Perfil</h3>
                         <div className="space-y-4">
                           {scorePercentages.map((item, i) => (
-                            <motion.div key={item.profile} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
+                            <div key={item.profile} className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.1}s` }}>
                               <div className="flex justify-between text-sm mb-1"><span className={i === 0 ? "text-[#C5A059] font-medium" : "text-zinc-400"}>{item.label}</span><span className={i === 0 ? "text-[#C5A059] font-bold" : "text-zinc-500"}>{item.percentage}%</span></div>
-                              <div className="h-2 bg-zinc-800 rounded-full overflow-hidden"><motion.div className={`h-full rounded-full ${i === 0 ? "bg-[#C5A059]" : "bg-zinc-600"}`} initial={{ width: 0 }} animate={{ width: `${item.percentage}%` }} transition={{ duration: 0.8, delay: i * 0.1 }} /></div>
-                            </motion.div>
+                              <div className="h-2 bg-zinc-800 rounded-full overflow-hidden"><div className={`h-full rounded-full ${i === 0 ? "bg-[#C5A059]" : "bg-zinc-600"} transition-all duration-500`} style={{ width: `${item.percentage}%` }} /></div>
+                            </div>
                           ))}
                         </div>
                         {scorePercentages[1]?.percentage > 20 && <p className="text-sm text-zinc-500 mt-4"><span className="text-[#C5A059]">Nota:</span> Perfil secundario: <span className="text-white">{scorePercentages[1].label}</span> ({scorePercentages[1].percentage}%)</p>}
@@ -912,28 +912,28 @@ function AnalisePerfilContent() {
                 </section>
                 <section className="py-12">
                   <div className="max-w-5xl mx-auto px-6">
-                    <AnimatePresence mode="wait">
+
                       {selectedTab === 'perfil' && (
-                        <motion.div key="perfil" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
-                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Star className="text-[#C5A059]" size={20} />Caracteristicas que Valoriza</h3><div className="grid md:grid-cols-2 gap-3">{result.characteristics.map((c, i) => <motion.div key={c} className="flex items-center gap-3 text-zinc-300" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}><div className="w-6 h-6 bg-[#C5A059]/10 rounded-full flex items-center justify-center"><Check className="text-[#C5A059]" size={14} /></div>{c}</motion.div>)}</div></div>
+                        <div key="perfil" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
+                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Star className="text-[#C5A059]" size={20} />Caracteristicas que Valoriza</h3><div className="grid md:grid-cols-2 gap-3">{result.characteristics.map((c, i) => <div key={c} className="flex items-center gap-3 text-zinc-300 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.05}s` }}><div className="w-6 h-6 bg-[#C5A059]/10 rounded-full flex items-center justify-center"><Check className="text-[#C5A059]" size={14} /></div>{c}</div>)}</div></div>
                           <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Trophy className="text-[#C5A059]" size={20} />Disciplinas Recomendadas</h3><div className="flex flex-wrap gap-2">{result.disciplinas.map(d => <span key={d} className="bg-[#C5A059]/10 text-[#C5A059] px-4 py-2 text-sm">{d}</span>)}</div></div>
-                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Award className="text-[#C5A059]" size={20} />Cavalos de Referencia</h3><div className="grid md:grid-cols-2 gap-4">{result.famousHorses.map((h, i) => <motion.div key={h.name} className="flex items-start gap-3 p-4 bg-zinc-800/30 border border-white/5" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}><div className="w-10 h-10 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0"><Medal className="text-[#C5A059]" size={18} /></div><div><h4 className="text-white font-medium">{h.name}</h4><p className="text-sm text-zinc-500">{h.achievement}</p></div></motion.div>)}</div></div>
-                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><TreeDeciduous className="text-[#C5A059]" size={20} />Linhagens Sugeridas</h3><div className="space-y-4">{result.linhagens.map((l, i) => <motion.div key={l.name} className="flex items-start gap-4 p-4 bg-zinc-800/30 border border-white/5" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}><div className="w-10 h-10 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0"><Crown className="text-[#C5A059]" size={18} /></div><div><h4 className="text-white font-medium">{l.name}</h4><p className="text-sm text-zinc-500">{l.reason}</p></div></motion.div>)}</div></div>
-                        </motion.div>
+                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Award className="text-[#C5A059]" size={20} />Cavalos de Referencia</h3><div className="grid md:grid-cols-2 gap-4">{result.famousHorses.map((h, i) => <div key={h.name} className="flex items-start gap-3 p-4 bg-zinc-800/30 border border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.1}s` }}><div className="w-10 h-10 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0"><Medal className="text-[#C5A059]" size={18} /></div><div><h4 className="text-white font-medium">{h.name}</h4><p className="text-sm text-zinc-500">{h.achievement}</p></div></div>)}</div></div>
+                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><TreeDeciduous className="text-[#C5A059]" size={20} />Linhagens Sugeridas</h3><div className="space-y-4">{result.linhagens.map((l, i) => <div key={l.name} className="flex items-start gap-4 p-4 bg-zinc-800/30 border border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.1}s` }}><div className="w-10 h-10 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0"><Crown className="text-[#C5A059]" size={18} /></div><div><h4 className="text-white font-medium">{l.name}</h4><p className="text-sm text-zinc-500">{l.reason}</p></div></div>)}</div></div>
+                        </div>
                       )}
                       {selectedTab === 'cavalo' && (
-                        <motion.div key="cavalo" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
+                        <div key="cavalo" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
                           <div className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/20 p-8">
                             <h3 className="flex items-center gap-2 text-xl font-serif text-white mb-8"><Feather className="text-[#C5A059]" size={24} />O Seu Lusitano Ideal</h3>
                             <div className="grid md:grid-cols-2 gap-6">{[{ label: "Idade Ideal", value: result.idealHorse.age, icon: Clock }, { label: "Altura", value: result.idealHorse.height, icon: Activity }, { label: "Nivel de Treino", value: result.idealHorse.training, icon: TrendingUp }, { label: "Temperamento", value: result.idealHorse.temperament, icon: Heart }].map(it => <div key={it.label} className="bg-zinc-900/50 p-5 border border-white/5"><div className="flex items-center gap-2 text-[#C5A059] mb-2"><it.icon size={16} /><span className="text-xs uppercase tracking-wider">{it.label}</span></div><p className="text-white">{it.value}</p></div>)}</div>
                             <div className="mt-6 p-5 bg-[#C5A059]/10 border border-[#C5A059]/30"><div className="flex items-center gap-2 text-[#C5A059] mb-2"><DollarSign size={16} /><span className="text-xs uppercase tracking-wider">Faixa de Preco</span></div><p className="text-2xl font-serif text-white">{result.idealHorse.priceRange}</p><p className="text-sm text-zinc-500 mt-2">*Valores indicativos</p></div>
                           </div>
                           <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><MapPin className="text-[#C5A059]" size={20} />Regioes Recomendadas</h3><div className="flex flex-wrap gap-3">{result.recommendedRegions.map(r => <span key={r} className="bg-zinc-800 text-zinc-300 px-4 py-2 text-sm">{r}</span>)}</div></div>
-                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Zap className="text-[#C5A059]" size={20} />Dicas para a Aquisicao</h3><div className="space-y-3">{result.tips.map((t, i) => <motion.div key={i} className="flex items-start gap-3 text-zinc-300" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}><span className="text-[#C5A059] font-bold flex-shrink-0">{i + 1}.</span><span>{t}</span></motion.div>)}</div></div>
-                        </motion.div>
+                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Zap className="text-[#C5A059]" size={20} />Dicas para a Aquisicao</h3><div className="space-y-3">{result.tips.map((t, i) => <div key={i} className="flex items-start gap-3 text-zinc-300 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.05}s` }}><span className="text-[#C5A059] font-bold flex-shrink-0">{i + 1}.</span><span>{t}</span></div>)}</div></div>
+                        </div>
                       )}
                       {selectedTab === 'custos' && (
-                        <motion.div key="custos" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
+                        <div key="custos" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
                           <div className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/20 p-8">
                             <h3 className="flex items-center gap-2 text-xl font-serif text-white mb-6"><DollarSign className="text-[#C5A059]" size={24} />Custos Anuais Estimados</h3>
                             <div className="text-center mb-8"><p className="text-sm text-zinc-500 mb-2">Intervalo estimado por ano</p><p className="text-4xl font-serif text-white">{result.annualCosts.min.toLocaleString()} - {result.annualCosts.max.toLocaleString()} euros</p></div>
@@ -941,10 +941,10 @@ function AnalisePerfilContent() {
                             <p className="text-sm text-zinc-500 mt-6 text-center">*Valores aproximados para Portugal continental</p>
                           </div>
                           <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Activity className="text-[#C5A059]" size={20} />Comparacao entre Perfis</h3><div className="space-y-4">{Object.entries(results).map(([k, r]) => <div key={k} className="flex items-center gap-4"><div className={`w-32 text-sm ${k === result.profile ? 'text-[#C5A059] font-medium' : 'text-zinc-500'}`}>{r.title.split(' ')[0]}</div><div className="flex-1"><div className="h-3 bg-zinc-800 rounded-full overflow-hidden"><div className={`h-full rounded-full ${k === result.profile ? 'bg-[#C5A059]' : 'bg-zinc-600'}`} style={{ width: `${(r.annualCosts.max / 50000) * 100}%` }} /></div></div><div className={`w-48 text-right text-sm ${k === result.profile ? 'text-[#C5A059]' : 'text-zinc-500'}`}>{r.annualCosts.min.toLocaleString()} - {r.annualCosts.max.toLocaleString()}</div></div>)}</div></div>
-                        </motion.div>
+                        </div>
                       )}
                       {selectedTab === 'cronograma' && (
-                        <motion.div key="cronograma" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
+                        <div key="cronograma" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
                           {/* Timeline */}
                           <div className="bg-zinc-900/30 border border-white/5 p-8">
                             <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Calendar className="text-[#C5A059]" size={20} />Cronograma Recomendado</h3>
@@ -952,14 +952,14 @@ function AnalisePerfilContent() {
                               <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-[#C5A059]/20" />
                               <div className="space-y-6">
                                 {result.timeline.map((item, i) => (
-                                  <motion.div key={i} className="relative pl-12" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
+                                  <div key={i} className="relative pl-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.1}s` }}>
                                     <div className="absolute left-0 w-8 h-8 bg-[#C5A059] text-black rounded-full flex items-center justify-center text-xs font-bold">{i + 1}</div>
                                     <div className="bg-zinc-800/30 border border-white/5 p-4">
                                       <div className="text-[#C5A059] text-xs uppercase tracking-wider mb-1">{item.month}</div>
                                       <h4 className="text-white font-medium mb-2">{item.title}</h4>
                                       <p className="text-sm text-zinc-400">{item.description}</p>
                                     </div>
-                                  </motion.div>
+                                  </div>
                                 ))}
                               </div>
                             </div>
@@ -969,13 +969,13 @@ function AnalisePerfilContent() {
                             <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Quote className="text-[#C5A059]" size={20} />Palavras de Especialistas</h3>
                             <div className="space-y-4">
                               {result.quotes.map((q, i) => (
-                                <motion.div key={i} className="bg-zinc-800/30 border-l-2 border-[#C5A059] p-5" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+                                <div key={i} className="bg-zinc-800/30 border-l-2 border-[#C5A059] p-5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.1}s` }}>
                                   <p className="text-zinc-300 italic mb-3">"{q.quote}"</p>
                                   <div className="flex items-center gap-2">
                                     <div className="w-8 h-8 bg-[#C5A059]/10 rounded-full flex items-center justify-center"><Quote className="text-[#C5A059]" size={14} /></div>
                                     <div><p className="text-white text-sm font-medium">{q.author}</p><p className="text-zinc-500 text-xs">{q.role}</p></div>
                                   </div>
-                                </motion.div>
+                                </div>
                               ))}
                             </div>
                           </div>
@@ -984,26 +984,24 @@ function AnalisePerfilContent() {
                             <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><HelpCircle className="text-[#C5A059]" size={20} />Perguntas Frequentes</h3>
                             <div className="space-y-3">
                               {result.faq.map((item, i) => (
-                                <motion.div key={i} className="border border-white/5 overflow-hidden" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                                <div key={i} className="border border-white/5 overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.05}s` }}>
                                   <button onClick={() => setExpandedFaq(expandedFaq === i ? null : i)} className="w-full flex items-center justify-between p-4 bg-zinc-800/30 hover:bg-zinc-800/50 transition-colors text-left">
                                     <span className="text-white font-medium pr-4">{item.question}</span>
                                     <ChevronDown className={`text-[#C5A059] flex-shrink-0 transition-transform ${expandedFaq === i ? 'rotate-180' : ''}`} size={18} />
                                   </button>
-                                  <AnimatePresence>
-                                    {expandedFaq === i && (
-                                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}>
-                                        <div className="p-4 bg-zinc-900/50 text-zinc-400 text-sm">{item.answer}</div>
-                                      </motion.div>
-                                    )}
-                                  </AnimatePresence>
-                                </motion.div>
+                                  {expandedFaq === i && (
+                                    <div className="animate-[fadeSlideIn_0.2s_ease-out_forwards]">
+                                      <div className="p-4 bg-zinc-900/50 text-zinc-400 text-sm">{item.answer}</div>
+                                    </div>
+                                  )}
+                                </div>
                               ))}
                             </div>
                           </div>
-                        </motion.div>
+                        </div>
                       )}
                       {selectedTab === 'analise' && (
-                        <motion.div key="analise" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
+                        <div key="analise" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
                           {/* Confidence Index */}
                           <div className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/20 p-8">
                             <h3 className="flex items-center gap-2 text-xl font-serif text-white mb-6"><Percent className="text-[#C5A059]" size={24} />Indice de Confianca</h3>
@@ -1036,7 +1034,7 @@ function AnalisePerfilContent() {
                                 const maxProfile = Object.entries(detail.points).reduce((a, b) => b[1] > a[1] ? b : a, ['', 0]);
                                 const profileColors: Record<string, string> = { competidor: 'bg-amber-500', tradicional: 'bg-emerald-500', criador: 'bg-purple-500', amador: 'bg-rose-500' };
                                 return (
-                                  <motion.div key={i} className="bg-zinc-800/30 border border-white/5 p-4" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03 }}>
+                                  <div key={i} className="bg-zinc-800/30 border border-white/5 p-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.03}s` }}>
                                     <div className="flex items-start justify-between gap-4 mb-2">
                                       <div className="flex-1">
                                         <p className="text-xs text-zinc-500 mb-1">Pergunta {detail.questionId}</p>
@@ -1051,7 +1049,7 @@ function AnalisePerfilContent() {
                                         <div key={profile} className={`${profileColors[profile]} opacity-${Math.min(100, pts * 10)}`} style={{ width: `${(pts / 10) * 100}%`, opacity: pts / 10 }} title={`${profile}: ${pts}`} />
                                       ))}
                                     </div>
-                                  </motion.div>
+                                  </div>
                                 );
                               })}
                             </div>
@@ -1077,11 +1075,11 @@ function AnalisePerfilContent() {
                               ))}
                             </div>
                           </div>
-                        </motion.div>
+                        </div>
                       )}
                       {selectedTab === 'proximos' && (
-                        <motion.div key="proximos" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
-                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Compass className="text-[#C5A059]" size={20} />Proximos Passos Recomendados</h3><div className="space-y-4">{result.nextSteps.map((s, i) => <motion.div key={i} className="flex items-start gap-4 p-4 bg-zinc-800/30 border border-white/5" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}><div className="w-8 h-8 bg-[#C5A059] text-black rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm">{i + 1}</div><p className="text-zinc-300 pt-1">{s}</p></motion.div>)}</div></div>
+                        <div key="proximos" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
+                          <div className="bg-zinc-900/30 border border-white/5 p-8"><h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6"><Compass className="text-[#C5A059]" size={20} />Proximos Passos Recomendados</h3><div className="space-y-4">{result.nextSteps.map((s, i) => <div key={i} className="flex items-start gap-4 p-4 bg-zinc-800/30 border border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: `${i * 0.1}s` }}><div className="w-8 h-8 bg-[#C5A059] text-black rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm">{i + 1}</div><p className="text-zinc-300 pt-1">{s}</p></div>)}</div></div>
                           <div className="bg-gradient-to-r from-[#C5A059]/20 to-transparent border border-[#C5A059]/30 p-8 text-center">
                             <h3 className="text-xl font-serif text-white mb-4">Pronto para Encontrar o Seu Lusitano?</h3>
                             <p className="text-zinc-400 mb-8 max-w-md mx-auto">Explore o nosso directorio de coudelarias ou utilize as nossas ferramentas de analise.</p>
@@ -1090,17 +1088,17 @@ function AnalisePerfilContent() {
                               <Link href={`/calculadora-valor?perfil=${result.profile}&min=${result.idealHorse.priceRange.split(' ')[0].replace('.', '').replace(',', '')}`} className="inline-flex items-center justify-center gap-2 border border-[#C5A059] text-[#C5A059] px-8 py-4 font-bold uppercase tracking-wider text-sm hover:bg-[#C5A059] hover:text-black transition-colors">Calculadora de Valor<ChevronRight size={18} /></Link>
                             </div>
                           </div>
-                        </motion.div>
+                        </div>
                       )}
-                    </AnimatePresence>
+
                   </div>
                 </section>
                 <section className="py-12 border-t border-white/5"><div className="max-w-5xl mx-auto px-6 text-center"><button onClick={resetQuiz} className="inline-flex items-center justify-center gap-2 border border-white/20 text-zinc-400 px-6 py-3 hover:text-white transition-colors"><RotateCcw size={18} />Repetir Analise</button></div></section>
               </>
             )}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+
     </main>
   );
 }

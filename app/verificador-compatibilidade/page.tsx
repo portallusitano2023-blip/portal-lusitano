@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Heart, Dna, Star, AlertTriangle, CheckCircle, Crown, Baby,
   Palette, Activity, Shield, Zap, ChevronRight, Info, Award, TrendingUp,
@@ -450,14 +449,9 @@ export default function VerificadorCompatibilidadePage() {
 
       <div className="pt-16">
         {/* ==================== INTRO ==================== */}
-        <AnimatePresence mode="wait">
+        {/* Step transitions */}
           {step === 0 && !resultado && (
-            <motion.div
-              key="intro"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, y: -20 }}
-            >
+            <div className="animate-[fadeSlideIn_0.4s_ease-out_forwards]">
               {/* Hero Section */}
               <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
@@ -472,71 +466,57 @@ export default function VerificadorCompatibilidadePage() {
                 </div>
 
                 <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-                  <motion.span
-                    className="inline-block px-4 py-1.5 bg-pink-500/10 border border-pink-500/30 text-pink-400 text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
+                  <span
+                    className="inline-block px-4 py-1.5 bg-pink-500/10 border border-pink-500/30 text-pink-400 text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.2s" }}
                   >
                     Ferramenta de Criação
-                  </motion.span>
+                  </span>
 
-                  <motion.h1
-                    className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
+                  <h1
+                    className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.3s" }}
                   >
                     Verificador de
                     <span className="block text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 mt-2">
                       Compatibilidade Genética
                     </span>
-                  </motion.h1>
+                  </h1>
 
-                  <motion.p
-                    className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
+                  <p
+                    className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.4s" }}
                   >
                     "Analise a compatibilidade entre garanhão e égua antes do cruzamento.
                     Previsão de COI, BLUP, pelagens e riscos genéticos."
-                  </motion.p>
+                  </p>
 
-                  <motion.p
-                    className="text-sm text-zinc-500 max-w-xl mx-auto mb-10"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
+                  <p
+                    className="text-sm text-zinc-500 max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.5s" }}
                   >
                     Baseado em princípios de genética equina, índices BLUP e
                     padrões de seleção do Stud Book Lusitano (APSL).
-                  </motion.p>
+                  </p>
 
-                  <motion.button
+                  <button
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-lg hover:from-pink-400 hover:to-purple-500 transition-all shadow-lg shadow-pink-500/20"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-lg hover:from-pink-400 hover:to-purple-500 transition-all shadow-lg shadow-pink-500/20 hover:scale-[1.02] active:scale-[0.98] transition-transform opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.6s" }}
                   >
                     <Dna size={20} />
                     Iniciar Análise
                     <ChevronRight size={18} />
-                  </motion.button>
+                  </button>
                 </div>
               </section>
 
               {/* Features */}
               <section className="py-16 px-6">
                 <div className="max-w-6xl mx-auto">
-                  <motion.div
-                    className="grid md:grid-cols-3 gap-6"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 }}
+                  <div
+                    className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.7s" }}
                   >
                     <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                       <div className="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center mb-4">
@@ -570,13 +550,11 @@ export default function VerificadorCompatibilidadePage() {
                         e outros problemas hereditários a evitar.
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
 
-                  <motion.div
-                    className="mt-12 p-6 bg-pink-500/5 border border-pink-500/20 rounded-xl"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 }}
+                  <div
+                    className="mt-12 p-6 bg-pink-500/5 border border-pink-500/20 rounded-xl opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.8s" }}
                   >
                     <div className="flex items-start gap-4">
                       <Info className="text-pink-400 flex-shrink-0 mt-1" size={20} />
@@ -590,23 +568,16 @@ export default function VerificadorCompatibilidadePage() {
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
               </section>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
 
         {/* ==================== FORMULÁRIO ==================== */}
-        <AnimatePresence mode="wait">
+        {/* Form step */}
           {step === 1 && !resultado && (
-            <motion.div
-              key="form"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="max-w-4xl mx-auto px-4 py-8"
-            >
+            <div className="max-w-4xl mx-auto px-4 py-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
               {/* Tabs */}
               <div className="flex gap-2 mb-8">
                 <button
@@ -915,16 +886,13 @@ export default function VerificadorCompatibilidadePage() {
                   </>
                 )}
               </button>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
 
         {/* ==================== RESULTADO ==================== */}
         {resultado && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-4xl mx-auto px-4 py-8"
+          <div
+            className="max-w-4xl mx-auto px-4 py-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             {/* Score Principal */}
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-800 p-8 border border-zinc-800 mb-6">
@@ -1100,16 +1068,14 @@ export default function VerificadorCompatibilidadePage() {
                       </span>
                     </div>
                     <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-                      <motion.div
-                        className={`h-full ${
+                      <div
+                        className={`h-full transition-all duration-500 ${
                           f.tipo === "excelente" ? "bg-emerald-500" :
                           f.tipo === "bom" ? "bg-blue-500" :
                           f.tipo === "aviso" ? "bg-amber-500" :
                           f.tipo === "risco" ? "bg-red-500" : "bg-zinc-500"
                         }`}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(f.score / f.max) * 100}%` }}
-                        transition={{ duration: 0.8, delay: i * 0.1 }}
+                        style={{ width: `${(f.score / f.max) * 100}%` }}
                       />
                     </div>
                   </div>
@@ -1144,7 +1110,7 @@ export default function VerificadorCompatibilidadePage() {
                 testes genéticos completos antes de qualquer cruzamento.
               </p>
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
     </main>

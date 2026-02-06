@@ -110,7 +110,7 @@ export default function CartDrawer() {
                       <div>
                         <div className="flex justify-between items-start">
                           <h3 className="text-lg font-serif text-white leading-tight pr-4">{item.title}</h3>
-                          <button onClick={() => removeFromCart(item.id)} className="text-zinc-600 hover:text-red-400 text-xs uppercase">Remover</button>
+                          <button onClick={() => removeFromCart(item.id)} className="text-zinc-400 hover:text-red-400 text-xs uppercase">Remover</button>
                         </div>
                         <p className="text-[#C5A059] font-serif text-md mt-2">{Number(item.price).toFixed(2)} EUR</p>
                       </div>
@@ -131,7 +131,7 @@ export default function CartDrawer() {
               <div className="flex justify-between items-end">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-2">{ct.subtotal}</p>
-                  <p className="text-xs text-zinc-600 font-serif italic">{ct.shipping_note}</p>
+                  <p className="text-xs text-zinc-400 font-serif italic">{ct.shipping_note}</p>
                 </div>
                 <p className="text-3xl font-serif text-white">
                   {cart.reduce((total, item) => total + Number(item.price) * item.quantity, 0).toFixed(2)} <span className="text-sm text-zinc-500">EUR</span>

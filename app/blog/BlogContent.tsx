@@ -90,7 +90,7 @@ export default function BlogContent({ posts }: { posts: Post[] }) {
           ))
         ) : (
           <div className="col-span-full text-center py-20 border border-dashed border-zinc-900">
-            <p className="text-zinc-600 text-xs uppercase tracking-[0.2em]">{t.blog.no_news}</p>
+            <p className="text-zinc-400 text-xs uppercase tracking-[0.2em]">{t.blog.no_news}</p>
           </div>
         )}
       </div>

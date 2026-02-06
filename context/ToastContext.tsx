@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle, AlertCircle, Info, ShoppingBag } from "lucide-react";
 
 type ToastType = "success" | "error" | "info" | "cart";
@@ -11,6 +10,7 @@ interface Toast {
   type: ToastType;
   message: string;
   duration?: number;
+  removing?: boolean;
 }
 
 interface ToastContextType {
@@ -37,7 +37,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const hideToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    setToasts((prev) => prev.map((t) => t.id === id ? { ...t, removing: true } : t));
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 300);
   }, []);
 
   const getIcon = (type: ToastType) => {
@@ -72,27 +75,21 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
       {/* Toast Container */}
       <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3">
-        <AnimatePresence>
-          {toasts.map((toast) => (
-            <motion.div
-              key={toast.id}
-              initial={{ opacity: 0, x: 100, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 100, scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
-              className={`bg-[#0a0a0a] border ${getBorderColor(toast.type)} backdrop-blur-xl shadow-2xl rounded-sm px-5 py-4 flex items-center gap-4 min-w-[300px] max-w-[400px]`}
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
+            className={`bg-[#0a0a0a] border ${getBorderColor(toast.type)} backdrop-blur-xl shadow-2xl rounded-sm px-5 py-4 flex items-center gap-4 min-w-[300px] max-w-[400px] ${toast.removing ? 'animate-[slideOutRight_0.3s_ease-out_forwards]' : 'animate-[slideInRight_0.3s_ease-out_forwards]'}`}
+          >
+            {getIcon(toast.type)}
+            <p className="text-sm text-white flex-1">{toast.message}</p>
+            <button
+              onClick={() => hideToast(toast.id)}
+              className="text-zinc-500 hover:text-white transition-colors"
             >
-              {getIcon(toast.type)}
-              <p className="text-sm text-white flex-1">{toast.message}</p>
-              <button
-                onClick={() => hideToast(toast.id)}
-                className="text-zinc-500 hover:text-white transition-colors"
-              >
-                <X size={16} />
-              </button>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+              <X size={16} />
+            </button>
+          </div>
+        ))}
       </div>
     </ToastContext.Provider>
   );

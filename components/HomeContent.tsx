@@ -76,7 +76,7 @@ export default function HomeContent({ products }: { products: any[] }) {
                 <h3 className="text-2xl font-serif italic text-white mb-2 group-hover:text-[#C5A059] transition-colors">
                   {product.title}
                 </h3>
-                <p className="text-zinc-600 font-serif text-sm tracking-widest">
+                <p className="text-zinc-400 font-serif text-sm tracking-widest">
                   {Number(product.priceRange.minVariantPrice.amount).toFixed(2)} EUR
                 </p>
               </div>

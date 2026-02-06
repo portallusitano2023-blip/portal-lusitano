@@ -298,6 +298,50 @@ html, body {
   50% { transform: translateY(3px); }
 }
 
+/* Bounce maior para scroll indicator */
+@keyframes bounce-scroll {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* Loading spinner rotations */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes spin-slow-reverse {
+  to { transform: rotate(-360deg); }
+}
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+@keyframes pulse-opacity {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* Toast notifications */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(100%) scale(0.95); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes slideOutRight {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to { opacity: 0; transform: translateX(100%) scale(0.95); }
+}
+
+/* Scale in for modals/icons */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Slide up for bottom sheet/cookie banner */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Fade-in animation for mobile */
 @keyframes fade-in-up {
   from {
@@ -351,4 +395,74 @@ html, body {
   main {
     padding-bottom: 80px;
   }
+}
+
+/* ===== VIEW TRANSITIONS API ===== */
+/* Transições suaves entre páginas — API nativa do browser, zero JS */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: vtFadeOut 0.2s ease-out forwards;
+}
+::view-transition-new(root) {
+  animation: vtFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes vtFadeOut {
+  from { opacity: 1; filter: blur(0); }
+  to { opacity: 0; filter: blur(2px); }
+}
+@keyframes vtFadeIn {
+  from { opacity: 0; filter: blur(2px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+/* ===== TEXT SPLIT — HEADLINE CINEMATOGRÁFICA ===== */
+/* Cada palavra surge individualmente com delay crescente */
+@keyframes wordReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) rotateX(10deg);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+    filter: blur(0);
+  }
+}
+
+.text-split-word {
+  display: inline-block;
+  opacity: 0;
+  animation: wordReveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* ===== CLIP-PATH REVEAL — IMAGENS QUE SE DESVENDAM ===== */
+@keyframes clipRevealLeft {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes clipRevealUp {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.clip-reveal-left {
+  animation: clipRevealLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+.clip-reveal-up {
+  animation: clipRevealUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* ===== TILT 3D — PERSPECTIVE PARA CARDS ===== */
+.tilt-card {
+  transform-style: preserve-3d;
+  perspective: 800px;
+  transition: transform 0.1s ease-out;
+}
+.tilt-card > * {
+  transform: translateZ(0);
 }

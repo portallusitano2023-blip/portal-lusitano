@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import { trackEbookFunnel, trackEmailSubscription, trackEbookDownload } from "@/lib/analytics";
 import {
   BookOpen,
@@ -160,19 +159,15 @@ export default function EbookGratisPage() {
   if (submitted) {
     return (
       <main className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center max-w-md"
+        <div
+          className="text-center max-w-md opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring" }}
-            className="w-20 h-20 bg-green-500/20 border-2 border-green-500 rounded-full flex items-center justify-center mx-auto mb-6"
+          <div
+            className="w-20 h-20 bg-green-500/20 border-2 border-green-500 rounded-full flex items-center justify-center mx-auto mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.2s" }}
           >
             <Check className="text-green-500" size={40} />
-          </motion.div>
+          </div>
           <h2 className="text-3xl font-serif text-white mb-4">
             Sucesso! Verifica o teu email
           </h2>
@@ -182,7 +177,7 @@ export default function EbookGratisPage() {
           <p className="text-zinc-500 text-sm">
             A redirecionar para a página de download...
           </p>
-        </motion.div>
+        </div>
       </main>
     );
   }
@@ -197,10 +192,8 @@ export default function EbookGratisPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Left Column - Text */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+            <div
+              className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             >
               {/* Badge */}
               <div className="inline-flex items-center gap-2 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
@@ -225,12 +218,10 @@ export default function EbookGratisPage() {
               {/* Stats Row - Responsive */}
               <div className="grid grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-10">
                 {stats.map((stat, index) => (
-                  <motion.div
+                  <div
                     key={stat.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="text-center"
+                    className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#C5A059] mb-0.5 sm:mb-1">
                       {stat.value}
@@ -238,7 +229,7 @@ export default function EbookGratisPage() {
                     <div className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-wider">
                       {stat.label}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
@@ -291,14 +282,12 @@ export default function EbookGratisPage() {
               <p className="text-zinc-600 text-[10px] sm:text-xs mt-3 sm:mt-4 text-center">
                 Sem spam. Cancela a qualquer momento. Os teus dados estão seguros.
               </p>
-            </motion.div>
+            </div>
 
             {/* Right Column - Ebook Preview */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
+            <div
+              className="relative opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              style={{ animationDelay: "0.2s" }}
             >
               <div className="relative aspect-[3/4] max-w-md mx-auto">
                 {/* Glow effect */}
@@ -321,25 +310,21 @@ export default function EbookGratisPage() {
               </div>
 
               {/* Floating badges */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                className="absolute -top-6 -right-6 bg-green-500 text-white px-6 py-3 rounded-full font-bold shadow-lg"
+              <div
+                className="absolute -top-6 -right-6 bg-green-500 text-white px-6 py-3 rounded-full font-bold shadow-lg opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.8s" }}
               >
                 100% GRÁTIS
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 }}
-                className="absolute -bottom-6 -left-6 bg-zinc-900 border border-[#C5A059]/30 text-white px-6 py-3 rounded-full font-medium shadow-lg flex items-center gap-2"
+              <div
+                className="absolute -bottom-6 -left-6 bg-zinc-900 border border-[#C5A059]/30 text-white px-6 py-3 rounded-full font-medium shadow-lg flex items-center gap-2 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "1s" }}
               >
                 <Sparkles className="text-[#C5A059]" size={16} />
                 PDF de Alta Qualidade
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -347,11 +332,8 @@ export default function EbookGratisPage() {
       {/* What You'll Learn Section */}
       <section className="py-20 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
+          <div
+            className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <h2 className="text-4xl font-serif text-white mb-4">
               O Que Vais Aprender
@@ -359,17 +341,14 @@ export default function EbookGratisPage() {
             <p className="text-zinc-400 max-w-2xl mx-auto">
               Um guia completo estruturado em 4 capítulos essenciais
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {chapters.map((chapter, index) => (
-              <motion.div
+              <div
                 key={chapter.number}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-zinc-900/50 border border-white/5 p-8 hover:border-[#C5A059]/30 transition-colors group"
+                className="bg-zinc-900/50 border border-white/5 p-8 hover:border-[#C5A059]/30 transition-colors group opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex items-start gap-6">
                   <div className="text-5xl font-serif text-[#C5A059]/20 group-hover:text-[#C5A059]/40 transition-colors">
@@ -385,7 +364,7 @@ export default function EbookGratisPage() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -394,26 +373,20 @@ export default function EbookGratisPage() {
       {/* Benefits Grid */}
       <section className="py-20 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
+          <div
+            className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <h2 className="text-4xl font-serif text-white mb-4">
               Por Que Descarregar Este Ebook?
             </h2>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
-              <motion.div
+              <div
                 key={benefit.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center"
+                className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <benefit.icon className="text-[#C5A059]" size={28} />
@@ -422,7 +395,7 @@ export default function EbookGratisPage() {
                   {benefit.title}
                 </h3>
                 <p className="text-zinc-400 text-sm">{benefit.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -431,11 +404,8 @@ export default function EbookGratisPage() {
       {/* Testimonials */}
       <section className="py-20 border-t border-white/5 bg-zinc-900/20">
         <div className="max-w-7xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
+          <div
+            className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <h2 className="text-4xl font-serif text-white mb-4">
               O Que Dizem Os Leitores
@@ -446,17 +416,14 @@ export default function EbookGratisPage() {
               ))}
             </div>
             <p className="text-zinc-400">Avaliação média: 4.9/5 (234 reviews)</p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <motion.div
+              <div
                 key={testimonial.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-zinc-900/50 border border-white/5 p-8"
+                className="bg-zinc-900/50 border border-white/5 p-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 bg-[#C5A059] rounded-full flex items-center justify-center text-black font-bold">
@@ -477,7 +444,7 @@ export default function EbookGratisPage() {
                     />
                   ))}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -486,11 +453,8 @@ export default function EbookGratisPage() {
       {/* CTA Final */}
       <section className="py-20 border-t border-white/5">
         <div className="max-w-4xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/30 rounded-2xl p-12 text-center"
+          <div
+            className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/30 rounded-2xl p-12 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <BookOpen className="text-[#C5A059] mx-auto mb-6" size={48} />
             <h2 className="text-4xl font-serif text-white mb-4">
@@ -514,7 +478,7 @@ export default function EbookGratisPage() {
                 <span>100% grátis para sempre</span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
         </div>
       </section>

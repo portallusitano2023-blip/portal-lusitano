@@ -59,7 +59,8 @@ export default function MobileBottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center gap-1 min-w-[64px] min-h-[56px] rounded-xl transition-all active:scale-90 touch-manipulation ${
+              aria-label={item.label}
+              className={`flex flex-col items-center justify-center gap-1 min-w-[64px] min-h-[56px] rounded-xl transition-all active:scale-90 touch-manipulation focus-visible:ring-2 focus-visible:ring-[#C5A059] ${
                 item.isActive
                   ? "text-[#C5A059]"
                   : "text-zinc-500 hover:text-zinc-300"
@@ -82,7 +83,8 @@ export default function MobileBottomNav() {
           {/* Cart Button */}
           <button
             onClick={openCart}
-            className="flex flex-col items-center justify-center gap-1 min-w-[64px] min-h-[56px] rounded-xl text-zinc-500 hover:text-zinc-300 transition-all active:scale-90 touch-manipulation"
+            aria-label="Abrir carrinho de compras"
+            className="flex flex-col items-center justify-center gap-1 min-w-[64px] min-h-[56px] rounded-xl text-zinc-500 hover:text-zinc-300 transition-all active:scale-90 touch-manipulation focus-visible:ring-2 focus-visible:ring-[#C5A059]"
           >
             <div className="relative">
               <ShoppingCart size={24} strokeWidth={1.5} />

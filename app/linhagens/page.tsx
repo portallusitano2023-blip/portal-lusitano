@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import {
   BookOpen,
   Calendar,
@@ -74,11 +73,7 @@ export default function LinhagenPage() {
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
               Conhecimento
             </span>
@@ -89,17 +84,15 @@ export default function LinhagenPage() {
               Descubra a história e as características das principais linhagens
               do cavalo Lusitano. Séculos de seleção e tradição equestre.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-6 pb-20">
         {/* Introdução */}
-        <motion.div
-          className="mb-16 p-8 bg-zinc-900/50 border border-white/10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+        <div
+          className="mb-16 p-8 bg-zinc-900/50 border border-white/10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.1s" }}
         >
           <div className="flex items-start gap-6">
             <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -119,7 +112,7 @@ export default function LinhagenPage() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Loading */}
         {loading ? (
@@ -150,11 +143,9 @@ export default function LinhagenPage() {
         )}
 
         {/* Árvore Genealógica Simplificada */}
-        <motion.section
-          className="mt-20"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+        <section
+          className="mt-20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.3s" }}
         >
           <h2 className="text-2xl font-serif text-white mb-8 text-center">
             Influência das Linhagens
@@ -183,14 +174,12 @@ export default function LinhagenPage() {
             </div>
             <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C5A059]/30 to-transparent -z-10" />
           </div>
-        </motion.section>
+        </section>
 
         {/* Dicas para Escolher */}
-        <motion.section
-          className="mt-20 p-8 bg-gradient-to-r from-[#C5A059]/10 via-transparent to-[#C5A059]/10 border border-[#C5A059]/20"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+        <section
+          className="mt-20 p-8 bg-gradient-to-r from-[#C5A059]/10 via-transparent to-[#C5A059]/10 border border-[#C5A059]/20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.4s" }}
         >
           <h2 className="text-2xl font-serif text-white mb-6 text-center">
             Como Escolher a Linhagem Ideal?
@@ -224,7 +213,7 @@ export default function LinhagenPage() {
               </p>
             </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Modal de Linhagem */}
         {selectedLinhagem && (
@@ -250,12 +239,10 @@ function LinhagemCard({
   const image = linhagem.imagem_capa || linhagemImages[linhagem.nome] || linhagemImages["Veiga"];
 
   return (
-    <motion.button
+    <button
       onClick={onSelect}
-      className="text-left group relative overflow-hidden"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
+      className="text-left group relative overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      style={{ animationDelay: `${index * 0.1}s` }}
     >
       <div className="relative h-80">
         <div
@@ -310,7 +297,7 @@ function LinhagemCard({
           </div>
         </div>
       </div>
-    </motion.button>
+    </button>
   );
 }
 
@@ -324,16 +311,12 @@ function LinhagemModal({
   const image = linhagem.imagem_capa || linhagemImages[linhagem.nome] || linhagemImages["Veiga"];
 
   return (
-    <motion.div
-      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+    <div
+      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto animate-[fadeSlideIn_0.3s_ease-out_forwards]"
       onClick={onClose}
     >
-      <motion.div
-        className="bg-zinc-900 border border-white/10 max-w-4xl w-full my-8 relative"
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+      <div
+        className="bg-zinc-900 border border-white/10 max-w-4xl w-full my-8 relative opacity-0 animate-[scaleIn_0.3s_ease-out_forwards]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -477,7 +460,7 @@ function LinhagemModal({
             </div>
           )}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

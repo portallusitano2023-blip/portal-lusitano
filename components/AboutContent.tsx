@@ -55,7 +55,7 @@ export default function AboutContent() {
 
         {/* Valores Traduzidos */}
         <div className="border-t border-zinc-900 pt-20 text-center">
-            <h3 className="text-[10px] uppercase tracking-[0.3em] text-zinc-600 mb-10">
+            <h3 className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 mb-10">
                {t.about.values_title}
             </h3>
             <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-24 font-serif italic text-xl text-[#C5A059]">

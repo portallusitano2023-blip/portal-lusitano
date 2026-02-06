@@ -21,11 +21,11 @@ export default function GenealogyTree({ horse }) {
         {/* PAIS */}
         <div className="flex flex-col gap-12">
           <div className="w-56 border border-zinc-800 p-4 hover:border-[#C5A059] transition-all">
-            <p className="text-zinc-600 text-[8px] uppercase font-bold mb-1">Pai (Sire)</p>
+            <p className="text-zinc-400 text-[8px] uppercase font-bold mb-1">Pai (Sire)</p>
             <p className="font-serif text-sm italic text-white">{horse.pai || "Ancestral de Elite"}</p>
           </div>
           <div className="w-56 border border-zinc-800 p-4 hover:border-[#C5A059] transition-all">
-            <p className="text-zinc-600 text-[8px] uppercase font-bold mb-1">Mãe (Dam)</p>
+            <p className="text-zinc-400 text-[8px] uppercase font-bold mb-1">Mãe (Dam)</p>
             <p className="font-serif text-sm italic text-white">{horse.mae || "Ventre de Ouro"}</p>
           </div>
         </div>

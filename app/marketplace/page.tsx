@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 import {
   Search,
   Filter,
@@ -17,6 +16,10 @@ import {
   ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
+import TextSplit from "@/components/TextSplit";
+import { useCountUp } from "@/hooks/useCountUp";
+import { useInViewOnce } from "@/hooks/useInViewOnce";
+import { useTilt3D } from "@/hooks/useTilt3D";
 
 interface Cavalo {
   id: string;
@@ -174,63 +177,63 @@ export default function MarketplacePage() {
   const cavalosDestaque = cavalos.filter((c) => c.destaque);
   const outrosCavalos = cavalos.filter((c) => !c.destaque);
 
+  // Contadores animados
+  const statsRef = useRef<HTMLDivElement>(null);
+  const statsInView = useInViewOnce(statsRef);
+  const countCavalos = useCountUp(cavalos.length, statsInView);
+  const countDestaque = useCountUp(cavalosDestaque.length, statsInView);
+  const countPercent = useCountUp(100, statsInView);
+
   return (
     <main className="min-h-screen bg-[#050505]">
       {/* Hero */}
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
               Marketplace
             </span>
             <h1 className="text-4xl md:text-6xl font-serif text-white mb-6">
-              Cavalos Lusitanos à Venda
+              <TextSplit text="Cavalos Lusitanos à Venda" baseDelay={0.2} wordDelay={0.1} />
             </h1>
             <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
               Encontre o seu próximo cavalo Lusitano. Exemplares de qualidade das
               melhores coudelarias de Portugal.
             </p>
-          </motion.div>
+          </div>
 
-          {/* Stats */}
-          <motion.div
-            className="grid grid-cols-3 gap-4 max-w-xl mx-auto mt-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          {/* Stats — contadores animados */}
+          <div
+            ref={statsRef}
+            className="grid grid-cols-3 gap-4 max-w-xl mx-auto mt-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.1s" }}
           >
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
               <div className="text-3xl font-serif text-[#C5A059]">
-                {cavalos.length}
+                {countCavalos}
               </div>
               <div className="text-sm text-zinc-500">Cavalos</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
               <div className="text-3xl font-serif text-[#C5A059]">
-                {cavalosDestaque.length}
+                {countDestaque}
               </div>
               <div className="text-sm text-zinc-500">Em Destaque</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059]">100%</div>
+              <div className="text-3xl font-serif text-[#C5A059]">{countPercent}%</div>
               <div className="text-sm text-zinc-500">Lusitanos</div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-6 pb-20">
         {/* Pesquisa e Filtros */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+        <div
+          className="mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.2s" }}
         >
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             {/* Pesquisa */}
@@ -267,11 +270,7 @@ export default function MarketplacePage() {
 
           {/* Painel de Filtros */}
           {showFilters && (
-            <motion.div
-              className="bg-zinc-900/50 border border-white/10 p-6"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-            >
+            <div className="bg-zinc-900/50 border border-white/10 p-6 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
               <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {/* Sexo */}
                 <div>
@@ -373,9 +372,9 @@ export default function MarketplacePage() {
                   />
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
-        </motion.div>
+        </div>
 
         {/* Loading */}
         {loading ? (
@@ -480,13 +479,15 @@ function CavaloCard({
   getSexoLabel: (s: string) => string;
 }) {
   const image = cavalo.foto_principal || placeholderHorses[index % placeholderHorses.length];
+  const { ref: tiltRef, onMouseMove, onMouseLeave } = useTilt3D(5);
 
   return (
-    <motion.div
-      className="group bg-zinc-900/50 border border-white/10 hover:border-[#C5A059]/50 overflow-hidden transition-all"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
+    <div
+      ref={tiltRef}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      className="group bg-zinc-900/50 border border-white/10 hover:border-[#C5A059]/50 overflow-hidden transition-all opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      style={{ animationDelay: `${index * 0.05}s`, transition: "transform 0.1s ease-out, border-color 0.3s" }}
     >
       {/* Imagem */}
       <div className="relative h-56 overflow-hidden">
@@ -559,7 +560,7 @@ function CavaloCard({
           </div>
         )}
       </button>
-    </motion.div>
+    </div>
   );
 }
 
@@ -583,16 +584,12 @@ function CavaloModal({
   const image = cavalo.foto_principal || placeholderHorses[0];
 
   return (
-    <motion.div
-      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+    <div
+      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto animate-[fadeSlideIn_0.3s_ease-out_forwards]"
       onClick={onClose}
     >
-      <motion.div
-        className="bg-zinc-900 border border-white/10 max-w-4xl w-full my-8 relative"
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+      <div
+        className="bg-zinc-900 border border-white/10 max-w-4xl w-full my-8 relative opacity-0 animate-[scaleIn_0.3s_ease-out_forwards]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -746,7 +743,7 @@ function CavaloModal({
             </div>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

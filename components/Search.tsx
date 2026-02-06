@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Search as SearchIcon, X, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface SearchResult {
   id: string;
@@ -136,107 +135,100 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
     onClose();
   };
 
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
-          />
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+        onClick={onClose}
+      />
 
-          {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 px-4"
-          >
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg shadow-2xl overflow-hidden">
-              {/* Input */}
-              <div className="flex items-center gap-4 p-4 border-b border-white/10">
-                <SearchIcon size={20} className="text-zinc-500" />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t.common.search_placeholder || "Pesquisar..."}
-                  className="flex-1 bg-transparent text-white placeholder-zinc-500 outline-none text-lg"
-                />
-                {isLoading && <Loader2 size={20} className="text-[#C5A059] animate-spin" />}
-                <button
-                  onClick={onClose}
-                  className="p-2 hover:bg-white/5 rounded-full transition-colors"
-                  aria-label={t.common.close}
-                >
-                  <X size={20} className="text-zinc-500" />
-                </button>
-              </div>
+      {/* Modal */}
+      <div
+        className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 px-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+        style={{ animationDelay: "0.05s" }}
+      >
+        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg shadow-2xl overflow-hidden">
+          {/* Input */}
+          <div className="flex items-center gap-4 p-4 border-b border-white/10">
+            <SearchIcon size={20} className="text-zinc-500" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t.common.search_placeholder || "Pesquisar..."}
+              className="flex-1 bg-transparent text-white placeholder-zinc-500 outline-none text-lg"
+            />
+            {isLoading && <Loader2 size={20} className="text-[#C5A059] animate-spin" />}
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/5 rounded-full transition-colors"
+              aria-label={t.common.close}
+            >
+              <X size={20} className="text-zinc-500" />
+            </button>
+          </div>
 
-              {/* Resultados */}
-              <div className="max-h-[60vh] overflow-y-auto">
-                {results.length > 0 ? (
-                  <ul className="py-2">
-                    {results.map((result) => (
-                      <li key={result.id}>
-                        <Link
-                          href={result.url}
-                          onClick={handleResultClick}
-                          className="flex items-center gap-4 px-4 py-3 hover:bg-white/5 transition-colors"
-                        >
-                          <div className="w-8 h-8 rounded bg-[#C5A059]/10 flex items-center justify-center">
-                            <span className="text-[#C5A059] text-xs uppercase">
-                              {result.type === "product" ? "P" : result.type === "article" ? "A" : "Pg"}
-                            </span>
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-white font-medium">{result.title}</p>
-                            {result.description && (
-                              <p className="text-sm text-zinc-500 line-clamp-1">{result.description}</p>
-                            )}
-                          </div>
-                          <span className="text-xs text-zinc-600 uppercase tracking-wider">
-                            {result.type === "product"
-                              ? (language === "pt" ? "Produto" : "Product")
-                              : result.type === "article"
-                              ? (language === "pt" ? "Artigo" : "Article")
-                              : (language === "pt" ? "Pagina" : "Page")}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : query.length >= 2 && !isLoading ? (
-                  <div className="py-12 text-center">
-                    <p className="text-zinc-500">
-                      {language === "pt" ? "Nenhum resultado encontrado" : "No results found"}
-                    </p>
-                  </div>
-                ) : query.length < 2 ? (
-                  <div className="py-12 text-center">
-                    <p className="text-zinc-600 text-sm">
-                      {language === "pt" ? "Digite pelo menos 2 caracteres" : "Type at least 2 characters"}
-                    </p>
-                  </div>
-                ) : null}
+          {/* Resultados */}
+          <div className="max-h-[60vh] overflow-y-auto">
+            {results.length > 0 ? (
+              <ul className="py-2">
+                {results.map((result) => (
+                  <li key={result.id}>
+                    <Link
+                      href={result.url}
+                      onClick={handleResultClick}
+                      className="flex items-center gap-4 px-4 py-3 hover:bg-white/5 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded bg-[#C5A059]/10 flex items-center justify-center">
+                        <span className="text-[#C5A059] text-xs uppercase">
+                          {result.type === "product" ? "P" : result.type === "article" ? "A" : "Pg"}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-white font-medium">{result.title}</p>
+                        {result.description && (
+                          <p className="text-sm text-zinc-500 line-clamp-1">{result.description}</p>
+                        )}
+                      </div>
+                      <span className="text-xs text-zinc-600 uppercase tracking-wider">
+                        {result.type === "product"
+                          ? (language === "pt" ? "Produto" : "Product")
+                          : result.type === "article"
+                          ? (language === "pt" ? "Artigo" : "Article")
+                          : (language === "pt" ? "Pagina" : "Page")}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : query.length >= 2 && !isLoading ? (
+              <div className="py-12 text-center">
+                <p className="text-zinc-500">
+                  {language === "pt" ? "Nenhum resultado encontrado" : "No results found"}
+                </p>
               </div>
+            ) : query.length < 2 ? (
+              <div className="py-12 text-center">
+                <p className="text-zinc-600 text-sm">
+                  {language === "pt" ? "Digite pelo menos 2 caracteres" : "Type at least 2 characters"}
+                </p>
+              </div>
+            ) : null}
+          </div>
 
-              {/* Atalhos */}
-              <div className="px-4 py-3 border-t border-white/5 flex items-center gap-4 text-xs text-zinc-600">
-                <span className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-zinc-500">ESC</kbd>
-                  {language === "pt" ? "para fechar" : "to close"}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+          {/* Atalhos */}
+          <div className="px-4 py-3 border-t border-white/5 flex items-center gap-4 text-xs text-zinc-600">
+            <span className="flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-zinc-500">ESC</kbd>
+              {language === "pt" ? "para fechar" : "to close"}
+            </span>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

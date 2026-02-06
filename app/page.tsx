@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import { motion } from "framer-motion";
+import TextSplit from "@/components/TextSplit";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -11,12 +11,10 @@ export default function Home() {
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
 
-      {/* 1. IMAGEM DE FUNDO (HERO BACKGROUND) */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+      {/* 1. IMAGEM DE FUNDO — clip-path reveal cinematográfico */}
+      <div
+        className="absolute inset-0 z-0 clip-reveal-left"
+        style={{ animationDuration: "1.2s" }}
       >
         <Image
           src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1920&auto=format&fit=crop"
@@ -28,46 +26,37 @@ export default function Home() {
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-black/40"></div>
-      </motion.div>
+      </div>
 
-      {/* 2. CONTEUDO (Texto e Botoes) */}
+      {/* 2. CONTEUDO */}
       <div className="relative z-10 max-w-4xl mx-auto space-y-8">
 
-        <motion.p
-          className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#C5A059]"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
+        <p
+          className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#C5A059] opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+          style={{ animationDelay: "0.4s" }}
         >
           {t.home.est}
-        </motion.p>
+        </p>
 
-        <motion.h1
-          className="text-6xl md:text-8xl font-serif text-white leading-tight drop-shadow-lg"
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-          style={{ willChange: "transform, opacity" }}
+        {/* HEADLINE — cada palavra surge individualmente */}
+        <h1 className="text-6xl md:text-8xl font-serif text-white leading-tight drop-shadow-lg">
+          <TextSplit
+            text={t.home.title_main}
+            baseDelay={0.5}
+            wordDelay={0.12}
+          />
+        </h1>
+
+        <p
+          className="text-sm md:text-base font-serif italic text-zinc-200 max-w-lg mx-auto leading-relaxed drop-shadow-md opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+          style={{ animationDelay: "0.9s" }}
         >
-          <span className="block text-2xl md:text-4xl italic font-light mb-2 text-zinc-300"></span>
-          {t.home.title_main.split(' ')[0]} <br />
-          {t.home.title_main.split(' ').slice(1).join(' ')}
-        </motion.h1>
+          &ldquo;{t.home.hero_text}&rdquo;
+        </p>
 
-        <motion.p
-          className="text-sm md:text-base font-serif italic text-zinc-200 max-w-lg mx-auto leading-relaxed drop-shadow-md"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.35 }}
-        >
-          "{t.home.hero_text}"
-        </motion.p>
-
-        <motion.div
-          className="pt-8"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.45 }}
+        <div
+          className="pt-8 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+          style={{ animationDelay: "1.1s" }}
         >
           <Link
             href="/loja"
@@ -75,22 +64,19 @@ export default function Home() {
           >
             {t.home.cta}
           </Link>
-        </motion.div>
+        </div>
 
       </div>
 
-      {/* Decoracao Rodape (Scroll Indicator) */}
-      <motion.div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-white/40"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: [0, 8, 0] }}
-        transition={{
-          opacity: { duration: 0.4, delay: 0.6 },
-          y: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
-        }}
+      {/* Scroll Indicator */}
+      <div
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-white/40 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+        style={{ animationDelay: "1.3s" }}
       >
-        <span className="text-[10px] tracking-widest uppercase">{t.home.scroll}</span>
-      </motion.div>
+        <span className="text-[10px] tracking-widest uppercase animate-[bounce-scroll_1.5s_ease-in-out_infinite]">
+          {t.home.scroll}
+        </span>
+      </div>
 
     </main>
   );

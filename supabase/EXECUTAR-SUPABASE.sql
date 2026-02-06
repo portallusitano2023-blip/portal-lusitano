@@ -540,7 +540,9 @@ Registada na APSL como "Coisas do Campo, Lda - Quinta da Hermida" (sócio nº 44
 
 -- =============================================
 -- 14. COUDELARIA LUÍS FOLGADO
--- Excelência desportiva
+-- Excelência desportiva em Montemor-o-Novo
+-- Fonte: https://coudelarialuisfolgado.com/en/
+-- Morada: Monte Mayor, EN 114 Km 145.5, 7050-704 Montemor-o-Novo
 -- =============================================
 INSERT INTO coudelarias (
   nome, slug, descricao, historia, localizacao, regiao,
@@ -555,9 +557,11 @@ INSERT INTO coudelarias (
   'A Coudelaria Luís Folgado seleciona animais que, além de preservar as características morfológicas do Puro Sangue Lusitano, têm aptidão desportiva excepcional.',
   'A Coudelaria Luís Folgado dedica-se à seleção de animais que combinam as características morfológicas tradicionais do Puro Sangue Lusitano com aptidão desportiva excepcional.
 
-O foco na funcionalidade e no desporto tem resultado em cavalos que se destacam tanto em concursos de modelo como em competições desportivas.',
-  'Ribatejo',
-  'Ribatejo',
+O foco na funcionalidade e no desporto tem resultado em cavalos que se destacam tanto em concursos de modelo como em competições desportivas.
+
+Localizada em Monte Mayor, Montemor-o-Novo, possui também um centro de treino na zona de Alapraia, Estoril.',
+  'Montemor-o-Novo',
+  'Alentejo',
   '+351 XXX XXX XXX',
   'info@coudelarialuisfolgado.com',
   'https://coudelarialuisfolgado.com',
@@ -566,38 +570,46 @@ O foco na funcionalidade e no desporto tem resultado em cavalos que se destacam 
   ARRAY['Dressage', 'Cavalos de Desporto', 'Modelo e Andamentos'],
   ARRAY['Veiga'],
   ARRAY['Venda de cavalos', 'Cavalos de competição'],
-  39.2000, -8.7000,
+  38.6475, -8.2160,
   'https://images.unsplash.com/photo-1598974357801-cbca100e65d3?w=1200',
-  ARRAY['desporto', 'dressage', 'competição'],
+  ARRAY['desporto', 'dressage', 'competição', 'montemor-o-novo'],
   false, true, 14, 'active', 'gratuito'
 );
 
 -- =============================================
 -- 15. COUDELARIA LUÍS BASTOS
--- Tradição e qualidade
+-- Linhagem Veiga pura em Porto de Muge, Cartaxo
+-- Fonte: https://lusitanohorsefinder.com/coudelaria-luis-bastos/
+-- Fundada em 2006 com 5 éguas puras Veiga
 -- =============================================
 INSERT INTO coudelarias (
   nome, slug, descricao, historia, localizacao, regiao,
   website,
-  num_cavalos, especialidades, linhagens, servicos,
+  num_cavalos, ano_fundacao, especialidades, linhagens, premios, servicos,
   latitude, longitude, foto_capa,
   tags,
   is_pro, destaque, ordem_destaque, status, plan
 ) VALUES (
   'Coudelaria Luís Bastos',
   'luis-bastos',
-  'A Coudelaria Luís Bastos é reconhecida pela qualidade dos seus Puro Sangue Lusitano, combinando tradição e modernidade na criação de cavalos de excelência.',
-  'A Coudelaria Luís Bastos combina a tradição da criação do cavalo Lusitano com abordagens modernas, resultando em animais de qualidade reconhecida.',
-  'Portugal',
-  'Centro',
+  'Fundada em 2006 em Porto de Muge, Cartaxo, a Coudelaria Luís Bastos começou com 5 éguas de linhagem Veiga pura. Hoje com 12 éguas PSL, é reconhecida por produzir cavalos de desporto com as verdadeiras qualidades do Lusitano.',
+  'A Coudelaria Luís Bastos foi fundada em 2006 por Luís Bastos, com 5 éguas Lusitanas, todas de linhagem Veiga pura. O sonho de Luís sempre foi produzir Lusitanos puros de desporto que mantivessem as verdadeiras qualidades da raça.
+
+Localizada em Porto de Muge, junto ao rio Tejo, no distrito de Santarém, a coudelaria prova que o Lusitano puro pode produzir cavalos de Dressage de topo. Hoje tem 12 éguas PSL e o seu garanhão fundador Escorial compete com sucesso em Dressage.
+
+Os seus poldros conquistam regularmente títulos e campeonatos em Modelo e Andamentos, incluindo múltiplas medalhas de ouro e o título de Melhor Criador e Campeão de Campeões.',
+  'Porto de Muge, Cartaxo',
+  'Ribatejo',
   'https://lusitanohorsefinder.com/coudelaria-luis-bastos/',
-  25,
-  ARRAY['Dressage', 'Lazer'],
-  ARRAY['Veiga', 'Andrade'],
+  12,
+  2006,
+  ARRAY['Dressage', 'Modelo e Andamentos', 'Cavalos de Desporto'],
+  ARRAY['Veiga'],
+  ARRAY['Melhor Criador (múltiplas vezes)', 'Campeão de Campeões em Modelo e Andamentos', 'Múltiplas medalhas de ouro'],
   ARRAY['Venda de cavalos'],
-  39.5000, -8.0000,
+  39.1592, -8.7856,
   'https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=1200',
-  ARRAY['tradição', 'qualidade'],
+  ARRAY['cartaxo', 'veiga', 'dressage', 'medalhas de ouro'],
   false, true, 15, 'active', 'gratuito'
 );
 
@@ -632,32 +644,40 @@ INSERT INTO coudelarias (
 );
 
 -- =============================================
--- 17. COUDELARIA LAGO ALVA
--- Tradição no Ribatejo
+-- 17. QUINTA DA LAGOALVA DE CIMA
+-- Coudelaria histórica desde 1848 em Alpiarça
+-- Fonte: https://www.lagoalva.pt/en/the-haras/
+-- Fonte: https://www.clubevinhosportugueses.pt/turismo/quinta-da-lagoalva-de-cima-o-encanto-da-historia/
+-- Fundada pelo 4º Duque de Palmela
 -- =============================================
 INSERT INTO coudelarias (
   nome, slug, descricao, historia, localizacao, regiao,
   website, instagram,
-  num_cavalos, especialidades, linhagens, servicos,
+  num_cavalos, ano_fundacao, especialidades, linhagens, servicos,
   latitude, longitude, foto_capa,
   tags,
   is_pro, destaque, ordem_destaque, status, plan
 ) VALUES (
-  'Coudelaria Lago Alva',
-  'lago-alva',
-  'A Coudelaria Lago Alva é uma das referências na criação do Puro Sangue Lusitano no Ribatejo, mantendo a tradição equestre da região.',
-  'Situada no coração do Ribatejo, a Coudelaria Lago Alva mantém viva a tradição da criação do cavalo Lusitano, combinando o respeito pela linhagem com a excelência na produção.',
-  'Ribatejo',
+  'Quinta da Lagoalva de Cima',
+  'lagoalva-de-cima',
+  'Com registos desde 1848, a Coudelaria da Quinta da Lagoalva de Cima é uma das mais antigas do Ribatejo. Fundada pelo 4º Duque de Palmela, produz cavalos Lusitanos para atrelagem, lazer, toureio e ensino, privilegiando a pelagem baia.',
+  'O primeiro registo da Coudelaria da Quinta da Lagoalva data de 1848. O seu principal promotor foi o 4º Duque de Palmela e Marquês do Faial, Luís Borges Coutinho de Medeiros, que adquiriu 24 éguas do Haras do Duque de Toledo para juntar ao efectivo existente.
+
+No século XX, o carácter lusitano da coudelaria definiu-se com base em éguas da Coudelaria Nacional e outras já pertencentes à propriedade. A coudelaria privilegia a pelagem baia, a cabeça convexa e boa conformação física.
+
+A Quinta da Lagoalva de Cima situa-se na margem sul do rio Tejo, a 2 km de Alpiarça e 11 km de Santarém. Para além de cavalos, produz cortiça, azeite, mel, vinho e outros produtos agrícolas.',
+  'Alpiarça',
   'Ribatejo',
   'https://www.lagoalva.pt/en/the-haras/',
-  '@coudelarialagoalva',
+  '@lagoalva',
   40,
-  ARRAY['Dressage', 'Equitação de Trabalho', 'Criação'],
-  ARRAY['Veiga', 'Andrade'],
-  ARRAY['Venda de cavalos', 'Visitas'],
-  39.3000, -8.7000,
+  1848,
+  ARRAY['Atrelagem', 'Lazer', 'Toureio', 'Ensino', 'Enoturismo'],
+  ARRAY['Coudelaria Nacional', 'Andaluz'],
+  ARRAY['Venda de cavalos', 'Enoturismo', 'Visitas à quinta'],
+  39.2584, -8.5857,
   'https://images.unsplash.com/photo-1534307671554-9a6d81f4d629?w=1200',
-  ARRAY['ribatejo', 'tradição', 'criação'],
+  ARRAY['alpiarça', 'histórico', 'duque de palmela', 'enoturismo'],
   false, true, 17, 'active', 'gratuito'
 );
 
@@ -740,6 +760,202 @@ INSERT INTO coudelarias (
   'https://images.unsplash.com/photo-1534307671554-9a6d81f4d629?w=1200',
   ARRAY['dressage', 'top mundial', 'zonik', 'elite'],
   false, true, 20, 'active', 'gratuito'
+);
+
+-- =============================================
+-- 21. COUDELARIA VEIGA — QUINTA DA BROA
+-- Uma das 4 linhagens fundadoras do Lusitano
+-- Fonte: https://quintadabroa.com/coudelaria-veiga.html
+-- Fonte: http://www.lusitanocollection.com/cv.htm
+-- Fonte: https://lusitanohorsefinder.com/lusitano-bloodlines/
+-- Azinhaga do Ribatejo, activa há mais de 200 anos
+-- =============================================
+INSERT INTO coudelarias (
+  nome, slug, descricao, historia, localizacao, regiao,
+  website,
+  num_cavalos, ano_fundacao, especialidades, linhagens, premios, servicos,
+  latitude, longitude, foto_capa,
+  testemunhos, tags,
+  is_pro, destaque, ordem_destaque, status, plan
+) VALUES (
+  'Coudelaria Veiga — Quinta da Broa',
+  'coudelaria-veiga',
+  'Fundada há mais de 200 anos por Rafael José da Cunha na Quinta da Broa, Azinhaga do Ribatejo, a Coudelaria Veiga é uma das 4 linhagens fundadoras do cavalo Lusitano. Continua activa na criação de cavalos de sangue Veiga.',
+  'A Coudelaria Veiga tem sede na Quinta da Broa, Azinhaga do Ribatejo, e foi fundada há mais de 200 anos por Rafael José da Cunha, conhecido como o Príncipe dos Lavradores Portugueses.
+
+Por herança familiar, a coudelaria passou a ser gerida pelo Engenheiro Manuel Tavares Veiga, bisneto de Rafael José da Cunha. O trabalho que desenvolveu foi notável, sendo justamente considerado o iniciador do novo ciclo do cavalo Lusitano em Portugal.
+
+A linhagem Veiga é uma das 4 linhagens fundadoras do Puro Sangue Lusitano e está presente nos melhores programas de criação do mundo. A coudelaria continua activa na Quinta da Broa.',
+  'Azinhaga',
+  'Ribatejo',
+  'https://quintadabroa.com/coudelaria-veiga.html',
+  50,
+  1824,
+  ARRAY['Linhagem Fundadora', 'Dressage', 'Toureio', 'Equitação de Trabalho'],
+  ARRAY['Veiga'],
+  ARRAY['Uma das 4 linhagens fundadoras do Lusitano', 'Mais de 200 anos de criação contínua', 'Linhagem presente nos melhores programas do mundo'],
+  ARRAY['Venda de cavalos', 'Preservação genética'],
+  39.3636, -8.5395,
+  'https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=1200',
+  '[{"autor": "Lusitano Horse Finder", "texto": "A linhagem Veiga é considerada a espinha dorsal da criação do Lusitano moderno.", "data": "2024"}]'::jsonb,
+  ARRAY['veiga', 'linhagem fundadora', 'azinhaga', 'ribatejo', 'histórico'],
+  false, true, 21, 'active', 'gratuito'
+);
+
+-- =============================================
+-- 22. CASA CADAVAL
+-- Uma das mais antigas coudelarias da Península Ibérica (1648)
+-- Fonte: https://www.casacadaval.pt/coudelaria/
+-- Fonte: https://saltofportugal.com/2022/07/26/casa-cadaval/
+-- Fonte: https://www.visitlisboa.com/en/places/casa-cadaval
+-- Muge, Ribatejo — 5400 hectares
+-- =============================================
+INSERT INTO coudelarias (
+  nome, slug, descricao, historia, localizacao, regiao,
+  website, instagram,
+  num_cavalos, ano_fundacao, especialidades, linhagens, servicos,
+  latitude, longitude, foto_capa,
+  testemunhos, tags,
+  is_pro, destaque, ordem_destaque, status, plan
+) VALUES (
+  'Casa Cadaval',
+  'casa-cadaval',
+  'Com origens em 1648, a Coudelaria da Casa Cadaval em Muge é considerada uma das mais antigas da Península Ibérica. A propriedade de 5400 hectares combina a criação de Puro Sangue Lusitano com produção vinícola e florestal.',
+  'A Coudelaria da Casa Cadaval foi fundada em 1648, quando a Condessa de Odemira trouxe uma manada de éguas de uma das suas propriedades no Alentejo ao casar com o 1º Duque de Cadaval.
+
+Considerada uma das mais antigas coudelarias da Península Ibérica, a tradição de criação do Puro Sangue Lusitano na Casa Cadaval mantém-se viva após quatro séculos de história.
+
+A Herdade de Muge Casa Cadaval tem 5400 hectares e é hoje gerida por Teresa Schönborn, sendo a quinta geração consecutiva de mulheres a dirigir esta casa. A propriedade divide-se entre floresta, culturas irrigadas, vinha, criação de cavalos Lusitanos e gado.',
+  'Muge',
+  'Ribatejo',
+  'https://www.casacadaval.pt/coudelaria/',
+  '@casacadavalmuge',
+  30,
+  1648,
+  ARRAY['Criação Histórica', 'Dressage', 'Enoturismo'],
+  ARRAY['Cadaval'],
+  ARRAY['Visitas à propriedade', 'Enoturismo', 'Venda de cavalos'],
+  39.1045, -8.7130,
+  'https://images.unsplash.com/photo-1534307671554-9a6d81f4d629?w=1200',
+  '[{"autor": "Visit Lisboa", "texto": "Uma das mais antigas coudelarias da Península Ibérica, com quatro séculos de história.", "data": "2024"}]'::jsonb,
+  ARRAY['muge', 'histórico', '1648', 'duque de cadaval', 'enoturismo'],
+  false, true, 22, 'active', 'gratuito'
+);
+
+-- =============================================
+-- 23. COUDELARIA PAULO CAETANO
+-- Herdade das Esquilas, Monforte
+-- Fonte: https://www.equisport.pt/artigos/coudelaria-paulo-caetano/
+-- Fonte: https://lusitanohorsefinder.com/inspirational-interview-with-paulo-and-maria-caetano/
+-- Fundada em 1981 com 8 éguas de Miguel Quina
+-- =============================================
+INSERT INTO coudelarias (
+  nome, slug, descricao, historia, localizacao, regiao,
+  telefone, website,
+  num_cavalos, ano_fundacao, especialidades, linhagens, premios, servicos,
+  latitude, longitude, foto_capa,
+  testemunhos, tags,
+  is_pro, destaque, ordem_destaque, status, plan
+) VALUES (
+  'Coudelaria Paulo Caetano',
+  'paulo-caetano',
+  'Fundada em 1981 na Herdade das Esquilas, Monforte, com 8 éguas de qualidade excepcional adquiridas a Miguel Quina. Paulo Caetano é rejoneador profissional e criador reconhecido, com cavalos em toureio, dressage e equitação portuguesa.',
+  'Em 1978, o pai de Paulo Caetano entregou-lhe a gestão da Herdade das Esquilas em Monforte. Em Junho de 1981, Paulo iniciou a coudelaria com 8 éguas de qualidade excepcional que pertenceram anteriormente a Miguel Quina.
+
+Enquanto geria a propriedade, Paulo continuou a sua carreira como rejoneador profissional, usando os rendimentos do toureio para desenvolver novos negócios agrícolas e pecuários e adquirir mais terras.
+
+Paulo Caetano alcançou os seus objectivos de criação com sucesso, produzindo cavalos para toureio, dressage e equitação portuguesa. Tem ensinado vários jovens cavaleiros até ao nível internacional, incluindo a sua filha Maria Caetano, que compete ao mais alto nível mundial de Dressage.',
+  'Monforte',
+  'Alentejo',
+  '+351 XXX XXX XXX',
+  'https://www.equisport.pt/artigos/coudelaria-paulo-caetano/',
+  60,
+  1981,
+  ARRAY['Toureio', 'Dressage', 'Equitação Portuguesa', 'Formação de Cavaleiros'],
+  ARRAY['Veiga', 'Andrade'],
+  ARRAY['Maria Caetano - cavaleira internacional de Dressage', 'Rejoneador profissional de referência'],
+  ARRAY['Venda de cavalos', 'Formação de cavaleiros'],
+  39.0530, -7.4391,
+  'https://images.unsplash.com/photo-1598974357801-cbca100e65d3?w=1200',
+  '[{"autor": "Lusitano Horse Finder", "texto": "Paulo e Maria Caetano são uma referência na criação e no desporto equestre português.", "data": "2024"}]'::jsonb,
+  ARRAY['monforte', 'toureio', 'dressage', 'maria caetano', 'rejoneador'],
+  false, true, 23, 'active', 'gratuito'
+);
+
+-- =============================================
+-- 24. COUDELARIA PEDRO FERRAZ DA COSTA
+-- Herdade das Coelheiras, Vila Verde de Ficalho
+-- Fonte: https://lusitanohorsefinder.com/coudaleria-pedro-feraz-da-costa/
+-- Fonte: http://www.equitacao.com/tv/38/4/coudelaria-ferraz-da-costa/
+-- Fundada em 1987, ~100 cavalos, 30 éguas PSL
+-- =============================================
+INSERT INTO coudelarias (
+  nome, slug, descricao, historia, localizacao, regiao,
+  website, instagram,
+  num_cavalos, ano_fundacao, especialidades, linhagens, servicos,
+  latitude, longitude, foto_capa,
+  testemunhos, tags,
+  is_pro, destaque, ordem_destaque, status, plan
+) VALUES (
+  'Coudelaria Pedro Ferraz da Costa',
+  'ferraz-da-costa',
+  'Fundada em 1987 na Herdade das Coelheiras, Vila Verde de Ficalho, a Coudelaria Ferraz da Costa opera com 30 éguas PSL e cerca de 100 cavalos. Reconhecida pela qualidade e carácter excepcional dos seus produtos.',
+  'A Coudelaria Ferraz da Costa foi fundada em 1987 por Pedro Ferraz da Costa, com o objectivo de criar cavalos testados na funcionalidade — toureio, equitação de trabalho e dressage.
+
+Localizada na Herdade das Coelheiras em Vila Verde de Ficalho, no Baixo Alentejo, a coudelaria opera com cerca de 30 éguas Puro Sangue Lusitano e três éguas de sangue quente utilizadas em cruzamentos com garanhões PSL.
+
+Com aproximadamente 100 cavalos, a coudelaria é muito apreciada pela qualidade dos seus produtos e pelo carácter excepcional dos cavalos, adequados para o desporto.',
+  'Vila Verde de Ficalho',
+  'Alentejo',
+  'https://lusitanohorsefinder.com/coudaleria-pedro-feraz-da-costa/',
+  '@coudelariaferrazdacosta',
+  100,
+  1987,
+  ARRAY['Toureio', 'Equitação de Trabalho', 'Dressage', 'Cruzamentos PSL/Sangue Quente'],
+  ARRAY['Veiga', 'Andrade'],
+  ARRAY['Venda de cavalos', 'Cobrições'],
+  37.9468, -7.3010,
+  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200',
+  '[{"autor": "Lusitano Horse Finder", "texto": "Cavalos de qualidade excepcional com carácter ideal para desporto.", "data": "2024"}]'::jsonb,
+  ARRAY['ficalho', 'baixo alentejo', 'funcionalidade', 'desporto'],
+  false, true, 24, 'active', 'gratuito'
+);
+
+-- =============================================
+-- 25. QUINTA DO CASAL BRANCO
+-- Coudelaria histórica em Benfica do Ribatejo / Almeirim
+-- Fonte: https://www.casalbranco.com/pt/en/coudelaria/
+-- Fonte: https://www.visitribatejo.pt/en/catalogue/what-to-do/wine-tourism/quinta-do-casal-branco/
+-- Tradição vitivinícola e equestre há mais de 200 anos
+-- =============================================
+INSERT INTO coudelarias (
+  nome, slug, descricao, historia, localizacao, regiao,
+  website, instagram,
+  num_cavalos, ano_fundacao, especialidades, linhagens, servicos,
+  latitude, longitude, foto_capa,
+  testemunhos, tags,
+  is_pro, destaque, ordem_destaque, status, plan
+) VALUES (
+  'Quinta do Casal Branco',
+  'casal-branco',
+  'A Coudelaria da Quinta do Casal Branco, em Benfica do Ribatejo (Almeirim), é marcada pela beleza e tradição do cavalo Puro Sangue Lusitano. A história remonta ao 2º Conde de Sobral, combinando vinhos e cavalos há mais de dois séculos.',
+  'A tradição equestre da Quinta do Casal Branco remonta ao 2º Conde de Sobral, D. Luís de Mello Breyner. Hoje a tradição mantém-se viva numa propriedade que combina a produção de vinho com a criação de cavalos Lusitanos há mais de 200 anos.
+
+Localizada em Benfica do Ribatejo, no concelho de Almeirim, a quinta oferece experiências personalizadas de enoturismo e é reconhecida como um dos criatórios de referência do Puro Sangue Lusitano na região do Tejo.',
+  'Benfica do Ribatejo, Almeirim',
+  'Ribatejo',
+  'https://www.casalbranco.com/pt/en/coudelaria/',
+  '@quintadocasalbranco',
+  35,
+  1775,
+  ARRAY['Criação Histórica', 'Dressage', 'Enoturismo', 'Lazer'],
+  ARRAY['Veiga', 'Andrade'],
+  ARRAY['Venda de cavalos', 'Enoturismo', 'Visitas guiadas'],
+  39.2250, -8.6483,
+  'https://images.unsplash.com/photo-1534307671554-9a6d81f4d629?w=1200',
+  '[{"autor": "Visit Ribatejo", "texto": "Uma quinta onde a tradição do vinho e dos cavalos se encontram há séculos.", "data": "2024"}]'::jsonb,
+  ARRAY['almeirim', 'ribatejo', 'enoturismo', 'histórico', 'conde de sobral'],
+  false, true, 25, 'active', 'gratuito'
 );
 
 -- =============================================

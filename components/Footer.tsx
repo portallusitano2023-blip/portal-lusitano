@@ -37,13 +37,13 @@ export default function Footer() {
 
             {/* REDES SOCIAIS COM ICONS */}
             <div className="flex gap-5 pt-4">
-              <a href="https://instagram.com/portal_lusitano" target="_blank" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
+              <a href="https://instagram.com/portal_lusitano" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
                 <Instagram size={18} />
               </a>
-              <a href="https://tiktok.com/@portal_lusitano" target="_blank" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
+              <a href="https://tiktok.com/@portal_lusitano" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
                 <Music2 size={18} />
               </a>
-              <a href="mailto:portal.lusitano2023@gmail.com" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
+              <a href="mailto:portal.lusitano2023@gmail.com" aria-label="Email" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
                 <Mail size={18} />
               </a>
             </div>
@@ -51,9 +51,9 @@ export default function Footer() {
 
           {/* NAVEGACAO RAPIDA */}
           <div className="md:col-span-3 space-y-8">
-            <h4 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
+            <h2 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
               {t.nav.home === "Home" ? "Navigation" : "Navegacao"}
-            </h4>
+            </h2>
             <ul className="space-y-4">
               {navItems.map((item) => (
                 <li key={item.href}>
@@ -68,9 +68,9 @@ export default function Footer() {
 
           {/* CONTACTOS E LOCALIZACAO */}
           <div className="md:col-span-4 space-y-8">
-            <h4 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
+            <h2 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
               {t.nav.home === "Home" ? "Official Contact" : "Contacto Oficial"}
-            </h4>
+            </h2>
             <div className="space-y-6">
               <div className="flex items-start gap-4 group">
                 <MapPin className="text-[#C5A059] mt-1" size={16} />

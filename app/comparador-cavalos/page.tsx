@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Plus, X, Scale, Trophy, Heart, Ruler, Calendar, Euro, Star,
   Crown, Dna, Activity, Medal, TrendingUp, BarChart3, ChevronRight,
@@ -161,7 +160,7 @@ const RadarChart = ({ cavalos, labels }: { cavalos: { nome: string; valores: num
       })}
       {/* Data polygons */}
       {cavalos.map((cavalo, ci) => (
-        <motion.polygon
+        <polygon
           key={ci}
           points={cavalo.valores.map((v, i) => {
             const p = getPoint(v, i);
@@ -170,9 +169,7 @@ const RadarChart = ({ cavalos, labels }: { cavalos: { nome: string; valores: num
           fill={`${cavalo.cor}20`}
           stroke={cavalo.cor}
           strokeWidth="2"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: ci * 0.2 }}
+          style={{ opacity: 0, animation: `fadeSlideIn 0.5s ease-out ${ci * 0.2}s forwards` }}
         />
       ))}
       {/* Labels */}
@@ -341,14 +338,8 @@ export default function ComparadorCavalosPage() {
 
       <div className="pt-16">
         {/* ==================== INTRO ==================== */}
-        <AnimatePresence mode="wait">
           {step === 0 && (
-            <motion.div
-              key="intro"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, y: -20 }}
-            >
+            <div className="animate-[fadeSlideIn_0.4s_ease-out_forwards]">
               {/* Hero Section */}
               <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
@@ -363,71 +354,57 @@ export default function ComparadorCavalosPage() {
                 </div>
 
                 <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-                  <motion.span
-                    className="inline-block px-4 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
+                  <span
+                    className="inline-block px-4 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.2s" }}
                   >
                     Ferramenta de Análise
-                  </motion.span>
+                  </span>
 
-                  <motion.h1
-                    className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
+                  <h1
+                    className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.3s" }}
                   >
                     Comparador de
                     <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mt-2">
                       Cavalos Lusitanos
                     </span>
-                  </motion.h1>
+                  </h1>
 
-                  <motion.p
-                    className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
+                  <p
+                    className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.4s" }}
                   >
                     "Compare até 4 cavalos lado a lado com análise detalhada de conformação,
                     andamentos, treino e valor de mercado."
-                  </motion.p>
+                  </p>
 
-                  <motion.p
-                    className="text-sm text-zinc-500 max-w-xl mx-auto mb-10"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
+                  <p
+                    className="text-sm text-zinc-500 max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.5s" }}
                   >
                     Gráficos radar, tabelas comparativas e análise de custo-benefício
                     para ajudar na tomada de decisão.
-                  </motion.p>
+                  </p>
 
-                  <motion.button
+                  <button
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-400 hover:to-blue-500 transition-all shadow-lg shadow-blue-500/20"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-400 hover:to-blue-500 transition-all shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.6s" }}
                   >
                     <Scale size={20} />
                     Iniciar Comparação
                     <ChevronRight size={18} />
-                  </motion.button>
+                  </button>
                 </div>
               </section>
 
               {/* Features */}
               <section className="py-16 px-6">
                 <div className="max-w-6xl mx-auto">
-                  <motion.div
-                    className="grid md:grid-cols-3 gap-6"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 }}
+                  <div
+                    className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.7s" }}
                   >
                     <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                       <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
@@ -461,35 +438,25 @@ export default function ComparadorCavalosPage() {
                         o melhor investimento.
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
               </section>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
 
         {/* ==================== COMPARAÇÃO ==================== */}
-        <AnimatePresence mode="wait">
           {step === 1 && (
-            <motion.div
-              key="compare"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="max-w-7xl mx-auto px-4 py-8"
-            >
+            <div className="max-w-7xl mx-auto px-4 py-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
               {/* Cards dos Cavalos */}
               <div className={`grid gap-4 mb-8 ${
                 cavalos.length === 2 ? "md:grid-cols-2" :
                 cavalos.length === 3 ? "md:grid-cols-3" : "md:grid-cols-4"
               }`}>
                 {cavalos.map((c, i) => (
-                  <motion.div
+                  <div
                     key={c.id}
-                    className="bg-zinc-900/50 rounded-2xl border border-zinc-800 overflow-hidden"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
+                    className="bg-zinc-900/50 rounded-2xl border border-zinc-800 overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: `${i * 0.1}s` }}
                   >
                     {/* Header do Card */}
                     <div
@@ -688,7 +655,7 @@ export default function ComparadorCavalosPage() {
                         </div>
                       </div>
                     )}
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
@@ -705,11 +672,7 @@ export default function ComparadorCavalosPage() {
 
               {/* Análise */}
               {showAnalise && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-6"
-                >
+                <div className="space-y-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
                   {/* Gráfico Radar */}
                   <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800">
                     <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
@@ -870,11 +833,10 @@ export default function ComparadorCavalosPage() {
                       avaliação presencial e exame veterinário.
                     </p>
                   </div>
-                </motion.div>
+                </div>
               )}
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </div>
     </main>
   );

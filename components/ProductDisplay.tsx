@@ -42,12 +42,13 @@ export default function ProductDisplay({ product }: { product: any }) {
         {product.images.length > 1 && (
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
             {product.images.map((img: any, index: number) => (
-              <button 
+              <button
                 key={index}
                 onClick={() => setSelectedImage(img.url)}
+                aria-label={`Ver imagem ${index + 1} de ${product.title}`}
                 className={`w-20 h-24 flex-shrink-0 border transition-all ${selectedImage === img.url ? 'border-[#C5A059] opacity-100' : 'border-transparent opacity-50 hover:opacity-100'}`}
               >
-                <img src={img.url} alt="" className="w-full h-full object-cover" />
+                <img src={img.url} alt={`${product.title} - imagem ${index + 1}`} className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
@@ -72,12 +73,13 @@ export default function ProductDisplay({ product }: { product: any }) {
         {/* MENU DESDOBRÁVEL (DROPDOWN) */}
         {product.variants.length > 1 && (
           <div className="mb-8">
-            <span className="text-[10px] uppercase tracking-widest text-zinc-500 mb-4 block">
+            <label htmlFor="variant-select" className="text-[10px] uppercase tracking-widest text-zinc-500 mb-4 block">
               Modelo
-            </span>
-            
+            </label>
+
             <div className="relative w-full max-w-xs">
               <select
+                id="variant-select"
                 value={selectedVariantId}
                 onChange={(e) => setSelectedVariantId(e.target.value)}
                 className="w-full appearance-none bg-transparent border border-zinc-800 text-white py-4 pl-4 pr-12 font-serif text-sm focus:border-[#C5A059] focus:outline-none transition-colors cursor-pointer uppercase tracking-wider rounded-none"

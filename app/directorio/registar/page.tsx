@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Check,
   MapPin,
@@ -98,10 +97,8 @@ export default function RegistarCoudelariaPage() {
     <main className="min-h-screen bg-[#050505] pt-32 pb-20">
       <div className="max-w-4xl mx-auto px-6">
         {/* Header */}
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
+          className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
         >
           <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
             Diretório de Coudelarias
@@ -112,7 +109,7 @@ export default function RegistarCoudelariaPage() {
           <p className="text-zinc-400 max-w-xl mx-auto">
             Junte-se ao maior diretório de coudelarias Lusitanas de Portugal
           </p>
-        </motion.div>
+        </div>
 
         {/* Progress Steps */}
         <div className="flex items-center justify-center gap-4 mb-12">
@@ -140,9 +137,8 @@ export default function RegistarCoudelariaPage() {
 
         {/* Step 1: Informações */}
         {step === 1 && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+          <div
+            className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <h2 className="text-2xl font-serif text-white mb-6 text-center">
               Informações da Coudelaria
@@ -333,14 +329,13 @@ export default function RegistarCoudelariaPage() {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Step 2: Confirmar */}
         {step === 2 && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+          <div
+            className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <h2 className="text-2xl font-serif text-white mb-6 text-center">
               Confirmar Registo
@@ -408,15 +403,13 @@ export default function RegistarCoudelariaPage() {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Step 3: Sucesso */}
         {step === 3 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center"
+          <div
+            className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <Check className="text-green-500" size={40} />
@@ -434,7 +427,7 @@ export default function RegistarCoudelariaPage() {
               Ver Diretório
               <ArrowRight size={18} />
             </Link>
-          </motion.div>
+          </div>
         )}
       </div>
     </main>

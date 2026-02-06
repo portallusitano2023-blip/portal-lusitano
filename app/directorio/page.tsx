@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import {
   MapPin,
   Search,
@@ -96,10 +95,8 @@ export default function DirectorioPage() {
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <div
+            className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
               Diretório Oficial
@@ -111,14 +108,12 @@ export default function DirectorioPage() {
               Descubra as melhores coudelarias de cavalos Lusitanos em Portugal.
               Criadores verificados, linhagens de excelência e cavalos de elite.
             </p>
-          </motion.div>
+          </div>
 
           {/* Stats */}
-          <motion.div
-            className="grid grid-cols-3 gap-4 max-w-xl mx-auto mt-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          <div
+            className="grid grid-cols-3 gap-4 max-w-xl mx-auto mt-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.1s" }}
           >
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
               <div className="text-3xl font-serif text-[#C5A059]">
@@ -136,17 +131,15 @@ export default function DirectorioPage() {
               <div className="text-3xl font-serif text-[#C5A059]">1000+</div>
               <div className="text-sm text-zinc-500">Cavalos</div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-6 pb-20">
         {/* CTA para registar */}
-        <motion.div
-          className="mb-12 p-8 bg-gradient-to-r from-[#C5A059]/10 via-[#C5A059]/5 to-transparent border border-[#C5A059]/20 relative overflow-hidden"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+        <div
+          className="mb-12 p-8 bg-gradient-to-r from-[#C5A059]/10 via-[#C5A059]/5 to-transparent border border-[#C5A059]/20 relative overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.2s" }}
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#C5A059]/10 blur-3xl" />
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative">
@@ -171,14 +164,12 @@ export default function DirectorioPage() {
               Registar Coudelaria
             </Link>
           </div>
-        </motion.div>
+        </div>
 
         {/* Filtros */}
-        <motion.div
-          className="mb-12 flex flex-col md:flex-row gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+        <div
+          className="mb-12 flex flex-col md:flex-row gap-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.3s" }}
         >
           {/* Pesquisa */}
           <div className="flex-1 relative">
@@ -213,7 +204,7 @@ export default function DirectorioPage() {
               ))}
             </select>
           </div>
-        </motion.div>
+        </div>
 
         {/* Loading */}
         {loading && (
@@ -302,10 +293,9 @@ function FeaturedCard({
     coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
+    <div
+      className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      style={{ animationDelay: `${index * 0.1}s` }}
     >
       <Link
         href={`/directorio/${coudelaria.slug}`}
@@ -357,7 +347,7 @@ function FeaturedCard({
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }
 
@@ -373,10 +363,9 @@ function CoudelariaCard({
     coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
+    <div
+      className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      style={{ animationDelay: `${index * 0.05}s` }}
     >
       <Link
         href={`/directorio/${coudelaria.slug}`}
@@ -432,7 +421,6 @@ function CoudelariaCard({
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }
-

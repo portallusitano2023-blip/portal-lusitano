@@ -388,3 +388,148 @@ export function HorseSchema({
     />
   );
 }
+
+// Schema de Pagina de Coleccao (para listagens)
+interface CollectionPageSchemaProps {
+  name: string;
+  description: string;
+  url: string;
+}
+
+export function CollectionPageSchema({ name, description, url }: CollectionPageSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    description,
+    url,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Portal Lusitano",
+      url: siteUrl,
+    },
+    inLanguage: "pt-PT",
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema de Aplicacao Web (para ferramentas)
+interface WebApplicationSchemaProps {
+  name: string;
+  description: string;
+  url: string;
+}
+
+export function WebApplicationSchema({ name, description, url }: WebApplicationSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name,
+    description,
+    url,
+    applicationCategory: "UtilityApplication",
+    operatingSystem: "Any",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+    },
+    provider: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+      url: siteUrl,
+    },
+    inLanguage: "pt-PT",
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema de Pagina Medica (para piroplasmose)
+export function MedicalWebPageSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    name: "Piroplasmose Equina — Guia Completo",
+    description: "Guia completo sobre piroplasmose equina: prevalência em Portugal, impacto na exportação, diagnóstico, tratamento e prevenção.",
+    url: `${siteUrl}/piroplasmose`,
+    lastReviewed: "2025-01-01",
+    about: {
+      "@type": "MedicalCondition",
+      name: "Piroplasmose Equina",
+      alternateName: ["Equine Piroplasmosis", "Babesiose Equina"],
+      associatedAnatomy: {
+        "@type": "AnatomicalStructure",
+        name: "Sangue (eritrócitos)",
+      },
+      cause: [
+        { "@type": "InfectiveAgent", name: "Theileria equi" },
+        { "@type": "InfectiveAgent", name: "Babesia caballi" },
+      ],
+    },
+    medicalAudience: {
+      "@type": "MedicalAudience",
+      audienceType: "Veterinários, Proprietários de Cavalos",
+    },
+    inLanguage: "pt-PT",
+    publisher: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+      url: siteUrl,
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema de Livro (para ebook)
+export function BookSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    name: "Introdução ao Cavalo Lusitano",
+    description: "O guia essencial para quem quer conhecer a raça mais nobre da Península Ibérica. História, linhagens, cuidados e dicas para compradores.",
+    author: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+    },
+    inLanguage: "pt",
+    bookFormat: "https://schema.org/EBook",
+    isAccessibleForFree: true,
+    numberOfPages: 30,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+      availability: "https://schema.org/InStock",
+      url: `${siteUrl}/ebook-gratis`,
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}

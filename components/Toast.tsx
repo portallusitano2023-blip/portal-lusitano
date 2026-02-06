@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, AlertCircle, Info, X } from "lucide-react";
 
 export type ToastType = "success" | "error" | "warning" | "info";
@@ -10,6 +9,7 @@ interface ToastProps {
   message: string;
   type?: ToastType;
   duration?: number;
+  removing?: boolean;
   onClose: () => void;
 }
 
@@ -51,6 +51,7 @@ export default function Toast({
   message,
   type = "info",
   duration = 5000,
+  removing = false,
   onClose,
 }: ToastProps) {
   const Icon = icons[type];
@@ -64,11 +65,8 @@ export default function Toast({
   }, [duration, onClose]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      className={`${colorScheme.bg} ${colorScheme.border} border rounded-lg px-4 py-3 shadow-xl backdrop-blur-sm flex items-start gap-3 min-w-[320px] max-w-md`}
+    <div
+      className={`${colorScheme.bg} ${colorScheme.border} border rounded-lg px-4 py-3 shadow-xl backdrop-blur-sm flex items-start gap-3 min-w-[320px] max-w-md ${removing ? 'animate-[slideOutRight_0.3s_ease-out_forwards]' : 'animate-[slideInRight_0.3s_ease-out_forwards]'}`}
     >
       <Icon className={`${colorScheme.icon} flex-shrink-0 mt-0.5`} size={20} />
       <p className={`${colorScheme.text} text-sm flex-1 font-medium`}>
@@ -81,7 +79,7 @@ export default function Toast({
       >
         <X size={18} />
       </button>
-    </motion.div>
+    </div>
   );
 }
 
@@ -91,6 +89,7 @@ interface ToastContainerProps {
     message: string;
     type?: ToastType;
     duration?: number;
+    removing?: boolean;
   }>;
   onRemove: (id: string) => void;
 }
@@ -99,17 +98,16 @@ export function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
   return (
     <div className="fixed top-4 right-4 z-[9999] pointer-events-none">
       <div className="flex flex-col gap-3 pointer-events-auto">
-        <AnimatePresence mode="popLayout">
-          {toasts.map((toast) => (
-            <Toast
-              key={toast.id}
-              message={toast.message}
-              type={toast.type}
-              duration={toast.duration}
-              onClose={() => onRemove(toast.id)}
-            />
-          ))}
-        </AnimatePresence>
+        {toasts.map((toast) => (
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+            duration={toast.duration}
+            removing={toast.removing}
+            onClose={() => onRemove(toast.id)}
+          />
+        ))}
       </div>
     </div>
   );

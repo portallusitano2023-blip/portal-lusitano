@@ -115,6 +115,12 @@ export default function RootLayout({
   return (
     <html lang="pt" className={`${playfair.variable} ${montserrat.variable} dark`}>
       <head>
+        {/* DNS-Prefetch para recursos externos */}
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <OrganizationSchema />
         <WebsiteSchema />
         <AnalyticsScripts />

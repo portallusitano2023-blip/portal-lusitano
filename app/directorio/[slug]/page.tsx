@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   MapPin,
   Phone,
@@ -264,10 +263,7 @@ export default function CoudelariaPage() {
         {/* Hero Content */}
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
+            <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
               {coudelaria.ano_fundacao && (
                 <span className="text-[#C5A059] text-sm uppercase tracking-widest mb-2 block">
                   Fundada em {coudelaria.ano_fundacao}
@@ -288,7 +284,7 @@ export default function CoudelariaPage() {
                   </span>
                 )}
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -298,22 +294,20 @@ export default function CoudelariaPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-12">
             {/* Description */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+            <section
+              className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              style={{ animationDelay: "0.1s" }}
             >
               <p className="text-xl text-zinc-300 leading-relaxed">
                 {coudelaria.descricao}
               </p>
-            </motion.section>
+            </section>
 
             {/* Especialidades */}
             {coudelaria.especialidades?.length > 0 && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+              <section
+                className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.2s" }}
               >
                 <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
                   <Sparkles className="text-[#C5A059]" size={24} />
@@ -329,15 +323,14 @@ export default function CoudelariaPage() {
                     </span>
                   ))}
                 </div>
-              </motion.section>
+              </section>
             )}
 
             {/* História */}
             {coudelaria.historia && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+              <section
+                className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.3s" }}
               >
                 <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
                   <Calendar className="text-[#C5A059]" size={24} />
@@ -350,15 +343,14 @@ export default function CoudelariaPage() {
                     </p>
                   ))}
                 </div>
-              </motion.section>
+              </section>
             )}
 
             {/* Galeria */}
             {images.length > 1 && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+              <section
+                className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.4s" }}
               >
                 <h2 className="text-2xl font-serif text-white mb-6">Galeria</h2>
                 <div className="relative">
@@ -411,15 +403,14 @@ export default function CoudelariaPage() {
                     ))}
                   </div>
                 </div>
-              </motion.section>
+              </section>
             )}
 
             {/* Prémios */}
             {coudelaria.premios && coudelaria.premios.length > 0 && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+              <section
+                className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.5s" }}
               >
                 <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
                   <Trophy className="text-[#C5A059]" size={24} />
@@ -436,16 +427,15 @@ export default function CoudelariaPage() {
                     </div>
                   ))}
                 </div>
-              </motion.section>
+              </section>
             )}
 
             {/* Cavalos em Destaque */}
             {coudelaria.cavalos_destaque &&
               coudelaria.cavalos_destaque.length > 0 && (
-                <motion.section
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
+                <section
+                  className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  style={{ animationDelay: "0.6s" }}
                 >
                   <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
                     <Star className="text-[#C5A059]" size={24} />
@@ -492,15 +482,14 @@ export default function CoudelariaPage() {
                       </div>
                     ))}
                   </div>
-                </motion.section>
+                </section>
               )}
 
             {/* Testemunhos */}
             {coudelaria.testemunhos && coudelaria.testemunhos.length > 0 && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
+              <section
+                className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.7s" }}
               >
                 <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
                   <Quote className="text-[#C5A059]" size={24} />
@@ -524,14 +513,13 @@ export default function CoudelariaPage() {
                     </div>
                   ))}
                 </div>
-              </motion.section>
+              </section>
             )}
 
             {/* Sistema de Reviews */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
+            <section
+              className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              style={{ animationDelay: "0.8s" }}
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-serif text-white flex items-center gap-3">
@@ -581,11 +569,9 @@ export default function CoudelariaPage() {
 
               {/* Formulário de Review */}
               {showReviewForm && (
-                <motion.form
+                <form
                   onSubmit={submitReview}
-                  className="mb-8 p-6 bg-zinc-900/50 border border-[#C5A059]/30"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
+                  className="mb-8 p-6 bg-zinc-900/50 border border-[#C5A059]/30 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 >
                   <h3 className="text-lg font-serif text-white mb-4">
                     Partilhe a sua experiência
@@ -709,7 +695,7 @@ export default function CoudelariaPage() {
                     <Send size={18} />
                     {submittingReview ? "A enviar..." : "Submeter Avaliação"}
                   </button>
-                </motion.form>
+                </form>
               )}
 
               {/* Lista de Reviews */}
@@ -773,18 +759,16 @@ export default function CoudelariaPage() {
                   </p>
                 </div>
               )}
-            </motion.section>
+            </section>
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-32 space-y-6">
               {/* Contact Card */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-zinc-900/50 border border-white/10 p-6"
+              <div
+                className="bg-zinc-900/50 border border-white/10 p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.2s" }}
               >
                 <h3 className="text-lg font-medium text-white mb-6">
                   Informações de Contacto
@@ -881,15 +865,13 @@ export default function CoudelariaPage() {
                     </p>
                   )}
                 </div>
-              </motion.div>
+              </div>
 
               {/* Serviços */}
               {coudelaria.servicos && coudelaria.servicos.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="bg-zinc-900/50 border border-white/10 p-6"
+                <div
+                  className="bg-zinc-900/50 border border-white/10 p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  style={{ animationDelay: "0.3s" }}
                 >
                   <h3 className="text-lg font-medium text-white mb-4">
                     Serviços
@@ -905,16 +887,14 @@ export default function CoudelariaPage() {
                       </li>
                     ))}
                   </ul>
-                </motion.div>
+                </div>
               )}
 
               {/* Linhagens */}
               {coudelaria.linhagens && coudelaria.linhagens.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="bg-zinc-900/50 border border-white/10 p-6"
+                <div
+                  className="bg-zinc-900/50 border border-white/10 p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  style={{ animationDelay: "0.4s" }}
                 >
                   <h3 className="text-lg font-medium text-white mb-4">
                     Linhagens
@@ -929,16 +909,14 @@ export default function CoudelariaPage() {
                       </span>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               )}
 
               {/* Map Placeholder */}
               {coudelaria.latitude && coudelaria.longitude && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="bg-zinc-900/50 border border-white/10 overflow-hidden"
+                <div
+                  className="bg-zinc-900/50 border border-white/10 overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  style={{ animationDelay: "0.5s" }}
                 >
                   <a
                     href={`https://www.google.com/maps?q=${coudelaria.latitude},${coudelaria.longitude}`}
@@ -958,15 +936,13 @@ export default function CoudelariaPage() {
                       </div>
                     </div>
                   </a>
-                </motion.div>
+                </div>
               )}
 
               {/* CTA para registo */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
-                className="bg-gradient-to-br from-[#C5A059]/20 to-[#C5A059]/5 border border-[#C5A059]/30 p-6"
+              <div
+                className="bg-gradient-to-br from-[#C5A059]/20 to-[#C5A059]/5 border border-[#C5A059]/30 p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.6s" }}
               >
                 <h3 className="text-lg font-medium text-white mb-2">
                   Tem uma coudelaria?
@@ -981,7 +957,7 @@ export default function CoudelariaPage() {
                 >
                   Registar Coudelaria
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>

@@ -27,7 +27,7 @@ export default function AdminError({
         </p>
 
         {error.digest && (
-          <p className="text-zinc-600 text-xs mb-4 font-mono">
+          <p className="text-zinc-400 text-xs mb-4 font-mono">
             {error.digest}
           </p>
         )}

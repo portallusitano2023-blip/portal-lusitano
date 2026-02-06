@@ -205,12 +205,94 @@ export default function VenderCavaloPage() {
     if (!validateStep(6)) return;
 
     setLoading(true);
-    // Aqui seria a integração com Stripe e backend
-    // Por agora simula o processo
-    setTimeout(() => {
+
+    try {
+      const response = await fetch("/api/vender-cavalo/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          anuncio: true,
+          destaque: opcaoDestaque,
+          formData: {
+            // Proprietário
+            proprietarioNome: formData.proprietario_nome,
+            proprietarioEmail: formData.proprietario_email,
+            proprietarioTelefone: formData.proprietario_telefone,
+            proprietarioWhatsapp: formData.proprietario_telefone, // ou campo separado se existir
+            // Cavalo
+            nomeCavalo: formData.nome,
+            nomeRegisto: formData.nome_registo,
+            numeroRegisto: formData.numero_registo,
+            microchip: formData.microchip,
+            passaporteEquino: formData.passaporte_equino,
+            // Linhagem
+            pai: formData.pai_nome,
+            paiRegisto: formData.pai_registo,
+            mae: formData.mae_nome,
+            maeRegisto: formData.mae_registo,
+            coudelariaOrigem: formData.coudelaria_origem,
+            linhagem: formData.coudelaria_origem,
+            // Características
+            dataNascimento: formData.data_nascimento,
+            idade: calcularIdade(formData.data_nascimento),
+            sexo: formData.sexo,
+            pelagem: formData.pelagem,
+            altura: formData.altura,
+            // Treino
+            nivelTreino: formData.nivel_treino,
+            disciplinas: formData.disciplinas,
+            competicoes: formData.competicoes,
+            premios: formData.premios,
+            // Saúde
+            estadoSaude: formData.estado_saude,
+            vacinacaoAtualizada: formData.vacinacao_atualizada,
+            desparasitacaoAtualizada: formData.desparasitacao_atualizada,
+            exameVeterinario: formData.exame_veterinario,
+            observacoesSaude: formData.observacoes_saude,
+            // Venda
+            preco: formData.preco,
+            precoNegociavel: formData.negociavel,
+            localizacao: formData.localizacao,
+            regiao: "Ribatejo", // Ou usar formData.regiao se existir
+            descricao: formData.descricao,
+            // Documentos
+            registoAPSL: formData.numero_registo,
+            documentosEmDia: formData.vacinacao_atualizada && formData.desparasitacao_atualizada,
+          },
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erro ao criar checkout");
+      }
+
+      if (!data.url) {
+        throw new Error("URL de checkout não retornada");
+      }
+
+      // Redirect para Stripe Checkout
+      window.location.href = data.url;
+    } catch (error: any) {
+      console.error("Erro ao processar pagamento:", error);
+      alert(`Erro ao processar pagamento: ${error.message}. Por favor, tente novamente ou contacte o suporte.`);
       setLoading(false);
-      alert("Funcionalidade de pagamento será implementada. O seu anúncio será publicado após confirmação do pagamento.");
-    }, 2000);
+    }
+  };
+
+  // Helper para calcular idade
+  const calcularIdade = (dataNascimento: string): number => {
+    if (!dataNascimento) return 0;
+    const hoje = new Date();
+    const nascimento = new Date(dataNascimento);
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mesAtual = hoje.getMonth();
+    const mesNascimento = nascimento.getMonth();
+    if (mesAtual < mesNascimento || (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
+      idade--;
+    }
+    return idade;
   };
 
   const precoTotal = PRECO_ANUNCIO + (opcaoDestaque ? PRECO_DESTAQUE : 0);

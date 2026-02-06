@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import {
   Calendar,
   MapPin,
@@ -183,10 +182,8 @@ export default function EventosPage() {
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <div
+            className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
               Calendário Equestre
@@ -198,18 +195,16 @@ export default function EventosPage() {
               Feiras, competições, leilões e muito mais. Não perca os principais
               eventos do mundo equestre português.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-6 pb-20">
         {/* Eventos em Destaque */}
         {eventosDestaque.length > 0 && (
-          <motion.section
-            className="mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          <section
+            className="mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.1s" }}
           >
             <div className="flex items-center gap-3 mb-8">
               <Star className="text-[#C5A059]" size={24} />
@@ -225,15 +220,13 @@ export default function EventosPage() {
                 />
               ))}
             </div>
-          </motion.section>
+          </section>
         )}
 
         {/* Filtros */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+        <div
+          className="mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.2s" }}
         >
           <div className="flex flex-wrap gap-3 mb-6">
             {tiposEvento.map((tipo) => (
@@ -270,7 +263,7 @@ export default function EventosPage() {
               <ChevronRight size={24} />
             </button>
           </div>
-        </motion.div>
+        </div>
 
         {/* Lista de Eventos */}
         {loading ? (
@@ -288,11 +281,9 @@ export default function EventosPage() {
             </p>
           </div>
         ) : (
-          <motion.div
-            className="space-y-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
+          <div
+            className="space-y-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.3s" }}
           >
             {eventos.map((evento, index) => (
               <EventoCard
@@ -302,21 +293,18 @@ export default function EventosPage() {
                 onClick={() => setSelectedEvento(evento)}
               />
             ))}
-          </motion.div>
+          </div>
         )}
 
         {/* Modal de Evento */}
         {selectedEvento && (
-          <motion.div
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-6 overflow-y-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <div
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-6 overflow-y-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             onClick={() => setSelectedEvento(null)}
           >
-            <motion.div
-              className="bg-zinc-900 border border-white/10 max-w-2xl w-full p-8 relative my-8"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+            <div
+              className="bg-zinc-900 border border-white/10 max-w-2xl w-full p-8 relative my-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              style={{ animationDelay: "0.1s" }}
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -418,8 +406,8 @@ export default function EventosPage() {
                   </a>
                 )}
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
       </div>
     </main>
@@ -438,12 +426,10 @@ function EventoDestaqueCard({
   const tipoIcon = tiposEvento.find((t) => t.value === evento.tipo)?.icon || "📅";
 
   return (
-    <motion.button
+    <button
       onClick={onClick}
-      className="text-left relative h-64 overflow-hidden group"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
+      className="text-left relative h-64 overflow-hidden group opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      style={{ animationDelay: `${index * 0.1}s` }}
     >
       {evento.imagem_capa && (
         <img
@@ -479,7 +465,7 @@ function EventoDestaqueCard({
           {evento.localizacao}
         </div>
       </div>
-    </motion.button>
+    </button>
   );
 }
 
@@ -520,12 +506,10 @@ function EventoCard({
   }
 
   return (
-    <motion.button
+    <button
       onClick={onClick}
-      className="w-full text-left flex items-stretch bg-zinc-900/50 border border-white/10 hover:border-[#C5A059]/50 transition-all group"
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.05 }}
+      className="w-full text-left flex items-stretch bg-zinc-900/50 border border-white/10 hover:border-[#C5A059]/50 transition-all group opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      style={{ animationDelay: `${index * 0.05}s` }}
     >
       {/* Data */}
       <div className="w-24 flex-shrink-0 bg-zinc-800/50 flex flex-col items-center justify-center p-4 border-r border-white/10 relative">
@@ -572,6 +556,6 @@ function EventoCard({
       <div className="flex items-center px-4 text-zinc-600 group-hover:text-[#C5A059] transition-colors">
         <ChevronRight size={24} />
       </div>
-    </motion.button>
+    </button>
   );
 }

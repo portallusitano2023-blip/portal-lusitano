@@ -28,7 +28,7 @@ export default function Error({
         </p>
 
         {error.digest && (
-          <p className="text-zinc-600 text-xs mb-6">
+          <p className="text-zinc-400 text-xs mb-6">
             Referência: {error.digest}
           </p>
         )}
@@ -49,7 +49,7 @@ export default function Error({
           </a>
         </div>
 
-        <p className="text-zinc-600 text-xs mt-12">
+        <p className="text-zinc-400 text-xs mt-12">
           Se o problema persistir, contacta-nos em{" "}
           <a
             href="mailto:suporte@portal-lusitano.pt"

@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Calculator, Dna, ChevronRight, ChevronLeft, Check, Activity,
   ArrowLeft, TrendingUp, TrendingDown, GitBranch, Crown, Sparkles,
@@ -439,11 +438,9 @@ export default function CalculadoraValorPage() {
         {/* Progress bar */}
         {step > 0 && !resultado && (
           <div className="h-0.5 bg-zinc-900">
-            <motion.div
-              className="h-full bg-gradient-to-r from-[#C5A059] to-[#D4AF6A]"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+            <div
+              className="h-full bg-gradient-to-r from-[#C5A059] to-[#D4AF6A] transition-all duration-500"
+              style={{ width: `${progress}%` }}
             />
           </div>
         )}
@@ -451,15 +448,9 @@ export default function CalculadoraValorPage() {
 
       <div className="pt-16">
         {/* ==================== INTRO ==================== */}
-        <AnimatePresence mode="wait">
+        {/* Step transitions */}
           {step === 0 && !resultado && (
-            <motion.div
-              key="intro"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-            >
+            <div className="animate-[fadeSlideIn_0.4s_ease-out_forwards]">
               {/* Hero Section */}
               <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
                 {/* Background */}
@@ -476,69 +467,55 @@ export default function CalculadoraValorPage() {
                 </div>
 
                 <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-                  <motion.span
-                    className="inline-block px-4 py-1.5 bg-[#C5A059]/10 border border-[#C5A059]/30 text-[#C5A059] text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
+                  <span
+                    className="inline-block px-4 py-1.5 bg-[#C5A059]/10 border border-[#C5A059]/30 text-[#C5A059] text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.2s" }}
                   >
                     Ferramenta Profissional
-                  </motion.span>
+                  </span>
 
-                  <motion.h1
-                    className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
+                  <h1
+                    className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.3s" }}
                   >
                     Calculadora de Valor
                     <span className="block text-[#C5A059] mt-2">Puro Sangue Lusitano</span>
-                  </motion.h1>
+                  </h1>
 
-                  <motion.p
-                    className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
+                  <p
+                    className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.4s" }}
                   >
                     "Uma ferramenta desenvolvida para criadores, compradores e profissionais
                     do sector equestre que procuram uma avaliação fundamentada."
-                  </motion.p>
+                  </p>
 
-                  <motion.p
-                    className="text-sm text-zinc-500 max-w-xl mx-auto mb-10"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
+                  <p
+                    className="text-sm text-zinc-500 max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.5s" }}
                   >
                     Baseada nos critérios de avaliação APSL, índices BLUP,
                     análise de mercado europeu e padrões internacionais de dressage.
-                  </motion.p>
+                  </p>
 
-                  <motion.button
+                  <button
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all shadow-lg shadow-[#C5A059]/20 hover:shadow-[#C5A059]/30"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all shadow-lg shadow-[#C5A059]/20 hover:shadow-[#C5A059]/30 hover:scale-[1.02] active:scale-[0.98] transition-transform opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.6s" }}
                   >
                     <Calculator size={20} />
                     Iniciar Avaliação
                     <ChevronRight size={18} />
-                  </motion.button>
+                  </button>
                 </div>
               </section>
 
               {/* Features */}
               <section className="py-16 px-6">
                 <div className="max-w-6xl mx-auto">
-                  <motion.div
-                    className="grid md:grid-cols-3 gap-6"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 }}
+                  <div
+                    className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.7s" }}
                   >
                     <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                       <div className="w-12 h-12 bg-[#C5A059]/10 rounded-lg flex items-center justify-center mb-4">
@@ -572,14 +549,12 @@ export default function CalculadoraValorPage() {
                         Reino Unido e Américas.
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
 
                   {/* Info Box */}
-                  <motion.div
-                    className="mt-12 p-6 bg-[#C5A059]/5 border border-[#C5A059]/20 rounded-xl"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 }}
+                  <div
+                    className="mt-12 p-6 bg-[#C5A059]/5 border border-[#C5A059]/20 rounded-xl opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.8s" }}
                   >
                     <div className="flex items-start gap-4">
                       <Info className="text-[#C5A059] flex-shrink-0 mt-1" size={20} />
@@ -594,25 +569,20 @@ export default function CalculadoraValorPage() {
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
               </section>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
 
         {/* ==================== FORMULÁRIO ==================== */}
         <div className="pb-24 px-4">
           <div className="max-w-2xl mx-auto">
-            <AnimatePresence mode="wait">
+            {/* Form steps */}
               {step > 0 && !resultado && (
-                <motion.div
+                <div
                   key={`step-${step}`}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-8 pt-8"
+                  className="space-y-8 pt-8 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
                 >
                   {/* Step 1: Identificação */}
                   {step === 1 && (
@@ -751,10 +721,8 @@ export default function CalculadoraValorPage() {
                           </div>
 
                           {form.registoAPSL && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: "auto" }}
-                              className="mt-4"
+                            <div
+                              className="mt-4 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
                             >
                               <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
                                 Tipo de Livro
@@ -778,7 +746,7 @@ export default function CalculadoraValorPage() {
                                   </button>
                                 ))}
                               </div>
-                            </motion.div>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -832,9 +800,8 @@ export default function CalculadoraValorPage() {
                         </div>
 
                         {(form.linhagem === "premium" || form.linhagem === "elite") && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
+                          <div
+                            className="animate-[fadeSlideIn_0.3s_ease-out_forwards]"
                           >
                             <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
                               Linhagem Principal
@@ -857,7 +824,7 @@ export default function CalculadoraValorPage() {
                                 </button>
                               ))}
                             </div>
-                          </motion.div>
+                          </div>
                         )}
 
                         <div className="pt-4 border-t border-zinc-900">
@@ -1161,10 +1128,8 @@ export default function CalculadoraValorPage() {
                             </button>
 
                             {form.reproducao && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                className="grid grid-cols-2 gap-4"
+                              <div
+                                className="grid grid-cols-2 gap-4 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
                               >
                                 <div>
                                   <label className="block text-xs text-zinc-500 mb-2">
@@ -1190,7 +1155,7 @@ export default function CalculadoraValorPage() {
                                     className="w-full bg-transparent border border-zinc-800 rounded-lg py-2 px-3 focus:border-[#C5A059] outline-none transition-colors"
                                   />
                                 </div>
-                              </motion.div>
+                              </div>
                             )}
                           </div>
                         )}
@@ -1289,18 +1254,14 @@ export default function CalculadoraValorPage() {
                       </button>
                     )}
                   </div>
-                </motion.div>
+                </div>
               )}
-            </AnimatePresence>
 
             {/* ==================== RESULTADO ==================== */}
             {resultado && (
-              <motion.div
+              <div
                 ref={resultRef}
-                className="space-y-6 pt-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                className="space-y-6 pt-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
               >
                 {/* Hero do Valor */}
                 <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-800 p-8 border border-zinc-800">
@@ -1471,11 +1432,9 @@ export default function CalculadoraValorPage() {
                           </span>
                         </div>
                         <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-                          <motion.div
-                            className="h-full bg-gradient-to-r from-[#C5A059] to-[#D4AF6A]"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${Math.min(cat.score * 10, 100)}%` }}
-                            transition={{ duration: 1, delay: i * 0.1 }}
+                          <div
+                            className="h-full bg-gradient-to-r from-[#C5A059] to-[#D4AF6A] transition-all duration-500"
+                            style={{ width: `${Math.min(cat.score * 10, 100)}%` }}
                           />
                         </div>
                       </div>
@@ -1563,7 +1522,7 @@ export default function CalculadoraValorPage() {
                     <ChevronRight size={16} />
                   </Link>
                 </div>
-              </motion.div>
+              </div>
             )}
           </div>
         </div>

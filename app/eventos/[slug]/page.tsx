@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -261,10 +260,8 @@ END:VCALENDAR`;
 
         <div className="relative max-w-4xl mx-auto px-6 pt-16">
           {/* Breadcrumb */}
-          <motion.nav
-            className="flex items-center gap-2 text-sm text-zinc-400 mb-8"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <nav
+            className="flex items-center gap-2 text-sm text-zinc-400 mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
             <Link href="/eventos" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">
               <ArrowLeft size={16} />
@@ -272,14 +269,12 @@ END:VCALENDAR`;
             </Link>
             <span>/</span>
             <span className="text-zinc-500 truncate">{evento.titulo}</span>
-          </motion.nav>
+          </nav>
 
           {/* Badges */}
-          <motion.div
-            className="flex flex-wrap items-center gap-3 mb-6"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          <div
+            className="flex flex-wrap items-center gap-3 mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.1s" }}
           >
             <span className={`px-3 py-1.5 text-sm border ${tipoInfo.color} flex items-center gap-2`}>
               <span>{tipoInfo.icon}</span>
@@ -305,24 +300,20 @@ END:VCALENDAR`;
                 {evento.views_count} visualizações
               </span>
             )}
-          </motion.div>
+          </div>
 
           {/* Título */}
-          <motion.h1
-            className="text-3xl md:text-5xl font-serif text-white mb-6"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+          <h1
+            className="text-3xl md:text-5xl font-serif text-white mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.2s" }}
           >
             {evento.titulo}
-          </motion.h1>
+          </h1>
 
           {/* Info Principal */}
-          <motion.div
-            className="grid md:grid-cols-2 gap-4 mb-8"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+          <div
+            className="grid md:grid-cols-2 gap-4 mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.3s" }}
           >
             <div className="flex items-center gap-3 text-zinc-300">
               <div className="w-10 h-10 bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center">
@@ -367,7 +358,7 @@ END:VCALENDAR`;
                 </div>
               </div>
             )}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -375,11 +366,9 @@ END:VCALENDAR`;
       <section className="max-w-4xl mx-auto px-6 pb-20">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Descrição */}
-          <motion.div
-            className="md:col-span-2 space-y-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+          <div
+            className="md:col-span-2 space-y-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.4s" }}
           >
             <div className="bg-zinc-900/50 border border-white/10 p-6">
               <h2 className="text-xl font-serif text-white mb-4">Sobre o Evento</h2>
@@ -415,14 +404,12 @@ END:VCALENDAR`;
                 <p className="text-zinc-400">{evento.organizador}</p>
               </div>
             )}
-          </motion.div>
+          </div>
 
           {/* Sidebar */}
-          <motion.aside
-            className="space-y-4"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
+          <aside
+            className="space-y-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.5s" }}
           >
             {/* Ações */}
             <div className="bg-zinc-900/50 border border-white/10 p-4 space-y-3">
@@ -509,16 +496,14 @@ END:VCALENDAR`;
                 <p className="text-white font-medium mt-1">{evento.regiao}</p>
               </div>
             )}
-          </motion.aside>
+          </aside>
         </div>
 
         {/* Eventos Relacionados */}
         {relacionados.length > 0 && (
-          <motion.section
-            className="mt-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+          <section
+            className="mt-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.6s" }}
           >
             <h2 className="text-2xl font-serif text-white mb-6">Eventos Relacionados</h2>
             <div className="grid md:grid-cols-3 gap-6">
@@ -564,7 +549,7 @@ END:VCALENDAR`;
                 );
               })}
             </div>
-          </motion.section>
+          </section>
         )}
       </section>
     </main>

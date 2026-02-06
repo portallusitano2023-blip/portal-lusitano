@@ -1,79 +1,52 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock, BookOpen } from "lucide-react";
-import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { articlesListPT, articlesListEN } from "@/data/articlesList";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.15,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4 },
-  },
-};
+import { useInViewOnce } from "@/hooks/useInViewOnce";
+import TextSplit from "@/components/TextSplit";
 
 export default function JornalPage() {
   const { t, language } = useLanguage();
 
   const articles = language === "pt" ? articlesListPT : articlesListEN;
 
+  const gridRef = useRef<HTMLDivElement>(null);
+  const gridInView = useInViewOnce(gridRef);
+
   return (
     <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
 
       {/* 1. CABECALHO */}
-      <motion.div
-        className="text-center mb-16 max-w-4xl mx-auto"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+      <div
+        className="text-center mb-16 max-w-4xl mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       >
-        <motion.span
-          className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+        <span
+          className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.2s" }}
         >
           {t.journal.archive}
-        </motion.span>
-        <motion.h1
+        </span>
+        <h1
           className="text-5xl md:text-7xl font-serif text-white mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
         >
-          {t.journal.title}
-        </motion.h1>
-        <motion.p
-          className="text-zinc-400 font-serif italic text-lg"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+          <TextSplit text={t.journal.title} baseDelay={0.3} wordDelay={0.1} />
+        </h1>
+        <p
+          className="text-zinc-400 font-serif italic text-lg opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.5s" }}
         >
-          "{t.journal.subtitle}"
-        </motion.p>
-      </motion.div>
+          &ldquo;{t.journal.subtitle}&rdquo;
+        </p>
+      </div>
 
       {/* 2. DESTAQUE */}
-      <motion.div
-        className="max-w-7xl mx-auto mb-20"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
+      <div
+        className="max-w-7xl mx-auto mb-20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+        style={{ animationDelay: "0.4s" }}
       >
         <Link href={`/jornal/${articles[0].id}`}>
           <div className="group relative w-full h-[600px] overflow-hidden border border-white/10 rounded-sm cursor-pointer">
@@ -87,12 +60,7 @@ export default function JornalPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
 
-            <motion.div
-              className="absolute bottom-0 left-0 p-8 md:p-16 w-full md:w-2/3"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-            >
+            <div className="absolute bottom-0 left-0 p-8 md:p-16 w-full md:w-2/3">
               <span className="inline-block bg-[#C5A059] text-black px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
                 {articles[0].category}
               </span>
@@ -106,30 +74,29 @@ export default function JornalPage() {
                 <div className="flex items-center gap-2"><BookOpen size={14} /> {t.journal.technical_read}</div>
                 <div className="flex items-center gap-2"><Clock size={14} /> {articles[0].readTime}</div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </Link>
-      </motion.div>
+      </div>
 
       {/* 3. GRELHA COMPLETA */}
-      <motion.div
+      <div
+        ref={gridRef}
         className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
       >
-        {articles.slice(1).map((article) => (
-          <motion.div key={article.id} variants={itemVariants}>
+        {articles.slice(1).map((article, index) => (
+          <div
+            key={article.id}
+            className={`transition-all duration-500 ${gridInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            style={{ transitionDelay: `${index * 0.08 + 0.15}s` }}
+          >
             <Link href={`/jornal/${article.id}`}>
               <article className="group cursor-pointer h-full flex flex-col border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02]">
                 <div className="w-full h-64 overflow-hidden relative">
-                  <motion.img
+                  <img
                     src={article.image}
                     alt={article.title}
-                    className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-700"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.7 }}
+                    className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
                   />
                   <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1 text-[10px] uppercase text-white tracking-widest border border-white/10">
                     {article.category}
@@ -155,9 +122,9 @@ export default function JornalPage() {
                 </div>
               </article>
             </Link>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
 
     </main>
   );

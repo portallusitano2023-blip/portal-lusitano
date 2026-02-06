@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Megaphone, Users, TrendingUp, Mail, Check } from "lucide-react";
+import { useState } from "react";
+import { Megaphone, Users, TrendingUp, Mail, Check, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 const content = {
@@ -28,8 +28,9 @@ const content = {
     packages: [
       {
         name: "Banner Lateral",
-        price: "€50",
+        price: "€25",
         period: "/mês",
+        packageId: "lateral",
         features: [
           "Banner 300x250px",
           "Visível em todas as páginas",
@@ -40,8 +41,9 @@ const content = {
       },
       {
         name: "Destaque Premium",
-        price: "€150",
+        price: "€75",
         period: "/mês",
+        packageId: "premium",
         features: [
           "Banner 728x90px no topo",
           "Banner lateral incluído",
@@ -53,8 +55,9 @@ const content = {
       },
       {
         name: "Parceria Anual",
-        price: "€1.200",
+        price: "€600",
         period: "/ano",
+        packageId: "anual",
         features: [
           "Tudo do Premium",
           "Artigo patrocinado",
@@ -104,8 +107,9 @@ const content = {
     packages: [
       {
         name: "Sidebar Banner",
-        price: "€50",
+        price: "€25",
         period: "/month",
+        packageId: "lateral",
         features: [
           "300x250px banner",
           "Visible on all pages",
@@ -116,8 +120,9 @@ const content = {
       },
       {
         name: "Premium Highlight",
-        price: "€150",
+        price: "€75",
         period: "/month",
+        packageId: "premium",
         features: [
           "728x90px top banner",
           "Sidebar banner included",
@@ -129,8 +134,9 @@ const content = {
       },
       {
         name: "Annual Partnership",
-        price: "€1,200",
+        price: "€600",
         period: "/year",
+        packageId: "anual",
         features: [
           "Everything in Premium",
           "Sponsored article",
@@ -163,15 +169,61 @@ export default function PublicidadePage() {
   const { language } = useLanguage();
   const t = content[language];
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    company: "",
+    telefone: "",
+  });
+
+  const handleOpenCheckout = (packageId: string) => {
+    setSelectedPackage(packageId);
+    setShowModal(true);
+  };
+
+  const handleCheckout = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.email || !formData.company) {
+      alert("Por favor preencha email e nome da empresa");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/publicidade/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          package: selectedPackage,
+          email: formData.email,
+          company: formData.company,
+          telefone: formData.telefone,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!data.url) {
+        throw new Error(data.error || "Erro ao criar checkout");
+      }
+
+      window.location.href = data.url;
+    } catch (error: any) {
+      alert(`Erro: ${error.message}`);
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+        <div
+          className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
         >
           <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Megaphone className="text-[#C5A059]" size={32} />
@@ -185,14 +237,12 @@ export default function PublicidadePage() {
           <p className="text-zinc-400 font-serif italic max-w-xl mx-auto">
             {t.description}
           </p>
-        </motion.div>
+        </div>
 
         {/* Stats */}
-        <motion.div
-          className="grid grid-cols-3 gap-4 mb-16"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
+        <div
+          className="grid grid-cols-3 gap-4 mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.1s" }}
         >
           {t.stats.map((stat, index) => (
             <div key={index} className="text-center p-6 bg-white/[0.02] border border-white/5">
@@ -200,14 +250,12 @@ export default function PublicidadePage() {
               <div className="text-sm text-zinc-500">{stat.label}</div>
             </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Audience */}
-        <motion.div
-          className="mb-16 p-8 bg-white/[0.02] border border-white/5"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.15 }}
+        <div
+          className="mb-16 p-8 bg-white/[0.02] border border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.15s" }}
         >
           <div className="flex items-center gap-3 mb-6">
             <Users className="text-[#C5A059]" size={24} />
@@ -221,14 +269,12 @@ export default function PublicidadePage() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Pricing Packages */}
-        <motion.div
-          className="mb-16"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
+        <div
+          className="mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.2s" }}
         >
           <div className="flex items-center gap-3 mb-8 justify-center">
             <TrendingUp className="text-[#C5A059]" size={24} />
@@ -255,7 +301,7 @@ export default function PublicidadePage() {
                   <span className="text-3xl font-serif text-[#C5A059]">{pkg.price}</span>
                   <span className="text-zinc-500">{pkg.period}</span>
                 </div>
-                <ul className="space-y-3">
+                <ul className="space-y-3 mb-6">
                   {pkg.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2 text-sm text-zinc-400">
                       <Check className="text-[#C5A059] mt-0.5 flex-shrink-0" size={14} />
@@ -263,17 +309,25 @@ export default function PublicidadePage() {
                     </li>
                   ))}
                 </ul>
+                <button
+                  onClick={() => handleOpenCheckout(pkg.packageId)}
+                  className={`w-full py-3 text-sm uppercase tracking-wider font-bold transition-all ${
+                    pkg.popular
+                      ? "bg-[#C5A059] text-black hover:bg-white"
+                      : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
+                  }`}
+                >
+                  {language === "pt" ? "Começar Agora" : "Get Started"}
+                </button>
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Other Options */}
-        <motion.div
-          className="mb-16 p-8 bg-white/[0.02] border border-white/5"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.25 }}
+        <div
+          className="mb-16 p-8 bg-white/[0.02] border border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.25s" }}
         >
           <h2 className="text-2xl font-serif text-white mb-6">{t.other.title}</h2>
           <div className="grid md:grid-cols-2 gap-4">
@@ -284,14 +338,12 @@ export default function PublicidadePage() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* CTA */}
-        <motion.div
-          className="text-center p-10 bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/20"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
+        <div
+          className="text-center p-10 bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.3s" }}
         >
           <Mail className="text-[#C5A059] mx-auto mb-4" size={32} />
           <h2 className="text-2xl font-serif text-white mb-2">{t.cta.title}</h2>
@@ -305,8 +357,76 @@ export default function PublicidadePage() {
             {t.cta.button}
           </a>
           <p className="mt-4 text-zinc-500 text-sm">{t.cta.email}</p>
-        </motion.div>
+        </div>
       </div>
+
+      {/* Modal de Checkout */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl max-w-md w-full p-6 relative">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white"
+            >
+              <X size={20} />
+            </button>
+
+            <h3 className="text-xl font-serif text-white mb-4">
+              {language === "pt" ? "Dados da Empresa" : "Company Details"}
+            </h3>
+
+            <form onSubmit={handleCheckout} className="space-y-4">
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">
+                  {language === "pt" ? "Email" : "Email"} *
+                </label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full bg-black border border-zinc-800 rounded px-4 py-3 text-white focus:outline-none focus:border-[#C5A059]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">
+                  {language === "pt" ? "Nome da Empresa" : "Company Name"} *
+                </label>
+                <input
+                  type="text"
+                  value={formData.company}
+                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  className="w-full bg-black border border-zinc-800 rounded px-4 py-3 text-white focus:outline-none focus:border-[#C5A059]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">
+                  {language === "pt" ? "Telefone (Opcional)" : "Phone (Optional)"}
+                </label>
+                <input
+                  type="tel"
+                  value={formData.telefone}
+                  onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+                  className="w-full bg-black border border-zinc-800 rounded px-4 py-3 text-white focus:outline-none focus:border-[#C5A059]"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#C5A059] hover:bg-white text-black font-bold py-3 uppercase tracking-wider transition-all disabled:opacity-50"
+              >
+                {loading
+                  ? (language === "pt" ? "A processar..." : "Processing...")
+                  : (language === "pt" ? "Continuar para Pagamento" : "Continue to Payment")}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

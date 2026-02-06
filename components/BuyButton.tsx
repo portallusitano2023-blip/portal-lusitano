@@ -42,7 +42,7 @@ export default function BuyButton({ variantId, available }) {
         transition-all duration-500 border
         ${available 
           ? 'bg-[#C5A059] text-black border-[#C5A059] hover:bg-white hover:text-black hover:border-white' 
-          : 'bg-zinc-900 text-zinc-600 border-zinc-800 cursor-not-allowed'}
+          : 'bg-zinc-900 text-zinc-400 border-zinc-800 cursor-not-allowed'}
       `}
     >
       <span className="relative z-10 flex items-center justify-center gap-2">

@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import {
   Check,
   Mail,
@@ -98,20 +97,14 @@ export default function DownloadPage() {
     <main className="min-h-screen bg-[#050505] pt-32 pb-20">
       {/* Success Hero */}
       <section className="max-w-4xl mx-auto px-6 text-center mb-20">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
+        <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
           {/* Success Icon */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-24 h-24 bg-green-500/20 border-2 border-green-500 rounded-full flex items-center justify-center mx-auto mb-8"
+          <div
+            className="w-24 h-24 bg-green-500/20 border-2 border-green-500 rounded-full flex items-center justify-center mx-auto mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.2s" }}
           >
             <Check className="text-green-500" size={48} />
-          </motion.div>
+          </div>
 
           <h1 className="text-5xl md:text-6xl font-serif text-white mb-6">
             Parabéns!
@@ -123,62 +116,53 @@ export default function DownloadPage() {
           </p>
 
           {/* View Ebook Button */}
-          <motion.button
+          <button
             onClick={handleViewEbook}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 bg-[#C5A059] text-black px-10 py-5 text-sm font-bold uppercase tracking-widest hover:bg-white transition-colors mb-4"
+            className="inline-flex items-center gap-3 bg-[#C5A059] text-black px-10 py-5 text-sm font-bold uppercase tracking-widest hover:bg-white hover:scale-[1.05] active:scale-[0.95] transition-all mb-4"
           >
             <BookOpen size={20} />
             Ler Ebook Agora
-          </motion.button>
+          </button>
 
           <p className="text-zinc-600 text-sm">
             Versão interativa otimizada para browser
           </p>
-        </motion.div>
+        </div>
       </section>
 
       {/* Next Steps */}
       <section className="max-w-6xl mx-auto px-6 mb-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
+        <div
+          className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.3s" }}
         >
           <h2 className="text-3xl font-serif text-white mb-4">
             Próximos Passos
           </h2>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {nextSteps.map((step, index) => (
-            <motion.div
+            <div
               key={step.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-zinc-900/50 border border-white/5 p-8 text-center"
+              className="bg-zinc-900/50 border border-white/5 p-8 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              style={{ animationDelay: `${0.4 + index * 0.1}s` }}
             >
               <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <step.icon className="text-[#C5A059]" size={28} />
               </div>
               <h3 className="text-xl font-serif text-white mb-3">{step.title}</h3>
               <p className="text-zinc-400">{step.description}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
 
       {/* Bonus Content */}
       <section className="max-w-6xl mx-auto px-6 mb-20 py-20 border-t border-white/5">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
+        <div
+          className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.3s" }}
         >
           <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-4 py-2 mb-4">
             <Sparkles className="text-green-500" size={16} />
@@ -192,35 +176,30 @@ export default function DownloadPage() {
           <p className="text-zinc-400 max-w-2xl mx-auto">
             Ao descarregares este ebook, também ganhaste acesso a:
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {bonuses.map((bonus, index) => (
-            <motion.div
+            <div
               key={bonus.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-gradient-to-b from-[#C5A059]/5 to-transparent border border-[#C5A059]/20 p-8 text-center"
+              className="bg-gradient-to-b from-[#C5A059]/5 to-transparent border border-[#C5A059]/20 p-8 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              style={{ animationDelay: `${0.4 + index * 0.1}s` }}
             >
               <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <bonus.icon className="text-[#C5A059]" size={28} />
               </div>
               <h3 className="text-lg font-serif text-white mb-3">{bonus.title}</h3>
               <p className="text-zinc-400 text-sm">{bonus.description}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
 
       {/* Share Section */}
       <section className="max-w-4xl mx-auto px-6 mb-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-zinc-900/50 border border-white/5 rounded-2xl p-12 text-center"
+        <div
+          className="bg-zinc-900/50 border border-white/5 rounded-2xl p-12 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.3s" }}
         >
           <Share2 className="text-[#C5A059] mx-auto mb-6" size={40} />
           <h3 className="text-2xl font-serif text-white mb-4">
@@ -244,16 +223,14 @@ export default function DownloadPage() {
               </a>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Final Message */}
       <section className="max-w-4xl mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="py-12 border-t border-white/5"
+        <div
+          className="py-12 border-t border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.3s" }}
         >
           <p className="text-zinc-400 mb-2">
             Tens alguma dúvida ou precisas de ajuda?
@@ -264,7 +241,7 @@ export default function DownloadPage() {
           >
             Visita a nossa página de FAQ
           </Link>
-        </motion.div>
+        </div>
       </section>
     </main>
   );

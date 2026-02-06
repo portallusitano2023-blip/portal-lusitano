@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { ShoppingBag, User, Menu, X, Search, Heart, Crown, Gift, ChevronDown, MapPin, Calendar, ShoppingCart, BookOpen, HelpCircle, Home, Store, Calculator, Scale, Dna, Users, Trophy, Euro, Shield } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
@@ -27,11 +27,34 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLusitanoOpen, setIsLusitanoOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const lusitanoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const openLusitano = useCallback(() => {
+    if (lusitanoTimeoutRef.current) {
+      clearTimeout(lusitanoTimeoutRef.current);
+      lusitanoTimeoutRef.current = null;
+    }
+    setIsLusitanoOpen(true);
+  }, []);
+
+  const closeLusitano = useCallback(() => {
+    lusitanoTimeoutRef.current = setTimeout(() => {
+      setIsLusitanoOpen(false);
+    }, 150);
+  }, []);
 
   // Fechar menu mobile quando a página muda (evita click-through para o carrinho)
   useEffect(() => {
     setIsMobileOpen(false);
+    setIsLusitanoOpen(false);
   }, [pathname]);
+
+  // Limpar timeout ao desmontar
+  useEffect(() => {
+    return () => {
+      if (lusitanoTimeoutRef.current) clearTimeout(lusitanoTimeoutRef.current);
+    };
+  }, []);
 
   // Detect scroll for better mobile UX
   useEffect(() => {
@@ -85,8 +108,8 @@ export default function Navbar() {
           {/* Lusitano Dropdown */}
           <div
             className="relative group"
-            onMouseEnter={() => setIsLusitanoOpen(true)}
-            onMouseLeave={() => setIsLusitanoOpen(false)}
+            onMouseEnter={openLusitano}
+            onMouseLeave={closeLusitano}
           >
             <button className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors py-2">
               Lusitano
@@ -95,160 +118,83 @@ export default function Navbar() {
 
             {isLusitanoOpen && (
               <div className="absolute top-full left-0 pt-2 w-[520px]">
-                <div className="bg-[#0a0a0a] border border-white/10 shadow-xl p-4 grid grid-cols-2 gap-4">
+                {/* CSS puro para hover instantâneo — evita Tailwind hover classes e repaints múltiplos */}
+                <style dangerouslySetInnerHTML={{ __html: `
+                  .dd-item{display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.75rem;border-radius:0.25rem;text-decoration:none;background:transparent}
+                  .dd-item:hover{background:rgba(255,255,255,0.08)}
+                ` }} />
+                <div className="bg-[#0a0a0a] border border-white/10 p-4 grid grid-cols-2 gap-4" style={{ contain: 'layout style paint' }}>
                   {/* Coluna 1 - Base de Dados */}
                   <div>
                     <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">Base de Dados</span>
-                    <Link
-                      href="/comprar"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <ShoppingCart size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Comprar Cavalo</div>
-                        <div className="text-[10px] text-zinc-500">Cavalos à venda</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/vender-cavalo"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <Euro size={16} className="text-green-500" />
-                      <div>
-                        <div className="text-sm font-medium">Vender Cavalo</div>
-                        <div className="text-[10px] text-zinc-500">Anuncie aqui</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/directorio"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <Crown size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Coudelarias</div>
-                        <div className="text-[10px] text-zinc-500">Diretório completo</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/mapa"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <MapPin size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Mapa</div>
-                        <div className="text-[10px] text-zinc-500">Mapa interativo</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/eventos"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <Calendar size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Eventos</div>
-                        <div className="text-[10px] text-zinc-500">Feiras e competições</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/linhagens"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <BookOpen size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Linhagens</div>
-                        <div className="text-[10px] text-zinc-500">Guia das linhagens</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/piroplasmose"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <Shield size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Piroplasmose</div>
-                        <div className="text-[10px] text-zinc-500">Saúde e exportação</div>
-                      </div>
-                    </Link>
+                    {[
+                      { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo", desc: "Cavalos à venda" },
+                      { href: "/vender-cavalo", icon: Euro, label: "Vender Cavalo", desc: "Anuncie aqui", iconClass: "text-green-500" },
+                      { href: "/directorio", icon: Crown, label: "Coudelarias", desc: "Diretório completo" },
+                      { href: "/mapa", icon: MapPin, label: "Mapa", desc: "Mapa interativo" },
+                      { href: "/eventos", icon: Calendar, label: "Eventos", desc: "Feiras e competições" },
+                      { href: "/linhagens", icon: BookOpen, label: "Linhagens", desc: "Guia das linhagens" },
+                      { href: "/piroplasmose", icon: Shield, label: "Piroplasmose", desc: "Saúde e exportação" },
+                    ].map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        prefetch={false}
+                        onClick={() => setIsLusitanoOpen(false)}
+                        className="dd-item"
+                      >
+                        <item.icon size={16} className={item.iconClass || "text-[#C5A059]"} />
+                        <div>
+                          <div className="text-sm font-medium text-zinc-200">{item.label}</div>
+                          <div className="text-[10px] text-zinc-500">{item.desc}</div>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
 
                   {/* Coluna 2 - Ferramentas e Comunidade */}
                   <div>
                     <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">Ferramentas</span>
-                    <Link
-                      href="/calculadora-valor"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <Calculator size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Calculadora</div>
-                        <div className="text-[10px] text-zinc-500">Estimar valor</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/comparador-cavalos"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <Scale size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Comparador</div>
-                        <div className="text-[10px] text-zinc-500">Comparar cavalos</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/verificador-compatibilidade"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <Dna size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Compatibilidade</div>
-                        <div className="text-[10px] text-zinc-500">Para criação</div>
-                      </div>
-                    </Link>
+                    {[
+                      { href: "/calculadora-valor", icon: Calculator, label: "Calculadora", desc: "Estimar valor" },
+                      { href: "/comparador-cavalos", icon: Scale, label: "Comparador", desc: "Comparar cavalos" },
+                      { href: "/verificador-compatibilidade", icon: Dna, label: "Compatibilidade", desc: "Para criação" },
+                    ].map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        prefetch={false}
+                        onClick={() => setIsLusitanoOpen(false)}
+                        className="dd-item"
+                      >
+                        <item.icon size={16} className="text-[#C5A059]" />
+                        <div>
+                          <div className="text-sm font-medium text-zinc-200">{item.label}</div>
+                          <div className="text-[10px] text-zinc-500">{item.desc}</div>
+                        </div>
+                      </Link>
+                    ))}
 
                     <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 mt-4 block font-medium">Comunidade</span>
-                    <Link
-                      href="/profissionais"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <Users size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Profissionais</div>
-                        <div className="text-[10px] text-zinc-500">Vets, ferradores, treinadores</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/cavalos-famosos"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <Trophy size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Lusitanos Notáveis</div>
-                        <div className="text-[10px] text-zinc-500">Galeria de honra</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/analise-perfil"
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded"
-                    >
-                      <HelpCircle size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium">Análise de Perfil</div>
-                        <div className="text-[10px] text-zinc-500">Descubra o seu perfil equestre</div>
-                      </div>
-                    </Link>
+                    {[
+                      { href: "/profissionais", icon: Users, label: "Profissionais", desc: "Vets, ferradores, treinadores" },
+                      { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis", desc: "Galeria de honra" },
+                      { href: "/analise-perfil", icon: HelpCircle, label: "Análise de Perfil", desc: "Descubra o seu perfil equestre" },
+                    ].map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        prefetch={false}
+                        onClick={() => setIsLusitanoOpen(false)}
+                        className="dd-item"
+                      >
+                        <item.icon size={16} className="text-[#C5A059]" />
+                        <div>
+                          <div className="text-sm font-medium text-zinc-200">{item.label}</div>
+                          <div className="text-[10px] text-zinc-500">{item.desc}</div>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 </div>
               </div>

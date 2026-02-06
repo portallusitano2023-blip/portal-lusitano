@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Heart, Trash2, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -39,30 +38,12 @@ export default function FavoritosPage() {
 
   const t = text[language];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
     <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+        <div
+          className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
         >
           <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Heart className="text-[#C5A059]" size={32} />
@@ -78,14 +59,12 @@ export default function FavoritosPage() {
               {t.clearAll}
             </button>
           )}
-        </motion.div>
+        </div>
 
         {wishlist.length === 0 ? (
-          <motion.div
-            className="text-center py-20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
+          <div
+            className="text-center py-20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            style={{ animationDelay: "0.2s" }}
           >
             <Heart className="text-zinc-800 mx-auto mb-6" size={64} />
             <h2 className="text-2xl font-serif text-white mb-3">{t.empty}</h2>
@@ -96,19 +75,16 @@ export default function FavoritosPage() {
             >
               {t.explore}
             </Link>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           >
-            {wishlist.map((item) => (
-              <motion.div
+            {wishlist.map((item, index) => (
+              <div
                 key={item.id}
-                variants={itemVariants}
-                className="group border border-white/5 bg-white/[0.02] overflow-hidden"
+                className="group border border-white/5 bg-white/[0.02] overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Imagem */}
                 <Link href={`/loja/${item.handle}`} className="block">
@@ -152,9 +128,9 @@ export default function FavoritosPage() {
                     </button>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </main>
