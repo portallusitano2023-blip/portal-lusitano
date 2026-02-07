@@ -40,6 +40,9 @@ interface Stats {
   aprovado: number;
   rejeitado: number;
   destaque: number;
+  bronze: number;
+  prata: number;
+  ouro: number;
 }
 
 export default function CoudelariasPage() {
@@ -48,10 +51,11 @@ export default function CoudelariasPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [planoFilter, setPlanoFilter] = useState("all");
 
   useEffect(() => {
     loadCoudelarias();
-  }, [statusFilter, searchTerm]);
+  }, [statusFilter, planoFilter, searchTerm]);
 
   const loadCoudelarias = async () => {
     try {

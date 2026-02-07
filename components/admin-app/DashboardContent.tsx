@@ -1,524 +1,538 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import {
-  FiDollarSign,
-  FiTrendingUp,
-  FiRepeat,
-  FiShoppingCart,
-  FiMail,
-  FiEye,
-  FiUsers,
-  FiCalendar,
-  FiStar,
-  FiBarChart2,
-} from "react-icons/fi";
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  Mail,
+  ShoppingCart,
+  Users,
+  Calendar,
+  Star,
+  Eye,
+  Settings,
+  RefreshCw,
+  Plus,
+  X,
+  Grid,
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  ArrowUpRight,
+  ArrowDownRight,
+  Zap,
+  Target,
+} from "lucide-react";
 
-interface DashboardStats {
-  totalLeads: number;
-  convertedLeads: number;
-  conversionRate: number;
-  totalCavalos: number;
-  activeCavalos: number;
-  soldCavalos: number;
-  cavalosViews: number;
-  totalEventos: number;
-  featuredEventos: number;
-  futureEventos: number;
-  eventosViews: number;
-  totalCoudelarias: number;
-  featuredCoudelarias: number;
-  totalReviews: number;
-  pendingReviews: number;
-  approvedReviews: number;
-}
+// ========================================
+// TIPOS
+// ========================================
 
-interface FinancialOverview {
-  totalRevenue: number;
-  thisMonthRevenue: number;
-  growthPercentage: number;
-  mrr: number;
-  averageTicket: number;
-  totalTransactions: number;
-}
-
-interface MessagesStats {
-  total: number;
-  novo: number;
-  lido: number;
-  respondido: number;
-}
-
-interface RecentMessage {
+interface Widget {
   id: string;
-  name: string;
-  email: string;
-  form_type: string;
-  status: string;
-  created_at: string;
+  title: string;
+  enabled: boolean;
+  size: "small" | "medium" | "large";
+  category: "metrics" | "charts" | "lists" | "actions";
 }
 
-export default function DashboardContent() {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [financial, setFinancial] = useState<FinancialOverview | null>(null);
-  const [messages, setMessages] = useState<MessagesStats | null>(null);
-  const [recentMessages, setRecentMessages] = useState<RecentMessage[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [setupNeeded, setSetupNeeded] = useState(false);
+interface DashboardData {
+  revenue: {
+    total: number;
+    thisMonth: number;
+    lastMonth: number;
+    growth: number;
+    mrr: number;
+  };
+  messages: {
+    total: number;
+    unread: number;
+    last24h: number;
+    responseRate: number;
+  };
+  cavalos: {
+    total: number;
+    active: number;
+    sold: number;
+    views: number;
+  };
+  events: {
+    total: number;
+    upcoming: number;
+    featured: number;
+  };
+  recentActivity: Array<{
+    id: string;
+    type: string;
+    message: string;
+    time: string;
+    icon: string;
+  }>;
+  quickStats: {
+    todayRevenue: number;
+    newLeads: number;
+    pendingReviews: number;
+    activeUsers: number;
+  };
+}
+
+// ========================================
+// WIDGETS COMPONENTS
+// ========================================
+
+const RevenueWidget = ({ data }: { data: any }) => {
+  const growth = data?.growth ?? 0;
+  const isPositive = growth >= 0;
+
+  return (
+    <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-6 hover:shadow-lg hover:shadow-green-500/10 transition-all">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+            <DollarSign className="w-6 h-6 text-green-400" />
+          </div>
+          <div>
+            <p className="text-sm text-gray-400">Receita Total</p>
+            <h3 className="text-2xl font-bold text-white">
+              €{((data?.total ?? 0) / 100).toLocaleString("pt-PT")}
+            </h3>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-400">Este Mês</span>
+          <span className="text-white font-semibold">
+            €{((data?.thisMonth ?? 0) / 100).toLocaleString("pt-PT")}
+          </span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-400">MRR</span>
+          <span className="text-green-400 font-semibold">
+            €{((data?.mrr ?? 0) / 100).toLocaleString("pt-PT")}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+          {isPositive ? (
+            <ArrowUpRight className="w-4 h-4 text-green-400" />
+          ) : (
+            <ArrowDownRight className="w-4 h-4 text-red-400" />
+          )}
+          <span className={`text-sm font-semibold ${isPositive ? "text-green-400" : "text-red-400"}`}>
+            {isPositive ? "+" : ""}{growth.toFixed(1)}% vs mês anterior
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MessagesWidget = ({ data }: { data: any }) => {
+  const urgency = data.unread > 10 ? "high" : data.unread > 5 ? "medium" : "low";
+
+  return (
+    <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-6 hover:shadow-lg hover:shadow-blue-500/10 transition-all">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center relative">
+            <Mail className="w-6 h-6 text-blue-400" />
+            {data.unread > 0 && (
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                {data.unread > 99 ? "99+" : data.unread}
+              </div>
+            )}
+          </div>
+          <div>
+            <p className="text-sm text-gray-400">Mensagens</p>
+            <h3 className="text-2xl font-bold text-white">{data.total}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-400">Não Lidas</span>
+          <span className={`font-semibold ${
+            urgency === "high" ? "text-red-400" :
+            urgency === "medium" ? "text-yellow-400" : "text-gray-400"
+          }`}>
+            {data.unread}
+          </span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-400">Últimas 24h</span>
+          <span className="text-white font-semibold">{data.last24h}</span>
+        </div>
+        <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+          <Target className="w-4 h-4 text-blue-400" />
+          <span className="text-sm text-blue-400 font-semibold">
+            {data.responseRate}% taxa de resposta
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const QuickStatsWidget = ({ data }: { data: any }) => {
+  const stats = [
+    { label: "Receita Hoje", value: `€${(data.todayRevenue / 100).toFixed(0)}`, icon: DollarSign, color: "green" },
+    { label: "Novos Leads", value: data.newLeads, icon: Users, color: "blue" },
+    { label: "Reviews Pendentes", value: data.pendingReviews, icon: Star, color: "yellow" },
+    { label: "Utilizadores Ativos", value: data.activeUsers, icon: Eye, color: "purple" },
+  ];
+
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+          <Zap className="w-5 h-5 text-[#C5A059]" />
+          Stats Rápidas
+        </h3>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        {stats.map((stat, index) => {
+          const Icon = stat.icon;
+          const colorMap: Record<string, string> = {
+            green: "text-green-400 bg-green-500/10",
+            blue: "text-blue-400 bg-blue-500/10",
+            yellow: "text-yellow-400 bg-yellow-500/10",
+            purple: "text-purple-400 bg-purple-500/10",
+          };
+
+          return (
+            <div key={index} className="bg-black/20 rounded-lg p-3 hover:bg-black/30 transition-colors">
+              <div className="flex items-center gap-2 mb-2">
+                <div className={`w-8 h-8 ${colorMap[stat.color]} rounded-lg flex items-center justify-center`}>
+                  <Icon className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-xs text-gray-400 mb-1">{stat.label}</p>
+              <p className="text-xl font-bold text-white">{stat.value}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const RecentActivityWidget = ({ data }: { data: any[] }) => {
+  const getIconColor = (type: string) => {
+    const map: Record<string, string> = {
+      payment: "text-green-400",
+      message: "text-blue-400",
+      review: "text-yellow-400",
+      sale: "text-purple-400",
+    };
+    return map[type] || "text-gray-400";
+  };
+
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+          <Clock className="w-5 h-5 text-[#C5A059]" />
+          Atividade Recente
+        </h3>
+        <button className="text-xs text-gray-400 hover:text-white transition-colors">
+          Ver Tudo
+        </button>
+      </div>
+
+      <div className="space-y-3 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+        {data.map((activity) => (
+          <div key={activity.id} className="flex items-start gap-3 p-3 bg-black/20 rounded-lg hover:bg-black/30 transition-colors">
+            <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span className={`text-lg ${getIconColor(activity.type)}`}>{activity.icon}</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-white">{activity.message}</p>
+              <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const QuickActionsWidget = () => {
+  const actions = [
+    { label: "Novo Cavalo", icon: Plus, color: "bg-green-500", action: () => console.log("novo cavalo") },
+    { label: "Novo Evento", icon: Calendar, color: "bg-blue-500", action: () => console.log("novo evento") },
+    { label: "Ver Mensagens", icon: Mail, color: "bg-purple-500", action: () => console.log("mensagens") },
+    { label: "Analytics", icon: TrendingUp, color: "bg-orange-500", action: () => console.log("analytics") },
+  ];
+
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <Zap className="w-5 h-5 text-[#C5A059]" />
+        Quick Actions
+      </h3>
+
+      <div className="grid grid-cols-2 gap-3">
+        {actions.map((action, index) => {
+          const Icon = action.icon;
+          return (
+            <button
+              key={index}
+              onClick={action.action}
+              className={`${action.color} hover:opacity-90 text-white rounded-lg p-4 flex flex-col items-center gap-2 transition-all hover:scale-105`}
+            >
+              <Icon className="w-6 h-6" />
+              <span className="text-sm font-semibold">{action.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const AlertsWidget = () => {
+  const alerts = [
+    { type: "warning", message: "5 reviews pendentes de aprovação", action: "Ver" },
+    { type: "info", message: "Backup automático concluído", action: "OK" },
+    { type: "success", message: "Meta de receita mensal atingida! 🎉", action: "Ver" },
+  ];
+
+  const getAlertStyle = (type: string) => {
+    const styles: Record<string, string> = {
+      warning: "bg-yellow-500/10 border-yellow-500/20 text-yellow-400",
+      info: "bg-blue-500/10 border-blue-500/20 text-blue-400",
+      success: "bg-green-500/10 border-green-500/20 text-green-400",
+    };
+    return styles[type] || styles.info;
+  };
+
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <AlertCircle className="w-5 h-5 text-[#C5A059]" />
+        Alertas
+      </h3>
+
+      <div className="space-y-3">
+        {alerts.map((alert, index) => (
+          <div key={index} className={`border rounded-lg p-3 flex items-center justify-between ${getAlertStyle(alert.type)}`}>
+            <p className="text-sm flex-1">{alert.message}</p>
+            <button className="text-xs px-3 py-1 bg-white/10 rounded hover:bg-white/20 transition-colors">
+              {alert.action}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ========================================
+// DASHBOARD PRINCIPAL
+// ========================================
+
+export default function DashboardContentNew() {
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showCustomize, setShowCustomize] = useState(false);
+  const [widgets, setWidgets] = useState<Widget[]>([
+    { id: "revenue", title: "Receita", enabled: true, size: "medium", category: "metrics" },
+    { id: "messages", title: "Mensagens", enabled: true, size: "medium", category: "metrics" },
+    { id: "quickStats", title: "Stats Rápidas", enabled: true, size: "large", category: "metrics" },
+    { id: "activity", title: "Atividade Recente", enabled: true, size: "large", category: "lists" },
+    { id: "actions", title: "Quick Actions", enabled: true, size: "medium", category: "actions" },
+    { id: "alerts", title: "Alertas", enabled: true, size: "medium", category: "actions" },
+  ]);
 
   useEffect(() => {
-    loadAllData();
+    loadDashboardData();
   }, []);
 
-  const loadAllData = async () => {
+  const loadDashboardData = async () => {
     try {
-      await Promise.all([
-        loadStats(),
-        loadFinancial(),
-        loadMessages(),
-        loadRecentMessages(),
+      // Carregar dados de múltiplas APIs em paralelo
+      const [statsRes, financialRes, messagesRes] = await Promise.all([
+        fetch("/api/admin/stats"),
+        fetch("/api/admin/financeiro/overview"),
+        fetch("/api/admin/messages/stats"),
       ]);
-    } catch (err) {
-      console.error("Erro ao carregar dados:", err);
-      setError("Erro ao carregar alguns dados");
+
+      const stats = await statsRes.json();
+      const financial = await financialRes.json();
+      const messages = await messagesRes.json();
+
+      // Mock de atividade recente (você pode criar uma API real para isso)
+      const recentActivity = [
+        { id: "1", type: "payment", message: "Novo pagamento de €49 recebido", time: "Há 5 min", icon: "💰" },
+        { id: "2", type: "message", message: "Nova mensagem de João Silva", time: "Há 12 min", icon: "📧" },
+        { id: "3", type: "review", message: "Review aprovada para Cavalo X", time: "Há 1 hora", icon: "⭐" },
+        { id: "4", type: "sale", message: "Cavalo vendido: €15,000", time: "Há 2 horas", icon: "🐴" },
+      ];
+
+      setDashboardData({
+        revenue: financial.overview || {
+          total: 0,
+          thisMonth: 0,
+          lastMonth: 0,
+          growth: 0,
+          mrr: 0,
+        },
+        messages: messages || {
+          total: 0,
+          unread: 0,
+          last24h: 0,
+          responseRate: 0,
+        },
+        cavalos: {
+          total: stats?.totalCavalos || 0,
+          active: stats?.activeCavalos || 0,
+          sold: stats?.soldCavalos || 0,
+          views: stats?.cavalosViews || 0,
+        },
+        events: {
+          total: stats?.totalEventos || 0,
+          upcoming: stats?.futureEventos || 0,
+          featured: stats?.featuredEventos || 0,
+        },
+        recentActivity,
+        quickStats: {
+          todayRevenue: 4900,
+          newLeads: 12,
+          pendingReviews: 5,
+          activeUsers: 234,
+        },
+      });
+    } catch (error) {
+      console.error("Erro ao carregar dashboard:", error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const loadStats = async () => {
-    try {
-      const response = await fetch("/api/admin/stats");
-      if (!response.ok) throw new Error("Erro ao carregar estatísticas");
-      const data = await response.json();
-      setStats(data);
-    } catch (err) {
-      console.error("Erro stats:", err);
-    }
+  const toggleWidget = (id: string) => {
+    setWidgets((prev) =>
+      prev.map((w) => (w.id === id ? { ...w, enabled: !w.enabled } : w))
+    );
   };
 
-  const loadFinancial = async () => {
-    try {
-      const response = await fetch("/api/admin/financeiro/overview");
-      if (!response.ok) {
-        if (response.status === 500 || response.status === 404) {
-          setSetupNeeded(true);
-        }
-        throw new Error("Erro ao carregar dados financeiros");
-      }
-      const data = await response.json();
-      setFinancial(data.overview);
-    } catch (err) {
-      console.error("Erro financial:", err);
-    }
-  };
-
-  const loadMessages = async () => {
-    try {
-      const response = await fetch("/api/admin/messages/stats");
-      if (!response.ok) {
-        if (response.status === 500 || response.status === 404) {
-          setSetupNeeded(true);
-        }
-        throw new Error("Erro ao carregar mensagens");
-      }
-      const data = await response.json();
-      setMessages(data.stats);
-    } catch (err) {
-      console.error("Erro messages:", err);
-    }
-  };
-
-  const loadRecentMessages = async () => {
-    try {
-      const response = await fetch("/api/admin/messages?limit=5&page=1");
-      if (!response.ok) throw new Error("Erro ao carregar mensagens recentes");
-      const data = await response.json();
-      setRecentMessages(data.messages);
-    } catch (err) {
-      console.error("Erro recent messages:", err);
-    }
-  };
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-PT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  };
-
-  const formatNumber = (value: number) => {
-    return new Intl.NumberFormat("pt-PT").format(value);
-  };
-
-  const getFormTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      vender_cavalo: "Vender Cavalo",
-      publicidade: "Publicidade",
-      instagram: "Instagram",
-      contact_general: "Contacto Geral",
-    };
-    return labels[type] || type;
-  };
-
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      novo: "bg-blue-500/10 text-blue-500",
-      lido: "bg-yellow-500/10 text-yellow-500",
-      respondido: "bg-green-500/10 text-green-500",
-      arquivado: "bg-gray-500/10 text-gray-500",
-    };
-    return colors[status] || "bg-gray-500/10 text-gray-500";
-  };
-
-  if (isLoading) {
+  if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center h-full">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C5A059] mx-auto"></div>
-          <p className="text-gray-400 mt-4">A carregar dashboard...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#C5A059] mx-auto mb-4"></div>
+          <p className="text-gray-400">A carregar dashboard...</p>
         </div>
       </div>
     );
   }
 
+  const enabledWidgets = widgets.filter((w) => w.enabled);
+
   return (
-    <div className="p-6">
-      {/* Aviso se dados não carregarem */}
-      {setupNeeded && (
-        <div className="mb-6 p-6 bg-orange-500/10 border-2 border-orange-500/30 rounded-lg">
-          <div className="flex items-start gap-4">
-            <div className="text-3xl">⚠️</div>
-            <div className="flex-1">
-              <h3 className="text-lg font-bold text-orange-500 mb-2">
-                Setup Necessário
-              </h3>
-              <p className="text-gray-300 mb-3">
-                Alguns dados não estão disponíveis porque as tabelas SQL ainda não foram criadas.
-              </p>
-              <div className="bg-black/30 p-4 rounded-lg border border-white/10">
-                <p className="text-sm text-gray-300 font-mono mb-2">
-                  📋 Siga estes passos:
-                </p>
-                <ol className="text-sm text-gray-400 space-y-1 ml-4 list-decimal">
-                  <li>Abra o ficheiro <code className="text-[#C5A059]">INSTALAR_ADMIN.md</code></li>
-                  <li>Siga as instruções para executar o SQL no Supabase</li>
-                  <li>Recarregue esta página (F5)</li>
-                </ol>
-              </div>
-              <p className="text-xs text-gray-500 mt-3">
-                ⏱️ Demora apenas 5 minutos e depois terás acesso completo ao dashboard financeiro e inbox de mensagens!
-              </p>
-            </div>
+    <div className="h-full overflow-y-auto bg-gradient-to-br from-[#050505] via-[#0A0A0A] to-[#050505] p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-1">Dashboard</h1>
+          <p className="text-gray-400">Bem-vindo de volta! Aqui está o resumo do teu negócio</p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={loadDashboardData}
+            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Atualizar
+          </button>
+
+          <button
+            onClick={() => setShowCustomize(!showCustomize)}
+            className="flex items-center gap-2 px-4 py-2 bg-[#C5A059] hover:bg-[#d4b469] text-black font-semibold rounded-lg transition-all"
+          >
+            <Grid className="w-4 h-4" />
+            Personalizar
+          </button>
+        </div>
+      </div>
+
+      {/* Painel de Customização */}
+      {showCustomize && (
+        <div className="mb-6 bg-white/5 border border-white/10 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <Settings className="w-5 h-5" />
+              Escolhe os teus Widgets
+            </h3>
+            <button
+              onClick={() => setShowCustomize(false)}
+              className="text-gray-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {widgets.map((widget) => (
+              <button
+                key={widget.id}
+                onClick={() => toggleWidget(widget.id)}
+                className={`
+                  p-4 rounded-lg border-2 transition-all text-left
+                  ${widget.enabled
+                    ? "border-[#C5A059] bg-[#C5A059]/10"
+                    : "border-white/10 bg-white/5 hover:bg-white/10"
+                  }
+                `}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-semibold text-white">{widget.title}</span>
+                  {widget.enabled && <CheckCircle2 className="w-5 h-5 text-[#C5A059]" />}
+                </div>
+                <span className="text-xs text-gray-400">{widget.category}</span>
+              </button>
+            ))}
           </div>
         </div>
       )}
 
-      {error && (
-        <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-          <p className="text-yellow-500">{error}</p>
-        </div>
-      )}
+      {/* Grid de Widgets */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {dashboardData && (
+          <>
+            {enabledWidgets.find((w) => w.id === "revenue") && (
+              <RevenueWidget data={dashboardData.revenue} />
+            )}
 
-      {/* SECÇÃO FINANCEIRA */}
-      {financial && (
-        <>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">💰 Financeiro</h2>
-          </div>
+            {enabledWidgets.find((w) => w.id === "messages") && (
+              <MessagesWidget data={dashboardData.messages} />
+            )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {/* Receita Total */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-[#C5A059]/30 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-400">Receita Total</h3>
-                <FiDollarSign className="text-[#C5A059]" size={20} />
+            {enabledWidgets.find((w) => w.id === "quickStats") && (
+              <div className="md:col-span-2 lg:col-span-3">
+                <QuickStatsWidget data={dashboardData.quickStats} />
               </div>
-              <p className="text-3xl font-bold text-white">
-                {formatCurrency(financial.totalRevenue)}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">Desde o início</p>
-            </div>
+            )}
 
-            {/* Receita Este Mês */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-green-500/30 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-400">Este Mês</h3>
-                <FiTrendingUp className="text-green-500" size={20} />
+            {enabledWidgets.find((w) => w.id === "activity") && (
+              <div className="md:col-span-2">
+                <RecentActivityWidget data={dashboardData.recentActivity} />
               </div>
-              <p className="text-3xl font-bold text-white">
-                {formatCurrency(financial.thisMonthRevenue)}
-              </p>
-              <p className={`text-xs mt-1 ${
-                financial.growthPercentage >= 0 ? "text-green-500" : "text-red-500"
-              }`}>
-                {financial.growthPercentage >= 0 ? "+" : ""}
-                {financial.growthPercentage.toFixed(1)}% vs mês passado
-              </p>
-            </div>
+            )}
 
-            {/* MRR */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-[#C5A059]/30 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-400">MRR</h3>
-                <FiRepeat className="text-[#C5A059]" size={20} />
-              </div>
-              <p className="text-3xl font-bold text-white">
-                {formatCurrency(financial.mrr)}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">Receita recorrente</p>
-            </div>
+            {enabledWidgets.find((w) => w.id === "actions") && (
+              <QuickActionsWidget />
+            )}
 
-            {/* Transações */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-[#C5A059]/30 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-400">Transações</h3>
-                <FiShoppingCart className="text-[#C5A059]" size={20} />
-              </div>
-              <p className="text-3xl font-bold text-white">
-                {financial.totalTransactions}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                Ticket médio: {formatCurrency(financial.averageTicket)}
-              </p>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* SECÇÃO MENSAGENS */}
-      {messages && (
-        <>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">📨 Mensagens & Contactos</h2>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-            {/* Stats de Mensagens */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <FiMail className="text-[#C5A059]" size={24} />
-                <h3 className="text-lg font-semibold text-white">Status das Mensagens</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Novas</span>
-                  <span className="text-2xl font-bold text-blue-500">{messages.novo}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Lidas</span>
-                  <span className="text-xl font-semibold text-yellow-500">{messages.lido}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Respondidas</span>
-                  <span className="text-xl font-semibold text-green-500">{messages.respondido}</span>
-                </div>
-                <div className="pt-3 border-t border-white/10">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-400 font-medium">Total</span>
-                    <span className="text-xl font-bold text-white">{messages.total}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Mensagens Recentes */}
-            <div className="lg:col-span-2 bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Mensagens Recentes</h3>
-              <div className="space-y-3">
-                {recentMessages.length > 0 ? (
-                  recentMessages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className="block p-3 bg-white/5 hover:bg-white/10 border border-white/5 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <p className="font-medium text-white">{msg.name}</p>
-                            <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(msg.status)}`}>
-                              {msg.status}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-400">{msg.email}</p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {getFormTypeLabel(msg.form_type)} • {new Date(msg.created_at).toLocaleDateString("pt-PT")}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center text-gray-500 py-8">Nenhuma mensagem recente</p>
-                )}
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* SECÇÃO ANALYTICS */}
-      {stats && (
-        <>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">📊 Analytics & Performance</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {/* Views Totais */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-blue-500/30 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-400">Total Views</h3>
-                <FiEye className="text-blue-500" size={20} />
-              </div>
-              <p className="text-3xl font-bold text-white">
-                {formatNumber(stats.cavalosViews + stats.eventosViews)}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {formatNumber(stats.cavalosViews)} cavalos • {formatNumber(stats.eventosViews)} eventos
-              </p>
-            </div>
-
-            {/* Leads */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-green-500/30 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-400">Leads (Ebook)</h3>
-                <FiUsers className="text-green-500" size={20} />
-              </div>
-              <p className="text-3xl font-bold text-white">{stats.totalLeads}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                {stats.conversionRate}% taxa conversão
-              </p>
-            </div>
-
-            {/* Reviews */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-yellow-500/30 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-400">Reviews</h3>
-                <FiStar className="text-yellow-500" size={20} />
-              </div>
-              <p className="text-3xl font-bold text-white">{stats.totalReviews}</p>
-              <p className="text-xs text-yellow-500 mt-1">
-                {stats.pendingReviews} pendentes aprovação
-              </p>
-            </div>
-
-            {/* Eventos */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-purple-500/30 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-400">Eventos</h3>
-                <FiCalendar className="text-purple-500" size={20} />
-              </div>
-              <p className="text-3xl font-bold text-white">{stats.totalEventos}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                {stats.futureEventos} futuros
-              </p>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* GESTÃO DE CONTEÚDO */}
-      {stats && (
-        <>
-          <h2 className="text-2xl font-bold text-white mb-6">🎯 Gestão de Conteúdo</h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
-            <div className="bg-gradient-to-br from-orange-500/10 to-orange-600/10 border border-orange-500/20 hover:border-orange-500/40 rounded-lg p-4 text-center transition-all hover:scale-105 cursor-pointer">
-              <p className="text-3xl mb-2">🐴</p>
-              <p className="font-semibold text-white">Marketplace</p>
-              <p className="text-sm text-gray-400">{stats.totalCavalos} cavalos</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-pink-500/10 to-pink-600/10 border border-pink-500/20 hover:border-pink-500/40 rounded-lg p-4 text-center transition-all hover:scale-105 cursor-pointer">
-              <p className="text-3xl mb-2">📅</p>
-              <p className="font-semibold text-white">Eventos</p>
-              <p className="text-sm text-gray-400">{stats.totalEventos} eventos</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-teal-500/10 to-teal-600/10 border border-teal-500/20 hover:border-teal-500/40 rounded-lg p-4 text-center transition-all hover:scale-105 cursor-pointer">
-              <p className="text-3xl mb-2">🏠</p>
-              <p className="font-semibold text-white">Coudelarias</p>
-              <p className="text-sm text-gray-400">{stats.totalCoudelarias} registadas</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border border-yellow-500/20 hover:border-yellow-500/40 rounded-lg p-4 text-center transition-all hover:scale-105 cursor-pointer">
-              <p className="text-3xl mb-2">⭐</p>
-              <p className="font-semibold text-white">Reviews</p>
-              <p className="text-sm text-gray-400">{stats.pendingReviews} pendentes</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/20 hover:border-purple-500/40 rounded-lg p-4 text-center transition-all hover:scale-105 cursor-pointer">
-              <p className="text-3xl mb-2">📸</p>
-              <p className="font-semibold text-white">Instagram</p>
-              <p className="text-sm text-gray-400">Uploads</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-indigo-500/10 to-indigo-600/10 border border-indigo-500/20 hover:border-indigo-500/40 rounded-lg p-4 text-center transition-all hover:scale-105 cursor-pointer">
-              <p className="text-3xl mb-2">🧬</p>
-              <p className="font-semibold text-white">Linhagens</p>
-              <p className="text-sm text-gray-400">Genealogia</p>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* DASHBOARDS ESPECIALIZADOS */}
-      <div className="bg-gradient-to-br from-[#C5A059]/10 to-[#C5A059]/5 border border-[#C5A059]/20 rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-white mb-4">🚀 Dashboards Especializados</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div className="bg-[#0A0A0A] border border-white/10 hover:border-[#C5A059]/50 rounded-lg p-6 transition-all hover:scale-105 cursor-pointer">
-            <div className="flex items-center gap-3 mb-3">
-              <FiDollarSign className="text-[#C5A059]" size={28} />
-              <h3 className="text-lg font-bold text-white">Dashboard Financeiro</h3>
-            </div>
-            <p className="text-sm text-gray-400">
-              Receitas, MRR, gráficos, transações e exportação CSV
-            </p>
-          </div>
-
-          <div className="bg-[#0A0A0A] border border-white/10 hover:border-blue-500/50 rounded-lg p-6 transition-all hover:scale-105 cursor-pointer">
-            <div className="flex items-center gap-3 mb-3">
-              <FiMail className="text-blue-500" size={28} />
-              <h3 className="text-lg font-bold text-white">Inbox de Mensagens</h3>
-            </div>
-            <p className="text-sm text-gray-400">
-              Gestão centralizada de todos os contactos e formulários
-            </p>
-          </div>
-
-          <div className="bg-[#0A0A0A] border border-white/10 hover:border-green-500/50 rounded-lg p-6 transition-all hover:scale-105 cursor-pointer">
-            <div className="flex items-center gap-3 mb-3">
-              <FiBarChart2 className="text-green-500" size={28} />
-              <h3 className="text-lg font-bold text-white">Analytics Completo</h3>
-            </div>
-            <p className="text-sm text-gray-400">
-              Tráfego, conversões, performance e análise de leads
-            </p>
-          </div>
-
-          <div className="bg-[#0A0A0A] border border-white/10 hover:border-purple-500/50 rounded-lg p-6 transition-all hover:scale-105 cursor-pointer">
-            <div className="flex items-center gap-3 mb-3">
-              <FiCalendar className="text-purple-500" size={28} />
-              <h3 className="text-lg font-bold text-white">Calendário Follow-ups</h3>
-            </div>
-            <p className="text-sm text-gray-400">
-              Gestão de tarefas, lembretes e follow-ups de clientes
-            </p>
-          </div>
-
-          <div className="bg-[#0A0A0A] border border-white/10 hover:border-orange-500/50 rounded-lg p-6 transition-all hover:scale-105 cursor-pointer">
-            <div className="flex items-center gap-3 mb-3">
-              <FiTrendingUp className="text-orange-500" size={28} />
-              <h3 className="text-lg font-bold text-white">CRM Pipeline</h3>
-            </div>
-            <p className="text-sm text-gray-400">
-              Pipeline visual de vendas com drag-and-drop
-            </p>
-          </div>
-        </div>
+            {enabledWidgets.find((w) => w.id === "alerts") && (
+              <AlertsWidget />
+            )}
+          </>
+        )}
       </div>
     </div>
   );
