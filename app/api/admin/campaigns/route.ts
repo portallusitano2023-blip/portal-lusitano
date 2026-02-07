@@ -19,10 +19,10 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
 
     return NextResponse.json({ campaigns: campaigns || [] });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Campaigns list error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao listar campanhas" },
+      { error: error instanceof Error ? error.message : "Erro ao listar campanhas" },
       { status: 500 }
     );
   }
@@ -140,10 +140,45 @@ export async function POST(req: NextRequest) {
       campaign,
       message: "Campanha agendada com sucesso",
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Campaign creation error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao criar campanha" },
+      { error: error instanceof Error ? error.message : "Erro ao criar campanha" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE - Eliminar campanha
+export async function DELETE(req: NextRequest) {
+  try {
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const campaignId = searchParams.get("id");
+
+    if (!campaignId) {
+      return NextResponse.json(
+        { error: "ID da campanha não fornecido" },
+        { status: 400 }
+      );
+    }
+
+    const { error } = await supabase
+      .from("email_campaigns")
+      .delete()
+      .eq("id", campaignId);
+
+    if (error) throw error;
+
+    return NextResponse.json({ message: "Campanha eliminada com sucesso" });
+  } catch (error) {
+    console.error("Campaign deletion error:", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Erro ao eliminar campanha" },
       { status: 500 }
     );
   }

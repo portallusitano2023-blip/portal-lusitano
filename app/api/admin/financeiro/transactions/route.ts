@@ -101,10 +101,10 @@ export async function GET(req: NextRequest) {
         totalPages: Math.ceil((count || 0) / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Transactions fetch error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao buscar transações" },
+      { error: error instanceof Error ? error.message : "Erro ao buscar transações" },
       { status: 500 }
     );
   }

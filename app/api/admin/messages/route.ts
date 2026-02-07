@@ -65,10 +65,10 @@ export async function GET(req: NextRequest) {
         totalPages: Math.ceil((count || 0) / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Messages list error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao listar mensagens" },
+      { error: error instanceof Error ? error.message : "Erro ao listar mensagens" },
       { status: 500 }
     );
   }

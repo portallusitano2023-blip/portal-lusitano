@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     }
 
     // 1. FONTES DE TRÁFEGO (UTM da tabela leads)
-    let leads: any[] = [];
+    let leads: { email: string; utm_source: string | null; utm_medium: string | null; utm_campaign: string | null; created_at: string }[] = [];
 
     try {
       const { data } = await supabase
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
 
     // 2. ROI POR CANAL (Receita gerada por fonte)
     // Cruzar leads com payments por email
-    let payments: any[] = [];
+    let payments: { email: string; amount: number; created_at: string }[] = [];
 
     try {
       const { data } = await supabase
@@ -159,10 +159,10 @@ export async function GET(req: NextRequest) {
       totalLeads,
       totalRevenue: parseFloat((Object.values(revenueBySource).reduce((sum, r) => sum + r, 0) / 100).toFixed(2)),
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Sources analytics error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao buscar analytics de fontes" },
+      { error: error instanceof Error ? error.message : "Erro ao buscar analytics de fontes" },
       { status: 500 }
     );
   }

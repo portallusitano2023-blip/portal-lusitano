@@ -49,8 +49,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setCheckoutUrl(cartData.checkoutUrl); 
 
         if (cartData.lines) {
-          const formattedCart = cartData.lines.edges.map((edge: any) => ({
-            id: edge.node.id, 
+          interface CartEdge {
+            node: {
+              id: string;
+              quantity: number;
+              merchandise: {
+                price: { amount: string };
+                product: {
+                  title: string;
+                  images: { edges: { node: { url: string } }[] };
+                };
+              };
+            };
+          }
+          const formattedCart = cartData.lines.edges.map((edge: CartEdge) => ({
+            id: edge.node.id,
             title: edge.node.merchandise.product.title,
             price: edge.node.merchandise.price.amount,
             image: edge.node.merchandise.product.images.edges[0]?.node.url,

@@ -77,10 +77,10 @@ export async function GET(req: NextRequest) {
       mrr,
       count,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching profissionais:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar profissionais", details: error.message },
+      { error: "Erro ao carregar profissionais", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -131,10 +131,10 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ profissional }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating profissional:", error);
     return NextResponse.json(
-      { error: "Erro ao criar profissional", details: error.message },
+      { error: "Erro ao criar profissional", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

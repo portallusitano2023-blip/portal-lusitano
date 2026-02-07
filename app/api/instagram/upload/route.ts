@@ -189,10 +189,10 @@ export async function POST(req: NextRequest) {
       filesCount: files.length
     });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("Instagram upload error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao processar upload" },
+      { error: error instanceof Error ? error.message : "Erro ao processar upload" },
       { status: 500 }
     );
   }

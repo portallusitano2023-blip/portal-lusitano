@@ -19,6 +19,9 @@ import {
   FiBriefcase,
   FiTrendingUp,
   FiMessageSquare,
+  FiShield,
+  FiMap,
+  FiActivity,
 } from "react-icons/fi";
 import { Instagram } from "lucide-react";
 
@@ -35,10 +38,15 @@ const ReviewsContent = lazy(() => import("@/components/admin-app/ReviewsContent"
 const InstagramContent = lazy(() => import("@/components/admin-app/InstagramContent"));
 const AnalyticsContent = lazy(() => import("@/components/admin-app/AnalyticsContent"));
 const CalendarioContent = lazy(() => import("@/components/admin-app/CalendarioContent"));
+const TasksContent = lazy(() => import("@/components/admin-app/TasksContent"));
 const CRMContent = lazy(() => import("@/components/admin-app/CRMContent"));
 const DepoimentosContent = lazy(() => import("@/components/admin-app/DepoimentosContent"));
 const DefinicoesContent = lazy(() => import("@/components/admin-app/DefinicoesContent"));
 const LogsContent = lazy(() => import("@/components/admin-app/LogsContent"));
+const UsersContent = lazy(() => import("@/components/admin-app/UsersContent"));
+const GeoAnalyticsContent = lazy(() => import("@/components/admin-app/GeoAnalyticsContent"));
+const ForecastingContent = lazy(() => import("@/components/admin-app/ForecastingContent"));
+const AutomationsContent = lazy(() => import("@/components/admin-app/AutomationsContent"));
 import GlobalSearch from "@/components/admin-app/GlobalSearch";
 import NotificationCenter from "@/components/admin-app/NotificationCenter";
 
@@ -143,6 +151,13 @@ const MENU_ITEMS: MenuItem[] = [
     component: CalendarioContent,
   },
   {
+    id: "tasks",
+    title: "Tarefas",
+    icon: FiFileText,
+    emoji: "✅",
+    component: TasksContent,
+  },
+  {
     id: "analytics",
     title: "Analytics",
     icon: FiBarChart2,
@@ -150,11 +165,39 @@ const MENU_ITEMS: MenuItem[] = [
     component: AnalyticsContent,
   },
   {
+    id: "geo",
+    title: "Geo Analytics",
+    icon: FiMap,
+    emoji: "🗺️",
+    component: GeoAnalyticsContent,
+  },
+  {
+    id: "forecasting",
+    title: "Previsões",
+    icon: FiActivity,
+    emoji: "🔮",
+    component: ForecastingContent,
+  },
+  {
+    id: "automations",
+    title: "Automações",
+    icon: FiActivity,
+    emoji: "⚡",
+    component: AutomationsContent,
+  },
+  {
     id: "logs",
     title: "Logs",
     icon: FiFileText,
     emoji: "📋",
     component: LogsContent,
+  },
+  {
+    id: "users",
+    title: "Utilizadores",
+    icon: FiShield,
+    emoji: "🔐",
+    component: UsersContent,
   },
   {
     id: "definicoes",

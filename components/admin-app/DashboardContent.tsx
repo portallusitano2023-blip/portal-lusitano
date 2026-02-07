@@ -23,7 +23,25 @@ import {
   ArrowDownRight,
   Zap,
   Target,
+  GripVertical,
 } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 // ========================================
 // TIPOS
@@ -76,6 +94,47 @@ interface DashboardData {
     activeUsers: number;
   };
 }
+
+// ========================================
+// SORTABLE WRAPPER
+// ========================================
+
+interface SortableWidgetProps {
+  id: string;
+  children: React.ReactNode;
+}
+
+const SortableWidget = ({ id, children }: SortableWidgetProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="relative group">
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute top-2 right-2 z-10 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <div className="p-2 bg-[#C5A059]/20 hover:bg-[#C5A059]/30 rounded-lg backdrop-blur-sm">
+          <GripVertical className="w-4 h-4 text-[#C5A059]" />
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+};
 
 // ========================================
 // WIDGETS COMPONENTS
@@ -348,63 +407,53 @@ export default function DashboardContentNew() {
     { id: "alerts", title: "Alertas", enabled: true, size: "medium", category: "actions" },
   ]);
 
+  // Drag and Drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   useEffect(() => {
     loadDashboardData();
+    loadWidgetOrder();
   }, []);
+
+  // Load widget order from localStorage
+  const loadWidgetOrder = () => {
+    const savedOrder = localStorage.getItem("dashboard-widget-order");
+    if (savedOrder) {
+      try {
+        const parsed = JSON.parse(savedOrder);
+        setWidgets(parsed);
+      } catch (error) {
+        console.error("Error loading widget order:", error);
+      }
+    }
+  };
+
+  // Save widget order to localStorage
+  const saveWidgetOrder = (newWidgets: Widget[]) => {
+    localStorage.setItem("dashboard-widget-order", JSON.stringify(newWidgets));
+  };
 
   const loadDashboardData = async () => {
     try {
-      // Carregar dados de múltiplas APIs em paralelo
-      const [statsRes, financialRes, messagesRes] = await Promise.all([
-        fetch("/api/admin/stats"),
-        fetch("/api/admin/financeiro/overview"),
-        fetch("/api/admin/messages/stats"),
-      ]);
+      // DADOS REAIS - API unificada
+      const response = await fetch("/api/admin/dashboard");
 
-      const stats = await statsRes.json();
-      const financial = await financialRes.json();
-      const messages = await messagesRes.json();
+      if (!response.ok) throw new Error("Erro ao carregar dados");
 
-      // Mock de atividade recente (você pode criar uma API real para isso)
-      const recentActivity = [
-        { id: "1", type: "payment", message: "Novo pagamento de €49 recebido", time: "Há 5 min", icon: "💰" },
-        { id: "2", type: "message", message: "Nova mensagem de João Silva", time: "Há 12 min", icon: "📧" },
-        { id: "3", type: "review", message: "Review aprovada para Cavalo X", time: "Há 1 hora", icon: "⭐" },
-        { id: "4", type: "sale", message: "Cavalo vendido: €15,000", time: "Há 2 horas", icon: "🐴" },
-      ];
+      const data = await response.json();
 
       setDashboardData({
-        revenue: financial.overview || {
-          total: 0,
-          thisMonth: 0,
-          lastMonth: 0,
-          growth: 0,
-          mrr: 0,
-        },
-        messages: messages || {
-          total: 0,
-          unread: 0,
-          last24h: 0,
-          responseRate: 0,
-        },
-        cavalos: {
-          total: stats?.totalCavalos || 0,
-          active: stats?.activeCavalos || 0,
-          sold: stats?.soldCavalos || 0,
-          views: stats?.cavalosViews || 0,
-        },
-        events: {
-          total: stats?.totalEventos || 0,
-          upcoming: stats?.futureEventos || 0,
-          featured: stats?.featuredEventos || 0,
-        },
-        recentActivity,
-        quickStats: {
-          todayRevenue: 4900,
-          newLeads: 12,
-          pendingReviews: 5,
-          activeUsers: 234,
-        },
+        revenue: data.revenue,
+        messages: data.messages,
+        cavalos: data.cavalos,
+        events: data.events,
+        recentActivity: data.recentActivity,
+        quickStats: data.quickStats,
       });
     } catch (error) {
       console.error("Erro ao carregar dashboard:", error);
@@ -414,9 +463,23 @@ export default function DashboardContentNew() {
   };
 
   const toggleWidget = (id: string) => {
-    setWidgets((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, enabled: !w.enabled } : w))
-    );
+    const newWidgets = widgets.map((w) => (w.id === id ? { ...w, enabled: !w.enabled } : w));
+    setWidgets(newWidgets);
+    saveWidgetOrder(newWidgets);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setWidgets((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        saveWidgetOrder(newItems);
+        return newItems;
+      });
+    }
   };
 
   if (loading) {
@@ -500,40 +563,76 @@ export default function DashboardContentNew() {
         </div>
       )}
 
-      {/* Grid de Widgets */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dashboardData && (
-          <>
-            {enabledWidgets.find((w) => w.id === "revenue") && (
-              <RevenueWidget data={dashboardData.revenue} />
-            )}
+      {/* Grid de Widgets com Drag-and-Drop */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={enabledWidgets.map((w) => w.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {dashboardData &&
+              enabledWidgets.map((widget) => {
+                if (widget.id === "revenue") {
+                  return (
+                    <SortableWidget key={widget.id} id={widget.id}>
+                      <RevenueWidget data={dashboardData.revenue} />
+                    </SortableWidget>
+                  );
+                }
 
-            {enabledWidgets.find((w) => w.id === "messages") && (
-              <MessagesWidget data={dashboardData.messages} />
-            )}
+                if (widget.id === "messages") {
+                  return (
+                    <SortableWidget key={widget.id} id={widget.id}>
+                      <MessagesWidget data={dashboardData.messages} />
+                    </SortableWidget>
+                  );
+                }
 
-            {enabledWidgets.find((w) => w.id === "quickStats") && (
-              <div className="md:col-span-2 lg:col-span-3">
-                <QuickStatsWidget data={dashboardData.quickStats} />
-              </div>
-            )}
+                if (widget.id === "quickStats") {
+                  return (
+                    <div key={widget.id} className="md:col-span-2 lg:col-span-3">
+                      <SortableWidget id={widget.id}>
+                        <QuickStatsWidget data={dashboardData.quickStats} />
+                      </SortableWidget>
+                    </div>
+                  );
+                }
 
-            {enabledWidgets.find((w) => w.id === "activity") && (
-              <div className="md:col-span-2">
-                <RecentActivityWidget data={dashboardData.recentActivity} />
-              </div>
-            )}
+                if (widget.id === "activity") {
+                  return (
+                    <div key={widget.id} className="md:col-span-2">
+                      <SortableWidget id={widget.id}>
+                        <RecentActivityWidget data={dashboardData.recentActivity} />
+                      </SortableWidget>
+                    </div>
+                  );
+                }
 
-            {enabledWidgets.find((w) => w.id === "actions") && (
-              <QuickActionsWidget />
-            )}
+                if (widget.id === "actions") {
+                  return (
+                    <SortableWidget key={widget.id} id={widget.id}>
+                      <QuickActionsWidget />
+                    </SortableWidget>
+                  );
+                }
 
-            {enabledWidgets.find((w) => w.id === "alerts") && (
-              <AlertsWidget />
-            )}
-          </>
-        )}
-      </div>
+                if (widget.id === "alerts") {
+                  return (
+                    <SortableWidget key={widget.id} id={widget.id}>
+                      <AlertsWidget />
+                    </SortableWidget>
+                  );
+                }
+
+                return null;
+              })}
+          </div>
+        </SortableContext>
+      </DndContext>
     </div>
   );
 }

@@ -57,10 +57,10 @@ export async function GET(req: NextRequest) {
       stats,
       count,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching coudelarias:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar coudelarias", details: error.message },
+      { error: "Erro ao carregar coudelarias", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -151,10 +151,10 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
 
     return NextResponse.json({ coudelaria }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating coudelaria:", error);
     return NextResponse.json(
-      { error: "Erro ao criar coudelaria", details: error.message },
+      { error: "Erro ao criar coudelaria", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

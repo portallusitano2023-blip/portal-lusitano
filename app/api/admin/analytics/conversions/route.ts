@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
     }
 
     // 3. CLIENTES PAGOS (pessoas que compraram algo)
-    let payments: any[] = [];
+    let payments: { email: string; amount: number; created_at: string }[] = [];
 
     try {
       const { data } = await supabase
@@ -132,14 +132,14 @@ export async function GET(req: NextRequest) {
     if (payments) {
       const uniqueCustomersByMonth: Record<string, Set<string>> = {};
 
-      payments.forEach((payment: any) => {
+      payments.forEach((payment) => {
         const date = new Date(payment.created_at);
         const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
         if (monthlyConversions[monthStr]) {
           if (!uniqueCustomersByMonth[monthStr]) {
             uniqueCustomersByMonth[monthStr] = new Set();
           }
-          uniqueCustomersByMonth[monthStr].add(payment.email);
+          uniqueCustomersByMonth[monthStr].add(payment.email as string);
         }
       });
 
@@ -180,10 +180,10 @@ export async function GET(req: NextRequest) {
       funnel,
       monthlyConversions: monthlyChart,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Conversions analytics error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao buscar analytics de conversões" },
+      { error: error instanceof Error ? error.message : "Erro ao buscar analytics de conversões" },
       { status: 500 }
     );
   }

@@ -30,10 +30,10 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ uploads: data || [] });
-  } catch (error: any) {
+  } catch (error) {
     console.error("List error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao listar uploads" },
+      { error: error instanceof Error ? error.message : "Erro ao listar uploads" },
       { status: 500 }
     );
   }

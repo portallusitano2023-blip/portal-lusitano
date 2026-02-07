@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get("status") || "all";
     const priority = searchParams.get("priority") || "all";
     const taskType = searchParams.get("task_type") || "all";
+    const assignedTo = searchParams.get("assigned_to") || "all";
     const month = searchParams.get("month"); // YYYY-MM format
     const search = searchParams.get("search") || "";
 
@@ -36,6 +37,10 @@ export async function GET(req: NextRequest) {
       query = query.eq("task_type", taskType);
     }
 
+    if (assignedTo !== "all") {
+      query = query.eq("assigned_to", assignedTo);
+    }
+
     // Filtrar por mês específico
     if (month) {
       const [year, monthNum] = month.split("-");
@@ -49,7 +54,7 @@ export async function GET(req: NextRequest) {
 
     // Pesquisa
     if (search) {
-      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,related_email.ilike.%${search}%`);
+      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,assigned_to.ilike.%${search}%,related_email.ilike.%${search}%`);
     }
 
     const { data: tasks, error, count } = await query;
@@ -77,10 +82,10 @@ export async function GET(req: NextRequest) {
       tasks: tasks || [],
       stats,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching tasks:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar tarefas", details: error.message },
+      { error: "Erro ao carregar tarefas", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -101,6 +106,7 @@ export async function POST(req: NextRequest) {
       task_type = "follow_up",
       due_date,
       priority = "normal",
+      assigned_to,
       related_email,
       notes,
     } = body;
@@ -123,6 +129,7 @@ export async function POST(req: NextRequest) {
         due_date: new Date(due_date).toISOString(),
         priority,
         status: "pendente",
+        assigned_to,
         related_email,
         notes,
         admin_email: email,
@@ -133,10 +140,10 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
 
     return NextResponse.json({ task }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating task:", error);
     return NextResponse.json(
-      { error: "Erro ao criar tarefa", details: error.message },
+      { error: "Erro ao criar tarefa", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

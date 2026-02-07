@@ -19,10 +19,10 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
 
     return NextResponse.json({ pendentes: pendentes || [] });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching depoimentos:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar depoimentos", details: error.message },
+      { error: "Erro ao carregar depoimentos", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

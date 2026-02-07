@@ -348,7 +348,7 @@ const results: Record<string, Result> = {
     recommendedRegions: ["Ribatejo", "Alentejo", "Internacional"],
     linhagens: [{ name: "Veiga", reason: "Reconhecida pelos movimentos expressivos e elegancia" }, { name: "Alter Real", reason: "Tradicao real, seleccao para funcionalidade de elite" }, { name: "Coudelaria Nacional", reason: "Genetica testada em competicao internacional" }],
     disciplinas: ["Dressage FEI", "Grand Prix", "Grand Prix Special", "Freestyle/Kur", "CDI Internacional"],
-    famousHorses: [{ name: "Rubi AR", achievement: "Jogos Olimpicos com Miguel Ralao Duarte" }, { name: "Oxidado", achievement: "Campeonatos da Europa com Daniel Pinto" }, { name: "Fogoso", achievement: "Lenda do Dressage Portugues" }, { name: "Euclides MOR", achievement: "Top mundial com Rodrigo Torres" }],
+    famousHorses: [{ name: "Rubi AR", achievement: "Jogos Olimpicos Londres 2012 com Gonçalo Carvalho" }, { name: "Oxidado", achievement: "Campeonatos da Europa com Daniel Pinto" }, { name: "Fogoso", achievement: "Lenda do Dressage Portugues" }, { name: "Euclides MOR", achievement: "Top mundial com Rodrigo Torres" }],
     tips: ["Invista num exame veterinario completo com RX", "Veja o cavalo trabalhar varias vezes", "Considere o custo total anual", "Procure referencias da coudelaria", "Avalie o potencial de evolucao", "Considere um periodo de experiencia"],
     nextSteps: ["Consultar coudelarias especializadas em competicao", "Contactar cavaleiros profissionais", "Visitar Golega na Feira Nacional do Cavalo", "Assistir a provas CDI", "Definir orcamento total"],
     icon: <Trophy className="text-[#C5A059]" size={48} />,

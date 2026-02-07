@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 const domain = "irdip0-dq.myshopify.com";
 const storefrontAccessToken = "5566f8155086c19776145d6ff669019b";
 
-export async function register(prevState: any, formData: FormData) {
+export async function register(prevState: { error?: string } | null, formData: FormData) {
   const firstName = formData.get('firstName') as string;
   const lastName = formData.get('lastName') as string;
   const email = formData.get('email') as string;

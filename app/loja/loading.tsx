@@ -1,5 +1,3 @@
-import { ProductGridSkeleton } from "@/components/ui/Skeleton";
-
 export default function LojaLoading() {
   return (
     <main className="min-h-screen bg-[#050505] text-white pt-32 pb-32">

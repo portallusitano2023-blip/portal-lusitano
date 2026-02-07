@@ -8,11 +8,27 @@
  */
 
 // ============================================================================
+// TIPOS
+// ============================================================================
+
+type GtagFn = (...args: [string, ...unknown[]]) => void;
+type FbqFn = (...args: [string, ...unknown[]]) => void;
+
+interface AnalyticsWindow extends Window {
+  gtag?: GtagFn;
+  fbq?: FbqFn;
+}
+
+// ============================================================================
 // CONFIGURAÇÃO
 // ============================================================================
 
 const isBrowser = typeof window !== "undefined";
 const DEBUG_MODE = process.env.NODE_ENV === "development";
+
+function getWindow(): AnalyticsWindow | undefined {
+  return isBrowser ? (window as AnalyticsWindow) : undefined;
+}
 
 function debugLog(action: string, data: unknown) {
   if (DEBUG_MODE) {
@@ -25,8 +41,9 @@ function debugLog(action: string, data: unknown) {
 // ============================================================================
 
 export const pageview = (url: string) => {
-  if (isBrowser && (window as any).gtag) {
-    (window as any).gtag("config", process.env.NEXT_PUBLIC_GA_ID, {
+  const w = getWindow();
+  if (w?.gtag) {
+    w.gtag("config", process.env.NEXT_PUBLIC_GA_ID, {
       page_path: url,
     });
     debugLog("GA4 Pageview", { url });
@@ -44,8 +61,9 @@ export const event = ({
   label?: string;
   value?: number;
 }) => {
-  if (isBrowser && (window as any).gtag) {
-    (window as any).gtag("event", action, {
+  const w = getWindow();
+  if (w?.gtag) {
+    w.gtag("event", action, {
       event_category: category,
       event_label: label,
       value: value,
@@ -56,8 +74,9 @@ export const event = ({
 
 // Enviar evento GA4 com parâmetros flexíveis
 export function sendGA4Event(eventName: string, params?: Record<string, unknown>) {
-  if (isBrowser && (window as any).gtag) {
-    (window as any).gtag("event", eventName, params);
+  const w = getWindow();
+  if (w?.gtag) {
+    w.gtag("event", eventName, params);
     debugLog("GA4 Event", { eventName, params });
   }
 }
@@ -67,15 +86,17 @@ export function sendGA4Event(eventName: string, params?: Record<string, unknown>
 // ============================================================================
 
 export function sendMetaEvent(eventName: string, params?: Record<string, unknown>) {
-  if (isBrowser && (window as any).fbq) {
-    (window as any).fbq("track", eventName, params);
+  const w = getWindow();
+  if (w?.fbq) {
+    w.fbq("track", eventName, params);
     debugLog("Meta Pixel Event", { eventName, params });
   }
 }
 
 export function sendMetaCustomEvent(eventName: string, params?: Record<string, unknown>) {
-  if (isBrowser && (window as any).fbq) {
-    (window as any).fbq("trackCustom", eventName, params);
+  const w = getWindow();
+  if (w?.fbq) {
+    w.fbq("trackCustom", eventName, params);
     debugLog("Meta Pixel Custom", { eventName, params });
   }
 }

@@ -125,7 +125,25 @@ export async function GET(req: NextRequest) {
       };
     }).sort((a, b) => b.revenue - a.revenue);
 
-    // 5. MONTAR DADOS PARA O PDF
+    // 5. CALCULAR MRR (subscrições recorrentes de publicidade)
+    const { data: allPayments } = await supabase
+      .from("payments")
+      .select("amount, product_metadata")
+      .eq("status", "succeeded")
+      .not("product_metadata", "is", null);
+
+    const subscriptionPayments = allPayments?.filter((payment) => {
+      const metadata = payment.product_metadata as Record<string, unknown> | null;
+      const pkg = metadata?.package;
+      return pkg === "lateral" || pkg === "premium";
+    }) || [];
+
+    const currentMRR = subscriptionPayments.reduce(
+      (sum, payment) => sum + (payment.amount || 0),
+      0
+    ) / 100;
+
+    // 6. MONTAR DADOS PARA O PDF
     const reportData = {
       period: {
         month: periodStart.toLocaleDateString("pt-PT", { month: "long" }),
@@ -134,7 +152,7 @@ export async function GET(req: NextRequest) {
       financial: {
         totalRevenue,
         revenueThisMonth,
-        mrr: 0, // TODO: calcular MRR quando houver subscrições recorrentes
+        mrr: parseFloat(currentMRR.toFixed(2)),
         averageTicket,
         transactionCount: paymentsThisMonth.length,
         revenueByProduct,
@@ -162,12 +180,12 @@ export async function GET(req: NextRequest) {
         "Content-Disposition": `attachment; filename="${fileName}"`,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Erro ao gerar relatório PDF:", error);
     return NextResponse.json(
       {
         error: "Erro ao gerar relatório",
-        details: error.message,
+        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );

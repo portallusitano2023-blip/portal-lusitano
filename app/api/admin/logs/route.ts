@@ -67,10 +67,10 @@ export async function GET(req: NextRequest) {
         admins: uniqueAdmins,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Logs error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao buscar logs" },
+      { error: error instanceof Error ? error.message : "Erro ao buscar logs" },
       { status: 500 }
     );
   }
@@ -111,10 +111,10 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ log });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Log creation error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao criar log" },
+      { error: error instanceof Error ? error.message : "Erro ao criar log" },
       { status: 500 }
     );
   }

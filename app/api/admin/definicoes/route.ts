@@ -44,10 +44,10 @@ export async function GET(req: NextRequest) {
       grouped,
       categories: Object.keys(grouped),
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Settings list error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao listar definições" },
+      { error: error instanceof Error ? error.message : "Erro ao listar definições" },
       { status: 500 }
     );
   }
@@ -105,10 +105,10 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ setting });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Setting creation error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao criar definição" },
+      { error: error instanceof Error ? error.message : "Erro ao criar definição" },
       { status: 500 }
     );
   }

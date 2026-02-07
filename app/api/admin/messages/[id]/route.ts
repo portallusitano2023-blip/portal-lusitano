@@ -43,10 +43,10 @@ export async function GET(
     }
 
     return NextResponse.json({ message: data });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Message get error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao buscar mensagem" },
+      { error: error instanceof Error ? error.message : "Erro ao buscar mensagem" },
       { status: 500 }
     );
   }
@@ -76,7 +76,7 @@ export async function PATCH(
       "assigned_to",
     ];
 
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
 
     for (const field of allowedFields) {
       if (updates[field] !== undefined) {
@@ -108,10 +108,10 @@ export async function PATCH(
     }
 
     return NextResponse.json({ message: data });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Message update error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao atualizar mensagem" },
+      { error: error instanceof Error ? error.message : "Erro ao atualizar mensagem" },
       { status: 500 }
     );
   }
@@ -145,10 +145,10 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Message delete error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao eliminar mensagem" },
+      { error: error instanceof Error ? error.message : "Erro ao eliminar mensagem" },
       { status: 500 }
     );
   }

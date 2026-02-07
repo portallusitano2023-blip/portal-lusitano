@@ -6,16 +6,77 @@ import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { ShoppingBag, User, Menu, X, Search, Heart, Crown, Gift, ChevronDown, MapPin, Calendar, ShoppingCart, BookOpen, HelpCircle, Home, Store, Calculator, Scale, Dna, Users, Trophy, Euro, Shield } from "lucide-react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
+import type { LucideIcon } from "lucide-react";
 
 // Lazy load - SearchModal só carrega quando o utilizador abre a pesquisa
 const SearchModal = dynamic(
   () => import("./Search").then((mod) => ({ default: mod.SearchModal })),
   { ssr: false }
 );
+
+// Dados de navegação estáticos - extraídos fora do componente para evitar re-criação a cada render
+interface NavDropdownItem {
+  href: string;
+  icon: LucideIcon;
+  label: string;
+  desc: string;
+  iconClass?: string;
+}
+
+interface MobileNavItem {
+  href: string;
+  icon: LucideIcon;
+  label: string;
+  highlight?: boolean;
+}
+
+const DB_ITEMS: NavDropdownItem[] = [
+  { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo", desc: "Cavalos à venda" },
+  { href: "/vender-cavalo", icon: Euro, label: "Vender Cavalo", desc: "Anuncie aqui", iconClass: "text-green-500" },
+  { href: "/directorio", icon: Crown, label: "Coudelarias", desc: "Diretório completo" },
+  { href: "/mapa", icon: MapPin, label: "Mapa", desc: "Mapa interativo" },
+  { href: "/eventos", icon: Calendar, label: "Eventos", desc: "Feiras e competições" },
+  { href: "/linhagens", icon: BookOpen, label: "Linhagens", desc: "Guia das linhagens" },
+  { href: "/piroplasmose", icon: Shield, label: "Piroplasmose", desc: "Saúde e exportação" },
+];
+
+const TOOLS_ITEMS: NavDropdownItem[] = [
+  { href: "/calculadora-valor", icon: Calculator, label: "Calculadora", desc: "Estimar valor" },
+  { href: "/comparador-cavalos", icon: Scale, label: "Comparador", desc: "Comparar cavalos" },
+  { href: "/verificador-compatibilidade", icon: Dna, label: "Compatibilidade", desc: "Para criação" },
+];
+
+const COMMUNITY_ITEMS: NavDropdownItem[] = [
+  { href: "/profissionais", icon: Users, label: "Profissionais", desc: "Vets, ferradores, treinadores" },
+  { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis", desc: "Galeria de honra" },
+  { href: "/analise-perfil", icon: HelpCircle, label: "Análise de Perfil", desc: "Descubra o seu perfil equestre" },
+];
+
+const MOBILE_DB_ITEMS: MobileNavItem[] = [
+  { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo" },
+  { href: "/vender-cavalo", icon: Euro, label: "Vender Cavalo", highlight: true },
+  { href: "/directorio", icon: Crown, label: "Coudelarias" },
+  { href: "/mapa", icon: MapPin, label: "Mapa" },
+  { href: "/eventos", icon: Calendar, label: "Eventos" },
+  { href: "/linhagens", icon: BookOpen, label: "Linhagens" },
+  { href: "/piroplasmose", icon: Shield, label: "Piroplasmose" },
+];
+
+const MOBILE_TOOLS_ITEMS: MobileNavItem[] = [
+  { href: "/calculadora-valor", icon: Calculator, label: "Calculadora" },
+  { href: "/comparador-cavalos", icon: Scale, label: "Comparador" },
+  { href: "/verificador-compatibilidade", icon: Dna, label: "Compatibilidade" },
+  { href: "/analise-perfil", icon: HelpCircle, label: "Análise" },
+];
+
+const MOBILE_COMMUNITY_ITEMS: MobileNavItem[] = [
+  { href: "/profissionais", icon: Users, label: "Profissionais" },
+  { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis" },
+];
 
 export default function Navbar() {
   const { totalQuantity, openCart } = useCart();
@@ -118,24 +179,11 @@ export default function Navbar() {
 
             {isLusitanoOpen && (
               <div className="absolute top-full left-0 pt-2 w-[520px]">
-                {/* CSS puro para hover instantâneo — evita Tailwind hover classes e repaints múltiplos */}
-                <style dangerouslySetInnerHTML={{ __html: `
-                  .dd-item{display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.75rem;border-radius:0.25rem;text-decoration:none;background:transparent}
-                  .dd-item:hover{background:rgba(255,255,255,0.08)}
-                ` }} />
                 <div className="bg-[#0a0a0a] border border-white/10 p-4 grid grid-cols-2 gap-4" style={{ contain: 'layout style paint' }}>
                   {/* Coluna 1 - Base de Dados */}
                   <div>
                     <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">Base de Dados</span>
-                    {[
-                      { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo", desc: "Cavalos à venda" },
-                      { href: "/vender-cavalo", icon: Euro, label: "Vender Cavalo", desc: "Anuncie aqui", iconClass: "text-green-500" },
-                      { href: "/directorio", icon: Crown, label: "Coudelarias", desc: "Diretório completo" },
-                      { href: "/mapa", icon: MapPin, label: "Mapa", desc: "Mapa interativo" },
-                      { href: "/eventos", icon: Calendar, label: "Eventos", desc: "Feiras e competições" },
-                      { href: "/linhagens", icon: BookOpen, label: "Linhagens", desc: "Guia das linhagens" },
-                      { href: "/piroplasmose", icon: Shield, label: "Piroplasmose", desc: "Saúde e exportação" },
-                    ].map((item) => (
+                    {DB_ITEMS.map((item) => (
                       <Link
                         key={item.href}
                         href={item.href}
@@ -155,11 +203,7 @@ export default function Navbar() {
                   {/* Coluna 2 - Ferramentas e Comunidade */}
                   <div>
                     <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">Ferramentas</span>
-                    {[
-                      { href: "/calculadora-valor", icon: Calculator, label: "Calculadora", desc: "Estimar valor" },
-                      { href: "/comparador-cavalos", icon: Scale, label: "Comparador", desc: "Comparar cavalos" },
-                      { href: "/verificador-compatibilidade", icon: Dna, label: "Compatibilidade", desc: "Para criação" },
-                    ].map((item) => (
+                    {TOOLS_ITEMS.map((item) => (
                       <Link
                         key={item.href}
                         href={item.href}
@@ -176,11 +220,7 @@ export default function Navbar() {
                     ))}
 
                     <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 mt-4 block font-medium">Comunidade</span>
-                    {[
-                      { href: "/profissionais", icon: Users, label: "Profissionais", desc: "Vets, ferradores, treinadores" },
-                      { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis", desc: "Galeria de honra" },
-                      { href: "/analise-perfil", icon: HelpCircle, label: "Análise de Perfil", desc: "Descubra o seu perfil equestre" },
-                    ].map((item) => (
+                    {COMMUNITY_ITEMS.map((item) => (
                       <Link
                         key={item.href}
                         href={item.href}
@@ -320,25 +360,17 @@ export default function Navbar() {
                 Base de Dados
               </span>
               <div className="grid grid-cols-2 gap-2">
-                {[
-                  { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo" },
-                  { href: "/vender-cavalo", icon: Euro, label: "Vender Cavalo", highlight: true },
-                  { href: "/directorio", icon: Crown, label: "Coudelarias" },
-                  { href: "/mapa", icon: MapPin, label: "Mapa" },
-                  { href: "/eventos", icon: Calendar, label: "Eventos" },
-                  { href: "/linhagens", icon: BookOpen, label: "Linhagens" },
-                  { href: "/piroplasmose", icon: Shield, label: "Piroplasmose" },
-                ].map((item) => (
+                {MOBILE_DB_ITEMS.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={`flex items-center gap-3 py-3 px-3 text-sm transition-colors rounded-lg active:scale-[0.98] touch-manipulation ${
-                      (item as any).highlight
+                      item.highlight
                         ? "text-green-400 bg-green-500/10 border border-green-500/30"
                         : "text-zinc-300 hover:text-[#C5A059] hover:bg-white/5"
                     }`}
                   >
-                    <item.icon size={18} className={(item as any).highlight ? "text-green-400" : "text-[#C5A059]/70"} />
+                    <item.icon size={18} className={item.highlight ? "text-green-400" : "text-[#C5A059]/70"} />
                     <span className="truncate">{item.label}</span>
                   </Link>
                 ))}
@@ -351,12 +383,7 @@ export default function Navbar() {
                 Ferramentas
               </span>
               <div className="grid grid-cols-2 gap-2">
-                {[
-                  { href: "/calculadora-valor", icon: Calculator, label: "Calculadora" },
-                  { href: "/comparador-cavalos", icon: Scale, label: "Comparador" },
-                  { href: "/verificador-compatibilidade", icon: Dna, label: "Compatibilidade" },
-                  { href: "/analise-perfil", icon: HelpCircle, label: "Análise" },
-                ].map((item) => (
+                {MOBILE_TOOLS_ITEMS.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -375,10 +402,7 @@ export default function Navbar() {
                 Comunidade
               </span>
               <div className="grid grid-cols-2 gap-2">
-                {[
-                  { href: "/profissionais", icon: Users, label: "Profissionais" },
-                  { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis" },
-                ].map((item) => (
+                {MOBILE_COMMUNITY_ITEMS.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}

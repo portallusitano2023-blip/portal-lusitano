@@ -16,7 +16,7 @@ export async function GET() {
       authenticated: true,
       email,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Auth check error:", error);
     return NextResponse.json(
       { authenticated: false },

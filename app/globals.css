@@ -397,6 +397,20 @@ html, body {
   }
 }
 
+/* ===== NAVBAR DROPDOWN ===== */
+.dd-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  background: transparent;
+}
+.dd-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
 /* ===== VIEW TRANSITIONS API ===== */
 /* Transições suaves entre páginas — API nativa do browser, zero JS */
 @view-transition {

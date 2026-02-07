@@ -5,7 +5,16 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function HomeContent({ products }: { products: any[] }) {
+interface ShopifyProduct {
+  id: string;
+  title: string;
+  handle: string;
+  images: { url: string; altText?: string }[];
+  variants: { id: string; price: { amount: string } }[];
+  priceRange?: { minVariantPrice: { amount: string; currencyCode?: string } };
+}
+
+export default function HomeContent({ products }: { products: ShopifyProduct[] }) {
   const { t } = useLanguage();
 
   return (
@@ -77,7 +86,7 @@ export default function HomeContent({ products }: { products: any[] }) {
                   {product.title}
                 </h3>
                 <p className="text-zinc-400 font-serif text-sm tracking-widest">
-                  {Number(product.priceRange.minVariantPrice.amount).toFixed(2)} EUR
+                  {Number(product.priceRange?.minVariantPrice?.amount || product.variants[0]?.price?.amount || 0).toFixed(2)} EUR
                 </p>
               </div>
             </Link>

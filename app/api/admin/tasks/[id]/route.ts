@@ -28,10 +28,10 @@ export async function GET(
     }
 
     return NextResponse.json({ task });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching task:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar tarefa", details: error.message },
+      { error: "Erro ao carregar tarefa", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -58,18 +58,20 @@ export async function PATCH(
       due_date,
       status,
       priority,
+      assigned_to,
       related_email,
       notes,
     } = body;
 
     // Construir objeto de atualização
-    const updates: any = {};
+    const updates: Record<string, unknown> = {};
 
     if (title !== undefined) updates.title = title;
     if (description !== undefined) updates.description = description;
     if (task_type !== undefined) updates.task_type = task_type;
     if (due_date !== undefined) updates.due_date = new Date(due_date).toISOString();
     if (priority !== undefined) updates.priority = priority;
+    if (assigned_to !== undefined) updates.assigned_to = assigned_to;
     if (related_email !== undefined) updates.related_email = related_email;
     if (notes !== undefined) updates.notes = notes;
 
@@ -94,10 +96,10 @@ export async function PATCH(
     if (error) throw error;
 
     return NextResponse.json({ task });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating task:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar tarefa", details: error.message },
+      { error: "Erro ao atualizar tarefa", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -124,10 +126,10 @@ export async function DELETE(
     if (error) throw error;
 
     return NextResponse.json({ message: "Tarefa eliminada com sucesso" });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting task:", error);
     return NextResponse.json(
-      { error: "Erro ao eliminar tarefa", details: error.message },
+      { error: "Erro ao eliminar tarefa", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

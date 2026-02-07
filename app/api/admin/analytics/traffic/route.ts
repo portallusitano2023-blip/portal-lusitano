@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
     // 1. TOTAL DE VISUALIZAÇÕES DE CAVALOS
     let totalCavalosViews = 0;
-    let cavalos: any[] = [];
+    let cavalos: { views_count: number }[] = [];
 
     try {
       const { data, error } = await supabase
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
 
     // 2. TOTAL DE VISUALIZAÇÕES DE EVENTOS
     let totalEventosViews = 0;
-    let eventos: any[] = [];
+    let eventos: { views_count: number }[] = [];
 
     try {
       const { data, error } = await supabase
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
     const totalViews = totalCavalosViews + totalEventosViews;
 
     // 4. CAVALOS MAIS VISTOS (Top 10)
-    let topCavalos: any[] = [];
+    let topCavalos: { id: string; nome_cavalo: string; views_count: number }[] = [];
 
     try {
       const { data, error } = await supabase
@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
     }
 
     // 5. EVENTOS MAIS VISTOS (Top 10)
-    let topEventos: any[] = [];
+    let topEventos: { id: string; titulo: string; views_count: number }[] = [];
 
     try {
       const { data, error } = await supabase
@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
     }
 
     // 6. FONTES DE TRÁFEGO (UTM Source da tabela leads)
-    let leads: any[] = [];
+    let leads: { utm_source: string | null; utm_medium: string | null; utm_campaign: string | null }[] = [];
 
     try {
       const { data, error } = await supabase
@@ -210,10 +210,10 @@ export async function GET(req: NextRequest) {
       trafficSources: trafficSourcesArray,
       contentTypeBreakdown,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Traffic analytics error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao buscar analytics de tráfego" },
+      { error: error instanceof Error ? error.message : "Erro ao buscar analytics de tráfego" },
       { status: 500 }
     );
   }

@@ -1,43 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Verify admin token using Web Crypto API (Edge compatible)
-async function verifyAdminToken(token: string): Promise<boolean> {
-  try {
-    const [data, signature] = token.split(".");
-    if (!data || !signature) return false;
-
-    const secret = process.env.ADMIN_SECRET || "change-this-in-production";
-    const encoder = new TextEncoder();
-
-    // Import key for HMAC
-    const key = await crypto.subtle.importKey(
-      "raw",
-      encoder.encode(secret),
-      { name: "HMAC", hash: "SHA-256" },
-      false,
-      ["sign"]
-    );
-
-    // Generate expected signature
-    const signatureBytes = await crypto.subtle.sign("HMAC", key, encoder.encode(data));
-    const expectedSignature = btoa(String.fromCharCode(...new Uint8Array(signatureBytes)))
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=+$/, "");
-
-    if (signature !== expectedSignature) return false;
-
-    // Parse and check expiration
-    const payload = JSON.parse(atob(data.replace(/-/g, "+").replace(/_/g, "/")));
-    if (Date.now() > payload.exp) return false;
-
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
@@ -77,11 +40,50 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
+  // i18n: Rewrite /en/* routes to serve the same pages with locale cookie
+  // Isto permite que o Google indexe /en/comprar, /en/loja, etc.
+  const pathname = request.nextUrl.pathname;
+  if (pathname.startsWith("/en/") || pathname === "/en") {
+    // Strip /en prefix and rewrite to the Portuguese route
+    const strippedPath = pathname.replace(/^\/en/, "") || "/";
+    const url = request.nextUrl.clone();
+    url.pathname = strippedPath;
+
+    const rewriteResponse = NextResponse.rewrite(url);
+    // Set locale cookie so LanguageContext initializes in English
+    rewriteResponse.cookies.set("locale", "en", { path: "/", sameSite: "lax" });
+    // Copy security headers
+    rewriteResponse.headers.set("X-DNS-Prefetch-Control", "on");
+    rewriteResponse.headers.set("X-Download-Options", "noopen");
+    rewriteResponse.headers.set("X-Permitted-Cross-Domain-Policies", "none");
+    rewriteResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    // Set Content-Language header for SEO
+    rewriteResponse.headers.set("Content-Language", "en");
+    return rewriteResponse;
+  }
+
+  // Set Content-Language for Portuguese routes
+  response.headers.set("Content-Language", "pt");
+
   // Protect admin routes (except login page)
   if (request.nextUrl.pathname.startsWith("/admin") && !request.nextUrl.pathname.startsWith("/admin/login")) {
-    const token = request.cookies.get("auth-token")?.value;
+    const token = request.cookies.get("admin_session")?.value;
 
-    if (!token || !(await verifyAdminToken(token))) {
+    if (!token) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
+
+    // Verify JWT token using jose (same as lib/auth.ts)
+    try {
+      const secret = new TextEncoder().encode(process.env.ADMIN_SECRET || "fallback-secret-key");
+      const { payload } = await (await import("jose")).jwtVerify(token, secret);
+
+      // Check if token has expired
+      if (!payload.email) {
+        return NextResponse.redirect(new URL("/admin/login", request.url));
+      }
+    } catch (error) {
+      // Invalid or expired token
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
   }

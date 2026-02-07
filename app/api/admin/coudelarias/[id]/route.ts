@@ -42,10 +42,10 @@ export async function GET(
       coudelaria,
       plano_historico: historico || [],
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching coudelaria:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar coudelaria", details: error.message },
+      { error: "Erro ao carregar coudelaria", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -108,7 +108,7 @@ export async function PATCH(
     } = body;
 
     // Construir objeto de atualização (só campos fornecidos)
-    const updates: any = { updated_by: email };
+    const updates: Record<string, unknown> = { updated_by: email };
 
     if (nome !== undefined) updates.nome = nome;
     if (descricao !== undefined) updates.descricao = descricao;
@@ -183,10 +183,10 @@ export async function PATCH(
     }
 
     return NextResponse.json({ coudelaria });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating coudelaria:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar coudelaria", details: error.message },
+      { error: "Erro ao atualizar coudelaria", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -217,10 +217,10 @@ export async function DELETE(
     if (error) throw error;
 
     return NextResponse.json({ message: "Coudelaria eliminada com sucesso" });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting coudelaria:", error);
     return NextResponse.json(
-      { error: "Erro ao eliminar coudelaria", details: error.message },
+      { error: "Erro ao eliminar coudelaria", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

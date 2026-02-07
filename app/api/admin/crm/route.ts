@@ -62,10 +62,10 @@ export async function GET(req: NextRequest) {
       pipelineValue,
       wonValue,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching CRM leads:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar leads", details: error.message },
+      { error: "Erro ao carregar leads", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -129,10 +129,10 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
 
     return NextResponse.json({ lead }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating lead:", error);
     return NextResponse.json(
-      { error: "Erro ao criar lead", details: error.message },
+      { error: "Erro ao criar lead", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

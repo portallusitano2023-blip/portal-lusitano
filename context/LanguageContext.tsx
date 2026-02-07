@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 const translations = {
   // PORTUGUES
@@ -505,6 +505,24 @@ const LanguageContext = createContext<LanguageContextType | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>("pt");
+
+  // Ler locale do cookie (definido pelo middleware para rotas /en/*)
+  useEffect(() => {
+    const cookieLocale = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("locale="))
+      ?.split("=")[1];
+    if (cookieLocale === "en") {
+      setLanguage("en");
+    }
+  }, []);
+
+  // Actualizar <html lang> e cookie quando o idioma muda
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.cookie = `locale=${language}; path=/; samesite=lax; max-age=${60 * 60 * 24 * 365}`;
+  }, [language]);
+
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === "pt" ? "en" : "pt"));
   };

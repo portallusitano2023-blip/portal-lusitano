@@ -42,10 +42,10 @@ export async function GET(
       profissional,
       subscription_historico: historico || [],
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching profissional:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar profissional", details: error.message },
+      { error: "Erro ao carregar profissional", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -66,7 +66,7 @@ export async function PATCH(
     const body = await req.json();
 
     // Construir objeto de atualização
-    const updates: any = { ...body, updated_by: email };
+    const updates: Record<string, unknown> = { ...body, updated_by: email };
 
     // Converter datas
     if (body.plano_inicio) {
@@ -105,10 +105,10 @@ export async function PATCH(
     }
 
     return NextResponse.json({ profissional });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating profissional:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar profissional", details: error.message },
+      { error: "Erro ao atualizar profissional", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -140,10 +140,10 @@ export async function DELETE(
     if (error) throw error;
 
     return NextResponse.json({ message: "Profissional eliminado com sucesso" });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting profissional:", error);
     return NextResponse.json(
-      { error: "Erro ao eliminar profissional", details: error.message },
+      { error: "Erro ao eliminar profissional", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

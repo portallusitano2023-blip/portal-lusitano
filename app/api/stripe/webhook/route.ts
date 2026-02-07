@@ -21,8 +21,8 @@ export async function POST(req: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (err: any) {
-    console.error(`Webhook signature verification failed: ${err.message}`);
+  } catch (err) {
+    console.error(`Webhook signature verification failed: ${err instanceof Error ? err.message : "Unknown error"}`);
     return Response.json({ error: "Invalid signature" }, { status: 400 });
   }
 
@@ -42,8 +42,8 @@ export async function POST(req: Request) {
     }
 
     return Response.json({ received: true });
-  } catch (error: any) {
-    console.error(`Webhook handler error: ${error.message}`);
+  } catch (error) {
+    console.error(`Webhook handler error: ${error instanceof Error ? error.message : "Unknown error"}`);
     return Response.json({ error: "Webhook handler failed" }, { status: 500 });
   }
 }

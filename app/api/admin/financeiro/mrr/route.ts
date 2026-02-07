@@ -125,10 +125,10 @@ export async function GET(req: NextRequest) {
       },
       evolution: mrrChart,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("MRR calculation error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao calcular MRR" },
+      { error: error instanceof Error ? error.message : "Erro ao calcular MRR" },
       { status: 500 }
     );
   }

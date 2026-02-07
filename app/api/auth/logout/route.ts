@@ -5,7 +5,7 @@ export async function POST() {
   try {
     await deleteSession();
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Logout error:", error);
     return NextResponse.json(
       { error: "Erro ao fazer logout" },

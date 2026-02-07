@@ -2,8 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface DiagnosticoCheck { status: string; message?: string; email?: string | null; error?: any; total_registos?: number; [key: string]: unknown; }
+
 export async function GET(req: NextRequest) {
-  const diagnostico: any = {
+  const diagnostico: {
+    timestamp: string;
+    checks: Record<string, DiagnosticoCheck>;
+    resumo?: { total: number; ok: number; falhas: number; status: string };
+  } = {
     timestamp: new Date().toISOString(),
     checks: {},
   };
@@ -16,10 +23,10 @@ export async function GET(req: NextRequest) {
       email: email || null,
       message: email ? "Sessão válida" : "Sem sessão - precisa fazer login",
     };
-  } catch (error: any) {
+  } catch (error) {
     diagnostico.checks.autenticacao = {
       status: "❌ ERRO",
-      message: error.message,
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 
@@ -32,10 +39,10 @@ export async function GET(req: NextRequest) {
       message: error ? error.message : "Conexão com Supabase OK",
       error: error || null,
     };
-  } catch (error: any) {
+  } catch (error) {
     diagnostico.checks.supabase_conexao = {
       status: "❌ ERRO",
-      message: error.message,
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 
@@ -50,10 +57,10 @@ export async function GET(req: NextRequest) {
       total_registos: count || 0,
       error: error || null,
     };
-  } catch (error: any) {
+  } catch (error) {
     diagnostico.checks.tabela_payments = {
       status: "❌ ERRO",
-      message: error.message,
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 
@@ -68,10 +75,10 @@ export async function GET(req: NextRequest) {
       total_registos: count || 0,
       error: error || null,
     };
-  } catch (error: any) {
+  } catch (error) {
     diagnostico.checks.tabela_contact_submissions = {
       status: "❌ ERRO",
-      message: error.message,
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 
@@ -86,15 +93,22 @@ export async function GET(req: NextRequest) {
       total_registos: count || 0,
       error: error || null,
     };
-  } catch (error: any) {
+  } catch (error) {
     diagnostico.checks.tabela_leads = {
       status: "❌ ERRO",
-      message: error.message,
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 
   // 6. VERIFICAR VARIÁVEIS DE AMBIENTE
   diagnostico.checks.variaveis_ambiente = {
+    status: [
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      process.env.ADMIN_EMAIL,
+      process.env.ADMIN_PASSWORD,
+      process.env.ADMIN_SECRET,
+    ].every(Boolean) ? "✅ OK" : "⚠️ INCOMPLETO",
     SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ? "✅ Definida" : "❌ Não definida",
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY ? "✅ Definida" : "❌ Não definida",
     ADMIN_EMAIL: process.env.ADMIN_EMAIL ? "✅ Definida" : "❌ Não definida",
@@ -104,7 +118,7 @@ export async function GET(req: NextRequest) {
 
   // 7. RESUMO
   const totalChecks = Object.keys(diagnostico.checks).length;
-  const checksOK = Object.values(diagnostico.checks).filter((check: any) =>
+  const checksOK = Object.values(diagnostico.checks).filter((check: { status?: string }) =>
     typeof check === 'object' && check.status?.includes("✅")
   ).length;
 

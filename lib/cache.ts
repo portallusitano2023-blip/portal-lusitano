@@ -1,12 +1,12 @@
 // Simple in-memory cache with TTL
 class Cache {
-  private cache: Map<string, { value: any; expiry: number }>;
+  private cache: Map<string, { value: unknown; expiry: number }>;
 
   constructor() {
     this.cache = new Map();
   }
 
-  set(key: string, value: any, ttl: number = 3600000): void {
+  set(key: string, value: unknown, ttl: number = 3600000): void {
     const expiry = Date.now() + ttl;
     this.cache.set(key, { value, expiry });
   }
@@ -65,7 +65,8 @@ if (typeof window === "undefined") {
 }
 
 // Cache decorator for functions
-export function memoize<T extends (...args: any[]) => any>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function memoize<T extends (...args: never[]) => unknown>(
   fn: T,
   ttl: number = 3600000
 ): T {
@@ -79,18 +80,19 @@ export function memoize<T extends (...args: any[]) => any>(
 
     const result = fn(...args);
     cache.set(key, result, ttl);
-    return result;
+    return result as ReturnType<T>;
   }) as T;
 }
 
 // Async cache decorator
-export function memoizeAsync<T extends (...args: any[]) => Promise<any>>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function memoizeAsync<T extends (...args: never[]) => Promise<unknown>>(
   fn: T,
   ttl: number = 3600000
 ): T {
-  return (async (...args: Parameters<T>): Promise<ReturnType<T>> => {
+  return (async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>>> => {
     const key = `memoize:${fn.name}:${JSON.stringify(args)}`;
-    const cached = cache.get<ReturnType<T>>(key);
+    const cached = cache.get<Awaited<ReturnType<T>>>(key);
 
     if (cached !== null) {
       return cached;
@@ -98,6 +100,6 @@ export function memoizeAsync<T extends (...args: any[]) => Promise<any>>(
 
     const result = await fn(...args);
     cache.set(key, result, ttl);
-    return result;
+    return result as Awaited<ReturnType<T>>;
   }) as T;
 }

@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Atualizar status
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       status,
     };
 
@@ -108,10 +108,10 @@ export async function POST(req: NextRequest) {
       success: true,
       message: `Status atualizado para ${status}`,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Update status error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao atualizar status" },
+      { error: error instanceof Error ? error.message : "Erro ao atualizar status" },
       { status: 500 }
     );
   }

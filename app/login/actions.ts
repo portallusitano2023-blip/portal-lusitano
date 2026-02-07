@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation'
 const domain = "irdip0-dq.myshopify.com";
 const storefrontAccessToken = "5566f8155086c19776145d6ff669019b";
 
-export async function login(prevState: any, formData: FormData) {
+export async function login(prevState: { error?: string } | null, formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 

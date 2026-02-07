@@ -107,10 +107,10 @@ export async function GET(req: NextRequest) {
         "Content-Disposition": `attachment; filename="transacoes_${new Date().toISOString().split("T")[0]}.csv"`,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("CSV export error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao exportar CSV" },
+      { error: error instanceof Error ? error.message : "Erro ao exportar CSV" },
       { status: 500 }
     );
   }

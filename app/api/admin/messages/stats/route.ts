@@ -135,10 +135,10 @@ export async function GET(req: NextRequest) {
       byPriority: priorityStats,
       latestMessage: latestMessage || null,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Stats error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao buscar estatísticas" },
+      { error: error instanceof Error ? error.message : "Erro ao buscar estatísticas" },
       { status: 500 }
     );
   }

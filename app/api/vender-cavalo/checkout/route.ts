@@ -120,10 +120,10 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ url: session.url });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Checkout creation error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao criar checkout" },
+      { error: error instanceof Error ? error.message : "Erro ao criar checkout" },
       { status: 500 }
     );
   }

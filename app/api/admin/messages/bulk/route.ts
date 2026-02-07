@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let updateData: any = {};
+    let updateData: Record<string, unknown> = {};
 
     switch (action) {
       case "mark_read":
@@ -156,10 +156,10 @@ export async function POST(req: NextRequest) {
       success: true,
       updated: ids.length,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Bulk operation error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao executar ação em massa" },
+      { error: error instanceof Error ? error.message : "Erro ao executar ação em massa" },
       { status: 500 }
     );
   }

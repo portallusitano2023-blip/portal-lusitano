@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { adminLogin } from "./actions";
 
@@ -20,6 +20,13 @@ function SubmitButton() {
 
 export default function AdminLoginPage() {
   const [state, formAction] = useActionState(adminLogin, null);
+
+  useEffect(() => {
+    console.log("Login state changed:", state);
+    if (state?.error) {
+      console.error("Login error:", state.error);
+    }
+  }, [state]);
 
   return (
     <main className="min-h-screen bg-[#050505] flex items-center justify-center relative overflow-hidden px-6">

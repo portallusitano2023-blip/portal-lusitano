@@ -167,10 +167,10 @@ export async function GET(req: NextRequest) {
       unreadCount,
       total: notifications.length,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Notifications error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao carregar notificações" },
+      { error: error instanceof Error ? error.message : "Erro ao carregar notificações" },
       { status: 500 }
     );
   }

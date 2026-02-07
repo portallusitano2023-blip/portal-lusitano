@@ -37,10 +37,10 @@ export async function PATCH(
     if (error) throw error;
 
     return NextResponse.json({ depoimento });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating depoimento:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar depoimento", details: error.message },
+      { error: "Erro ao atualizar depoimento", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

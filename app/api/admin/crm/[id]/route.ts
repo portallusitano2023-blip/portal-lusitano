@@ -28,10 +28,10 @@ export async function GET(
     }
 
     return NextResponse.json({ lead });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching lead:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar lead", details: error.message },
+      { error: "Erro ao carregar lead", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -70,7 +70,7 @@ export async function PATCH(
     } = body;
 
     // Construir objeto de atualização
-    const updates: any = {};
+    const updates: Record<string, unknown> = {};
 
     if (name !== undefined) updates.name = name;
     if (leadEmail !== undefined) updates.email = leadEmail;
@@ -116,10 +116,10 @@ export async function PATCH(
     if (error) throw error;
 
     return NextResponse.json({ lead });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating lead:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar lead", details: error.message },
+      { error: "Erro ao atualizar lead", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }
@@ -146,10 +146,10 @@ export async function DELETE(
     if (error) throw error;
 
     return NextResponse.json({ message: "Lead eliminado com sucesso" });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting lead:", error);
     return NextResponse.json(
-      { error: "Erro ao eliminar lead", details: error.message },
+      { error: "Erro ao eliminar lead", details: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

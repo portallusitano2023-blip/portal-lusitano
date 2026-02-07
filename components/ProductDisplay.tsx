@@ -1,16 +1,37 @@
 "use client";
 
-import { useState, useEffect } from "react"; // Adicionámos o useEffect
+import { useState, useEffect } from "react";
 import AddToCartButton from "@/components/AddToCartButton";
-import { ChevronDown } from "lucide-react"; 
+import { ChevronDown } from "lucide-react";
 
-export default function ProductDisplay({ product }: { product: any }) {
+interface ProductImage {
+  url: string;
+  altText?: string;
+}
+
+interface ProductVariant {
+  id: string;
+  title: string;
+  price: { amount: string; currencyCode?: string };
+  availableForSale: boolean;
+  image?: ProductImage;
+}
+
+interface Product {
+  id: string;
+  title: string;
+  description?: string;
+  images: ProductImage[];
+  variants: ProductVariant[];
+}
+
+export default function ProductDisplay({ product }: { product: Product }) {
   // 1. Estados iniciais
   const [selectedImage, setSelectedImage] = useState(product.images[0]?.url);
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id);
 
   // Encontra a variante ativa com base na escolha
-  const activeVariant = product.variants.find((v: any) => v.id === selectedVariantId) || product.variants[0];
+  const activeVariant = product.variants.find((v) => v.id === selectedVariantId) || product.variants[0];
   
   // --- NOVO: ATUALIZAR IMAGEM AUTOMATICAMENTE ---
   // Sempre que a variante muda (activeVariant), verificamos se ela tem uma imagem específica.
@@ -41,7 +62,7 @@ export default function ProductDisplay({ product }: { product: any }) {
         {/* Miniaturas */}
         {product.images.length > 1 && (
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-            {product.images.map((img: any, index: number) => (
+            {product.images.map((img, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedImage(img.url)}
@@ -84,7 +105,7 @@ export default function ProductDisplay({ product }: { product: any }) {
                 onChange={(e) => setSelectedVariantId(e.target.value)}
                 className="w-full appearance-none bg-transparent border border-zinc-800 text-white py-4 pl-4 pr-12 font-serif text-sm focus:border-[#C5A059] focus:outline-none transition-colors cursor-pointer uppercase tracking-wider rounded-none"
               >
-                {product.variants.map((variant: any) => (
+                {product.variants.map((variant) => (
                   <option key={variant.id} value={variant.id} className="bg-[#1a1a1a] text-zinc-300 py-2">
                     {variant.title}
                   </option>

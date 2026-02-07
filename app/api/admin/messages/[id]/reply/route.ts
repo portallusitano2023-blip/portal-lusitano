@@ -113,10 +113,10 @@ export async function POST(
       success: true,
       message: "Email enviado com sucesso",
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Reply error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao enviar email" },
+      { error: error instanceof Error ? error.message : "Erro ao enviar email" },
       { status: 500 }
     );
   }

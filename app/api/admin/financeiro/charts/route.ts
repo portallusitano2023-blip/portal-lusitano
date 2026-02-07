@@ -164,10 +164,10 @@ export async function GET(req: NextRequest) {
         },
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Financial charts error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao gerar gráficos" },
+      { error: error instanceof Error ? error.message : "Erro ao gerar gráficos" },
       { status: 500 }
     );
   }

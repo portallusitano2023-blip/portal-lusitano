@@ -132,10 +132,10 @@ export async function GET(req: NextRequest) {
         amount: (amount as number) / 100,
       })),
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Financial overview error:", error);
     return NextResponse.json(
-      { error: error.message || "Erro ao buscar dados financeiros" },
+      { error: error instanceof Error ? error.message : "Erro ao buscar dados financeiros" },
       { status: 500 }
     );
   }

@@ -30,7 +30,7 @@ export default function GlobalSearch({ onNavigate }: GlobalSearchProps) {
 
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Carregar pesquisas recentes do localStorage
   useEffect(() => {
