@@ -2,6 +2,7 @@
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Pedigree from "@/components/Pedigree";
+import { ProductSchema, BreadcrumbSchema } from "@/components/JsonLd";
 
 export default async function DetalheCavaloPage({ params }) {
   const resolvedParams = await params; // Next.js 15+ requer await
@@ -40,8 +41,22 @@ export default async function DetalheCavaloPage({ params }) {
 
   return (
     <>
+      <ProductSchema
+        name={cavalo.nome_cavalo}
+        description={cavalo.descricao || `Cavalo Lusitano - ${cavalo.nome_cavalo}`}
+        image={cavalo.image_url || ""}
+        price={String(cavalo.preco || 0)}
+        sku={cavalo.id}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Início", url: "https://portal-lusitano.pt" },
+          { name: "Comprar", url: "https://portal-lusitano.pt/comprar" },
+          { name: cavalo.nome_cavalo, url: `https://portal-lusitano.pt/comprar/${id}` },
+        ]}
+      />
       <Navbar dev={true} />
-      
+
       <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
         
         {/* LADO ESQUERDO: A IMAGEM FIXA (Visual Hero) */}

@@ -1,16 +1,5 @@
 import {defineType, defineArrayMember} from 'sanity'
-import {ImageIcon} from '@sanity/icons'
-
-/**
- * This is the schema type for block content used in the post document type
- * Importing this type into the studio configuration's `schema` property
- * lets you reuse it in other document types with:
- *  {
- *    name: 'someName',
- *    title: 'Some title',
- *    type: 'blockContent'
- *  }
- */
+import {ImageIcon, InfoOutlineIcon, BarChartIcon, BlockElementIcon, WarningOutlineIcon} from '@sanity/icons'
 
 export const blockContentType = defineType({
   title: 'Block Content',
@@ -19,10 +8,6 @@ export const blockContentType = defineType({
   of: [
     defineArrayMember({
       type: 'block',
-      // Styles let you define what blocks can be marked up as. The default
-      // set corresponds with HTML tags, but you can set any title or value
-      // you want, and decide how you want to deal with it where you want to
-      // use your content.
       styles: [
         {title: 'Normal', value: 'normal'},
         {title: 'H1', value: 'h1'},
@@ -30,17 +15,17 @@ export const blockContentType = defineType({
         {title: 'H3', value: 'h3'},
         {title: 'H4', value: 'h4'},
         {title: 'Quote', value: 'blockquote'},
+        {title: 'Lead Paragraph', value: 'leadParagraph'},
       ],
-      lists: [{title: 'Bullet', value: 'bullet'}],
-      // Marks let you mark up inline text in the Portable Text Editor
+      lists: [
+        {title: 'Bullet', value: 'bullet'},
+        {title: 'Numbered', value: 'number'},
+      ],
       marks: {
-        // Decorators usually describe a single property – e.g. a typographic
-        // preference or highlighting
         decorators: [
           {title: 'Strong', value: 'strong'},
           {title: 'Emphasis', value: 'em'},
         ],
-        // Annotations can be any object structure – e.g. a link or a footnote.
         annotations: [
           {
             title: 'URL',
@@ -57,9 +42,6 @@ export const blockContentType = defineType({
         ],
       },
     }),
-    // You can add additional types here. Note that you can't use
-    // primitive types such as 'string' and 'number' in the same array
-    // as a block type.
     defineArrayMember({
       type: 'image',
       icon: ImageIcon,
@@ -69,8 +51,151 @@ export const blockContentType = defineType({
           name: 'alt',
           type: 'string',
           title: 'Alternative Text',
-        }
-      ]
+        },
+        {
+          name: 'caption',
+          type: 'string',
+          title: 'Caption',
+        },
+      ],
+    }),
+    // Info Box
+    defineArrayMember({
+      name: 'infoBox',
+      title: 'Info Box',
+      type: 'object',
+      icon: InfoOutlineIcon,
+      fields: [
+        {name: 'title', title: 'Título', type: 'string', validation: (Rule) => Rule.required()},
+        {name: 'titleEn', title: 'Título (EN)', type: 'string'},
+        {name: 'icon', title: 'Ícone (nome Lucide)', type: 'string', description: 'Ex: BookOpen, AlertTriangle, Shield'},
+        {name: 'variant', title: 'Variante', type: 'string', options: {list: ['default', 'warning']}, initialValue: 'default'},
+        {name: 'content', title: 'Conteúdo (PT)', type: 'blockContent'},
+        {name: 'contentEn', title: 'Conteúdo (EN)', type: 'blockContent'},
+      ],
+      preview: {
+        select: {title: 'title'},
+        prepare({title}) {
+          return {title: title || 'Info Box', subtitle: 'Info Box'}
+        },
+      },
+    }),
+    // Stat Card Group
+    defineArrayMember({
+      name: 'statCardGroup',
+      title: 'Stat Cards',
+      type: 'object',
+      icon: BarChartIcon,
+      fields: [
+        {name: 'title', title: 'Título do Grupo', type: 'string'},
+        {name: 'icon', title: 'Ícone (nome Lucide)', type: 'string'},
+        {
+          name: 'cards',
+          title: 'Cards',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {name: 'value', title: 'Valor', type: 'string', validation: (Rule) => Rule.required()},
+                {name: 'title', title: 'Título', type: 'string', validation: (Rule) => Rule.required()},
+                {name: 'titleEn', title: 'Título (EN)', type: 'string'},
+                {name: 'subtitle', title: 'Subtítulo', type: 'string'},
+                {name: 'subtitleEn', title: 'Subtítulo (EN)', type: 'string'},
+                {name: 'description', title: 'Descrição', type: 'text'},
+                {name: 'descriptionEn', title: 'Descrição (EN)', type: 'text'},
+                {name: 'highlight', title: 'Destaque', type: 'boolean', initialValue: false},
+              ],
+              preview: {
+                select: {title: 'title', value: 'value'},
+                prepare({title, value}) {
+                  return {title: title || 'Card', subtitle: value}
+                },
+              },
+            },
+          ],
+        },
+      ],
+      preview: {
+        select: {title: 'title'},
+        prepare({title}) {
+          return {title: title || 'Stat Cards', subtitle: 'Stat Card Group'}
+        },
+      },
+    }),
+    // Pillar Card Group
+    defineArrayMember({
+      name: 'pillarCardGroup',
+      title: 'Pillar Cards',
+      type: 'object',
+      icon: BlockElementIcon,
+      fields: [
+        {
+          name: 'cards',
+          title: 'Cards',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {name: 'icon', title: 'Ícone (nome Lucide)', type: 'string'},
+                {name: 'title', title: 'Título', type: 'string', validation: (Rule) => Rule.required()},
+                {name: 'titleEn', title: 'Título (EN)', type: 'string'},
+                {name: 'content', title: 'Conteúdo (PT)', type: 'blockContent'},
+                {name: 'contentEn', title: 'Conteúdo (EN)', type: 'blockContent'},
+              ],
+              preview: {
+                select: {title: 'title'},
+                prepare({title}) {
+                  return {title: title || 'Pillar Card'}
+                },
+              },
+            },
+          ],
+        },
+      ],
+      preview: {
+        prepare() {
+          return {title: 'Pillar Cards', subtitle: 'Pillar Card Group'}
+        },
+      },
+    }),
+    // Article Section Divider
+    defineArrayMember({
+      name: 'articleSection',
+      title: 'Section Divider',
+      type: 'object',
+      icon: BlockElementIcon,
+      fields: [
+        {name: 'title', title: 'Título (PT)', type: 'string', validation: (Rule) => Rule.required()},
+        {name: 'titleEn', title: 'Título (EN)', type: 'string'},
+      ],
+      preview: {
+        select: {title: 'title'},
+        prepare({title}) {
+          return {title: title || 'Section', subtitle: 'Section Divider'}
+        },
+      },
+    }),
+    // Warning Box
+    defineArrayMember({
+      name: 'warningBox',
+      title: 'Warning Box',
+      type: 'object',
+      icon: WarningOutlineIcon,
+      fields: [
+        {name: 'title', title: 'Título', type: 'string', validation: (Rule) => Rule.required()},
+        {name: 'titleEn', title: 'Título (EN)', type: 'string'},
+        {name: 'icon', title: 'Ícone (nome Lucide)', type: 'string'},
+        {name: 'content', title: 'Conteúdo (PT)', type: 'blockContent'},
+        {name: 'contentEn', title: 'Conteúdo (EN)', type: 'blockContent'},
+      ],
+      preview: {
+        select: {title: 'title'},
+        prepare({title}) {
+          return {title: title || 'Warning', subtitle: 'Warning Box'}
+        },
+      },
     }),
   ],
 })

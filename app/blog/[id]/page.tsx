@@ -3,6 +3,7 @@ import { client } from "@/lib/client";
 import { PortableText } from "@portabletext/react";
 // DOIS níveis para cima para achar a pasta components a partir de [id]
 import Newsletter from "../../../components/Newsletter";
+import { ArticleSchema, BreadcrumbSchema } from "@/components/JsonLd";
 
 export default async function BlogPost({ params }) {
   const { id } = await params;
@@ -19,6 +20,20 @@ export default async function BlogPost({ params }) {
 
   return (
     <main className="min-h-screen bg-[#050505] text-gray-300 pb-20">
+      <ArticleSchema
+        title={post.title}
+        description={post.title}
+        image={post.imageUrl || ""}
+        datePublished={post.publishedAt || new Date().toISOString()}
+        author={post.authorName || "Portal Lusitano"}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Início", url: "https://portal-lusitano.pt" },
+          { name: "Blog", url: "https://portal-lusitano.pt/blog" },
+          { name: post.title, url: `https://portal-lusitano.pt/blog/${id}` },
+        ]}
+      />
       <div className="h-[60vh] relative overflow-hidden">
         {post.imageUrl && <img src={post.imageUrl} className="w-full h-full object-cover opacity-60" alt={post.title} />}
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />

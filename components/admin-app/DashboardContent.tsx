@@ -443,7 +443,16 @@ export default function DashboardContentNew() {
       // DADOS REAIS - API unificada
       const response = await fetch("/api/admin/dashboard");
 
-      if (!response.ok) throw new Error("Erro ao carregar dados");
+      // Se não autorizado (401), redirecionar para login
+      if (response.status === 401) {
+        console.warn("Não autorizado - redirecionando para login");
+        window.location.href = "/admin/login";
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(`Erro ao carregar dados: ${response.status}`);
+      }
 
       const data = await response.json();
 

@@ -1,13 +1,27 @@
 import { NextResponse } from 'next/server';
 import { client } from '@/lib/client';
+import { apiLimiter } from '@/lib/rate-limit';
+import { newsletterSchema, parseWithZod } from '@/lib/schemas';
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
-
-    if (!email || !email.includes('@')) {
-      return NextResponse.json({ error: 'E-mail inválido' }, { status: 400 });
+    // Rate limit: 10 requests per minute per IP
+    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    try {
+      await apiLimiter.check(10, ip);
+    } catch {
+      return NextResponse.json(
+        { error: "Demasiados pedidos. Tente novamente mais tarde." },
+        { status: 429 }
+      );
     }
+
+    const body = await request.json();
+    const parsed = parseWithZod(newsletterSchema, body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
+    }
+    const { email } = parsed.data;
 
     // Escreve o novo subscritor diretamente no Sanity
     await client.create({

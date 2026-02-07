@@ -75,7 +75,7 @@ export async function middleware(request: NextRequest) {
 
     // Verify JWT token using jose (same as lib/auth.ts)
     try {
-      const secret = new TextEncoder().encode(process.env.ADMIN_SECRET || "fallback-secret-key");
+      const secret = new TextEncoder().encode(process.env.ADMIN_SECRET || "dev-only-secret-not-for-production");
       const { payload } = await (await import("jose")).jwtVerify(token, secret);
 
       // Check if token has expired

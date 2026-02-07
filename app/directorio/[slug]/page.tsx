@@ -228,8 +228,40 @@ export default function CoudelariaPage() {
     : placeholderImages;
   const heroImage = coudelaria.foto_capa || images[0];
 
+  // JSON-LD structured data for this coudelaria
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: coudelaria.nome,
+    description: coudelaria.descricao,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: coudelaria.localizacao,
+      addressRegion: coudelaria.regiao,
+      addressCountry: "PT",
+    },
+    ...(coudelaria.telefone && { telephone: coudelaria.telefone }),
+    ...(coudelaria.email && { email: coudelaria.email }),
+    ...(coudelaria.website && { url: coudelaria.website }),
+    ...(heroImage && { image: heroImage }),
+    ...(reviewStats.total > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: reviewStats.media,
+        reviewCount: reviewStats.total,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }),
+    priceRange: "€€€",
+  };
+
   return (
     <main className="min-h-screen bg-[#050505]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
       {/* Hero Section */}
       <section className="relative h-[70vh] min-h-[500px]">
         <div

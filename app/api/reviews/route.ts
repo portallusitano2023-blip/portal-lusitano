@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { reviewSchema, parseWithZod } from "@/lib/schemas";
 
 // GET - Listar reviews de uma coudelaria
 export async function GET(request: NextRequest) {
@@ -53,7 +54,26 @@ export async function GET(request: NextRequest) {
 // POST - Criar nova review
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 5 reviews per minute per IP
+    const { strictLimiter } = await import("@/lib/rate-limit");
+    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    try {
+      await strictLimiter.check(5, ip);
+    } catch {
+      return NextResponse.json(
+        { error: "Demasiados pedidos. Tente novamente mais tarde." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
+    const parsed = parseWithZod(reviewSchema, body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error },
+        { status: 400 }
+      );
+    }
     const {
       coudelaria_id,
       autor_nome,
@@ -65,22 +85,7 @@ export async function POST(request: NextRequest) {
       data_visita,
       tipo_visita,
       recomenda,
-    } = body;
-
-    // Validações
-    if (!coudelaria_id || !autor_nome || !avaliacao || !comentario) {
-      return NextResponse.json(
-        { error: "Campos obrigatórios em falta" },
-        { status: 400 }
-      );
-    }
-
-    if (avaliacao < 1 || avaliacao > 5) {
-      return NextResponse.json(
-        { error: "Avaliação deve ser entre 1 e 5" },
-        { status: 400 }
-      );
-    }
+    } = parsed.data;
 
     // Inserir review
     const { data, error } = await supabase

@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
 
-const siteUrl = "https://portal-lusitano.pt";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
-  title: "Jornal Lusitano",
+  title: "Jornal Lusitano | Portal Lusitano",
   description:
-    "Jornal do Portal Lusitano com artigos aprofundados sobre história, criação, treino e saúde do cavalo Lusitano. Jornalismo equestre de qualidade.",
+    "Jornal do Portal Lusitano — artigos, crónicas e investigação aprofundada sobre história, criação, treino e saúde do cavalo Lusitano. Jornalismo equestre de qualidade.",
   keywords: [
     "jornal cavalos",
     "artigos lusitanos",
     "jornalismo equestre",
     "notícias cavalos portugal",
     "história lusitano",
+    "crónicas equestres",
+    "cavalo lusitano",
   ],
   alternates: {
     canonical: `${siteUrl}/jornal`,
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Jornal Lusitano | Portal Lusitano",
     description:
-      "Jornal do Portal Lusitano com artigos aprofundados sobre história, criação, treino e saúde do cavalo Lusitano. Jornalismo equestre de qualidade.",
+      "Jornal do Portal Lusitano — artigos, crónicas e investigação aprofundada sobre história, criação, treino e saúde do cavalo Lusitano.",
     url: `${siteUrl}/jornal`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
@@ -38,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Jornal Lusitano | Portal Lusitano",
     description:
-      "Jornal do Portal Lusitano com artigos aprofundados sobre história, criação, treino e saúde do cavalo Lusitano. Jornalismo equestre de qualidade.",
+      "Jornal do Portal Lusitano — artigos, crónicas e investigação aprofundada sobre história, criação, treino e saúde do cavalo Lusitano.",
     images: ["/og-image.jpg"],
   },
 };
@@ -58,7 +60,7 @@ export default function JornalLayout({
       />
       <CollectionPageSchema
         name="Jornal Lusitano"
-        description="Jornal do Portal Lusitano com artigos aprofundados sobre história, criação, treino e saúde do cavalo Lusitano. Jornalismo equestre de qualidade."
+        description="Jornal do Portal Lusitano — artigos, crónicas e investigação aprofundada sobre história, criação, treino e saúde do cavalo Lusitano."
         url={`${siteUrl}/jornal`}
       />
       {children}

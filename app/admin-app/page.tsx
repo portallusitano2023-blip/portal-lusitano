@@ -298,7 +298,11 @@ export default function AdminAppPage() {
           <div className="bg-[#0A0A0A] border border-white/10 rounded-xl p-8">
             {/* Logo */}
             <div className="text-center mb-8">
-              <div className="text-6xl mb-4">🐴</div>
+              <img
+                src="/logo.png"
+                alt="Portal Lusitano"
+                className="w-24 h-24 mx-auto mb-4 object-contain"
+              />
               <h1 className="text-3xl font-bold text-[#C5A059] mb-2">Portal Lusitano</h1>
               <p className="text-gray-400">Admin App - Sistema de Gestão</p>
             </div>
@@ -387,8 +391,8 @@ export default function AdminAppPage() {
         <div className="p-6 border-b border-white/5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#8B7042] rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-xl">🐴</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#8B7042] rounded-xl flex items-center justify-center shadow-lg p-1.5">
+                <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
               </div>
               <div>
                 <h1 className="text-lg font-bold text-white">Portal Lusitano</h1>

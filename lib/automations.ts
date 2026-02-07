@@ -36,7 +36,7 @@ export async function triggerAutomations(
       // For now, we execute immediately
       if (automation.delay_minutes > 0) {
         // TODO: Implement scheduled execution with a job queue
-        console.log(`Automation ${automation.id} should be delayed by ${automation.delay_minutes} minutes`);
+        // TODO: Implement scheduled execution with a job queue
         // For now, skip delayed automations
         continue;
       }

@@ -1,9 +1,9 @@
 import { DocumentTextIcon } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 /**
- * Schema para artigos do Jornal Lusitano
- * Estrutura preparada para migração futura do articlesData.tsx
+ * Schema para artigos do Jornal Lusitano (redesenhado)
+ * Suporta artigos longos e crónicas curtas, PT/EN, com fontes verificadas
  */
 export const artigoType = defineType({
   name: "artigo",
@@ -12,42 +12,68 @@ export const artigoType = defineType({
   icon: DocumentTextIcon,
   fields: [
     defineField({
-      name: "id",
-      title: "ID (slug numérico)",
-      type: "string",
-      description: "Identificador único do artigo (ex: 1, 2, 3)",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: "title",
-      title: "Título",
+      title: "Título (PT)",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "titleEn",
-      title: "Título (Inglês)",
+      title: "Título (EN)",
       type: "string",
     }),
     defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: { source: "title", maxLength: 96 },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "slugLegacy",
+      title: "ID Legado",
+      type: "string",
+      description: "ID numérico antigo (1-6) para redirects",
+    }),
+    defineField({
+      name: "contentType",
+      title: "Tipo de Conteúdo",
+      type: "string",
+      options: {
+        list: [
+          { title: "Artigo (longo)", value: "article" },
+          { title: "Crónica (curta)", value: "post" },
+        ],
+      },
+      initialValue: "article",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "featured",
+      title: "Destaque",
+      type: "boolean",
+      initialValue: false,
+      description: "Artigo em destaque na listagem",
+    }),
+    defineField({
       name: "subtitle",
-      title: "Subtítulo",
+      title: "Subtítulo (PT)",
       type: "string",
     }),
     defineField({
       name: "subtitleEn",
-      title: "Subtítulo (Inglês)",
+      title: "Subtítulo (EN)",
       type: "string",
     }),
     defineField({
       name: "description",
-      title: "Descrição (SEO)",
+      title: "Descrição SEO (PT)",
       type: "text",
       description: "Meta description para motores de busca",
     }),
     defineField({
       name: "descriptionEn",
-      title: "Descrição (Inglês, SEO)",
+      title: "Descrição SEO (EN)",
       type: "text",
     }),
     defineField({
@@ -57,55 +83,104 @@ export const artigoType = defineType({
       of: [{ type: "string" }],
     }),
     defineField({
-      name: "date",
-      title: "Data de publicação",
-      type: "string",
+      name: "publishedAt",
+      title: "Data de Publicação",
+      type: "datetime",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "readTime",
-      title: "Tempo de leitura",
-      type: "string",
+      name: "estimatedReadTime",
+      title: "Tempo de Leitura (minutos)",
+      type: "number",
+      validation: (Rule) => Rule.min(1),
+    }),
+    defineField({
+      name: "author",
+      title: "Autor",
+      type: "reference",
+      to: [{ type: "author" }],
+    }),
+    defineField({
+      name: "categories",
+      title: "Categorias",
+      type: "array",
+      of: [defineArrayMember({ type: "reference", to: [{ type: "category" }] })],
     }),
     defineField({
       name: "category",
-      title: "Categoria",
+      title: "Categoria (PT - texto)",
       type: "string",
+      description: "Categoria em texto livre (PT)",
     }),
     defineField({
       name: "categoryEn",
-      title: "Categoria (Inglês)",
+      title: "Categoria (EN - texto)",
       type: "string",
     }),
     defineField({
       name: "image",
-      title: "Imagem de capa",
+      title: "Imagem de Capa",
       type: "image",
       options: { hotspot: true },
       fields: [
         {
           name: "alt",
           type: "string",
-          title: "Texto alternativo",
+          title: "Texto Alternativo",
         },
       ],
     }),
     defineField({
       name: "body",
-      title: "Conteúdo",
+      title: "Conteúdo (PT)",
       type: "blockContent",
-      description: "Conteúdo principal do artigo (Portable Text)",
+      description: "Conteúdo principal do artigo em Português",
     }),
+    defineField({
+      name: "bodyEn",
+      title: "Conteúdo (EN)",
+      type: "blockContent",
+      description: "Conteúdo principal do artigo em Inglês",
+    }),
+    defineField({
+      name: "sources",
+      title: "Fontes e Referências",
+      type: "array",
+      description: "Lista de fontes verificadas (regra fundamental do projecto)",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "label", title: "Descrição", type: "string", validation: (Rule) => Rule.required() },
+            { name: "url", title: "URL", type: "url", validation: (Rule) => Rule.required() },
+          ],
+          preview: {
+            select: { title: "label", subtitle: "url" },
+          },
+        },
+      ],
+    }),
+  ],
+  orderings: [
+    {
+      title: "Data de Publicação (mais recente)",
+      name: "publishedAtDesc",
+      by: [{ field: "publishedAt", direction: "desc" }],
+    },
   ],
   preview: {
     select: {
       title: "title",
-      id: "id",
+      subtitle: "subtitle",
       media: "image",
+      contentType: "contentType",
     },
-    prepare({ title, id }) {
+    prepare({ title, subtitle, media, contentType }) {
+      const typeLabel = contentType === "post" ? "Crónica" : "Artigo";
       return {
-        title: title || `Artigo ${id}`,
-        subtitle: `ID: ${id}`,
+        title: title || "Sem título",
+        subtitle: `[${typeLabel}] ${subtitle || ""}`,
+        media,
       };
     },
   },

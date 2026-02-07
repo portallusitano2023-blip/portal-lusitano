@@ -50,7 +50,7 @@ export default function Footer() {
           </div>
 
           {/* NAVEGACAO RAPIDA */}
-          <div className="md:col-span-3 space-y-8">
+          <nav aria-label="Links do rodapé" className="md:col-span-3 space-y-8">
             <h2 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
               {t.nav.home === "Home" ? "Navigation" : "Navegacao"}
             </h2>
@@ -64,7 +64,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* CONTACTOS E LOCALIZACAO */}
           <div className="md:col-span-4 space-y-8">
