@@ -130,7 +130,7 @@ export default function AdminDashboard() {
         throw new Error("Erro ao carregar mensagens");
       }
       const data = await response.json();
-      setMessages(data.stats.byStatus);
+      setMessages(data.stats);
     } catch (err) {
       console.error("Erro messages:", err);
     }

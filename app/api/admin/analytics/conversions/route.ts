@@ -11,35 +11,49 @@ export async function GET(req: NextRequest) {
     }
 
     // 1. TOTAL DE VISITANTES (aproximação via views de cavalos e eventos)
-    const { data: cavalos, error: cavalosError } = await supabase
-      .from("cavalos_venda")
-      .select("views_count");
+    let totalViews = 0;
 
-    if (cavalosError) throw cavalosError;
+    try {
+      const { data: cavalos } = await supabase
+        .from("cavalos_venda")
+        .select("views_count");
 
-    const { data: eventos, error: eventosError } = await supabase
-      .from("eventos")
-      .select("views_count");
+      const { data: eventos } = await supabase
+        .from("eventos")
+        .select("views_count");
 
-    if (eventosError) throw eventosError;
-
-    const totalViews = (cavalos?.reduce((sum, c) => sum + (c.views_count || 0), 0) || 0) +
-                      (eventos?.reduce((sum, e) => sum + (e.views_count || 0), 0) || 0);
+      totalViews = (cavalos?.reduce((sum, c) => sum + (c.views_count || 0), 0) || 0) +
+                    (eventos?.reduce((sum, e) => sum + (e.views_count || 0), 0) || 0);
+    } catch (e) {
+      console.warn("Error fetching views:", e);
+    }
 
     // 2. LEADS GERADOS (ebook grátis)
-    const { count: totalLeads, error: leadsError } = await supabase
-      .from("leads")
-      .select("*", { count: "exact", head: true });
+    let totalLeads = 0;
 
-    if (leadsError) throw leadsError;
+    try {
+      const { count } = await supabase
+        .from("leads")
+        .select("*", { count: "exact", head: true });
+
+      totalLeads = count || 0;
+    } catch (e) {
+      console.warn("Error counting leads:", e);
+    }
 
     // 3. CLIENTES PAGOS (pessoas que compraram algo)
-    const { data: payments, error: paymentsError } = await supabase
-      .from("payments")
-      .select("email, amount, created_at")
-      .eq("status", "succeeded");
+    let payments: any[] = [];
 
-    if (paymentsError) throw paymentsError;
+    try {
+      const { data } = await supabase
+        .from("payments")
+        .select("email, amount, created_at")
+        .eq("status", "succeeded");
+
+      payments = data || [];
+    } catch (e) {
+      console.warn("Error fetching payments:", e);
+    }
 
     // Contar emails únicos (clientes únicos)
     const uniqueCustomers = new Set(payments?.map(p => p.email)).size;
@@ -95,19 +109,23 @@ export async function GET(req: NextRequest) {
     }
 
     // Contar leads por mês
-    const { data: leadsData, error: leadsDataError } = await supabase
-      .from("leads")
-      .select("created_at")
-      .order("created_at", { ascending: true });
+    try {
+      const { data: leadsData } = await supabase
+        .from("leads")
+        .select("created_at")
+        .order("created_at", { ascending: true });
 
-    if (!leadsDataError && leadsData) {
-      leadsData.forEach((lead) => {
-        const date = new Date(lead.created_at);
-        const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-        if (monthlyConversions[monthStr]) {
-          monthlyConversions[monthStr].leads += 1;
-        }
-      });
+      if (leadsData) {
+        leadsData.forEach((lead) => {
+          const date = new Date(lead.created_at);
+          const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+          if (monthlyConversions[monthStr]) {
+            monthlyConversions[monthStr].leads += 1;
+          }
+        });
+      }
+    } catch (e) {
+      console.warn("Error fetching leads data:", e);
     }
 
     // Contar clientes por mês

@@ -11,17 +11,23 @@ export async function GET(req: NextRequest) {
     }
 
     // 1. FONTES DE TRÁFEGO (UTM da tabela leads)
-    const { data: leads, error: leadsError } = await supabase
-      .from("leads")
-      .select("email, utm_source, utm_medium, utm_campaign, created_at");
+    let leads: any[] = [];
 
-    if (leadsError) throw leadsError;
+    try {
+      const { data } = await supabase
+        .from("leads")
+        .select("email, utm_source, utm_medium, utm_campaign, created_at");
+
+      leads = data || [];
+    } catch (e) {
+      console.warn("Error fetching leads:", e);
+    }
 
     // Agregar por fonte
     const sourceStats: Record<string, { leads: number; percentage: number }> = {};
-    const totalLeads = leads?.length || 0;
+    const totalLeads = leads.length;
 
-    leads?.forEach((lead) => {
+    leads.forEach((lead) => {
       const source = lead.utm_source || "Direto";
       if (!sourceStats[source]) {
         sourceStats[source] = { leads: 0, percentage: 0 };
@@ -46,22 +52,28 @@ export async function GET(req: NextRequest) {
 
     // 2. ROI POR CANAL (Receita gerada por fonte)
     // Cruzar leads com payments por email
-    const { data: payments, error: paymentsError } = await supabase
-      .from("payments")
-      .select("email, amount, created_at")
-      .eq("status", "succeeded");
+    let payments: any[] = [];
 
-    if (paymentsError) throw paymentsError;
+    try {
+      const { data } = await supabase
+        .from("payments")
+        .select("email, amount, created_at")
+        .eq("status", "succeeded");
+
+      payments = data || [];
+    } catch (e) {
+      console.warn("Error fetching payments:", e);
+    }
 
     // Criar mapa email → utm_source
     const emailToSource: Record<string, string> = {};
-    leads?.forEach((lead) => {
+    leads.forEach((lead) => {
       emailToSource[lead.email] = lead.utm_source || "Direto";
     });
 
     // Calcular receita por fonte
     const revenueBySource: Record<string, number> = {};
-    payments?.forEach((payment) => {
+    payments.forEach((payment) => {
       const source = emailToSource[payment.email] || "Direto";
       revenueBySource[source] = (revenueBySource[source] || 0) + (payment.amount || 0);
     });
@@ -111,7 +123,7 @@ export async function GET(req: NextRequest) {
       monthlyTrends[monthStr] = {};
     }
 
-    leads?.forEach((lead) => {
+    leads.forEach((lead) => {
       const date = new Date(lead.created_at);
       const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
       const source = lead.utm_source || "Direto";

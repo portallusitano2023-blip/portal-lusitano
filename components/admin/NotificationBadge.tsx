@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { FiBell } from "react-icons/fi";
 import Link from "next/link";
+import { requestNotificationPermission, notifyNewMessage } from "@/lib/notifications";
 
 interface NotificationBadgeProps {
   refreshInterval?: number; // em milissegundos, default 30000 (30s)
@@ -11,18 +12,40 @@ interface NotificationBadgeProps {
 export default function NotificationBadge({ refreshInterval = 30000 }: NotificationBadgeProps) {
   const [newMessagesCount, setNewMessagesCount] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [pushEnabled, setPushEnabled] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const previousCount = useRef(0);
+  const latestMessageRef = useRef<any>(null);
 
   useEffect(() => {
     // Criar elemento de áudio para notificação
-    audioRef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSaHzPLTgjMGHm7A7+OZTA8PVqnk77BeDwtJouHyvmwgBSaHzPLVgC8GHm/A7+OZTA8OVqrk77BeDwtIouDyv2wgBSWGy/LWhC8GHnDB7+OZTA8OVqrk77BfDgtIot/yvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDg==");
+    audioRef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSaHzPLTgjMGHm7A7+OZTA8PVqnk77BeDwtJouHyvmwgBSaHzPLVgC8GHm/A7+OZTA8OVqrk77BeDwtIouDyv2wgBSWGy/LWhC8GHnDB7+OZTA8OVqrk77BfDgtIot/yvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDg==");
+
+    // Pedir permissão para notificações push
+    requestNotificationPermission().then((granted) => {
+      setPushEnabled(granted);
+      if (granted) {
+        console.log("✅ Push notifications ativadas!");
+      }
+    });
 
     // Carregar contagem inicial
     checkNewMessages();
 
     // Configurar polling
     const interval = setInterval(checkNewMessages, refreshInterval);
+
+    // Listener para clicar em notificações
+    if ("Notification" in window) {
+      navigator.serviceWorker?.ready.then(() => {
+        navigator.serviceWorker.addEventListener("message", (event) => {
+          if (event.data?.type === "notification-click") {
+            window.focus();
+            window.location.href = event.data.url || "/admin/mensagens";
+          }
+        });
+      });
+    }
 
     return () => {
       clearInterval(interval);
@@ -35,12 +58,21 @@ export default function NotificationBadge({ refreshInterval = 30000 }: Notificat
       if (!res.ok) return;
 
       const data = await res.json();
-      const count = data.stats?.byStatus?.novo || 0;
+      const count = data.stats?.novo || 0;
 
-      // Se a contagem aumentou, tocar som e animar
+      // Se a contagem aumentou, tocar som, animar e enviar push notification
       if (count > previousCount.current) {
         playNotificationSound();
         triggerAnimation();
+
+        // Enviar push notification se habilitado
+        if (pushEnabled && data.latestMessage) {
+          notifyNewMessage({
+            name: data.latestMessage.name,
+            type: data.latestMessage.form_type,
+            id: data.latestMessage.id,
+          });
+        }
       }
 
       previousCount.current = count;
@@ -63,26 +95,36 @@ export default function NotificationBadge({ refreshInterval = 30000 }: Notificat
   };
 
   return (
-    <Link
-      href="/admin/mensagens"
-      className={`relative p-2 rounded-lg transition-all ${
-        isAnimating
-          ? "bg-[#C5A059] scale-110"
-          : "bg-white/5 hover:bg-white/10"
-      }`}
-    >
-      <FiBell
-        size={20}
-        className={`${
-          newMessagesCount > 0 ? "text-[#C5A059]" : "text-gray-400"
-        } ${isAnimating ? "animate-bounce" : ""}`}
-      />
+    <div className="relative">
+      <Link
+        href="/admin/mensagens"
+        className={`relative p-2 rounded-lg transition-all block ${
+          isAnimating
+            ? "bg-[#C5A059] scale-110"
+            : "bg-white/5 hover:bg-white/10"
+        }`}
+      >
+        <FiBell
+          size={20}
+          className={`${
+            newMessagesCount > 0 ? "text-[#C5A059]" : "text-gray-400"
+          } ${isAnimating ? "animate-bounce" : ""}`}
+        />
 
-      {newMessagesCount > 0 && (
-        <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
-          {newMessagesCount > 9 ? "9+" : newMessagesCount}
-        </span>
+        {newMessagesCount > 0 && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+            {newMessagesCount > 9 ? "9+" : newMessagesCount}
+          </span>
+        )}
+      </Link>
+
+      {/* Indicador de Push Notifications */}
+      {pushEnabled && (
+        <div
+          className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-[#0A0A0A]"
+          title="Push notifications ativadas"
+        />
       )}
-    </Link>
+    </div>
   );
 }

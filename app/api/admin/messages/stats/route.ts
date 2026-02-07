@@ -114,15 +114,26 @@ export async function GET(req: NextRequest) {
       ? ((responded || 0) / nonArchived) * 100
       : 0;
 
+    // Última mensagem nova (para push notifications)
+    const { data: latestMessage } = await supabase
+      .from("contact_submissions")
+      .select("id, name, email, form_type, created_at")
+      .eq("status", "novo")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
     return NextResponse.json({
       total: totalMessages || 0,
       unread: unreadMessages || 0,
       last24h: last24h || 0,
       lastWeek: lastWeekCount || 0,
       responseRate: Math.round(responseRate * 10) / 10, // 1 casa decimal
+      stats: statusStats, // Mudado de byStatus para stats para compatibilidade
       byStatus: statusStats,
       byFormType: formTypeStats,
       byPriority: priorityStats,
+      latestMessage: latestMessage || null,
     });
   } catch (error: any) {
     console.error("Stats error:", error);

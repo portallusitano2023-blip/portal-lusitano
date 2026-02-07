@@ -11,56 +11,96 @@ export async function GET(req: NextRequest) {
     }
 
     // 1. TOTAL DE VISUALIZAÇÕES DE CAVALOS
-    const { data: cavalos, error: cavalosError } = await supabase
-      .from("cavalos_venda")
-      .select("views_count");
+    let totalCavalosViews = 0;
+    let cavalos: any[] = [];
 
-    if (cavalosError) throw cavalosError;
+    try {
+      const { data, error } = await supabase
+        .from("cavalos_venda")
+        .select("views_count");
 
-    const totalCavalosViews = cavalos?.reduce(
-      (sum, cavalo) => sum + (cavalo.views_count || 0),
-      0
-    ) || 0;
+      if (!error && data) {
+        cavalos = data;
+        totalCavalosViews = data.reduce(
+          (sum, cavalo) => sum + (cavalo.views_count || 0),
+          0
+        );
+      }
+    } catch (e) {
+      console.warn("views_count column might not exist on cavalos_venda:", e);
+    }
 
     // 2. TOTAL DE VISUALIZAÇÕES DE EVENTOS
-    const { data: eventos, error: eventosError } = await supabase
-      .from("eventos")
-      .select("views_count");
+    let totalEventosViews = 0;
+    let eventos: any[] = [];
 
-    if (eventosError) throw eventosError;
+    try {
+      const { data, error } = await supabase
+        .from("eventos")
+        .select("views_count");
 
-    const totalEventosViews = eventos?.reduce(
-      (sum, evento) => sum + (evento.views_count || 0),
-      0
-    ) || 0;
+      if (!error && data) {
+        eventos = data;
+        totalEventosViews = data.reduce(
+          (sum, evento) => sum + (evento.views_count || 0),
+          0
+        );
+      }
+    } catch (e) {
+      console.warn("views_count column might not exist on eventos:", e);
+    }
 
     // 3. TOTAL GERAL DE VISUALIZAÇÕES
     const totalViews = totalCavalosViews + totalEventosViews;
 
     // 4. CAVALOS MAIS VISTOS (Top 10)
-    const { data: topCavalos, error: topCavalosError } = await supabase
-      .from("cavalos_venda")
-      .select("id, nome_cavalo, views_count")
-      .order("views_count", { ascending: false })
-      .limit(10);
+    let topCavalos: any[] = [];
 
-    if (topCavalosError) throw topCavalosError;
+    try {
+      const { data, error } = await supabase
+        .from("cavalos_venda")
+        .select("id, nome_cavalo, views_count")
+        .order("views_count", { ascending: false })
+        .limit(10);
+
+      if (!error && data) {
+        topCavalos = data;
+      }
+    } catch (e) {
+      console.warn("Error fetching top cavalos:", e);
+    }
 
     // 5. EVENTOS MAIS VISTOS (Top 10)
-    const { data: topEventos, error: topEventosError } = await supabase
-      .from("eventos")
-      .select("id, titulo, views_count")
-      .order("views_count", { ascending: false })
-      .limit(10);
+    let topEventos: any[] = [];
 
-    if (topEventosError) throw topEventosError;
+    try {
+      const { data, error } = await supabase
+        .from("eventos")
+        .select("id, titulo, views_count")
+        .order("views_count", { ascending: false })
+        .limit(10);
+
+      if (!error && data) {
+        topEventos = data;
+      }
+    } catch (e) {
+      console.warn("Error fetching top eventos:", e);
+    }
 
     // 6. FONTES DE TRÁFEGO (UTM Source da tabela leads)
-    const { data: leads, error: leadsError } = await supabase
-      .from("leads")
-      .select("utm_source, utm_medium, utm_campaign");
+    let leads: any[] = [];
 
-    if (leadsError) throw leadsError;
+    try {
+      const { data, error } = await supabase
+        .from("leads")
+        .select("utm_source, utm_medium, utm_campaign");
+
+      if (!error && data) {
+        leads = data;
+      }
+    } catch (e) {
+      console.warn("Error fetching leads:", e);
+    }
 
     // Agregar por fonte
     const trafficSources: Record<string, number> = {};
@@ -93,11 +133,19 @@ export async function GET(req: NextRequest) {
     const averageViewsPerContent = totalContent > 0 ? totalViews / totalContent : 0;
 
     // 9. LEADS GERADOS (total)
-    const { count: totalLeads, error: leadsCountError } = await supabase
-      .from("leads")
-      .select("*", { count: "exact", head: true });
+    let totalLeads = 0;
 
-    if (leadsCountError) throw leadsCountError;
+    try {
+      const { count, error } = await supabase
+        .from("leads")
+        .select("*", { count: "exact", head: true });
+
+      if (!error) {
+        totalLeads = count || 0;
+      }
+    } catch (e) {
+      console.warn("Error counting leads:", e);
+    }
 
     // 10. CRESCIMENTO DE LEADS (últimos 30 dias vs 30 dias anteriores)
     const thirtyDaysAgo = new Date();
@@ -105,24 +153,39 @@ export async function GET(req: NextRequest) {
     const sixtyDaysAgo = new Date();
     sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
 
-    const { count: recentLeads, error: recentError } = await supabase
-      .from("leads")
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", thirtyDaysAgo.toISOString());
+    let recentLeads = 0;
+    let previousLeads = 0;
 
-    if (recentError) throw recentError;
+    try {
+      const { count, error } = await supabase
+        .from("leads")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", thirtyDaysAgo.toISOString());
 
-    const { count: previousLeads, error: previousError } = await supabase
-      .from("leads")
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", sixtyDaysAgo.toISOString())
-      .lt("created_at", thirtyDaysAgo.toISOString());
+      if (!error) {
+        recentLeads = count || 0;
+      }
+    } catch (e) {
+      console.warn("Error counting recent leads:", e);
+    }
 
-    if (previousError) throw previousError;
+    try {
+      const { count, error } = await supabase
+        .from("leads")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", sixtyDaysAgo.toISOString())
+        .lt("created_at", thirtyDaysAgo.toISOString());
 
-    const leadsGrowth = (previousLeads || 0) > 0
-      ? (((recentLeads || 0) - (previousLeads || 0)) / (previousLeads || 0)) * 100
-      : (recentLeads || 0) > 0 ? 100 : 0;
+      if (!error) {
+        previousLeads = count || 0;
+      }
+    } catch (e) {
+      console.warn("Error counting previous leads:", e);
+    }
+
+    const leadsGrowth = previousLeads > 0
+      ? ((recentLeads - previousLeads) / previousLeads) * 100
+      : recentLeads > 0 ? 100 : 0;
 
     return NextResponse.json({
       overview: {
@@ -130,20 +193,20 @@ export async function GET(req: NextRequest) {
         totalCavalosViews,
         totalEventosViews,
         averageViewsPerContent: parseFloat(averageViewsPerContent.toFixed(2)),
-        totalLeads: totalLeads || 0,
-        recentLeads: recentLeads || 0,
+        totalLeads: totalLeads,
+        recentLeads: recentLeads,
         leadsGrowth: parseFloat(leadsGrowth.toFixed(2)),
       },
-      topCavalos: topCavalos?.map((c) => ({
+      topCavalos: (topCavalos || []).map((c) => ({
         id: c.id,
         name: c.nome_cavalo,
         views: c.views_count || 0,
-      })) || [],
-      topEventos: topEventos?.map((e) => ({
+      })),
+      topEventos: (topEventos || []).map((e) => ({
         id: e.id,
         name: e.titulo,
         views: e.views_count || 0,
-      })) || [],
+      })),
       trafficSources: trafficSourcesArray,
       contentTypeBreakdown,
     });
