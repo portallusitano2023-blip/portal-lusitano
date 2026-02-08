@@ -19,7 +19,7 @@ const translations = {
       featured: "Colecao em Destaque",
       view_all: "Ver Todos",
       manifesto: "Nao criamos apenas vestuario. Criamos simbolos de pertenca.",
-      scroll: "Scroll"
+      scroll: "Scroll",
     },
 
     // LOJA
@@ -35,7 +35,7 @@ const translations = {
       discover: "Descobrir",
       not_found: "Peca nao encontrada",
       not_found_text: "O sistema nao encontrou a peca com o handle:",
-      back_collection: "Voltar a Colecao"
+      back_collection: "Voltar a Colecao",
     },
 
     // SOBRE
@@ -43,15 +43,16 @@ const translations = {
       title: "A Nossa Missao",
       subtitle: "O Portal Lusitano nasceu para elevar o Cavalo Lusitano ao palco global.",
       story_title: "A Origem",
-      story_text: "Fundado por Francisco Gaspar, o Portal Lusitano une a engenharia digital a paixao equestre.",
+      story_text:
+        "Fundado por Francisco Gaspar, o Portal Lusitano une a engenharia digital a paixao equestre.",
       values_title: "Os Nossos Valores",
       value1: "Tradicao",
       value2: "Inovacao",
       value3: "Excelencia",
-      founder: "Fundador"
+      founder: "Fundador",
     },
 
-    // JORNAL
+    // JORNAL (unificado: artigos + crónicas)
     journal: {
       archive: "Arquivo Editorial",
       title: "Enciclopedia Lusitana",
@@ -65,13 +66,29 @@ const translations = {
       peer_reviewed: "Peer-Reviewed",
       scientific_research: "Investigacao Cientifica",
       preservation: "Preservacao do Conhecimento Equestre",
-      preservation_text: "Este artigo faz parte do projeto de arquivamento digital do conhecimento cientifico sobre o Cavalo Lusitano, a raca equestre mais influente da civilizacao ocidental.",
+      preservation_text:
+        "Este artigo faz parte do projeto de arquivamento digital do conhecimento cientifico sobre o Cavalo Lusitano, a raca equestre mais influente da civilizacao ocidental.",
       support: "Apoiar o Projeto",
       explore_archive: "Explorar Arquivo",
-      share: "Partilhar"
+      share: "Partilhar",
+      all_categories: "Todas as Categorias",
+      search_placeholder: "Pesquisar artigos...",
+      no_results: "Nenhum artigo encontrado.",
+      related_articles: "Artigos Relacionados",
+      table_of_contents: "Indice",
+      sources: "Fontes e Referencias",
+      min_read: "min de leitura",
+      view_grid: "Vista grelha",
+      view_list: "Vista lista",
+      load_more: "Carregar mais",
+      article_type: "Artigo",
+      post_type: "Cronica",
+      read_chronicle: "Ler Cronica",
+      no_cover: "Sem Capa",
+      culture: "Cultura Lusitana",
     },
 
-    // BLOG
+    // BLOG (depreciado - redirects para /jornal)
     blog: {
       editorial: "Editorial",
       title: "Jornal Lusitano",
@@ -80,7 +97,7 @@ const translations = {
       read: "Ler Cronica",
       no_news: "Sem noticias publicadas",
       culture: "Cultura Lusitana",
-      not_found: "Artigo nao encontrado."
+      not_found: "Artigo nao encontrado.",
     },
 
     // LOGIN
@@ -93,7 +110,7 @@ const translations = {
       logging_in: "A Entrar...",
       enter: "Entrar na Conta",
       no_invite: "Ainda sem convite?",
-      create: "Criar Conta"
+      create: "Criar Conta",
     },
 
     // REGISTAR
@@ -107,7 +124,7 @@ const translations = {
       creating: "A Criar Conta...",
       confirm: "Confirmar Registo",
       already_member: "Ja e membro?",
-      enter: "Entrar"
+      enter: "Entrar",
     },
 
     // MINHA CONTA
@@ -122,25 +139,27 @@ const translations = {
       history: "Historico de Aquisicoes",
       order: "Encomenda",
       no_orders: "Ainda nao possui aquisicoes.",
-      explore: "Explorar Colecao"
+      explore: "Explorar Colecao",
     },
 
     // COUDELARIAS
     studs: {
       directory: "Diretorio de Prestigio",
       title: "As Grandes Casas",
-      subtitle: "Uma selecao exclusiva dos criadores que mantem viva a chama da raca Lusitana. Historia, genetica e paixao em cada coudelaria.",
+      subtitle:
+        "Uma selecao exclusiva dos criadores que mantem viva a chama da raca Lusitana. Historia, genetica e paixao em cada coudelaria.",
       no_image: "Sem Imagem",
       view_profile: "Ver Perfil",
       breeder: "E criador?",
-      join: "Junte-se ao Portal"
+      join: "Junte-se ao Portal",
     },
 
     // LEILOES
     auctions: {
       offline: "Live Bidding Offline",
       title: "Sala de Leiloes",
-      subtitle: "Os leiloes do Portal Lusitano sao eventos exclusivos. O proximo evento esta agendado para Marco de 2026.",
+      subtitle:
+        "Os leiloes do Portal Lusitano sao eventos exclusivos. O proximo evento esta agendado para Marco de 2026.",
       lot: "Lote",
       lineage: "Linhagem",
       last_bid: "Ultima Licitacao",
@@ -159,7 +178,7 @@ const translations = {
       years: "anos",
       description: "Descricao Editorial",
       loading: "Carregando exemplar de elite...",
-      other_specimens: "Outros Exemplares de Elite"
+      other_specimens: "Outros Exemplares de Elite",
     },
 
     // COMPRAR
@@ -187,7 +206,7 @@ const translations = {
       standard: "Standard",
       request_dossier: "Solicitar Dossier & Visita",
       members_only: "Exclusivo para membros Portal Lusitano",
-      not_found: "Exemplar nao encontrado."
+      not_found: "Exemplar nao encontrado.",
     },
 
     // PRIVACIDADE
@@ -195,11 +214,14 @@ const translations = {
       security: "Seguranca",
       title: "Politica de Privacidade",
       data_privacy: "Privacidade dos Dados",
-      data_text: "No Portal Lusitano, tratamos os seus dados pessoais com o mesmo rigor que tratamos a genetica da nossa raca. Os seus dados de membro (Portal ID) sao utilizados exclusivamente para gerir a sua conta e historico de aquisicoes.",
+      data_text:
+        "No Portal Lusitano, tratamos os seus dados pessoais com o mesmo rigor que tratamos a genetica da nossa raca. Os seus dados de membro (Portal ID) sao utilizados exclusivamente para gerir a sua conta e historico de aquisicoes.",
       collection: "Recolha de Informacao",
-      collection_text: "Recolhemos informacoes quando se regista no nosso site, faz uma compra ou subscreve a nossa newsletter. Isto inclui o seu nome, e-mail e endereco de faturacao.",
+      collection_text:
+        "Recolhemos informacoes quando se regista no nosso site, faz uma compra ou subscreve a nossa newsletter. Isto inclui o seu nome, e-mail e endereco de faturacao.",
       cookies: "Cookies e Shopify",
-      cookies_text: "Utilizamos cookies para melhorar a sua experiencia de navegacao e processar os itens no seu saco de compras atraves da infraestrutura segura do Shopify."
+      cookies_text:
+        "Utilizamos cookies para melhorar a sua experiencia de navegacao e processar os itens no seu saco de compras atraves da infraestrutura segura do Shopify.",
     },
 
     // TERMOS
@@ -207,13 +229,17 @@ const translations = {
       legal: "Juridico",
       title: "Termos & Condicoes",
       scope: "1. Ambito do Servico",
-      scope_text: "O Portal Lusitano opera como uma plataforma de marketplace e editorial dedicada a raca Lusitana. Ao aceder ao nosso site, o utilizador concorda em cumprir os presentes termos de utilizacao.",
+      scope_text:
+        "O Portal Lusitano opera como uma plataforma de marketplace e editorial dedicada a raca Lusitana. Ao aceder ao nosso site, o utilizador concorda em cumprir os presentes termos de utilizacao.",
       marketplace: "2. Marketplace de Elite",
-      marketplace_text: "As transacoes comerciais realizadas atraves da nossa loja sao processadas de forma segura. O Portal Lusitano reserva-se o direito de selecionar criteriosamente as pecas e coudelarias presentes na plataforma para garantir o padrao de qualidade da marca.",
+      marketplace_text:
+        "As transacoes comerciais realizadas atraves da nossa loja sao processadas de forma segura. O Portal Lusitano reserva-se o direito de selecionar criteriosamente as pecas e coudelarias presentes na plataforma para garantir o padrao de qualidade da marca.",
       intellectual: "3. Propriedade Intelectual",
-      intellectual_text: "Todo o conteudo editorial, design e fotografias presentes no Jornal Lusitano e na loja sao propriedade exclusiva do Portal Lusitano ou dos seus parceiros devidamente identificados.",
+      intellectual_text:
+        "Todo o conteudo editorial, design e fotografias presentes no Jornal Lusitano e na loja sao propriedade exclusiva do Portal Lusitano ou dos seus parceiros devidamente identificados.",
       liability: "4. Limitacao de Responsabilidade",
-      liability_text: "Embora envidemos todos os esforcos para garantir a precisao das informacoes sobre coudelarias e linhagens geneticas, o Portal Lusitano nao se responsabiliza por imprecisoes fornecidas por terceiros."
+      liability_text:
+        "Embora envidemos todos os esforcos para garantir a precisao das informacoes sobre coudelarias e linhagens geneticas, o Portal Lusitano nao se responsabiliza por imprecisoes fornecidas por terceiros.",
     },
 
     // COMUM
@@ -237,15 +263,15 @@ const translations = {
       yes: "Sim",
       no: "Nao",
       close: "Fechar",
-      home: "Inicio"
+      home: "Inicio",
     },
 
     // FOOTER
     footer: {
       rights: "Todos os direitos reservados",
       privacy: "Privacidade",
-      terms: "Termos"
-    }
+      terms: "Termos",
+    },
   },
 
   // INGLES
@@ -264,7 +290,7 @@ const translations = {
       featured: "Featured Collection",
       view_all: "View All",
       manifesto: "We don't just create clothing. We create symbols of belonging.",
-      scroll: "Scroll"
+      scroll: "Scroll",
     },
 
     // SHOP
@@ -280,7 +306,7 @@ const translations = {
       discover: "Discover",
       not_found: "Piece not found",
       not_found_text: "The system could not find the piece with handle:",
-      back_collection: "Back to Collection"
+      back_collection: "Back to Collection",
     },
 
     // ABOUT
@@ -288,15 +314,16 @@ const translations = {
       title: "Our Mission",
       subtitle: "Portal Lusitano was born to elevate the Lusitano Horse to the global stage.",
       story_title: "The Origin",
-      story_text: "Founded by Francisco Gaspar, Portal Lusitano unites digital engineering with equestrian passion.",
+      story_text:
+        "Founded by Francisco Gaspar, Portal Lusitano unites digital engineering with equestrian passion.",
       values_title: "Our Values",
       value1: "Tradition",
       value2: "Innovation",
       value3: "Excellence",
-      founder: "Founder"
+      founder: "Founder",
     },
 
-    // JOURNAL
+    // JOURNAL (unified: articles + chronicles)
     journal: {
       archive: "Editorial Archive",
       title: "Lusitano Encyclopedia",
@@ -310,13 +337,29 @@ const translations = {
       peer_reviewed: "Peer-Reviewed",
       scientific_research: "Scientific Research",
       preservation: "Equestrian Knowledge Preservation",
-      preservation_text: "This article is part of the digital archiving project of scientific knowledge about the Lusitano Horse, the most influential equestrian breed of Western civilization.",
+      preservation_text:
+        "This article is part of the digital archiving project of scientific knowledge about the Lusitano Horse, the most influential equestrian breed of Western civilization.",
       support: "Support the Project",
       explore_archive: "Explore Archive",
-      share: "Share"
+      share: "Share",
+      all_categories: "All Categories",
+      search_placeholder: "Search articles...",
+      no_results: "No articles found.",
+      related_articles: "Related Articles",
+      table_of_contents: "Contents",
+      sources: "Sources & References",
+      min_read: "min read",
+      view_grid: "Grid view",
+      view_list: "List view",
+      load_more: "Load more",
+      article_type: "Article",
+      post_type: "Chronicle",
+      read_chronicle: "Read Chronicle",
+      no_cover: "No Cover",
+      culture: "Lusitano Culture",
     },
 
-    // BLOG
+    // BLOG (deprecated - redirects to /jornal)
     blog: {
       editorial: "Editorial",
       title: "Lusitano Journal",
@@ -325,7 +368,7 @@ const translations = {
       read: "Read Chronicle",
       no_news: "No news published",
       culture: "Lusitano Culture",
-      not_found: "Article not found."
+      not_found: "Article not found.",
     },
 
     // LOGIN
@@ -338,7 +381,7 @@ const translations = {
       logging_in: "Logging in...",
       enter: "Enter Account",
       no_invite: "No invite yet?",
-      create: "Create Account"
+      create: "Create Account",
     },
 
     // REGISTER
@@ -352,7 +395,7 @@ const translations = {
       creating: "Creating Account...",
       confirm: "Confirm Registration",
       already_member: "Already a member?",
-      enter: "Sign In"
+      enter: "Sign In",
     },
 
     // MY ACCOUNT
@@ -367,25 +410,27 @@ const translations = {
       history: "Purchase History",
       order: "Order",
       no_orders: "You don't have any purchases yet.",
-      explore: "Explore Collection"
+      explore: "Explore Collection",
     },
 
     // STUD FARMS
     studs: {
       directory: "Prestige Directory",
       title: "The Great Houses",
-      subtitle: "An exclusive selection of breeders keeping the flame of the Lusitano breed alive. History, genetics and passion in every stud farm.",
+      subtitle:
+        "An exclusive selection of breeders keeping the flame of the Lusitano breed alive. History, genetics and passion in every stud farm.",
       no_image: "No Image",
       view_profile: "View Profile",
       breeder: "Are you a breeder?",
-      join: "Join the Portal"
+      join: "Join the Portal",
     },
 
     // AUCTIONS
     auctions: {
       offline: "Live Bidding Offline",
       title: "Auction Room",
-      subtitle: "Portal Lusitano auctions are exclusive events. The next event is scheduled for March 2026.",
+      subtitle:
+        "Portal Lusitano auctions are exclusive events. The next event is scheduled for March 2026.",
       lot: "Lot",
       lineage: "Lineage",
       last_bid: "Last Bid",
@@ -404,7 +449,7 @@ const translations = {
       years: "years",
       description: "Editorial Description",
       loading: "Loading elite specimen...",
-      other_specimens: "Other Elite Specimens"
+      other_specimens: "Other Elite Specimens",
     },
 
     // BUY
@@ -432,7 +477,7 @@ const translations = {
       standard: "Standard",
       request_dossier: "Request Dossier & Visit",
       members_only: "Exclusive for Portal Lusitano members",
-      not_found: "Specimen not found."
+      not_found: "Specimen not found.",
     },
 
     // PRIVACY
@@ -440,11 +485,14 @@ const translations = {
       security: "Security",
       title: "Privacy Policy",
       data_privacy: "Data Privacy",
-      data_text: "At Portal Lusitano, we treat your personal data with the same rigor we treat the genetics of our breed. Your member data (Portal ID) is used exclusively to manage your account and purchase history.",
+      data_text:
+        "At Portal Lusitano, we treat your personal data with the same rigor we treat the genetics of our breed. Your member data (Portal ID) is used exclusively to manage your account and purchase history.",
       collection: "Information Collection",
-      collection_text: "We collect information when you register on our site, make a purchase or subscribe to our newsletter. This includes your name, email and billing address.",
+      collection_text:
+        "We collect information when you register on our site, make a purchase or subscribe to our newsletter. This includes your name, email and billing address.",
       cookies: "Cookies and Shopify",
-      cookies_text: "We use cookies to improve your browsing experience and process items in your shopping bag through Shopify's secure infrastructure."
+      cookies_text:
+        "We use cookies to improve your browsing experience and process items in your shopping bag through Shopify's secure infrastructure.",
     },
 
     // TERMS
@@ -452,13 +500,17 @@ const translations = {
       legal: "Legal",
       title: "Terms & Conditions",
       scope: "1. Scope of Service",
-      scope_text: "Portal Lusitano operates as a marketplace and editorial platform dedicated to the Lusitano breed. By accessing our site, the user agrees to comply with these terms of use.",
+      scope_text:
+        "Portal Lusitano operates as a marketplace and editorial platform dedicated to the Lusitano breed. By accessing our site, the user agrees to comply with these terms of use.",
       marketplace: "2. Elite Marketplace",
-      marketplace_text: "Commercial transactions carried out through our store are processed securely. Portal Lusitano reserves the right to carefully select the pieces and stud farms present on the platform to guarantee the brand's quality standard.",
+      marketplace_text:
+        "Commercial transactions carried out through our store are processed securely. Portal Lusitano reserves the right to carefully select the pieces and stud farms present on the platform to guarantee the brand's quality standard.",
       intellectual: "3. Intellectual Property",
-      intellectual_text: "All editorial content, design and photographs present in the Lusitano Journal and store are the exclusive property of Portal Lusitano or its duly identified partners.",
+      intellectual_text:
+        "All editorial content, design and photographs present in the Lusitano Journal and store are the exclusive property of Portal Lusitano or its duly identified partners.",
       liability: "4. Limitation of Liability",
-      liability_text: "Although we make every effort to ensure the accuracy of information about stud farms and genetic lineages, Portal Lusitano is not responsible for inaccuracies provided by third parties."
+      liability_text:
+        "Although we make every effort to ensure the accuracy of information about stud farms and genetic lineages, Portal Lusitano is not responsible for inaccuracies provided by third parties.",
     },
 
     // COMMON
@@ -482,40 +534,38 @@ const translations = {
       yes: "Yes",
       no: "No",
       close: "Close",
-      home: "Home"
+      home: "Home",
     },
 
     // FOOTER
     footer: {
       rights: "All rights reserved",
       privacy: "Privacy",
-      terms: "Terms"
-    }
-  }
+      terms: "Terms",
+    },
+  },
 };
 
 type Language = "pt" | "en";
 interface LanguageContextType {
   language: Language;
   toggleLanguage: () => void;
-  t: typeof translations["pt"];
+  t: (typeof translations)["pt"];
 }
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>("pt");
+function getInitialLanguage(): Language {
+  if (typeof document === "undefined") return "pt";
+  const cookieLocale = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("locale="))
+    ?.split("=")[1];
+  return cookieLocale === "en" ? "en" : "pt";
+}
 
-  // Ler locale do cookie (definido pelo middleware para rotas /en/*)
-  useEffect(() => {
-    const cookieLocale = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("locale="))
-      ?.split("=")[1];
-    if (cookieLocale === "en") {
-      setLanguage("en");
-    }
-  }, []);
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguage] = useState<Language>(getInitialLanguage);
 
   // Actualizar <html lang> e cookie quando o idioma muda
   useEffect(() => {

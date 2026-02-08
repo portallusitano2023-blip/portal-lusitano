@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { supabase } from "@/lib/supabase";
+import { fetchArticleSlugs } from "@/lib/sanity-queries";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
@@ -55,12 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: currentDate,
       changeFrequency: "weekly",
       priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/blog`,
-      lastModified: currentDate,
-      changeFrequency: "weekly",
-      priority: 0.7,
     },
     {
       url: `${siteUrl}/mapa`,
@@ -223,9 +218,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Buscar linhagens
   let linhagensPages: MetadataRoute.Sitemap = [];
   try {
-    const { data: linhagens } = await supabase
-      .from("linhagens")
-      .select("slug, updated_at");
+    const { data: linhagens } = await supabase.from("linhagens").select("slug, updated_at");
 
     if (linhagens) {
       linhagensPages = linhagens.map((l) => ({
@@ -239,13 +232,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Erro ao buscar linhagens para sitemap:", error);
   }
 
-  // Artigos do jornal (1-6)
-  const journalArticles: MetadataRoute.Sitemap = Array.from({ length: 6 }, (_, i) => ({
-    url: `${siteUrl}/jornal/${i + 1}`,
-    lastModified: currentDate,
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  // Artigos do jornal (dinâmico via Sanity)
+  let journalArticles: MetadataRoute.Sitemap = [];
+  try {
+    const slugs = await fetchArticleSlugs();
+    if (slugs && slugs.length > 0) {
+      journalArticles = slugs.map((s) => ({
+        url: `${siteUrl}/jornal/${s.slug}`,
+        lastModified: currentDate,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      }));
+    } else {
+      // Fallback para slugs estáticos
+      const staticSlugs = [
+        "genese-cavalo-iberico",
+        "biomecanica-reuniao",
+        "standard-apsl",
+        "genetica-pelagens",
+        "toricidade-selecao-combate",
+        "novilheiro-rubi-revolucao-olimpica",
+      ];
+      journalArticles = staticSlugs.map((slug) => ({
+        url: `${siteUrl}/jornal/${slug}`,
+        lastModified: currentDate,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      }));
+    }
+  } catch {
+    // Fallback
+    const staticSlugs = [
+      "genese-cavalo-iberico",
+      "biomecanica-reuniao",
+      "standard-apsl",
+      "genetica-pelagens",
+      "toricidade-selecao-combate",
+      "novilheiro-rubi-revolucao-olimpica",
+    ];
+    journalArticles = staticSlugs.map((slug) => ({
+      url: `${siteUrl}/jornal/${slug}`,
+      lastModified: currentDate,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+  }
 
   return [
     ...staticPages,

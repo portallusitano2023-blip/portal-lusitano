@@ -60,66 +60,96 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
   }, [isOpen, onClose]);
 
   // Pesquisa com debounce
-  const performSearch = useCallback(async (searchQuery: string) => {
-    if (searchQuery.length < 2) {
-      setResults([]);
-      return;
-    }
-
-    setIsLoading(true);
-
-    // Simula pesquisa - pode ser substituido por API real
-    // Por agora, pesquisa local em dados estaticos
-    const mockResults: SearchResult[] = [];
-
-    // Pesquisa em artigos do jornal
-    const journalArticles = [
-      { id: "1", title: language === "pt" ? "A Genese do Cavalo Iberico" : "The Genesis of the Iberian Horse", url: "/jornal/1" },
-      { id: "2", title: language === "pt" ? "A Fisica da Reuniao" : "The Physics of Collection", url: "/jornal/2" },
-      { id: "3", title: language === "pt" ? "O Standard Oficial APSL" : "The Official APSL Standard", url: "/jornal/3" },
-      { id: "4", title: language === "pt" ? "Genetica de Pelagens" : "Coat Color Genetics", url: "/jornal/4" },
-      { id: "5", title: language === "pt" ? "Toricidade: Selecao pelo Combate" : "Toricity: Selection by Combat", url: "/jornal/5" },
-      { id: "6", title: language === "pt" ? "A Revolucao Olimpica" : "The Olympic Revolution", url: "/jornal/6" },
-    ];
-
-    journalArticles.forEach((article) => {
-      if (article.title.toLowerCase().includes(searchQuery.toLowerCase())) {
-        mockResults.push({
-          id: `journal-${article.id}`,
-          type: "article",
-          title: article.title,
-          url: article.url,
-        });
+  const performSearch = useCallback(
+    async (searchQuery: string) => {
+      if (searchQuery.length < 2) {
+        setResults([]);
+        return;
       }
-    });
 
-    // Pesquisa em paginas
-    const pages = [
-      { title: language === "pt" ? "Loja" : "Shop", url: "/loja" },
-      { title: language === "pt" ? "Marketplace" : "Marketplace", url: "/marketplace" },
-      { title: language === "pt" ? "Coudelarias" : "Studs", url: "/coudelarias" },
-      { title: language === "pt" ? "Eventos" : "Events", url: "/eventos" },
-      { title: language === "pt" ? "Blog" : "Blog", url: "/blog" },
-      { title: language === "pt" ? "Jornal" : "Journal", url: "/jornal" },
-    ];
+      setIsLoading(true);
 
-    pages.forEach((page, index) => {
-      if (page.title.toLowerCase().includes(searchQuery.toLowerCase())) {
-        mockResults.push({
-          id: `page-${index}`,
-          type: "page",
-          title: page.title,
-          url: page.url,
-        });
-      }
-    });
+      // Simula pesquisa - pode ser substituido por API real
+      // Por agora, pesquisa local em dados estaticos
+      const mockResults: SearchResult[] = [];
 
-    // Simula delay de API
-    await new Promise((resolve) => setTimeout(resolve, 300));
+      // Pesquisa em artigos do jornal (slugs unificados)
+      const journalArticles = [
+        {
+          id: "1",
+          title:
+            language === "pt" ? "A Genese do Cavalo Iberico" : "The Genesis of the Iberian Horse",
+          url: "/jornal/genese-cavalo-iberico",
+        },
+        {
+          id: "2",
+          title: language === "pt" ? "A Fisica da Reuniao" : "The Physics of Collection",
+          url: "/jornal/biomecanica-reuniao",
+        },
+        {
+          id: "3",
+          title: language === "pt" ? "O Standard Oficial APSL" : "The Official APSL Standard",
+          url: "/jornal/standard-apsl",
+        },
+        {
+          id: "4",
+          title: language === "pt" ? "Genetica de Pelagens" : "Coat Color Genetics",
+          url: "/jornal/genetica-pelagens",
+        },
+        {
+          id: "5",
+          title:
+            language === "pt"
+              ? "Toricidade: Selecao pelo Combate"
+              : "Toricity: Selection by Combat",
+          url: "/jornal/toricidade-selecao-combate",
+        },
+        {
+          id: "6",
+          title: language === "pt" ? "A Revolucao Olimpica" : "The Olympic Revolution",
+          url: "/jornal/novilheiro-rubi-revolucao-olimpica",
+        },
+      ];
 
-    setResults(mockResults);
-    setIsLoading(false);
-  }, [language]);
+      journalArticles.forEach((article) => {
+        if (article.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+          mockResults.push({
+            id: `journal-${article.id}`,
+            type: "article",
+            title: article.title,
+            url: article.url,
+          });
+        }
+      });
+
+      // Pesquisa em paginas
+      const pages = [
+        { title: language === "pt" ? "Loja" : "Shop", url: "/loja" },
+        { title: language === "pt" ? "Marketplace" : "Marketplace", url: "/marketplace" },
+        { title: language === "pt" ? "Coudelarias" : "Studs", url: "/coudelarias" },
+        { title: language === "pt" ? "Eventos" : "Events", url: "/eventos" },
+        { title: language === "pt" ? "Jornal" : "Journal", url: "/jornal" },
+      ];
+
+      pages.forEach((page, index) => {
+        if (page.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+          mockResults.push({
+            id: `page-${index}`,
+            type: "page",
+            title: page.title,
+            url: page.url,
+          });
+        }
+      });
+
+      // Simula delay de API
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      setResults(mockResults);
+      setIsLoading(false);
+    },
+    [language]
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -196,10 +226,16 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                       </div>
                       <span className="text-xs text-zinc-600 uppercase tracking-wider">
                         {result.type === "product"
-                          ? (language === "pt" ? "Produto" : "Product")
+                          ? language === "pt"
+                            ? "Produto"
+                            : "Product"
                           : result.type === "article"
-                          ? (language === "pt" ? "Artigo" : "Article")
-                          : (language === "pt" ? "Pagina" : "Page")}
+                            ? language === "pt"
+                              ? "Artigo"
+                              : "Article"
+                            : language === "pt"
+                              ? "Pagina"
+                              : "Page"}
                       </span>
                     </Link>
                   </li>
@@ -214,7 +250,9 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
             ) : query.length < 2 ? (
               <div className="py-12 text-center">
                 <p className="text-zinc-600 text-sm">
-                  {language === "pt" ? "Digite pelo menos 2 caracteres" : "Type at least 2 characters"}
+                  {language === "pt"
+                    ? "Digite pelo menos 2 caracteres"
+                    : "Type at least 2 characters"}
                 </p>
               </div>
             ) : null}
