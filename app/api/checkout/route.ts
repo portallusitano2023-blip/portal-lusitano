@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createCart, addToCart } from "@/lib/shopify";
 import { NextResponse } from "next/server";
 
@@ -38,9 +37,14 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ checkoutUrl });
-
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("🔥 ERRO CRÍTICO NO SERVIDOR:", error);
-    return NextResponse.json({ error: "Erro ao criar checkout", details: error.message }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao criar checkout",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
+      { status: 500 }
+    );
   }
 }

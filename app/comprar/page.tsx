@@ -1,20 +1,23 @@
-// @ts-nocheck
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import HorseCard from "@/components/HorseCard";
 import Link from "next/link";
 
-export default async function ComprarPage({ searchParams }) {
+export default async function ComprarPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
   // PASSO DE ENGENHARIA: Em Next.js 15/16, searchParams é uma Promise
   const sParams = await searchParams;
   const isDev = sParams?.dev === "true";
 
   // BUSCA DE DADOS: Definimos a variável 'cavalos' aqui
   const { data: cavalos, error } = await supabase
-    .from('cavalos_venda')
-    .select('*')
-    .eq('status', 'aprovado') // Apenas os que tu aprovaste no Admin
-    .order('created_at', { ascending: false });
+    .from("cavalos_venda")
+    .select("*")
+    .eq("status", "aprovado") // Apenas os que tu aprovaste no Admin
+    .order("created_at", { ascending: false });
 
   // Tratamento de erro básico para evitar que o build rebente
   if (error) {
@@ -49,7 +52,8 @@ export default async function ComprarPage({ searchParams }) {
             <div>
               <h2 className="text-lg sm:text-xl font-serif mb-1">Quer vender o seu Lusitano?</h2>
               <p className="text-sm text-zinc-400">
-                Anuncie no maior marketplace de cavalos Lusitanos em Portugal. Verificação de documentação incluída.
+                Anuncie no maior marketplace de cavalos Lusitanos em Portugal. Verificação de
+                documentação incluída.
               </p>
             </div>
             <Link
@@ -68,7 +72,7 @@ export default async function ComprarPage({ searchParams }) {
               <HorseCard
                 key={c.id}
                 horse={c}
-                href={`/comprar/${c.id}${isDev ? '?dev=true' : ''}`}
+                href={`/comprar/${c.id}${isDev ? "?dev=true" : ""}`}
               />
             ))}
           </div>

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { getProducts } from "@/lib/shopify";
 import LojaContent from "./LojaContent";
 

@@ -1,21 +1,20 @@
-// @ts-nocheck
 import Navbar from "@/components/Navbar";
 import { getCustomer } from "@/lib/shopify";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import MinhaContaContent from "./MinhaContaContent";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function MinhaContaPage() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('shopify_customer_token')?.value;
+  const token = cookieStore.get("shopify_customer_token")?.value;
 
-  if (!token) redirect('/login');
+  if (!token) redirect("/login");
 
   const customer = await getCustomer(token);
 
-  if (!customer) redirect('/login');
+  if (!customer) redirect("/login");
 
   return (
     <>

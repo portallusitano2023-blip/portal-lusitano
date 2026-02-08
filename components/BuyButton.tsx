@@ -1,9 +1,13 @@
-// @ts-nocheck
-"use client"; 
+"use client";
 
 import { useState } from "react";
 
-export default function BuyButton({ variantId, available }) {
+interface BuyButtonProps {
+  variantId: string;
+  available: boolean;
+}
+
+export default function BuyButton({ variantId, available }: BuyButtonProps) {
   const [loading, setLoading] = useState(false);
 
   function handleBuy() {
@@ -25,7 +29,6 @@ export default function BuyButton({ variantId, available }) {
 
       // 3. Redirecionamos o utilizador
       window.location.href = checkoutUrl;
-
     } catch (error) {
       console.error("Erro ao processar:", error);
       alert("Erro ao iniciar compra. Tente novamente.");
@@ -40,9 +43,11 @@ export default function BuyButton({ variantId, available }) {
       className={`
         group relative block w-full py-6 text-center text-xs uppercase font-bold tracking-[0.3em] 
         transition-all duration-500 border
-        ${available 
-          ? 'bg-[#C5A059] text-black border-[#C5A059] hover:bg-white hover:text-black hover:border-white' 
-          : 'bg-zinc-900 text-zinc-400 border-zinc-800 cursor-not-allowed'}
+        ${
+          available
+            ? "bg-[#C5A059] text-black border-[#C5A059] hover:bg-white hover:text-black hover:border-white"
+            : "bg-zinc-900 text-zinc-400 border-zinc-800 cursor-not-allowed"
+        }
       `}
     >
       <span className="relative z-10 flex items-center justify-center gap-2">
@@ -51,8 +56,10 @@ export default function BuyButton({ variantId, available }) {
             <span className="animate-spin h-3 w-3 border-2 border-black border-t-transparent rounded-full"></span>
             A Redirecionar...
           </>
+        ) : available ? (
+          "Comprar Agora"
         ) : (
-          available ? "Comprar Agora" : "Esgotado"
+          "Esgotado"
         )}
       </span>
     </button>

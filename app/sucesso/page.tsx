@@ -1,4 +1,3 @@
-// @ts-nocheck
 export default function MaintenancePage() {
   return (
     <main className="min-h-screen bg-black flex flex-col items-center justify-center text-white px-6">

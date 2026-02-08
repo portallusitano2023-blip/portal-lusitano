@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { headers } from "next/headers";
 import { stripe } from "@/lib/stripe";
 import { supabase } from "@/lib/supabase";
@@ -16,13 +17,11 @@ export async function POST(req: Request) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
+    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err) {
-    console.error(`Webhook signature verification failed: ${err instanceof Error ? err.message : "Unknown error"}`);
+    console.error(
+      `Webhook signature verification failed: ${err instanceof Error ? err.message : "Unknown error"}`
+    );
     return Response.json({ error: "Invalid signature" }, { status: 400 });
   }
 
@@ -43,7 +42,9 @@ export async function POST(req: Request) {
 
     return Response.json({ received: true });
   } catch (error) {
-    console.error(`Webhook handler error: ${error instanceof Error ? error.message : "Unknown error"}`);
+    console.error(
+      `Webhook handler error: ${error instanceof Error ? error.message : "Unknown error"}`
+    );
     return Response.json({ error: "Webhook handler failed" }, { status: 500 });
   }
 }
@@ -58,34 +59,21 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   // Handle cavalo anuncio
   if (metadata.type === "cavalo_anuncio") {
-    // ===== NOVO: Buscar dados da BD em vez de memória =====
+    // Buscar dados da BD
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let formData: any = null;
     let submissionId: string | null = null;
 
-    // Tentar buscar do contact_submissions (NOVO sistema)
     if (metadata.contact_submission_id) {
       const { data: submission } = await supabase
-        .from('contact_submissions')
-        .select('*')
-        .eq('id', metadata.contact_submission_id)
+        .from("contact_submissions")
+        .select("*")
+        .eq("id", metadata.contact_submission_id)
         .single();
 
       if (submission) {
         formData = submission.form_data;
         submissionId = submission.id;
-        console.log('✅ Dados recuperados de contact_submissions');
-      }
-    }
-
-    // Fallback para tempStorage (ANTIGO sistema - backward compatibility)
-    if (!formData && metadata.temp_id) {
-      const { tempStorage } = await import("@/app/api/vender-cavalo/checkout/route");
-      const tempData = tempStorage.get(metadata.temp_id);
-
-      if (tempData) {
-        formData = tempData.formData;
-        tempStorage.delete(metadata.temp_id);
-        console.log('⚠️ Dados recuperados de tempStorage (DEPRECATED)');
       }
     }
 
@@ -131,33 +119,36 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
 
     // Registar pagamento (com NOVOS campos)
-    const { data: payment } = await supabase.from("payments").insert({
-      stripe_payment_intent_id: session.payment_intent as string,
-      stripe_session_id: session.id, // NOVO
-      email: session.customer_details?.email!,
-      amount: session.amount_total!,
-      currency: session.currency!,
-      status: "succeeded",
-      product_type: "cavalo_anuncio", // NOVO
-      product_metadata: { // NOVO
-        package: "anuncio",
-        destaque: metadata.destaque === "true",
-        nome_cavalo: formData.nomeCavalo,
-      },
-      description: `Anúncio: ${formData.nomeCavalo}`,
-    })
-    .select()
-    .single();
+    const { data: payment } = await supabase
+      .from("payments")
+      .insert({
+        stripe_payment_intent_id: session.payment_intent as string,
+        stripe_session_id: session.id, // NOVO
+        email: session.customer_details?.email!,
+        amount: session.amount_total!,
+        currency: session.currency!,
+        status: "succeeded",
+        product_type: "cavalo_anuncio", // NOVO
+        product_metadata: {
+          // NOVO
+          package: "anuncio",
+          destaque: metadata.destaque === "true",
+          nome_cavalo: formData.nomeCavalo,
+        },
+        description: `Anúncio: ${formData.nomeCavalo}`,
+      })
+      .select()
+      .single();
 
     // Ligar pagamento ao contacto (se existir)
     if (submissionId && payment) {
       await supabase
-        .from('contact_submissions')
+        .from("contact_submissions")
         .update({
           payment_id: payment.id,
           cavalo_id: data.id, // Ligar ao cavalo criado
         })
-        .eq('id', submissionId);
+        .eq("id", submissionId);
     }
 
     // Enviar email de confirmação ao vendedor
@@ -225,30 +216,33 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // Handle Instagram ad
   if (metadata.type === "instagram_ad") {
     // Registar pagamento (com NOVOS campos)
-    const { data: payment } = await supabase.from("payments").insert({
-      stripe_payment_intent_id: session.payment_intent as string,
-      stripe_session_id: session.id, // NOVO
-      email: session.customer_details?.email!,
-      amount: session.amount_total!,
-      currency: session.currency!,
-      status: "succeeded",
-      product_type: "instagram", // NOVO
-      product_metadata: { // NOVO
-        package: metadata.package,
-        nome: metadata.nome,
-        empresa: metadata.empresa,
-      },
-      description: `Instagram - ${metadata.package}`,
-    })
-    .select()
-    .single();
+    const { data: payment } = await supabase
+      .from("payments")
+      .insert({
+        stripe_payment_intent_id: session.payment_intent as string,
+        stripe_session_id: session.id, // NOVO
+        email: session.customer_details?.email!,
+        amount: session.amount_total!,
+        currency: session.currency!,
+        status: "succeeded",
+        product_type: "instagram", // NOVO
+        product_metadata: {
+          // NOVO
+          package: metadata.package,
+          nome: metadata.nome,
+          empresa: metadata.empresa,
+        },
+        description: `Instagram - ${metadata.package}`,
+      })
+      .select()
+      .single();
 
     // Ligar pagamento ao contacto
     if (metadata.contact_submission_id && payment) {
       await supabase
-        .from('contact_submissions')
+        .from("contact_submissions")
         .update({ payment_id: payment.id })
-        .eq('id', metadata.contact_submission_id);
+        .eq("id", metadata.contact_submission_id);
     }
 
     // Notificar admin com todos os detalhes
@@ -316,30 +310,33 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // Handle publicidade
   if (metadata.type === "publicidade") {
     // Registar pagamento (com NOVOS campos)
-    const { data: payment } = await supabase.from("payments").insert({
-      stripe_payment_intent_id: session.payment_intent as string,
-      stripe_session_id: session.id, // NOVO
-      email: session.customer_details?.email!,
-      amount: session.amount_total!,
-      currency: session.currency!,
-      status: "succeeded",
-      product_type: "publicidade", // NOVO
-      product_metadata: { // NOVO
-        package: metadata.package,
-        company: metadata.company,
-        recurring: session.mode === "subscription",
-      },
-      description: `Publicidade: ${metadata.package}`,
-    })
-    .select()
-    .single();
+    const { data: payment } = await supabase
+      .from("payments")
+      .insert({
+        stripe_payment_intent_id: session.payment_intent as string,
+        stripe_session_id: session.id, // NOVO
+        email: session.customer_details?.email!,
+        amount: session.amount_total!,
+        currency: session.currency!,
+        status: "succeeded",
+        product_type: "publicidade", // NOVO
+        product_metadata: {
+          // NOVO
+          package: metadata.package,
+          company: metadata.company,
+          recurring: session.mode === "subscription",
+        },
+        description: `Publicidade: ${metadata.package}`,
+      })
+      .select()
+      .single();
 
     // Ligar pagamento ao contacto
     if (metadata.contact_submission_id && payment) {
       await supabase
-        .from('contact_submissions')
+        .from("contact_submissions")
         .update({ payment_id: payment.id })
-        .eq('id', metadata.contact_submission_id);
+        .eq("id", metadata.contact_submission_id);
     }
 
     // Notificar admin
@@ -363,7 +360,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   // Handle profissional
   if (metadata.type === "profissional") {
-    const { data, error } = await supabase.from("profissionais").insert({
+    const { error } = await supabase.from("profissionais").insert({
       nome: metadata.nome,
       categoria: metadata.categoria,
       email: session.customer_details?.email!,

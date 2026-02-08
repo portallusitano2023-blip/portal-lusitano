@@ -5,8 +5,32 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { ShoppingBag, User, Menu, X, Search, Heart, Crown, Gift, ChevronDown, MapPin, Calendar, ShoppingCart, BookOpen, HelpCircle, Home, Store, Calculator, Scale, Dna, Users, Trophy, Euro, Shield } from "lucide-react";
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import {
+  ShoppingBag,
+  User,
+  Menu,
+  X,
+  Search,
+  Heart,
+  Crown,
+  Gift,
+  ChevronDown,
+  MapPin,
+  Calendar,
+  ShoppingCart,
+  BookOpen,
+  HelpCircle,
+  Home,
+  Store,
+  Calculator,
+  Scale,
+  Dna,
+  Users,
+  Trophy,
+  Euro,
+  Shield,
+} from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
@@ -36,7 +60,13 @@ interface MobileNavItem {
 
 const DB_ITEMS: NavDropdownItem[] = [
   { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo", desc: "Cavalos à venda" },
-  { href: "/vender-cavalo", icon: Euro, label: "Vender Cavalo", desc: "Anuncie aqui", iconClass: "text-green-500" },
+  {
+    href: "/vender-cavalo",
+    icon: Euro,
+    label: "Vender Cavalo",
+    desc: "Anuncie aqui",
+    iconClass: "text-green-500",
+  },
   { href: "/directorio", icon: Crown, label: "Coudelarias", desc: "Diretório completo" },
   { href: "/mapa", icon: MapPin, label: "Mapa", desc: "Mapa interativo" },
   { href: "/eventos", icon: Calendar, label: "Eventos", desc: "Feiras e competições" },
@@ -47,13 +77,28 @@ const DB_ITEMS: NavDropdownItem[] = [
 const TOOLS_ITEMS: NavDropdownItem[] = [
   { href: "/calculadora-valor", icon: Calculator, label: "Calculadora", desc: "Estimar valor" },
   { href: "/comparador-cavalos", icon: Scale, label: "Comparador", desc: "Comparar cavalos" },
-  { href: "/verificador-compatibilidade", icon: Dna, label: "Compatibilidade", desc: "Para criação" },
+  {
+    href: "/verificador-compatibilidade",
+    icon: Dna,
+    label: "Compatibilidade",
+    desc: "Para criação",
+  },
 ];
 
 const COMMUNITY_ITEMS: NavDropdownItem[] = [
-  { href: "/profissionais", icon: Users, label: "Profissionais", desc: "Vets, ferradores, treinadores" },
+  {
+    href: "/profissionais",
+    icon: Users,
+    label: "Profissionais",
+    desc: "Vets, ferradores, treinadores",
+  },
   { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis", desc: "Galeria de honra" },
-  { href: "/analise-perfil", icon: HelpCircle, label: "Análise de Perfil", desc: "Descubra o seu perfil equestre" },
+  {
+    href: "/analise-perfil",
+    icon: HelpCircle,
+    label: "Análise de Perfil",
+    desc: "Descubra o seu perfil equestre",
+  },
 ];
 
 const MOBILE_DB_ITEMS: MobileNavItem[] = [
@@ -78,7 +123,7 @@ const MOBILE_COMMUNITY_ITEMS: MobileNavItem[] = [
   { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
   const { totalQuantity, openCart } = useCart();
   const { language, toggleLanguage, t } = useLanguage();
   const { wishlist } = useWishlist();
@@ -106,8 +151,8 @@ export default function Navbar() {
 
   // Fechar menu mobile quando a página muda (evita click-through para o carrinho)
   useEffect(() => {
-    setIsMobileOpen(false);
-    setIsLusitanoOpen(false);
+    setIsMobileOpen(false); // eslint-disable-line react-hooks/set-state-in-effect
+    setIsLusitanoOpen(false);  
   }, [pathname]);
 
   // Limpar timeout ao desmontar
@@ -127,9 +172,13 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav id="main-navigation" role="navigation" aria-label="Navegação principal" className={`fixed w-full z-50 backdrop-blur-md border-b transition-all duration-300 ${scrolled ? "bg-[#050505]/98 border-white/10 shadow-lg" : "bg-[#050505]/95 border-white/5"}`}>
+    <nav
+      id="main-navigation"
+      role="navigation"
+      aria-label="Navegação principal"
+      className={`fixed w-full z-50 backdrop-blur-md border-b transition-all duration-300 ${scrolled ? "bg-[#050505]/98 border-white/10 shadow-lg" : "bg-[#050505]/95 border-white/5"}`}
+    >
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 md:h-24 flex items-center justify-between gap-4">
-
         {/* LOGÓTIPO COM IMAGEM */}
         <Link href="/" className="flex items-center gap-2 md:gap-3 group flex-shrink-0">
           <Image
@@ -167,22 +216,26 @@ export default function Navbar() {
           ))}
 
           {/* Lusitano Dropdown */}
-          <div
-            className="relative group"
-            onMouseEnter={openLusitano}
-            onMouseLeave={closeLusitano}
-          >
+          <div className="relative group" onMouseEnter={openLusitano} onMouseLeave={closeLusitano}>
             <button className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors py-2">
               Lusitano
-              <ChevronDown size={14} className={`transition-transform ${isLusitanoOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                size={14}
+                className={`transition-transform ${isLusitanoOpen ? "rotate-180" : ""}`}
+              />
             </button>
 
             {isLusitanoOpen && (
               <div className="absolute top-full left-0 pt-2 w-[520px]">
-                <div className="bg-[#0a0a0a] border border-white/10 p-4 grid grid-cols-2 gap-4" style={{ contain: 'layout style paint' }}>
+                <div
+                  className="bg-[#0a0a0a] border border-white/10 p-4 grid grid-cols-2 gap-4"
+                  style={{ contain: "layout style paint" }}
+                >
                   {/* Coluna 1 - Base de Dados */}
                   <div>
-                    <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">Base de Dados</span>
+                    <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
+                      Base de Dados
+                    </span>
                     {DB_ITEMS.map((item) => (
                       <Link
                         key={item.href}
@@ -202,7 +255,9 @@ export default function Navbar() {
 
                   {/* Coluna 2 - Ferramentas e Comunidade */}
                   <div>
-                    <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">Ferramentas</span>
+                    <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
+                      Ferramentas
+                    </span>
                     {TOOLS_ITEMS.map((item) => (
                       <Link
                         key={item.href}
@@ -219,7 +274,9 @@ export default function Navbar() {
                       </Link>
                     ))}
 
-                    <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 mt-4 block font-medium">Comunidade</span>
+                    <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 mt-4 block font-medium">
+                      Comunidade
+                    </span>
                     {COMMUNITY_ITEMS.map((item) => (
                       <Link
                         key={item.href}
@@ -264,7 +321,7 @@ export default function Navbar() {
           <button
             onClick={() => setIsSearchOpen(true)}
             className="text-zinc-400 hover:text-[#C5A059] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
-            aria-label={language === 'pt' ? 'Pesquisar' : 'Search'}
+            aria-label={language === "pt" ? "Pesquisar" : "Search"}
           >
             <Search size={20} strokeWidth={1.5} />
           </button>
@@ -273,21 +330,21 @@ export default function Navbar() {
           <button
             onClick={toggleLanguage}
             className="hidden lg:flex text-xs font-bold tracking-widest text-zinc-500 hover:text-white transition-colors border border-transparent hover:border-zinc-800 px-2 py-1 rounded-sm"
-            aria-label={language === 'pt' ? 'Mudar idioma' : 'Change language'}
+            aria-label={language === "pt" ? "Mudar idioma" : "Change language"}
           >
-            <span className={language === 'pt' ? "text-[#C5A059]" : ""}>PT</span>
+            <span className={language === "pt" ? "text-[#C5A059]" : ""}>PT</span>
             <span className="mx-1 opacity-30 text-zinc-600">|</span>
-            <span className={language === 'en' ? "text-[#C5A059]" : ""}>EN</span>
+            <span className={language === "en" ? "text-[#C5A059]" : ""}>EN</span>
           </button>
 
           {/* Favoritos - Products + Horses */}
           <Link
             href="/cavalos-favoritos"
             className="text-zinc-400 hover:text-[#C5A059] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center relative active:scale-95 touch-manipulation"
-            aria-label={language === 'pt' ? 'Cavalos Favoritos' : 'Favorite Horses'}
+            aria-label={language === "pt" ? "Cavalos Favoritos" : "Favorite Horses"}
           >
             <Heart size={20} strokeWidth={1.5} />
-            {(wishlist.length + favoritesCount) > 0 && (
+            {wishlist.length + favoritesCount > 0 && (
               <span className="absolute top-0.5 right-0.5 w-5 h-5 bg-[#C5A059] rounded-full flex items-center justify-center text-[10px] text-black font-bold">
                 {wishlist.length + favoritesCount}
               </span>
@@ -298,7 +355,7 @@ export default function Navbar() {
           <Link
             href="/minha-conta"
             className="hidden md:flex text-zinc-400 hover:text-[#C5A059] transition-colors p-2 min-w-[44px] min-h-[44px] items-center justify-center active:scale-95 touch-manipulation"
-            aria-label={language === 'pt' ? 'Minha conta' : 'My account'}
+            aria-label={language === "pt" ? "Minha conta" : "My account"}
           >
             <User size={20} strokeWidth={1.5} />
           </Link>
@@ -307,7 +364,7 @@ export default function Navbar() {
           <button
             onClick={openCart}
             className="flex items-center gap-2 text-zinc-400 hover:text-[#C5A059] transition-colors group active:scale-95 touch-manipulation"
-            aria-label={`${language === 'pt' ? 'Carrinho' : 'Cart'} (${totalQuantity} ${language === 'pt' ? 'itens' : 'items'})`}
+            aria-label={`${language === "pt" ? "Carrinho" : "Cart"} (${totalQuantity} ${language === "pt" ? "itens" : "items"})`}
           >
             <div className="relative p-2 min-w-[44px] min-h-[44px] flex items-center justify-center">
               <ShoppingBag size={20} strokeWidth={1.5} />
@@ -326,7 +383,15 @@ export default function Navbar() {
           <button
             className="lg:hidden text-white p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            aria-label={isMobileOpen ? (language === 'pt' ? 'Fechar menu' : 'Close menu') : (language === 'pt' ? 'Abrir menu' : 'Open menu')}
+            aria-label={
+              isMobileOpen
+                ? language === "pt"
+                  ? "Fechar menu"
+                  : "Close menu"
+                : language === "pt"
+                  ? "Abrir menu"
+                  : "Open menu"
+            }
             aria-expanded={isMobileOpen}
           >
             {isMobileOpen ? <X size={26} /> : <Menu size={26} />}
@@ -370,7 +435,10 @@ export default function Navbar() {
                         : "text-zinc-300 hover:text-[#C5A059] hover:bg-white/5"
                     }`}
                   >
-                    <item.icon size={18} className={item.highlight ? "text-green-400" : "text-[#C5A059]/70"} />
+                    <item.icon
+                      size={18}
+                      className={item.highlight ? "text-green-400" : "text-[#C5A059]/70"}
+                    />
                     <span className="truncate">{item.label}</span>
                   </Link>
                 ))}
@@ -478,7 +546,7 @@ export default function Navbar() {
                 }}
                 className="w-full text-center py-3 px-3 text-zinc-400 hover:text-white transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
               >
-                {language === 'pt' ? '🇬🇧 Switch to English' : '🇵🇹 Mudar para Português'}
+                {language === "pt" ? "🇬🇧 Switch to English" : "🇵🇹 Mudar para Português"}
               </button>
             </div>
           </div>
