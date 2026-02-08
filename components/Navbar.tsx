@@ -152,7 +152,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
   // Fechar menu mobile quando a página muda (evita click-through para o carrinho)
   useEffect(() => {
     setIsMobileOpen(false); // eslint-disable-line react-hooks/set-state-in-effect
-    setIsLusitanoOpen(false);  
+    setIsLusitanoOpen(false);
   }, [pathname]);
 
   // Limpar timeout ao desmontar
@@ -217,7 +217,10 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
 
           {/* Lusitano Dropdown */}
           <div className="relative group" onMouseEnter={openLusitano} onMouseLeave={closeLusitano}>
-            <button className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors py-2">
+            <button
+              onClick={() => setIsLusitanoOpen((prev) => !prev)}
+              className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors py-2"
+            >
               Lusitano
               <ChevronDown
                 size={14}

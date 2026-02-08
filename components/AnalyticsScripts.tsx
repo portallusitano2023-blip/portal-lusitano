@@ -17,8 +17,8 @@ export default function AnalyticsScripts() {
   const GA4_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
   const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
-  // Não renderizar em desenvolvimento (opcional - remover para testar)
-  // if (process.env.NODE_ENV === "development") return null;
+  // Não carregar analytics em desenvolvimento
+  if (process.env.NODE_ENV === "development") return null;
 
   return (
     <>

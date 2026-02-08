@@ -25,8 +25,10 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log para servico de monitoring (Sentry, etc.)
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    // Sentry captura automaticamente via sentry.client.config.ts
+    if (process.env.NODE_ENV === "development") {
+      console.error("ErrorBoundary:", error, errorInfo);
+    }
   }
 
   handleRetry = () => {
@@ -48,9 +50,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Titulo */}
-            <h1 className="text-3xl font-serif text-white mb-4">
-              Algo correu mal
-            </h1>
+            <h1 className="text-3xl font-serif text-white mb-4">Algo correu mal</h1>
 
             {/* Descricao */}
             <p className="text-zinc-400 mb-8">
@@ -60,9 +60,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             {/* Detalhes do erro (apenas em desenvolvimento) */}
             {process.env.NODE_ENV === "development" && this.state.error && (
               <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 text-left overflow-auto max-h-40">
-                <p className="text-red-400 text-xs font-mono">
-                  {this.state.error.message}
-                </p>
+                <p className="text-red-400 text-xs font-mono">{this.state.error.message}</p>
               </div>
             )}
 

@@ -7,7 +7,13 @@ interface AbandonedCart {
   id: string;
   email: string;
   emails_sent: number;
-  cart_items: unknown[];
+  cart_items: Array<{
+    product_id: string;
+    name: string;
+    image: string;
+    price: number;
+    quantity: number;
+  }>;
   cart_total: number;
   cart_quantity: number;
   recovery_url: string;
@@ -64,7 +70,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Cart not found or already recovered" }, { status: 404 });
       }
 
-      cartsToEmail = [data];
+      cartsToEmail = [data as AbandonedCart];
     } else {
       // Find all carts that need recovery emails
       const { data, error } = await supabase
@@ -84,7 +90,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Failed to fetch abandoned carts" }, { status: 500 });
       }
 
-      cartsToEmail = data || [];
+      cartsToEmail = (data as AbandonedCart[]) || [];
     }
 
     if (cartsToEmail.length === 0) {
@@ -112,7 +118,13 @@ export async function POST(request: NextRequest) {
           to: cart.email,
           subject: getSubjectLine(actualEmailType, cart),
           react: CartRecoveryEmail({
-            cartItems: cart.cart_items,
+            cartItems: cart.cart_items as {
+              product_id: string;
+              name: string;
+              image: string;
+              price: number;
+              quantity: number;
+            }[],
             cartTotal: cart.cart_total,
             recoveryUrl: cart.recovery_url,
             emailType: actualEmailType,

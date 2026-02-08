@@ -1,7 +1,10 @@
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Pedigree from "@/components/Pedigree";
 import { ProductSchema, BreadcrumbSchema } from "@/components/JsonLd";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
 interface CavaloVenda {
   id: string;
@@ -60,20 +63,23 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
       />
       <BreadcrumbSchema
         items={[
-          { name: "Início", url: "https://portal-lusitano.pt" },
-          { name: "Comprar", url: "https://portal-lusitano.pt/comprar" },
-          { name: cavalo.nome_cavalo, url: `https://portal-lusitano.pt/comprar/${id}` },
+          { name: "Início", url: siteUrl },
+          { name: "Comprar", url: `${siteUrl}/comprar` },
+          { name: cavalo.nome_cavalo, url: `${siteUrl}/comprar/${id}` },
         ]}
       />
-      <Navbar dev={true} />
+      <Navbar />
 
       <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
         {/* LADO ESQUERDO: A IMAGEM FIXA (Visual Hero) */}
         <div className="lg:w-1/2 h-[50vh] lg:h-screen lg:fixed lg:top-0 lg:left-0 relative border-r border-zinc-900 z-0">
-          <img
+          <Image
             src={cavalo.image_url}
             alt={cavalo.nome_cavalo}
-            className="w-full h-full object-cover grayscale brightness-75"
+            fill
+            className="object-cover grayscale brightness-75"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90 lg:hidden"></div>
 

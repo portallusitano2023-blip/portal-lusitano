@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function Error({
   error,
@@ -10,8 +11,10 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error to console (Sentry will capture this in production)
-    console.error("Application error:", error);
+    // Sentry captura automaticamente em produção
+    if (process.env.NODE_ENV === "development") {
+      console.error("Application error:", error);
+    }
   }, [error]);
 
   return (
@@ -19,19 +22,13 @@ export default function Error({
       <div className="max-w-md w-full text-center">
         <div className="text-[#C5A059] text-6xl mb-6">!</div>
 
-        <h1 className="text-2xl font-serif text-white mb-4">
-          Algo correu mal
-        </h1>
+        <h1 className="text-2xl font-serif text-white mb-4">Algo correu mal</h1>
 
         <p className="text-zinc-400 mb-8">
           Pedimos desculpa pelo inconveniente. Ocorreu um erro inesperado.
         </p>
 
-        {error.digest && (
-          <p className="text-zinc-400 text-xs mb-6">
-            Referência: {error.digest}
-          </p>
-        )}
+        {error.digest && <p className="text-zinc-400 text-xs mb-6">Referência: {error.digest}</p>}
 
         <div className="flex flex-col gap-4">
           <button
@@ -41,20 +38,14 @@ export default function Error({
             Tentar novamente
           </button>
 
-          <a
-            href="/"
-            className="text-zinc-500 text-sm hover:text-[#C5A059] transition-colors"
-          >
+          <Link href="/" className="text-zinc-500 text-sm hover:text-[#C5A059] transition-colors">
             Voltar ao início
-          </a>
+          </Link>
         </div>
 
         <p className="text-zinc-400 text-xs mt-12">
           Se o problema persistir, contacta-nos em{" "}
-          <a
-            href="mailto:suporte@portal-lusitano.pt"
-            className="text-[#C5A059] hover:underline"
-          >
+          <a href="mailto:suporte@portal-lusitano.pt" className="text-[#C5A059] hover:underline">
             suporte@portal-lusitano.pt
           </a>
         </p>
