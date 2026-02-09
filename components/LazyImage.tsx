@@ -25,12 +25,11 @@ export default function LazyImage({
   sizes,
 }: LazyImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
+  const [isInView, setIsInView] = useState(priority);
   const imgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (priority) {
-      setIsInView(true);
       return;
     }
 
@@ -60,9 +59,7 @@ export default function LazyImage({
   return (
     <div ref={imgRef} className={`relative overflow-hidden ${className}`}>
       {/* Placeholder skeleton */}
-      {!isLoaded && (
-        <div className="absolute inset-0 bg-zinc-800/50 animate-pulse" />
-      )}
+      {!isLoaded && <div className="absolute inset-0 bg-zinc-800/50 animate-pulse" />}
 
       {/* Image */}
       {isInView && (

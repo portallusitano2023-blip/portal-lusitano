@@ -35,46 +35,69 @@ export function useToast() {
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((toast: Omit<Toast, "id">) => {
-    const id = Math.random().toString(36).slice(2);
-    const newToast = { ...toast, id };
-    setToasts((prev) => [...prev, newToast]);
-
-    const duration = toast.duration || 5000;
-    if (duration > 0) {
-      setTimeout(() => removeToast(id), duration);
-    }
-  }, []);
-
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const success = useCallback((title: string, message?: string) => {
-    showToast({ type: "success", title, message });
-  }, [showToast]);
+  const showToast = useCallback(
+    (toast: Omit<Toast, "id">) => {
+      const id = Math.random().toString(36).slice(2);
+      const newToast = { ...toast, id };
+      setToasts((prev) => [...prev, newToast]);
 
-  const error = useCallback((title: string, message?: string) => {
-    showToast({ type: "error", title, message });
-  }, [showToast]);
+      const duration = toast.duration || 5000;
+      if (duration > 0) {
+        setTimeout(() => removeToast(id), duration);
+      }
+    },
+    [removeToast]
+  );
 
-  const info = useCallback((title: string, message?: string) => {
-    showToast({ type: "info", title, message });
-  }, [showToast]);
+  const success = useCallback(
+    (title: string, message?: string) => {
+      showToast({ type: "success", title, message });
+    },
+    [showToast]
+  );
 
-  const warning = useCallback((title: string, message?: string) => {
-    showToast({ type: "warning", title, message });
-  }, [showToast]);
+  const error = useCallback(
+    (title: string, message?: string) => {
+      showToast({ type: "error", title, message });
+    },
+    [showToast]
+  );
+
+  const info = useCallback(
+    (title: string, message?: string) => {
+      showToast({ type: "info", title, message });
+    },
+    [showToast]
+  );
+
+  const warning = useCallback(
+    (title: string, message?: string) => {
+      showToast({ type: "warning", title, message });
+    },
+    [showToast]
+  );
 
   return (
-    <ToastContext.Provider value={{ toasts, showToast, removeToast, success, error, info, warning }}>
+    <ToastContext.Provider
+      value={{ toasts, showToast, removeToast, success, error, info, warning }}
+    >
       {children}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </ToastContext.Provider>
   );
 }
 
-function ToastContainer({ toasts, removeToast }: { toasts: Toast[]; removeToast: (id: string) => void }) {
+function ToastContainer({
+  toasts,
+  removeToast,
+}: {
+  toasts: Toast[];
+  removeToast: (id: string) => void;
+}) {
   return (
     <div className="fixed bottom-4 right-4 z-50 space-y-2 max-w-md">
       {toasts.map((toast) => (
@@ -115,7 +138,9 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
   const { icon: Icon, bgColor, borderColor, textColor } = config[toast.type];
 
   return (
-    <div className={`${bgColor} border ${borderColor} rounded-lg p-4 shadow-2xl backdrop-blur-sm animate-slide-in-right flex items-start gap-3`}>
+    <div
+      className={`${bgColor} border ${borderColor} rounded-lg p-4 shadow-2xl backdrop-blur-sm animate-slide-in-right flex items-start gap-3`}
+    >
       <Icon className={`w-5 h-5 ${textColor} flex-shrink-0 mt-0.5`} />
       <div className="flex-1 min-w-0">
         <p className={`font-semibold ${textColor}`}>{toast.title}</p>

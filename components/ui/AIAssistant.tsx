@@ -3,10 +3,32 @@
 import { useState } from "react";
 import { Sparkles, Loader2, Copy, RefreshCw, CheckCircle2, AlertCircle } from "lucide-react";
 
+interface AIResult {
+  text?: string;
+  description?: string;
+  subject?: string;
+  sentiment?: string;
+  score?: number;
+  summary?: string;
+  day?: string;
+  time?: string;
+  reason?: string;
+  alternatives?: Array<{ day: string; time: string; openRate: string }>;
+  improved?: string;
+  changes?: Array<{ type: string; description: string }>;
+  readabilityBefore?: number;
+  readabilityAfter?: number;
+}
+
 interface AIAssistantProps {
-  task: "generate_description" | "suggest_subject" | "analyze_sentiment" | "best_time" | "improve_text";
-  input: any;
-  onResult?: (result: any) => void;
+  task:
+    | "generate_description"
+    | "suggest_subject"
+    | "analyze_sentiment"
+    | "best_time"
+    | "improve_text";
+  input: Record<string, unknown>;
+  onResult?: (result: AIResult) => void;
   buttonText?: string;
   showInline?: boolean;
 }
@@ -19,7 +41,7 @@ export default function AIAssistant({
   showInline = false,
 }: AIAssistantProps) {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<AIResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -44,8 +66,8 @@ export default function AIAssistant({
       if (onResult) {
         onResult(data);
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
       setLoading(false);
     }
@@ -159,8 +181,8 @@ export default function AIAssistant({
                 result.overall === "positive"
                   ? "bg-green-500/10 border-green-500/20"
                   : result.overall === "negative"
-                  ? "bg-red-500/10 border-red-500/20"
-                  : "bg-yellow-500/10 border-yellow-500/20"
+                    ? "bg-red-500/10 border-red-500/20"
+                    : "bg-yellow-500/10 border-yellow-500/20"
               }`}
             >
               <p className="text-sm font-semibold text-white mb-3">Análise de Sentimento</p>
@@ -214,23 +236,23 @@ export default function AIAssistant({
                 <div>
                   <p className="text-sm font-semibold text-white mb-2">Alternativas</p>
                   <div className="space-y-2">
-                    {result.alternatives.map((alt: any, i: number) => (
-                      <div key={i} className="bg-white/5 rounded-lg p-2 text-sm">
-                        <span className="text-white">
-                          {alt.day} às {alt.time}
-                        </span>
-                        <span className="text-gray-400 ml-2">({alt.openRate})</span>
-                      </div>
-                    ))}
+                    {result.alternatives.map(
+                      (alt: { day: string; time: string; openRate: string }, i: number) => (
+                        <div key={i} className="bg-white/5 rounded-lg p-2 text-sm">
+                          <span className="text-white">
+                            {alt.day} às {alt.time}
+                          </span>
+                          <span className="text-gray-400 ml-2">({alt.openRate})</span>
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               )}
 
               {result.avoid && result.avoid.length > 0 && (
                 <div className="mt-3 bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-                  <p className="text-sm text-red-400">
-                    ⚠️ Evitar: {result.avoid.join(", ")}
-                  </p>
+                  <p className="text-sm text-red-400">⚠️ Evitar: {result.avoid.join(", ")}</p>
                 </div>
               )}
             </div>
@@ -274,11 +296,13 @@ export default function AIAssistant({
               <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                 <p className="text-sm font-semibold text-blue-400 mb-2">📝 Mudanças Aplicadas</p>
                 <ul className="space-y-1">
-                  {result.changes.map((change: any, i: number) => (
-                    <li key={i} className="text-sm text-gray-300">
-                      • <span className="text-blue-400">{change.type}:</span> {change.description}
-                    </li>
-                  ))}
+                  {result.changes.map(
+                    (change: { type: string; description: string }, i: number) => (
+                      <li key={i} className="text-sm text-gray-300">
+                        • <span className="text-blue-400">{change.type}:</span> {change.description}
+                      </li>
+                    )
+                  )}
                 </ul>
               </div>
             )}
@@ -300,8 +324,7 @@ export default function AIAssistant({
         >
           {loading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              A processar...
+              <Loader2 className="w-4 h-4 animate-spin" />A processar...
             </>
           ) : (
             <>
@@ -348,8 +371,7 @@ export default function AIAssistant({
     >
       {loading ? (
         <>
-          <Loader2 className="w-4 h-4 animate-spin" />
-          A processar...
+          <Loader2 className="w-4 h-4 animate-spin" />A processar...
         </>
       ) : (
         <>
