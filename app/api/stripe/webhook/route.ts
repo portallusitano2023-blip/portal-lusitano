@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         await handleSubscriptionCancelled(event.data.object as Stripe.Subscription);
         break;
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        break;
     }
 
     return Response.json({ received: true });
@@ -53,7 +53,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const metadata = session.metadata;
 
   if (!metadata) {
-    console.log("No metadata found in checkout session");
     return;
   }
 
@@ -208,8 +207,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         <p><a href="https://portal-lusitano.pt/admin">Ir para Admin Panel</a></p>
       `,
     });
-
-    console.log(`Cavalo anuncio created: ${data.id}`);
   }
 
   // Handle Instagram ad
@@ -302,8 +299,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         </div>
       `,
     });
-
-    console.log(`Instagram ad purchase: ${metadata.package} by ${metadata.nome}`);
   }
 
   // Handle publicidade
@@ -353,8 +348,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         <p><strong>Tipo:</strong> ${session.mode === "subscription" ? "Recorrente (mensal)" : "Pagamento único"}</p>
       `,
     });
-
-    console.log(`Publicidade purchase: ${metadata.package}`);
   }
 
   // Handle profissional

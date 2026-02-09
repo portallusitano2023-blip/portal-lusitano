@@ -81,7 +81,6 @@ export function useCartAbandonment() {
           if (response.ok) {
             const data = await response.json();
             if (data.tracked) {
-              console.log("Cart abandonment tracked:", data.cartId);
               lastTrackedRef.current = cartFingerprint;
 
               // Store recovery token for later use
@@ -154,12 +153,8 @@ export function useCartRecovery() {
           const url = new URL(window.location.href);
           url.searchParams.delete("recover");
           window.history.replaceState({}, "", url.toString());
-
-          console.log("Cart recovered successfully");
         }
-      } catch (error) {
-        console.error("Cart recovery error:", error);
-      }
+      } catch {}
     })();
   }, [addItemToCart]);
 

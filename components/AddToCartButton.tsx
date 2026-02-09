@@ -1,11 +1,17 @@
-"use client"; 
+"use client";
 
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { Loader2 } from "lucide-react";
 
-export default function AddToCartButton({ variantId, available }: { variantId: string, available: boolean }) {
+export default function AddToCartButton({
+  variantId,
+  available,
+}: {
+  variantId: string;
+  available: boolean;
+}) {
   const { addItemToCart, openCart } = useCart();
   const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
@@ -32,18 +38,16 @@ export default function AddToCartButton({ variantId, available }: { variantId: s
     setLoading(true);
 
     try {
-      // 2. TENTATIVA DE ADIÇÃO
-      console.log("A tentar adicionar produto:", variantId);
-      
       await addItemToCart(variantId, 1);
-    
+
       // 3. SUCESSO
       openCart();
-
     } catch (error) {
       // 4. ERRO DO SHOPIFY
       console.error("Erro no Shopify:", error);
-      alert("ERRO DE LIGAÇÃO: Não foi possível conectar ao Shopify. \n\n1. Verifica se o ficheiro .env.local existe.\n2. Verifica se as chaves da API estão corretas.\n3. Abre a Consola (F12) para ver o erro técnico.");
+      alert(
+        "ERRO DE LIGAÇÃO: Não foi possível conectar ao Shopify. \n\n1. Verifica se o ficheiro .env.local existe.\n2. Verifica se as chaves da API estão corretas.\n3. Abre a Consola (F12) para ver o erro técnico."
+      );
     } finally {
       setLoading(false);
     }
@@ -56,9 +60,11 @@ export default function AddToCartButton({ variantId, available }: { variantId: s
       className={`
         group relative block w-full py-6 text-center text-xs uppercase font-bold tracking-[0.3em] 
         transition-all duration-500 border
-        ${available 
-          ? 'bg-[#C5A059] text-black border-[#C5A059] hover:bg-white hover:text-black hover:border-white' 
-          : 'bg-zinc-900 text-zinc-400 border-zinc-800 cursor-not-allowed'}
+        ${
+          available
+            ? "bg-[#C5A059] text-black border-[#C5A059] hover:bg-white hover:text-black hover:border-white"
+            : "bg-zinc-900 text-zinc-400 border-zinc-800 cursor-not-allowed"
+        }
       `}
     >
       <span className="relative z-10 flex items-center justify-center gap-2">
@@ -67,8 +73,10 @@ export default function AddToCartButton({ variantId, available }: { variantId: s
             <Loader2 className="animate-spin" size={16} />
             {t.adding}
           </>
+        ) : available ? (
+          t.add
         ) : (
-          available ? t.add : t.sold_out
+          t.sold_out
         )}
       </span>
     </button>

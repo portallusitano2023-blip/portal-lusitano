@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { adminLogin } from "./actions";
 
@@ -21,13 +21,6 @@ function SubmitButton() {
 export default function AdminLoginPage() {
   const [state, formAction] = useActionState(adminLogin, null);
 
-  useEffect(() => {
-    console.log("Login state changed:", state);
-    if (state?.error) {
-      console.error("Login error:", state.error);
-    }
-  }, [state]);
-
   return (
     <main className="min-h-screen bg-[#050505] flex items-center justify-center relative overflow-hidden px-6">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#C5A059] opacity-[0.03] blur-[120px] rounded-full pointer-events-none"></div>
@@ -37,9 +30,7 @@ export default function AdminLoginPage() {
           <span className="text-[#C5A059] text-[9px] uppercase tracking-[0.4em] font-bold block mb-4">
             Acesso Restrito
           </span>
-          <h1 className="text-4xl font-serif text-white tracking-tight">
-            Administração
-          </h1>
+          <h1 className="text-4xl font-serif text-white tracking-tight">Administração</h1>
           <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059] to-transparent mx-auto mt-6"></div>
         </div>
 

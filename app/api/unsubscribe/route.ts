@@ -7,25 +7,20 @@ export async function POST(request: NextRequest) {
     const { email } = body;
 
     if (!email) {
-      return NextResponse.json(
-        { error: "Email é obrigatório" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email é obrigatório" }, { status: 400 });
     }
 
     // Validate email format
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    const emailRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
     if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "Email inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email inválido" }, { status: 400 });
     }
 
     const normalizedEmail = email.toLowerCase().trim();
 
     // Update lead status to unsubscribed
-    const { error: updateError, count } = await supabase
+    const { error: updateError } = await supabase
       .from("leads")
       .update({
         status: "unsubscribed",
@@ -35,14 +30,8 @@ export async function POST(request: NextRequest) {
 
     if (updateError) {
       console.error("Error unsubscribing:", updateError);
-      return NextResponse.json(
-        { error: "Erro ao processar pedido" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Erro ao processar pedido" }, { status: 500 });
     }
-
-    // Log the unsubscribe for analytics
-    console.log(`Unsubscribed: ${normalizedEmail}`);
 
     return NextResponse.json({
       success: true,
@@ -50,9 +39,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Unsubscribe error:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
