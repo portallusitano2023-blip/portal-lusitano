@@ -30,7 +30,7 @@ import {
   Euro,
   Shield,
 } from "lucide-react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
@@ -131,36 +131,12 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isLusitanoOpen, setIsLusitanoOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const lusitanoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const openLusitano = useCallback(() => {
-    if (lusitanoTimeoutRef.current) {
-      clearTimeout(lusitanoTimeoutRef.current);
-      lusitanoTimeoutRef.current = null;
-    }
-    setIsLusitanoOpen(true);
-  }, []);
-
-  const closeLusitano = useCallback(() => {
-    lusitanoTimeoutRef.current = setTimeout(() => {
-      setIsLusitanoOpen(false);
-    }, 150);
-  }, []);
-
-  // Fechar menu mobile quando a página muda (evita click-through para o carrinho)
+  // Fechar menu mobile quando a página muda
   useEffect(() => {
     setIsMobileOpen(false); // eslint-disable-line react-hooks/set-state-in-effect
-    setIsLusitanoOpen(false);
   }, [pathname]);
-
-  // Limpar timeout ao desmontar
-  useEffect(() => {
-    return () => {
-      if (lusitanoTimeoutRef.current) clearTimeout(lusitanoTimeoutRef.current);
-    };
-  }, []);
 
   // Detect scroll for better mobile UX
   useEffect(() => {
@@ -216,48 +192,29 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
             </Link>
           ))}
 
-          {/* Lusitano Dropdown */}
-          <div className="relative" onMouseEnter={openLusitano} onMouseLeave={closeLusitano}>
-            <button
-              onClick={() => setIsLusitanoOpen((prev) => !prev)}
-              onKeyDown={(e) => {
-                if (e.key === "Escape" && isLusitanoOpen) {
-                  setIsLusitanoOpen(false);
-                } else if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setIsLusitanoOpen((prev) => !prev);
-                }
-              }}
-              aria-haspopup="true"
-              aria-expanded={isLusitanoOpen}
-              className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 py-2"
-            >
+          {/* Lusitano Dropdown - Pure CSS hover, zero JavaScript */}
+          <div className="group/dd relative">
+            <span className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 py-2 cursor-pointer">
               Lusitano
               <ChevronDown
                 size={14}
-                className={`transition-transform ${isLusitanoOpen ? "rotate-180" : ""}`}
+                className="transition-transform duration-300 group-hover/dd:rotate-180"
               />
-            </button>
+            </span>
 
-            {/* Dropdown Panel */}
-            {isLusitanoOpen && (
-              <div
-                className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[520px] bg-[#0a0a0a] border border-white/10 rounded-lg p-4 grid grid-cols-2 gap-4"
-                style={{ zIndex: 9999, boxShadow: "0 25px 50px -12px rgba(0,0,0,0.8)" }}
-              >
+            {/* Dropdown Panel - CSS only, no JS needed */}
+            <div
+              className="absolute top-full left-1/2 -translate-x-1/2 pt-3 hidden group-hover/dd:block"
+              style={{ zIndex: 9999 }}
+            >
+              <div className="w-[520px] grid grid-cols-2 gap-4 bg-[#0a0a0a] border border-white/10 rounded-lg p-4 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
                 {/* Coluna 1 - Base de Dados */}
                 <div>
                   <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
                     Base de Dados
                   </span>
                   {DB_ITEMS.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      prefetch={false}
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="dd-item"
-                    >
+                    <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
                       <item.icon size={16} className={item.iconClass || "text-[#C5A059]"} />
                       <div>
                         <div className="text-sm font-medium text-zinc-200">{item.label}</div>
@@ -273,13 +230,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
                     Ferramentas
                   </span>
                   {TOOLS_ITEMS.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      prefetch={false}
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="dd-item"
-                    >
+                    <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
                       <item.icon size={16} className="text-[#C5A059]" />
                       <div>
                         <div className="text-sm font-medium text-zinc-200">{item.label}</div>
@@ -292,13 +243,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
                     Comunidade
                   </span>
                   {COMMUNITY_ITEMS.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      prefetch={false}
-                      onClick={() => setIsLusitanoOpen(false)}
-                      className="dd-item"
-                    >
+                    <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
                       <item.icon size={16} className="text-[#C5A059]" />
                       <div>
                         <div className="text-sm font-medium text-zinc-200">{item.label}</div>
@@ -308,8 +253,9 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
                   ))}
                 </div>
               </div>
-            )}
+            </div>
           </div>
+
           {/* Instagram Promo Link */}
           <Link
             href="/instagram"

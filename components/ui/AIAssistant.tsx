@@ -18,6 +18,7 @@ interface AIResult {
   changes?: Array<{ type: string; description: string }>;
   readabilityBefore?: number;
   readabilityAfter?: number;
+  suggestions?: string[];
 }
 
 interface AIAssistantProps {
@@ -90,8 +91,9 @@ export default function AIAssistant({
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-semibold text-[#C5A059]">Descrição Gerada</span>
                 <button
-                  onClick={() => copyToClipboard(result.text)}
+                  onClick={() => result.text && copyToClipboard(result.text)}
                   className="p-2 hover:bg-white/5 rounded-lg transition-all"
+                  disabled={!result.text}
                 >
                   {copied ? (
                     <CheckCircle2 className="w-4 h-4 text-green-400" />
@@ -125,7 +127,7 @@ export default function AIAssistant({
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-semibold text-[#C5A059]">📧 Subject Recomendado</span>
                 <button
-                  onClick={() => copyToClipboard(result.subject)}
+                  onClick={() => copyToClipboard(result.subject || "")}
                   className="p-2 hover:bg-white/5 rounded-lg transition-all"
                 >
                   {copied ? (
