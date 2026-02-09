@@ -1,15 +1,9 @@
-import { TabProvider } from "@/contexts/TabContext";
+import { TabProvider } from "@/context/TabContext";
 
-export default function AdminAppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminAppLayout({ children }: { children: React.ReactNode }) {
   return (
     <TabProvider>
-      <div className="h-screen bg-[#050505] text-white overflow-hidden">
-        {children}
-      </div>
+      <div className="h-screen bg-[#050505] text-white overflow-hidden">{children}</div>
     </TabProvider>
   );
 }

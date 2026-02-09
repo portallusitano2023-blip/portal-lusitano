@@ -57,7 +57,7 @@ export default function BulkActionsAdvanced({
   const [showHistory, setShowHistory] = useState(false);
   const toast = useToast();
 
-  const selectedData = itemsData.filter((item) => selectedItems.includes(item.id));
+  const selectedData = itemsData.filter((item) => selectedItems.includes(String(item.id)));
 
   const handleAction = async (actionId: string) => {
     const action = actions.find((a) => a.id === actionId);
@@ -200,17 +200,19 @@ export default function BulkActionsAdvanced({
               <div className="space-y-3">
                 {selectedData.map((item) => (
                   <div
-                    key={item.id}
+                    key={String(item.id)}
                     className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between"
                   >
                     <div>
                       <p className="text-white font-semibold">
-                        {item.name || item.title || item.id}
+                        {String(item.name || item.title || item.id)}
                       </p>
-                      {item.email && <p className="text-sm text-gray-400">{item.email}</p>}
-                      {item.status && (
+                      {Boolean(item.email) && (
+                        <p className="text-sm text-gray-400">{String(item.email)}</p>
+                      )}
+                      {Boolean(item.status) && (
                         <span className="inline-block mt-2 px-2 py-1 bg-[#C5A059]/20 text-[#C5A059] text-xs rounded">
-                          {item.status}
+                          {String(item.status)}
                         </span>
                       )}
                     </div>

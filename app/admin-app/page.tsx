@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, lazy, Suspense } from "react";
-import { useTab } from "@/contexts/TabContext";
+import { useTab } from "@/context/TabContext";
 import { X, LogOut, Menu } from "lucide-react";
 import Image from "next/image";
 import {

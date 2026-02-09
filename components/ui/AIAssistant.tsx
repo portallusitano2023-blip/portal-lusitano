@@ -17,9 +17,20 @@ interface AIResult {
   alternatives?: Array<{ day: string; time: string; openRate: string }>;
   improved?: string;
   changes?: Array<{ type: string; description: string }>;
-  readabilityBefore?: number;
-  readabilityAfter?: number;
   suggestions?: string[];
+  tips?: string[];
+  overall?: string;
+  positive?: number;
+  neutral?: number;
+  negative?: number;
+  percentages?: { positive: number; neutral: number; negative: number };
+  insights?: string[];
+  bestDay?: string;
+  bestTime?: string;
+  expectedOpenRate?: string;
+  avoid?: string[];
+  original?: string;
+  readabilityScore?: { before: number; after: number; improvement: string };
 }
 
 interface AIAssistantProps {
@@ -278,7 +289,7 @@ export default function AIAssistant({
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-semibold text-green-400">Melhorado ✨</p>
                   <button
-                    onClick={() => copyToClipboard(result.improved)}
+                    onClick={() => copyToClipboard(result.improved || "")}
                     className="p-2 hover:bg-white/5 rounded-lg transition-all"
                   >
                     {copied ? (

@@ -80,13 +80,13 @@ function checkTriggerConditions(
 
   // Example condition checks
   for (const [key, value] of Object.entries(conditions)) {
-    if (key === "amount_min" && triggerData.amount) {
+    if (key === "amount_min" && typeof triggerData.amount === "number") {
       if (triggerData.amount < Number(value)) return false;
     }
-    if (key === "amount_max" && triggerData.amount) {
+    if (key === "amount_max" && typeof triggerData.amount === "number") {
       if (triggerData.amount > Number(value)) return false;
     }
-    if (key === "email_contains" && triggerData.email) {
+    if (key === "email_contains" && typeof triggerData.email === "string") {
       if (!triggerData.email.includes(value as string)) return false;
     }
     // Add more condition checks as needed

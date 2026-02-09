@@ -112,7 +112,7 @@ export default function GlobalSearch({ onNavigate }: GlobalSearchProps) {
     };
   }, [query]);
 
-  const handleResultClick = (item: { title: string; url?: string }) => {
+  const handleResultClick = (item: { title: string; link: string }) => {
     // Adicionar às pesquisas recentes
     const newRecent = [item.title, ...recentSearches.filter((s) => s !== item.title)].slice(0, 5);
     setRecentSearches(newRecent);

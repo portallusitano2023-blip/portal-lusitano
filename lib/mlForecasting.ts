@@ -134,10 +134,10 @@ export async function predictChurn(users: Record<string, unknown>[]): Promise<Ch
 
   return users.map((user) => {
     // Simple heuristic-based prediction (replace with real ML)
-    const daysSinceLastPurchase = user.daysSinceLastPurchase || 0;
-    const totalPurchases = user.totalPurchases || 0;
-    const avgOrderValue = user.avgOrderValue || 0;
-    const emailOpenRate = user.emailOpenRate || 0;
+    const daysSinceLastPurchase = Number(user.daysSinceLastPurchase) || 0;
+    const totalPurchases = Number(user.totalPurchases) || 0;
+    const avgOrderValue = Number(user.avgOrderValue) || 0;
+    const emailOpenRate = Number(user.emailOpenRate) || 0;
 
     // Calculate churn score (0-1)
     let churnScore = 0;
@@ -181,8 +181,8 @@ export async function predictChurn(users: Record<string, unknown>[]): Promise<Ch
     }
 
     return {
-      userId: user.id,
-      email: user.email,
+      userId: String(user.id),
+      email: String(user.email),
       churnProbability: Math.round(churnProbability),
       risk,
       factors: factors.length ? factors : ["Baixo risco de churn"],
@@ -200,9 +200,9 @@ export async function predictLTV(users: Record<string, unknown>[]): Promise<LTVP
   // TODO: Replace with real ML model (Gradient Boosting)
 
   return users.map((user) => {
-    const totalSpent = user.totalSpent || 0;
-    const totalOrders = user.totalOrders || 0;
-    const daysSinceFirstOrder = user.daysSinceFirstOrder || 1;
+    const totalSpent = Number(user.totalSpent) || 0;
+    const totalOrders = Number(user.totalOrders) || 0;
+    const daysSinceFirstOrder = Number(user.daysSinceFirstOrder) || 1;
     const avgOrderValue = totalOrders > 0 ? totalSpent / totalOrders : 0;
 
     // Simple LTV formula: (AOV × Purchase Frequency × Customer Lifespan)
@@ -218,8 +218,8 @@ export async function predictLTV(users: Record<string, unknown>[]): Promise<LTVP
       predictedLTV > 50000 ? "high-value" : predictedLTV > 15000 ? "medium-value" : "low-value";
 
     return {
-      userId: user.id,
-      email: user.email,
+      userId: String(user.id),
+      email: String(user.email),
       predictedLTV: Math.round(predictedLTV),
       confidence: Math.round(confidence),
       segment,
@@ -283,9 +283,9 @@ export async function clusterCustomers(
 
   // Classify each user
   users.forEach((user) => {
-    const recency = user.daysSinceLastPurchase || 999;
-    const frequency = user.totalOrders || 0;
-    const monetary = user.totalSpent || 0;
+    const recency = Number(user.daysSinceLastPurchase) || 999;
+    const frequency = Number(user.totalOrders) || 0;
+    const monetary = Number(user.totalSpent) || 0;
 
     let segment: CustomerSegment;
 
