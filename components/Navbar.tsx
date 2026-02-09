@@ -134,12 +134,9 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLusitanoOpen, setIsLusitanoOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [ddPos, setDdPos] = useState({ top: 0, left: 0 });
   const lusitanoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lusitanoBtnRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => { setMounted(true); }, []);
 
   const openLusitano = useCallback(() => {
     if (lusitanoTimeoutRef.current) {
@@ -499,85 +496,108 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
       {/* Modal de Pesquisa */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
-      {/* Lusitano Dropdown - renderizado via portal fora do nav para evitar clipping */}
-      {mounted && createPortal(
-        <div
-          className={`fixed z-[9999] w-[520px] transition-all duration-200 ${
-            isLusitanoOpen
-              ? "opacity-100 visible translate-y-0"
-              : "opacity-0 invisible -translate-y-2 pointer-events-none"
-          }`}
-          style={{ top: ddPos.top, left: ddPos.left }}
-          onMouseEnter={openLusitano}
-          onMouseLeave={closeLusitano}
-        >
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg shadow-2xl shadow-black/60 p-4 grid grid-cols-2 gap-4">
-            {/* Coluna 1 - Base de Dados */}
-            <div>
-              <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
-                Base de Dados
-              </span>
-              {DB_ITEMS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  prefetch={false}
-                  onClick={() => setIsLusitanoOpen(false)}
-                  className="dd-item"
-                >
-                  <item.icon size={16} className={item.iconClass || "text-[#C5A059]"} />
-                  <div>
-                    <div className="text-sm font-medium text-zinc-200">{item.label}</div>
-                    <div className="text-[10px] text-zinc-500">{item.desc}</div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+      {/* Lusitano Dropdown - portal no body, renderização condicional simples */}
+      {typeof document !== "undefined" &&
+        isLusitanoOpen &&
+        createPortal(
+          <>
+            {/* Backdrop invisível para fechar ao clicar fora */}
+            <div
+              className="fixed inset-0"
+              style={{ zIndex: 9998 }}
+              onClick={() => setIsLusitanoOpen(false)}
+            />
+            {/* Painel do dropdown */}
+            <div
+              style={{
+                position: "fixed",
+                zIndex: 9999,
+                top: ddPos.top,
+                left: ddPos.left,
+                width: 520,
+              }}
+              onMouseEnter={openLusitano}
+              onMouseLeave={closeLusitano}
+            >
+              <div
+                style={{
+                  background: "#0a0a0a",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 8,
+                  boxShadow: "0 25px 50px -12px rgba(0,0,0,0.8)",
+                  padding: 16,
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 16,
+                }}
+              >
+                {/* Coluna 1 - Base de Dados */}
+                <div>
+                  <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
+                    Base de Dados
+                  </span>
+                  {DB_ITEMS.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      prefetch={false}
+                      onClick={() => setIsLusitanoOpen(false)}
+                      className="dd-item"
+                    >
+                      <item.icon size={16} className={item.iconClass || "text-[#C5A059]"} />
+                      <div>
+                        <div className="text-sm font-medium text-zinc-200">{item.label}</div>
+                        <div className="text-[10px] text-zinc-500">{item.desc}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
 
-            {/* Coluna 2 - Ferramentas e Comunidade */}
-            <div>
-              <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
-                Ferramentas
-              </span>
-              {TOOLS_ITEMS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  prefetch={false}
-                  onClick={() => setIsLusitanoOpen(false)}
-                  className="dd-item"
-                >
-                  <item.icon size={16} className="text-[#C5A059]" />
-                  <div>
-                    <div className="text-sm font-medium text-zinc-200">{item.label}</div>
-                    <div className="text-[10px] text-zinc-500">{item.desc}</div>
-                  </div>
-                </Link>
-              ))}
+                {/* Coluna 2 - Ferramentas e Comunidade */}
+                <div>
+                  <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
+                    Ferramentas
+                  </span>
+                  {TOOLS_ITEMS.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      prefetch={false}
+                      onClick={() => setIsLusitanoOpen(false)}
+                      className="dd-item"
+                    >
+                      <item.icon size={16} className="text-[#C5A059]" />
+                      <div>
+                        <div className="text-sm font-medium text-zinc-200">{item.label}</div>
+                        <div className="text-[10px] text-zinc-500">{item.desc}</div>
+                      </div>
+                    </Link>
+                  ))}
 
-              <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 mt-4 block font-medium">
-                Comunidade
-              </span>
-              {COMMUNITY_ITEMS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  prefetch={false}
-                  onClick={() => setIsLusitanoOpen(false)}
-                  className="dd-item"
-                >
-                  <item.icon size={16} className="text-[#C5A059]" />
-                  <div>
-                    <div className="text-sm font-medium text-zinc-200">{item.label}</div>
-                    <div className="text-[10px] text-zinc-500">{item.desc}</div>
-                  </div>
-                </Link>
-              ))}
+                  <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 mt-4 block font-medium">
+                    Comunidade
+                  </span>
+                  {COMMUNITY_ITEMS.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      prefetch={false}
+                      onClick={() => setIsLusitanoOpen(false)}
+                      className="dd-item"
+                    >
+                      <item.icon size={16} className="text-[#C5A059]" />
+                      <div>
+                        <div className="text-sm font-medium text-zinc-200">{item.label}</div>
+                        <div className="text-[10px] text-zinc-500">{item.desc}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>,
-        document.body
-      )}
+          </>,
+          document.body
+        )}
     </nav>
   );
 }
