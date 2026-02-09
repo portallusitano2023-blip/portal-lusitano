@@ -27,16 +27,7 @@ export default function ChatContent() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
-  useEffect(() => {
-    loadMessages();
-    subscribeToMessages();
-  }, []);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const loadMessages = async () => {
+  const loadMessages = useCallback(async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -52,9 +43,9 @@ export default function ChatContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
 
-  const subscribeToMessages = () => {
+  const subscribeToMessages = useCallback(() => {
     const channel = supabase
       .channel("admin-chat")
       .on(
@@ -73,7 +64,16 @@ export default function ChatContent() {
     return () => {
       supabase.removeChannel(channel);
     };
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    loadMessages();
+    subscribeToMessages();
+  }, [loadMessages, subscribeToMessages]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!newMessage.trim()) return;

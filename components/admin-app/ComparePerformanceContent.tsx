@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { TrendingUp, Eye, DollarSign, Users, BarChart3 } from "lucide-react";
 
 interface CompareItem {
@@ -19,14 +19,9 @@ export default function ComparePerformanceContent() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadItems();
-  }, [selectedType]);
-
-  const loadItems = async () => {
+  const loadItems = useCallback(async () => {
     setLoading(true);
     try {
-      // DADOS REAIS da API
       const response = await fetch(`/api/admin/compare?type=${selectedType}`);
       if (!response.ok) throw new Error("Erro ao carregar dados");
 
@@ -38,7 +33,11 @@ export default function ComparePerformanceContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedType]);
+
+  useEffect(() => {
+    loadItems();
+  }, [loadItems]);
 
   const toggleItem = (id: string) => {
     setSelectedItems((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));

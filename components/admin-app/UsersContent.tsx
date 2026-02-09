@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Users,
   Plus,
@@ -10,9 +10,7 @@ import {
   Shield,
   ShieldCheck,
   Search,
-  Filter,
   X,
-  Check,
   AlertCircle,
 } from "lucide-react";
 
@@ -43,8 +41,7 @@ export default function UsersContent() {
     role: "admin" as "admin" | "super_admin",
   });
 
-  // Carregar utilizadores
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -63,11 +60,11 @@ export default function UsersContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [roleFilter, ativoFilter]);
 
   useEffect(() => {
     loadUsers();
-  }, [roleFilter, ativoFilter]);
+  }, [loadUsers]);
 
   // Filtrar localmente por pesquisa
   const filteredUsers = users.filter((user) => {
