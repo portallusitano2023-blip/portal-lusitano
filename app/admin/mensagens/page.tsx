@@ -75,6 +75,7 @@ export default function MensagensPage() {
   useEffect(() => {
     fetchStats();
     fetchMessages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, searchTerm]);
 
   const fetchStats = async () => {

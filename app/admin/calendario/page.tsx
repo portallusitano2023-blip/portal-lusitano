@@ -87,6 +87,7 @@ export default function CalendarioPage() {
     };
 
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   // Buscar tarefas
@@ -108,6 +109,7 @@ export default function CalendarioPage() {
     if (isAuthenticated) {
       fetchTasks();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate, isAuthenticated]);
 
   // Funções do calendário

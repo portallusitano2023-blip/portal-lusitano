@@ -226,6 +226,7 @@ export default function AdminAppPage() {
         handleMenuClick(MENU_ITEMS[0]);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {

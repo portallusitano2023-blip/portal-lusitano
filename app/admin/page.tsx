@@ -75,16 +75,12 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     loadAllData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadAllData = async () => {
     try {
-      await Promise.all([
-        loadStats(),
-        loadFinancial(),
-        loadMessages(),
-        loadRecentMessages(),
-      ]);
+      await Promise.all([loadStats(), loadFinancial(), loadMessages(), loadRecentMessages()]);
     } catch (err) {
       console.error("Erro ao carregar dados:", err);
       setError("Erro ao carregar alguns dados");
@@ -236,24 +232,23 @@ export default function AdminDashboard() {
             <div className="flex items-start gap-4">
               <div className="text-3xl">⚠️</div>
               <div className="flex-1">
-                <h3 className="text-lg font-bold text-orange-500 mb-2">
-                  Setup Necessário
-                </h3>
+                <h3 className="text-lg font-bold text-orange-500 mb-2">Setup Necessário</h3>
                 <p className="text-gray-300 mb-3">
                   Alguns dados não estão disponíveis porque as tabelas SQL ainda não foram criadas.
                 </p>
                 <div className="bg-black/30 p-4 rounded-lg border border-white/10">
-                  <p className="text-sm text-gray-300 font-mono mb-2">
-                    📋 Siga estes passos:
-                  </p>
+                  <p className="text-sm text-gray-300 font-mono mb-2">📋 Siga estes passos:</p>
                   <ol className="text-sm text-gray-400 space-y-1 ml-4 list-decimal">
-                    <li>Abra o ficheiro <code className="text-[#C5A059]">INSTALAR_ADMIN.md</code></li>
+                    <li>
+                      Abra o ficheiro <code className="text-[#C5A059]">INSTALAR_ADMIN.md</code>
+                    </li>
                     <li>Siga as instruções para executar o SQL no Supabase</li>
                     <li>Recarregue esta página (F5)</li>
                   </ol>
                 </div>
                 <p className="text-xs text-gray-500 mt-3">
-                  ⏱️ Demora apenas 5 minutos e depois terás acesso completo ao dashboard financeiro e inbox de mensagens!
+                  ⏱️ Demora apenas 5 minutos e depois terás acesso completo ao dashboard financeiro
+                  e inbox de mensagens!
                 </p>
               </div>
             </div>
@@ -301,9 +296,11 @@ export default function AdminDashboard() {
                 <p className="text-3xl font-bold text-white">
                   {formatCurrency(financial.thisMonthRevenue)}
                 </p>
-                <p className={`text-xs mt-1 ${
-                  financial.growthPercentage >= 0 ? "text-green-500" : "text-red-500"
-                }`}>
+                <p
+                  className={`text-xs mt-1 ${
+                    financial.growthPercentage >= 0 ? "text-green-500" : "text-red-500"
+                  }`}
+                >
                   {financial.growthPercentage >= 0 ? "+" : ""}
                   {financial.growthPercentage.toFixed(1)}% vs mês passado
                 </p>
@@ -315,9 +312,7 @@ export default function AdminDashboard() {
                   <h3 className="text-sm font-medium text-gray-400">MRR</h3>
                   <FiRepeat className="text-[#C5A059]" size={20} />
                 </div>
-                <p className="text-3xl font-bold text-white">
-                  {formatCurrency(financial.mrr)}
-                </p>
+                <p className="text-3xl font-bold text-white">{formatCurrency(financial.mrr)}</p>
                 <p className="text-xs text-gray-500 mt-1">Receita recorrente</p>
               </div>
 
@@ -327,9 +322,7 @@ export default function AdminDashboard() {
                   <h3 className="text-sm font-medium text-gray-400">Transações</h3>
                   <FiShoppingCart className="text-[#C5A059]" size={20} />
                 </div>
-                <p className="text-3xl font-bold text-white">
-                  {financial.totalTransactions}
-                </p>
+                <p className="text-3xl font-bold text-white">{financial.totalTransactions}</p>
                 <p className="text-xs text-gray-500 mt-1">
                   Ticket médio: {formatCurrency(financial.averageTicket)}
                 </p>
@@ -369,7 +362,9 @@ export default function AdminDashboard() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Respondidas</span>
-                    <span className="text-xl font-semibold text-green-500">{messages.respondido}</span>
+                    <span className="text-xl font-semibold text-green-500">
+                      {messages.respondido}
+                    </span>
                   </div>
                   <div className="pt-3 border-t border-white/10">
                     <div className="flex items-center justify-between">
@@ -395,13 +390,16 @@ export default function AdminDashboard() {
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               <p className="font-medium text-white">{msg.name}</p>
-                              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(msg.status)}`}>
+                              <span
+                                className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(msg.status)}`}
+                              >
                                 {msg.status}
                               </span>
                             </div>
                             <p className="text-sm text-gray-400">{msg.email}</p>
                             <p className="text-xs text-gray-500 mt-1">
-                              {getFormTypeLabel(msg.form_type)} • {new Date(msg.created_at).toLocaleDateString("pt-PT")}
+                              {getFormTypeLabel(msg.form_type)} •{" "}
+                              {new Date(msg.created_at).toLocaleDateString("pt-PT")}
                             </p>
                           </div>
                         </div>
@@ -440,7 +438,8 @@ export default function AdminDashboard() {
                   {formatNumber(stats.cavalosViews + stats.eventosViews)}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {formatNumber(stats.cavalosViews)} cavalos • {formatNumber(stats.eventosViews)} eventos
+                  {formatNumber(stats.cavalosViews)} cavalos • {formatNumber(stats.eventosViews)}{" "}
+                  eventos
                 </p>
               </div>
 
@@ -451,9 +450,7 @@ export default function AdminDashboard() {
                   <FiUsers className="text-green-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">{stats.totalLeads}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {stats.conversionRate}% taxa conversão
-                </p>
+                <p className="text-xs text-gray-500 mt-1">{stats.conversionRate}% taxa conversão</p>
               </div>
 
               {/* Reviews */}
@@ -475,9 +472,7 @@ export default function AdminDashboard() {
                   <FiCalendar className="text-purple-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">{stats.totalEventos}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {stats.futureEventos} futuros
-                </p>
+                <p className="text-xs text-gray-500 mt-1">{stats.futureEventos} futuros</p>
               </div>
             </div>
           </>
@@ -610,9 +605,7 @@ export default function AdminDashboard() {
                 <FiTrendingUp className="text-orange-500" size={28} />
                 <h3 className="text-lg font-bold text-white">CRM Pipeline</h3>
               </div>
-              <p className="text-sm text-gray-400">
-                Pipeline visual de vendas com drag-and-drop
-              </p>
+              <p className="text-sm text-gray-400">Pipeline visual de vendas com drag-and-drop</p>
             </Link>
           </div>
         </div>

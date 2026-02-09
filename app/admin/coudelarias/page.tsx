@@ -44,6 +44,7 @@ export default function CoudelariasPage() {
 
   useEffect(() => {
     loadCoudelarias();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter, planoFilter, searchTerm]);
 
   const loadCoudelarias = async () => {

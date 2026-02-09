@@ -117,16 +117,13 @@ export default function AdminFinanceiroPage() {
     };
 
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   // Fetch all data
   const fetchAllData = async () => {
     try {
-      await Promise.all([
-        fetchOverview(),
-        fetchCharts(),
-        fetchTransactions(),
-      ]);
+      await Promise.all([fetchOverview(), fetchCharts(), fetchTransactions()]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -245,6 +242,7 @@ export default function AdminFinanceiroPage() {
     if (isAuthenticated) {
       fetchTransactions();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, isAuthenticated]);
 
   if (isLoading) {
@@ -267,9 +265,7 @@ export default function AdminFinanceiroPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-white">Dashboard Financeiro</h1>
-              <p className="text-gray-400 mt-1">
-                Gestão completa de receitas e transações
-              </p>
+              <p className="text-gray-400 mt-1">Gestão completa de receitas e transações</p>
             </div>
             <button
               onClick={() => router.push("/admin")}
@@ -351,8 +347,8 @@ export default function AdminFinanceiroPage() {
             >
               {isGeneratingPDF ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
-                  A gerar...
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>A
+                  gerar...
                 </>
               ) : (
                 <>
@@ -366,7 +362,8 @@ export default function AdminFinanceiroPage() {
           {/* Info adicional */}
           <div className="mt-4 pt-4 border-t border-[#C5A059]/20">
             <p className="text-xs text-gray-500">
-              📊 O relatório inclui: Resumo Executivo, Receitas por Produto, Top 5 Cavalos Mais Vistos, Análise de Leads e ROI por Canal de Marketing
+              📊 O relatório inclui: Resumo Executivo, Receitas por Produto, Top 5 Cavalos Mais
+              Vistos, Análise de Leads e ROI por Canal de Marketing
             </p>
           </div>
         </div>
@@ -381,7 +378,8 @@ export default function AdminFinanceiroPage() {
                 <FiDollarSign className="text-[#C5A059]" size={20} />
               </div>
               <p className="text-3xl font-bold text-white">
-                €{overviewData.overview.totalRevenue.toLocaleString("pt-PT", {
+                €
+                {overviewData.overview.totalRevenue.toLocaleString("pt-PT", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
@@ -396,16 +394,17 @@ export default function AdminFinanceiroPage() {
                 <FiTrendingUp className="text-green-500" size={20} />
               </div>
               <p className="text-3xl font-bold text-white">
-                €{overviewData.overview.thisMonthRevenue.toLocaleString("pt-PT", {
+                €
+                {overviewData.overview.thisMonthRevenue.toLocaleString("pt-PT", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
               </p>
-              <p className={`text-xs mt-1 ${
-                overviewData.overview.growthPercentage >= 0
-                  ? "text-green-500"
-                  : "text-red-500"
-              }`}>
+              <p
+                className={`text-xs mt-1 ${
+                  overviewData.overview.growthPercentage >= 0 ? "text-green-500" : "text-red-500"
+                }`}
+              >
                 {overviewData.overview.growthPercentage >= 0 ? "+" : ""}
                 {overviewData.overview.growthPercentage.toFixed(1)}% vs mês passado
               </p>
@@ -418,7 +417,8 @@ export default function AdminFinanceiroPage() {
                 <FiRepeat className="text-[#C5A059]" size={20} />
               </div>
               <p className="text-3xl font-bold text-white">
-                €{overviewData.overview.mrr.toLocaleString("pt-PT", {
+                €
+                {overviewData.overview.mrr.toLocaleString("pt-PT", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
@@ -452,27 +452,18 @@ export default function AdminFinanceiroPage() {
               </h3>
               <div className="h-64 flex items-end justify-between gap-1">
                 {chartData.dailyRevenue.slice(-30).map((day, index) => {
-                  const maxRevenue = Math.max(
-                    ...chartData.dailyRevenue.map((d) => d.revenue)
-                  );
-                  const height = maxRevenue > 0
-                    ? (day.revenue / maxRevenue) * 100
-                    : 0;
+                  const maxRevenue = Math.max(...chartData.dailyRevenue.map((d) => d.revenue));
+                  const height = maxRevenue > 0 ? (day.revenue / maxRevenue) * 100 : 0;
 
                   return (
-                    <div
-                      key={index}
-                      className="group relative flex-1"
-                      style={{ height: "100%" }}
-                    >
+                    <div key={index} className="group relative flex-1" style={{ height: "100%" }}>
                       <div
                         className="absolute bottom-0 w-full bg-[#C5A059] rounded-t transition-all hover:bg-[#d4b469] cursor-pointer"
                         style={{ height: `${height}%` }}
                       >
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black/90 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                           {new Date(day.date).toLocaleDateString("pt-PT")}
-                          <br />
-                          €{day.revenue.toFixed(2)}
+                          <br />€{day.revenue.toFixed(2)}
                         </div>
                       </div>
                     </div>
@@ -483,25 +474,16 @@ export default function AdminFinanceiroPage() {
 
             {/* Receita por Produto */}
             <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Receita por Produto
-              </h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Receita por Produto</h3>
               <div className="space-y-4">
                 {chartData.revenueByProduct.map((product, index) => {
                   const totalRevenue = chartData.revenueByProduct.reduce(
                     (sum, p) => sum + p.revenue,
                     0
                   );
-                  const percentage = totalRevenue > 0
-                    ? (product.revenue / totalRevenue) * 100
-                    : 0;
+                  const percentage = totalRevenue > 0 ? (product.revenue / totalRevenue) * 100 : 0;
 
-                  const colors = [
-                    "#C5A059",
-                    "#8B7042",
-                    "#A08850",
-                    "#666",
-                  ];
+                  const colors = ["#C5A059", "#8B7042", "#A08850", "#666"];
 
                   return (
                     <div key={index}>
@@ -520,9 +502,7 @@ export default function AdminFinanceiroPage() {
                           }}
                         />
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {product.count} transações
-                      </p>
+                      <p className="text-xs text-gray-500 mt-1">{product.count} transações</p>
                     </div>
                   );
                 })}
@@ -536,27 +516,18 @@ export default function AdminFinanceiroPage() {
               </h3>
               <div className="h-64 flex items-end justify-between gap-2">
                 {chartData.monthlyRevenue.map((month, index) => {
-                  const maxRevenue = Math.max(
-                    ...chartData.monthlyRevenue.map((m) => m.revenue)
-                  );
-                  const height = maxRevenue > 0
-                    ? (month.revenue / maxRevenue) * 100
-                    : 0;
+                  const maxRevenue = Math.max(...chartData.monthlyRevenue.map((m) => m.revenue));
+                  const height = maxRevenue > 0 ? (month.revenue / maxRevenue) * 100 : 0;
 
                   return (
-                    <div
-                      key={index}
-                      className="group relative flex-1"
-                      style={{ height: "100%" }}
-                    >
+                    <div key={index} className="group relative flex-1" style={{ height: "100%" }}>
                       <div
                         className="absolute bottom-8 w-full bg-gradient-to-t from-[#C5A059] to-[#d4b469] rounded-t transition-all hover:from-[#d4b469] hover:to-[#e4c479] cursor-pointer"
                         style={{ height: `calc(${height}% - 2rem)` }}
                       >
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black/90 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                           {month.fullMonth}
-                          <br />
-                          €{month.revenue.toFixed(2)}
+                          <br />€{month.revenue.toFixed(2)}
                         </div>
                       </div>
                       <p className="absolute bottom-0 w-full text-center text-xs text-gray-500">
@@ -570,9 +541,7 @@ export default function AdminFinanceiroPage() {
 
             {/* Evolução MRR */}
             <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Evolução MRR
-              </h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Evolução MRR</h3>
               <div className="h-64 relative">
                 <svg className="w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="none">
                   <defs>
@@ -587,22 +556,19 @@ export default function AdminFinanceiroPage() {
                     <>
                       {(() => {
                         const maxMRR = Math.max(...chartData.mrrEvolution.map((m) => m.mrr));
-                        const points = chartData.mrrEvolution.map((month, index) => {
-                          const x = (index / (chartData.mrrEvolution.length - 1)) * 400;
-                          const y = maxMRR > 0
-                            ? 200 - (month.mrr / maxMRR) * 180
-                            : 200;
-                          return `${x},${y}`;
-                        }).join(" ");
+                        const points = chartData.mrrEvolution
+                          .map((month, index) => {
+                            const x = (index / (chartData.mrrEvolution.length - 1)) * 400;
+                            const y = maxMRR > 0 ? 200 - (month.mrr / maxMRR) * 180 : 200;
+                            return `${x},${y}`;
+                          })
+                          .join(" ");
 
                         const areaPoints = `0,200 ${points} 400,200`;
 
                         return (
                           <>
-                            <polyline
-                              points={areaPoints}
-                              fill="url(#mrrGradient)"
-                            />
+                            <polyline points={areaPoints} fill="url(#mrrGradient)" />
                             <polyline
                               points={points}
                               fill="none"
@@ -616,11 +582,13 @@ export default function AdminFinanceiroPage() {
                   )}
                 </svg>
                 <div className="absolute bottom-0 left-0 right-0 flex justify-between px-2">
-                  {chartData.mrrEvolution.filter((_, i) => i % 2 === 0).map((month, index) => (
-                    <span key={index} className="text-xs text-gray-500">
-                      {month.month}
-                    </span>
-                  ))}
+                  {chartData.mrrEvolution
+                    .filter((_, i) => i % 2 === 0)
+                    .map((month, index) => (
+                      <span key={index} className="text-xs text-gray-500">
+                        {month.month}
+                      </span>
+                    ))}
                 </div>
               </div>
             </div>
@@ -743,9 +711,7 @@ export default function AdminFinanceiroPage() {
                             })}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-sm text-white">
-                          {transaction.email}
-                        </td>
+                        <td className="py-3 px-4 text-sm text-white">{transaction.email}</td>
                         <td className="py-3 px-4 text-sm text-gray-300">
                           {transaction.productType}
                         </td>
@@ -758,8 +724,8 @@ export default function AdminFinanceiroPage() {
                               transaction.statusKey === "succeeded"
                                 ? "bg-green-500/10 text-green-500"
                                 : transaction.statusKey === "pending"
-                                ? "bg-yellow-500/10 text-yellow-500"
-                                : "bg-red-500/10 text-red-500"
+                                  ? "bg-yellow-500/10 text-yellow-500"
+                                  : "bg-red-500/10 text-red-500"
                             }`}
                           >
                             {transaction.status}
@@ -774,7 +740,8 @@ export default function AdminFinanceiroPage() {
               {/* Paginação */}
               <div className="flex items-center justify-between mt-6 pt-6 border-t border-white/10">
                 <div className="text-sm text-gray-400">
-                  Mostrando {((transactionsData.pagination.page - 1) * transactionsData.pagination.limit) + 1} a{" "}
+                  Mostrando{" "}
+                  {(transactionsData.pagination.page - 1) * transactionsData.pagination.limit + 1} a{" "}
                   {Math.min(
                     transactionsData.pagination.page * transactionsData.pagination.limit,
                     transactionsData.pagination.total

@@ -46,6 +46,7 @@ export default function AdminInstagramPage() {
     if (authenticated) {
       fetchUploads();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, authenticated]);
 
   const checkAuthentication = async () => {
