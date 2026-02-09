@@ -33,8 +33,8 @@ vi.mock("next/dynamic", () => ({
 }));
 vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => {
-    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
     const imgProps = { ...props, fill: undefined };
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
     return <img {...(imgProps as React.ImgHTMLAttributes<HTMLImageElement>)} />;
   },
 }));

@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Zap,
   Plus,
   Search,
-  Filter,
   Trash2,
   Edit,
   Play,
@@ -25,11 +24,9 @@ import {
 // Simple toast utility (replace with your preferred toast library)
 const toast = {
   success: (message: string) => {
-    console.log("✅", message);
     alert(message);
   },
   error: (message: string) => {
-    console.error("❌", message);
     alert(`Erro: ${message}`);
   },
 };
@@ -44,9 +41,9 @@ interface Automation {
   description: string;
   enabled: boolean;
   trigger_type: string;
-  trigger_conditions: any;
+  trigger_conditions: Record<string, unknown>;
   action_type: string;
-  action_config: any;
+  action_config: Record<string, unknown>;
   delay_minutes: number;
   total_runs: number;
   successful_runs: number;
@@ -61,8 +58,8 @@ interface AutomationLog {
   id: string;
   automation_id: string;
   status: string;
-  trigger_data: any;
-  action_result: any;
+  trigger_data: Record<string, unknown>;
+  action_result: Record<string, unknown>;
   error_message: string | null;
   executed_at: string;
   completed_at: string | null;
@@ -83,19 +80,64 @@ interface Stats {
 // ========================================
 
 const TRIGGER_TYPES = [
-  { value: "lead_created", label: "Lead Criado", icon: "👤", description: "Quando um novo lead se regista" },
-  { value: "payment_succeeded", label: "Pagamento Bem-Sucedido", icon: "💳", description: "Após pagamento confirmado" },
-  { value: "review_submitted", label: "Review Submetida", icon: "⭐", description: "Nova review pendente" },
-  { value: "cavalo_created", label: "Cavalo Criado", icon: "🐴", description: "Novo cavalo adicionado" },
+  {
+    value: "lead_created",
+    label: "Lead Criado",
+    icon: "👤",
+    description: "Quando um novo lead se regista",
+  },
+  {
+    value: "payment_succeeded",
+    label: "Pagamento Bem-Sucedido",
+    icon: "💳",
+    description: "Após pagamento confirmado",
+  },
+  {
+    value: "review_submitted",
+    label: "Review Submetida",
+    icon: "⭐",
+    description: "Nova review pendente",
+  },
+  {
+    value: "cavalo_created",
+    label: "Cavalo Criado",
+    icon: "🐴",
+    description: "Novo cavalo adicionado",
+  },
   { value: "time_based", label: "Baseado em Tempo", icon: "⏰", description: "Execução agendada" },
 ];
 
 const ACTION_TYPES = [
-  { value: "send_email", label: "Enviar Email", icon: "📧", description: "Enviar email via Resend" },
-  { value: "create_task", label: "Criar Tarefa", icon: "✅", description: "Criar tarefa no admin_tasks" },
-  { value: "update_field", label: "Atualizar Campo", icon: "✏️", description: "Atualizar campo numa tabela" },
-  { value: "approve_review", label: "Aprovar Review", icon: "⭐", description: "Aprovar review automaticamente" },
-  { value: "send_notification", label: "Enviar Notificação", icon: "🔔", description: "Criar notificação admin" },
+  {
+    value: "send_email",
+    label: "Enviar Email",
+    icon: "📧",
+    description: "Enviar email via Resend",
+  },
+  {
+    value: "create_task",
+    label: "Criar Tarefa",
+    icon: "✅",
+    description: "Criar tarefa no admin_tasks",
+  },
+  {
+    value: "update_field",
+    label: "Atualizar Campo",
+    icon: "✏️",
+    description: "Atualizar campo numa tabela",
+  },
+  {
+    value: "approve_review",
+    label: "Aprovar Review",
+    icon: "⭐",
+    description: "Aprovar review automaticamente",
+  },
+  {
+    value: "send_notification",
+    label: "Enviar Notificação",
+    icon: "🔔",
+    description: "Criar notificação admin",
+  },
 ];
 
 // ========================================
@@ -129,11 +171,7 @@ export default function AutomationsContent() {
     enabled: true,
   });
 
-  useEffect(() => {
-    loadAutomations();
-  }, [filterEnabled, filterTrigger, filterAction]);
-
-  const loadAutomations = async () => {
+  const loadAutomations = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       if (filterEnabled !== "all") params.set("enabled", filterEnabled);
@@ -147,12 +185,16 @@ export default function AutomationsContent() {
 
       setAutomations(data.automations);
       setStats(data.stats);
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao carregar automações");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Erro ao carregar automações");
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterEnabled, filterTrigger, filterAction]);
+
+  useEffect(() => {
+    loadAutomations();
+  }, [loadAutomations]);
 
   const handleCreateAutomation = async () => {
     try {
@@ -184,8 +226,8 @@ export default function AutomationsContent() {
       setShowCreateModal(false);
       resetForm();
       loadAutomations();
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao criar automação");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Erro ao criar automação");
     }
   };
 
@@ -223,8 +265,8 @@ export default function AutomationsContent() {
       setSelectedAutomation(null);
       resetForm();
       loadAutomations();
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao atualizar automação");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Erro ao atualizar automação");
     }
   };
 
@@ -245,8 +287,8 @@ export default function AutomationsContent() {
 
       toast.success(automation.enabled ? "Automação desativada" : "Automação ativada");
       loadAutomations();
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao atualizar automação");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Erro ao atualizar automação");
     }
   };
 
@@ -266,8 +308,8 @@ export default function AutomationsContent() {
 
       toast.success("Automação apagada!");
       loadAutomations();
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao apagar automação");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Erro ao apagar automação");
     }
   };
 
@@ -293,8 +335,8 @@ export default function AutomationsContent() {
       }
 
       loadAutomations();
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao executar automação");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Erro ao executar automação");
     }
   };
 
@@ -376,18 +418,8 @@ export default function AutomationsContent() {
       {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <StatsCard
-            title="Total Automações"
-            value={stats.total}
-            icon={Activity}
-            color="blue"
-          />
-          <StatsCard
-            title="Ativas"
-            value={stats.enabled}
-            icon={CheckCircle2}
-            color="green"
-          />
+          <StatsCard title="Total Automações" value={stats.total} icon={Activity} color="blue" />
+          <StatsCard title="Ativas" value={stats.enabled} icon={CheckCircle2} color="green" />
           <StatsCard
             title="Total Execuções"
             value={stats.total_runs}
@@ -421,7 +453,7 @@ export default function AutomationsContent() {
           {/* Filter: Status */}
           <select
             value={filterEnabled}
-            onChange={(e) => setFilterEnabled(e.target.value as any)}
+            onChange={(e) => setFilterEnabled(e.target.value as "all" | "true" | "false")}
             className="bg-black/30 border border-white/10 px-4 py-2 text-white rounded-lg focus:outline-none focus:border-[#C5A059]"
           >
             <option value="all">Todas</option>
@@ -526,7 +558,14 @@ export default function AutomationsContent() {
 // SUB-COMPONENTES
 // ========================================
 
-function StatsCard({ title, value, icon: Icon, color }: any) {
+interface StatsCardProps {
+  title: string;
+  value: number | string;
+  icon: typeof Activity;
+  color: string;
+}
+
+function StatsCard({ title, value, icon: Icon, color }: StatsCardProps) {
   const colorMap: Record<string, string> = {
     blue: "from-blue-500/10 to-cyan-500/10 border-blue-500/20 text-blue-400",
     green: "from-green-500/10 to-emerald-500/10 border-green-500/20 text-green-400",
@@ -549,6 +588,15 @@ function StatsCard({ title, value, icon: Icon, color }: any) {
   );
 }
 
+interface AutomationCardProps {
+  automation: Automation;
+  onToggle: (automation: Automation) => void;
+  onEdit: (automation: Automation) => void;
+  onDelete: (automation: Automation) => void;
+  onExecute: (automation: Automation) => void;
+  onViewLogs: (automation: Automation) => void;
+}
+
 function AutomationCard({
   automation,
   onToggle,
@@ -556,7 +604,7 @@ function AutomationCard({
   onDelete,
   onExecute,
   onViewLogs,
-}: any) {
+}: AutomationCardProps) {
   const [expanded, setExpanded] = useState(false);
 
   const trigger = TRIGGER_TYPES.find((t) => t.value === automation.trigger_type);
@@ -602,9 +650,7 @@ function AutomationCard({
             {automation.delay_minutes > 0 && (
               <>
                 <span className="text-gray-500">⏱️</span>
-                <span className="text-xs text-gray-400">
-                  Delay: {automation.delay_minutes} min
-                </span>
+                <span className="text-xs text-gray-400">Delay: {automation.delay_minutes} min</span>
               </>
             )}
           </div>
@@ -721,17 +767,33 @@ function AutomationCard({
   );
 }
 
-function AutomationModal({ title, formData, setFormData, onSave, onClose }: any) {
+interface AutomationFormData {
+  name: string;
+  description: string;
+  trigger_type: string;
+  trigger_conditions: string;
+  action_type: string;
+  action_config: string;
+  delay_minutes: number;
+  enabled: boolean;
+}
+
+interface AutomationModalProps {
+  title: string;
+  formData: AutomationFormData;
+  setFormData: (data: AutomationFormData) => void;
+  onSave: () => void;
+  onClose: () => void;
+}
+
+function AutomationModal({ title, formData, setFormData, onSave, onClose }: AutomationModalProps) {
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-6">
       <div className="bg-[#0A0A0A] border border-white/10 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <h2 className="text-2xl font-bold text-white">{title}</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-white/5 rounded-lg transition-all"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg transition-all">
             <X className="w-5 h-5 text-gray-400" />
           </button>
         </div>
@@ -754,9 +816,7 @@ function AutomationModal({ title, formData, setFormData, onSave, onClose }: any)
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Descrição
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Descrição</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -791,9 +851,7 @@ function AutomationModal({ title, formData, setFormData, onSave, onClose }: any)
             </label>
             <textarea
               value={formData.trigger_conditions}
-              onChange={(e) =>
-                setFormData({ ...formData, trigger_conditions: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, trigger_conditions: e.target.value })}
               className="w-full bg-black/30 border border-white/10 px-4 py-2 text-white rounded-lg focus:outline-none focus:border-[#C5A059] font-mono text-sm"
               rows={4}
               placeholder='{"amount_min": 50}'
@@ -832,17 +890,18 @@ function AutomationModal({ title, formData, setFormData, onSave, onClose }: any)
             />
             <p className="text-xs text-gray-500 mt-2">
               Exemplos:
-              <br />- Email: {`{"to": "user@example.com", "subject": "Bem-vindo", "template": "welcome"}`}
-              <br />- Tarefa: {`{"title": "Follow-up", "task_type": "follow_up", "priority": "alta"}`}
-              <br />- Notificação: {`{"title": "Nova Review", "message": "Review pendente", "type": "info"}`}
+              <br />- Email:{" "}
+              {`{"to": "user@example.com", "subject": "Bem-vindo", "template": "welcome"}`}
+              <br />- Tarefa:{" "}
+              {`{"title": "Follow-up", "task_type": "follow_up", "priority": "alta"}`}
+              <br />- Notificação:{" "}
+              {`{"title": "Nova Review", "message": "Review pendente", "type": "info"}`}
             </p>
           </div>
 
           {/* Delay */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Delay (minutos)
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Delay (minutos)</label>
             <input
               type="number"
               value={formData.delay_minutes}
@@ -893,15 +952,16 @@ function AutomationModal({ title, formData, setFormData, onSave, onClose }: any)
   );
 }
 
-function LogsModal({ automation, onClose }: any) {
+interface LogsModalProps {
+  automation: Automation;
+  onClose: () => void;
+}
+
+function LogsModal({ automation, onClose }: LogsModalProps) {
   const [logs, setLogs] = useState<AutomationLog[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadLogs();
-  }, []);
-
-  const loadLogs = async () => {
+  const loadLogs = useCallback(async () => {
     try {
       const response = await fetch(
         `/api/admin/automations/logs?automation_id=${automation.id}&limit=10`
@@ -911,12 +971,16 @@ function LogsModal({ automation, onClose }: any) {
       if (!response.ok) throw new Error(data.error);
 
       setLogs(data.logs);
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao carregar logs");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Erro ao carregar logs");
     } finally {
       setLoading(false);
     }
-  };
+  }, [automation.id]);
+
+  useEffect(() => {
+    loadLogs();
+  }, [loadLogs]);
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-6">
@@ -927,10 +991,7 @@ function LogsModal({ automation, onClose }: any) {
             <h2 className="text-2xl font-bold text-white mb-1">Logs de Execução</h2>
             <p className="text-sm text-gray-400">{automation.name}</p>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-white/5 rounded-lg transition-all"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg transition-all">
             <X className="w-5 h-5 text-gray-400" />
           </button>
         </div>
@@ -956,8 +1017,8 @@ function LogsModal({ automation, onClose }: any) {
                     log.status === "success"
                       ? "bg-green-500/10 border-green-500/20"
                       : log.status === "failed"
-                      ? "bg-red-500/10 border-red-500/20"
-                      : "bg-yellow-500/10 border-yellow-500/20"
+                        ? "bg-red-500/10 border-red-500/20"
+                        : "bg-yellow-500/10 border-yellow-500/20"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-3">
@@ -974,15 +1035,15 @@ function LogsModal({ automation, onClose }: any) {
                           log.status === "success"
                             ? "text-green-400"
                             : log.status === "failed"
-                            ? "text-red-400"
-                            : "text-yellow-400"
+                              ? "text-red-400"
+                              : "text-yellow-400"
                         }`}
                       >
                         {log.status === "success"
                           ? "Sucesso"
                           : log.status === "failed"
-                          ? "Falhou"
-                          : "Pendente"}
+                            ? "Falhou"
+                            : "Pendente"}
                       </span>
                     </div>
                     <span className="text-xs text-gray-400">

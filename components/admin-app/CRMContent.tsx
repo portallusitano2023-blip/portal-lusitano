@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   FiDollarSign,
   FiTrendingUp,
@@ -85,13 +85,8 @@ export default function CRMContent() {
   // Estado do drag-and-drop
   const [draggedLead, setDraggedLead] = useState<Lead | null>(null);
 
-  useEffect(() => {
-    fetchLeads();
-    setIsLoading(false);
-  }, []);
-
   // Buscar leads
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/crm");
       if (!res.ok) throw new Error("Failed to fetch leads");
@@ -104,7 +99,12 @@ export default function CRMContent() {
     } catch (error) {
       console.error("Error fetching leads:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchLeads();
+    setIsLoading(false);
+  }, [fetchLeads]);
 
   // Funções de lead
   const createLead = async () => {
@@ -231,12 +231,19 @@ export default function CRMContent() {
 
     if (editingLead) {
       await updateLead(editingLead.id, {
-        ...formData,
+        name: formData.name,
+        email: formData.email,
+        telefone: formData.telefone || null,
+        company: formData.company || null,
         estimated_value: parseInt(formData.estimated_value) * 100 || 0,
         probability: parseInt(formData.probability) || 50,
+        source_type: formData.source_type || null,
+        interests: formData.interests || null,
+        notes: formData.notes || null,
         budget_min: formData.budget_min ? parseInt(formData.budget_min) * 100 : null,
         budget_max: formData.budget_max ? parseInt(formData.budget_max) * 100 : null,
-      } as any);
+        next_follow_up: formData.next_follow_up || null,
+      });
     } else {
       await createLead();
     }
@@ -266,12 +273,8 @@ export default function CRMContent() {
             <div className="flex items-center gap-3">
               <FiTrendingUp className="text-[#C5A059]" size={32} />
               <div>
-                <h1 className="text-3xl font-bold text-white">
-                  CRM - Pipeline de Vendas
-                </h1>
-                <p className="text-gray-400">
-                  Gestão visual de leads e oportunidades
-                </p>
+                <h1 className="text-3xl font-bold text-white">CRM - Pipeline de Vendas</h1>
+                <p className="text-gray-400">Gestão visual de leads e oportunidades</p>
               </div>
             </div>
             <button
@@ -310,9 +313,7 @@ export default function CRMContent() {
               <FiTrendingUp className="text-emerald-500" size={24} />
               <h3 className="text-sm font-medium text-gray-400">Vendas Ganhas</h3>
             </div>
-            <p className="text-3xl font-bold text-emerald-500">
-              {formatCurrency(wonValue)}
-            </p>
+            <p className="text-3xl font-bold text-emerald-500">{formatCurrency(wonValue)}</p>
             <p className="text-xs text-gray-500 mt-1">{stats?.ganho || 0} negócios fechados</p>
           </div>
 
@@ -322,9 +323,7 @@ export default function CRMContent() {
               <h3 className="text-sm font-medium text-gray-400">Taxa de Conversão</h3>
             </div>
             <p className="text-3xl font-bold text-orange-500">
-              {stats && stats.total > 0
-                ? ((stats.ganho / stats.total) * 100).toFixed(1)
-                : "0.0"}%
+              {stats && stats.total > 0 ? ((stats.ganho / stats.total) * 100).toFixed(1) : "0.0"}%
             </p>
             <p className="text-xs text-gray-500 mt-1">Leads → Vendas</p>
           </div>
@@ -347,12 +346,14 @@ export default function CRMContent() {
                 onDrop={() => handleDrop(stage.key)}
               >
                 {/* Header da coluna */}
-                <div className={`p-4 border-b border-${stage.color}-500/20 bg-${stage.color}-500/5`}>
+                <div
+                  className={`p-4 border-b border-${stage.color}-500/20 bg-${stage.color}-500/5`}
+                >
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className={`font-semibold text-${stage.color}-500`}>
-                      {stage.label}
-                    </h3>
-                    <span className={`text-xs px-2 py-0.5 rounded-full bg-${stage.color}-500/20 text-${stage.color}-400 font-medium`}>
+                    <h3 className={`font-semibold text-${stage.color}-500`}>{stage.label}</h3>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full bg-${stage.color}-500/20 text-${stage.color}-400 font-medium`}
+                    >
                       {stageLeads.length}
                     </span>
                   </div>
@@ -374,12 +375,8 @@ export default function CRMContent() {
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
-                          <h4 className="text-white font-medium text-sm mb-1">
-                            {lead.name}
-                          </h4>
-                          {lead.company && (
-                            <p className="text-xs text-gray-500">{lead.company}</p>
-                          )}
+                          <h4 className="text-white font-medium text-sm mb-1">{lead.name}</h4>
+                          {lead.company && <p className="text-xs text-gray-500">{lead.company}</p>}
                         </div>
                         <div className="flex gap-1">
                           <button
@@ -411,18 +408,14 @@ export default function CRMContent() {
                       </div>
 
                       {lead.interests && (
-                        <p className="text-xs text-gray-500 mb-2 line-clamp-2">
-                          {lead.interests}
-                        </p>
+                        <p className="text-xs text-gray-500 mb-2 line-clamp-2">{lead.interests}</p>
                       )}
 
                       <div className="flex items-center justify-between pt-2 border-t border-white/10">
                         <span className="text-sm font-semibold text-[#C5A059]">
                           {formatCurrency(lead.estimated_value || 0)}
                         </span>
-                        <span className="text-xs text-gray-500">
-                          {lead.probability}% prob.
-                        </span>
+                        <span className="text-xs text-gray-500">{lead.probability}% prob.</span>
                       </div>
                     </div>
                   ))}
@@ -452,9 +445,7 @@ export default function CRMContent() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Nome *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Nome *</label>
                   <input
                     type="text"
                     required
@@ -465,9 +456,7 @@ export default function CRMContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Email *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Email *</label>
                   <input
                     type="email"
                     required
@@ -480,9 +469,7 @@ export default function CRMContent() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Telefone
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Telefone</label>
                   <input
                     type="text"
                     value={formData.telefone}
@@ -492,9 +479,7 @@ export default function CRMContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Empresa
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Empresa</label>
                   <input
                     type="text"
                     value={formData.company}
@@ -544,9 +529,7 @@ export default function CRMContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Origem
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Origem</label>
                   <select
                     value={formData.source_type}
                     onChange={(e) => setFormData({ ...formData, source_type: e.target.value })}
@@ -574,9 +557,7 @@ export default function CRMContent() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Notas
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Notas</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}

@@ -10,7 +10,6 @@ import {
   DollarSign,
   Users,
   UserPlus,
-  Calendar,
   BarChart3,
 } from "lucide-react";
 
@@ -111,15 +110,10 @@ export default function ForecastingContent() {
       height - padding - ((height - padding * 2) / maxValue) * value;
 
     // Pontos históricos
-    const historicalPoints = historical
-      .map((d, i) => `${xScale(i)},${yScale(d.value)}`)
-      .join(" ");
+    const historicalPoints = historical.map((d, i) => `${xScale(i)},${yScale(d.value)}`).join(" ");
 
     // Pontos previstos
-    const forecastPoints = [
-      historical[historical.length - 1],
-      ...forecast,
-    ]
+    const forecastPoints = [historical[historical.length - 1], ...forecast]
       .map((d, i) => `${xScale(historical.length - 1 + i)},${yScale(d.value)}`)
       .join(" ");
 
@@ -136,12 +130,7 @@ export default function ForecastingContent() {
         />
 
         {/* Linha histórica */}
-        <polyline
-          points={historicalPoints}
-          fill="none"
-          stroke="#C5A059"
-          strokeWidth="3"
-        />
+        <polyline points={historicalPoints} fill="none" stroke="#C5A059" strokeWidth="3" />
 
         {/* Área histórica */}
         <polygon
@@ -181,13 +170,7 @@ export default function ForecastingContent() {
 
         {/* Pontos */}
         {historical.map((d, i) => (
-          <circle
-            key={`h-${i}`}
-            cx={xScale(i)}
-            cy={yScale(d.value)}
-            r="4"
-            fill="#C5A059"
-          />
+          <circle key={`h-${i}`} cx={xScale(i)} cy={yScale(d.value)} r="4" fill="#C5A059" />
         ))}
 
         {forecast.map((d, i) => (
@@ -202,20 +185,10 @@ export default function ForecastingContent() {
         ))}
 
         {/* Labels */}
-        <text
-          x={padding}
-          y={height - 10}
-          fill="rgba(255,255,255,0.5)"
-          fontSize="12"
-        >
+        <text x={padding} y={height - 10} fill="rgba(255,255,255,0.5)" fontSize="12">
           {historical[0]?.date}
         </text>
-        <text
-          x={width - padding - 80}
-          y={height - 10}
-          fill="rgba(255,255,255,0.5)"
-          fontSize="12"
-        >
+        <text x={width - padding - 80} y={height - 10} fill="rgba(255,255,255,0.5)" fontSize="12">
           {forecast[forecast.length - 1]?.date}
         </text>
       </svg>
@@ -240,9 +213,7 @@ export default function ForecastingContent() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Métrica */}
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
-              Métrica
-            </label>
+            <label className="block text-sm font-medium text-gray-400 mb-2">Métrica</label>
             <select
               value={metric}
               onChange={(e) => setMetric(e.target.value as MetricType)}
@@ -256,9 +227,7 @@ export default function ForecastingContent() {
 
           {/* Dias históricos */}
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
-              Histórico (dias)
-            </label>
+            <label className="block text-sm font-medium text-gray-400 mb-2">Histórico (dias)</label>
             <select
               value={daysBack}
               onChange={(e) => setDaysBack(parseInt(e.target.value))}
@@ -274,9 +243,7 @@ export default function ForecastingContent() {
 
           {/* Dias futuros */}
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
-              Previsão (dias)
-            </label>
+            <label className="block text-sm font-medium text-gray-400 mb-2">Previsão (dias)</label>
             <select
               value={daysAhead}
               onChange={(e) => setDaysAhead(parseInt(e.target.value))}
@@ -375,7 +342,10 @@ export default function ForecastingContent() {
                 <span className="text-sm text-gray-400">Histórico</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-1 bg-[#C5A059] opacity-70 rounded" style={{ borderTop: "2px dashed #C5A059" }} />
+                <div
+                  className="w-4 h-1 bg-[#C5A059] opacity-70 rounded"
+                  style={{ borderTop: "2px dashed #C5A059" }}
+                />
                 <span className="text-sm text-gray-400">Previsão</span>
               </div>
             </div>
@@ -386,20 +356,16 @@ export default function ForecastingContent() {
             <div className="flex items-start gap-4">
               <AlertCircle className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">
-                  Sobre as Previsões
-                </h3>
+                <h3 className="text-lg font-bold text-white mb-2">Sobre as Previsões</h3>
                 <div className="text-sm text-gray-300 space-y-2">
                   <p>
-                    • As previsões são baseadas em{" "}
-                    <strong>análise de tendências lineares</strong> dos dados históricos
+                    • As previsões são baseadas em <strong>análise de tendências lineares</strong>{" "}
+                    dos dados históricos
                   </p>
                   <p>
                     • A <strong>confiança</strong> é calculada com base na volatilidade dos dados
                   </p>
-                  <p>
-                    • Previsões mais longas tendem a ter menor precisão
-                  </p>
+                  <p>• Previsões mais longas tendem a ter menor precisão</p>
                   <p className="text-yellow-400 mt-3">
                     ⚠️ Use estas previsões como <em>orientação</em>, não como garantia
                   </p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MapPin, Users, CreditCard, TrendingUp, HelpCircle } from "lucide-react";
 import PortugalHeatmap from "./PortugalHeatmap";
 
@@ -52,7 +52,7 @@ export default function GeoAnalyticsContent() {
   const currentMetric = metrics.find((m) => m.id === metric)!;
 
   // Carregar dados
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/admin/geo?metric=${metric}`);
@@ -67,11 +67,11 @@ export default function GeoAnalyticsContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [metric]);
 
   useEffect(() => {
     loadData();
-  }, [metric]);
+  }, [loadData]);
 
   return (
     <div className="space-y-6">
@@ -81,9 +81,7 @@ export default function GeoAnalyticsContent() {
           <MapPin className="w-8 h-8 text-[#C5A059]" />
           Análise Geográfica
         </h1>
-        <p className="text-gray-400">
-          Visualize a distribuição de dados por distrito de Portugal
-        </p>
+        <p className="text-gray-400">Visualize a distribuição de dados por distrito de Portugal</p>
       </div>
 
       {/* Seletor de Métrica */}
@@ -112,16 +110,10 @@ export default function GeoAnalyticsContent() {
                   ${isActive ? "bg-[#C5A059]" : "bg-white/10"}
                 `}
                 >
-                  <Icon
-                    className={`w-6 h-6 ${isActive ? "text-black" : "text-gray-400"}`}
-                  />
+                  <Icon className={`w-6 h-6 ${isActive ? "text-black" : "text-gray-400"}`} />
                 </div>
                 <div className="flex-1">
-                  <h3
-                    className={`text-lg font-bold ${
-                      isActive ? "text-white" : "text-gray-300"
-                    }`}
-                  >
+                  <h3 className={`text-lg font-bold ${isActive ? "text-white" : "text-gray-300"}`}>
                     {m.label}
                   </h3>
                   {!loading && isActive && (
@@ -154,7 +146,7 @@ export default function GeoAnalyticsContent() {
           title={`Mapa de Calor - ${currentMetric.label}`}
           subtitle={currentMetric.description}
           valueLabel={currentMetric.label.toLowerCase()}
-          colorScheme={currentMetric.color as any}
+          colorScheme={currentMetric.color as "blue" | "green" | "gold" | "red"}
         />
       )}
 
@@ -163,25 +155,19 @@ export default function GeoAnalyticsContent() {
         <div className="flex items-start gap-4">
           <HelpCircle className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
           <div>
-            <h3 className="text-lg font-bold text-white mb-2">
-              Como funcionam os mapas de calor?
-            </h3>
+            <h3 className="text-lg font-bold text-white mb-2">Como funcionam os mapas de calor?</h3>
             <div className="text-sm text-gray-300 space-y-2">
               <p>
-                • <strong>Leads:</strong> Baseado na localização preenchida no
-                formulário de ebook
+                • <strong>Leads:</strong> Baseado na localização preenchida no formulário de ebook
               </p>
               <p>
-                • <strong>Pagamentos:</strong> Transações bem-sucedidas associadas
-                a cada distrito
+                • <strong>Pagamentos:</strong> Transações bem-sucedidas associadas a cada distrito
               </p>
               <p>
-                • <strong>Clientes:</strong> Clientes únicos (emails) com pelo
-                menos 1 pagamento
+                • <strong>Clientes:</strong> Clientes únicos (emails) com pelo menos 1 pagamento
               </p>
               <p>
-                • <strong>Cavalos:</strong> Baseado na localização do proprietário
-                do cavalo
+                • <strong>Cavalos:</strong> Baseado na localização do proprietário do cavalo
               </p>
               <p className="text-gray-400 mt-3">
                 💡 <em>Distritos sem dados aparecem em cinza claro</em>

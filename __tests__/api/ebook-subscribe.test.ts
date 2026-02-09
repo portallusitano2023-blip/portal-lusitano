@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { NextRequest } from "next/server";
 
-// Store original modules for restoration
-const originalEnv = process.env;
-
 // Mock external dependencies before importing the route
 vi.mock("@/lib/resend", () => ({
   sendEmail: vi.fn().mockResolvedValue({ success: true, id: "test-id" }),
@@ -23,8 +20,8 @@ describe("POST /api/ebook-gratis/subscribe - Validation Tests", () => {
   beforeEach(async () => {
     vi.resetModules();
     // Re-import the module to reset the rate limiter
-    const module = await import("@/app/api/ebook-gratis/subscribe/route");
-    POST = module.POST;
+    const routeModule = await import("@/app/api/ebook-gratis/subscribe/route");
+    POST = routeModule.POST;
   });
 
   afterEach(() => {
@@ -131,17 +128,14 @@ describe("POST /api/ebook-gratis/subscribe - Validation Tests", () => {
   });
 
   it("should handle empty body gracefully", async () => {
-    const request = new NextRequest(
-      "http://localhost:3000/api/ebook-gratis/subscribe",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-forwarded-for": "unique-ip-" + Math.random(),
-        },
-        body: JSON.stringify({}),
-      }
-    );
+    const request = new NextRequest("http://localhost:3000/api/ebook-gratis/subscribe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-forwarded-for": "unique-ip-" + Math.random(),
+      },
+      body: JSON.stringify({}),
+    });
 
     const response = await POST(request);
     expect(response.status).toBe(400);
