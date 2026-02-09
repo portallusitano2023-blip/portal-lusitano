@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Search,
   Filter,
@@ -21,6 +22,7 @@ import { useCountUp } from "@/hooks/useCountUp";
 import { useInViewOnce } from "@/hooks/useInViewOnce";
 import { useTilt3D } from "@/hooks/useTilt3D";
 import { Cavalo } from "@/types/cavalo";
+import Pagination from "@/components/ui/Pagination";
 
 const sexoOptions = [
   { value: "todos", label: "Todos" },
@@ -56,7 +58,13 @@ const placeholderHorses = [
   "https://images.unsplash.com/photo-1598974357801-cbca100e65d3?w=800",
 ];
 
+const ITENS_POR_PAGINA = 20;
+
 export default function MarketplacePage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
   const [cavalos, setCavalos] = useState<Cavalo[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -129,6 +137,18 @@ export default function MarketplacePage() {
 
   const cavalosDestaque = cavalos.filter((c) => c.destaque);
   const outrosCavalos = cavalos.filter((c) => !c.destaque);
+
+  // Paginação para "Outros Cavalos"
+  const totalPaginas = Math.ceil(outrosCavalos.length / ITENS_POR_PAGINA);
+  const inicio = (currentPage - 1) * ITENS_POR_PAGINA;
+  const outrosCavalosPaginados = outrosCavalos.slice(inicio, inicio + ITENS_POR_PAGINA);
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", page.toString());
+    router.push(`?${params.toString()}`, { scroll: true });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Contadores animados
   const statsRef = useRef<HTMLDivElement>(null);
@@ -365,9 +385,16 @@ export default function MarketplacePage() {
             {/* Outros Cavalos */}
             {outrosCavalos.length > 0 && (
               <section>
-                <h2 className="text-2xl font-serif text-zinc-300 mb-8">Todos os Cavalos</h2>
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-serif text-zinc-300">
+                    Todos os Cavalos
+                    <span className="text-zinc-600 text-lg ml-3">
+                      ({outrosCavalos.length} {outrosCavalos.length === 1 ? "cavalo" : "cavalos"})
+                    </span>
+                  </h2>
+                </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {outrosCavalos.map((cavalo, index) => (
+                  {outrosCavalosPaginados.map((cavalo, index) => (
                     <CavaloCard
                       key={cavalo.id}
                       cavalo={cavalo}
@@ -380,6 +407,14 @@ export default function MarketplacePage() {
                     />
                   ))}
                 </div>
+
+                {/* Paginação */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPaginas}
+                  onPageChange={handlePageChange}
+                  className="mt-12"
+                />
               </section>
             )}
           </div>
