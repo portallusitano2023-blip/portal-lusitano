@@ -104,8 +104,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         await refreshCart(activeId);
         setIsCartOpen(true);
       } catch (e) {
-        console.log("Carrinho antigo falhou. A criar novo...");
-
+        // Carrinho expirado - criar novo silenciosamente
         localStorage.removeItem("shopify_cart_id");
         const retryCart = await createCart();
 

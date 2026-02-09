@@ -7,6 +7,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useToast } from "@/context/ToastContext";
 import Link from "next/link";
+import Image from "next/image";
 import { ProductListing } from "@/types/product";
 
 interface QuickViewProps {
@@ -131,10 +132,11 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
               <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Galeria de imagens */}
                 <div className="relative aspect-square bg-zinc-900">
-                  <img
+                  <Image
                     src={product.images[selectedImage]?.url}
                     alt={product.title}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
 
                   {/* Navegacao de imagens */}

@@ -3,6 +3,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { useTab } from "@/contexts/TabContext";
 import { X, LogOut, Menu } from "lucide-react";
+import Image from "next/image";
 import {
   FiHome,
   FiUsers,
@@ -385,7 +386,13 @@ export default function AdminAppPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#8B7042] rounded-xl flex items-center justify-center shadow-lg p-1.5">
-                <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                <Image
+                  src="/logo.png"
+                  alt="Logo"
+                  width={28}
+                  height={28}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
                 <h1 className="text-lg font-bold text-white">Portal Lusitano</h1>

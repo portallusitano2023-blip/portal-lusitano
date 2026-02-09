@@ -3,6 +3,7 @@
 import { client } from "@/lib/client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface CavaloSanity {
   nome: string;
@@ -91,12 +92,13 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* GALERIA INTERATIVA */}
           <div className="space-y-4">
-            <div className="aspect-[4/5] overflow-hidden border border-zinc-900 bg-zinc-900 shadow-2xl">
+            <div className="relative aspect-[4/5] overflow-hidden border border-zinc-900 bg-zinc-900 shadow-2xl">
               {fotoAtiva && (
-                <img
+                <Image
                   src={fotoAtiva}
                   alt={data.nome}
-                  className="w-full h-full object-cover transition-all duration-500"
+                  fill
+                  className="object-cover transition-all duration-500"
                 />
               )}
             </div>
@@ -105,9 +107,9 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                 <button
                   key={idx}
                   onClick={() => setFotoAtiva(url)}
-                  className={`aspect-square border-2 transition-all ${fotoAtiva === url ? "border-[#C5A059]" : "border-transparent opacity-50 hover:opacity-100"}`}
+                  className={`relative aspect-square border-2 transition-all ${fotoAtiva === url ? "border-[#C5A059]" : "border-transparent opacity-50 hover:opacity-100"}`}
                 >
-                  <img src={url} className="w-full h-full object-cover" alt={`Miniatura ${idx}`} />
+                  <Image src={url} fill className="object-cover" alt={`Miniatura ${idx}`} />
                 </button>
               ))}
             </div>
