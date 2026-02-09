@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Verificar autenticação
     const email = await verifySession();
@@ -14,16 +14,13 @@ export async function GET(req: NextRequest) {
     let totalViews = 0;
 
     try {
-      const { data: cavalos } = await supabase
-        .from("cavalos_venda")
-        .select("views_count");
+      const { data: cavalos } = await supabase.from("cavalos_venda").select("views_count");
 
-      const { data: eventos } = await supabase
-        .from("eventos")
-        .select("views_count");
+      const { data: eventos } = await supabase.from("eventos").select("views_count");
 
-      totalViews = (cavalos?.reduce((sum, c) => sum + (c.views_count || 0), 0) || 0) +
-                    (eventos?.reduce((sum, e) => sum + (e.views_count || 0), 0) || 0);
+      totalViews =
+        (cavalos?.reduce((sum, c) => sum + (c.views_count || 0), 0) || 0) +
+        (eventos?.reduce((sum, e) => sum + (e.views_count || 0), 0) || 0);
     } catch (e) {
       console.warn("Error fetching views:", e);
     }
@@ -32,9 +29,7 @@ export async function GET(req: NextRequest) {
     let totalLeads = 0;
 
     try {
-      const { count } = await supabase
-        .from("leads")
-        .select("*", { count: "exact", head: true });
+      const { count } = await supabase.from("leads").select("*", { count: "exact", head: true });
 
       totalLeads = count || 0;
     } catch (e) {
@@ -56,23 +51,18 @@ export async function GET(req: NextRequest) {
     }
 
     // Contar emails únicos (clientes únicos)
-    const uniqueCustomers = new Set(payments?.map(p => p.email)).size;
+    const uniqueCustomers = new Set(payments?.map((p) => p.email)).size;
 
     // 4. TAXA DE CONVERSÃO LEAD → CLIENTE
-    const leadToCustomerRate = (totalLeads || 0) > 0
-      ? ((uniqueCustomers / (totalLeads || 1)) * 100)
-      : 0;
+    const leadToCustomerRate =
+      (totalLeads || 0) > 0 ? (uniqueCustomers / (totalLeads || 1)) * 100 : 0;
 
     // 5. TAXA DE CONVERSÃO VISITANTE → LEAD
-    const visitorToLeadRate = totalViews > 0
-      ? (((totalLeads || 0) / totalViews) * 100)
-      : 0;
+    const visitorToLeadRate = totalViews > 0 ? ((totalLeads || 0) / totalViews) * 100 : 0;
 
     // 6. RECEITA POR LEAD (LTV - Lifetime Value por lead)
     const totalRevenue = payments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
-    const revenuePerLead = (totalLeads || 0) > 0
-      ? (totalRevenue / 100) / (totalLeads || 1)
-      : 0;
+    const revenuePerLead = (totalLeads || 0) > 0 ? totalRevenue / 100 / (totalLeads || 1) : 0;
 
     // 7. FUNIL DE CONVERSÃO
     const funnel = [
@@ -151,10 +141,20 @@ export async function GET(req: NextRequest) {
     }
 
     const monthlyChart = last12Months.map((month) => {
-      const [year, monthNum] = month.split("-");
+      const [, monthNum] = month.split("-");
       const monthNames = [
-        "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-        "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+        "Jan",
+        "Fev",
+        "Mar",
+        "Abr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Set",
+        "Out",
+        "Nov",
+        "Dez",
       ];
 
       return {
@@ -162,9 +162,13 @@ export async function GET(req: NextRequest) {
         fullMonth: month,
         leads: monthlyConversions[month].leads,
         customers: monthlyConversions[month].customers,
-        conversionRate: monthlyConversions[month].leads > 0
-          ? ((monthlyConversions[month].customers / monthlyConversions[month].leads) * 100).toFixed(1)
-          : "0.0",
+        conversionRate:
+          monthlyConversions[month].leads > 0
+            ? (
+                (monthlyConversions[month].customers / monthlyConversions[month].leads) *
+                100
+              ).toFixed(1)
+            : "0.0",
       };
     });
 

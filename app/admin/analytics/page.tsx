@@ -1,16 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  FiTrendingUp,
-  FiUsers,
-  FiDollarSign,
-  FiTarget,
-  FiArrowRight,
-  FiExternalLink,
-} from "react-icons/fi";
+import { FiTrendingUp, FiUsers, FiDollarSign, FiTarget, FiArrowRight } from "react-icons/fi";
 
 interface TrafficData {
   overview: {
@@ -70,7 +62,6 @@ interface SourcesData {
 }
 
 export default function AdminAnalyticsPage() {
-  const router = useRouter();
   const [traffic, setTraffic] = useState<TrafficData | null>(null);
   const [conversions, setConversions] = useState<ConversionsData | null>(null);
   const [sources, setSources] = useState<SourcesData | null>(null);
@@ -146,9 +137,7 @@ export default function AdminAnalyticsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-white">Analytics Completo</h1>
-              <p className="text-gray-400 mt-1">
-                Tráfego, Conversões e ROI por Canal
-              </p>
+              <p className="text-gray-400 mt-1">Tráfego, Conversões e ROI por Canal</p>
             </div>
             <Link
               href="/admin"
@@ -219,25 +208,17 @@ export default function AdminAnalyticsPage() {
 
             {/* Funil Visual */}
             <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-8 mb-12">
-              <h3 className="text-lg font-semibold text-white mb-6">
-                Visualização do Funil
-              </h3>
+              <h3 className="text-lg font-semibold text-white mb-6">Visualização do Funil</h3>
               <div className="space-y-4">
                 {conversions.funnel.map((stage, index) => (
                   <div key={index}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-3">
-                        <span className="text-white font-semibold">
-                          {stage.stage}
-                        </span>
-                        <span className="text-gray-400 text-sm">
-                          {stage.label}
-                        </span>
+                        <span className="text-white font-semibold">{stage.stage}</span>
+                        <span className="text-gray-400 text-sm">{stage.label}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-white font-bold">
-                          {formatNumber(stage.count)}
-                        </span>
+                        <span className="text-white font-bold">{formatNumber(stage.count)}</span>
                         <span className="text-[#C5A059] text-sm font-semibold">
                           {stage.percentage.toFixed(1)}%
                         </span>
@@ -268,9 +249,7 @@ export default function AdminAnalyticsPage() {
         {/* SECÇÃO: ROI POR CANAL */}
         {sources && (
           <>
-            <h2 className="text-2xl font-bold text-white mb-6">
-              💰 ROI por Canal de Marketing
-            </h2>
+            <h2 className="text-2xl font-bold text-white mb-6">💰 ROI por Canal de Marketing</h2>
 
             {sources.bestChannel && (
               <div className="bg-gradient-to-r from-[#C5A059]/20 to-[#C5A059]/5 border-2 border-[#C5A059]/30 rounded-lg p-6 mb-6">
@@ -302,19 +281,12 @@ export default function AdminAnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
               {/* Tabela ROI */}
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">
-                  ROI Detalhado por Canal
-                </h3>
+                <h3 className="text-lg font-semibold text-white mb-4">ROI Detalhado por Canal</h3>
                 <div className="space-y-3">
                   {sources.roiByChannel.slice(0, 5).map((channel, index) => (
-                    <div
-                      key={index}
-                      className="p-4 bg-white/5 rounded-lg border border-white/5"
-                    >
+                    <div key={index} className="p-4 bg-white/5 rounded-lg border border-white/5">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-semibold text-white">
-                          {channel.source}
-                        </span>
+                        <span className="font-semibold text-white">{channel.source}</span>
                         <span
                           className={`text-lg font-bold ${
                             channel.roi >= 0 ? "text-green-500" : "text-red-500"
@@ -327,15 +299,11 @@ export default function AdminAnalyticsPage() {
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div>
                           <p className="text-gray-500">Receita</p>
-                          <p className="text-white font-semibold">
-                            €{channel.revenue.toFixed(0)}
-                          </p>
+                          <p className="text-white font-semibold">€{channel.revenue.toFixed(0)}</p>
                         </div>
                         <div>
                           <p className="text-gray-500">Leads</p>
-                          <p className="text-white font-semibold">
-                            {channel.leads}
-                          </p>
+                          <p className="text-white font-semibold">{channel.leads}</p>
                         </div>
                         <div>
                           <p className="text-gray-500">€/Lead</p>
@@ -351,9 +319,7 @@ export default function AdminAnalyticsPage() {
 
               {/* Distribuição de Fontes */}
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">
-                  Distribuição de Tráfego
-                </h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Distribuição de Tráfego</h3>
                 <div className="space-y-4">
                   {sources.trafficSources.slice(0, 6).map((source, index) => {
                     const colors = [
@@ -368,9 +334,7 @@ export default function AdminAnalyticsPage() {
                     return (
                       <div key={index}>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm text-gray-300">
-                            {source.source}
-                          </span>
+                          <span className="text-sm text-gray-300">{source.source}</span>
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-semibold text-white">
                               {source.leads} leads
@@ -401,9 +365,7 @@ export default function AdminAnalyticsPage() {
         {/* SECÇÃO: TOP CONTENT */}
         {traffic && (
           <>
-            <h2 className="text-2xl font-bold text-white mb-6">
-              🔥 Conteúdo Mais Popular
-            </h2>
+            <h2 className="text-2xl font-bold text-white mb-6">🔥 Conteúdo Mais Popular</h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
               {/* Top Cavalos */}
@@ -418,9 +380,7 @@ export default function AdminAnalyticsPage() {
                       className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-[#C5A059] font-bold w-6">
-                          #{index + 1}
-                        </span>
+                        <span className="text-[#C5A059] font-bold w-6">#{index + 1}</span>
                         <span className="text-white">{cavalo.name}</span>
                       </div>
                       <span className="text-gray-400 text-sm">
@@ -443,9 +403,7 @@ export default function AdminAnalyticsPage() {
                       className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-purple-500 font-bold w-6">
-                          #{index + 1}
-                        </span>
+                        <span className="text-purple-500 font-bold w-6">#{index + 1}</span>
                         <span className="text-white">{evento.name}</span>
                       </div>
                       <span className="text-gray-400 text-sm">
@@ -462,16 +420,12 @@ export default function AdminAnalyticsPage() {
         {/* SECÇÃO: CONVERSÕES MENSAIS */}
         {conversions && (
           <>
-            <h2 className="text-2xl font-bold text-white mb-6">
-              📈 Evolução de Conversões
-            </h2>
+            <h2 className="text-2xl font-bold text-white mb-6">📈 Evolução de Conversões</h2>
 
             <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
               <div className="h-80 flex items-end justify-between gap-2">
                 {conversions.monthlyConversions.map((month, index) => {
-                  const maxLeads = Math.max(
-                    ...conversions.monthlyConversions.map((m) => m.leads)
-                  );
+                  const maxLeads = Math.max(...conversions.monthlyConversions.map((m) => m.leads));
                   const leadsHeight = maxLeads > 0 ? (month.leads / maxLeads) * 100 : 0;
                   const customersHeight =
                     month.leads > 0 ? (month.customers / month.leads) * leadsHeight : 0;
@@ -483,15 +437,9 @@ export default function AdminAnalyticsPage() {
                     >
                       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black/90 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
                         <div className="font-bold mb-1">{month.month}</div>
-                        <div className="text-green-400">
-                          Leads: {month.leads}
-                        </div>
-                        <div className="text-[#C5A059]">
-                          Clientes: {month.customers}
-                        </div>
-                        <div className="text-purple-400">
-                          Taxa: {month.conversionRate}%
-                        </div>
+                        <div className="text-green-400">Leads: {month.leads}</div>
+                        <div className="text-[#C5A059]">Clientes: {month.customers}</div>
+                        <div className="text-purple-400">Taxa: {month.conversionRate}%</div>
                       </div>
 
                       {/* Barra Leads */}
@@ -506,9 +454,7 @@ export default function AdminAnalyticsPage() {
                         />
                       </div>
 
-                      <p className="text-center text-xs text-gray-500 mt-2">
-                        {month.month}
-                      </p>
+                      <p className="text-center text-xs text-gray-500 mt-2">{month.month}</p>
                     </div>
                   );
                 })}

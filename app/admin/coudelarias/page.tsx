@@ -2,18 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  FiHome,
-  FiSearch,
-  FiPlus,
-  FiEdit2,
-  FiTrash2,
-  FiCheck,
-  FiX,
-  FiStar,
-  FiEye,
-  FiFilter,
-} from "react-icons/fi";
+import { FiHome, FiSearch, FiEdit2, FiTrash2, FiCheck, FiX, FiStar, FiEye } from "react-icons/fi";
 
 interface Coudelaria {
   id: string;

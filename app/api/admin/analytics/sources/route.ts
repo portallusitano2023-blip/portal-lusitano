@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Verificar autenticação
     const email = await verifySession();
@@ -11,7 +11,13 @@ export async function GET(req: NextRequest) {
     }
 
     // 1. FONTES DE TRÁFEGO (UTM da tabela leads)
-    let leads: { email: string; utm_source: string | null; utm_medium: string | null; utm_campaign: string | null; created_at: string }[] = [];
+    let leads: {
+      email: string;
+      utm_source: string | null;
+      utm_medium: string | null;
+      utm_campaign: string | null;
+      created_at: string;
+    }[] = [];
 
     try {
       const { data } = await supabase
@@ -37,9 +43,8 @@ export async function GET(req: NextRequest) {
 
     // Calcular percentagens
     Object.keys(sourceStats).forEach((source) => {
-      sourceStats[source].percentage = totalLeads > 0
-        ? (sourceStats[source].leads / totalLeads) * 100
-        : 0;
+      sourceStats[source].percentage =
+        totalLeads > 0 ? (sourceStats[source].leads / totalLeads) * 100 : 0;
     });
 
     const trafficSources = Object.entries(sourceStats)
@@ -87,31 +92,24 @@ export async function GET(req: NextRequest) {
           source,
           revenue: parseFloat(revenueInEuros.toFixed(2)),
           leads: leadsFromSource,
-          revenuePerLead: leadsFromSource > 0
-            ? parseFloat((revenueInEuros / leadsFromSource).toFixed(2))
-            : 0,
+          revenuePerLead:
+            leadsFromSource > 0 ? parseFloat((revenueInEuros / leadsFromSource).toFixed(2)) : 0,
           // ROI = (Receita - Custo) / Custo * 100
           // Assumimos custo estimado por lead
           estimatedCost: leadsFromSource * 5, // €5 por lead (estimativa)
-          roi: leadsFromSource > 0
-            ? parseFloat((((revenueInEuros - (leadsFromSource * 5)) / (leadsFromSource * 5)) * 100).toFixed(1))
-            : 0,
+          roi:
+            leadsFromSource > 0
+              ? parseFloat(
+                  (((revenueInEuros - leadsFromSource * 5) / (leadsFromSource * 5)) * 100).toFixed(
+                    1
+                  )
+                )
+              : 0,
         };
       })
       .sort((a, b) => b.revenue - a.revenue);
 
-    // 3. MÉDIAS POR CANAL
-    const channelLabels: Record<string, string> = {
-      google: "Google (Orgânico)",
-      "google-ads": "Google Ads (Pago)",
-      facebook: "Facebook",
-      instagram: "Instagram",
-      email: "Email Marketing",
-      direct: "Direto",
-      referral: "Referências",
-    };
-
-    // 4. TENDÊNCIAS (últimos 6 meses)
+    // 3. TENDÊNCIAS (últimos 6 meses)
     const monthlyTrends: Record<string, Record<string, number>> = {};
     const last6Months: string[] = [];
 
@@ -134,8 +132,21 @@ export async function GET(req: NextRequest) {
     });
 
     const trendsChart = last6Months.map((month) => {
-      const [year, monthNum] = month.split("-");
-      const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+      const [, monthNum] = month.split("-");
+      const monthNames = [
+        "Jan",
+        "Fev",
+        "Mar",
+        "Abr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Set",
+        "Out",
+        "Nov",
+        "Dez",
+      ];
 
       return {
         month: monthNames[parseInt(monthNum) - 1],
@@ -145,11 +156,10 @@ export async function GET(req: NextRequest) {
     });
 
     // 5. MELHOR CANAL (por ROI)
-    const bestChannel = roiByChannel.length > 0
-      ? roiByChannel.reduce((best, current) =>
-          current.roi > best.roi ? current : best
-        )
-      : null;
+    const bestChannel =
+      roiByChannel.length > 0
+        ? roiByChannel.reduce((best, current) => (current.roi > best.roi ? current : best))
+        : null;
 
     return NextResponse.json({
       trafficSources,
@@ -157,7 +167,9 @@ export async function GET(req: NextRequest) {
       trendsChart,
       bestChannel,
       totalLeads,
-      totalRevenue: parseFloat((Object.values(revenueBySource).reduce((sum, r) => sum + r, 0) / 100).toFixed(2)),
+      totalRevenue: parseFloat(
+        (Object.values(revenueBySource).reduce((sum, r) => sum + r, 0) / 100).toFixed(2)
+      ),
     });
   } catch (error) {
     console.error("Sources analytics error:", error);

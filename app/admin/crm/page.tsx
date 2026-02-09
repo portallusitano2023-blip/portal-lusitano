@@ -281,11 +281,6 @@ export default function CRMPage() {
     })}`;
   };
 
-  const getStageColor = (stage: string) => {
-    const stageConfig = STAGES.find((s) => s.key === stage);
-    return stageConfig?.color || "gray";
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">

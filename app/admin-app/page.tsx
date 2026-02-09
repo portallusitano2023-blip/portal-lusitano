@@ -3,7 +3,6 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { useTab } from "@/contexts/TabContext";
 import { X, LogOut, Menu } from "lucide-react";
-import { useRouter } from "next/navigation";
 import {
   FiHome,
   FiUsers,
@@ -210,7 +209,6 @@ const MENU_ITEMS: MenuItem[] = [
 
 export default function AdminAppPage() {
   const { tabs, activeTabId, addTab, closeTab, setActiveTabId } = useTab();
-  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
@@ -251,7 +249,7 @@ export default function AdminAppPage() {
 
       setIsAuthenticated(true);
       handleMenuClick(MENU_ITEMS[0]); // Abrir dashboard
-    } catch (error) {
+    } catch {
       setLoginError("Erro ao conectar ao servidor");
     } finally {
       setIsLoggingIn(false);
@@ -405,7 +403,6 @@ export default function AdminAppPage() {
         {/* Menu Items com melhor espaçamento */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           {MENU_ITEMS.map((item) => {
-            const Icon = item.icon;
             const isActive = tabs.some((t) => t.id === item.id);
             const isCurrentTab = activeTabId === item.id;
 

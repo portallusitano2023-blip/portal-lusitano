@@ -1,8 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Instagram, Check, X, Loader2, ExternalLink, Download, Mail, Lock, LogOut } from "lucide-react";
-import Image from "next/image";
+import {
+  Instagram,
+  Check,
+  X,
+  Loader2,
+  ExternalLink,
+  Download,
+  Mail,
+  Lock,
+  LogOut,
+} from "lucide-react";
 
 interface InstagramUpload {
   id: string;
@@ -44,7 +53,7 @@ export default function AdminInstagramPage() {
       const response = await fetch("/api/auth/check");
       const data = await response.json();
       setAuthenticated(data.authenticated);
-    } catch (error) {
+    } catch {
       setAuthenticated(false);
     } finally {
       setCheckingAuth(false);
@@ -71,7 +80,7 @@ export default function AdminInstagramPage() {
       }
 
       setAuthenticated(true);
-    } catch (error) {
+    } catch {
       setLoginError("Erro ao conectar ao servidor");
     } finally {
       setLoggingIn(false);
@@ -156,18 +165,14 @@ export default function AdminInstagramPage() {
               </div>
             </div>
 
-            <h1 className="text-2xl font-serif text-white text-center mb-2">
-              Admin Instagram
-            </h1>
+            <h1 className="text-2xl font-serif text-white text-center mb-2">Admin Instagram</h1>
             <p className="text-zinc-400 text-center mb-8">
               Acesso restrito ao painel de administração
             </p>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Email
-                </label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Email</label>
                 <input
                   type="email"
                   value={loginForm.email}
@@ -179,9 +184,7 @@ export default function AdminInstagramPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Password
-                </label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Password</label>
                 <input
                   type="password"
                   value={loginForm.password}
@@ -205,8 +208,7 @@ export default function AdminInstagramPage() {
               >
                 {loggingIn ? (
                   <>
-                    <Loader2 className="animate-spin" size={20} />
-                    A entrar...
+                    <Loader2 className="animate-spin" size={20} />A entrar...
                   </>
                 ) : (
                   "Entrar"
@@ -319,10 +321,7 @@ export default function AdminInstagramPage() {
         ) : (
           <div className="space-y-6">
             {filteredUploads.map((upload) => (
-              <div
-                key={upload.id}
-                className="bg-zinc-900/50 border border-white/10 rounded-xl p-6"
-              >
+              <div key={upload.id} className="bg-zinc-900/50 border border-white/10 rounded-xl p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
                   <div>
@@ -332,8 +331,8 @@ export default function AdminInstagramPage() {
                           upload.status === "pending"
                             ? "bg-orange-500/20 text-orange-400"
                             : upload.status === "published"
-                            ? "bg-green-500/20 text-green-400"
-                            : "bg-zinc-600/20 text-zinc-400"
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-zinc-600/20 text-zinc-400"
                         }`}
                       >
                         {upload.status}
@@ -398,21 +397,11 @@ export default function AdminInstagramPage() {
                         return (
                           <div key={idx} className="bg-black rounded-lg overflow-hidden">
                             {isImage ? (
-                              <img
-                                src={url}
-                                alt={`Media ${idx + 1}`}
-                                className="w-full h-auto"
-                              />
+                              <img src={url} alt={`Media ${idx + 1}`} className="w-full h-auto" />
                             ) : isVideo ? (
-                              <video
-                                src={url}
-                                controls
-                                className="w-full h-auto"
-                              />
+                              <video src={url} controls className="w-full h-auto" />
                             ) : (
-                              <div className="p-4 text-zinc-400 text-sm">
-                                Ficheiro {idx + 1}
-                              </div>
+                              <div className="p-4 text-zinc-400 text-sm">Ficheiro {idx + 1}</div>
                             )}
                             <div className="p-3 bg-zinc-800 flex items-center justify-between">
                               <span className="text-zinc-400 text-xs">
@@ -495,9 +484,7 @@ export default function AdminInstagramPage() {
                     )}
 
                     {/* Session ID */}
-                    <div className="text-xs text-zinc-600">
-                      Session: {upload.session_id}
-                    </div>
+                    <div className="text-xs text-zinc-600">Session: {upload.session_id}</div>
                   </div>
                 </div>
 

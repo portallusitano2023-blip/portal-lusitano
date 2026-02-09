@@ -2,18 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  ArrowLeft,
-  Star,
-  MapPin,
-  X,
-  Euro,
-  Search,
-} from "lucide-react";
+import { Plus, Edit, Trash2, Eye, ArrowLeft, Star, MapPin, X, Search } from "lucide-react";
 
 interface Cavalo {
   id: string;
@@ -106,9 +95,7 @@ export default function AdminCavalosPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const url = editingCavalo
-        ? `/api/admin/cavalos/${editingCavalo.id}`
-        : "/api/admin/cavalos";
+      const url = editingCavalo ? `/api/admin/cavalos/${editingCavalo.id}` : "/api/admin/cavalos";
       const method = editingCavalo ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -252,9 +239,7 @@ export default function AdminCavalosPage() {
                 <h1 className="text-2xl font-bold text-gray-900">
                   🐴 Marketplace - Cavalos à Venda
                 </h1>
-                <p className="text-gray-600 text-sm">
-                  Gerir anúncios de cavalos no marketplace
-                </p>
+                <p className="text-gray-600 text-sm">Gerir anúncios de cavalos no marketplace</p>
               </div>
             </div>
             <button
@@ -356,17 +341,15 @@ export default function AdminCavalosPage() {
                         <div>
                           <p className="font-medium text-gray-900">{cavalo.nome}</p>
                           {cavalo.linhagem && (
-                            <p className="text-sm text-amber-600">
-                              Linhagem {cavalo.linhagem}
-                            </p>
+                            <p className="text-sm text-amber-600">Linhagem {cavalo.linhagem}</p>
                           )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-gray-600 text-sm">
-                        {sexoOptions.find((s) => s.value === cavalo.sexo)?.label} •{" "}
-                        {cavalo.idade} anos • {cavalo.cor}
+                        {sexoOptions.find((s) => s.value === cavalo.sexo)?.label} • {cavalo.idade}{" "}
+                        anos • {cavalo.cor}
                       </p>
                       <p className="text-gray-500 text-sm flex items-center gap-1">
                         <MapPin size={12} />
@@ -390,9 +373,7 @@ export default function AdminCavalosPage() {
                         <option value="inativo">Inativo</option>
                       </select>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">
-                      {cavalo.views_count || 0}
-                    </td>
+                    <td className="px-6 py-4 text-gray-600">{cavalo.views_count || 0}</td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
                         <Link
@@ -465,9 +446,7 @@ export default function AdminCavalosPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Sexo *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Sexo *</label>
                   <select
                     value={formData.sexo}
                     onChange={(e) => setFormData({ ...formData, sexo: e.target.value })}
@@ -494,9 +473,7 @@ export default function AdminCavalosPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Cor
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Cor</label>
                   <input
                     type="text"
                     value={formData.cor}
@@ -521,9 +498,7 @@ export default function AdminCavalosPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Linhagem
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Linhagem</label>
                   <input
                     type="text"
                     value={formData.linhagem}
@@ -551,9 +526,7 @@ export default function AdminCavalosPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Preço (€)
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Preço (€)</label>
                   <input
                     type="number"
                     value={formData.preco}
@@ -590,9 +563,7 @@ export default function AdminCavalosPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Região
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Região</label>
                   <input
                     type="text"
                     value={formData.regiao}
