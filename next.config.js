@@ -110,6 +110,16 @@ const nextConfig = {
           },
           {
             key: "Content-Security-Policy",
+            // NOTA: 'unsafe-inline' é necessário para:
+            // - Google Tag Manager (GTM) e Google Analytics
+            // - Facebook Pixel
+            // - Scripts inline do Next.js em desenvolvimento
+            // FUTURO: Considerar migração para nonces (via middleware.ts) para
+            // melhorar segurança eliminando 'unsafe-inline'. Isto requer:
+            // 1. Criar middleware.ts com geração de nonce único por request
+            // 2. Injetar nonce em todos os scripts via _document.tsx
+            // 3. Adicionar nonce aos scripts de tracking (GTM, Analytics)
+            // Por agora mantemos 'unsafe-inline' para garantir funcionalidade.
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net",
