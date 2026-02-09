@@ -227,7 +227,7 @@ export default function DirectorioPage() {
                     <Users className="text-zinc-400" size={24} />
                     <h2 className="text-2xl font-serif text-zinc-300">
                       Outras Coudelarias
-                      <span className="text-zinc-600 text-lg ml-3">
+                      <span className="text-zinc-400 text-lg ml-3">
                         ({normalCoudelarias.length}{" "}
                         {normalCoudelarias.length === 1 ? "coudelaria" : "coudelarias"})
                       </span>
@@ -254,7 +254,7 @@ export default function DirectorioPage() {
             {coudelarias.length === 0 && (
               <div className="text-center py-20">
                 <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Search className="text-zinc-600" size={32} />
+                  <Search className="text-zinc-400" size={32} />
                 </div>
                 <h3 className="text-xl font-serif text-white mb-2">
                   Nenhuma coudelaria encontrada

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { verifySession } from "@/lib/auth";
 
 // Eventos CONFIRMADOS oficialmente para 2026 (com fontes verificadas)
 const eventosConfirmados2026 = [
-  "iii-salao-cavalo-lusitano-2026",  // Confirmado APSL + Equisport
-  "feira-cavalo-ponte-lima-2026",     // Cartaz apresentado na Golegã 2025
-  "galas-epae-2026",                  // Programa contínuo oficial
+  "iii-salao-cavalo-lusitano-2026", // Confirmado APSL + Equisport
+  "feira-cavalo-ponte-lima-2026", // Cartaz apresentado na Golegã 2025
+  "galas-epae-2026", // Programa contínuo oficial
 ];
 
 // Eventos a ELIMINAR (não confirmados oficialmente para 2026)
@@ -28,6 +29,11 @@ const eventosParaEliminar2026 = [
 
 export async function POST() {
   try {
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
     const results = {
       confirmados: 0,
       eliminados: 0,
@@ -36,10 +42,7 @@ export async function POST() {
 
     // 1. ELIMINAR eventos 2026 não confirmados
     for (const slug of eventosParaEliminar2026) {
-      const { error } = await supabase
-        .from("eventos")
-        .delete()
-        .eq("slug", slug);
+      const { error } = await supabase.from("eventos").delete().eq("slug", slug);
 
       if (error) {
         results.errors.push(`Erro ao eliminar ${slug}: ${error.message}`);
@@ -79,15 +82,17 @@ export async function POST() {
     });
   } catch (error) {
     console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
 
 // GET - Ver status atual
 export async function GET() {
+  const email = await verifySession();
+  if (!email) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
+
   const { data, error } = await supabase
     .from("eventos")
     .select("titulo, slug, data_inicio, confirmado")

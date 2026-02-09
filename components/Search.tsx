@@ -224,7 +224,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                           <p className="text-sm text-zinc-500 line-clamp-1">{result.description}</p>
                         )}
                       </div>
-                      <span className="text-xs text-zinc-600 uppercase tracking-wider">
+                      <span className="text-xs text-zinc-400 uppercase tracking-wider">
                         {result.type === "product"
                           ? language === "pt"
                             ? "Produto"
@@ -249,7 +249,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               </div>
             ) : query.length < 2 ? (
               <div className="py-12 text-center">
-                <p className="text-zinc-600 text-sm">
+                <p className="text-zinc-400 text-sm">
                   {language === "pt"
                     ? "Digite pelo menos 2 caracteres"
                     : "Type at least 2 characters"}
@@ -259,7 +259,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
           </div>
 
           {/* Atalhos */}
-          <div className="px-4 py-3 border-t border-white/5 flex items-center gap-4 text-xs text-zinc-600">
+          <div className="px-4 py-3 border-t border-white/5 flex items-center gap-4 text-xs text-zinc-400">
             <span className="flex items-center gap-1">
               <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-zinc-500">ESC</kbd>
               {language === "pt" ? "para fechar" : "to close"}

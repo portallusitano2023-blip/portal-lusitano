@@ -311,7 +311,7 @@ export default function EventosPage() {
           </div>
         ) : eventos.length === 0 ? (
           <div className="text-center py-20">
-            <Calendar className="mx-auto text-zinc-600 mb-4" size={48} />
+            <Calendar className="mx-auto text-zinc-400 mb-4" size={48} />
             <h3 className="text-xl font-serif text-white mb-2">Nenhum evento encontrado</h3>
             <p className="text-zinc-500">Não há eventos agendados para os filtros selecionados.</p>
           </div>
@@ -320,7 +320,7 @@ export default function EventosPage() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-serif text-zinc-300">
                 Todos os Eventos
-                <span className="text-zinc-600 text-lg ml-3">
+                <span className="text-zinc-400 text-lg ml-3">
                   ({eventosOrdenados.length} {eventosOrdenados.length === 1 ? "evento" : "eventos"})
                 </span>
               </h2>
@@ -623,7 +623,7 @@ function EventoCard({
       </div>
 
       {/* Arrow */}
-      <div className="flex items-center px-4 text-zinc-600 group-hover:text-[#C5A059] transition-colors">
+      <div className="flex items-center px-4 text-zinc-400 group-hover:text-[#C5A059] transition-colors">
         <ChevronRight size={24} />
       </div>
     </button>

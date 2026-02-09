@@ -44,7 +44,7 @@ export function NavIcons({
         aria-label={language === "pt" ? "Mudar idioma" : "Change language"}
       >
         <span className={language === "pt" ? "text-[#C5A059]" : ""}>PT</span>
-        <span className="mx-1 opacity-30 text-zinc-600">|</span>
+        <span className="mx-1 opacity-30 text-zinc-400">|</span>
         <span className={language === "en" ? "text-[#C5A059]" : ""}>EN</span>
       </button>
 

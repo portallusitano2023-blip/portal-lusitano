@@ -12,6 +12,12 @@ interface DiagnosticoCheck {
 }
 
 export async function GET(req: NextRequest) {
+  // Auth gate - only admins can access diagnostics
+  const sessionEmail = await verifySession();
+  if (!sessionEmail) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
+
   const diagnostico: {
     timestamp: string;
     checks: Record<string, DiagnosticoCheck>;
@@ -22,19 +28,11 @@ export async function GET(req: NextRequest) {
   };
 
   // 1. VERIFICAR AUTENTICAÇÃO
-  try {
-    const email = await verifySession();
-    diagnostico.checks.autenticacao = {
-      status: email ? "✅ OK" : "❌ FALHOU",
-      email: email || null,
-      message: email ? "Sessão válida" : "Sem sessão - precisa fazer login",
-    };
-  } catch (error) {
-    diagnostico.checks.autenticacao = {
-      status: "❌ ERRO",
-      message: error instanceof Error ? error.message : "Erro desconhecido",
-    };
-  }
+  diagnostico.checks.autenticacao = {
+    status: "✅ OK",
+    email: sessionEmail,
+    message: "Sessão válida",
+  };
 
   // 2. VERIFICAR CONEXÃO SUPABASE
   try {

@@ -1,21 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { verifySession } from "@/lib/auth";
 
 // PATCH - Atualizar status de uma review
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
     const { id } = await params;
     const body = await request.json();
     const { status } = body;
 
     if (!status || !["approved", "rejected", "pending"].includes(status)) {
-      return NextResponse.json(
-        { error: "Status inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Status inválido" }, { status: 400 });
     }
 
     const { data, error } = await supabase
@@ -30,10 +30,7 @@ export async function PATCH(
 
     if (error) {
       console.error("Erro ao atualizar review:", error);
-      return NextResponse.json(
-        { error: "Erro ao atualizar review" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Erro ao atualizar review" }, { status: 500 });
     }
 
     // Se aprovada, atualizar média da coudelaria
@@ -44,10 +41,7 @@ export async function PATCH(
     return NextResponse.json({ review: data });
   } catch (error) {
     console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
 
@@ -57,28 +51,24 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
     const { id } = await params;
 
-    const { error } = await supabase
-      .from("reviews")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("reviews").delete().eq("id", id);
 
     if (error) {
       console.error("Erro ao eliminar review:", error);
-      return NextResponse.json(
-        { error: "Erro ao eliminar review" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Erro ao eliminar review" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
 

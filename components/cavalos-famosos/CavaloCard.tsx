@@ -76,7 +76,7 @@ export function CavaloCard({ cavalo, onClick, variant = "destaque" }: CavaloCard
     >
       <div className="flex items-start gap-4">
         <div className="w-16 h-16 bg-zinc-800 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span className="text-2xl font-serif text-zinc-600">{cavalo.nome.charAt(0)}</span>
+          <span className="text-2xl font-serif text-zinc-400">{cavalo.nome.charAt(0)}</span>
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-white group-hover:text-[#C5A059] transition-colors truncate">
@@ -97,7 +97,7 @@ export function CavaloCard({ cavalo, onClick, variant = "destaque" }: CavaloCard
       </div>
       <p className="text-sm text-zinc-500 mt-3 line-clamp-2">{cavalo.legado}</p>
       {cavalo.influenciaGenetica && (
-        <div className="mt-2 text-xs text-zinc-600">
+        <div className="mt-2 text-xs text-zinc-400">
           Influência genética: <span className="text-[#C5A059]">{cavalo.influenciaGenetica}%</span>
         </div>
       )}

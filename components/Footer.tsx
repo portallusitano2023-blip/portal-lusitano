@@ -41,7 +41,7 @@ export default function Footer() {
               <span className="font-serif text-3xl sm:text-4xl text-white tracking-tighter group-hover:text-[#C5A059] transition-all duration-500">
                 PORTAL <span className="italic font-light">LUSITANO</span>
               </span>
-              <span className="text-[9px] text-zinc-600 uppercase tracking-[0.5em] block mt-2 font-bold group-hover:text-zinc-400 transition-colors">
+              <span className="text-[9px] text-zinc-400 uppercase tracking-[0.5em] block mt-2 font-bold group-hover:text-zinc-400 transition-colors">
                 The Noble Legacy · Est. 2023
               </span>
             </Link>
