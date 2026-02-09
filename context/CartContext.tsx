@@ -46,7 +46,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const cartData = await getCart(id);
       if (cartData) {
-        setCheckoutUrl(cartData.checkoutUrl); 
+        setCheckoutUrl(cartData.checkoutUrl);
 
         if (cartData.lines) {
           interface CartEdge {
@@ -72,8 +72,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
           setCart(formattedCart);
         }
       }
-    } catch (e) {
-      console.error("Erro ao atualizar carrinho:", e);
+    } catch {
+      // Silently handle cart refresh errors
     }
   };
 
@@ -95,27 +95,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Passo 2: Tenta adicionar ao carrinho atual
     if (activeId) {
       try {
-        result = await addToCart(activeId, variantId);
-        
+        result = await addToCart(activeId, variantId, quantity);
+
         if (!result) {
           throw new Error("Carrinho expirado");
         }
 
         await refreshCart(activeId);
         setIsCartOpen(true);
-
       } catch (e) {
         console.log("Carrinho antigo falhou. A criar novo...");
-        
+
         localStorage.removeItem("shopify_cart_id");
         const retryCart = await createCart();
-        
+
         if (retryCart) {
           activeId = retryCart.id;
           setCartId(retryCart.id);
           localStorage.setItem("shopify_cart_id", retryCart.id);
-          
-          await addToCart(retryCart.id, variantId);
+
+          await addToCart(retryCart.id, variantId, quantity);
           await refreshCart(retryCart.id);
           setIsCartOpen(true);
         }

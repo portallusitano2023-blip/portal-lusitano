@@ -3,10 +3,8 @@
 import { useState, useEffect } from "react";
 import {
   TrendingUp,
-  TrendingDown,
   DollarSign,
   Mail,
-  ShoppingCart,
   Users,
   Calendar,
   Star,
@@ -105,14 +103,9 @@ interface SortableWidgetProps {
 }
 
 const SortableWidget = ({ id, children }: SortableWidgetProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -140,7 +133,7 @@ const SortableWidget = ({ id, children }: SortableWidgetProps) => {
 // WIDGETS COMPONENTS
 // ========================================
 
-const RevenueWidget = ({ data }: { data: any }) => {
+const RevenueWidget = ({ data }: { data: DashboardData["revenue"] }) => {
   const growth = data?.growth ?? 0;
   const isPositive = growth >= 0;
 
@@ -179,8 +172,11 @@ const RevenueWidget = ({ data }: { data: any }) => {
           ) : (
             <ArrowDownRight className="w-4 h-4 text-red-400" />
           )}
-          <span className={`text-sm font-semibold ${isPositive ? "text-green-400" : "text-red-400"}`}>
-            {isPositive ? "+" : ""}{growth.toFixed(1)}% vs mês anterior
+          <span
+            className={`text-sm font-semibold ${isPositive ? "text-green-400" : "text-red-400"}`}
+          >
+            {isPositive ? "+" : ""}
+            {growth.toFixed(1)}% vs mês anterior
           </span>
         </div>
       </div>
@@ -188,7 +184,7 @@ const RevenueWidget = ({ data }: { data: any }) => {
   );
 };
 
-const MessagesWidget = ({ data }: { data: any }) => {
+const MessagesWidget = ({ data }: { data: DashboardData["messages"] }) => {
   const urgency = data.unread > 10 ? "high" : data.unread > 5 ? "medium" : "low";
 
   return (
@@ -213,10 +209,15 @@ const MessagesWidget = ({ data }: { data: any }) => {
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span className="text-gray-400">Não Lidas</span>
-          <span className={`font-semibold ${
-            urgency === "high" ? "text-red-400" :
-            urgency === "medium" ? "text-yellow-400" : "text-gray-400"
-          }`}>
+          <span
+            className={`font-semibold ${
+              urgency === "high"
+                ? "text-red-400"
+                : urgency === "medium"
+                  ? "text-yellow-400"
+                  : "text-gray-400"
+            }`}
+          >
             {data.unread}
           </span>
         </div>
@@ -235,9 +236,14 @@ const MessagesWidget = ({ data }: { data: any }) => {
   );
 };
 
-const QuickStatsWidget = ({ data }: { data: any }) => {
+const QuickStatsWidget = ({ data }: { data: DashboardData["quickStats"] }) => {
   const stats = [
-    { label: "Receita Hoje", value: `€${(data.todayRevenue / 100).toFixed(0)}`, icon: DollarSign, color: "green" },
+    {
+      label: "Receita Hoje",
+      value: `€${(data.todayRevenue / 100).toFixed(0)}`,
+      icon: DollarSign,
+      color: "green",
+    },
     { label: "Novos Leads", value: data.newLeads, icon: Users, color: "blue" },
     { label: "Reviews Pendentes", value: data.pendingReviews, icon: Star, color: "yellow" },
     { label: "Utilizadores Ativos", value: data.activeUsers, icon: Eye, color: "purple" },
@@ -263,9 +269,14 @@ const QuickStatsWidget = ({ data }: { data: any }) => {
           };
 
           return (
-            <div key={index} className="bg-black/20 rounded-lg p-3 hover:bg-black/30 transition-colors">
+            <div
+              key={index}
+              className="bg-black/20 rounded-lg p-3 hover:bg-black/30 transition-colors"
+            >
               <div className="flex items-center gap-2 mb-2">
-                <div className={`w-8 h-8 ${colorMap[stat.color]} rounded-lg flex items-center justify-center`}>
+                <div
+                  className={`w-8 h-8 ${colorMap[stat.color]} rounded-lg flex items-center justify-center`}
+                >
                   <Icon className="w-4 h-4" />
                 </div>
               </div>
@@ -279,7 +290,7 @@ const QuickStatsWidget = ({ data }: { data: any }) => {
   );
 };
 
-const RecentActivityWidget = ({ data }: { data: any[] }) => {
+const RecentActivityWidget = ({ data }: { data: DashboardData["recentActivity"] }) => {
   const getIconColor = (type: string) => {
     const map: Record<string, string> = {
       payment: "text-green-400",
@@ -304,7 +315,10 @@ const RecentActivityWidget = ({ data }: { data: any[] }) => {
 
       <div className="space-y-3 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
         {data.map((activity) => (
-          <div key={activity.id} className="flex items-start gap-3 p-3 bg-black/20 rounded-lg hover:bg-black/30 transition-colors">
+          <div
+            key={activity.id}
+            className="flex items-start gap-3 p-3 bg-black/20 rounded-lg hover:bg-black/30 transition-colors"
+          >
             <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0">
               <span className={`text-lg ${getIconColor(activity.type)}`}>{activity.icon}</span>
             </div>
@@ -321,10 +335,30 @@ const RecentActivityWidget = ({ data }: { data: any[] }) => {
 
 const QuickActionsWidget = () => {
   const actions = [
-    { label: "Novo Cavalo", icon: Plus, color: "bg-green-500", action: () => console.log("novo cavalo") },
-    { label: "Novo Evento", icon: Calendar, color: "bg-blue-500", action: () => console.log("novo evento") },
-    { label: "Ver Mensagens", icon: Mail, color: "bg-purple-500", action: () => console.log("mensagens") },
-    { label: "Analytics", icon: TrendingUp, color: "bg-orange-500", action: () => console.log("analytics") },
+    {
+      label: "Novo Cavalo",
+      icon: Plus,
+      color: "bg-green-500",
+      action: () => console.log("novo cavalo"),
+    },
+    {
+      label: "Novo Evento",
+      icon: Calendar,
+      color: "bg-blue-500",
+      action: () => console.log("novo evento"),
+    },
+    {
+      label: "Ver Mensagens",
+      icon: Mail,
+      color: "bg-purple-500",
+      action: () => console.log("mensagens"),
+    },
+    {
+      label: "Analytics",
+      icon: TrendingUp,
+      color: "bg-orange-500",
+      action: () => console.log("analytics"),
+    },
   ];
 
   return (
@@ -378,7 +412,10 @@ const AlertsWidget = () => {
 
       <div className="space-y-3">
         {alerts.map((alert, index) => (
-          <div key={index} className={`border rounded-lg p-3 flex items-center justify-between ${getAlertStyle(alert.type)}`}>
+          <div
+            key={index}
+            className={`border rounded-lg p-3 flex items-center justify-between ${getAlertStyle(alert.type)}`}
+          >
             <p className="text-sm flex-1">{alert.message}</p>
             <button className="text-xs px-3 py-1 bg-white/10 rounded hover:bg-white/20 transition-colors">
               {alert.action}
@@ -555,9 +592,10 @@ export default function DashboardContentNew() {
                 onClick={() => toggleWidget(widget.id)}
                 className={`
                   p-4 rounded-lg border-2 transition-all text-left
-                  ${widget.enabled
-                    ? "border-[#C5A059] bg-[#C5A059]/10"
-                    : "border-white/10 bg-white/5 hover:bg-white/10"
+                  ${
+                    widget.enabled
+                      ? "border-[#C5A059] bg-[#C5A059]/10"
+                      : "border-white/10 bg-white/5 hover:bg-white/10"
                   }
                 `}
               >
@@ -573,11 +611,7 @@ export default function DashboardContentNew() {
       )}
 
       {/* Grid de Widgets com Drag-and-Drop */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext
           items={enabledWidgets.map((w) => w.id)}
           strategy={verticalListSortingStrategy}
