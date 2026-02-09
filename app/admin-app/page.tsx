@@ -296,10 +296,12 @@ export default function AdminAppPage() {
           <div className="bg-[#0A0A0A] border border-white/10 rounded-xl p-8">
             {/* Logo */}
             <div className="text-center mb-8">
-              <img
+              <Image
                 src="/logo.png"
                 alt="Portal Lusitano"
-                className="w-24 h-24 mx-auto mb-4 object-contain"
+                width={96}
+                height={96}
+                className="mx-auto mb-4 object-contain"
               />
               <h1 className="text-3xl font-bold text-[#C5A059] mb-2">Portal Lusitano</h1>
               <p className="text-gray-400">Admin App - Sistema de Gestão</p>

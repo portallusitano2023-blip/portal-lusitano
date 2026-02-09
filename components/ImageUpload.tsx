@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import { Upload, X, Loader2, Image as ImageIcon, AlertCircle } from "lucide-react";
 
 interface ImageUploadProps {
@@ -30,61 +31,67 @@ export default function ImageUpload({
     portrait: "aspect-[3/4]",
   };
 
-  const handleFile = useCallback(async (file: File) => {
-    setError(null);
+  const handleFile = useCallback(
+    async (file: File) => {
+      setError(null);
 
-    // Validar tipo
-    if (!file.type.startsWith("image/")) {
-      setError("Por favor selecione uma imagem");
-      return;
-    }
-
-    // Validar tamanho (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Imagem demasiado grande. Maximo 5MB.");
-      return;
-    }
-
-    // Preview local
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreview(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-
-    // Upload
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", folder);
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Erro no upload");
+      // Validar tipo
+      if (!file.type.startsWith("image/")) {
+        setError("Por favor selecione uma imagem");
+        return;
       }
 
-      onUpload(data.url);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao fazer upload");
-      setPreview(currentImage || null);
-    } finally {
-      setUploading(false);
-    }
-  }, [folder, currentImage, onUpload]);
+      // Validar tamanho (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Imagem demasiado grande. Maximo 5MB.");
+        return;
+      }
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
-  }, [handleFile]);
+      // Preview local
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      // Upload
+      setUploading(true);
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", folder);
+
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Erro no upload");
+        }
+
+        onUpload(data.url);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erro ao fazer upload");
+        setPreview(currentImage || null);
+      } finally {
+        setUploading(false);
+      }
+    },
+    [folder, currentImage, onUpload]
+  );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragOver(false);
+      const file = e.dataTransfer.files[0];
+      if (file) handleFile(file);
+    },
+    [handleFile]
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -103,9 +110,7 @@ export default function ImageUpload({
     <div className={className}>
       <div
         className={`relative ${aspectClasses[aspectRatio]} bg-gray-100 border-2 border-dashed rounded-lg overflow-hidden transition-colors ${
-          dragOver
-            ? "border-amber-500 bg-amber-50"
-            : "border-gray-300 hover:border-gray-400"
+          dragOver ? "border-amber-500 bg-amber-50" : "border-gray-300 hover:border-gray-400"
         }`}
         onDragOver={(e) => {
           e.preventDefault();
@@ -116,10 +121,12 @@ export default function ImageUpload({
       >
         {preview ? (
           <>
-            <img
+            <Image
               src={preview}
-              alt="Preview"
-              className="w-full h-full object-cover"
+              alt="Preview da imagem"
+              fill
+              className="object-cover"
+              unoptimized
             />
             {/* Overlay com botoes */}
             <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -153,12 +160,8 @@ export default function ImageUpload({
             ) : (
               <>
                 <ImageIcon className="w-10 h-10 mb-2" />
-                <span className="text-sm font-medium">
-                  Clique ou arraste uma imagem
-                </span>
-                <span className="text-xs text-gray-400 mt-1">
-                  PNG, JPG, WebP ate 5MB
-                </span>
+                <span className="text-sm font-medium">Clique ou arraste uma imagem</span>
+                <span className="text-xs text-gray-400 mt-1">PNG, JPG, WebP ate 5MB</span>
               </>
             )}
           </button>
@@ -250,8 +253,17 @@ export function MultiImageUpload({
     <div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {images.map((url, index) => (
-          <div key={index} className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden group">
-            <img src={url} alt="" className="w-full h-full object-cover" />
+          <div
+            key={index}
+            className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden group"
+          >
+            <Image
+              src={url}
+              alt={`Imagem ${index + 1}`}
+              fill
+              className="object-cover"
+              unoptimized
+            />
             <button
               type="button"
               onClick={() => removeImage(index)}

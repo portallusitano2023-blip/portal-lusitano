@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   Instagram,
   Check,
@@ -398,7 +399,15 @@ export default function AdminInstagramPage() {
                         return (
                           <div key={idx} className="bg-black rounded-lg overflow-hidden">
                             {isImage ? (
-                              <img src={url} alt={`Media ${idx + 1}`} className="w-full h-auto" />
+                              <div className="relative w-full aspect-square">
+                                <Image
+                                  src={url}
+                                  alt={`Media ${idx + 1}`}
+                                  fill
+                                  className="object-cover"
+                                  unoptimized
+                                />
+                              </div>
                             ) : isVideo ? (
                               <video src={url} controls className="w-full h-auto" />
                             ) : (

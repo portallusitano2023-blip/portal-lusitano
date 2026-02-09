@@ -189,11 +189,12 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relacionados.map((rel) => (
                 <Link key={rel.slug} href={`/cavalo/${rel.slug}`} className="group block">
-                  <div className="aspect-[4/5] overflow-hidden bg-zinc-900 mb-4 border border-zinc-800 group-hover:border-[#C5A059] transition-all">
-                    <img
+                  <div className="aspect-[4/5] overflow-hidden bg-zinc-900 mb-4 border border-zinc-800 group-hover:border-[#C5A059] transition-all relative">
+                    <Image
                       src={rel.imageUrl}
                       alt={rel.nome}
-                      className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+                      fill
+                      className="object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
                     />
                   </div>
                   <p className="text-[#C5A059] uppercase tracking-widest text-[10px] mb-1 font-bold">

@@ -63,9 +63,8 @@ export default function DefinicoesContent() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("email_templates");
-  const [editedValues, setEditedValues] = useState<
-    Record<string, string | number | boolean | null>
-  >({});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [editedValues, setEditedValues] = useState<Record<string, any>>({});
   const [showSuccess, setShowSuccess] = useState(false);
   const [showJsonPreview, setShowJsonPreview] = useState<Record<string, boolean>>({});
 
