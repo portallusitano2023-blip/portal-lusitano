@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Send, Paperclip, Smile, MoreVertical, Search, Users, Hash } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -80,10 +80,7 @@ export default function ChatContent() {
 
     try {
       // Extract mentions (@email)
-      const mentions = Array.from(
-        newMessage.matchAll(/@(\S+@\S+\.\S+)/g),
-        (m) => m[1]
-      );
+      const mentions = Array.from(newMessage.matchAll(/@(\S+@\S+\.\S+)/g), (m) => m[1]);
 
       const { error } = await supabase.from("admin_chat_messages").insert({
         sender_email: currentUser,
@@ -166,7 +163,10 @@ export default function ChatContent() {
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-br from-[#050505] via-[#0A0A0A] to-[#050505]">
         {loading ? (
-          <div className="text-center text-gray-400 py-8">A carregar mensagens...</div>
+          <div className="text-center py-8">
+            <div className="animate-spin w-8 h-8 border-4 border-[#C5A059] border-t-transparent rounded-full mx-auto mb-3" />
+            <p className="text-gray-400 text-sm">A carregar mensagens...</p>
+          </div>
         ) : messages.length === 0 ? (
           <div className="text-center text-gray-400 py-8">
             <p className="mb-2">Nenhuma mensagem ainda</p>
@@ -175,8 +175,7 @@ export default function ChatContent() {
         ) : (
           messages.map((msg, index) => {
             const isOwn = msg.sender_email === currentUser;
-            const showAvatar =
-              index === 0 || messages[index - 1].sender_email !== msg.sender_email;
+            const showAvatar = index === 0 || messages[index - 1].sender_email !== msg.sender_email;
 
             return (
               <div
@@ -224,9 +223,7 @@ export default function ChatContent() {
                       </div>
                     )}
 
-                    {msg.edited && (
-                      <span className="text-xs opacity-60 ml-2">(editado)</span>
-                    )}
+                    {msg.edited && <span className="text-xs opacity-60 ml-2">(editado)</span>}
                   </div>
                 </div>
 
@@ -277,7 +274,8 @@ export default function ChatContent() {
         </div>
 
         <p className="text-xs text-gray-500 mt-2">
-          Usa <kbd className="px-1 py-0.5 bg-white/10 rounded text-xs">@email</kbd> para mencionar alguém
+          Usa <kbd className="px-1 py-0.5 bg-white/10 rounded text-xs">@email</kbd> para mencionar
+          alguém
         </p>
       </div>
     </div>

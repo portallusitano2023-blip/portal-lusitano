@@ -41,9 +41,7 @@ export default function ComparePerformanceContent() {
   };
 
   const toggleItem = (id: string) => {
-    setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    setSelectedItems((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   };
 
   const selectedData = items.filter((item) => selectedItems.includes(item.id));
@@ -55,9 +53,7 @@ export default function ComparePerformanceContent() {
           <BarChart3 className="w-8 h-8 text-[#C5A059]" />
           Comparação de Performance
         </h1>
-        <p className="text-gray-400">
-          Compare métricas de cavalos ou eventos lado a lado
-        </p>
+        <p className="text-gray-400">Compare métricas de cavalos ou eventos lado a lado</p>
       </div>
 
       {/* Type Selector */}
@@ -89,23 +85,30 @@ export default function ComparePerformanceContent() {
         <h3 className="text-lg font-bold text-white mb-4">
           Seleciona {selectedType}s para comparar (até 4)
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {items.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => toggleItem(item.id)}
-              disabled={selectedItems.length >= 4 && !selectedItems.includes(item.id)}
-              className={`p-4 rounded-lg border-2 text-left transition-all ${
-                selectedItems.includes(item.id)
-                  ? "bg-[#C5A059]/20 border-[#C5A059]"
-                  : "bg-white/5 border-white/10 hover:border-white/20"
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
-            >
-              <p className="font-semibold text-white">{item.name}</p>
-              <p className="text-sm text-gray-400">{item.views} views</p>
-            </button>
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin w-10 h-10 border-4 border-[#C5A059] border-t-transparent rounded-full mx-auto mb-4" />
+            <p className="text-gray-400">A carregar {selectedType}s...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {items.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => toggleItem(item.id)}
+                disabled={selectedItems.length >= 4 && !selectedItems.includes(item.id)}
+                className={`p-4 rounded-lg border-2 text-left transition-all ${
+                  selectedItems.includes(item.id)
+                    ? "bg-[#C5A059]/20 border-[#C5A059]"
+                    : "bg-white/5 border-white/10 hover:border-white/20"
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                <p className="font-semibold text-white">{item.name}</p>
+                <p className="text-sm text-gray-400">{item.views} views</p>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Comparison Table */}
@@ -179,13 +182,15 @@ export default function ComparePerformanceContent() {
           <h3 className="text-lg font-bold text-white mb-2">🏆 Melhor Performance</h3>
           <p className="text-gray-300">
             <strong className="text-green-400">
-              {selectedData.reduce((prev, current) => 
-                prev.conversion_rate > current.conversion_rate ? prev : current
-              ).name}
-            </strong>
-            {" "}tem a melhor taxa de conversão com{" "}
+              {
+                selectedData.reduce((prev, current) =>
+                  prev.conversion_rate > current.conversion_rate ? prev : current
+                ).name
+              }
+            </strong>{" "}
+            tem a melhor taxa de conversão com{" "}
             <strong className="text-green-400">
-              {Math.max(...selectedData.map(d => d.conversion_rate)).toFixed(2)}%
+              {Math.max(...selectedData.map((d) => d.conversion_rate)).toFixed(2)}%
             </strong>
           </p>
         </div>

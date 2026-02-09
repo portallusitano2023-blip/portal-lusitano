@@ -19,16 +19,15 @@ export default function HomeContent({ products }: { products: ShopifyProduct[] }
 
   return (
     <main className="bg-[#050505] min-h-screen text-white selection:bg-[#C5A059] selection:text-black">
-      
       {/* HERO SECTION - VOLTA AO ESTILO NOBREZA */}
       <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-900/30 via-[#050505] to-[#050505] z-0"></div>
-        
+
         <div className="relative z-10 text-center flex flex-col items-center animate-fade-in-up max-w-4xl">
           <span className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059] mb-8 font-medium">
             {t.home.est}
           </span>
-          
+
           {/* TÍTULO CLÁSSICO DE MARCA */}
           <h1 className="text-5xl md:text-8xl font-serif text-white mb-8 tracking-wide leading-tight">
             {/* O "The" pequeno e itálico */}
@@ -38,12 +37,15 @@ export default function HomeContent({ products }: { products: ShopifyProduct[] }
             {/* O Título Principal */}
             {t.home.title_main}
           </h1>
-          
+
           <p className="max-w-md text-zinc-400 font-serif italic text-sm md:text-base leading-relaxed mb-12">
-            "{t.home.hero_text}"
+            &ldquo;{t.home.hero_text}&rdquo;
           </p>
-          
-          <Link href="/loja" className="group flex items-center gap-4 text-[10px] uppercase tracking-[0.3em] border border-white/20 px-10 py-4 hover:bg-[#C5A059] hover:border-[#C5A059] hover:text-black transition-all duration-500">
+
+          <Link
+            href="/loja"
+            className="group flex items-center gap-4 text-[10px] uppercase tracking-[0.3em] border border-white/20 px-10 py-4 hover:bg-[#C5A059] hover:border-[#C5A059] hover:text-black transition-all duration-500"
+          >
             {t.home.cta}
             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -57,11 +59,12 @@ export default function HomeContent({ products }: { products: ShopifyProduct[] }
             <span className="text-[9px] uppercase tracking-[0.3em] text-[#C5A059] mb-3 block">
               {t.home.curation}
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif italic text-white">
-              {t.home.featured}
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-serif italic text-white">{t.home.featured}</h2>
           </div>
-          <Link href="/loja" className="text-[9px] uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition-colors pb-1">
+          <Link
+            href="/loja"
+            className="text-[9px] uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition-colors pb-1"
+          >
             {t.home.view_all} &rarr;
           </Link>
         </div>
@@ -86,27 +89,31 @@ export default function HomeContent({ products }: { products: ShopifyProduct[] }
                   {product.title}
                 </h3>
                 <p className="text-zinc-400 font-serif text-sm tracking-widest">
-                  {Number(product.priceRange?.minVariantPrice?.amount || product.variants[0]?.price?.amount || 0).toFixed(2)} EUR
+                  {Number(
+                    product.priceRange?.minVariantPrice?.amount ||
+                      product.variants[0]?.price?.amount ||
+                      0
+                  ).toFixed(2)}{" "}
+                  EUR
                 </p>
               </div>
             </Link>
           ))}
         </div>
       </section>
-      
+
       {/* MANIFESTO (Rodapé) */}
       <section className="py-40 bg-[#080808] text-center px-6 mt-20 border-t border-zinc-900">
         <div className="max-w-2xl mx-auto">
           <span className="text-3xl text-[#C5A059] font-serif mb-8 block opacity-80">❦</span>
           <p className="text-xl md:text-2xl font-serif italic leading-relaxed text-zinc-400">
-            "{t.home.manifesto}"
+            &ldquo;{t.home.manifesto}&rdquo;
           </p>
           <span className="text-[9px] uppercase tracking-[0.3em] text-zinc-700 mt-10 block">
             Portal Lusitano • Heritage
           </span>
         </div>
       </section>
-
     </main>
   );
 }

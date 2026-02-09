@@ -73,10 +73,7 @@ export default function UsersContent() {
   const filteredUsers = users.filter((user) => {
     if (!searchTerm) return true;
     const term = searchTerm.toLowerCase();
-    return (
-      user.email.toLowerCase().includes(term) ||
-      user.nome?.toLowerCase().includes(term)
-    );
+    return user.email.toLowerCase().includes(term) || user.nome?.toLowerCase().includes(term);
   });
 
   // Criar/Atualizar utilizador
@@ -84,9 +81,7 @@ export default function UsersContent() {
     e.preventDefault();
 
     try {
-      const url = editingUser
-        ? `/api/admin/users/${editingUser.id}`
-        : "/api/admin/users";
+      const url = editingUser ? `/api/admin/users/${editingUser.id}` : "/api/admin/users";
       const method = editingUser ? "PUT" : "POST";
 
       const response = await fetch(url, {
@@ -191,9 +186,7 @@ export default function UsersContent() {
             <Users className="w-8 h-8 text-[#C5A059]" />
             Gestão de Utilizadores
           </h1>
-          <p className="text-gray-400">
-            Total de {total} utilizadores admin
-          </p>
+          <p className="text-gray-400">Total de {total} utilizadores admin</p>
         </div>
 
         <button
@@ -246,7 +239,10 @@ export default function UsersContent() {
 
       {/* Lista de Utilizadores */}
       {loading ? (
-        <div className="text-center text-gray-400 py-12">A carregar...</div>
+        <div className="bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-12 text-center">
+          <div className="animate-spin w-10 h-10 border-4 border-[#C5A059] border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-gray-400">A carregar utilizadores...</p>
+        </div>
       ) : filteredUsers.length === 0 ? (
         <div className="text-center text-gray-400 py-12">
           <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -282,9 +278,7 @@ export default function UsersContent() {
 
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-bold text-white">
-                        {user.nome || user.email}
-                      </h3>
+                      <h3 className="text-lg font-bold text-white">{user.nome || user.email}</h3>
                       {!user.ativo && (
                         <span className="px-2 py-1 bg-red-500/20 text-red-400 text-xs font-semibold rounded">
                           INATIVO
@@ -301,8 +295,7 @@ export default function UsersContent() {
                       </span>
                       {user.last_login && (
                         <span>
-                          Último login:{" "}
-                          {new Date(user.last_login).toLocaleDateString("pt-PT")}
+                          Último login: {new Date(user.last_login).toLocaleDateString("pt-PT")}
                         </span>
                       )}
                     </div>
@@ -364,15 +357,11 @@ export default function UsersContent() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">
-                  Email *
-                </label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Email *</label>
                 <input
                   type="email"
                   value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   disabled={!!editingUser}
                   required
                   className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#C5A059] disabled:opacity-50"
@@ -381,24 +370,18 @@ export default function UsersContent() {
 
               {/* Nome */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">
-                  Nome
-                </label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Nome</label>
                 <input
                   type="text"
                   value={formData.nome}
-                  onChange={(e) =>
-                    setFormData({ ...formData, nome: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                   className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#C5A059]"
                 />
               </div>
 
               {/* Role */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">
-                  Role *
-                </label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Role *</label>
                 <select
                   value={formData.role}
                   onChange={(e) =>

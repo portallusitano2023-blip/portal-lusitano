@@ -3,7 +3,16 @@
 import { useRef, useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Clock, BookOpen, Search, LayoutGrid, List, FileText, Newspaper } from "lucide-react";
+import {
+  ArrowRight,
+  Clock,
+  BookOpen,
+  Search,
+  LayoutGrid,
+  List,
+  FileText,
+  Newspaper,
+} from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useInViewOnce } from "@/hooks/useInViewOnce";
 import TextSplit from "@/components/TextSplit";
@@ -30,11 +39,13 @@ function getImageUrl(article: SanityArticle): string {
 function formatDate(dateStr: string, lang: string): string {
   try {
     const date = new Date(dateStr);
-    return date.toLocaleDateString(lang === "pt" ? "pt-PT" : "en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }).toUpperCase();
+    return date
+      .toLocaleDateString(lang === "pt" ? "pt-PT" : "en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+      .toUpperCase();
   } catch {
     return dateStr;
   }
@@ -65,13 +76,13 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-
-  // Ler preferência de vista do localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("jornal-view-mode");
-    if (saved === "grid" || saved === "list") setViewMode(saved);
-  }, []);
+  const [viewMode, setViewMode] = useState<"grid" | "list">(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("jornal-view-mode");
+      if (saved === "grid" || saved === "list") return saved;
+    }
+    return "grid";
+  });
 
   const handleViewChange = (mode: "grid" | "list") => {
     setViewMode(mode);
@@ -90,9 +101,10 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
   // Filtrar artigos
   const filteredArticles = useMemo(() => {
     return displayArticles.filter((article) => {
-      const matchesSearch = !searchQuery ||
+      const matchesSearch =
+        !searchQuery ||
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (article.subtitle?.toLowerCase().includes(searchQuery.toLowerCase()));
+        article.subtitle?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = !selectedCategory || article.category === selectedCategory;
       const matchesType = !selectedType || article.contentType === selectedType;
       return matchesSearch && matchesCategory && matchesType;
@@ -282,91 +294,96 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
             : "flex flex-col gap-4"
         }`}
       >
-        {(searchQuery || selectedCategory || selectedType ? filteredArticles : gridArticles).map((article, index) => (
-          <div
-            key={article._id}
-            className={`transition-all duration-500 ${gridInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-            style={{ transitionDelay: `${index * 0.08 + 0.15}s` }}
-          >
-            {viewMode === "grid" ? (
-              <Link href={`/jornal/${article.slug.current}`}>
-                <article className="group cursor-pointer h-full flex flex-col border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02]">
-                  <div className="w-full h-64 overflow-hidden relative">
-                    {getImageUrl(article) && (
-                      <img
-                        src={getImageUrl(article)}
-                        alt={article.image?.alt || article.title}
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
-                      />
-                    )}
-                    <div className="absolute top-4 right-4 flex items-center gap-2">
-                      {article.contentType === "post" && (
-                        <span className="bg-white/20 backdrop-blur-sm px-2 py-0.5 text-[9px] uppercase text-white tracking-widest">
-                          {language === "pt" ? "Crónica" : "Chronicle"}
-                        </span>
+        {(searchQuery || selectedCategory || selectedType ? filteredArticles : gridArticles).map(
+          (article, index) => (
+            <div
+              key={article._id}
+              className={`transition-all duration-500 ${gridInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+              style={{ transitionDelay: `${index * 0.08 + 0.15}s` }}
+            >
+              {viewMode === "grid" ? (
+                <Link href={`/jornal/${article.slug.current}`}>
+                  <article className="group cursor-pointer h-full flex flex-col border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02]">
+                    <div className="w-full h-64 overflow-hidden relative">
+                      {getImageUrl(article) && (
+                        <img
+                          src={getImageUrl(article)}
+                          alt={article.image?.alt || article.title}
+                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+                        />
                       )}
-                      <span className="bg-black/60 backdrop-blur-sm px-3 py-1 text-[10px] uppercase text-white tracking-widest border border-white/10">
-                        {article.category}
-                      </span>
+                      <div className="absolute top-4 right-4 flex items-center gap-2">
+                        {article.contentType === "post" && (
+                          <span className="bg-white/20 backdrop-blur-sm px-2 py-0.5 text-[9px] uppercase text-white tracking-widest">
+                            {language === "pt" ? "Crónica" : "Chronicle"}
+                          </span>
+                        )}
+                        <span className="bg-black/60 backdrop-blur-sm px-3 py-1 text-[10px] uppercase text-white tracking-widest border border-white/10">
+                          {article.category}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="p-8 flex flex-col flex-grow">
-                    <div className="mb-4 text-[#C5A059] text-[10px] uppercase tracking-widest flex justify-between">
-                      <span>{formatDate(article.publishedAt, language)}</span>
-                      <span>{article.estimatedReadTime} min</span>
+                    <div className="p-8 flex flex-col flex-grow">
+                      <div className="mb-4 text-[#C5A059] text-[10px] uppercase tracking-widest flex justify-between">
+                        <span>{formatDate(article.publishedAt, language)}</span>
+                        <span>{article.estimatedReadTime} min</span>
+                      </div>
+                      <h3 className="text-2xl font-serif text-white mb-3 group-hover:text-[#C5A059] transition-colors leading-tight">
+                        {article.title}
+                      </h3>
+                      <p className="text-zinc-500 text-sm leading-relaxed mb-6 flex-grow font-serif">
+                        {article.subtitle}
+                      </p>
+                      <div className="border-t border-white/10 pt-4 mt-auto">
+                        <span className="flex items-center gap-2 text-white text-xs uppercase tracking-widest group-hover:gap-4 transition-all">
+                          {t.journal.read_study} <ArrowRight size={14} className="text-[#C5A059]" />
+                        </span>
+                      </div>
                     </div>
-                    <h3 className="text-2xl font-serif text-white mb-3 group-hover:text-[#C5A059] transition-colors leading-tight">
-                      {article.title}
-                    </h3>
-                    <p className="text-zinc-500 text-sm leading-relaxed mb-6 flex-grow font-serif">
-                      {article.subtitle}
-                    </p>
-                    <div className="border-t border-white/10 pt-4 mt-auto">
-                      <span className="flex items-center gap-2 text-white text-xs uppercase tracking-widest group-hover:gap-4 transition-all">
-                        {t.journal.read_study} <ArrowRight size={14} className="text-[#C5A059]" />
-                      </span>
+                  </article>
+                </Link>
+              ) : (
+                <Link href={`/jornal/${article.slug.current}`}>
+                  <article className="group cursor-pointer flex gap-6 border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02] p-4">
+                    <div className="w-32 h-32 flex-shrink-0 overflow-hidden relative">
+                      {getImageUrl(article) && (
+                        <img
+                          src={getImageUrl(article)}
+                          alt={article.image?.alt || article.title}
+                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500"
+                        />
+                      )}
                     </div>
-                  </div>
-                </article>
-              </Link>
-            ) : (
-              <Link href={`/jornal/${article.slug.current}`}>
-                <article className="group cursor-pointer flex gap-6 border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02] p-4">
-                  <div className="w-32 h-32 flex-shrink-0 overflow-hidden relative">
-                    {getImageUrl(article) && (
-                      <img
-                        src={getImageUrl(article)}
-                        alt={article.image?.alt || article.title}
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500"
-                      />
-                    )}
-                  </div>
-                  <div className="flex flex-col justify-center flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-[#C5A059] text-[10px] uppercase tracking-widest">
-                        {article.category}
-                      </span>
-                      <span className="text-zinc-600 text-[10px]">
-                        {formatDate(article.publishedAt, language)}
-                      </span>
-                      <span className="text-zinc-600 text-[10px]">
-                        {article.estimatedReadTime} min
-                      </span>
+                    <div className="flex flex-col justify-center flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-[#C5A059] text-[10px] uppercase tracking-widest">
+                          {article.category}
+                        </span>
+                        <span className="text-zinc-600 text-[10px]">
+                          {formatDate(article.publishedAt, language)}
+                        </span>
+                        <span className="text-zinc-600 text-[10px]">
+                          {article.estimatedReadTime} min
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-serif text-white mb-1 group-hover:text-[#C5A059] transition-colors truncate">
+                        {article.title}
+                      </h3>
+                      <p className="text-zinc-500 text-sm line-clamp-1 font-serif">
+                        {article.subtitle}
+                      </p>
                     </div>
-                    <h3 className="text-xl font-serif text-white mb-1 group-hover:text-[#C5A059] transition-colors truncate">
-                      {article.title}
-                    </h3>
-                    <p className="text-zinc-500 text-sm line-clamp-1 font-serif">
-                      {article.subtitle}
-                    </p>
-                  </div>
-                  <ArrowRight size={16} className="text-zinc-600 group-hover:text-[#C5A059] self-center flex-shrink-0 transition-colors" />
-                </article>
-              </Link>
-            )}
-          </div>
-        ))}
+                    <ArrowRight
+                      size={16}
+                      className="text-zinc-600 group-hover:text-[#C5A059] self-center flex-shrink-0 transition-colors"
+                    />
+                  </article>
+                </Link>
+              )}
+            </div>
+          )
+        )}
       </div>
     </main>
   );

@@ -10,13 +10,15 @@ export default function GlobalError({
   return (
     <html lang="pt">
       <body style={{ backgroundColor: "#050505", margin: 0, fontFamily: "system-ui, sans-serif" }}>
-        <main style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "1.5rem",
-        }}>
+        <main
+          style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1.5rem",
+          }}
+        >
           <div style={{ maxWidth: "28rem", width: "100%", textAlign: "center" }}>
             <div style={{ color: "#C5A059", fontSize: "3.75rem", marginBottom: "1.5rem" }}>!</div>
 
@@ -52,6 +54,7 @@ export default function GlobalError({
                 Tentar novamente
               </button>
 
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- global-error cannot use Next Link */}
               <a
                 href="/"
                 style={{ color: "#71717a", fontSize: "0.875rem", textDecoration: "none" }}

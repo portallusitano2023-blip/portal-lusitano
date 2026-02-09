@@ -102,7 +102,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const metric = searchParams.get("metric") || "leads"; // 'leads', 'payments', 'customers'
 
-    let districtCounts: Record<string, number> = {};
+    const districtCounts: Record<string, number> = {};
 
     // Inicializar todos os distritos com 0
     ALL_DISTRICTS.forEach((district) => {
@@ -111,9 +111,7 @@ export async function GET(req: NextRequest) {
 
     if (metric === "leads") {
       // Contar leads por distrito
-      const { data: leads } = await supabase
-        .from("leads")
-        .select("location, email");
+      const { data: leads } = await supabase.from("leads").select("location, email");
 
       if (leads) {
         leads.forEach((lead) => {
@@ -138,9 +136,7 @@ export async function GET(req: NextRequest) {
           .select("email, location")
           .in("email", emails);
 
-        const locationMap = new Map(
-          leads?.map((l) => [l.email, l.location]) || []
-        );
+        const locationMap = new Map(leads?.map((l) => [l.email, l.location]) || []);
 
         payments.forEach((payment) => {
           const location = locationMap.get(payment.email);
