@@ -1,6 +1,9 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET || "change-this-in-production";
+if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === "production") {
+  throw new Error("ADMIN_SECRET environment variable is required in production");
+}
+const ADMIN_SECRET = process.env.ADMIN_SECRET || "dev-only-local-secret-min16chars";
 const TOKEN_EXPIRY_HOURS = 24;
 
 interface TokenPayload {

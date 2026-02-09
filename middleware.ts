@@ -16,10 +16,7 @@ export async function middleware(request: NextRequest) {
     if (allowedOrigin) {
       response.headers.set("Access-Control-Allow-Credentials", "true");
       response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
-      response.headers.set(
-        "Access-Control-Allow-Methods",
-        "GET,DELETE,PATCH,POST,PUT,OPTIONS"
-      );
+      response.headers.set("Access-Control-Allow-Methods", "GET,DELETE,PATCH,POST,PUT,OPTIONS");
       response.headers.set(
         "Access-Control-Allow-Headers",
         "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
@@ -66,7 +63,10 @@ export async function middleware(request: NextRequest) {
   response.headers.set("Content-Language", "pt");
 
   // Protect admin routes (except login page)
-  if (request.nextUrl.pathname.startsWith("/admin") && !request.nextUrl.pathname.startsWith("/admin/login")) {
+  if (
+    request.nextUrl.pathname.startsWith("/admin") &&
+    !request.nextUrl.pathname.startsWith("/admin/login")
+  ) {
     const token = request.cookies.get("admin_session")?.value;
 
     if (!token) {
@@ -75,14 +75,18 @@ export async function middleware(request: NextRequest) {
 
     // Verify JWT token using jose (same as lib/auth.ts)
     try {
-      const secret = new TextEncoder().encode(process.env.ADMIN_SECRET || "dev-only-secret-not-for-production");
+      if (!process.env.ADMIN_SECRET) {
+        console.error("ADMIN_SECRET not set - rejecting admin access");
+        return NextResponse.redirect(new URL("/admin/login", request.url));
+      }
+      const secret = new TextEncoder().encode(process.env.ADMIN_SECRET);
       const { payload } = await (await import("jose")).jwtVerify(token, secret);
 
       // Check if token has expired
       if (!payload.email) {
         return NextResponse.redirect(new URL("/admin/login", request.url));
       }
-    } catch (error) {
+    } catch {
       // Invalid or expired token
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
