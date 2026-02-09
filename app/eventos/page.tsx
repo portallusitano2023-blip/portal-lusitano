@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Calendar,
   MapPin,
@@ -17,6 +18,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
+import Pagination from "@/components/ui/Pagination";
 
 interface Evento {
   id: string;
@@ -50,11 +52,27 @@ const tiposEvento = [
 ];
 
 const meses = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
 ];
 
+const ITENS_POR_PAGINA = 12;
+
 export default function EventosPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTipo, setSelectedTipo] = useState("todos");
@@ -86,14 +104,37 @@ export default function EventosPage() {
   // Eventos em destaque
   const eventosDestaque = eventos.filter((e) => e.destaque);
 
+  // Eventos não destaque (para paginação)
+  const eventosNormais = eventos.filter((e) => !e.destaque);
+
+  // Ordenar por data descendente (mais recentes primeiro)
+  const eventosOrdenados = [...eventosNormais].sort(
+    (a, b) => new Date(b.data_inicio).getTime() - new Date(a.data_inicio).getTime()
+  );
+
+  // Paginação
+  const totalPaginas = Math.ceil(eventosOrdenados.length / ITENS_POR_PAGINA);
+  const inicio = (currentPage - 1) * ITENS_POR_PAGINA;
+  const eventosPaginados = eventosOrdenados.slice(inicio, inicio + ITENS_POR_PAGINA);
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", page.toString());
+    router.push(`?${params.toString()}`, { scroll: true });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   // Agrupar eventos por mês
-  const eventosPorMes = eventos.reduce((acc, evento) => {
-    const date = new Date(evento.data_inicio);
-    const key = `${date.getFullYear()}-${date.getMonth()}`;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(evento);
-    return acc;
-  }, {} as Record<string, Evento[]>);
+  const eventosPorMes = eventos.reduce(
+    (acc, evento) => {
+      const date = new Date(evento.data_inicio);
+      const key = `${date.getFullYear()}-${date.getMonth()}`;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(evento);
+      return acc;
+    },
+    {} as Record<string, Evento[]>
+  );
 
   const currentMonthKey = `${currentYear}-${currentMonth}`;
   const eventosDoMes = eventosPorMes[currentMonthKey] || [];
@@ -182,9 +223,7 @@ export default function EventosPage() {
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
-          <div
-            className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
+          <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
               Calendário Equestre
             </span>
@@ -192,8 +231,8 @@ export default function EventosPage() {
               Eventos & Competições
             </h1>
             <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
-              Feiras, competições, leilões e muito mais. Não perca os principais
-              eventos do mundo equestre português.
+              Feiras, competições, leilões e muito mais. Não perca os principais eventos do mundo
+              equestre português.
             </p>
           </div>
         </div>
@@ -273,27 +312,41 @@ export default function EventosPage() {
         ) : eventos.length === 0 ? (
           <div className="text-center py-20">
             <Calendar className="mx-auto text-zinc-600 mb-4" size={48} />
-            <h3 className="text-xl font-serif text-white mb-2">
-              Nenhum evento encontrado
-            </h3>
-            <p className="text-zinc-500">
-              Não há eventos agendados para os filtros selecionados.
-            </p>
+            <h3 className="text-xl font-serif text-white mb-2">Nenhum evento encontrado</h3>
+            <p className="text-zinc-500">Não há eventos agendados para os filtros selecionados.</p>
           </div>
         ) : (
-          <div
-            className="space-y-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.3s" }}
-          >
-            {eventos.map((evento, index) => (
-              <EventoCard
-                key={evento.id}
-                evento={evento}
-                index={index}
-                onClick={() => setSelectedEvento(evento)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-serif text-zinc-300">
+                Todos os Eventos
+                <span className="text-zinc-600 text-lg ml-3">
+                  ({eventosOrdenados.length} {eventosOrdenados.length === 1 ? "evento" : "eventos"})
+                </span>
+              </h2>
+            </div>
+            <div
+              className="space-y-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              style={{ animationDelay: "0.3s" }}
+            >
+              {eventosPaginados.map((evento, index) => (
+                <EventoCard
+                  key={evento.id}
+                  evento={evento}
+                  index={index}
+                  onClick={() => setSelectedEvento(evento)}
+                />
+              ))}
+            </div>
+
+            {/* Paginação */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPaginas}
+              onPageChange={handlePageChange}
+              className="mt-12"
+            />
+          </>
         )}
 
         {/* Modal de Evento */}
@@ -316,7 +369,9 @@ export default function EventosPage() {
 
               <div className="flex items-center flex-wrap gap-3 mb-4">
                 <span className="text-3xl">{getTipoIcon(selectedEvento.tipo)}</span>
-                <span className={`px-3 py-1 text-xs uppercase tracking-wider border ${getTipoColor(selectedEvento.tipo)}`}>
+                <span
+                  className={`px-3 py-1 text-xs uppercase tracking-wider border ${getTipoColor(selectedEvento.tipo)}`}
+                >
                   {selectedEvento.tipo}
                 </span>
                 {selectedEvento.destaque && (
@@ -329,26 +384,31 @@ export default function EventosPage() {
                   if (!badge) return null;
                   const Icon = badge.icon;
                   return (
-                    <span className={`flex items-center gap-1 ${badge.color} text-sm ${badge.bg} px-2 py-1 rounded`}>
+                    <span
+                      className={`flex items-center gap-1 ${badge.color} text-sm ${badge.bg} px-2 py-1 rounded`}
+                    >
                       <Icon size={14} /> {badge.label}
                     </span>
                   );
                 })()}
               </div>
 
-              <h3 className="text-2xl font-serif text-white mb-4">
-                {selectedEvento.titulo}
-              </h3>
+              <h3 className="text-2xl font-serif text-white mb-4">{selectedEvento.titulo}</h3>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="flex items-center gap-2 text-zinc-400">
                   <Calendar size={18} className="text-[#C5A059]" />
-                  <span>{formatDateRange(selectedEvento.data_inicio, selectedEvento.data_fim)}</span>
+                  <span>
+                    {formatDateRange(selectedEvento.data_inicio, selectedEvento.data_fim)}
+                  </span>
                 </div>
                 {selectedEvento.hora_inicio && (
                   <div className="flex items-center gap-2 text-zinc-400">
                     <Clock size={18} className="text-[#C5A059]" />
-                    <span>{selectedEvento.hora_inicio}{selectedEvento.hora_fim && ` - ${selectedEvento.hora_fim}`}</span>
+                    <span>
+                      {selectedEvento.hora_inicio}
+                      {selectedEvento.hora_fim && ` - ${selectedEvento.hora_fim}`}
+                    </span>
                   </div>
                 )}
                 <div className="flex items-center gap-2 text-zinc-400">
@@ -495,11 +555,23 @@ function EventoCard({
   function getConfirmacaoIcon(confirmado?: string) {
     switch (confirmado) {
       case "confirmado":
-        return <span title="Confirmado"><CheckCircle size={12} className="text-green-400" /></span>;
+        return (
+          <span title="Confirmado">
+            <CheckCircle size={12} className="text-green-400" />
+          </span>
+        );
       case "anual":
-        return <span title="Evento Anual"><RefreshCw size={12} className="text-blue-400" /></span>;
+        return (
+          <span title="Evento Anual">
+            <RefreshCw size={12} className="text-blue-400" />
+          </span>
+        );
       case "provisorio":
-        return <span title="Data Provisória"><AlertCircle size={12} className="text-amber-400" /></span>;
+        return (
+          <span title="Data Provisória">
+            <AlertCircle size={12} className="text-amber-400" />
+          </span>
+        );
       default:
         return null;
     }
@@ -518,9 +590,7 @@ function EventoCard({
           {date.toLocaleDateString("pt-PT", { month: "short" })}
         </span>
         {evento.confirmado === "provisorio" && (
-          <span className="absolute top-2 right-2">
-            {getConfirmacaoIcon(evento.confirmado)}
-          </span>
+          <span className="absolute top-2 right-2">{getConfirmacaoIcon(evento.confirmado)}</span>
         )}
       </div>
 
@@ -530,10 +600,10 @@ function EventoCard({
           <span className={`px-2 py-0.5 text-xs ${getTipoColor(evento.tipo)}`}>
             {tipoIcon} {evento.tipo}
           </span>
-          {evento.destaque && (
-            <Star size={14} className="text-[#C5A059]" />
-          )}
-          {evento.confirmado && evento.confirmado !== "provisorio" && getConfirmacaoIcon(evento.confirmado)}
+          {evento.destaque && <Star size={14} className="text-[#C5A059]" />}
+          {evento.confirmado &&
+            evento.confirmado !== "provisorio" &&
+            getConfirmacaoIcon(evento.confirmado)}
         </div>
         <h3 className="text-lg font-serif text-white group-hover:text-[#C5A059] transition-colors mb-1">
           {evento.titulo}

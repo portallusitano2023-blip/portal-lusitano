@@ -1,14 +1,18 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { verifySession } from "@/lib/auth";
 
 export async function GET() {
   try {
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
     const now = new Date();
 
     // Buscar leads (ebooks)
-    const { data: leads, error: leadsError } = await supabase
-      .from("leads")
-      .select("*");
+    const { data: leads, error: leadsError } = await supabase.from("leads").select("*");
 
     if (leadsError) {
       console.error("Erro ao buscar leads:", leadsError);
@@ -52,36 +56,35 @@ export async function GET() {
 
     // Stats de leads/ebooks
     const totalLeads = leads?.length || 0;
-    const convertedLeads = leads?.filter(l => l.converted).length || 0;
+    const convertedLeads = leads?.filter((l) => l.converted).length || 0;
 
     // Stats de cavalos
     const totalCavalos = cavalos?.length || 0;
-    const activeCavalos = cavalos?.filter(c => c.status === "active").length || 0;
-    const soldCavalos = cavalos?.filter(c => c.status === "sold").length || 0;
+    const activeCavalos = cavalos?.filter((c) => c.status === "active").length || 0;
+    const soldCavalos = cavalos?.filter((c) => c.status === "sold").length || 0;
     const cavalosViews = cavalos?.reduce((sum, c) => sum + (c.views_count || 0), 0) || 0;
 
     // Stats de eventos
     const totalEventos = eventos?.length || 0;
-    const featuredEventos = eventos?.filter(e => e.destaque).length || 0;
-    const futureEventos = eventos?.filter(e => new Date(e.data_inicio) > now).length || 0;
+    const featuredEventos = eventos?.filter((e) => e.destaque).length || 0;
+    const futureEventos = eventos?.filter((e) => new Date(e.data_inicio) > now).length || 0;
     const eventosViews = eventos?.reduce((sum, e) => sum + (e.views_count || 0), 0) || 0;
 
     // Stats de coudelarias
     const totalCoudelarias = coudelarias?.length || 0;
-    const featuredCoudelarias = coudelarias?.filter(c => c.destaque).length || 0;
+    const featuredCoudelarias = coudelarias?.filter((c) => c.destaque).length || 0;
 
     // Stats de reviews
     const totalReviews = reviews?.length || 0;
-    const pendingReviews = reviews?.filter(r => r.status === "pending").length || 0;
-    const approvedReviews = reviews?.filter(r => r.status === "approved").length || 0;
+    const pendingReviews = reviews?.filter((r) => r.status === "pending").length || 0;
+    const approvedReviews = reviews?.filter((r) => r.status === "approved").length || 0;
 
     const stats = {
       // Leads/Ebooks
       totalLeads,
       convertedLeads,
-      conversionRate: totalLeads > 0
-        ? parseFloat(((convertedLeads / totalLeads) * 100).toFixed(1))
-        : 0,
+      conversionRate:
+        totalLeads > 0 ? parseFloat(((convertedLeads / totalLeads) * 100).toFixed(1)) : 0,
 
       // Cavalos
       totalCavalos,
@@ -108,9 +111,6 @@ export async function GET() {
     return NextResponse.json(stats);
   } catch (error) {
     console.error("Erro ao buscar estatísticas:", error);
-    return NextResponse.json(
-      { error: "Erro ao buscar estatísticas" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao buscar estatísticas" }, { status: 500 });
   }
 }

@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { verifySession } from "@/lib/auth";
 
 // GET - Listar todos os cavalos (admin)
 export async function GET() {
   try {
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
     const { data, error } = await supabase
       .from("cavalos_venda")
       .select("*")
@@ -11,25 +17,24 @@ export async function GET() {
 
     if (error) {
       console.error("Erro ao buscar cavalos:", error);
-      return NextResponse.json(
-        { error: "Erro ao buscar cavalos" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Erro ao buscar cavalos" }, { status: 500 });
     }
 
     return NextResponse.json({ cavalos: data });
   } catch (error) {
     console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
 
 // POST - Criar novo anúncio de cavalo
 export async function POST(request: NextRequest) {
   try {
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
     const body = await request.json();
 
     const { data, error } = await supabase
@@ -44,18 +49,12 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error("Erro ao criar anúncio:", error);
-      return NextResponse.json(
-        { error: "Erro ao criar anúncio" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Erro ao criar anúncio" }, { status: 500 });
     }
 
     return NextResponse.json({ cavalo: data });
   } catch (error) {
     console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
