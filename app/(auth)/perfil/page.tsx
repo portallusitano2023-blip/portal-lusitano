@@ -108,7 +108,7 @@ function PerfilContent() {
           </div>
         </div>
 
-        {/* Usage History placeholder */}
+        {/* Histórico de Uso */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-4">
             <Clock className="text-zinc-400" size={20} />
