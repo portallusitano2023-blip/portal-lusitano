@@ -1,17 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  MapPin,
-  Search,
-  Filter,
-  Crown,
-  ArrowRight,
-  Plus,
-  Users,
-  Star,
-} from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { MapPin, Search, Filter, Crown, ArrowRight, Plus, Users, Star } from "lucide-react";
 import Link from "next/link";
+import Pagination from "@/components/ui/Pagination";
 
 // Tipo para coudelaria
 interface Coudelaria {
@@ -36,16 +29,7 @@ interface Coudelaria {
   views_count: number;
 }
 
-const regioes = [
-  "Todas",
-  "Ribatejo",
-  "Alentejo",
-  "Lisboa",
-  "Porto",
-  "Minho",
-  "Douro",
-  "Centro",
-];
+const regioes = ["Todas", "Ribatejo", "Alentejo", "Lisboa", "Porto", "Minho", "Douro", "Centro"];
 
 // Placeholder images
 const placeholderImages = [
@@ -56,7 +40,13 @@ const placeholderImages = [
   "https://images.unsplash.com/photo-1450052590821-8bf91254a353?w=800",
 ];
 
+const ITENS_POR_PAGINA = 15;
+
 export default function DirectorioPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRegiao, setSelectedRegiao] = useState("Todas");
   const [coudelarias, setCoudelarias] = useState<Coudelaria[]>([]);
@@ -89,15 +79,25 @@ export default function DirectorioPage() {
   const destaqueCoudelarias = coudelarias.filter((c) => c.destaque);
   const normalCoudelarias = coudelarias.filter((c) => !c.destaque);
 
+  // Paginação para "Outras Coudelarias"
+  const totalPaginas = Math.ceil(normalCoudelarias.length / ITENS_POR_PAGINA);
+  const inicio = (currentPage - 1) * ITENS_POR_PAGINA;
+  const normalCoudelariasPaginadas = normalCoudelarias.slice(inicio, inicio + ITENS_POR_PAGINA);
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", page.toString());
+    router.push(`?${params.toString()}`, { scroll: true });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <main className="min-h-screen bg-[#050505]">
       {/* Hero Section */}
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
-          <div
-            className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
+          <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
               Diretório Oficial
             </span>
@@ -105,8 +105,8 @@ export default function DirectorioPage() {
               Coudelarias de Portugal
             </h1>
             <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
-              Descubra as melhores coudelarias de cavalos Lusitanos em Portugal.
-              Criadores verificados, linhagens de excelência e cavalos de elite.
+              Descubra as melhores coudelarias de cavalos Lusitanos em Portugal. Criadores
+              verificados, linhagens de excelência e cavalos de elite.
             </p>
           </div>
 
@@ -116,15 +116,11 @@ export default function DirectorioPage() {
             style={{ animationDelay: "0.1s" }}
           >
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059]">
-                {coudelarias.length}+
-              </div>
+              <div className="text-3xl font-serif text-[#C5A059]">{coudelarias.length}+</div>
               <div className="text-sm text-zinc-500">Coudelarias</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059]">
-                {regioes.length - 1}
-              </div>
+              <div className="text-3xl font-serif text-[#C5A059]">{regioes.length - 1}</div>
               <div className="text-sm text-zinc-500">Regiões</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
@@ -148,9 +144,7 @@ export default function DirectorioPage() {
                 <Crown className="text-black" size={32} />
               </div>
               <div>
-                <h3 className="text-xl font-serif text-white mb-1">
-                  Tem uma coudelaria?
-                </h3>
+                <h3 className="text-xl font-serif text-white mb-1">Tem uma coudelaria?</h3>
                 <p className="text-zinc-400">
                   Registe-se e apareça no maior diretório equestre de Portugal
                 </p>
@@ -173,10 +167,7 @@ export default function DirectorioPage() {
         >
           {/* Pesquisa */}
           <div className="flex-1 relative">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500"
-              size={20}
-            />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={20} />
             <input
               type="text"
               placeholder="Pesquisar por nome ou localização..."
@@ -188,10 +179,7 @@ export default function DirectorioPage() {
 
           {/* Filtro por região */}
           <div className="relative">
-            <Filter
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500"
-              size={20}
-            />
+            <Filter className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={20} />
             <select
               value={selectedRegiao}
               onChange={(e) => setSelectedRegiao(e.target.value)}
@@ -209,9 +197,7 @@ export default function DirectorioPage() {
         {/* Loading */}
         {loading && (
           <div className="text-center py-20">
-            <div className="animate-pulse text-[#C5A059]">
-              A carregar coudelarias...
-            </div>
+            <div className="animate-pulse text-[#C5A059]">A carregar coudelarias...</div>
           </div>
         )}
 
@@ -223,17 +209,11 @@ export default function DirectorioPage() {
               <section>
                 <div className="flex items-center gap-3 mb-8">
                   <Star className="text-[#C5A059]" size={24} />
-                  <h2 className="text-2xl font-serif text-white">
-                    Coudelarias em Destaque
-                  </h2>
+                  <h2 className="text-2xl font-serif text-white">Coudelarias em Destaque</h2>
                 </div>
                 <div className="grid lg:grid-cols-2 gap-8">
                   {destaqueCoudelarias.map((coudelaria, index) => (
-                    <FeaturedCard
-                      key={coudelaria.id}
-                      coudelaria={coudelaria}
-                      index={index}
-                    />
+                    <FeaturedCard key={coudelaria.id} coudelaria={coudelaria} index={index} />
                   ))}
                 </div>
               </section>
@@ -242,21 +222,31 @@ export default function DirectorioPage() {
             {/* Outras Coudelarias */}
             {normalCoudelarias.length > 0 && (
               <section>
-                <div className="flex items-center gap-3 mb-8">
-                  <Users className="text-zinc-400" size={24} />
-                  <h2 className="text-2xl font-serif text-zinc-300">
-                    Outras Coudelarias
-                  </h2>
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-3">
+                    <Users className="text-zinc-400" size={24} />
+                    <h2 className="text-2xl font-serif text-zinc-300">
+                      Outras Coudelarias
+                      <span className="text-zinc-600 text-lg ml-3">
+                        ({normalCoudelarias.length}{" "}
+                        {normalCoudelarias.length === 1 ? "coudelaria" : "coudelarias"})
+                      </span>
+                    </h2>
+                  </div>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {normalCoudelarias.map((coudelaria, index) => (
-                    <CoudelariaCard
-                      key={coudelaria.id}
-                      coudelaria={coudelaria}
-                      index={index}
-                    />
+                  {normalCoudelariasPaginadas.map((coudelaria, index) => (
+                    <CoudelariaCard key={coudelaria.id} coudelaria={coudelaria} index={index} />
                   ))}
                 </div>
+
+                {/* Paginação */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPaginas}
+                  onPageChange={handlePageChange}
+                  className="mt-12"
+                />
               </section>
             )}
 
@@ -269,9 +259,7 @@ export default function DirectorioPage() {
                 <h3 className="text-xl font-serif text-white mb-2">
                   Nenhuma coudelaria encontrada
                 </h3>
-                <p className="text-zinc-500">
-                  Tente ajustar os filtros de pesquisa
-                </p>
+                <p className="text-zinc-500">Tente ajustar os filtros de pesquisa</p>
               </div>
             )}
           </div>
@@ -282,15 +270,8 @@ export default function DirectorioPage() {
 }
 
 // Featured Card (para coudelarias em destaque)
-function FeaturedCard({
-  coudelaria,
-  index,
-}: {
-  coudelaria: Coudelaria;
-  index: number;
-}) {
-  const image =
-    coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
+function FeaturedCard({ coudelaria, index }: { coudelaria: Coudelaria; index: number }) {
+  const image = coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
 
   return (
     <div
@@ -335,15 +316,10 @@ function FeaturedCard({
               </span>
             )}
           </div>
-          <p className="text-zinc-400 line-clamp-2 mb-4">
-            {coudelaria.descricao}
-          </p>
+          <p className="text-zinc-400 line-clamp-2 mb-4">{coudelaria.descricao}</p>
           <div className="flex items-center gap-2 text-[#C5A059] text-sm font-medium">
             Ver coudelaria
-            <ArrowRight
-              size={16}
-              className="group-hover:translate-x-1 transition-transform"
-            />
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
       </Link>
@@ -352,15 +328,8 @@ function FeaturedCard({
 }
 
 // Card para coudelarias
-function CoudelariaCard({
-  coudelaria,
-  index,
-}: {
-  coudelaria: Coudelaria;
-  index: number;
-}) {
-  const image =
-    coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
+function CoudelariaCard({ coudelaria, index }: { coudelaria: Coudelaria; index: number }) {
+  const image = coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
 
   return (
     <div
@@ -394,18 +363,13 @@ function CoudelariaCard({
             <MapPin size={14} />
             {coudelaria.localizacao}, {coudelaria.regiao}
           </div>
-          <p className="text-zinc-400 text-sm line-clamp-2 mb-4">
-            {coudelaria.descricao}
-          </p>
+          <p className="text-zinc-400 text-sm line-clamp-2 mb-4">{coudelaria.descricao}</p>
 
           {/* Especialidades */}
           {coudelaria.especialidades?.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-4">
               {coudelaria.especialidades.slice(0, 2).map((esp) => (
-                <span
-                  key={esp}
-                  className="text-xs bg-[#C5A059]/10 text-[#C5A059] px-2 py-0.5"
-                >
+                <span key={esp} className="text-xs bg-[#C5A059]/10 text-[#C5A059] px-2 py-0.5">
                   {esp}
                 </span>
               ))}
@@ -414,10 +378,7 @@ function CoudelariaCard({
 
           <div className="flex items-center gap-2 text-[#C5A059] text-sm">
             Ver detalhes
-            <ArrowRight
-              size={14}
-              className="group-hover:translate-x-1 transition-transform"
-            />
+            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
       </Link>
