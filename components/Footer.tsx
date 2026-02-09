@@ -5,12 +5,13 @@ import { Instagram, Music2, Mail, MapPin, ArrowUpRight, Gift } from "lucide-reac
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Footer() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const navItems = [
     { name: t.nav.home, href: "/" },
     { name: t.nav.shop, href: "/loja" },
     { name: t.nav.journal, href: "/jornal" },
+    { name: language === "pt" ? "Sobre Nós" : "About Us", href: "/sobre" },
   ];
 
   const lusitanoItems = [

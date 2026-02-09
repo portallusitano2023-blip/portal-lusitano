@@ -208,6 +208,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
             { name: t.nav.home, href: "/" },
             { name: t.nav.shop, href: "/loja" },
             { name: t.nav.journal, href: "/jornal" },
+            { name: language === "pt" ? "Sobre" : "About", href: "/sobre" },
           ].map((item) => (
             <Link
               key={item.href}
@@ -416,6 +417,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
               { name: t.nav.home, href: "/", icon: Home },
               { name: t.nav.shop, href: "/loja", icon: Store },
               { name: t.nav.journal, href: "/jornal", icon: BookOpen },
+              { name: language === "pt" ? "Sobre Nós" : "About Us", href: "/sobre", icon: Users },
             ].map((item) => (
               <Link
                 key={item.href}

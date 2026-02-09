@@ -1,7 +1,7 @@
 {
   "name": "Portal Lusitano",
   "short_name": "Portal Lusitano",
-  "description": "O Portal de Excelência do Cavalo Lusitano - Loja, Leilões e Jornal",
+  "description": "O Portal de Excelência do Cavalo Lusitano - Marketplace, Ferramentas e Jornal",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#050505",
@@ -70,10 +70,17 @@
       "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Leilões",
-      "short_name": "Leilões",
-      "description": "Ver leilões ativos",
-      "url": "/leiloes",
+      "name": "Comprar Cavalo",
+      "short_name": "Cavalos",
+      "description": "Marketplace de cavalos Lusitanos",
+      "url": "/comprar",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Jornal",
+      "short_name": "Jornal",
+      "description": "Artigos e investigação sobre o Lusitano",
+      "url": "/jornal",
       "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     }
   ]
