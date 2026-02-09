@@ -227,6 +227,17 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
           <div ref={lusitanoBtnRef} onMouseEnter={openLusitano} onMouseLeave={closeLusitano}>
             <button
               onClick={() => setIsLusitanoOpen((prev) => !prev)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape" && isLusitanoOpen) {
+                  setIsLusitanoOpen(false);
+                } else if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setIsLusitanoOpen((prev) => !prev);
+                }
+              }}
+              aria-haspopup="true"
+              aria-expanded={isLusitanoOpen}
+              aria-controls="lusitano-dropdown-menu"
               className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 py-2"
             >
               Lusitano
@@ -506,9 +517,13 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
               className="fixed inset-0"
               style={{ zIndex: 9998 }}
               onClick={() => setIsLusitanoOpen(false)}
+              aria-hidden="true"
             />
             {/* Painel do dropdown */}
             <div
+              id="lusitano-dropdown-menu"
+              role="menu"
+              aria-label="Menu Lusitano"
               style={{
                 position: "fixed",
                 zIndex: 9999,
@@ -518,6 +533,9 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
               }}
               onMouseEnter={openLusitano}
               onMouseLeave={closeLusitano}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setIsLusitanoOpen(false);
+              }}
             >
               <div
                 style={{
@@ -541,6 +559,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
                       key={item.href}
                       href={item.href}
                       prefetch={false}
+                      role="menuitem"
                       onClick={() => setIsLusitanoOpen(false)}
                       className="dd-item"
                     >
@@ -563,6 +582,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
                       key={item.href}
                       href={item.href}
                       prefetch={false}
+                      role="menuitem"
                       onClick={() => setIsLusitanoOpen(false)}
                       className="dd-item"
                     >
@@ -582,6 +602,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
                       key={item.href}
                       href={item.href}
                       prefetch={false}
+                      role="menuitem"
                       onClick={() => setIsLusitanoOpen(false)}
                       className="dd-item"
                     >
