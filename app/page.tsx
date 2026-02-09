@@ -4,80 +4,333 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import TextSplit from "@/components/TextSplit";
+import { AnimateOnScroll } from "@/components/AnimateOnScroll";
+import {
+  ShoppingCart,
+  Crown,
+  Calculator,
+  BookOpen,
+  Gift,
+  Newspaper,
+  ArrowRight,
+  MapPin,
+  Trophy,
+  Shield,
+} from "lucide-react";
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const isPt = language === "pt";
+
+  const features = [
+    {
+      icon: ShoppingCart,
+      title: isPt ? "Comprar Cavalo" : "Buy a Horse",
+      desc: isPt
+        ? "Marketplace com cavalos Lusitanos verificados à venda"
+        : "Marketplace with verified Lusitano horses for sale",
+      href: "/comprar",
+      accent: "from-amber-500/20 to-orange-500/20",
+    },
+    {
+      icon: Crown,
+      title: isPt ? "Coudelarias" : "Stud Farms",
+      desc: isPt
+        ? "Directório das melhores coudelarias de Portugal"
+        : "Directory of the best stud farms in Portugal",
+      href: "/directorio",
+      accent: "from-yellow-500/20 to-amber-500/20",
+    },
+    {
+      icon: Calculator,
+      title: isPt ? "Ferramentas" : "Tools",
+      desc: isPt
+        ? "Calculadora de valor, comparador e análise de perfil"
+        : "Value calculator, comparator and profile analysis",
+      href: "/ferramentas",
+      accent: "from-emerald-500/20 to-teal-500/20",
+    },
+    {
+      icon: Newspaper,
+      title: isPt ? "Jornal" : "Journal",
+      desc: isPt
+        ? "Artigos, investigação e crónicas sobre o Lusitano"
+        : "Articles, research and chronicles about the Lusitano",
+      href: "/jornal",
+      accent: "from-blue-500/20 to-indigo-500/20",
+    },
+    {
+      icon: Trophy,
+      title: isPt ? "Lusitanos Notáveis" : "Notable Lusitanos",
+      desc: isPt
+        ? "Galeria de honra dos cavalos que fizeram história"
+        : "Hall of fame of horses that made history",
+      href: "/cavalos-famosos",
+      accent: "from-purple-500/20 to-pink-500/20",
+    },
+    {
+      icon: MapPin,
+      title: isPt ? "Mapa Interativo" : "Interactive Map",
+      desc: isPt
+        ? "Encontre coudelarias, eventos e profissionais no mapa"
+        : "Find stud farms, events and professionals on the map",
+      href: "/mapa",
+      accent: "from-rose-500/20 to-red-500/20",
+    },
+  ];
+
+  const pillars = [
+    {
+      icon: BookOpen,
+      title: isPt ? "Conhecimento" : "Knowledge",
+      desc: isPt
+        ? "Arquivo editorial com investigação sobre a raça"
+        : "Editorial archive with research about the breed",
+    },
+    {
+      icon: Shield,
+      title: isPt ? "Verificação" : "Verification",
+      desc: isPt ? "Dados verificados e fontes credíveis" : "Verified data and credible sources",
+    },
+    {
+      icon: Crown,
+      title: isPt ? "Tradição" : "Tradition",
+      desc: isPt
+        ? "500 anos de história equestre portuguesa"
+        : "500 years of Portuguese equestrian history",
+    },
+    {
+      icon: Gift,
+      title: isPt ? "Comunidade" : "Community",
+      desc: isPt
+        ? "Uma rede de cavaleiros, criadores e entusiastas"
+        : "A network of riders, breeders and enthusiasts",
+    },
+  ];
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
-
-      {/* 1. IMAGEM DE FUNDO — clip-path reveal cinematográfico */}
-      <div
-        className="absolute inset-0 z-0 clip-reveal-left"
-        style={{ animationDuration: "1.2s" }}
-      >
-        <Image
-          src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1920&auto=format&fit=crop"
-          alt="Nobreza Lusitana"
-          fill
-          className="object-cover opacity-50"
-          style={{ objectPosition: "center 30%" }}
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-black/40"></div>
-      </div>
-
-      {/* 2. CONTEUDO */}
-      <div className="relative z-10 max-w-4xl mx-auto space-y-8">
-
-        <p
-          className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#C5A059] opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-          style={{ animationDelay: "0.4s" }}
-        >
-          {t.home.est}
-        </p>
-
-        {/* HEADLINE — cada palavra surge individualmente */}
-        <h1 className="text-6xl md:text-8xl font-serif text-white leading-tight drop-shadow-lg">
-          <TextSplit
-            text={t.home.title_main}
-            baseDelay={0.5}
-            wordDelay={0.12}
-          />
-        </h1>
-
-        <p
-          className="text-sm md:text-base font-serif italic text-zinc-200 max-w-lg mx-auto leading-relaxed drop-shadow-md opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-          style={{ animationDelay: "0.9s" }}
-        >
-          &ldquo;{t.home.hero_text}&rdquo;
-        </p>
-
+    <main>
+      {/* ===== HERO — Full Screen ===== */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+        {/* Background Image */}
         <div
-          className="pt-8 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-          style={{ animationDelay: "1.1s" }}
+          className="absolute inset-0 z-0 clip-reveal-left"
+          style={{ animationDuration: "1.2s" }}
         >
-          <Link
-            href="/loja"
-            className="inline-block border border-white/30 bg-black/20 backdrop-blur-md px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-white hover:bg-[#C5A059] hover:text-black hover:border-[#C5A059] transition-all duration-500"
-          >
-            {t.home.cta}
-          </Link>
+          <Image
+            src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1920&auto=format&fit=crop"
+            alt="Nobreza Lusitana"
+            fill
+            className="object-cover opacity-50"
+            style={{ objectPosition: "center 30%" }}
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-black/40" />
         </div>
 
-      </div>
+        {/* Content */}
+        <div className="relative z-10 max-w-4xl mx-auto space-y-8">
+          <p
+            className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#C5A059] opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+            style={{ animationDelay: "0.4s" }}
+          >
+            {t.home.est}
+          </p>
 
-      {/* Scroll Indicator */}
-      <div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-white/40 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-        style={{ animationDelay: "1.3s" }}
-      >
-        <span className="text-[10px] tracking-widest uppercase animate-[bounce-scroll_1.5s_ease-in-out_infinite]">
-          {t.home.scroll}
-        </span>
-      </div>
+          <h1 className="text-6xl md:text-8xl font-serif text-white leading-tight drop-shadow-lg">
+            <TextSplit text={t.home.title_main} baseDelay={0.5} wordDelay={0.12} />
+          </h1>
 
+          <p
+            className="text-sm md:text-base font-serif italic text-zinc-200 max-w-lg mx-auto leading-relaxed drop-shadow-md opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+            style={{ animationDelay: "0.9s" }}
+          >
+            &ldquo;{t.home.hero_text}&rdquo;
+          </p>
+
+          <div
+            className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+            style={{ animationDelay: "1.1s" }}
+          >
+            <Link
+              href="/comprar"
+              className="inline-block border border-white/30 bg-black/20 backdrop-blur-md px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-white hover:bg-[#C5A059] hover:text-black hover:border-[#C5A059] transition-all duration-500"
+            >
+              {isPt ? "Comprar Cavalo" : "Buy a Horse"}
+            </Link>
+            <Link
+              href="/loja"
+              className="inline-block px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-zinc-400 hover:text-white transition-colors duration-300"
+            >
+              {t.home.cta} →
+            </Link>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-white/40 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+          style={{ animationDelay: "1.3s" }}
+        >
+          <span className="text-[10px] tracking-widest uppercase animate-[bounce-scroll_1.5s_ease-in-out_infinite]">
+            {t.home.scroll}
+          </span>
+        </div>
+      </section>
+
+      {/* ===== DISCOVER SECTION ===== */}
+      <section className="py-24 sm:py-32 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto">
+          <AnimateOnScroll className="text-center mb-16">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-4 block">
+              {isPt ? "Descubra" : "Discover"}
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mb-4">
+              {isPt ? "Tudo Sobre o Lusitano" : "Everything About the Lusitano"}
+            </h2>
+            <p className="text-zinc-500 max-w-xl mx-auto">
+              {isPt
+                ? "A plataforma mais completa dedicada ao cavalo Lusitano"
+                : "The most complete platform dedicated to the Lusitano horse"}
+            </p>
+          </AnimateOnScroll>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {features.map((feature, i) => (
+              <AnimateOnScroll key={feature.href} delay={i * 80}>
+                <Link
+                  href={feature.href}
+                  className="group block bg-white/[0.02] border border-white/5 p-6 sm:p-8 hover:border-[#C5A059]/20 hover:bg-white/[0.04] transition-all duration-500 relative overflow-hidden"
+                >
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                  />
+                  <div className="relative">
+                    <div className="w-12 h-12 bg-[#C5A059]/10 rounded-lg flex items-center justify-center mb-5 group-hover:bg-[#C5A059]/20 transition-colors">
+                      <feature.icon size={22} className="text-[#C5A059]" />
+                    </div>
+                    <h3 className="text-lg font-serif text-white mb-2 group-hover:text-[#C5A059] transition-colors duration-300">
+                      {feature.title}
+                    </h3>
+                    <p className="text-zinc-500 text-sm leading-relaxed mb-4">{feature.desc}</p>
+                    <span className="text-[11px] uppercase tracking-wider text-zinc-600 group-hover:text-[#C5A059] transition-colors flex items-center gap-2">
+                      {isPt ? "Explorar" : "Explore"}
+                      <ArrowRight
+                        size={12}
+                        className="group-hover:translate-x-1 transition-transform"
+                      />
+                    </span>
+                  </div>
+                </Link>
+              </AnimateOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== PILLARS ===== */}
+      <section className="py-20 sm:py-28 border-t border-white/5">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <AnimateOnScroll className="text-center mb-16">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-4 block">
+              {isPt ? "Os Nossos Pilares" : "Our Pillars"}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+              {isPt ? "Porquê o Portal Lusitano" : "Why Portal Lusitano"}
+            </h2>
+          </AnimateOnScroll>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {pillars.map((pillar, i) => (
+              <AnimateOnScroll key={pillar.title} delay={i * 100}>
+                <div className="text-center p-6">
+                  <div className="w-14 h-14 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-5">
+                    <pillar.icon size={24} className="text-[#C5A059]" />
+                  </div>
+                  <h3 className="text-lg font-serif text-white mb-2">{pillar.title}</h3>
+                  <p className="text-zinc-500 text-sm leading-relaxed">{pillar.desc}</p>
+                </div>
+              </AnimateOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== EBOOK CTA ===== */}
+      <section className="relative py-24 sm:py-32 border-t border-white/5 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C5A059]/5 rounded-full blur-[120px]" />
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+          <AnimateOnScroll>
+            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+              {/* Book Preview */}
+              <div className="flex-shrink-0">
+                <div className="w-48 h-64 sm:w-56 sm:h-72 bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#C5A059]/20 flex flex-col items-center justify-center relative shadow-2xl shadow-black/50">
+                  <div className="absolute top-4 left-4 w-8 h-8 border-t border-l border-[#C5A059]/20" />
+                  <div className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-[#C5A059]/20" />
+                  <BookOpen className="text-[#C5A059]/40 mb-4" size={40} />
+                  <p className="text-white/80 font-serif text-sm text-center px-6">
+                    Introdução ao Cavalo Lusitano
+                  </p>
+                  <p className="text-zinc-600 text-[9px] uppercase tracking-[0.3em] mt-3">
+                    30 {isPt ? "Páginas" : "Pages"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Text */}
+              <div className="text-center md:text-left">
+                <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-4 block">
+                  Ebook {isPt ? "Gratuito" : "Free"}
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+                  {isPt ? "O Guia Essencial do Lusitano" : "The Essential Lusitano Guide"}
+                </h2>
+                <p className="text-zinc-400 leading-relaxed mb-8 max-w-lg">
+                  {isPt
+                    ? "Descobre a história, as características e o que torna esta raça única. 30 páginas de conhecimento gratuito."
+                    : "Discover the history, characteristics and what makes this breed unique. 30 pages of free knowledge."}
+                </p>
+                <Link
+                  href="/ebook-gratis"
+                  className="inline-flex items-center gap-3 bg-gradient-to-r from-[#C5A059] to-[#D4B06A] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.15)]"
+                >
+                  <Gift size={16} />
+                  {isPt ? "Descarregar Grátis" : "Download Free"}
+                </Link>
+              </div>
+            </div>
+          </AnimateOnScroll>
+        </div>
+      </section>
+
+      {/* ===== LOJA CTA ===== */}
+      <section className="py-20 sm:py-28 border-t border-white/5">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <AnimateOnScroll>
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-4 block">
+              {isPt ? "Loja" : "Shop"}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+              {isPt ? "Vestuário & Acessórios Equestres" : "Equestrian Clothing & Accessories"}
+            </h2>
+            <p className="text-zinc-500 max-w-lg mx-auto mb-10">
+              {isPt
+                ? "Peças que celebram a herança equestre portuguesa. Design contemporâneo, tradição secular."
+                : "Pieces that celebrate Portuguese equestrian heritage. Contemporary design, secular tradition."}
+            </p>
+            <Link
+              href="/loja"
+              className="inline-block border border-white/20 px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-white hover:bg-[#C5A059] hover:text-black hover:border-[#C5A059] transition-all duration-500"
+            >
+              {t.home.cta}
+            </Link>
+          </AnimateOnScroll>
+        </div>
+      </section>
     </main>
   );
 }
