@@ -2,10 +2,7 @@
 
 import { useState, useEffect, type RefObject } from "react";
 
-export function useInViewOnce(
-  ref: RefObject<HTMLElement | null>,
-  margin = "-50px"
-) {
+export function useInViewOnce(ref: RefObject<HTMLElement | null>, margin = "-50px") {
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
@@ -24,7 +21,7 @@ export function useInViewOnce(
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [margin]);
+  }, [ref, margin]);
 
   return inView;
 }
