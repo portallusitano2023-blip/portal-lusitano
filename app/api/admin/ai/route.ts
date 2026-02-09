@@ -6,15 +6,27 @@ import { verifySession } from "@/lib/auth";
 // import OpenAI from "openai";
 // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+interface Review {
+  comment?: string;
+  rating?: number;
+}
+
+interface AIInput {
+  type?: string;
+  name?: string;
+  features?: string[];
+  text?: string;
+  reviews?: Review[];
+}
+
 interface AIRequest {
-  task: "generate_description" | "suggest_subject" | "analyze_sentiment" | "best_time" | "improve_text";
-  input: {
-    type?: string;
-    name?: string;
-    features?: string[];
-    text?: string;
-    reviews?: any[];
-  };
+  task:
+    | "generate_description"
+    | "suggest_subject"
+    | "analyze_sentiment"
+    | "best_time"
+    | "improve_text";
+  input: AIInput;
 }
 
 export async function POST(request: NextRequest) {
@@ -27,7 +39,7 @@ export async function POST(request: NextRequest) {
     const body: AIRequest = await request.json();
     const { task, input } = body;
 
-    let result: any = {};
+    let result: Record<string, unknown> = {};
 
     switch (task) {
       case "generate_description":
@@ -68,7 +80,7 @@ export async function POST(request: NextRequest) {
 // AI FUNCTIONS (Mock - Replace with real AI)
 // ========================================
 
-async function generateDescription(input: any) {
+async function generateDescription(input: AIInput) {
   // Mock - In production, use OpenAI:
   /*
   const response = await openai.chat.completions.create({
@@ -105,10 +117,10 @@ async function generateDescription(input: any) {
   };
 }
 
-async function suggestEmailSubject(input: any) {
+async function suggestEmailSubject(input: AIInput) {
   // Mock - In production, use OpenAI with prompt engineering
 
-  const { type, text } = input;
+  const { type } = input;
 
   const subjects = {
     newsletter: [
@@ -146,7 +158,7 @@ async function suggestEmailSubject(input: any) {
   };
 }
 
-async function analyzeSentiment(input: any) {
+async function analyzeSentiment(input: AIInput) {
   // Mock sentiment analysis - In production, use OpenAI or specialized API
 
   const reviews = input.reviews || [];
@@ -162,7 +174,7 @@ async function analyzeSentiment(input: any) {
   }
 
   // Simple mock analysis
-  const sentiments = reviews.map((review: any) => {
+  const sentiments = reviews.map((review: Review) => {
     const text = (review.comment || "").toLowerCase();
     const positiveWords = ["excelente", "ótimo", "bom", "recomendo", "fantástico", "maravilhoso"];
     const negativeWords = ["mau", "péssimo", "terrível", "não recomendo", "fraco"];
@@ -197,15 +209,15 @@ async function analyzeSentiment(input: any) {
       overall === "positive"
         ? "Reviews maioritariamente positivas - Ótima reputação"
         : overall === "negative"
-        ? "Atenção: Sentimento negativo detetado - Investigar problemas"
-        : "Sentimento misto - Oportunidade de melhoria",
+          ? "Atenção: Sentimento negativo detetado - Investigar problemas"
+          : "Sentimento misto - Oportunidade de melhoria",
       `${positive} reviews positivas de ${total}`,
       negative > 0 ? `${negative} reviews negativas requerem atenção` : "Sem reviews negativas",
     ],
   };
 }
 
-async function suggestBestTime(input: any) {
+async function suggestBestTime(_input: AIInput) {
   // Mock - In production, analyze historical email open rates
 
   const dayRecommendations = {
@@ -214,8 +226,8 @@ async function suggestBestTime(input: any) {
     "Quarta-feira": { time: "11:00", openRate: "29%", reason: "Meio da semana, atenção alta" },
     "Quinta-feira": { time: "15:00", openRate: "26%", reason: "Preparação fim de semana" },
     "Sexta-feira": { time: "09:00", openRate: "15%", reason: "Manhã antes do weekend" },
-    "Sábado": { time: "12:00", openRate: "8%", reason: "Baixo engagement - evitar" },
-    "Domingo": { time: "19:00", openRate: "12%", reason: "Noite de preparação semana" },
+    Sábado: { time: "12:00", openRate: "8%", reason: "Baixo engagement - evitar" },
+    Domingo: { time: "19:00", openRate: "12%", reason: "Noite de preparação semana" },
   };
 
   const best = "Terça-feira";
@@ -234,7 +246,7 @@ async function suggestBestTime(input: any) {
   };
 }
 
-async function improveText(input: any) {
+async function improveText(input: AIInput) {
   // Mock text improvement - In production, use OpenAI
 
   const { text } = input;

@@ -30,7 +30,7 @@ interface Message {
   email: string;
   telefone: string | null;
   company: string | null;
-  form_data: any;
+  form_data: Record<string, unknown>;
   status: string;
   priority: string;
   tags: string[];
@@ -121,9 +121,7 @@ export default function MensagensPage() {
       });
 
       // Atualizar local
-      setMessages((prev) =>
-        prev.map((m) => (m.id === message.id ? { ...m, status: "lido" } : m))
-      );
+      setMessages((prev) => prev.map((m) => (m.id === message.id ? { ...m, status: "lido" } : m)));
       fetchStats();
     }
   };
@@ -136,9 +134,7 @@ export default function MensagensPage() {
         body: JSON.stringify({ status }),
       });
 
-      setMessages((prev) =>
-        prev.map((m) => (m.id === messageId ? { ...m, status } : m))
-      );
+      setMessages((prev) => prev.map((m) => (m.id === messageId ? { ...m, status } : m)));
 
       if (selectedMessage?.id === messageId) {
         setSelectedMessage({ ...selectedMessage, status });
@@ -309,8 +305,16 @@ export default function MensagensPage() {
                     { value: "all", label: "Todos", count: stats?.total || 0 },
                     { value: "novo", label: "Novos", count: stats?.byStatus.novo || 0 },
                     { value: "lido", label: "Lidos", count: stats?.byStatus.lido || 0 },
-                    { value: "respondido", label: "Respondidos", count: stats?.byStatus.respondido || 0 },
-                    { value: "arquivado", label: "Arquivados", count: stats?.byStatus.arquivado || 0 },
+                    {
+                      value: "respondido",
+                      label: "Respondidos",
+                      count: stats?.byStatus.respondido || 0,
+                    },
+                    {
+                      value: "arquivado",
+                      label: "Arquivados",
+                      count: stats?.byStatus.arquivado || 0,
+                    },
                   ].map((item) => (
                     <button
                       key={item.value}
@@ -390,7 +394,10 @@ export default function MensagensPage() {
             {/* Pesquisa */}
             <div className="mb-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                <Search
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+                  size={18}
+                />
                 <input
                   type="text"
                   value={searchTerm}
@@ -425,22 +432,30 @@ export default function MensagensPage() {
                     }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`mt-1 ${message.status === "novo" ? "text-orange-400" : "text-zinc-600"}`}>
+                      <div
+                        className={`mt-1 ${message.status === "novo" ? "text-orange-400" : "text-zinc-600"}`}
+                      >
                         {message.status === "novo" ? <Mail size={20} /> : <MailOpen size={20} />}
                       </div>
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className={`font-medium text-white truncate ${message.status === "novo" ? "font-bold" : ""}`}>
+                          <span
+                            className={`font-medium text-white truncate ${message.status === "novo" ? "font-bold" : ""}`}
+                          >
                             {message.name}
                           </span>
-                          <span className={`flex-shrink-0 w-2 h-2 rounded-full ${getPriorityColor(message.priority)}`}></span>
+                          <span
+                            className={`flex-shrink-0 w-2 h-2 rounded-full ${getPriorityColor(message.priority)}`}
+                          ></span>
                         </div>
 
                         <div className="text-sm text-zinc-500 truncate mb-2">{message.email}</div>
 
                         <div className="flex items-center gap-2">
-                          <span className={`text-xs px-2 py-0.5 rounded border ${getFormTypeColor(message.form_type)}`}>
+                          <span
+                            className={`text-xs px-2 py-0.5 rounded border ${getFormTypeColor(message.form_type)}`}
+                          >
                             {getFormTypeLabel(message.form_type)}
                           </span>
 
@@ -470,7 +485,9 @@ export default function MensagensPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h2 className="text-2xl font-serif text-white">{selectedMessage.name}</h2>
-                      <span className={`text-xs px-2 py-1 rounded border ${getFormTypeColor(selectedMessage.form_type)}`}>
+                      <span
+                        className={`text-xs px-2 py-1 rounded border ${getFormTypeColor(selectedMessage.form_type)}`}
+                      >
                         {getFormTypeLabel(selectedMessage.form_type)}
                       </span>
                     </div>
@@ -539,7 +556,9 @@ export default function MensagensPage() {
                 <div className="flex gap-2 mb-6">
                   <button
                     onClick={() => {
-                      setReplySubject(`Re: ${getFormTypeLabel(selectedMessage.form_type)} - ${selectedMessage.name}`);
+                      setReplySubject(
+                        `Re: ${getFormTypeLabel(selectedMessage.form_type)} - ${selectedMessage.name}`
+                      );
                       setShowReplyModal(true);
                     }}
                     className="flex items-center gap-2 bg-[#C5A059] hover:bg-[#B39049] text-black px-4 py-2 rounded-lg font-medium transition-colors"
@@ -582,7 +601,9 @@ export default function MensagensPage() {
                 </div>
 
                 {/* Info Adicional */}
-                {(selectedMessage.responded_at || selectedMessage.payment_id || selectedMessage.cavalo_id) && (
+                {(selectedMessage.responded_at ||
+                  selectedMessage.payment_id ||
+                  selectedMessage.cavalo_id) && (
                   <div className="bg-zinc-800/50 p-4 rounded-lg space-y-2 text-sm">
                     {selectedMessage.responded_at && (
                       <div className="text-green-400">
@@ -594,7 +615,9 @@ export default function MensagensPage() {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
-                        {selectedMessage.responded_by && <span className="text-zinc-500"> por {selectedMessage.responded_by}</span>}
+                        {selectedMessage.responded_by && (
+                          <span className="text-zinc-500"> por {selectedMessage.responded_by}</span>
+                        )}
                       </div>
                     )}
 
@@ -678,8 +701,7 @@ export default function MensagensPage() {
                   >
                     {sending ? (
                       <>
-                        <RefreshCw className="animate-spin" size={16} />
-                        A enviar...
+                        <RefreshCw className="animate-spin" size={16} />A enviar...
                       </>
                     ) : (
                       <>

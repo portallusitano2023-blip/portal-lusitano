@@ -53,9 +53,9 @@ import NotificationCenter from "@/components/admin-app/NotificationCenter";
 interface MenuItem {
   id: string;
   title: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
   emoji: string;
-  component: any;
+  component: React.LazyExoticComponent<React.ComponentType>;
 }
 
 const MENU_ITEMS: MenuItem[] = [
@@ -219,9 +219,7 @@ export default function AdminAppPage() {
 
   // Verificar autenticação
   useEffect(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("auth-token="));
+    const token = document.cookie.split("; ").find((row) => row.startsWith("auth-token="));
 
     if (token) {
       setIsAuthenticated(true);
@@ -310,9 +308,7 @@ export default function AdminAppPage() {
             {/* Formulário */}
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Email
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
                 <input
                   type="email"
                   value={loginForm.email}
@@ -325,9 +321,7 @@ export default function AdminAppPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Password
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
                 <input
                   type="password"
                   value={loginForm.password}
@@ -412,7 +406,7 @@ export default function AdminAppPage() {
         <nav className="flex-1 overflow-y-auto p-4 space-y-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           {MENU_ITEMS.map((item) => {
             const Icon = item.icon;
-            const isActive = tabs.some(t => t.id === item.id);
+            const isActive = tabs.some((t) => t.id === item.id);
             const isCurrentTab = activeTabId === item.id;
 
             return (
@@ -426,14 +420,16 @@ export default function AdminAppPage() {
                     isCurrentTab
                       ? "bg-gradient-to-r from-[#C5A059] to-[#d4b469] text-black font-semibold shadow-lg shadow-[#C5A059]/20"
                       : isActive
-                      ? "bg-white/5 text-[#C5A059] font-medium"
-                      : "text-gray-400 hover:bg-white/5 hover:text-white"
+                        ? "bg-white/5 text-[#C5A059] font-medium"
+                        : "text-gray-400 hover:bg-white/5 hover:text-white"
                   }
                 `}
               >
-                <span className={`text-2xl transition-transform duration-200 ${
-                  isCurrentTab ? "scale-110" : "group-hover:scale-110"
-                }`}>
+                <span
+                  className={`text-2xl transition-transform duration-200 ${
+                    isCurrentTab ? "scale-110" : "group-hover:scale-110"
+                  }`}
+                >
                   {item.emoji}
                 </span>
                 <span className="text-sm font-medium">{item.title}</span>
@@ -514,15 +510,15 @@ export default function AdminAppPage() {
                   )}
 
                   {tab.icon && (
-                    <span className={`text-xl transition-transform duration-200 ${
-                      activeTabId === tab.id ? "scale-110" : "group-hover:scale-105"
-                    }`}>
+                    <span
+                      className={`text-xl transition-transform duration-200 ${
+                        activeTabId === tab.id ? "scale-110" : "group-hover:scale-105"
+                      }`}
+                    >
                       {tab.icon}
                     </span>
                   )}
-                  <span className="flex-1 truncate text-sm font-medium">
-                    {tab.title}
-                  </span>
+                  <span className="flex-1 truncate text-sm font-medium">{tab.title}</span>
                   {tab.closable !== false && (
                     <button
                       onClick={(e) => {

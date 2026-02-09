@@ -76,7 +76,7 @@ export default function CoudelariasPage() {
     }
   };
 
-  const updateCoudelaria = async (id: string, updates: any) => {
+  const updateCoudelaria = async (id: string, updates: Partial<Coudelaria>) => {
     try {
       const res = await fetch(`/api/admin/coudelarias/${id}`, {
         method: "PATCH",
@@ -142,19 +142,12 @@ export default function CoudelariasPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Link
-              href="/admin"
-              className="p-2 hover:bg-white/5 rounded-lg transition-colors"
-            >
+            <Link href="/admin" className="p-2 hover:bg-white/5 rounded-lg transition-colors">
               <FiHome className="text-gray-400" size={20} />
             </Link>
-            <h1 className="text-3xl font-bold text-white">
-              Gestão de Coudelarias
-            </h1>
+            <h1 className="text-3xl font-bold text-white">Gestão de Coudelarias</h1>
           </div>
-          <p className="text-gray-400">
-            Gerir coudelarias, planos e aprovações
-          </p>
+          <p className="text-gray-400">Gerir coudelarias, planos e aprovações</p>
         </div>
 
         {/* Stats Cards */}
@@ -166,21 +159,15 @@ export default function CoudelariasPage() {
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Pendentes</div>
-              <div className="text-2xl font-bold text-yellow-400">
-                {stats.pendente}
-              </div>
+              <div className="text-2xl font-bold text-yellow-400">{stats.pendente}</div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Aprovadas</div>
-              <div className="text-2xl font-bold text-green-400">
-                {stats.aprovado}
-              </div>
+              <div className="text-2xl font-bold text-green-400">{stats.aprovado}</div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Destaque</div>
-              <div className="text-2xl font-bold text-[#C5A059]">
-                {stats.destaque}
-              </div>
+              <div className="text-2xl font-bold text-[#C5A059]">{stats.destaque}</div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Planos Pagos</div>
@@ -258,19 +245,12 @@ export default function CoudelariasPage() {
             </thead>
             <tbody className="divide-y divide-white/10">
               {coudelarias.map((coudelaria) => (
-                <tr
-                  key={coudelaria.id}
-                  className="hover:bg-white/5 transition-colors"
-                >
+                <tr key={coudelaria.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-4 py-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-white font-medium">
-                          {coudelaria.nome}
-                        </span>
-                        {coudelaria.destaque && (
-                          <FiStar className="text-[#C5A059]" size={14} />
-                        )}
+                        <span className="text-white font-medium">{coudelaria.nome}</span>
+                        {coudelaria.destaque && <FiStar className="text-[#C5A059]" size={14} />}
                       </div>
                       <div className="text-xs text-gray-400 mt-1">
                         {coudelaria.proprietario_nome || coudelaria.proprietario_email}
@@ -306,9 +286,7 @@ export default function CoudelariasPage() {
                       {/* Aprovar */}
                       {coudelaria.status === "pendente" && (
                         <button
-                          onClick={() =>
-                            updateCoudelaria(coudelaria.id, { status: "aprovado" })
-                          }
+                          onClick={() => updateCoudelaria(coudelaria.id, { status: "aprovado" })}
                           className="p-2 hover:bg-green-500/20 rounded-lg transition-colors"
                           title="Aprovar"
                         >
@@ -319,9 +297,7 @@ export default function CoudelariasPage() {
                       {/* Rejeitar */}
                       {coudelaria.status === "pendente" && (
                         <button
-                          onClick={() =>
-                            updateCoudelaria(coudelaria.id, { status: "rejeitado" })
-                          }
+                          onClick={() => updateCoudelaria(coudelaria.id, { status: "rejeitado" })}
                           className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
                           title="Rejeitar"
                         >
@@ -344,9 +320,7 @@ export default function CoudelariasPage() {
                         title={coudelaria.destaque ? "Remover destaque" : "Adicionar destaque"}
                       >
                         <FiStar
-                          className={
-                            coudelaria.destaque ? "text-[#C5A059]" : "text-gray-400"
-                          }
+                          className={coudelaria.destaque ? "text-[#C5A059]" : "text-gray-400"}
                           size={16}
                         />
                       </button>
@@ -386,9 +360,7 @@ export default function CoudelariasPage() {
           </table>
 
           {coudelarias.length === 0 && (
-            <div className="p-8 text-center text-gray-400">
-              Nenhuma coudelaria encontrada
-            </div>
+            <div className="p-8 text-center text-gray-400">Nenhuma coudelaria encontrada</div>
           )}
         </div>
       </div>
