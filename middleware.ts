@@ -1,8 +1,45 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+// --- Rate Limiting (Edge-compatible, in-memory) ---
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown"
+  );
+}
+
+function isRateLimited(ip: string, limit: number, windowMs: number): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry || now > entry.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
+    return false;
+  }
+
+  entry.count += 1;
+  return entry.count > limit;
+}
+
+// Cleanup stale entries periodically
+let requestCounter = 0;
+function cleanupRateLimitMap() {
+  requestCounter++;
+  if (requestCounter % 1000 === 0) {
+    const now = Date.now();
+    for (const [key, entry] of rateLimitMap) {
+      if (now > entry.resetTime) rateLimitMap.delete(key);
+    }
+  }
+}
+
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
+  const pathname = request.nextUrl.pathname;
 
   // Additional security headers (beyond next.config.js)
   response.headers.set("X-DNS-Prefetch-Control", "on");
@@ -10,8 +47,31 @@ export async function middleware(request: NextRequest) {
   response.headers.set("X-Permitted-Cross-Domain-Policies", "none");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
 
-  // CORS headers for API routes
-  if (request.nextUrl.pathname.startsWith("/api/")) {
+  // API routes: Rate Limiting + CORS
+  if (pathname.startsWith("/api/")) {
+    cleanupRateLimitMap();
+
+    // Skip rate limiting for webhooks (Stripe needs unrestricted access)
+    const isWebhook = pathname.startsWith("/api/stripe/webhook");
+
+    if (!isWebhook) {
+      const ip = getClientIp(request);
+      const isAuth = pathname.startsWith("/api/auth/login");
+
+      // Auth routes: 10 req/15min, other API: 60 req/min
+      const limit = isAuth ? 10 : 60;
+      const window = isAuth ? 15 * 60 * 1000 : 60 * 1000;
+      const key = isAuth ? `auth:${ip}` : `api:${ip}`;
+
+      if (isRateLimited(key, limit, window)) {
+        return NextResponse.json(
+          { error: "Too many requests. Please try again later." },
+          { status: 429 }
+        );
+      }
+    }
+
+    // CORS
     const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL;
     if (allowedOrigin) {
       response.headers.set("Access-Control-Allow-Credentials", "true");
@@ -39,7 +99,6 @@ export async function middleware(request: NextRequest) {
 
   // i18n: Rewrite /en/* routes to serve the same pages with locale cookie
   // Isto permite que o Google indexe /en/comprar, /en/loja, etc.
-  const pathname = request.nextUrl.pathname;
   if (pathname.startsWith("/en/") || pathname === "/en") {
     // Strip /en prefix and rewrite to the Portuguese route
     const strippedPath = pathname.replace(/^\/en/, "") || "/";
@@ -63,10 +122,7 @@ export async function middleware(request: NextRequest) {
   response.headers.set("Content-Language", "pt");
 
   // Protect admin routes (except login page)
-  if (
-    request.nextUrl.pathname.startsWith("/admin") &&
-    !request.nextUrl.pathname.startsWith("/admin/login")
-  ) {
+  if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
     const token = request.cookies.get("admin_session")?.value;
 
     if (!token) {
