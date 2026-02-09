@@ -1,13 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Users, Mail, Phone, CreditCard, CheckCircle, TrendingDown, AlertCircle } from "lucide-react";
+import {
+  Users,
+  Mail,
+  Phone,
+  CreditCard,
+  CheckCircle,
+  TrendingDown,
+  AlertCircle,
+} from "lucide-react";
 
 interface FunnelStage {
   id: string;
   label: string;
   count: number;
-  icon: any;
+  icon: typeof Users;
   color: string;
 }
 
@@ -34,8 +42,8 @@ export default function ConversionFunnel({
     const percentage = (stage.count / totalStart) * 100;
     const previousCount = index > 0 ? stages[index - 1].count : stage.count;
     const dropoff = index > 0 ? previousCount - stage.count : 0;
-    const dropoffPercentage = index > 0 ? ((dropoff / previousCount) * 100) : 0;
-    const conversionRate = index > 0 ? ((stage.count / previousCount) * 100) : 100;
+    const dropoffPercentage = index > 0 ? (dropoff / previousCount) * 100 : 0;
+    const conversionRate = index > 0 ? (stage.count / previousCount) * 100 : 100;
 
     return {
       ...stage,
@@ -47,9 +55,8 @@ export default function ConversionFunnel({
   });
 
   // Calcular taxa de conversão geral
-  const overallConversion = stages.length > 0
-    ? ((stages[stages.length - 1].count / totalStart) * 100)
-    : 0;
+  const overallConversion =
+    stages.length > 0 ? (stages[stages.length - 1].count / totalStart) * 100 : 0;
 
   return (
     <div className="bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-6">
@@ -58,7 +65,8 @@ export default function ConversionFunnel({
         <div>
           <h2 className="text-2xl font-bold text-white mb-1">{title}</h2>
           <p className="text-gray-400 text-sm">
-            Taxa de conversão geral: <span className="text-[#C5A059] font-semibold">{overallConversion.toFixed(1)}%</span>
+            Taxa de conversão geral:{" "}
+            <span className="text-[#C5A059] font-semibold">{overallConversion.toFixed(1)}%</span>
           </p>
         </div>
       </div>
@@ -121,9 +129,7 @@ export default function ConversionFunnel({
                     {/* Taxa de Conversão para próximo estágio */}
                     {index < stages.length - 1 && (
                       <div className="flex-shrink-0 text-right">
-                        <p className="text-2xl font-bold">
-                          {stage.conversionRate.toFixed(0)}%
-                        </p>
+                        <p className="text-2xl font-bold">{stage.conversionRate.toFixed(0)}%</p>
                         <p className="text-xs opacity-75">conversão</p>
                       </div>
                     )}
@@ -136,21 +142,29 @@ export default function ConversionFunnel({
                     <div className="text-sm space-y-1">
                       <div className="flex justify-between">
                         <span className="text-gray-400">Total:</span>
-                        <span className="text-white font-semibold">{stage.count.toLocaleString("pt-PT")}</span>
+                        <span className="text-white font-semibold">
+                          {stage.count.toLocaleString("pt-PT")}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">% do início:</span>
-                        <span className="text-white font-semibold">{stage.percentage.toFixed(1)}%</span>
+                        <span className="text-white font-semibold">
+                          {stage.percentage.toFixed(1)}%
+                        </span>
                       </div>
                       {index > 0 && (
                         <>
                           <div className="flex justify-between">
                             <span className="text-gray-400">Taxa conversão:</span>
-                            <span className="text-green-400 font-semibold">{stage.conversionRate.toFixed(1)}%</span>
+                            <span className="text-green-400 font-semibold">
+                              {stage.conversionRate.toFixed(1)}%
+                            </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-400">Perdidos:</span>
-                            <span className="text-red-400 font-semibold">{stage.dropoff.toLocaleString("pt-PT")}</span>
+                            <span className="text-red-400 font-semibold">
+                              {stage.dropoff.toLocaleString("pt-PT")}
+                            </span>
                           </div>
                         </>
                       )}
@@ -189,14 +203,15 @@ export default function ConversionFunnel({
           <div className="bg-black/20 rounded-lg px-4 py-3">
             <p className="text-xs text-gray-400 mb-1">Melhor Conversão</p>
             <p className="text-lg font-bold text-green-400">
-              {Math.max(...stagesWithMetrics.filter((_, i) => i > 0).map((s) => s.conversionRate)).toFixed(1)}%
+              {Math.max(
+                ...stagesWithMetrics.filter((_, i) => i > 0).map((s) => s.conversionRate)
+              ).toFixed(1)}
+              %
             </p>
           </div>
           <div className="bg-black/20 rounded-lg px-4 py-3">
             <p className="text-xs text-gray-400 mb-1">Conversão Final</p>
-            <p className="text-lg font-bold text-[#C5A059]">
-              {overallConversion.toFixed(1)}%
-            </p>
+            <p className="text-lg font-bold text-[#C5A059]">{overallConversion.toFixed(1)}%</p>
           </div>
         </div>
       </div>
@@ -207,18 +222,78 @@ export default function ConversionFunnel({
 // Funis pré-configurados
 export const funnelPresets = {
   ecommerce: [
-    { id: "visitors", label: "Visitantes", count: 0, icon: Users, color: "bg-blue-500/20 border-blue-500/30" },
-    { id: "viewed", label: "Viram Produto", count: 0, icon: Mail, color: "bg-purple-500/20 border-purple-500/30" },
-    { id: "cart", label: "Adicionaram ao Carrinho", count: 0, icon: Phone, color: "bg-yellow-500/20 border-yellow-500/30" },
-    { id: "checkout", label: "Iniciaram Checkout", count: 0, icon: CreditCard, color: "bg-orange-500/20 border-orange-500/30" },
-    { id: "purchase", label: "Compraram", count: 0, icon: CheckCircle, color: "bg-green-500/20 border-green-500/30" },
+    {
+      id: "visitors",
+      label: "Visitantes",
+      count: 0,
+      icon: Users,
+      color: "bg-blue-500/20 border-blue-500/30",
+    },
+    {
+      id: "viewed",
+      label: "Viram Produto",
+      count: 0,
+      icon: Mail,
+      color: "bg-purple-500/20 border-purple-500/30",
+    },
+    {
+      id: "cart",
+      label: "Adicionaram ao Carrinho",
+      count: 0,
+      icon: Phone,
+      color: "bg-yellow-500/20 border-yellow-500/30",
+    },
+    {
+      id: "checkout",
+      label: "Iniciaram Checkout",
+      count: 0,
+      icon: CreditCard,
+      color: "bg-orange-500/20 border-orange-500/30",
+    },
+    {
+      id: "purchase",
+      label: "Compraram",
+      count: 0,
+      icon: CheckCircle,
+      color: "bg-green-500/20 border-green-500/30",
+    },
   ],
 
   leads: [
-    { id: "visitors", label: "Visitantes do Site", count: 0, icon: Users, color: "bg-blue-500/20 border-blue-500/30" },
-    { id: "engaged", label: "Interagiram", count: 0, icon: Mail, color: "bg-purple-500/20 border-purple-500/30" },
-    { id: "leads", label: "Tornaram-se Leads", count: 0, icon: Phone, color: "bg-yellow-500/20 border-yellow-500/30" },
-    { id: "contacted", label: "Foram Contactados", count: 0, icon: CreditCard, color: "bg-orange-500/20 border-orange-500/30" },
-    { id: "customers", label: "Viraram Clientes", count: 0, icon: CheckCircle, color: "bg-green-500/20 border-green-500/30" },
+    {
+      id: "visitors",
+      label: "Visitantes do Site",
+      count: 0,
+      icon: Users,
+      color: "bg-blue-500/20 border-blue-500/30",
+    },
+    {
+      id: "engaged",
+      label: "Interagiram",
+      count: 0,
+      icon: Mail,
+      color: "bg-purple-500/20 border-purple-500/30",
+    },
+    {
+      id: "leads",
+      label: "Tornaram-se Leads",
+      count: 0,
+      icon: Phone,
+      color: "bg-yellow-500/20 border-yellow-500/30",
+    },
+    {
+      id: "contacted",
+      label: "Foram Contactados",
+      count: 0,
+      icon: CreditCard,
+      color: "bg-orange-500/20 border-orange-500/30",
+    },
+    {
+      id: "customers",
+      label: "Viraram Clientes",
+      count: 0,
+      icon: CheckCircle,
+      color: "bg-green-500/20 border-green-500/30",
+    },
   ],
 };

@@ -22,11 +22,11 @@ export async function generateRevenueReport(data: RevenueData[], period: string)
   doc.setFontSize(24);
   doc.setTextColor(197, 160, 89); // #C5A059
   doc.text("Portal Lusitano", 14, 20);
-  
+
   doc.setFontSize(16);
   doc.setTextColor(0, 0, 0);
   doc.text("Relatório de Receitas", 14, 32);
-  
+
   doc.setFontSize(10);
   doc.setTextColor(128, 128, 128);
   doc.text(`Período: ${period}`, 14, 40);
@@ -35,10 +35,14 @@ export async function generateRevenueReport(data: RevenueData[], period: string)
   // Summary
   const totalRevenue = data.reduce((sum, row) => sum + row.revenue, 0);
   const totalTransactions = data.reduce((sum, row) => sum + row.transactions, 0);
-  
+
   doc.setFontSize(12);
   doc.setTextColor(0, 0, 0);
-  doc.text(`Total de Receitas: €${(totalRevenue / 100).toLocaleString("pt-PT", { minimumFractionDigits: 2 })}`, 14, 56);
+  doc.text(
+    `Total de Receitas: €${(totalRevenue / 100).toLocaleString("pt-PT", { minimumFractionDigits: 2 })}`,
+    14,
+    56
+  );
   doc.text(`Total de Transações: ${totalTransactions}`, 14, 64);
 
   // Table
@@ -85,11 +89,11 @@ export async function generateAnalyticsReport(data: AnalyticsData[], title: stri
   doc.setFontSize(24);
   doc.setTextColor(197, 160, 89);
   doc.text("Portal Lusitano", 14, 20);
-  
+
   doc.setFontSize(16);
   doc.setTextColor(0, 0, 0);
   doc.text(title, 14, 32);
-  
+
   doc.setFontSize(10);
   doc.setTextColor(128, 128, 128);
   doc.text(`Gerado em: ${new Date().toLocaleString("pt-PT")}`, 14, 40);
@@ -144,8 +148,8 @@ export async function generateAnalyticsReport(data: AnalyticsData[], title: stri
 export async function generateCustomReport(
   title: string,
   subtitle: string,
-  data: any[],
-  columns: { header: string; dataKey: string; format?: (val: any) => string }[]
+  data: Record<string, unknown>[],
+  columns: { header: string; dataKey: string; format?: (val: unknown) => string }[]
 ) {
   const doc = new jsPDF();
 
@@ -153,11 +157,11 @@ export async function generateCustomReport(
   doc.setFontSize(24);
   doc.setTextColor(197, 160, 89);
   doc.text("Portal Lusitano", 14, 20);
-  
+
   doc.setFontSize(16);
   doc.setTextColor(0, 0, 0);
   doc.text(title, 14, 32);
-  
+
   if (subtitle) {
     doc.setFontSize(10);
     doc.setTextColor(128, 128, 128);

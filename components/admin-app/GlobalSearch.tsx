@@ -112,7 +112,7 @@ export default function GlobalSearch({ onNavigate }: GlobalSearchProps) {
     };
   }, [query]);
 
-  const handleResultClick = (item: any) => {
+  const handleResultClick = (item: { title: string; url?: string }) => {
     // Adicionar às pesquisas recentes
     const newRecent = [item.title, ...recentSearches.filter((s) => s !== item.title)].slice(0, 5);
     setRecentSearches(newRecent);
@@ -242,9 +242,7 @@ export default function GlobalSearch({ onNavigate }: GlobalSearchProps) {
                                 <p className="text-sm font-medium text-white mb-1 truncate">
                                   {item.title}
                                 </p>
-                                <p className="text-xs text-gray-400 truncate">
-                                  {item.subtitle}
-                                </p>
+                                <p className="text-xs text-gray-400 truncate">{item.subtitle}</p>
                               </div>
                               <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-[#C5A059] transition-colors flex-shrink-0 ml-2 mt-1" />
                             </div>
@@ -257,7 +255,9 @@ export default function GlobalSearch({ onNavigate }: GlobalSearchProps) {
               ) : !loading && query.length >= 2 ? (
                 <div className="p-8 text-center">
                   <Search className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                  <p className="text-gray-400">Nenhum resultado encontrado para "{query}"</p>
+                  <p className="text-gray-400">
+                    Nenhum resultado encontrado para {`\u201C${query}\u201D`}
+                  </p>
                   <p className="text-sm text-gray-500 mt-2">
                     Tenta pesquisar por nome, email, localização ou descrição
                   </p>

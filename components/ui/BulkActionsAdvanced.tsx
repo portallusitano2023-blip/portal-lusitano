@@ -1,7 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { CheckSquare, Trash2, Archive, Eye, EyeOff, Star, RotateCcw, AlertCircle, CheckCircle2 } from "lucide-react";
+import {
+  CheckSquare,
+  Trash2,
+  Archive,
+  Eye,
+  EyeOff,
+  Star,
+  RotateCcw,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
 import { useToast } from "./Toast";
 
 export interface BulkAction {
@@ -17,7 +27,7 @@ export interface BulkActionHistory {
   id: string;
   action: string;
   itemsCount: number;
-  itemsData: any[];
+  itemsData: Record<string, unknown>[];
   timestamp: Date;
 }
 
@@ -27,7 +37,7 @@ interface BulkActionsAdvancedProps {
   actions: BulkAction[];
   onAction: (actionId: string, items: string[]) => Promise<void>;
   onUndo?: (history: BulkActionHistory) => Promise<void>;
-  itemsData?: any[];
+  itemsData?: Record<string, unknown>[];
   entityName?: string;
 }
 
@@ -83,8 +93,8 @@ export default function BulkActionsAdvanced({
 
       const action = actions.find((a) => a.id === actionId);
       toast.success(`${selectedItems.length} ${entityName} ${action?.label.toLowerCase()}`);
-    } catch (error: any) {
-      toast.error(`Erro: ${error.message}`);
+    } catch (error: unknown) {
+      toast.error(`Erro: ${error instanceof Error ? error.message : "Desconhecido"}`);
     } finally {
       setLoading(false);
     }
@@ -98,8 +108,8 @@ export default function BulkActionsAdvanced({
       await onUndo(historyEntry);
       setHistory((prev) => prev.filter((h) => h.id !== historyEntry.id));
       toast.success(`Ação revertida: ${historyEntry.action}`);
-    } catch (error: any) {
-      toast.error(`Erro ao reverter: ${error.message}`);
+    } catch (error: unknown) {
+      toast.error(`Erro ao reverter: ${error instanceof Error ? error.message : "Desconhecido"}`);
     } finally {
       setLoading(false);
     }
@@ -117,7 +127,9 @@ export default function BulkActionsAdvanced({
           {/* Selection Count */}
           <div className="flex items-center gap-2 text-black font-bold">
             <CheckSquare className="w-5 h-5" />
-            <span>{selectedItems.length} / {totalItems} selecionados</span>
+            <span>
+              {selectedItems.length} / {totalItems} selecionados
+            </span>
           </div>
 
           {/* Divider */}
@@ -192,7 +204,9 @@ export default function BulkActionsAdvanced({
                     className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between"
                   >
                     <div>
-                      <p className="text-white font-semibold">{item.name || item.title || item.id}</p>
+                      <p className="text-white font-semibold">
+                        {item.name || item.title || item.id}
+                      </p>
                       {item.email && <p className="text-sm text-gray-400">{item.email}</p>}
                       {item.status && (
                         <span className="inline-block mt-2 px-2 py-1 bg-[#C5A059]/20 text-[#C5A059] text-xs rounded">
@@ -223,8 +237,12 @@ export default function BulkActionsAdvanced({
           <div className="bg-[#1A1A1A] border border-white/10 rounded-xl max-w-md w-full">
             <div className="p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className={`w-12 h-12 ${confirmAction.dangerous ? 'bg-red-500/20' : 'bg-yellow-500/20'} rounded-lg flex items-center justify-center`}>
-                  <AlertCircle className={`w-6 h-6 ${confirmAction.dangerous ? 'text-red-400' : 'text-yellow-400'}`} />
+                <div
+                  className={`w-12 h-12 ${confirmAction.dangerous ? "bg-red-500/20" : "bg-yellow-500/20"} rounded-lg flex items-center justify-center`}
+                >
+                  <AlertCircle
+                    className={`w-6 h-6 ${confirmAction.dangerous ? "text-red-400" : "text-yellow-400"}`}
+                  />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Confirmar Ação</h3>
@@ -236,7 +254,8 @@ export default function BulkActionsAdvanced({
 
               <div className="bg-white/5 border border-white/10 rounded-lg p-4 mb-6">
                 <p className="text-white">
-                  {confirmAction.confirmMessage || `Tens a certeza que queres ${confirmAction.label.toLowerCase()} ${selectedItems.length} ${entityName}?`}
+                  {confirmAction.confirmMessage ||
+                    `Tens a certeza que queres ${confirmAction.label.toLowerCase()} ${selectedItems.length} ${entityName}?`}
                 </p>
                 {confirmAction.dangerous && (
                   <p className="text-red-400 text-sm mt-2 font-semibold">
@@ -257,8 +276,8 @@ export default function BulkActionsAdvanced({
                   disabled={loading}
                   className={`flex-1 px-4 py-2 rounded-lg font-semibold transition-all disabled:opacity-50 ${
                     confirmAction.dangerous
-                      ? 'bg-red-500 hover:bg-red-600 text-white'
-                      : 'bg-[#C5A059] hover:bg-[#d4b469] text-black'
+                      ? "bg-red-500 hover:bg-red-600 text-white"
+                      : "bg-[#C5A059] hover:bg-[#d4b469] text-black"
                   }`}
                 >
                   {loading ? "A executar..." : "Confirmar"}
@@ -299,7 +318,8 @@ export default function BulkActionsAdvanced({
                         <p className="text-white font-semibold">{entry.action}</p>
                       </div>
                       <p className="text-sm text-gray-400">
-                        {entry.itemsCount} {entityName} • {new Date(entry.timestamp).toLocaleString("pt-PT")}
+                        {entry.itemsCount} {entityName} •{" "}
+                        {new Date(entry.timestamp).toLocaleString("pt-PT")}
                       </p>
                     </div>
                     <button
@@ -314,9 +334,7 @@ export default function BulkActionsAdvanced({
                 ))}
 
                 {history.length === 0 && (
-                  <div className="text-center py-8 text-gray-400">
-                    Nenhuma ação no histórico
-                  </div>
+                  <div className="text-center py-8 text-gray-400">Nenhuma ação no histórico</div>
                 )}
               </div>
             </div>

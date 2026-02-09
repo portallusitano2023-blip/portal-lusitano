@@ -29,26 +29,22 @@ const HorseFavoritesContext = createContext<HorseFavoritesContextType | undefine
 const STORAGE_KEY = "horse_favorites";
 
 export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
-  const [favorites, setFavorites] = useState<FavoriteHorse[]>([]);
-  const [isHydrated, setIsHydrated] = useState(false);
-  const { showToast } = useToast();
-  const { language } = useLanguage();
-
-  // Load favorites from localStorage on mount
-  useEffect(() => {
+  const [favorites, setFavorites] = useState<FavoriteHorse[]>(() => {
+    if (typeof window === "undefined") return [];
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          setFavorites(parsed);
-        }
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch (error) {
       console.error("Error loading horse favorites:", error);
     }
-    setIsHydrated(true);
-  }, []);
+    return [];
+  });
+  const [isHydrated, setIsHydrated] = useState(typeof window !== "undefined");
+  const { showToast } = useToast();
+  const { language } = useLanguage();
 
   // Save favorites to localStorage when they change
   useEffect(() => {
@@ -92,10 +88,7 @@ export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
 
   const clearFavorites = () => {
     setFavorites([]);
-    showToast(
-      "info",
-      language === "pt" ? "Favoritos limpos" : "Favorites cleared"
-    );
+    showToast("info", language === "pt" ? "Favoritos limpos" : "Favorites cleared");
   };
 
   return (

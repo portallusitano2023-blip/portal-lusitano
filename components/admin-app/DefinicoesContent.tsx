@@ -21,12 +21,12 @@ import {
 interface Setting {
   id: string;
   key: string;
-  value: any;
+  value: string | number | boolean | null;
   category: string;
   label: string;
   description: string | null;
   input_type: string;
-  options: any;
+  options: string[] | null;
   is_required: boolean;
   validation_regex: string | null;
   updated_at: string;
@@ -37,7 +37,7 @@ interface GroupedSettings {
   [category: string]: Setting[];
 }
 
-const CATEGORY_ICONS: Record<string, any> = {
+const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   email_templates: Mail,
   notifications: Bell,
   payment: CreditCard,
@@ -63,7 +63,9 @@ export default function DefinicoesContent() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("email_templates");
-  const [editedValues, setEditedValues] = useState<Record<string, any>>({});
+  const [editedValues, setEditedValues] = useState<
+    Record<string, string | number | boolean | null>
+  >({});
   const [showSuccess, setShowSuccess] = useState(false);
   const [showJsonPreview, setShowJsonPreview] = useState<Record<string, boolean>>({});
 
@@ -89,7 +91,7 @@ export default function DefinicoesContent() {
     }
   };
 
-  const handleValueChange = (key: string, newValue: any) => {
+  const handleValueChange = (key: string, newValue: unknown) => {
     setEditedValues((prev) => ({
       ...prev,
       [key]: newValue,
@@ -99,9 +101,8 @@ export default function DefinicoesContent() {
   const handleSave = async (setting: Setting) => {
     setSaving(setting.key);
     try {
-      const valueToSave = editedValues[setting.key] !== undefined
-        ? editedValues[setting.key]
-        : setting.value;
+      const valueToSave =
+        editedValues[setting.key] !== undefined ? editedValues[setting.key] : setting.value;
 
       const response = await fetch(`/api/admin/definicoes/${setting.key}`, {
         method: "PATCH",
@@ -115,9 +116,7 @@ export default function DefinicoesContent() {
 
       // Atualizar localmente
       setSettings((prev) =>
-        prev.map((s) =>
-          s.key === setting.key ? { ...s, value: valueToSave } : s
-        )
+        prev.map((s) => (s.key === setting.key ? { ...s, value: valueToSave } : s))
       );
 
       // Remover do editedValues
@@ -139,9 +138,8 @@ export default function DefinicoesContent() {
   };
 
   const renderInput = (setting: Setting) => {
-    const currentValue = editedValues[setting.key] !== undefined
-      ? editedValues[setting.key]
-      : setting.value;
+    const currentValue =
+      editedValues[setting.key] !== undefined ? editedValues[setting.key] : setting.value;
 
     const hasChanges = editedValues[setting.key] !== undefined;
 
@@ -150,9 +148,7 @@ export default function DefinicoesContent() {
         return (
           <div className="flex items-center gap-3">
             <button
-              onClick={() =>
-                handleValueChange(setting.key, { enabled: !currentValue.enabled })
-              }
+              onClick={() => handleValueChange(setting.key, { enabled: !currentValue.enabled })}
               className={`
                 relative w-14 h-7 rounded-full transition-colors duration-200
                 ${currentValue.enabled ? "bg-green-500" : "bg-gray-600"}
@@ -177,9 +173,7 @@ export default function DefinicoesContent() {
           <input
             type="number"
             value={currentValue.value || 0}
-            onChange={(e) =>
-              handleValueChange(setting.key, { value: parseFloat(e.target.value) })
-            }
+            onChange={(e) => handleValueChange(setting.key, { value: parseFloat(e.target.value) })}
             className="w-full bg-black/30 border border-white/10 px-4 py-2 rounded-lg text-white focus:outline-none focus:border-[#C5A059]"
           />
         );
@@ -188,9 +182,7 @@ export default function DefinicoesContent() {
         return (
           <textarea
             value={currentValue.value || ""}
-            onChange={(e) =>
-              handleValueChange(setting.key, { value: e.target.value })
-            }
+            onChange={(e) => handleValueChange(setting.key, { value: e.target.value })}
             rows={4}
             className="w-full bg-black/30 border border-white/10 px-4 py-2 rounded-lg text-white focus:outline-none focus:border-[#C5A059] resize-none"
           />
@@ -289,9 +281,7 @@ export default function DefinicoesContent() {
           <input
             type="email"
             value={currentValue.value || ""}
-            onChange={(e) =>
-              handleValueChange(setting.key, { value: e.target.value })
-            }
+            onChange={(e) => handleValueChange(setting.key, { value: e.target.value })}
             className="w-full bg-black/30 border border-white/10 px-4 py-2 rounded-lg text-white focus:outline-none focus:border-[#C5A059]"
             placeholder="exemplo@email.com"
           />
@@ -302,9 +292,7 @@ export default function DefinicoesContent() {
           <input
             type="url"
             value={currentValue.value || ""}
-            onChange={(e) =>
-              handleValueChange(setting.key, { value: e.target.value })
-            }
+            onChange={(e) => handleValueChange(setting.key, { value: e.target.value })}
             className="w-full bg-black/30 border border-white/10 px-4 py-2 rounded-lg text-white focus:outline-none focus:border-[#C5A059]"
             placeholder="https://exemplo.com"
           />
@@ -315,9 +303,7 @@ export default function DefinicoesContent() {
           <input
             type="text"
             value={currentValue.value || ""}
-            onChange={(e) =>
-              handleValueChange(setting.key, { value: e.target.value })
-            }
+            onChange={(e) => handleValueChange(setting.key, { value: e.target.value })}
             className="w-full bg-black/30 border border-white/10 px-4 py-2 rounded-lg text-white focus:outline-none focus:border-[#C5A059]"
           />
         );
@@ -361,9 +347,7 @@ export default function DefinicoesContent() {
                 `}
               >
                 <Icon className="w-5 h-5 flex-shrink-0" />
-                <span className="flex-1 text-sm">
-                  {CATEGORY_LABELS[category] || category}
-                </span>
+                <span className="flex-1 text-sm">{CATEGORY_LABELS[category] || category}</span>
                 <span className="text-xs opacity-60">{count}</span>
               </button>
             );
@@ -397,16 +381,11 @@ export default function DefinicoesContent() {
             const isSaving = saving === setting.key;
 
             return (
-              <div
-                key={setting.key}
-                className="bg-white/5 border border-white/10 rounded-xl p-6"
-              >
+              <div key={setting.key} className="bg-white/5 border border-white/10 rounded-xl p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-semibold text-white">
-                        {setting.label}
-                      </h3>
+                      <h3 className="text-lg font-semibold text-white">{setting.label}</h3>
                       {setting.is_required && (
                         <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded">
                           Obrigatório

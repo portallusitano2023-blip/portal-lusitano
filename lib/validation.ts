@@ -60,14 +60,7 @@ export function getPasswordStrength(password: string): {
   if (/[^a-zA-Z0-9]/.test(password)) score++;
   else feedback.push("Caracteres especiais");
 
-  const strengthText = [
-    "Muito fraca",
-    "Fraca",
-    "Razoável",
-    "Boa",
-    "Forte",
-    "Muito forte",
-  ][score];
+  const strengthText = ["Muito fraca", "Fraca", "Razoável", "Boa", "Forte", "Muito forte"][score];
 
   return {
     score,
@@ -129,9 +122,9 @@ export function isValidDate(date: string): boolean {
 }
 
 // Form validation helper
-export function validateForm<T extends Record<string, any>>(
+export function validateForm<T extends Record<string, unknown>>(
   data: T,
-  rules: Partial<Record<keyof T, (value: any) => string | null>>
+  rules: Partial<Record<keyof T, (value: T[keyof T]) => string | null>>
 ): { isValid: boolean; errors: Partial<Record<keyof T, string>> } {
   const errors: Partial<Record<keyof T, string>> = {};
 

@@ -71,12 +71,8 @@ export default function DepoimentosContent() {
           <div className="flex items-center gap-3 mb-4">
             <FiStar className="text-[#C5A059]" size={32} />
             <div>
-              <h1 className="text-3xl font-bold text-white">
-                Curadoria de Testemunhos
-              </h1>
-              <p className="text-gray-400">
-                Aprovar ou rejeitar depoimentos sobre cavalos
-              </p>
+              <h1 className="text-3xl font-bold text-white">Curadoria de Testemunhos</h1>
+              <p className="text-gray-400">Aprovar ou rejeitar depoimentos sobre cavalos</p>
             </div>
           </div>
         </div>
@@ -101,7 +97,7 @@ export default function DepoimentosContent() {
                     </p>
                   )}
                   <p className="text-xl font-serif italic text-gray-300 mb-4">
-                    "{dep.mensagem}"
+                    {`\u201C${dep.mensagem}\u201D`}
                   </p>
                   <p className="text-xs uppercase tracking-tight text-gray-500">
                     {dep.autor_nome} — {dep.autor_cargo}

@@ -128,7 +128,7 @@ export async function forecastRevenue(
 // CHURN PREDICTION
 // ========================================
 
-export async function predictChurn(users: any[]): Promise<ChurnPrediction[]> {
+export async function predictChurn(users: Record<string, unknown>[]): Promise<ChurnPrediction[]> {
   // Mock ML churn prediction
   // TODO: Replace with real ML model (Random Forest or XGBoost)
 
@@ -152,7 +152,8 @@ export async function predictChurn(users: any[]): Promise<ChurnPrediction[]> {
     else if (totalPurchases < 5) churnScore += 0.1;
 
     // Monetary factor
-    if (avgOrderValue < 3000) churnScore += 0.2; // Less than €30
+    if (avgOrderValue < 3000)
+      churnScore += 0.2; // Less than €30
     else if (avgOrderValue < 10000) churnScore += 0.1; // Less than €100
 
     // Engagement factor
@@ -161,8 +162,7 @@ export async function predictChurn(users: any[]): Promise<ChurnPrediction[]> {
 
     const churnProbability = Math.min(1, churnScore) * 100;
 
-    const risk =
-      churnProbability > 70 ? "high" : churnProbability > 40 ? "medium" : "low";
+    const risk = churnProbability > 70 ? "high" : churnProbability > 40 ? "medium" : "low";
 
     const factors = [];
     const actions = [];
@@ -186,8 +186,7 @@ export async function predictChurn(users: any[]): Promise<ChurnPrediction[]> {
       churnProbability: Math.round(churnProbability),
       risk,
       factors: factors.length ? factors : ["Baixo risco de churn"],
-      recommendedActions:
-        actions.length ? actions : ["Manter engagement atual"],
+      recommendedActions: actions.length ? actions : ["Manter engagement atual"],
     };
   });
 }
@@ -196,7 +195,7 @@ export async function predictChurn(users: any[]): Promise<ChurnPrediction[]> {
 // LIFETIME VALUE (LTV) PREDICTION
 // ========================================
 
-export async function predictLTV(users: any[]): Promise<LTVPrediction[]> {
+export async function predictLTV(users: Record<string, unknown>[]): Promise<LTVPrediction[]> {
   // Mock LTV prediction
   // TODO: Replace with real ML model (Gradient Boosting)
 
@@ -213,17 +212,10 @@ export async function predictLTV(users: any[]): Promise<LTVPrediction[]> {
     const predictedLTV = avgOrderValue * orderFrequency * predictedLifespanYears * 365;
 
     // Confidence based on historical data availability
-    const confidence = Math.min(
-      100,
-      (totalOrders / 5) * 50 + (daysSinceFirstOrder / 365) * 50
-    );
+    const confidence = Math.min(100, (totalOrders / 5) * 50 + (daysSinceFirstOrder / 365) * 50);
 
     const segment =
-      predictedLTV > 50000
-        ? "high-value"
-        : predictedLTV > 15000
-        ? "medium-value"
-        : "low-value";
+      predictedLTV > 50000 ? "high-value" : predictedLTV > 15000 ? "medium-value" : "low-value";
 
     return {
       userId: user.id,
@@ -239,7 +231,9 @@ export async function predictLTV(users: any[]): Promise<LTVPrediction[]> {
 // CUSTOMER CLUSTERING (K-Means simulation)
 // ========================================
 
-export async function clusterCustomers(users: any[]): Promise<CustomerSegment[]> {
+export async function clusterCustomers(
+  users: Record<string, unknown>[]
+): Promise<CustomerSegment[]> {
   // Mock customer clustering
   // TODO: Replace with real K-Means from ml.js
 
@@ -249,11 +243,7 @@ export async function clusterCustomers(users: any[]): Promise<CustomerSegment[]>
       id: "champions",
       name: "Champions",
       size: 0,
-      characteristics: [
-        "Compraram recentemente",
-        "Compram frequentemente",
-        "Gastam muito",
-      ],
+      characteristics: ["Compraram recentemente", "Compram frequentemente", "Gastam muito"],
       avgValue: 0,
       color: "#10b981",
     },
@@ -261,11 +251,7 @@ export async function clusterCustomers(users: any[]): Promise<CustomerSegment[]>
       id: "loyal",
       name: "Leais",
       size: 0,
-      characteristics: [
-        "Compram regularmente",
-        "Valor médio-alto",
-        "Engagement alto",
-      ],
+      characteristics: ["Compram regularmente", "Valor médio-alto", "Engagement alto"],
       avgValue: 0,
       color: "#3b82f6",
     },
@@ -273,11 +259,7 @@ export async function clusterCustomers(users: any[]): Promise<CustomerSegment[]>
       id: "potential",
       name: "Potencial",
       size: 0,
-      characteristics: [
-        "Compraram recentemente",
-        "Baixa frequência",
-        "Valor promissor",
-      ],
+      characteristics: ["Compraram recentemente", "Baixa frequência", "Valor promissor"],
       avgValue: 0,
       color: "#f59e0b",
     },
@@ -285,11 +267,7 @@ export async function clusterCustomers(users: any[]): Promise<CustomerSegment[]>
       id: "at-risk",
       name: "Em Risco",
       size: 0,
-      characteristics: [
-        "Não compram há tempo",
-        "Eram clientes valiosos",
-        "Precisam reativação",
-      ],
+      characteristics: ["Não compram há tempo", "Eram clientes valiosos", "Precisam reativação"],
       avgValue: 0,
       color: "#ef4444",
     },
@@ -297,11 +275,7 @@ export async function clusterCustomers(users: any[]): Promise<CustomerSegment[]>
       id: "hibernating",
       name: "Hibernando",
       size: 0,
-      characteristics: [
-        "Inativos há muito tempo",
-        "Baixo valor histórico",
-        "Difícil recuperação",
-      ],
+      characteristics: ["Inativos há muito tempo", "Baixo valor histórico", "Difícil recuperação"],
       avgValue: 0,
       color: "#6b7280",
     },

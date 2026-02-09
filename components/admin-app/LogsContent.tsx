@@ -23,7 +23,7 @@ interface Log {
   action_type: string;
   entity_type: string;
   entity_id: string | null;
-  changes: any;
+  changes: Record<string, unknown> | null;
   ip_address: string | null;
   created_at: string;
 }
@@ -267,7 +267,9 @@ export default function LogsContent() {
             return (
               <div key={log.id} className="relative pl-20">
                 {/* Icon da timeline */}
-                <div className={`absolute left-0 w-16 h-16 ${actionColor} rounded-xl flex items-center justify-center border-2 border-white/10 shadow-lg`}>
+                <div
+                  className={`absolute left-0 w-16 h-16 ${actionColor} rounded-xl flex items-center justify-center border-2 border-white/10 shadow-lg`}
+                >
                   <Icon className="w-7 h-7" />
                 </div>
 
@@ -301,7 +303,10 @@ export default function LogsContent() {
                   {/* ID da Entidade */}
                   {log.entity_id && (
                     <div className="text-sm text-gray-400 mb-2">
-                      ID: <code className="bg-black/30 px-2 py-1 rounded text-[#C5A059]">{log.entity_id}</code>
+                      ID:{" "}
+                      <code className="bg-black/30 px-2 py-1 rounded text-[#C5A059]">
+                        {log.entity_id}
+                      </code>
                     </div>
                   )}
 
@@ -320,9 +325,7 @@ export default function LogsContent() {
 
                   {/* IP */}
                   {log.ip_address && (
-                    <div className="text-xs text-gray-600 mt-2">
-                      IP: {log.ip_address}
-                    </div>
+                    <div className="text-xs text-gray-600 mt-2">IP: {log.ip_address}</div>
                   )}
                 </div>
               </div>
@@ -335,9 +338,7 @@ export default function LogsContent() {
           <div className="text-center py-12">
             <Activity className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400 text-lg">Nenhum log encontrado</p>
-            <p className="text-gray-500 text-sm mt-2">
-              Ajusta os filtros para ver mais resultados
-            </p>
+            <p className="text-gray-500 text-sm mt-2">Ajusta os filtros para ver mais resultados</p>
           </div>
         )}
       </div>

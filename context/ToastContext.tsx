@@ -23,25 +23,28 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((type: ToastType, message: string, duration = 4000) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    const newToast: Toast = { id, type, message, duration };
-
-    setToasts((prev) => [...prev, newToast]);
-
-    if (duration > 0) {
-      setTimeout(() => {
-        hideToast(id);
-      }, duration);
-    }
-  }, []);
-
   const hideToast = useCallback((id: string) => {
-    setToasts((prev) => prev.map((t) => t.id === id ? { ...t, removing: true } : t));
+    setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, removing: true } : t)));
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 300);
   }, []);
+
+  const showToast = useCallback(
+    (type: ToastType, message: string, duration = 4000) => {
+      const id = Math.random().toString(36).substr(2, 9);
+      const newToast: Toast = { id, type, message, duration };
+
+      setToasts((prev) => [...prev, newToast]);
+
+      if (duration > 0) {
+        setTimeout(() => {
+          hideToast(id);
+        }, duration);
+      }
+    },
+    [hideToast]
+  );
 
   const getIcon = (type: ToastType) => {
     switch (type) {
@@ -78,7 +81,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`bg-[#0a0a0a] border ${getBorderColor(toast.type)} backdrop-blur-xl shadow-2xl rounded-sm px-5 py-4 flex items-center gap-4 min-w-[300px] max-w-[400px] ${toast.removing ? 'animate-[slideOutRight_0.3s_ease-out_forwards]' : 'animate-[slideInRight_0.3s_ease-out_forwards]'}`}
+            className={`bg-[#0a0a0a] border ${getBorderColor(toast.type)} backdrop-blur-xl shadow-2xl rounded-sm px-5 py-4 flex items-center gap-4 min-w-[300px] max-w-[400px] ${toast.removing ? "animate-[slideOutRight_0.3s_ease-out_forwards]" : "animate-[slideInRight_0.3s_ease-out_forwards]"}`}
           >
             {getIcon(toast.type)}
             <p className="text-sm text-white flex-1">{toast.message}</p>

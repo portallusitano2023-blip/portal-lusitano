@@ -6,7 +6,7 @@ import { supabase } from "./supabase";
  */
 export async function triggerAutomations(
   triggerType: string,
-  triggerData: any = {}
+  triggerData: Record<string, unknown> = {}
 ) {
   try {
     // Find all enabled automations matching this trigger type
@@ -70,7 +70,10 @@ export async function triggerAutomations(
 /**
  * Check if trigger conditions match the trigger data
  */
-function checkTriggerConditions(conditions: any, triggerData: any): boolean {
+function checkTriggerConditions(
+  conditions: Record<string, unknown>,
+  triggerData: Record<string, unknown>
+): boolean {
   if (!conditions || Object.keys(conditions).length === 0) {
     return true; // No conditions = always match
   }

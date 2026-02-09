@@ -22,15 +22,10 @@ const TabContext = createContext<TabContextType | undefined>(undefined);
 
 export function TabProvider({ children }: { children: ReactNode }) {
   const [tabs, setTabs] = useState<Tab[]>([]);
-  const [activeTabId, setActiveTabId] = useState<string>("");
-
-  // Carregar tabs do localStorage ao montar
-  useEffect(() => {
-    const savedActiveTab = localStorage.getItem("admin-active-tab");
-    if (savedActiveTab) {
-      setActiveTabId(savedActiveTab);
-    }
-  }, []);
+  const [activeTabId, setActiveTabId] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    return localStorage.getItem("admin-active-tab") || "";
+  });
 
   // Guardar tab ativa no localStorage
   useEffect(() => {

@@ -13,6 +13,7 @@ interface AIResult {
   day?: string;
   time?: string;
   reason?: string;
+  openRatePrediction?: string;
   alternatives?: Array<{ day: string; time: string; openRate: string }>;
   improved?: string;
   changes?: Array<{ type: string; description: string }>;
@@ -147,13 +148,13 @@ export default function AIAssistant({
               <div className="bg-white/5 border border-white/10 rounded-lg p-4">
                 <p className="text-sm font-semibold text-white mb-2">Alternativas</p>
                 <div className="space-y-2">
-                  {result.alternatives.map((alt: string, i: number) => (
+                  {result.alternatives.map((alt, i) => (
                     <button
                       key={i}
-                      onClick={() => copyToClipboard(alt)}
+                      onClick={() => copyToClipboard(`${alt.day} ${alt.time} (${alt.openRate})`)}
                       className="w-full text-left p-2 bg-white/5 hover:bg-white/10 rounded-lg text-gray-300 text-sm transition-all"
                     >
-                      {alt}
+                      {alt.day} {alt.time} — {alt.openRate}
                     </button>
                   ))}
                 </div>

@@ -23,17 +23,18 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export function WishlistProvider({ children }: { children: ReactNode }) {
-  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const [wishlist, setWishlist] = useState<WishlistItem[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const saved = localStorage.getItem("wishlist");
+      if (saved) return JSON.parse(saved);
+    } catch {
+      /* ignore */
+    }
+    return [];
+  });
   const { showToast } = useToast();
   const { language } = useLanguage();
-
-  // Carregar wishlist do localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("wishlist");
-    if (saved) {
-      setWishlist(JSON.parse(saved));
-    }
-  }, []);
 
   // Guardar wishlist no localStorage
   useEffect(() => {
