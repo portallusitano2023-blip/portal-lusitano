@@ -5,123 +5,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import {
-  ShoppingBag,
-  User,
-  Menu,
-  X,
-  Search,
-  Heart,
-  Crown,
-  Gift,
-  ChevronDown,
-  MapPin,
-  Calendar,
-  ShoppingCart,
-  BookOpen,
-  HelpCircle,
-  Home,
-  Store,
-  Calculator,
-  Scale,
-  Dna,
-  Users,
-  Trophy,
-  Euro,
-  Shield,
-} from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
-import type { LucideIcon } from "lucide-react";
+import { DesktopMenu } from "./navbar/DesktopMenu";
+import { NavIcons } from "./navbar/NavIcons";
+import { MobileMenu } from "./navbar/MobileMenu";
 
 // Lazy load - SearchModal só carrega quando o utilizador abre a pesquisa
 const SearchModal = dynamic(
   () => import("./Search").then((mod) => ({ default: mod.SearchModal })),
   { ssr: false }
 );
-
-// Dados de navegação estáticos - extraídos fora do componente para evitar re-criação a cada render
-interface NavDropdownItem {
-  href: string;
-  icon: LucideIcon;
-  label: string;
-  desc: string;
-  iconClass?: string;
-}
-
-interface MobileNavItem {
-  href: string;
-  icon: LucideIcon;
-  label: string;
-  highlight?: boolean;
-}
-
-const DB_ITEMS: NavDropdownItem[] = [
-  { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo", desc: "Cavalos à venda" },
-  {
-    href: "/vender-cavalo",
-    icon: Euro,
-    label: "Vender Cavalo",
-    desc: "Anuncie aqui",
-    iconClass: "text-green-500",
-  },
-  { href: "/directorio", icon: Crown, label: "Coudelarias", desc: "Diretório completo" },
-  { href: "/mapa", icon: MapPin, label: "Mapa", desc: "Mapa interativo" },
-  { href: "/eventos", icon: Calendar, label: "Eventos", desc: "Feiras e competições" },
-  { href: "/linhagens", icon: BookOpen, label: "Linhagens", desc: "Guia das linhagens" },
-  { href: "/piroplasmose", icon: Shield, label: "Piroplasmose", desc: "Saúde e exportação" },
-];
-
-const TOOLS_ITEMS: NavDropdownItem[] = [
-  { href: "/calculadora-valor", icon: Calculator, label: "Calculadora", desc: "Estimar valor" },
-  { href: "/comparador-cavalos", icon: Scale, label: "Comparador", desc: "Comparar cavalos" },
-  {
-    href: "/verificador-compatibilidade",
-    icon: Dna,
-    label: "Compatibilidade",
-    desc: "Para criação",
-  },
-];
-
-const COMMUNITY_ITEMS: NavDropdownItem[] = [
-  {
-    href: "/profissionais",
-    icon: Users,
-    label: "Profissionais",
-    desc: "Vets, ferradores, treinadores",
-  },
-  { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis", desc: "Galeria de honra" },
-  {
-    href: "/analise-perfil",
-    icon: HelpCircle,
-    label: "Análise de Perfil",
-    desc: "Descubra o seu perfil equestre",
-  },
-];
-
-const MOBILE_DB_ITEMS: MobileNavItem[] = [
-  { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo" },
-  { href: "/vender-cavalo", icon: Euro, label: "Vender Cavalo", highlight: true },
-  { href: "/directorio", icon: Crown, label: "Coudelarias" },
-  { href: "/mapa", icon: MapPin, label: "Mapa" },
-  { href: "/eventos", icon: Calendar, label: "Eventos" },
-  { href: "/linhagens", icon: BookOpen, label: "Linhagens" },
-  { href: "/piroplasmose", icon: Shield, label: "Piroplasmose" },
-];
-
-const MOBILE_TOOLS_ITEMS: MobileNavItem[] = [
-  { href: "/calculadora-valor", icon: Calculator, label: "Calculadora" },
-  { href: "/comparador-cavalos", icon: Scale, label: "Comparador" },
-  { href: "/verificador-compatibilidade", icon: Dna, label: "Compatibilidade" },
-  { href: "/analise-perfil", icon: HelpCircle, label: "Análise" },
-];
-
-const MOBILE_COMMUNITY_ITEMS: MobileNavItem[] = [
-  { href: "/profissionais", icon: Users, label: "Profissionais" },
-  { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis" },
-];
 
 export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
   const { totalQuantity, openCart } = useCart();
@@ -175,343 +71,33 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
         </Link>
 
         {/* MENU DESKTOP */}
-        <div className="hidden lg:flex items-center gap-4 xl:gap-6 ml-8 lg:ml-12">
-          {[
-            { name: t.nav.home, href: "/" },
-            { name: t.nav.shop, href: "/loja" },
-            { name: t.nav.journal, href: "/jornal" },
-            { name: language === "pt" ? "Sobre" : "About", href: "/sobre" },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 relative group py-2"
-            >
-              {item.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-500 ease-out group-hover:w-full"></span>
-            </Link>
-          ))}
-
-          {/* Lusitano Dropdown - Pure CSS hover, zero JavaScript */}
-          <div className="group/dd relative">
-            <span className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 py-2 cursor-pointer">
-              Lusitano
-              <ChevronDown
-                size={14}
-                className="transition-transform duration-300 group-hover/dd:rotate-180"
-              />
-            </span>
-
-            {/* Dropdown Panel - CSS only, no JS needed */}
-            <div
-              className="absolute top-full left-1/2 -translate-x-1/2 pt-3 hidden group-hover/dd:block"
-              style={{ zIndex: 9999 }}
-            >
-              <div className="w-[520px] grid grid-cols-2 gap-4 bg-[#0a0a0a] border border-white/10 rounded-lg p-4 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
-                {/* Coluna 1 - Base de Dados */}
-                <div>
-                  <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
-                    Base de Dados
-                  </span>
-                  {DB_ITEMS.map((item) => (
-                    <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
-                      <item.icon size={16} className={item.iconClass || "text-[#C5A059]"} />
-                      <div>
-                        <div className="text-sm font-medium text-zinc-200">{item.label}</div>
-                        <div className="text-[10px] text-zinc-500">{item.desc}</div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-
-                {/* Coluna 2 - Ferramentas e Comunidade */}
-                <div>
-                  <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
-                    Ferramentas
-                  </span>
-                  {TOOLS_ITEMS.map((item) => (
-                    <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
-                      <item.icon size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium text-zinc-200">{item.label}</div>
-                        <div className="text-[10px] text-zinc-500">{item.desc}</div>
-                      </div>
-                    </Link>
-                  ))}
-
-                  <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 mt-4 block font-medium">
-                    Comunidade
-                  </span>
-                  {COMMUNITY_ITEMS.map((item) => (
-                    <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
-                      <item.icon size={16} className="text-[#C5A059]" />
-                      <div>
-                        <div className="text-sm font-medium text-zinc-200">{item.label}</div>
-                        <div className="text-[10px] text-zinc-500">{item.desc}</div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Instagram Promo Link */}
-          <Link
-            href="/instagram"
-            className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 relative group py-2"
-          >
-            Publicidade
-            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-500 ease-out group-hover:w-full"></span>
-          </Link>
-          {/* Free Ebook Link */}
-          <Link
-            href="/ebook-gratis"
-            className="relative flex items-center gap-2 bg-gradient-to-r from-[#C5A059] to-[#D4B06A] text-black px-5 py-2.5 text-[10px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_20px_rgba(197,160,89,0.15)] hover:shadow-[0_0_25px_rgba(197,160,89,0.3)]"
-          >
-            <Gift size={14} />
-            Ebook Grátis
-          </Link>
-        </div>
+        <DesktopMenu language={language} t={t} />
 
         {/* ICONES E IDIOMA */}
-        <div className="flex items-center gap-2 md:gap-4">
-          {/* Pesquisa */}
-          <button
-            onClick={() => setIsSearchOpen(true)}
-            className="text-zinc-400 hover:text-[#C5A059] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
-            aria-label={language === "pt" ? "Pesquisar" : "Search"}
-          >
-            <Search size={20} strokeWidth={1.5} />
-          </button>
-
-          {/* Idioma */}
-          <button
-            onClick={toggleLanguage}
-            className="hidden lg:flex text-xs font-bold tracking-widest text-zinc-500 hover:text-white transition-colors border border-transparent hover:border-zinc-800 px-2 py-1 rounded-sm"
-            aria-label={language === "pt" ? "Mudar idioma" : "Change language"}
-          >
-            <span className={language === "pt" ? "text-[#C5A059]" : ""}>PT</span>
-            <span className="mx-1 opacity-30 text-zinc-600">|</span>
-            <span className={language === "en" ? "text-[#C5A059]" : ""}>EN</span>
-          </button>
-
-          {/* Favoritos - Products + Horses */}
-          <Link
-            href="/cavalos-favoritos"
-            className="text-zinc-400 hover:text-[#C5A059] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center relative active:scale-95 touch-manipulation"
-            aria-label={language === "pt" ? "Cavalos Favoritos" : "Favorite Horses"}
-          >
-            <Heart size={20} strokeWidth={1.5} />
-            {wishlist.length + favoritesCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 w-5 h-5 bg-[#C5A059] rounded-full flex items-center justify-center text-[10px] text-black font-bold">
-                {wishlist.length + favoritesCount}
-              </span>
-            )}
-          </Link>
-
-          {/* Conta */}
-          <Link
-            href="/minha-conta"
-            className="hidden md:flex text-zinc-400 hover:text-[#C5A059] transition-colors p-2 min-w-[44px] min-h-[44px] items-center justify-center active:scale-95 touch-manipulation"
-            aria-label={language === "pt" ? "Minha conta" : "My account"}
-          >
-            <User size={20} strokeWidth={1.5} />
-          </Link>
-
-          {/* Carrinho */}
-          <button
-            onClick={openCart}
-            className="flex items-center gap-2 text-zinc-400 hover:text-[#C5A059] transition-colors group active:scale-95 touch-manipulation"
-            aria-label={`${language === "pt" ? "Carrinho" : "Cart"} (${totalQuantity} ${language === "pt" ? "itens" : "items"})`}
-          >
-            <div className="relative p-2 min-w-[44px] min-h-[44px] flex items-center justify-center">
-              <ShoppingBag size={20} strokeWidth={1.5} />
-              {totalQuantity > 0 && (
-                <span className="absolute top-0.5 right-0.5 w-5 h-5 bg-[#C5A059] rounded-full flex items-center justify-center text-[10px] text-black font-bold">
-                  {totalQuantity}
-                </span>
-              )}
-            </div>
-            <span className="hidden xl:block text-[10px] uppercase tracking-widest group-hover:text-white font-medium">
-              {t.cart} ({totalQuantity})
-            </span>
-          </button>
-
-          {/* Menu Mobile */}
-          <button
-            className="lg:hidden text-white p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
-            onClick={() => setIsMobileOpen(!isMobileOpen)}
-            aria-label={
-              isMobileOpen
-                ? language === "pt"
-                  ? "Fechar menu"
-                  : "Close menu"
-                : language === "pt"
-                  ? "Abrir menu"
-                  : "Open menu"
-            }
-            aria-expanded={isMobileOpen}
-          >
-            {isMobileOpen ? <X size={26} /> : <Menu size={26} />}
-          </button>
-        </div>
+        <NavIcons
+          language={language}
+          t={t}
+          wishlistCount={wishlist.length}
+          favoritesCount={favoritesCount}
+          totalQuantity={totalQuantity}
+          isMobileOpen={isMobileOpen}
+          onSearchClick={() => setIsSearchOpen(true)}
+          onLanguageToggle={toggleLanguage}
+          onCartClick={openCart}
+          onMobileToggle={() => setIsMobileOpen(!isMobileOpen)}
+        />
       </div>
 
-      {/* Menu Mobile Expandido - Touch Optimized */}
-      {isMobileOpen && (
-        <div className="lg:hidden bg-[#050505] border-t border-white/5 max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain">
-          <div className="px-4 py-6 space-y-2">
-            {/* Main Navigation */}
-            {[
-              { name: t.nav.home, href: "/", icon: Home },
-              { name: t.nav.shop, href: "/loja", icon: Store },
-              { name: t.nav.journal, href: "/jornal", icon: BookOpen },
-              { name: language === "pt" ? "Sobre Nós" : "About Us", href: "/sobre", icon: Users },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex items-center gap-4 py-4 px-3 text-lg text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-              >
-                <item.icon size={20} className="text-zinc-500" />
-                {item.name}
-              </Link>
-            ))}
-
-            {/* Lusitano Section Mobile - Grid Layout */}
-            <div className="border-t border-white/10 pt-4 mt-4">
-              <span className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] mb-3 block px-3 font-medium">
-                Base de Dados
-              </span>
-              <div className="grid grid-cols-2 gap-2">
-                {MOBILE_DB_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center gap-3 py-3 px-3 text-sm transition-colors rounded-lg active:scale-[0.98] touch-manipulation ${
-                      item.highlight
-                        ? "text-green-400 bg-green-500/10 border border-green-500/30"
-                        : "text-zinc-300 hover:text-[#C5A059] hover:bg-white/5"
-                    }`}
-                  >
-                    <item.icon
-                      size={18}
-                      className={item.highlight ? "text-green-400" : "text-[#C5A059]/70"}
-                    />
-                    <span className="truncate">{item.label}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Ferramentas Mobile */}
-            <div className="border-t border-white/10 pt-4 mt-4">
-              <span className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] mb-3 block px-3 font-medium">
-                Ferramentas
-              </span>
-              <div className="grid grid-cols-2 gap-2">
-                {MOBILE_TOOLS_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-                  >
-                    <item.icon size={18} className="text-[#C5A059]/70" />
-                    <span className="truncate">{item.label}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Comunidade Mobile */}
-            <div className="border-t border-white/10 pt-4 mt-4">
-              <span className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] mb-3 block px-3 font-medium">
-                Comunidade
-              </span>
-              <div className="grid grid-cols-2 gap-2">
-                {MOBILE_COMMUNITY_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-                  >
-                    <item.icon size={18} className="text-[#C5A059]/70" />
-                    <span className="truncate">{item.label}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Favorites Section */}
-            <div className="border-t border-white/10 pt-4 mt-4">
-              <div className="grid grid-cols-2 gap-2">
-                <Link
-                  href="/cavalos-favoritos"
-                  className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-                >
-                  <Heart size={18} className="text-red-400" />
-                  <span>Cavalos Favoritos</span>
-                  {favoritesCount > 0 && (
-                    <span className="ml-auto bg-[#C5A059] text-black text-xs px-2 py-0.5 rounded-full font-bold">
-                      {favoritesCount}
-                    </span>
-                  )}
-                </Link>
-                <Link
-                  href="/favoritos"
-                  className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-                >
-                  <Heart size={18} className="text-pink-400" />
-                  <span>Loja Favoritos</span>
-                  {wishlist.length > 0 && (
-                    <span className="ml-auto bg-[#C5A059] text-black text-xs px-2 py-0.5 rounded-full font-bold">
-                      {wishlist.length}
-                    </span>
-                  )}
-                </Link>
-              </div>
-            </div>
-
-            {/* Additional Links */}
-            <div className="border-t border-white/10 pt-4 mt-4 space-y-2">
-              <Link
-                href="/instagram"
-                className="flex items-center gap-4 py-3 px-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-              >
-                Publicidade / Instagram
-              </Link>
-              <Link
-                href="/minha-conta"
-                className="flex items-center gap-4 py-3 px-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-              >
-                <User size={18} className="text-zinc-500" />
-                Minha Conta
-              </Link>
-            </div>
-
-            {/* CTA & Language */}
-            <div className="border-t border-white/10 pt-4 mt-4 space-y-3">
-              <Link
-                href="/ebook-gratis"
-                className="flex items-center justify-center gap-3 bg-gradient-to-r from-[#C5A059] to-[#D4B06A] text-black px-4 py-4 text-sm uppercase tracking-widest font-bold w-full rounded-lg active:scale-[0.98] touch-manipulation shadow-[0_0_20px_rgba(197,160,89,0.2)]"
-              >
-                <Gift size={18} />
-                Ebook Grátis
-              </Link>
-              <button
-                onClick={() => {
-                  toggleLanguage();
-                  setIsMobileOpen(false);
-                }}
-                className="w-full text-center py-3 px-3 text-zinc-400 hover:text-white transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-              >
-                {language === "pt" ? "🇬🇧 Switch to English" : "🇵🇹 Mudar para Português"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Menu Mobile Expandido */}
+      <MobileMenu
+        isOpen={isMobileOpen}
+        language={language}
+        t={t}
+        wishlistCount={wishlist.length}
+        favoritesCount={favoritesCount}
+        onLanguageToggle={toggleLanguage}
+        onClose={() => setIsMobileOpen(false)}
+      />
 
       {/* Modal de Pesquisa */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
