@@ -2,36 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  Star,
-  MapPin,
-  X,
-  Search,
-} from "lucide-react";
-
-interface Cavalo {
-  id: string;
-  nome: string;
-  slug: string;
-  descricao: string;
-  sexo: string;
-  idade: number;
-  cor: string;
-  altura: number;
-  linhagem?: string;
-  nivel_treino: string;
-  preco: number;
-  preco_sob_consulta: boolean;
-  localizacao: string;
-  regiao: string;
-  destaque: boolean;
-  status: string;
-  views_count: number;
-}
+import { Plus, Edit, Trash2, Eye, Star, MapPin, X, Search } from "lucide-react";
+import { CavaloAdmin } from "@/types/cavalo";
 
 const sexoOptions = [
   { value: "macho", label: "Garanhão" },
@@ -54,11 +26,11 @@ const statusColors: Record<string, string> = {
 };
 
 export default function CavalosContent() {
-  const [cavalos, setCavalos] = useState<Cavalo[]>([]);
+  const [cavalos, setCavalos] = useState<CavaloAdmin[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [editingCavalo, setEditingCavalo] = useState<Cavalo | null>(null);
+  const [editingCavalo, setEditingCavalo] = useState<CavaloAdmin | null>(null);
   const [formData, setFormData] = useState({
     nome: "",
     slug: "",
@@ -104,9 +76,7 @@ export default function CavalosContent() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const url = editingCavalo
-        ? `/api/admin/cavalos/${editingCavalo.id}`
-        : "/api/admin/cavalos";
+      const url = editingCavalo ? `/api/admin/cavalos/${editingCavalo.id}` : "/api/admin/cavalos";
       const method = editingCavalo ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -159,7 +129,7 @@ export default function CavalosContent() {
     }
   }
 
-  function startEdit(cavalo: Cavalo) {
+  function startEdit(cavalo: CavaloAdmin) {
     setEditingCavalo(cavalo);
     setFormData({
       nome: cavalo.nome,
@@ -224,7 +194,7 @@ export default function CavalosContent() {
       .replace(/(^-|-$)+/g, "");
   }
 
-  function formatPrice(cavalo: Cavalo) {
+  function formatPrice(cavalo: CavaloAdmin) {
     if (cavalo.preco_sob_consulta) return "Sob consulta";
     if (!cavalo.preco) return "A definir";
     return `€${cavalo.preco.toLocaleString("pt-PT")}`;
@@ -246,9 +216,7 @@ export default function CavalosContent() {
               <h1 className="text-2xl font-bold text-[#C5A059]">
                 🐴 Marketplace - Cavalos à Venda
               </h1>
-              <p className="text-gray-400 text-sm">
-                Gerir anúncios de cavalos no marketplace
-              </p>
+              <p className="text-gray-400 text-sm">Gerir anúncios de cavalos no marketplace</p>
             </div>
             <button
               onClick={() => setShowForm(true)}
@@ -349,17 +317,15 @@ export default function CavalosContent() {
                         <div>
                           <p className="font-medium text-white">{cavalo.nome}</p>
                           {cavalo.linhagem && (
-                            <p className="text-sm text-[#C5A059]">
-                              Linhagem {cavalo.linhagem}
-                            </p>
+                            <p className="text-sm text-[#C5A059]">Linhagem {cavalo.linhagem}</p>
                           )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-gray-400 text-sm">
-                        {sexoOptions.find((s) => s.value === cavalo.sexo)?.label} •{" "}
-                        {cavalo.idade} anos • {cavalo.cor}
+                        {sexoOptions.find((s) => s.value === cavalo.sexo)?.label} • {cavalo.idade}{" "}
+                        anos • {cavalo.cor}
                       </p>
                       <p className="text-gray-500 text-sm flex items-center gap-1">
                         <MapPin size={12} />
@@ -383,9 +349,7 @@ export default function CavalosContent() {
                         <option value="inativo">Inativo</option>
                       </select>
                     </td>
-                    <td className="px-6 py-4 text-gray-400">
-                      {cavalo.views_count || 0}
-                    </td>
+                    <td className="px-6 py-4 text-gray-400">{cavalo.views_count || 0}</td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
                         <Link
@@ -458,9 +422,7 @@ export default function CavalosContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Sexo *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Sexo *</label>
                   <select
                     value={formData.sexo}
                     onChange={(e) => setFormData({ ...formData, sexo: e.target.value })}
@@ -487,9 +449,7 @@ export default function CavalosContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Cor
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Cor</label>
                   <input
                     type="text"
                     value={formData.cor}
@@ -514,9 +474,7 @@ export default function CavalosContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Linhagem
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Linhagem</label>
                   <input
                     type="text"
                     value={formData.linhagem}
@@ -544,9 +502,7 @@ export default function CavalosContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Preço (€)
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Preço (€)</label>
                   <input
                     type="number"
                     value={formData.preco}
@@ -583,9 +539,7 @@ export default function CavalosContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Região
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Região</label>
                   <input
                     type="text"
                     value={formData.regiao}

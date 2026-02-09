@@ -4,27 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import AddToCartButton from "@/components/AddToCartButton";
 import { ChevronDown } from "lucide-react";
-
-interface ProductImage {
-  url: string;
-  altText?: string;
-}
-
-interface ProductVariant {
-  id: string;
-  title: string;
-  price: { amount: string; currencyCode?: string };
-  availableForSale: boolean;
-  image?: ProductImage;
-}
-
-interface Product {
-  id: string;
-  title: string;
-  description?: string;
-  images: ProductImage[];
-  variants: ProductVariant[];
-}
+import { Product } from "@/types/product";
 
 export default function ProductDisplay({ product }: { product: Product }) {
   // 1. Estados iniciais

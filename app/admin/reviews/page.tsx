@@ -3,26 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Star, Check, X, Eye, ArrowLeft, MessageSquare, ThumbsUp, ThumbsDown } from "lucide-react";
-
-interface Review {
-  id: string;
-  coudelaria_id: string;
-  autor_nome: string;
-  autor_email?: string;
-  autor_localizacao?: string;
-  avaliacao: number;
-  titulo?: string;
-  comentario: string;
-  data_visita?: string;
-  tipo_visita?: string;
-  recomenda: boolean;
-  status: string;
-  created_at: string;
-  coudelarias?: {
-    nome: string;
-    slug: string;
-  };
-}
+import { Review } from "@/types/review";
 
 export default function AdminReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>([]);

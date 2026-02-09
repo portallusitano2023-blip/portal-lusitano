@@ -88,11 +88,11 @@ export async function getCart(cartId: string) {
   return res.data?.cart;
 }
 
-export async function addToCart(cartId: string, variantId: string) {
+export async function addToCart(cartId: string, variantId: string, quantity: number = 1) {
   const query = `mutation($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { id checkoutUrl totalQuantity } } }`;
   const res = await shopifyFetch({
     query,
-    variables: { cartId, lines: [{ merchandiseId: variantId, quantity: 1 }] },
+    variables: { cartId, lines: [{ merchandiseId: variantId, quantity }] },
   });
   return res.data?.cartLinesAdd?.cart;
 }

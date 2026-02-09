@@ -4,21 +4,9 @@ import Navbar from "@/components/Navbar";
 import Pedigree from "@/components/Pedigree";
 import { ProductSchema, BreadcrumbSchema } from "@/components/JsonLd";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
+import { CavaloVenda } from "@/types/cavalo";
 
-interface CavaloVenda {
-  id: string;
-  nome_cavalo: string;
-  preco: number;
-  idade: number;
-  localizacao: string;
-  linhagem: string;
-  descricao: string;
-  image_url: string;
-  pai?: string;
-  mae?: string;
-  pontuacao_apsl?: number;
-}
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
 export default async function DetalheCavaloPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params; // Next.js 15+ requer await

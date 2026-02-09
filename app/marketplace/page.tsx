@@ -20,43 +20,7 @@ import TextSplit from "@/components/TextSplit";
 import { useCountUp } from "@/hooks/useCountUp";
 import { useInViewOnce } from "@/hooks/useInViewOnce";
 import { useTilt3D } from "@/hooks/useTilt3D";
-
-interface Cavalo {
-  id: string;
-  nome: string;
-  slug: string;
-  descricao: string;
-  sexo: string;
-  idade: number;
-  cor: string;
-  altura: number;
-  linhagem?: string;
-  pai?: string;
-  mae?: string;
-  nivel_treino: string;
-  disciplinas: string[];
-  premios?: string[];
-  caracteristicas?: string[];
-  preco: number;
-  preco_negociavel: boolean;
-  preco_sob_consulta: boolean;
-  coudelaria_id?: string;
-  vendedor_nome?: string;
-  vendedor_telefone?: string;
-  vendedor_email?: string;
-  vendedor_whatsapp?: string;
-  localizacao: string;
-  regiao: string;
-  foto_principal?: string;
-  fotos?: string[];
-  video_url?: string;
-  registro_apsl?: string;
-  destaque: boolean;
-  coudelarias?: {
-    nome: string;
-    slug: string;
-  };
-}
+import { Cavalo } from "@/types/cavalo";
 
 const sexoOptions = [
   { value: "todos", label: "Todos" },
@@ -83,16 +47,7 @@ const disciplinaOptions = [
   { value: "reproducao", label: "Reprodução" },
 ];
 
-const regioes = [
-  "Todas",
-  "Ribatejo",
-  "Alentejo",
-  "Lisboa",
-  "Porto",
-  "Minho",
-  "Douro",
-  "Centro",
-];
+const regioes = ["Todas", "Ribatejo", "Alentejo", "Lisboa", "Porto", "Minho", "Douro", "Centro"];
 
 // Placeholder images
 const placeholderHorses = [
@@ -144,9 +99,7 @@ export default function MarketplacePage() {
   }, [filters, searchTerm]);
 
   const toggleFavorite = (id: string) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
-    );
+    setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
   };
 
   function formatPrice(cavalo: Cavalo) {
@@ -198,8 +151,8 @@ export default function MarketplacePage() {
               <TextSplit text="Cavalos Lusitanos à Venda" baseDelay={0.2} wordDelay={0.1} />
             </h1>
             <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
-              Encontre o seu próximo cavalo Lusitano. Exemplares de qualidade das
-              melhores coudelarias de Portugal.
+              Encontre o seu próximo cavalo Lusitano. Exemplares de qualidade das melhores
+              coudelarias de Portugal.
             </p>
           </div>
 
@@ -210,15 +163,11 @@ export default function MarketplacePage() {
             style={{ animationDelay: "0.1s" }}
           >
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059]">
-                {countCavalos}
-              </div>
+              <div className="text-3xl font-serif text-[#C5A059]">{countCavalos}</div>
               <div className="text-sm text-zinc-500">Cavalos</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059]">
-                {countDestaque}
-              </div>
+              <div className="text-3xl font-serif text-[#C5A059]">{countDestaque}</div>
               <div className="text-sm text-zinc-500">Em Destaque</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
@@ -384,12 +333,8 @@ export default function MarketplacePage() {
         ) : cavalos.length === 0 ? (
           <div className="text-center py-20">
             <Search className="mx-auto text-zinc-600 mb-4" size={48} />
-            <h3 className="text-xl font-serif text-white mb-2">
-              Nenhum cavalo encontrado
-            </h3>
-            <p className="text-zinc-500">
-              Tente ajustar os filtros de pesquisa.
-            </p>
+            <h3 className="text-xl font-serif text-white mb-2">Nenhum cavalo encontrado</h3>
+            <p className="text-zinc-500">Tente ajustar os filtros de pesquisa.</p>
           </div>
         ) : (
           <div className="space-y-16">
@@ -398,9 +343,7 @@ export default function MarketplacePage() {
               <section>
                 <div className="flex items-center gap-3 mb-8">
                   <Star className="text-[#C5A059]" size={24} />
-                  <h2 className="text-2xl font-serif text-white">
-                    Cavalos em Destaque
-                  </h2>
+                  <h2 className="text-2xl font-serif text-white">Cavalos em Destaque</h2>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {cavalosDestaque.map((cavalo, index) => (
@@ -422,9 +365,7 @@ export default function MarketplacePage() {
             {/* Outros Cavalos */}
             {outrosCavalos.length > 0 && (
               <section>
-                <h2 className="text-2xl font-serif text-zinc-300 mb-8">
-                  Todos os Cavalos
-                </h2>
+                <h2 className="text-2xl font-serif text-zinc-300 mb-8">Todos os Cavalos</h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {outrosCavalos.map((cavalo, index) => (
                     <CavaloCard
@@ -487,7 +428,10 @@ function CavaloCard({
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       className="group bg-zinc-900/50 border border-white/10 hover:border-[#C5A059]/50 overflow-hidden transition-all opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-      style={{ animationDelay: `${index * 0.05}s`, transition: "transform 0.1s ease-out, border-color 0.3s" }}
+      style={{
+        animationDelay: `${index * 0.05}s`,
+        transition: "transform 0.1s ease-out, border-color 0.3s",
+      }}
     >
       {/* Imagem */}
       <div className="relative h-56 overflow-hidden">
@@ -517,10 +461,7 @@ function CavaloCard({
           }}
           className="absolute top-3 right-3 p-2 bg-black/40 hover:bg-black/60 transition-colors"
         >
-          <Heart
-            size={20}
-            className={isFavorite ? "fill-red-500 text-red-500" : "text-white"}
-          />
+          <Heart size={20} className={isFavorite ? "fill-red-500 text-red-500" : "text-white"} />
         </button>
 
         {/* Preço */}
@@ -635,9 +576,7 @@ function CavaloModal({
               </button>
             </div>
 
-            <div className="text-3xl font-serif text-[#C5A059] mb-6">
-              {formatPrice(cavalo)}
-            </div>
+            <div className="text-3xl font-serif text-[#C5A059] mb-6">{formatPrice(cavalo)}</div>
 
             {/* Características */}
             <div className="grid grid-cols-2 gap-4 mb-6">

@@ -2,35 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Star,
-  Check,
-  X,
-  Eye,
-  MessageSquare,
-  ThumbsUp,
-  ThumbsDown,
-} from "lucide-react";
-
-interface Review {
-  id: string;
-  coudelaria_id: string;
-  autor_nome: string;
-  autor_email?: string;
-  autor_localizacao?: string;
-  avaliacao: number;
-  titulo?: string;
-  comentario: string;
-  data_visita?: string;
-  tipo_visita?: string;
-  recomenda: boolean;
-  status: string;
-  created_at: string;
-  coudelarias?: {
-    nome: string;
-    slug: string;
-  };
-}
+import { Star, Check, X, Eye, MessageSquare, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Review } from "@/types/review";
 
 export default function ReviewsContent() {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -150,13 +123,9 @@ export default function ReviewsContent() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="font-semibold text-white">
-                        {review.autor_nome}
-                      </span>
+                      <span className="font-semibold text-white">{review.autor_nome}</span>
                       {review.autor_localizacao && (
-                        <span className="text-gray-400 text-sm">
-                          de {review.autor_localizacao}
-                        </span>
+                        <span className="text-gray-400 text-sm">de {review.autor_localizacao}</span>
                       )}
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -179,24 +148,14 @@ export default function ReviewsContent() {
                     </div>
 
                     {review.titulo && (
-                      <h3 className="font-medium text-gray-300 mb-1">
-                        {review.titulo}
-                      </h3>
+                      <h3 className="font-medium text-gray-300 mb-1">{review.titulo}</h3>
                     )}
                     <p className="text-gray-400 mb-3">{review.comentario}</p>
 
                     <div className="flex items-center gap-4 text-sm text-gray-500">
-                      {review.coudelarias && (
-                        <span>Coudelaria: {review.coudelarias.nome}</span>
-                      )}
-                      {review.tipo_visita && (
-                        <span>Tipo: {review.tipo_visita}</span>
-                      )}
-                      <span>
-                        {new Date(review.created_at).toLocaleDateString(
-                          "pt-PT"
-                        )}
-                      </span>
+                      {review.coudelarias && <span>Coudelaria: {review.coudelarias.nome}</span>}
+                      {review.tipo_visita && <span>Tipo: {review.tipo_visita}</span>}
+                      <span>{new Date(review.created_at).toLocaleDateString("pt-PT")}</span>
                     </div>
                   </div>
 
@@ -211,18 +170,14 @@ export default function ReviewsContent() {
                     {review.status === "pending" && (
                       <>
                         <button
-                          onClick={() =>
-                            updateReviewStatus(review.id, "approved")
-                          }
+                          onClick={() => updateReviewStatus(review.id, "approved")}
                           className="p-2 text-green-500 hover:bg-green-500/10 rounded transition"
                           title="Aprovar"
                         >
                           <Check size={20} />
                         </button>
                         <button
-                          onClick={() =>
-                            updateReviewStatus(review.id, "rejected")
-                          }
+                          onClick={() => updateReviewStatus(review.id, "rejected")}
                           className="p-2 text-red-500 hover:bg-red-500/10 rounded transition"
                           title="Rejeitar"
                         >
@@ -248,9 +203,7 @@ export default function ReviewsContent() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-start mb-6">
-              <h2 className="text-xl font-bold text-white">
-                Detalhes da Review
-              </h2>
+              <h2 className="text-xl font-bold text-white">Detalhes da Review</h2>
               <button
                 onClick={() => setSelectedReview(null)}
                 className="text-gray-400 hover:text-white"
@@ -271,7 +224,9 @@ export default function ReviewsContent() {
                 </div>
                 <div>
                   <label className="text-sm text-gray-500">Localização</label>
-                  <p className="text-gray-300">{selectedReview.autor_localizacao || "Não fornecida"}</p>
+                  <p className="text-gray-300">
+                    {selectedReview.autor_localizacao || "Não fornecida"}
+                  </p>
                 </div>
                 <div>
                   <label className="text-sm text-gray-500">Avaliação</label>
@@ -301,18 +256,14 @@ export default function ReviewsContent() {
               {selectedReview.status === "pending" && (
                 <div className="flex gap-4 pt-4 border-t border-white/10">
                   <button
-                    onClick={() =>
-                      updateReviewStatus(selectedReview.id, "approved")
-                    }
+                    onClick={() => updateReviewStatus(selectedReview.id, "approved")}
                     className="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2"
                   >
                     <Check size={20} />
                     Aprovar Review
                   </button>
                   <button
-                    onClick={() =>
-                      updateReviewStatus(selectedReview.id, "rejected")
-                    }
+                    onClick={() => updateReviewStatus(selectedReview.id, "rejected")}
                     className="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2"
                   >
                     <X size={20} />

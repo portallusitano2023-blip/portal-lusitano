@@ -3,26 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Eye, ArrowLeft, Star, MapPin, X, Search } from "lucide-react";
-
-interface Cavalo {
-  id: string;
-  nome: string;
-  slug: string;
-  descricao: string;
-  sexo: string;
-  idade: number;
-  cor: string;
-  altura: number;
-  linhagem?: string;
-  nivel_treino: string;
-  preco: number;
-  preco_sob_consulta: boolean;
-  localizacao: string;
-  regiao: string;
-  destaque: boolean;
-  status: string;
-  views_count: number;
-}
+import { CavaloAdmin } from "@/types/cavalo";
 
 const sexoOptions = [
   { value: "macho", label: "Garanhão" },
@@ -45,11 +26,11 @@ const statusColors: Record<string, string> = {
 };
 
 export default function AdminCavalosPage() {
-  const [cavalos, setCavalos] = useState<Cavalo[]>([]);
+  const [cavalos, setCavalos] = useState<CavaloAdmin[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [editingCavalo, setEditingCavalo] = useState<Cavalo | null>(null);
+  const [editingCavalo, setEditingCavalo] = useState<CavaloAdmin | null>(null);
   const [formData, setFormData] = useState({
     nome: "",
     slug: "",
@@ -148,7 +129,7 @@ export default function AdminCavalosPage() {
     }
   }
 
-  function startEdit(cavalo: Cavalo) {
+  function startEdit(cavalo: CavaloAdmin) {
     setEditingCavalo(cavalo);
     setFormData({
       nome: cavalo.nome,
@@ -213,7 +194,7 @@ export default function AdminCavalosPage() {
       .replace(/(^-|-$)+/g, "");
   }
 
-  function formatPrice(cavalo: Cavalo) {
+  function formatPrice(cavalo: CavaloAdmin) {
     if (cavalo.preco_sob_consulta) return "Sob consulta";
     if (!cavalo.preco) return "A definir";
     return `€${cavalo.preco.toLocaleString("pt-PT")}`;

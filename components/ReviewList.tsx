@@ -2,31 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { Star, ThumbsUp, Calendar, MapPin, User } from "lucide-react";
-
-interface Review {
-  id: string;
-  autor_nome: string;
-  autor_localizacao?: string;
-  avaliacao: number;
-  titulo?: string;
-  comentario: string;
-  data_visita?: string;
-  tipo_visita?: string;
-  recomenda: boolean;
-  created_at: string;
-}
-
-interface ReviewStats {
-  total: number;
-  media: number;
-}
+import { Review, ReviewStats } from "@/types/review";
 
 interface ReviewListProps {
   coudelariaId: string;
   refreshKey?: number;
 }
 
-export function ReviewStars({ rating, size = "md" }: { rating: number; size?: "sm" | "md" | "lg" }) {
+export function ReviewStars({
+  rating,
+  size = "md",
+}: {
+  rating: number;
+  size?: "sm" | "md" | "lg";
+}) {
   const sizeClasses = {
     sm: "w-4 h-4",
     md: "w-5 h-5",
@@ -38,9 +27,7 @@ export function ReviewStars({ rating, size = "md" }: { rating: number; size?: "s
       {[1, 2, 3, 4, 5].map((star) => (
         <Star
           key={star}
-          className={`${sizeClasses[size]} ${
-            star <= rating ? "text-yellow-400" : "text-gray-300"
-          }`}
+          className={`${sizeClasses[size]} ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
           fill={star <= rating ? "currentColor" : "none"}
         />
       ))}
@@ -172,9 +159,7 @@ export default function ReviewList({ coudelariaId, refreshKey = 0 }: ReviewListP
                     )}
                   </div>
                 </div>
-                <span className="text-xs text-gray-400">
-                  {formatDate(review.created_at)}
-                </span>
+                <span className="text-xs text-gray-400">{formatDate(review.created_at)}</span>
               </div>
 
               <p className="text-gray-700 mb-3">{review.comentario}</p>
