@@ -3,7 +3,21 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Upload, AlertCircle, CheckCircle, Euro, FileText, Camera, Shield, CreditCard, Info, X, Plus, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Upload,
+  AlertCircle,
+  CheckCircle,
+  Euro,
+  FileText,
+  Camera,
+  Shield,
+  CreditCard,
+  Info,
+  X,
+  Plus,
+  Trash2,
+} from "lucide-react";
 
 interface FormData {
   // Dados do Proprietário
@@ -96,10 +110,43 @@ const initialFormData: FormData = {
   videos_url: "",
 };
 
-const pelagens = ["Ruço", "Castanho", "Preto", "Alazão", "Baio", "Palomino", "Tordilho", "Isabelo", "Malhado"];
-const niveis_treino = ["Potro (sem desbaste)", "Desbravado", "Iniciado", "Intermédio", "Avançado", "Alta Escola", "Competição"];
-const disciplinas_opcoes = ["Dressage", "Equitação de Trabalho", "Toureio", "Atrelagem", "Saltos", "Lazer", "Reprodução", "Ensino"];
-const disponibilidades = ["Imediata", "Após acordo", "Fins de semana", "Dias úteis", "Por marcação"];
+const pelagens = [
+  "Ruço",
+  "Castanho",
+  "Preto",
+  "Alazão",
+  "Baio",
+  "Palomino",
+  "Tordilho",
+  "Isabelo",
+  "Malhado",
+];
+const niveis_treino = [
+  "Potro (sem desbaste)",
+  "Desbravado",
+  "Iniciado",
+  "Intermédio",
+  "Avançado",
+  "Alta Escola",
+  "Competição",
+];
+const disciplinas_opcoes = [
+  "Dressage",
+  "Equitação de Trabalho",
+  "Toureio",
+  "Atrelagem",
+  "Saltos",
+  "Lazer",
+  "Reprodução",
+  "Ensino",
+];
+const disponibilidades = [
+  "Imediata",
+  "Após acordo",
+  "Fins de semana",
+  "Dias úteis",
+  "Por marcação",
+];
 
 const PRECO_ANUNCIO = 49; // Preço base
 const PRECO_DESTAQUE = 29; // Extra para destaque
@@ -108,13 +155,17 @@ export default function VenderCavaloPage() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [imagens, setImagens] = useState<File[]>([]);
-  const [documentos, setDocumentos] = useState<{ livroAzul?: File; passaporte?: File; exameVet?: File }>({});
+  const [documentos, setDocumentos] = useState<{
+    livroAzul?: File;
+    passaporte?: File;
+    exameVet?: File;
+  }>({});
   const [errors, setErrors] = useState<string[]>([]);
   const [opcaoDestaque, setOpcaoDestaque] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const updateField = (field: keyof FormData, value: any) => {
+  const updateField = (field: keyof FormData, value: FormData[keyof FormData]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -148,8 +199,10 @@ export default function VenderCavaloPage() {
     }
 
     if (currentStep === 3) {
-      if (!formData.pai_nome || !formData.pai_registo) newErrors.push("Dados do pai são obrigatórios");
-      if (!formData.mae_nome || !formData.mae_registo) newErrors.push("Dados da mãe são obrigatórios");
+      if (!formData.pai_nome || !formData.pai_registo)
+        newErrors.push("Dados do pai são obrigatórios");
+      if (!formData.mae_nome || !formData.mae_registo)
+        newErrors.push("Dados da mãe são obrigatórios");
       if (!documentos.livroAzul) newErrors.push("Upload do Livro Azul é obrigatório");
     }
 
@@ -162,7 +215,8 @@ export default function VenderCavaloPage() {
     if (currentStep === 5) {
       if (!formData.preco) newErrors.push("Preço é obrigatório");
       if (!formData.localizacao) newErrors.push("Localização é obrigatória");
-      if (!formData.descricao || formData.descricao.length < 100) newErrors.push("Descrição deve ter pelo menos 100 caracteres");
+      if (!formData.descricao || formData.descricao.length < 100)
+        newErrors.push("Descrição deve ter pelo menos 100 caracteres");
       if (imagens.length < 3) newErrors.push("Mínimo de 3 fotografias é obrigatório");
     }
 
@@ -274,9 +328,12 @@ export default function VenderCavaloPage() {
 
       // Redirect para Stripe Checkout
       window.location.href = data.url;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao processar pagamento:", error);
-      alert(`Erro ao processar pagamento: ${error.message}. Por favor, tente novamente ou contacte o suporte.`);
+      const message = error instanceof Error ? error.message : "Erro desconhecido";
+      alert(
+        `Erro ao processar pagamento: ${message}. Por favor, tente novamente ou contacte o suporte.`
+      );
       setLoading(false);
     }
   };
@@ -289,7 +346,10 @@ export default function VenderCavaloPage() {
     let idade = hoje.getFullYear() - nascimento.getFullYear();
     const mesAtual = hoje.getMonth();
     const mesNascimento = nascimento.getMonth();
-    if (mesAtual < mesNascimento || (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
+    if (
+      mesAtual < mesNascimento ||
+      (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())
+    ) {
       idade--;
     }
     return idade;
@@ -306,8 +366,8 @@ export default function VenderCavaloPage() {
               s === step
                 ? "bg-[#C5A059] text-black"
                 : s < step
-                ? "bg-green-500 text-white"
-                : "bg-zinc-800 text-zinc-500"
+                  ? "bg-green-500 text-white"
+                  : "bg-zinc-800 text-zinc-500"
             }`}
           >
             {s < step ? <CheckCircle size={16} /> : s}
@@ -338,8 +398,8 @@ export default function VenderCavaloPage() {
             Vender Cavalo Lusitano
           </h1>
           <p className="text-zinc-400 text-sm max-w-xl mx-auto">
-            Anuncie o seu cavalo no maior marketplace de Lusitanos em Portugal.
-            Todos os anúncios passam por verificação de documentação.
+            Anuncie o seu cavalo no maior marketplace de Lusitanos em Portugal. Todos os anúncios
+            passam por verificação de documentação.
           </p>
         </div>
       </div>
@@ -350,7 +410,9 @@ export default function VenderCavaloPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h3 className="text-lg font-semibold mb-1">Anúncio Premium</h3>
-              <p className="text-sm text-zinc-400">30 dias de visibilidade + Verificação de documentos</p>
+              <p className="text-sm text-zinc-400">
+                30 dias de visibilidade + Verificação de documentos
+              </p>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-[#C5A059]">{PRECO_ANUNCIO}€</div>
@@ -373,7 +435,9 @@ export default function VenderCavaloPage() {
             <div className="flex items-start gap-3">
               <AlertCircle size={20} className="text-red-400 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-red-400 mb-2">Por favor corrija os seguintes erros:</p>
+                <p className="text-sm font-medium text-red-400 mb-2">
+                  Por favor corrija os seguintes erros:
+                </p>
                 <ul className="text-sm text-red-300 space-y-1">
                   {errors.map((error, i) => (
                     <li key={i}>• {error}</li>
@@ -388,7 +452,9 @@ export default function VenderCavaloPage() {
         {step === 1 && (
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
             <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">1</span>
+              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">
+                1
+              </span>
               Dados do Proprietário
             </h2>
 
@@ -457,7 +523,9 @@ export default function VenderCavaloPage() {
         {step === 2 && (
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
             <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">2</span>
+              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">
+                2
+              </span>
               Identificação do Cavalo
             </h2>
 
@@ -465,7 +533,8 @@ export default function VenderCavaloPage() {
               <div className="flex items-start gap-3">
                 <Info size={18} className="text-blue-400 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-blue-300">
-                  Todos os cavalos devem estar registados no Livro Azul da APSL (Associação Portuguesa de Criadores do Cavalo Puro Sangue Lusitano).
+                  Todos os cavalos devem estar registados no Livro Azul da APSL (Associação
+                  Portuguesa de Criadores do Cavalo Puro Sangue Lusitano).
                 </p>
               </div>
             </div>
@@ -483,7 +552,9 @@ export default function VenderCavaloPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-1">Nome de Registo (Livro Azul) *</label>
+                  <label className="block text-sm text-zinc-400 mb-1">
+                    Nome de Registo (Livro Azul) *
+                  </label>
                   <input
                     type="text"
                     value={formData.nome_registo}
@@ -496,7 +567,9 @@ export default function VenderCavaloPage() {
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-1">Número de Registo APSL *</label>
+                  <label className="block text-sm text-zinc-400 mb-1">
+                    Número de Registo APSL *
+                  </label>
                   <input
                     type="text"
                     value={formData.numero_registo}
@@ -518,7 +591,9 @@ export default function VenderCavaloPage() {
               </div>
 
               <div>
-                <label className="block text-sm text-zinc-400 mb-1">Número do Passaporte Equino</label>
+                <label className="block text-sm text-zinc-400 mb-1">
+                  Número do Passaporte Equino
+                </label>
                 <input
                   type="text"
                   value={formData.passaporte_equino}
@@ -560,7 +635,9 @@ export default function VenderCavaloPage() {
                   >
                     <option value="">Selecionar</option>
                     {pelagens.map((p) => (
-                      <option key={p} value={p}>{p}</option>
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -586,7 +663,9 @@ export default function VenderCavaloPage() {
         {step === 3 && (
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
             <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">3</span>
+              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">
+                3
+              </span>
               Linhagem e Documentação
             </h2>
 
@@ -605,7 +684,9 @@ export default function VenderCavaloPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1">Registo APSL do Pai *</label>
+                    <label className="block text-sm text-zinc-400 mb-1">
+                      Registo APSL do Pai *
+                    </label>
                     <input
                       type="text"
                       value={formData.pai_registo}
@@ -630,7 +711,9 @@ export default function VenderCavaloPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1">Registo APSL da Mãe *</label>
+                    <label className="block text-sm text-zinc-400 mb-1">
+                      Registo APSL da Mãe *
+                    </label>
                     <input
                       type="text"
                       value={formData.mae_registo}
@@ -671,13 +754,17 @@ export default function VenderCavaloPage() {
                     <label className="flex items-center justify-center gap-2 px-4 py-3 border border-dashed border-zinc-600 rounded-lg cursor-pointer hover:border-[#C5A059] transition-colors touch-manipulation">
                       <Upload size={18} className="text-zinc-500" />
                       <span className="text-sm text-zinc-400">
-                        {documentos.livroAzul ? documentos.livroAzul.name : "Escolher ficheiro (PDF ou imagem)"}
+                        {documentos.livroAzul
+                          ? documentos.livroAzul.name
+                          : "Escolher ficheiro (PDF ou imagem)"}
                       </span>
                       <input
                         type="file"
                         accept=".pdf,.jpg,.jpeg,.png"
                         className="hidden"
-                        onChange={(e) => e.target.files?.[0] && handleDocUpload("livroAzul", e.target.files[0])}
+                        onChange={(e) =>
+                          e.target.files?.[0] && handleDocUpload("livroAzul", e.target.files[0])
+                        }
                       />
                     </label>
                   </div>
@@ -686,7 +773,9 @@ export default function VenderCavaloPage() {
                   <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium">Passaporte Equino</span>
-                      {documentos.passaporte && <CheckCircle size={18} className="text-green-400" />}
+                      {documentos.passaporte && (
+                        <CheckCircle size={18} className="text-green-400" />
+                      )}
                     </div>
                     <p className="text-xs text-zinc-500 mb-3">Documento de identificação europeu</p>
                     <label className="flex items-center justify-center gap-2 px-4 py-3 border border-dashed border-zinc-600 rounded-lg cursor-pointer hover:border-[#C5A059] transition-colors touch-manipulation">
@@ -698,7 +787,9 @@ export default function VenderCavaloPage() {
                         type="file"
                         accept=".pdf,.jpg,.jpeg,.png"
                         className="hidden"
-                        onChange={(e) => e.target.files?.[0] && handleDocUpload("passaporte", e.target.files[0])}
+                        onChange={(e) =>
+                          e.target.files?.[0] && handleDocUpload("passaporte", e.target.files[0])
+                        }
                       />
                     </label>
                   </div>
@@ -712,7 +803,9 @@ export default function VenderCavaloPage() {
         {step === 4 && (
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
             <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">4</span>
+              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">
+                4
+              </span>
               Treino e Saúde
             </h2>
 
@@ -727,7 +820,9 @@ export default function VenderCavaloPage() {
                 >
                   <option value="">Selecionar</option>
                   {niveis_treino.map((n) => (
-                    <option key={n} value={n}>{n}</option>
+                    <option key={n} value={n}>
+                      {n}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -854,7 +949,9 @@ export default function VenderCavaloPage() {
                         type="file"
                         accept=".pdf,.jpg,.jpeg,.png"
                         className="hidden"
-                        onChange={(e) => e.target.files?.[0] && handleDocUpload("exameVet", e.target.files[0])}
+                        onChange={(e) =>
+                          e.target.files?.[0] && handleDocUpload("exameVet", e.target.files[0])
+                        }
                       />
                     </label>
                   </div>
@@ -868,7 +965,9 @@ export default function VenderCavaloPage() {
         {step === 5 && (
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
             <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">5</span>
+              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">
+                5
+              </span>
               Preço e Apresentação
             </h2>
 
@@ -878,7 +977,10 @@ export default function VenderCavaloPage() {
                 <div>
                   <label className="block text-sm text-zinc-400 mb-1">Preço (€) *</label>
                   <div className="relative">
-                    <Euro size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
+                    <Euro
+                      size={18}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500"
+                    />
                     <input
                       type="number"
                       value={formData.preco}
@@ -922,7 +1024,9 @@ export default function VenderCavaloPage() {
               </div>
 
               <div>
-                <label className="block text-sm text-zinc-400 mb-1">Disponibilidade para Visitas</label>
+                <label className="block text-sm text-zinc-400 mb-1">
+                  Disponibilidade para Visitas
+                </label>
                 <select
                   value={formData.disponibilidade_visita}
                   onChange={(e) => updateField("disponibilidade_visita", e.target.value)}
@@ -930,7 +1034,9 @@ export default function VenderCavaloPage() {
                 >
                   <option value="">Selecionar</option>
                   {disponibilidades.map((d) => (
-                    <option key={d} value={d}>{d}</option>
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -942,12 +1048,16 @@ export default function VenderCavaloPage() {
                   Fotografias * (mínimo 3, máximo 10)
                 </h3>
                 <p className="text-xs text-zinc-500 mb-4">
-                  Inclua fotos de diferentes ângulos: perfil, frente, traseira, cascos, e em movimento se possível.
+                  Inclua fotos de diferentes ângulos: perfil, frente, traseira, cascos, e em
+                  movimento se possível.
                 </p>
 
                 <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4">
                   {imagens.map((img, i) => (
-                    <div key={i} className="aspect-square bg-zinc-800 rounded-lg relative overflow-hidden">
+                    <div
+                      key={i}
+                      className="aspect-square bg-zinc-800 rounded-lg relative overflow-hidden"
+                    >
                       <img
                         src={URL.createObjectURL(img)}
                         alt={`Foto ${i + 1}`}
@@ -992,7 +1102,9 @@ export default function VenderCavaloPage() {
 
               {/* Vídeos */}
               <div>
-                <label className="block text-sm text-zinc-400 mb-1">Link para Vídeos (YouTube/Vimeo)</label>
+                <label className="block text-sm text-zinc-400 mb-1">
+                  Link para Vídeos (YouTube/Vimeo)
+                </label>
                 <input
                   type="url"
                   value={formData.videos_url}
@@ -1009,7 +1121,9 @@ export default function VenderCavaloPage() {
         {step === 6 && (
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
             <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">6</span>
+              <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">
+                6
+              </span>
               Revisão e Pagamento
             </h2>
 
@@ -1022,7 +1136,9 @@ export default function VenderCavaloPage() {
                 <span className="text-zinc-500">Registo:</span>
                 <span>{formData.numero_registo || "-"}</span>
                 <span className="text-zinc-500">Preço:</span>
-                <span>{formData.preco ? `${parseInt(formData.preco).toLocaleString()}€` : "-"}</span>
+                <span>
+                  {formData.preco ? `${parseInt(formData.preco).toLocaleString()}€` : "-"}
+                </span>
                 <span className="text-zinc-500">Localização:</span>
                 <span>{formData.localizacao || "-"}</span>
                 <span className="text-zinc-500">Fotografias:</span>
@@ -1042,7 +1158,9 @@ export default function VenderCavaloPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-medium">Anúncio em Destaque</span>
-                    <span className="px-2 py-0.5 bg-[#C5A059] text-black text-xs font-bold rounded">+{PRECO_DESTAQUE}€</span>
+                    <span className="px-2 py-0.5 bg-[#C5A059] text-black text-xs font-bold rounded">
+                      +{PRECO_DESTAQUE}€
+                    </span>
                   </div>
                   <p className="text-sm text-zinc-400">
                     Apareça no topo da lista e na homepage durante 7 dias. 3x mais visualizações!
@@ -1075,8 +1193,16 @@ export default function VenderCavaloPage() {
                   className="w-5 h-5 accent-[#C5A059] mt-0.5"
                 />
                 <span className="text-sm text-zinc-400">
-                  Li e aceito os <Link href="/termos" className="text-[#C5A059] hover:underline">Termos e Condições</Link> e a <Link href="/privacidade" className="text-[#C5A059] hover:underline">Política de Privacidade</Link>.
-                  Confirmo que todas as informações fornecidas são verdadeiras e que sou o proprietário legal do cavalo.
+                  Li e aceito os{" "}
+                  <Link href="/termos" className="text-[#C5A059] hover:underline">
+                    Termos e Condições
+                  </Link>{" "}
+                  e a{" "}
+                  <Link href="/privacidade" className="text-[#C5A059] hover:underline">
+                    Política de Privacidade
+                  </Link>
+                  . Confirmo que todas as informações fornecidas são verdadeiras e que sou o
+                  proprietário legal do cavalo.
                 </span>
               </label>
             </div>
@@ -1088,8 +1214,8 @@ export default function VenderCavaloPage() {
                 <div className="text-sm text-blue-300">
                   <p className="font-medium mb-1">Verificação de Documentos</p>
                   <p className="text-blue-300/80">
-                    Após o pagamento, a nossa equipa irá verificar a documentação (Livro Azul, registo APSL).
-                    O anúncio será publicado em até 24 horas úteis após aprovação.
+                    Após o pagamento, a nossa equipa irá verificar a documentação (Livro Azul,
+                    registo APSL). O anúncio será publicado em até 24 horas úteis após aprovação.
                   </p>
                 </div>
               </div>

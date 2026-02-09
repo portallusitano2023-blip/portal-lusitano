@@ -22,12 +22,12 @@ export default function InstagramUploadPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
-      setFiles(prev => [...prev, ...selectedFiles].slice(0, 5)); // Max 5 files
+      setFiles((prev) => [...prev, ...selectedFiles].slice(0, 5)); // Max 5 files
     }
   };
 
   const removeFile = (index: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== index));
+    setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,9 +67,9 @@ export default function InstagramUploadPage() {
       setTimeout(() => {
         router.push("/");
       }, 3000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Upload error:", error);
-      alert(`Erro: ${error.message}`);
+      alert(`Erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
     } finally {
       setUploading(false);
     }
@@ -82,15 +82,12 @@ export default function InstagramUploadPage() {
           <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check className="text-green-500" size={40} />
           </div>
-          <h1 className="text-3xl font-serif text-white mb-4">
-            Materiais Recebidos!
-          </h1>
+          <h1 className="text-3xl font-serif text-white mb-4">Materiais Recebidos!</h1>
           <p className="text-zinc-400 mb-6">
-            Obrigado! Recebemos os seus materiais e vamos publicar no Instagram nas próximas 48 horas.
+            Obrigado! Recebemos os seus materiais e vamos publicar no Instagram nas próximas 48
+            horas.
           </p>
-          <p className="text-zinc-500 text-sm">
-            A redirecionar...
-          </p>
+          <p className="text-zinc-500 text-sm">A redirecionar...</p>
         </div>
       </main>
     );
@@ -104,28 +101,18 @@ export default function InstagramUploadPage() {
           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Instagram className="text-white" size={32} />
           </div>
-          <h1 className="text-3xl md:text-4xl font-serif text-white mb-4">
-            Upload de Materiais
-          </h1>
-          <p className="text-zinc-400">
-            Envie as imagens/vídeos e instruções para a publicação
-          </p>
+          <h1 className="text-3xl md:text-4xl font-serif text-white mb-4">Upload de Materiais</h1>
+          <p className="text-zinc-400">Envie as imagens/vídeos e instruções para a publicação</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* File Upload */}
           <div className="bg-zinc-900/50 border border-white/10 p-8 rounded-xl">
-            <h2 className="text-xl font-serif text-white mb-4">
-              1. Imagens/Vídeos
-            </h2>
+            <h2 className="text-xl font-serif text-white mb-4">1. Imagens/Vídeos</h2>
             <label className="block border-2 border-dashed border-white/20 rounded-xl p-12 text-center cursor-pointer hover:border-[#C5A059] transition-colors">
               <Upload className="text-zinc-500 mx-auto mb-4" size={48} />
-              <p className="text-white font-medium mb-2">
-                Clique para seleccionar ficheiros
-              </p>
-              <p className="text-zinc-500 text-sm">
-                Máximo 5 ficheiros (imagens ou vídeos)
-              </p>
+              <p className="text-white font-medium mb-2">Clique para seleccionar ficheiros</p>
+              <p className="text-zinc-500 text-sm">Máximo 5 ficheiros (imagens ou vídeos)</p>
               <input
                 type="file"
                 multiple
@@ -169,14 +156,10 @@ export default function InstagramUploadPage() {
 
           {/* Caption */}
           <div className="bg-zinc-900/50 border border-white/10 p-8 rounded-xl">
-            <h2 className="text-xl font-serif text-white mb-4">
-              2. Caption e Hashtags
-            </h2>
+            <h2 className="text-xl font-serif text-white mb-4">2. Caption e Hashtags</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
-                  Caption do Post
-                </label>
+                <label className="block text-sm text-zinc-400 mb-2">Caption do Post</label>
                 <textarea
                   value={formData.caption}
                   onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
@@ -187,9 +170,7 @@ export default function InstagramUploadPage() {
               </div>
 
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
-                  Hashtags (opcional)
-                </label>
+                <label className="block text-sm text-zinc-400 mb-2">Hashtags (opcional)</label>
                 <input
                   type="text"
                   value={formData.hashtags}
@@ -200,9 +181,7 @@ export default function InstagramUploadPage() {
               </div>
 
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
-                  Link (se aplicável)
-                </label>
+                <label className="block text-sm text-zinc-400 mb-2">Link (se aplicável)</label>
                 <input
                   type="url"
                   value={formData.link}
@@ -216,9 +195,7 @@ export default function InstagramUploadPage() {
 
           {/* Observações */}
           <div className="bg-zinc-900/50 border border-white/10 p-8 rounded-xl">
-            <h2 className="text-xl font-serif text-white mb-4">
-              3. Observações Adicionais
-            </h2>
+            <h2 className="text-xl font-serif text-white mb-4">3. Observações Adicionais</h2>
             <textarea
               value={formData.observacoes}
               onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
@@ -236,8 +213,7 @@ export default function InstagramUploadPage() {
           >
             {uploading ? (
               <>
-                <Loader2 className="animate-spin" size={18} />
-                A enviar...
+                <Loader2 className="animate-spin" size={18} />A enviar...
               </>
             ) : (
               <>

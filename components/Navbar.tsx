@@ -177,8 +177,12 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
       role="navigation"
       aria-label="Navegação principal"
       className={`fixed w-full z-50 backdrop-blur-md border-b transition-all duration-300 ${scrolled ? "bg-[#050505]/98 border-white/10 shadow-lg" : "bg-[#050505]/95 border-white/5"}`}
+      style={{ overflow: "visible" }}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 md:h-24 flex items-center justify-between gap-4">
+      <div
+        className="max-w-7xl mx-auto px-4 md:px-6 h-20 md:h-24 flex items-center justify-between gap-4"
+        style={{ overflow: "visible" }}
+      >
         {/* LOGÓTIPO COM IMAGEM */}
         <Link href="/" className="flex items-center gap-2 md:gap-3 group flex-shrink-0">
           <Image
@@ -228,74 +232,78 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
               />
             </button>
 
-            {isLusitanoOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[520px] z-[100]">
-                <div className="bg-[#0a0a0a]/95 backdrop-blur-sm border border-white/10 rounded-lg shadow-2xl shadow-black/50 p-4 grid grid-cols-2 gap-4">
-                  {/* Coluna 1 - Base de Dados */}
-                  <div>
-                    <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
-                      Base de Dados
-                    </span>
-                    {DB_ITEMS.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        prefetch={false}
-                        onClick={() => setIsLusitanoOpen(false)}
-                        className="dd-item"
-                      >
-                        <item.icon size={16} className={item.iconClass || "text-[#C5A059]"} />
-                        <div>
-                          <div className="text-sm font-medium text-zinc-200">{item.label}</div>
-                          <div className="text-[10px] text-zinc-500">{item.desc}</div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+            <div
+              className={`absolute top-full left-0 pt-2 w-[520px] z-[100] transition-all duration-200 ${
+                isLusitanoOpen
+                  ? "opacity-100 visible translate-y-0"
+                  : "opacity-0 invisible -translate-y-2 pointer-events-none"
+              }`}
+            >
+              <div className="bg-[#0a0a0a] border border-white/10 rounded-lg shadow-2xl shadow-black/60 p-4 grid grid-cols-2 gap-4">
+                {/* Coluna 1 - Base de Dados */}
+                <div>
+                  <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
+                    Base de Dados
+                  </span>
+                  {DB_ITEMS.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      prefetch={false}
+                      onClick={() => setIsLusitanoOpen(false)}
+                      className="dd-item"
+                    >
+                      <item.icon size={16} className={item.iconClass || "text-[#C5A059]"} />
+                      <div>
+                        <div className="text-sm font-medium text-zinc-200">{item.label}</div>
+                        <div className="text-[10px] text-zinc-500">{item.desc}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
 
-                  {/* Coluna 2 - Ferramentas e Comunidade */}
-                  <div>
-                    <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
-                      Ferramentas
-                    </span>
-                    {TOOLS_ITEMS.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        prefetch={false}
-                        onClick={() => setIsLusitanoOpen(false)}
-                        className="dd-item"
-                      >
-                        <item.icon size={16} className="text-[#C5A059]" />
-                        <div>
-                          <div className="text-sm font-medium text-zinc-200">{item.label}</div>
-                          <div className="text-[10px] text-zinc-500">{item.desc}</div>
-                        </div>
-                      </Link>
-                    ))}
+                {/* Coluna 2 - Ferramentas e Comunidade */}
+                <div>
+                  <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
+                    Ferramentas
+                  </span>
+                  {TOOLS_ITEMS.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      prefetch={false}
+                      onClick={() => setIsLusitanoOpen(false)}
+                      className="dd-item"
+                    >
+                      <item.icon size={16} className="text-[#C5A059]" />
+                      <div>
+                        <div className="text-sm font-medium text-zinc-200">{item.label}</div>
+                        <div className="text-[10px] text-zinc-500">{item.desc}</div>
+                      </div>
+                    </Link>
+                  ))}
 
-                    <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 mt-4 block font-medium">
-                      Comunidade
-                    </span>
-                    {COMMUNITY_ITEMS.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        prefetch={false}
-                        onClick={() => setIsLusitanoOpen(false)}
-                        className="dd-item"
-                      >
-                        <item.icon size={16} className="text-[#C5A059]" />
-                        <div>
-                          <div className="text-sm font-medium text-zinc-200">{item.label}</div>
-                          <div className="text-[10px] text-zinc-500">{item.desc}</div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+                  <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 mt-4 block font-medium">
+                    Comunidade
+                  </span>
+                  {COMMUNITY_ITEMS.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      prefetch={false}
+                      onClick={() => setIsLusitanoOpen(false)}
+                      className="dd-item"
+                    >
+                      <item.icon size={16} className="text-[#C5A059]" />
+                      <div>
+                        <div className="text-sm font-medium text-zinc-200">{item.label}</div>
+                        <div className="text-[10px] text-zinc-500">{item.desc}</div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               </div>
-            )}
+            </div>
           </div>
           {/* Instagram Promo Link */}
           <Link

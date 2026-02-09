@@ -21,17 +21,16 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
 
     // Filtrar apenas subscrições recorrentes
-    const subscriptionPayments = payments?.filter((payment) => {
-      const metadata = payment.product_metadata as any;
-      const pkg = metadata?.package;
-      return pkg === "lateral" || pkg === "premium"; // Pacotes recorrentes
-    }) || [];
+    const subscriptionPayments =
+      payments?.filter((payment) => {
+        const metadata = payment.product_metadata as Record<string, unknown> | null;
+        const pkg = metadata?.package;
+        return pkg === "lateral" || pkg === "premium"; // Pacotes recorrentes
+      }) || [];
 
     // Calcular MRR atual (soma de todas as subscrições ativas)
-    const currentMRR = subscriptionPayments.reduce(
-      (sum, payment) => sum + (payment.amount || 0),
-      0
-    ) / 100;
+    const currentMRR =
+      subscriptionPayments.reduce((sum, payment) => sum + (payment.amount || 0), 0) / 100;
 
     // Calcular MRR por tipo de pacote
     const mrrByPackage: Record<string, { count: number; mrr: number }> = {
@@ -40,7 +39,7 @@ export async function GET(req: NextRequest) {
     };
 
     subscriptionPayments.forEach((payment) => {
-      const metadata = payment.product_metadata as any;
+      const metadata = payment.product_metadata as Record<string, unknown> | null;
       const pkg = metadata?.package as "lateral" | "premium";
 
       if (pkg && mrrByPackage[pkg]) {
@@ -82,8 +81,18 @@ export async function GET(req: NextRequest) {
     const mrrChart = last12Months.map((month) => {
       const [year, monthNum] = month.split("-");
       const monthNames = [
-        "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-        "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+        "Jan",
+        "Fev",
+        "Mar",
+        "Abr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Set",
+        "Out",
+        "Nov",
+        "Dez",
       ];
 
       return {
@@ -99,9 +108,12 @@ export async function GET(req: NextRequest) {
     // Calcular taxa de crescimento de MRR
     const currentMonth = mrrChart[mrrChart.length - 1];
     const lastMonth = mrrChart[mrrChart.length - 2];
-    const mrrGrowthRate = lastMonth?.mrr > 0
-      ? ((currentMonth.mrr - lastMonth.mrr) / lastMonth.mrr) * 100
-      : currentMonth.mrr > 0 ? 100 : 0;
+    const mrrGrowthRate =
+      lastMonth?.mrr > 0
+        ? ((currentMonth.mrr - lastMonth.mrr) / lastMonth.mrr) * 100
+        : currentMonth.mrr > 0
+          ? 100
+          : 0;
 
     // Projeção ARR (Annual Recurring Revenue)
     const arr = currentMRR * 12;

@@ -75,8 +75,18 @@ export async function GET(req: NextRequest) {
     const monthlyRevenueChart = last12Months.map((month) => {
       const [year, monthNum] = month.split("-");
       const monthNames = [
-        "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-        "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+        "Jan",
+        "Fev",
+        "Mar",
+        "Abr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Set",
+        "Out",
+        "Nov",
+        "Dez",
       ];
       return {
         month: monthNames[parseInt(monthNum) - 1],
@@ -122,7 +132,7 @@ export async function GET(req: NextRequest) {
       const date = new Date(payment.created_at);
       const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 
-      const metadata = payment.product_metadata as any;
+      const metadata = payment.product_metadata as Record<string, unknown> | null;
       const pkg = metadata?.package;
 
       // Apenas pacotes recorrentes (lateral e premium)
@@ -136,8 +146,18 @@ export async function GET(req: NextRequest) {
     const mrrChart = last12Months.map((month) => {
       const [year, monthNum] = month.split("-");
       const monthNames = [
-        "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-        "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+        "Jan",
+        "Fev",
+        "Mar",
+        "Abr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Set",
+        "Out",
+        "Nov",
+        "Dez",
       ];
       return {
         month: monthNames[parseInt(monthNum) - 1],

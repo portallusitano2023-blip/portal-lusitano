@@ -60,8 +60,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // Handle cavalo anuncio
   if (metadata.type === "cavalo_anuncio") {
     // Buscar dados da BD
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let formData: any = null;
+    let formData: Record<string, string | boolean | number> | null = null;
     let submissionId: string | null = null;
 
     if (metadata.contact_submission_id) {

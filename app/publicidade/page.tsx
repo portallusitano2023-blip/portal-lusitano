@@ -212,8 +212,8 @@ export default function PublicidadePage() {
       }
 
       window.location.href = data.url;
-    } catch (error: any) {
-      alert(`Erro: ${error.message}`);
+    } catch (error: unknown) {
+      alert(`Erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
       setLoading(false);
     }
   };
@@ -222,21 +222,15 @@ export default function PublicidadePage() {
     <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div
-          className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-        >
+        <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
           <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Megaphone className="text-[#C5A059]" size={32} />
           </div>
           <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
             {t.subtitle}
           </span>
-          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">
-            {t.title}
-          </h1>
-          <p className="text-zinc-400 font-serif italic max-w-xl mx-auto">
-            {t.description}
-          </p>
+          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">{t.title}</h1>
+          <p className="text-zinc-400 font-serif italic max-w-xl mx-auto">{t.description}</p>
         </div>
 
         {/* Stats */}
@@ -332,7 +326,10 @@ export default function PublicidadePage() {
           <h2 className="text-2xl font-serif text-white mb-6">{t.other.title}</h2>
           <div className="grid md:grid-cols-2 gap-4">
             {t.other.items.map((item, index) => (
-              <div key={index} className="flex justify-between items-center py-3 border-b border-white/5">
+              <div
+                key={index}
+                className="flex justify-between items-center py-3 border-b border-white/5"
+              >
                 <span className="text-zinc-400">{item.name}</span>
                 <span className="text-[#C5A059] font-medium">{item.price}</span>
               </div>
@@ -347,9 +344,7 @@ export default function PublicidadePage() {
         >
           <Mail className="text-[#C5A059] mx-auto mb-4" size={32} />
           <h2 className="text-2xl font-serif text-white mb-2">{t.cta.title}</h2>
-          <p className="text-zinc-400 mb-6 max-w-md mx-auto">
-            {t.cta.description}
-          </p>
+          <p className="text-zinc-400 mb-6 max-w-md mx-auto">{t.cta.description}</p>
           <a
             href={`mailto:${t.cta.email}`}
             className="inline-block bg-[#C5A059] text-black px-8 py-3 text-sm uppercase tracking-widest hover:bg-white transition-colors"
@@ -420,8 +415,12 @@ export default function PublicidadePage() {
                 className="w-full bg-[#C5A059] hover:bg-white text-black font-bold py-3 uppercase tracking-wider transition-all disabled:opacity-50"
               >
                 {loading
-                  ? (language === "pt" ? "A processar..." : "Processing...")
-                  : (language === "pt" ? "Continuar para Pagamento" : "Continue to Payment")}
+                  ? language === "pt"
+                    ? "A processar..."
+                    : "Processing..."
+                  : language === "pt"
+                    ? "Continuar para Pagamento"
+                    : "Continue to Payment"}
               </button>
             </form>
           </div>

@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Agrupar por categoria para facilitar na UI
-    const grouped: Record<string, any[]> = {};
+    const grouped: Record<string, typeof settings> = {};
     settings?.forEach((setting) => {
       if (!grouped[setting.category]) {
         grouped[setting.category] = [];
@@ -76,10 +76,7 @@ export async function POST(req: NextRequest) {
 
     // Validações básicas
     if (!key || !value || !category || !label || !input_type) {
-      return NextResponse.json(
-        { error: "Campos obrigatórios em falta" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Campos obrigatórios em falta" }, { status: 400 });
     }
 
     const { data: setting, error } = await supabase

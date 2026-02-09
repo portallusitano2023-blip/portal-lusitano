@@ -24,10 +24,8 @@ export async function GET(req: NextRequest) {
 
     if (totalError) throw totalError;
 
-    const totalRevenue = totalRevenueData?.reduce(
-      (sum, payment) => sum + (payment.amount || 0),
-      0
-    ) || 0;
+    const totalRevenue =
+      totalRevenueData?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
 
     // 2. RECEITA ESTE MÊS
     const { data: thisMonthData, error: monthError } = await supabase
@@ -38,10 +36,8 @@ export async function GET(req: NextRequest) {
 
     if (monthError) throw monthError;
 
-    const thisMonthRevenue = thisMonthData?.reduce(
-      (sum, payment) => sum + (payment.amount || 0),
-      0
-    ) || 0;
+    const thisMonthRevenue =
+      thisMonthData?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
 
     // 3. RECEITA MÊS PASSADO (para calcular crescimento)
     const { data: lastMonthData, error: lastMonthError } = await supabase
@@ -53,15 +49,16 @@ export async function GET(req: NextRequest) {
 
     if (lastMonthError) throw lastMonthError;
 
-    const lastMonthRevenue = lastMonthData?.reduce(
-      (sum, payment) => sum + (payment.amount || 0),
-      0
-    ) || 0;
+    const lastMonthRevenue =
+      lastMonthData?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
 
     // Calcular crescimento percentual
-    const growthPercentage = lastMonthRevenue > 0
-      ? ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
-      : thisMonthRevenue > 0 ? 100 : 0;
+    const growthPercentage =
+      lastMonthRevenue > 0
+        ? ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
+        : thisMonthRevenue > 0
+          ? 100
+          : 0;
 
     // 4. MRR (Monthly Recurring Revenue) - subscrições ativas
     // Publicidade lateral (€25) e premium (€75) são recorrentes
@@ -74,13 +71,14 @@ export async function GET(req: NextRequest) {
     if (subsError) throw subsError;
 
     // Calcular MRR baseado em subscrições (simplificado - assume 1 mês)
-    const mrr = subscriptionsData
-      ?.filter((payment) => {
-        const metadata = payment.product_metadata as any;
-        const pkg = metadata?.package;
-        return pkg === "lateral" || pkg === "premium"; // Pacotes recorrentes
-      })
-      .reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
+    const mrr =
+      subscriptionsData
+        ?.filter((payment) => {
+          const metadata = payment.product_metadata as Record<string, unknown> | null;
+          const pkg = metadata?.package;
+          return pkg === "lateral" || pkg === "premium"; // Pacotes recorrentes
+        })
+        .reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
 
     // 5. TICKET MÉDIO (valor médio por transação)
     const { data: allPayments, error: avgError } = await supabase
@@ -91,9 +89,7 @@ export async function GET(req: NextRequest) {
     if (avgError) throw avgError;
 
     const totalTransactions = allPayments?.length || 0;
-    const averageTicket = totalTransactions > 0
-      ? totalRevenue / totalTransactions
-      : 0;
+    const averageTicket = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
 
     // 6. TOTAL DE TRANSAÇÕES
     const { count: transactionCount, error: countError } = await supabase
@@ -111,11 +107,12 @@ export async function GET(req: NextRequest) {
 
     if (breakdownError) throw breakdownError;
 
-    const revenueByProduct = productBreakdown?.reduce((acc: any, payment) => {
-      const type = payment.product_type || "outros";
-      acc[type] = (acc[type] || 0) + (payment.amount || 0);
-      return acc;
-    }, {}) || {};
+    const revenueByProduct =
+      productBreakdown?.reduce((acc: Record<string, number>, payment) => {
+        const type = payment.product_type || "outros";
+        acc[type] = (acc[type] || 0) + (payment.amount || 0);
+        return acc;
+      }, {}) || {};
 
     return NextResponse.json({
       overview: {

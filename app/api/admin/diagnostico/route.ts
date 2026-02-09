@@ -2,8 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface DiagnosticoCheck { status: string; message?: string; email?: string | null; error?: any; total_registos?: number; [key: string]: unknown; }
+interface DiagnosticoCheck {
+  status: string;
+  message?: string;
+  email?: string | null;
+  error?: unknown;
+  total_registos?: number;
+  [key: string]: unknown;
+}
 
 export async function GET(req: NextRequest) {
   const diagnostico: {
@@ -108,9 +114,13 @@ export async function GET(req: NextRequest) {
       process.env.ADMIN_EMAIL,
       process.env.ADMIN_PASSWORD,
       process.env.ADMIN_SECRET,
-    ].every(Boolean) ? "✅ OK" : "⚠️ INCOMPLETO",
+    ].every(Boolean)
+      ? "✅ OK"
+      : "⚠️ INCOMPLETO",
     SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ? "✅ Definida" : "❌ Não definida",
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY ? "✅ Definida" : "❌ Não definida",
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY
+      ? "✅ Definida"
+      : "❌ Não definida",
     ADMIN_EMAIL: process.env.ADMIN_EMAIL ? "✅ Definida" : "❌ Não definida",
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ? "✅ Definida" : "❌ Não definida",
     ADMIN_SECRET: process.env.ADMIN_SECRET ? "✅ Definida" : "❌ Não definida",
@@ -118,8 +128,8 @@ export async function GET(req: NextRequest) {
 
   // 7. RESUMO
   const totalChecks = Object.keys(diagnostico.checks).length;
-  const checksOK = Object.values(diagnostico.checks).filter((check: { status?: string }) =>
-    typeof check === 'object' && check.status?.includes("✅")
+  const checksOK = Object.values(diagnostico.checks).filter(
+    (check: { status?: string }) => typeof check === "object" && check.status?.includes("✅")
   ).length;
 
   diagnostico.resumo = {

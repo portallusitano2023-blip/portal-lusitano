@@ -30,11 +30,7 @@ const packages = [
     name: "Story",
     price: 10,
     description: "1 Story com link",
-    features: [
-      "1 Story (24h visível)",
-      "Link direto para o seu site",
-      "Menção da marca",
-    ],
+    features: ["1 Story (24h visível)", "Link direto para o seu site", "Menção da marca"],
     icon: Image,
     popular: false,
   },
@@ -57,11 +53,7 @@ const packages = [
     name: "Reels",
     price: 50,
     description: "1 Vídeo Reels com maior alcance",
-    features: [
-      "1 Reels (até 60 seg)",
-      "Maior alcance orgânico",
-      "Caption e hashtags",
-    ],
+    features: ["1 Reels (até 60 seg)", "Maior alcance orgânico", "Caption e hashtags"],
     icon: Film,
     popular: false,
   },
@@ -70,11 +62,7 @@ const packages = [
     name: "Pack Completo",
     price: 75,
     description: "1 Post + 3 Stories",
-    features: [
-      "1 Post no feed",
-      "3 Stories ao longo da semana",
-      "Menção na bio (1 semana)",
-    ],
+    features: ["1 Post no feed", "3 Stories ao longo da semana", "Menção na bio (1 semana)"],
     icon: Sparkles,
     popular: false,
   },
@@ -115,7 +103,7 @@ export default function InstagramPage() {
           email: formData.email,
           instagram: formData.instagram,
           mensagem: formData.mensagem,
-          preco: packages.find(p => p.id === selectedPackage)?.price,
+          preco: packages.find((p) => p.id === selectedPackage)?.price,
         }),
       });
 
@@ -127,9 +115,9 @@ export default function InstagramPage() {
 
       // Redirecionar para Stripe
       window.location.href = data.url;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao processar:", error);
-      alert(`Erro: ${error.message}`);
+      alert(`Erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
       setIsSubmitting(false);
     }
   };
@@ -138,9 +126,7 @@ export default function InstagramPage() {
     <main className="min-h-screen bg-[#050505] pt-32 pb-20">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
-        <div
-          className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-        >
+        <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
           <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Instagram className="text-white" size={40} />
           </div>
@@ -151,7 +137,8 @@ export default function InstagramPage() {
             Promova no Nosso Instagram
           </h1>
           <p className="text-zinc-400 max-w-2xl mx-auto">
-            Alcance milhares de entusiastas do mundo equestre através da nossa comunidade no Instagram
+            Alcance milhares de entusiastas do mundo equestre através da nossa comunidade no
+            Instagram
           </p>
         </div>
 
@@ -191,9 +178,7 @@ export default function InstagramPage() {
           className="mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <h2 className="text-2xl font-serif text-white text-center mb-8">
-            Escolha o Pacote
-          </h2>
+          <h2 className="text-2xl font-serif text-white text-center mb-8">Escolha o Pacote</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {packages.map((pkg) => (
               <div
@@ -210,7 +195,10 @@ export default function InstagramPage() {
                     Mais Popular
                   </div>
                 )}
-                <pkg.icon className={`mb-3 ${selectedPackage === pkg.id ? "text-[#C5A059]" : "text-zinc-500"}`} size={28} />
+                <pkg.icon
+                  className={`mb-3 ${selectedPackage === pkg.id ? "text-[#C5A059]" : "text-zinc-500"}`}
+                  size={28}
+                />
                 <h3 className="text-lg font-medium text-white mb-1">{pkg.name}</h3>
                 <div className="mb-3">
                   <span className="text-2xl font-bold text-white">€{pkg.price}</span>
@@ -236,9 +224,7 @@ export default function InstagramPage() {
             style={{ animationDelay: "0.4s" }}
           >
             <div className="bg-zinc-900/50 border border-white/10 p-8">
-              <h2 className="text-2xl font-serif text-white mb-6 text-center">
-                Pedir Orçamento
-              </h2>
+              <h2 className="text-2xl font-serif text-white mb-6 text-center">Pedir Orçamento</h2>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
@@ -257,7 +243,10 @@ export default function InstagramPage() {
                   <div>
                     <label className="block text-sm text-zinc-400 mb-2">Empresa/Marca</label>
                     <div className="relative">
-                      <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                      <Building
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+                        size={18}
+                      />
                       <input
                         type="text"
                         name="empresa"
@@ -274,7 +263,10 @@ export default function InstagramPage() {
                   <div>
                     <label className="block text-sm text-zinc-400 mb-2">Email *</label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                      <Mail
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+                        size={18}
+                      />
                       <input
                         type="email"
                         name="email"
@@ -289,7 +281,10 @@ export default function InstagramPage() {
                   <div>
                     <label className="block text-sm text-zinc-400 mb-2">Instagram</label>
                     <div className="relative">
-                      <Instagram className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                      <Instagram
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+                        size={18}
+                      />
                       <input
                         type="text"
                         name="instagram"
@@ -343,8 +338,7 @@ export default function InstagramPage() {
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="animate-spin" size={18} />
-                      A processar...
+                      <Loader2 className="animate-spin" size={18} />A processar...
                     </>
                   ) : (
                     <>
@@ -354,27 +348,23 @@ export default function InstagramPage() {
                   )}
                 </button>
 
-                <p className="text-center text-zinc-500 text-sm">
-                  Pagamento seguro via Stripe
-                </p>
+                <p className="text-center text-zinc-500 text-sm">Pagamento seguro via Stripe</p>
               </form>
             </div>
           </div>
         ) : (
-          <div
-            className="max-w-xl mx-auto text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
+          <div className="max-w-xl mx-auto text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <Check className="text-green-500" size={40} />
             </div>
-            <h2 className="text-3xl font-serif text-white mb-4">
-              Pedido Enviado!
-            </h2>
+            <h2 className="text-3xl font-serif text-white mb-4">Pedido Enviado!</h2>
             <p className="text-zinc-400 mb-6">
-              Obrigado pelo seu interesse! Vamos analisar o seu pedido e responder por email em menos de 24 horas.
+              Obrigado pelo seu interesse! Vamos analisar o seu pedido e responder por email em
+              menos de 24 horas.
             </p>
             <p className="text-[#C5A059]">
-              Pacote selecionado: {packages.find(p => p.id === selectedPackage)?.name} - €{packages.find(p => p.id === selectedPackage)?.price}
+              Pacote selecionado: {packages.find((p) => p.id === selectedPackage)?.name} - €
+              {packages.find((p) => p.id === selectedPackage)?.price}
             </p>
           </div>
         )}
