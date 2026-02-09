@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Instagram, Music2, Mail, MapPin, ArrowUpRight } from "lucide-react";
+import { Instagram, Music2, Mail, MapPin, ArrowUpRight, Gift } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Footer() {
@@ -10,55 +10,81 @@ export default function Footer() {
   const navItems = [
     { name: t.nav.home, href: "/" },
     { name: t.nav.shop, href: "/loja" },
-    { name: t.nav.journal, href: "/jornal" }
+    { name: t.nav.journal, href: "/jornal" },
+  ];
+
+  const lusitanoItems = [
+    { name: "Comprar Cavalo", href: "/comprar" },
+    { name: "Coudelarias", href: "/directorio" },
+    { name: "Eventos", href: "/eventos" },
+    { name: "Linhagens", href: "/linhagens" },
+    { name: "Lusitanos Notáveis", href: "/cavalos-famosos" },
+  ];
+
+  const toolItems = [
+    { name: "Calculadora de Valor", href: "/calculadora-valor" },
+    { name: "Comparador", href: "/comparador-cavalos" },
+    { name: "Compatibilidade", href: "/verificador-compatibilidade" },
+    { name: "Análise de Perfil", href: "/analise-perfil" },
   ];
 
   return (
-    <footer className="bg-[#050505] border-t border-zinc-900 pt-32 pb-12 px-6 mt-20 relative overflow-hidden">
-      {/* Efeito de luz dourada subtil no fundo */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[#C5A059] opacity-[0.03] blur-[100px] pointer-events-none"></div>
+    <footer className="bg-[#050505] border-t border-zinc-900 pt-24 sm:pt-32 pb-12 px-4 sm:px-6 mt-20 relative overflow-hidden">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[#C5A059] opacity-[0.03] blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
-
-          {/* IDENTIDADE E MANIFESTO */}
-          <div className="md:col-span-5 space-y-8">
+        <div className="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-16 mb-20">
+          {/* IDENTIDADE */}
+          <div className="col-span-2 md:col-span-4 space-y-6">
             <Link href="/" className="inline-block group">
-              <span className="font-serif text-4xl text-white tracking-tighter group-hover:text-[#C5A059] transition-all duration-500">
+              <span className="font-serif text-3xl sm:text-4xl text-white tracking-tighter group-hover:text-[#C5A059] transition-all duration-500">
                 PORTAL <span className="italic font-light">LUSITANO</span>
               </span>
-              <span className="text-[9px] text-zinc-600 uppercase tracking-[0.5em] block mt-3 font-bold group-hover:text-zinc-400 transition-colors">
-                The Noble Legacy • Est. 2023
+              <span className="text-[9px] text-zinc-600 uppercase tracking-[0.5em] block mt-2 font-bold group-hover:text-zinc-400 transition-colors">
+                The Noble Legacy · Est. 2023
               </span>
             </Link>
-            <p className="text-zinc-500 text-base font-light leading-relaxed max-w-md">
+            <p className="text-zinc-500 text-sm font-light leading-relaxed max-w-sm">
               {t.home.manifesto}
             </p>
 
-            {/* REDES SOCIAIS COM ICONS */}
-            <div className="flex gap-5 pt-4">
-              <a href="https://instagram.com/portal_lusitano" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
-                <Instagram size={18} />
-              </a>
-              <a href="https://tiktok.com/@portal_lusitano" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
-                <Music2 size={18} />
-              </a>
-              <a href="mailto:portal.lusitano2023@gmail.com" aria-label="Email" className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059] transition-all duration-500 group">
-                <Mail size={18} />
-              </a>
+            {/* Redes sociais */}
+            <div className="flex gap-4 pt-2">
+              {[
+                {
+                  href: "https://instagram.com/portal_lusitano",
+                  label: "Instagram",
+                  icon: Instagram,
+                },
+                { href: "https://tiktok.com/@portal_lusitano", label: "TikTok", icon: Music2 },
+                { href: "mailto:portal.lusitano2023@gmail.com", label: "Email", icon: Mail },
+              ].map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target={social.href.startsWith("http") ? "_blank" : undefined}
+                  rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  aria-label={social.label}
+                  className="w-10 h-10 border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-[#C5A059] hover:border-[#C5A059]/30 transition-all duration-300"
+                >
+                  <social.icon size={17} />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* NAVEGACAO RAPIDA */}
-          <nav aria-label="Links do rodapé" className="md:col-span-3 space-y-8">
+          {/* NAVEGAÇÃO */}
+          <nav aria-label="Links principais" className="md:col-span-2 space-y-5">
             <h2 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
-              {t.nav.home === "Home" ? "Navigation" : "Navegacao"}
+              Navegação
             </h2>
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-zinc-500 hover:text-white text-sm font-light transition-colors flex items-center gap-2 group">
-                    <span className="w-0 group-hover:w-4 h-[1px] bg-[#C5A059] transition-all duration-300"></span>
+                  <Link
+                    href={item.href}
+                    className="text-zinc-500 hover:text-white text-sm font-light transition-colors"
+                  >
                     {item.name}
                   </Link>
                 </li>
@@ -66,36 +92,80 @@ export default function Footer() {
             </ul>
           </nav>
 
-          {/* CONTACTOS E LOCALIZACAO */}
-          <div className="md:col-span-4 space-y-8">
+          {/* LUSITANO */}
+          <nav aria-label="Links Lusitano" className="md:col-span-3 space-y-5">
             <h2 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
-              {t.nav.home === "Home" ? "Official Contact" : "Contacto Oficial"}
+              Lusitano
             </h2>
-            <div className="space-y-6">
-              <div className="flex items-start gap-4 group">
-                <MapPin className="text-[#C5A059] mt-1" size={16} />
-                <div>
-                  <p className="text-white text-sm font-medium italic font-serif">Portugal</p>
-                  <p className="text-zinc-500 text-xs mt-1 lowercase">portal.lusitano2023@gmail.com</p>
-                </div>
+            <ul className="space-y-3">
+              {lusitanoItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-zinc-500 hover:text-white text-sm font-light transition-colors"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* FERRAMENTAS + CONTACTO */}
+          <div className="md:col-span-3 space-y-8">
+            <div className="space-y-5">
+              <h2 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
+                Ferramentas
+              </h2>
+              <ul className="space-y-3">
+                {toolItems.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="text-zinc-500 hover:text-white text-sm font-light transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="pt-4 border-t border-white/5 space-y-3">
+              <div className="flex items-center gap-3">
+                <MapPin className="text-[#C5A059]" size={14} />
+                <span className="text-zinc-500 text-xs">portal.lusitano2023@gmail.com</span>
               </div>
-              <Link href="/minha-conta" className="inline-flex items-center gap-2 text-[#C5A059] text-[10px] uppercase tracking-widest font-bold border-b border-[#C5A059]/30 pb-1 hover:border-[#C5A059] transition-all">
-                {t.nav.home === "Home" ? "Access Portal ID" : "Aceder ao Portal ID"} <ArrowUpRight size={12} />
+              <Link
+                href="/ebook-gratis"
+                className="inline-flex items-center gap-2 text-[#C5A059] text-[10px] uppercase tracking-widest font-bold hover:text-white transition-colors"
+              >
+                <Gift size={12} />
+                Ebook Grátis
+                <ArrowUpRight size={10} />
               </Link>
             </div>
           </div>
         </div>
 
-        {/* BARRA DE COPYRIGHT */}
-        <div className="pt-12 border-t border-zinc-900/50 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-8">
-            <p className="text-zinc-700 text-[9px] uppercase tracking-[0.2em]">
-              © 2026 Portal Lusitano. {t.footer.rights}.
-            </p>
-          </div>
-          <div className="flex gap-10">
-            <Link href="/privacidade" className="text-zinc-700 hover:text-white text-[9px] uppercase tracking-[0.2em] transition-colors">{t.footer.privacy}</Link>
-            <Link href="/termos" className="text-zinc-700 hover:text-white text-[9px] uppercase tracking-[0.2em] transition-colors">{t.footer.terms}</Link>
+        {/* COPYRIGHT */}
+        <div className="pt-10 border-t border-zinc-900/50 flex flex-col sm:flex-row justify-between items-center gap-6">
+          <p className="text-zinc-700 text-[9px] uppercase tracking-[0.2em]">
+            © 2026 Portal Lusitano. {t.footer.rights}.
+          </p>
+          <div className="flex gap-8">
+            <Link
+              href="/privacidade"
+              className="text-zinc-700 hover:text-zinc-400 text-[9px] uppercase tracking-[0.2em] transition-colors"
+            >
+              {t.footer.privacy}
+            </Link>
+            <Link
+              href="/termos"
+              className="text-zinc-700 hover:text-zinc-400 text-[9px] uppercase tracking-[0.2em] transition-colors"
+            >
+              {t.footer.terms}
+            </Link>
           </div>
         </div>
       </div>

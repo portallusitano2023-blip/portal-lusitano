@@ -208,10 +208,10 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
             <Link
               key={item.href}
               href={item.href}
-              className="text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors relative group"
+              className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 relative group py-2"
             >
               {item.name}
-              <span className="absolute -bottom-2 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-500 ease-out group-hover:w-full"></span>
             </Link>
           ))}
 
@@ -219,7 +219,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
           <div className="relative group" onMouseEnter={openLusitano} onMouseLeave={closeLusitano}>
             <button
               onClick={() => setIsLusitanoOpen((prev) => !prev)}
-              className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors py-2"
+              className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 py-2"
             >
               Lusitano
               <ChevronDown
@@ -229,11 +229,8 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
             </button>
 
             {isLusitanoOpen && (
-              <div className="absolute top-full left-0 pt-2 w-[520px]">
-                <div
-                  className="bg-[#0a0a0a] border border-white/10 p-4 grid grid-cols-2 gap-4"
-                  style={{ contain: "layout style paint" }}
-                >
+              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[520px] z-[100]">
+                <div className="bg-[#0a0a0a]/95 backdrop-blur-sm border border-white/10 rounded-lg shadow-2xl shadow-black/50 p-4 grid grid-cols-2 gap-4">
                   {/* Coluna 1 - Base de Dados */}
                   <div>
                     <span className="text-[9px] uppercase tracking-[0.2em] text-[#C5A059] mb-2 block font-medium">
@@ -303,15 +300,15 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
           {/* Instagram Promo Link */}
           <Link
             href="/instagram"
-            className="text-[11px] uppercase tracking-[0.2em] text-zinc-300 hover:text-[#C5A059] transition-colors relative group"
+            className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 relative group py-2"
           >
             Publicidade
-            <span className="absolute -bottom-2 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-300 group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-500 ease-out group-hover:w-full"></span>
           </Link>
           {/* Free Ebook Link */}
           <Link
             href="/ebook-gratis"
-            className="flex items-center gap-2 bg-green-600/20 border border-green-500/30 text-green-400 px-4 py-2 text-[10px] uppercase tracking-[0.15em] font-bold hover:bg-green-600/30 transition-colors"
+            className="relative flex items-center gap-2 bg-gradient-to-r from-[#C5A059] to-[#D4B06A] text-black px-5 py-2.5 text-[10px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_20px_rgba(197,160,89,0.15)] hover:shadow-[0_0_25px_rgba(197,160,89,0.3)]"
           >
             <Gift size={14} />
             Ebook Grátis
@@ -537,7 +534,7 @@ export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
             <div className="border-t border-white/10 pt-4 mt-4 space-y-3">
               <Link
                 href="/ebook-gratis"
-                className="flex items-center justify-center gap-3 bg-green-600/20 border border-green-500/30 text-green-400 px-4 py-4 text-sm uppercase tracking-widest font-bold w-full rounded-lg active:scale-[0.98] touch-manipulation"
+                className="flex items-center justify-center gap-3 bg-gradient-to-r from-[#C5A059] to-[#D4B06A] text-black px-4 py-4 text-sm uppercase tracking-widest font-bold w-full rounded-lg active:scale-[0.98] touch-manipulation shadow-[0_0_20px_rgba(197,160,89,0.2)]"
               >
                 <Gift size={18} />
                 Ebook Grátis

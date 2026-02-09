@@ -19,6 +19,7 @@ import {
   Share2,
   Zap,
 } from "lucide-react";
+import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 
 // ============================================
 // DATA
@@ -330,40 +331,22 @@ export default function FerramentasPage() {
         <div className="max-w-5xl mx-auto">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              {
-                icon: Shield,
-                label: "Dados Seguros",
-                text: "Encriptação de ponta a ponta",
-              },
-              {
-                icon: Zap,
-                label: "Resultados Instantâneos",
-                text: "Análises em tempo real",
-              },
-              {
-                icon: Download,
-                label: "Exportar PDF",
-                text: "Relatórios profissionais",
-              },
-              {
-                icon: Crown,
-                label: "Feito para Lusitanos",
-                text: "Optimizado para a raça",
-              },
+              { icon: Shield, label: "Dados Seguros", text: "Encriptação de ponta a ponta" },
+              { icon: Zap, label: "Resultados Instantâneos", text: "Análises em tempo real" },
+              { icon: Download, label: "Exportar PDF", text: "Relatórios profissionais" },
+              { icon: Crown, label: "Feito para Lusitanos", text: "Optimizado para a raça" },
             ].map((benefit, i) => (
-              <div
-                key={benefit.label}
-                className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                style={{ animationDelay: `${0.4 + i * 0.1}s` }}
-              >
-                <div className="w-10 h-10 bg-[#C5A059]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <benefit.icon size={20} className="text-[#C5A059]" />
+              <AnimateOnScroll key={benefit.label} delay={i * 80}>
+                <div className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+                  <div className="w-10 h-10 bg-[#C5A059]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <benefit.icon size={20} className="text-[#C5A059]" />
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-medium">{benefit.label}</p>
+                    <p className="text-zinc-500 text-xs">{benefit.text}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white text-sm font-medium">{benefit.label}</p>
-                  <p className="text-zinc-500 text-xs">{benefit.text}</p>
-                </div>
-              </div>
+              </AnimateOnScroll>
             ))}
           </div>
         </div>
@@ -373,7 +356,7 @@ export default function FerramentasPage() {
       <section className="px-6 pb-24" id="precos">
         <div className="max-w-4xl mx-auto">
           {/* Section header */}
-          <div className="text-center mb-16">
+          <AnimateOnScroll className="text-center mb-16">
             <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
               Planos e Preços
             </span>
@@ -383,7 +366,7 @@ export default function FerramentasPage() {
             <p className="text-zinc-400 max-w-lg mx-auto">
               Comece gratuitamente e faça upgrade quando precisar de mais
             </p>
-          </div>
+          </AnimateOnScroll>
 
           {/* Pricing cards */}
           <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
@@ -527,7 +510,7 @@ export default function FerramentasPage() {
       <section className="px-6 pb-32" id="faq">
         <div className="max-w-3xl mx-auto">
           {/* Section header */}
-          <div className="text-center mb-12">
+          <AnimateOnScroll className="text-center mb-12">
             <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
               Perguntas Frequentes
             </span>
@@ -535,7 +518,7 @@ export default function FerramentasPage() {
             <p className="text-zinc-400 max-w-lg mx-auto">
               Tudo o que precisa de saber sobre as nossas ferramentas
             </p>
-          </div>
+          </AnimateOnScroll>
 
           {/* FAQ items */}
           <div>

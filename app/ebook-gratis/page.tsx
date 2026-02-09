@@ -10,12 +10,12 @@ import {
   Award,
   Users,
   Clock,
-  Sparkles,
   Gift,
   Mail,
   FileText,
+  Shield,
+  Heart,
 } from "lucide-react";
-import Image from "next/image";
 
 export default function EbookGratisPage() {
   const [email, setEmail] = useState("");
@@ -24,12 +24,10 @@ export default function EbookGratisPage() {
   const [submitted, setSubmitted] = useState(false);
   const formStartedRef = useRef(false);
 
-  // Track page view on mount
   useEffect(() => {
     trackEbookFunnel("view_landing");
   }, []);
 
-  // Track form start when user begins typing
   const handleFormStart = () => {
     if (!formStartedRef.current) {
       formStartedRef.current = true;
@@ -44,9 +42,7 @@ export default function EbookGratisPage() {
     try {
       const response = await fetch("/api/ebook-gratis/subscribe", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, nome }),
       });
 
@@ -56,7 +52,6 @@ export default function EbookGratisPage() {
         throw new Error(data.error || "Erro ao processar pedido");
       }
 
-      // Track conversão
       trackEbookFunnel("submit_form");
       trackEmailSubscription("free-ebook");
       trackEbookDownload("introducao-lusitano", "free");
@@ -64,7 +59,6 @@ export default function EbookGratisPage() {
       setLoading(false);
       setSubmitted(true);
 
-      // Redirecionar para página de download após 2 segundos
       setTimeout(() => {
         window.location.href = "/ebook-gratis/download";
       }, 2000);
@@ -75,46 +69,23 @@ export default function EbookGratisPage() {
     }
   };
 
-  const benefits = [
-    {
-      icon: BookOpen,
-      title: "30 Páginas de Conteúdo Premium",
-      description: "Informação essencial condensada num formato fácil de ler",
-    },
-    {
-      icon: Clock,
-      title: "Leitura Rápida (20 min)",
-      description: "Aprende o essencial sobre o Lusitano numa tarde",
-    },
-    {
-      icon: Award,
-      title: "Conteúdo Certificado",
-      description: "Informação validada por criadores profissionais",
-    },
-    {
-      icon: FileText,
-      title: "Formato PDF Profissional",
-      description: "Design elegante, ilustrações e fácil de imprimir",
-    },
-  ];
-
   const chapters = [
     {
       number: "01",
       title: "O Que É o Cavalo Lusitano?",
-      description: "Definição, história e características únicas",
+      description: "Definição, história e características únicas que distinguem esta raça",
       pages: 8,
     },
     {
       number: "02",
       title: "História em 10 Minutos",
-      description: "Desde a Idade do Gelo até aos dias de hoje",
+      description: "Da Idade do Gelo à modernidade — uma jornada épica",
       pages: 8,
     },
     {
       number: "03",
       title: "Características Únicas",
-      description: "Morfologia, andamentos, temperamento e aptidões",
+      description: "Morfologia, andamentos, temperamento e aptidões naturais",
       pages: 10,
     },
     {
@@ -149,34 +120,23 @@ export default function EbookGratisPage() {
     },
   ];
 
-  const stats = [
-    { value: "5.000+", label: "Downloads" },
-    { value: "4.9/5", label: "Avaliação" },
-    { value: "30", label: "Páginas" },
-    { value: "100%", label: "Grátis" },
-  ];
-
   if (submitted) {
     return (
       <main className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
-        <div
-          className="text-center max-w-md opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-        >
+        <div className="text-center max-w-md opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
           <div
-            className="w-20 h-20 bg-green-500/20 border-2 border-green-500 rounded-full flex items-center justify-center mx-auto mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="w-24 h-24 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mx-auto mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.2s" }}
           >
-            <Check className="text-green-500" size={40} />
+            <Check className="text-green-400" size={44} />
           </div>
-          <h2 className="text-3xl font-serif text-white mb-4">
-            Sucesso! Verifica o teu email
-          </h2>
-          <p className="text-zinc-400 mb-2">
-            Enviámos o link de download para <strong className="text-white">{email}</strong>
-          </p>
-          <p className="text-zinc-500 text-sm">
-            A redirecionar para a página de download...
-          </p>
+          <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">Sucesso!</h2>
+          <p className="text-zinc-400 mb-2 text-lg">Enviámos o link de download para</p>
+          <p className="text-[#C5A059] font-medium text-lg mb-6">{email}</p>
+          <div className="flex items-center justify-center gap-2 text-zinc-500 text-sm">
+            <div className="w-4 h-4 border-2 border-zinc-600 border-t-[#C5A059] rounded-full animate-spin" />
+            A redirecionar para o download...
+          </div>
         </div>
       </main>
     );
@@ -184,183 +144,275 @@ export default function EbookGratisPage() {
 
   return (
     <main className="min-h-screen bg-[#050505]">
-      {/* Hero Section */}
-      <section className="relative pt-24 sm:pt-32 pb-12 sm:pb-20 overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 via-transparent to-transparent" />
+      {/* ===== HERO ===== */}
+      <section className="relative pt-28 sm:pt-36 pb-20 sm:pb-28 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/8 via-transparent to-transparent" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#C5A059]/5 rounded-full blur-[150px]" />
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            {/* Left Column - Text */}
-            <div
-              className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            >
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Left */}
+            <div className="opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]">
+              <div className="inline-flex items-center gap-2 bg-[#C5A059]/10 border border-[#C5A059]/20 px-4 py-2 mb-8">
                 <Gift className="text-[#C5A059]" size={14} />
-                <span className="text-[#C5A059] text-xs sm:text-sm font-medium">
-                  Ebook Gratuito
+                <span className="text-[#C5A059] text-[11px] uppercase tracking-[0.15em] font-medium">
+                  100% Gratuito
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-4 sm:mb-6 leading-tight">
-                Introdução ao{" "}
-                <span className="bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] bg-clip-text text-transparent">
-                  Cavalo Lusitano
-                </span>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-[1.08]">
+                Introdução ao <span className="text-[#C5A059]">Cavalo Lusitano</span>
               </h1>
 
-              <p className="text-base sm:text-lg md:text-xl text-zinc-400 mb-6 sm:mb-8 leading-relaxed">
-                O guia essencial para quem quer conhecer a raça mais nobre da Península Ibérica.
-                <strong className="text-white"> 30 páginas de puro conhecimento, 100% grátis.</strong>
+              <p className="text-lg sm:text-xl text-zinc-400 mb-8 leading-relaxed max-w-xl">
+                O guia essencial para conhecer a raça mais nobre da Península Ibérica.{" "}
+                <span className="text-white font-medium">30 páginas de puro conhecimento.</span>
               </p>
 
-              {/* Stats Row - Responsive */}
-              <div className="grid grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-10">
-                {stats.map((stat, index) => (
-                  <div
-                    key={stat.label}
-                    className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#C5A059] mb-0.5 sm:mb-1">
-                      {stat.value}
-                    </div>
-                    <div className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-wider">
-                      {stat.label}
-                    </div>
+              <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-3 mb-10">
+                {[
+                  { icon: FileText, text: "30 Páginas" },
+                  { icon: Clock, text: "20 min leitura" },
+                  { icon: Award, text: "Conteúdo verificado" },
+                  { icon: Users, text: "5.000+ downloads" },
+                ].map((item) => (
+                  <div key={item.text} className="flex items-center gap-2 text-zinc-400 text-sm">
+                    <item.icon size={15} className="text-[#C5A059] flex-shrink-0" />
+                    <span>{item.text}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Email Form - Mobile Optimized */}
-              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-                <div>
-                  <input
-                    type="text"
-                    value={nome}
-                    onChange={(e) => setNome(e.target.value)}
-                    onFocus={handleFormStart}
-                    placeholder="O teu nome"
-                    required
-                    autoComplete="name"
-                    className="w-full bg-zinc-900/50 border border-white/10 text-white px-4 sm:px-6 py-4 text-base focus:outline-none focus:border-[#C5A059] focus:ring-2 focus:ring-[#C5A059]/20 transition-all rounded-lg touch-manipulation"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onFocus={handleFormStart}
-                    placeholder="O teu melhor email"
-                    required
-                    autoComplete="email"
-                    inputMode="email"
-                    className="w-full bg-zinc-900/50 border border-white/10 text-white px-4 sm:px-6 py-4 text-base focus:outline-none focus:border-[#C5A059] focus:ring-2 focus:ring-[#C5A059]/20 transition-all rounded-lg touch-manipulation"
-                  />
-                </div>
+              <form onSubmit={handleSubmit} className="space-y-3 max-w-lg">
+                <input
+                  type="text"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  onFocus={handleFormStart}
+                  placeholder="O teu nome"
+                  required
+                  autoComplete="name"
+                  className="w-full bg-white/5 border border-white/10 text-white px-5 py-4 text-[15px] focus:outline-none focus:border-[#C5A059]/50 focus:bg-white/[0.07] transition-all placeholder:text-zinc-600"
+                />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={handleFormStart}
+                  placeholder="O teu melhor email"
+                  required
+                  autoComplete="email"
+                  inputMode="email"
+                  className="w-full bg-white/5 border border-white/10 text-white px-5 py-4 text-[15px] focus:outline-none focus:border-[#C5A059]/50 focus:bg-white/[0.07] transition-all placeholder:text-zinc-600"
+                />
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#C5A059] text-black py-4 sm:py-5 text-sm font-bold uppercase tracking-widest hover:bg-white active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3 rounded-lg touch-manipulation min-h-[56px]"
+                  className="w-full bg-[#C5A059] text-black py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 min-h-[56px] active:scale-[0.98] touch-manipulation"
                 >
                   {loading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-                      <span className="text-xs sm:text-sm">A processar...</span>
+                      A processar...
                     </>
                   ) : (
                     <>
                       <Download size={18} />
-                      <span className="text-xs sm:text-sm">Descarregar Ebook Grátis</span>
+                      Descarregar Grátis
                     </>
                   )}
                 </button>
+                <p className="text-zinc-600 text-[11px] text-center pt-1">
+                  Sem spam. Cancela a qualquer momento.
+                </p>
               </form>
-
-              <p className="text-zinc-600 text-[10px] sm:text-xs mt-3 sm:mt-4 text-center">
-                Sem spam. Cancela a qualquer momento. Os teus dados estão seguros.
-              </p>
             </div>
 
-            {/* Right Column - Ebook Preview */}
+            {/* Right - Book Cover */}
             <div
-              className="relative opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              className="relative opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
               style={{ animationDelay: "0.2s" }}
             >
-              <div className="relative aspect-[3/4] max-w-md mx-auto">
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-[#C5A059]/20 blur-3xl scale-110" />
+              <div className="relative max-w-sm mx-auto">
+                {/* Glow */}
+                <div className="absolute inset-0 bg-[#C5A059]/15 blur-[80px] scale-125" />
 
-                {/* Ebook cover mockup - Usando placeholder por agora */}
-                <div className="relative bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 shadow-2xl flex flex-col items-center justify-center p-12 text-center">
-                  <BookOpen className="text-[#C5A059] mb-6" size={64} />
-                  <h3 className="text-2xl font-serif text-white mb-3">
-                    Introdução ao Cavalo Lusitano
-                  </h3>
-                  <div className="w-16 h-1 bg-[#C5A059] mb-4" />
-                  <p className="text-zinc-400 text-sm mb-6">
-                    O Guia Essencial Para Iniciantes
-                  </p>
-                  <div className="text-xs text-zinc-600 uppercase tracking-widest">
-                    Portal Lusitano
+                {/* Book */}
+                <div className="relative">
+                  <div className="absolute -left-3 top-3 bottom-3 w-5 bg-gradient-to-r from-[#7A6235] via-[#A08848] to-[#8B7340] shadow-xl" />
+                  <div className="absolute -right-1 top-4 bottom-4 w-2 bg-zinc-200/10" />
+
+                  <div className="relative bg-gradient-to-br from-[#0D0D0D] via-[#111111] to-[#080808] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] aspect-[3/4] flex flex-col items-center justify-center p-10 sm:p-14 text-center">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#C5A059] to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 h-[0.5px] bg-gradient-to-r from-transparent via-[#C5A059]/30 to-transparent" />
+
+                    <div className="absolute top-5 left-5 w-10 h-10 border-t-2 border-l-2 border-[#C5A059]/25" />
+                    <div className="absolute top-5 right-5 w-10 h-10 border-t-2 border-r-2 border-[#C5A059]/25" />
+                    <div className="absolute bottom-5 left-5 w-10 h-10 border-b-2 border-l-2 border-[#C5A059]/25" />
+                    <div className="absolute bottom-5 right-5 w-10 h-10 border-b-2 border-r-2 border-[#C5A059]/25" />
+
+                    <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059]/50 to-transparent mb-8" />
+                    <BookOpen className="text-[#C5A059]/50 mb-6" size={52} />
+                    <h3 className="text-xl sm:text-2xl font-serif text-white/90 mb-2 leading-tight">
+                      Introdução ao
+                    </h3>
+                    <h3 className="text-2xl sm:text-3xl font-serif text-[#C5A059] mb-8 leading-tight">
+                      Cavalo Lusitano
+                    </h3>
+                    <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059]/40 to-transparent mb-6" />
+                    <p className="text-zinc-500 text-[11px] uppercase tracking-[0.25em] mb-1">
+                      O Guia Essencial
+                    </p>
+                    <p className="text-zinc-600 text-[10px] uppercase tracking-[0.25em]">
+                      Para Iniciantes
+                    </p>
+                    <div className="absolute bottom-8 left-0 right-0">
+                      <div className="w-8 h-[1px] bg-[#C5A059]/20 mx-auto mb-3" />
+                      <p className="text-zinc-600 text-[9px] uppercase tracking-[0.4em]">
+                        Portal Lusitano
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Floating badges */}
-              <div
-                className="absolute -top-6 -right-6 bg-green-500 text-white px-6 py-3 rounded-full font-bold shadow-lg opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                style={{ animationDelay: "0.8s" }}
-              >
-                100% GRÁTIS
-              </div>
+                <div
+                  className="absolute -top-4 -right-4 sm:-top-5 sm:-right-5 bg-[#C5A059] text-black px-5 py-2.5 text-xs font-bold shadow-lg opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  style={{ animationDelay: "0.9s" }}
+                >
+                  GRÁTIS
+                </div>
 
-              <div
-                className="absolute -bottom-6 -left-6 bg-zinc-900 border border-[#C5A059]/30 text-white px-6 py-3 rounded-full font-medium shadow-lg flex items-center gap-2 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                style={{ animationDelay: "1s" }}
-              >
-                <Sparkles className="text-[#C5A059]" size={16} />
-                PDF de Alta Qualidade
+                <div
+                  className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 bg-[#0A0A0A] border border-white/10 px-4 py-2.5 shadow-xl flex items-center gap-2.5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  style={{ animationDelay: "1.1s" }}
+                >
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={11} className="fill-[#C5A059] text-[#C5A059]" />
+                    ))}
+                  </div>
+                  <span className="text-white text-xs font-medium">4.9/5</span>
+                  <span className="text-zinc-500 text-[10px]">(234)</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* What You'll Learn Section */}
-      <section className="py-20 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div
-            className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
-            <h2 className="text-4xl font-serif text-white mb-4">
-              O Que Vais Aprender
-            </h2>
-            <p className="text-zinc-400 max-w-2xl mx-auto">
-              Um guia completo estruturado em 4 capítulos essenciais
+      {/* ===== CHAPTERS ===== */}
+      <section className="py-20 sm:py-28 border-t border-white/5">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-4 block">
+              Conteúdo
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">O Que Vais Aprender</h2>
+            <p className="text-zinc-500 max-w-xl mx-auto">
+              4 capítulos essenciais para compreender o Lusitano
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
             {chapters.map((chapter, index) => (
               <div
                 key={chapter.number}
-                className="bg-zinc-900/50 border border-white/5 p-8 hover:border-[#C5A059]/30 transition-colors group opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="group bg-white/[0.02] border border-white/5 p-6 sm:p-8 hover:border-[#C5A059]/20 hover:bg-white/[0.04] transition-all duration-500 relative overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: `${0.1 + index * 0.1}s` }}
               >
-                <div className="flex items-start gap-6">
-                  <div className="text-5xl font-serif text-[#C5A059]/20 group-hover:text-[#C5A059]/40 transition-colors">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative flex items-start gap-5">
+                  <span className="text-4xl sm:text-5xl font-serif text-[#C5A059]/15 group-hover:text-[#C5A059]/30 transition-colors duration-500 leading-none">
                     {chapter.number}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-serif text-white mb-2">
+                  </span>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-lg font-serif text-white mb-2 group-hover:text-[#C5A059] transition-colors duration-300">
                       {chapter.title}
                     </h3>
-                    <p className="text-zinc-400 mb-3">{chapter.description}</p>
-                    <div className="text-sm text-zinc-600">
+                    <p className="text-zinc-500 text-sm leading-relaxed mb-3">
+                      {chapter.description}
+                    </p>
+                    <span className="text-[11px] text-zinc-600 uppercase tracking-wider">
                       {chapter.pages} páginas
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== STATS ===== */}
+      <section className="border-t border-b border-white/5 bg-white/[0.015]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12">
+            {[
+              { value: "5.000+", label: "Downloads", icon: Download },
+              { value: "4.9/5", label: "Avaliação média", icon: Star },
+              { value: "30", label: "Páginas", icon: FileText },
+              { value: "100%", label: "Gratuito", icon: Gift },
+            ].map((stat, index) => (
+              <div
+                key={stat.label}
+                className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <stat.icon size={20} className="text-[#C5A059]/40 mx-auto mb-3" />
+                <div className="text-2xl sm:text-3xl font-serif text-white mb-1">{stat.value}</div>
+                <div className="text-[11px] text-zinc-500 uppercase tracking-wider">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== TESTIMONIALS ===== */}
+      <section className="py-20 sm:py-28">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-4 block">
+              Testemunhos
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+              O Que Dizem Os Leitores
+            </h2>
+            <div className="flex items-center justify-center gap-1.5 mb-3">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="fill-[#C5A059] text-[#C5A059]" size={16} />
+              ))}
+            </div>
+            <p className="text-zinc-500 text-sm">Avaliação média: 4.9/5</p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={testimonial.name}
+                className="group bg-white/[0.02] border border-white/5 p-6 sm:p-8 hover:border-[#C5A059]/15 hover:bg-white/[0.04] transition-all duration-500 relative overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative">
+                  <div className="flex gap-1 mb-5">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="text-[#C5A059] fill-[#C5A059]" size={13} />
+                    ))}
+                  </div>
+                  <p className="text-zinc-300 text-sm leading-relaxed mb-6 italic">
+                    &ldquo;{testimonial.text}&rdquo;
+                  </p>
+                  <div className="flex items-center gap-3 pt-5 border-t border-white/5">
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#C5A059]/20 to-[#C5A059]/5 border border-[#C5A059]/20 flex items-center justify-center text-[#C5A059] text-xs font-bold">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <h4 className="text-white text-sm font-medium">{testimonial.name}</h4>
+                      <p className="text-zinc-600 text-xs">{testimonial.role}</p>
                     </div>
                   </div>
                 </div>
@@ -370,116 +422,81 @@ export default function EbookGratisPage() {
         </div>
       </section>
 
-      {/* Benefits Grid */}
-      <section className="py-20 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div
-            className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
-            <h2 className="text-4xl font-serif text-white mb-4">
-              Por Que Descarregar Este Ebook?
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {benefits.map((benefit, index) => (
-              <div
-                key={benefit.title}
-                className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <benefit.icon className="text-[#C5A059]" size={28} />
-                </div>
-                <h3 className="text-lg font-serif text-white mb-3">
-                  {benefit.title}
-                </h3>
-                <p className="text-zinc-400 text-sm">{benefit.description}</p>
-              </div>
-            ))}
-          </div>
+      {/* ===== FINAL CTA ===== */}
+      <section className="relative py-24 sm:py-32 border-t border-white/5 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C5A059]/5 rounded-full blur-[120px]" />
         </div>
-      </section>
 
-      {/* Testimonials */}
-      <section className="py-20 border-t border-white/5 bg-zinc-900/20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div
-            className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
-            <h2 className="text-4xl font-serif text-white mb-4">
-              O Que Dizem Os Leitores
-            </h2>
-            <div className="flex items-center justify-center gap-2 text-[#C5A059] mb-2">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="fill-[#C5A059]" size={20} />
-              ))}
-            </div>
-            <p className="text-zinc-400">Avaliação média: 4.9/5 (234 reviews)</p>
-          </div>
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 relative z-10 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+          <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-6 block">
+            Começa Agora
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mb-6">
+            Descarrega o Teu Guia <span className="text-[#C5A059]">Gratuito</span>
+          </h2>
+          <p className="text-zinc-400 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+            Recebe imediatamente o ebook + acesso à newsletter semanal com dicas exclusivas.
+          </p>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={testimonial.name}
-                className="bg-zinc-900/50 border border-white/5 p-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 bg-[#C5A059] rounded-full flex items-center justify-center text-black font-bold">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <h4 className="text-white font-medium">{testimonial.name}</h4>
-                    <p className="text-zinc-500 text-sm">{testimonial.role}</p>
-                  </div>
-                </div>
-                <p className="text-zinc-300 italic mb-4">"{testimonial.text}"</p>
-                <div className="flex gap-1">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="text-[#C5A059] fill-[#C5A059]"
-                      size={14}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Final */}
-      <section className="py-20 border-t border-white/5">
-        <div className="max-w-4xl mx-auto px-6">
-          <div
-            className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/30 rounded-2xl p-12 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
-            <BookOpen className="text-[#C5A059] mx-auto mb-6" size={48} />
-            <h2 className="text-4xl font-serif text-white mb-4">
-              Pronto Para Começar?
-            </h2>
-            <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
-              Insere o teu email acima e recebe imediatamente o ebook gratuito +
-              acesso à nossa newsletter semanal com dicas exclusivas.
+          <form onSubmit={handleSubmit} className="space-y-3 max-w-lg mx-auto">
+            <input
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              onFocus={handleFormStart}
+              placeholder="O teu nome"
+              required
+              autoComplete="name"
+              className="w-full bg-black/40 border border-white/10 text-white px-5 py-4 text-[15px] focus:outline-none focus:border-[#C5A059]/50 focus:bg-black/60 transition-all placeholder:text-zinc-600"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onFocus={handleFormStart}
+              placeholder="O teu melhor email"
+              required
+              autoComplete="email"
+              inputMode="email"
+              className="w-full bg-black/40 border border-white/10 text-white px-5 py-4 text-[15px] focus:outline-none focus:border-[#C5A059]/50 focus:bg-black/60 transition-all placeholder:text-zinc-600"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#C5A059] text-black py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 min-h-[56px] active:scale-[0.98] touch-manipulation"
+            >
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                  A processar...
+                </>
+              ) : (
+                <>
+                  <Download size={18} />
+                  Quero o Meu Ebook
+                </>
+              )}
+            </button>
+            <p className="text-zinc-600 text-[11px] text-center pt-1">
+              Sem spam. Cancela a qualquer momento.
             </p>
-            <div className="flex items-center justify-center gap-6 text-sm text-zinc-500">
-              <div className="flex items-center gap-2">
-                <Check className="text-green-500" size={16} />
-                <span>Sem custos ocultos</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="text-green-500" size={16} />
-                <span>Cancela a qualquer momento</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="text-green-500" size={16} />
-                <span>100% grátis para sempre</span>
-              </div>
+          </form>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mt-8 text-sm text-zinc-600">
+            <div className="flex items-center gap-2">
+              <Shield className="text-zinc-600" size={14} />
+              <span>Sem custos ocultos</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Mail className="text-zinc-600" size={14} />
+              <span>Cancela a qualquer momento</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Heart className="text-zinc-600" size={14} />
+              <span>100% grátis para sempre</span>
             </div>
           </div>
-
         </div>
       </section>
     </main>
