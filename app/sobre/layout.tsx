@@ -33,6 +33,12 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sobre Nós | Portal Lusitano",
+    description: "O Portal Lusitano é a plataforma mais completa dedicada ao Cavalo Lusitano.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
