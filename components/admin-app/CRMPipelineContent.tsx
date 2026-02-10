@@ -1,7 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Users, TrendingUp, DollarSign, Mail, Phone, Calendar, Flame, Snowflake, ChevronRight, Plus, X } from "lucide-react";
+import {
+  Users,
+  TrendingUp,
+  DollarSign,
+  Mail,
+  Phone,
+  Calendar,
+  Flame,
+  Snowflake,
+  ChevronRight,
+  Plus,
+  X,
+} from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -12,11 +24,7 @@ import {
   DragEndEvent,
   DragOverlay,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  useSortable,
-} from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 interface Lead {
@@ -90,9 +98,7 @@ function LeadCard({ lead }: { lead: Lead }) {
           <p className="text-xs text-gray-400">{lead.email}</p>
           {lead.company && <p className="text-xs text-gray-500">{lead.company}</p>}
         </div>
-        <div className="flex items-center gap-1">
-          {tempIcon[lead.temperature]}
-        </div>
+        <div className="flex items-center gap-1">{tempIcon[lead.temperature]}</div>
       </div>
 
       <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
@@ -113,9 +119,7 @@ function LeadCard({ lead }: { lead: Lead }) {
         </div>
       </div>
 
-      {lead.notes && (
-        <p className="mt-2 text-xs text-gray-400 italic line-clamp-2">{lead.notes}</p>
-      )}
+      {lead.notes && <p className="mt-2 text-xs text-gray-400 italic line-clamp-2">{lead.notes}</p>}
     </div>
   );
 }
@@ -144,9 +148,7 @@ function StageColumn({ stage, leads }: { stage: Stage; leads: Lead[] }) {
         <SortableContext items={leads.map((l) => l.id)} strategy={verticalListSortingStrategy}>
           <div className="space-y-3 min-h-[200px]">
             {leads.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 text-sm">
-                Nenhum lead nesta fase
-              </div>
+              <div className="text-center py-8 text-gray-500 text-sm">Nenhum lead nesta fase</div>
             ) : (
               leads.map((lead) => <LeadCard key={lead.id} lead={lead} />)
             )}
@@ -163,10 +165,7 @@ export default function CRMPipelineContent() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor)
-  );
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor));
 
   useEffect(() => {
     loadLeads();
@@ -189,8 +188,8 @@ export default function CRMPipelineContent() {
     }
   };
 
-  const handleDragStart = (event: any) => {
-    setActiveId(event.active.id);
+  const handleDragStart = (event: { active: { id: string | number } }) => {
+    setActiveId(String(event.active.id));
   };
 
   const handleDragEnd = (event: DragEndEvent) => {

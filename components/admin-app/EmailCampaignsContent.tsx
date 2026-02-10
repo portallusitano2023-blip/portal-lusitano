@@ -91,7 +91,7 @@ export default function EmailCampaignsContent() {
     setIsSubmitting(true);
 
     try {
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         name: formData.name,
         subject: formData.subject,
         html_content: formData.html_content,
@@ -118,16 +118,13 @@ export default function EmailCampaignsContent() {
         throw new Error(data.error || "Erro ao criar campanha");
       }
 
-      success(
-        "Campanha criada com sucesso",
-        data.message || "A campanha foi criada"
-      );
+      success("Campanha criada com sucesso", data.message || "A campanha foi criada");
 
       setIsCreateModalOpen(false);
       resetForm();
       fetchCampaigns();
-    } catch (err: any) {
-      showError("Erro ao criar campanha", err.message);
+    } catch (err: unknown) {
+      showError("Erro ao criar campanha", err instanceof Error ? err.message : "Erro desconhecido");
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -151,8 +148,11 @@ export default function EmailCampaignsContent() {
 
       success("Campanha eliminada com sucesso");
       fetchCampaigns();
-    } catch (err: any) {
-      showError("Erro ao eliminar campanha", err.message);
+    } catch (err: unknown) {
+      showError(
+        "Erro ao eliminar campanha",
+        err instanceof Error ? err.message : "Erro desconhecido"
+      );
       console.error(err);
     }
   };
@@ -263,9 +263,7 @@ export default function EmailCampaignsContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Campanhas de Email</h1>
-          <p className="text-gray-400">
-            Gerir e acompanhar campanhas de email marketing
-          </p>
+          <p className="text-gray-400">Gerir e acompanhar campanhas de email marketing</p>
         </div>
         <button
           onClick={() => setIsCreateModalOpen(true)}
@@ -338,12 +336,8 @@ export default function EmailCampaignsContent() {
         {campaigns.length === 0 ? (
           <div className="text-center py-12">
             <Mail className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-400 mb-2">
-              Nenhuma campanha criada
-            </h3>
-            <p className="text-gray-500 mb-6">
-              Crie a sua primeira campanha de email para começar
-            </p>
+            <h3 className="text-xl font-semibold text-gray-400 mb-2">Nenhuma campanha criada</h3>
+            <p className="text-gray-500 mb-6">Crie a sua primeira campanha de email para começar</p>
             <button
               onClick={() => setIsCreateModalOpen(true)}
               className="px-4 py-2 bg-[#C5A059] hover:bg-[#B59049] text-black font-semibold rounded-lg transition-colors"
@@ -368,9 +362,7 @@ export default function EmailCampaignsContent() {
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
                     Estatísticas
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
-                    Data
-                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Data</th>
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-400">
                     Ações
                   </th>
@@ -378,10 +370,7 @@ export default function EmailCampaignsContent() {
               </thead>
               <tbody className="divide-y divide-gray-800">
                 {campaigns.map((campaign) => (
-                  <tr
-                    key={campaign.id}
-                    className="hover:bg-white/5 transition-colors"
-                  >
+                  <tr key={campaign.id} className="hover:bg-white/5 transition-colors">
                     <td className="px-6 py-4">
                       <div>
                         <p className="font-semibold text-white">{campaign.name}</p>
@@ -392,9 +381,7 @@ export default function EmailCampaignsContent() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-gray-400" />
-                        <span className="text-white font-medium">
-                          {campaign.recipients_count}
-                        </span>
+                        <span className="text-white font-medium">{campaign.recipients_count}</span>
                         <span className="text-xs text-gray-500">
                           ({getRecipientTypeLabel(campaign.recipient_type)})
                         </span>
@@ -440,16 +427,12 @@ export default function EmailCampaignsContent() {
                         ) : campaign.scheduled_at ? (
                           <div>
                             <p className="text-gray-400">Agendada:</p>
-                            <p className="text-white">
-                              {formatDate(campaign.scheduled_at)}
-                            </p>
+                            <p className="text-white">{formatDate(campaign.scheduled_at)}</p>
                           </div>
                         ) : (
                           <div>
                             <p className="text-gray-400">Criada:</p>
-                            <p className="text-white">
-                              {formatDate(campaign.created_at)}
-                            </p>
+                            <p className="text-white">{formatDate(campaign.created_at)}</p>
                           </div>
                         )}
                       </div>
@@ -506,9 +489,7 @@ export default function EmailCampaignsContent() {
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                   className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#C5A059]"
                   placeholder="Ex: Newsletter Maio 2024"
@@ -523,9 +504,7 @@ export default function EmailCampaignsContent() {
                 <input
                   type="text"
                   value={formData.subject}
-                  onChange={(e) =>
-                    setFormData({ ...formData, subject: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   required
                   className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#C5A059]"
                   placeholder="Ex: Novidades do Portal Lusitano"
@@ -539,9 +518,7 @@ export default function EmailCampaignsContent() {
                 </label>
                 <textarea
                   value={formData.html_content}
-                  onChange={(e) =>
-                    setFormData({ ...formData, html_content: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, html_content: e.target.value })}
                   required
                   rows={10}
                   className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#C5A059] font-mono text-sm"
@@ -560,9 +537,7 @@ export default function EmailCampaignsContent() {
                 <div className="grid grid-cols-3 gap-3">
                   <button
                     type="button"
-                    onClick={() =>
-                      setFormData({ ...formData, recipient_type: "all_leads" })
-                    }
+                    onClick={() => setFormData({ ...formData, recipient_type: "all_leads" })}
                     className={`px-4 py-3 rounded-lg border-2 transition-colors ${
                       formData.recipient_type === "all_leads"
                         ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
@@ -574,9 +549,7 @@ export default function EmailCampaignsContent() {
                   </button>
                   <button
                     type="button"
-                    onClick={() =>
-                      setFormData({ ...formData, recipient_type: "customers" })
-                    }
+                    onClick={() => setFormData({ ...formData, recipient_type: "customers" })}
                     className={`px-4 py-3 rounded-lg border-2 transition-colors ${
                       formData.recipient_type === "customers"
                         ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
@@ -588,9 +561,7 @@ export default function EmailCampaignsContent() {
                   </button>
                   <button
                     type="button"
-                    onClick={() =>
-                      setFormData({ ...formData, recipient_type: "custom" })
-                    }
+                    onClick={() => setFormData({ ...formData, recipient_type: "custom" })}
                     className={`px-4 py-3 rounded-lg border-2 transition-colors ${
                       formData.recipient_type === "custom"
                         ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
@@ -611,9 +582,7 @@ export default function EmailCampaignsContent() {
                   </label>
                   <textarea
                     value={formData.custom_emails}
-                    onChange={(e) =>
-                      setFormData({ ...formData, custom_emails: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, custom_emails: e.target.value })}
                     rows={3}
                     className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#C5A059]"
                     placeholder="email1@example.com, email2@example.com"
@@ -632,9 +601,7 @@ export default function EmailCampaignsContent() {
                       type="radio"
                       name="send_option"
                       checked={formData.send_immediately}
-                      onChange={() =>
-                        setFormData({ ...formData, send_immediately: true })
-                      }
+                      onChange={() => setFormData({ ...formData, send_immediately: true })}
                       className="w-4 h-4 text-[#C5A059] focus:ring-[#C5A059]"
                     />
                     <span className="text-white">Enviar imediatamente</span>
@@ -644,9 +611,7 @@ export default function EmailCampaignsContent() {
                       type="radio"
                       name="send_option"
                       checked={!formData.send_immediately}
-                      onChange={() =>
-                        setFormData({ ...formData, send_immediately: false })
-                      }
+                      onChange={() => setFormData({ ...formData, send_immediately: false })}
                       className="w-4 h-4 text-[#C5A059] focus:ring-[#C5A059]"
                     />
                     <span className="text-white">Agendar envio</span>
@@ -663,9 +628,7 @@ export default function EmailCampaignsContent() {
                   <input
                     type="datetime-local"
                     value={formData.schedule_at}
-                    onChange={(e) =>
-                      setFormData({ ...formData, schedule_at: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, schedule_at: e.target.value })}
                     className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-[#C5A059]"
                   />
                 </div>
@@ -712,12 +675,8 @@ export default function EmailCampaignsContent() {
           <div className="bg-[#0A0A0A] border border-gray-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             <div className="bg-[#0A0A0A] border-b border-gray-800 px-6 py-4 flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-white">
-                  {previewCampaign.name}
-                </h2>
-                <p className="text-sm text-gray-400 mt-1">
-                  Assunto: {previewCampaign.subject}
-                </p>
+                <h2 className="text-2xl font-bold text-white">{previewCampaign.name}</h2>
+                <p className="text-sm text-gray-400 mt-1">Assunto: {previewCampaign.subject}</p>
               </div>
               <button
                 onClick={() => {

@@ -4,6 +4,7 @@ import { client } from "@/lib/client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import DynamicSEO from "@/components/DynamicSEO";
 
 interface CavaloSanity {
   nome: string;
@@ -81,6 +82,15 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
 
   return (
     <main className="min-h-screen bg-[#050505] text-white pt-24 pb-20">
+      <DynamicSEO
+        title={`${data.nome} - Cavalo Lusitano à Venda - Portal Lusitano`}
+        description={
+          data.descricao ||
+          `${data.nome}, ${data.idade} anos, ${data.ferro}. Cavalo Lusitano de elite disponível para venda.`
+        }
+        image={data.imageUrl}
+        url={`https://portallusitano.com/cavalo/${slug}`}
+      />
       <div className="max-w-6xl mx-auto px-6">
         <Link
           href="/marketplace"

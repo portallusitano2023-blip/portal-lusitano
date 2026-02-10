@@ -59,17 +59,17 @@ export const cache = new Cache();
 
 // Run cleanup every 5 minutes
 if (typeof window === "undefined") {
-  setInterval(() => {
-    cache.cleanup();
-  }, 5 * 60 * 1000);
+  setInterval(
+    () => {
+      cache.cleanup();
+    },
+    5 * 60 * 1000
+  );
 }
 
 // Cache decorator for functions
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function memoize<T extends (...args: never[]) => unknown>(
-  fn: T,
-  ttl: number = 3600000
-): T {
+
+export function memoize<T extends (...args: never[]) => unknown>(fn: T, ttl: number = 3600000): T {
   return ((...args: Parameters<T>): ReturnType<T> => {
     const key = `memoize:${fn.name}:${JSON.stringify(args)}`;
     const cached = cache.get<ReturnType<T>>(key);
@@ -85,7 +85,7 @@ export function memoize<T extends (...args: never[]) => unknown>(
 }
 
 // Async cache decorator
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function memoizeAsync<T extends (...args: never[]) => Promise<unknown>>(
   fn: T,
   ttl: number = 3600000

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Filter, X, Save, Calendar, Search } from "lucide-react";
 
 export interface FilterConfig {
@@ -13,7 +13,7 @@ export interface FilterConfig {
 
 export interface ActiveFilter {
   id: string;
-  value: any;
+  value: string | number | { start: string; end: string };
   operator?: "equals" | "contains" | "gt" | "lt" | "between";
 }
 
@@ -35,18 +35,22 @@ export default function AdvancedFilters({
   storageKey = "advanced-filters",
 }: AdvancedFiltersProps) {
   const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
-  const [savedFilters, setSavedFilters] = useState<SavedFilter[]>([]);
+  const [savedFilters, setSavedFilters] = useState<SavedFilter[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(`${storageKey}-saved`);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+    return [];
+  });
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [filterName, setFilterName] = useState("");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
-
-  // Load saved filters from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem(`${storageKey}-saved`);
-    if (saved) {
-      setSavedFilters(JSON.parse(saved));
-    }
-  }, [storageKey]);
 
   // Save filters to localStorage
   const saveFiltersToStorage = (filters: SavedFilter[]) => {
@@ -71,9 +75,7 @@ export default function AdvancedFilters({
   };
 
   const updateFilter = (index: number, updates: Partial<ActiveFilter>) => {
-    const updated = activeFilters.map((f, i) =>
-      i === index ? { ...f, ...updates } : f
-    );
+    const updated = activeFilters.map((f, i) => (i === index ? { ...f, ...updates } : f));
     setActiveFilters(updated);
     onFiltersChange(updated);
   };
@@ -136,7 +138,7 @@ export default function AdvancedFilters({
             </select>
             <input
               type="text"
-              value={filter.value || ""}
+              value={typeof filter.value === "object" ? "" : filter.value || ""}
               onChange={(e) => updateFilter(index, { value: e.target.value })}
               placeholder={config.placeholder}
               className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500"
@@ -147,7 +149,7 @@ export default function AdvancedFilters({
       case "select":
         return (
           <select
-            value={filter.value || ""}
+            value={typeof filter.value === "object" ? "" : filter.value || ""}
             onChange={(e) => updateFilter(index, { value: e.target.value })}
             className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white"
           >
@@ -160,16 +162,17 @@ export default function AdvancedFilters({
           </select>
         );
 
-      case "dateRange":
+      case "dateRange": {
+        const dateVal = typeof filter.value === "object" ? filter.value : { start: "", end: "" };
         return (
           <div className="flex items-center gap-2 flex-1">
             <Calendar className="w-4 h-4 text-gray-400" />
             <input
               type="date"
-              value={filter.value?.start || ""}
+              value={dateVal.start || ""}
               onChange={(e) =>
                 updateFilter(index, {
-                  value: { ...filter.value, start: e.target.value },
+                  value: { ...dateVal, start: e.target.value },
                 })
               }
               className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white"
@@ -177,16 +180,17 @@ export default function AdvancedFilters({
             <span className="text-gray-400">até</span>
             <input
               type="date"
-              value={filter.value?.end || ""}
+              value={dateVal.end || ""}
               onChange={(e) =>
                 updateFilter(index, {
-                  value: { ...filter.value, end: e.target.value },
+                  value: { ...dateVal, end: e.target.value },
                 })
               }
               className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white"
             />
           </div>
         );
+      }
 
       case "number":
         return (
@@ -207,7 +211,7 @@ export default function AdvancedFilters({
             </select>
             <input
               type="number"
-              value={filter.value || ""}
+              value={typeof filter.value === "object" ? "" : filter.value || ""}
               onChange={(e) => updateFilter(index, { value: e.target.value })}
               placeholder={config.placeholder}
               className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white"
@@ -220,9 +224,7 @@ export default function AdvancedFilters({
     }
   };
 
-  const availableConfigs = configs.filter(
-    (c) => !activeFilters.some((f) => f.id === c.id)
-  );
+  const availableConfigs = configs.filter((c) => !activeFilters.some((f) => f.id === c.id));
 
   return (
     <div className="space-y-4">
@@ -259,10 +261,7 @@ export default function AdvancedFilters({
           {activeFilters.map((filter, index) => {
             const config = configs.find((c) => c.id === filter.id);
             return (
-              <div
-                key={index}
-                className="flex items-center gap-3 bg-white/5 rounded-lg p-3"
-              >
+              <div key={index} className="flex items-center gap-3 bg-white/5 rounded-lg p-3">
                 <span className="text-sm font-medium text-gray-300 min-w-[120px]">
                   {config?.label}
                 </span>
@@ -314,9 +313,7 @@ export default function AdvancedFilters({
       {/* Saved Filters */}
       {savedFilters.length > 0 && (
         <div className="bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-4">
-          <h4 className="text-sm font-bold text-white mb-3">
-            Filtros Guardados
-          </h4>
+          <h4 className="text-sm font-bold text-white mb-3">Filtros Guardados</h4>
           <div className="flex flex-wrap gap-2">
             {savedFilters.map((saved) => (
               <div
@@ -345,9 +342,7 @@ export default function AdvancedFilters({
       {showSaveModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-[#1A1A1A] border border-white/10 rounded-xl p-6 max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold text-white mb-4">
-              Guardar Filtros
-            </h3>
+            <h3 className="text-xl font-bold text-white mb-4">Guardar Filtros</h3>
             <input
               type="text"
               value={filterName}

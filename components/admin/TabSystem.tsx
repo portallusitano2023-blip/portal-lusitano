@@ -18,34 +18,26 @@ interface TabSystemProps {
 
 export default function TabSystem({ initialTabs = [], onTabChange }: TabSystemProps) {
   const [tabs, setTabs] = useState<Tab[]>(initialTabs);
-  const [activeTabId, setActiveTabId] = useState<string>(initialTabs[0]?.id || "");
-
-  // Carregar tabs do localStorage ao montar
-  useEffect(() => {
-    const savedTabs = localStorage.getItem("admin-tabs");
-    const savedActiveTab = localStorage.getItem("admin-active-tab");
-
-    if (savedTabs) {
-      try {
-        const parsed = JSON.parse(savedTabs);
-        // Note: não podemos guardar components no localStorage,
-        // então vamos precisar de re-hidratar os components
-        // Por agora, usar initialTabs se savedTabs existir
-      } catch (e) {
-        console.error("Erro ao carregar tabs:", e);
+  const [activeTabId, setActiveTabId] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const savedActiveTab = localStorage.getItem("admin-active-tab");
+      if (savedActiveTab && initialTabs.find((t) => t.id === savedActiveTab)) {
+        return savedActiveTab;
       }
     }
-
-    if (savedActiveTab && tabs.find((t) => t.id === savedActiveTab)) {
-      setActiveTabId(savedActiveTab);
-    }
-  }, []);
+    return initialTabs[0]?.id || "";
+  });
 
   // Guardar tabs no localStorage quando mudam
   useEffect(() => {
     if (tabs.length > 0) {
       // Guardar apenas os IDs e títulos (não os components)
-      const tabsToSave = tabs.map((t) => ({ id: t.id, title: t.title, icon: t.icon, closable: t.closable }));
+      const tabsToSave = tabs.map((t) => ({
+        id: t.id,
+        title: t.title,
+        icon: t.icon,
+        closable: t.closable,
+      }));
       localStorage.setItem("admin-tabs", JSON.stringify(tabsToSave));
     }
   }, [tabs]);

@@ -8,15 +8,12 @@ import {
   Trash2,
   Calendar,
   User,
-  Flag,
   Filter,
   SortAsc,
   CheckCircle2,
   Clock,
-  AlertCircle,
   PlayCircle,
   Search,
-  ChevronDown,
 } from "lucide-react";
 import {
   DndContext,
@@ -30,7 +27,7 @@ import {
   useDroppable,
   useDraggable,
 } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
+// arrayMove not used currently
 
 // ========================================
 // TIPOS
@@ -196,9 +193,7 @@ const TaskCard = ({ task, onEdit, onDelete, isDragging }: TaskCardProps) => {
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-2">
-        <h4 className="text-white font-semibold text-sm flex-1 pr-2 line-clamp-2">
-          {task.title}
-        </h4>
+        <h4 className="text-white font-semibold text-sm flex-1 pr-2 line-clamp-2">{task.title}</h4>
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={(e) => {
@@ -223,9 +218,7 @@ const TaskCard = ({ task, onEdit, onDelete, isDragging }: TaskCardProps) => {
 
       {/* Description */}
       {task.description && (
-        <p className="text-gray-400 text-xs mb-3 line-clamp-2">
-          {task.description}
-        </p>
+        <p className="text-gray-400 text-xs mb-3 line-clamp-2">{task.description}</p>
       )}
 
       {/* Footer */}
@@ -293,18 +286,11 @@ const KanbanColumnComponent = ({ column, tasks, onEdit, onDelete }: KanbanColumn
       {/* Tasks */}
       <div className="space-y-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
         {tasks.map((task) => (
-          <DraggableTaskCard
-            key={task.id}
-            task={task}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
+          <DraggableTaskCard key={task.id} task={task} onEdit={onEdit} onDelete={onDelete} />
         ))}
 
         {tasks.length === 0 && (
-          <div className="text-center text-gray-500 text-sm py-8">
-            Nenhuma tarefa
-          </div>
+          <div className="text-center text-gray-500 text-sm py-8">Nenhuma tarefa</div>
         )}
       </div>
     </div>
@@ -324,35 +310,35 @@ interface TaskModalProps {
 }
 
 const TaskModal = ({ isOpen, onClose, task, onSave, adminUsers }: TaskModalProps) => {
-  const [formData, setFormData] = useState<Partial<Task>>({
-    title: "",
-    description: "",
-    assigned_to: "",
-    priority: "normal",
-    due_date: new Date().toISOString().split("T")[0],
-    status: "pendente",
-  });
-
-  useEffect(() => {
+  const getFormData = (): Partial<Task> => {
     if (task) {
-      setFormData({
+      return {
         title: task.title,
         description: task.description || "",
         assigned_to: task.assigned_to || "",
         priority: task.priority,
         due_date: task.due_date.split("T")[0],
         status: task.status,
-      });
-    } else {
-      setFormData({
-        title: "",
-        description: "",
-        assigned_to: "",
-        priority: "normal",
-        due_date: new Date().toISOString().split("T")[0],
-        status: "pendente",
-      });
+      };
     }
+    return {
+      title: "",
+      description: "",
+      assigned_to: "",
+      priority: "normal",
+      due_date: new Date().toISOString().split("T")[0],
+      status: "pendente",
+    };
+  };
+
+  const [formData, setFormData] = useState<Partial<Task>>(getFormData);
+
+  // Sync formData when task or modal open state changes
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(getFormData());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [task, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -367,13 +353,8 @@ const TaskModal = ({ isOpen, onClose, task, onSave, adminUsers }: TaskModalProps
       <div className="bg-[#0A0A0A] border border-white/20 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
-          <h2 className="text-xl font-bold text-white">
-            {task ? "Editar Tarefa" : "Nova Tarefa"}
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
-          >
+          <h2 className="text-xl font-bold text-white">{task ? "Editar Tarefa" : "Nova Tarefa"}</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -397,9 +378,7 @@ const TaskModal = ({ isOpen, onClose, task, onSave, adminUsers }: TaskModalProps
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Descrição
-            </label>
+            <label className="block text-sm font-semibold text-gray-300 mb-2">Descrição</label>
             <textarea
               value={formData.description || ""}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -412,9 +391,7 @@ const TaskModal = ({ isOpen, onClose, task, onSave, adminUsers }: TaskModalProps
           {/* Assigned To & Priority */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-300 mb-2">
-                Atribuído a
-              </label>
+              <label className="block text-sm font-semibold text-gray-300 mb-2">Atribuído a</label>
               <input
                 type="text"
                 list="admin-users"
@@ -431,12 +408,12 @@ const TaskModal = ({ isOpen, onClose, task, onSave, adminUsers }: TaskModalProps
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-300 mb-2">
-                Prioridade
-              </label>
+              <label className="block text-sm font-semibold text-gray-300 mb-2">Prioridade</label>
               <select
                 value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
+                onChange={(e) =>
+                  setFormData({ ...formData, priority: e.target.value as Task["priority"] })
+                }
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#C5A059] transition-colors"
               >
                 <option value="baixa">Baixa</option>
@@ -464,12 +441,12 @@ const TaskModal = ({ isOpen, onClose, task, onSave, adminUsers }: TaskModalProps
 
             {task && (
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-2">
-                  Estado
-                </label>
+                <label className="block text-sm font-semibold text-gray-300 mb-2">Estado</label>
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, status: e.target.value as Task["status"] })
+                  }
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#C5A059] transition-colors"
                 >
                   <option value="pendente">Pendente</option>
@@ -534,10 +511,6 @@ export default function TasksContent() {
     })
   );
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
   const loadData = async () => {
     setLoading(true);
     try {
@@ -555,7 +528,7 @@ export default function TasksContent() {
       }
 
       if (usersData.users) {
-        setAdminUsers(usersData.users.map((u: any) => u.email));
+        setAdminUsers(usersData.users.map((u: { email: string }) => u.email));
       }
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
@@ -652,9 +625,7 @@ export default function TasksContent() {
     if (!task || task.status === newStatus) return;
 
     // Optimistic update
-    setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t))
-    );
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)));
 
     try {
       const response = await fetch(`/api/admin/tasks/${taskId}`, {
@@ -815,7 +786,9 @@ export default function TasksContent() {
               className="bg-white/5 border border-white/10 rounded-lg pl-10 pr-8 py-2 text-white appearance-none focus:outline-none focus:border-[#C5A059] transition-colors cursor-pointer"
             >
               <option value="all">Todos Atribuídos</option>
-              {Array.from(new Set(tasks.map((t) => t.assigned_to).filter((v): v is string => Boolean(v)))).map((email) => (
+              {Array.from(
+                new Set(tasks.map((t) => t.assigned_to).filter((v): v is string => Boolean(v)))
+              ).map((email) => (
                 <option key={email} value={email}>
                   {email}
                 </option>
@@ -828,7 +801,7 @@ export default function TasksContent() {
             <SortAsc className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as "due_date" | "created_at" | "priority")}
               className="bg-white/5 border border-white/10 rounded-lg pl-10 pr-8 py-2 text-white appearance-none focus:outline-none focus:border-[#C5A059] transition-colors cursor-pointer"
             >
               <option value="due_date">Ordenar por Vencimento</option>
@@ -873,6 +846,7 @@ export default function TasksContent() {
 
       {/* Task Modal */}
       <TaskModal
+        key={editingTask?.id || "new"}
         isOpen={showModal}
         onClose={() => {
           setShowModal(false);

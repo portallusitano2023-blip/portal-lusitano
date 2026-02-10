@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import DynamicSEO from "@/components/DynamicSEO";
 import {
   Calendar,
   MapPin,
@@ -61,11 +62,31 @@ interface EventoRelacionado {
 }
 
 const tiposEvento: Record<string, { label: string; icon: string; color: string }> = {
-  feira: { label: "Feira", icon: "🎠", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-  competicao: { label: "Competição", icon: "🏆", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
-  leilao: { label: "Leilão", icon: "🔨", color: "bg-green-500/20 text-green-400 border-green-500/30" },
-  exposicao: { label: "Exposição", icon: "🎨", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-  workshop: { label: "Workshop", icon: "📚", color: "bg-pink-500/20 text-pink-400 border-pink-500/30" },
+  feira: {
+    label: "Feira",
+    icon: "🎠",
+    color: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+  },
+  competicao: {
+    label: "Competição",
+    icon: "🏆",
+    color: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  },
+  leilao: {
+    label: "Leilão",
+    icon: "🔨",
+    color: "bg-green-500/20 text-green-400 border-green-500/30",
+  },
+  exposicao: {
+    label: "Exposição",
+    icon: "🎨",
+    color: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+  },
+  workshop: {
+    label: "Workshop",
+    icon: "📚",
+    color: "bg-pink-500/20 text-pink-400 border-pink-500/30",
+  },
 };
 
 export default function EventoPage() {
@@ -189,11 +210,26 @@ END:VCALENDAR`;
   function getConfirmacaoBadge(confirmado?: string) {
     switch (confirmado) {
       case "confirmado":
-        return { icon: CheckCircle, label: "Confirmado", color: "text-green-400", bg: "bg-green-500/10 border-green-500/30" };
+        return {
+          icon: CheckCircle,
+          label: "Confirmado",
+          color: "text-green-400",
+          bg: "bg-green-500/10 border-green-500/30",
+        };
       case "anual":
-        return { icon: RefreshCw, label: "Evento Anual", color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/30" };
+        return {
+          icon: RefreshCw,
+          label: "Evento Anual",
+          color: "text-blue-400",
+          bg: "bg-blue-500/10 border-blue-500/30",
+        };
       case "provisorio":
-        return { icon: AlertCircle, label: "Data Provisória", color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/30" };
+        return {
+          icon: AlertCircle,
+          label: "Data Provisória",
+          color: "text-amber-400",
+          bg: "bg-amber-500/10 border-amber-500/30",
+        };
       default:
         return null;
     }
@@ -221,9 +257,7 @@ END:VCALENDAR`;
           <h1 className="text-3xl font-serif text-white mb-4">
             {error || "Evento não encontrado"}
           </h1>
-          <p className="text-zinc-400 mb-8">
-            O evento que procura não existe ou foi removido.
-          </p>
+          <p className="text-zinc-400 mb-8">O evento que procura não existe ou foi removido.</p>
           <Link
             href="/eventos"
             className="inline-flex items-center gap-2 text-[#C5A059] hover:underline"
@@ -236,11 +270,25 @@ END:VCALENDAR`;
     );
   }
 
-  const tipoInfo = tiposEvento[evento.tipo] || { label: evento.tipo, icon: "📅", color: "bg-zinc-500/20 text-zinc-400" };
+  const tipoInfo = tiposEvento[evento.tipo] || {
+    label: evento.tipo,
+    icon: "📅",
+    color: "bg-zinc-500/20 text-zinc-400",
+  };
   const confirmacaoBadge = getConfirmacaoBadge(evento.confirmado);
 
   return (
     <main className="min-h-screen bg-[#050505]">
+      <DynamicSEO
+        title={`${evento.titulo} - ${tipoInfo.label} - Portal Lusitano`}
+        description={
+          evento.descricao_completa ||
+          evento.descricao ||
+          `${evento.titulo} em ${evento.localizacao}. ${formatDateRange(evento.data_inicio, evento.data_fim)}`
+        }
+        image={evento.imagem_capa}
+        url={`https://portallusitano.com/eventos/${slug}`}
+      />
       {/* Hero com imagem ou gradiente */}
       <section className="relative pt-24 pb-12">
         {evento.imagem_capa ? (
@@ -260,10 +308,11 @@ END:VCALENDAR`;
 
         <div className="relative max-w-4xl mx-auto px-6 pt-16">
           {/* Breadcrumb */}
-          <nav
-            className="flex items-center gap-2 text-sm text-zinc-400 mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
-            <Link href="/eventos" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">
+          <nav className="flex items-center gap-2 text-sm text-zinc-400 mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+            <Link
+              href="/eventos"
+              className="hover:text-[#C5A059] transition-colors flex items-center gap-1"
+            >
               <ArrowLeft size={16} />
               Eventos
             </Link>
@@ -276,7 +325,9 @@ END:VCALENDAR`;
             className="flex flex-wrap items-center gap-3 mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.1s" }}
           >
-            <span className={`px-3 py-1.5 text-sm border ${tipoInfo.color} flex items-center gap-2`}>
+            <span
+              className={`px-3 py-1.5 text-sm border ${tipoInfo.color} flex items-center gap-2`}
+            >
               <span>{tipoInfo.icon}</span>
               {tipoInfo.label}
             </span>
@@ -288,7 +339,9 @@ END:VCALENDAR`;
             )}
 
             {confirmacaoBadge && (
-              <span className={`flex items-center gap-1.5 ${confirmacaoBadge.color} ${confirmacaoBadge.bg} border px-3 py-1.5 text-sm`}>
+              <span
+                className={`flex items-center gap-1.5 ${confirmacaoBadge.color} ${confirmacaoBadge.bg} border px-3 py-1.5 text-sm`}
+              >
                 <confirmacaoBadge.icon size={14} />
                 {confirmacaoBadge.label}
               </span>
@@ -342,7 +395,10 @@ END:VCALENDAR`;
                 </div>
                 <div>
                   <span className="text-xs text-zinc-500 uppercase tracking-wider">Horário</span>
-                  <p>{evento.hora_inicio}{evento.hora_fim && ` - ${evento.hora_fim}`}</p>
+                  <p>
+                    {evento.hora_inicio}
+                    {evento.hora_fim && ` - ${evento.hora_fim}`}
+                  </p>
                 </div>
               </div>
             )}
@@ -508,7 +564,10 @@ END:VCALENDAR`;
             <h2 className="text-2xl font-serif text-white mb-6">Eventos Relacionados</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {relacionados.map((rel) => {
-                const relTipo = tiposEvento[rel.tipo] || { icon: "📅", color: "bg-zinc-500/20 text-zinc-400" };
+                const relTipo = tiposEvento[rel.tipo] || {
+                  icon: "📅",
+                  color: "bg-zinc-500/20 text-zinc-400",
+                };
                 return (
                   <Link
                     key={rel.id}

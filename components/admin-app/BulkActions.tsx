@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   CheckSquare,
   Square,
@@ -18,13 +18,13 @@ import {
 interface BulkAction {
   id: string;
   label: string;
-  icon: any;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   color: string;
   action: (selectedIds: string[]) => void | Promise<void>;
 }
 
 interface BulkActionsProps {
-  items: any[];
+  items: Record<string, unknown>[];
   selectedIds: string[];
   onSelectionChange: (ids: string[]) => void;
   actions: BulkAction[];
@@ -47,7 +47,7 @@ export default function BulkActions({
     if (allSelected) {
       onSelectionChange([]);
     } else {
-      onSelectionChange(items.map((item) => item[idField]));
+      onSelectionChange(items.map((item) => String(item[idField])));
     }
   };
 
@@ -88,9 +88,7 @@ export default function BulkActions({
 
         {/* Counter */}
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-white">
-            {selectedIds.length}
-          </span>
+          <span className="text-sm font-semibold text-white">{selectedIds.length}</span>
           <span className="text-sm text-gray-400">
             {selectedIds.length === 1 ? "item selecionado" : "items selecionados"}
           </span>
@@ -150,20 +148,18 @@ export default function BulkActions({
 }
 
 // Hook para gerir seleção
-export function useBulkSelection(items: any[], idField: string = "id") {
+export function useBulkSelection(items: Record<string, unknown>[], idField: string = "id") {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const toggleItem = (id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   };
 
   const isSelected = (id: string) => selectedIds.includes(id);
 
   const clearSelection = () => setSelectedIds([]);
 
-  const selectAll = () => setSelectedIds(items.map((item) => item[idField]));
+  const selectAll = () => setSelectedIds(items.map((item) => String(item[idField])));
 
   return {
     selectedIds,

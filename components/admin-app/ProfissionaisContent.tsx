@@ -92,7 +92,7 @@ export default function ProfissionaisContent() {
     }
   };
 
-  const updateProfissional = async (id: string, updates: any) => {
+  const updateProfissional = async (id: string, updates: Record<string, unknown>) => {
     try {
       const res = await fetch(`/api/admin/profissionais/${id}`, {
         method: "PATCH",
@@ -184,12 +184,8 @@ export default function ProfissionaisContent() {
           <div className="flex items-center gap-3 mb-4">
             <FiAward className="text-[#C5A059]" size={32} />
             <div>
-              <h1 className="text-3xl font-bold text-white">
-                Gestão de Profissionais
-              </h1>
-              <p className="text-gray-400">
-                Gerir profissionais, planos e aprovações
-              </p>
+              <h1 className="text-3xl font-bold text-white">Gestão de Profissionais</h1>
+              <p className="text-gray-400">Gerir profissionais, planos e aprovações</p>
             </div>
           </div>
         </div>
@@ -203,33 +199,23 @@ export default function ProfissionaisContent() {
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Pendentes</div>
-              <div className="text-2xl font-bold text-yellow-400">
-                {stats.pendente}
-              </div>
+              <div className="text-2xl font-bold text-yellow-400">{stats.pendente}</div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Aprovados</div>
-              <div className="text-2xl font-bold text-green-400">
-                {stats.aprovado}
-              </div>
+              <div className="text-2xl font-bold text-green-400">{stats.aprovado}</div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Destaque</div>
-              <div className="text-2xl font-bold text-[#C5A059]">
-                {stats.destaque}
-              </div>
+              <div className="text-2xl font-bold text-[#C5A059]">{stats.destaque}</div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Planos Ativos</div>
-              <div className="text-2xl font-bold text-blue-400">
-                {stats.ativos}
-              </div>
+              <div className="text-2xl font-bold text-blue-400">{stats.ativos}</div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">MRR</div>
-              <div className="text-2xl font-bold text-emerald-400">
-                {formatCurrency(mrr)}
-              </div>
+              <div className="text-2xl font-bold text-emerald-400">{formatCurrency(mrr)}</div>
             </div>
           </div>
         )}
@@ -317,10 +303,7 @@ export default function ProfissionaisContent() {
             </thead>
             <tbody className="divide-y divide-white/10">
               {profissionais.map((prof) => (
-                <tr
-                  key={prof.id}
-                  className="hover:bg-white/5 transition-colors"
-                >
+                <tr key={prof.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {prof.foto_url && (
@@ -332,17 +315,11 @@ export default function ProfissionaisContent() {
                       )}
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-white font-medium">
-                            {prof.nome}
-                          </span>
-                          {prof.destaque && (
-                            <FiStar className="text-[#C5A059]" size={14} />
-                          )}
+                          <span className="text-white font-medium">{prof.nome}</span>
+                          {prof.destaque && <FiStar className="text-[#C5A059]" size={14} />}
                         </div>
                         {prof.especialidade && (
-                          <div className="text-xs text-gray-400 mt-1">
-                            {prof.especialidade}
-                          </div>
+                          <div className="text-xs text-gray-400 mt-1">{prof.especialidade}</div>
                         )}
                         <div className="flex items-center gap-2 mt-1">
                           {prof.email && (
@@ -363,9 +340,7 @@ export default function ProfissionaisContent() {
                   </td>
                   <td className="px-4 py-3">
                     <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${getTipoColor(
-                        prof.tipo
-                      )}`}
+                      className={`px-2 py-1 rounded text-xs font-medium ${getTipoColor(prof.tipo)}`}
                     >
                       {getTipoLabel(prof.tipo)}
                     </span>
@@ -384,9 +359,7 @@ export default function ProfissionaisContent() {
                     >
                       {prof.plano.toUpperCase()}
                     </span>
-                    {prof.plano_ativo && (
-                      <div className="text-xs text-green-400 mt-1">Ativo</div>
-                    )}
+                    {prof.plano_ativo && <div className="text-xs text-green-400 mt-1">Ativo</div>}
                   </td>
                   <td className="px-4 py-3">
                     <span
@@ -402,9 +375,7 @@ export default function ProfissionaisContent() {
                       {/* Aprovar */}
                       {prof.status === "pendente" && (
                         <button
-                          onClick={() =>
-                            updateProfissional(prof.id, { status: "aprovado" })
-                          }
+                          onClick={() => updateProfissional(prof.id, { status: "aprovado" })}
                           className="p-2 hover:bg-green-500/20 rounded-lg transition-colors"
                           title="Aprovar"
                         >
@@ -415,9 +386,7 @@ export default function ProfissionaisContent() {
                       {/* Rejeitar */}
                       {prof.status === "pendente" && (
                         <button
-                          onClick={() =>
-                            updateProfissional(prof.id, { status: "rejeitado" })
-                          }
+                          onClick={() => updateProfissional(prof.id, { status: "rejeitado" })}
                           className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
                           title="Rejeitar"
                         >
@@ -440,9 +409,7 @@ export default function ProfissionaisContent() {
                         title={prof.destaque ? "Remover destaque" : "Adicionar destaque"}
                       >
                         <FiStar
-                          className={
-                            prof.destaque ? "text-[#C5A059]" : "text-gray-400"
-                          }
+                          className={prof.destaque ? "text-[#C5A059]" : "text-gray-400"}
                           size={16}
                         />
                       </button>
@@ -481,9 +448,7 @@ export default function ProfissionaisContent() {
           </table>
 
           {profissionais.length === 0 && (
-            <div className="p-8 text-center text-gray-400">
-              Nenhum profissional encontrado
-            </div>
+            <div className="p-8 text-center text-gray-400">Nenhum profissional encontrado</div>
           )}
         </div>
       </div>
@@ -493,9 +458,7 @@ export default function ProfissionaisContent() {
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
           <div className="bg-[#0A0A0A] border border-white/10 rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-white">
-                Detalhes do Profissional
-              </h3>
+              <h3 className="text-xl font-semibold text-white">Detalhes do Profissional</h3>
               <button
                 onClick={() => setSelectedProfissional(null)}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
