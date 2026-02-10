@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Trophy, Users } from "lucide-react";
 import { CavaloFamoso } from "@/app/cavalos-famosos/types";
 
@@ -9,7 +10,11 @@ interface CavaloCardProps {
   variant?: "destaque" | "normal";
 }
 
-export function CavaloCard({ cavalo, onClick, variant = "destaque" }: CavaloCardProps) {
+export const CavaloCard = memo(function CavaloCard({
+  cavalo,
+  onClick,
+  variant = "destaque",
+}: CavaloCardProps) {
   if (variant === "destaque") {
     return (
       <button
@@ -103,4 +108,4 @@ export function CavaloCard({ cavalo, onClick, variant = "destaque" }: CavaloCard
       )}
     </button>
   );
-}
+});

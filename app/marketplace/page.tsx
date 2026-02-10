@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Search,
@@ -113,26 +113,26 @@ export default function MarketplacePage() {
     fetchCavalos();
   }, [filters, debouncedSearch]);
 
-  const toggleFavorite = (id: string) => {
+  const toggleFavorite = useCallback((id: string) => {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
-  };
+  }, []);
 
-  function formatPrice(cavalo: Cavalo) {
+  const formatPrice = useCallback(function formatPrice(cavalo: Cavalo) {
     if (cavalo.preco_sob_consulta) return "Sob consulta";
     if (!cavalo.preco) return "A definir";
     return `€${cavalo.preco.toLocaleString("pt-PT")}${cavalo.preco_negociavel ? " (negociável)" : ""}`;
-  }
+  }, []);
 
-  function getSexoLabel(sexo: string) {
+  const getSexoLabel = useCallback(function getSexoLabel(sexo: string) {
     const labels: Record<string, string> = {
       macho: "Garanhão",
       femea: "Égua",
       castrado: "Castrado",
     };
     return labels[sexo] || sexo;
-  }
+  }, []);
 
-  function getNivelLabel(nivel: string) {
+  const getNivelLabel = useCallback(function getNivelLabel(nivel: string) {
     const labels: Record<string, string> = {
       desbastado: "Desbastado",
       iniciado: "Iniciado",
@@ -140,7 +140,7 @@ export default function MarketplacePage() {
       competicao: "Competição",
     };
     return labels[nivel] || nivel;
-  }
+  }, []);
 
   const cavalosDestaque = cavalos.filter((c) => c.destaque);
   const outrosCavalos = cavalos.filter((c) => !c.destaque);
@@ -444,7 +444,7 @@ export default function MarketplacePage() {
   );
 }
 
-function CavaloCard({
+const CavaloCard = memo(function CavaloCard({
   cavalo,
   index,
   onSelect,
@@ -545,7 +545,7 @@ function CavaloCard({
       </button>
     </div>
   );
-}
+});
 
 function CavaloModal({
   cavalo,
