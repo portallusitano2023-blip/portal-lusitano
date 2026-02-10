@@ -19,6 +19,15 @@ export const reviewSchema = z.object({
   recomenda: z.boolean().optional().default(true),
 });
 
+// Reviews de Ferramentas
+export const toolReviewSchema = z.object({
+  ferramenta_slug: z.string().min(1, "Ferramenta é obrigatória"),
+  autor_nome: z.string().min(1, "Nome é obrigatório").max(100),
+  avaliacao: z.number().int().min(1, "Mínimo 1").max(5, "Máximo 5"),
+  comentario: z.string().min(1, "Comentário é obrigatório").max(2000),
+  recomenda: z.boolean().optional().default(true),
+});
+
 // Login
 export const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -45,7 +54,10 @@ export const coudelariaRegistoSchema = z.object({
 });
 
 // Utility: parse with Zod and return structured error
-export function parseWithZod<T>(schema: z.ZodSchema<T>, data: unknown): { success: true; data: T } | { success: false; error: string } {
+export function parseWithZod<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown
+): { success: true; data: T } | { success: false; error: string } {
   const result = schema.safeParse(data);
   if (result.success) {
     return { success: true, data: result.data };

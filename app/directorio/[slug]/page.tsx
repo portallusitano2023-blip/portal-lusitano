@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { analytics } from "@/lib/analytics-events";
 import Image from "next/image";
 import DynamicSEO from "@/components/DynamicSEO";
 import {
@@ -125,9 +127,25 @@ export default function CoudelariaPage() {
         if (res.ok) {
           const data = await res.json();
           setCoudelaria(data.coudelaria);
+
+          // ✅ Track view da coudelaria
+          analytics.viewCoudelaria({
+            id: data.coudelaria.id,
+            nome: data.coudelaria.nome,
+            localizacao: data.coudelaria.localizacao,
+            regiao: data.coudelaria.regiao,
+          });
+        } else if (res.status === 404) {
+          // ✅ Coudelaria não encontrada - retorna 404 adequado (SEO correto)
+          notFound();
+        } else {
+          // ✅ Outro erro (500, etc.)
+          throw new Error(`Erro ${res.status}: ${res.statusText}`);
         }
       } catch (error) {
         console.error("Erro ao carregar coudelaria:", error);
+        // ✅ Se houver erro de rede, mostra mensagem genérica
+        setLoading(false);
       } finally {
         setLoading(false);
       }
@@ -172,6 +190,13 @@ export default function CoudelariaPage() {
       });
 
       if (res.ok) {
+        // ✅ Track submissão de review
+        analytics.submitReview({
+          id: coudelaria.id,
+          nome: coudelaria.nome,
+          rating: reviewForm.avaliacao,
+        });
+
         setShowReviewForm(false);
         setReviewForm({
           autor_nome: "",
@@ -183,10 +208,46 @@ export default function CoudelariaPage() {
           tipo_visita: "visita",
           recomenda: true,
         });
-        alert("Avaliação submetida com sucesso! Será publicada após revisão.");
+        // ✅ Toast de sucesso
+        toast.success("Avaliação submetida com sucesso! Será publicada após revisão.", {
+          duration: 5000,
+          style: {
+            background: "#1a1a1a",
+            color: "#C5A059",
+            border: "1px solid #C5A059",
+          },
+        });
+
+        // ✅ Recarregar reviews
+        const reviewsRes = await fetch(`/api/reviews?coudelaria_id=${coudelaria.id}`);
+        if (reviewsRes.ok) {
+          const data = await reviewsRes.json();
+          setReviews(data.reviews || []);
+          setReviewStats(data.stats || { total: 0, media: 0 });
+        }
+      } else {
+        // ✅ Erro do servidor (validação, etc.)
+        const errorData = await res.json().catch(() => ({ message: "Erro desconhecido" }));
+        toast.error(errorData.message || "Erro ao submeter avaliação. Tente novamente.", {
+          duration: 5000,
+          style: {
+            background: "#1a1a1a",
+            color: "#ff4444",
+            border: "1px solid #ff4444",
+          },
+        });
       }
     } catch (error) {
       console.error("Erro ao submeter review:", error);
+      // ✅ Erro de rede
+      toast.error("Erro de conexão. Verifique sua internet e tente novamente.", {
+        duration: 5000,
+        style: {
+          background: "#1a1a1a",
+          color: "#ff4444",
+          border: "1px solid #ff4444",
+        },
+      });
     } finally {
       setSubmittingReview(false);
     }

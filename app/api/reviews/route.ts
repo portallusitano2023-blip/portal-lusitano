@@ -1,33 +1,49 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { reviewSchema, parseWithZod } from "@/lib/schemas";
+import { reviewSchema, toolReviewSchema, parseWithZod } from "@/lib/schemas";
 
-// GET - Listar reviews de uma coudelaria
+const VALID_TOOL_SLUGS = [
+  "calculadora-valor",
+  "comparador-cavalos",
+  "verificador-compatibilidade",
+  "analise-perfil",
+];
+
+// GET - Listar reviews de uma coudelaria ou ferramenta
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const coudelariaId = searchParams.get("coudelaria_id");
+    const ferramentaSlug = searchParams.get("ferramenta_slug");
 
-    if (!coudelariaId) {
+    if (!coudelariaId && !ferramentaSlug) {
       return NextResponse.json(
-        { error: "ID da coudelaria é obrigatório" },
+        { error: "ID da coudelaria ou slug da ferramenta é obrigatório" },
         { status: 400 }
       );
     }
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("reviews")
       .select("*")
-      .eq("coudelaria_id", coudelariaId)
       .eq("status", "approved")
       .order("created_at", { ascending: false });
 
+    if (ferramentaSlug) {
+      if (ferramentaSlug === "all") {
+        query = query.not("ferramenta_slug", "is", null);
+      } else {
+        query = query.eq("ferramenta_slug", ferramentaSlug);
+      }
+    } else {
+      query = query.eq("coudelaria_id", coudelariaId!);
+    }
+
+    const { data, error } = await query;
+
     if (error) {
       console.error("Erro ao buscar reviews:", error);
-      return NextResponse.json(
-        { error: "Erro ao buscar reviews" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Erro ao buscar reviews" }, { status: 500 });
     }
 
     // Calcular média
@@ -44,14 +60,11 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
 
-// POST - Criar nova review
+// POST - Criar nova review (coudelaria ou ferramenta)
 export async function POST(request: NextRequest) {
   try {
     // Rate limit: 5 reviews per minute per IP
@@ -67,30 +80,53 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const parsed = parseWithZod(reviewSchema, body);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: parsed.error },
-        { status: 400 }
-      );
-    }
-    const {
-      coudelaria_id,
-      autor_nome,
-      autor_email,
-      autor_localizacao,
-      avaliacao,
-      titulo,
-      comentario,
-      data_visita,
-      tipo_visita,
-      recomenda,
-    } = parsed.data;
 
-    // Inserir review
-    const { data, error } = await supabase
-      .from("reviews")
-      .insert({
+    // Detect review type based on presence of ferramenta_slug
+    const isToolReview = "ferramenta_slug" in body && body.ferramenta_slug;
+
+    if (isToolReview) {
+      // Validate tool slug
+      if (!VALID_TOOL_SLUGS.includes(body.ferramenta_slug)) {
+        return NextResponse.json({ error: "Ferramenta inválida" }, { status: 400 });
+      }
+
+      const parsed = parseWithZod(toolReviewSchema, body);
+      if (!parsed.success) {
+        return NextResponse.json({ error: parsed.error }, { status: 400 });
+      }
+
+      const { ferramenta_slug, autor_nome, avaliacao, comentario, recomenda } = parsed.data;
+
+      const { data, error } = await supabase
+        .from("reviews")
+        .insert({
+          ferramenta_slug,
+          autor_nome,
+          avaliacao,
+          comentario,
+          recomenda: recomenda ?? true,
+          status: "approved",
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Erro ao criar review de ferramenta:", error);
+        return NextResponse.json({ error: "Erro ao submeter avaliação" }, { status: 500 });
+      }
+
+      return NextResponse.json({
+        success: true,
+        review: data,
+        message: "Avaliação submetida para aprovação",
+      });
+    } else {
+      // Coudelaria review (original logic)
+      const parsed = parseWithZod(reviewSchema, body);
+      if (!parsed.success) {
+        return NextResponse.json({ error: parsed.error }, { status: 400 });
+      }
+      const {
         coudelaria_id,
         autor_nome,
         autor_email,
@@ -100,30 +136,40 @@ export async function POST(request: NextRequest) {
         comentario,
         data_visita,
         tipo_visita,
-        recomenda: recomenda ?? true,
-        status: "pending", // Reviews ficam pendentes para moderação
-      })
-      .select()
-      .single();
+        recomenda,
+      } = parsed.data;
 
-    if (error) {
-      console.error("Erro ao criar review:", error);
-      return NextResponse.json(
-        { error: "Erro ao submeter avaliação" },
-        { status: 500 }
-      );
+      const { data, error } = await supabase
+        .from("reviews")
+        .insert({
+          coudelaria_id,
+          autor_nome,
+          autor_email,
+          autor_localizacao,
+          avaliacao,
+          titulo,
+          comentario,
+          data_visita,
+          tipo_visita,
+          recomenda: recomenda ?? true,
+          status: "pending",
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Erro ao criar review:", error);
+        return NextResponse.json({ error: "Erro ao submeter avaliação" }, { status: 500 });
+      }
+
+      return NextResponse.json({
+        success: true,
+        review: data,
+        message: "Avaliação submetida para aprovação",
+      });
     }
-
-    return NextResponse.json({
-      success: true,
-      review: data,
-      message: "Avaliação submetida para aprovação",
-    });
   } catch (error) {
     console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

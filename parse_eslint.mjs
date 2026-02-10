@@ -7,10 +7,10 @@ for (const line of input.split('\n')) {
   if (trimmed.startsWith('C:') && trimmed.length > 3 && !trimmed.startsWith('  ')) {
     currentFile = trimmed;
   } else {
-    const match = trimmed.match(/^(\d+:\d+)\s+error\s+(.+?)(?:\s{2,}(\S+))?$/);
+    const match = trimmed.match(/^(\d+:\d+)\s+warning\s+(.+?)\s{2,}(@\S+)/);
     if (match) {
       const short = currentFile.split('portal-lusitano').pop() || currentFile;
-      console.log(short.replace(/^\\/,'') + ':' + match[1] + ' [' + (match[3]||'') + '] ' + match[2].substring(0,60));
+      console.log(short.replace(/^\\/,'') + ':' + match[1] + ' | ' + match[2].trim());
     }
   }
 }

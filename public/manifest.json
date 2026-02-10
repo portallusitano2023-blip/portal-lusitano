@@ -60,7 +60,36 @@
   "categories": ["shopping", "lifestyle"],
   "lang": "pt-PT",
   "dir": "ltr",
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "/screenshots/home-desktop.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Portal Lusitano - Página Inicial"
+    },
+    {
+      "src": "/screenshots/marketplace-desktop.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Marketplace - Cavalos Lusitanos à Venda"
+    },
+    {
+      "src": "/screenshots/loja-mobile.webp",
+      "sizes": "750x1334",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Loja - Equipamento Equestre"
+    },
+    {
+      "src": "/screenshots/jornal-mobile.webp",
+      "sizes": "750x1334",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Jornal - Artigos sobre Cavalos Lusitanos"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Loja",

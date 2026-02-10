@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   Calculator,
@@ -18,8 +18,14 @@ import {
   History,
   Share2,
   Zap,
+  Star,
+  ThumbsUp,
+  User,
+  MessageSquare,
 } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
+import ToolReviewForm from "@/components/ToolReviewForm";
+import { Review, ReviewStats } from "@/types/review";
 
 // ============================================
 // DATA
@@ -142,6 +148,15 @@ const faqItems: FAQItem[] = [
   },
 ];
 
+const toolSlugToName: Record<string, string> = {
+  "calculadora-valor": "Calculadora de Valor",
+  "comparador-cavalos": "Comparador de Cavalos",
+  "verificador-compatibilidade": "Verificador de Compatibilidade",
+  "analise-perfil": "Análise de Perfil",
+};
+
+const toolSlugs = Object.keys(toolSlugToName);
+
 // ============================================
 // COMPONENTS
 // ============================================
@@ -248,6 +263,215 @@ function PricingFeature({ text, included }: { text: string; included: boolean })
       )}
       <span className={included ? "text-zinc-300 text-sm" : "text-zinc-600 text-sm"}>{text}</span>
     </li>
+  );
+}
+
+function ToolReviewsSection() {
+  const [filterSlug, setFilterSlug] = useState<string>("all");
+  const [formSlug, setFormSlug] = useState<string>(toolSlugs[0]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [stats, setStats] = useState<ReviewStats>({ total: 0, media: 0 });
+  const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const fetchReviews = useCallback(async () => {
+    setLoading(true);
+    try {
+      const slug = filterSlug || "all";
+      const res = await fetch(`/api/reviews?ferramenta_slug=${slug}`);
+      if (res.ok) {
+        const data = await res.json();
+        setReviews(data.reviews || []);
+        setStats(data.stats || { total: 0, media: 0 });
+      }
+    } catch (err) {
+      console.error("Erro ao carregar reviews:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [filterSlug]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews, refreshKey]);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("pt-PT", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  return (
+    <section className="px-6 pb-32" id="avaliacoes">
+      <div className="max-w-4xl mx-auto">
+        {/* Section header */}
+        <AnimateOnScroll className="text-center mb-12">
+          <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
+            Avaliações dos Utilizadores
+          </span>
+          <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
+            O que dizem os nossos utilizadores
+          </h2>
+          <p className="text-zinc-400 max-w-lg mx-auto">
+            Avaliações reais de quem já utilizou as nossas ferramentas
+          </p>
+        </AnimateOnScroll>
+
+        {/* Tool filter */}
+        <div className="flex flex-wrap gap-2 justify-center mb-10">
+          <button
+            onClick={() => setFilterSlug("all")}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+              filterSlug === "all"
+                ? "bg-[#C5A059] text-black"
+                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+            }`}
+          >
+            Todas
+          </button>
+          {toolSlugs.map((slug) => (
+            <button
+              key={slug}
+              onClick={() => setFilterSlug(slug)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                filterSlug === slug
+                  ? "bg-[#C5A059] text-black"
+                  : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+              }`}
+            >
+              {toolSlugToName[slug]}
+            </button>
+          ))}
+        </div>
+
+        {/* Stats summary */}
+        {stats.total > 0 && (
+          <div className="flex items-center justify-center gap-6 mb-10 p-4 bg-[#C5A059]/5 border border-[#C5A059]/10 rounded-xl">
+            <div className="text-center">
+              <p className="text-3xl font-serif text-[#C5A059]">{stats.media}</p>
+              <div className="flex gap-0.5 justify-center mt-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    size={14}
+                    className={star <= Math.round(stats.media) ? "text-[#C5A059]" : "text-zinc-600"}
+                    fill={star <= Math.round(stats.media) ? "currentColor" : "none"}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="border-l border-[#C5A059]/20 pl-6">
+              <p className="text-sm text-zinc-400">
+                Baseado em <span className="font-semibold text-white">{stats.total}</span>{" "}
+                {stats.total === 1 ? "avaliação" : "avaliações"}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Reviews list */}
+        {loading ? (
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="animate-pulse bg-zinc-900/50 border border-white/5 rounded-xl p-6"
+              >
+                <div className="h-4 bg-zinc-800 rounded w-1/4 mb-3" />
+                <div className="h-3 bg-zinc-800 rounded w-1/3 mb-4" />
+                <div className="h-16 bg-zinc-800 rounded" />
+              </div>
+            ))}
+          </div>
+        ) : reviews.length === 0 ? (
+          <div className="text-center py-12 bg-zinc-900/50 border border-white/5 rounded-xl mb-10">
+            <MessageSquare className="mx-auto text-zinc-600 mb-4" size={40} />
+            <p className="text-zinc-500">Ainda sem avaliações aprovadas</p>
+            <p className="text-zinc-600 text-sm mt-1">Seja o primeiro a avaliar!</p>
+          </div>
+        ) : (
+          <div className="space-y-4 mb-10">
+            {reviews.map((review) => (
+              <div
+                key={review.id}
+                className="bg-zinc-900/50 border border-white/5 rounded-xl p-6 hover:border-white/10 transition"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <div className="flex items-center gap-3 mb-1">
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            size={16}
+                            className={
+                              star <= review.avaliacao ? "text-[#C5A059]" : "text-zinc-600"
+                            }
+                            fill={star <= review.avaliacao ? "currentColor" : "none"}
+                          />
+                        ))}
+                      </div>
+                      {review.ferramenta_slug && filterSlug === "all" && (
+                        <span className="text-xs px-2 py-0.5 bg-zinc-800 text-zinc-400 rounded-full">
+                          {toolSlugToName[review.ferramenta_slug] || review.ferramenta_slug}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-zinc-500">
+                      <User size={14} />
+                      <span>{review.autor_nome}</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-600">{formatDate(review.created_at)}</span>
+                </div>
+
+                <p className="text-zinc-300 text-sm leading-relaxed mb-3">{review.comentario}</p>
+
+                {review.recomenda && (
+                  <span className="inline-flex items-center gap-1 text-xs text-green-500">
+                    <ThumbsUp size={12} />
+                    Recomenda
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Review form */}
+        <div className="bg-zinc-900/80 border border-white/10 rounded-2xl p-8">
+          <h3 className="text-xl font-serif text-white mb-2">Deixe a sua avaliação</h3>
+          <p className="text-zinc-500 text-sm mb-6">
+            Partilhe a sua experiência com as nossas ferramentas
+          </p>
+
+          {/* Tool selector dropdown */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-zinc-300 mb-2">Ferramenta</label>
+            <select
+              value={formSlug}
+              onChange={(e) => setFormSlug(e.target.value)}
+              className="w-full px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition"
+            >
+              {toolSlugs.map((slug) => (
+                <option key={slug} value={slug}>
+                  {toolSlugToName[slug]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <ToolReviewForm
+            key={formSlug}
+            ferramentaSlug={formSlug}
+            ferramentaNome={toolSlugToName[formSlug]}
+            onSuccess={() => setRefreshKey((k) => k + 1)}
+          />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -545,6 +769,9 @@ export default function FerramentasPage() {
           </div>
         </div>
       </section>
+
+      {/* ===== REVIEWS SECTION ===== */}
+      <ToolReviewsSection />
     </main>
   );
 }

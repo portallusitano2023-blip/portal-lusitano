@@ -2,6 +2,7 @@
 export interface Review {
   id: string;
   coudelaria_id?: string;
+  ferramenta_slug?: string;
   autor_nome: string;
   autor_email?: string;
   autor_localizacao?: string;

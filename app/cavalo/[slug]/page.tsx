@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import DynamicSEO from "@/components/DynamicSEO";
+import { analytics } from "@/lib/analytics-events";
 
 interface CavaloSanity {
   nome: string;
@@ -29,6 +30,8 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
   const [relacionados, setRelacionados] = useState<CavaloRelacionado[]>([]);
   const [fotoAtiva, setFotoAtiva] = useState<string | null>(null);
   const [slug, setSlug] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     params.then((p) => setSlug(p.slug));
@@ -38,41 +41,163 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
     if (!slug) return;
 
     const fetchData = async () => {
-      const result = await client.fetch(
-        `
-        {
-          "atual": *[_type == "cavalo" && slug.current == $slug][0]{
-            nome, idade, ferro, genealogia, descricao, preco,
-            "imageUrl": fotografiaPrincipal.asset->url,
-            "galeriaUrls": galeria[].asset->url
-          },
-          "relacionados": *[_type == "cavalo" && slug.current != $slug][0...3]{
-            nome,
-            "slug": slug.current,
-            "imageUrl": fotografiaPrincipal.asset->url,
-            idade
-          }
-        }
-      `,
-        { slug }
-      );
+      try {
+        setLoading(true);
+        setError(null);
 
-      if (result.atual) {
-        setData(result.atual);
-        setFotoAtiva(result.atual.imageUrl);
-        setRelacionados(result.relacionados);
+        // ✅ Timeout de 10 segundos
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        const result = await client.fetch(
+          `
+          {
+            "atual": *[_type == "cavalo" && slug.current == $slug][0]{
+              nome, idade, ferro, genealogia, descricao, preco,
+              "imageUrl": fotografiaPrincipal.asset->url,
+              "galeriaUrls": galeria[].asset->url
+            },
+            "relacionados": *[_type == "cavalo" && slug.current != $slug][0...3]{
+              nome,
+              "slug": slug.current,
+              "imageUrl": fotografiaPrincipal.asset->url,
+              idade
+            }
+          }
+        `,
+          { slug },
+          { signal: controller.signal }
+        );
+
+        clearTimeout(timeoutId);
+
+        if (result.atual) {
+          setData(result.atual);
+          setFotoAtiva(result.atual.imageUrl);
+          setRelacionados(result.relacionados || []);
+
+          // ✅ Track view do cavalo
+          analytics.viewCavalo({
+            id: slug,
+            nome: result.atual.nome,
+            preco: result.atual.preco,
+            coudelaria: result.atual.ferro,
+            idade: result.atual.idade,
+          });
+        } else {
+          // ✅ Cavalo não encontrado (404)
+          setError("not_found");
+        }
+      } catch (err) {
+        console.error("Erro ao carregar cavalo:", err);
+
+        // ✅ Tratamento de erro específico
+        if (err instanceof Error) {
+          if (err.name === "AbortError") {
+            setError("timeout");
+          } else {
+            setError("network");
+          }
+        } else {
+          setError("unknown");
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [slug]);
 
-  if (!data)
+  // ✅ Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#C5A059] mb-4"></div>
+          <p className="italic text-zinc-400">Carregando exemplar de elite...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ Error 404 - Cavalo não encontrado
+  if (error === "not_found") {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white px-6">
+        <div className="text-center max-w-md">
+          <h1 className="text-6xl font-serif mb-4 text-[#C5A059]">404</h1>
+          <p className="text-xl mb-6 text-zinc-400">Exemplar não encontrado</p>
+          <p className="text-sm text-zinc-500 mb-8">
+            O cavalo que procura pode ter sido vendido ou o link está incorreto.
+          </p>
+          <Link
+            href="/marketplace"
+            className="inline-block px-8 py-3 bg-[#C5A059] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
+          >
+            Ver Marketplace
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ Error timeout
+  if (error === "timeout") {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white px-6">
+        <div className="text-center max-w-md">
+          <h1 className="text-4xl font-serif mb-4 text-[#C5A059]">Tempo esgotado</h1>
+          <p className="text-sm text-zinc-400 mb-8">
+            A conexão demorou muito tempo. Verifique sua internet e tente novamente.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-block px-8 py-3 bg-[#C5A059] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
+          >
+            Tentar Novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ Error network/unknown
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white px-6">
+        <div className="text-center max-w-md">
+          <h1 className="text-4xl font-serif mb-4 text-[#C5A059]">Erro ao carregar</h1>
+          <p className="text-sm text-zinc-400 mb-8">
+            Ocorreu um erro ao carregar o cavalo. Por favor, tente novamente.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-8 py-3 bg-[#C5A059] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
+            >
+              Tentar Novamente
+            </button>
+            <Link
+              href="/marketplace"
+              className="px-8 py-3 bg-zinc-900 border border-[#C5A059]/30 text-[#C5A059] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#C5A059] hover:text-black transition-all"
+            >
+              Voltar
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ Safety check (nunca deve acontecer, mas por precaução)
+  if (!data) {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white italic">
         Carregando exemplar de elite...
       </div>
     );
+  }
 
   const numeroTelemovel = "351939513151";
   const mensagem = `Ola! Estou interessado no cavalo *${data.nome}* que vi no Portal Lusitano.`;
@@ -145,12 +270,30 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   href={linkWhatsApp}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    // ✅ Track contacto WhatsApp
+                    analytics.contactCavalo({
+                      id: slug!,
+                      nome: data.nome,
+                      preco: data.preco,
+                      method: "whatsapp",
+                    });
+                  }}
                   className="w-full py-4 bg-[#25D366] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#20bd5a] transition-all text-center"
                 >
                   Contactar por WhatsApp
                 </a>
                 <a
                   href="mailto:portal.lusitano2023@gmail.com"
+                  onClick={() => {
+                    // ✅ Track contacto Email
+                    analytics.contactCavalo({
+                      id: slug!,
+                      nome: data.nome,
+                      preco: data.preco,
+                      method: "email",
+                    });
+                  }}
                   className="w-full py-4 bg-zinc-900 border border-[#C5A059]/30 text-[#C5A059] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#C5A059] hover:text-black transition-all text-center"
                 >
                   Enviar Email

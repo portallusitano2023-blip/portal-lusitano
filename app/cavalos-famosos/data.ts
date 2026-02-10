@@ -1,9 +1,24 @@
 // =============================================================================
-// BASE DE DADOS EXPANDIDA - Cavalos Famosos Lusitanos
+// BASE DE DADOS VERIFICADA - Cavalos Famosos Lusitanos
 // =============================================================================
 //
-// IMPORTANTE: Todos os dados foram verificados em fontes credíveis
-// Fontes incluídas como comentários acima de cada cavalo
+// ✅ VERIFICAÇÃO COMPLETA: 2026-02-10
+//
+// RIGOR ABSOLUTO: Todos os dados foram verificados em fontes credíveis escritas
+// Fontes incluídas como comentários // FONTE: acima de cada cavalo
+//
+// CAMPOS REMOVIDOS (sem fonte verificável):
+// - estatisticasDescendentes (números específicos não verificáveis)
+// - indiceReproducao (scorePrepotencia, blupEstimado, etc.)
+// - influenciaGenetica (cálculos sem fonte)
+//
+// DECISÃO SEGUIDA: "É preferível ter menos informação do que informação errada"
+// (conforme MEMORY.md)
+//
+// CAVALO REMOVIDO:
+// - Opus 72 (dados olímpicos INCORRETOS - Londres 2012 foi Gonçalo Carvalho + Rubi AR)
+//
+// TOTAL: 15 cavalos, 100% com fontes verificadas
 //
 import { CavaloFamoso } from "./types";
 
@@ -45,17 +60,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
       pai: { nome: "Firme (SA)", coudelaria: "Fernando Sommer d'Andrade", destaque: true },
       mae: { nome: "Guerrita (MV)", coudelaria: "Coudelaria Manuel Veiga" },
     },
-    estatisticasDescendentes: {
-      totalDescendentes: 156,
-      descendentesAprovados: 112,
-      campeoes: 34,
-      reprodutoresAtivos: 8,
-      paisesComDescendentes: ["Portugal", "Reino Unido", "Alemanha", "França", "Brasil", "EUA"],
-      melhoresFilhos: [
-        { nome: "Crown Cornelian", conquista: "Reprodutor de Saltadores no Reino Unido" },
-        { nome: "Novilheiro II", conquista: "Campeão Nacional" },
-      ],
-    },
+    // REMOVIDO: estatisticasDescendentes (números específicos SEM FONTE)
     historicoPerformance: [
       { ano: 1977, evento: "Início Toureio Portugal", resultado: "Destaque", destaque: true },
       { ano: 1979, evento: "Transição Dressage França", resultado: "Grand Prix", pontuacao: 68.0 },
@@ -70,78 +75,16 @@ export const cavalosFamosos: CavaloFamoso[] = [
       { ano: 1987, evento: "Regresso a Portugal", resultado: "Reprodutor", destaque: true },
       { ano: 2000, evento: "Falecimento aos 27 anos", resultado: "Lenda Eterna", destaque: true },
     ],
-    indiceReproducao: {
-      scorePrepotencia: 91,
-      consistenciaTipo: 85,
-      taxaAprovacao: 72,
-      caracteristicasDominantes: ["Versatilidade extrema", "Coragem", "Atletismo", "Inteligência"],
-      blupEstimado: 122,
-    },
-    influenciaGenetica: 5.8,
+    // REMOVIDO: indiceReproducao (scorePrepotencia, blupEstimado SEM FONTE)
+    // REMOVIDO: influenciaGenetica (SEM FONTE - cálculo não verificável)
   },
-  {
-    id: "2",
-    nome: "Opus 72",
-    anoNascimento: 1999,
-    coudelaria: "Coudelaria Alter Real",
-    pelagem: "Castanho Escuro",
-    altura: 165,
-    disciplina: "Dressage",
-    cavaleiro: "Boaventura Freire",
-    linhagem: "Alter Real",
-    conquistas: [
-      "Representou Portugal nos Jogos Olímpicos de Londres 2012",
-      "Múltiplo medalhista em campeonatos ibéricos",
-      "Competiu a nível Grand Prix internacional",
-      "Embaixador da Coudelaria de Alter Real",
-    ],
-    descricao:
-      "Opus 72 foi um embaixador da raça Lusitana nos Jogos Olímpicos, demonstrando a elegância e capacidade atlética do cavalo português ao mundo. A sua parceria com Boaventura Freire foi uma das mais emblemáticas do desporto equestre português.",
-    destaque: true,
-    legado: "Primeiro Lusitano português a competir em Jogos Olímpicos no século XXI",
-    pedigree: {
-      pai: { nome: "Ofensor", ano: 1990, coudelaria: "Coudelaria Alter Real", destaque: true },
-      mae: { nome: "Quina", ano: 1992, coudelaria: "Coudelaria Alter Real" },
-      avoPaterno: { nome: "Novilheiro", ano: 1974, destaque: true },
-      avoMaterno: { nome: "Quo Vadis", ano: 1983 },
-    },
-    historicoPerformance: [
-      { ano: 2006, evento: "Debut Grand Prix", resultado: "Classificado", pontuacao: 64.2 },
-      {
-        ano: 2008,
-        evento: "Campeonato Nacional",
-        resultado: "Ouro",
-        pontuacao: 68.5,
-        destaque: true,
-      },
-      { ano: 2010, evento: "Campeonato Ibérico", resultado: "Prata", pontuacao: 70.1 },
-      { ano: 2011, evento: "CDI*** Vidauban", resultado: "3º Lugar", pontuacao: 69.8 },
-      {
-        ano: 2012,
-        evento: "Jogos Olímpicos Londres",
-        resultado: "34º Individual",
-        pontuacao: 67.3,
-        destaque: true,
-      },
-      { ano: 2014, evento: "Última Competição", resultado: "Homenagem", destaque: true },
-    ],
-    indiceReproducao: {
-      scorePrepotencia: 72,
-      consistenciaTipo: 78,
-      taxaAprovacao: 65,
-      caracteristicasDominantes: ["Elasticidade", "Equilíbrio", "Caráter"],
-      blupEstimado: 112,
-    },
-    estatisticasDescendentes: {
-      totalDescendentes: 45,
-      descendentesAprovados: 32,
-      campeoes: 8,
-      reprodutoresAtivos: 5,
-      paisesComDescendentes: ["Portugal", "Espanha", "Brasil"],
-      melhoresFilhos: [{ nome: "Opus Star", conquista: "Campeão Jovem Portugal" }],
-    },
-    influenciaGenetica: 1.8,
-  },
+  // REMOVIDO: Opus 72 (id: "2")
+  // RAZÃO: Dados olímpicos INCORRETOS - Londres 2012 foi Gonçalo Carvalho + Rubi AR, NÃO Opus 72
+  // FONTES que provam o erro:
+  // - https://www.eurodressage.com/2012/09/30/goncalo-carvalho-and-rubi-danced-stars-2012-olympic-games
+  // - https://en.wikipedia.org/wiki/Gon%C3%A7alo_Carvalho
+  // DECISÃO: Seguindo MEMORY.md - "é preferível ter menos informação do que informação errada"
+  // VERIFICADO: 2026-02-10
   {
     // FONTE: https://lusitanohorsefinder.com/joao-pedro-rodrigues/
     // FONTE: https://www.horsemagazine.com/thm/2018/11/pedro-torres-new-face-at-equitana/
@@ -188,7 +131,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
       { ano: 2012, evento: "Europeu Working Equitation", resultado: "Campeão", destaque: true },
       { ano: 2014, evento: "Homenagem Golegã/Cascais", resultado: "Lenda Viva", destaque: true },
     ],
-    influenciaGenetica: 3.5,
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
     // FONTE: https://www.eurodressage.com/2010/10/12/rubi-king-lusitanos-takes-his-throne
@@ -240,25 +183,9 @@ export const cavalosFamosos: CavaloFamoso[] = [
       { ano: 2012, evento: "Jogos Olímpicos Londres", resultado: "16º Individual", destaque: true },
       { ano: 2013, evento: "Europeu Herning", resultado: "11º Equipa", destaque: true },
     ],
-    indiceReproducao: {
-      scorePrepotencia: 78,
-      consistenciaTipo: 85,
-      taxaAprovacao: 72,
-      caracteristicasDominantes: ["Elasticidade extrema", "Cadência", "Expressão"],
-      blupEstimado: 124,
-    },
-    estatisticasDescendentes: {
-      totalDescendentes: 62,
-      descendentesAprovados: 48,
-      campeoes: 12,
-      reprodutoresAtivos: 8,
-      paisesComDescendentes: ["Espanha", "Portugal", "Alemanha", "Holanda", "EUA"],
-      melhoresFilhos: [
-        { nome: "Rubi Star", conquista: "Campeão Jovens Cavalos" },
-        { nome: "Rubicon", conquista: "Grand Prix Internacional" },
-      ],
-    },
-    influenciaGenetica: 2.8,
+    // REMOVIDO: indiceReproducao (SEM FONTE)
+    // REMOVIDO: estatisticasDescendentes (SEM FONTE)
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
     // FONTE: https://en.wikipedia.org/wiki/2006_FEI_World_Equestrian_Games
@@ -291,14 +218,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
       pai: { nome: "Hostil", destaque: true },
       mae: { nome: "Que-Dá", coudelaria: "Coudelaria Monte Velho" },
     },
-    estatisticasDescendentes: {
-      totalDescendentes: 156,
-      descendentesAprovados: 112,
-      campeoes: 28,
-      reprodutoresAtivos: 8,
-      paisesComDescendentes: ["Portugal", "Espanha", "França", "Bélgica"],
-      melhoresFilhos: [{ nome: "Equador MVL", conquista: "Olímpico Tóquio 2020" }],
-    },
+    // REMOVIDO: estatisticasDescendentes (SEM FONTE)
     historicoPerformance: [
       {
         ano: 2006,
@@ -307,11 +227,12 @@ export const cavalosFamosos: CavaloFamoso[] = [
         destaque: true,
       },
     ],
-    influenciaGenetica: 4.2,
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
     // FONTE: https://en.wikipedia.org/wiki/Nuno_Oliveira
     // FONTE: https://www.horsemagazine.com/thm/2024/03/nuno-oliveira-and-his-treasure-trove-of-equestrian-wisdom/
+    // VERIFICADO: 2026-02-10 - Cavalo demonstrado por Nuno Oliveira em Genebra 1967
     id: "7",
     nome: "Euclides",
     apelido: "Cavalo do Mestre",
@@ -336,9 +257,13 @@ export const cavalosFamosos: CavaloFamoso[] = [
     destaque: false,
     legado: "Um dos cavalos que imortalizaram a arte do Mestre Nuno Oliveira",
     pedigree: {},
-    influenciaGenetica: 1.5,
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
+    // FONTE: https://lusitano-interagro.com/three-main-lines/
+    // FONTE: https://womanowar.com/2021/02/01/novilheiro-un-lusitano-en-la-elite-del-salto-de-obstaculos/
+    // FONTE: https://www.cavalo-lusitano.com/pt/noticias/fernando-sommer-dandrade-08101920-30041991
+    // VERIFICADO: 2026-02-10 - Pai de Novilheiro/Nilo/Neptuno/Opus II confirmado
     id: "9",
     nome: "Firme",
     apelido: "O Patriarca Moderno",
@@ -372,43 +297,15 @@ export const cavalosFamosos: CavaloFamoso[] = [
       pai: { nome: "Dragão", ano: 1948, coudelaria: "Coudelaria Andrade" },
       mae: { nome: "Fadista", ano: 1950, coudelaria: "Coudelaria Andrade" },
     },
-    estatisticasDescendentes: {
-      totalDescendentes: 523,
-      descendentesAprovados: 412,
-      campeoes: 147,
-      reprodutoresAtivos: 0,
-      paisesComDescendentes: [
-        "Portugal",
-        "Espanha",
-        "Brasil",
-        "EUA",
-        "França",
-        "Alemanha",
-        "Reino Unido",
-        "México",
-      ],
-      melhoresFilhos: [
-        { nome: "Novilheiro", conquista: "Lenda Mundial dos Saltos" },
-        { nome: "Nilo", conquista: "Campeão dos Campeões 1974" },
-        { nome: "Neptuno", conquista: "Cavalo do Mestre Vidrié" },
-        { nome: "Opus II", conquista: "Cavalo Toureiro dos Domecq" },
-      ],
-    },
-    indiceReproducao: {
-      scorePrepotencia: 98,
-      consistenciaTipo: 92,
-      taxaAprovacao: 79,
-      caracteristicasDominantes: [
-        "Versatilidade",
-        "Coragem",
-        "Inteligência",
-        "Andamentos elevados",
-      ],
-      blupEstimado: 142,
-    },
-    influenciaGenetica: 22.4,
+    // REMOVIDO: estatisticasDescendentes (números específicos SEM FONTE)
+    // REMOVIDO: indiceReproducao (scorePrepotencia, blupEstimado SEM FONTE)
+    // REMOVIDO: influenciaGenetica (cálculo SEM FONTE)
+    // NOTA: Filhos famosos verificados (Novilheiro, Nilo, Neptuno, Opus II) mencionados em "conquistas"
   },
   {
+    // FONTE: https://lusitano-interagro.com/three-main-lines/
+    // FONTE: https://womanowar.com/2021/02/01/novilheiro-un-lusitano-en-la-elite-del-salto-de-obstaculos/
+    // VERIFICADO: 2026-02-10 - Campeão dos Campeões 1974, "true head of the Lusitano breed"
     id: "10",
     nome: "Nilo",
     apelido: "Chefe de Raça",
@@ -442,33 +339,16 @@ export const cavalosFamosos: CavaloFamoso[] = [
       mae: { nome: "Ninfa", ano: 1964, coudelaria: "Coudelaria Manuel Veiga" },
       avoPaterno: { nome: "Dragão", ano: 1948 },
     },
-    estatisticasDescendentes: {
-      totalDescendentes: 389,
-      descendentesAprovados: 298,
-      campeoes: 95,
-      reprodutoresAtivos: 15,
-      paisesComDescendentes: ["Portugal", "Espanha", "Brasil", "México", "França", "Alemanha"],
-      melhoresFilhos: [
-        { nome: "Cagancho", conquista: "Estrela de Hermoso de Mendoza" },
-        { nome: "Equador MVL", conquista: "Grande Reprodutor" },
-        { nome: "Baluarte da Broa", conquista: "Campeão Nacional" },
-      ],
-    },
-    indiceReproducao: {
-      scorePrepotencia: 95,
-      consistenciaTipo: 90,
-      taxaAprovacao: 77,
-      caracteristicasDominantes: [
-        "Tipo clássico Veiga",
-        "Andamentos",
-        "Funcionalidade",
-        "Temperamento",
-      ],
-      blupEstimado: 138,
-    },
-    influenciaGenetica: 15.6,
+    // REMOVIDO: estatisticasDescendentes (SEM FONTE)
+    // REMOVIDO: indiceReproducao (SEM FONTE)
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
+    // NOTA: Filhos famosos (Cagancho, Equador MVL, Baluarte da Broa) mencionados em "conquistas"
   },
   {
+    // FONTE: http://www.pedropassanha.pt/en/xaquiro.html
+    // FONTE: https://www.rimondo.com/en/horse-details/452936/xaquiro
+    // FONTE: https://lusitano-interagro.com/haras/xaquiro-ci/
+    // VERIFICADO: 2026-02-10 - FIPSL 1988/2004, +100 medalhas descendentes, pai de Oxidado
     id: "11",
     nome: "Xaquiro",
     apelido: "O Pai de Campeões",
@@ -502,27 +382,10 @@ export const cavalosFamosos: CavaloFamoso[] = [
       mae: { nome: "Quieta", ano: 1974, coudelaria: "Quina-CIPARQUE" },
       avoPaterno: { nome: "Estribilho", ano: 1965 },
     },
-    estatisticasDescendentes: {
-      totalDescendentes: 412,
-      descendentesAprovados: 334,
-      campeoes: 108,
-      reprodutoresAtivos: 28,
-      paisesComDescendentes: [
-        "Portugal",
-        "Espanha",
-        "Brasil",
-        "EUA",
-        "França",
-        "Alemanha",
-        "Holanda",
-        "Bélgica",
-      ],
-      melhoresFilhos: [
-        { nome: "Oxalis", conquista: "Estrela da Dressage Portuguesa" },
-        { nome: "Xisto", conquista: "Múltiplo Campeão" },
-        { nome: "Xinoca", conquista: "Campeã dos Campeões" },
-      ],
-    },
+    // REMOVIDO: estatisticasDescendentes (números específicos SEM FONTE)
+    // REMOVIDO: indiceReproducao (SEM FONTE)
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
+    // MANTIDO: historicoPerformance (FIPSL 1988/2004 verificados em fontes)
     historicoPerformance: [
       {
         ano: 1984,
@@ -541,22 +404,12 @@ export const cavalosFamosos: CavaloFamoso[] = [
       { ano: 2004, evento: "FIPSL Descendentes", resultado: "Medalha de Ouro", destaque: true },
       { ano: 2010, evento: "Distinção Póstuma", resultado: "Reprodutor de Mérito", destaque: true },
     ],
-    indiceReproducao: {
-      scorePrepotencia: 97,
-      consistenciaTipo: 93,
-      taxaAprovacao: 81,
-      caracteristicasDominantes: [
-        "Funcionalidade",
-        "Andamentos",
-        "Temperamento dócil",
-        "Aptidão dressage",
-      ],
-      blupEstimado: 145,
-    },
-    influenciaGenetica: 14.2,
   },
   {
     // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
+    // FONTE: https://lusitano-interagro.com/three-main-lines/
+    // FONTE: https://uslusitano.org/index.php/lusitano-info-news/lusitano-info/history-j
+    // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" (Chefes de Linhagem) oficiais
     id: "12",
     nome: "Agareno",
     apelido: "O Fundador Veiga",
@@ -586,43 +439,15 @@ export const cavalosFamosos: CavaloFamoso[] = [
       pai: { nome: "Lidador II", ano: 1922, coudelaria: "Coudelaria Manuel Veiga", destaque: true },
       mae: { nome: "Bagocha", ano: 1924, coudelaria: "Coudelaria Manuel Veiga" },
     },
-    estatisticasDescendentes: {
-      totalDescendentes: 1245,
-      descendentesAprovados: 987,
-      campeoes: 312,
-      reprodutoresAtivos: 0,
-      paisesComDescendentes: [
-        "Portugal",
-        "Espanha",
-        "Brasil",
-        "França",
-        "Alemanha",
-        "EUA",
-        "México",
-        "Argentina",
-        "Austrália",
-      ],
-      melhoresFilhos: [
-        { nome: "Lidador III", conquista: "Continuador da Linha" },
-        { nome: "Agostinho", conquista: "Grande Reprodutor" },
-      ],
-    },
-    indiceReproducao: {
-      scorePrepotencia: 99,
-      consistenciaTipo: 96,
-      taxaAprovacao: 83,
-      caracteristicasDominantes: [
-        "Tipo Veiga clássico",
-        "Bravura",
-        "Agilidade",
-        "Cabeça convexa característica",
-      ],
-      blupEstimado: 155,
-    },
-    influenciaGenetica: 28.5,
+    // REMOVIDO: estatisticasDescendentes (impossível verificar para cavalo de 1931)
+    // REMOVIDO: indiceReproducao (SEM FONTE)
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
     // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
+    // FONTE: https://lusitano-interagro.com/three-main-lines/
+    // FONTE: https://uslusitano.org/index.php/lusitano-info-news/lusitano-info/history-j
+    // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" oficiais
     id: "13",
     nome: "Primoroso",
     apelido: "Chefe de Linha",
@@ -651,10 +476,13 @@ export const cavalosFamosos: CavaloFamoso[] = [
       pai: { nome: "Presumido (DH)", coudelaria: "Dominguez Hermanos", destaque: true },
       mae: { nome: "Primorosa II (DH)", coudelaria: "Dominguez Hermanos" },
     },
-    influenciaGenetica: 31.2,
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
     // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
+    // FONTE: https://lusitano-interagro.com/three-main-lines/
+    // FONTE: https://uslusitano.org/index.php/lusitano-info-news/lusitano-info/history-j
+    // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" oficiais
     id: "14",
     nome: "Destinado",
     apelido: "Chefe de Linha",
@@ -680,10 +508,13 @@ export const cavalosFamosos: CavaloFamoso[] = [
       pai: { nome: "Alegre II (DH)", coudelaria: "Dominguez Hermanos", destaque: true },
       mae: { nome: "Destinada (DH)", coudelaria: "Dominguez Hermanos" },
     },
-    influenciaGenetica: 18.5,
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
     // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
+    // FONTE: https://lusitano-interagro.com/three-main-lines/
+    // FONTE: https://uslusitano.org/index.php/lusitano-info-news/lusitano-info/history-j
+    // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" oficiais
     id: "17",
     nome: "Marialva II",
     apelido: "Chefe de Linha",
@@ -709,10 +540,13 @@ export const cavalosFamosos: CavaloFamoso[] = [
       pai: { nome: "Marialva (APM)", coudelaria: "Antonio Fontes Pereira de Melo", destaque: true },
       mae: { nome: "Campina (APM)", coudelaria: "Antonio Fontes Pereira de Melo" },
     },
-    influenciaGenetica: 12.8,
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
     // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
+    // FONTE: https://lusitano-interagro.com/three-main-lines/
+    // FONTE: https://uslusitano.org/index.php/lusitano-info-news/lusitano-info/history-j
+    // VERIFICADO: 2026-02-10 - Única ÉGUA entre os 6 "Line Chiefs" oficiais
     id: "18",
     nome: "Hucharia",
     apelido: "A Única Égua Fundadora",
@@ -739,10 +573,13 @@ export const cavalosFamosos: CavaloFamoso[] = [
       pai: { nome: "Cartujano (APT)", destaque: true },
       mae: { nome: "Vizacaína (MRB)" },
     },
-    influenciaGenetica: 22.3,
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
     // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
+    // FONTE: https://lusitano-interagro.com/three-main-lines/
+    // FONTE: https://uslusitano.org/index.php/lusitano-info-news/lusitano-info/history-j
+    // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" oficiais, único Alter Real
     id: "15",
     nome: "Regedor",
     apelido: "O Alter Real",
@@ -772,30 +609,9 @@ export const cavalosFamosos: CavaloFamoso[] = [
       pai: { nome: "Gaivoto", ano: 1915, coudelaria: "Coudelaria de Alter Real", destaque: true },
       mae: { nome: "Gavina", ano: 1917, coudelaria: "Coudelaria de Alter Real" },
     },
-    estatisticasDescendentes: {
-      totalDescendentes: 1567,
-      descendentesAprovados: 1234,
-      campeoes: 387,
-      reprodutoresAtivos: 0,
-      paisesComDescendentes: ["Portugal", "Espanha", "Brasil", "França", "Alemanha", "EUA"],
-      melhoresFilhos: [
-        { nome: "Lidador AR", conquista: "Continuador da Linha" },
-        { nome: "Regente", conquista: "Grande Reprodutor Alter" },
-      ],
-    },
-    indiceReproducao: {
-      scorePrepotencia: 97,
-      consistenciaTipo: 95,
-      taxaAprovacao: 80,
-      caracteristicasDominantes: [
-        "Pelagem castanha",
-        "Elegância",
-        "Aptidão Alta Escola",
-        "Porte nobre",
-      ],
-      blupEstimado: 148,
-    },
-    influenciaGenetica: 24.7,
+    // REMOVIDO: estatisticasDescendentes (impossível verificar para cavalo de 1923)
+    // REMOVIDO: indiceReproducao (SEM FONTE)
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
   {
     // FONTE: https://eurodressage.com/2019/08/12/joao-torrao-and-equador-mvl-shooting-stars-portuguese-dressage
@@ -852,21 +668,8 @@ export const cavalosFamosos: CavaloFamoso[] = [
       { ano: 2021, evento: "Jogos Olímpicos Tóquio", resultado: "29º Individual", destaque: true },
       { ano: 2022, evento: "Falecimento", resultado: "2 Maio 2022", destaque: true },
     ],
-    indiceReproducao: {
-      scorePrepotencia: 75,
-      consistenciaTipo: 82,
-      taxaAprovacao: 70,
-      caracteristicasDominantes: ["Elasticidade", "Expressão", "Andamentos", "Presença"],
-      blupEstimado: 126,
-    },
-    estatisticasDescendentes: {
-      totalDescendentes: 28,
-      descendentesAprovados: 22,
-      campeoes: 5,
-      reprodutoresAtivos: 3,
-      paisesComDescendentes: ["Portugal", "Espanha", "França"],
-      melhoresFilhos: [{ nome: "Eclipse MVL", conquista: "Jovem Promessa" }],
-    },
-    influenciaGenetica: 2.1,
+    // REMOVIDO: indiceReproducao (SEM FONTE)
+    // REMOVIDO: estatisticasDescendentes (SEM FONTE - Equador MVL faleceu em 2022)
+    // REMOVIDO: influenciaGenetica (SEM FONTE)
   },
 ];

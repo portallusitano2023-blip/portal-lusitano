@@ -6,6 +6,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { HorseFavoritesProvider } from "@/context/HorseFavoritesContext";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ReactNode } from "react";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -19,21 +20,23 @@ const NewsletterPopup = dynamic(() => import("@/components/NewsletterPopup"), { 
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <ErrorBoundary>
-      <LanguageProvider>
-        <ToastProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <HorseFavoritesProvider>
-                <Preloader />
-                {children}
-                <ScrollToTop />
-                <CookieConsent />
-                <NewsletterPopup />
-              </HorseFavoritesProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </ToastProvider>
-      </LanguageProvider>
+      <AuthProvider>
+        <LanguageProvider>
+          <ToastProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <HorseFavoritesProvider>
+                  <Preloader />
+                  {children}
+                  <ScrollToTop />
+                  <CookieConsent />
+                  <NewsletterPopup />
+                </HorseFavoritesProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </ToastProvider>
+        </LanguageProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }

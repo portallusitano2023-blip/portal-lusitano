@@ -2,7 +2,27 @@
   "permissions": {
     "allow": [
       "Bash(curl:*)",
-      "WebFetch(domain:pmc.ncbi.nlm.nih.gov)"
+      "WebFetch(domain:pmc.ncbi.nlm.nih.gov)",
+      "WebSearch",
+      "Bash(npx next lint)",
+      "WebFetch(domain:www.rimondo.com)",
+      "WebFetch(domain:www.pedropassanha.pt)",
+      "Bash(npx next lint .)",
+      "Bash(npx eslint:*)",
+      "WebFetch(domain:www.fei.org)",
+      "WebFetch(domain:interagro.com.br)",
+      "Bash(npm run build:*)",
+      "Bash(node parse_eslint.mjs:*)",
+      "Bash(timeout 15 npm run dev)",
+      "Bash(grep:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git status:*)",
+      "Bash(git reset:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: eliminar todos os 139 ESLint warnings \\(0 errors, 0 warnings\\)\n\n- Remove 118 unused imports/variables across 61 files\n- Add eslint-disable for 10 legitimate <img> uses \\(tracking pixels, blob URLs, external images\\)\n- Add eslint-disable for 12 intentional react-hooks/exhaustive-deps \\(mount-only effects\\)\n- Fix ref dependency in useInViewOnce hook\n- Prefix unused params with _ in API routes\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: eliminar 8 ESLint errors em analytics-events.ts \\(any types\\)\n\n- Replace Record<string, any> with Record<string, unknown>\n- Remove `as any` casts for window.fbq\n- Fix Window interface declaration to use unknown[]\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npm run dev:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
