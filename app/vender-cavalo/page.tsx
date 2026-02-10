@@ -464,6 +464,8 @@ export default function VenderCavaloPage() {
                   <label className="block text-sm text-zinc-400 mb-1">Nome Completo *</label>
                   <input
                     type="text"
+                    required
+                    minLength={3}
                     value={formData.proprietario_nome}
                     onChange={(e) => updateField("proprietario_nome", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -474,6 +476,10 @@ export default function VenderCavaloPage() {
                   <label className="block text-sm text-zinc-400 mb-1">NIF *</label>
                   <input
                     type="text"
+                    required
+                    minLength={9}
+                    maxLength={9}
+                    pattern="\d{9}"
                     value={formData.proprietario_nif}
                     onChange={(e) => updateField("proprietario_nif", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -487,6 +493,7 @@ export default function VenderCavaloPage() {
                   <label className="block text-sm text-zinc-400 mb-1">Email *</label>
                   <input
                     type="email"
+                    required
                     value={formData.proprietario_email}
                     onChange={(e) => updateField("proprietario_email", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -497,6 +504,7 @@ export default function VenderCavaloPage() {
                   <label className="block text-sm text-zinc-400 mb-1">Telefone *</label>
                   <input
                     type="tel"
+                    required
                     value={formData.proprietario_telefone}
                     onChange={(e) => updateField("proprietario_telefone", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -545,6 +553,8 @@ export default function VenderCavaloPage() {
                   <label className="block text-sm text-zinc-400 mb-1">Nome do Cavalo *</label>
                   <input
                     type="text"
+                    required
+                    minLength={2}
                     value={formData.nome}
                     onChange={(e) => updateField("nome", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -557,6 +567,8 @@ export default function VenderCavaloPage() {
                   </label>
                   <input
                     type="text"
+                    required
+                    minLength={2}
                     value={formData.nome_registo}
                     onChange={(e) => updateField("nome_registo", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -572,6 +584,7 @@ export default function VenderCavaloPage() {
                   </label>
                   <input
                     type="text"
+                    required
                     value={formData.numero_registo}
                     onChange={(e) => updateField("numero_registo", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -582,6 +595,10 @@ export default function VenderCavaloPage() {
                   <label className="block text-sm text-zinc-400 mb-1">Número do Microchip *</label>
                   <input
                     type="text"
+                    required
+                    minLength={15}
+                    maxLength={15}
+                    pattern="\d{15}"
                     value={formData.microchip}
                     onChange={(e) => updateField("microchip", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -608,6 +625,7 @@ export default function VenderCavaloPage() {
                   <label className="block text-sm text-zinc-400 mb-1">Data de Nascimento *</label>
                   <input
                     type="date"
+                    required
                     value={formData.data_nascimento}
                     onChange={(e) => updateField("data_nascimento", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -616,6 +634,7 @@ export default function VenderCavaloPage() {
                 <div>
                   <label className="block text-sm text-zinc-400 mb-1">Sexo *</label>
                   <select
+                    required
                     value={formData.sexo}
                     onChange={(e) => updateField("sexo", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -678,6 +697,8 @@ export default function VenderCavaloPage() {
                     <label className="block text-sm text-zinc-400 mb-1">Nome do Pai *</label>
                     <input
                       type="text"
+                      required
+                      minLength={2}
                       value={formData.pai_nome}
                       onChange={(e) => updateField("pai_nome", e.target.value)}
                       className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -689,6 +710,7 @@ export default function VenderCavaloPage() {
                     </label>
                     <input
                       type="text"
+                      required
                       value={formData.pai_registo}
                       onChange={(e) => updateField("pai_registo", e.target.value)}
                       className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -705,6 +727,8 @@ export default function VenderCavaloPage() {
                     <label className="block text-sm text-zinc-400 mb-1">Nome da Mãe *</label>
                     <input
                       type="text"
+                      required
+                      minLength={2}
                       value={formData.mae_nome}
                       onChange={(e) => updateField("mae_nome", e.target.value)}
                       className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -716,6 +740,7 @@ export default function VenderCavaloPage() {
                     </label>
                     <input
                       type="text"
+                      required
                       value={formData.mae_registo}
                       onChange={(e) => updateField("mae_registo", e.target.value)}
                       className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -814,6 +839,7 @@ export default function VenderCavaloPage() {
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Nível de Treino *</label>
                 <select
+                  required
                   value={formData.nivel_treino}
                   onChange={(e) => updateField("nivel_treino", e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -882,6 +908,7 @@ export default function VenderCavaloPage() {
                 <div>
                   <label className="block text-sm text-zinc-400 mb-2">Estado Geral *</label>
                   <select
+                    required
                     value={formData.estado_saude}
                     onChange={(e) => updateField("estado_saude", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -983,6 +1010,8 @@ export default function VenderCavaloPage() {
                     />
                     <input
                       type="number"
+                      required
+                      min={0}
                       value={formData.preco}
                       onChange={(e) => updateField("preco", e.target.value)}
                       className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-12 pr-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -994,6 +1023,8 @@ export default function VenderCavaloPage() {
                   <label className="block text-sm text-zinc-400 mb-1">Localização *</label>
                   <input
                     type="text"
+                    required
+                    minLength={3}
                     value={formData.localizacao}
                     onChange={(e) => updateField("localizacao", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059]"
@@ -1093,6 +1124,8 @@ export default function VenderCavaloPage() {
                   Descrição * ({formData.descricao.length}/100 caracteres mínimos)
                 </label>
                 <textarea
+                  required
+                  minLength={100}
                   value={formData.descricao}
                   onChange={(e) => updateField("descricao", e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C5A059] h-40 resize-none"

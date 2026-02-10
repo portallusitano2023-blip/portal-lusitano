@@ -67,7 +67,8 @@ export default function MarketplacePage() {
 
   const [cavalos, setCavalos] = useState<Cavalo[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [filters, setFilters] = useState({
     sexo: "todos",
     regiao: "Todas",
@@ -80,6 +81,12 @@ export default function MarketplacePage() {
   const [selectedCavalo, setSelectedCavalo] = useState<Cavalo | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
 
+  // Debounce search input (300ms)
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchInput), 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   useEffect(() => {
     async function fetchCavalos() {
       try {
@@ -90,7 +97,7 @@ export default function MarketplacePage() {
         if (filters.disciplina !== "todas") params.set("disciplina", filters.disciplina);
         if (filters.precoMin) params.set("precoMin", filters.precoMin);
         if (filters.precoMax) params.set("precoMax", filters.precoMax);
-        if (searchTerm) params.set("search", searchTerm);
+        if (debouncedSearch) params.set("search", debouncedSearch);
 
         const res = await fetch(`/api/cavalos?${params.toString()}`);
         if (res.ok) {
@@ -104,7 +111,7 @@ export default function MarketplacePage() {
       }
     }
     fetchCavalos();
-  }, [filters, searchTerm]);
+  }, [filters, debouncedSearch]);
 
   const toggleFavorite = (id: string) => {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
@@ -214,8 +221,8 @@ export default function MarketplacePage() {
               <input
                 type="text"
                 placeholder="Pesquisar por nome, linhagem..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 className="w-full bg-zinc-900/50 border border-white/10 pl-12 pr-4 py-4 text-white placeholder-zinc-500 focus:border-[#C5A059] focus:outline-none transition-colors"
               />
             </div>
