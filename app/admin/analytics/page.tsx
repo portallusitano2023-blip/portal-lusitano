@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FiTrendingUp, FiUsers, FiDollarSign, FiTarget, FiArrowRight } from "react-icons/fi";
+import { TrendingUp, Users, DollarSign, Target, ArrowRight } from "lucide-react";
 
 interface TrafficData {
   overview: {
@@ -161,7 +161,7 @@ export default function AdminAnalyticsPage() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Visitantes</h3>
-                  <FiUsers className="text-blue-500" size={20} />
+                  <Users className="text-blue-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">
                   {formatNumber(conversions.overview.totalViews)}
@@ -172,7 +172,7 @@ export default function AdminAnalyticsPage() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Leads</h3>
-                  <FiTarget className="text-green-500" size={20} />
+                  <Target className="text-green-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">
                   {formatNumber(conversions.overview.totalLeads)}
@@ -185,7 +185,7 @@ export default function AdminAnalyticsPage() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Clientes</h3>
-                  <FiDollarSign className="text-[#C5A059]" size={20} />
+                  <DollarSign className="text-[#C5A059]" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">
                   {formatNumber(conversions.overview.uniqueCustomers)}
@@ -198,7 +198,7 @@ export default function AdminAnalyticsPage() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">LTV por Lead</h3>
-                  <FiTrendingUp className="text-purple-500" size={20} />
+                  <TrendingUp className="text-purple-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">
                   €{conversions.overview.revenuePerLead.toFixed(2)}
@@ -237,7 +237,7 @@ export default function AdminAnalyticsPage() {
                     </div>
                     {index < conversions.funnel.length - 1 && (
                       <div className="flex justify-center my-2">
-                        <FiArrowRight className="text-gray-600" size={24} />
+                        <ArrowRight className="text-gray-600" size={24} />
                       </div>
                     )}
                   </div>

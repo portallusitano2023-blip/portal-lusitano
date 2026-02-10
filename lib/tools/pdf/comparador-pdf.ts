@@ -91,8 +91,9 @@ export function generateComparadorPDF(
     margin: { left: MARGIN, right: MARGIN },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  y = (doc as any).lastAutoTable?.finalY + 10 || y + 80;
+  y = (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY
+    ? (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10
+    : y + 80;
 
   // Disclaimer
   y = addText(

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   Calendar,
   MapPin,
@@ -71,6 +72,7 @@ export default function EventosPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
+  const { t } = useLanguage();
 
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,6 +80,18 @@ export default function EventosPage() {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [selectedEvento, setSelectedEvento] = useState<Evento | null>(null);
+
+  const tiposEventoTranslated = useMemo(
+    () => [
+      { value: "todos", label: t.eventos.all_types, icon: "\uD83C\uDFAA" },
+      { value: "feira", label: t.eventos.fairs, icon: "\uD83C\uDFA0" },
+      { value: "competicao", label: t.eventos.competitions, icon: "\uD83C\uDFC6" },
+      { value: "leilao", label: t.eventos.auctions, icon: "\uD83D\uDD28" },
+      { value: "exposicao", label: t.eventos.exhibitions, icon: "\uD83C\uDFA8" },
+      { value: "workshop", label: t.eventos.workshops, icon: "\uD83D\uDCDA" },
+    ],
+    [t]
+  );
 
   useEffect(() => {
     async function fetchEventos() {
@@ -183,21 +197,21 @@ export default function EventosPage() {
       case "confirmado":
         return {
           icon: CheckCircle,
-          label: "Confirmado",
+          label: t.eventos.confirmed,
           color: "text-green-400",
           bg: "bg-green-500/10",
         };
       case "anual":
         return {
           icon: RefreshCw,
-          label: "Evento Anual",
+          label: t.eventos.annual,
           color: "text-blue-400",
           bg: "bg-blue-500/10",
         };
       case "provisorio":
         return {
           icon: AlertCircle,
-          label: "Data Provisória",
+          label: t.eventos.provisional,
           color: "text-amber-400",
           bg: "bg-amber-500/10",
         };
@@ -214,15 +228,10 @@ export default function EventosPage() {
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
-              Calendário Equestre
+              {t.eventos.badge}
             </span>
-            <h1 className="text-4xl md:text-6xl font-serif text-white mb-6">
-              Eventos & Competições
-            </h1>
-            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
-              Feiras, competições, leilões e muito mais. Não perca os principais eventos do mundo
-              equestre português.
-            </p>
+            <h1 className="text-4xl md:text-6xl font-serif text-white mb-6">{t.eventos.title}</h1>
+            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">{t.eventos.subtitle}</p>
           </div>
         </div>
       </section>
@@ -236,7 +245,7 @@ export default function EventosPage() {
           >
             <div className="flex items-center gap-3 mb-8">
               <Star className="text-[#C5A059]" size={24} />
-              <h2 className="text-2xl font-serif text-white">Destaques</h2>
+              <h2 className="text-2xl font-serif text-white">{t.eventos.featured}</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               {eventosDestaque.slice(0, 2).map((evento, index) => (
@@ -257,7 +266,7 @@ export default function EventosPage() {
           style={{ animationDelay: "0.2s" }}
         >
           <div className="flex flex-wrap gap-3 mb-6">
-            {tiposEvento.map((tipo) => (
+            {tiposEventoTranslated.map((tipo) => (
               <button
                 key={tipo.value}
                 onClick={() => setSelectedTipo(tipo.value)}
@@ -266,6 +275,7 @@ export default function EventosPage() {
                     ? "bg-[#C5A059] text-black border-[#C5A059]"
                     : "bg-zinc-900/50 text-zinc-400 border-white/10 hover:border-[#C5A059]/50"
                 }`}
+                aria-pressed={selectedTipo === tipo.value}
               >
                 <span>{tipo.icon}</span>
                 <span className="text-sm">{tipo.label}</span>
@@ -278,6 +288,7 @@ export default function EventosPage() {
             <button
               onClick={() => navigateMonth(-1)}
               className="p-2 text-zinc-400 hover:text-white transition-colors"
+              aria-label={t.eventos.badge ? "Mes anterior" : "Previous month"}
             >
               <ChevronLeft size={24} />
             </button>
@@ -287,6 +298,7 @@ export default function EventosPage() {
             <button
               onClick={() => navigateMonth(1)}
               className="p-2 text-zinc-400 hover:text-white transition-colors"
+              aria-label={t.eventos.badge ? "Proximo mes" : "Next month"}
             >
               <ChevronRight size={24} />
             </button>
@@ -296,21 +308,22 @@ export default function EventosPage() {
         {/* Lista de Eventos */}
         {loading ? (
           <div className="text-center py-20">
-            <div className="animate-pulse text-[#C5A059]">A carregar eventos...</div>
+            <div className="animate-pulse text-[#C5A059]">{t.eventos.loading}</div>
           </div>
         ) : eventos.length === 0 ? (
           <div className="text-center py-20">
             <Calendar className="mx-auto text-zinc-400 mb-4" size={48} />
-            <h3 className="text-xl font-serif text-white mb-2">Nenhum evento encontrado</h3>
-            <p className="text-zinc-500">Não há eventos agendados para os filtros selecionados.</p>
+            <h3 className="text-xl font-serif text-white mb-2">{t.eventos.no_events}</h3>
+            <p className="text-zinc-500">{t.eventos.no_events_hint}</p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-serif text-zinc-300">
-                Todos os Eventos
+                {t.eventos.all_events}
                 <span className="text-zinc-400 text-lg ml-3">
-                  ({eventosOrdenados.length} {eventosOrdenados.length === 1 ? "evento" : "eventos"})
+                  ({eventosOrdenados.length}{" "}
+                  {eventosOrdenados.length === 1 ? t.eventos.event_single : t.eventos.event_plural})
                 </span>
               </h2>
             </div>
@@ -352,6 +365,7 @@ export default function EventosPage() {
               <button
                 onClick={() => setSelectedEvento(null)}
                 className="absolute top-4 right-4 text-zinc-400 hover:text-white text-2xl"
+                aria-label="Fechar detalhes do evento"
               >
                 ×
               </button>
@@ -365,7 +379,7 @@ export default function EventosPage() {
                 </span>
                 {selectedEvento.destaque && (
                   <span className="flex items-center gap-1 text-[#C5A059] text-sm">
-                    <Star size={14} /> Destaque
+                    <Star size={14} /> {t.eventos.highlight}
                   </span>
                 )}
                 {(() => {
@@ -414,7 +428,7 @@ export default function EventosPage() {
 
               {selectedEvento.organizador && (
                 <p className="text-zinc-500 text-sm mb-4">
-                  Organizado por: {selectedEvento.organizador}
+                  {t.eventos.organized_by}: {selectedEvento.organizador}
                 </p>
               )}
 
@@ -441,7 +455,7 @@ export default function EventosPage() {
                   href={`/eventos/${selectedEvento.slug}`}
                   className="flex items-center justify-center gap-2 w-full bg-[#C5A059] text-black py-3 font-bold uppercase tracking-wider hover:bg-white transition-colors"
                 >
-                  Ver Página Completa
+                  {t.eventos.view_full_page}
                 </Link>
                 {selectedEvento.website && (
                   <a
@@ -451,7 +465,7 @@ export default function EventosPage() {
                     className="flex items-center justify-center gap-2 w-full bg-zinc-800 text-white py-3 font-medium hover:bg-zinc-700 transition-colors border border-white/10"
                   >
                     <ExternalLink size={18} />
-                    Site Oficial
+                    {t.eventos.official_site}
                   </a>
                 )}
               </div>
@@ -528,6 +542,7 @@ function EventoCard({
   index: number;
   onClick: () => void;
 }) {
+  const { t } = useLanguage();
   const tipoIcon = tiposEvento.find((t) => t.value === evento.tipo)?.icon || "📅";
   const date = new Date(evento.data_inicio);
 
@@ -546,19 +561,19 @@ function EventoCard({
     switch (confirmado) {
       case "confirmado":
         return (
-          <span title="Confirmado">
+          <span title={t.eventos.confirmed}>
             <CheckCircle size={12} className="text-green-400" />
           </span>
         );
       case "anual":
         return (
-          <span title="Evento Anual">
+          <span title={t.eventos.annual}>
             <RefreshCw size={12} className="text-blue-400" />
           </span>
         );
       case "provisorio":
         return (
-          <span title="Data Provisória">
+          <span title={t.eventos.provisional}>
             <AlertCircle size={12} className="text-amber-400" />
           </span>
         );

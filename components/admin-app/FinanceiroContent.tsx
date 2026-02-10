@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import {
-  FiTrendingUp,
-  FiDollarSign,
-  FiRepeat,
-  FiShoppingCart,
-  FiDownload,
-  FiFilter,
-  FiSearch,
-  FiChevronLeft,
-  FiChevronRight,
-  FiFileText,
-} from "react-icons/fi";
+  TrendingUp,
+  DollarSign,
+  Repeat,
+  ShoppingCart,
+  Download,
+  Filter,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+} from "lucide-react";
 
 interface OverviewData {
   overview: {
@@ -222,7 +222,7 @@ export default function FinanceiroContent() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <FiFileText className="text-[#C5A059]" size={20} />
+              <FileText className="text-[#C5A059]" size={20} />
               Relatórios Mensais em PDF
             </h3>
             <p className="text-sm text-gray-400 mt-1">
@@ -288,7 +288,7 @@ export default function FinanceiroContent() {
               </>
             ) : (
               <>
-                <FiDownload size={16} />
+                <Download size={16} />
                 Descarregar Relatório PDF
               </>
             )}
@@ -309,7 +309,7 @@ export default function FinanceiroContent() {
           <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-gray-400">Receita Total</h3>
-              <FiDollarSign className="text-[#C5A059]" size={20} />
+              <DollarSign className="text-[#C5A059]" size={20} />
             </div>
             <p className="text-3xl font-bold text-white">
               €
@@ -324,7 +324,7 @@ export default function FinanceiroContent() {
           <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-gray-400">Este Mês</h3>
-              <FiTrendingUp className="text-green-500" size={20} />
+              <TrendingUp className="text-green-500" size={20} />
             </div>
             <p className="text-3xl font-bold text-white">
               €
@@ -344,7 +344,7 @@ export default function FinanceiroContent() {
           <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-gray-400">MRR</h3>
-              <FiRepeat className="text-[#C5A059]" size={20} />
+              <Repeat className="text-[#C5A059]" size={20} />
             </div>
             <p className="text-3xl font-bold text-white">
               €
@@ -359,7 +359,7 @@ export default function FinanceiroContent() {
           <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-gray-400">Transações</h3>
-              <FiShoppingCart className="text-[#C5A059]" size={20} />
+              <ShoppingCart className="text-[#C5A059]" size={20} />
             </div>
             <p className="text-3xl font-bold text-white">
               {overviewData.overview.totalTransactions}
@@ -443,7 +443,7 @@ export default function FinanceiroContent() {
             onClick={exportCSV}
             className="flex items-center gap-2 px-4 py-2 bg-[#C5A059] hover:bg-[#d4b469] text-black font-medium rounded-lg transition-colors"
           >
-            <FiDownload size={16} />
+            <Download size={16} />
             Exportar CSV
           </button>
         </div>
@@ -493,7 +493,7 @@ export default function FinanceiroContent() {
               onChange={(e) => handleFilterChange("search", e.target.value)}
               className="w-full px-3 py-2 pl-9 bg-black/30 border border-white/10 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C5A059]"
             />
-            <FiSearch
+            <Search
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
               size={16}
             />
@@ -504,7 +504,7 @@ export default function FinanceiroContent() {
           onClick={applyFilters}
           className="mb-6 flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg transition-colors"
         >
-          <FiFilter size={16} />
+          <Filter size={16} />
           Aplicar Filtros
         </button>
 
@@ -584,7 +584,7 @@ export default function FinanceiroContent() {
                   disabled={currentPage === 1}
                   className="px-3 py-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <FiChevronLeft size={16} />
+                  <ChevronLeft size={16} />
                 </button>
                 {Array.from(
                   { length: Math.min(5, transactionsData.pagination.totalPages) },
@@ -610,7 +610,7 @@ export default function FinanceiroContent() {
                   disabled={currentPage === transactionsData.pagination.totalPages}
                   className="px-3 py-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <FiChevronRight size={16} />
+                  <ChevronRight size={16} />
                 </button>
               </div>
             </div>

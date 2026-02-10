@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { FiBell } from "react-icons/fi";
+import { Bell } from "lucide-react";
 import Link from "next/link";
 import { requestNotificationPermission, notifyNewMessage } from "@/lib/notifications";
 
@@ -93,7 +93,7 @@ export default function NotificationBadge({ refreshInterval = 30000 }: Notificat
           isAnimating ? "bg-[#C5A059] scale-110" : "bg-white/5 hover:bg-white/10"
         }`}
       >
-        <FiBell
+        <Bell
           size={20}
           className={`${
             newMessagesCount > 0 ? "text-[#C5A059]" : "text-gray-400"

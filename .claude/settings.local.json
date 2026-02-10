@@ -22,7 +22,32 @@
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: eliminar todos os 139 ESLint warnings \\(0 errors, 0 warnings\\)\n\n- Remove 118 unused imports/variables across 61 files\n- Add eslint-disable for 10 legitimate <img> uses \\(tracking pixels, blob URLs, external images\\)\n- Add eslint-disable for 12 intentional react-hooks/exhaustive-deps \\(mount-only effects\\)\n- Fix ref dependency in useInViewOnce hook\n- Prefix unused params with _ in API routes\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: eliminar 8 ESLint errors em analytics-events.ts \\(any types\\)\n\n- Replace Record<string, any> with Record<string, unknown>\n- Remove `as any` casts for window.fbq\n- Fix Window interface declaration to use unknown[]\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(npm run dev:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(dir:*)",
+      "Bash(npx vitest:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: corrigir CSP que bloqueava navegação e React state update warnings\n\n- CSP: substituir nonces por ''unsafe-inline'' no script-src \\(Next.js injeta\n  scripts inline para hidratação que não suportam nonces automaticamente\\)\n- CSP: adicionar wildcards para domínios Google AdSense \\(*.googlesyndication.com,\n  *.doubleclick.net, *.google.com, *.adtrafficquality.google\\)\n- CSP: adicionar ''unsafe-eval'' apenas em dev \\(necessário para HMR/react-refresh\\)\n- Remover sistema de nonces \\(generateNonce, x-nonce header, nonce props\\)\n- Mover leituras de localStorage de lazy initializers para useEffect em 8 ficheiros\n  \\(WishlistContext, HorseFavoritesContext, LanguageContext, TabContext,\n  useLocalStorage, TabSystem, JornalListClient, AdvancedFilters\\)\n- Corrige: navegação client-side bloqueada pelo CSP\n- Corrige: \"Can 't perform React state update on unmounted component\"\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: corrigir CSP que bloqueava navegação e React state update warnings\n\n- CSP: substituir nonces por ''unsafe-inline'' no script-src \\(Next.js injeta\n  scripts inline para hidratação que não suportam nonces automaticamente\\)\n- CSP: adicionar wildcards para domínios Google AdSense \\(*.googlesyndication.com,\n  *.doubleclick.net, *.google.com, *.adtrafficquality.google\\)\n- CSP: adicionar ''unsafe-eval'' apenas em dev \\(necessário para HMR/react-refresh\\)\n- Remover sistema de nonces \\(generateNonce, x-nonce header, nonce props\\)\n- Mover leituras de localStorage de lazy initializers para useEffect em contextos\n  \\(WishlistContext, HorseFavoritesContext, LanguageContext, TabContext,\n  TabSystem, JornalListClient, AdvancedFilters\\)\n- Corrige: navegação client-side bloqueada pelo CSP\n- Corrige: \"Can 't perform React state update on unmounted component\"\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npx next build:*)",
+      "Bash(ls -la \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\types\"\" 2>/dev/null || echo \"No types directory found \")",
+      "Bash(tasklist:*)",
+      "Bash(findstr:*)",
+      "Bash(netstat:*)",
+      "Bash(npm test:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "Bash(ls \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\app\\\\api\\\\tools\\\\check-access\"\" 2>&1 || echo \"Directory empty/removed \")",
+      "Bash(1)",
+      "Bash(python:*)",
+      "Bash(powershell:*)",
+      "Bash(node:*)",
+      "Bash(npx next lint:*)",
+      "Bash(for dir in jornal directorio eventos ferramentas comprar linhagens calculadora-valor comparador-cavalos verificador-compatibilidade analise-perfil piroplasmose vender-cavalo)",
+      "Bash(do test -d \"C:/Users/USUARIO/portal-lusitano/app/$dir\")",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(timeout:*)",
+      "Bash(npm outdated:*)"
     ]
   }
 }

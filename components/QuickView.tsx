@@ -35,6 +35,11 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
       viewDetails: "View Details",
       addedToCart: "Added to bag!",
     },
+    es: {
+      addToCart: "Anadir a la Bolsa",
+      viewDetails: "Ver Detalles",
+      addedToCart: "Anadido a la bolsa!",
+    },
   };
 
   const t = text[language];
@@ -81,9 +86,9 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
   const toggleWishlist = () => {
     const wishlistItem = {
       id: product.id,
-      handle: product.handle,
+      handle: product.handle || product.id,
       title: product.title,
-      price: product.priceRange.minVariantPrice.amount,
+      price: product.priceRange?.minVariantPrice.amount || "0",
       image: product.images[0]?.url || "",
     };
 
@@ -145,12 +150,14 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                       <button
                         onClick={prevImage}
                         className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black transition-colors"
+                        aria-label={language === "pt" ? "Imagem anterior" : "Previous image"}
                       >
                         <ChevronLeft size={20} />
                       </button>
                       <button
                         onClick={nextImage}
                         className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black transition-colors"
+                        aria-label={language === "pt" ? "Proxima imagem" : "Next image"}
                       >
                         <ChevronRight size={20} />
                       </button>
@@ -164,6 +171,11 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                             className={`w-2 h-2 rounded-full transition-colors ${
                               index === selectedImage ? "bg-[#C5A059]" : "bg-white/30"
                             }`}
+                            aria-label={
+                              language === "pt"
+                                ? `Ver imagem ${index + 1}`
+                                : `View image ${index + 1}`
+                            }
                           />
                         ))}
                       </div>
@@ -175,7 +187,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                 <div className="p-8 flex flex-col">
                   <h2 className="text-2xl font-serif text-white mb-2">{product.title}</h2>
                   <p className="text-2xl text-[#C5A059] font-serif mb-6">
-                    {Number(product.priceRange.minVariantPrice.amount).toFixed(2)} EUR
+                    {Number(product.priceRange?.minVariantPrice.amount || 0).toFixed(2)} EUR
                   </p>
 
                   <p className="text-zinc-400 text-sm leading-relaxed mb-8 line-clamp-4">
@@ -207,6 +219,15 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                             ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
                             : "border-white/20 text-white hover:border-[#C5A059] hover:text-[#C5A059]"
                         } transition-colors flex items-center justify-center`}
+                        aria-label={
+                          isInWishlist(product.id)
+                            ? language === "pt"
+                              ? "Remover dos favoritos"
+                              : "Remove from wishlist"
+                            : language === "pt"
+                              ? "Adicionar aos favoritos"
+                              : "Add to wishlist"
+                        }
                       >
                         <Heart
                           size={18}

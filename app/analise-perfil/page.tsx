@@ -53,6 +53,7 @@ import { useSearchParams } from "next/navigation";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Question {
   id: number;
@@ -1307,18 +1308,19 @@ interface RadarChartProps {
 }
 
 function RadarChart({ data }: RadarChartProps) {
+  const { t } = useLanguage();
   const [animate, setAnimate] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setAnimate(true), 300);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setAnimate(true), 300);
+    return () => clearTimeout(timer);
   }, []);
   const labels = [
-    { key: "competicao", label: "Competicao" },
-    { key: "tradicao", label: "Tradicao" },
-    { key: "criacao", label: "Criacao" },
-    { key: "lazer", label: "Lazer" },
-    { key: "investimento", label: "Investimento" },
-    { key: "dedicacao", label: "Dedicacao" },
+    { key: "competicao", label: t.analise_perfil.radar_competition },
+    { key: "tradicao", label: t.analise_perfil.radar_tradition },
+    { key: "criacao", label: t.analise_perfil.radar_breeding },
+    { key: "lazer", label: t.analise_perfil.radar_leisure },
+    { key: "investimento", label: t.analise_perfil.radar_investment },
+    { key: "dedicacao", label: t.analise_perfil.radar_dedication },
   ];
   const cX = 150,
     cY = 150,
@@ -1415,6 +1417,7 @@ interface AnswerDetail {
 }
 
 function AnalisePerfilContent() {
+  const { t } = useLanguage();
   const [showIntro, setShowIntro] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
@@ -1436,7 +1439,14 @@ function AnalisePerfilContent() {
   const quizRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
-  const { canUse, isSubscribed, freeUsesLeft, requiresAuth, recordUsage } = useToolAccess("perfil");
+  const {
+    canUse,
+    isSubscribed,
+    freeUsesLeft,
+    requiresAuth,
+    recordUsage,
+    isLoading: accessLoading,
+  } = useToolAccess("perfil");
 
   // Check for shared result in URL
   useEffect(() => {
@@ -1561,19 +1571,19 @@ function AnalisePerfilContent() {
 
   const shareInstagram = () => {
     if (!result) return;
-    const t = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-    const p = Math.round((scores[result.profile] / t) * 100);
+    const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+    const p = Math.round((scores[result.profile] / totalScore) * 100);
     const text = `🐴 Fiz a Análise de Perfil do Cavaleiro!\n\n✨ O meu perfil: ${result.title} (${p}%)\n"${result.subtitle}"\n\n🔗 Descobre o teu perfil em:\nportallusitano.pt/analise-perfil\n\n#Lusitano #CavaloLusitano #Equitacao #PortalLusitano`;
     navigator.clipboard.writeText(text);
-    alert("Texto copiado! Cole no Instagram Stories ou publicação.");
+    alert(t.analise_perfil.instagram_copied);
   };
 
   const downloadPDF = async () => {
     if (!result) return;
     const jsPDF = (await import("jspdf")).default;
     const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-    const t = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-    const p = Math.round((scores[result.profile] / t) * 100);
+    const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+    const p = Math.round((scores[result.profile] / totalScore) * 100);
 
     // Header
     doc.setFillColor(5, 5, 5);
@@ -1767,35 +1777,37 @@ function AnalisePerfilContent() {
               <div className="opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]">
                 <span className="inline-flex items-center gap-2 text-[#C5A059] text-xs uppercase tracking-[0.3em] mb-6">
                   <ClipboardCheck size={14} />
-                  Analise Personalizada
+                  {t.analise_perfil.badge}
                   <ClipboardCheck size={14} />
                 </span>
                 <h1 className="text-5xl md:text-7xl font-serif text-white mb-6 leading-tight">
-                  Analise de Perfil<span className="block text-[#C5A059] italic">do Cavaleiro</span>
+                  {t.analise_perfil.title_line1}
+                  <span className="block text-[#C5A059] italic">
+                    {t.analise_perfil.title_line2}
+                  </span>
                 </h1>
                 <p className="text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-                  Uma analise desenvolvida por especialistas para identificar o perfil de cavalo
-                  Puro Sangue Lusitano que melhor se adequa aos seus objectivos.
+                  {t.analise_perfil.intro_desc}
                 </p>
                 <div className="flex flex-wrap justify-center gap-6 text-sm text-zinc-400 mb-12">
                   <div className="flex items-center gap-2">
                     <Clock size={16} className="text-[#C5A059]" />
-                    <span>8-10 minutos</span>
+                    <span>{t.analise_perfil.time}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <BookOpen size={16} className="text-[#C5A059]" />
-                    <span>15 perguntas</span>
+                    <span>{t.analise_perfil.questions_count}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Target size={16} className="text-[#C5A059]" />
-                    <span>Resultado detalhado</span>
+                    <span>{t.analise_perfil.detailed_result}</span>
                   </div>
                 </div>
                 <button
                   onClick={startQuiz}
                   className="group inline-flex items-center gap-3 bg-[#C5A059] text-black px-10 py-5 text-sm uppercase tracking-[0.2em] font-bold hover:bg-white transition-all hover:scale-[1.02] active:scale-[0.98] transition-transform"
                 >
-                  Iniciar Analise
+                  {t.analise_perfil.start}
                   <ChevronRight className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
@@ -1807,26 +1819,30 @@ function AnalisePerfilContent() {
           <section className="py-20 border-t border-white/5">
             <div className="max-w-6xl mx-auto px-6">
               <h2 className="text-center text-2xl font-serif text-white mb-12">
-                O que vai descobrir
+                {t.analise_perfil.discover_title}
               </h2>
               <div className="grid md:grid-cols-4 gap-8">
                 {[
                   {
                     icon: Target,
-                    title: "Perfil Equestre",
-                    desc: "Competidor, Tradicional, Criador ou Lazer",
+                    title: t.analise_perfil.feat_profile,
+                    desc: t.analise_perfil.feat_profile_desc,
                   },
                   {
                     icon: Feather,
-                    title: "Cavalo Ideal",
-                    desc: "Idade, altura, treino e temperamento",
+                    title: t.analise_perfil.feat_horse,
+                    desc: t.analise_perfil.feat_horse_desc,
                   },
                   {
                     icon: DollarSign,
-                    title: "Custos Estimados",
-                    desc: "Investimento anual por perfil",
+                    title: t.analise_perfil.feat_costs,
+                    desc: t.analise_perfil.feat_costs_desc,
                   },
-                  { icon: Trophy, title: "Referencias", desc: "Cavalos famosos do seu perfil" },
+                  {
+                    icon: Trophy,
+                    title: t.analise_perfil.feat_references,
+                    desc: t.analise_perfil.feat_references_desc,
+                  },
                 ].map((f, i) => (
                   <div
                     key={f.title}
@@ -1851,21 +1867,29 @@ function AnalisePerfilContent() {
           className="min-h-screen pt-24 pb-20 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
         >
           <div className="max-w-3xl mx-auto px-6">
-            <SubscriptionBanner
-              isSubscribed={isSubscribed}
-              freeUsesLeft={freeUsesLeft}
-              requiresAuth={requiresAuth}
-            />
+            {accessLoading ? (
+              <div className="flex items-center justify-center py-4">
+                <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
+              </div>
+            ) : (
+              <SubscriptionBanner
+                isSubscribed={isSubscribed}
+                freeUsesLeft={freeUsesLeft}
+                requiresAuth={requiresAuth}
+              />
+            )}
             <div className="text-center mb-8">
               <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-2">
                 {questions[currentQuestion].category}
               </span>
-              <h2 className="text-2xl font-serif text-white">Analise de Perfil do Cavaleiro</h2>
+              <h2 className="text-2xl font-serif text-white">{t.analise_perfil.quiz_title}</h2>
             </div>
             <div className="mb-10">
               <div className="flex justify-between text-sm text-zinc-500 mb-3">
                 <span>
-                  Pergunta {currentQuestion + 1} de {questions.length}
+                  {t.analise_perfil.question_of
+                    .replace("{current}", String(currentQuestion + 1))
+                    .replace("{total}", String(questions.length))}
                 </span>
                 <span>{Math.round(progress)}%</span>
               </div>
@@ -1904,7 +1928,7 @@ function AnalisePerfilContent() {
                 </div>
                 {currentQuestion === questions.length - 1 && !canUse ? (
                   <div className="mt-4">
-                    <Paywall toolName="Análise de Perfil" requiresAuth={requiresAuth} />
+                    <Paywall toolName={t.analise_perfil.title_line1} requiresAuth={requiresAuth} />
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -1938,13 +1962,13 @@ function AnalisePerfilContent() {
                     className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors"
                   >
                     <ChevronLeft size={18} />
-                    Anterior
+                    {t.analise_perfil.previous}
                   </button>
                 ) : (
                   <div />
                 )}
                 <button onClick={resetQuiz} className="text-zinc-600 hover:text-zinc-400 text-sm">
-                  Reiniciar
+                  {t.analise_perfil.restart}
                 </button>
               </div>
             </div>
@@ -1963,7 +1987,7 @@ function AnalisePerfilContent() {
                       {result.icon}
                     </div>
                     <span className="text-[#C5A059] text-xs uppercase tracking-[0.3em] block mb-3">
-                      O seu perfil equestre e
+                      {t.analise_perfil.your_profile_is}
                     </span>
                     <h1 className="text-4xl md:text-5xl font-serif text-white mb-2">
                       {result.title}
@@ -1979,7 +2003,7 @@ function AnalisePerfilContent() {
                         className={`inline-flex items-center gap-2 px-3 py-2 text-sm border transition-colors ${saved ? "border-green-500 text-green-500" : "border-white/20 text-zinc-400 hover:text-white"}`}
                       >
                         {saved ? <Check size={16} /> : <Save size={16} />}
-                        {saved ? "Guardado!" : "Guardar"}
+                        {saved ? t.analise_perfil.saved : t.analise_perfil.save}
                       </button>
                       <button
                         onClick={downloadPDF}
@@ -2021,7 +2045,7 @@ function AnalisePerfilContent() {
                         className={`inline-flex items-center gap-2 px-3 py-2 text-sm border transition-colors ${copied ? "border-green-500 text-green-500" : "border-white/20 text-zinc-400 hover:text-white"}`}
                       >
                         {copied ? <Check size={16} /> : <LinkIcon size={16} />}
-                        {copied ? "Copiado!" : "Link"}
+                        {copied ? t.analise_perfil.copied : t.analise_perfil.link}
                       </button>
                     </div>
                     {/* Downloadable Badge (hidden, used for export) */}
@@ -2038,7 +2062,7 @@ function AnalisePerfilContent() {
                             {result.icon}
                           </div>
                           <p className="text-zinc-500 text-xs uppercase tracking-wider mb-2">
-                            O meu perfil equestre
+                            {t.analise_perfil.my_equestrian_profile}
                           </p>
                           <h2 className="text-3xl font-serif text-white mb-2 text-center">
                             {result.title}
@@ -2061,13 +2085,13 @@ function AnalisePerfilContent() {
                   <div className="grid md:grid-cols-2 gap-12 items-center">
                     <div>
                       <h3 className="text-sm uppercase tracking-wider text-zinc-500 mb-6 text-center">
-                        Mapa de Perfil
+                        {t.analise_perfil.profile_map}
                       </h3>
                       <RadarChart data={radarData} />
                     </div>
                     <div>
                       <h3 className="text-sm uppercase tracking-wider text-zinc-500 mb-6">
-                        Distribuicao do Perfil
+                        {t.analise_perfil.profile_distribution}
                       </h3>
                       <div className="space-y-4">
                         {scorePercentages.map((item, i) => (
@@ -2099,7 +2123,8 @@ function AnalisePerfilContent() {
                       </div>
                       {scorePercentages[1]?.percentage > 20 && (
                         <p className="text-sm text-zinc-500 mt-4">
-                          <span className="text-[#C5A059]">Nota:</span> Perfil secundario:{" "}
+                          <span className="text-[#C5A059]">{t.analise_perfil.note_label}</span>{" "}
+                          {t.analise_perfil.secondary_profile}{" "}
                           <span className="text-white">{scorePercentages[1].label}</span> (
                           {scorePercentages[1].percentage}%)
                         </p>
@@ -2112,12 +2137,12 @@ function AnalisePerfilContent() {
                 <div className="max-w-5xl mx-auto px-6">
                   <div className="flex gap-1 overflow-x-auto scrollbar-hide">
                     {[
-                      { id: "perfil", label: "Perfil", icon: Users },
-                      { id: "cavalo", label: "Cavalo Ideal", icon: Feather },
-                      { id: "custos", label: "Custos", icon: DollarSign },
-                      { id: "cronograma", label: "Cronograma", icon: Calendar },
-                      { id: "analise", label: "Analise", icon: BarChart3 },
-                      { id: "proximos", label: "Proximos Passos", icon: Compass },
+                      { id: "perfil", label: t.analise_perfil.tab_profile, icon: Users },
+                      { id: "cavalo", label: t.analise_perfil.tab_ideal_horse, icon: Feather },
+                      { id: "custos", label: t.analise_perfil.tab_costs, icon: DollarSign },
+                      { id: "cronograma", label: t.analise_perfil.tab_timeline, icon: Calendar },
+                      { id: "analise", label: t.analise_perfil.tab_analysis, icon: BarChart3 },
+                      { id: "proximos", label: t.analise_perfil.tab_next_steps, icon: Compass },
                     ].map((tab) => (
                       <button
                         key={tab.id}
@@ -2141,7 +2166,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <Star className="text-[#C5A059]" size={20} />
-                          Caracteristicas que Valoriza
+                          {t.analise_perfil.characteristics_title}
                         </h3>
                         <div className="grid md:grid-cols-2 gap-3">
                           {result.characteristics.map((c, i) => (
@@ -2161,7 +2186,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <Trophy className="text-[#C5A059]" size={20} />
-                          Disciplinas Recomendadas
+                          {t.analise_perfil.disciplines_title}
                         </h3>
                         <div className="flex flex-wrap gap-2">
                           {result.disciplinas.map((d) => (
@@ -2177,7 +2202,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <Award className="text-[#C5A059]" size={20} />
-                          Cavalos de Referencia
+                          {t.analise_perfil.reference_horses}
                         </h3>
                         <div className="grid md:grid-cols-2 gap-4">
                           {result.famousHorses.map((h, i) => (
@@ -2200,7 +2225,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <TreeDeciduous className="text-[#C5A059]" size={20} />
-                          Linhagens Sugeridas
+                          {t.analise_perfil.suggested_lineages}
                         </h3>
                         <div className="space-y-4">
                           {result.linhagens.map((l, i) => (
@@ -2229,19 +2254,28 @@ function AnalisePerfilContent() {
                     >
                       <div className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/20 p-8">
                         <h3 className="flex items-center gap-2 text-xl font-serif text-white mb-8">
-                          <Feather className="text-[#C5A059]" size={24} />O Seu Lusitano Ideal
+                          <Feather className="text-[#C5A059]" size={24} />
+                          {t.analise_perfil.your_ideal_lusitano}
                         </h3>
                         <div className="grid md:grid-cols-2 gap-6">
                           {[
-                            { label: "Idade Ideal", value: result.idealHorse.age, icon: Clock },
-                            { label: "Altura", value: result.idealHorse.height, icon: Activity },
                             {
-                              label: "Nivel de Treino",
+                              label: t.analise_perfil.ideal_age,
+                              value: result.idealHorse.age,
+                              icon: Clock,
+                            },
+                            {
+                              label: t.analise_perfil.height,
+                              value: result.idealHorse.height,
+                              icon: Activity,
+                            },
+                            {
+                              label: t.analise_perfil.training_level,
                               value: result.idealHorse.training,
                               icon: TrendingUp,
                             },
                             {
-                              label: "Temperamento",
+                              label: t.analise_perfil.temperament,
                               value: result.idealHorse.temperament,
                               icon: Heart,
                             },
@@ -2261,18 +2295,22 @@ function AnalisePerfilContent() {
                         <div className="mt-6 p-5 bg-[#C5A059]/10 border border-[#C5A059]/30">
                           <div className="flex items-center gap-2 text-[#C5A059] mb-2">
                             <DollarSign size={16} />
-                            <span className="text-xs uppercase tracking-wider">Faixa de Preco</span>
+                            <span className="text-xs uppercase tracking-wider">
+                              {t.analise_perfil.price_range}
+                            </span>
                           </div>
                           <p className="text-2xl font-serif text-white">
                             {result.idealHorse.priceRange}
                           </p>
-                          <p className="text-sm text-zinc-500 mt-2">*Valores indicativos</p>
+                          <p className="text-sm text-zinc-500 mt-2">
+                            {t.analise_perfil.indicative_values}
+                          </p>
                         </div>
                       </div>
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <MapPin className="text-[#C5A059]" size={20} />
-                          Regioes Recomendadas
+                          {t.analise_perfil.recommended_regions}
                         </h3>
                         <div className="flex flex-wrap gap-3">
                           {result.recommendedRegions.map((r) => (
@@ -2285,7 +2323,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <Zap className="text-[#C5A059]" size={20} />
-                          Dicas para a Aquisicao
+                          {t.analise_perfil.acquisition_tips}
                         </h3>
                         <div className="space-y-3">
                           {result.tips.map((t, i) => (
@@ -2312,18 +2350,20 @@ function AnalisePerfilContent() {
                       <div className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/20 p-8">
                         <h3 className="flex items-center gap-2 text-xl font-serif text-white mb-6">
                           <DollarSign className="text-[#C5A059]" size={24} />
-                          Custos Anuais Estimados
+                          {t.analise_perfil.annual_costs}
                         </h3>
                         <div className="text-center mb-8">
-                          <p className="text-sm text-zinc-500 mb-2">Intervalo estimado por ano</p>
+                          <p className="text-sm text-zinc-500 mb-2">
+                            {t.analise_perfil.estimated_range}
+                          </p>
                           <p className="text-4xl font-serif text-white">
                             {result.annualCosts.min.toLocaleString()} -{" "}
-                            {result.annualCosts.max.toLocaleString()} euros
+                            {result.annualCosts.max.toLocaleString()} {t.analise_perfil.euros}
                           </p>
                         </div>
                         <div className="bg-zinc-900/50 p-6 border border-white/5">
                           <h4 className="text-sm uppercase tracking-wider text-[#C5A059] mb-4">
-                            O que esta incluido:
+                            {t.analise_perfil.whats_included}
                           </h4>
                           <div className="grid md:grid-cols-2 gap-3">
                             {result.annualCosts.includes.map((it, i) => (
@@ -2338,13 +2378,13 @@ function AnalisePerfilContent() {
                           </div>
                         </div>
                         <p className="text-sm text-zinc-500 mt-6 text-center">
-                          *Valores aproximados para Portugal continental
+                          {t.analise_perfil.approx_values}
                         </p>
                       </div>
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <Activity className="text-[#C5A059]" size={20} />
-                          Comparacao entre Perfis
+                          {t.analise_perfil.profile_comparison}
                         </h3>
                         <div className="space-y-4">
                           {Object.entries(results).map(([k, r]) => (
@@ -2383,7 +2423,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <Calendar className="text-[#C5A059]" size={20} />
-                          Cronograma Recomendado
+                          {t.analise_perfil.recommended_timeline}
                         </h3>
                         <div className="relative">
                           <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-[#C5A059]/20" />
@@ -2413,7 +2453,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <Quote className="text-[#C5A059]" size={20} />
-                          Palavras de Especialistas
+                          {t.analise_perfil.expert_words}
                         </h3>
                         <div className="space-y-4">
                           {result.quotes.map((q, i) => (
@@ -2440,7 +2480,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <HelpCircle className="text-[#C5A059]" size={20} />
-                          Perguntas Frequentes
+                          {t.analise_perfil.faq}
                         </h3>
                         <div className="space-y-3">
                           {result.faq.map((item, i) => (
@@ -2481,7 +2521,7 @@ function AnalisePerfilContent() {
                       <div className="bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/20 p-8">
                         <h3 className="flex items-center gap-2 text-xl font-serif text-white mb-6">
                           <Percent className="text-[#C5A059]" size={24} />
-                          Indice de Confianca
+                          {t.analise_perfil.confidence_index}
                         </h3>
                         <div className="text-center mb-6">
                           <div className="inline-flex items-center justify-center w-32 h-32 rounded-full border-4 border-[#C5A059] relative">
@@ -2490,15 +2530,14 @@ function AnalisePerfilContent() {
                             </span>
                           </div>
                           <p className="text-zinc-400 mt-4 max-w-md mx-auto text-sm">
-                            Este valor indica a consistencia das suas respostas. Quanto maior, mais
-                            alinhadas estavam as suas escolhas com o perfil identificado.
+                            {t.analise_perfil.confidence_desc}
                           </p>
                         </div>
                         <div className="grid grid-cols-3 gap-4 text-center">
                           <div className="bg-zinc-900/50 p-4 border border-white/5">
                             <p className="text-2xl font-bold text-white">{answerDetails.length}</p>
                             <p className="text-xs text-zinc-500 uppercase tracking-wider">
-                              Perguntas
+                              {t.analise_perfil.questions_label}
                             </p>
                           </div>
                           <div className="bg-zinc-900/50 p-4 border border-white/5">
@@ -2506,7 +2545,7 @@ function AnalisePerfilContent() {
                               {scorePercentages[0]?.percentage || 0}%
                             </p>
                             <p className="text-xs text-zinc-500 uppercase tracking-wider">
-                              Perfil Principal
+                              {t.analise_perfil.main_profile}
                             </p>
                           </div>
                           <div className="bg-zinc-900/50 p-4 border border-white/5">
@@ -2514,7 +2553,7 @@ function AnalisePerfilContent() {
                               {scorePercentages[1]?.percentage || 0}%
                             </p>
                             <p className="text-xs text-zinc-500 uppercase tracking-wider">
-                              Perfil Secundario
+                              {t.analise_perfil.secondary_profile_label}
                             </p>
                           </div>
                         </div>
@@ -2523,7 +2562,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <BarChart3 className="text-[#C5A059]" size={20} />
-                          Analise por Pergunta
+                          {t.analise_perfil.question_analysis}
                         </h3>
                         <div className="space-y-4">
                           {answerDetails.map((detail, i) => {
@@ -2546,7 +2585,7 @@ function AnalisePerfilContent() {
                                 <div className="flex items-start justify-between gap-4 mb-2">
                                   <div className="flex-1">
                                     <p className="text-xs text-zinc-500 mb-1">
-                                      Pergunta {detail.questionId}
+                                      {t.analise_perfil.question_prefix} {detail.questionId}
                                     </p>
                                     <p className="text-white text-sm font-medium">
                                       {detail.answerText}
@@ -2577,7 +2616,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <Activity className="text-[#C5A059]" size={20} />
-                          Comparacao com Outros Perfis
+                          {t.analise_perfil.other_profiles_comparison}
                         </h3>
                         <div className="space-y-6">
                           {Object.entries(results)
@@ -2595,14 +2634,18 @@ function AnalisePerfilContent() {
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                   <div>
-                                    <span className="text-zinc-500">Custos:</span>{" "}
+                                    <span className="text-zinc-500">
+                                      {t.analise_perfil.costs_label}
+                                    </span>{" "}
                                     <span className="text-zinc-300">
                                       {r.annualCosts.min.toLocaleString()}-
                                       {r.annualCosts.max.toLocaleString()}€/ano
                                     </span>
                                   </div>
                                   <div>
-                                    <span className="text-zinc-500">Preco:</span>{" "}
+                                    <span className="text-zinc-500">
+                                      {t.analise_perfil.price_label}
+                                    </span>{" "}
                                     <span className="text-zinc-300">{r.idealHorse.priceRange}</span>
                                   </div>
                                 </div>
@@ -2620,7 +2663,7 @@ function AnalisePerfilContent() {
                       <div className="bg-zinc-900/30 border border-white/5 p-8">
                         <h3 className="flex items-center gap-2 text-lg font-medium text-white mb-6">
                           <Compass className="text-[#C5A059]" size={20} />
-                          Proximos Passos Recomendados
+                          {t.analise_perfil.recommended_next_steps}
                         </h3>
                         <div className="space-y-4">
                           {result.nextSteps.map((s, i) => (
@@ -2639,11 +2682,10 @@ function AnalisePerfilContent() {
                       </div>
                       <div className="bg-gradient-to-r from-[#C5A059]/20 to-transparent border border-[#C5A059]/30 p-8 text-center">
                         <h3 className="text-xl font-serif text-white mb-4">
-                          Pronto para Encontrar o Seu Lusitano?
+                          {t.analise_perfil.ready_title}
                         </h3>
                         <p className="text-zinc-400 mb-8 max-w-md mx-auto">
-                          Explore o nosso directorio de coudelarias ou utilize as nossas ferramentas
-                          de analise.
+                          {t.analise_perfil.ready_desc}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                           <Link
@@ -2651,13 +2693,13 @@ function AnalisePerfilContent() {
                             className="inline-flex items-center justify-center gap-2 bg-[#C5A059] text-black px-8 py-4 font-bold uppercase tracking-wider text-sm hover:bg-white transition-colors"
                           >
                             <Briefcase size={18} />
-                            Explorar Coudelarias
+                            {t.analise_perfil.explore_studs}
                           </Link>
                           <Link
                             href={`/calculadora-valor?perfil=${result.profile}&min=${result.idealHorse.priceRange.split(" ")[0].replace(".", "").replace(",", "")}`}
                             className="inline-flex items-center justify-center gap-2 border border-[#C5A059] text-[#C5A059] px-8 py-4 font-bold uppercase tracking-wider text-sm hover:bg-[#C5A059] hover:text-black transition-colors"
                           >
-                            Calculadora de Valor
+                            {t.analise_perfil.value_calculator}
                             <ChevronRight size={18} />
                           </Link>
                         </div>
@@ -2673,7 +2715,7 @@ function AnalisePerfilContent() {
                     className="inline-flex items-center justify-center gap-2 border border-white/20 text-zinc-400 px-6 py-3 hover:text-white transition-colors"
                   >
                     <RotateCcw size={18} />
-                    Repetir Analise
+                    {t.analise_perfil.repeat_analysis}
                   </button>
                 </div>
               </section>
@@ -2686,11 +2728,12 @@ function AnalisePerfilContent() {
 }
 
 export default function AnalisePerfil() {
+  const { t } = useLanguage();
   return (
     <Suspense
       fallback={
         <div className="min-h-screen bg-[#050505] flex items-center justify-center">
-          <div className="text-[#C5A059]">A carregar...</div>
+          <div className="text-[#C5A059]">{t.analise_perfil.loading}</div>
         </div>
       }
     >

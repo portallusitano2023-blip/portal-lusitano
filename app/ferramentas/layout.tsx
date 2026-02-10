@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { BreadcrumbSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, WebApplicationSchema, FAQSchema } from "@/components/JsonLd";
+import { faqItems } from "./faq-data";
 
 const siteUrl = "https://portal-lusitano.pt";
 
@@ -53,6 +54,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           { name: "Ferramentas Equestres", url: `${siteUrl}/ferramentas` },
         ]}
       />
+      <WebApplicationSchema
+        name="Ferramentas Equestres — Portal Lusitano"
+        description="Suite de ferramentas gratuitas para proprietários, criadores e apaixonados pelo Cavalo Lusitano: calculadora de valor, comparador, compatibilidade genética e análise de perfil."
+        url={`${siteUrl}/ferramentas`}
+      />
+      <FAQSchema items={faqItems} />
       {children}
     </>
   );

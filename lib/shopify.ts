@@ -1,13 +1,108 @@
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN;
 const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_TOKEN;
 
+// Shopify Storefront API types
+// Fields are optional because different GraphQL queries return different subsets
+export interface ShopifyImage {
+  url: string;
+}
+
+export interface ShopifyPrice {
+  amount: string;
+  currencyCode?: string;
+}
+
+export interface ShopifyProductNode {
+  id: string;
+  handle?: string;
+  title: string;
+  descriptionHtml?: string;
+  images: { edges: Array<{ node: ShopifyImage }> };
+  priceRange?: { minVariantPrice: ShopifyPrice };
+  variants?: {
+    edges: Array<{
+      node: {
+        id: string;
+        title: string;
+        availableForSale: boolean;
+        price: ShopifyPrice;
+        image?: ShopifyImage;
+      };
+    }>;
+  };
+}
+
+export interface ShopifyCart {
+  id: string;
+  checkoutUrl?: string;
+  totalQuantity?: number;
+  lines?: {
+    edges: Array<{
+      node: {
+        id: string;
+        quantity: number;
+        merchandise: {
+          id?: string;
+          title?: string;
+          price: ShopifyPrice;
+          product: {
+            title: string;
+            images: { edges: Array<{ node: ShopifyImage }> };
+          };
+        };
+      };
+    }>;
+  };
+}
+
+interface ShopifyResponse {
+  data: {
+    products?: { edges: Array<{ node: ShopifyProductNode }> };
+    productByHandle?: ShopifyProductNode;
+    cartCreate?: { cart: ShopifyCart };
+    cart?: ShopifyCart;
+    cartLinesAdd?: { cart: ShopifyCart };
+    cartLinesRemove?: { cart: ShopifyCart };
+    cartLinesUpdate?: { cart: ShopifyCart };
+    customer?: ShopifyCustomer;
+  } | null;
+}
+
+interface ShopifyCustomer {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  defaultAddress?: {
+    address1: string;
+    city: string;
+    country: string;
+    zip: string;
+  };
+  orders: {
+    edges: Array<{
+      node: {
+        id: string;
+        orderNumber: number;
+        processedAt: string;
+        financialStatus: string;
+        fulfillmentStatus: string;
+        totalPrice: ShopifyPrice;
+        lineItems: { edges: Array<{ node: { title: string; quantity: number } }> };
+      };
+    }>;
+  };
+}
+
 interface ShopifyFetchParams {
   query: string;
   variables?: Record<string, unknown>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function shopifyFetch({ query, variables = {} }: ShopifyFetchParams): Promise<{ data: any }> {
+async function shopifyFetch({
+  query,
+  variables = {},
+}: ShopifyFetchParams): Promise<ShopifyResponse> {
   const endpoint = `https://${domain}/api/2024-01/graphql.json`;
   if (!domain || !storefrontAccessToken) return { data: null };
   try {
@@ -26,20 +121,39 @@ async function shopifyFetch({ query, variables = {} }: ShopifyFetchParams): Prom
   }
 }
 
-export async function getProducts() {
+export async function getProducts(): Promise<
+  Array<{
+    id: string;
+    handle?: string;
+    title: string;
+    images: ShopifyImage[];
+    priceRange?: { minVariantPrice: ShopifyPrice };
+  }>
+> {
   const query = `query { products(first: 20) { edges { node { id handle title images(first: 1) { edges { node { url } } } priceRange { minVariantPrice { amount } } } } } }`;
   const res = await shopifyFetch({ query });
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   return (
-    res.data?.products.edges.map((edge: any) => ({
+    res.data?.products?.edges.map((edge) => ({
       ...edge.node,
-      images: edge.node.images.edges.map((img: any) => img.node),
+      images: edge.node.images.edges.map((img) => img.node),
     })) || []
   );
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 }
 
-export async function getProduct(handle: string) {
+export async function getProduct(handle: string): Promise<{
+  id: string;
+  title: string;
+  handle?: string;
+  descriptionHtml?: string;
+  images: ShopifyImage[];
+  variants: Array<{
+    id: string;
+    title: string;
+    availableForSale: boolean;
+    price: ShopifyPrice;
+    image?: ShopifyImage;
+  }>;
+} | null> {
   const query = `
     query getProduct($handle: String!) {
       productByHandle(handle: $handle) {
@@ -67,10 +181,8 @@ export async function getProduct(handle: string) {
   if (!product) return null;
   return {
     ...product,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    images: product.images.edges.map((e: any) => e.node),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    variants: product.variants.edges.map((e: any) => e.node),
+    images: product.images.edges.map((e) => e.node),
+    variants: product.variants?.edges.map((e) => e.node) || [],
   };
 }
 

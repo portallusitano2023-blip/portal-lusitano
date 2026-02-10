@@ -11,6 +11,7 @@ vi.mock("@/lib/client", () => ({
 }));
 
 // Mock do Next.js Image component
+/* eslint-disable @next/next/no-img-element */
 vi.mock("next/image", () => ({
   default: ({
     src,
@@ -29,6 +30,7 @@ vi.mock("next/image", () => ({
     return <img src={src} alt={alt} className={className} />;
   },
 }));
+/* eslint-enable @next/next/no-img-element */
 
 // Mock do DynamicSEO component
 vi.mock("@/components/DynamicSEO", () => ({

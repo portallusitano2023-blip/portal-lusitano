@@ -1,8 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Crown, Loader2, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { logout } from "./actions";
 
 interface Customer {
@@ -28,6 +32,120 @@ interface Customer {
       };
     }[];
   };
+}
+
+function ToolsSubscriptionCard() {
+  const { user } = useAuth();
+  const [status, setStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [portalLoading, setPortalLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const load = async () => {
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const { data } = await supabase
+          .from("user_profiles")
+          .select("tools_subscription_status")
+          .eq("id", user.id)
+          .single();
+        setStatus(data?.tools_subscription_status || "inactive");
+      } catch {
+        setStatus(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, [user]);
+
+  const handleManagePortal = async () => {
+    setPortalLoading(true);
+    try {
+      const res = await fetch("/api/tools/customer-portal", { method: "POST" });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setPortalLoading(false);
+      }
+    } catch {
+      setPortalLoading(false);
+    }
+  };
+
+  const handleSubscribe = async () => {
+    setPortalLoading(true);
+    try {
+      const res = await fetch("/api/tools/create-checkout", { method: "POST" });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setPortalLoading(false);
+      }
+    } catch {
+      setPortalLoading(false);
+    }
+  };
+
+  if (loading || !user) return null;
+
+  const isActive = status === "active";
+
+  return (
+    <div className="bg-zinc-900/30 p-8 border border-white/5 mt-6">
+      <h3 className="text-lg font-serif italic text-white mb-4 flex items-center gap-2">
+        <Crown size={18} className="text-[#C5A059]" />
+        Ferramentas PRO
+      </h3>
+
+      {isActive ? (
+        <>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="inline-block w-2 h-2 bg-emerald-400 rounded-full" />
+            <span className="text-sm text-emerald-400">Subscricao activa</span>
+          </div>
+          <p className="text-xs text-zinc-500 mb-4">
+            4,99 EUR/mes — Acesso ilimitado a todas as ferramentas.
+          </p>
+          <button
+            onClick={handleManagePortal}
+            disabled={portalLoading}
+            className="inline-flex items-center gap-2 text-xs text-[#C5A059] hover:text-[#D4AF6A] font-medium transition-colors disabled:opacity-50"
+          >
+            {portalLoading ? (
+              <Loader2 size={14} className="animate-spin" />
+            ) : (
+              <ExternalLink size={14} />
+            )}
+            Gerir subscricao
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="text-sm text-zinc-400 mb-4">
+            Subscreva por <span className="text-[#C5A059] font-semibold">4,99 EUR/mes</span> para
+            acesso ilimitado a todas as ferramentas.
+          </p>
+          <button
+            onClick={handleSubscribe}
+            disabled={portalLoading}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black text-xs font-bold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all disabled:opacity-50"
+          >
+            {portalLoading ? <Loader2 size={14} className="animate-spin" /> : <Crown size={14} />}
+            Subscrever PRO
+          </button>
+        </>
+      )}
+    </div>
+  );
 }
 
 export default function MinhaContaContent({ customer }: { customer: Customer }) {
@@ -83,6 +201,8 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
                 </div>
               </div>
             </div>
+
+            <ToolsSubscriptionCard />
           </div>
 
           {/* --- COLUNA 2: HISTORICO DE ENCOMENDAS --- */}

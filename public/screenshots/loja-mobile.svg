@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1334" viewBox="0 0 750 1334">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#050505"/>
+      <stop offset="100%" style="stop-color:#0A0A0A"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#B8963F"/>
+      <stop offset="50%" style="stop-color:#C5A059"/>
+      <stop offset="100%" style="stop-color:#D4B06A"/>
+    </linearGradient>
+  </defs>
+  <rect width="750" height="1334" fill="url(#bg)"/>
+  <rect x="75" y="533.6" width="600" height="1" fill="url(#gold)" opacity="0.3"/>
+  <rect x="75" y="800.4" width="600" height="1" fill="url(#gold)" opacity="0.3"/>
+  <circle cx="375" cy="466.9" r="80" fill="none" stroke="#C5A059" stroke-width="2" opacity="0.5"/>
+  <text x="375" y="472.9" text-anchor="middle" font-family="Georgia, serif" font-size="32" fill="#C5A059" opacity="0.8">PL</text>
+  <text x="375" y="686.2" text-anchor="middle" font-family="Georgia, serif" font-size="48" fill="#C5A059" font-weight="600">Loja</text>
+  <text x="375" y="734.2" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#888888">Equipamento Equestre</text>
+  <text x="375" y="1133.8999999999999" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#555555">TODO: Substituir por screenshot real</text>
+</svg>

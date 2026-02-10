@@ -1,0 +1,275 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { NextRequest } from "next/server";
+
+// ---------------------------------------------------------------------------
+// Mocks
+// ---------------------------------------------------------------------------
+const mockSelect = vi.fn();
+const mockEq = vi.fn();
+const mockOr = vi.fn();
+const mockLimit = vi.fn();
+
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          or: vi.fn().mockReturnValue({
+            limit: vi.fn().mockResolvedValue({ data: [], error: null }),
+          }),
+        }),
+      }),
+    }),
+  },
+}));
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+function createGetRequest(params: Record<string, string> = {}) {
+  const url = new URL("http://localhost:3000/api/search");
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.set(key, value);
+  }
+  return new NextRequest(url.toString(), { method: "GET" });
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+describe("GET /api/search", () => {
+  let GET: typeof import("@/app/api/search/route").GET;
+
+  beforeEach(async () => {
+    vi.resetModules();
+
+    // Re-setup supabase mock with controllable responses
+    const { supabase } = await import("@/lib/supabase");
+
+    const createChain = (data: unknown[] = []) => ({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          or: vi.fn().mockReturnValue({
+            limit: vi.fn().mockResolvedValue({ data, error: null }),
+          }),
+        }),
+      }),
+    });
+
+    vi.mocked(supabase.from).mockImplementation((table: string) => {
+      if (table === "cavalos_venda") {
+        return createChain([]) as ReturnType<typeof supabase.from>;
+      }
+      if (table === "eventos") {
+        return createChain([]) as ReturnType<typeof supabase.from>;
+      }
+      if (table === "coudelarias") {
+        return createChain([]) as ReturnType<typeof supabase.from>;
+      }
+      return createChain([]) as ReturnType<typeof supabase.from>;
+    });
+
+    const routeModule = await import("@/app/api/search/route");
+    GET = routeModule.GET;
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should return empty results when query is missing", async () => {
+    const request = createGetRequest({});
+    const response = await GET(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.results).toEqual([]);
+  });
+
+  it("should return empty results when query is too short (< 2 chars)", async () => {
+    const request = createGetRequest({ q: "a" });
+    const response = await GET(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.results).toEqual([]);
+  });
+
+  it("should return matching static pages for valid query", async () => {
+    const request = createGetRequest({ q: "loja" });
+    const response = await GET(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.results.length).toBeGreaterThan(0);
+
+    const lojaResult = data.results.find((r: { url: string }) => r.url === "/loja");
+    expect(lojaResult).toBeDefined();
+    expect(lojaResult.type).toBe("page");
+    expect(lojaResult.title).toBe("Loja");
+  });
+
+  it("should return horse results from supabase", async () => {
+    vi.resetModules();
+
+    vi.doMock("@/lib/supabase", () => {
+      const createChainWithData = (data: unknown[]) => ({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            or: vi.fn().mockReturnValue({
+              limit: vi.fn().mockResolvedValue({ data, error: null }),
+            }),
+          }),
+        }),
+      });
+
+      return {
+        supabase: {
+          from: vi.fn().mockImplementation((table: string) => {
+            if (table === "cavalos_venda") {
+              return createChainWithData([
+                {
+                  id: "1",
+                  nome: "Lusitano Teste",
+                  descricao: "Cavalo de teste",
+                  imagens: ["https://example.com/horse.jpg"],
+                  slug: "lusitano-teste",
+                },
+              ]);
+            }
+            return createChainWithData([]);
+          }),
+        },
+      };
+    });
+
+    const routeModule = await import("@/app/api/search/route");
+    const request = createGetRequest({ q: "lusitano" });
+    const response = await routeModule.GET(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    const horseResult = data.results.find((r: { type: string }) => r.type === "horse");
+    expect(horseResult).toBeDefined();
+    expect(horseResult.id).toBe("horse-1");
+    expect(horseResult.title).toBe("Lusitano Teste");
+    expect(horseResult.url).toBe("/comprar/lusitano-teste");
+    expect(horseResult.image).toBe("https://example.com/horse.jpg");
+  });
+
+  it("should return event and stud results from supabase", async () => {
+    vi.resetModules();
+
+    vi.doMock("@/lib/supabase", () => {
+      const createChainWithData = (data: unknown[]) => ({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            or: vi.fn().mockReturnValue({
+              limit: vi.fn().mockResolvedValue({ data, error: null }),
+            }),
+          }),
+        }),
+      });
+
+      return {
+        supabase: {
+          from: vi.fn().mockImplementation((table: string) => {
+            if (table === "eventos") {
+              return createChainWithData([
+                {
+                  id: "ev1",
+                  titulo: "Feira do Cavalo",
+                  descricao: "Grande evento",
+                  slug: "feira-cavalo",
+                  imagem: "https://example.com/event.jpg",
+                },
+              ]);
+            }
+            if (table === "coudelarias") {
+              return createChainWithData([
+                {
+                  id: "st1",
+                  nome: "Coudelaria Real",
+                  descricao: "Coudelaria historica",
+                  slug: "coudelaria-real",
+                  logo: "https://example.com/stud.jpg",
+                },
+              ]);
+            }
+            return createChainWithData([]);
+          }),
+        },
+      };
+    });
+
+    const routeModule = await import("@/app/api/search/route");
+    const request = createGetRequest({ q: "cavalo" });
+    const response = await routeModule.GET(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+
+    const eventResult = data.results.find((r: { type: string }) => r.type === "event");
+    expect(eventResult).toBeDefined();
+    expect(eventResult.id).toBe("event-ev1");
+    expect(eventResult.title).toBe("Feira do Cavalo");
+    expect(eventResult.url).toBe("/eventos/feira-cavalo");
+
+    const studResult = data.results.find((r: { type: string }) => r.type === "stud");
+    expect(studResult).toBeDefined();
+    expect(studResult.id).toBe("stud-st1");
+    expect(studResult.title).toBe("Coudelaria Real");
+    expect(studResult.url).toBe("/directorio/coudelaria-real");
+  });
+
+  it("should respect the limit parameter", async () => {
+    const request = createGetRequest({ q: "ferramentas", limit: "1" });
+    const response = await GET(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.results.length).toBeLessThanOrEqual(1);
+  });
+
+  it("should cap limit at 30", async () => {
+    // The route caps limit at 30 via Math.min
+    const request = createGetRequest({ q: "loja", limit: "100" });
+    const response = await GET(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    // The total static pages matching "loja" won't exceed 30,
+    // but the important thing is it didn't crash
+    expect(data.results.length).toBeLessThanOrEqual(30);
+  });
+
+  it("should handle supabase errors gracefully via Promise.allSettled", async () => {
+    vi.resetModules();
+
+    vi.doMock("@/lib/supabase", () => ({
+      supabase: {
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              or: vi.fn().mockReturnValue({
+                limit: vi.fn().mockRejectedValue(new Error("DB connection failed")),
+              }),
+            }),
+          }),
+        }),
+      },
+    }));
+
+    const routeModule = await import("@/app/api/search/route");
+    const request = createGetRequest({ q: "loja" });
+    const response = await routeModule.GET(request);
+    const data = await response.json();
+
+    // Promise.allSettled means rejected supabase calls are handled;
+    // static pages should still return
+    expect(response.status).toBe(200);
+    expect(data.results).toBeDefined();
+    const lojaResult = data.results.find((r: { url: string }) => r.url === "/loja");
+    expect(lojaResult).toBeDefined();
+  });
+});

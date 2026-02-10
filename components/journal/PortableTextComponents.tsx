@@ -44,7 +44,7 @@ function getIcon(name?: string): LucideIcon {
 interface PortableTextRendererProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any[];
-  language?: "pt" | "en";
+  language?: "pt" | "en" | "es";
 }
 
 // Componentes custom do Portable Text para o Jornal Lusitano

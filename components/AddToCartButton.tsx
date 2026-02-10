@@ -19,6 +19,7 @@ export default function AddToCartButton({
   const buttonText = {
     pt: { add: "Adicionar ao Saco", adding: "A Adicionar...", sold_out: "Esgotado" },
     en: { add: "Add to Bag", adding: "Adding...", sold_out: "Sold Out" },
+    es: { add: "Anadir a la Bolsa", adding: "Anadiendo...", sold_out: "Agotado" },
   };
 
   const t = buttonText[language];

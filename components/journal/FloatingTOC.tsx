@@ -11,7 +11,7 @@ interface TOCItem {
 interface FloatingTOCProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: any[];
-  language?: "pt" | "en";
+  language?: "pt" | "en" | "es";
 }
 
 // Extrair headings do Portable Text body
@@ -20,9 +20,8 @@ function extractHeadings(body: FloatingTOCProps["body"]): TOCItem[] {
 
   body.forEach((block) => {
     if (block._type === "block" && (block.style === "h2" || block.style === "h3")) {
-      const text = block.children
-        ?.map((child: { text?: string }) => child.text || "")
-        .join("") || "";
+      const text =
+        block.children?.map((child: { text?: string }) => child.text || "").join("") || "";
       if (text) {
         headings.push({
           id: text.toLowerCase().replace(/\s+/g, "-"),
@@ -74,7 +73,10 @@ export default function FloatingTOC({ body, language = "pt" }: FloatingTOCProps)
   if (headings.length < 3) return null;
 
   return (
-    <nav className="sticky top-24" aria-label={language === "pt" ? "Índice do artigo" : "Table of contents"}>
+    <nav
+      className="sticky top-24"
+      aria-label={language === "pt" ? "Índice do artigo" : "Table of contents"}
+    >
       <h4 className="text-xs uppercase tracking-[0.2em] text-zinc-500 mb-4 font-bold">
         {language === "pt" ? "Índice" : "Contents"}
       </h4>

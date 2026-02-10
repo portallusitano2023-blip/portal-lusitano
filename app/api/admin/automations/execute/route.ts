@@ -134,14 +134,23 @@ export async function POST(req: NextRequest) {
 // ACTION EXECUTORS
 // ========================================
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AutomationData = Record<string, any>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TriggerData = Record<string, any>;
+interface AutomationData {
+  id: string;
+  name: string;
+  action_type: string;
+  action_config: Record<string, string | undefined>;
+  delay_minutes?: number;
+  total_runs: number;
+  successful_runs: number;
+  failed_runs: number;
+  enabled: boolean;
+  [key: string]: unknown;
+}
+type TriggerData = Record<string, unknown>;
 
 async function executeSendEmail(automation: AutomationData, triggerData: TriggerData) {
   const config = automation.action_config;
-  const to = config.to || triggerData.email;
+  const to = config.to || String(triggerData.email || "");
   const subject = config.subject || "Portal Lusitano";
   const template = config.template || "default";
 

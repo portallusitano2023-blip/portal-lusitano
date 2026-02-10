@@ -19,7 +19,10 @@ export default async function MinhaContaPage() {
   return (
     <>
       <Navbar />
-      <MinhaContaContent customer={customer} />
+      {/* getCustomer returns Shopify API data, cast to local Customer interface */}
+      <MinhaContaContent
+        customer={customer as unknown as Parameters<typeof MinhaContaContent>[0]["customer"]}
+      />
     </>
   );
 }

@@ -5,28 +5,28 @@ import { Instagram, Music2, Mail, MapPin, ArrowUpRight, Gift } from "lucide-reac
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Footer() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const navItems = [
     { name: t.nav.home, href: "/" },
     { name: t.nav.shop, href: "/loja" },
     { name: t.nav.journal, href: "/jornal" },
-    { name: language === "pt" ? "Sobre Nós" : "About Us", href: "/sobre" },
+    { name: t.footer.about, href: "/sobre" },
   ];
 
   const lusitanoItems = [
-    { name: "Comprar Cavalo", href: "/comprar" },
-    { name: "Coudelarias", href: "/directorio" },
-    { name: "Eventos", href: "/eventos" },
-    { name: "Linhagens", href: "/linhagens" },
-    { name: "Lusitanos Notáveis", href: "/cavalos-famosos" },
+    { name: t.footer.buy_horse, href: "/comprar" },
+    { name: t.footer.studs, href: "/directorio" },
+    { name: t.footer.events, href: "/eventos" },
+    { name: t.footer.lineages, href: "/linhagens" },
+    { name: t.footer.notable, href: "/cavalos-famosos" },
   ];
 
   const toolItems = [
-    { name: "Calculadora de Valor", href: "/calculadora-valor" },
-    { name: "Comparador", href: "/comparador-cavalos" },
-    { name: "Compatibilidade", href: "/verificador-compatibilidade" },
-    { name: "Análise de Perfil", href: "/analise-perfil" },
+    { name: t.footer.calculator, href: "/calculadora-valor" },
+    { name: t.footer.comparator, href: "/comparador-cavalos" },
+    { name: t.footer.compatibility, href: "/verificador-compatibilidade" },
+    { name: t.footer.profile_analysis, href: "/analise-perfil" },
   ];
 
   return (
@@ -77,7 +77,7 @@ export default function Footer() {
           {/* NAVEGAÇÃO */}
           <nav aria-label="Links principais" className="md:col-span-2 space-y-5">
             <h2 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
-              Navegação
+              {t.footer.navigation}
             </h2>
             <ul className="space-y-3">
               {navItems.map((item) => (
@@ -96,7 +96,7 @@ export default function Footer() {
           {/* LUSITANO */}
           <nav aria-label="Links Lusitano" className="md:col-span-3 space-y-5">
             <h2 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
-              Lusitano
+              {t.footer.lusitano}
             </h2>
             <ul className="space-y-3">
               {lusitanoItems.map((item) => (
@@ -116,7 +116,7 @@ export default function Footer() {
           <div className="md:col-span-3 space-y-8">
             <div className="space-y-5">
               <h2 className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">
-                Ferramentas
+                {t.footer.tools}
               </h2>
               <ul className="space-y-3">
                 {toolItems.map((item) => (
@@ -142,7 +142,7 @@ export default function Footer() {
                 className="inline-flex items-center gap-2 text-[#C5A059] text-[10px] uppercase tracking-widest font-bold hover:text-white transition-colors"
               >
                 <Gift size={12} />
-                Ebook Grátis
+                {t.footer.ebook}
                 <ArrowUpRight size={10} />
               </Link>
             </div>

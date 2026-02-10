@@ -21,6 +21,7 @@ import {
   Clock,
   Sparkles,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 // =============================================================================
 // TIPOS E INTERFACES
@@ -149,8 +150,7 @@ const linhagens: Linhagem[] = [
       },
       {
         ano: 1956,
-        evento:
-          "Nasce Firme na Coudelaria Andrade — futuro pai da geração de ouro",
+        evento: "Nasce Firme na Coudelaria Andrade — futuro pai da geração de ouro",
       },
       {
         ano: 1971,
@@ -164,8 +164,7 @@ const linhagens: Linhagem[] = [
       },
       {
         ano: 1983,
-        evento:
-          "Novilheiro é o cavalo com maior prémio acumulado em saltos na Europa",
+        evento: "Novilheiro é o cavalo com maior prémio acumulado em saltos na Europa",
         destaque: true,
       },
       {
@@ -232,7 +231,11 @@ const linhagens: Linhagem[] = [
       "Interagro (Brasil)",
     ],
     timeline: [
-      { ano: 1894, evento: "Dr. Ruy d'Andrade funda a coudelaria com éguas espanholas Cartujanas", destaque: true },
+      {
+        ano: 1894,
+        evento: "Dr. Ruy d'Andrade funda a coudelaria com éguas espanholas Cartujanas",
+        destaque: true,
+      },
       {
         ano: 1920,
         evento: "Dr. Ruy d'Andrade descobre cavalos Sorraia selvagens perto de Coruche",
@@ -245,8 +248,7 @@ const linhagens: Linhagem[] = [
       },
       {
         ano: 1938,
-        evento:
-          "Dr. Ruy d'Andrade salva a linha Alter Real com Vigilante, Regedor e Marialva II",
+        evento: "Dr. Ruy d'Andrade salva a linha Alter Real com Vigilante, Regedor e Marialva II",
         destaque: true,
       },
       {
@@ -352,8 +354,7 @@ const linhagens: Linhagem[] = [
       },
       {
         ano: 1910,
-        evento:
-          "Revolução Republicana: registos queimados, garanhões castrados",
+        evento: "Revolução Republicana: registos queimados, garanhões castrados",
       },
       {
         ano: 1923,
@@ -362,8 +363,7 @@ const linhagens: Linhagem[] = [
       },
       {
         ano: 1938,
-        evento:
-          "Dr. Ruy d'Andrade salva a linhagem com Vigilante, Regedor e Marialva II",
+        evento: "Dr. Ruy d'Andrade salva a linhagem com Vigilante, Regedor e Marialva II",
         destaque: true,
       },
       {
@@ -429,10 +429,7 @@ const linhagens: Linhagem[] = [
           "Única égua entre os 6 Chefes de Linha oficiais do PSL. Filha de Cartujano e Viscaína.",
       },
     ],
-    coudelariasPrincipais: [
-      "Coudelaria Nacional / Fonte Boa",
-      "Fundação Alter Real",
-    ],
+    coudelariasPrincipais: ["Coudelaria Nacional / Fonte Boa", "Fundação Alter Real"],
     timeline: [
       {
         ano: 1887,
@@ -456,8 +453,7 @@ const linhagens: Linhagem[] = [
       },
       {
         ano: 1989,
-        evento:
-          "Primoroso, Destinado e Hucharia reconhecidos no Stud Book oficial",
+        evento: "Primoroso, Destinado e Hucharia reconhecidos no Stud Book oficial",
         destaque: true,
       },
     ],
@@ -484,7 +480,13 @@ const chefesLinhagem = [
   { nome: "Agareno", ano: 1931, linhagem: "Veiga", tipo: "Garanhão", marca: "MV" },
   { nome: "Primoroso", ano: 1927, linhagem: "Dominguez Hermanos", tipo: "Garanhão", marca: "DH" },
   { nome: "Destinado", ano: 1930, linhagem: "Dominguez Hermanos", tipo: "Garanhão", marca: "DH" },
-  { nome: "Marialva II", ano: 1930, linhagem: "Fontes Pereira de Melo", tipo: "Garanhão", marca: "APM" },
+  {
+    nome: "Marialva II",
+    ano: 1930,
+    linhagem: "Fontes Pereira de Melo",
+    tipo: "Garanhão",
+    marca: "APM",
+  },
   { nome: "Regedor", ano: 1923, linhagem: "Alter Real", tipo: "Garanhão", marca: "AR" },
   { nome: "Hucharia", ano: 1943, linhagem: "Coudelaria Nacional", tipo: "Égua", marca: "CN" },
 ];
@@ -492,21 +494,36 @@ const chefesLinhagem = [
 // Timeline global de eventos históricos
 // FONTES: Compiladas de todas as fontes individuais acima
 const timelineGlobal: EventoHistorico[] = [
-  { ano: 1748, evento: "Rei D. João V funda a Coudelaria de Alter Real em Alter do Chão", destaque: true },
+  {
+    ano: 1748,
+    evento: "Rei D. João V funda a Coudelaria de Alter Real em Alter do Chão",
+    destaque: true,
+  },
   { ano: 1807, evento: "Invasões napoleónicas (1807-1811) devastam as coudelarias" },
   { ano: 1887, evento: "Fundação da Coudelaria Nacional", destaque: true },
   { ano: 1894, evento: "Dr. Ruy d'Andrade funda a coudelaria Andrade com éguas espanholas" },
-  { ano: 1910, evento: "Revolução: coudelaria Alter encerrada, registos queimados, garanhões castrados" },
+  {
+    ano: 1910,
+    evento: "Revolução: coudelaria Alter encerrada, registos queimados, garanhões castrados",
+  },
   { ano: 1920, evento: "Dr. Ruy d'Andrade descobre cavalos Sorraia selvagens perto de Coruche" },
   { ano: 1923, evento: "Nasce Regedor (AR), futuro Chefe de Linhagem", destaque: true },
   { ano: 1927, evento: "Nasce Primoroso (DH), futuro Chefe de Linha" },
   { ano: 1930, evento: "Nascem Destinado (DH) e Marialva II (APM)" },
   { ano: 1931, evento: "Nasce Agareno (MV), futuro Chefe de Linhagem", destaque: true },
-  { ano: 1938, evento: "Dr. Ruy d'Andrade adquire Vigilante, Regedor e Marialva II — salva a linha Alter Real", destaque: true },
+  {
+    ano: 1938,
+    evento: "Dr. Ruy d'Andrade adquire Vigilante, Regedor e Marialva II — salva a linha Alter Real",
+    destaque: true,
+  },
   { ano: 1942, evento: "Efectivo Alter Real transferido para o Ministério da Agricultura" },
   { ano: 1943, evento: "Nasce Hucharia (CN), única égua fundadora" },
   { ano: 1967, evento: "Falecimento de Dr. Ruy d'Andrade aos 87 anos" },
-  { ano: 1989, evento: "Stud Book reconhece oficialmente os 6 Chefes de Linhagem do PSL", destaque: true },
+  {
+    ano: 1989,
+    evento: "Stud Book reconhece oficialmente os 6 Chefes de Linhagem do PSL",
+    destaque: true,
+  },
 ];
 
 // =============================================================================
@@ -514,9 +531,8 @@ const timelineGlobal: EventoHistorico[] = [
 // =============================================================================
 
 export default function LinhagenPage() {
-  const [selectedLinhagem, setSelectedLinhagem] = useState<Linhagem | null>(
-    null
-  );
+  const { t } = useLanguage();
+  const [selectedLinhagem, setSelectedLinhagem] = useState<Linhagem | null>(null);
   const [showTimeline, setShowTimeline] = useState(false);
 
   const linhagensPrincipais = linhagens.filter((l) =>
@@ -534,20 +550,15 @@ export default function LinhagenPage() {
             className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#C5A059] transition-colors mb-8 touch-manipulation"
           >
             <ArrowLeft size={18} />
-            <span className="text-sm">Voltar</span>
+            <span className="text-sm">{t.linhagens.back}</span>
           </Link>
 
           <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
-              Conhecimento
+              {t.linhagens.badge}
             </span>
-            <h1 className="text-4xl md:text-6xl font-serif text-white mb-6">
-              Guia das Linhagens
-            </h1>
-            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
-              Descubra a história e as características das principais linhagens
-              do cavalo Lusitano. Séculos de selecção e tradição equestre.
-            </p>
+            <h1 className="text-4xl md:text-6xl font-serif text-white mb-6">{t.linhagens.title}</h1>
+            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">{t.linhagens.subtitle}</p>
           </div>
         </div>
       </section>
@@ -564,23 +575,15 @@ export default function LinhagenPage() {
             </div>
             <div>
               <h2 className="text-2xl font-serif text-white mb-4">
-                A Importância das Linhagens
+                {t.linhagens.importance_title}
               </h2>
-              <p className="text-zinc-400 leading-relaxed mb-4">
-                O cavalo Lusitano possui linhagens distintas que foram
-                desenvolvidas ao longo de séculos por famílias dedicadas à
-                criação. Cada linhagem tem características próprias em termos de
-                conformação, temperamento e aptidões.
-              </p>
+              <p className="text-zinc-400 leading-relaxed mb-4">{t.linhagens.importance_p1}</p>
               <p className="text-zinc-400 leading-relaxed">
-                Em 1989, o Livro Genealógico Português de Equinos reconheceu
-                oficialmente{" "}
+                {t.linhagens.importance_p2_prefix}{" "}
                 <span className="text-[#C5A059] font-medium">
-                  6 Chefes de Linhagem
+                  {t.linhagens.importance_p2_highlight}
                 </span>{" "}
-                como os pilares genéticos de toda a raça: 5 garanhões (Agareno,
-                Primoroso, Destinado, Marialva II e Regedor) e 1 égua
-                (Hucharia).
+                {t.linhagens.importance_p2_suffix}
               </p>
             </div>
           </div>
@@ -592,11 +595,9 @@ export default function LinhagenPage() {
           style={{ animationDelay: "0.15s" }}
         >
           <h2 className="text-2xl font-serif text-white mb-2 text-center">
-            Os 6 Chefes de Linhagem Oficiais
+            {t.linhagens.heads_title}
           </h2>
-          <p className="text-zinc-500 text-sm text-center mb-8">
-            Livro Genealógico Português de Equinos (31/Dez/1989)
-          </p>
+          <p className="text-zinc-500 text-sm text-center mb-8">{t.linhagens.heads_subtitle}</p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {chefesLinhagem.map((chefe) => (
               <div
@@ -614,9 +615,7 @@ export default function LinhagenPage() {
                     <Crown className="text-[#C5A059]" size={20} />
                   )}
                 </div>
-                <h3 className="text-white font-serif text-sm mb-1">
-                  {chefe.nome}
-                </h3>
+                <h3 className="text-white font-serif text-sm mb-1">{chefe.nome}</h3>
                 <p className="text-zinc-500 text-xs">{chefe.ano}</p>
                 <p className="text-[#C5A059] text-xs mt-1">{chefe.marca}</p>
                 <p className="text-zinc-600 text-[10px] mt-1 uppercase tracking-wider">
@@ -634,7 +633,7 @@ export default function LinhagenPage() {
             style={{ animationDelay: "0.2s" }}
           >
             <Sparkles size={20} className="fill-[#C5A059]" />
-            Linhagens Principais
+            {t.linhagens.main_lineages}
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
             {linhagensPrincipais.map((linhagem, index) => (
@@ -656,16 +655,10 @@ export default function LinhagenPage() {
           >
             <h3 className="text-sm font-serif text-zinc-400 mb-2 flex items-center gap-2">
               <BookOpen size={16} />
-              Outras Linhagens
+              {t.linhagens.other_lineages_title}
             </h3>
             <p className="text-zinc-500 text-sm leading-relaxed">
-              Existem outras linhagens reconhecidas na criação do Lusitano, como a{" "}
-              <strong className="text-zinc-400">Coimbra</strong> e a{" "}
-              <strong className="text-zinc-400">Infante da Câmara</strong>.
-              No entanto, a informação disponível online sobre estas linhagens é
-              muito limitada, existindo principalmente em literatura equestre
-              especializada e registos da APSL. Por rigor, optámos por não
-              publicar dados que não possamos verificar em fontes credíveis.
+              {t.linhagens.other_lineages_text}
             </p>
           </div>
         </section>
@@ -682,19 +675,13 @@ export default function LinhagenPage() {
             <div className="flex items-center gap-3">
               <Clock className="text-[#C5A059]" size={24} />
               <div>
-                <h2 className="text-xl font-serif text-white">
-                  Timeline Histórica das Linhagens
-                </h2>
-                <p className="text-zinc-500 text-sm">
-                  De 1748 a 1989 — os momentos que definiram a raça Lusitana
-                </p>
+                <h2 className="text-xl font-serif text-white">{t.linhagens.timeline_title}</h2>
+                <p className="text-zinc-500 text-sm">{t.linhagens.timeline_subtitle}</p>
               </div>
             </div>
             <ChevronRight
               size={20}
-              className={`text-[#C5A059] transition-transform ${
-                showTimeline ? "rotate-90" : ""
-              }`}
+              className={`text-[#C5A059] transition-transform ${showTimeline ? "rotate-90" : ""}`}
             />
           </button>
 
@@ -714,11 +701,7 @@ export default function LinhagenPage() {
                               : "bg-zinc-800 text-zinc-400"
                           }`}
                         >
-                          {evento.destaque ? (
-                            <Star size={14} />
-                          ) : (
-                            <Calendar size={14} />
-                          )}
+                          {evento.destaque ? <Star size={14} /> : <Calendar size={14} />}
                         </div>
                         <div
                           className={`flex-1 ${
@@ -727,14 +710,10 @@ export default function LinhagenPage() {
                               : "bg-zinc-800/30 border-zinc-800"
                           } border p-3`}
                         >
-                          <span className="text-sm font-bold text-white">
-                            {evento.ano}
-                          </span>
+                          <span className="text-sm font-bold text-white">{evento.ano}</span>
                           <p
                             className={`text-sm ${
-                              evento.destaque
-                                ? "text-zinc-300"
-                                : "text-zinc-400"
+                              evento.destaque ? "text-zinc-300" : "text-zinc-400"
                             }`}
                           >
                             {evento.evento}
@@ -754,56 +733,36 @@ export default function LinhagenPage() {
           style={{ animationDelay: "0.4s" }}
         >
           <h2 className="text-2xl font-serif text-white mb-6 text-center">
-            Como Escolher a Linhagem Ideal?
+            {t.linhagens.choose_title}
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="w-12 h-12 mx-auto bg-[#C5A059] rounded-full flex items-center justify-center mb-4">
                 <span className="text-black font-bold">1</span>
               </div>
-              <h3 className="text-white font-serif mb-2">
-                Defina o Objectivo
-              </h3>
-              <p className="text-zinc-400 text-sm">
-                Dressage, toureio, working equitation ou lazer? Cada linhagem
-                tem aptidões específicas. A Veiga excela no toureio e WE, a
-                Alter Real na Alta Escola, a Andrade no dressage.
-              </p>
+              <h3 className="text-white font-serif mb-2">{t.linhagens.choose_step1_title}</h3>
+              <p className="text-zinc-400 text-sm">{t.linhagens.choose_step1_desc}</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 mx-auto bg-[#C5A059] rounded-full flex items-center justify-center mb-4">
                 <span className="text-black font-bold">2</span>
               </div>
-              <h3 className="text-white font-serif mb-2">
-                Considere o Temperamento
-              </h3>
-              <p className="text-zinc-400 text-sm">
-                Os Veiga são mais reactivos e corajosos, ideais para cavaleiros
-                experientes. Os Andrade e Coudelaria Nacional são mais calmos e
-                versáteis, adequados a todos os níveis.
-              </p>
+              <h3 className="text-white font-serif mb-2">{t.linhagens.choose_step2_title}</h3>
+              <p className="text-zinc-400 text-sm">{t.linhagens.choose_step2_desc}</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 mx-auto bg-[#C5A059] rounded-full flex items-center justify-center mb-4">
                 <span className="text-black font-bold">3</span>
               </div>
-              <h3 className="text-white font-serif mb-2">
-                Visite Coudelarias
-              </h3>
-              <p className="text-zinc-400 text-sm">
-                Conheça cavalos de diferentes linhagens pessoalmente. Cada
-                exemplar é único e a interacção directa é insubstituível.
-              </p>
+              <h3 className="text-white font-serif mb-2">{t.linhagens.choose_step3_title}</h3>
+              <p className="text-zinc-400 text-sm">{t.linhagens.choose_step3_desc}</p>
             </div>
           </div>
         </section>
 
         {/* Modal de Linhagem */}
         {selectedLinhagem && (
-          <LinhagemModal
-            linhagem={selectedLinhagem}
-            onClose={() => setSelectedLinhagem(null)}
-          />
+          <LinhagemModal linhagem={selectedLinhagem} onClose={() => setSelectedLinhagem(null)} />
         )}
       </div>
     </main>
@@ -823,6 +782,7 @@ function LinhagemCard({
   index: number;
   onSelect: () => void;
 }) {
+  const { t } = useLanguage();
   const iconMap: Record<string, typeof Shield> = {
     veiga: Target,
     andrade: Award,
@@ -848,7 +808,7 @@ function LinhagemCard({
         {/* Badge de data */}
         <div className="absolute top-4 left-4 bg-black/60 text-[#C5A059] px-3 py-1 text-sm flex items-center gap-2">
           <Calendar size={14} />
-          Desde {linhagem.anoFundacao}
+          {t.linhagens.since} {linhagem.anoFundacao}
         </div>
 
         {/* Nível de confiança */}
@@ -863,13 +823,13 @@ function LinhagemCard({
             <div className="flex items-center gap-2 mb-3">
               <Crown size={14} className="text-[#C5A059]" />
               <span className="text-xs text-[#C5A059]">
-                Chefe de Linhagem: {linhagem.cabecaLinhagem}
+                {t.linhagens.lineage_head}: {linhagem.cabecaLinhagem}
               </span>
             </div>
           )}
 
           <h3 className="text-2xl font-serif text-white group-hover:text-[#C5A059] transition-colors mb-2">
-            Linhagem {linhagem.nome}
+            {t.linhagens.lineage_prefix} {linhagem.nome}
           </h3>
 
           <div className="flex items-center gap-2 text-zinc-400 text-sm mb-3">
@@ -877,28 +837,20 @@ function LinhagemCard({
             {linhagem.origem}
           </div>
 
-          <p className="text-zinc-400 text-sm line-clamp-2 mb-4">
-            {linhagem.descricao}
-          </p>
+          <p className="text-zinc-400 text-sm line-clamp-2 mb-4">{linhagem.descricao}</p>
 
           {/* Aptidões */}
           <div className="flex flex-wrap gap-2 mb-4">
             {linhagem.aptidoes.slice(0, 4).map((apt) => (
-              <span
-                key={apt}
-                className="text-xs bg-[#C5A059]/10 text-[#C5A059] px-2 py-0.5"
-              >
+              <span key={apt} className="text-xs bg-[#C5A059]/10 text-[#C5A059] px-2 py-0.5">
                 {apt}
               </span>
             ))}
           </div>
 
           <div className="flex items-center gap-2 text-[#C5A059] text-sm">
-            Explorar linhagem
-            <ChevronRight
-              size={16}
-              className="group-hover:translate-x-1 transition-transform"
-            />
+            {t.linhagens.explore_lineage}
+            <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
       </div>
@@ -910,13 +862,8 @@ function LinhagemCard({
 // MODAL DE LINHAGEM (EXPANDIDO)
 // =============================================================================
 
-function LinhagemModal({
-  linhagem,
-  onClose,
-}: {
-  linhagem: Linhagem;
-  onClose: () => void;
-}) {
+function LinhagemModal({ linhagem, onClose }: { linhagem: Linhagem; onClose: () => void }) {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<
     "historia" | "caracteristicas" | "cavalos" | "timeline"
   >("historia");
@@ -954,14 +901,14 @@ function LinhagemModal({
                 </span>
               )}
               <span className="text-xs bg-zinc-800 text-zinc-400 px-2 py-1">
-                Confiança: {linhagem.confianca}
+                {t.linhagens.confidence_label}: {linhagem.confianca}
               </span>
             </div>
             <h2 className="text-3xl font-serif text-white">
-              Linhagem {linhagem.nome}
+              {t.linhagens.lineage_prefix} {linhagem.nome}
             </h2>
             <p className="text-[#C5A059] mt-1">
-              {linhagem.origem} &bull; Desde {linhagem.anoFundacao}
+              {linhagem.origem} &bull; {t.linhagens.since} {linhagem.anoFundacao}
             </p>
           </div>
         </div>
@@ -970,14 +917,14 @@ function LinhagemModal({
         <div className="border-b border-zinc-800 px-8">
           <div className="flex gap-1 -mb-px overflow-x-auto">
             {[
-              { id: "historia" as const, label: "História", icon: BookOpen },
+              { id: "historia" as const, label: t.linhagens.tab_history, icon: BookOpen },
               {
                 id: "caracteristicas" as const,
-                label: "Características",
+                label: t.linhagens.tab_characteristics,
                 icon: Dna,
               },
-              { id: "cavalos" as const, label: "Cavalos Notáveis", icon: Star },
-              { id: "timeline" as const, label: "Timeline", icon: Clock },
+              { id: "cavalos" as const, label: t.linhagens.tab_notable_horses, icon: Star },
+              { id: "timeline" as const, label: t.linhagens.tab_timeline, icon: Clock },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -1004,12 +951,8 @@ function LinhagemModal({
               <div className="flex items-center gap-3 p-4 bg-[#C5A059]/10 border border-[#C5A059]/20">
                 <Users className="text-[#C5A059]" size={24} />
                 <div>
-                  <div className="text-zinc-500 text-xs uppercase">
-                    Fundador
-                  </div>
-                  <div className="text-white font-serif">
-                    {linhagem.fundador}
-                  </div>
+                  <div className="text-zinc-500 text-xs uppercase">{t.linhagens.founder}</div>
+                  <div className="text-white font-serif">{linhagem.fundador}</div>
                 </div>
               </div>
 
@@ -1019,11 +962,9 @@ function LinhagemModal({
                   <Crown className="text-[#C5A059]" size={24} />
                   <div>
                     <div className="text-zinc-500 text-xs uppercase">
-                      Chefe de Linhagem
+                      {t.linhagens.lineage_head}
                     </div>
-                    <div className="text-zinc-300 text-sm">
-                      {linhagem.cabecaLinhagemInfo}
-                    </div>
+                    <div className="text-zinc-300 text-sm">{linhagem.cabecaLinhagemInfo}</div>
                   </div>
                 </div>
               )}
@@ -1032,7 +973,7 @@ function LinhagemModal({
               <div>
                 <h3 className="text-lg font-serif text-white mb-4 flex items-center gap-2">
                   <BookOpen size={18} className="text-[#C5A059]" />
-                  História
+                  {t.linhagens.history}
                 </h3>
                 <div className="space-y-4">
                   {linhagem.historiaCompleta.map((paragrafo, i) => (
@@ -1047,14 +988,11 @@ function LinhagemModal({
               <div className="bg-[#C5A059]/5 border border-[#C5A059]/20 p-4">
                 <h3 className="text-sm font-semibold text-[#C5A059] mb-3 flex items-center gap-2">
                   <Sparkles size={14} />
-                  Factos Chave
+                  {t.linhagens.key_facts}
                 </h3>
                 <ul className="space-y-2">
                   {linhagem.factosChave.map((facto, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-2 text-sm text-zinc-300"
-                    >
+                    <li key={i} className="flex items-start gap-2 text-sm text-zinc-300">
                       <div className="w-1.5 h-1.5 bg-[#C5A059] rounded-full mt-1.5 flex-shrink-0" />
                       {facto}
                     </li>
@@ -1069,15 +1007,10 @@ function LinhagemModal({
             <div className="space-y-8">
               {/* Morfologia */}
               <div>
-                <h3 className="text-lg font-serif text-white mb-3">
-                  Morfologia
-                </h3>
+                <h3 className="text-lg font-serif text-white mb-3">{t.linhagens.morphology}</h3>
                 <ul className="grid md:grid-cols-2 gap-2">
                   {linhagem.caracteristicas.map((car, i) => (
-                    <li
-                      key={i}
-                      className="flex items-center gap-2 text-zinc-400"
-                    >
+                    <li key={i} className="flex items-center gap-2 text-zinc-400">
                       <div className="w-1.5 h-1.5 bg-[#C5A059] rounded-full" />
                       {car}
                     </li>
@@ -1088,25 +1021,20 @@ function LinhagemModal({
               {/* Temperamento */}
               <div>
                 <h3 className="text-lg font-serif text-white mb-3">
-                  Temperamento
+                  {t.linhagens.temperament_label}
                 </h3>
-                <p className="text-zinc-400 leading-relaxed">
-                  {linhagem.temperamento}
-                </p>
+                <p className="text-zinc-400 leading-relaxed">{linhagem.temperamento}</p>
               </div>
 
               {/* Cores e Aptidões */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-lg font-serif text-white mb-3">
-                    Cores Comuns
+                    {t.linhagens.common_colors}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {linhagem.coresComuns.map((cor) => (
-                      <span
-                        key={cor}
-                        className="bg-zinc-800 text-zinc-300 px-3 py-1 text-sm"
-                      >
+                      <span key={cor} className="bg-zinc-800 text-zinc-300 px-3 py-1 text-sm">
                         {cor}
                       </span>
                     ))}
@@ -1114,15 +1042,10 @@ function LinhagemModal({
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-serif text-white mb-3">
-                    Aptidões
-                  </h3>
+                  <h3 className="text-lg font-serif text-white mb-3">{t.linhagens.aptitudes}</h3>
                   <div className="flex flex-wrap gap-2">
                     {linhagem.aptidoes.map((apt) => (
-                      <span
-                        key={apt}
-                        className="bg-[#C5A059]/10 text-[#C5A059] px-3 py-1 text-sm"
-                      >
+                      <span key={apt} className="bg-[#C5A059]/10 text-[#C5A059] px-3 py-1 text-sm">
                         {apt}
                       </span>
                     ))}
@@ -1134,14 +1057,11 @@ function LinhagemModal({
               {linhagem.coudelariasPrincipais.length > 0 && (
                 <div>
                   <h3 className="text-lg font-serif text-white mb-3">
-                    Coudelarias de Referência
+                    {t.linhagens.reference_studs}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {linhagem.coudelariasPrincipais.map((coud) => (
-                      <span
-                        key={coud}
-                        className="bg-zinc-800 text-zinc-300 px-3 py-1 text-sm"
-                      >
+                      <span key={coud} className="bg-zinc-800 text-zinc-300 px-3 py-1 text-sm">
                         {coud}
                       </span>
                     ))}
@@ -1156,27 +1076,17 @@ function LinhagemModal({
             <div className="space-y-4">
               <h3 className="text-lg font-serif text-white mb-4 flex items-center gap-2">
                 <Award size={18} className="text-[#C5A059]" />
-                Lusitanos Notáveis desta Linhagem
+                {t.linhagens.notable_horses_title}
               </h3>
               {linhagem.cavalosNotaveis.length > 0 ? (
                 <div className="space-y-4">
                   {linhagem.cavalosNotaveis.map((cavalo, i) => (
-                    <div
-                      key={i}
-                      className="p-5 bg-zinc-800/50 border border-white/5"
-                    >
+                    <div key={i} className="p-5 bg-zinc-800/50 border border-white/5">
                       <div className="flex items-center gap-2 mb-2">
-                        <Star
-                          size={16}
-                          className="text-[#C5A059] fill-[#C5A059]"
-                        />
-                        <span className="text-white font-serif text-lg">
-                          {cavalo.nome}
-                        </span>
+                        <Star size={16} className="text-[#C5A059] fill-[#C5A059]" />
+                        <span className="text-white font-serif text-lg">{cavalo.nome}</span>
                         {cavalo.ano && (
-                          <span className="text-zinc-500 text-sm">
-                            ({cavalo.ano})
-                          </span>
+                          <span className="text-zinc-500 text-sm">({cavalo.ano})</span>
                         )}
                       </div>
                       <p className="text-zinc-400 text-sm leading-relaxed pl-6">
@@ -1188,9 +1098,7 @@ function LinhagemModal({
               ) : (
                 <div className="text-center py-8 text-zinc-500">
                   <Star size={32} className="mx-auto mb-3 opacity-30" />
-                  <p>
-                    Informação limitada sobre cavalos notáveis desta linhagem.
-                  </p>
+                  <p>{t.linhagens.no_notable_horses}</p>
                 </div>
               )}
             </div>
@@ -1201,7 +1109,7 @@ function LinhagemModal({
             <div className="space-y-4">
               <h3 className="text-lg font-serif text-white mb-4 flex items-center gap-2">
                 <Clock size={18} className="text-[#C5A059]" />
-                Momentos Históricos
+                {t.linhagens.historic_moments}
               </h3>
               {linhagem.timeline.length > 0 ? (
                 <div className="relative">
@@ -1210,10 +1118,7 @@ function LinhagemModal({
                     {linhagem.timeline
                       .sort((a, b) => a.ano - b.ano)
                       .map((evento, i) => (
-                        <div
-                          key={i}
-                          className="flex items-start gap-4 relative"
-                        >
+                        <div key={i} className="flex items-start gap-4 relative">
                           <div
                             className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 z-10 ${
                               evento.destaque
@@ -1221,11 +1126,7 @@ function LinhagemModal({
                                 : "bg-zinc-800 text-zinc-400"
                             }`}
                           >
-                            {evento.destaque ? (
-                              <Star size={14} />
-                            ) : (
-                              <Calendar size={14} />
-                            )}
+                            {evento.destaque ? <Star size={14} /> : <Calendar size={14} />}
                           </div>
                           <div
                             className={`flex-1 ${
@@ -1234,14 +1135,10 @@ function LinhagemModal({
                                 : "bg-zinc-800/30 border-zinc-800"
                             } border p-3`}
                           >
-                            <span className="text-sm font-bold text-white">
-                              {evento.ano}
-                            </span>
+                            <span className="text-sm font-bold text-white">{evento.ano}</span>
                             <p
                               className={`text-sm ${
-                                evento.destaque
-                                  ? "text-zinc-300"
-                                  : "text-zinc-400"
+                                evento.destaque ? "text-zinc-300" : "text-zinc-400"
                               }`}
                             >
                               {evento.evento}
@@ -1254,7 +1151,7 @@ function LinhagemModal({
               ) : (
                 <div className="text-center py-8 text-zinc-500">
                   <Clock size={32} className="mx-auto mb-3 opacity-30" />
-                  <p>Timeline limitada para esta linhagem.</p>
+                  <p>{t.linhagens.no_timeline}</p>
                 </div>
               )}
             </div>

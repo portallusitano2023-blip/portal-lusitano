@@ -51,6 +51,14 @@ export default function CartDrawer() {
       shipping_note: "Shipping and taxes calculated at checkout.",
       checkout: "Checkout",
     },
+    es: {
+      title: "Su Bolsa",
+      empty: "Su bolsa esta vacia.",
+      empty_cta: "Explorar la Coleccion",
+      subtotal: "Subtotal",
+      shipping_note: "Envio e impuestos calculados en el checkout.",
+      checkout: "Finalizar Compra",
+    },
   };
 
   const ct = cartText[language];
@@ -134,6 +142,11 @@ export default function CartDrawer() {
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           disabled={item.quantity <= 1}
                           className="text-zinc-400 hover:text-white"
+                          aria-label={
+                            language === "pt"
+                              ? `Diminuir quantidade de ${item.title}`
+                              : `Decrease quantity of ${item.title}`
+                          }
                         >
                           <Minus size={14} />
                         </button>
@@ -143,6 +156,11 @@ export default function CartDrawer() {
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           className="text-zinc-400 hover:text-white"
+                          aria-label={
+                            language === "pt"
+                              ? `Aumentar quantidade de ${item.title}`
+                              : `Increase quantity of ${item.title}`
+                          }
                         >
                           <Plus size={14} />
                         </button>

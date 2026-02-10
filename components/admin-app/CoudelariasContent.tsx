@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FiSearch, FiEdit2, FiTrash2, FiCheck, FiX, FiStar, FiEye } from "react-icons/fi";
+import { Search, Pencil, Trash2, Check, X, Star, Eye } from "lucide-react";
 
 interface Coudelaria {
   id: string;
@@ -172,7 +172,7 @@ export default function CoudelariasContent() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search */}
           <div className="relative">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Pesquisar coudelarias..."
@@ -239,7 +239,7 @@ export default function CoudelariasContent() {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-white font-medium">{coudelaria.nome}</span>
-                      {coudelaria.destaque && <FiStar className="text-[#C5A059]" size={14} />}
+                      {coudelaria.destaque && <Star className="text-[#C5A059]" size={14} />}
                     </div>
                     <div className="text-xs text-gray-400 mt-1">
                       {coudelaria.proprietario_nome || coudelaria.proprietario_email}
@@ -279,7 +279,7 @@ export default function CoudelariasContent() {
                         className="p-2 hover:bg-green-500/20 rounded-lg transition-colors"
                         title="Aprovar"
                       >
-                        <FiCheck className="text-green-500" size={16} />
+                        <Check className="text-green-500" size={16} />
                       </button>
                     )}
 
@@ -290,7 +290,7 @@ export default function CoudelariasContent() {
                         className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
                         title="Rejeitar"
                       >
-                        <FiX className="text-red-500" size={16} />
+                        <X className="text-red-500" size={16} />
                       </button>
                     )}
 
@@ -308,7 +308,7 @@ export default function CoudelariasContent() {
                       }`}
                       title={coudelaria.destaque ? "Remover destaque" : "Adicionar destaque"}
                     >
-                      <FiStar
+                      <Star
                         className={coudelaria.destaque ? "text-[#C5A059]" : "text-gray-400"}
                         size={16}
                       />
@@ -321,7 +321,7 @@ export default function CoudelariasContent() {
                       className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                       title="Ver no site"
                     >
-                      <FiEye className="text-gray-400" size={16} />
+                      <Eye className="text-gray-400" size={16} />
                     </Link>
 
                     {/* Editar */}
@@ -330,7 +330,7 @@ export default function CoudelariasContent() {
                       className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                       title="Editar"
                     >
-                      <FiEdit2 className="text-gray-400" size={16} />
+                      <Pencil className="text-gray-400" size={16} />
                     </button>
 
                     {/* Eliminar */}
@@ -339,7 +339,7 @@ export default function CoudelariasContent() {
                       className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
                       title="Eliminar"
                     >
-                      <FiTrash2 className="text-red-500" size={16} />
+                      <Trash2 className="text-red-500" size={16} />
                     </button>
                   </div>
                 </td>

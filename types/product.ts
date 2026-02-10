@@ -17,7 +17,9 @@ export interface ProductVariant {
 export interface Product {
   id: string;
   title: string;
+  handle?: string;
   description?: string;
+  descriptionHtml?: string;
   images: ProductImage[];
   variants: ProductVariant[];
 }
@@ -25,10 +27,10 @@ export interface Product {
 /** Produto Shopify (listagem) */
 export interface ProductListing {
   id: string;
-  handle: string;
+  handle?: string;
   title: string;
   description?: string;
   images: { url: string }[];
-  priceRange: { minVariantPrice: { amount: string } };
+  priceRange?: { minVariantPrice: { amount: string } };
   variants?: { id: string; title: string; price: { amount: string } }[];
 }

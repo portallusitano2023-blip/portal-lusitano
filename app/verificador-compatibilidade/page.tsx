@@ -23,8 +23,8 @@ import ResultActions from "@/components/tools/ResultActions";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
-import { generateCompatibilidadePDF } from "@/lib/tools/pdf/compatibilidade-pdf";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ============================================
 // TIPOS
@@ -152,6 +152,7 @@ const DEFEITOS_GENETICOS = [
 // ============================================
 
 export default function VerificadorCompatibilidadePage() {
+  const { t } = useLanguage();
   const [garanhao, setGaranhao] = useState<Cavalo>(criarCavalo("Garanhão"));
   const [egua, setEgua] = useState<Cavalo>(criarCavalo("Égua"));
   const [tab, setTab] = useState<"garanhao" | "egua">("garanhao");
@@ -159,13 +160,20 @@ export default function VerificadorCompatibilidadePage() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [resultado, setResultado] = useState<ResultadoCompatibilidade | null>(null);
   const [isExporting, setIsExporting] = useState(false);
-  const { canUse, isSubscribed, freeUsesLeft, requiresAuth, recordUsage } =
-    useToolAccess("compatibilidade");
+  const {
+    canUse,
+    isSubscribed,
+    freeUsesLeft,
+    requiresAuth,
+    recordUsage,
+    isLoading: accessLoading,
+  } = useToolAccess("compatibilidade");
 
   const handleExportPDF = async () => {
     if (!resultado) return;
     setIsExporting(true);
     try {
+      const { generateCompatibilidadePDF } = await import("@/lib/tools/pdf/compatibilidade-pdf");
       await generateCompatibilidadePDF(garanhao, egua, resultado);
     } finally {
       setIsExporting(false);
@@ -174,8 +182,8 @@ export default function VerificadorCompatibilidadePage() {
 
   const handleShare = async () => {
     const url = window.location.href;
-    const title = "Verificador de Compatibilidade Equina";
-    const text = `Compatibilidade: ${garanhao.nome || "Garanhao"} x ${egua.nome || "Egua"} - Portal Lusitano`;
+    const title = t.verificador.tool_name;
+    const text = `${t.verificador.compatibility}: ${garanhao.nome || t.verificador.tab_stallion} x ${egua.nome || t.verificador.tab_mare} - Portal Lusitano`;
     const shared = await shareNative(title, text, url);
     if (!shared) await copyToClipboard(url);
   };
@@ -521,9 +529,9 @@ export default function VerificadorCompatibilidadePage() {
             </div>
             <div className="hidden sm:block">
               <span className="text-sm font-medium text-white block leading-tight">
-                Verificador de Compatibilidade
+                {t.verificador.tool_name}
               </span>
-              <span className="text-xs text-zinc-500">Análise Genética para Reprodução</span>
+              <span className="text-xs text-zinc-500">{t.verificador.tool_subtitle}</span>
             </div>
           </div>
 
@@ -533,7 +541,7 @@ export default function VerificadorCompatibilidadePage() {
               className="text-sm text-pink-400 hover:text-pink-300 transition-colors flex items-center gap-2"
             >
               <RefreshCw size={14} />
-              <span className="hidden sm:inline">Nova análise</span>
+              <span className="hidden sm:inline">{t.verificador.new_analysis}</span>
             </button>
           )}
         </div>
@@ -542,11 +550,17 @@ export default function VerificadorCompatibilidadePage() {
       <div className="pt-16">
         {/* Subscription Banner */}
         <div className="max-w-4xl mx-auto px-4 pt-6">
-          <SubscriptionBanner
-            isSubscribed={isSubscribed}
-            freeUsesLeft={freeUsesLeft}
-            requiresAuth={requiresAuth}
-          />
+          {accessLoading ? (
+            <div className="flex items-center justify-center py-4">
+              <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
+            </div>
+          ) : (
+            <SubscriptionBanner
+              isSubscribed={isSubscribed}
+              freeUsesLeft={freeUsesLeft}
+              requiresAuth={requiresAuth}
+            />
+          )}
         </div>
 
         {/* ==================== INTRO ==================== */}
@@ -572,16 +586,16 @@ export default function VerificadorCompatibilidadePage() {
                   className="inline-block px-4 py-1.5 bg-pink-500/10 border border-pink-500/30 text-pink-400 text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.2s" }}
                 >
-                  Ferramenta de Criação
+                  {t.verificador.badge}
                 </span>
 
                 <h1
                   className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.3s" }}
                 >
-                  Verificador de
+                  {t.verificador.title_prefix}
                   <span className="block text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 mt-2">
-                    Compatibilidade Genética
+                    {t.verificador.title_accent}
                   </span>
                 </h1>
 
@@ -589,16 +603,14 @@ export default function VerificadorCompatibilidadePage() {
                   className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.4s" }}
                 >
-                  &ldquo;Analise a compatibilidade entre garanhão e égua antes do cruzamento.
-                  Previsão de COI, BLUP, pelagens e riscos genéticos.&rdquo;
+                  &ldquo;{t.verificador.intro_quote}&rdquo;
                 </p>
 
                 <p
                   className="text-sm text-zinc-500 max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.5s" }}
                 >
-                  Baseado em princípios de genética equina, índices BLUP e padrões de seleção do
-                  Stud Book Lusitano (APSL).
+                  {t.verificador.intro_desc}
                 </p>
 
                 <button
@@ -607,7 +619,7 @@ export default function VerificadorCompatibilidadePage() {
                   style={{ animationDelay: "0.6s" }}
                 >
                   <Dna size={20} />
-                  Iniciar Análise
+                  {t.verificador.start_btn}
                   <ChevronRight size={18} />
                 </button>
               </div>
@@ -624,33 +636,28 @@ export default function VerificadorCompatibilidadePage() {
                     <div className="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center mb-4">
                       <Dna className="text-pink-400" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Análise de COI</h3>
-                    <p className="text-sm text-zinc-400">
-                      Cálculo do Coeficiente de Consanguinidade previsto para ajudar a evitar
-                      problemas genéticos na descendência.
-                    </p>
+                    <h3 className="text-lg font-serif text-white mb-2">{t.verificador.feat_coi}</h3>
+                    <p className="text-sm text-zinc-400">{t.verificador.feat_coi_desc}</p>
                   </div>
 
                   <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                     <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-4">
                       <Palette className="text-purple-400" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Previsão de Pelagem</h3>
-                    <p className="text-sm text-zinc-400">
-                      Probabilidades de pelagem do potro baseadas nos genótipos Extension, Agouti,
-                      Grey e Cream dos progenitores.
-                    </p>
+                    <h3 className="text-lg font-serif text-white mb-2">
+                      {t.verificador.feat_coat}
+                    </h3>
+                    <p className="text-sm text-zinc-400">{t.verificador.feat_coat_desc}</p>
                   </div>
 
                   <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                     <div className="w-12 h-12 bg-amber-500/10 rounded-lg flex items-center justify-center mb-4">
                       <AlertTriangle className="text-amber-400" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Riscos Genéticos</h3>
-                    <p className="text-sm text-zinc-400">
-                      Identificação de defeitos genéticos comuns como WFFS, OCD e outros problemas
-                      hereditários a evitar.
-                    </p>
+                    <h3 className="text-lg font-serif text-white mb-2">
+                      {t.verificador.feat_risks}
+                    </h3>
+                    <p className="text-sm text-zinc-400">{t.verificador.feat_risks_desc}</p>
                   </div>
                 </div>
 
@@ -661,13 +668,9 @@ export default function VerificadorCompatibilidadePage() {
                   <div className="flex items-start gap-4">
                     <Info className="text-pink-400 flex-shrink-0 mt-1" size={20} />
                     <div>
-                      <h4 className="text-white font-medium mb-2">Sobre a Análise</h4>
+                      <h4 className="text-white font-medium mb-2">{t.verificador.about_title}</h4>
                       <p className="text-sm text-zinc-400 leading-relaxed">
-                        Esta ferramenta analisa mais de 10 parâmetros incluindo idade reprodutiva,
-                        compatibilidade física, qualidade genética, conformação, andamentos,
-                        temperamento, estado de saúde, fertilidade e defeitos genéticos conhecidos.
-                        O resultado inclui previsões de BLUP, COI e pelagem do potro, bem como
-                        recomendações personalizadas.
+                        {t.verificador.about_desc}
                       </p>
                     </div>
                   </div>
@@ -693,8 +696,10 @@ export default function VerificadorCompatibilidadePage() {
               >
                 <Crown size={20} />
                 <div className="text-left">
-                  <span className="block font-semibold">Garanhão</span>
-                  <span className="text-xs opacity-70">{garanhao.nome || "Não definido"}</span>
+                  <span className="block font-semibold">{t.verificador.tab_stallion}</span>
+                  <span className="text-xs opacity-70">
+                    {garanhao.nome || t.verificador.not_defined_m}
+                  </span>
                 </div>
               </button>
               <button
@@ -707,8 +712,10 @@ export default function VerificadorCompatibilidadePage() {
               >
                 <Heart size={20} />
                 <div className="text-left">
-                  <span className="block font-semibold">Égua</span>
-                  <span className="text-xs opacity-70">{egua.nome || "Não definida"}</span>
+                  <span className="block font-semibold">{t.verificador.tab_mare}</span>
+                  <span className="text-xs opacity-70">
+                    {egua.nome || t.verificador.not_defined_f}
+                  </span>
                 </div>
               </button>
             </div>
@@ -722,10 +729,10 @@ export default function VerificadorCompatibilidadePage() {
                   <Heart className="text-pink-400" size={24} />
                 )}
                 <div>
-                  <h2 className="text-xl font-serif text-white">Dados do {cavalo.sexo}</h2>
-                  <p className="text-sm text-zinc-500">
-                    Informações para análise de compatibilidade
-                  </p>
+                  <h2 className="text-xl font-serif text-white">
+                    {t.verificador.horse_data} {cavalo.sexo}
+                  </h2>
+                  <p className="text-sm text-zinc-500">{t.verificador.form_desc}</p>
                 </div>
               </div>
 
@@ -733,7 +740,7 @@ export default function VerificadorCompatibilidadePage() {
               <div className="grid sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                    Nome
+                    {t.verificador.label_name}
                   </label>
                   <input
                     type="text"
@@ -745,7 +752,7 @@ export default function VerificadorCompatibilidadePage() {
                 </div>
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                    Idade
+                    {t.verificador.label_age}
                   </label>
                   <div className="relative">
                     <input
@@ -757,13 +764,13 @@ export default function VerificadorCompatibilidadePage() {
                       className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
-                      anos
+                      {t.verificador.label_years}
                     </span>
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                    Altura
+                    {t.verificador.label_height}
                   </label>
                   <div className="relative">
                     <input
@@ -775,7 +782,7 @@ export default function VerificadorCompatibilidadePage() {
                       className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
-                      cm
+                      {t.verificador.label_cm}
                     </span>
                   </div>
                 </div>
@@ -785,7 +792,7 @@ export default function VerificadorCompatibilidadePage() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                    Coudelaria / Origem
+                    {t.verificador.label_origin}
                   </label>
                   <select
                     value={cavalo.coudelaria}
@@ -801,7 +808,7 @@ export default function VerificadorCompatibilidadePage() {
                 </div>
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                    Qualidade da Linhagem
+                    {t.verificador.label_lineage_quality}
                   </label>
                   <select
                     value={cavalo.linhagem}
@@ -820,7 +827,7 @@ export default function VerificadorCompatibilidadePage() {
               {/* Linhagem Famosa */}
               <div>
                 <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                  Linhagem Principal
+                  {t.verificador.label_main_lineage}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {LINHAGENS_FAMOSAS.map((lin) => (
@@ -848,7 +855,9 @@ export default function VerificadorCompatibilidadePage() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Palette className="text-purple-400" size={18} />
-                  <label className="text-sm font-medium text-zinc-300">Genética de Pelagem</label>
+                  <label className="text-sm font-medium text-zinc-300">
+                    {t.verificador.label_coat_genetics}
+                  </label>
                 </div>
                 <div className="grid grid-cols-5 gap-2">
                   {[
@@ -874,21 +883,27 @@ export default function VerificadorCompatibilidadePage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-zinc-600 mt-2">
-                  Se desconhecer, mantenha os valores padrão (Ee, Aa, Gg, NN, dd)
-                </p>
+                <p className="text-xs text-zinc-600 mt-2">{t.verificador.coat_genetics_hint}</p>
               </div>
 
               {/* Avaliações */}
               <div className="grid sm:grid-cols-2 gap-6">
                 {[
-                  { field: "conformacao" as const, label: "Conformação", desc: "Morfologia geral" },
+                  {
+                    field: "conformacao" as const,
+                    label: t.verificador.label_conformation,
+                    desc: t.verificador.label_conformation_desc,
+                  },
                   {
                     field: "andamentos" as const,
-                    label: "Andamentos",
-                    desc: "Qualidade de movimento",
+                    label: t.verificador.label_gaits,
+                    desc: t.verificador.label_gaits_desc,
                   },
-                  { field: "saude" as const, label: "Saúde", desc: "Estado veterinário" },
+                  {
+                    field: "saude" as const,
+                    label: t.verificador.label_health,
+                    desc: t.verificador.label_health_desc,
+                  },
                 ].map(({ field, label, desc }) => (
                   <div key={field}>
                     <div className="flex justify-between mb-2">
@@ -911,7 +926,7 @@ export default function VerificadorCompatibilidadePage() {
 
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                    BLUP Index
+                    {t.verificador.label_blup}
                   </label>
                   <input
                     type="number"
@@ -921,7 +936,7 @@ export default function VerificadorCompatibilidadePage() {
                     onChange={(e) => update("blup", +e.target.value || 100)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
                   />
-                  <p className="text-xs text-zinc-600 mt-1">Média da raça: 100</p>
+                  <p className="text-xs text-zinc-600 mt-1">{t.verificador.blup_avg}</p>
                 </div>
               </div>
 
@@ -929,23 +944,23 @@ export default function VerificadorCompatibilidadePage() {
               <div className="grid sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                    Temperamento
+                    {t.verificador.label_temperament}
                   </label>
                   <select
                     value={cavalo.temperamento}
                     onChange={(e) => update("temperamento", e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
                   >
-                    {TEMPERAMENTOS.map((t) => (
-                      <option key={t.value} value={t.value}>
-                        {t.label} - {t.desc}
+                    {TEMPERAMENTOS.map((temp) => (
+                      <option key={temp.value} value={temp.value}>
+                        {temp.label} - {temp.desc}
                       </option>
                     ))}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                    Fertilidade
+                    {t.verificador.label_fertility}
                   </label>
                   <select
                     value={cavalo.fertilidade}
@@ -961,7 +976,7 @@ export default function VerificadorCompatibilidadePage() {
                 </div>
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                    COI Conhecido (%)
+                    {t.verificador.label_coi}
                   </label>
                   <input
                     type="number"
@@ -986,14 +1001,14 @@ export default function VerificadorCompatibilidadePage() {
                   }`}
                 >
                   {cavalo.aprovado && <CheckCircle size={16} />}
-                  {cavalo.aprovado ? "Aprovado como Reprodutor" : "Não Aprovado / Desconhecido"}
+                  {cavalo.aprovado ? t.verificador.btn_approved : t.verificador.btn_not_approved}
                 </button>
               </div>
 
               {/* Defeitos Genéticos */}
               <div>
                 <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                  Defeitos Genéticos Conhecidos
+                  {t.verificador.label_defects}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {DEFEITOS_GENETICOS.map((d) => (
@@ -1033,7 +1048,7 @@ export default function VerificadorCompatibilidadePage() {
             {/* Paywall */}
             {!canUse && (
               <div className="mt-8">
-                <Paywall toolName="Verificador de Compatibilidade" requiresAuth={requiresAuth} />
+                <Paywall toolName={t.verificador.tool_name} requiresAuth={requiresAuth} />
               </div>
             )}
 
@@ -1047,12 +1062,12 @@ export default function VerificadorCompatibilidadePage() {
                 {isCalculating ? (
                   <>
                     <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    A analisar compatibilidade...
+                    {t.verificador.btn_analysing}
                   </>
                 ) : (
                   <>
                     <Dna size={22} />
-                    Analisar Compatibilidade
+                    {t.verificador.btn_analyse}
                   </>
                 )}
               </button>
@@ -1079,7 +1094,9 @@ export default function VerificadorCompatibilidadePage() {
                   }`}
                 >
                   {resultado.score >= 70 ? <CheckCircle size={18} /> : <AlertTriangle size={18} />}
-                  <span className="font-semibold">Compatibilidade {resultado.nivel}</span>
+                  <span className="font-semibold">
+                    {t.verificador.compatibility} {resultado.nivel}
+                  </span>
                 </div>
 
                 <div className="flex items-baseline justify-center gap-2 mb-2">
@@ -1092,7 +1109,8 @@ export default function VerificadorCompatibilidadePage() {
                 </div>
 
                 <p className="text-zinc-400 text-sm">
-                  {garanhao.nome || "Garanhão"} × {egua.nome || "Égua"}
+                  {garanhao.nome || t.verificador.tab_stallion} ×{" "}
+                  {egua.nome || t.verificador.tab_mare}
                 </p>
               </div>
             </div>
@@ -1112,7 +1130,7 @@ export default function VerificadorCompatibilidadePage() {
               <div className="bg-zinc-900/50 rounded-xl p-5 border border-zinc-800">
                 <div className="flex items-center gap-2 text-zinc-400 text-sm mb-2">
                   <Dna size={16} className="text-purple-400" />
-                  COI Previsto
+                  {t.verificador.coi_predicted}
                 </div>
                 <div
                   className={`text-3xl font-light ${resultado.coi > 6.25 ? "text-amber-400" : "text-emerald-400"}`}
@@ -1121,32 +1139,32 @@ export default function VerificadorCompatibilidadePage() {
                 </div>
                 <div className="text-xs text-zinc-500 mt-1">
                   {resultado.coi <= 3
-                    ? "Excelente"
+                    ? t.verificador.coi_excellent
                     : resultado.coi <= 6.25
-                      ? "Aceitável"
-                      : "Elevado"}
+                      ? t.verificador.coi_acceptable
+                      : t.verificador.coi_high}
                 </div>
               </div>
 
               <div className="bg-zinc-900/50 rounded-xl p-5 border border-zinc-800">
                 <div className="flex items-center gap-2 text-zinc-400 text-sm mb-2">
                   <Activity size={16} className="text-blue-400" />
-                  BLUP Previsto
+                  {t.verificador.blup_predicted}
                 </div>
                 <div className="text-3xl font-light text-blue-400">{resultado.blup}</div>
-                <div className="text-xs text-zinc-500 mt-1">Média da raça: 100</div>
+                <div className="text-xs text-zinc-500 mt-1">{t.verificador.blup_breed_avg}</div>
               </div>
 
               <div className="bg-zinc-900/50 rounded-xl p-5 border border-zinc-800">
                 <div className="flex items-center gap-2 text-zinc-400 text-sm mb-2">
                   <Baby size={16} className="text-pink-400" />
-                  Altura Estimada
+                  {t.verificador.estimated_height}
                 </div>
                 <div className="text-3xl font-light text-pink-400">
                   {resultado.altura.min}-{resultado.altura.max}
                   <span className="text-lg">cm</span>
                 </div>
-                <div className="text-xs text-zinc-500 mt-1">Do potro adulto</div>
+                <div className="text-xs text-zinc-500 mt-1">{t.verificador.of_adult_foal}</div>
               </div>
             </div>
 
@@ -1158,7 +1176,7 @@ export default function VerificadorCompatibilidadePage() {
                   <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-5">
                     <h3 className="text-sm font-medium text-emerald-400 mb-3 flex items-center gap-2">
                       <TrendingUp size={16} />
-                      Pontos Fortes
+                      {t.verificador.strengths}
                     </h3>
                     <ul className="space-y-2">
                       {resultado.pontosForteseFracos.fortes.map((ponto, i) => (
@@ -1177,7 +1195,7 @@ export default function VerificadorCompatibilidadePage() {
                   <div className="bg-orange-500/5 border border-orange-500/20 rounded-xl p-5">
                     <h3 className="text-sm font-medium text-orange-400 mb-3 flex items-center gap-2">
                       <AlertTriangle size={16} />
-                      Pontos de Atenção
+                      {t.verificador.attention_points}
                     </h3>
                     <ul className="space-y-2">
                       {resultado.pontosForteseFracos.fracos.map((ponto, i) => (
@@ -1196,7 +1214,7 @@ export default function VerificadorCompatibilidadePage() {
             <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-800 mb-6">
               <h3 className="font-medium mb-4 flex items-center gap-2">
                 <Palette className="text-purple-400" size={18} />
-                Previsão de Pelagem do Potro
+                {t.verificador.coat_prediction}
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {resultado.pelagens.map((p, i) => (
@@ -1222,7 +1240,7 @@ export default function VerificadorCompatibilidadePage() {
               <div className="mb-6 space-y-2">
                 <h3 className="font-medium mb-3 flex items-center gap-2">
                   <AlertTriangle className="text-amber-400" size={18} />
-                  Alertas e Riscos
+                  {t.verificador.alerts_risks}
                 </h3>
                 {resultado.riscos.map((r, i) => (
                   <div
@@ -1254,7 +1272,7 @@ export default function VerificadorCompatibilidadePage() {
             {/* Factores Detalhados */}
             <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-800 mb-6">
               <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-4">
-                Análise Detalhada por Factor
+                {t.verificador.detailed_analysis}
               </h3>
               <div className="space-y-4">
                 {resultado.factores.map((f, i) => (
@@ -1308,7 +1326,7 @@ export default function VerificadorCompatibilidadePage() {
               <div className="bg-pink-500/5 rounded-xl p-6 border border-pink-500/20 mb-6">
                 <h3 className="text-sm font-medium text-pink-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                   <Sparkles size={16} />
-                  Recomendações
+                  {t.verificador.recommendations}
                 </h3>
                 <ul className="space-y-3">
                   {resultado.recomendacoes.map((rec, i) => (
@@ -1324,11 +1342,8 @@ export default function VerificadorCompatibilidadePage() {
             {/* Disclaimer */}
             <div className="p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
               <p className="text-xs text-zinc-500 leading-relaxed">
-                <strong className="text-zinc-400">Aviso:</strong> Esta análise é uma ferramenta de
-                apoio à decisão e não substitui a consulta de um veterinário especializado em
-                reprodução equina ou geneticista. Os resultados são estimativas baseadas nos dados
-                fornecidos. Recomendamos sempre realizar testes genéticos completos antes de
-                qualquer cruzamento.
+                <strong className="text-zinc-400">{t.verificador.disclaimer_title}</strong>{" "}
+                {t.verificador.disclaimer_text}
               </p>
             </div>
           </div>

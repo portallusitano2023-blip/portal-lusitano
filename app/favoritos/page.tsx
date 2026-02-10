@@ -31,6 +31,16 @@ export default function FavoritosPage() {
       remove: "Remove",
       view: "View Product",
     },
+    es: {
+      title: "Sus Favoritos",
+      subtitle: "Piezas que captaron su atencion",
+      empty: "Su lista de favoritos esta vacia",
+      emptySubtitle: "Explore nuestra coleccion y guarde las piezas que mas le gusten",
+      explore: "Explorar Coleccion",
+      clearAll: "Limpiar Todo",
+      remove: "Eliminar",
+      view: "Ver Producto",
+    },
   };
 
   const t = text[language];

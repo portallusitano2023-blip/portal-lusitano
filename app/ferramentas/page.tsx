@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Calculator,
   BarChart3,
@@ -22,10 +23,15 @@ import {
   ThumbsUp,
   User,
   MessageSquare,
+  Loader2,
+  CheckCircle,
 } from "lucide-react";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
+import { useLanguage } from "@/context/LanguageContext";
 import ToolReviewForm from "@/components/ToolReviewForm";
 import { Review, ReviewStats } from "@/types/review";
+import { faqItems } from "./faq-data";
 
 // ============================================
 // DATA
@@ -115,39 +121,6 @@ interface FAQItem {
   answer: string;
 }
 
-const faqItems: FAQItem[] = [
-  {
-    question: "As ferramentas são gratuitas?",
-    answer:
-      "Sim, cada ferramenta oferece 1 utilização gratuita para que possa experimentar sem compromisso. Para utilizações ilimitadas, exportação de PDF e funcionalidades avançadas, pode subscrever o plano PRO por apenas 4,99 euros por mês.",
-  },
-  {
-    question: "Como funciona a Calculadora de Valor?",
-    answer:
-      "A nossa calculadora utiliza um algoritmo proprietário com mais de 20 variáveis, incluindo linhagem, morfologia, andamentos, treino, resultados em competição e tendências de mercado. O resultado é uma estimativa fundamentada que reflecte o valor real do seu Lusitano no mercado actual.",
-  },
-  {
-    question: "O Verificador de Compatibilidade substitui a opinião de um veterinário?",
-    answer:
-      "Não. O Verificador de Compatibilidade é uma ferramenta de apoio à decisão que analisa dados genéticos e morfológicos para sugerir cruzamentos promissores. Recomendamos sempre consultar um veterinário especializado em reprodução equina antes de tomar decisões definitivas.",
-  },
-  {
-    question: "Posso cancelar a subscrição PRO a qualquer momento?",
-    answer:
-      "Sim, pode cancelar a sua subscrição PRO a qualquer momento, sem compromissos ou taxas adicionais. Continuará a ter acesso às funcionalidades PRO até ao final do período de facturação em curso.",
-  },
-  {
-    question: "Os meus dados e resultados ficam guardados?",
-    answer:
-      "No plano gratuito, os resultados são apresentados apenas durante a sessão. No plano PRO, todo o seu histórico de análises fica guardado na sua conta, podendo consultá-lo, exportá-lo ou partilhá-lo a qualquer momento.",
-  },
-  {
-    question: "As ferramentas funcionam para cavalos de outras raças?",
-    answer:
-      "As nossas ferramentas foram concebidas e optimizadas especificamente para o Cavalo Lusitano, com dados, parâmetros e referências ajustados à raça. Embora possam ser usadas com outras raças ibéricas, os resultados serão mais precisos para Lusitanos registados na APSL.",
-  },
-];
-
 const toolSlugToName: Record<string, string> = {
   "calculadora-valor": "Calculadora de Valor",
   "comparador-cavalos": "Comparador de Cavalos",
@@ -162,6 +135,7 @@ const toolSlugs = Object.keys(toolSlugToName);
 // ============================================
 
 function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number }) {
+  const { t } = useLanguage();
   const Icon = tool.icon;
 
   return (
@@ -203,7 +177,7 @@ function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number
 
         {/* CTA */}
         <div className="flex items-center gap-2 text-sm font-medium text-[#C5A059] group-hover:gap-3 transition-all">
-          <span>Experimentar</span>
+          <span>{t.ferramentas.try}</span>
           <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
         </div>
       </div>
@@ -226,6 +200,7 @@ function FAQAccordion({
         onClick={onClick}
         className="w-full py-6 flex items-center justify-between text-left group"
         aria-expanded={isOpen}
+        aria-controls={`faq-answer-${item.question.slice(0, 20).replace(/\s/g, "-")}`}
       >
         <span className="text-lg font-serif text-white group-hover:text-[#C5A059] transition-colors pr-8">
           {item.question}
@@ -266,7 +241,118 @@ function PricingFeature({ text, included }: { text: string; included: boolean })
   );
 }
 
+function ProSubscribeButton({ className }: { className?: string }) {
+  const { user } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async () => {
+    if (!user) {
+      router.push("/registar?redirect=/ferramentas");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/tools/create-checkout", { method: "POST" });
+      const data = await res.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Checkout error:", data.error);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Checkout error:", err);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleSubscribe}
+      disabled={loading}
+      className={
+        className ||
+        "block w-full py-3 text-center bg-gradient-to-r from-[#C5A059] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all hover:shadow-lg hover:shadow-[#C5A059]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+      }
+    >
+      {loading ? (
+        <span className="inline-flex items-center justify-center gap-2">
+          <Loader2 size={16} className="animate-spin" />A processar...
+        </span>
+      ) : (
+        <span className="inline-flex items-center justify-center gap-2">
+          <Crown size={16} />
+          Subscrever PRO
+          <ArrowRight size={16} />
+        </span>
+      )}
+    </button>
+  );
+}
+
+function CheckoutFeedback() {
+  const searchParams = useSearchParams();
+  const isSuccess = searchParams.get("success") === "true";
+  const isCancelled = searchParams.get("cancelled") === "true";
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    if (isSuccess || isCancelled) {
+      const timer = setTimeout(() => setDismissed(true), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, isCancelled]);
+
+  const visible = (isSuccess || isCancelled) && !dismissed;
+
+  if (!visible) return null;
+
+  if (isSuccess) {
+    return (
+      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
+        <div className="flex items-center gap-3 px-6 py-4 bg-emerald-500/20 border border-emerald-500/40 rounded-xl backdrop-blur-sm shadow-lg">
+          <CheckCircle size={20} className="text-emerald-400" />
+          <span className="text-emerald-300 font-medium text-sm">
+            Subscricao PRO activada com sucesso!
+          </span>
+          <button
+            onClick={() => setDismissed(true)}
+            className="text-emerald-400 hover:text-emerald-300 ml-2"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isCancelled) {
+    return (
+      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
+        <div className="flex items-center gap-3 px-6 py-4 bg-zinc-800/90 border border-zinc-700 rounded-xl backdrop-blur-sm shadow-lg">
+          <X size={20} className="text-zinc-400" />
+          <span className="text-zinc-300 font-medium text-sm">
+            Pagamento cancelado. Pode subscrever a qualquer momento.
+          </span>
+          <button
+            onClick={() => setDismissed(true)}
+            className="text-zinc-400 hover:text-zinc-300 ml-2"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 function ToolReviewsSection() {
+  const { t } = useLanguage();
   const [filterSlug, setFilterSlug] = useState<string>("all");
   const [formSlug, setFormSlug] = useState<string>(toolSlugs[0]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -309,14 +395,12 @@ function ToolReviewsSection() {
         {/* Section header */}
         <AnimateOnScroll className="text-center mb-12">
           <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
-            Avaliações dos Utilizadores
+            {t.ferramentas.reviews_badge}
           </span>
           <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
-            O que dizem os nossos utilizadores
+            {t.ferramentas.reviews_title}
           </h2>
-          <p className="text-zinc-400 max-w-lg mx-auto">
-            Avaliações reais de quem já utilizou as nossas ferramentas
-          </p>
+          <p className="text-zinc-400 max-w-lg mx-auto">{t.ferramentas.reviews_subtitle}</p>
         </AnimateOnScroll>
 
         {/* Tool filter */}
@@ -328,8 +412,9 @@ function ToolReviewsSection() {
                 ? "bg-[#C5A059] text-black"
                 : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
             }`}
+            aria-pressed={filterSlug === "all"}
           >
-            Todas
+            {t.ferramentas.reviews_all}
           </button>
           {toolSlugs.map((slug) => (
             <button
@@ -340,6 +425,7 @@ function ToolReviewsSection() {
                   ? "bg-[#C5A059] text-black"
                   : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
               }`}
+              aria-pressed={filterSlug === slug}
             >
               {toolSlugToName[slug]}
             </button>
@@ -364,8 +450,9 @@ function ToolReviewsSection() {
             </div>
             <div className="border-l border-[#C5A059]/20 pl-6">
               <p className="text-sm text-zinc-400">
-                Baseado em <span className="font-semibold text-white">{stats.total}</span>{" "}
-                {stats.total === 1 ? "avaliação" : "avaliações"}
+                {t.ferramentas.reviews_based_on}{" "}
+                <span className="font-semibold text-white">{stats.total}</span>{" "}
+                {stats.total === 1 ? t.ferramentas.reviews_single : t.ferramentas.reviews_plural}
               </p>
             </div>
           </div>
@@ -388,8 +475,8 @@ function ToolReviewsSection() {
         ) : reviews.length === 0 ? (
           <div className="text-center py-12 bg-zinc-900/50 border border-white/5 rounded-xl mb-10">
             <MessageSquare className="mx-auto text-zinc-600 mb-4" size={40} />
-            <p className="text-zinc-500">Ainda sem avaliações aprovadas</p>
-            <p className="text-zinc-600 text-sm mt-1">Seja o primeiro a avaliar!</p>
+            <p className="text-zinc-500">{t.ferramentas.reviews_none}</p>
+            <p className="text-zinc-600 text-sm mt-1">{t.ferramentas.reviews_be_first}</p>
           </div>
         ) : (
           <div className="space-y-4 mb-10">
@@ -432,7 +519,7 @@ function ToolReviewsSection() {
                 {review.recomenda && (
                   <span className="inline-flex items-center gap-1 text-xs text-green-500">
                     <ThumbsUp size={12} />
-                    Recomenda
+                    {t.ferramentas.recommends}
                   </span>
                 )}
               </div>
@@ -442,14 +529,14 @@ function ToolReviewsSection() {
 
         {/* Review form */}
         <div className="bg-zinc-900/80 border border-white/10 rounded-2xl p-8">
-          <h3 className="text-xl font-serif text-white mb-2">Deixe a sua avaliação</h3>
-          <p className="text-zinc-500 text-sm mb-6">
-            Partilhe a sua experiência com as nossas ferramentas
-          </p>
+          <h3 className="text-xl font-serif text-white mb-2">{t.ferramentas.reviews_leave}</h3>
+          <p className="text-zinc-500 text-sm mb-6">{t.ferramentas.reviews_share}</p>
 
           {/* Tool selector dropdown */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Ferramenta</label>
+            <label className="block text-sm font-medium text-zinc-300 mb-2">
+              {t.ferramentas.reviews_tool}
+            </label>
             <select
               value={formSlug}
               onChange={(e) => setFormSlug(e.target.value)}
@@ -480,10 +567,14 @@ function ToolReviewsSection() {
 // ============================================
 
 export default function FerramentasPage() {
+  const { t } = useLanguage();
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
 
   return (
     <main className="min-h-screen bg-[#050505]">
+      <Suspense fallback={null}>
+        <CheckoutFeedback />
+      </Suspense>
       {/* ===== HERO SECTION ===== */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
         {/* Background decorative elements */}
@@ -497,7 +588,7 @@ export default function FerramentasPage() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-full mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <Sparkles size={14} className="text-[#C5A059]" />
             <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] font-medium">
-              Ferramentas Profissionais
+              {t.ferramentas.badge}
             </span>
           </div>
 
@@ -506,9 +597,9 @@ export default function FerramentasPage() {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.1s" }}
           >
-            Ferramentas{" "}
+            {t.ferramentas.title}{" "}
             <span className="bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] bg-clip-text text-transparent">
-              Premium
+              {t.ferramentas.title_accent}
             </span>
           </h1>
 
@@ -517,16 +608,14 @@ export default function FerramentasPage() {
             className="text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.2s" }}
           >
-            Ferramentas profissionais concebidas para proprietários, criadores e apaixonados pelo
-            Cavalo Lusitano
+            {t.ferramentas.subtitle}
           </p>
 
           <p
             className="text-sm text-zinc-500 max-w-xl mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.3s" }}
           >
-            Avalie, compare, analise e descubra tudo sobre o seu Lusitano com algoritmos
-            desenvolvidos por especialistas da raça.
+            {t.ferramentas.subtitle_detail}
           </p>
         </div>
       </section>
@@ -537,7 +626,7 @@ export default function FerramentasPage() {
           {/* Section label */}
           <div className="text-center mb-12">
             <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059]">
-              4 Ferramentas Disponíveis
+              {t.ferramentas.available}
             </span>
           </div>
 
@@ -555,10 +644,26 @@ export default function FerramentasPage() {
         <div className="max-w-5xl mx-auto">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Shield, label: "Dados Seguros", text: "Encriptação de ponta a ponta" },
-              { icon: Zap, label: "Resultados Instantâneos", text: "Análises em tempo real" },
-              { icon: Download, label: "Exportar PDF", text: "Relatórios profissionais" },
-              { icon: Crown, label: "Feito para Lusitanos", text: "Optimizado para a raça" },
+              {
+                icon: Shield,
+                label: t.ferramentas.data_secure,
+                text: t.ferramentas.data_secure_desc,
+              },
+              {
+                icon: Zap,
+                label: t.ferramentas.instant_results,
+                text: t.ferramentas.instant_results_desc,
+              },
+              {
+                icon: Download,
+                label: t.ferramentas.export_pdf,
+                text: t.ferramentas.export_pdf_desc,
+              },
+              {
+                icon: Crown,
+                label: t.ferramentas.for_lusitanos,
+                text: t.ferramentas.for_lusitanos_desc,
+              },
             ].map((benefit, i) => (
               <AnimateOnScroll key={benefit.label} delay={i * 80}>
                 <div className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
@@ -582,14 +687,12 @@ export default function FerramentasPage() {
           {/* Section header */}
           <AnimateOnScroll className="text-center mb-16">
             <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
-              Planos e Preços
+              {t.ferramentas.plans_title}
             </span>
             <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
-              Escolha o plano ideal
+              {t.ferramentas.choose_plan}
             </h2>
-            <p className="text-zinc-400 max-w-lg mx-auto">
-              Comece gratuitamente e faça upgrade quando precisar de mais
-            </p>
+            <p className="text-zinc-400 max-w-lg mx-auto">{t.ferramentas.plans_subtitle}</p>
           </AnimateOnScroll>
 
           {/* Pricing cards */}
@@ -597,8 +700,8 @@ export default function FerramentasPage() {
             {/* Free Tier */}
             <div className="bg-zinc-900/80 border border-white/10 rounded-2xl p-8">
               <div className="mb-8">
-                <h3 className="text-xl font-serif text-white mb-2">Gratuito</h3>
-                <p className="text-zinc-500 text-sm mb-6">Experimente sem compromisso</p>
+                <h3 className="text-xl font-serif text-white mb-2">{t.ferramentas.free}</h3>
+                <p className="text-zinc-500 text-sm mb-6">{t.ferramentas.free_subtitle}</p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-serif text-white">0</span>
                   <span className="text-zinc-500 text-lg">EUR</span>
@@ -616,7 +719,7 @@ export default function FerramentasPage() {
                 href="/registar"
                 className="block w-full py-3 text-center border border-white/20 text-white text-sm font-medium rounded-lg hover:bg-white/5 transition-colors"
               >
-                Criar Conta Gratuita
+                {t.ferramentas.create_free}
               </Link>
             </div>
 
@@ -626,20 +729,20 @@ export default function FerramentasPage() {
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                 <span className="inline-flex items-center gap-1.5 px-4 py-1 bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] text-black text-xs font-bold uppercase tracking-[0.15em] rounded-full">
                   <Crown size={12} />
-                  Mais Popular
+                  {t.ferramentas.most_popular}
                 </span>
               </div>
 
               <div className="mb-8">
-                <h3 className="text-xl font-serif text-white mb-2">PRO</h3>
-                <p className="text-zinc-500 text-sm mb-6">Para profissionais e criadores</p>
+                <h3 className="text-xl font-serif text-white mb-2">{t.ferramentas.pro}</h3>
+                <p className="text-zinc-500 text-sm mb-6">{t.ferramentas.pro_subtitle}</p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-serif bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] bg-clip-text text-transparent">
                     4,99
                   </span>
-                  <span className="text-zinc-500 text-lg">EUR/mês</span>
+                  <span className="text-zinc-500 text-lg">{t.ferramentas.per_month}</span>
                 </div>
-                <p className="text-zinc-600 text-xs mt-1">Cancele a qualquer momento</p>
+                <p className="text-zinc-600 text-xs mt-1">{t.ferramentas.cancel_anytime}</p>
               </div>
 
               <ul className="space-y-4 mb-8">
@@ -648,19 +751,12 @@ export default function FerramentasPage() {
                 ))}
               </ul>
 
-              <Link
-                href="/registar"
-                className="block w-full py-3 text-center bg-gradient-to-r from-[#C5A059] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all hover:shadow-lg hover:shadow-[#C5A059]/20"
-              >
-                Subscrever PRO
-              </Link>
+              <ProSubscribeButton />
             </div>
           </div>
 
           {/* Trust note */}
-          <p className="text-center text-zinc-600 text-xs mt-8">
-            Pagamento seguro via Stripe. Sem compromissos. Cancele quando quiser.
-          </p>
+          <p className="text-center text-zinc-600 text-xs mt-8">{t.ferramentas.payment_note}</p>
         </div>
       </section>
 
@@ -672,23 +768,15 @@ export default function FerramentasPage() {
               {/* Left: Text */}
               <div>
                 <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
-                  Vantagens PRO
+                  {t.ferramentas.pro_advantages}
                 </span>
                 <h2 className="text-2xl md:text-3xl font-serif text-white mb-6">
-                  Tudo o que precisa para decisões informadas
+                  {t.ferramentas.pro_title}
                 </h2>
                 <p className="text-zinc-400 text-sm leading-relaxed mb-8">
-                  O plano PRO desbloqueia o potencial completo de cada ferramenta, permitindo-lhe
-                  tomar decisões de compra, venda e criação com dados profissionais e relatórios
-                  detalhados.
+                  {t.ferramentas.pro_desc}
                 </p>
-                <Link
-                  href="/registar"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#C5A059] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all"
-                >
-                  Começar Agora
-                  <ArrowRight size={16} />
-                </Link>
+                <ProSubscribeButton className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#C5A059] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all disabled:opacity-50 disabled:cursor-not-allowed" />
               </div>
 
               {/* Right: Feature grid */}
@@ -696,23 +784,23 @@ export default function FerramentasPage() {
                 {[
                   {
                     icon: Zap,
-                    title: "Ilimitado",
-                    desc: "Sem limites de utilizações",
+                    title: t.ferramentas.unlimited,
+                    desc: t.ferramentas.unlimited_desc,
                   },
                   {
                     icon: Download,
-                    title: "PDF Export",
-                    desc: "Relatórios profissionais",
+                    title: t.ferramentas.pdf_export,
+                    desc: t.ferramentas.pdf_export_desc,
                   },
                   {
                     icon: History,
-                    title: "Histórico",
-                    desc: "Todas as análises guardadas",
+                    title: t.ferramentas.history,
+                    desc: t.ferramentas.history_desc,
                   },
                   {
                     icon: Share2,
-                    title: "Partilhar",
-                    desc: "Links partilháveis",
+                    title: t.ferramentas.share,
+                    desc: t.ferramentas.share_desc,
                   },
                 ].map((feat) => (
                   <div
@@ -736,12 +824,12 @@ export default function FerramentasPage() {
           {/* Section header */}
           <AnimateOnScroll className="text-center mb-12">
             <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
-              Perguntas Frequentes
+              {t.ferramentas.faq_badge}
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">Dúvidas Comuns</h2>
-            <p className="text-zinc-400 max-w-lg mx-auto">
-              Tudo o que precisa de saber sobre as nossas ferramentas
-            </p>
+            <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
+              {t.ferramentas.faq_title}
+            </h2>
+            <p className="text-zinc-400 max-w-lg mx-auto">{t.ferramentas.faq_subtitle}</p>
           </AnimateOnScroll>
 
           {/* FAQ items */}
@@ -758,12 +846,12 @@ export default function FerramentasPage() {
 
           {/* Contact CTA */}
           <div className="mt-12 text-center p-8 bg-white/[0.02] border border-white/5 rounded-xl">
-            <p className="text-zinc-400 mb-4 text-sm">Não encontrou a resposta que procurava?</p>
+            <p className="text-zinc-400 mb-4 text-sm">{t.ferramentas.faq_not_found}</p>
             <Link
               href="/faq"
               className="inline-flex items-center gap-2 text-[#C5A059] text-sm font-medium hover:underline"
             >
-              Ver todas as perguntas frequentes
+              {t.ferramentas.faq_see_all}
               <ArrowRight size={14} />
             </Link>
           </div>

@@ -42,6 +42,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/icons/icon-192x192.png",
+    shortcut: "/favicon.ico",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -76,7 +81,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_PT",
-    alternateLocale: "en_US",
+    alternateLocale: ["en_US", "es_ES"],
     url: siteUrl,
     siteName: "Portal Lusitano",
     title: "Portal Lusitano | Cavalos Lusitanos de Elite",
@@ -117,6 +122,7 @@ export const metadata: Metadata = {
     languages: {
       "pt-PT": siteUrl,
       "en-US": `${siteUrl}/en`,
+      "es-ES": `${siteUrl}/es`,
     },
   },
 };

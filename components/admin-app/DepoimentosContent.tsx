@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FiStar, FiCheck, FiX } from "react-icons/fi";
+import { Star, Check, X } from "lucide-react";
 
 interface Depoimento {
   id: string;
@@ -69,7 +69,7 @@ export default function DepoimentosContent() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <FiStar className="text-[#C5A059]" size={32} />
+            <Star className="text-[#C5A059]" size={32} />
             <div>
               <h1 className="text-3xl font-bold text-white">Curadoria de Testemunhos</h1>
               <p className="text-gray-400">Aprovar ou rejeitar depoimentos sobre cavalos</p>
@@ -80,7 +80,7 @@ export default function DepoimentosContent() {
         {/* Lista de Depoimentos */}
         {depoimentos.length === 0 ? (
           <div className="text-center py-20">
-            <FiStar className="text-zinc-700 mx-auto mb-4" size={60} />
+            <Star className="text-zinc-700 mx-auto mb-4" size={60} />
             <p className="text-gray-500">Nenhum depoimento pendente</p>
           </div>
         ) : (
@@ -116,14 +116,14 @@ export default function DepoimentosContent() {
                     onClick={() => updateStatus(dep.id, "aprovado")}
                     className="flex items-center gap-2 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-xs font-bold uppercase transition-colors"
                   >
-                    <FiCheck size={14} />
+                    <Check size={14} />
                     Aprovar
                   </button>
                   <button
                     onClick={() => updateStatus(dep.id, "rejeitado")}
                     className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-xs font-bold uppercase transition-colors"
                   >
-                    <FiX size={14} />
+                    <X size={14} />
                     Rejeitar
                   </button>
                 </div>

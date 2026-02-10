@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Scripts utilitários usam CommonJS (require) - não são parte do bundle
+    "scripts/*.js",
   ]),
   {
     rules: {

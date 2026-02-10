@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { Mail, Lock, Eye, EyeOff, User, UserPlus, Loader2, CheckCircle } from "lucide-react";
 
 export default function RegistarPage() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,7 +79,7 @@ export default function RegistarPage() {
           Verifique a sua caixa de correio para activar a conta.
         </p>
         <Link
-          href="/login"
+          href={redirect ? `/login?returnUrl=${encodeURIComponent(redirect)}` : "/login"}
           className="inline-flex items-center gap-2 px-6 py-3 bg-[#C5A059] text-black font-semibold rounded-lg hover:bg-[#D4AF6A] transition-colors"
         >
           Ir para Login
@@ -210,7 +213,7 @@ export default function RegistarPage() {
       <p className="mt-6 text-center text-sm text-zinc-500">
         Ja tem conta?{" "}
         <Link
-          href="/login"
+          href={redirect ? `/login?returnUrl=${encodeURIComponent(redirect)}` : "/login"}
           className="text-[#C5A059] hover:text-[#D4AF6A] font-medium transition-colors"
         >
           Iniciar sessao

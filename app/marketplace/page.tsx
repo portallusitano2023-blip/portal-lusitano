@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, memo, useCallback } from "react";
+import { useState, useEffect, useRef, memo, useCallback, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Search,
@@ -22,33 +22,18 @@ import { useInViewOnce } from "@/hooks/useInViewOnce";
 import { useTilt3D } from "@/hooks/useTilt3D";
 import { Cavalo } from "@/types/cavalo";
 import Pagination from "@/components/ui/Pagination";
+import { useLanguage } from "@/context/LanguageContext";
 
-const sexoOptions = [
-  { value: "todos", label: "Todos" },
-  { value: "macho", label: "Garanhões" },
-  { value: "femea", label: "Éguas" },
-  { value: "castrado", label: "Castrados" },
+const regioesValues = [
+  "Todas",
+  "Ribatejo",
+  "Alentejo",
+  "Lisboa",
+  "Porto",
+  "Minho",
+  "Douro",
+  "Centro",
 ];
-
-const nivelOptions = [
-  { value: "todos", label: "Todos os níveis" },
-  { value: "desbastado", label: "Desbastado" },
-  { value: "iniciado", label: "Iniciado" },
-  { value: "avancado", label: "Avançado" },
-  { value: "competicao", label: "Competição" },
-];
-
-const disciplinaOptions = [
-  { value: "todas", label: "Todas as disciplinas" },
-  { value: "dressage", label: "Dressage" },
-  { value: "alta_escola", label: "Alta Escola" },
-  { value: "toureio", label: "Toureio" },
-  { value: "trabalho", label: "Equitação de Trabalho" },
-  { value: "lazer", label: "Lazer" },
-  { value: "reproducao", label: "Reprodução" },
-];
-
-const regioes = ["Todas", "Ribatejo", "Alentejo", "Lisboa", "Porto", "Minho", "Douro", "Centro"];
 
 // Placeholder images
 const placeholderHorses = [
@@ -60,9 +45,50 @@ const placeholderHorses = [
 const ITENS_POR_PAGINA = 20;
 
 export default function MarketplacePage() {
+  const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
+
+  const sexoOptions = useMemo(
+    () => [
+      { value: "todos", label: t.marketplace_page.sex_all },
+      { value: "macho", label: t.marketplace_page.sex_stallions },
+      { value: "femea", label: t.marketplace_page.sex_mares },
+      { value: "castrado", label: t.marketplace_page.sex_geldings },
+    ],
+    [t]
+  );
+
+  const nivelOptions = useMemo(
+    () => [
+      { value: "todos", label: t.marketplace_page.level_all },
+      { value: "desbastado", label: t.marketplace_page.level_broken },
+      { value: "iniciado", label: t.marketplace_page.level_started },
+      { value: "avancado", label: t.marketplace_page.level_advanced },
+      { value: "competicao", label: t.marketplace_page.level_competition },
+    ],
+    [t]
+  );
+
+  const disciplinaOptions = useMemo(
+    () => [
+      { value: "todas", label: t.marketplace_page.discipline_all },
+      { value: "dressage", label: t.marketplace_page.discipline_dressage },
+      { value: "alta_escola", label: t.marketplace_page.discipline_alta_escola },
+      { value: "toureio", label: t.marketplace_page.discipline_toureio },
+      { value: "trabalho", label: t.marketplace_page.discipline_trabalho },
+      { value: "lazer", label: t.marketplace_page.discipline_leisure },
+      { value: "reproducao", label: t.marketplace_page.discipline_breeding },
+    ],
+    [t]
+  );
+
+  const regioes = useMemo(() => {
+    const r = [...regioesValues];
+    r[0] = t.marketplace_page.region_all;
+    return r;
+  }, [t]);
 
   const [cavalos, setCavalos] = useState<Cavalo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -116,30 +142,39 @@ export default function MarketplacePage() {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
   }, []);
 
-  const formatPrice = useCallback(function formatPrice(cavalo: Cavalo) {
-    if (cavalo.preco_sob_consulta) return "Sob consulta";
-    if (!cavalo.preco) return "A definir";
-    return `€${cavalo.preco.toLocaleString("pt-PT")}${cavalo.preco_negociavel ? " (negociável)" : ""}`;
-  }, []);
+  const formatPrice = useCallback(
+    function formatPrice(cavalo: Cavalo) {
+      if (cavalo.preco_sob_consulta) return t.marketplace_page.on_request;
+      if (!cavalo.preco) return t.marketplace_page.to_define;
+      return `€${cavalo.preco.toLocaleString("pt-PT")}${cavalo.preco_negociavel ? ` (${t.marketplace_page.negotiable})` : ""}`;
+    },
+    [t]
+  );
 
-  const getSexoLabel = useCallback(function getSexoLabel(sexo: string) {
-    const labels: Record<string, string> = {
-      macho: "Garanhão",
-      femea: "Égua",
-      castrado: "Castrado",
-    };
-    return labels[sexo] || sexo;
-  }, []);
+  const getSexoLabel = useCallback(
+    function getSexoLabel(sexo: string) {
+      const labels: Record<string, string> = {
+        macho: t.marketplace_page.sex_stallion,
+        femea: t.marketplace_page.sex_mare,
+        castrado: t.marketplace_page.sex_gelding,
+      };
+      return labels[sexo] || sexo;
+    },
+    [t]
+  );
 
-  const getNivelLabel = useCallback(function getNivelLabel(nivel: string) {
-    const labels: Record<string, string> = {
-      desbastado: "Desbastado",
-      iniciado: "Iniciado",
-      avancado: "Avançado",
-      competicao: "Competição",
-    };
-    return labels[nivel] || nivel;
-  }, []);
+  const getNivelLabel = useCallback(
+    function getNivelLabel(nivel: string) {
+      const labels: Record<string, string> = {
+        desbastado: t.marketplace_page.level_broken,
+        iniciado: t.marketplace_page.level_started,
+        avancado: t.marketplace_page.level_advanced,
+        competicao: t.marketplace_page.level_competition,
+      };
+      return labels[nivel] || nivel;
+    },
+    [t]
+  );
 
   const cavalosDestaque = cavalos.filter((c) => c.destaque);
   const outrosCavalos = cavalos.filter((c) => !c.destaque);
@@ -171,15 +206,12 @@ export default function MarketplacePage() {
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
-              Marketplace
+              {t.marketplace_page.badge}
             </span>
             <h1 className="text-4xl md:text-6xl font-serif text-white mb-6">
-              <TextSplit text="Cavalos Lusitanos à Venda" baseDelay={0.2} wordDelay={0.1} />
+              <TextSplit text={t.marketplace_page.title} baseDelay={0.2} wordDelay={0.1} />
             </h1>
-            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
-              Encontre o seu próximo cavalo Lusitano. Exemplares de qualidade das melhores
-              coudelarias de Portugal.
-            </p>
+            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">{t.marketplace_page.subtitle}</p>
           </div>
 
           {/* Stats — contadores animados */}
@@ -190,15 +222,15 @@ export default function MarketplacePage() {
           >
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
               <div className="text-3xl font-serif text-[#C5A059]">{countCavalos}</div>
-              <div className="text-sm text-zinc-500">Cavalos</div>
+              <div className="text-sm text-zinc-500">{t.marketplace_page.stat_horses}</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
               <div className="text-3xl font-serif text-[#C5A059]">{countDestaque}</div>
-              <div className="text-sm text-zinc-500">Em Destaque</div>
+              <div className="text-sm text-zinc-500">{t.marketplace_page.stat_featured}</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
               <div className="text-3xl font-serif text-[#C5A059]">{countPercent}%</div>
-              <div className="text-sm text-zinc-500">Lusitanos</div>
+              <div className="text-sm text-zinc-500">{t.marketplace_page.stat_lusitanos}</div>
             </div>
           </div>
         </div>
@@ -219,7 +251,7 @@ export default function MarketplacePage() {
               />
               <input
                 type="text"
-                placeholder="Pesquisar por nome, linhagem..."
+                placeholder={t.marketplace_page.search_placeholder}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="w-full bg-zinc-900/50 border border-white/10 pl-12 pr-4 py-4 text-white placeholder-zinc-500 focus:border-[#C5A059] focus:outline-none transition-colors"
@@ -235,7 +267,7 @@ export default function MarketplacePage() {
               }`}
             >
               <Filter size={20} />
-              Filtros
+              {t.marketplace_page.filters}
               <ChevronDown
                 size={16}
                 className={`transition-transform ${showFilters ? "rotate-180" : ""}`}
@@ -250,7 +282,7 @@ export default function MarketplacePage() {
                 {/* Sexo */}
                 <div>
                   <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
-                    Sexo
+                    {t.marketplace_page.label_sex}
                   </label>
                   <select
                     value={filters.sexo}
@@ -268,7 +300,7 @@ export default function MarketplacePage() {
                 {/* Região */}
                 <div>
                   <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
-                    Região
+                    {t.marketplace_page.label_region}
                   </label>
                   <select
                     value={filters.regiao}
@@ -286,7 +318,7 @@ export default function MarketplacePage() {
                 {/* Nível */}
                 <div>
                   <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
-                    Nível
+                    {t.marketplace_page.label_level}
                   </label>
                   <select
                     value={filters.nivel}
@@ -304,7 +336,7 @@ export default function MarketplacePage() {
                 {/* Disciplina */}
                 <div>
                   <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
-                    Disciplina
+                    {t.marketplace_page.label_discipline}
                   </label>
                   <select
                     value={filters.disciplina}
@@ -322,11 +354,11 @@ export default function MarketplacePage() {
                 {/* Preço Min */}
                 <div>
                   <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
-                    Preço Min
+                    {t.marketplace_page.label_price_min}
                   </label>
                   <input
                     type="number"
-                    placeholder="€ Min"
+                    placeholder={t.marketplace_page.placeholder_min}
                     value={filters.precoMin}
                     onChange={(e) => setFilters({ ...filters, precoMin: e.target.value })}
                     className="w-full bg-zinc-800 border border-white/10 px-3 py-2 text-white focus:border-[#C5A059] focus:outline-none"
@@ -336,11 +368,11 @@ export default function MarketplacePage() {
                 {/* Preço Max */}
                 <div>
                   <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
-                    Preço Max
+                    {t.marketplace_page.label_price_max}
                   </label>
                   <input
                     type="number"
-                    placeholder="€ Max"
+                    placeholder={t.marketplace_page.placeholder_max}
                     value={filters.precoMax}
                     onChange={(e) => setFilters({ ...filters, precoMax: e.target.value })}
                     className="w-full bg-zinc-800 border border-white/10 px-3 py-2 text-white focus:border-[#C5A059] focus:outline-none"
@@ -354,13 +386,13 @@ export default function MarketplacePage() {
         {/* Loading */}
         {loading ? (
           <div className="text-center py-20">
-            <div className="animate-pulse text-[#C5A059]">A carregar cavalos...</div>
+            <div className="animate-pulse text-[#C5A059]">{t.marketplace_page.loading}</div>
           </div>
         ) : cavalos.length === 0 ? (
           <div className="text-center py-20">
             <Search className="mx-auto text-zinc-400 mb-4" size={48} />
-            <h3 className="text-xl font-serif text-white mb-2">Nenhum cavalo encontrado</h3>
-            <p className="text-zinc-500">Tente ajustar os filtros de pesquisa.</p>
+            <h3 className="text-xl font-serif text-white mb-2">{t.marketplace_page.no_results}</h3>
+            <p className="text-zinc-500">{t.marketplace_page.no_results_hint}</p>
           </div>
         ) : (
           <div className="space-y-16">
@@ -369,7 +401,9 @@ export default function MarketplacePage() {
               <section>
                 <div className="flex items-center gap-3 mb-8">
                   <Star className="text-[#C5A059]" size={24} />
-                  <h2 className="text-2xl font-serif text-white">Cavalos em Destaque</h2>
+                  <h2 className="text-2xl font-serif text-white">
+                    {t.marketplace_page.featured_horses}
+                  </h2>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {cavalosDestaque.map((cavalo, index) => (
@@ -393,9 +427,13 @@ export default function MarketplacePage() {
               <section>
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-2xl font-serif text-zinc-300">
-                    Todos os Cavalos
+                    {t.marketplace_page.all_horses}
                     <span className="text-zinc-400 text-lg ml-3">
-                      ({outrosCavalos.length} {outrosCavalos.length === 1 ? "cavalo" : "cavalos"})
+                      ({outrosCavalos.length}{" "}
+                      {outrosCavalos.length === 1
+                        ? t.marketplace_page.horse_singular
+                        : t.marketplace_page.horse_plural}
+                      )
                     </span>
                   </h2>
                 </div>
@@ -460,6 +498,7 @@ const CavaloCard = memo(function CavaloCard({
   formatPrice: (c: Cavalo) => string;
   getSexoLabel: (s: string) => string;
 }) {
+  const { t } = useLanguage();
   const image = cavalo.foto_principal || placeholderHorses[index % placeholderHorses.length];
   const { ref: tiltRef, onMouseMove, onMouseLeave } = useTilt3D(5);
 
@@ -486,7 +525,7 @@ const CavaloCard = memo(function CavaloCard({
         <div className="absolute top-3 left-3 flex gap-2">
           {cavalo.destaque && (
             <span className="bg-[#C5A059] text-black px-2 py-1 text-xs font-bold flex items-center gap-1">
-              <Star size={12} /> Destaque
+              <Star size={12} /> {t.marketplace_page.featured_badge}
             </span>
           )}
           <span className="bg-black/60 text-white px-2 py-1 text-xs">
@@ -518,13 +557,19 @@ const CavaloCard = memo(function CavaloCard({
         </h3>
 
         <div className="flex flex-wrap gap-2 text-zinc-500 text-sm mb-3">
-          {cavalo.idade && <span>{cavalo.idade} anos</span>}
+          {cavalo.idade && (
+            <span>
+              {cavalo.idade} {t.marketplace_page.years}
+            </span>
+          )}
           {cavalo.cor && <span>• {cavalo.cor}</span>}
           {cavalo.altura && <span>• {cavalo.altura}m</span>}
         </div>
 
         {cavalo.linhagem && (
-          <p className="text-[#C5A059] text-sm mb-2">Linhagem: {cavalo.linhagem}</p>
+          <p className="text-[#C5A059] text-sm mb-2">
+            {t.marketplace_page.lineage_label} {cavalo.linhagem}
+          </p>
         )}
 
         <div className="flex items-center gap-1 text-zinc-500 text-sm">
@@ -563,6 +608,7 @@ function CavaloModal({
   isFavorite: boolean;
   onToggleFavorite: () => void;
 }) {
+  const { t } = useLanguage();
   const image = cavalo.foto_principal || placeholderHorses[0];
 
   return (
@@ -592,7 +638,7 @@ function CavaloModal({
 
             {cavalo.destaque && (
               <div className="absolute top-4 left-4 bg-[#C5A059] text-black px-3 py-1 text-sm font-bold flex items-center gap-1">
-                <Star size={14} /> Destaque
+                <Star size={14} /> {t.marketplace_page.featured_badge}
               </div>
             )}
           </div>
@@ -603,7 +649,8 @@ function CavaloModal({
               <div>
                 <h2 className="text-2xl font-serif text-white mb-1">{cavalo.nome}</h2>
                 <p className="text-zinc-500">
-                  {getSexoLabel(cavalo.sexo)} • {cavalo.idade} anos • {cavalo.cor}
+                  {getSexoLabel(cavalo.sexo)} • {cavalo.idade} {t.marketplace_page.years} •{" "}
+                  {cavalo.cor}
                 </p>
               </div>
               <button
@@ -623,25 +670,33 @@ function CavaloModal({
             <div className="grid grid-cols-2 gap-4 mb-6">
               {cavalo.altura && (
                 <div className="bg-zinc-800/50 p-3">
-                  <div className="text-zinc-500 text-xs uppercase mb-1">Altura</div>
+                  <div className="text-zinc-500 text-xs uppercase mb-1">
+                    {t.marketplace_page.modal_height}
+                  </div>
                   <div className="text-white">{cavalo.altura}m</div>
                 </div>
               )}
               {cavalo.linhagem && (
                 <div className="bg-zinc-800/50 p-3">
-                  <div className="text-zinc-500 text-xs uppercase mb-1">Linhagem</div>
+                  <div className="text-zinc-500 text-xs uppercase mb-1">
+                    {t.marketplace_page.modal_lineage}
+                  </div>
                   <div className="text-white">{cavalo.linhagem}</div>
                 </div>
               )}
               {cavalo.nivel_treino && (
                 <div className="bg-zinc-800/50 p-3">
-                  <div className="text-zinc-500 text-xs uppercase mb-1">Nível</div>
+                  <div className="text-zinc-500 text-xs uppercase mb-1">
+                    {t.marketplace_page.modal_level}
+                  </div>
                   <div className="text-white">{getNivelLabel(cavalo.nivel_treino)}</div>
                 </div>
               )}
               {cavalo.registro_apsl && (
                 <div className="bg-zinc-800/50 p-3">
-                  <div className="text-zinc-500 text-xs uppercase mb-1">APSL</div>
+                  <div className="text-zinc-500 text-xs uppercase mb-1">
+                    {t.marketplace_page.modal_apsl}
+                  </div>
                   <div className="text-white">{cavalo.registro_apsl}</div>
                 </div>
               )}
@@ -650,17 +705,19 @@ function CavaloModal({
             {/* Genealogia */}
             {(cavalo.pai || cavalo.mae) && (
               <div className="mb-6">
-                <h3 className="text-zinc-500 text-xs uppercase mb-2">Genealogia</h3>
+                <h3 className="text-zinc-500 text-xs uppercase mb-2">
+                  {t.marketplace_page.modal_genealogy}
+                </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {cavalo.pai && (
                     <div className="bg-zinc-800/30 p-2 text-sm">
-                      <span className="text-zinc-500">Pai:</span>{" "}
+                      <span className="text-zinc-500">{t.marketplace_page.modal_father}</span>{" "}
                       <span className="text-white">{cavalo.pai}</span>
                     </div>
                   )}
                   {cavalo.mae && (
                     <div className="bg-zinc-800/30 p-2 text-sm">
-                      <span className="text-zinc-500">Mãe:</span>{" "}
+                      <span className="text-zinc-500">{t.marketplace_page.modal_mother}</span>{" "}
                       <span className="text-white">{cavalo.mae}</span>
                     </div>
                   )}
@@ -717,7 +774,7 @@ function CavaloModal({
                   className="flex items-center gap-2 w-full border border-[#C5A059] text-[#C5A059] py-3 px-4 font-bold hover:bg-[#C5A059] hover:text-black transition-colors"
                 >
                   <Mail size={18} />
-                  Enviar Email
+                  {t.marketplace_page.send_email}
                 </a>
               )}
             </div>

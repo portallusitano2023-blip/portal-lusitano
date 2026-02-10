@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import {
-  BreadcrumbSchema,
-  CollectionPageSchema,
-} from "@/components/JsonLd";
+import { BreadcrumbSchema, CollectionPageSchema, ItemListSchema } from "@/components/JsonLd";
+import { cavalosFamosos } from "./data";
 
 const siteUrl = "https://portal-lusitano.pt";
 
@@ -60,6 +58,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         name="Lusitanos Notáveis"
         description="Galeria dos cavalos Lusitanos mais famosos da história. Conheça os exemplares que levaram o PSL ao mais alto nível em Dressage, Atrelagem e Working Equitation."
         url={`${siteUrl}/cavalos-famosos`}
+      />
+      <ItemListSchema
+        name="Cavalos Lusitanos Famosos"
+        description="Os 15 cavalos Lusitanos mais notáveis da história, verificados com fontes credíveis."
+        items={cavalosFamosos.map((c) => ({
+          name: c.nome,
+          description: c.descricao,
+          url: `${siteUrl}/cavalos-famosos#${c.id}`,
+        }))}
       />
       {children}
     </>

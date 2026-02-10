@@ -66,7 +66,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                     {product.title}
                   </h3>
                   <p className="text-[#C5A059] font-serif text-base mb-5">
-                    {Number(product.priceRange.minVariantPrice.amount).toFixed(2)}{" "}
+                    {Number(product.priceRange?.minVariantPrice.amount || 0).toFixed(2)}{" "}
                     {t.shop.price_suffix}
                   </p>
 

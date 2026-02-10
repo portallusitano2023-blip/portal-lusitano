@@ -3,17 +3,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  FiDollarSign,
-  FiTrendingUp,
-  FiUser,
-  FiMail,
-  FiPhone,
-  FiCalendar,
-  FiPlus,
-  FiX,
-  FiEdit2,
-  FiTrash2,
-} from "react-icons/fi";
+  DollarSign,
+  TrendingUp,
+  User,
+  Mail,
+  Phone,
+  Calendar,
+  Plus,
+  X,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 import WhatsAppButton from "@/components/admin/WhatsAppButton";
 import { Lead, CRMStats } from "@/types/lead";
@@ -27,6 +27,33 @@ const STAGES = [
   { key: "ganho", label: "Ganho ✓", color: "emerald" },
   { key: "perdido", label: "Perdido ✗", color: "red" },
 ];
+
+// Lead scoring: calcula score 0-100 baseado nos dados do lead
+function calculateLeadScore(lead: Lead): number {
+  let score = 0;
+  if (lead.email) score += 10;
+  if (lead.telefone) score += 10;
+  if (lead.budget_min || lead.budget_max) score += 15;
+  if (lead.estimated_value > 1000000)
+    score += 30; // >10k€ (em cêntimos)
+  else if (lead.estimated_value > 500000)
+    score += 20; // >5k€
+  else if (lead.estimated_value > 0) score += 10;
+  if (lead.probability > 70) score += 15;
+  else if (lead.probability > 40) score += 8;
+  if (lead.source_type === "direto") score += 10;
+  else if (lead.source_type === "publicidade") score += 5;
+  if (lead.interests) score += 5;
+  if (lead.company) score += 5;
+  return Math.min(score, 100);
+}
+
+// Temperatura do lead baseada no score
+function getLeadTemperature(score: number): { label: string; color: string; emoji: string } {
+  if (score >= 70) return { label: "Quente", color: "text-red-400", emoji: "🔥" };
+  if (score >= 40) return { label: "Morno", color: "text-yellow-400", emoji: "🌤" };
+  return { label: "Frio", color: "text-blue-400", emoji: "❄️" };
+}
 
 export default function CRMPage() {
   const router = useRouter();
@@ -273,7 +300,7 @@ export default function CRMPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                <FiTrendingUp className="text-[#C5A059]" />
+                <TrendingUp className="text-[#C5A059]" />
                 CRM - Pipeline de Vendas
               </h1>
               <p className="text-gray-400 mt-1">Gestão visual de leads e oportunidades</p>
@@ -283,7 +310,7 @@ export default function CRMPage() {
                 onClick={() => openModal()}
                 className="flex items-center gap-2 px-4 py-2 bg-[#C5A059] hover:bg-[#d4b469] text-black font-semibold rounded-lg transition-colors"
               >
-                <FiPlus size={16} />
+                <Plus size={16} />
                 Novo Lead
               </button>
               <Link
@@ -299,10 +326,10 @@ export default function CRMPage() {
 
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
             <div className="flex items-center gap-3 mb-2">
-              <FiUser className="text-[#C5A059]" size={24} />
+              <User className="text-[#C5A059]" size={24} />
               <h3 className="text-sm font-medium text-gray-400">Total Leads</h3>
             </div>
             <p className="text-3xl font-bold text-white">{stats?.total || 0}</p>
@@ -310,7 +337,7 @@ export default function CRMPage() {
 
           <div className="bg-[#0A0A0A] border border-green-500/20 rounded-lg p-6">
             <div className="flex items-center gap-3 mb-2">
-              <FiDollarSign className="text-green-500" size={24} />
+              <DollarSign className="text-green-500" size={24} />
               <h3 className="text-sm font-medium text-gray-400">Valor Pipeline</h3>
             </div>
             <p className="text-3xl font-bold text-green-500">
@@ -321,7 +348,7 @@ export default function CRMPage() {
 
           <div className="bg-[#0A0A0A] border border-emerald-500/20 rounded-lg p-6">
             <div className="flex items-center gap-3 mb-2">
-              <FiTrendingUp className="text-emerald-500" size={24} />
+              <TrendingUp className="text-emerald-500" size={24} />
               <h3 className="text-sm font-medium text-gray-400">Vendas Ganhas</h3>
             </div>
             <p className="text-3xl font-bold text-emerald-500">{formatCurrency(wonValue)}</p>
@@ -330,13 +357,70 @@ export default function CRMPage() {
 
           <div className="bg-[#0A0A0A] border border-orange-500/20 rounded-lg p-6">
             <div className="flex items-center gap-3 mb-2">
-              <FiCalendar className="text-orange-500" size={24} />
+              <Calendar className="text-orange-500" size={24} />
               <h3 className="text-sm font-medium text-gray-400">Taxa de Conversão</h3>
             </div>
             <p className="text-3xl font-bold text-orange-500">
               {stats && stats.total > 0 ? ((stats.ganho / stats.total) * 100).toFixed(1) : "0.0"}%
             </p>
             <p className="text-xs text-gray-500 mt-1">Leads → Vendas</p>
+          </div>
+        </div>
+
+        {/* Lead Temperature Summary + Follow-ups */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-4">
+            <h3 className="text-sm font-medium text-gray-400 mb-3">Temperatura dos Leads</h3>
+            <div className="flex gap-6">
+              <div className="flex items-center gap-2">
+                <span>🔥</span>
+                <span className="text-red-400 font-semibold">
+                  {leads.filter((l) => calculateLeadScore(l) >= 70).length}
+                </span>
+                <span className="text-xs text-gray-500">Quentes</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>🌤</span>
+                <span className="text-yellow-400 font-semibold">
+                  {
+                    leads.filter((l) => {
+                      const s = calculateLeadScore(l);
+                      return s >= 40 && s < 70;
+                    }).length
+                  }
+                </span>
+                <span className="text-xs text-gray-500">Mornos</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>❄️</span>
+                <span className="text-blue-400 font-semibold">
+                  {leads.filter((l) => calculateLeadScore(l) < 40).length}
+                </span>
+                <span className="text-xs text-gray-500">Frios</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[#0A0A0A] border border-orange-500/20 rounded-lg p-4">
+            <h3 className="text-sm font-medium text-gray-400 mb-3">Follow-ups Pendentes</h3>
+            {leads.filter((l) => l.next_follow_up && new Date(l.next_follow_up) <= new Date())
+              .length > 0 ? (
+              <div className="space-y-1">
+                {leads
+                  .filter((l) => l.next_follow_up && new Date(l.next_follow_up) <= new Date())
+                  .slice(0, 3)
+                  .map((lead) => (
+                    <div key={lead.id} className="flex items-center justify-between text-xs">
+                      <span className="text-orange-400">{lead.name}</span>
+                      <span className="text-gray-500">
+                        {new Date(lead.next_follow_up!).toLocaleDateString("pt-PT")}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <p className="text-xs text-gray-500">Nenhum follow-up pendente</p>
+            )}
           </div>
         </div>
 
@@ -377,68 +461,93 @@ export default function CRMPage() {
 
                 {/* Cards dos leads */}
                 <div className="p-3 space-y-3">
-                  {stageLeads.map((lead) => (
-                    <div
-                      key={lead.id}
-                      draggable
-                      onDragStart={() => handleDragStart(lead)}
-                      className="bg-white/5 border border-white/10 rounded-lg p-4 cursor-move hover:border-white/30 transition-all"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex-1">
-                          <h4 className="text-white font-medium text-sm mb-1">{lead.name}</h4>
-                          {lead.company && <p className="text-xs text-gray-500">{lead.company}</p>}
+                  {stageLeads.map((lead) => {
+                    const score = calculateLeadScore(lead);
+                    const temp = getLeadTemperature(score);
+                    return (
+                      <div
+                        key={lead.id}
+                        draggable
+                        onDragStart={() => handleDragStart(lead)}
+                        className="bg-white/5 border border-white/10 rounded-lg p-4 cursor-move hover:border-white/30 transition-all"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h4 className="text-white font-medium text-sm">{lead.name}</h4>
+                              <span
+                                className={`text-xs ${temp.color}`}
+                                title={`Score: ${score} - ${temp.label}`}
+                              >
+                                {temp.emoji}
+                              </span>
+                            </div>
+                            {lead.company && (
+                              <p className="text-xs text-gray-500">{lead.company}</p>
+                            )}
+                          </div>
+                          <div className="flex gap-1">
+                            {lead.telefone && (
+                              <WhatsAppButton
+                                phone={lead.telefone}
+                                name={lead.name}
+                                preMessage={`Olá ${lead.name},\n\nRecebi o seu contacto através do Portal Lusitano.\n\n${lead.interests ? `Interesse: ${lead.interests}\n\n` : ""}Como posso ajudar?\n\nCumprimentos,\nPortal Lusitano`}
+                                variant="icon"
+                                className="p-1"
+                              />
+                            )}
+                            <button
+                              onClick={() => openModal(lead)}
+                              className="p-1 hover:bg-white/10 rounded transition-colors"
+                            >
+                              <Pencil className="text-gray-400" size={12} />
+                            </button>
+                            <button
+                              onClick={() => deleteLead(lead.id)}
+                              className="p-1 hover:bg-white/10 rounded transition-colors"
+                            >
+                              <Trash2 className="text-red-400" size={12} />
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex gap-1">
-                          {lead.telefone && (
-                            <WhatsAppButton
-                              phone={lead.telefone}
-                              name={lead.name}
-                              preMessage={`Olá ${lead.name},\n\nRecebi o seu contacto através do Portal Lusitano.\n\n${lead.interests ? `Interesse: ${lead.interests}\n\n` : ""}Como posso ajudar?\n\nCumprimentos,\nPortal Lusitano`}
-                              variant="icon"
-                              className="p-1"
-                            />
-                          )}
-                          <button
-                            onClick={() => openModal(lead)}
-                            className="p-1 hover:bg-white/10 rounded transition-colors"
-                          >
-                            <FiEdit2 className="text-gray-400" size={12} />
-                          </button>
-                          <button
-                            onClick={() => deleteLead(lead.id)}
-                            className="p-1 hover:bg-white/10 rounded transition-colors"
-                          >
-                            <FiTrash2 className="text-red-400" size={12} />
-                          </button>
-                        </div>
-                      </div>
 
-                      <div className="space-y-1 mb-3">
-                        <div className="flex items-center gap-2 text-xs text-gray-400">
-                          <FiMail size={10} />
-                          <span className="truncate">{lead.email}</span>
-                        </div>
-                        {lead.telefone && (
+                        <div className="space-y-1 mb-3">
                           <div className="flex items-center gap-2 text-xs text-gray-400">
-                            <FiPhone size={10} />
-                            <span>{lead.telefone}</span>
+                            <Mail size={10} />
+                            <span className="truncate">{lead.email}</span>
+                          </div>
+                          {lead.telefone && (
+                            <div className="flex items-center gap-2 text-xs text-gray-400">
+                              <Phone size={10} />
+                              <span>{lead.telefone}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {lead.interests && (
+                          <p className="text-xs text-gray-500 mb-2 line-clamp-2">
+                            {lead.interests}
+                          </p>
+                        )}
+
+                        <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                          <span className="text-sm font-semibold text-[#C5A059]">
+                            {formatCurrency(lead.estimated_value || 0)}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-gray-600">{score}pts</span>
+                            <span className="text-xs text-gray-500">{lead.probability}%</span>
+                          </div>
+                        </div>
+                        {lead.next_follow_up && new Date(lead.next_follow_up) <= new Date() && (
+                          <div className="mt-2 text-xs text-orange-400 flex items-center gap-1">
+                            <Calendar size={10} />
+                            Follow-up pendente!
                           </div>
                         )}
                       </div>
-
-                      {lead.interests && (
-                        <p className="text-xs text-gray-500 mb-2 line-clamp-2">{lead.interests}</p>
-                      )}
-
-                      <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                        <span className="text-sm font-semibold text-[#C5A059]">
-                          {formatCurrency(lead.estimated_value || 0)}
-                        </span>
-                        <span className="text-xs text-gray-500">{lead.probability}% prob.</span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -458,7 +567,7 @@ export default function CRMPage() {
                 onClick={closeModal}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
               >
-                <FiX className="text-gray-400" />
+                <X className="text-gray-400" />
               </button>
             </div>
 

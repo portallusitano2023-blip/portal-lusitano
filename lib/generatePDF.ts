@@ -201,3 +201,286 @@ export async function generateCustomReport(
 
   doc.save(`relatorio_${Date.now()}.pdf`);
 }
+
+// ================================================================
+// HTML-based report generation (printable via window.print())
+// ================================================================
+
+/**
+ * Shared inline-styled HTML wrapper with Portal Lusitano dark-theme branding.
+ * Opens a new window and triggers print when ready.
+ */
+function openPrintableReport(title: string, bodyHTML: string): void {
+  const html = `<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${title} - Portal Lusitano</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: #050505;
+    color: #fff;
+    padding: 40px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .header {
+    border-bottom: 2px solid #C5A059;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+  .header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 28px;
+    color: #C5A059;
+    margin-bottom: 4px;
+  }
+  .header h2 {
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .header .meta {
+    font-size: 12px;
+    color: #888;
+    margin-top: 8px;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .summary-card {
+    background: #0A0A0A;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .summary-card .label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .summary-card .value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #C5A059;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+  thead th {
+    background: #C5A059;
+    color: #000;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  tbody td {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #ddd;
+  }
+  tbody tr:nth-child(even) {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+  }
+
+  @media print {
+    body { padding: 20px; background: #050505; }
+    .no-print { display: none; }
+  }
+</style>
+</head>
+<body>
+${bodyHTML}
+<div class="footer">
+  Portal Lusitano &middot; Relatorio gerado em ${new Date().toLocaleString("pt-PT")}
+</div>
+<script>
+  window.onload = function() {
+    // Small delay to let fonts load, then trigger print
+    setTimeout(function() { window.print(); }, 600);
+  };
+</script>
+</body>
+</html>`;
+
+  const printWindow = window.open("", "_blank");
+  if (printWindow) {
+    printWindow.document.write(html);
+    printWindow.document.close();
+  }
+}
+
+// -------------------------------------------------------
+// Financial Report
+// -------------------------------------------------------
+
+interface FinancialReportData {
+  period: string;
+  totalRevenue: number;
+  totalOrders: number;
+  averageOrderValue: number;
+  topProducts: Array<{ name: string; revenue: number; quantity: number }>;
+}
+
+export function generateFinancialReportHTML(data: FinancialReportData): string {
+  const fmt = (cents: number) =>
+    `€${(cents / 100).toLocaleString("pt-PT", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
+  const body = `
+<div class="header">
+  <h1>Portal Lusitano</h1>
+  <h2>Relatorio Financeiro</h2>
+  <p class="meta">Periodo: ${data.period}</p>
+</div>
+
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="label">Receita Total</div>
+    <div class="value">${fmt(data.totalRevenue)}</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">Total Encomendas</div>
+    <div class="value">${data.totalOrders.toLocaleString("pt-PT")}</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">Valor Medio</div>
+    <div class="value">${fmt(data.averageOrderValue)}</div>
+  </div>
+</div>
+
+<h3 class="section-title">Top Produtos</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Produto</th>
+      <th>Receita</th>
+      <th>Quantidade</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${data.topProducts
+      .map(
+        (p) => `
+    <tr>
+      <td>${p.name}</td>
+      <td>${fmt(p.revenue)}</td>
+      <td>${p.quantity}</td>
+    </tr>`
+      )
+      .join("")}
+  </tbody>
+</table>
+`;
+
+  openPrintableReport("Relatorio Financeiro", body);
+  return body;
+}
+
+// -------------------------------------------------------
+// Analytics Report
+// -------------------------------------------------------
+
+interface AnalyticsReportDataHTML {
+  period: string;
+  totalVisits: number;
+  uniqueVisitors: number;
+  pageViews: number;
+  topPages: Array<{ path: string; views: number }>;
+  conversionRate: number;
+}
+
+export function generateAnalyticsReportHTML(data: AnalyticsReportDataHTML): string {
+  const body = `
+<div class="header">
+  <h1>Portal Lusitano</h1>
+  <h2>Relatorio de Analytics</h2>
+  <p class="meta">Periodo: ${data.period}</p>
+</div>
+
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="label">Visitas Totais</div>
+    <div class="value">${data.totalVisits.toLocaleString("pt-PT")}</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">Visitantes Unicos</div>
+    <div class="value">${data.uniqueVisitors.toLocaleString("pt-PT")}</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">Page Views</div>
+    <div class="value">${data.pageViews.toLocaleString("pt-PT")}</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">Taxa de Conversao</div>
+    <div class="value">${data.conversionRate.toFixed(1)}%</div>
+  </div>
+</div>
+
+<h3 class="section-title">Paginas Mais Visitadas</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Pagina</th>
+      <th>Visualizacoes</th>
+      <th>% do Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${data.topPages
+      .map(
+        (p) => `
+    <tr>
+      <td>${p.path}</td>
+      <td>${p.views.toLocaleString("pt-PT")}</td>
+      <td>${data.pageViews > 0 ? ((p.views / data.pageViews) * 100).toFixed(1) : "0.0"}%</td>
+    </tr>`
+      )
+      .join("")}
+  </tbody>
+</table>
+`;
+
+  openPrintableReport("Relatorio de Analytics", body);
+  return body;
+}

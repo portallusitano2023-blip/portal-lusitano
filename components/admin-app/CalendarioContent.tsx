@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  FiCalendar,
-  FiPlus,
-  FiX,
-  FiEdit2,
-  FiTrash2,
-  FiChevronLeft,
-  FiChevronRight,
-} from "react-icons/fi";
+import { Calendar, Plus, X, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Task {
   id: string;
@@ -228,7 +220,7 @@ export default function CalendarioContent() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <FiCalendar className="text-[#C5A059]" size={32} />
+            <Calendar className="text-[#C5A059]" size={32} />
             <div>
               <h1 className="text-3xl font-bold text-white">Calendário de Follow-ups</h1>
               <p className="text-gray-400">Gerir tarefas e lembretes de clientes</p>
@@ -277,13 +269,13 @@ export default function CalendarioContent() {
                   onClick={previousMonth}
                   className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
                 >
-                  <FiChevronLeft className="text-white" />
+                  <ChevronLeft className="text-white" />
                 </button>
                 <button
                   onClick={nextMonth}
                   className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
                 >
-                  <FiChevronRight className="text-white" />
+                  <ChevronRight className="text-white" />
                 </button>
               </div>
             </div>
@@ -371,7 +363,7 @@ export default function CalendarioContent() {
                 onClick={() => openModal()}
                 className="p-2 bg-[#C5A059] hover:bg-[#d4b469] rounded-lg transition-colors"
               >
-                <FiPlus className="text-black" size={16} />
+                <Plus className="text-black" size={16} />
               </button>
             </div>
 
@@ -403,13 +395,13 @@ export default function CalendarioContent() {
                           onClick={() => openModal(task)}
                           className="p-1 hover:bg-white/10 rounded transition-colors"
                         >
-                          <FiEdit2 className="text-gray-400" size={14} />
+                          <Pencil className="text-gray-400" size={14} />
                         </button>
                         <button
                           onClick={() => deleteTask(task.id)}
                           className="p-1 hover:bg-white/10 rounded transition-colors"
                         >
-                          <FiTrash2 className="text-red-400" size={14} />
+                          <Trash2 className="text-red-400" size={14} />
                         </button>
                       </div>
                     </div>
@@ -463,7 +455,7 @@ export default function CalendarioContent() {
                 onClick={closeModal}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
               >
-                <FiX className="text-gray-400" />
+                <X className="text-gray-400" />
               </button>
             </div>
 

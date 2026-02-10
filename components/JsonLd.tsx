@@ -10,17 +10,15 @@ export function OrganizationSchema() {
     name: "Portal Lusitano",
     url: siteUrl,
     logo: `${siteUrl}/logo.png`,
-    description: "Marketplace premium de cavalos Lusitanos. Loja equestre, leiloes exclusivos e arquivo editorial.",
+    description:
+      "Marketplace premium de cavalos Lusitanos. Loja equestre, leiloes exclusivos e arquivo editorial.",
     foundingDate: "2024",
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
       availableLanguage: ["Portuguese", "English"],
     },
-    sameAs: [
-      "https://instagram.com/portal_lusitano",
-      "https://tiktok.com/@portal_lusitano",
-    ],
+    sameAs: ["https://instagram.com/portal_lusitano", "https://tiktok.com/@portal_lusitano"],
   };
 
   return (
@@ -241,26 +239,30 @@ export function EventSchema({
     eventAttendanceMode: location
       ? "https://schema.org/OfflineEventAttendanceMode"
       : "https://schema.org/OnlineEventAttendanceMode",
-    location: location ? {
-      "@type": "Place",
-      name: location,
-      address: address || location,
-    } : {
-      "@type": "VirtualLocation",
-      url: siteUrl,
-    },
+    location: location
+      ? {
+          "@type": "Place",
+          name: location,
+          address: address || location,
+        }
+      : {
+          "@type": "VirtualLocation",
+          url: siteUrl,
+        },
     organizer: {
       "@type": "Organization",
       name: organizer,
       url: siteUrl,
     },
     image,
-    offers: price ? {
-      "@type": "Offer",
-      price: price === "Gratuito" ? "0" : price.replace(/[^0-9]/g, ""),
-      priceCurrency: "EUR",
-      availability: "https://schema.org/InStock",
-    } : undefined,
+    offers: price
+      ? {
+          "@type": "Offer",
+          price: price === "Gratuito" ? "0" : price.replace(/[^0-9]/g, ""),
+          priceCurrency: "EUR",
+          availability: "https://schema.org/InStock",
+        }
+      : undefined,
   };
 
   return (
@@ -310,13 +312,16 @@ export function LocalBusinessSchema({
     email,
     url: website || siteUrl,
     image,
-    aggregateRating: rating && reviewCount ? {
-      "@type": "AggregateRating",
-      ratingValue: rating,
-      reviewCount: reviewCount,
-      bestRating: 5,
-      worstRating: 1,
-    } : undefined,
+    aggregateRating:
+      rating && reviewCount
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: rating,
+            reviewCount: reviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          }
+        : undefined,
     priceRange: "€€€",
   };
 
@@ -379,6 +384,47 @@ export function HorseSchema({
         address: location,
       },
     },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema de ItemList (para listas de itens - cavalos, ferramentas, etc.)
+interface ItemListItem {
+  name: string;
+  description?: string;
+  url?: string;
+  image?: string;
+}
+
+export function ItemListSchema({
+  name,
+  description,
+  items,
+}: {
+  name: string;
+  description?: string;
+  items: ItemListItem[];
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    description,
+    numberOfItems: items.length,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      description: item.description,
+      url: item.url,
+      image: item.image,
+    })),
   };
 
   return (
@@ -462,7 +508,8 @@ export function MedicalWebPageSchema() {
     "@context": "https://schema.org",
     "@type": "MedicalWebPage",
     name: "Piroplasmose Equina — Guia Completo",
-    description: "Guia completo sobre piroplasmose equina: prevalência em Portugal, impacto na exportação, diagnóstico, tratamento e prevenção.",
+    description:
+      "Guia completo sobre piroplasmose equina: prevalência em Portugal, impacto na exportação, diagnóstico, tratamento e prevenção.",
     url: `${siteUrl}/piroplasmose`,
     lastReviewed: "2025-01-01",
     about: {
@@ -504,7 +551,8 @@ export function BookSchema() {
     "@context": "https://schema.org",
     "@type": "Book",
     name: "Introdução ao Cavalo Lusitano",
-    description: "O guia essencial para quem quer conhecer a raça mais nobre da Península Ibérica. História, linhagens, cuidados e dicas para compradores.",
+    description:
+      "O guia essencial para quem quer conhecer a raça mais nobre da Península Ibérica. História, linhagens, cuidados e dicas para compradores.",
     author: {
       "@type": "Organization",
       name: "Portal Lusitano",

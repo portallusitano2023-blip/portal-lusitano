@@ -5,19 +5,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import NotificationBadge from "@/components/admin/NotificationBadge";
 import {
-  FiDollarSign,
-  FiTrendingUp,
-  FiRepeat,
-  FiShoppingCart,
-  FiMail,
-  FiEye,
-  FiUsers,
-  FiCalendar,
-  FiStar,
-  FiBarChart2,
-  FiLogOut,
-  FiExternalLink,
-} from "react-icons/fi";
+  DollarSign,
+  TrendingUp,
+  Repeat,
+  ShoppingCart,
+  Mail,
+  Eye,
+  Users,
+  Calendar,
+  Star,
+  BarChart2,
+  LogOut,
+  ExternalLink,
+} from "lucide-react";
 
 interface DashboardStats {
   totalLeads: number;
@@ -210,14 +210,14 @@ export default function AdminDashboard() {
                 href="/"
                 className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg transition-colors"
               >
-                <FiExternalLink size={16} />
+                <ExternalLink size={16} />
                 Ver Site
               </Link>
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-lg transition-colors"
               >
-                <FiLogOut size={16} />
+                <LogOut size={16} />
                 Sair
               </button>
             </div>
@@ -279,7 +279,7 @@ export default function AdminDashboard() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-[#C5A059]/30 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Receita Total</h3>
-                  <FiDollarSign className="text-[#C5A059]" size={20} />
+                  <DollarSign className="text-[#C5A059]" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">
                   {formatCurrency(financial.totalRevenue)}
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-green-500/30 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Este Mês</h3>
-                  <FiTrendingUp className="text-green-500" size={20} />
+                  <TrendingUp className="text-green-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">
                   {formatCurrency(financial.thisMonthRevenue)}
@@ -310,7 +310,7 @@ export default function AdminDashboard() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-[#C5A059]/30 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">MRR</h3>
-                  <FiRepeat className="text-[#C5A059]" size={20} />
+                  <Repeat className="text-[#C5A059]" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">{formatCurrency(financial.mrr)}</p>
                 <p className="text-xs text-gray-500 mt-1">Receita recorrente</p>
@@ -320,7 +320,7 @@ export default function AdminDashboard() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-[#C5A059]/30 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Transações</h3>
-                  <FiShoppingCart className="text-[#C5A059]" size={20} />
+                  <ShoppingCart className="text-[#C5A059]" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">{financial.totalTransactions}</p>
                 <p className="text-xs text-gray-500 mt-1">
@@ -348,7 +348,7 @@ export default function AdminDashboard() {
               {/* Stats de Mensagens */}
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <FiMail className="text-[#C5A059]" size={24} />
+                  <Mail className="text-[#C5A059]" size={24} />
                   <h3 className="text-lg font-semibold text-white">Status das Mensagens</h3>
                 </div>
                 <div className="space-y-3">
@@ -432,7 +432,7 @@ export default function AdminDashboard() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-blue-500/30 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Total Views</h3>
-                  <FiEye className="text-blue-500" size={20} />
+                  <Eye className="text-blue-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">
                   {formatNumber(stats.cavalosViews + stats.eventosViews)}
@@ -447,7 +447,7 @@ export default function AdminDashboard() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-green-500/30 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Leads (Ebook)</h3>
-                  <FiUsers className="text-green-500" size={20} />
+                  <Users className="text-green-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">{stats.totalLeads}</p>
                 <p className="text-xs text-gray-500 mt-1">{stats.conversionRate}% taxa conversão</p>
@@ -457,7 +457,7 @@ export default function AdminDashboard() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-yellow-500/30 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Reviews</h3>
-                  <FiStar className="text-yellow-500" size={20} />
+                  <Star className="text-yellow-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">{stats.totalReviews}</p>
                 <p className="text-xs text-yellow-500 mt-1">
@@ -469,7 +469,7 @@ export default function AdminDashboard() {
               <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6 hover:border-purple-500/30 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-gray-400">Eventos</h3>
-                  <FiCalendar className="text-purple-500" size={20} />
+                  <Calendar className="text-purple-500" size={20} />
                 </div>
                 <p className="text-3xl font-bold text-white">{stats.totalEventos}</p>
                 <p className="text-xs text-gray-500 mt-1">{stats.futureEventos} futuros</p>
@@ -550,7 +550,7 @@ export default function AdminDashboard() {
               className="bg-[#0A0A0A] border border-white/10 hover:border-[#C5A059]/50 rounded-lg p-6 transition-all hover:scale-105"
             >
               <div className="flex items-center gap-3 mb-3">
-                <FiDollarSign className="text-[#C5A059]" size={28} />
+                <DollarSign className="text-[#C5A059]" size={28} />
                 <h3 className="text-lg font-bold text-white">Dashboard Financeiro</h3>
               </div>
               <p className="text-sm text-gray-400">
@@ -563,7 +563,7 @@ export default function AdminDashboard() {
               className="bg-[#0A0A0A] border border-white/10 hover:border-blue-500/50 rounded-lg p-6 transition-all hover:scale-105"
             >
               <div className="flex items-center gap-3 mb-3">
-                <FiMail className="text-blue-500" size={28} />
+                <Mail className="text-blue-500" size={28} />
                 <h3 className="text-lg font-bold text-white">Inbox de Mensagens</h3>
               </div>
               <p className="text-sm text-gray-400">
@@ -576,7 +576,7 @@ export default function AdminDashboard() {
               className="bg-[#0A0A0A] border border-white/10 hover:border-green-500/50 rounded-lg p-6 transition-all hover:scale-105"
             >
               <div className="flex items-center gap-3 mb-3">
-                <FiBarChart2 className="text-green-500" size={28} />
+                <BarChart2 className="text-green-500" size={28} />
                 <h3 className="text-lg font-bold text-white">Analytics Completo</h3>
               </div>
               <p className="text-sm text-gray-400">
@@ -589,7 +589,7 @@ export default function AdminDashboard() {
               className="bg-[#0A0A0A] border border-white/10 hover:border-purple-500/50 rounded-lg p-6 transition-all hover:scale-105"
             >
               <div className="flex items-center gap-3 mb-3">
-                <FiCalendar className="text-purple-500" size={28} />
+                <Calendar className="text-purple-500" size={28} />
                 <h3 className="text-lg font-bold text-white">Calendário Follow-ups</h3>
               </div>
               <p className="text-sm text-gray-400">
@@ -602,7 +602,7 @@ export default function AdminDashboard() {
               className="bg-[#0A0A0A] border border-white/10 hover:border-orange-500/50 rounded-lg p-6 transition-all hover:scale-105"
             >
               <div className="flex items-center gap-3 mb-3">
-                <FiTrendingUp className="text-orange-500" size={28} />
+                <TrendingUp className="text-orange-500" size={28} />
                 <h3 className="text-lg font-bold text-white">CRM Pipeline</h3>
               </div>
               <p className="text-sm text-gray-400">Pipeline visual de vendas com drag-and-drop</p>

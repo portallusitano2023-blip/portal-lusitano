@@ -2,17 +2,17 @@
 
 import { useCallback, useEffect, useState } from "react";
 import {
-  FiDollarSign,
-  FiTrendingUp,
-  FiUser,
-  FiMail,
-  FiPhone,
-  FiCalendar,
-  FiPlus,
-  FiX,
-  FiEdit2,
-  FiTrash2,
-} from "react-icons/fi";
+  DollarSign,
+  TrendingUp,
+  User,
+  Mail,
+  Phone,
+  Calendar,
+  Plus,
+  X,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import { Lead, CRMStats } from "@/types/lead";
 
 const STAGES = [
@@ -243,7 +243,7 @@ export default function CRMContent() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <FiTrendingUp className="text-[#C5A059]" size={32} />
+              <TrendingUp className="text-[#C5A059]" size={32} />
               <div>
                 <h1 className="text-3xl font-bold text-white">CRM - Pipeline de Vendas</h1>
                 <p className="text-gray-400">Gestão visual de leads e oportunidades</p>
@@ -253,7 +253,7 @@ export default function CRMContent() {
               onClick={() => openModal()}
               className="flex items-center gap-2 px-4 py-2 bg-[#C5A059] hover:bg-[#d4b469] text-black font-semibold rounded-lg transition-colors"
             >
-              <FiPlus size={16} />
+              <Plus size={16} />
               Novo Lead
             </button>
           </div>
@@ -263,7 +263,7 @@ export default function CRMContent() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white/5 border border-white/10 rounded-lg p-6">
             <div className="flex items-center gap-3 mb-2">
-              <FiUser className="text-[#C5A059]" size={24} />
+              <User className="text-[#C5A059]" size={24} />
               <h3 className="text-sm font-medium text-gray-400">Total Leads</h3>
             </div>
             <p className="text-3xl font-bold text-white">{stats?.total || 0}</p>
@@ -271,7 +271,7 @@ export default function CRMContent() {
 
           <div className="bg-white/5 border border-green-500/20 rounded-lg p-6">
             <div className="flex items-center gap-3 mb-2">
-              <FiDollarSign className="text-green-500" size={24} />
+              <DollarSign className="text-green-500" size={24} />
               <h3 className="text-sm font-medium text-gray-400">Valor Pipeline</h3>
             </div>
             <p className="text-3xl font-bold text-green-500">
@@ -282,7 +282,7 @@ export default function CRMContent() {
 
           <div className="bg-white/5 border border-emerald-500/20 rounded-lg p-6">
             <div className="flex items-center gap-3 mb-2">
-              <FiTrendingUp className="text-emerald-500" size={24} />
+              <TrendingUp className="text-emerald-500" size={24} />
               <h3 className="text-sm font-medium text-gray-400">Vendas Ganhas</h3>
             </div>
             <p className="text-3xl font-bold text-emerald-500">{formatCurrency(wonValue)}</p>
@@ -291,7 +291,7 @@ export default function CRMContent() {
 
           <div className="bg-white/5 border border-orange-500/20 rounded-lg p-6">
             <div className="flex items-center gap-3 mb-2">
-              <FiCalendar className="text-orange-500" size={24} />
+              <Calendar className="text-orange-500" size={24} />
               <h3 className="text-sm font-medium text-gray-400">Taxa de Conversão</h3>
             </div>
             <p className="text-3xl font-bold text-orange-500">
@@ -355,25 +355,25 @@ export default function CRMContent() {
                             onClick={() => openModal(lead)}
                             className="p-1 hover:bg-white/10 rounded transition-colors"
                           >
-                            <FiEdit2 className="text-gray-400" size={12} />
+                            <Pencil className="text-gray-400" size={12} />
                           </button>
                           <button
                             onClick={() => deleteLead(lead.id)}
                             className="p-1 hover:bg-white/10 rounded transition-colors"
                           >
-                            <FiTrash2 className="text-red-400" size={12} />
+                            <Trash2 className="text-red-400" size={12} />
                           </button>
                         </div>
                       </div>
 
                       <div className="space-y-1 mb-3">
                         <div className="flex items-center gap-2 text-xs text-gray-400">
-                          <FiMail size={10} />
+                          <Mail size={10} />
                           <span className="truncate">{lead.email}</span>
                         </div>
                         {lead.telefone && (
                           <div className="flex items-center gap-2 text-xs text-gray-400">
-                            <FiPhone size={10} />
+                            <Phone size={10} />
                             <span>{lead.telefone}</span>
                           </div>
                         )}
@@ -410,7 +410,7 @@ export default function CRMContent() {
                 onClick={closeModal}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
               >
-                <FiX className="text-gray-400" />
+                <X className="text-gray-400" />
               </button>
             </div>
 

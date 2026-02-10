@@ -26,6 +26,14 @@ export default function CookieConsent() {
       accept: "Accept",
       decline: "Decline",
     },
+    es: {
+      title: "Utilizamos Cookies",
+      description:
+        "Utilizamos cookies para mejorar su experiencia en nuestro sitio. Al continuar navegando, acepta nuestra",
+      policy: "Politica de Privacidad",
+      accept: "Aceptar",
+      decline: "Rechazar",
+    },
   };
 
   const t = text[language];

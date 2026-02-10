@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import {
   Calculator,
@@ -33,8 +33,8 @@ import ResultActions from "@/components/tools/ResultActions";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
-import { generateCalculadoraPDF } from "@/lib/tools/pdf/calculadora-pdf";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ============================================
 // TIPOS
@@ -195,19 +195,27 @@ const MULT_LIVRO: Record<string, number> = {
 // ============================================
 
 export default function CalculadoraValorPage() {
+  const { t } = useLanguage();
   const [step, setStep] = useState(0); // 0 = intro
   const [isCalculating, setIsCalculating] = useState(false);
   const [resultado, setResultado] = useState<Resultado | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
   const [isExporting, setIsExporting] = useState(false);
-  const { canUse, isSubscribed, freeUsesLeft, requiresAuth, recordUsage } =
-    useToolAccess("calculadora");
+  const {
+    canUse,
+    isSubscribed,
+    freeUsesLeft,
+    requiresAuth,
+    recordUsage,
+    isLoading: accessLoading,
+  } = useToolAccess("calculadora");
 
   const handleExportPDF = async () => {
     if (!resultado) return;
     setIsExporting(true);
     try {
+      const { generateCalculadoraPDF } = await import("@/lib/tools/pdf/calculadora-pdf");
       await generateCalculadoraPDF(form, resultado);
     } finally {
       setIsExporting(false);
@@ -216,10 +224,264 @@ export default function CalculadoraValorPage() {
 
   const handleShare = async () => {
     const url = window.location.href;
-    const text = `Calculadora de Valor do Lusitano - Portal Lusitano`;
-    const shared = await shareNative("Calculadora de Valor", text, url);
+    const text = `${t.calculadora.tool_name} - Portal Lusitano`;
+    const shared = await shareNative(t.calculadora.tool_name, text, url);
     if (!shared) await copyToClipboard(url);
   };
+
+  // Translatable data arrays moved inside component with useMemo
+  const pelagens = useMemo(
+    () => [
+      { value: "Ruço", label: t.calculadora.coat_ruco, desc: t.calculadora.coat_ruco_desc },
+      {
+        value: "Castanho",
+        label: t.calculadora.coat_castanho,
+        desc: t.calculadora.coat_castanho_desc,
+      },
+      { value: "Preto", label: t.calculadora.coat_preto, desc: t.calculadora.coat_preto_desc },
+      { value: "Baio", label: t.calculadora.coat_baio, desc: t.calculadora.coat_baio_desc },
+      {
+        value: "Tordilho",
+        label: t.calculadora.coat_tordilho,
+        desc: t.calculadora.coat_tordilho_desc,
+      },
+      {
+        value: "Isabela",
+        label: t.calculadora.coat_isabela,
+        desc: t.calculadora.coat_isabela_desc,
+      },
+      {
+        value: "Palomino",
+        label: t.calculadora.coat_palomino,
+        desc: t.calculadora.coat_palomino_desc,
+      },
+    ],
+    [t]
+  );
+
+  const sexOptions = useMemo(
+    () => [
+      { value: "garanhao", label: t.calculadora.sex_stallion, icon: Crown },
+      { value: "egua", label: t.calculadora.sex_mare, icon: Heart },
+      { value: "castrado", label: t.calculadora.sex_gelding, icon: Shield },
+    ],
+    [t]
+  );
+
+  const lineageOptions = useMemo(
+    () => [
+      {
+        value: "desconhecida",
+        label: t.calculadora.lineage_unknown,
+        desc: t.calculadora.lineage_unknown_desc,
+      },
+      {
+        value: "comum",
+        label: t.calculadora.lineage_common,
+        desc: t.calculadora.lineage_common_desc,
+      },
+      {
+        value: "registada",
+        label: t.calculadora.lineage_registered,
+        desc: t.calculadora.lineage_registered_desc,
+      },
+      {
+        value: "certificada",
+        label: t.calculadora.lineage_certified,
+        desc: t.calculadora.lineage_certified_desc,
+      },
+      {
+        value: "premium",
+        label: t.calculadora.lineage_premium,
+        desc: t.calculadora.lineage_premium_desc,
+      },
+      {
+        value: "elite",
+        label: t.calculadora.lineage_elite,
+        desc: t.calculadora.lineage_elite_desc,
+      },
+    ],
+    [t]
+  );
+
+  const morphologyItems = useMemo(
+    () => [
+      {
+        key: "morfologia",
+        label: t.calculadora.morph_general,
+        desc: t.calculadora.morph_general_desc,
+      },
+      { key: "cabeca", label: t.calculadora.morph_head, desc: t.calculadora.morph_head_desc },
+      {
+        key: "espádua",
+        label: t.calculadora.morph_shoulder,
+        desc: t.calculadora.morph_shoulder_desc,
+      },
+      { key: "garupa", label: t.calculadora.morph_croup, desc: t.calculadora.morph_croup_desc },
+      { key: "membros", label: t.calculadora.morph_limbs, desc: t.calculadora.morph_limbs_desc },
+    ],
+    [t]
+  );
+
+  const gaitItems = useMemo(
+    () => [
+      {
+        key: "andamentos",
+        label: t.calculadora.gait_general,
+        desc: t.calculadora.gait_general_desc,
+      },
+      {
+        key: "elevacao",
+        label: t.calculadora.gait_elevation,
+        desc: t.calculadora.gait_elevation_desc,
+      },
+      {
+        key: "suspensao",
+        label: t.calculadora.gait_suspension,
+        desc: t.calculadora.gait_suspension_desc,
+      },
+      {
+        key: "regularidade",
+        label: t.calculadora.gait_regularity,
+        desc: t.calculadora.gait_regularity_desc,
+      },
+    ],
+    [t]
+  );
+
+  const temperamentItems = useMemo(
+    () => [
+      {
+        key: "temperamento",
+        label: t.calculadora.temp_balance,
+        desc: t.calculadora.temp_balance_desc,
+      },
+      {
+        key: "sensibilidade",
+        label: t.calculadora.temp_sensitivity,
+        desc: t.calculadora.temp_sensitivity_desc,
+      },
+      {
+        key: "vontadeTrabalho",
+        label: t.calculadora.temp_willingness,
+        desc: t.calculadora.temp_willingness_desc,
+      },
+    ],
+    [t]
+  );
+
+  const trainingOptions = useMemo(
+    () => [
+      {
+        value: "potro",
+        label: t.calculadora.training_foal,
+        desc: t.calculadora.training_foal_desc,
+        price: "8.000€+",
+      },
+      {
+        value: "desbravado",
+        label: t.calculadora.training_broken,
+        desc: t.calculadora.training_broken_desc,
+        price: "15.000€+",
+      },
+      {
+        value: "iniciado",
+        label: t.calculadora.training_started,
+        desc: t.calculadora.training_started_desc,
+        price: "25.000€+",
+      },
+      {
+        value: "elementar",
+        label: t.calculadora.training_elementary,
+        desc: t.calculadora.training_elementary_desc,
+        price: "40.000€+",
+      },
+      {
+        value: "medio",
+        label: t.calculadora.training_medium,
+        desc: t.calculadora.training_medium_desc,
+        price: "65.000€+",
+      },
+      {
+        value: "avancado",
+        label: t.calculadora.training_advanced,
+        desc: t.calculadora.training_advanced_desc,
+        price: "100.000€+",
+      },
+      {
+        value: "alta_escola",
+        label: t.calculadora.training_haute_ecole,
+        desc: t.calculadora.training_haute_ecole_desc,
+        price: "150.000€+",
+      },
+      {
+        value: "grand_prix",
+        label: t.calculadora.training_gp,
+        desc: t.calculadora.training_gp_desc,
+        price: "250.000€+",
+      },
+    ],
+    [t]
+  );
+
+  const competitionOptions = useMemo(
+    () => [
+      { value: "nenhuma", label: t.calculadora.comp_none, icon: null },
+      { value: "regional", label: t.calculadora.comp_regional, icon: Medal },
+      { value: "nacional", label: t.calculadora.comp_national, icon: Award },
+      { value: "internacional", label: t.calculadora.comp_international, icon: Globe },
+      { value: "campeonato_mundo", label: t.calculadora.comp_world_champ, icon: Crown },
+    ],
+    [t]
+  );
+
+  const healthOptions = useMemo(
+    () => [
+      {
+        value: "excelente",
+        label: t.calculadora.health_excellent,
+        desc: t.calculadora.health_excellent_desc,
+        color: "text-green-400",
+      },
+      {
+        value: "muito_bom",
+        label: t.calculadora.health_very_good,
+        desc: t.calculadora.health_very_good_desc,
+        color: "text-emerald-400",
+      },
+      {
+        value: "bom",
+        label: t.calculadora.health_good,
+        desc: t.calculadora.health_good_desc,
+        color: "text-yellow-400",
+      },
+      {
+        value: "regular",
+        label: t.calculadora.health_regular,
+        desc: t.calculadora.health_regular_desc,
+        color: "text-orange-400",
+      },
+    ],
+    [t]
+  );
+
+  const trendOptions = useMemo(
+    () => [
+      { value: "alta", label: t.calculadora.trend_up, icon: TrendingUp, desc: "+12%" },
+      { value: "estavel", label: t.calculadora.trend_stable, icon: Activity, desc: "±0%" },
+      { value: "baixa", label: t.calculadora.trend_down, icon: TrendingDown, desc: "-12%" },
+    ],
+    [t]
+  );
+
+  const bookOptions = useMemo(
+    () => [
+      { value: "definitivo", label: t.calculadora.book_definitive },
+      { value: "provisorio", label: t.calculadora.book_provisional },
+      { value: "auxiliar", label: t.calculadora.book_auxiliary },
+    ],
+    [t]
+  );
 
   const [form, setForm] = useState<FormData>({
     nome: "",
@@ -543,9 +805,9 @@ export default function CalculadoraValorPage() {
             </div>
             <div className="hidden sm:block">
               <span className="text-sm font-medium text-white block leading-tight">
-                Calculadora de Valor
+                {t.calculadora.tool_name}
               </span>
-              <span className="text-xs text-zinc-500">Avaliação Profissional PSL</span>
+              <span className="text-xs text-zinc-500">{t.calculadora.tool_subtitle}</span>
             </div>
           </div>
 
@@ -555,7 +817,7 @@ export default function CalculadoraValorPage() {
               className="text-sm text-[#C5A059] hover:text-[#D4AF6A] transition-colors flex items-center gap-2"
             >
               <RefreshCw size={14} />
-              <span className="hidden sm:inline">Nova avaliação</span>
+              <span className="hidden sm:inline">{t.calculadora.new_evaluation}</span>
             </button>
           ) : step > 0 ? (
             <div className="text-xs text-zinc-500 flex items-center gap-2">
@@ -605,31 +867,29 @@ export default function CalculadoraValorPage() {
                   className="inline-block px-4 py-1.5 bg-[#C5A059]/10 border border-[#C5A059]/30 text-[#C5A059] text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.2s" }}
                 >
-                  Ferramenta Profissional
+                  {t.calculadora.badge}
                 </span>
 
                 <h1
                   className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.3s" }}
                 >
-                  Calculadora de Valor
-                  <span className="block text-[#C5A059] mt-2">Puro Sangue Lusitano</span>
+                  {t.calculadora.title}
+                  <span className="block text-[#C5A059] mt-2">{t.calculadora.title_accent}</span>
                 </h1>
 
                 <p
                   className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.4s" }}
                 >
-                  &ldquo;Uma ferramenta desenvolvida para criadores, compradores e profissionais do
-                  sector equestre que procuram uma avaliação fundamentada.&rdquo;
+                  &ldquo;{t.calculadora.intro_quote}&rdquo;
                 </p>
 
                 <p
                   className="text-sm text-zinc-500 max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.5s" }}
                 >
-                  Baseada nos critérios de avaliação APSL, índices BLUP, análise de mercado europeu
-                  e padrões internacionais de dressage.
+                  {t.calculadora.intro_desc}
                 </p>
 
                 <button
@@ -638,7 +898,7 @@ export default function CalculadoraValorPage() {
                   style={{ animationDelay: "0.6s" }}
                 >
                   <Calculator size={20} />
-                  Iniciar Avaliação
+                  {t.calculadora.start_btn}
                   <ChevronRight size={18} />
                 </button>
               </div>
@@ -655,33 +915,30 @@ export default function CalculadoraValorPage() {
                     <div className="w-12 h-12 bg-[#C5A059]/10 rounded-lg flex items-center justify-center mb-4">
                       <Dna className="text-[#C5A059]" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Análise Genética</h3>
-                    <p className="text-sm text-zinc-400">
-                      Avaliação baseada nas principais linhagens portuguesas: Veiga, Andrade, Alter
-                      Real e Coudelaria Nacional.
-                    </p>
+                    <h3 className="text-lg font-serif text-white mb-2">
+                      {t.calculadora.feat_genetic}
+                    </h3>
+                    <p className="text-sm text-zinc-400">{t.calculadora.feat_genetic_desc}</p>
                   </div>
 
                   <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                     <div className="w-12 h-12 bg-[#C5A059]/10 rounded-lg flex items-center justify-center mb-4">
                       <BarChart3 className="text-[#C5A059]" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Índices BLUP</h3>
-                    <p className="text-sm text-zinc-400">
-                      Cálculo aproximado do índice genético com base em morfologia, andamentos e
-                      historial reprodutivo.
-                    </p>
+                    <h3 className="text-lg font-serif text-white mb-2">
+                      {t.calculadora.feat_blup}
+                    </h3>
+                    <p className="text-sm text-zinc-400">{t.calculadora.feat_blup_desc}</p>
                   </div>
 
                   <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                     <div className="w-12 h-12 bg-[#C5A059]/10 rounded-lg flex items-center justify-center mb-4">
                       <Globe className="text-[#C5A059]" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Mercado Internacional</h3>
-                    <p className="text-sm text-zinc-400">
-                      Ajustes de valor para diferentes mercados: Portugal, Europa Central, Reino
-                      Unido e Américas.
-                    </p>
+                    <h3 className="text-lg font-serif text-white mb-2">
+                      {t.calculadora.feat_market}
+                    </h3>
+                    <p className="text-sm text-zinc-400">{t.calculadora.feat_market_desc}</p>
                   </div>
                 </div>
 
@@ -693,13 +950,11 @@ export default function CalculadoraValorPage() {
                   <div className="flex items-start gap-4">
                     <Info className="text-[#C5A059] flex-shrink-0 mt-1" size={20} />
                     <div>
-                      <h4 className="text-white font-medium mb-2">Metodologia de Avaliação</h4>
+                      <h4 className="text-white font-medium mb-2">
+                        {t.calculadora.methodology_title}
+                      </h4>
                       <p className="text-sm text-zinc-400 leading-relaxed">
-                        Esta calculadora considera mais de 20 parâmetros incluindo conformação
-                        segundo padrões APSL, qualidade de andamentos (elevação, suspensão,
-                        regularidade), nível de treino conforme escalas FEI, temperamento, historial
-                        de competição, documentação veterinária e dinâmicas de mercado. Os valores
-                        são indicativos e devem ser complementados por avaliação presencial.
+                        {t.calculadora.methodology_desc}
                       </p>
                     </div>
                   </div>
@@ -712,11 +967,17 @@ export default function CalculadoraValorPage() {
         {/* ==================== FORMULÁRIO ==================== */}
         <div className="pb-24 px-4">
           <div className="max-w-2xl mx-auto">
-            <SubscriptionBanner
-              isSubscribed={isSubscribed}
-              freeUsesLeft={freeUsesLeft}
-              requiresAuth={requiresAuth}
-            />
+            {accessLoading ? (
+              <div className="flex items-center justify-center py-4">
+                <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
+              </div>
+            ) : (
+              <SubscriptionBanner
+                isSubscribed={isSubscribed}
+                freeUsesLeft={freeUsesLeft}
+                requiresAuth={requiresAuth}
+              />
+            )}
             {/* Form steps */}
             {step > 0 && !resultado && (
               <div
@@ -729,16 +990,19 @@ export default function CalculadoraValorPage() {
                     <div className="text-center mb-8">
                       <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs font-medium rounded-full mb-3">
                         <Shield size={12} />
-                        Identificação
+                        {t.calculadora.step1_badge}
                       </span>
-                      <h2 className="text-2xl sm:text-3xl font-serif">Dados do Cavalo</h2>
-                      <p className="text-zinc-500 text-sm mt-2">Informação básica e registo</p>
+                      <h2 className="text-2xl sm:text-3xl font-serif">
+                        {t.calculadora.step1_title}
+                      </h2>
+                      <p className="text-zinc-500 text-sm mt-2">{t.calculadora.step1_desc}</p>
                     </div>
 
                     <div className="space-y-5">
                       <div>
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                          Nome do Cavalo <span className="text-zinc-600">(opcional)</span>
+                          {t.calculadora.label_horse_name}{" "}
+                          <span className="text-zinc-600">{t.calculadora.label_optional}</span>
                         </label>
                         <input
                           type="text"
@@ -752,7 +1016,7 @@ export default function CalculadoraValorPage() {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                            Idade
+                            {t.calculadora.label_age}
                           </label>
                           <div className="relative">
                             <input
@@ -766,15 +1030,17 @@ export default function CalculadoraValorPage() {
                               className="w-full bg-transparent border-b border-zinc-800 py-3 text-lg focus:border-[#C5A059] outline-none transition-colors"
                             />
                             <span className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
-                              anos
+                              {t.calculadora.label_years}
                             </span>
                           </div>
-                          <span className="text-xs text-zinc-600 mt-1 block">Ideal: 7-12 anos</span>
+                          <span className="text-xs text-zinc-600 mt-1 block">
+                            {t.calculadora.label_ideal_age}
+                          </span>
                         </div>
 
                         <div>
                           <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                            Altura (Garrote)
+                            {t.calculadora.label_height}
                           </label>
                           <div className="relative">
                             <input
@@ -786,25 +1052,21 @@ export default function CalculadoraValorPage() {
                               className="w-full bg-transparent border-b border-zinc-800 py-3 text-lg focus:border-[#C5A059] outline-none transition-colors"
                             />
                             <span className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
-                              cm
+                              {t.calculadora.label_cm}
                             </span>
                           </div>
                           <span className="text-xs text-zinc-600 mt-1 block">
-                            Padrão: 155-170cm
+                            {t.calculadora.label_standard_height}
                           </span>
                         </div>
                       </div>
 
                       <div>
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Sexo
+                          {t.calculadora.label_sex}
                         </label>
                         <div className="grid grid-cols-3 gap-2">
-                          {[
-                            { value: "garanhao", label: "Garanhão", icon: Crown },
-                            { value: "egua", label: "Égua", icon: Heart },
-                            { value: "castrado", label: "Castrado", icon: Shield },
-                          ].map((opt) => (
+                          {sexOptions.map((opt) => (
                             <button
                               key={opt.value}
                               onClick={() => update("sexo", opt.value as FormData["sexo"])}
@@ -823,10 +1085,10 @@ export default function CalculadoraValorPage() {
 
                       <div>
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Pelagem
+                          {t.calculadora.label_coat}
                         </label>
                         <div className="grid grid-cols-2 gap-2">
-                          {PELAGENS.map((p) => (
+                          {pelagens.map((p) => (
                             <button
                               key={p.value}
                               onClick={() => update("pelagem", p.value)}
@@ -849,7 +1111,7 @@ export default function CalculadoraValorPage() {
 
                       <div className="pt-4 border-t border-zinc-900">
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Registo APSL (Stud Book)
+                          {t.calculadora.label_apsl_reg}
                         </label>
                         <div className="grid grid-cols-2 gap-2">
                           <button
@@ -861,7 +1123,7 @@ export default function CalculadoraValorPage() {
                             }`}
                           >
                             {form.registoAPSL && <Check size={16} />}
-                            Registado APSL
+                            {t.calculadora.btn_registered}
                           </button>
                           <button
                             onClick={() => update("registoAPSL", false)}
@@ -871,21 +1133,17 @@ export default function CalculadoraValorPage() {
                                 : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
                             }`}
                           >
-                            Sem registo
+                            {t.calculadora.btn_no_reg}
                           </button>
                         </div>
 
                         {form.registoAPSL && (
                           <div className="mt-4 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
                             <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                              Tipo de Livro
+                              {t.calculadora.label_book_type}
                             </label>
                             <div className="grid grid-cols-3 gap-2">
-                              {[
-                                { value: "definitivo", label: "Definitivo" },
-                                { value: "provisorio", label: "Provisório" },
-                                { value: "auxiliar", label: "Auxiliar" },
-                              ].map((opt) => (
+                              {bookOptions.map((opt) => (
                                 <button
                                   key={opt.value}
                                   onClick={() =>
@@ -914,36 +1172,21 @@ export default function CalculadoraValorPage() {
                     <div className="text-center mb-8">
                       <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs font-medium rounded-full mb-3">
                         <Dna size={12} />
-                        Genética & Conformação
+                        {t.calculadora.step2_badge}
                       </span>
-                      <h2 className="text-2xl sm:text-3xl font-serif">Linhagem e Morfologia</h2>
-                      <p className="text-zinc-500 text-sm mt-2">
-                        Qualidade genética e conformação física
-                      </p>
+                      <h2 className="text-2xl sm:text-3xl font-serif">
+                        {t.calculadora.step2_title}
+                      </h2>
+                      <p className="text-zinc-500 text-sm mt-2">{t.calculadora.step2_desc}</p>
                     </div>
 
                     <div className="space-y-6">
                       <div>
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Qualidade da Linhagem
+                          {t.calculadora.label_lineage_quality}
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                          {[
-                            {
-                              value: "desconhecida",
-                              label: "Desconhecida",
-                              desc: "Sem informação",
-                            },
-                            { value: "comum", label: "Comum", desc: "Pedigree básico" },
-                            { value: "registada", label: "Registada", desc: "3 gerações" },
-                            {
-                              value: "certificada",
-                              label: "Certificada",
-                              desc: "Genealogia completa",
-                            },
-                            { value: "premium", label: "Premium", desc: "Linhas reconhecidas" },
-                            { value: "elite", label: "Elite", desc: "Top genético" },
-                          ].map((opt) => (
+                          {lineageOptions.map((opt) => (
                             <button
                               key={opt.value}
                               onClick={() => update("linhagem", opt.value as FormData["linhagem"])}
@@ -967,7 +1210,7 @@ export default function CalculadoraValorPage() {
                       {(form.linhagem === "premium" || form.linhagem === "elite") && (
                         <div className="animate-[fadeSlideIn_0.3s_ease-out_forwards]">
                           <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                            Linhagem Principal
+                            {t.calculadora.label_main_lineage}
                           </label>
                           <div className="grid grid-cols-2 gap-2">
                             {LINHAGENS_FAMOSAS.map((lin) => (
@@ -995,34 +1238,14 @@ export default function CalculadoraValorPage() {
                       <div className="pt-4 border-t border-zinc-900">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="text-sm font-medium text-zinc-300">
-                            Conformação Morfológica
+                            {t.calculadora.morph_title}
                           </h3>
-                          <span className="text-xs text-zinc-500">Segundo padrões APSL</span>
+                          <span className="text-xs text-zinc-500">
+                            {t.calculadora.morph_apsl_standards}
+                          </span>
                         </div>
 
-                        {[
-                          {
-                            key: "morfologia",
-                            label: "Impressão Geral",
-                            desc: "Harmonia e proporção",
-                          },
-                          {
-                            key: "cabeca",
-                            label: "Cabeça & Pescoço",
-                            desc: "Expressão e inserção",
-                          },
-                          {
-                            key: "espádua",
-                            label: "Espádua & Peito",
-                            desc: "Inclinação e amplitude",
-                          },
-                          { key: "garupa", label: "Garupa & Dorso", desc: "Linha superior" },
-                          {
-                            key: "membros",
-                            label: "Membros & Aprumos",
-                            desc: "Correção e solidez",
-                          },
-                        ].map((item) => (
+                        {morphologyItems.map((item) => (
                           <div key={item.key} className="mb-5">
                             <div className="flex justify-between items-center mb-2">
                               <div>
@@ -1056,37 +1279,26 @@ export default function CalculadoraValorPage() {
                     <div className="text-center mb-8">
                       <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs font-medium rounded-full mb-3">
                         <Zap size={12} />
-                        Funcionalidade
+                        {t.calculadora.step3_badge}
                       </span>
-                      <h2 className="text-2xl sm:text-3xl font-serif">Andamentos e Carácter</h2>
-                      <p className="text-zinc-500 text-sm mt-2">
-                        Qualidade de movimento e temperamento
-                      </p>
+                      <h2 className="text-2xl sm:text-3xl font-serif">
+                        {t.calculadora.step3_title}
+                      </h2>
+                      <p className="text-zinc-500 text-sm mt-2">{t.calculadora.step3_desc}</p>
                     </div>
 
                     <div className="space-y-6">
                       <div>
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="text-sm font-medium text-zinc-300">
-                            Qualidade dos Andamentos
+                            {t.calculadora.gait_quality}
                           </h3>
-                          <span className="text-xs text-zinc-500">Avaliação funcional</span>
+                          <span className="text-xs text-zinc-500">
+                            {t.calculadora.gait_functional}
+                          </span>
                         </div>
 
-                        {[
-                          {
-                            key: "andamentos",
-                            label: "Qualidade Geral",
-                            desc: "Impulsão e cadência",
-                          },
-                          { key: "elevacao", label: "Elevação", desc: "Altura do movimento" },
-                          { key: "suspensao", label: "Suspensão", desc: "Tempo no ar" },
-                          {
-                            key: "regularidade",
-                            label: "Regularidade",
-                            desc: "Ritmo e equilíbrio",
-                          },
-                        ].map((item) => (
+                        {gaitItems.map((item) => (
                           <div key={item.key} className="mb-5">
                             <div className="flex justify-between items-center mb-2">
                               <div>
@@ -1113,27 +1325,15 @@ export default function CalculadoraValorPage() {
 
                       <div className="pt-4 border-t border-zinc-900">
                         <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-sm font-medium text-zinc-300">Temperamento</h3>
-                          <span className="text-xs text-zinc-500">Carácter e atitude</span>
+                          <h3 className="text-sm font-medium text-zinc-300">
+                            {t.calculadora.temperament_title}
+                          </h3>
+                          <span className="text-xs text-zinc-500">
+                            {t.calculadora.temperament_attitude}
+                          </span>
                         </div>
 
-                        {[
-                          {
-                            key: "temperamento",
-                            label: "Equilíbrio Mental",
-                            desc: "Calma e confiança",
-                          },
-                          {
-                            key: "sensibilidade",
-                            label: "Sensibilidade",
-                            desc: "Resposta às ajudas",
-                          },
-                          {
-                            key: "vontadeTrabalho",
-                            label: "Vontade de Trabalho",
-                            desc: "Cooperação e energia",
-                          },
-                        ].map((item) => (
+                        {temperamentItems.map((item) => (
                           <div key={item.key} className="mb-5">
                             <div className="flex justify-between items-center mb-2">
                               <div>
@@ -1167,70 +1367,22 @@ export default function CalculadoraValorPage() {
                     <div className="text-center mb-8">
                       <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs font-medium rounded-full mb-3">
                         <Target size={12} />
-                        Formação & Condição
+                        {t.calculadora.step4_badge}
                       </span>
-                      <h2 className="text-2xl sm:text-3xl font-serif">Treino e Saúde</h2>
-                      <p className="text-zinc-500 text-sm mt-2">
-                        Nível técnico e estado veterinário
-                      </p>
+                      <h2 className="text-2xl sm:text-3xl font-serif">
+                        {t.calculadora.step4_title}
+                      </h2>
+                      <p className="text-zinc-500 text-sm mt-2">{t.calculadora.step4_desc}</p>
                     </div>
 
                     <div className="space-y-6">
                       <div>
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Nível de Treino <span className="text-zinc-600">(Escala FEI)</span>
+                          {t.calculadora.label_training}{" "}
+                          <span className="text-zinc-600">{t.calculadora.label_fei_scale}</span>
                         </label>
                         <div className="grid grid-cols-2 gap-2">
-                          {[
-                            {
-                              value: "potro",
-                              label: "Potro",
-                              desc: "Sem desbaste",
-                              price: "8.000€+",
-                            },
-                            {
-                              value: "desbravado",
-                              label: "Desbravado",
-                              desc: "Aceita cavaleiro",
-                              price: "15.000€+",
-                            },
-                            {
-                              value: "iniciado",
-                              label: "Iniciado",
-                              desc: "Trabalho básico",
-                              price: "25.000€+",
-                            },
-                            {
-                              value: "elementar",
-                              label: "Elementar",
-                              desc: "Figuras básicas",
-                              price: "40.000€+",
-                            },
-                            {
-                              value: "medio",
-                              label: "Médio (M)",
-                              desc: "Cambios, piruetas",
-                              price: "65.000€+",
-                            },
-                            {
-                              value: "avancado",
-                              label: "Avançado (S)",
-                              desc: "Movimentos avançados",
-                              price: "100.000€+",
-                            },
-                            {
-                              value: "alta_escola",
-                              label: "Alta Escola",
-                              desc: "Ares de cima",
-                              price: "150.000€+",
-                            },
-                            {
-                              value: "grand_prix",
-                              label: "Grand Prix",
-                              desc: "Competição GP",
-                              price: "250.000€+",
-                            },
-                          ].map((opt) => (
+                          {trainingOptions.map((opt) => (
                             <button
                               key={opt.value}
                               onClick={() => update("treino", opt.value as FormData["treino"])}
@@ -1256,7 +1408,7 @@ export default function CalculadoraValorPage() {
 
                       <div>
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Disciplina Principal
+                          {t.calculadora.label_discipline}
                         </label>
                         <select
                           value={form.disciplina}
@@ -1273,16 +1425,10 @@ export default function CalculadoraValorPage() {
 
                       <div>
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Historial de Competição
+                          {t.calculadora.label_competition_history}
                         </label>
                         <div className="grid grid-cols-2 gap-2">
-                          {[
-                            { value: "nenhuma", label: "Sem competição", icon: null },
-                            { value: "regional", label: "Regional", icon: Medal },
-                            { value: "nacional", label: "Nacional", icon: Award },
-                            { value: "internacional", label: "Internacional", icon: Globe },
-                            { value: "campeonato_mundo", label: "Campeonato Mundo", icon: Crown },
-                          ].map((opt) => (
+                          {competitionOptions.map((opt) => (
                             <button
                               key={opt.value}
                               onClick={() =>
@@ -1303,35 +1449,10 @@ export default function CalculadoraValorPage() {
 
                       <div className="pt-4 border-t border-zinc-900">
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Estado de Saúde
+                          {t.calculadora.label_health}
                         </label>
                         <div className="grid grid-cols-2 gap-2">
-                          {[
-                            {
-                              value: "excelente",
-                              label: "Excelente",
-                              desc: "Sem problemas",
-                              color: "text-green-400",
-                            },
-                            {
-                              value: "muito_bom",
-                              label: "Muito Bom",
-                              desc: "Histórico limpo",
-                              color: "text-emerald-400",
-                            },
-                            {
-                              value: "bom",
-                              label: "Bom",
-                              desc: "Questões menores",
-                              color: "text-yellow-400",
-                            },
-                            {
-                              value: "regular",
-                              label: "Regular",
-                              desc: "Limitações",
-                              color: "text-orange-400",
-                            },
-                          ].map((opt) => (
+                          {healthOptions.map((opt) => (
                             <button
                               key={opt.value}
                               onClick={() => update("saude", opt.value as FormData["saude"])}
@@ -1361,7 +1482,7 @@ export default function CalculadoraValorPage() {
                             }`}
                           >
                             {form.raioX && <Check size={16} />}
-                            Raio-X disponível
+                            {t.calculadora.btn_xray}
                           </button>
                           <button
                             onClick={() => update("exameVeterinario", !form.exameVeterinario)}
@@ -1372,7 +1493,7 @@ export default function CalculadoraValorPage() {
                             }`}
                           >
                             {form.exameVeterinario && <Check size={16} />}
-                            Exame veterinário
+                            {t.calculadora.btn_vet_exam}
                           </button>
                         </div>
                       </div>
@@ -1386,10 +1507,12 @@ export default function CalculadoraValorPage() {
                     <div className="text-center mb-8">
                       <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs font-medium rounded-full mb-3">
                         <Star size={12} />
-                        Finalização
+                        {t.calculadora.step5_badge}
                       </span>
-                      <h2 className="text-2xl sm:text-3xl font-serif">Reprodução e Mercado</h2>
-                      <p className="text-zinc-500 text-sm mt-2">Informações finais para cálculo</p>
+                      <h2 className="text-2xl sm:text-3xl font-serif">
+                        {t.calculadora.step5_title}
+                      </h2>
+                      <p className="text-zinc-500 text-sm mt-2">{t.calculadora.step5_desc}</p>
                     </div>
 
                     <div className="space-y-6">
@@ -1397,7 +1520,9 @@ export default function CalculadoraValorPage() {
                         <div className="p-5 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                           <div className="flex items-center gap-3 mb-4">
                             <GitBranch className="text-[#C5A059]" size={20} />
-                            <h3 className="text-sm font-medium text-zinc-300">Valor Reprodutivo</h3>
+                            <h3 className="text-sm font-medium text-zinc-300">
+                              {t.calculadora.repro_value}
+                            </h3>
                           </div>
 
                           <button
@@ -1410,15 +1535,15 @@ export default function CalculadoraValorPage() {
                           >
                             {form.reproducao && <Check size={16} />}
                             {form.sexo === "garanhao"
-                              ? "Aprovado como Reprodutor"
-                              : "Reprodutora Aprovada"}
+                              ? t.calculadora.approved_stallion
+                              : t.calculadora.approved_mare}
                           </button>
 
                           {form.reproducao && (
                             <div className="grid grid-cols-2 gap-4 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
                               <div>
                                 <label className="block text-xs text-zinc-500 mb-2">
-                                  Descendentes Registados
+                                  {t.calculadora.label_registered_offspring}
                                 </label>
                                 <input
                                   type="number"
@@ -1432,7 +1557,7 @@ export default function CalculadoraValorPage() {
                               </div>
                               <div>
                                 <label className="block text-xs text-zinc-500 mb-2">
-                                  Desc. Aprovados (se garanhão)
+                                  {t.calculadora.label_approved_offspring}
                                 </label>
                                 <input
                                   type="number"
@@ -1454,7 +1579,7 @@ export default function CalculadoraValorPage() {
 
                       <div>
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Mercado Alvo
+                          {t.calculadora.label_target_market}
                         </label>
                         <div className="grid grid-cols-3 gap-2">
                           {MERCADOS.map((m) => (
@@ -1472,21 +1597,16 @@ export default function CalculadoraValorPage() {
                           ))}
                         </div>
                         <p className="text-xs text-zinc-600 mt-2">
-                          O mercado influencia o valor: mercados como EUA e Alemanha têm maior poder
-                          de compra.
+                          {t.calculadora.market_influence}
                         </p>
                       </div>
 
                       <div>
                         <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
-                          Tendência de Mercado <span className="text-zinc-600">(2024)</span>
+                          {t.calculadora.label_market_trend}
                         </label>
                         <div className="grid grid-cols-3 gap-2">
-                          {[
-                            { value: "alta", label: "Em Alta", icon: TrendingUp, desc: "+12%" },
-                            { value: "estavel", label: "Estável", icon: Activity, desc: "±0%" },
-                            { value: "baixa", label: "Em Baixa", icon: TrendingDown, desc: "-12%" },
-                          ].map((opt) => (
+                          {trendOptions.map((opt) => (
                             <button
                               key={opt.value}
                               onClick={() =>
@@ -1510,7 +1630,9 @@ export default function CalculadoraValorPage() {
                 )}
 
                 {/* Paywall */}
-                {!canUse && <Paywall toolName="Calculadora de Valor" requiresAuth={requiresAuth} />}
+                {!canUse && (
+                  <Paywall toolName={t.calculadora.tool_name} requiresAuth={requiresAuth} />
+                )}
 
                 {/* Navegação */}
                 <div className="flex gap-3 pt-6">
@@ -1520,7 +1642,7 @@ export default function CalculadoraValorPage() {
                       className="flex-1 py-4 rounded-xl border border-zinc-800 text-zinc-400 font-medium hover:border-zinc-700 hover:text-white transition-all flex items-center justify-center gap-2"
                     >
                       <ChevronLeft size={18} />
-                      Anterior
+                      {t.calculadora.btn_previous}
                     </button>
                   )}
 
@@ -1529,7 +1651,7 @@ export default function CalculadoraValorPage() {
                       onClick={() => setStep((s) => s + 1)}
                       className="flex-1 py-4 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all flex items-center justify-center gap-2"
                     >
-                      Continuar
+                      {t.calculadora.btn_continue}
                       <ChevronRight size={18} />
                     </button>
                   ) : (
@@ -1541,12 +1663,12 @@ export default function CalculadoraValorPage() {
                       {isCalculating ? (
                         <>
                           <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                          A processar dados...
+                          {t.calculadora.btn_processing}
                         </>
                       ) : (
                         <>
                           <Calculator size={18} />
-                          Calcular Valor
+                          {t.calculadora.btn_calculate}
                         </>
                       )}
                     </button>
@@ -1569,7 +1691,9 @@ export default function CalculadoraValorPage() {
                   <div className="absolute top-4 right-4">
                     <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#C5A059]/10 rounded-full border border-[#C5A059]/30">
                       <Crown size={12} className="text-[#C5A059]" />
-                      <span className="text-xs text-[#C5A059] font-medium">Avaliação Premium</span>
+                      <span className="text-xs text-[#C5A059] font-medium">
+                        {t.calculadora.premium_eval}
+                      </span>
                     </div>
                   </div>
 
@@ -1580,7 +1704,7 @@ export default function CalculadoraValorPage() {
                       </p>
                     )}
                     <p className="text-[#C5A059] text-xs font-medium uppercase tracking-[0.2em] mb-6">
-                      Valor de Mercado Estimado
+                      {t.calculadora.market_value}
                     </p>
 
                     <div className="flex items-baseline justify-center gap-2">
@@ -1602,21 +1726,21 @@ export default function CalculadoraValorPage() {
                         <div className="text-2xl font-medium text-white">
                           {resultado.confianca}%
                         </div>
-                        <div className="text-xs text-zinc-500">Confiança</div>
+                        <div className="text-xs text-zinc-500">{t.calculadora.confidence}</div>
                       </div>
                       <div className="w-px bg-zinc-800" />
                       <div className="text-center">
                         <div className="text-2xl font-medium text-white">
                           Top {Math.max(1, 100 - resultado.percentil)}%
                         </div>
-                        <div className="text-xs text-zinc-500">Mercado PSL</div>
+                        <div className="text-xs text-zinc-500">{t.calculadora.market_psl}</div>
                       </div>
                       <div className="w-px bg-zinc-800" />
                       <div className="text-center">
                         <div className="text-2xl font-medium text-white">
                           {resultado.multiplicador}x
                         </div>
-                        <div className="text-xs text-zinc-500">Multiplicador</div>
+                        <div className="text-xs text-zinc-500">{t.calculadora.multiplier}</div>
                       </div>
                     </div>
                   </div>
@@ -1627,12 +1751,10 @@ export default function CalculadoraValorPage() {
                   <div className="bg-zinc-900/50 rounded-xl p-5 border border-zinc-800">
                     <div className="flex items-center gap-2 text-zinc-400 text-sm mb-3">
                       <Dna size={16} className="text-purple-400" />
-                      <span>Índice BLUP Estimado</span>
+                      <span>{t.calculadora.blup_estimated}</span>
                     </div>
                     <div className="text-3xl font-light text-white">{resultado.blup}</div>
-                    <div className="text-xs text-zinc-500 mt-1">
-                      Média da raça: 100 | Top: &gt;120
-                    </div>
+                    <div className="text-xs text-zinc-500 mt-1">{t.calculadora.blup_avg}</div>
                     <div className="mt-3 h-2 bg-zinc-800 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-purple-500 to-purple-400"
@@ -1644,11 +1766,11 @@ export default function CalculadoraValorPage() {
                   <div className="bg-zinc-900/50 rounded-xl p-5 border border-zinc-800">
                     <div className="flex items-center gap-2 text-zinc-400 text-sm mb-3">
                       <BarChart3 size={16} className="text-amber-400" />
-                      <span>Percentil de Mercado</span>
+                      <span>{t.calculadora.market_percentile}</span>
                     </div>
                     <div className="text-3xl font-light text-white">{resultado.percentil}%</div>
                     <div className="text-xs text-zinc-500 mt-1">
-                      Acima de {resultado.percentil}% dos PSL
+                      {t.calculadora.above_percentile} {resultado.percentil}% {t.calculadora.of_psl}
                     </div>
                     <div className="mt-3 h-2 bg-zinc-800 rounded-full overflow-hidden">
                       <div
@@ -1667,7 +1789,7 @@ export default function CalculadoraValorPage() {
                       <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-5">
                         <h3 className="text-sm font-medium text-emerald-400 mb-3 flex items-center gap-2">
                           <TrendingUp size={16} />
-                          Pontos Fortes
+                          {t.calculadora.strengths}
                         </h3>
                         <ul className="space-y-2">
                           {resultado.pontosForteseFracos.fortes.map((ponto, i) => (
@@ -1683,7 +1805,7 @@ export default function CalculadoraValorPage() {
                       <div className="bg-orange-500/5 border border-orange-500/20 rounded-xl p-5">
                         <h3 className="text-sm font-medium text-orange-400 mb-3 flex items-center gap-2">
                           <Info size={16} />
-                          Áreas de Atenção
+                          {t.calculadora.attention_areas}
                         </h3>
                         <ul className="space-y-2">
                           {resultado.pontosForteseFracos.fracos.map((ponto, i) => (
@@ -1705,7 +1827,7 @@ export default function CalculadoraValorPage() {
                 <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-800">
                   <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <BarChart3 size={16} className="text-[#C5A059]" />
-                    Comparação de Mercado
+                    {t.calculadora.market_comparison}
                   </h3>
                   <div className="space-y-4">
                     {resultado.comparacao.map((comp, i) => (
@@ -1734,7 +1856,7 @@ export default function CalculadoraValorPage() {
                 {/* Análise por Categoria */}
                 <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-800">
                   <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-4">
-                    Impacto por Categoria
+                    {t.calculadora.category_impact}
                   </h3>
                   <div className="space-y-4">
                     {resultado.categorias.slice(0, 6).map((cat, i) => (
@@ -1769,7 +1891,7 @@ export default function CalculadoraValorPage() {
                   <div className="bg-[#C5A059]/5 rounded-xl p-6 border border-[#C5A059]/20">
                     <h3 className="text-sm font-medium text-[#C5A059] uppercase tracking-wider mb-4 flex items-center gap-2">
                       <Sparkles size={16} />
-                      Recomendações para Valorização
+                      {t.calculadora.recommendations}
                     </h3>
                     <ul className="space-y-3">
                       {resultado.recomendacoes.map((rec, i) => (
@@ -1785,31 +1907,33 @@ export default function CalculadoraValorPage() {
                 {/* Informações do Cavalo */}
                 <div className="bg-zinc-900/30 rounded-xl p-6 border border-zinc-800/50">
                   <h3 className="text-sm font-medium text-zinc-500 uppercase tracking-wider mb-4">
-                    Resumo da Avaliação
+                    {t.calculadora.eval_summary}
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
                     <div>
-                      <span className="text-zinc-600 block">Idade</span>
-                      <span className="text-zinc-300">{form.idade} anos</span>
-                    </div>
-                    <div>
-                      <span className="text-zinc-600 block">Sexo</span>
+                      <span className="text-zinc-600 block">{t.calculadora.result_age}</span>
                       <span className="text-zinc-300">
-                        {form.sexo === "garanhao"
-                          ? "Garanhão"
-                          : form.sexo === "egua"
-                            ? "Égua"
-                            : "Castrado"}
+                        {form.idade} {t.calculadora.label_years}
                       </span>
                     </div>
                     <div>
-                      <span className="text-zinc-600 block">Nível</span>
+                      <span className="text-zinc-600 block">{t.calculadora.result_sex}</span>
+                      <span className="text-zinc-300">
+                        {form.sexo === "garanhao"
+                          ? t.calculadora.sex_stallion
+                          : form.sexo === "egua"
+                            ? t.calculadora.sex_mare
+                            : t.calculadora.sex_gelding}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-zinc-600 block">{t.calculadora.result_level}</span>
                       <span className="text-zinc-300 capitalize">
                         {form.treino.replace("_", " ")}
                       </span>
                     </div>
                     <div>
-                      <span className="text-zinc-600 block">Mercado</span>
+                      <span className="text-zinc-600 block">{t.calculadora.result_market}</span>
                       <span className="text-zinc-300">{form.mercado}</span>
                     </div>
                   </div>
@@ -1826,26 +1950,20 @@ export default function CalculadoraValorPage() {
                 {/* Disclaimer */}
                 <div className="p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
                   <p className="text-xs text-zinc-500 leading-relaxed">
-                    <strong className="text-zinc-400">Aviso:</strong> Esta avaliação é uma
-                    estimativa baseada nos dados fornecidos e não substitui uma avaliação presencial
-                    por um profissional qualificado. O valor real pode variar significativamente
-                    consoante as condições de mercado, negociação, localização geográfica e
-                    características individuais do cavalo. Recomendamos sempre uma inspeção
-                    veterinária completa e avaliação por especialistas antes de qualquer transação.
+                    <strong className="text-zinc-400">{t.calculadora.disclaimer_title}</strong>{" "}
+                    {t.calculadora.disclaimer_text}
                   </p>
                 </div>
 
                 {/* CTA Final */}
                 <div className="text-center pt-4">
-                  <p className="text-sm text-zinc-500 mb-4">
-                    Precisa de uma avaliação profissional presencial?
-                  </p>
+                  <p className="text-sm text-zinc-500 mb-4">{t.calculadora.need_professional}</p>
                   <Link
                     href="/profissionais"
                     className="inline-flex items-center gap-2 px-6 py-3 border border-[#C5A059]/50 text-[#C5A059] rounded-lg hover:bg-[#C5A059]/10 transition-colors"
                   >
                     <BookOpen size={16} />
-                    Encontrar Avaliadores Certificados
+                    {t.calculadora.find_evaluators}
                     <ChevronRight size={16} />
                   </Link>
                 </div>

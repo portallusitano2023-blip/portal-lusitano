@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Crown, Zap } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Crown, Zap, Loader2 } from "lucide-react";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface SubscriptionBannerProps {
   freeUsesLeft: number;
@@ -14,11 +17,67 @@ export default function SubscriptionBanner({
   isSubscribed,
   requiresAuth,
 }: SubscriptionBannerProps) {
+  const { user } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async () => {
+    if (!user) {
+      router.push("/registar?redirect=/ferramentas");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/tools/create-checkout", { method: "POST" });
+      const data = await res.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Checkout error:", data.error);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Checkout error:", err);
+      setLoading(false);
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/tools/customer-portal", { method: "POST" });
+      const data = await res.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Portal error:", data.error);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Portal error:", err);
+      setLoading(false);
+    }
+  };
+
   if (isSubscribed) {
     return (
-      <div className="flex items-center gap-2 px-4 py-2 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg">
-        <Crown size={16} className="text-[#C5A059]" />
-        <span className="text-xs text-[#C5A059] font-medium">Ferramentas PRO - Uso Ilimitado</span>
+      <div className="flex items-center justify-between px-4 py-2 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg">
+        <div className="flex items-center gap-2">
+          <Crown size={16} className="text-[#C5A059]" />
+          <span className="text-xs text-[#C5A059] font-medium">
+            Ferramentas PRO - Uso Ilimitado
+          </span>
+        </div>
+        <button
+          onClick={handleManageSubscription}
+          disabled={loading}
+          className="text-xs text-[#C5A059]/70 hover:text-[#C5A059] font-medium transition-colors disabled:opacity-50"
+        >
+          {loading ? <Loader2 size={12} className="animate-spin" /> : "Gerir"}
+        </button>
       </div>
     );
   }
@@ -47,12 +106,13 @@ export default function SubscriptionBanner({
             {freeUsesLeft !== 1 ? "s" : ""} restante{freeUsesLeft !== 1 ? "s" : ""}
           </span>
         </div>
-        <Link
-          href="/ferramentas"
-          className="text-xs text-[#C5A059] hover:text-[#D4AF6A] font-medium transition-colors"
+        <button
+          onClick={handleSubscribe}
+          disabled={loading}
+          className="text-xs text-[#C5A059] hover:text-[#D4AF6A] font-medium transition-colors disabled:opacity-50"
         >
-          Subscrever PRO
-        </Link>
+          {loading ? <Loader2 size={12} className="animate-spin" /> : "Subscrever PRO"}
+        </button>
       </div>
     );
   }

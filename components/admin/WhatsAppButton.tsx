@@ -1,6 +1,6 @@
 "use client";
 
-import { FiMessageCircle } from "react-icons/fi";
+import { MessageCircle } from "lucide-react";
 import { useState } from "react";
 
 interface WhatsAppButtonProps {
@@ -54,7 +54,8 @@ export default function WhatsAppButton({
     if (context?.type) {
       switch (context.type) {
         case "vender_cavalo":
-          message += "Recebi o seu pedido de publicação de anúncio de cavalo no Portal Lusitano.\n\n";
+          message +=
+            "Recebi o seu pedido de publicação de anúncio de cavalo no Portal Lusitano.\n\n";
           if (context.details) {
             message += `Detalhes: ${context.details}\n\n`;
           }
@@ -70,7 +71,8 @@ export default function WhatsAppButton({
           break;
 
         case "instagram":
-          message += "Recebi o seu pedido de marketing no Instagram através do Portal Lusitano.\n\n";
+          message +=
+            "Recebi o seu pedido de marketing no Instagram através do Portal Lusitano.\n\n";
           if (context.details) {
             message += `Pacote: ${context.details}\n\n`;
           }
@@ -113,7 +115,7 @@ export default function WhatsAppButton({
         className={`p-2 bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 hover:border-green-500/40 rounded-lg transition-all ${className}`}
         title="Responder via WhatsApp"
       >
-        <FiMessageCircle className="text-green-500" size={16} />
+        <MessageCircle className="text-green-500" size={16} />
       </button>
     );
   }
@@ -125,7 +127,7 @@ export default function WhatsAppButton({
         onClick={() => setIsModalOpen(true)}
         className={`flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-all ${className}`}
       >
-        <FiMessageCircle size={16} />
+        <MessageCircle size={16} />
         Responder via WhatsApp
       </button>
 
@@ -136,12 +138,10 @@ export default function WhatsAppButton({
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-500/20 rounded-lg">
-                  <FiMessageCircle className="text-green-500" size={24} />
+                  <MessageCircle className="text-green-500" size={24} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">
-                    Enviar Mensagem WhatsApp
-                  </h3>
+                  <h3 className="text-lg font-semibold text-white">Enviar Mensagem WhatsApp</h3>
                   <p className="text-sm text-gray-400">Para: {name}</p>
                 </div>
               </div>
@@ -149,7 +149,7 @@ export default function WhatsAppButton({
                 onClick={() => setIsModalOpen(false)}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
               >
-                <FiMessageCircle className="text-gray-400" size={20} />
+                <MessageCircle className="text-gray-400" size={20} />
               </button>
             </div>
 
@@ -179,14 +179,15 @@ export default function WhatsAppButton({
                 onClick={() => openWhatsApp(customMessage || undefined)}
                 className="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
               >
-                <FiMessageCircle size={16} />
+                <MessageCircle size={16} />
                 Abrir WhatsApp
               </button>
             </div>
 
             <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
               <p className="text-xs text-yellow-500">
-                ⚠️ Certifique-se que o número de telefone <span className="font-mono font-bold">{cleanPhone(phone)}</span> está correto
+                ⚠️ Certifique-se que o número de telefone{" "}
+                <span className="font-mono font-bold">{cleanPhone(phone)}</span> está correto
               </p>
             </div>
           </div>

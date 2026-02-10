@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation";
 import { Home, ShoppingCart, Heart, User } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
+import { useLanguage } from "@/context/LanguageContext";
 export default function MobileBottomNav() {
   const pathname = usePathname();
   const { openCart, totalQuantity } = useCart();
   const { favoritesCount } = useHorseFavorites();
+  const { t } = useLanguage();
   // Don't show on certain pages
   const hiddenPaths = ["/studio", "/admin"];
   if (hiddenPaths.some((path) => pathname.startsWith(path))) {
@@ -19,26 +21,26 @@ export default function MobileBottomNav() {
     {
       href: "/",
       icon: Home,
-      label: "Início",
+      label: t.mobile_nav.home,
       isActive: pathname === "/",
     },
     {
       href: "/comprar",
       icon: ShoppingCart,
-      label: "Cavalos",
+      label: t.mobile_nav.horses,
       isActive: pathname.startsWith("/comprar") || pathname === "/marketplace",
     },
     {
       href: "/cavalos-favoritos",
       icon: Heart,
-      label: "Favoritos",
+      label: t.mobile_nav.favorites,
       isActive: pathname === "/cavalos-favoritos" || pathname === "/favoritos",
       badge: favoritesCount > 0 ? favoritesCount : undefined,
     },
     {
       href: "/minha-conta",
       icon: User,
-      label: "Conta",
+      label: t.mobile_nav.account,
       isActive: pathname === "/minha-conta",
     },
   ];
@@ -77,7 +79,7 @@ export default function MobileBottomNav() {
           {/* Cart Button */}
           <button
             onClick={openCart}
-            aria-label="Abrir carrinho de compras"
+            aria-label={t.mobile_nav.shop}
             className="flex flex-col items-center justify-center gap-1 min-w-[64px] min-h-[56px] rounded-xl text-zinc-500 hover:text-zinc-300 transition-all active:scale-90 touch-manipulation focus-visible:ring-2 focus-visible:ring-[#C5A059]"
           >
             <div className="relative">
@@ -88,7 +90,7 @@ export default function MobileBottomNav() {
                 </span>
               )}
             </div>
-            <span className="text-[10px] font-medium">Loja</span>
+            <span className="text-[10px] font-medium">{t.mobile_nav.shop}</span>
           </button>
         </div>
       </nav>

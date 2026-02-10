@@ -46,7 +46,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const cartData = await getCart(id);
       if (cartData) {
-        setCheckoutUrl(cartData.checkoutUrl);
+        setCheckoutUrl(cartData.checkoutUrl ?? null);
 
         if (cartData.lines) {
           interface CartEdge {
@@ -103,7 +103,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
         await refreshCart(activeId);
         setIsCartOpen(true);
-      } catch (e) {
+      } catch {
         // Carrinho expirado - criar novo silenciosamente
         localStorage.removeItem("shopify_cart_id");
         const retryCart = await createCart();

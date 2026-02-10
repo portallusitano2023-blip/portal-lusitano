@@ -37,7 +37,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
           <div
             className="prose prose-invert prose-p:text-zinc-400 prose-p:leading-relaxed prose-p:font-light prose-strong:text-white"
             dangerouslySetInnerHTML={{
-              __html: product.descriptionHtml || product.description || "",
+              __html: product.descriptionHtml || "",
             }}
           />
         </div>

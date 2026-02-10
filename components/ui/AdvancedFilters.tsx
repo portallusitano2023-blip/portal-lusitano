@@ -1,332 +1,398 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Filter, X, Save, Calendar } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Filter, X, Save, Calendar, Search, Download, Trash2 } from "lucide-react";
+
+// -------------------------------------------------------
+// Public interfaces
+// -------------------------------------------------------
 
 export interface FilterConfig {
-  id: string;
-  label: string;
-  type: "text" | "select" | "dateRange" | "number";
-  options?: { value: string; label: string }[];
-  placeholder?: string;
+  showDateRange?: boolean;
+  showSearch?: boolean;
+  showStatus?: boolean;
+  statusOptions?: Array<{ value: string; label: string }>;
+  typeOptions?: Array<{ value: string; label: string }>;
+  onFilterChange: (filters: ActiveFilters) => void;
+  onExport?: () => void;
+  presetKey?: string;
 }
 
-export interface ActiveFilter {
-  id: string;
-  value: string | number | { start: string; end: string };
-  operator?: "equals" | "contains" | "gt" | "lt" | "between";
+export interface ActiveFilters {
+  search: string;
+  dateFrom: string;
+  dateTo: string;
+  status: string;
+  type: string;
 }
 
-export interface SavedFilter {
+interface SavedPreset {
   id: string;
   name: string;
-  filters: ActiveFilter[];
+  filters: ActiveFilters;
 }
 
-interface AdvancedFiltersProps {
-  configs: FilterConfig[];
-  onFiltersChange: (filters: ActiveFilter[]) => void;
-  storageKey?: string;
-}
+// -------------------------------------------------------
+// Default values
+// -------------------------------------------------------
+
+const DEFAULT_FILTERS: ActiveFilters = {
+  search: "",
+  dateFrom: "",
+  dateTo: "",
+  status: "",
+  type: "",
+};
+
+const DEFAULT_STATUS_OPTIONS = [
+  { value: "", label: "Todos" },
+  { value: "active", label: "Activo" },
+  { value: "inactive", label: "Inactivo" },
+];
+
+// -------------------------------------------------------
+// Component
+// -------------------------------------------------------
 
 export default function AdvancedFilters({
-  configs,
-  onFiltersChange,
-  storageKey = "advanced-filters",
-}: AdvancedFiltersProps) {
-  const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
-  const [savedFilters, setSavedFilters] = useState<SavedFilter[]>([]);
+  showDateRange = true,
+  showSearch = true,
+  showStatus = true,
+  statusOptions,
+  typeOptions,
+  onFilterChange,
+  onExport,
+  presetKey = "advanced-filters",
+}: FilterConfig) {
+  const [filters, setFilters] = useState<ActiveFilters>(DEFAULT_FILTERS);
+  const [savedPresets, setSavedPresets] = useState<SavedPreset[]>([]);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [presetName, setPresetName] = useState("");
 
+  // Hydrate saved presets from localStorage on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(`${storageKey}-saved`);
+      const stored = localStorage.getItem(`${presetKey}-presets`);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage on mount
-      if (saved) setSavedFilters(JSON.parse(saved));
+      if (stored) setSavedPresets(JSON.parse(stored));
     } catch {
-      /* ignore */
+      /* ignore corrupt data */
     }
-  }, [storageKey]);
-  const [showSaveModal, setShowSaveModal] = useState(false);
-  const [filterName, setFilterName] = useState("");
-  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  }, [presetKey]);
 
-  // Save filters to localStorage
-  const saveFiltersToStorage = (filters: SavedFilter[]) => {
-    localStorage.setItem(`${storageKey}-saved`, JSON.stringify(filters));
-    setSavedFilters(filters);
+  // Notify parent of filter changes
+  const propagate = useCallback(
+    (next: ActiveFilters) => {
+      setFilters(next);
+      onFilterChange(next);
+    },
+    [onFilterChange]
+  );
+
+  // ------- Handlers -------
+
+  const handleSearchChange = (value: string) => {
+    propagate({ ...filters, search: value });
   };
 
-  const addFilter = (configId: string) => {
-    const config = configs.find((c) => c.id === configId);
-    if (!config) return;
-
-    const newFilter: ActiveFilter = {
-      id: configId,
-      value: config.type === "dateRange" ? { start: "", end: "" } : "",
-      operator: "equals",
-    };
-
-    const updated = [...activeFilters, newFilter];
-    setActiveFilters(updated);
-    onFiltersChange(updated);
-    setShowFilterMenu(false);
+  const handleDateFromChange = (value: string) => {
+    propagate({ ...filters, dateFrom: value });
   };
 
-  const updateFilter = (index: number, updates: Partial<ActiveFilter>) => {
-    const updated = activeFilters.map((f, i) => (i === index ? { ...f, ...updates } : f));
-    setActiveFilters(updated);
-    onFiltersChange(updated);
+  const handleDateToChange = (value: string) => {
+    propagate({ ...filters, dateTo: value });
   };
 
-  const removeFilter = (index: number) => {
-    const updated = activeFilters.filter((_, i) => i !== index);
-    setActiveFilters(updated);
-    onFiltersChange(updated);
+  const handleStatusChange = (value: string) => {
+    propagate({ ...filters, status: value });
   };
 
-  const clearAllFilters = () => {
-    setActiveFilters([]);
-    onFiltersChange([]);
+  const handleTypeChange = (value: string) => {
+    propagate({ ...filters, type: value });
   };
 
-  const saveCurrentFilters = () => {
-    if (!filterName.trim()) return;
+  const clearAll = () => {
+    propagate({ ...DEFAULT_FILTERS });
+  };
 
-    const newSavedFilter: SavedFilter = {
+  const hasActiveFilters =
+    filters.search !== "" ||
+    filters.dateFrom !== "" ||
+    filters.dateTo !== "" ||
+    filters.status !== "" ||
+    filters.type !== "";
+
+  // ------- Presets -------
+
+  const persistPresets = (presets: SavedPreset[]) => {
+    setSavedPresets(presets);
+    try {
+      localStorage.setItem(`${presetKey}-presets`, JSON.stringify(presets));
+    } catch {
+      /* quota exceeded - silently ignore */
+    }
+  };
+
+  const savePreset = () => {
+    if (!presetName.trim()) return;
+    const newPreset: SavedPreset = {
       id: Date.now().toString(),
-      name: filterName,
-      filters: activeFilters,
+      name: presetName.trim(),
+      filters: { ...filters },
     };
-
-    const updated = [...savedFilters, newSavedFilter];
-    saveFiltersToStorage(updated);
-    setFilterName("");
+    persistPresets([...savedPresets, newPreset]);
+    setPresetName("");
     setShowSaveModal(false);
   };
 
-  const loadSavedFilter = (saved: SavedFilter) => {
-    setActiveFilters(saved.filters);
-    onFiltersChange(saved.filters);
+  const loadPreset = (preset: SavedPreset) => {
+    propagate({ ...preset.filters });
   };
 
-  const deleteSavedFilter = (id: string) => {
-    const updated = savedFilters.filter((f) => f.id !== id);
-    saveFiltersToStorage(updated);
+  const deletePreset = (id: string) => {
+    persistPresets(savedPresets.filter((p) => p.id !== id));
   };
 
-  const renderFilterInput = (filter: ActiveFilter, index: number) => {
-    const config = configs.find((c) => c.id === filter.id);
-    if (!config) return null;
-
-    switch (config.type) {
-      case "text":
-        return (
-          <div className="flex items-center gap-2 flex-1">
-            <select
-              value={filter.operator || "contains"}
-              onChange={(e) =>
-                updateFilter(index, {
-                  operator: e.target.value as ActiveFilter["operator"],
-                })
-              }
-              className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm"
-            >
-              <option value="equals">Igual a</option>
-              <option value="contains">Contém</option>
-            </select>
-            <input
-              type="text"
-              value={typeof filter.value === "object" ? "" : filter.value || ""}
-              onChange={(e) => updateFilter(index, { value: e.target.value })}
-              placeholder={config.placeholder}
-              className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500"
-            />
-          </div>
-        );
-
-      case "select":
-        return (
-          <select
-            value={typeof filter.value === "object" ? "" : filter.value || ""}
-            onChange={(e) => updateFilter(index, { value: e.target.value })}
-            className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white"
-          >
-            <option value="">Selecionar...</option>
-            {config.options?.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        );
-
-      case "dateRange": {
-        const dateVal = typeof filter.value === "object" ? filter.value : { start: "", end: "" };
-        return (
-          <div className="flex items-center gap-2 flex-1">
-            <Calendar className="w-4 h-4 text-gray-400" />
-            <input
-              type="date"
-              value={dateVal.start || ""}
-              onChange={(e) =>
-                updateFilter(index, {
-                  value: { ...dateVal, start: e.target.value },
-                })
-              }
-              className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white"
-            />
-            <span className="text-gray-400">até</span>
-            <input
-              type="date"
-              value={dateVal.end || ""}
-              onChange={(e) =>
-                updateFilter(index, {
-                  value: { ...dateVal, end: e.target.value },
-                })
-              }
-              className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white"
-            />
-          </div>
-        );
-      }
-
-      case "number":
-        return (
-          <div className="flex items-center gap-2 flex-1">
-            <select
-              value={filter.operator || "equals"}
-              onChange={(e) =>
-                updateFilter(index, {
-                  operator: e.target.value as ActiveFilter["operator"],
-                })
-              }
-              className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm"
-            >
-              <option value="equals">=</option>
-              <option value="gt">&gt;</option>
-              <option value="lt">&lt;</option>
-              <option value="between">Entre</option>
-            </select>
-            <input
-              type="number"
-              value={typeof filter.value === "object" ? "" : filter.value || ""}
-              onChange={(e) => updateFilter(index, { value: e.target.value })}
-              placeholder={config.placeholder}
-              className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white"
-            />
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  const availableConfigs = configs.filter((c) => !activeFilters.some((f) => f.id === c.id));
+  // Resolved options lists
+  const resolvedStatusOptions = statusOptions || DEFAULT_STATUS_OPTIONS;
 
   return (
     <div className="space-y-4">
-      {/* Active Filters */}
-      <div className="bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-4">
+      {/* Main filter bar */}
+      <div className="bg-[#0A0A0A] border border-white/10 rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
             <Filter className="w-5 h-5 text-[#C5A059]" />
-            Filtros Avançados
+            Filtros Avancados
           </h3>
+
           <div className="flex items-center gap-2">
-            {activeFilters.length > 0 && (
+            {hasActiveFilters && (
               <>
                 <button
                   onClick={() => setShowSaveModal(true)}
                   className="px-3 py-1.5 bg-[#C5A059]/20 text-[#C5A059] rounded-lg text-sm font-medium hover:bg-[#C5A059]/30 transition-all flex items-center gap-2"
+                  aria-label="Guardar filtros actuais como preset"
                 >
                   <Save className="w-4 h-4" />
                   Guardar
                 </button>
                 <button
-                  onClick={clearAllFilters}
-                  className="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30 transition-all"
+                  onClick={clearAll}
+                  className="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30 transition-all flex items-center gap-2"
+                  aria-label="Limpar todos os filtros"
                 >
-                  Limpar Todos
+                  <Trash2 className="w-4 h-4" />
+                  Limpar
                 </button>
               </>
+            )}
+
+            {onExport && (
+              <button
+                onClick={onExport}
+                className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-500/30 transition-all flex items-center gap-2"
+                aria-label="Exportar dados filtrados"
+              >
+                <Download className="w-4 h-4" />
+                Exportar
+              </button>
             )}
           </div>
         </div>
 
-        {/* Filter List */}
-        <div className="space-y-3">
-          {activeFilters.map((filter, index) => {
-            const config = configs.find((c) => c.id === filter.id);
-            return (
-              <div key={index} className="flex items-center gap-3 bg-white/5 rounded-lg p-3">
-                <span className="text-sm font-medium text-gray-300 min-w-[120px]">
-                  {config?.label}
-                </span>
-                {renderFilterInput(filter, index)}
-                <button
-                  onClick={() => removeFilter(index)}
-                  className="p-2 hover:bg-red-500/20 rounded-lg transition-all"
-                >
-                  <X className="w-4 h-4 text-red-400" />
-                </button>
+        {/* Filter controls grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Search */}
+          {showSearch && (
+            <div>
+              <label
+                htmlFor="filter-search"
+                className="block text-xs font-medium text-gray-400 mb-1.5"
+              >
+                Pesquisa
+              </label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <input
+                  id="filter-search"
+                  type="text"
+                  value={filters.search}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  placeholder="Pesquisar..."
+                  className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#C5A059] transition-colors"
+                />
               </div>
-            );
-          })}
+            </div>
+          )}
 
-          {activeFilters.length === 0 && (
-            <p className="text-gray-400 text-center py-4">
-              Nenhum filtro ativo. Adiciona um filtro abaixo.
-            </p>
+          {/* Date range */}
+          {showDateRange && (
+            <div className="md:col-span-1 lg:col-span-1">
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">Periodo</label>
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                  <input
+                    type="date"
+                    value={filters.dateFrom}
+                    onChange={(e) => handleDateFromChange(e.target.value)}
+                    aria-label="Data de inicio"
+                    className="w-full pl-9 pr-2 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#C5A059] transition-colors [color-scheme:dark]"
+                  />
+                </div>
+                <span className="text-gray-500 text-sm shrink-0">ate</span>
+                <input
+                  type="date"
+                  value={filters.dateTo}
+                  onChange={(e) => handleDateToChange(e.target.value)}
+                  aria-label="Data de fim"
+                  className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#C5A059] transition-colors [color-scheme:dark]"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Status */}
+          {showStatus && (
+            <div>
+              <label
+                htmlFor="filter-status"
+                className="block text-xs font-medium text-gray-400 mb-1.5"
+              >
+                Estado
+              </label>
+              <select
+                id="filter-status"
+                value={filters.status}
+                onChange={(e) => handleStatusChange(e.target.value)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#C5A059] transition-colors"
+              >
+                {resolvedStatusOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Type */}
+          {typeOptions && typeOptions.length > 0 && (
+            <div>
+              <label
+                htmlFor="filter-type"
+                className="block text-xs font-medium text-gray-400 mb-1.5"
+              >
+                Tipo
+              </label>
+              <select
+                id="filter-type"
+                value={filters.type}
+                onChange={(e) => handleTypeChange(e.target.value)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#C5A059] transition-colors"
+              >
+                <option value="">Todos</option>
+                {typeOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
         </div>
 
-        {/* Add Filter Button */}
-        {availableConfigs.length > 0 && (
-          <div className="relative mt-4">
-            <button
-              onClick={() => setShowFilterMenu(!showFilterMenu)}
-              className="px-4 py-2 bg-[#C5A059] text-black rounded-lg font-semibold hover:bg-[#B39048] transition-all"
-            >
-              + Adicionar Filtro
-            </button>
-
-            {showFilterMenu && (
-              <div className="absolute top-full mt-2 bg-[#1A1A1A] border border-white/10 rounded-lg shadow-xl z-10 min-w-[200px]">
-                {availableConfigs.map((config) => (
-                  <button
-                    key={config.id}
-                    onClick={() => addFilter(config.id)}
-                    className="w-full text-left px-4 py-2 text-white hover:bg-white/5 transition-all first:rounded-t-lg last:rounded-b-lg"
-                  >
-                    {config.label}
-                  </button>
-                ))}
-              </div>
+        {/* Active filter pills */}
+        {hasActiveFilters && (
+          <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-white/5">
+            <span className="text-xs text-gray-500">Filtros activos:</span>
+            {filters.search && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+                Pesquisa: &quot;{filters.search}&quot;
+                <button
+                  onClick={() => handleSearchChange("")}
+                  aria-label="Remover filtro de pesquisa"
+                  className="hover:text-white transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.dateFrom && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+                De: {filters.dateFrom}
+                <button
+                  onClick={() => handleDateFromChange("")}
+                  aria-label="Remover data de inicio"
+                  className="hover:text-white transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.dateTo && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+                Ate: {filters.dateTo}
+                <button
+                  onClick={() => handleDateToChange("")}
+                  aria-label="Remover data de fim"
+                  className="hover:text-white transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.status && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+                Estado:{" "}
+                {resolvedStatusOptions.find((o) => o.value === filters.status)?.label ||
+                  filters.status}
+                <button
+                  onClick={() => handleStatusChange("")}
+                  aria-label="Remover filtro de estado"
+                  className="hover:text-white transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.type && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+                Tipo: {typeOptions?.find((o) => o.value === filters.type)?.label || filters.type}
+                <button
+                  onClick={() => handleTypeChange("")}
+                  aria-label="Remover filtro de tipo"
+                  className="hover:text-white transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
             )}
           </div>
         )}
       </div>
 
-      {/* Saved Filters */}
-      {savedFilters.length > 0 && (
-        <div className="bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-4">
+      {/* Saved presets */}
+      {savedPresets.length > 0 && (
+        <div className="bg-[#0A0A0A] border border-white/10 rounded-xl p-4">
           <h4 className="text-sm font-bold text-white mb-3">Filtros Guardados</h4>
           <div className="flex flex-wrap gap-2">
-            {savedFilters.map((saved) => (
+            {savedPresets.map((preset) => (
               <div
-                key={saved.id}
+                key={preset.id}
                 className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2"
               >
                 <button
-                  onClick={() => loadSavedFilter(saved)}
+                  onClick={() => loadPreset(preset)}
                   className="text-sm text-[#C5A059] hover:underline"
                 >
-                  {saved.name}
+                  {preset.name}
                 </button>
                 <button
-                  onClick={() => deleteSavedFilter(saved.id)}
+                  onClick={() => deletePreset(preset.id)}
                   className="p-1 hover:bg-red-500/20 rounded transition-all"
+                  aria-label={`Eliminar preset ${preset.name}`}
                 >
                   <X className="w-3 h-3 text-red-400" />
                 </button>
@@ -336,23 +402,35 @@ export default function AdvancedFilters({
         </div>
       )}
 
-      {/* Save Filter Modal */}
+      {/* Save preset modal */}
       {showSaveModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Guardar preset de filtros"
+        >
           <div className="bg-[#1A1A1A] border border-white/10 rounded-xl p-6 max-w-md w-full mx-4">
             <h3 className="text-xl font-bold text-white mb-4">Guardar Filtros</h3>
             <input
               type="text"
-              value={filterName}
-              onChange={(e) => setFilterName(e.target.value)}
-              placeholder="Nome do filtro..."
-              className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 mb-4"
+              value={presetName}
+              onChange={(e) => setPresetName(e.target.value)}
+              placeholder="Nome do preset..."
+              className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-[#C5A059]"
               autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") savePreset();
+                if (e.key === "Escape") {
+                  setShowSaveModal(false);
+                  setPresetName("");
+                }
+              }}
             />
             <div className="flex gap-3">
               <button
-                onClick={saveCurrentFilters}
-                disabled={!filterName.trim()}
+                onClick={savePreset}
+                disabled={!presetName.trim()}
                 className="flex-1 px-4 py-2 bg-[#C5A059] text-black rounded-lg font-semibold hover:bg-[#B39048] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Guardar
@@ -360,7 +438,7 @@ export default function AdvancedFilters({
               <button
                 onClick={() => {
                   setShowSaveModal(false);
-                  setFilterName("");
+                  setPresetName("");
                 }}
                 className="flex-1 px-4 py-2 bg-white/5 text-white rounded-lg font-semibold hover:bg-white/10 transition-all"
               >

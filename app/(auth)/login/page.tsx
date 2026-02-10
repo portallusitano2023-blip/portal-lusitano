@@ -117,7 +117,9 @@ export default function LoginPage() {
       <p className="mt-6 text-center text-sm text-zinc-500">
         Nao tem conta?{" "}
         <Link
-          href="/registar"
+          href={
+            returnUrl !== "/" ? `/registar?redirect=${encodeURIComponent(returnUrl)}` : "/registar"
+          }
           className="text-[#C5A059] hover:text-[#D4AF6A] font-medium transition-colors"
         >
           Criar conta

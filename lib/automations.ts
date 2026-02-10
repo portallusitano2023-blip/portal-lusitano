@@ -32,12 +32,9 @@ export async function triggerAutomations(
         continue;
       }
 
-      // If there's a delay, schedule for later (in production you'd use a queue/cron)
-      // For now, we execute immediately
+      // If there's a delay, schedule for later execution
       if (automation.delay_minutes > 0) {
-        // TODO: Implement scheduled execution with a job queue
-        // TODO: Implement scheduled execution with a job queue
-        // For now, skip delayed automations
+        scheduleDelayedAutomation(automation, triggerData);
         continue;
       }
 
@@ -65,6 +62,52 @@ export async function triggerAutomations(
   } catch (error) {
     console.error("Error in triggerAutomations:", error);
   }
+}
+
+// In-memory store for scheduled automations (single-server setup)
+// For multi-server, replace with Bull/Redis or similar job queue
+const scheduledJobs = new Map<string, NodeJS.Timeout>();
+
+/**
+ * Schedule a delayed automation execution
+ */
+function scheduleDelayedAutomation(
+  automation: { id: string; delay_minutes: number },
+  triggerData: Record<string, unknown>
+) {
+  const delayMs = automation.delay_minutes * 60 * 1000;
+  const jobKey = `${automation.id}-${Date.now()}`;
+
+  const timeout = setTimeout(async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/admin/automations/execute`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            automation_id: automation.id,
+            trigger_data: triggerData,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error(`Delayed automation ${automation.id} failed`);
+      }
+    } catch (error) {
+      console.error(`Error executing delayed automation ${automation.id}:`, error);
+    } finally {
+      scheduledJobs.delete(jobKey);
+    }
+  }, delayMs);
+
+  scheduledJobs.set(jobKey, timeout);
+}
+
+/** Get count of pending scheduled automations */
+export function getPendingAutomationsCount(): number {
+  return scheduledJobs.size;
 }
 
 /**

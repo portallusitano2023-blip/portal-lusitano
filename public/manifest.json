@@ -62,30 +62,30 @@
   "dir": "ltr",
   "screenshots": [
     {
-      "src": "/screenshots/home-desktop.webp",
+      "src": "/screenshots/home-desktop.svg",
       "sizes": "1280x720",
-      "type": "image/webp",
+      "type": "image/svg+xml",
       "form_factor": "wide",
       "label": "Portal Lusitano - Página Inicial"
     },
     {
-      "src": "/screenshots/marketplace-desktop.webp",
+      "src": "/screenshots/marketplace-desktop.svg",
       "sizes": "1280x720",
-      "type": "image/webp",
+      "type": "image/svg+xml",
       "form_factor": "wide",
       "label": "Marketplace - Cavalos Lusitanos à Venda"
     },
     {
-      "src": "/screenshots/loja-mobile.webp",
+      "src": "/screenshots/loja-mobile.svg",
       "sizes": "750x1334",
-      "type": "image/webp",
+      "type": "image/svg+xml",
       "form_factor": "narrow",
       "label": "Loja - Equipamento Equestre"
     },
     {
-      "src": "/screenshots/jornal-mobile.webp",
+      "src": "/screenshots/jornal-mobile.svg",
       "sizes": "750x1334",
-      "type": "image/webp",
+      "type": "image/svg+xml",
       "form_factor": "narrow",
       "label": "Jornal - Artigos sobre Cavalos Lusitanos"
     }

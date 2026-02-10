@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { MapPin, Search, Filter, Crown, ArrowRight, Plus, Users, Star } from "lucide-react";
 import Link from "next/link";
 import Pagination from "@/components/ui/Pagination";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Tipo para coudelaria
 interface Coudelaria {
@@ -46,6 +47,8 @@ export default function DirectorioPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
+
+  const { t } = useLanguage();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRegiao, setSelectedRegiao] = useState("Todas");
@@ -99,15 +102,12 @@ export default function DirectorioPage() {
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
-              Diretório Oficial
+              {t.directorio.badge}
             </span>
             <h1 className="text-4xl md:text-6xl font-serif text-white mb-6">
-              Coudelarias de Portugal
+              {t.directorio.title}
             </h1>
-            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
-              Descubra as melhores coudelarias de cavalos Lusitanos em Portugal. Criadores
-              verificados, linhagens de excelência e cavalos de elite.
-            </p>
+            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">{t.directorio.subtitle}</p>
           </div>
 
           {/* Stats */}
@@ -117,15 +117,15 @@ export default function DirectorioPage() {
           >
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
               <div className="text-3xl font-serif text-[#C5A059]">{coudelarias.length}+</div>
-              <div className="text-sm text-zinc-500">Coudelarias</div>
+              <div className="text-sm text-zinc-500">{t.directorio.coudelarias}</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
               <div className="text-3xl font-serif text-[#C5A059]">{regioes.length - 1}</div>
-              <div className="text-sm text-zinc-500">Regiões</div>
+              <div className="text-sm text-zinc-500">{t.directorio.regioes}</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
               <div className="text-3xl font-serif text-[#C5A059]">1000+</div>
-              <div className="text-sm text-zinc-500">Cavalos</div>
+              <div className="text-sm text-zinc-500">{t.directorio.cavalos}</div>
             </div>
           </div>
         </div>
@@ -144,10 +144,8 @@ export default function DirectorioPage() {
                 <Crown className="text-black" size={32} />
               </div>
               <div>
-                <h3 className="text-xl font-serif text-white mb-1">Tem uma coudelaria?</h3>
-                <p className="text-zinc-400">
-                  Registe-se e apareça no maior diretório equestre de Portugal
-                </p>
+                <h3 className="text-xl font-serif text-white mb-1">{t.directorio.has_stud}</h3>
+                <p className="text-zinc-400">{t.directorio.register_cta}</p>
               </div>
             </div>
             <Link
@@ -155,7 +153,7 @@ export default function DirectorioPage() {
               className="inline-flex items-center gap-2 bg-[#C5A059] text-black px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors whitespace-nowrap"
             >
               <Plus size={18} />
-              Registar Coudelaria
+              {t.directorio.register_btn}
             </Link>
           </div>
         </div>
@@ -170,9 +168,10 @@ export default function DirectorioPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={20} />
             <input
               type="text"
-              placeholder="Pesquisar por nome ou localização..."
+              placeholder={t.directorio.search_placeholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label={t.directorio.search_placeholder}
               className="w-full bg-zinc-900/50 border border-white/10 pl-12 pr-4 py-4 text-white placeholder-zinc-500 focus:border-[#C5A059] focus:outline-none transition-colors"
             />
           </div>
@@ -183,6 +182,7 @@ export default function DirectorioPage() {
             <select
               value={selectedRegiao}
               onChange={(e) => setSelectedRegiao(e.target.value)}
+              aria-label={t.directorio.regioes}
               className="bg-zinc-900/50 border border-white/10 pl-12 pr-8 py-4 text-white focus:border-[#C5A059] focus:outline-none transition-colors appearance-none cursor-pointer min-w-[200px]"
             >
               {regioes.map((regiao) => (
@@ -197,7 +197,7 @@ export default function DirectorioPage() {
         {/* Loading */}
         {loading && (
           <div className="text-center py-20">
-            <div className="animate-pulse text-[#C5A059]">A carregar coudelarias...</div>
+            <div className="animate-pulse text-[#C5A059]">{t.directorio.loading}</div>
           </div>
         )}
 
@@ -209,11 +209,11 @@ export default function DirectorioPage() {
               <section>
                 <div className="flex items-center gap-3 mb-8">
                   <Star className="text-[#C5A059]" size={24} />
-                  <h2 className="text-2xl font-serif text-white">Coudelarias em Destaque</h2>
+                  <h2 className="text-2xl font-serif text-white">{t.directorio.featured}</h2>
                 </div>
                 <div className="grid lg:grid-cols-2 gap-8">
                   {destaqueCoudelarias.map((coudelaria, index) => (
-                    <FeaturedCard key={coudelaria.id} coudelaria={coudelaria} index={index} />
+                    <FeaturedCard key={coudelaria.id} coudelaria={coudelaria} index={index} t={t} />
                   ))}
                 </div>
               </section>
@@ -226,17 +226,25 @@ export default function DirectorioPage() {
                   <div className="flex items-center gap-3">
                     <Users className="text-zinc-400" size={24} />
                     <h2 className="text-2xl font-serif text-zinc-300">
-                      Outras Coudelarias
+                      {t.directorio.others}
                       <span className="text-zinc-400 text-lg ml-3">
                         ({normalCoudelarias.length}{" "}
-                        {normalCoudelarias.length === 1 ? "coudelaria" : "coudelarias"})
+                        {normalCoudelarias.length === 1
+                          ? t.directorio.coudelaria_single
+                          : t.directorio.coudelarias_plural}
+                        )
                       </span>
                     </h2>
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {normalCoudelariasPaginadas.map((coudelaria, index) => (
-                    <CoudelariaCard key={coudelaria.id} coudelaria={coudelaria} index={index} />
+                    <CoudelariaCard
+                      key={coudelaria.id}
+                      coudelaria={coudelaria}
+                      index={index}
+                      t={t}
+                    />
                   ))}
                 </div>
 
@@ -256,10 +264,8 @@ export default function DirectorioPage() {
                 <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Search className="text-zinc-400" size={32} />
                 </div>
-                <h3 className="text-xl font-serif text-white mb-2">
-                  Nenhuma coudelaria encontrada
-                </h3>
-                <p className="text-zinc-500">Tente ajustar os filtros de pesquisa</p>
+                <h3 className="text-xl font-serif text-white mb-2">{t.directorio.no_results}</h3>
+                <p className="text-zinc-500">{t.directorio.no_results_hint}</p>
               </div>
             )}
           </div>
@@ -270,7 +276,15 @@ export default function DirectorioPage() {
 }
 
 // Featured Card (para coudelarias em destaque)
-function FeaturedCard({ coudelaria, index }: { coudelaria: Coudelaria; index: number }) {
+function FeaturedCard({
+  coudelaria,
+  index,
+  t,
+}: {
+  coudelaria: Coudelaria;
+  index: number;
+  t: ReturnType<typeof useLanguage>["t"];
+}) {
   const image = coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
 
   return (
@@ -291,14 +305,14 @@ function FeaturedCard({ coudelaria, index }: { coudelaria: Coudelaria; index: nu
         {/* Destaque Badge */}
         <div className="absolute top-4 left-4 flex items-center gap-2 bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] text-black px-3 py-1.5 text-xs font-bold uppercase">
           <Star size={14} />
-          Destaque
+          {t.directorio.highlight}
         </div>
 
         {/* Content */}
         <div className="absolute bottom-0 left-0 right-0 p-8">
           {coudelaria.ano_fundacao && (
             <span className="text-[#C5A059] text-sm uppercase tracking-widest mb-2 block">
-              Desde {coudelaria.ano_fundacao}
+              {t.directorio.since} {coudelaria.ano_fundacao}
             </span>
           )}
           <h3 className="text-3xl font-serif text-white mb-3 group-hover:text-[#C5A059] transition-colors">
@@ -312,13 +326,13 @@ function FeaturedCard({ coudelaria, index }: { coudelaria: Coudelaria; index: nu
             {coudelaria.num_cavalos && (
               <span className="flex items-center gap-1">
                 <Users size={14} className="text-[#C5A059]" />
-                {coudelaria.num_cavalos} cavalos
+                {coudelaria.num_cavalos} {t.directorio.horses}
               </span>
             )}
           </div>
           <p className="text-zinc-400 line-clamp-2 mb-4">{coudelaria.descricao}</p>
           <div className="flex items-center gap-2 text-[#C5A059] text-sm font-medium">
-            Ver coudelaria
+            {t.directorio.view_stud}
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
@@ -328,7 +342,15 @@ function FeaturedCard({ coudelaria, index }: { coudelaria: Coudelaria; index: nu
 }
 
 // Card para coudelarias
-function CoudelariaCard({ coudelaria, index }: { coudelaria: Coudelaria; index: number }) {
+function CoudelariaCard({
+  coudelaria,
+  index,
+  t,
+}: {
+  coudelaria: Coudelaria;
+  index: number;
+  t: ReturnType<typeof useLanguage>["t"];
+}) {
   const image = coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
 
   return (
@@ -349,7 +371,7 @@ function CoudelariaCard({ coudelaria, index }: { coudelaria: Coudelaria; index: 
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
           {coudelaria.ano_fundacao && (
             <div className="absolute top-3 left-3 bg-black/60 text-white px-2 py-1 text-xs">
-              Desde {coudelaria.ano_fundacao}
+              {t.directorio.since} {coudelaria.ano_fundacao}
             </div>
           )}
         </div>
@@ -377,7 +399,7 @@ function CoudelariaCard({ coudelaria, index }: { coudelaria: Coudelaria; index: 
           )}
 
           <div className="flex items-center gap-2 text-[#C5A059] text-sm">
-            Ver detalhes
+            {t.directorio.view_details}
             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </div>
         </div>

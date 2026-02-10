@@ -96,6 +96,7 @@ export default function ToolReviewForm({
               onMouseEnter={() => setHoverRating(star)}
               onMouseLeave={() => setHoverRating(0)}
               className="p-1 transition-transform hover:scale-110"
+              aria-label={`${star} ${star === 1 ? "estrela" : "estrelas"}`}
             >
               <Star
                 className={`w-8 h-8 ${

@@ -8,7 +8,7 @@ import type { SanityArticle } from "@/lib/sanity-queries";
 
 interface RelatedArticlesProps {
   articles: SanityArticle[];
-  language?: "pt" | "en";
+  language?: "pt" | "en" | "es";
 }
 
 function getImageUrl(article: SanityArticle): string {

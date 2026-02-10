@@ -163,6 +163,85 @@ const content = {
       email: "publicidade@portal-lusitano.pt",
     },
   },
+  es: {
+    subtitle: "Publicidad",
+    title: "Anuncie en Portal Lusitano",
+    description: "Alcance a miles de entusiastas y profesionales del mundo ecuestre",
+    stats: [
+      { value: "10.000+", label: "Visitantes/mes" },
+      { value: "50+", label: "Paises" },
+      { value: "100%", label: "Publico cualificado" },
+    ],
+    audience: {
+      title: "Nuestro Publico",
+      items: [
+        "Criadores de caballos Lusitanos",
+        "Jinetes y amazonas",
+        "Propietarios de yeguadas",
+        "Profesionales ecuestres (veterinarios, herradores, entrenadores)",
+        "Entusiastas y coleccionistas",
+        "Empresas del sector ecuestre",
+      ],
+    },
+    packages: [
+      {
+        name: "Banner Lateral",
+        price: "€25",
+        period: "/mes",
+        packageId: "lateral",
+        features: [
+          "Banner 300x250px",
+          "Visible en todas las paginas",
+          "Enlace directo a su sitio",
+          "Informe mensual de clics",
+        ],
+        popular: false,
+      },
+      {
+        name: "Destacado Premium",
+        price: "€75",
+        period: "/mes",
+        packageId: "premium",
+        features: [
+          "Banner 728x90px en la parte superior",
+          "Banner lateral incluido",
+          "Mencion en el boletin",
+          "Publicacion en redes sociales",
+          "Informe detallado",
+        ],
+        popular: true,
+      },
+      {
+        name: "Asociacion Anual",
+        price: "€600",
+        period: "/ano",
+        packageId: "anual",
+        features: [
+          "Todo lo del Premium",
+          "Articulo patrocinado",
+          "Logo en el pie de pagina",
+          "2 meses gratis",
+          "Soporte prioritario",
+        ],
+        popular: false,
+      },
+    ],
+    other: {
+      title: "Otras Opciones",
+      items: [
+        { name: "Articulo Patrocinado", price: "€200 (unico)" },
+        { name: "Boletin Dedicado", price: "€100 (por envio)" },
+        { name: "Listado Yeguada Premium", price: "€30/mes" },
+        { name: "Anuncio Caballo Destacado", price: "€25 (30 dias)" },
+      ],
+    },
+    cta: {
+      title: "Interesado?",
+      description: "Contacte con nosotros para discutir la mejor solucion para su negocio.",
+      button: "Contactar",
+      email: "publicidade@portal-lusitano.pt",
+    },
+  },
 };
 
 export default function PublicidadePage() {

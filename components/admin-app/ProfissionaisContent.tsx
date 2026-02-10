@@ -2,18 +2,18 @@
 
 import { useEffect, useState } from "react";
 import {
-  FiAward,
-  FiSearch,
-  FiEdit2,
-  FiTrash2,
-  FiCheck,
-  FiX,
-  FiStar,
-  FiEye,
-  FiMail,
-  FiPhone,
-  FiGlobe,
-} from "react-icons/fi";
+  Award,
+  Search,
+  Pencil,
+  Trash2,
+  Check,
+  X,
+  Star,
+  Eye,
+  Mail,
+  Phone,
+  Globe,
+} from "lucide-react";
 
 interface Profissional {
   id: string;
@@ -181,7 +181,7 @@ export default function ProfissionaisContent() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <FiAward className="text-[#C5A059]" size={32} />
+            <Award className="text-[#C5A059]" size={32} />
             <div>
               <h1 className="text-3xl font-bold text-white">Gestão de Profissionais</h1>
               <p className="text-gray-400">Gerir profissionais, planos e aprovações</p>
@@ -224,7 +224,7 @@ export default function ProfissionaisContent() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
             <div className="relative">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Pesquisar profissionais..."
@@ -316,7 +316,7 @@ export default function ProfissionaisContent() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="text-white font-medium">{prof.nome}</span>
-                          {prof.destaque && <FiStar className="text-[#C5A059]" size={14} />}
+                          {prof.destaque && <Star className="text-[#C5A059]" size={14} />}
                         </div>
                         {prof.especialidade && (
                           <div className="text-xs text-gray-400 mt-1">{prof.especialidade}</div>
@@ -324,13 +324,13 @@ export default function ProfissionaisContent() {
                         <div className="flex items-center gap-2 mt-1">
                           {prof.email && (
                             <div className="flex items-center gap-1 text-xs text-gray-500">
-                              <FiMail size={10} />
+                              <Mail size={10} />
                               {prof.email}
                             </div>
                           )}
                           {prof.telefone && (
                             <div className="flex items-center gap-1 text-xs text-gray-500">
-                              <FiPhone size={10} />
+                              <Phone size={10} />
                               {prof.telefone}
                             </div>
                           )}
@@ -379,7 +379,7 @@ export default function ProfissionaisContent() {
                           className="p-2 hover:bg-green-500/20 rounded-lg transition-colors"
                           title="Aprovar"
                         >
-                          <FiCheck className="text-green-500" size={16} />
+                          <Check className="text-green-500" size={16} />
                         </button>
                       )}
 
@@ -390,7 +390,7 @@ export default function ProfissionaisContent() {
                           className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
                           title="Rejeitar"
                         >
-                          <FiX className="text-red-500" size={16} />
+                          <X className="text-red-500" size={16} />
                         </button>
                       )}
 
@@ -408,7 +408,7 @@ export default function ProfissionaisContent() {
                         }`}
                         title={prof.destaque ? "Remover destaque" : "Adicionar destaque"}
                       >
-                        <FiStar
+                        <Star
                           className={prof.destaque ? "text-[#C5A059]" : "text-gray-400"}
                           size={16}
                         />
@@ -420,7 +420,7 @@ export default function ProfissionaisContent() {
                         className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                         title="Ver detalhes"
                       >
-                        <FiEye className="text-gray-400" size={16} />
+                        <Eye className="text-gray-400" size={16} />
                       </button>
 
                       {/* Editar */}
@@ -429,7 +429,7 @@ export default function ProfissionaisContent() {
                         className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                         title="Editar"
                       >
-                        <FiEdit2 className="text-gray-400" size={16} />
+                        <Pencil className="text-gray-400" size={16} />
                       </button>
 
                       {/* Eliminar */}
@@ -438,7 +438,7 @@ export default function ProfissionaisContent() {
                         className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
                         title="Eliminar"
                       >
-                        <FiTrash2 className="text-red-500" size={16} />
+                        <Trash2 className="text-red-500" size={16} />
                       </button>
                     </div>
                   </td>
@@ -463,7 +463,7 @@ export default function ProfissionaisContent() {
                 onClick={() => setSelectedProfissional(null)}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
               >
-                <FiX className="text-gray-400" />
+                <X className="text-gray-400" />
               </button>
             </div>
 
@@ -524,7 +524,7 @@ export default function ProfissionaisContent() {
                     className="text-[#C5A059] hover:underline flex items-center gap-2"
                   >
                     {selectedProfissional.website}
-                    <FiGlobe size={14} />
+                    <Globe size={14} />
                   </a>
                 </div>
               )}

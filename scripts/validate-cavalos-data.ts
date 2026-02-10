@@ -38,11 +38,6 @@ console.log("═".repeat(70) + "\n");
 // ============================================================================
 console.log("📋 1. VERIFICANDO FONTES...\n");
 
-const cavalosRegex = /\{\s*(?:\/\/[^\n]*\n\s*)*id:\s*"(\d+)"/g;
-const fontesRegex = /\/\/\s*FONTE:\s*(https?:\/\/[^\s]+)/g;
-const verificadoRegex = /\/\/\s*VERIFICADO:\s*(\d{4}-\d{2}-\d{2})/;
-
-let match;
 let currentCavaloId: string | null = null;
 let currentCavaloNome: string | null = null;
 let currentCavaloFontes: string[] = [];
@@ -119,9 +114,6 @@ console.log(`\n   📊 ${cavalosComFontes}/${totalCavalos} cavalos com fontes\n`
 // ============================================================================
 console.log("📅 2. VERIFICANDO DATAS...\n");
 
-const dataNascimentoRegex = /anoNascimento:\s*(\d{4})/;
-const dataFalecimentoRegex = /anoFalecimento:\s*(\d{4})/;
-
 let currentNascimento: number | null = null;
 let currentFalecimento: number | null = null;
 
@@ -142,13 +134,13 @@ for (let i = 0; i < lines.length; i++) {
   }
 
   // Extrair nascimento
-  const nascMatch = line.match(dataNascimentoRegex);
+  const nascMatch = line.match(/anoNascimento:\s*(\d{4})/);
   if (nascMatch) {
     currentNascimento = parseInt(nascMatch[1]);
   }
 
   // Extrair falecimento
-  const falecMatch = line.match(dataFalecimentoRegex);
+  const falecMatch = line.match(/anoFalecimento:\s*(\d{4})/);
   if (falecMatch) {
     currentFalecimento = parseInt(falecMatch[1]);
   }
@@ -175,7 +167,6 @@ console.log("");
 // ============================================================================
 console.log("🧬 3. VERIFICANDO PEDIGREES...\n");
 
-const pedigreeRegex = /pedigree:\s*\{([^}]+)\}/g;
 const paiAnoRegex = /pai:\s*\{[^}]*ano:\s*(\d{4})/;
 const maeAnoRegex = /mae:\s*\{[^}]*ano:\s*(\d{4})/;
 
@@ -189,7 +180,7 @@ for (let i = 0; i < lines.length; i++) {
   }
 
   // Extrair nascimento
-  const nascMatch = line.match(dataNascimentoRegex);
+  const nascMatch = line.match(/anoNascimento:\s*(\d{4})/);
   if (nascMatch) {
     currentNascimento = parseInt(nascMatch[1]);
   }

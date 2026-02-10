@@ -21,8 +21,8 @@ import ResultActions from "@/components/tools/ResultActions";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
-import { generateComparadorPDF } from "@/lib/tools/pdf/comparador-pdf";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ============================================
 // TIPOS
@@ -216,6 +216,7 @@ const RadarChart = ({
 // ============================================
 
 export default function ComparadorCavalosPage() {
+  const { t } = useLanguage();
   const [cavalos, setCavalos] = useState<Cavalo[]>([
     criarCavalo("1", "Cavalo A"),
     criarCavalo("2", "Cavalo B"),
@@ -223,8 +224,14 @@ export default function ComparadorCavalosPage() {
   const [step, setStep] = useState(0); // 0 = intro
   const [showAnalise, setShowAnalise] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const { canUse, isSubscribed, freeUsesLeft, requiresAuth, recordUsage } =
-    useToolAccess("comparador");
+  const {
+    canUse,
+    isSubscribed,
+    freeUsesLeft,
+    requiresAuth,
+    recordUsage,
+    isLoading: accessLoading,
+  } = useToolAccess("comparador");
 
   const handleExportPDF = async () => {
     setIsExporting(true);
@@ -236,6 +243,7 @@ export default function ComparadorCavalosPage() {
       const melhorValorNome = cavalos.reduce((a, b) =>
         calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b
       ).nome;
+      const { generateComparadorPDF } = await import("@/lib/tools/pdf/comparador-pdf");
       generateComparadorPDF(cavalos, scores, vencedorNome, melhorValorNome);
     } finally {
       setIsExporting(false);
@@ -244,8 +252,8 @@ export default function ComparadorCavalosPage() {
 
   const handleShare = async () => {
     const url = window.location.href;
-    const text = `Comparador de Cavalos Lusitanos - Portal Lusitano`;
-    const shared = await shareNative("Comparador de Cavalos", text, url);
+    const text = `${t.comparador.tool_name} - Portal Lusitano`;
+    const shared = await shareNative(t.comparador.tool_name, text, url);
     if (!shared) await copyToClipboard(url);
   };
 
@@ -373,9 +381,9 @@ export default function ComparadorCavalosPage() {
             </div>
             <div className="hidden sm:block">
               <span className="text-sm font-medium text-white block leading-tight">
-                Comparador de Cavalos
+                {t.comparador.tool_name}
               </span>
-              <span className="text-xs text-zinc-500">Análise Comparativa PSL</span>
+              <span className="text-xs text-zinc-500">{t.comparador.tool_subtitle}</span>
             </div>
           </div>
 
@@ -387,7 +395,7 @@ export default function ComparadorCavalosPage() {
                 className="px-4 py-2 bg-blue-600 rounded-lg flex items-center gap-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500 transition-colors"
               >
                 <Plus size={16} />
-                <span className="hidden sm:inline">Adicionar</span>
+                <span className="hidden sm:inline">{t.comparador.btn_add}</span>
               </button>
             )}
             {showAnalise && (
@@ -396,7 +404,7 @@ export default function ComparadorCavalosPage() {
                 className="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2"
               >
                 <RefreshCw size={14} />
-                <span className="hidden sm:inline">Nova comparação</span>
+                <span className="hidden sm:inline">{t.comparador.new_comparison}</span>
               </button>
             )}
           </div>
@@ -426,16 +434,16 @@ export default function ComparadorCavalosPage() {
                   className="inline-block px-4 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.2s" }}
                 >
-                  Ferramenta de Análise
+                  {t.comparador.badge}
                 </span>
 
                 <h1
                   className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.3s" }}
                 >
-                  Comparador de
+                  {t.comparador.title_prefix}
                   <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mt-2">
-                    Cavalos Lusitanos
+                    {t.comparador.title_accent}
                   </span>
                 </h1>
 
@@ -443,16 +451,14 @@ export default function ComparadorCavalosPage() {
                   className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.4s" }}
                 >
-                  &ldquo;Compare até 4 cavalos lado a lado com análise detalhada de conformação,
-                  andamentos, treino e valor de mercado.&rdquo;
+                  &ldquo;{t.comparador.intro_quote}&rdquo;
                 </p>
 
                 <p
                   className="text-sm text-zinc-500 max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.5s" }}
                 >
-                  Gráficos radar, tabelas comparativas e análise de custo-benefício para ajudar na
-                  tomada de decisão.
+                  {t.comparador.intro_desc}
                 </p>
 
                 <button
@@ -461,7 +467,7 @@ export default function ComparadorCavalosPage() {
                   style={{ animationDelay: "0.6s" }}
                 >
                   <Scale size={20} />
-                  Iniciar Comparação
+                  {t.comparador.start_btn}
                   <ChevronRight size={18} />
                 </button>
               </div>
@@ -478,33 +484,30 @@ export default function ComparadorCavalosPage() {
                     <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
                       <BarChart3 className="text-blue-400" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Gráfico Radar</h3>
-                    <p className="text-sm text-zinc-400">
-                      Visualização intuitiva das características de cada cavalo em múltiplas
-                      dimensões de qualidade.
-                    </p>
+                    <h3 className="text-lg font-serif text-white mb-2">
+                      {t.comparador.feat_radar}
+                    </h3>
+                    <p className="text-sm text-zinc-400">{t.comparador.feat_radar_desc}</p>
                   </div>
 
                   <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                     <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-4">
                       <Scale className="text-emerald-400" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Tabela Comparativa</h3>
-                    <p className="text-sm text-zinc-400">
-                      Comparação detalhada parâmetro a parâmetro com destaque automático para os
-                      melhores valores.
-                    </p>
+                    <h3 className="text-lg font-serif text-white mb-2">
+                      {t.comparador.feat_table}
+                    </h3>
+                    <p className="text-sm text-zinc-400">{t.comparador.feat_table_desc}</p>
                   </div>
 
                   <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
                     <div className="w-12 h-12 bg-amber-500/10 rounded-lg flex items-center justify-center mb-4">
                       <Euro className="text-amber-400" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Análise de Valor</h3>
-                    <p className="text-sm text-zinc-400">
-                      Cálculo de custo por ponto de qualidade para identificar o melhor
-                      investimento.
-                    </p>
+                    <h3 className="text-lg font-serif text-white mb-2">
+                      {t.comparador.feat_value}
+                    </h3>
+                    <p className="text-sm text-zinc-400">{t.comparador.feat_value_desc}</p>
                   </div>
                 </div>
               </div>
@@ -542,7 +545,7 @@ export default function ComparadorCavalosPage() {
                         value={c.nome}
                         onChange={(e) => update(c.id, "nome", e.target.value)}
                         className="bg-transparent text-lg font-semibold outline-none flex-1 text-white"
-                        placeholder="Nome do cavalo"
+                        placeholder={t.comparador.placeholder_horse_name}
                       />
                       {cavalos.length > 2 && (
                         <button
@@ -558,13 +561,13 @@ export default function ComparadorCavalosPage() {
                         {c.id === vencedor.id && (
                           <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 rounded text-amber-400 text-xs">
                             <Crown size={12} />
-                            Melhor Score
+                            {t.comparador.best_score}
                           </span>
                         )}
                         {c.id === melhorValor.id && (
                           <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-500/20 rounded text-emerald-400 text-xs">
                             <Euro size={12} />
-                            Melhor Valor
+                            {t.comparador.best_value}
                           </span>
                         )}
                       </div>
@@ -575,7 +578,9 @@ export default function ComparadorCavalosPage() {
                   <div className="p-4 space-y-4 text-sm">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">Idade</label>
+                        <label className="text-xs text-zinc-500 block mb-1">
+                          {t.comparador.label_age}
+                        </label>
                         <input
                           type="number"
                           min="1"
@@ -586,7 +591,9 @@ export default function ComparadorCavalosPage() {
                         />
                       </div>
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">Altura (cm)</label>
+                        <label className="text-xs text-zinc-500 block mb-1">
+                          {t.comparador.label_height}
+                        </label>
                         <input
                           type="number"
                           min="140"
@@ -599,7 +606,9 @@ export default function ComparadorCavalosPage() {
                     </div>
 
                     <div>
-                      <label className="text-xs text-zinc-500 block mb-1">Sexo</label>
+                      <label className="text-xs text-zinc-500 block mb-1">
+                        {t.comparador.label_sex}
+                      </label>
                       <select
                         value={c.sexo}
                         onChange={(e) => update(c.id, "sexo", e.target.value)}
@@ -615,7 +624,9 @@ export default function ComparadorCavalosPage() {
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">Pelagem</label>
+                        <label className="text-xs text-zinc-500 block mb-1">
+                          {t.comparador.label_coat}
+                        </label>
                         <select
                           value={c.pelagem}
                           onChange={(e) => update(c.id, "pelagem", e.target.value)}
@@ -629,7 +640,9 @@ export default function ComparadorCavalosPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">Linhagem</label>
+                        <label className="text-xs text-zinc-500 block mb-1">
+                          {t.comparador.label_lineage}
+                        </label>
                         <select
                           value={c.linhagem}
                           onChange={(e) => update(c.id, "linhagem", e.target.value)}
@@ -645,7 +658,9 @@ export default function ComparadorCavalosPage() {
                     </div>
 
                     <div>
-                      <label className="text-xs text-zinc-500 block mb-1">Nível de Treino</label>
+                      <label className="text-xs text-zinc-500 block mb-1">
+                        {t.comparador.label_training}
+                      </label>
                       <select
                         value={c.treino}
                         onChange={(e) => update(c.id, "treino", e.target.value)}
@@ -661,10 +676,10 @@ export default function ComparadorCavalosPage() {
 
                     {/* Sliders */}
                     {[
-                      { field: "conformacao" as const, label: "Conformação" },
-                      { field: "andamentos" as const, label: "Andamentos" },
-                      { field: "temperamento" as const, label: "Temperamento" },
-                      { field: "saude" as const, label: "Saúde" },
+                      { field: "conformacao" as const, label: t.comparador.label_conformation },
+                      { field: "andamentos" as const, label: t.comparador.label_gaits },
+                      { field: "temperamento" as const, label: t.comparador.label_temperament },
+                      { field: "saude" as const, label: t.comparador.label_health },
                     ].map(({ field, label }) => (
                       <div key={field}>
                         <div className="flex justify-between mb-1">
@@ -687,7 +702,9 @@ export default function ComparadorCavalosPage() {
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">Competições</label>
+                        <label className="text-xs text-zinc-500 block mb-1">
+                          {t.comparador.label_competitions}
+                        </label>
                         <select
                           value={c.competicoes}
                           onChange={(e) => update(c.id, "competicoes", e.target.value)}
@@ -714,7 +731,9 @@ export default function ComparadorCavalosPage() {
                     </div>
 
                     <div>
-                      <label className="text-xs text-zinc-500 block mb-1">Preço (€)</label>
+                      <label className="text-xs text-zinc-500 block mb-1">
+                        {t.comparador.label_price}
+                      </label>
                       <input
                         type="number"
                         min="0"
@@ -734,7 +753,7 @@ export default function ComparadorCavalosPage() {
                       }`}
                     >
                       {c.registoAPSL && <Check size={14} />}
-                      Registo APSL
+                      {t.comparador.label_apsl_reg}
                     </button>
                   </div>
 
@@ -742,13 +761,13 @@ export default function ComparadorCavalosPage() {
                   {showAnalise && (
                     <div className="p-4 bg-zinc-800/50 border-t border-zinc-800">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-zinc-400">Score Total</span>
+                        <span className="text-sm text-zinc-400">{t.comparador.score_total}</span>
                         <span className="text-2xl font-bold" style={{ color: cores[i] }}>
                           {calcularScore(c)}
                         </span>
                       </div>
                       <div className="text-xs text-zinc-500">
-                        Valor/Ponto:{" "}
+                        {t.comparador.value_per_point}{" "}
                         <span className="text-zinc-300">
                           {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
                         </span>
@@ -760,11 +779,17 @@ export default function ComparadorCavalosPage() {
             </div>
 
             {/* Subscription Banner */}
-            <SubscriptionBanner
-              isSubscribed={isSubscribed}
-              freeUsesLeft={freeUsesLeft}
-              requiresAuth={requiresAuth}
-            />
+            {accessLoading ? (
+              <div className="flex items-center justify-center py-4">
+                <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
+              </div>
+            ) : (
+              <SubscriptionBanner
+                isSubscribed={isSubscribed}
+                freeUsesLeft={freeUsesLeft}
+                requiresAuth={requiresAuth}
+              />
+            )}
 
             {/* Botão Analisar */}
             {!showAnalise && (
@@ -773,16 +798,22 @@ export default function ComparadorCavalosPage() {
                   onClick={() => {
                     if (!canUse) return;
                     setShowAnalise(true);
-                    recordUsage();
+                    recordUsage({
+                      cavalos: cavalos.map((c) => ({
+                        nome: c.nome,
+                        idade: c.idade,
+                        pelagem: c.pelagem,
+                      })),
+                    });
                   }}
                   disabled={!canUse}
                   className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <BarChart3 size={22} />
-                  Analisar Comparação
+                  {t.comparador.btn_analyse}
                 </button>
                 {!canUse && (
-                  <Paywall toolName="Comparador de Cavalos" requiresAuth={requiresAuth} />
+                  <Paywall toolName={t.comparador.tool_name} requiresAuth={requiresAuth} />
                 )}
               </>
             )}
@@ -802,7 +833,7 @@ export default function ComparadorCavalosPage() {
                 <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800">
                   <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
                     <Activity className="text-blue-400" size={20} />
-                    Comparação Visual
+                    {t.comparador.visual_comparison}
                   </h3>
                   <div className="flex flex-col items-center">
                     <RadarChart
@@ -838,12 +869,12 @@ export default function ComparadorCavalosPage() {
                 <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800 overflow-x-auto">
                   <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
                     <Scale className="text-blue-400" size={20} />
-                    Tabela Comparativa
+                    {t.comparador.comparative_table}
                   </h3>
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="text-zinc-400 border-b border-zinc-800">
-                        <th className="text-left py-3 px-2">Parâmetro</th>
+                        <th className="text-left py-3 px-2">{t.comparador.param_header}</th>
                         {cavalos.map((c, i) => (
                           <th
                             key={c.id}
@@ -857,29 +888,49 @@ export default function ComparadorCavalosPage() {
                     </thead>
                     <tbody>
                       {[
-                        { label: "Idade", campo: "idade" as const, maior: false, suffix: " anos" },
-                        { label: "Altura", campo: "altura" as const, maior: false, suffix: " cm" },
                         {
-                          label: "Conformação",
+                          label: t.comparador.param_age,
+                          campo: "idade" as const,
+                          maior: false,
+                          suffix: " anos",
+                        },
+                        {
+                          label: t.comparador.param_height,
+                          campo: "altura" as const,
+                          maior: false,
+                          suffix: " cm",
+                        },
+                        {
+                          label: t.comparador.param_conformation,
                           campo: "conformacao" as const,
                           maior: true,
                           suffix: "/10",
                         },
                         {
-                          label: "Andamentos",
+                          label: t.comparador.param_gaits,
                           campo: "andamentos" as const,
                           maior: true,
                           suffix: "/10",
                         },
                         {
-                          label: "Temperamento",
+                          label: t.comparador.param_temperament,
                           campo: "temperamento" as const,
                           maior: true,
                           suffix: "/10",
                         },
-                        { label: "Saúde", campo: "saude" as const, maior: true, suffix: "/10" },
+                        {
+                          label: t.comparador.param_health,
+                          campo: "saude" as const,
+                          maior: true,
+                          suffix: "/10",
+                        },
                         { label: "BLUP", campo: "blup" as const, maior: true, suffix: "" },
-                        { label: "Preço", campo: "preco" as const, maior: false, suffix: "€" },
+                        {
+                          label: t.comparador.param_price,
+                          campo: "preco" as const,
+                          maior: false,
+                          suffix: "€",
+                        },
                       ].map(({ label, campo, maior, suffix }) => (
                         <tr key={campo} className="border-b border-zinc-800/50">
                           <td className="py-3 px-2 text-zinc-400">{label}</td>
@@ -896,7 +947,9 @@ export default function ComparadorCavalosPage() {
                         </tr>
                       ))}
                       <tr className="border-t-2 border-zinc-700">
-                        <td className="py-4 px-2 font-semibold text-white">SCORE TOTAL</td>
+                        <td className="py-4 px-2 font-semibold text-white">
+                          {t.comparador.total_score}
+                        </td>
                         {cavalos.map((c, i) => (
                           <td key={c.id} className="text-center py-4 px-2">
                             <span className="text-2xl font-bold" style={{ color: cores[i] }}>
@@ -909,7 +962,7 @@ export default function ComparadorCavalosPage() {
                         ))}
                       </tr>
                       <tr className="border-t border-zinc-800">
-                        <td className="py-3 px-2 text-zinc-400">Valor/Ponto</td>
+                        <td className="py-3 px-2 text-zinc-400">{t.comparador.value_per_pt}</td>
                         {cavalos.map((c) => (
                           <td
                             key={c.id}
@@ -932,7 +985,7 @@ export default function ComparadorCavalosPage() {
                   <div className="bg-gradient-to-br from-amber-900/30 to-zinc-900 rounded-2xl p-6 border border-amber-500/30">
                     <h3 className="text-lg font-serif mb-4 flex items-center gap-3">
                       <Trophy className="text-amber-400" size={20} />
-                      Melhor Qualidade
+                      {t.comparador.best_quality}
                     </h3>
                     <div className="flex items-center gap-4">
                       <div className="p-4 bg-amber-500/20 rounded-xl">
@@ -941,7 +994,7 @@ export default function ComparadorCavalosPage() {
                       <div>
                         <p className="text-xl font-bold text-amber-400">{vencedor.nome}</p>
                         <p className="text-sm text-zinc-400">
-                          Score: {calcularScore(vencedor)} pontos
+                          Score: {calcularScore(vencedor)} {t.comparador.points}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1">
                           {vencedor.treino} • {vencedor.linhagem}
@@ -953,7 +1006,7 @@ export default function ComparadorCavalosPage() {
                   <div className="bg-gradient-to-br from-emerald-900/30 to-zinc-900 rounded-2xl p-6 border border-emerald-500/30">
                     <h3 className="text-lg font-serif mb-4 flex items-center gap-3">
                       <Euro className="text-emerald-400" size={20} />
-                      Melhor Custo-Benefício
+                      {t.comparador.best_cost_benefit}
                     </h3>
                     <div className="flex items-center gap-4">
                       <div className="p-4 bg-emerald-500/20 rounded-xl">
@@ -962,7 +1015,8 @@ export default function ComparadorCavalosPage() {
                       <div>
                         <p className="text-xl font-bold text-emerald-400">{melhorValor.nome}</p>
                         <p className="text-sm text-zinc-400">
-                          {calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")}€ por ponto
+                          {calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")}€{" "}
+                          {t.comparador.per_point}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1">
                           {melhorValor.preco.toLocaleString("pt-PT")}€ • Score{" "}
@@ -976,10 +1030,8 @@ export default function ComparadorCavalosPage() {
                 {/* Disclaimer */}
                 <div className="p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
                   <p className="text-xs text-zinc-500 leading-relaxed">
-                    <strong className="text-zinc-400">Nota:</strong> Esta comparação é uma
-                    ferramenta de apoio à decisão baseada nos dados fornecidos. O score é calculado
-                    considerando múltiplos factores de qualidade segundo padrões APSL. A decisão
-                    final deve incluir avaliação presencial e exame veterinário.
+                    <strong className="text-zinc-400">{t.comparador.disclaimer_title}</strong>{" "}
+                    {t.comparador.disclaimer_text}
                   </p>
                 </div>
               </div>

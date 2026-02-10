@@ -116,8 +116,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  // i18n: Rewrite /en/* routes to serve the same pages with locale cookie
-  // Isto permite que o Google indexe /en/comprar, /en/loja, etc.
+  // i18n: Rewrite /en/* and /es/* routes to serve the same pages with locale cookie
+  // Isto permite que o Google indexe /en/comprar, /en/loja, /es/comprar, /es/loja, etc.
   if (pathname.startsWith("/en/") || pathname === "/en") {
     // Strip /en prefix and rewrite to the Portuguese route
     const strippedPath = pathname.replace(/^\/en/, "") || "/";
@@ -134,6 +134,25 @@ export async function middleware(request: NextRequest) {
     rewriteResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     // Set Content-Language header for SEO
     rewriteResponse.headers.set("Content-Language", "en");
+    return rewriteResponse;
+  }
+
+  if (pathname.startsWith("/es/") || pathname === "/es") {
+    // Strip /es prefix and rewrite to the Portuguese route
+    const strippedPath = pathname.replace(/^\/es/, "") || "/";
+    const url = request.nextUrl.clone();
+    url.pathname = strippedPath;
+
+    const rewriteResponse = NextResponse.rewrite(url);
+    // Set locale cookie so LanguageContext initializes in Spanish
+    rewriteResponse.cookies.set("locale", "es", { path: "/", sameSite: "lax" });
+    // Copy security headers
+    rewriteResponse.headers.set("X-DNS-Prefetch-Control", "on");
+    rewriteResponse.headers.set("X-Download-Options", "noopen");
+    rewriteResponse.headers.set("X-Permitted-Cross-Domain-Policies", "none");
+    rewriteResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    // Set Content-Language header for SEO
+    rewriteResponse.headers.set("Content-Language", "es");
     return rewriteResponse;
   }
 

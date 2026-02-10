@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Lock, Crown, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Lock, Crown, ArrowRight, Loader2 } from "lucide-react";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface PaywallProps {
   toolName: string;
@@ -9,6 +12,33 @@ interface PaywallProps {
 }
 
 export default function Paywall({ toolName, requiresAuth = false }: PaywallProps) {
+  const { user } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async () => {
+    if (!user) {
+      router.push("/registar?redirect=/ferramentas");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/tools/create-checkout", { method: "POST" });
+      const data = await res.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Checkout error:", data.error);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Checkout error:", err);
+      setLoading(false);
+    }
+  };
+
   if (requiresAuth) {
     return (
       <div className="relative rounded-2xl overflow-hidden">
@@ -72,14 +102,23 @@ export default function Paywall({ toolName, requiresAuth = false }: PaywallProps
             </li>
           </ul>
 
-          <Link
-            href="/ferramentas"
-            className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all shadow-lg shadow-[#C5A059]/20"
+          <button
+            onClick={handleSubscribe}
+            disabled={loading}
+            className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all shadow-lg shadow-[#C5A059]/20 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Crown size={18} />
-            Subscrever PRO
-            <ArrowRight size={16} />
-          </Link>
+            {loading ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />A processar...
+              </>
+            ) : (
+              <>
+                <Crown size={18} />
+                Subscrever PRO
+                <ArrowRight size={16} />
+              </>
+            )}
+          </button>
         </div>
       </div>
       <div className="blur-sm pointer-events-none select-none opacity-50 min-h-[300px] bg-zinc-900/50 rounded-2xl" />

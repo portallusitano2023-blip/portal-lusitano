@@ -403,20 +403,141 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     console.log(`Profissional registered: ${metadata.nome}`);
   }
+
+  // Handle tools subscription
+  if (metadata.type === "tools_subscription") {
+    const userId = metadata.user_id;
+    const subscriptionId = session.subscription as string;
+
+    if (!userId) {
+      console.error("tools_subscription: missing user_id in metadata");
+      return;
+    }
+
+    // Update user profile with active subscription
+    const { error } = await supabase
+      .from("user_profiles")
+      .update({
+        tools_subscription_status: "active",
+        stripe_subscription_id: subscriptionId,
+        stripe_customer_id: session.customer as string,
+      })
+      .eq("id", userId);
+
+    if (error) {
+      console.error("Error updating tools subscription:", error);
+      throw new Error(`Failed to activate tools subscription: ${error.message}`);
+    }
+
+    // Register payment
+    await supabase.from("payments").insert({
+      stripe_payment_intent_id: session.payment_intent as string,
+      stripe_session_id: session.id,
+      email: session.customer_details?.email!,
+      amount: session.amount_total!,
+      currency: session.currency!,
+      status: "succeeded",
+      product_type: "tools_subscription",
+      product_metadata: {
+        user_id: userId,
+        subscription_id: subscriptionId,
+      },
+      description: "Ferramentas PRO - Subscrição Mensal",
+    });
+
+    // Confirmation email to user
+    await resend.emails.send({
+      from: "Portal Lusitano <ferramentas@portal-lusitano.pt>",
+      to: session.customer_details?.email!,
+      subject: "Ferramentas PRO Activadas! 🛠️",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #C5A059 0%, #8B7042 100%); padding: 30px; text-align: center;">
+            <h1 style="color: #000; margin: 0;">Portal Lusitano</h1>
+          </div>
+          <div style="padding: 40px 30px; background: #fff;">
+            <h2 style="color: #333;">Ferramentas PRO Activadas!</h2>
+            <p style="color: #666; line-height: 1.6;">
+              A sua subscrição PRO está agora activa. Tem acesso ilimitado a todas as ferramentas:
+            </p>
+            <ul style="color: #666; line-height: 1.8;">
+              <li>Calculadora de Valor</li>
+              <li>Comparador de Cavalos</li>
+              <li>Verificador de Compatibilidade</li>
+              <li>Análise de Perfil</li>
+            </ul>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p style="margin: 5px 0; color: #666;"><strong>Plano:</strong> PRO Mensal</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Valor:</strong> 4,99 EUR/mês</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+              <a href="https://portal-lusitano.pt/ferramentas" style="background: #C5A059; color: #000; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                Usar Ferramentas
+              </a>
+            </div>
+          </div>
+          <div style="background: #f5f5f5; padding: 20px; text-align: center; color: #999; font-size: 12px;">
+            <p>Portal Lusitano - Ferramentas PRO para cavalos Lusitanos</p>
+          </div>
+        </div>
+      `,
+    });
+
+    // Notify admin
+    await resend.emails.send({
+      from: "Portal Lusitano <admin@portal-lusitano.pt>",
+      to: "portal.lusitano2023@gmail.com",
+      subject: `Nova Subscrição PRO: ${session.customer_details?.email}`,
+      html: `
+        <h2>Nova subscrição Ferramentas PRO</h2>
+        <p><strong>Email:</strong> ${session.customer_details?.email}</p>
+        <p><strong>User ID:</strong> ${userId}</p>
+        <p><strong>Valor:</strong> €${((session.amount_total || 0) / 100).toFixed(2)}/mês</p>
+        <p><strong>Subscription ID:</strong> ${subscriptionId}</p>
+      `,
+    });
+
+    console.log(`Tools PRO subscription activated for user: ${userId}`);
+  }
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
+  const customerId = invoice.customer as string;
+
+  if (customerId) {
+    // Reactivate tools subscription on renewal if needed
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("id, tools_subscription_status")
+      .eq("stripe_customer_id", customerId)
+      .single();
+
+    if (profile && profile.tools_subscription_status !== "active") {
+      await supabase
+        .from("user_profiles")
+        .update({ tools_subscription_status: "active" })
+        .eq("id", profile.id);
+
+      console.log(`Tools subscription reactivated for user: ${profile.id}`);
+    }
+  }
+
   console.log(`Payment succeeded for invoice: ${invoice.id}`);
-  // Aqui podemos adicionar lógica para renovações de subscrições
 }
 
 async function handleSubscriptionCancelled(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string;
 
-  // Desactivar profissional se for o caso
+  // Deactivate profissional if applicable
   await supabase
     .from("profissionais")
     .update({ status: "cancelled" })
+    .eq("stripe_customer_id", customerId);
+
+  // Deactivate tools subscription if applicable
+  await supabase
+    .from("user_profiles")
+    .update({ tools_subscription_status: "cancelled" })
     .eq("stripe_customer_id", customerId);
 
   console.log(`Subscription cancelled: ${subscription.id}`);

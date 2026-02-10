@@ -7,7 +7,7 @@ import { ToastProvider } from "@/context/ToastContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { HorseFavoritesProvider } from "@/context/HorseFavoritesContext";
 import { AuthProvider } from "@/components/auth/AuthProvider";
-import { ReactNode } from "react";
+import { type ReactNode, type FC } from "react";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Preloader from "@/components/Preloader";
@@ -17,26 +17,34 @@ const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: fal
 const CookieConsent = dynamic(() => import("@/components/CookieConsent"), { ssr: false });
 const NewsletterPopup = dynamic(() => import("@/components/NewsletterPopup"), { ssr: false });
 
+// Compose multiple providers to avoid deeply nested JSX
+// Each provider only re-renders its own consumers, not siblings
+function composeProviders(...providers: FC<{ children: ReactNode }>[]) {
+  return function ComposedProviders({ children }: { children: ReactNode }) {
+    return providers.reduceRight((acc, Provider) => <Provider>{acc}</Provider>, children);
+  };
+}
+
+// Providers ordered by dependency:
+// ErrorBoundary > Auth > Language > Toast > Cart > Wishlist > HorseFavorites
+const ComposedProviders = composeProviders(
+  ErrorBoundary as unknown as FC<{ children: ReactNode }>,
+  AuthProvider,
+  LanguageProvider,
+  ToastProvider,
+  CartProvider,
+  WishlistProvider,
+  HorseFavoritesProvider
+);
+
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <LanguageProvider>
-          <ToastProvider>
-            <CartProvider>
-              <WishlistProvider>
-                <HorseFavoritesProvider>
-                  <Preloader />
-                  {children}
-                  <ScrollToTop />
-                  <CookieConsent />
-                  <NewsletterPopup />
-                </HorseFavoritesProvider>
-              </WishlistProvider>
-            </CartProvider>
-          </ToastProvider>
-        </LanguageProvider>
-      </AuthProvider>
-    </ErrorBoundary>
+    <ComposedProviders>
+      <Preloader />
+      {children}
+      <ScrollToTop />
+      <CookieConsent />
+      <NewsletterPopup />
+    </ComposedProviders>
   );
 }

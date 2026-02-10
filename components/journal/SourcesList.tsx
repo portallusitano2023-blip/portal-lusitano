@@ -9,7 +9,7 @@ interface Source {
 
 interface SourcesListProps {
   sources: Source[];
-  language?: "pt" | "en";
+  language?: "pt" | "en" | "es";
 }
 
 export default function SourcesList({ sources, language = "pt" }: SourcesListProps) {

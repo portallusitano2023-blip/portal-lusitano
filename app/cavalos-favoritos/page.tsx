@@ -46,6 +46,22 @@ export default function CavalosFavoritosPage() {
       sortPriceDesc: "Price: High",
       total: "horses saved",
     },
+    es: {
+      title: "Caballos Favoritos",
+      subtitle: "Los ejemplares que ha guardado",
+      empty: "Aun no ha guardado ningun caballo",
+      emptySubtitle: "Explore el marketplace y guarde los caballos que le interesen",
+      explore: "Ver Caballos en Venta",
+      clearAll: "Limpiar Todo",
+      remove: "Eliminar",
+      view: "Ver Detalles",
+      share: "Compartir",
+      years: "anos",
+      sortRecent: "Mas Recientes",
+      sortPriceAsc: "Precio: Menor",
+      sortPriceDesc: "Precio: Mayor",
+      total: "caballos guardados",
+    },
   };
 
   const t = text[language];
