@@ -135,6 +135,7 @@ export default function ImageUpload({
                 onClick={() => inputRef.current?.click()}
                 className="p-2 bg-white rounded-full text-gray-700 hover:bg-gray-100"
                 disabled={uploading}
+                aria-label="Trocar imagem"
               >
                 <Upload size={20} />
               </button>
@@ -143,6 +144,7 @@ export default function ImageUpload({
                 onClick={handleRemove}
                 className="p-2 bg-red-500 rounded-full text-white hover:bg-red-600"
                 disabled={uploading}
+                aria-label="Remover imagem"
               >
                 <X size={20} />
               </button>
@@ -268,6 +270,7 @@ export function MultiImageUpload({
               type="button"
               onClick={() => removeImage(index)}
               className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label={`Remover imagem ${index + 1}`}
             >
               <X size={16} />
             </button>
