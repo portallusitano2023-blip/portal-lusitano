@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TrendingUp, Users, MapPin } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 interface DistrictData {
   name: string;
@@ -54,7 +54,7 @@ const DISTRICTS: Record<string, { path: string; cx: number; cy: number }> = {
     cx: 192,
     cy: 162,
   },
-  "Guarda": {
+  Guarda: {
     path: "M 205 145 L 230 150 L 235 175 L 220 185 L 205 180 Z",
     cx: 220,
     cy: 165,
@@ -181,7 +181,7 @@ export default function PortugalHeatmap({
             {Object.entries(DISTRICTS).map(([name, { path }]) => {
               const isHovered = hoveredDistrict === name;
               const districtData = dataMap.get(name);
-              const hasData = districtData && districtData.value > 0;
+              const _hasData = districtData && districtData.value > 0;
 
               return (
                 <path
@@ -227,8 +227,7 @@ export default function PortugalHeatmap({
               <p className="text-sm text-gray-400">
                 {valueLabel}:{" "}
                 <span className="text-[#C5A059] font-semibold">
-                  {dataMap.get(hoveredDistrict)?.value.toLocaleString("pt-PT") ||
-                    "Sem dados"}
+                  {dataMap.get(hoveredDistrict)?.value.toLocaleString("pt-PT") || "Sem dados"}
                 </span>
               </p>
             </div>
@@ -239,9 +238,7 @@ export default function PortugalHeatmap({
         <div className="space-y-6">
           {/* Legenda de Cores */}
           <div className="bg-black/20 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-gray-400 mb-3">
-              Intensidade
-            </h3>
+            <h3 className="text-sm font-semibold text-gray-400 mb-3">Intensidade</h3>
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <div
@@ -272,9 +269,7 @@ export default function PortugalHeatmap({
                   className="w-6 h-6 rounded"
                   style={{
                     background:
-                      colorScheme === "gold"
-                        ? "rgba(197, 160, 89, 1)"
-                        : "rgba(59, 130, 246, 1)",
+                      colorScheme === "gold" ? "rgba(197, 160, 89, 1)" : "rgba(59, 130, 246, 1)",
                   }}
                 />
                 <span className="text-xs text-gray-400">Alta</span>
@@ -293,14 +288,9 @@ export default function PortugalHeatmap({
                 .sort((a, b) => b.value - a.value)
                 .slice(0, 5)
                 .map((district, index) => (
-                  <div
-                    key={district.name}
-                    className="flex items-center justify-between"
-                  >
+                  <div key={district.name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-[#C5A059] font-bold text-sm">
-                        {index + 1}.
-                      </span>
+                      <span className="text-[#C5A059] font-bold text-sm">{index + 1}.</span>
                       <span className="text-white text-sm">{district.name}</span>
                     </div>
                     <span className="text-gray-400 text-sm font-semibold">
@@ -313,9 +303,7 @@ export default function PortugalHeatmap({
 
           {/* Stats Gerais */}
           <div className="bg-black/20 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-gray-400 mb-3">
-              Resumo Geral
-            </h3>
+            <h3 className="text-sm font-semibold text-gray-400 mb-3">Resumo Geral</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-400">Total:</span>
@@ -326,9 +314,7 @@ export default function PortugalHeatmap({
               <div className="flex justify-between">
                 <span className="text-gray-400">Média:</span>
                 <span className="text-white font-semibold">
-                  {(
-                    data.reduce((sum, d) => sum + d.value, 0) / data.length
-                  ).toFixed(1)}
+                  {(data.reduce((sum, d) => sum + d.value, 0) / data.length).toFixed(1)}
                 </span>
               </div>
               <div className="flex justify-between">

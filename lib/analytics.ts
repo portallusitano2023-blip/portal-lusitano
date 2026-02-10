@@ -218,7 +218,7 @@ export const trackEvent = {
 /**
  * Track download do ebook gratuito
  */
-export function trackEbookDownload(ebookId: string, ebookType: "free" = "free") {
+export function trackEbookDownload(ebookId: string, _ebookType: "free" = "free") {
   // GA4
   sendGA4Event("generate_lead", {
     currency: "EUR",
@@ -244,11 +244,12 @@ export function trackEmailSubscription(source: string) {
   sendMetaEvent("CompleteRegistration", { content_name: source, status: "subscribed" });
 }
 
-
 /**
  * Track etapas do funil ebook
  */
-export function trackEbookFunnel(step: "view_landing" | "start_form" | "submit_form" | "download_pdf") {
+export function trackEbookFunnel(
+  step: "view_landing" | "start_form" | "submit_form" | "download_pdf"
+) {
   const stepData = {
     view_landing: { name: "Ebook Landing View", num: 1 },
     start_form: { name: "Ebook Form Started", num: 2 },
@@ -264,7 +265,6 @@ export function trackEbookFunnel(step: "view_landing" | "start_form" | "submit_f
 
   sendMetaCustomEvent("EbookFunnel", { step, step_number: stepData[step].num });
 }
-
 
 /**
  * Track partilha social

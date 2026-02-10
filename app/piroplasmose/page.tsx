@@ -91,7 +91,7 @@ function useInViewOnce(ref: React.RefObject<HTMLElement | null>, margin = "-40px
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [margin]);
+  }, [ref, margin]);
   return inView;
 }
 
@@ -1404,7 +1404,8 @@ export default function PiroplasmosePage() {
   // Calcular primeira secção fechada fora do map
   const primeiraFechadaIdx = useMemo(
     () => seccoes.findIndex((s) => !seccoesAbertas.has(s.id)),
-    [seccoes, seccoesAbertas]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [seccoesAbertas]
   );
 
   return (

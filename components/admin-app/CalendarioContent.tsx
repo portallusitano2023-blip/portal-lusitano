@@ -3,9 +3,6 @@
 import { useEffect, useState } from "react";
 import {
   FiCalendar,
-  FiCheck,
-  FiClock,
-  FiAlertCircle,
   FiPlus,
   FiX,
   FiEdit2,
@@ -66,6 +63,7 @@ export default function CalendarioContent() {
   useEffect(() => {
     fetchTasks();
     setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate]);
 
   // Buscar tarefas
@@ -232,12 +230,8 @@ export default function CalendarioContent() {
           <div className="flex items-center gap-3 mb-4">
             <FiCalendar className="text-[#C5A059]" size={32} />
             <div>
-              <h1 className="text-3xl font-bold text-white">
-                Calendário de Follow-ups
-              </h1>
-              <p className="text-gray-400">
-                Gerir tarefas e lembretes de clientes
-              </p>
+              <h1 className="text-3xl font-bold text-white">Calendário de Follow-ups</h1>
+              <p className="text-gray-400">Gerir tarefas e lembretes de clientes</p>
             </div>
           </div>
         </div>
@@ -327,14 +321,12 @@ export default function CalendarioContent() {
                       isToday
                         ? "border-[#C5A059] bg-[#C5A059]/10"
                         : isSelected
-                        ? "border-white/30 bg-white/5"
-                        : "border-white/10 hover:border-white/20 hover:bg-white/5"
+                          ? "border-white/30 bg-white/5"
+                          : "border-white/10 hover:border-white/20 hover:bg-white/5"
                     }`}
                   >
                     <span
-                      className={`text-sm font-medium ${
-                        isToday ? "text-[#C5A059]" : "text-white"
-                      }`}
+                      className={`text-sm font-medium ${isToday ? "text-[#C5A059]" : "text-white"}`}
                     >
                       {day}
                     </span>
@@ -349,10 +341,10 @@ export default function CalendarioContent() {
                               task.status === "concluida"
                                 ? "bg-green-500"
                                 : task.status === "em_andamento"
-                                ? "bg-orange-500"
-                                : new Date(task.due_date) < new Date()
-                                ? "bg-red-500"
-                                : "bg-blue-500"
+                                  ? "bg-orange-500"
+                                  : new Date(task.due_date) < new Date()
+                                    ? "bg-red-500"
+                                    : "bg-blue-500"
                             }`}
                           />
                         ))}
@@ -398,10 +390,10 @@ export default function CalendarioContent() {
                       task.status === "concluida"
                         ? "border-green-500/30 opacity-60"
                         : task.status === "em_andamento"
-                        ? "border-orange-500/30"
-                        : new Date(task.due_date) < new Date()
-                        ? "border-red-500/30"
-                        : "border-white/10"
+                          ? "border-orange-500/30"
+                          : new Date(task.due_date) < new Date()
+                            ? "border-red-500/30"
+                            : "border-white/10"
                     }`}
                   >
                     <div className="flex items-start justify-between mb-2">
@@ -432,8 +424,8 @@ export default function CalendarioContent() {
                           task.priority === "urgente"
                             ? "bg-red-500/20 text-red-400"
                             : task.priority === "alta"
-                            ? "bg-orange-500/20 text-orange-400"
-                            : "bg-blue-500/20 text-blue-400"
+                              ? "bg-orange-500/20 text-orange-400"
+                              : "bg-blue-500/20 text-blue-400"
                         }`}
                       >
                         {task.priority}
@@ -477,9 +469,7 @@ export default function CalendarioContent() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Título *
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Título *</label>
                 <input
                   type="text"
                   required
@@ -491,9 +481,7 @@ export default function CalendarioContent() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Descrição
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Descrição</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -505,9 +493,7 @@ export default function CalendarioContent() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Tipo
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Tipo</label>
                   <select
                     value={formData.task_type}
                     onChange={(e) => setFormData({ ...formData, task_type: e.target.value })}
@@ -522,9 +508,7 @@ export default function CalendarioContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Prioridade
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Prioridade</label>
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: e.target.value })}

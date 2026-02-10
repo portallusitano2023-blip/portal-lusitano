@@ -17,10 +17,7 @@ export async function POST(req: NextRequest) {
     const { automation_id, trigger_data = {} } = body;
 
     if (!automation_id) {
-      return NextResponse.json(
-        { error: "automation_id é obrigatório" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "automation_id é obrigatório" }, { status: 400 });
     }
 
     // Buscar automação
@@ -33,17 +30,11 @@ export async function POST(req: NextRequest) {
     if (fetchError) throw fetchError;
 
     if (!automation) {
-      return NextResponse.json(
-        { error: "Automação não encontrada" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Automação não encontrada" }, { status: 404 });
     }
 
     if (!automation.enabled) {
-      return NextResponse.json(
-        { error: "Automação está desativada" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Automação está desativada" }, { status: 400 });
     }
 
     // Criar log de execução
@@ -119,10 +110,7 @@ export async function POST(req: NextRequest) {
       updates.last_error = errorMessage;
     }
 
-    await supabase
-      .from("admin_automations")
-      .update(updates)
-      .eq("id", automation.id);
+    await supabase.from("admin_automations").update(updates).eq("id", automation.id);
 
     return NextResponse.json({
       success: status === "success",
@@ -133,7 +121,10 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error executing automation:", error);
     return NextResponse.json(
-      { error: "Erro ao executar automação", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao executar automação",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
@@ -183,11 +174,16 @@ async function executeSendEmail(automation: AutomationData, triggerData: Trigger
   return { email_sent: true, message_id: data?.id };
 }
 
-async function executeCreateTask(automation: AutomationData, triggerData: TriggerData, adminEmail: string) {
+async function executeCreateTask(
+  automation: AutomationData,
+  triggerData: TriggerData,
+  adminEmail: string
+) {
   const config = automation.action_config;
 
   const title = config.title || "Tarefa Automática";
-  const description = config.description || `Criada automaticamente pela automação: ${automation.name}`;
+  const description =
+    config.description || `Criada automaticamente pela automação: ${automation.name}`;
   const task_type = config.task_type || "follow_up";
   const priority = config.priority || "normal";
 
@@ -216,7 +212,7 @@ async function executeCreateTask(automation: AutomationData, triggerData: Trigge
   return { task_created: true, task_id: task.id };
 }
 
-async function executeUpdateField(automation: AutomationData, triggerData: TriggerData) {
+async function executeUpdateField(automation: AutomationData, _triggerData: TriggerData) {
   const config = automation.action_config;
 
   if (!config.table || !config.id || !config.field || config.value === undefined) {
@@ -242,7 +238,7 @@ async function executeApproveReview(automation: AutomationData, triggerData: Tri
     throw new Error("review_id não especificado");
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("reviews")
     .update({ status: "approved" })
     .eq("id", reviewId)

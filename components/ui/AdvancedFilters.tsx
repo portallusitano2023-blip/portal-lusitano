@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Filter, X, Save, Calendar, Search } from "lucide-react";
+import { Filter, X, Save, Calendar } from "lucide-react";
 
 export interface FilterConfig {
   id: string;

@@ -14,7 +14,6 @@ import {
   X,
   AlertCircle,
   Clock,
-  User,
   Building2,
   Phone,
   Calendar,
@@ -74,6 +73,7 @@ export default function MensagensContent() {
   useEffect(() => {
     fetchStats();
     fetchMessages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, searchTerm]);
 
   const fetchStats = async () => {

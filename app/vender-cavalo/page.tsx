@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowLeft,
   Upload,
@@ -16,7 +15,6 @@ import {
   Info,
   X,
   Plus,
-  Trash2,
 } from "lucide-react";
 
 interface FormData {
@@ -1089,6 +1087,7 @@ export default function VenderCavaloPage() {
                       key={i}
                       className="aspect-square bg-zinc-800 rounded-lg relative overflow-hidden"
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={URL.createObjectURL(img)}
                         alt={`Foto ${i + 1}`}

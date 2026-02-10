@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Verificar autenticação
     const email = await verifySession();
@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
     });
 
     const monthlyRevenueChart = last12Months.map((month) => {
-      const [year, monthNum] = month.split("-");
+      const [, monthNum] = month.split("-");
       const monthNames = [
         "Jan",
         "Fev",
@@ -144,7 +144,7 @@ export async function GET(req: NextRequest) {
     });
 
     const mrrChart = last12Months.map((month) => {
-      const [year, monthNum] = month.split("-");
+      const [, monthNum] = month.split("-");
       const monthNames = [
         "Jan",
         "Fev",

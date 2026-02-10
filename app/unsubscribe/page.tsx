@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -45,9 +45,7 @@ export default function UnsubscribePage() {
   return (
     <main className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
       <div className="max-w-md w-full bg-zinc-900/40 backdrop-blur-md border border-white/5 p-10 text-center">
-        <h1 className="text-2xl font-serif text-white mb-4">
-          Cancelar Subscrição
-        </h1>
+        <h1 className="text-2xl font-serif text-white mb-4">Cancelar Subscrição</h1>
 
         <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059] to-transparent mx-auto mb-8"></div>
 

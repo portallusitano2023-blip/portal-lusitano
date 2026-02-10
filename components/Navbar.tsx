@@ -19,7 +19,7 @@ const SearchModal = dynamic(
   { ssr: false }
 );
 
-export default function Navbar({ dev: _dev }: { dev?: boolean } = {}) {
+export default function Navbar({}: { dev?: boolean } = {}) {
   const { totalQuantity, openCart } = useCart();
   const { language, toggleLanguage, t } = useLanguage();
   const { wishlist } = useWishlist();

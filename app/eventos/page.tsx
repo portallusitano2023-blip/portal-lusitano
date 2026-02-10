@@ -9,7 +9,6 @@ import {
   Euro,
   ChevronLeft,
   ChevronRight,
-  Filter,
   Tag,
   ExternalLink,
   Star,
@@ -79,7 +78,6 @@ export default function EventosPage() {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [selectedEvento, setSelectedEvento] = useState<Evento | null>(null);
-  const [viewMode, setViewMode] = useState<"lista" | "calendario">("lista");
 
   useEffect(() => {
     async function fetchEventos() {
@@ -125,7 +123,7 @@ export default function EventosPage() {
   };
 
   // Agrupar eventos por mês
-  const eventosPorMes = eventos.reduce(
+  const _eventosPorMes = eventos.reduce(
     (acc, evento) => {
       const date = new Date(evento.data_inicio);
       const key = `${date.getFullYear()}-${date.getMonth()}`;
@@ -136,8 +134,7 @@ export default function EventosPage() {
     {} as Record<string, Evento[]>
   );
 
-  const currentMonthKey = `${currentYear}-${currentMonth}`;
-  const eventosDoMes = eventosPorMes[currentMonthKey] || [];
+  const _currentMonthKey = `${currentYear}-${currentMonth}`;
 
   const navigateMonth = (direction: number) => {
     let newMonth = currentMonth + direction;
@@ -152,14 +149,6 @@ export default function EventosPage() {
     setCurrentMonth(newMonth);
     setCurrentYear(newYear);
   };
-
-  function formatDate(dateStr: string) {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("pt-PT", {
-      day: "numeric",
-      month: "short",
-    });
-  }
 
   function formatDateRange(start: string, end?: string) {
     const startDate = new Date(start);
@@ -492,6 +481,7 @@ function EventoDestaqueCard({
       style={{ animationDelay: `${index * 0.1}s` }}
     >
       {evento.imagem_capa && (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={evento.imagem_capa}
           alt={evento.titulo}

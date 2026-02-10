@@ -25,14 +25,17 @@ function isRateLimited(ip: string): boolean {
 }
 
 // Cleanup old entries periodically (every 5 minutes)
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, record] of rateLimitMap.entries()) {
-    if (now > record.resetTime) {
-      rateLimitMap.delete(ip);
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [ip, record] of rateLimitMap.entries()) {
+      if (now > record.resetTime) {
+        rateLimitMap.delete(ip);
+      }
     }
-  }
-}, 5 * 60 * 1000);
+  },
+  5 * 60 * 1000
+);
 
 // RFC 5322 compliant email validation (simplified but robust)
 function isValidEmail(email: string): boolean {
@@ -40,7 +43,8 @@ function isValidEmail(email: string): boolean {
   if (email.length > 254) return false;
 
   // More comprehensive regex that catches common issues
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
   if (!emailRegex.test(email)) return false;
 
   // Check local part length (max 64 chars)
@@ -52,7 +56,13 @@ function isValidEmail(email: string): boolean {
   if (!tld || tld.length < 2) return false;
 
   // Block common disposable email domains
-  const disposableDomains = ["tempmail.com", "throwaway.com", "mailinator.com", "guerrillamail.com", "10minutemail.com"];
+  const disposableDomains = [
+    "tempmail.com",
+    "throwaway.com",
+    "mailinator.com",
+    "guerrillamail.com",
+    "10minutemail.com",
+  ];
   if (disposableDomains.includes(domain.toLowerCase())) return false;
 
   return true;
@@ -61,9 +71,10 @@ function isValidEmail(email: string): boolean {
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting check
-    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-               request.headers.get("x-real-ip") ||
-               "unknown";
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      request.headers.get("x-real-ip") ||
+      "unknown";
 
     if (isRateLimited(ip)) {
       return NextResponse.json(
@@ -77,34 +88,27 @@ export async function POST(request: NextRequest) {
 
     // Validate inputs
     if (!email || !nome) {
-      return NextResponse.json(
-        { error: "Email e nome são obrigatórios" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email e nome são obrigatórios" }, { status: 400 });
     }
 
     // Validate input lengths (security)
     if (nome.length > 100 || email.length > 255) {
-      return NextResponse.json(
-        { error: "Dados inválidos" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
     }
 
     // Validate email format with improved validation
     if (!isValidEmail(email.trim())) {
-      return NextResponse.json(
-        { error: "Por favor, insere um email válido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Por favor, insere um email válido" }, { status: 400 });
     }
 
     // Get metadata from request (ip already defined above for rate limiting)
-    const userAgent = request.headers.get("user-agent") || "";
+    const _userAgent = request.headers.get("user-agent") || "";
     const referer = request.headers.get("referer") || "";
 
     // Parse UTM params from referer
-    let utmSource = null, utmMedium = null, utmCampaign = null;
+    let utmSource = null,
+      utmMedium = null,
+      utmCampaign = null;
     try {
       const refUrl = new URL(referer);
       utmSource = refUrl.searchParams.get("utm_source");
@@ -159,10 +163,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error processing ebook subscription:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
 

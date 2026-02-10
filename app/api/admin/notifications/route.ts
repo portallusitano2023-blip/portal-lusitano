@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const limit = parseInt(searchParams.get("limit") || "20");
-    const unreadOnly = searchParams.get("unread") === "true";
+    const _unreadOnly = searchParams.get("unread") === "true";
 
     // Buscar eventos recentes de várias fontes
     const now = new Date();
@@ -150,16 +150,14 @@ export async function GET(req: NextRequest) {
     }
 
     // Ordenar por data (mais recente primeiro)
-    notifications.sort((a, b) =>
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    );
+    notifications.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     // Aplicar limite
     const limitedNotifications = notifications.slice(0, limit);
 
     // Contar não lidas (últimas 24h são consideradas não lidas)
-    const unreadCount = notifications.filter((n) =>
-      new Date(n.timestamp) > new Date(last24h)
+    const unreadCount = notifications.filter(
+      (n) => new Date(n.timestamp) > new Date(last24h)
     ).length;
 
     return NextResponse.json({

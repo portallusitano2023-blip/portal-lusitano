@@ -5,7 +5,15 @@ import { ChevronDown, HelpCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { faqData, type FAQItem } from "@/data/faqData";
 
-function FAQAccordion({ item, isOpen, onClick }: { item: FAQItem; isOpen: boolean; onClick: () => void }) {
+function FAQAccordion({
+  item,
+  isOpen,
+  onClick,
+}: {
+  item: FAQItem;
+  isOpen: boolean;
+  onClick: () => void;
+}) {
   return (
     <div className="border-b border-white/10">
       <button
@@ -19,15 +27,19 @@ function FAQAccordion({ item, isOpen, onClick }: { item: FAQItem; isOpen: boolea
           className="flex-shrink-0 transition-transform duration-200"
           style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
         >
-          <ChevronDown className={`${isOpen ? "text-[#C5A059]" : "text-zinc-500"} transition-colors`} size={20} />
+          <ChevronDown
+            className={`${isOpen ? "text-[#C5A059]" : "text-zinc-500"} transition-colors`}
+            size={20}
+          />
         </div>
       </button>
 
-      <div className="grid transition-all duration-200" style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}>
+      <div
+        className="grid transition-all duration-200"
+        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+      >
         <div className="overflow-hidden">
-          <p className="pb-6 text-zinc-400 leading-relaxed">
-            {item.answer}
-          </p>
+          <p className="pb-6 text-zinc-400 leading-relaxed">{item.answer}</p>
         </div>
       </div>
     </div>
@@ -36,7 +48,7 @@ function FAQAccordion({ item, isOpen, onClick }: { item: FAQItem; isOpen: boolea
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const faqs = faqData[language];
 
   return (
@@ -61,7 +73,10 @@ export default function FAQPage() {
         </div>
 
         {/* FAQ List */}
-        <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]" style={{ animationDelay: "0.1s" }}>
+        <div
+          className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          style={{ animationDelay: "0.1s" }}
+        >
           {faqs.map((faq, index) => (
             <FAQAccordion
               key={index}

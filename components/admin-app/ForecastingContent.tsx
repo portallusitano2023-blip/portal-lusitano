@@ -92,6 +92,7 @@ export default function ForecastingContent() {
 
   useEffect(() => {
     loadForecast();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metric, daysBack, daysAhead]);
 
   // Gráfico simples em SVG

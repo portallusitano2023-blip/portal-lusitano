@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
 // GET - Listar depoimentos pendentes
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -22,7 +22,10 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching depoimentos:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar depoimentos", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar depoimentos",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Verificar autenticação
     const email = await verifySession();
@@ -110,9 +110,8 @@ export async function GET(req: NextRequest) {
       .select("*", { count: "exact", head: true })
       .neq("status", "arquivado");
 
-    const responseRate = nonArchived && nonArchived > 0
-      ? ((responded || 0) / nonArchived) * 100
-      : 0;
+    const responseRate =
+      nonArchived && nonArchived > 0 ? ((responded || 0) / nonArchived) * 100 : 0;
 
     // Última mensagem nova (para push notifications)
     const { data: latestMessage } = await supabase

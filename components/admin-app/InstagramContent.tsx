@@ -25,6 +25,7 @@ export default function InstagramContent() {
 
   useEffect(() => {
     fetchUploads();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   const fetchUploads = async () => {
@@ -160,10 +161,7 @@ export default function InstagramContent() {
         ) : (
           <div className="space-y-6">
             {filteredUploads.map((upload) => (
-              <div
-                key={upload.id}
-                className="bg-white/5 border border-white/10 rounded-xl p-6"
-              >
+              <div key={upload.id} className="bg-white/5 border border-white/10 rounded-xl p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
                   <div>
@@ -173,8 +171,8 @@ export default function InstagramContent() {
                           upload.status === "pending"
                             ? "bg-orange-500/20 text-orange-400"
                             : upload.status === "published"
-                            ? "bg-green-500/20 text-green-400"
-                            : "bg-zinc-600/20 text-zinc-400"
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-zinc-600/20 text-zinc-400"
                         }`}
                       >
                         {upload.status}
@@ -239,21 +237,12 @@ export default function InstagramContent() {
                         return (
                           <div key={idx} className="bg-black rounded-lg overflow-hidden">
                             {isImage ? (
-                              <img
-                                src={url}
-                                alt={`Media ${idx + 1}`}
-                                className="w-full h-auto"
-                              />
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={url} alt={`Media ${idx + 1}`} className="w-full h-auto" />
                             ) : isVideo ? (
-                              <video
-                                src={url}
-                                controls
-                                className="w-full h-auto"
-                              />
+                              <video src={url} controls className="w-full h-auto" />
                             ) : (
-                              <div className="p-4 text-gray-400 text-sm">
-                                Ficheiro {idx + 1}
-                              </div>
+                              <div className="p-4 text-gray-400 text-sm">Ficheiro {idx + 1}</div>
                             )}
                             <div className="p-3 bg-zinc-800 flex items-center justify-between">
                               <span className="text-gray-400 text-xs">
@@ -336,9 +325,7 @@ export default function InstagramContent() {
                     )}
 
                     {/* Session ID */}
-                    <div className="text-xs text-gray-600">
-                      Session: {upload.session_id}
-                    </div>
+                    <div className="text-xs text-gray-600">Session: {upload.session_id}</div>
                   </div>
                 </div>
 

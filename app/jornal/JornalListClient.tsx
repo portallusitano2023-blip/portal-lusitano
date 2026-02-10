@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useMemo, useEffect } from "react";
+import { useRef, useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -306,6 +306,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                   <article className="group cursor-pointer h-full flex flex-col border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02]">
                     <div className="w-full h-64 overflow-hidden relative">
                       {getImageUrl(article) && (
+                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img
                           src={getImageUrl(article)}
                           alt={article.image?.alt || article.title}
@@ -348,6 +349,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                   <article className="group cursor-pointer flex gap-6 border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02] p-4">
                     <div className="w-32 h-32 flex-shrink-0 overflow-hidden relative">
                       {getImageUrl(article) && (
+                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img
                           src={getImageUrl(article)}
                           alt={article.image?.alt || article.title}

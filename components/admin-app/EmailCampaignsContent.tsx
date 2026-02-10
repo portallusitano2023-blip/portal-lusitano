@@ -8,7 +8,6 @@ import {
   Trash2,
   Plus,
   X,
-  Calendar,
   Users,
   TrendingUp,
   AlertCircle,
@@ -70,6 +69,7 @@ export default function EmailCampaignsContent() {
 
   useEffect(() => {
     fetchCampaigns();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchCampaigns = async () => {

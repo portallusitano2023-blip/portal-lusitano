@@ -1,7 +1,6 @@
 "use client";
 
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import Image from "next/image";
 import { urlFor } from "@/lib/client";
 import {
   ArticleInfoBox,
@@ -52,18 +51,30 @@ interface PortableTextRendererProps {
 export const journalComponents: PortableTextComponents = {
   block: {
     h2: ({ children }) => (
-      <h2 id={typeof children === "string" ? children.toString().toLowerCase().replace(/\s+/g, "-") : undefined} className="text-4xl font-serif text-[#C5A059] mb-6 mt-16 border-b border-white/10 pb-4">
+      <h2
+        id={
+          typeof children === "string"
+            ? children.toString().toLowerCase().replace(/\s+/g, "-")
+            : undefined
+        }
+        className="text-4xl font-serif text-[#C5A059] mb-6 mt-16 border-b border-white/10 pb-4"
+      >
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 id={typeof children === "string" ? children.toString().toLowerCase().replace(/\s+/g, "-") : undefined} className="text-2xl font-serif text-white mb-4 mt-10">
+      <h3
+        id={
+          typeof children === "string"
+            ? children.toString().toLowerCase().replace(/\s+/g, "-")
+            : undefined
+        }
+        className="text-2xl font-serif text-white mb-4 mt-10"
+      >
         {children}
       </h3>
     ),
-    h4: ({ children }) => (
-      <h4 className="text-xl font-bold text-white mb-3 mt-8">{children}</h4>
-    ),
+    h4: ({ children }) => <h4 className="text-xl font-bold text-white mb-3 mt-8">{children}</h4>,
     blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-[#C5A059] pl-6 my-8 text-zinc-300 italic font-serif text-lg">
         {children}
@@ -95,9 +106,7 @@ export const journalComponents: PortableTextComponents = {
     number: ({ children }) => <li className="leading-relaxed">{children}</li>,
   },
   marks: {
-    strong: ({ children }) => (
-      <strong className="text-white font-bold">{children}</strong>
-    ),
+    strong: ({ children }) => <strong className="text-white font-bold">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,
     link: ({ children, value }) => (
       <a
@@ -125,11 +134,7 @@ export const journalComponents: PortableTextComponents = {
     infoBox: ({ value }) => {
       const Icon = getIcon(value.icon);
       return (
-        <ArticleInfoBox
-          title={value.title}
-          icon={Icon}
-          variant={value.variant || "default"}
-        >
+        <ArticleInfoBox title={value.title} icon={Icon} variant={value.variant || "default"}>
           {value.content && (
             <div className="text-zinc-300 text-base leading-relaxed">
               <PortableText value={value.content} components={journalComponents} />
@@ -142,21 +147,37 @@ export const journalComponents: PortableTextComponents = {
       <div className="my-12">
         {value.title && (
           <h4 className="text-2xl font-serif text-[#C5A059] mb-6 flex items-center gap-3">
-            {value.icon && (() => { const I = getIcon(value.icon); return <I size={24} />; })()}
+            {value.icon &&
+              (() => {
+                const I = getIcon(value.icon);
+                return <I size={24} />;
+              })()}
             {value.title}
           </h4>
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {value.cards?.map((card: { value: string; title: string; subtitle: string; description?: string; highlight?: boolean; _key?: string }, i: number) => (
-            <ArticleStatCard
-              key={card._key || i}
-              value={card.value}
-              title={card.title}
-              subtitle={card.subtitle}
-              description={card.description ? <span>{card.description}</span> : undefined}
-              highlight={card.highlight}
-            />
-          ))}
+          {value.cards?.map(
+            (
+              card: {
+                value: string;
+                title: string;
+                subtitle: string;
+                description?: string;
+                highlight?: boolean;
+                _key?: string;
+              },
+              i: number
+            ) => (
+              <ArticleStatCard
+                key={card._key || i}
+                value={card.value}
+                title={card.title}
+                subtitle={card.subtitle}
+                description={card.description ? <span>{card.description}</span> : undefined}
+                highlight={card.highlight}
+              />
+            )
+          )}
         </div>
       </div>
     ),
@@ -167,9 +188,7 @@ export const journalComponents: PortableTextComponents = {
           const Icon = getIcon(card.icon);
           return (
             <ArticlePillarCard key={card._key || i} icon={Icon} title={card.title}>
-              {card.content && (
-                <PortableText value={card.content} components={journalComponents} />
-              )}
+              {card.content && <PortableText value={card.content} components={journalComponents} />}
             </ArticlePillarCard>
           );
         })}
@@ -196,7 +215,10 @@ export const journalComponents: PortableTextComponents = {
 };
 
 // Wrapper com suporte a idioma
-export default function PortableTextRenderer({ value, language = "pt" }: PortableTextRendererProps) {
+export default function PortableTextRenderer({
+  value,
+  language: _language = "pt",
+}: PortableTextRendererProps) {
   if (!value || value.length === 0) return null;
   return (
     <div className="article-body">

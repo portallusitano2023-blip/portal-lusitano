@@ -4,7 +4,7 @@ import { verifySession } from "@/lib/auth";
 import { resend } from "@/lib/resend";
 
 // GET - Listar campanhas
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -47,10 +47,7 @@ export async function POST(req: NextRequest) {
 
     // Validações
     if (!name || !subject || !html_content || !recipient_type) {
-      return NextResponse.json(
-        { error: "Campos obrigatórios em falta" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Campos obrigatórios em falta" }, { status: 400 });
     }
 
     // Buscar destinatários
@@ -70,10 +67,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (recipients.length === 0) {
-      return NextResponse.json(
-        { error: "Nenhum destinatário encontrado" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Nenhum destinatário encontrado" }, { status: 400 });
     }
 
     // Criar campanha na BD
@@ -161,16 +155,10 @@ export async function DELETE(req: NextRequest) {
     const campaignId = searchParams.get("id");
 
     if (!campaignId) {
-      return NextResponse.json(
-        { error: "ID da campanha não fornecido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "ID da campanha não fornecido" }, { status: 400 });
     }
 
-    const { error } = await supabase
-      .from("email_campaigns")
-      .delete()
-      .eq("id", campaignId);
+    const { error } = await supabase.from("email_campaigns").delete().eq("id", campaignId);
 
     if (error) throw error;
 

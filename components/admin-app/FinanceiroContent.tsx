@@ -83,15 +83,12 @@ export default function FinanceiroContent() {
 
   useEffect(() => {
     fetchAllData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAllData = async () => {
     try {
-      await Promise.all([
-        fetchOverview(),
-        fetchCharts(),
-        fetchTransactions(),
-      ]);
+      await Promise.all([fetchOverview(), fetchCharts(), fetchTransactions()]);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -202,6 +199,7 @@ export default function FinanceiroContent() {
 
   useEffect(() => {
     fetchTransactions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   if (isLoading) {
@@ -235,7 +233,9 @@ export default function FinanceiroContent() {
 
         <div className="flex flex-col sm:flex-row items-end gap-4">
           <div className="flex-1">
-            <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Mês</label>
+            <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+              Mês
+            </label>
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
@@ -257,7 +257,9 @@ export default function FinanceiroContent() {
           </div>
 
           <div className="flex-1">
-            <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Ano</label>
+            <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+              Ano
+            </label>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
@@ -265,7 +267,11 @@ export default function FinanceiroContent() {
             >
               {Array.from({ length: 5 }, (_, i) => {
                 const year = new Date().getFullYear() - i;
-                return <option key={year} value={year}>{year}</option>;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
               })}
             </select>
           </div>
@@ -277,8 +283,8 @@ export default function FinanceiroContent() {
           >
             {isGeneratingPDF ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
-                A gerar...
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>A
+                gerar...
               </>
             ) : (
               <>
@@ -291,7 +297,8 @@ export default function FinanceiroContent() {
 
         <div className="mt-4 pt-4 border-t border-[#C5A059]/20">
           <p className="text-xs text-gray-500">
-            📊 O relatório inclui: Resumo Executivo, Receitas por Produto, Top 5 Cavalos Mais Vistos, Análise de Leads e ROI
+            📊 O relatório inclui: Resumo Executivo, Receitas por Produto, Top 5 Cavalos Mais
+            Vistos, Análise de Leads e ROI
           </p>
         </div>
       </div>
@@ -305,7 +312,8 @@ export default function FinanceiroContent() {
               <FiDollarSign className="text-[#C5A059]" size={20} />
             </div>
             <p className="text-3xl font-bold text-white">
-              €{overviewData.overview.totalRevenue.toLocaleString("pt-PT", {
+              €
+              {overviewData.overview.totalRevenue.toLocaleString("pt-PT", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
@@ -319,12 +327,15 @@ export default function FinanceiroContent() {
               <FiTrendingUp className="text-green-500" size={20} />
             </div>
             <p className="text-3xl font-bold text-white">
-              €{overviewData.overview.thisMonthRevenue.toLocaleString("pt-PT", {
+              €
+              {overviewData.overview.thisMonthRevenue.toLocaleString("pt-PT", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
             </p>
-            <p className={`text-xs mt-1 ${overviewData.overview.growthPercentage >= 0 ? "text-green-500" : "text-red-500"}`}>
+            <p
+              className={`text-xs mt-1 ${overviewData.overview.growthPercentage >= 0 ? "text-green-500" : "text-red-500"}`}
+            >
               {overviewData.overview.growthPercentage >= 0 ? "+" : ""}
               {overviewData.overview.growthPercentage.toFixed(1)}% vs mês passado
             </p>
@@ -336,7 +347,8 @@ export default function FinanceiroContent() {
               <FiRepeat className="text-[#C5A059]" size={20} />
             </div>
             <p className="text-3xl font-bold text-white">
-              €{overviewData.overview.mrr.toLocaleString("pt-PT", {
+              €
+              {overviewData.overview.mrr.toLocaleString("pt-PT", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
@@ -349,7 +361,9 @@ export default function FinanceiroContent() {
               <h3 className="text-sm font-medium text-gray-400">Transações</h3>
               <FiShoppingCart className="text-[#C5A059]" size={20} />
             </div>
-            <p className="text-3xl font-bold text-white">{overviewData.overview.totalTransactions}</p>
+            <p className="text-3xl font-bold text-white">
+              {overviewData.overview.totalTransactions}
+            </p>
             <p className="text-xs text-gray-500 mt-1">
               Ticket médio: €{overviewData.overview.averageTicket.toFixed(2)}
             </p>
@@ -361,7 +375,9 @@ export default function FinanceiroContent() {
       {chartData && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Receita Diária (Últimos 30 Dias)</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Receita Diária (Últimos 30 Dias)
+            </h3>
             <div className="h-64 flex items-end justify-between gap-1">
               {chartData.dailyRevenue.slice(-30).map((day, index) => {
                 const maxRevenue = Math.max(...chartData.dailyRevenue.map((d) => d.revenue));
@@ -374,8 +390,7 @@ export default function FinanceiroContent() {
                     >
                       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black/90 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                         {new Date(day.date).toLocaleDateString("pt-PT")}
-                        <br />
-                        €{day.revenue.toFixed(2)}
+                        <br />€{day.revenue.toFixed(2)}
                       </div>
                     </div>
                   </div>
@@ -388,7 +403,10 @@ export default function FinanceiroContent() {
             <h3 className="text-lg font-semibold text-white mb-4">Receita por Produto</h3>
             <div className="space-y-4">
               {chartData.revenueByProduct.map((product, index) => {
-                const totalRevenue = chartData.revenueByProduct.reduce((sum, p) => sum + p.revenue, 0);
+                const totalRevenue = chartData.revenueByProduct.reduce(
+                  (sum, p) => sum + p.revenue,
+                  0
+                );
                 const percentage = totalRevenue > 0 ? (product.revenue / totalRevenue) * 100 : 0;
                 const colors = ["#C5A059", "#8B7042", "#A08850", "#666"];
                 return (
@@ -475,7 +493,10 @@ export default function FinanceiroContent() {
               onChange={(e) => handleFilterChange("search", e.target.value)}
               className="w-full px-3 py-2 pl-9 bg-black/30 border border-white/10 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C5A059]"
             />
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+            <FiSearch
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              size={16}
+            />
           </div>
         </div>
 
@@ -493,11 +514,21 @@ export default function FinanceiroContent() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">Data</th>
-                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">Email</th>
-                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">Produto</th>
-                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">Valor</th>
-                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">Status</th>
+                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">
+                      Data
+                    </th>
+                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">
+                      Email
+                    </th>
+                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">
+                      Produto
+                    </th>
+                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">
+                      Valor
+                    </th>
+                    <th className="text-left text-xs font-medium text-gray-400 uppercase tracking-wider py-3 px-4">
+                      Status
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
@@ -515,15 +546,17 @@ export default function FinanceiroContent() {
                       </td>
                       <td className="py-3 px-4 text-sm text-white">{transaction.email}</td>
                       <td className="py-3 px-4 text-sm text-gray-300">{transaction.productType}</td>
-                      <td className="py-3 px-4 text-sm font-semibold text-white">€{transaction.amount.toFixed(2)}</td>
+                      <td className="py-3 px-4 text-sm font-semibold text-white">
+                        €{transaction.amount.toFixed(2)}
+                      </td>
                       <td className="py-3 px-4">
                         <span
                           className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
                             transaction.statusKey === "succeeded"
                               ? "bg-green-500/10 text-green-500"
                               : transaction.statusKey === "pending"
-                              ? "bg-yellow-500/10 text-yellow-500"
-                              : "bg-red-500/10 text-red-500"
+                                ? "bg-yellow-500/10 text-yellow-500"
+                                : "bg-red-500/10 text-red-500"
                           }`}
                         >
                           {transaction.status}
@@ -537,7 +570,8 @@ export default function FinanceiroContent() {
 
             <div className="flex items-center justify-between mt-6 pt-6 border-t border-white/10">
               <div className="text-sm text-gray-400">
-                Mostrando {((transactionsData.pagination.page - 1) * transactionsData.pagination.limit) + 1} a{" "}
+                Mostrando{" "}
+                {(transactionsData.pagination.page - 1) * transactionsData.pagination.limit + 1} a{" "}
                 {Math.min(
                   transactionsData.pagination.page * transactionsData.pagination.limit,
                   transactionsData.pagination.total
@@ -552,22 +586,25 @@ export default function FinanceiroContent() {
                 >
                   <FiChevronLeft size={16} />
                 </button>
-                {Array.from({ length: Math.min(5, transactionsData.pagination.totalPages) }, (_, i) => {
-                  const pageNum = i + 1;
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => changePage(pageNum)}
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        currentPage === pageNum
-                          ? "bg-[#C5A059] text-black font-semibold"
-                          : "bg-white/5 hover:bg-white/10 text-white border border-white/10"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
+                {Array.from(
+                  { length: Math.min(5, transactionsData.pagination.totalPages) },
+                  (_, i) => {
+                    const pageNum = i + 1;
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => changePage(pageNum)}
+                        className={`px-4 py-2 rounded-lg transition-colors ${
+                          currentPage === pageNum
+                            ? "bg-[#C5A059] text-black font-semibold"
+                            : "bg-white/5 hover:bg-white/10 text-white border border-white/10"
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  }
+                )}
                 <button
                   onClick={() => changePage(currentPage + 1)}
                   disabled={currentPage === transactionsData.pagination.totalPages}

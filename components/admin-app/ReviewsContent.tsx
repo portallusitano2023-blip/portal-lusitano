@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { Star, Check, X, Eye, MessageSquare, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Review } from "@/types/review";
 
@@ -13,6 +12,7 @@ export default function ReviewsContent() {
 
   useEffect(() => {
     fetchReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter]);
 
   async function fetchReviews() {
@@ -59,7 +59,7 @@ export default function ReviewsContent() {
             Gestão de Reviews
           </h1>
           <p className="text-gray-400 text-sm mt-1">
-            Aprovar ou rejeitar avaliações de coudelarias
+            Aprovar ou rejeitar avaliações de coudelarias e ferramentas
           </p>
         </div>
       </div>
@@ -154,6 +154,11 @@ export default function ReviewsContent() {
 
                     <div className="flex items-center gap-4 text-sm text-gray-500">
                       {review.coudelarias && <span>Coudelaria: {review.coudelarias.nome}</span>}
+                      {review.ferramenta_slug && (
+                        <span className="px-2 py-0.5 bg-blue-500/10 text-blue-400 rounded text-xs">
+                          Ferramenta: {review.ferramenta_slug}
+                        </span>
+                      )}
                       {review.tipo_visita && <span>Tipo: {review.tipo_visita}</span>}
                       <span>{new Date(review.created_at).toLocaleDateString("pt-PT")}</span>
                     </div>
@@ -228,6 +233,12 @@ export default function ReviewsContent() {
                     {selectedReview.autor_localizacao || "Não fornecida"}
                   </p>
                 </div>
+                {selectedReview.ferramenta_slug && (
+                  <div>
+                    <label className="text-sm text-gray-500">Ferramenta</label>
+                    <p className="text-blue-400">{selectedReview.ferramenta_slug}</p>
+                  </div>
+                )}
                 <div>
                   <label className="text-sm text-gray-500">Avaliação</label>
                   <div className="flex">

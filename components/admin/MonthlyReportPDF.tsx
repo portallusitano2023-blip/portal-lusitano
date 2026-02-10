@@ -1,5 +1,5 @@
 import React from "react";
-import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 
 // Definir cores do Portal Lusitano
 const COLORS = {
@@ -175,29 +175,21 @@ export const MonthlyReportPDF = ({ data }: { data: ReportData }) => {
           <View style={styles.row}>
             <View style={styles.kpiCard}>
               <Text style={styles.kpiLabel}>Receita Total</Text>
-              <Text style={styles.kpiValue}>
-                {formatCurrency(financial.totalRevenue)}
-              </Text>
+              <Text style={styles.kpiValue}>{formatCurrency(financial.totalRevenue)}</Text>
             </View>
             <View style={styles.kpiCard}>
               <Text style={styles.kpiLabel}>Receita Este Mês</Text>
-              <Text style={styles.kpiValue}>
-                {formatCurrency(financial.revenueThisMonth)}
-              </Text>
+              <Text style={styles.kpiValue}>{formatCurrency(financial.revenueThisMonth)}</Text>
             </View>
           </View>
           <View style={styles.row}>
             <View style={styles.kpiCard}>
               <Text style={styles.kpiLabel}>MRR</Text>
-              <Text style={styles.kpiValue}>
-                {formatCurrency(financial.mrr)}
-              </Text>
+              <Text style={styles.kpiValue}>{formatCurrency(financial.mrr)}</Text>
             </View>
             <View style={styles.kpiCard}>
               <Text style={styles.kpiLabel}>Ticket Médio</Text>
-              <Text style={styles.kpiValue}>
-                {formatCurrency(financial.averageTicket)}
-              </Text>
+              <Text style={styles.kpiValue}>{formatCurrency(financial.averageTicket)}</Text>
             </View>
           </View>
         </View>
@@ -207,33 +199,23 @@ export const MonthlyReportPDF = ({ data }: { data: ReportData }) => {
           <Text style={styles.sectionTitle}>💰 Receitas por Produto</Text>
           <View style={styles.table}>
             <View style={[styles.tableRow, styles.tableHeader]}>
-              <Text style={[styles.tableHeaderText, { width: "60%" }]}>
-                Produto
-              </Text>
-              <Text style={[styles.tableHeaderText, { width: "40%" }]}>
-                Receita
-              </Text>
+              <Text style={[styles.tableHeaderText, { width: "60%" }]}>Produto</Text>
+              <Text style={[styles.tableHeaderText, { width: "40%" }]}>Receita</Text>
             </View>
             <View style={styles.tableRow}>
-              <Text style={[styles.tableCell, { width: "60%" }]}>
-                Anúncios de Cavalos
-              </Text>
+              <Text style={[styles.tableCell, { width: "60%" }]}>Anúncios de Cavalos</Text>
               <Text style={[styles.tableCell, { width: "40%" }]}>
                 {formatCurrency(financial.revenueByProduct.cavalo_anuncio)}
               </Text>
             </View>
             <View style={styles.tableRow}>
-              <Text style={[styles.tableCell, { width: "60%" }]}>
-                Instagram Marketing
-              </Text>
+              <Text style={[styles.tableCell, { width: "60%" }]}>Instagram Marketing</Text>
               <Text style={[styles.tableCell, { width: "40%" }]}>
                 {formatCurrency(financial.revenueByProduct.instagram)}
               </Text>
             </View>
             <View style={styles.tableRow}>
-              <Text style={[styles.tableCell, { width: "60%" }]}>
-                Publicidade
-              </Text>
+              <Text style={[styles.tableCell, { width: "60%" }]}>Publicidade</Text>
               <Text style={[styles.tableCell, { width: "40%" }]}>
                 {formatCurrency(financial.revenueByProduct.publicidade)}
               </Text>
@@ -246,18 +228,12 @@ export const MonthlyReportPDF = ({ data }: { data: ReportData }) => {
           <Text style={styles.sectionTitle}>🏆 Top 5 Cavalos Mais Vistos</Text>
           <View style={styles.table}>
             <View style={[styles.tableRow, styles.tableHeader]}>
-              <Text style={[styles.tableHeaderText, { width: "70%" }]}>
-                Nome
-              </Text>
-              <Text style={[styles.tableHeaderText, { width: "30%" }]}>
-                Visualizações
-              </Text>
+              <Text style={[styles.tableHeaderText, { width: "70%" }]}>Nome</Text>
+              <Text style={[styles.tableHeaderText, { width: "30%" }]}>Visualizações</Text>
             </View>
             {topHorses.map((horse, index) => (
               <View key={index} style={styles.tableRow}>
-                <Text style={[styles.tableCell, { width: "70%" }]}>
-                  {horse.name}
-                </Text>
+                <Text style={[styles.tableCell, { width: "70%" }]}>{horse.name}</Text>
                 <Text style={[styles.tableCell, { width: "30%" }]}>
                   {formatNumber(horse.views)}
                 </Text>
@@ -270,30 +246,20 @@ export const MonthlyReportPDF = ({ data }: { data: ReportData }) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>📧 Análise de Leads</Text>
           <View style={styles.highlight}>
-            <Text style={styles.highlightText}>
-              Total de Leads: {formatNumber(leads.total)}
-            </Text>
+            <Text style={styles.highlightText}>Total de Leads: {formatNumber(leads.total)}</Text>
           </View>
           <View style={styles.table}>
             <View style={[styles.tableRow, styles.tableHeader]}>
-              <Text style={[styles.tableHeaderText, { width: "60%" }]}>
-                Fonte
-              </Text>
-              <Text style={[styles.tableHeaderText, { width: "40%" }]}>
-                Leads
-              </Text>
+              <Text style={[styles.tableHeaderText, { width: "60%" }]}>Fonte</Text>
+              <Text style={[styles.tableHeaderText, { width: "40%" }]}>Leads</Text>
             </View>
             {Object.entries(leads.bySource)
               .sort(([, a], [, b]) => b - a)
               .slice(0, 5)
               .map(([source, count], index) => (
                 <View key={index} style={styles.tableRow}>
-                  <Text style={[styles.tableCell, { width: "60%" }]}>
-                    {source || "Direto"}
-                  </Text>
-                  <Text style={[styles.tableCell, { width: "40%" }]}>
-                    {formatNumber(count)}
-                  </Text>
+                  <Text style={[styles.tableCell, { width: "60%" }]}>{source || "Direto"}</Text>
+                  <Text style={[styles.tableCell, { width: "40%" }]}>{formatNumber(count)}</Text>
                 </View>
               ))}
           </View>
@@ -304,15 +270,9 @@ export const MonthlyReportPDF = ({ data }: { data: ReportData }) => {
           <Text style={styles.sectionTitle}>📈 ROI por Canal de Marketing</Text>
           <View style={styles.table}>
             <View style={[styles.tableRow, styles.tableHeader]}>
-              <Text style={[styles.tableHeaderText, { width: "40%" }]}>
-                Canal
-              </Text>
-              <Text style={[styles.tableHeaderText, { width: "30%" }]}>
-                Receita
-              </Text>
-              <Text style={[styles.tableHeaderText, { width: "30%" }]}>
-                ROI
-              </Text>
+              <Text style={[styles.tableHeaderText, { width: "40%" }]}>Canal</Text>
+              <Text style={[styles.tableHeaderText, { width: "30%" }]}>Receita</Text>
+              <Text style={[styles.tableHeaderText, { width: "30%" }]}>ROI</Text>
             </View>
             {roi.slice(0, 5).map((channel, index) => (
               <View key={index} style={styles.tableRow}>
@@ -322,9 +282,7 @@ export const MonthlyReportPDF = ({ data }: { data: ReportData }) => {
                 <Text style={[styles.tableCell, { width: "30%" }]}>
                   €{channel.revenue.toFixed(2)}
                 </Text>
-                <Text style={[styles.tableCell, { width: "30%" }]}>
-                  {channel.roi.toFixed(0)}%
-                </Text>
+                <Text style={[styles.tableCell, { width: "30%" }]}>{channel.roi.toFixed(0)}%</Text>
               </View>
             ))}
           </View>
@@ -333,8 +291,8 @@ export const MonthlyReportPDF = ({ data }: { data: ReportData }) => {
         {/* FOOTER */}
         <View style={styles.footer}>
           <Text>
-            Relatório gerado automaticamente em{" "}
-            {new Date().toLocaleDateString("pt-PT")} | Portal Lusitano © {new Date().getFullYear()}
+            Relatório gerado automaticamente em {new Date().toLocaleDateString("pt-PT")} | Portal
+            Lusitano © {new Date().getFullYear()}
           </Text>
         </View>
       </Page>

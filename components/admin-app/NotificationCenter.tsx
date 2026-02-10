@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Bell, Check, CheckCheck, X, Trash2, RefreshCw } from "lucide-react";
+import { Bell, Check, CheckCheck, RefreshCw } from "lucide-react";
 
 interface Notification {
   id: string;
@@ -184,9 +184,7 @@ export default function NotificationCenter() {
                       {/* Content */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between mb-1">
-                          <p className="font-semibold text-white text-sm">
-                            {notification.title}
-                          </p>
+                          <p className="font-semibold text-white text-sm">{notification.title}</p>
                           <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
                             {getTimeAgo(notification.timestamp)}
                           </span>
@@ -205,9 +203,7 @@ export default function NotificationCenter() {
                   <Bell className="w-8 h-8 text-gray-600" />
                 </div>
                 <p className="text-gray-400 mb-1">Sem notificações</p>
-                <p className="text-sm text-gray-500">
-                  Estás em dia! 🎉
-                </p>
+                <p className="text-sm text-gray-500">Estás em dia! 🎉</p>
               </div>
             )}
           </div>

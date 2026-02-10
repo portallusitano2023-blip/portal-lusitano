@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Trash2, MapPin, Calendar, Euro, ExternalLink, Share2, Filter } from "lucide-react";
+import { Heart, Trash2, MapPin, Calendar, ExternalLink, Share2, Filter } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -62,7 +62,7 @@ export default function CavalosFavoritosPage() {
     }
   });
 
-  const handleShare = async (horse: typeof favorites[0]) => {
+  const handleShare = async (horse: (typeof favorites)[0]) => {
     const url = `${window.location.origin}/comprar/${horse.id}`;
     if (navigator.share) {
       try {
@@ -71,7 +71,7 @@ export default function CavalosFavoritosPage() {
           text: `Vê este cavalo: ${horse.name}`,
           url,
         });
-      } catch (err) {
+      } catch {
         // User cancelled or error
       }
     } else {
@@ -86,9 +86,7 @@ export default function CavalosFavoritosPage() {
       <main className="min-h-screen bg-[#050505] pt-24 sm:pt-32 pb-24 sm:pb-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div
-            className="text-center mb-8 sm:mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
+          <div className="text-center mb-8 sm:mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
               <Heart className="text-[#C5A059]" size={28} />
             </div>
@@ -164,9 +162,7 @@ export default function CavalosFavoritosPage() {
               </div>
 
               {/* Grid - Mobile First */}
-              <div
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
-              >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {sortedFavorites.map((horse, index) => (
                   <div
                     key={horse.id}
@@ -225,9 +221,7 @@ export default function CavalosFavoritosPage() {
                             {horse.location}
                           </span>
                         )}
-                        {horse.breed && (
-                          <span className="text-zinc-600">{horse.breed}</span>
-                        )}
+                        {horse.breed && <span className="text-zinc-600">{horse.breed}</span>}
                       </div>
 
                       {/* Actions - Touch Optimized */}

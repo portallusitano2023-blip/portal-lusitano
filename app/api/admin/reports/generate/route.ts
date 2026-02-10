@@ -3,7 +3,6 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { MonthlyReportPDF } from "@/components/admin/MonthlyReportPDF";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
-import React from "react";
 
 export async function GET(req: NextRequest) {
   try {
@@ -32,10 +31,11 @@ export async function GET(req: NextRequest) {
       .select("amount, product_type, created_at")
       .eq("status", "succeeded");
 
-    const paymentsThisMonth = payments?.filter((p) => {
-      const date = new Date(p.created_at);
-      return date >= periodStart && date <= periodEnd;
-    }) || [];
+    const paymentsThisMonth =
+      payments?.filter((p) => {
+        const date = new Date(p.created_at);
+        return date >= periodStart && date <= periodEnd;
+      }) || [];
 
     const totalRevenue = payments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
     const revenueThisMonth = paymentsThisMonth.reduce((sum, p) => sum + (p.amount || 0), 0);
@@ -54,9 +54,8 @@ export async function GET(req: NextRequest) {
       }
     });
 
-    const averageTicket = paymentsThisMonth.length > 0
-      ? Math.round(revenueThisMonth / paymentsThisMonth.length)
-      : 0;
+    const averageTicket =
+      paymentsThisMonth.length > 0 ? Math.round(revenueThisMonth / paymentsThisMonth.length) : 0;
 
     // 2. BUSCAR TOP CAVALOS MAIS VISTOS
     const { data: topHorses } = await supabase
@@ -75,10 +74,11 @@ export async function GET(req: NextRequest) {
       .from("leads")
       .select("email, utm_source, created_at");
 
-    const leadsThisMonth = leadsData?.filter((l) => {
-      const date = new Date(l.created_at);
-      return date >= periodStart && date <= periodEnd;
-    }) || [];
+    const leadsThisMonth =
+      leadsData?.filter((l) => {
+        const date = new Date(l.created_at);
+        return date >= periodStart && date <= periodEnd;
+      }) || [];
 
     const leadsBySource: Record<string, number> = {};
     leadsThisMonth.forEach((lead) => {
@@ -92,10 +92,11 @@ export async function GET(req: NextRequest) {
       .select("amount, email, created_at")
       .eq("status", "succeeded");
 
-    const paymentsWithSourceThisMonth = paymentsWithSource?.filter((p) => {
-      const date = new Date(p.created_at);
-      return date >= periodStart && date <= periodEnd;
-    }) || [];
+    const paymentsWithSourceThisMonth =
+      paymentsWithSource?.filter((p) => {
+        const date = new Date(p.created_at);
+        return date >= periodStart && date <= periodEnd;
+      }) || [];
 
     // Mapear email → utm_source
     const emailToSource: Record<string, string> = {};
@@ -109,21 +110,22 @@ export async function GET(req: NextRequest) {
       revenueBySource[source] = (revenueBySource[source] || 0) + (p.amount || 0);
     });
 
-    const roiData = Object.entries(revenueBySource).map(([source, revenue]) => {
-      const leadsFromSource = leadsBySource[source] || 0;
-      const revenueInEuros = revenue / 100;
-      const estimatedCost = leadsFromSource * 5; // €5 por lead
-      const roi = estimatedCost > 0
-        ? ((revenueInEuros - estimatedCost) / estimatedCost) * 100
-        : 0;
+    const roiData = Object.entries(revenueBySource)
+      .map(([source, revenue]) => {
+        const leadsFromSource = leadsBySource[source] || 0;
+        const revenueInEuros = revenue / 100;
+        const estimatedCost = leadsFromSource * 5; // €5 por lead
+        const roi =
+          estimatedCost > 0 ? ((revenueInEuros - estimatedCost) / estimatedCost) * 100 : 0;
 
-      return {
-        source,
-        revenue: parseFloat(revenueInEuros.toFixed(2)),
-        leads: leadsFromSource,
-        roi: parseFloat(roi.toFixed(1)),
-      };
-    }).sort((a, b) => b.revenue - a.revenue);
+        return {
+          source,
+          revenue: parseFloat(revenueInEuros.toFixed(2)),
+          leads: leadsFromSource,
+          roi: parseFloat(roi.toFixed(1)),
+        };
+      })
+      .sort((a, b) => b.revenue - a.revenue);
 
     // 5. CALCULAR MRR (subscrições recorrentes de publicidade)
     const { data: allPayments } = await supabase
@@ -132,16 +134,15 @@ export async function GET(req: NextRequest) {
       .eq("status", "succeeded")
       .not("product_metadata", "is", null);
 
-    const subscriptionPayments = allPayments?.filter((payment) => {
-      const metadata = payment.product_metadata as Record<string, unknown> | null;
-      const pkg = metadata?.package;
-      return pkg === "lateral" || pkg === "premium";
-    }) || [];
+    const subscriptionPayments =
+      allPayments?.filter((payment) => {
+        const metadata = payment.product_metadata as Record<string, unknown> | null;
+        const pkg = metadata?.package;
+        return pkg === "lateral" || pkg === "premium";
+      }) || [];
 
-    const currentMRR = subscriptionPayments.reduce(
-      (sum, payment) => sum + (payment.amount || 0),
-      0
-    ) / 100;
+    const currentMRR =
+      subscriptionPayments.reduce((sum, payment) => sum + (payment.amount || 0), 0) / 100;
 
     // 6. MONTAR DADOS PARA O PDF
     const reportData = {

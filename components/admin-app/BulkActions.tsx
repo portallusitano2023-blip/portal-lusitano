@@ -5,14 +5,12 @@ import {
   CheckSquare,
   Square,
   Trash2,
-  Edit,
   Archive,
   CheckCircle,
   X,
   Download,
   Mail,
   Tag,
-  MoreHorizontal,
 } from "lucide-react";
 
 interface BulkAction {

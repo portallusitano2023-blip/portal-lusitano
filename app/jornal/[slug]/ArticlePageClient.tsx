@@ -49,7 +49,11 @@ function formatDate(dateStr: string, lang: string): string {
   }
 }
 
-export default function ArticlePageClient({ slug, legacyId, article, relatedArticles }: ArticlePageClientProps) {
+export default function ArticlePageClient({
+  legacyId,
+  article,
+  relatedArticles,
+}: ArticlePageClientProps) {
   const { t, language } = useLanguage();
 
   // Fallback para dados locais se artigo Sanity não existe
@@ -63,7 +67,10 @@ export default function ArticlePageClient({ slug, legacyId, article, relatedArti
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-serif">{t.journal.unavailable}</h1>
             <p className="text-zinc-500">{t.journal.unavailable_text}</p>
-            <Link href="/jornal" className="text-[#C5A059] border-b border-[#C5A059] pb-1 uppercase text-xs tracking-widest">
+            <Link
+              href="/jornal"
+              className="text-[#C5A059] border-b border-[#C5A059] pb-1 uppercase text-xs tracking-widest"
+            >
               {t.journal.back}
             </Link>
           </div>
@@ -77,18 +84,35 @@ export default function ArticlePageClient({ slug, legacyId, article, relatedArti
         <ReadingProgressBar />
         <header className="relative h-screen w-full overflow-hidden">
           <div className="absolute inset-0">
-            <Image src={localArticle.image} alt={localArticle.title} fill className="object-cover scale-105" sizes="100vw" priority />
+            <Image
+              src={localArticle.image}
+              alt={localArticle.title}
+              fill
+              className="object-cover scale-105"
+              sizes="100vw"
+              priority
+            />
             <div className="absolute inset-0 bg-black/70" aria-hidden />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent" aria-hidden />
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent"
+              aria-hidden
+            />
           </div>
           <div className="absolute bottom-0 left-0 w-full p-8 md:p-24 z-10">
             <div className="max-w-7xl mx-auto space-y-8">
-              <Link href="/jornal" className="inline-flex items-center text-white/60 hover:text-[#C5A059] transition-colors text-xs uppercase tracking-[0.2em] gap-2 mb-4">
+              <Link
+                href="/jornal"
+                className="inline-flex items-center text-white/60 hover:text-[#C5A059] transition-colors text-xs uppercase tracking-[0.2em] gap-2 mb-4"
+              >
                 <ArrowLeft size={16} /> {t.journal.back_archive}
               </Link>
               <div className="flex items-center gap-6 text-white/60 text-xs">
-                <span className="flex items-center gap-2"><Calendar size={14} className="text-[#C5A059]" /> {localArticle.date}</span>
-                <span className="flex items-center gap-2"><Clock size={14} className="text-[#C5A059]" /> {localArticle.readTime}</span>
+                <span className="flex items-center gap-2">
+                  <Calendar size={14} className="text-[#C5A059]" /> {localArticle.date}
+                </span>
+                <span className="flex items-center gap-2">
+                  <Clock size={14} className="text-[#C5A059]" /> {localArticle.readTime}
+                </span>
               </div>
               <span className="inline-block text-[#C5A059] text-[9px] uppercase tracking-[0.4em] font-bold border border-[#C5A059]/30 px-4 py-2">
                 {localArticle.category}
@@ -118,7 +142,10 @@ export default function ArticlePageClient({ slug, legacyId, article, relatedArti
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-serif">{t.journal.unavailable}</h1>
           <p className="text-zinc-500">{t.journal.unavailable_text}</p>
-          <Link href="/jornal" className="text-[#C5A059] border-b border-[#C5A059] pb-1 uppercase text-xs tracking-widest">
+          <Link
+            href="/jornal"
+            className="text-[#C5A059] border-b border-[#C5A059] pb-1 uppercase text-xs tracking-widest"
+          >
             {t.journal.back}
           </Link>
         </div>
@@ -128,10 +155,10 @@ export default function ArticlePageClient({ slug, legacyId, article, relatedArti
 
   // Artigo do Sanity com Portable Text
   const imageUrl = getImageUrl(article);
-  const title = language === "en" ? (article.titleEn || article.title) : article.title;
-  const subtitle = language === "en" ? (article.subtitleEn || article.subtitle) : article.subtitle;
-  const category = language === "en" ? (article.categoryEn || article.category) : article.category;
-  const body = language === "en" ? (article.bodyEn || article.body) : article.body;
+  const title = language === "en" ? article.titleEn || article.title : article.title;
+  const subtitle = language === "en" ? article.subtitleEn || article.subtitle : article.subtitle;
+  const category = language === "en" ? article.categoryEn || article.category : article.category;
+  const body = language === "en" ? article.bodyEn || article.body : article.body;
   const isPost = article.contentType === "post";
 
   return (
@@ -152,7 +179,10 @@ export default function ArticlePageClient({ slug, legacyId, article, relatedArti
             />
           )}
           <div className="absolute inset-0 bg-black/70" aria-hidden />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent" aria-hidden />
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent"
+            aria-hidden
+          />
         </div>
 
         <div className="absolute bottom-0 left-0 w-full p-8 md:p-24 z-10">

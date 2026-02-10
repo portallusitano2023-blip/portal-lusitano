@@ -58,7 +58,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export default function DefinicoesContent() {
-  const [settings, setSettings] = useState<Setting[]>([]);
+  const [_settings, setSettings] = useState<Setting[]>([]);
   const [grouped, setGrouped] = useState<GroupedSettings>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
@@ -70,6 +70,7 @@ export default function DefinicoesContent() {
 
   useEffect(() => {
     fetchSettings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchSettings = async () => {
@@ -140,7 +141,7 @@ export default function DefinicoesContent() {
     const currentValue =
       editedValues[setting.key] !== undefined ? editedValues[setting.key] : setting.value;
 
-    const hasChanges = editedValues[setting.key] !== undefined;
+    const _hasChanges = editedValues[setting.key] !== undefined;
 
     switch (setting.input_type) {
       case "boolean":
@@ -258,7 +259,7 @@ export default function DefinicoesContent() {
                 try {
                   const parsed = JSON.parse(e.target.value);
                   handleValueChange(setting.key, parsed);
-                } catch (err) {
+                } catch {
                   // Deixar o usuário continuar digitando mesmo com JSON inválido
                 }
               }}

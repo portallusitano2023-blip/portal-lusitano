@@ -52,6 +52,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                 <div className="aspect-[4/5] w-full bg-zinc-900 border border-zinc-800 overflow-hidden relative mb-6">
                   <div className="absolute inset-0 z-10 shadow-[inset_0_0_40px_rgba(0,0,0,0.2)] pointer-events-none transition-opacity duration-700 group-hover:opacity-40"></div>
 
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={product.images[0]?.url}
                     alt={product.title}

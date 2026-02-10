@@ -5,7 +5,6 @@ import {
   Instagram,
   Users,
   Heart,
-  MessageCircle,
   Send,
   Check,
   Image,
@@ -71,7 +70,7 @@ const packages = [
 export default function InstagramPage() {
   const [selectedPackage, setSelectedPackage] = useState("post");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",
     empresa: "",

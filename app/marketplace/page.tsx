@@ -7,7 +7,6 @@ import {
   Filter,
   Heart,
   MapPin,
-  Euro,
   ChevronDown,
   Star,
   Award,

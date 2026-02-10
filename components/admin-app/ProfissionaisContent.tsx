@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import {
   FiAward,
   FiSearch,
-  FiPlus,
   FiEdit2,
   FiTrash2,
   FiCheck,
@@ -13,7 +12,6 @@ import {
   FiEye,
   FiMail,
   FiPhone,
-  FiMapPin,
   FiGlobe,
 } from "react-icons/fi";
 
@@ -69,6 +67,7 @@ export default function ProfissionaisContent() {
 
   useEffect(() => {
     loadProfissionais();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter, tipoFilter, planoFilter, searchTerm]);
 
   const loadProfissionais = async () => {
@@ -307,6 +306,7 @@ export default function ProfissionaisContent() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {prof.foto_url && (
+                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img
                           src={prof.foto_url}
                           alt={prof.nome}
@@ -470,6 +470,7 @@ export default function ProfissionaisContent() {
             <div className="space-y-4">
               {selectedProfissional.foto_url && (
                 <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={selectedProfissional.foto_url}
                     alt={selectedProfissional.nome}

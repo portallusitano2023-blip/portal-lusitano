@@ -2,17 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingCart, Heart, Search, User } from "lucide-react";
+import { Home, ShoppingCart, Heart, User } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
-import { useState } from "react";
-
 export default function MobileBottomNav() {
   const pathname = usePathname();
   const { openCart, totalQuantity } = useCart();
   const { favoritesCount } = useHorseFavorites();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
   // Don't show on certain pages
   const hiddenPaths = ["/studio", "/admin"];
   if (hiddenPaths.some((path) => pathname.startsWith(path))) {
@@ -24,26 +20,26 @@ export default function MobileBottomNav() {
       href: "/",
       icon: Home,
       label: "Início",
-      isActive: pathname === "/"
+      isActive: pathname === "/",
     },
     {
       href: "/comprar",
       icon: ShoppingCart,
       label: "Cavalos",
-      isActive: pathname.startsWith("/comprar") || pathname === "/marketplace"
+      isActive: pathname.startsWith("/comprar") || pathname === "/marketplace",
     },
     {
       href: "/cavalos-favoritos",
       icon: Heart,
       label: "Favoritos",
       isActive: pathname === "/cavalos-favoritos" || pathname === "/favoritos",
-      badge: favoritesCount > 0 ? favoritesCount : undefined
+      badge: favoritesCount > 0 ? favoritesCount : undefined,
     },
     {
       href: "/minha-conta",
       icon: User,
       label: "Conta",
-      isActive: pathname === "/minha-conta"
+      isActive: pathname === "/minha-conta",
     },
   ];
 
@@ -61,9 +57,7 @@ export default function MobileBottomNav() {
               href={item.href}
               aria-label={item.label}
               className={`flex flex-col items-center justify-center gap-1 min-w-[64px] min-h-[56px] rounded-xl transition-all active:scale-90 touch-manipulation focus-visible:ring-2 focus-visible:ring-[#C5A059] ${
-                item.isActive
-                  ? "text-[#C5A059]"
-                  : "text-zinc-500 hover:text-zinc-300"
+                item.isActive ? "text-[#C5A059]" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
               <div className="relative">

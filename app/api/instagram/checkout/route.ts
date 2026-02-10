@@ -4,20 +4,25 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { packageId, nome, empresa, email, instagram, mensagem, preco } = await req.json();
+    const {
+      packageId,
+      nome,
+      empresa,
+      email,
+      instagram,
+      mensagem,
+      preco: _preco,
+    } = await req.json();
 
     if (!packageId || !email || !nome) {
-      return NextResponse.json(
-        { error: "Dados obrigatórios em falta" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Dados obrigatórios em falta" }, { status: 400 });
     }
 
     // ===== NOVO: Guardar contacto em BD ANTES de criar sessão Stripe =====
     const { data: submission, error: submissionError } = await supabase
-      .from('contact_submissions')
+      .from("contact_submissions")
       .insert({
-        form_type: 'instagram',
+        form_type: "instagram",
         name: nome,
         email: email,
         telefone: null,
@@ -30,18 +35,18 @@ export async function POST(req: NextRequest) {
           instagram: instagram,
           mensagem: mensagem,
         },
-        status: 'novo',
-        priority: packageId === 'pack' ? 'alta' : 'normal', // Pack = prioridade alta
-        ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || null,
-        user_agent: req.headers.get('user-agent') || null,
+        status: "novo",
+        priority: packageId === "pack" ? "alta" : "normal", // Pack = prioridade alta
+        ip_address: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || null,
+        user_agent: req.headers.get("user-agent") || null,
       })
       .select()
       .single();
 
     if (submissionError || !submission) {
-      console.error('Erro ao guardar contacto Instagram:', submissionError);
+      console.error("Erro ao guardar contacto Instagram:", submissionError);
       return NextResponse.json(
-        { error: 'Erro ao processar formulário. Tente novamente.' },
+        { error: "Erro ao processar formulário. Tente novamente." },
         { status: 500 }
       );
     }
@@ -64,10 +69,7 @@ export async function POST(req: NextRequest) {
     const selectedName = packageNames[packageId];
 
     if (!selectedPrice || !selectedName) {
-      return NextResponse.json(
-        { error: "Pacote inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Pacote inválido" }, { status: 400 });
     }
 
     // Criar sessão de checkout Stripe

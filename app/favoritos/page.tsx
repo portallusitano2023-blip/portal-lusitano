@@ -1,17 +1,14 @@
 "use client";
 
-import { Heart, Trash2, ShoppingBag } from "lucide-react";
+import { Heart, Trash2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { useCart } from "@/context/CartContext";
-import { useToast } from "@/context/ToastContext";
 
 export default function FavoritosPage() {
   const { language } = useLanguage();
   const { wishlist, removeFromWishlist, clearWishlist } = useWishlist();
-  const { showToast } = useToast();
 
   const text = {
     pt: {
@@ -42,9 +39,7 @@ export default function FavoritosPage() {
     <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div
-          className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-        >
+        <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
           <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Heart className="text-[#C5A059]" size={32} />
           </div>
@@ -77,9 +72,7 @@ export default function FavoritosPage() {
             </Link>
           </div>
         ) : (
-          <div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             {wishlist.map((item, index) => (
               <div
                 key={item.id}

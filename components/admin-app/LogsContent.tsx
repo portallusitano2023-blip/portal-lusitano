@@ -48,6 +48,7 @@ export default function LogsContent() {
 
   useEffect(() => {
     fetchLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, page]);
 
   const fetchLogs = async () => {
@@ -260,7 +261,7 @@ export default function LogsContent() {
 
         {/* Logs */}
         <div className="space-y-6">
-          {filteredLogs.map((log, index) => {
+          {filteredLogs.map((log, _index) => {
             const Icon = getActionIcon(log.action_type);
             const actionColor = getActionColor(log.action_type);
 

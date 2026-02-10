@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Cookie, X } from "lucide-react";
+import { Cookie } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -12,14 +12,16 @@ export default function CookieConsent() {
   const text = {
     pt: {
       title: "Utilizamos Cookies",
-      description: "Utilizamos cookies para melhorar a sua experiencia no nosso site. Ao continuar a navegar, concorda com a nossa",
+      description:
+        "Utilizamos cookies para melhorar a sua experiencia no nosso site. Ao continuar a navegar, concorda com a nossa",
       policy: "Politica de Privacidade",
       accept: "Aceitar",
       decline: "Recusar",
     },
     en: {
       title: "We Use Cookies",
-      description: "We use cookies to improve your experience on our site. By continuing to browse, you agree to our",
+      description:
+        "We use cookies to improve your experience on our site. By continuing to browse, you agree to our",
       policy: "Privacy Policy",
       accept: "Accept",
       decline: "Decline",

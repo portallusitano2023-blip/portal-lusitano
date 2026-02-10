@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
-import { trackEbookFunnel, trackSocialShare } from "@/lib/analytics";
+import { trackEbookFunnel } from "@/lib/analytics";
 
 export default function DownloadPage() {
   // Track download page view
@@ -36,7 +36,8 @@ export default function DownloadPage() {
     {
       icon: BookOpen,
       title: "Lê o Ebook",
-      description: "Dedica 20 minutos para ler e absorver o conhecimento essencial sobre Lusitanos.",
+      description:
+        "Dedica 20 minutos para ler e absorver o conhecimento essencial sobre Lusitanos.",
     },
     {
       icon: Users,
@@ -106,13 +107,10 @@ export default function DownloadPage() {
             <Check className="text-green-500" size={48} />
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-serif text-white mb-6">
-            Parabéns!
-          </h1>
+          <h1 className="text-5xl md:text-6xl font-serif text-white mb-6">Parabéns!</h1>
 
           <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
-            O teu ebook gratuito está pronto para leres.
-            Também enviámos o link para o teu email.
+            O teu ebook gratuito está pronto para leres. Também enviámos o link para o teu email.
           </p>
 
           {/* View Ebook Button */}
@@ -124,9 +122,7 @@ export default function DownloadPage() {
             Ler Ebook Agora
           </button>
 
-          <p className="text-zinc-600 text-sm">
-            Versão interativa otimizada para browser
-          </p>
+          <p className="text-zinc-600 text-sm">Versão interativa otimizada para browser</p>
         </div>
       </section>
 
@@ -136,9 +132,7 @@ export default function DownloadPage() {
           className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <h2 className="text-3xl font-serif text-white mb-4">
-            Próximos Passos
-          </h2>
+          <h2 className="text-3xl font-serif text-white mb-4">Próximos Passos</h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -166,13 +160,9 @@ export default function DownloadPage() {
         >
           <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-4 py-2 mb-4">
             <Sparkles className="text-green-500" size={16} />
-            <span className="text-green-500 text-sm font-medium">
-              Bónus Incluídos
-            </span>
+            <span className="text-green-500 text-sm font-medium">Bónus Incluídos</span>
           </div>
-          <h2 className="text-3xl font-serif text-white mb-4">
-            Mas Espera, Há Mais!
-          </h2>
+          <h2 className="text-3xl font-serif text-white mb-4">Mas Espera, Há Mais!</h2>
           <p className="text-zinc-400 max-w-2xl mx-auto">
             Ao descarregares este ebook, também ganhaste acesso a:
           </p>
@@ -202,9 +192,7 @@ export default function DownloadPage() {
           style={{ animationDelay: "0.3s" }}
         >
           <Share2 className="text-[#C5A059] mx-auto mb-6" size={40} />
-          <h3 className="text-2xl font-serif text-white mb-4">
-            Partilha com os Teus Amigos
-          </h3>
+          <h3 className="text-2xl font-serif text-white mb-4">Partilha com os Teus Amigos</h3>
           <p className="text-zinc-400 mb-8">
             Conheces alguém que gostaria deste ebook? Partilha nas redes sociais!
           </p>
@@ -232,13 +220,8 @@ export default function DownloadPage() {
           className="py-12 border-t border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <p className="text-zinc-400 mb-2">
-            Tens alguma dúvida ou precisas de ajuda?
-          </p>
-          <Link
-            href="/faq"
-            className="text-[#C5A059] hover:text-white transition-colors"
-          >
+          <p className="text-zinc-400 mb-2">Tens alguma dúvida ou precisas de ajuda?</p>
+          <Link href="/faq" className="text-[#C5A059] hover:text-white transition-colors">
             Visita a nossa página de FAQ
           </Link>
         </div>

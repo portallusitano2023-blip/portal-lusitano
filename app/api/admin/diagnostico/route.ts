@@ -11,7 +11,7 @@ interface DiagnosticoCheck {
   [key: string]: unknown;
 }
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   // Auth gate - only admins can access diagnostics
   const sessionEmail = await verifySession();
   if (!sessionEmail) {
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
   // 2. VERIFICAR CONEXÃO SUPABASE
   try {
-    const { data, error } = await supabase.from("payments").select("id").limit(1);
+    const { error } = await supabase.from("payments").select("id").limit(1);
 
     diagnostico.checks.supabase_conexao = {
       status: error ? "❌ ERRO" : "✅ OK",
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
 
   // 3. VERIFICAR TABELA payments
   try {
-    const { data, error, count } = await supabase
+    const { error, count } = await supabase
       .from("payments")
       .select("*", { count: "exact", head: true });
 
@@ -70,7 +70,7 @@ export async function GET(req: NextRequest) {
 
   // 4. VERIFICAR TABELA contact_submissions
   try {
-    const { data, error, count } = await supabase
+    const { error, count } = await supabase
       .from("contact_submissions")
       .select("*", { count: "exact", head: true });
 
@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
 
   // 5. VERIFICAR TABELA leads
   try {
-    const { data, error, count } = await supabase
+    const { error, count } = await supabase
       .from("leads")
       .select("*", { count: "exact", head: true });
 

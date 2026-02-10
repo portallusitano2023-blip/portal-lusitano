@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiCheck, FiX, FiStar, FiEye } from "react-icons/fi";
+import { FiSearch, FiEdit2, FiTrash2, FiCheck, FiX, FiStar, FiEye } from "react-icons/fi";
 
 interface Coudelaria {
   id: string;
@@ -44,6 +44,7 @@ export default function CoudelariasContent() {
 
   useEffect(() => {
     loadCoudelarias();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter, planoFilter, searchTerm]);
 
   const loadCoudelarias = async () => {

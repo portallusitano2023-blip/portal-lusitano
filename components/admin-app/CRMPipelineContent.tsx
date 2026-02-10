@@ -5,7 +5,6 @@ import {
   Users,
   TrendingUp,
   DollarSign,
-  Mail,
   Phone,
   Calendar,
   Flame,
@@ -161,7 +160,7 @@ function StageColumn({ stage, leads }: { stage: Stage; leads: Lead[] }) {
 
 export default function CRMPipelineContent() {
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
 

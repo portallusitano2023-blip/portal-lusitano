@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import DynamicSEO from "@/components/DynamicSEO";
@@ -91,7 +91,6 @@ const tiposEvento: Record<string, { label: string; icon: string; color: string }
 
 export default function EventoPage() {
   const params = useParams();
-  const router = useRouter();
   const slug = params?.slug as string;
 
   const [evento, setEvento] = useState<Evento | null>(null);

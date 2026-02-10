@@ -49,19 +49,6 @@ export default function TabSystem({ initialTabs = [], onTabChange }: TabSystemPr
     }
   }, [activeTabId, onTabChange]);
 
-  const addTab = (newTab: Tab) => {
-    // Se tab já existe, apenas ativar
-    const existingTab = tabs.find((t) => t.id === newTab.id);
-    if (existingTab) {
-      setActiveTabId(newTab.id);
-      return;
-    }
-
-    // Adicionar nova tab
-    setTabs([...tabs, newTab]);
-    setActiveTabId(newTab.id);
-  };
-
   const closeTab = (tabId: string) => {
     const tabIndex = tabs.findIndex((t) => t.id === tabId);
     const newTabs = tabs.filter((t) => t.id !== tabId);

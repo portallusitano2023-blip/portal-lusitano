@@ -68,6 +68,7 @@ export default function AnalyticsScripts() {
       {/* Meta Pixel NoScript Fallback */}
       {META_PIXEL_ID && (
         <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             height="1"
             width="1"

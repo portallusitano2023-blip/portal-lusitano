@@ -1,7 +1,13 @@
 "use client";
 
 import { Download, FileText, FileJson, FileSpreadsheet } from "lucide-react";
-import { exportToCSV, exportToJSON, exportToExcel, ExportFormat, ExportOptions } from "@/lib/export";
+import {
+  exportToCSV,
+  exportToJSON,
+  exportToExcel,
+  ExportFormat,
+  ExportOptions,
+} from "@/lib/export";
 import type { LucideIcon } from "lucide-react";
 
 interface ExportButtonProps {
@@ -50,7 +56,7 @@ export function ExportButton({
     }
   };
 
-  const Icon = getIcon();
+  const _Icon = getIcon();
 
   return (
     <button

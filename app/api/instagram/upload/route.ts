@@ -14,10 +14,7 @@ export async function POST(req: NextRequest) {
     const observacoes = formData.get("observacoes") as string;
 
     if (!sessionId) {
-      return NextResponse.json(
-        { error: "Session ID é obrigatório" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Session ID é obrigatório" }, { status: 400 });
     }
 
     // Buscar email do cliente no Stripe
@@ -39,10 +36,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (files.length === 0) {
-      return NextResponse.json(
-        { error: "Nenhum ficheiro enviado" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Nenhum ficheiro enviado" }, { status: 400 });
     }
 
     // Upload ficheiros para Supabase Storage
@@ -52,12 +46,10 @@ export async function POST(req: NextRequest) {
       const file = files[i];
       const fileName = `${sessionId}/${Date.now()}_${file.name}`;
 
-      const { data, error } = await supabase.storage
-        .from("instagram_uploads")
-        .upload(fileName, file, {
-          contentType: file.type,
-          upsert: false,
-        });
+      const { error } = await supabase.storage.from("instagram_uploads").upload(fileName, file, {
+        contentType: file.type,
+        upsert: false,
+      });
 
       if (error) {
         console.error("Supabase upload error:", error);
@@ -65,9 +57,7 @@ export async function POST(req: NextRequest) {
       }
 
       // Get public URL
-      const { data: urlData } = supabase.storage
-        .from("instagram_uploads")
-        .getPublicUrl(fileName);
+      const { data: urlData } = supabase.storage.from("instagram_uploads").getPublicUrl(fileName);
 
       uploadedUrls.push(urlData.publicUrl);
     }
@@ -85,10 +75,11 @@ export async function POST(req: NextRequest) {
     });
 
     // Enviar email para admin com TODOS os detalhes
-    const filesListHtml = uploadedUrls.map((url, i) => {
-      const file = files[i];
-      const isImage = file.type.startsWith("image/");
-      return `
+    const filesListHtml = uploadedUrls
+      .map((url, i) => {
+        const file = files[i];
+        const isImage = file.type.startsWith("image/");
+        return `
         <div style="margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">
           <p style="margin: 0 0 5px 0;"><strong>${isImage ? "📷 Imagem" : "🎥 Vídeo"} ${i + 1}:</strong></p>
           ${isImage ? `<img src="${url}" style="max-width: 300px; border-radius: 4px; display: block; margin: 5px 0;">` : ""}
@@ -97,7 +88,8 @@ export async function POST(req: NextRequest) {
           </a>
         </div>
       `;
-    }).join("");
+      })
+      .join("");
 
     await resend.emails.send({
       from: "Portal Lusitano <instagram@portal-lusitano.pt>",
@@ -118,20 +110,32 @@ export async function POST(req: NextRequest) {
               <h3 style="margin: 0 0 15px 0; color: #333;">📝 Caption:</h3>
               <p style="color: #666; line-height: 1.6; white-space: pre-wrap;">${caption || "(Não especificado)"}</p>
 
-              ${hashtags ? `
+              ${
+                hashtags
+                  ? `
                 <h3 style="margin: 15px 0 10px 0; color: #333;">#️⃣ Hashtags:</h3>
                 <p style="color: #666;">${hashtags}</p>
-              ` : ""}
+              `
+                  : ""
+              }
 
-              ${link ? `
+              ${
+                link
+                  ? `
                 <h3 style="margin: 15px 0 10px 0; color: #333;">🔗 Link:</h3>
                 <p style="color: #666;"><a href="${link}" style="color: #007bff;">${link}</a></p>
-              ` : ""}
+              `
+                  : ""
+              }
 
-              ${observacoes ? `
+              ${
+                observacoes
+                  ? `
                 <h3 style="margin: 15px 0 10px 0; color: #333;">💬 Observações:</h3>
                 <p style="color: #666; white-space: pre-wrap;">${observacoes}</p>
-              ` : ""}
+              `
+                  : ""
+              }
             </div>
 
             <h3 style="color: #333; margin: 30px 0 15px 0;">📁 Ficheiros (${files.length}):</h3>
@@ -157,7 +161,7 @@ export async function POST(req: NextRequest) {
         from: "Portal Lusitano <instagram@portal-lusitano.pt>",
         to: customerEmail,
         subject: "Materiais Recebidos - Instagram Portal Lusitano",
-      html: `
+        html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #833AB4, #FD1D1D); padding: 30px; text-align: center;">
             <h1 style="color: #fff; margin: 0;">Materiais Recebidos!</h1>
@@ -186,9 +190,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "Materiais enviados com sucesso",
-      filesCount: files.length
+      filesCount: files.length,
     });
-
   } catch (error) {
     console.error("Instagram upload error:", error);
     return NextResponse.json(

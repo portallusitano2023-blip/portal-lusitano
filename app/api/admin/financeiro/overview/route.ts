@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Verificar autenticação
     const email = await verifySession();
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+    const _endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
 
     // 1. RECEITA TOTAL (all time) - apenas succeeded
     const { data: totalRevenueData, error: totalError } = await supabase

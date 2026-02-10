@@ -4,7 +4,9 @@ import { cookies } from "next/headers";
 if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === "production") {
   throw new Error("ADMIN_SECRET environment variable is required in production");
 }
-const secret = new TextEncoder().encode(process.env.ADMIN_SECRET || "dev-only-secret-not-for-production");
+const secret = new TextEncoder().encode(
+  process.env.ADMIN_SECRET || "dev-only-secret-not-for-production"
+);
 
 export async function createSession(email: string) {
   const token = await new SignJWT({ email })
@@ -33,7 +35,7 @@ export async function verifySession() {
   try {
     const verified = await jwtVerify(cookie.value, secret);
     return verified.payload.email as string;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

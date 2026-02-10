@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Verificar autenticação
     const email = await verifySession();
@@ -15,16 +15,11 @@ export async function GET(req: NextRequest) {
     let cavalos: { views_count: number }[] = [];
 
     try {
-      const { data, error } = await supabase
-        .from("cavalos_venda")
-        .select("views_count");
+      const { data, error } = await supabase.from("cavalos_venda").select("views_count");
 
       if (!error && data) {
         cavalos = data;
-        totalCavalosViews = data.reduce(
-          (sum, cavalo) => sum + (cavalo.views_count || 0),
-          0
-        );
+        totalCavalosViews = data.reduce((sum, cavalo) => sum + (cavalo.views_count || 0), 0);
       }
     } catch (e) {
       console.warn("views_count column might not exist on cavalos_venda:", e);
@@ -35,16 +30,11 @@ export async function GET(req: NextRequest) {
     let eventos: { views_count: number }[] = [];
 
     try {
-      const { data, error } = await supabase
-        .from("eventos")
-        .select("views_count");
+      const { data, error } = await supabase.from("eventos").select("views_count");
 
       if (!error && data) {
         eventos = data;
-        totalEventosViews = data.reduce(
-          (sum, evento) => sum + (evento.views_count || 0),
-          0
-        );
+        totalEventosViews = data.reduce((sum, evento) => sum + (evento.views_count || 0), 0);
       }
     } catch (e) {
       console.warn("views_count column might not exist on eventos:", e);
@@ -88,7 +78,11 @@ export async function GET(req: NextRequest) {
     }
 
     // 6. FONTES DE TRÁFEGO (UTM Source da tabela leads)
-    let leads: { utm_source: string | null; utm_medium: string | null; utm_campaign: string | null }[] = [];
+    let leads: {
+      utm_source: string | null;
+      utm_medium: string | null;
+      utm_campaign: string | null;
+    }[] = [];
 
     try {
       const { data, error } = await supabase
@@ -183,9 +177,12 @@ export async function GET(req: NextRequest) {
       console.warn("Error counting previous leads:", e);
     }
 
-    const leadsGrowth = previousLeads > 0
-      ? ((recentLeads - previousLeads) / previousLeads) * 100
-      : recentLeads > 0 ? 100 : 0;
+    const leadsGrowth =
+      previousLeads > 0
+        ? ((recentLeads - previousLeads) / previousLeads) * 100
+        : recentLeads > 0
+          ? 100
+          : 0;
 
     return NextResponse.json({
       overview: {
