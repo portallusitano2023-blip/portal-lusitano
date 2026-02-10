@@ -41,7 +41,26 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const pathname = request.nextUrl.pathname;
 
-  // Additional security headers (beyond next.config.js)
+  const isDev = process.env.NODE_ENV === "development";
+
+  // CSP com 'unsafe-inline' — necessário porque o Next.js injeta scripts inline
+  // para hidratação e navegação client-side que não suportam nonces automaticamente.
+  // Google AdSense: wildcards cobrem todos os subdomínios (pagead2, tpc, ep1/ep2, etc.)
+  const cspDirectives = [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    "connect-src 'self' https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google",
+    "frame-src 'self' https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+  ].join("; ");
+
+  response.headers.set("Content-Security-Policy", cspDirectives);
+
+  // Additional security headers
   response.headers.set("X-DNS-Prefetch-Control", "on");
   response.headers.set("X-Download-Options", "noopen");
   response.headers.set("X-Permitted-Cross-Domain-Policies", "none");

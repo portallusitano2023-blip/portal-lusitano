@@ -22,10 +22,14 @@ const TabContext = createContext<TabContextType | undefined>(undefined);
 
 export function TabProvider({ children }: { children: ReactNode }) {
   const [tabs, setTabs] = useState<Tab[]>([]);
-  const [activeTabId, setActiveTabId] = useState<string>(() => {
-    if (typeof window === "undefined") return "";
-    return localStorage.getItem("admin-active-tab") || "";
-  });
+  const [activeTabId, setActiveTabId] = useState<string>("");
+
+  // Ler tab ativa do localStorage após mount
+  useEffect(() => {
+    const saved = localStorage.getItem("admin-active-tab");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage on mount
+    if (saved) setActiveTabId(saved);
+  }, []);
 
   // Guardar tab ativa no localStorage
   useEffect(() => {

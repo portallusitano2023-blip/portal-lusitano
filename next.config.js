@@ -108,30 +108,8 @@ const nextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
-          {
-            key: "Content-Security-Policy",
-            // NOTA: 'unsafe-inline' é necessário para:
-            // - Google Tag Manager (GTM) e Google Analytics
-            // - Facebook Pixel
-            // - Scripts inline do Next.js em desenvolvimento
-            // FUTURO: Considerar migração para nonces (via middleware.ts) para
-            // melhorar segurança eliminando 'unsafe-inline'. Isto requer:
-            // 1. Criar middleware.ts com geração de nonce único por request
-            // 2. Injetar nonce em todos os scripts via _document.tsx
-            // 3. Adicionar nonce aos scripts de tracking (GTM, Analytics)
-            // Por agora mantemos 'unsafe-inline' para garantir funcionalidade.
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io",
-              "frame-src 'self' https://js.stripe.com",
-              "object-src 'none'",
-              "base-uri 'self'",
-            ].join("; "),
-          },
+          // CSP é agora gerido no middleware.ts com nonces por request
+          // (eliminando a necessidade de 'unsafe-inline' para scripts)
         ],
       },
       // Cache static assets for 1 year

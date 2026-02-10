@@ -42,20 +42,17 @@ export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
     }
     return [];
   });
-  const [isHydrated, setIsHydrated] = useState(typeof window !== "undefined");
   const { showToast } = useToast();
   const { language } = useLanguage();
 
   // Save favorites to localStorage when they change
   useEffect(() => {
-    if (isHydrated) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-      } catch (error) {
-        console.error("Error saving horse favorites:", error);
-      }
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+    } catch (error) {
+      console.error("Error saving horse favorites:", error);
     }
-  }, [favorites, isHydrated]);
+  }, [favorites]);
 
   const addToFavorites = (horse: FavoriteHorse) => {
     if (!isFavorite(horse.id)) {

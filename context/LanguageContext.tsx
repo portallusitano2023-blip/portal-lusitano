@@ -242,6 +242,159 @@ const translations = {
         "Embora envidemos todos os esforcos para garantir a precisao das informacoes sobre coudelarias e linhagens geneticas, o Portal Lusitano nao se responsabiliza por imprecisoes fornecidas por terceiros.",
     },
 
+    // CAVALOS FAMOSOS
+    cavalos_famosos: {
+      gallery_badge: "Galeria de Honra • Genealogia Interativa",
+      title: "Lendas do Lusitano",
+      subtitle:
+        "Uma homenagem aos cavalos que marcaram a história da raça Lusitana. Explore genealogias, descendentes e o legado genético de cada lenda.",
+      back: "Voltar",
+      top_influencers: "MAIORES INFLUENCIADORES GENÉTICOS",
+      of_current: "dos Lusitanos atuais",
+      all_disciplines: "Todas Disciplinas",
+      all_lineages: "Todas Linhagens",
+      lineage_prefix: "Linhagem",
+      featured: "Lendas em Destaque",
+      others: "Outras Lendas Históricas",
+      no_results: "Nenhum cavalo encontrado",
+      no_results_hint: "Ajuste os filtros para ver mais resultados",
+      know_horse: "Conhece um cavalo Lusitano lendário?",
+      help_expand:
+        "Ajuda-nos a expandir esta galeria de honra com genealogias e históricos completos.",
+      suggest: "Sugerir Cavalo",
+      conquistas: "conquistas",
+      quote_author: "Mestre Nuno Oliveira",
+    },
+
+    // FERRAMENTAS
+    ferramentas: {
+      badge: "Ferramentas Profissionais",
+      title: "Ferramentas",
+      title_accent: "Premium",
+      subtitle:
+        "Ferramentas profissionais concebidas para proprietários, criadores e apaixonados pelo Cavalo Lusitano",
+      subtitle_detail:
+        "Avalie, compare, analise e descubra tudo sobre o seu Lusitano com algoritmos desenvolvidos por especialistas da raça.",
+      available: "4 Ferramentas Disponíveis",
+      try: "Experimentar",
+      data_secure: "Dados Seguros",
+      data_secure_desc: "Encriptação de ponta a ponta",
+      instant_results: "Resultados Instantâneos",
+      instant_results_desc: "Análises em tempo real",
+      export_pdf: "Exportar PDF",
+      export_pdf_desc: "Relatórios profissionais",
+      for_lusitanos: "Feito para Lusitanos",
+      for_lusitanos_desc: "Optimizado para a raça",
+      plans_title: "Planos e Preços",
+      choose_plan: "Escolha o plano ideal",
+      plans_subtitle: "Comece gratuitamente e faça upgrade quando precisar de mais",
+      free: "Gratuito",
+      free_subtitle: "Experimente sem compromisso",
+      per_month: "EUR/mês",
+      cancel_anytime: "Cancele a qualquer momento",
+      pro: "PRO",
+      pro_subtitle: "Para profissionais e criadores",
+      most_popular: "Mais Popular",
+      create_free: "Criar Conta Gratuita",
+      subscribe_pro: "Subscrever PRO",
+      payment_note: "Pagamento seguro via Stripe. Sem compromissos. Cancele quando quiser.",
+      pro_advantages: "Vantagens PRO",
+      pro_title: "Tudo o que precisa para decisões informadas",
+      pro_desc:
+        "O plano PRO desbloqueia o potencial completo de cada ferramenta, permitindo-lhe tomar decisões de compra, venda e criação com dados profissionais e relatórios detalhados.",
+      start_now: "Começar Agora",
+      unlimited: "Ilimitado",
+      unlimited_desc: "Sem limites de utilizações",
+      pdf_export: "PDF Export",
+      pdf_export_desc: "Relatórios profissionais",
+      history: "Histórico",
+      history_desc: "Todas as análises guardadas",
+      share: "Partilhar",
+      share_desc: "Links partilháveis",
+      faq_badge: "Perguntas Frequentes",
+      faq_title: "Dúvidas Comuns",
+      faq_subtitle: "Tudo o que precisa de saber sobre as nossas ferramentas",
+      faq_not_found: "Não encontrou a resposta que procurava?",
+      faq_see_all: "Ver todas as perguntas frequentes",
+      reviews_badge: "Avaliações dos Utilizadores",
+      reviews_title: "O que dizem os nossos utilizadores",
+      reviews_subtitle: "Avaliações reais de quem já utilizou as nossas ferramentas",
+      reviews_all: "Todas",
+      reviews_based_on: "Baseado em",
+      reviews_single: "avaliação",
+      reviews_plural: "avaliações",
+      reviews_none: "Ainda sem avaliações aprovadas",
+      reviews_be_first: "Seja o primeiro a avaliar!",
+      reviews_leave: "Deixe a sua avaliação",
+      reviews_share: "Partilhe a sua experiência com as nossas ferramentas",
+      reviews_tool: "Ferramenta",
+      recommends: "Recomenda",
+    },
+
+    // DIRECTORIO
+    directorio: {
+      badge: "Diretório Oficial",
+      title: "Coudelarias de Portugal",
+      subtitle:
+        "Descubra as melhores coudelarias de cavalos Lusitanos em Portugal. Criadores verificados, linhagens de excelência e cavalos de elite.",
+      coudelarias: "Coudelarias",
+      regioes: "Regiões",
+      cavalos: "Cavalos",
+      has_stud: "Tem uma coudelaria?",
+      register_cta: "Registe-se e apareça no maior diretório equestre de Portugal",
+      register_btn: "Registar Coudelaria",
+      search_placeholder: "Pesquisar por nome ou localização...",
+      featured: "Coudelarias em Destaque",
+      others: "Outras Coudelarias",
+      coudelaria_single: "coudelaria",
+      coudelarias_plural: "coudelarias",
+      since: "Desde",
+      horses: "cavalos",
+      view_stud: "Ver coudelaria",
+      view_details: "Ver detalhes",
+      highlight: "Destaque",
+      no_results: "Nenhuma coudelaria encontrada",
+      no_results_hint: "Tente ajustar os filtros de pesquisa",
+      loading: "A carregar coudelarias...",
+    },
+
+    // EVENTOS
+    eventos: {
+      badge: "Calendário Equestre",
+      title: "Eventos & Competições",
+      subtitle:
+        "Feiras, competições, leilões e muito mais. Não perca os principais eventos do mundo equestre português.",
+      featured: "Destaques",
+      all_events: "Todos os Eventos",
+      event_single: "evento",
+      event_plural: "eventos",
+      all_types: "Todos os Eventos",
+      fairs: "Feiras",
+      competitions: "Competições",
+      auctions: "Leilões",
+      exhibitions: "Exposições",
+      workshops: "Workshops",
+      confirmed: "Confirmado",
+      annual: "Evento Anual",
+      provisional: "Data Provisória",
+      no_events: "Nenhum evento encontrado",
+      no_events_hint: "Não há eventos agendados para os filtros selecionados.",
+      loading: "A carregar eventos...",
+      view_full_page: "Ver Página Completa",
+      official_site: "Site Oficial",
+      organized_by: "Organizado por",
+      highlight: "Destaque",
+    },
+
+    // MOBILE NAV
+    mobile_nav: {
+      home: "Início",
+      horses: "Cavalos",
+      favorites: "Favoritos",
+      account: "Conta",
+      shop: "Loja",
+    },
+
     // COMUM
     common: {
       loading: "A carregar...",
@@ -271,6 +424,20 @@ const translations = {
       rights: "Todos os direitos reservados",
       privacy: "Privacidade",
       terms: "Termos",
+      navigation: "Navegação",
+      lusitano: "Lusitano",
+      tools: "Ferramentas",
+      buy_horse: "Comprar Cavalo",
+      studs: "Coudelarias",
+      events: "Eventos",
+      lineages: "Linhagens",
+      notable: "Lusitanos Notáveis",
+      calculator: "Calculadora de Valor",
+      comparator: "Comparador",
+      compatibility: "Compatibilidade",
+      profile_analysis: "Análise de Perfil",
+      about: "Sobre Nós",
+      ebook: "Ebook Grátis",
     },
   },
 
@@ -513,6 +680,157 @@ const translations = {
         "Although we make every effort to ensure the accuracy of information about stud farms and genetic lineages, Portal Lusitano is not responsible for inaccuracies provided by third parties.",
     },
 
+    // FAMOUS HORSES
+    cavalos_famosos: {
+      gallery_badge: "Hall of Fame • Interactive Genealogy",
+      title: "Lusitano Legends",
+      subtitle:
+        "A tribute to the horses that made history in the Lusitano breed. Explore genealogies, descendants and the genetic legacy of each legend.",
+      back: "Back",
+      top_influencers: "TOP GENETIC INFLUENCERS",
+      of_current: "of current Lusitanos",
+      all_disciplines: "All Disciplines",
+      all_lineages: "All Lineages",
+      lineage_prefix: "Lineage",
+      featured: "Featured Legends",
+      others: "Other Historical Legends",
+      no_results: "No horses found",
+      no_results_hint: "Adjust the filters to see more results",
+      know_horse: "Know a legendary Lusitano horse?",
+      help_expand: "Help us expand this hall of fame with complete genealogies and histories.",
+      suggest: "Suggest Horse",
+      conquistas: "achievements",
+      quote_author: "Master Nuno Oliveira",
+    },
+
+    // TOOLS
+    ferramentas: {
+      badge: "Professional Tools",
+      title: "Tools",
+      title_accent: "Premium",
+      subtitle: "Professional tools designed for owners, breeders and Lusitano Horse enthusiasts",
+      subtitle_detail:
+        "Evaluate, compare, analyse and discover everything about your Lusitano with algorithms developed by breed specialists.",
+      available: "4 Tools Available",
+      try: "Try Now",
+      data_secure: "Secure Data",
+      data_secure_desc: "End-to-end encryption",
+      instant_results: "Instant Results",
+      instant_results_desc: "Real-time analysis",
+      export_pdf: "Export PDF",
+      export_pdf_desc: "Professional reports",
+      for_lusitanos: "Made for Lusitanos",
+      for_lusitanos_desc: "Optimised for the breed",
+      plans_title: "Plans & Pricing",
+      choose_plan: "Choose the ideal plan",
+      plans_subtitle: "Start for free and upgrade when you need more",
+      free: "Free",
+      free_subtitle: "Try without commitment",
+      per_month: "EUR/month",
+      cancel_anytime: "Cancel anytime",
+      pro: "PRO",
+      pro_subtitle: "For professionals and breeders",
+      most_popular: "Most Popular",
+      create_free: "Create Free Account",
+      subscribe_pro: "Subscribe PRO",
+      payment_note: "Secure payment via Stripe. No commitments. Cancel anytime.",
+      pro_advantages: "PRO Advantages",
+      pro_title: "Everything you need for informed decisions",
+      pro_desc:
+        "The PRO plan unlocks the full potential of each tool, allowing you to make buying, selling and breeding decisions with professional data and detailed reports.",
+      start_now: "Start Now",
+      unlimited: "Unlimited",
+      unlimited_desc: "No usage limits",
+      pdf_export: "PDF Export",
+      pdf_export_desc: "Professional reports",
+      history: "History",
+      history_desc: "All analyses saved",
+      share: "Share",
+      share_desc: "Shareable links",
+      faq_badge: "Frequently Asked Questions",
+      faq_title: "Common Questions",
+      faq_subtitle: "Everything you need to know about our tools",
+      faq_not_found: "Didn't find the answer you were looking for?",
+      faq_see_all: "See all frequently asked questions",
+      reviews_badge: "User Reviews",
+      reviews_title: "What our users say",
+      reviews_subtitle: "Real reviews from people who have used our tools",
+      reviews_all: "All",
+      reviews_based_on: "Based on",
+      reviews_single: "review",
+      reviews_plural: "reviews",
+      reviews_none: "No approved reviews yet",
+      reviews_be_first: "Be the first to review!",
+      reviews_leave: "Leave your review",
+      reviews_share: "Share your experience with our tools",
+      reviews_tool: "Tool",
+      recommends: "Recommends",
+    },
+
+    // DIRECTORY
+    directorio: {
+      badge: "Official Directory",
+      title: "Portuguese Stud Farms",
+      subtitle:
+        "Discover the best Lusitano horse stud farms in Portugal. Verified breeders, lineages of excellence and elite horses.",
+      coudelarias: "Stud Farms",
+      regioes: "Regions",
+      cavalos: "Horses",
+      has_stud: "Have a stud farm?",
+      register_cta: "Register and appear in Portugal's largest equestrian directory",
+      register_btn: "Register Stud Farm",
+      search_placeholder: "Search by name or location...",
+      featured: "Featured Stud Farms",
+      others: "Other Stud Farms",
+      coudelaria_single: "stud farm",
+      coudelarias_plural: "stud farms",
+      since: "Since",
+      horses: "horses",
+      view_stud: "View stud farm",
+      view_details: "View details",
+      highlight: "Featured",
+      no_results: "No stud farms found",
+      no_results_hint: "Try adjusting the search filters",
+      loading: "Loading stud farms...",
+    },
+
+    // EVENTS
+    eventos: {
+      badge: "Equestrian Calendar",
+      title: "Events & Competitions",
+      subtitle:
+        "Fairs, competitions, auctions and more. Don't miss the main events in the Portuguese equestrian world.",
+      featured: "Highlights",
+      all_events: "All Events",
+      event_single: "event",
+      event_plural: "events",
+      all_types: "All Events",
+      fairs: "Fairs",
+      competitions: "Competitions",
+      auctions: "Auctions",
+      exhibitions: "Exhibitions",
+      workshops: "Workshops",
+      confirmed: "Confirmed",
+      annual: "Annual Event",
+      provisional: "Provisional Date",
+      no_events: "No events found",
+      no_events_hint: "No events scheduled for the selected filters.",
+      loading: "Loading events...",
+      view_full_page: "View Full Page",
+      official_site: "Official Website",
+      organized_by: "Organized by",
+      highlight: "Featured",
+    },
+
+    // MOBILE NAV
+    mobile_nav: {
+      home: "Home",
+      horses: "Horses",
+      favorites: "Favorites",
+      account: "Account",
+      shop: "Shop",
+    },
+
     // COMMON
     common: {
       loading: "Loading...",
@@ -542,6 +860,20 @@ const translations = {
       rights: "All rights reserved",
       privacy: "Privacy",
       terms: "Terms",
+      navigation: "Navigation",
+      lusitano: "Lusitano",
+      tools: "Tools",
+      buy_horse: "Buy Horse",
+      studs: "Stud Farms",
+      events: "Events",
+      lineages: "Lineages",
+      notable: "Notable Lusitanos",
+      calculator: "Value Calculator",
+      comparator: "Comparator",
+      compatibility: "Compatibility",
+      profile_analysis: "Profile Analysis",
+      about: "About Us",
+      ebook: "Free Ebook",
     },
   },
 };
@@ -555,19 +887,17 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
-function getInitialLanguage(): Language {
-  if (typeof document === "undefined") return "pt";
-  const cookieLocale = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("locale="))
-    ?.split("=")[1];
-  return cookieLocale === "en" ? "en" : "pt";
-}
-
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window === "undefined") return "pt";
+    const cookieLocale = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("locale="))
+      ?.split("=")[1];
+    return cookieLocale === "en" ? "en" : "pt";
+  });
 
-  // Actualizar <html lang> e cookie quando o idioma muda
+  // Actualizar documento quando idioma muda
   useEffect(() => {
     document.documentElement.lang = language;
     document.cookie = `locale=${language}; path=/; samesite=lax; max-age=${60 * 60 * 24 * 365}`;

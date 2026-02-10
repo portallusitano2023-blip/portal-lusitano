@@ -27,7 +27,10 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     if (typeof window === "undefined") return [];
     try {
       const saved = localStorage.getItem("wishlist");
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
     } catch {
       /* ignore */
     }

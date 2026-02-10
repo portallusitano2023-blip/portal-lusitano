@@ -18,15 +18,16 @@ interface TabSystemProps {
 
 export default function TabSystem({ initialTabs = [], onTabChange }: TabSystemProps) {
   const [tabs, setTabs] = useState<Tab[]>(initialTabs);
-  const [activeTabId, setActiveTabId] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      const savedActiveTab = localStorage.getItem("admin-active-tab");
-      if (savedActiveTab && initialTabs.find((t) => t.id === savedActiveTab)) {
-        return savedActiveTab;
-      }
+  const [activeTabId, setActiveTabId] = useState<string>(initialTabs[0]?.id || "");
+
+  // Restore active tab from localStorage after mount
+  useEffect(() => {
+    const saved = localStorage.getItem("admin-active-tab");
+    if (saved && initialTabs.find((t) => t.id === saved)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage on mount
+      setActiveTabId(saved);
     }
-    return initialTabs[0]?.id || "";
-  });
+  }, [initialTabs]);
 
   // Guardar tabs no localStorage quando mudam
   useEffect(() => {

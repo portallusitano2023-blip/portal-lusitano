@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Filter, X, Save, Calendar } from "lucide-react";
 
 export interface FilterConfig {
@@ -35,19 +35,17 @@ export default function AdvancedFilters({
   storageKey = "advanced-filters",
 }: AdvancedFiltersProps) {
   const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
-  const [savedFilters, setSavedFilters] = useState<SavedFilter[]>(() => {
-    if (typeof window !== "undefined") {
+  const [savedFilters, setSavedFilters] = useState<SavedFilter[]>([]);
+
+  useEffect(() => {
+    try {
       const saved = localStorage.getItem(`${storageKey}-saved`);
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch {
-          /* ignore */
-        }
-      }
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage on mount
+      if (saved) setSavedFilters(JSON.parse(saved));
+    } catch {
+      /* ignore */
     }
-    return [];
-  });
+  }, [storageKey]);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [filterName, setFilterName] = useState("");
   const [showFilterMenu, setShowFilterMenu] = useState(false);

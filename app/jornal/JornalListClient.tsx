@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -76,13 +76,13 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "list">(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("jornal-view-mode");
-      if (saved === "grid" || saved === "list") return saved;
-    }
-    return "grid";
-  });
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("jornal-view-mode");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage on mount
+    if (saved === "grid" || saved === "list") setViewMode(saved);
+  }, []);
 
   const handleViewChange = (mode: "grid" | "list") => {
     setViewMode(mode);
