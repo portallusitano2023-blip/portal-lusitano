@@ -1,9 +1,11 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
-if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === "production") {
-  throw new Error("ADMIN_SECRET environment variable is required in production");
+function getAdminSecret(): string {
+  if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === "production") {
+    throw new Error("ADMIN_SECRET environment variable is required in production");
+  }
+  return process.env.ADMIN_SECRET || "dev-only-local-secret-min16chars";
 }
-const ADMIN_SECRET = process.env.ADMIN_SECRET || "dev-only-local-secret-min16chars";
 const TOKEN_EXPIRY_HOURS = 24;
 
 interface TokenPayload {
@@ -22,7 +24,7 @@ export function generateAdminToken(email: string): string {
   const exp = Date.now() + TOKEN_EXPIRY_HOURS * 60 * 60 * 1000;
   const payload: TokenPayload = { email, exp };
   const data = toBase64Url(JSON.stringify(payload));
-  const signatureBuffer = createHmac("sha256", ADMIN_SECRET).update(data).digest();
+  const signatureBuffer = createHmac("sha256", getAdminSecret()).update(data).digest();
   const signature = toBase64Url(signatureBuffer);
   return `${data}.${signature}`;
 }
@@ -34,7 +36,9 @@ export function verifyAdminToken(token: string): TokenPayload | null {
     if (!data || !signature) return null;
 
     // Verify signature
-    const expectedSignature = createHmac("sha256", ADMIN_SECRET).update(data).digest("base64url");
+    const expectedSignature = createHmac("sha256", getAdminSecret())
+      .update(data)
+      .digest("base64url");
     const signatureBuffer = Buffer.from(signature, "base64url");
     const expectedBuffer = Buffer.from(expectedSignature, "base64url");
 

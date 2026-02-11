@@ -10,19 +10,24 @@ export const metadata: Metadata = {
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[var(--background)] flex flex-col items-center justify-center px-4 py-12">
       <Link href="/" className="flex flex-col items-center mb-8 group">
-        <span className="text-xl font-serif text-white tracking-wide group-hover:text-[#C5A059] transition-colors">
+        <span className="text-xl font-serif text-[var(--foreground)] tracking-wide group-hover:text-[var(--gold)] transition-colors">
           PORTAL LUSITANO
         </span>
-        <span className="text-[9px] uppercase tracking-[0.3em] text-zinc-500 mt-1">EST. 2023</span>
+        <span className="text-[9px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mt-1">
+          EST. 2023
+        </span>
       </Link>
 
-      <div className="w-full max-w-md bg-zinc-900/80 border border-zinc-800 rounded-xl p-8">
+      <div className="w-full max-w-md bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
         {children}
       </div>
 
-      <Link href="/" className="mt-6 text-sm text-zinc-500 hover:text-[#C5A059] transition-colors">
+      <Link
+        href="/"
+        className="mt-6 text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
+      >
         Voltar ao Portal
       </Link>
     </div>

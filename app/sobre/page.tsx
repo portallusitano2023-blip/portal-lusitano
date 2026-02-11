@@ -90,19 +90,19 @@ export default function SobrePage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#050505] pt-32 pb-20">
+    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20">
       {/* ===== HERO ===== */}
       <section className="px-4 sm:px-6 mb-20 sm:mb-28">
         <div className="max-w-4xl mx-auto text-center">
           <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-6 block">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-6 block">
               {isPt ? "Sobre Nós" : "About Us"}
             </span>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-[1.08]">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6 leading-[1.08]">
               {isPt ? "A Nossa " : "Our "}
-              <span className="text-[#C5A059]">{isPt ? "Missão" : "Mission"}</span>
+              <span className="text-[var(--gold)]">{isPt ? "Missão" : "Mission"}</span>
             </h1>
-            <p className="text-lg sm:text-xl text-zinc-400 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-[var(--foreground-secondary)] leading-relaxed max-w-2xl mx-auto">
               {isPt
                 ? "O Portal Lusitano nasceu para elevar o Cavalo Lusitano ao palco global. Unimos tecnologia, investigação e paixão equestre numa plataforma sem precedentes."
                 : "Portal Lusitano was born to elevate the Lusitano Horse to the global stage. We unite technology, research and equestrian passion in an unprecedented platform."}
@@ -112,18 +112,18 @@ export default function SobrePage() {
       </section>
 
       {/* ===== ORIGIN STORY ===== */}
-      <section className="px-4 sm:px-6 mb-20 sm:mb-28 border-t border-white/5 pt-20 sm:pt-28">
+      <section className="px-4 sm:px-6 mb-20 sm:mb-28 border-t border-[var(--border)] pt-20 sm:pt-28">
         <div className="max-w-5xl mx-auto">
           <AnimateOnScroll>
             <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
               <div>
-                <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-4 block">
+                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
                   {isPt ? "A Origem" : "The Origin"}
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-serif text-white mb-6">
+                <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-6">
                   {isPt ? "Fundado em 2023" : "Founded in 2023"}
                 </h2>
-                <div className="space-y-4 text-zinc-400 leading-relaxed">
+                <div className="space-y-4 text-[var(--foreground-secondary)] leading-relaxed">
                   <p>
                     {isPt
                       ? "O Portal Lusitano foi fundado por Francisco Gaspar com uma visão clara: criar a plataforma de referência para o cavalo Lusitano no mundo digital."
@@ -144,14 +144,16 @@ export default function SobrePage() {
 
               <div className="flex justify-center">
                 <div className="relative">
-                  <div className="w-64 h-80 bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border border-[#C5A059]/15 flex flex-col items-center justify-center">
-                    <div className="absolute top-4 left-4 w-10 h-10 border-t border-l border-[#C5A059]/20" />
-                    <div className="absolute bottom-4 right-4 w-10 h-10 border-b border-r border-[#C5A059]/20" />
-                    <Target className="text-[#C5A059]/30 mb-6" size={48} />
-                    <p className="text-white font-serif text-2xl mb-2">2023</p>
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-[0.3em]">Portugal</p>
-                    <div className="w-12 h-[1px] bg-[#C5A059]/20 my-4" />
-                    <p className="text-zinc-600 text-[9px] uppercase tracking-[0.4em]">
+                  <div className="w-64 h-80 bg-gradient-to-br from-[var(--background-elevated)] to-[var(--background-secondary)] border border-[var(--gold)]/15 flex flex-col items-center justify-center">
+                    <div className="absolute top-4 left-4 w-10 h-10 border-t border-l border-[var(--gold)]/20" />
+                    <div className="absolute bottom-4 right-4 w-10 h-10 border-b border-r border-[var(--gold)]/20" />
+                    <Target className="text-[var(--gold)]/30 mb-6" size={48} />
+                    <p className="text-[var(--foreground)] font-serif text-2xl mb-2">2023</p>
+                    <p className="text-[var(--foreground-muted)] text-[10px] uppercase tracking-[0.3em]">
+                      Portugal
+                    </p>
+                    <div className="w-12 h-[1px] bg-[var(--gold)]/20 my-4" />
+                    <p className="text-[var(--foreground-muted)] text-[9px] uppercase tracking-[0.4em]">
                       Portal Lusitano
                     </p>
                   </div>
@@ -163,13 +165,13 @@ export default function SobrePage() {
       </section>
 
       {/* ===== VALUES ===== */}
-      <section className="px-4 sm:px-6 mb-20 sm:mb-28 border-t border-white/5 pt-20 sm:pt-28">
+      <section className="px-4 sm:px-6 mb-20 sm:mb-28 border-t border-[var(--border)] pt-20 sm:pt-28">
         <div className="max-w-5xl mx-auto">
           <AnimateOnScroll className="text-center mb-16">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-4 block">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {isPt ? "Valores" : "Values"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
               {isPt ? "O Que Nos Define" : "What Defines Us"}
             </h2>
           </AnimateOnScroll>
@@ -177,12 +179,16 @@ export default function SobrePage() {
           <div className="grid sm:grid-cols-2 gap-6">
             {values.map((value, i) => (
               <AnimateOnScroll key={value.title} delay={i * 100}>
-                <div className="bg-white/[0.02] border border-white/5 p-8 hover:border-[#C5A059]/15 transition-colors duration-500">
-                  <div className="w-12 h-12 bg-[#C5A059]/10 rounded-lg flex items-center justify-center mb-5">
-                    <value.icon size={22} className="text-[#C5A059]" />
+                <div className="bg-[var(--background-card)] border border-[var(--border)] p-8 hover:border-[var(--gold)]/15 transition-colors duration-500">
+                  <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center mb-5">
+                    <value.icon size={22} className="text-[var(--gold)]" />
                   </div>
-                  <h3 className="text-xl font-serif text-white mb-3">{value.title}</h3>
-                  <p className="text-zinc-500 text-sm leading-relaxed">{value.desc}</p>
+                  <h3 className="text-xl font-serif text-[var(--foreground)] mb-3">
+                    {value.title}
+                  </h3>
+                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
+                    {value.desc}
+                  </p>
                 </div>
               </AnimateOnScroll>
             ))}
@@ -191,13 +197,13 @@ export default function SobrePage() {
       </section>
 
       {/* ===== WHAT WE OFFER ===== */}
-      <section className="px-4 sm:px-6 mb-20 sm:mb-28 border-t border-white/5 pt-20 sm:pt-28">
+      <section className="px-4 sm:px-6 mb-20 sm:mb-28 border-t border-[var(--border)] pt-20 sm:pt-28">
         <div className="max-w-5xl mx-auto">
           <AnimateOnScroll className="text-center mb-16">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[#C5A059] mb-4 block">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {isPt ? "Plataforma" : "Platform"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
               {isPt ? "O Que Oferecemos" : "What We Offer"}
             </h2>
           </AnimateOnScroll>
@@ -205,9 +211,13 @@ export default function SobrePage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, i) => (
               <AnimateOnScroll key={feature.title} delay={i * 80}>
-                <div className="p-6 border-l border-[#C5A059]/20">
-                  <h3 className="text-lg font-serif text-white mb-2">{feature.title}</h3>
-                  <p className="text-zinc-500 text-sm leading-relaxed">{feature.desc}</p>
+                <div className="p-6 border-l border-[var(--gold)]/20">
+                  <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
+                    {feature.desc}
+                  </p>
                 </div>
               </AnimateOnScroll>
             ))}
@@ -216,18 +226,18 @@ export default function SobrePage() {
       </section>
 
       {/* ===== CTA ===== */}
-      <section className="relative px-4 sm:px-6 py-24 sm:py-32 border-t border-white/5 overflow-hidden">
+      <section className="relative px-4 sm:px-6 py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#C5A059]/5 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[var(--gold)]/5 rounded-full blur-[120px]" />
         </div>
 
         <div className="max-w-3xl mx-auto relative z-10 text-center">
           <AnimateOnScroll>
-            <Heart className="text-[#C5A059]/30 mx-auto mb-6" size={32} />
-            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+            <Heart className="text-[var(--gold)]/30 mx-auto mb-6" size={32} />
+            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
               {isPt ? "Junta-te à Comunidade" : "Join the Community"}
             </h2>
-            <p className="text-zinc-400 mb-10 max-w-lg mx-auto leading-relaxed">
+            <p className="text-[var(--foreground-secondary)] mb-10 max-w-lg mx-auto leading-relaxed">
               {isPt
                 ? "Faz parte da maior comunidade digital dedicada ao cavalo Lusitano. Regista-te gratuitamente."
                 : "Be part of the largest digital community dedicated to the Lusitano horse. Register for free."}
@@ -235,14 +245,14 @@ export default function SobrePage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/registar"
-                className="inline-flex items-center gap-3 bg-gradient-to-r from-[#C5A059] to-[#D4B06A] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300"
+                className="inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300"
               >
                 <Users size={16} />
                 {isPt ? "Criar Conta Grátis" : "Create Free Account"}
               </Link>
               <a
                 href="mailto:portal.lusitano2023@gmail.com"
-                className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-[11px] uppercase tracking-[0.15em] transition-colors"
+                className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] text-[11px] uppercase tracking-[0.15em] transition-colors"
               >
                 <Mail size={14} />
                 {isPt ? "Contactar" : "Contact"} <ArrowRight size={12} />

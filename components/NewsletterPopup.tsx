@@ -102,38 +102,42 @@ export default function NewsletterPopup() {
           {/* Modal */}
           <div className="fixed inset-0 z-[9998] flex items-center justify-center p-4">
             <div
-              className="relative bg-[#0a0a0a] border border-white/10 max-w-lg w-full overflow-hidden opacity-0 animate-[scaleIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
+              className="relative bg-[var(--background-secondary)] border border-[var(--border)] max-w-lg w-full overflow-hidden opacity-0 animate-[scaleIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
               style={{ animationDelay: "0.05s", willChange: "transform, opacity" }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Botao fechar */}
               <button
                 onClick={handleClose}
-                className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors z-10"
+                className="absolute top-4 right-4 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors z-10"
                 aria-label="Fechar"
               >
                 <X size={24} />
               </button>
 
               {/* Imagem decorativa */}
-              <div className="h-48 bg-gradient-to-br from-[#C5A059]/20 to-transparent relative">
+              <div className="h-48 bg-gradient-to-br from-[var(--gold)]/20 to-transparent relative">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Mail className="text-[#C5A059] opacity-20" size={80} />
+                  <Mail className="text-[var(--gold)] opacity-20" size={80} />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[var(--background-secondary)] to-transparent" />
               </div>
 
               {/* Conteudo */}
               <div className="p-8 pt-0 -mt-8 relative">
                 {!isSuccess ? (
                   <>
-                    <h2 className="text-3xl font-serif text-white text-center mb-3">{t.title}</h2>
-                    <p className="text-zinc-400 text-center text-sm mb-8">{t.subtitle}</p>
+                    <h2 className="text-3xl font-serif text-[var(--foreground)] text-center mb-3">
+                      {t.title}
+                    </h2>
+                    <p className="text-[var(--foreground-secondary)] text-center text-sm mb-8">
+                      {t.subtitle}
+                    </p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div className="relative">
                         <Mail
-                          className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"
+                          className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
                           size={18}
                         />
                         <input
@@ -147,7 +151,7 @@ export default function NewsletterPopup() {
                               ? "Endereco de email para newsletter"
                               : "Email address for newsletter"
                           }
-                          className="w-full bg-white/5 border border-white/10 pl-12 pr-4 py-4 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none transition-colors"
+                          className="w-full bg-[var(--surface-hover)] border border-[var(--border)] pl-12 pr-4 py-4 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none transition-colors"
                         />
                       </div>
 
@@ -156,20 +160,22 @@ export default function NewsletterPopup() {
                       <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-[#C5A059] text-black py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="w-full bg-[var(--gold)] text-black py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                       >
                         {isLoading ? <Loader2 className="animate-spin" size={18} /> : t.button}
                       </button>
                     </form>
 
-                    <p className="text-[10px] text-zinc-600 text-center mt-6">{t.privacy}</p>
+                    <p className="text-[10px] text-[var(--foreground-muted)] text-center mt-6">
+                      {t.privacy}
+                    </p>
                   </>
                 ) : (
                   <div className="py-8 text-center">
                     <div className="opacity-0 animate-[scaleIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)_forwards]">
                       <CheckCircle className="text-green-500 mx-auto mb-4" size={48} />
                     </div>
-                    <h3 className="text-2xl font-serif text-white">{t.success}</h3>
+                    <h3 className="text-2xl font-serif text-[var(--foreground)]">{t.success}</h3>
                   </div>
                 )}
               </div>

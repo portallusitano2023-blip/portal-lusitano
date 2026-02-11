@@ -221,17 +221,21 @@ export default function EventosPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#050505]">
+    <main className="min-h-screen bg-[var(--background)]">
       {/* Hero */}
       <section className="relative pt-32 pb-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--gold)]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
+            <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
               {t.eventos.badge}
             </span>
-            <h1 className="text-4xl md:text-6xl font-serif text-white mb-6">{t.eventos.title}</h1>
-            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">{t.eventos.subtitle}</p>
+            <h1 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-6">
+              {t.eventos.title}
+            </h1>
+            <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto text-lg">
+              {t.eventos.subtitle}
+            </p>
           </div>
         </div>
       </section>
@@ -244,8 +248,8 @@ export default function EventosPage() {
             style={{ animationDelay: "0.1s" }}
           >
             <div className="flex items-center gap-3 mb-8">
-              <Star className="text-[#C5A059]" size={24} />
-              <h2 className="text-2xl font-serif text-white">{t.eventos.featured}</h2>
+              <Star className="text-[var(--gold)]" size={24} />
+              <h2 className="text-2xl font-serif text-[var(--foreground)]">{t.eventos.featured}</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               {eventosDestaque.slice(0, 2).map((evento, index) => (
@@ -272,8 +276,8 @@ export default function EventosPage() {
                 onClick={() => setSelectedTipo(tipo.value)}
                 className={`flex items-center gap-2 px-4 py-2 border transition-all ${
                   selectedTipo === tipo.value
-                    ? "bg-[#C5A059] text-black border-[#C5A059]"
-                    : "bg-zinc-900/50 text-zinc-400 border-white/10 hover:border-[#C5A059]/50"
+                    ? "bg-[var(--gold)] text-black border-[var(--gold)]"
+                    : "bg-[var(--background-secondary)]/50 text-[var(--foreground-secondary)] border-[var(--border)] hover:border-[var(--gold)]/50"
                 }`}
                 aria-pressed={selectedTipo === tipo.value}
               >
@@ -284,20 +288,20 @@ export default function EventosPage() {
           </div>
 
           {/* Navegação do Mês */}
-          <div className="flex items-center justify-between bg-zinc-900/50 border border-white/10 p-4">
+          <div className="flex items-center justify-between bg-[var(--background-secondary)]/50 border border-[var(--border)] p-4">
             <button
               onClick={() => navigateMonth(-1)}
-              className="p-2 text-zinc-400 hover:text-white transition-colors"
+              className="p-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
               aria-label={t.eventos.badge ? "Mes anterior" : "Previous month"}
             >
               <ChevronLeft size={24} />
             </button>
-            <h3 className="text-xl font-serif text-white">
+            <h3 className="text-xl font-serif text-[var(--foreground)]">
               {meses[currentMonth]} {currentYear}
             </h3>
             <button
               onClick={() => navigateMonth(1)}
-              className="p-2 text-zinc-400 hover:text-white transition-colors"
+              className="p-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
               aria-label={t.eventos.badge ? "Proximo mes" : "Next month"}
             >
               <ChevronRight size={24} />
@@ -308,20 +312,22 @@ export default function EventosPage() {
         {/* Lista de Eventos */}
         {loading ? (
           <div className="text-center py-20">
-            <div className="animate-pulse text-[#C5A059]">{t.eventos.loading}</div>
+            <div className="animate-pulse text-[var(--gold)]">{t.eventos.loading}</div>
           </div>
         ) : eventos.length === 0 ? (
           <div className="text-center py-20">
-            <Calendar className="mx-auto text-zinc-400 mb-4" size={48} />
-            <h3 className="text-xl font-serif text-white mb-2">{t.eventos.no_events}</h3>
-            <p className="text-zinc-500">{t.eventos.no_events_hint}</p>
+            <Calendar className="mx-auto text-[var(--foreground-secondary)] mb-4" size={48} />
+            <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
+              {t.eventos.no_events}
+            </h3>
+            <p className="text-[var(--foreground-muted)]">{t.eventos.no_events_hint}</p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-serif text-zinc-300">
+              <h2 className="text-2xl font-serif text-[var(--foreground)]">
                 {t.eventos.all_events}
-                <span className="text-zinc-400 text-lg ml-3">
+                <span className="text-[var(--foreground-secondary)] text-lg ml-3">
                   ({eventosOrdenados.length}{" "}
                   {eventosOrdenados.length === 1 ? t.eventos.event_single : t.eventos.event_plural})
                 </span>
@@ -358,13 +364,13 @@ export default function EventosPage() {
             onClick={() => setSelectedEvento(null)}
           >
             <div
-              className="bg-zinc-900 border border-white/10 max-w-2xl w-full p-8 relative my-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              className="bg-[var(--background-secondary)] border border-[var(--border)] max-w-2xl w-full p-8 relative my-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
               style={{ animationDelay: "0.1s" }}
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setSelectedEvento(null)}
-                className="absolute top-4 right-4 text-zinc-400 hover:text-white text-2xl"
+                className="absolute top-4 right-4 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] text-2xl"
                 aria-label="Fechar detalhes do evento"
               >
                 ×
@@ -378,7 +384,7 @@ export default function EventosPage() {
                   {selectedEvento.tipo}
                 </span>
                 {selectedEvento.destaque && (
-                  <span className="flex items-center gap-1 text-[#C5A059] text-sm">
+                  <span className="flex items-center gap-1 text-[var(--gold)] text-sm">
                     <Star size={14} /> {t.eventos.highlight}
                   </span>
                 )}
@@ -396,43 +402,45 @@ export default function EventosPage() {
                 })()}
               </div>
 
-              <h3 className="text-2xl font-serif text-white mb-4">{selectedEvento.titulo}</h3>
+              <h3 className="text-2xl font-serif text-[var(--foreground)] mb-4">
+                {selectedEvento.titulo}
+              </h3>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="flex items-center gap-2 text-zinc-400">
-                  <Calendar size={18} className="text-[#C5A059]" />
+                <div className="flex items-center gap-2 text-[var(--foreground-secondary)]">
+                  <Calendar size={18} className="text-[var(--gold)]" />
                   <span>
                     {formatDateRange(selectedEvento.data_inicio, selectedEvento.data_fim)}
                   </span>
                 </div>
                 {selectedEvento.hora_inicio && (
-                  <div className="flex items-center gap-2 text-zinc-400">
-                    <Clock size={18} className="text-[#C5A059]" />
+                  <div className="flex items-center gap-2 text-[var(--foreground-secondary)]">
+                    <Clock size={18} className="text-[var(--gold)]" />
                     <span>
                       {selectedEvento.hora_inicio}
                       {selectedEvento.hora_fim && ` - ${selectedEvento.hora_fim}`}
                     </span>
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-zinc-400">
-                  <MapPin size={18} className="text-[#C5A059]" />
+                <div className="flex items-center gap-2 text-[var(--foreground-secondary)]">
+                  <MapPin size={18} className="text-[var(--gold)]" />
                   <span>{selectedEvento.localizacao}</span>
                 </div>
                 {selectedEvento.preco_entrada && (
-                  <div className="flex items-center gap-2 text-zinc-400">
-                    <Euro size={18} className="text-[#C5A059]" />
+                  <div className="flex items-center gap-2 text-[var(--foreground-secondary)]">
+                    <Euro size={18} className="text-[var(--gold)]" />
                     <span>{selectedEvento.preco_entrada}</span>
                   </div>
                 )}
               </div>
 
               {selectedEvento.organizador && (
-                <p className="text-zinc-500 text-sm mb-4">
+                <p className="text-[var(--foreground-muted)] text-sm mb-4">
                   {t.eventos.organized_by}: {selectedEvento.organizador}
                 </p>
               )}
 
-              <p className="text-zinc-300 mb-6">
+              <p className="text-[var(--foreground)] mb-6">
                 {selectedEvento.descricao_completa || selectedEvento.descricao}
               </p>
 
@@ -441,7 +449,7 @@ export default function EventosPage() {
                   {selectedEvento.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="flex items-center gap-1 text-xs bg-zinc-800 text-zinc-400 px-2 py-1"
+                      className="flex items-center gap-1 text-xs bg-[var(--background-elevated)] text-[var(--foreground-secondary)] px-2 py-1"
                     >
                       <Tag size={12} />
                       {tag}
@@ -453,7 +461,7 @@ export default function EventosPage() {
               <div className="flex flex-col gap-3">
                 <Link
                   href={`/eventos/${selectedEvento.slug}`}
-                  className="flex items-center justify-center gap-2 w-full bg-[#C5A059] text-black py-3 font-bold uppercase tracking-wider hover:bg-white transition-colors"
+                  className="flex items-center justify-center gap-2 w-full bg-[var(--gold)] text-black py-3 font-bold uppercase tracking-wider hover:bg-white transition-colors"
                 >
                   {t.eventos.view_full_page}
                 </Link>
@@ -462,7 +470,7 @@ export default function EventosPage() {
                     href={selectedEvento.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full bg-zinc-800 text-white py-3 font-medium hover:bg-zinc-700 transition-colors border border-white/10"
+                    className="flex items-center justify-center gap-2 w-full bg-[var(--background-elevated)] text-[var(--foreground)] py-3 font-medium hover:bg-[var(--surface-hover)] transition-colors border border-[var(--border)]"
                   >
                     <ExternalLink size={18} />
                     {t.eventos.official_site}
@@ -502,29 +510,29 @@ function EventoDestaqueCard({
           className="absolute inset-0 w-full h-full object-cover"
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/20 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[var(--gold)]/20 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-      <div className="absolute inset-0 border border-[#C5A059]/30 group-hover:border-[#C5A059] transition-colors" />
+      <div className="absolute inset-0 border border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-colors" />
 
       <div className="absolute top-4 left-4 flex items-center gap-2">
         <span className="text-2xl">{tipoIcon}</span>
-        <span className="bg-[#C5A059] text-black px-2 py-1 text-xs font-bold uppercase">
+        <span className="bg-[var(--gold)] text-black px-2 py-1 text-xs font-bold uppercase">
           {evento.tipo}
         </span>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 p-6">
-        <div className="flex items-center gap-2 text-[#C5A059] text-sm mb-2">
+        <div className="flex items-center gap-2 text-[var(--gold)] text-sm mb-2">
           <Calendar size={14} />
           {new Date(evento.data_inicio).toLocaleDateString("pt-PT", {
             day: "numeric",
             month: "long",
           })}
         </div>
-        <h3 className="text-xl font-serif text-white group-hover:text-[#C5A059] transition-colors mb-2">
+        <h3 className="text-xl font-serif text-white group-hover:text-[var(--gold)] transition-colors mb-2">
           {evento.titulo}
         </h3>
-        <div className="flex items-center gap-2 text-zinc-400 text-sm">
+        <div className="flex items-center gap-2 text-[var(--foreground-secondary)] text-sm">
           <MapPin size={14} />
           {evento.localizacao}
         </div>
@@ -585,13 +593,13 @@ function EventoCard({
   return (
     <button
       onClick={onClick}
-      className="w-full text-left flex items-stretch bg-zinc-900/50 border border-white/10 hover:border-[#C5A059]/50 transition-all group opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      className="w-full text-left flex items-stretch bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/50 transition-all group opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       style={{ animationDelay: `${index * 0.05}s` }}
     >
       {/* Data */}
-      <div className="w-24 flex-shrink-0 bg-zinc-800/50 flex flex-col items-center justify-center p-4 border-r border-white/10 relative">
-        <span className="text-3xl font-serif text-[#C5A059]">{date.getDate()}</span>
-        <span className="text-xs uppercase text-zinc-500">
+      <div className="w-24 flex-shrink-0 bg-[var(--background-elevated)]/50 flex flex-col items-center justify-center p-4 border-r border-[var(--border)] relative">
+        <span className="text-3xl font-serif text-[var(--gold)]">{date.getDate()}</span>
+        <span className="text-xs uppercase text-[var(--foreground-muted)]">
           {date.toLocaleDateString("pt-PT", { month: "short" })}
         </span>
         {evento.confirmado === "provisorio" && (
@@ -605,15 +613,15 @@ function EventoCard({
           <span className={`px-2 py-0.5 text-xs ${getTipoColor(evento.tipo)}`}>
             {tipoIcon} {evento.tipo}
           </span>
-          {evento.destaque && <Star size={14} className="text-[#C5A059]" />}
+          {evento.destaque && <Star size={14} className="text-[var(--gold)]" />}
           {evento.confirmado &&
             evento.confirmado !== "provisorio" &&
             getConfirmacaoIcon(evento.confirmado)}
         </div>
-        <h3 className="text-lg font-serif text-white group-hover:text-[#C5A059] transition-colors mb-1">
+        <h3 className="text-lg font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors mb-1">
           {evento.titulo}
         </h3>
-        <div className="flex items-center gap-4 text-zinc-500 text-sm">
+        <div className="flex items-center gap-4 text-[var(--foreground-muted)] text-sm">
           <span className="flex items-center gap-1">
             <MapPin size={14} />
             {evento.localizacao}
@@ -628,7 +636,7 @@ function EventoCard({
       </div>
 
       {/* Arrow */}
-      <div className="flex items-center px-4 text-zinc-400 group-hover:text-[#C5A059] transition-colors">
+      <div className="flex items-center px-4 text-[var(--foreground-secondary)] group-hover:text-[var(--gold)] transition-colors">
         <ChevronRight size={24} />
       </div>
     </button>

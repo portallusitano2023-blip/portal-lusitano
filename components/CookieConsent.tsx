@@ -67,19 +67,19 @@ export default function CookieConsent() {
       className="fixed bottom-0 left-0 right-0 z-[9998] p-4 md:p-6 opacity-0 animate-[slideUp_0.4s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
       style={{ willChange: "transform, opacity" }}
     >
-      <div className="max-w-4xl mx-auto bg-[#0a0a0a] border border-white/10 backdrop-blur-xl rounded-sm p-6 md:p-8 shadow-2xl">
+      <div className="max-w-4xl mx-auto bg-[var(--background-secondary)] border border-[var(--border)] backdrop-blur-xl rounded-sm p-6 md:p-8 shadow-2xl">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
           {/* Icone */}
-          <div className="w-12 h-12 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0">
-            <Cookie className="text-[#C5A059]" size={24} />
+          <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-full flex items-center justify-center flex-shrink-0">
+            <Cookie className="text-[var(--gold)]" size={24} />
           </div>
 
           {/* Texto */}
           <div className="flex-1">
-            <h3 className="text-white font-serif text-lg mb-2">{t.title}</h3>
-            <p className="text-zinc-400 text-sm">
+            <h3 className="text-[var(--foreground)] font-serif text-lg mb-2">{t.title}</h3>
+            <p className="text-[var(--foreground-secondary)] text-sm">
               {t.description}{" "}
-              <Link href="/privacidade" className="text-[#C5A059] hover:underline">
+              <Link href="/privacidade" className="text-[var(--gold)] hover:underline">
                 {t.policy}
               </Link>
               .
@@ -90,13 +90,13 @@ export default function CookieConsent() {
           <div className="flex items-center gap-3 w-full md:w-auto">
             <button
               onClick={handleDecline}
-              className="flex-1 md:flex-none px-6 py-3 text-xs uppercase tracking-widest text-zinc-400 hover:text-white border border-white/10 hover:border-white/30 transition-colors"
+              className="flex-1 md:flex-none px-6 py-3 text-xs uppercase tracking-widest text-[var(--foreground-secondary)] hover:text-[var(--foreground)] border border-[var(--border)] hover:border-[var(--border-hover)] transition-colors"
             >
               {t.decline}
             </button>
             <button
               onClick={handleAccept}
-              className="flex-1 md:flex-none px-6 py-3 text-xs uppercase tracking-widest bg-[#C5A059] text-black hover:bg-white transition-colors font-bold"
+              className="flex-1 md:flex-none px-6 py-3 text-xs uppercase tracking-widest bg-[var(--gold)] text-black hover:bg-white transition-colors font-bold"
             >
               {t.accept}
             </button>

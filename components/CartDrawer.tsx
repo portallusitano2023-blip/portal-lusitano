@@ -82,12 +82,12 @@ export default function CartDrawer() {
         <div className="h-full flex flex-col p-8">
           <div className="flex items-center justify-between mb-12 pb-6 border-b border-[var(--border)]">
             <div className="flex items-center gap-4">
-              <ShoppingBag size={20} className="text-[#C5A059]" />
-              <h2 className="text-2xl font-serif italic text-white">{ct.title}</h2>
+              <ShoppingBag size={20} className="text-[var(--gold)]" />
+              <h2 className="text-2xl font-serif italic text-[var(--foreground)]">{ct.title}</h2>
             </div>
             <button
               onClick={closeCart}
-              className="text-zinc-400 hover:text-white transition-colors p-2"
+              className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors p-2"
               aria-label={language === "pt" ? "Fechar carrinho" : "Close cart"}
             >
               <X size={24} strokeWidth={1} />
@@ -97,12 +97,12 @@ export default function CartDrawer() {
           <div className="flex-grow overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
             {cart.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-6 opacity-60">
-                <ShoppingBag size={48} strokeWidth={1} className="text-zinc-600" />
-                <p className="text-zinc-400 font-serif text-xl">{ct.empty}</p>
+                <ShoppingBag size={48} strokeWidth={1} className="text-[var(--foreground-muted)]" />
+                <p className="text-[var(--foreground-secondary)] font-serif text-xl">{ct.empty}</p>
                 <Link
                   href="/loja"
                   onClick={closeCart}
-                  className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] border-b border-[#C5A059] pb-1 hover:text-white transition-colors"
+                  className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] border-b border-[var(--gold)] pb-1 hover:text-[var(--foreground)] transition-colors"
                 >
                   {ct.empty_cta}
                 </Link>
@@ -111,7 +111,7 @@ export default function CartDrawer() {
               <div className="space-y-8">
                 {cart.map((item) => (
                   <div key={item.id} className="flex gap-6 animate-fade-in">
-                    <div className="w-24 h-32 flex-shrink-0 bg-[#0a0a0a] border border-white/5 overflow-hidden relative">
+                    <div className="w-24 h-32 flex-shrink-0 bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative">
                       <Image
                         src={item.image}
                         alt={item.title}
@@ -123,25 +123,25 @@ export default function CartDrawer() {
                     <div className="flex-grow flex flex-col justify-between py-1">
                       <div>
                         <div className="flex justify-between items-start">
-                          <h3 className="text-lg font-serif text-white leading-tight pr-4">
+                          <h3 className="text-lg font-serif text-[var(--foreground)] leading-tight pr-4">
                             {item.title}
                           </h3>
                           <button
                             onClick={() => removeFromCart(item.id)}
-                            className="text-zinc-400 hover:text-red-400 text-xs uppercase"
+                            className="text-[var(--foreground-secondary)] hover:text-red-400 text-xs uppercase"
                           >
                             Remover
                           </button>
                         </div>
-                        <p className="text-[#C5A059] font-serif text-md mt-2">
+                        <p className="text-[var(--gold)] font-serif text-md mt-2">
                           {Number(item.price).toFixed(2)} EUR
                         </p>
                       </div>
-                      <div className="flex items-center gap-4 border border-white/10 bg-white/5 w-fit px-3 py-2 mt-4">
+                      <div className="flex items-center gap-4 border border-[var(--border)] bg-[var(--surface-hover)] w-fit px-3 py-2 mt-4">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           disabled={item.quantity <= 1}
-                          className="text-zinc-400 hover:text-white"
+                          className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
                           aria-label={
                             language === "pt"
                               ? `Diminuir quantidade de ${item.title}`
@@ -150,12 +150,12 @@ export default function CartDrawer() {
                         >
                           <Minus size={14} />
                         </button>
-                        <span className="text-white font-serif w-6 text-center text-sm">
+                        <span className="text-[var(--foreground)] font-serif w-6 text-center text-sm">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="text-zinc-400 hover:text-white"
+                          className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
                           aria-label={
                             language === "pt"
                               ? `Aumentar quantidade de ${item.title}`
@@ -173,25 +173,27 @@ export default function CartDrawer() {
           </div>
 
           {cart.length > 0 && (
-            <div className="border-t border-white/10 pt-8 mt-8 space-y-6">
+            <div className="border-t border-[var(--border)] pt-8 mt-8 space-y-6">
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-2">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)] mb-2">
                     {ct.subtotal}
                   </p>
-                  <p className="text-xs text-zinc-400 font-serif italic">{ct.shipping_note}</p>
+                  <p className="text-xs text-[var(--foreground-secondary)] font-serif italic">
+                    {ct.shipping_note}
+                  </p>
                 </div>
-                <p className="text-3xl font-serif text-white">
+                <p className="text-3xl font-serif text-[var(--foreground)]">
                   {cart
                     .reduce((total, item) => total + Number(item.price) * item.quantity, 0)
                     .toFixed(2)}{" "}
-                  <span className="text-sm text-zinc-500">EUR</span>
+                  <span className="text-sm text-[var(--foreground-muted)]">EUR</span>
                 </p>
               </div>
               {/* AQUI ESTÁ A CORREÇÃO: USAMOS checkoutUrl DO CONTEXTO */}
               <a
                 href={checkoutUrl || "#"}
-                className="block w-full bg-[#C5A059] text-black text-center text-xs uppercase tracking-[0.3em] py-5 font-bold hover:bg-white transition-colors"
+                className="block w-full bg-[var(--gold)] text-black text-center text-xs uppercase tracking-[0.3em] py-5 font-bold hover:bg-white transition-colors"
               >
                 {ct.checkout}
               </a>

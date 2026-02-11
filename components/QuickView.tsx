@@ -121,14 +121,14 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
           <div className="fixed inset-0 z-[9998] flex items-center justify-center p-4">
             {/* Inner modal */}
             <div
-              className="relative bg-[#0a0a0a] border border-white/10 max-w-4xl w-full max-h-[90vh] overflow-hidden opacity-0 animate-[scaleIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
+              className="relative bg-[var(--background-secondary)] border border-[var(--border)] max-w-4xl w-full max-h-[90vh] overflow-hidden opacity-0 animate-[scaleIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
               style={{ animationDelay: "0.05s", willChange: "transform, opacity" }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Botao fechar */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors z-10"
+                className="absolute top-4 right-4 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors z-10"
                 aria-label="Fechar"
               >
                 <X size={24} />
@@ -136,7 +136,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
 
               <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Galeria de imagens */}
-                <div className="relative aspect-square bg-zinc-900">
+                <div className="relative aspect-square bg-[var(--background-secondary)]">
                   <Image
                     src={product.images[selectedImage]?.url}
                     alt={product.title}
@@ -169,7 +169,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                             key={index}
                             onClick={() => setSelectedImage(index)}
                             className={`w-2 h-2 rounded-full transition-colors ${
-                              index === selectedImage ? "bg-[#C5A059]" : "bg-white/30"
+                              index === selectedImage ? "bg-[var(--gold)]" : "bg-white/30"
                             }`}
                             aria-label={
                               language === "pt"
@@ -185,12 +185,14 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
 
                 {/* Detalhes do produto */}
                 <div className="p-8 flex flex-col">
-                  <h2 className="text-2xl font-serif text-white mb-2">{product.title}</h2>
-                  <p className="text-2xl text-[#C5A059] font-serif mb-6">
+                  <h2 className="text-2xl font-serif text-[var(--foreground)] mb-2">
+                    {product.title}
+                  </h2>
+                  <p className="text-2xl text-[var(--gold)] font-serif mb-6">
                     {Number(product.priceRange?.minVariantPrice.amount || 0).toFixed(2)} EUR
                   </p>
 
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-8 line-clamp-4">
+                  <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-8 line-clamp-4">
                     {product.description}
                   </p>
 
@@ -200,7 +202,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                       <button
                         onClick={handleAddToCart}
                         disabled={isLoading}
-                        className="flex-1 bg-[#C5A059] text-black py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="flex-1 bg-[var(--gold)] text-black py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                       >
                         {isLoading ? (
                           <Loader2 className="animate-spin" size={18} />
@@ -216,8 +218,8 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                         onClick={toggleWishlist}
                         className={`w-14 border ${
                           isInWishlist(product.id)
-                            ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                            : "border-white/20 text-white hover:border-[#C5A059] hover:text-[#C5A059]"
+                            ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                            : "border-[var(--border-hover)] text-[var(--foreground)] hover:border-[var(--gold)] hover:text-[var(--gold)]"
                         } transition-colors flex items-center justify-center`}
                         aria-label={
                           isInWishlist(product.id)
@@ -239,7 +241,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                     <Link
                       href={`/loja/${product.handle}`}
                       onClick={onClose}
-                      className="block text-center border border-white/20 text-white py-4 text-xs uppercase tracking-[0.2em] hover:border-[#C5A059] hover:text-[#C5A059] transition-colors"
+                      className="block text-center border border-[var(--border-hover)] text-[var(--foreground)] py-4 text-xs uppercase tracking-[0.2em] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
                     >
                       {t.viewDetails}
                     </Link>

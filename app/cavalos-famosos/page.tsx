@@ -239,10 +239,12 @@ export default function CavalosFamososPage() {
 
       {/* Info */}
       <div className="max-w-6xl mx-auto mt-16">
-        <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-6 text-center">
+        <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] rounded-xl p-6 text-center">
           <h3 className="text-lg font-semibold mb-2">{t.cavalos_famosos.know_horse}</h3>
-          <p className="text-sm text-zinc-400 mb-4">{t.cavalos_famosos.help_expand}</p>
-          <button className="px-6 py-2 bg-zinc-800 text-zinc-300 rounded-lg hover:bg-[#C5A059] hover:text-black transition-colors touch-manipulation">
+          <p className="text-sm text-[var(--foreground-secondary)] mb-4">
+            {t.cavalos_famosos.help_expand}
+          </p>
+          <button className="px-6 py-2 bg-[var(--background-elevated)] text-[var(--foreground-secondary)] rounded-lg hover:bg-[var(--gold)] hover:text-black transition-colors touch-manipulation">
             {t.cavalos_famosos.suggest}
           </button>
         </div>

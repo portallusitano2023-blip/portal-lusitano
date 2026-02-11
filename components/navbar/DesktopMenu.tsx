@@ -27,10 +27,10 @@ export function DesktopMenu({ language, t }: DesktopMenuProps) {
         <Link
           key={item.href}
           href={item.href}
-          className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 relative group py-2"
+          className="text-[11px] uppercase tracking-[0.2em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300 relative group py-2"
         >
           {item.name}
-          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-500 ease-out group-hover:w-full"></span>
+          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--gold)] transition-all duration-500 ease-out group-hover:w-full"></span>
         </Link>
       ))}
 
@@ -40,16 +40,16 @@ export function DesktopMenu({ language, t }: DesktopMenuProps) {
       {/* Instagram Promo Link */}
       <Link
         href="/instagram"
-        className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors duration-300 relative group py-2"
+        className="text-[11px] uppercase tracking-[0.2em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300 relative group py-2"
       >
         Publicidade
-        <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C5A059] transition-all duration-500 ease-out group-hover:w-full"></span>
+        <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--gold)] transition-all duration-500 ease-out group-hover:w-full"></span>
       </Link>
 
       {/* Free Ebook Link */}
       <Link
         href="/ebook-gratis"
-        className="relative flex items-center gap-2 bg-gradient-to-r from-[#C5A059] to-[#D4B06A] text-black px-5 py-2.5 text-[10px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_20px_rgba(197,160,89,0.15)] hover:shadow-[0_0_25px_rgba(197,160,89,0.3)]"
+        className="relative flex items-center gap-2 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-5 py-2.5 text-[10px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_20px_rgba(197,160,89,0.15)] hover:shadow-[0_0_25px_rgba(197,160,89,0.3)]"
       >
         <Gift size={14} />
         Ebook Grátis

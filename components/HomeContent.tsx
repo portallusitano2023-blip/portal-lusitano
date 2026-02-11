@@ -21,7 +21,7 @@ export default function HomeContent({ products }: { products: ShopifyProduct[] }
     <main className="bg-[var(--background)] min-h-screen text-[var(--foreground)] selection:bg-[var(--gold)] selection:text-black">
       {/* HERO SECTION - VOLTA AO ESTILO NOBREZA */}
       <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-900/30 via-[var(--background)] to-[var(--background)] z-0"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[var(--background-secondary)]/30 via-[var(--background)] to-[var(--background)] z-0"></div>
 
         <div className="relative z-10 text-center flex flex-col items-center animate-fade-in-up max-w-4xl">
           <span className="text-[10px] uppercase tracking-[0.4em] text-[var(--gold)] mb-8 font-medium">

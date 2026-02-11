@@ -89,7 +89,7 @@ export default function MobileBottomNav() {
             <div className="relative">
               <ShoppingCart size={24} strokeWidth={1.5} />
               {totalQuantity > 0 && (
-                <span className="absolute -top-1 -right-2 w-5 h-5 bg-[#C5A059] rounded-full flex items-center justify-center text-[10px] text-black font-bold">
+                <span className="absolute -top-1 -right-2 w-5 h-5 bg-[var(--gold)] rounded-full flex items-center justify-center text-[10px] text-black font-bold">
                   {totalQuantity > 9 ? "9+" : totalQuantity}
                 </span>
               )}

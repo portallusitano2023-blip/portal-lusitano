@@ -102,24 +102,24 @@ function getToolConfig(tool: string) {
 function SkeletonCard({ index }: { index: number }) {
   return (
     <div
-      className="bg-zinc-900/80 border border-white/10 p-6 animate-pulse opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      className="bg-[var(--background-secondary)]/80 border border-[var(--border)] p-6 animate-pulse opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       style={{ animationDelay: `${index * 0.1}s` }}
       role="status"
       aria-label="A carregar resultado"
     >
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 bg-zinc-800 rounded-full" />
+        <div className="w-10 h-10 bg-[var(--background-elevated)] rounded-full" />
         <div className="flex-1">
-          <div className="h-4 bg-zinc-800 rounded w-32 mb-2" />
-          <div className="h-3 bg-zinc-800/60 rounded w-20" />
+          <div className="h-4 bg-[var(--background-elevated)] rounded w-32 mb-2" />
+          <div className="h-3 bg-[var(--background-elevated)]/60 rounded w-20" />
         </div>
       </div>
-      <div className="h-5 bg-zinc-800 rounded w-3/4 mb-3" />
-      <div className="h-3 bg-zinc-800/60 rounded w-40 mb-6" />
+      <div className="h-5 bg-[var(--background-elevated)] rounded w-3/4 mb-3" />
+      <div className="h-3 bg-[var(--background-elevated)]/60 rounded w-40 mb-6" />
       <div className="flex gap-3">
-        <div className="h-10 bg-zinc-800 rounded flex-1" />
-        <div className="h-10 bg-zinc-800 rounded w-10" />
-        <div className="h-10 bg-zinc-800 rounded w-10" />
+        <div className="h-10 bg-[var(--background-elevated)] rounded flex-1" />
+        <div className="h-10 bg-[var(--background-elevated)] rounded w-10" />
+        <div className="h-10 bg-[var(--background-elevated)] rounded w-10" />
       </div>
     </div>
   );
@@ -131,11 +131,13 @@ function EmptyState() {
       className="text-center py-20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       style={{ animationDelay: "0.2s" }}
     >
-      <div className="w-20 h-20 bg-zinc-900/80 border border-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
-        <FileText className="text-zinc-600" size={36} />
+      <div className="w-20 h-20 bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-full flex items-center justify-center mx-auto mb-6">
+        <FileText className="text-[var(--foreground-muted)]" size={36} />
       </div>
-      <h2 className="text-2xl font-serif text-white mb-3">Ainda nao tem resultados guardados</h2>
-      <p className="text-zinc-500 mb-8 max-w-md mx-auto">
+      <h2 className="text-2xl font-serif text-[var(--foreground)] mb-3">
+        Ainda nao tem resultados guardados
+      </h2>
+      <p className="text-[var(--foreground-muted)] mb-8 max-w-md mx-auto">
         Utilize as nossas ferramentas e guarde os resultados para consultar mais tarde.
       </p>
       <div className="flex flex-wrap justify-center gap-4">
@@ -145,7 +147,7 @@ function EmptyState() {
             <Link
               key={key}
               href={config.href}
-              className="inline-flex items-center gap-2 bg-zinc-900/80 border border-white/10 text-white px-5 py-3 text-xs uppercase tracking-[0.15em] font-medium hover:border-[#C5A059]/50 hover:text-[#C5A059] transition-colors"
+              className="inline-flex items-center gap-2 bg-[var(--background-secondary)]/80 border border-[var(--border)] text-[var(--foreground)] px-5 py-3 text-xs uppercase tracking-[0.15em] font-medium hover:border-[var(--gold)]/50 hover:text-[var(--gold)] transition-colors"
             >
               <Icon size={14} />
               {config.label}
@@ -173,28 +175,28 @@ function ResultCard({
 
   return (
     <article
-      className="group bg-zinc-900/80 border border-white/10 p-6 hover:border-[#C5A059]/30 transition-all duration-300 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      className="group bg-[var(--background-secondary)]/80 border border-[var(--border)] p-6 hover:border-[var(--gold)]/30 transition-all duration-300 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       style={{ animationDelay: `${index * 0.08}s` }}
     >
       {/* Tool badge */}
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0">
-          <Icon className="text-[#C5A059]" size={18} />
+        <div className="w-10 h-10 bg-[var(--gold)]/10 rounded-full flex items-center justify-center flex-shrink-0">
+          <Icon className="text-[var(--gold)]" size={18} />
         </div>
         <div className="min-w-0">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#C5A059] font-medium">
+          <span className="text-xs uppercase tracking-[0.15em] text-[var(--gold)] font-medium">
             {config.label}
           </span>
         </div>
       </div>
 
       {/* Title */}
-      <h3 className="text-lg font-serif text-white mb-2 group-hover:text-[#C5A059] transition-colors line-clamp-2">
+      <h3 className="text-lg font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--gold)] transition-colors line-clamp-2">
         {result.title}
       </h3>
 
       {/* Date */}
-      <div className="flex items-center gap-1.5 text-zinc-500 text-sm mb-6">
+      <div className="flex items-center gap-1.5 text-[var(--foreground-muted)] text-sm mb-6">
         <Clock size={13} />
         <time dateTime={result.created_at}>{formatDatePT(result.created_at)}</time>
       </div>
@@ -203,14 +205,14 @@ function ResultCard({
       <div className="flex gap-3">
         <Link
           href={`/resultado/${result.id}`}
-          className="flex-1 bg-[#C5A059] text-black py-2.5 text-xs uppercase tracking-[0.15em] font-bold hover:bg-white transition-colors text-center flex items-center justify-center gap-2"
+          className="flex-1 bg-[var(--gold)] text-black py-2.5 text-xs uppercase tracking-[0.15em] font-bold hover:bg-white transition-colors text-center flex items-center justify-center gap-2"
         >
           <Search size={14} />
           Ver
         </Link>
         <button
           onClick={() => onShare(result.id)}
-          className="w-10 border border-white/10 text-zinc-400 hover:text-[#C5A059] hover:border-[#C5A059]/50 transition-colors flex items-center justify-center"
+          className="w-10 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:border-[var(--gold)]/50 transition-colors flex items-center justify-center"
           title="Partilhar resultado"
           aria-label={`Partilhar resultado: ${result.title}`}
         >
@@ -218,7 +220,7 @@ function ResultCard({
         </button>
         <button
           onClick={() => onDelete(result.id)}
-          className="w-10 border border-white/10 text-zinc-400 hover:text-red-500 hover:border-red-500/50 transition-colors flex items-center justify-center"
+          className="w-10 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-red-500 hover:border-red-500/50 transition-colors flex items-center justify-center"
           title="Eliminar resultado"
           aria-label={`Eliminar resultado: ${result.title}`}
         >
@@ -247,17 +249,17 @@ function ConfirmDialog({
       aria-modal="true"
       aria-labelledby="confirm-dialog-title"
     >
-      <div className="bg-zinc-900 border border-white/10 p-6 max-w-sm w-full">
-        <h3 id="confirm-dialog-title" className="text-lg font-serif text-white mb-3">
+      <div className="bg-[var(--background-secondary)] border border-[var(--border)] p-6 max-w-sm w-full">
+        <h3 id="confirm-dialog-title" className="text-lg font-serif text-[var(--foreground)] mb-3">
           Eliminar resultado?
         </h3>
-        <p className="text-zinc-400 text-sm mb-6">
+        <p className="text-[var(--foreground-secondary)] text-sm mb-6">
           Esta accao nao pode ser desfeita. O resultado sera permanentemente eliminado.
         </p>
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 border border-white/10 text-white py-2.5 text-xs uppercase tracking-[0.15em] font-medium hover:border-white/30 transition-colors"
+            className="flex-1 border border-[var(--border)] text-[var(--foreground)] py-2.5 text-xs uppercase tracking-[0.15em] font-medium hover:border-[var(--border-hover)] transition-colors"
             autoFocus
           >
             Cancelar
@@ -381,10 +383,10 @@ function HistoricoContent() {
         <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
           <FileText className="text-red-500" size={28} />
         </div>
-        <h2 className="text-xl font-serif text-white mb-3">{error}</h2>
+        <h2 className="text-xl font-serif text-[var(--foreground)] mb-3">{error}</h2>
         <button
           onClick={fetchResults}
-          className="mt-4 bg-[#C5A059] text-black px-6 py-3 text-xs uppercase tracking-[0.15em] font-bold hover:bg-white transition-colors"
+          className="mt-4 bg-[var(--gold)] text-black px-6 py-3 text-xs uppercase tracking-[0.15em] font-bold hover:bg-white transition-colors"
         >
           Tentar novamente
         </button>
@@ -400,7 +402,7 @@ function HistoricoContent() {
   // Results grid
   return (
     <>
-      <p className="text-zinc-500 text-sm mb-6">
+      <p className="text-[var(--foreground-muted)] text-sm mb-6">
         {results.length} resultado{results.length !== 1 ? "s" : ""} guardado
         {results.length !== 1 ? "s" : ""}
       </p>
@@ -420,11 +422,11 @@ function HistoricoContent() {
       {/* Toast for copy confirmation */}
       {copiedId && (
         <div
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 border border-[#C5A059]/30 text-white px-5 py-3 text-sm flex items-center gap-2 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[var(--background-secondary)] border border-[var(--gold)]/30 text-[var(--foreground)] px-5 py-3 text-sm flex items-center gap-2 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
           role="status"
           aria-live="polite"
         >
-          <Share2 size={14} className="text-[#C5A059]" />
+          <Share2 size={14} className="text-[var(--gold)]" />
           Link copiado para a area de transferencia
         </div>
       )}
@@ -446,13 +448,13 @@ function HistoricoContent() {
 export default function HistoricoPage() {
   return (
     <AuthGuard>
-      <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
+      <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
         <div className="max-w-6xl mx-auto">
           {/* Navigation */}
           <div className="mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-zinc-500 hover:text-[#C5A059] transition-colors text-sm"
+              className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors text-sm"
             >
               <ArrowLeft size={16} />
               Voltar ao inicio
@@ -464,13 +466,13 @@ export default function HistoricoPage() {
             className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.1s" }}
           >
-            <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Clock className="text-[#C5A059]" size={32} />
+            <div className="w-16 h-16 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Clock className="text-[var(--gold)]" size={32} />
             </div>
-            <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">
+            <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
               Historico de Resultados
             </h1>
-            <p className="text-zinc-400 font-serif italic">
+            <p className="text-[var(--foreground-secondary)] font-serif italic">
               Consulte e partilhe os seus resultados guardados
             </p>
           </div>

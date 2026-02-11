@@ -199,19 +199,21 @@ export default function MarketplacePage() {
   const countPercent = useCountUp(100, statsInView);
 
   return (
-    <main className="min-h-screen bg-[#050505]">
+    <main className="min-h-screen bg-[var(--background)]">
       {/* Hero */}
       <section className="relative pt-32 pb-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#C5A059]/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--gold)]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
+            <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
               {t.marketplace_page.badge}
             </span>
-            <h1 className="text-4xl md:text-6xl font-serif text-white mb-6">
+            <h1 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-6">
               <TextSplit text={t.marketplace_page.title} baseDelay={0.2} wordDelay={0.1} />
             </h1>
-            <p className="text-zinc-400 max-w-2xl mx-auto text-lg">{t.marketplace_page.subtitle}</p>
+            <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto text-lg">
+              {t.marketplace_page.subtitle}
+            </p>
           </div>
 
           {/* Stats — contadores animados */}
@@ -220,17 +222,23 @@ export default function MarketplacePage() {
             className="grid grid-cols-3 gap-4 max-w-xl mx-auto mt-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.1s" }}
           >
-            <div className="text-center p-4 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059]">{countCavalos}</div>
-              <div className="text-sm text-zinc-500">{t.marketplace_page.stat_horses}</div>
+            <div className="text-center p-4 bg-[var(--surface-hover)] border border-[var(--border)]">
+              <div className="text-3xl font-serif text-[var(--gold)]">{countCavalos}</div>
+              <div className="text-sm text-[var(--foreground-muted)]">
+                {t.marketplace_page.stat_horses}
+              </div>
             </div>
-            <div className="text-center p-4 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059]">{countDestaque}</div>
-              <div className="text-sm text-zinc-500">{t.marketplace_page.stat_featured}</div>
+            <div className="text-center p-4 bg-[var(--surface-hover)] border border-[var(--border)]">
+              <div className="text-3xl font-serif text-[var(--gold)]">{countDestaque}</div>
+              <div className="text-sm text-[var(--foreground-muted)]">
+                {t.marketplace_page.stat_featured}
+              </div>
             </div>
-            <div className="text-center p-4 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059]">{countPercent}%</div>
-              <div className="text-sm text-zinc-500">{t.marketplace_page.stat_lusitanos}</div>
+            <div className="text-center p-4 bg-[var(--surface-hover)] border border-[var(--border)]">
+              <div className="text-3xl font-serif text-[var(--gold)]">{countPercent}%</div>
+              <div className="text-sm text-[var(--foreground-muted)]">
+                {t.marketplace_page.stat_lusitanos}
+              </div>
             </div>
           </div>
         </div>
@@ -246,7 +254,7 @@ export default function MarketplacePage() {
             {/* Pesquisa */}
             <div className="flex-1 relative">
               <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
                 size={20}
               />
               <input
@@ -254,7 +262,7 @@ export default function MarketplacePage() {
                 placeholder={t.marketplace_page.search_placeholder}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full bg-zinc-900/50 border border-white/10 pl-12 pr-4 py-4 text-white placeholder-zinc-500 focus:border-[#C5A059] focus:outline-none transition-colors"
+                className="w-full bg-[var(--background-secondary)]/50 border border-[var(--border)] pl-12 pr-4 py-4 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none transition-colors"
               />
             </div>
             {/* Toggle Filtros */}
@@ -262,8 +270,8 @@ export default function MarketplacePage() {
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-2 px-6 py-4 border transition-colors ${
                 showFilters
-                  ? "bg-[#C5A059] text-black border-[#C5A059]"
-                  : "bg-zinc-900/50 text-zinc-400 border-white/10 hover:border-[#C5A059]/50"
+                  ? "bg-[var(--gold)] text-black border-[var(--gold)]"
+                  : "bg-[var(--background-secondary)]/50 text-[var(--foreground-secondary)] border-[var(--border)] hover:border-[var(--gold)]/50"
               }`}
             >
               <Filter size={20} />
@@ -277,17 +285,17 @@ export default function MarketplacePage() {
 
           {/* Painel de Filtros */}
           {showFilters && (
-            <div className="bg-zinc-900/50 border border-white/10 p-6 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
+            <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-6 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
               <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {/* Sexo */}
                 <div>
-                  <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
+                  <label className="text-[var(--foreground-muted)] text-xs uppercase tracking-wider block mb-2">
                     {t.marketplace_page.label_sex}
                   </label>
                   <select
                     value={filters.sexo}
                     onChange={(e) => setFilters({ ...filters, sexo: e.target.value })}
-                    className="w-full bg-zinc-800 border border-white/10 px-3 py-2 text-white focus:border-[#C5A059] focus:outline-none"
+                    className="w-full bg-[var(--background-elevated)] border border-[var(--border)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--gold)] focus:outline-none"
                   >
                     {sexoOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -299,13 +307,13 @@ export default function MarketplacePage() {
 
                 {/* Região */}
                 <div>
-                  <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
+                  <label className="text-[var(--foreground-muted)] text-xs uppercase tracking-wider block mb-2">
                     {t.marketplace_page.label_region}
                   </label>
                   <select
                     value={filters.regiao}
                     onChange={(e) => setFilters({ ...filters, regiao: e.target.value })}
-                    className="w-full bg-zinc-800 border border-white/10 px-3 py-2 text-white focus:border-[#C5A059] focus:outline-none"
+                    className="w-full bg-[var(--background-elevated)] border border-[var(--border)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--gold)] focus:outline-none"
                   >
                     {regioes.map((r) => (
                       <option key={r} value={r}>
@@ -317,13 +325,13 @@ export default function MarketplacePage() {
 
                 {/* Nível */}
                 <div>
-                  <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
+                  <label className="text-[var(--foreground-muted)] text-xs uppercase tracking-wider block mb-2">
                     {t.marketplace_page.label_level}
                   </label>
                   <select
                     value={filters.nivel}
                     onChange={(e) => setFilters({ ...filters, nivel: e.target.value })}
-                    className="w-full bg-zinc-800 border border-white/10 px-3 py-2 text-white focus:border-[#C5A059] focus:outline-none"
+                    className="w-full bg-[var(--background-elevated)] border border-[var(--border)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--gold)] focus:outline-none"
                   >
                     {nivelOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -335,13 +343,13 @@ export default function MarketplacePage() {
 
                 {/* Disciplina */}
                 <div>
-                  <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
+                  <label className="text-[var(--foreground-muted)] text-xs uppercase tracking-wider block mb-2">
                     {t.marketplace_page.label_discipline}
                   </label>
                   <select
                     value={filters.disciplina}
                     onChange={(e) => setFilters({ ...filters, disciplina: e.target.value })}
-                    className="w-full bg-zinc-800 border border-white/10 px-3 py-2 text-white focus:border-[#C5A059] focus:outline-none"
+                    className="w-full bg-[var(--background-elevated)] border border-[var(--border)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--gold)] focus:outline-none"
                   >
                     {disciplinaOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -353,7 +361,7 @@ export default function MarketplacePage() {
 
                 {/* Preço Min */}
                 <div>
-                  <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
+                  <label className="text-[var(--foreground-muted)] text-xs uppercase tracking-wider block mb-2">
                     {t.marketplace_page.label_price_min}
                   </label>
                   <input
@@ -361,13 +369,13 @@ export default function MarketplacePage() {
                     placeholder={t.marketplace_page.placeholder_min}
                     value={filters.precoMin}
                     onChange={(e) => setFilters({ ...filters, precoMin: e.target.value })}
-                    className="w-full bg-zinc-800 border border-white/10 px-3 py-2 text-white focus:border-[#C5A059] focus:outline-none"
+                    className="w-full bg-[var(--background-elevated)] border border-[var(--border)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--gold)] focus:outline-none"
                   />
                 </div>
 
                 {/* Preço Max */}
                 <div>
-                  <label className="text-zinc-500 text-xs uppercase tracking-wider block mb-2">
+                  <label className="text-[var(--foreground-muted)] text-xs uppercase tracking-wider block mb-2">
                     {t.marketplace_page.label_price_max}
                   </label>
                   <input
@@ -375,7 +383,7 @@ export default function MarketplacePage() {
                     placeholder={t.marketplace_page.placeholder_max}
                     value={filters.precoMax}
                     onChange={(e) => setFilters({ ...filters, precoMax: e.target.value })}
-                    className="w-full bg-zinc-800 border border-white/10 px-3 py-2 text-white focus:border-[#C5A059] focus:outline-none"
+                    className="w-full bg-[var(--background-elevated)] border border-[var(--border)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--gold)] focus:outline-none"
                   />
                 </div>
               </div>
@@ -386,13 +394,15 @@ export default function MarketplacePage() {
         {/* Loading */}
         {loading ? (
           <div className="text-center py-20">
-            <div className="animate-pulse text-[#C5A059]">{t.marketplace_page.loading}</div>
+            <div className="animate-pulse text-[var(--gold)]">{t.marketplace_page.loading}</div>
           </div>
         ) : cavalos.length === 0 ? (
           <div className="text-center py-20">
-            <Search className="mx-auto text-zinc-400 mb-4" size={48} />
-            <h3 className="text-xl font-serif text-white mb-2">{t.marketplace_page.no_results}</h3>
-            <p className="text-zinc-500">{t.marketplace_page.no_results_hint}</p>
+            <Search className="mx-auto text-[var(--foreground-secondary)] mb-4" size={48} />
+            <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
+              {t.marketplace_page.no_results}
+            </h3>
+            <p className="text-[var(--foreground-muted)]">{t.marketplace_page.no_results_hint}</p>
           </div>
         ) : (
           <div className="space-y-16">
@@ -400,8 +410,8 @@ export default function MarketplacePage() {
             {cavalosDestaque.length > 0 && (
               <section>
                 <div className="flex items-center gap-3 mb-8">
-                  <Star className="text-[#C5A059]" size={24} />
-                  <h2 className="text-2xl font-serif text-white">
+                  <Star className="text-[var(--gold)]" size={24} />
+                  <h2 className="text-2xl font-serif text-[var(--foreground)]">
                     {t.marketplace_page.featured_horses}
                   </h2>
                 </div>
@@ -426,9 +436,9 @@ export default function MarketplacePage() {
             {outrosCavalos.length > 0 && (
               <section>
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-serif text-zinc-300">
+                  <h2 className="text-2xl font-serif text-[var(--foreground)]">
                     {t.marketplace_page.all_horses}
-                    <span className="text-zinc-400 text-lg ml-3">
+                    <span className="text-[var(--foreground-secondary)] text-lg ml-3">
                       ({outrosCavalos.length}{" "}
                       {outrosCavalos.length === 1
                         ? t.marketplace_page.horse_singular
@@ -507,7 +517,7 @@ const CavaloCard = memo(function CavaloCard({
       ref={tiltRef}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      className="group bg-zinc-900/50 border border-white/10 hover:border-[#C5A059]/50 overflow-hidden transition-all opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      className="group bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/50 overflow-hidden transition-all opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       style={{
         animationDelay: `${index * 0.05}s`,
         transition: "transform 0.1s ease-out, border-color 0.3s",
@@ -524,7 +534,7 @@ const CavaloCard = memo(function CavaloCard({
         {/* Badges */}
         <div className="absolute top-3 left-3 flex gap-2">
           {cavalo.destaque && (
-            <span className="bg-[#C5A059] text-black px-2 py-1 text-xs font-bold flex items-center gap-1">
+            <span className="bg-[var(--gold)] text-black px-2 py-1 text-xs font-bold flex items-center gap-1">
               <Star size={12} /> {t.marketplace_page.featured_badge}
             </span>
           )}
@@ -545,18 +555,18 @@ const CavaloCard = memo(function CavaloCard({
         </button>
 
         {/* Preço */}
-        <div className="absolute bottom-3 right-3 bg-[#C5A059] text-black px-3 py-1 font-bold">
+        <div className="absolute bottom-3 right-3 bg-[var(--gold)] text-black px-3 py-1 font-bold">
           {formatPrice(cavalo)}
         </div>
       </div>
 
       {/* Conteúdo */}
       <button onClick={onSelect} className="w-full text-left p-5">
-        <h3 className="text-lg font-serif text-white group-hover:text-[#C5A059] transition-colors mb-2">
+        <h3 className="text-lg font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors mb-2">
           {cavalo.nome}
         </h3>
 
-        <div className="flex flex-wrap gap-2 text-zinc-500 text-sm mb-3">
+        <div className="flex flex-wrap gap-2 text-[var(--foreground-muted)] text-sm mb-3">
           {cavalo.idade && (
             <span>
               {cavalo.idade} {t.marketplace_page.years}
@@ -567,12 +577,12 @@ const CavaloCard = memo(function CavaloCard({
         </div>
 
         {cavalo.linhagem && (
-          <p className="text-[#C5A059] text-sm mb-2">
+          <p className="text-[var(--gold)] text-sm mb-2">
             {t.marketplace_page.lineage_label} {cavalo.linhagem}
           </p>
         )}
 
-        <div className="flex items-center gap-1 text-zinc-500 text-sm">
+        <div className="flex items-center gap-1 text-[var(--foreground-muted)] text-sm">
           <MapPin size={14} />
           {cavalo.localizacao}, {cavalo.regiao}
         </div>
@@ -580,7 +590,10 @@ const CavaloCard = memo(function CavaloCard({
         {cavalo.disciplinas && cavalo.disciplinas.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3">
             {cavalo.disciplinas.slice(0, 3).map((d) => (
-              <span key={d} className="text-xs bg-zinc-800 text-zinc-400 px-2 py-0.5">
+              <span
+                key={d}
+                className="text-xs bg-[var(--background-elevated)] text-[var(--foreground-secondary)] px-2 py-0.5"
+              >
                 {d}
               </span>
             ))}
@@ -617,7 +630,7 @@ function CavaloModal({
       onClick={onClose}
     >
       <div
-        className="bg-zinc-900 border border-white/10 max-w-4xl w-full my-8 relative opacity-0 animate-[scaleIn_0.3s_ease-out_forwards]"
+        className="bg-[var(--background-secondary)] border border-[var(--border)] max-w-4xl w-full my-8 relative opacity-0 animate-[scaleIn_0.3s_ease-out_forwards]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -637,7 +650,7 @@ function CavaloModal({
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:hidden" />
 
             {cavalo.destaque && (
-              <div className="absolute top-4 left-4 bg-[#C5A059] text-black px-3 py-1 text-sm font-bold flex items-center gap-1">
+              <div className="absolute top-4 left-4 bg-[var(--gold)] text-black px-3 py-1 text-sm font-bold flex items-center gap-1">
                 <Star size={14} /> {t.marketplace_page.featured_badge}
               </div>
             )}
@@ -647,15 +660,15 @@ function CavaloModal({
           <div className="p-8">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h2 className="text-2xl font-serif text-white mb-1">{cavalo.nome}</h2>
-                <p className="text-zinc-500">
+                <h2 className="text-2xl font-serif text-[var(--foreground)] mb-1">{cavalo.nome}</h2>
+                <p className="text-[var(--foreground-muted)]">
                   {getSexoLabel(cavalo.sexo)} • {cavalo.idade} {t.marketplace_page.years} •{" "}
                   {cavalo.cor}
                 </p>
               </div>
               <button
                 onClick={onToggleFavorite}
-                className="p-2 border border-white/10 hover:border-[#C5A059] transition-colors"
+                className="p-2 border border-[var(--border)] hover:border-[var(--gold)] transition-colors"
               >
                 <Heart
                   size={20}
@@ -664,40 +677,42 @@ function CavaloModal({
               </button>
             </div>
 
-            <div className="text-3xl font-serif text-[#C5A059] mb-6">{formatPrice(cavalo)}</div>
+            <div className="text-3xl font-serif text-[var(--gold)] mb-6">{formatPrice(cavalo)}</div>
 
             {/* Características */}
             <div className="grid grid-cols-2 gap-4 mb-6">
               {cavalo.altura && (
-                <div className="bg-zinc-800/50 p-3">
-                  <div className="text-zinc-500 text-xs uppercase mb-1">
+                <div className="bg-[var(--background-elevated)]/50 p-3">
+                  <div className="text-[var(--foreground-muted)] text-xs uppercase mb-1">
                     {t.marketplace_page.modal_height}
                   </div>
-                  <div className="text-white">{cavalo.altura}m</div>
+                  <div className="text-[var(--foreground)]">{cavalo.altura}m</div>
                 </div>
               )}
               {cavalo.linhagem && (
-                <div className="bg-zinc-800/50 p-3">
-                  <div className="text-zinc-500 text-xs uppercase mb-1">
+                <div className="bg-[var(--background-elevated)]/50 p-3">
+                  <div className="text-[var(--foreground-muted)] text-xs uppercase mb-1">
                     {t.marketplace_page.modal_lineage}
                   </div>
-                  <div className="text-white">{cavalo.linhagem}</div>
+                  <div className="text-[var(--foreground)]">{cavalo.linhagem}</div>
                 </div>
               )}
               {cavalo.nivel_treino && (
-                <div className="bg-zinc-800/50 p-3">
-                  <div className="text-zinc-500 text-xs uppercase mb-1">
+                <div className="bg-[var(--background-elevated)]/50 p-3">
+                  <div className="text-[var(--foreground-muted)] text-xs uppercase mb-1">
                     {t.marketplace_page.modal_level}
                   </div>
-                  <div className="text-white">{getNivelLabel(cavalo.nivel_treino)}</div>
+                  <div className="text-[var(--foreground)]">
+                    {getNivelLabel(cavalo.nivel_treino)}
+                  </div>
                 </div>
               )}
               {cavalo.registro_apsl && (
-                <div className="bg-zinc-800/50 p-3">
-                  <div className="text-zinc-500 text-xs uppercase mb-1">
+                <div className="bg-[var(--background-elevated)]/50 p-3">
+                  <div className="text-[var(--foreground-muted)] text-xs uppercase mb-1">
                     {t.marketplace_page.modal_apsl}
                   </div>
-                  <div className="text-white">{cavalo.registro_apsl}</div>
+                  <div className="text-[var(--foreground)]">{cavalo.registro_apsl}</div>
                 </div>
               )}
             </div>
@@ -705,20 +720,24 @@ function CavaloModal({
             {/* Genealogia */}
             {(cavalo.pai || cavalo.mae) && (
               <div className="mb-6">
-                <h3 className="text-zinc-500 text-xs uppercase mb-2">
+                <h3 className="text-[var(--foreground-muted)] text-xs uppercase mb-2">
                   {t.marketplace_page.modal_genealogy}
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {cavalo.pai && (
-                    <div className="bg-zinc-800/30 p-2 text-sm">
-                      <span className="text-zinc-500">{t.marketplace_page.modal_father}</span>{" "}
-                      <span className="text-white">{cavalo.pai}</span>
+                    <div className="bg-[var(--background-elevated)]/30 p-2 text-sm">
+                      <span className="text-[var(--foreground-muted)]">
+                        {t.marketplace_page.modal_father}
+                      </span>{" "}
+                      <span className="text-[var(--foreground)]">{cavalo.pai}</span>
                     </div>
                   )}
                   {cavalo.mae && (
-                    <div className="bg-zinc-800/30 p-2 text-sm">
-                      <span className="text-zinc-500">{t.marketplace_page.modal_mother}</span>{" "}
-                      <span className="text-white">{cavalo.mae}</span>
+                    <div className="bg-[var(--background-elevated)]/30 p-2 text-sm">
+                      <span className="text-[var(--foreground-muted)]">
+                        {t.marketplace_page.modal_mother}
+                      </span>{" "}
+                      <span className="text-[var(--foreground)]">{cavalo.mae}</span>
                     </div>
                   )}
                 </div>
@@ -726,13 +745,16 @@ function CavaloModal({
             )}
 
             {/* Descrição */}
-            <p className="text-zinc-400 mb-6">{cavalo.descricao}</p>
+            <p className="text-[var(--foreground-secondary)] mb-6">{cavalo.descricao}</p>
 
             {/* Disciplinas */}
             {cavalo.disciplinas && cavalo.disciplinas.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6">
                 {cavalo.disciplinas.map((d) => (
-                  <span key={d} className="text-xs bg-[#C5A059]/10 text-[#C5A059] px-2 py-1">
+                  <span
+                    key={d}
+                    className="text-xs bg-[var(--gold)]/10 text-[var(--gold)] px-2 py-1"
+                  >
                     {d}
                   </span>
                 ))}
@@ -740,8 +762,8 @@ function CavaloModal({
             )}
 
             {/* Localização */}
-            <div className="flex items-center gap-2 text-zinc-400 mb-6">
-              <MapPin size={16} className="text-[#C5A059]" />
+            <div className="flex items-center gap-2 text-[var(--foreground-secondary)] mb-6">
+              <MapPin size={16} className="text-[var(--gold)]" />
               {cavalo.localizacao}, {cavalo.regiao}
             </div>
 
@@ -749,7 +771,7 @@ function CavaloModal({
             {cavalo.coudelarias && (
               <Link
                 href={`/directorio/${cavalo.coudelarias.slug}`}
-                className="flex items-center gap-2 text-[#C5A059] text-sm mb-6 hover:underline"
+                className="flex items-center gap-2 text-[var(--gold)] text-sm mb-6 hover:underline"
               >
                 <Award size={16} />
                 {cavalo.coudelarias.nome}
@@ -762,7 +784,7 @@ function CavaloModal({
               {cavalo.vendedor_telefone && (
                 <a
                   href={`tel:${cavalo.vendedor_telefone}`}
-                  className="flex items-center gap-2 w-full bg-[#C5A059] text-black py-3 px-4 font-bold hover:bg-white transition-colors"
+                  className="flex items-center gap-2 w-full bg-[var(--gold)] text-black py-3 px-4 font-bold hover:bg-white transition-colors"
                 >
                   <Phone size={18} />
                   {cavalo.vendedor_telefone}
@@ -771,7 +793,7 @@ function CavaloModal({
               {cavalo.vendedor_email && (
                 <a
                   href={`mailto:${cavalo.vendedor_email}?subject=Interesse em ${cavalo.nome}`}
-                  className="flex items-center gap-2 w-full border border-[#C5A059] text-[#C5A059] py-3 px-4 font-bold hover:bg-[#C5A059] hover:text-black transition-colors"
+                  className="flex items-center gap-2 w-full border border-[var(--gold)] text-[var(--gold)] py-3 px-4 font-bold hover:bg-[var(--gold)] hover:text-black transition-colors"
                 >
                   <Mail size={18} />
                   {t.marketplace_page.send_email}

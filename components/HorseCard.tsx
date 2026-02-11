@@ -36,7 +36,9 @@ export default function HorseCard({ horse, href, compact = false }: HorseCardPro
     <div className="group cursor-pointer relative touch-manipulation">
       <Link href={href} className="block active:scale-[0.98] transition-transform">
         {/* Image Container - More square on mobile for better grid layout */}
-        <div className={`${compact ? "aspect-square" : "aspect-[4/5] sm:aspect-[4/5]"} bg-zinc-950 border border-zinc-900 overflow-hidden relative`}>
+        <div
+          className={`${compact ? "aspect-square" : "aspect-[4/5] sm:aspect-[4/5]"} bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative`}
+        >
           {horse.image_url ? (
             <Image
               src={horse.image_url}
@@ -47,7 +49,7 @@ export default function HorseCard({ horse, href, compact = false }: HorseCardPro
               priority={false}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-zinc-800 text-[10px] tracking-widest uppercase">
+            <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-[10px] tracking-widest uppercase">
               Sem Foto
             </div>
           )}
@@ -57,7 +59,7 @@ export default function HorseCard({ horse, href, compact = false }: HorseCardPro
 
           {/* Price badge - visible on image for mobile */}
           <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-            <p className="text-[#C5A059] font-serif text-lg sm:text-xl font-medium drop-shadow-lg">
+            <p className="text-[var(--gold)] font-serif text-lg sm:text-xl font-medium drop-shadow-lg">
               {Number(horse.preco).toLocaleString("pt-PT")} €
             </p>
           </div>
@@ -65,12 +67,12 @@ export default function HorseCard({ horse, href, compact = false }: HorseCardPro
 
         {/* Info section */}
         <div className="mt-3 sm:mt-4 px-1">
-          <h2 className="font-serif text-base sm:text-lg md:text-xl text-white mb-1 line-clamp-1 group-hover:text-[#C5A059] transition-colors">
+          <h2 className="font-serif text-base sm:text-lg md:text-xl text-[var(--foreground)] mb-1 line-clamp-1 group-hover:text-[var(--gold)] transition-colors">
             {horse.nome_cavalo}
           </h2>
 
           {/* Meta info row */}
-          <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-zinc-500">
+          <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-[var(--foreground-muted)]">
             {horse.idade && (
               <span className="flex items-center gap-1">
                 <Calendar size={12} className="hidden sm:inline" />
@@ -89,11 +91,7 @@ export default function HorseCard({ horse, href, compact = false }: HorseCardPro
 
       {/* Favorite Button - larger touch target on mobile */}
       <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">
-        <HorseFavoriteButton
-          horse={favoriteHorse}
-          size="md"
-          className="shadow-lg"
-        />
+        <HorseFavoriteButton horse={favoriteHorse} size="md" className="shadow-lg" />
       </div>
     </div>
   );
