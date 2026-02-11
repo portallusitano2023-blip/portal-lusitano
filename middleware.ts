@@ -125,33 +125,28 @@ export async function middleware(request: NextRequest) {
     url.pathname = strippedPath;
 
     const rewriteResponse = NextResponse.rewrite(url);
-    // Set locale cookie so LanguageContext initializes in English
     rewriteResponse.cookies.set("locale", "en", { path: "/", sameSite: "lax" });
-    // Copy security headers
+    rewriteResponse.headers.set("Content-Security-Policy", cspDirectives);
     rewriteResponse.headers.set("X-DNS-Prefetch-Control", "on");
     rewriteResponse.headers.set("X-Download-Options", "noopen");
     rewriteResponse.headers.set("X-Permitted-Cross-Domain-Policies", "none");
     rewriteResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-    // Set Content-Language header for SEO
     rewriteResponse.headers.set("Content-Language", "en");
     return rewriteResponse;
   }
 
   if (pathname.startsWith("/es/") || pathname === "/es") {
-    // Strip /es prefix and rewrite to the Portuguese route
     const strippedPath = pathname.replace(/^\/es/, "") || "/";
     const url = request.nextUrl.clone();
     url.pathname = strippedPath;
 
     const rewriteResponse = NextResponse.rewrite(url);
-    // Set locale cookie so LanguageContext initializes in Spanish
     rewriteResponse.cookies.set("locale", "es", { path: "/", sameSite: "lax" });
-    // Copy security headers
+    rewriteResponse.headers.set("Content-Security-Policy", cspDirectives);
     rewriteResponse.headers.set("X-DNS-Prefetch-Control", "on");
     rewriteResponse.headers.set("X-Download-Options", "noopen");
     rewriteResponse.headers.set("X-Permitted-Cross-Domain-Policies", "none");
     rewriteResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-    // Set Content-Language header for SEO
     rewriteResponse.headers.set("Content-Language", "es");
     return rewriteResponse;
   }
