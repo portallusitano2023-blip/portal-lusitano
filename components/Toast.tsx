@@ -66,12 +66,12 @@ export default function Toast({
 
   return (
     <div
-      className={`${colorScheme.bg} ${colorScheme.border} border rounded-lg px-4 py-3 shadow-xl backdrop-blur-sm flex items-start gap-3 min-w-[320px] max-w-md ${removing ? 'animate-[slideOutRight_0.3s_ease-out_forwards]' : 'animate-[slideInRight_0.3s_ease-out_forwards]'}`}
+      role="alert"
+      aria-live="assertive"
+      className={`${colorScheme.bg} ${colorScheme.border} border rounded-lg px-4 py-3 shadow-xl backdrop-blur-sm flex items-start gap-3 min-w-[320px] max-w-md ${removing ? "animate-[slideOutRight_0.3s_ease-out_forwards]" : "animate-[slideInRight_0.3s_ease-out_forwards]"}`}
     >
       <Icon className={`${colorScheme.icon} flex-shrink-0 mt-0.5`} size={20} />
-      <p className={`${colorScheme.text} text-sm flex-1 font-medium`}>
-        {message}
-      </p>
+      <p className={`${colorScheme.text} text-sm flex-1 font-medium`}>{message}</p>
       <button
         onClick={onClose}
         className={`${colorScheme.text} hover:opacity-70 transition-opacity flex-shrink-0`}

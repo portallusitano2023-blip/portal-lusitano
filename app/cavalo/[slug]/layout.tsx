@@ -11,6 +11,17 @@ const client = createClient({
   useCdn: true,
 });
 
+export async function generateStaticParams() {
+  try {
+    const slugs = await client.fetch<{ slug: string }[]>(
+      `*[_type == "cavalo" && defined(slug.current)]{ "slug": slug.current }`
+    );
+    return slugs.map((s) => ({ slug: s.slug }));
+  } catch {
+    return [];
+  }
+}
+
 export async function generateMetadata({
   params,
 }: {

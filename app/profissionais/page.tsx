@@ -130,7 +130,7 @@ export default function ProfissionaisPage() {
           </div>
 
           {/* Grid de Profissionais */}
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto" aria-live="polite" aria-atomic="true">
             {profissionaisFiltrados.length > 0 ? (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {profissionaisFiltrados.map((prof) => (

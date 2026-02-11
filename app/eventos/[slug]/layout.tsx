@@ -1,7 +1,17 @@
 import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
+import { EventSchema, BreadcrumbSchema } from "@/components/JsonLd";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
+
+export async function generateStaticParams() {
+  try {
+    const { data: eventos } = await supabase.from("eventos").select("slug").eq("status", "active");
+    return (eventos || []).map((e) => ({ slug: e.slug }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -59,6 +69,67 @@ export async function generateMetadata({
   }
 }
 
-export default function EventoLayout({ children }: { children: React.ReactNode }) {
-  return children;
+export default async function EventoLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  let evento: {
+    titulo?: string;
+    descricao?: string;
+    data_inicio?: string;
+    data_fim?: string;
+    localizacao?: string;
+    morada?: string;
+    imagem_capa?: string;
+    preco?: string;
+    organizador?: string;
+  } | null = null;
+
+  try {
+    const { data } = await supabase
+      .from("eventos")
+      .select(
+        "titulo, descricao, data_inicio, data_fim, localizacao, morada, imagem_capa, preco, organizador"
+      )
+      .eq("slug", slug)
+      .single();
+    evento = data;
+  } catch {
+    // Schema não é crítico - continuar sem ele
+  }
+
+  return (
+    <>
+      {evento?.titulo && (
+        <>
+          <EventSchema
+            name={evento.titulo}
+            description={
+              evento.descricao?.slice(0, 160) || `${evento.titulo}. Evento equestre em Portugal.`
+            }
+            startDate={evento.data_inicio || new Date().toISOString()}
+            endDate={evento.data_fim}
+            location={evento.localizacao}
+            address={evento.morada}
+            image={evento.imagem_capa}
+            price={evento.preco}
+            organizer={evento.organizador}
+          />
+          <BreadcrumbSchema
+            items={[
+              { name: "Início", url: siteUrl },
+              { name: "Eventos", url: `${siteUrl}/eventos` },
+              { name: evento.titulo, url: `${siteUrl}/eventos/${slug}` },
+            ]}
+          />
+        </>
+      )}
+      {children}
+    </>
+  );
 }

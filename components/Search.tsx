@@ -210,7 +210,11 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
             <SearchIcon size={20} className="text-zinc-500" />
             <input
               ref={inputRef}
-              type="text"
+              type="search"
+              role="combobox"
+              aria-expanded={results.length > 0}
+              aria-controls="search-results-list"
+              aria-autocomplete="list"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t.search.placeholder}
@@ -246,7 +250,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
           )}
 
           {/* Resultados */}
-          <div className="max-h-[60vh] overflow-y-auto">
+          <div className="max-h-[60vh] overflow-y-auto" aria-live="polite" aria-atomic="false">
             {/* Search history */}
             {showHistory && (
               <div className="py-3">
@@ -269,7 +273,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
 
             {/* Results */}
             {results.length > 0 ? (
-              <ul ref={resultsRef} className="py-2">
+              <ul ref={resultsRef} id="search-results-list" role="listbox" className="py-2">
                 {results.map((result, index) => {
                   const typeInfo = TYPE_LABELS[result.type] || TYPE_LABELS.page;
                   return (
