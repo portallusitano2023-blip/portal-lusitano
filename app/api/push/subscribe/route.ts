@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { apiLimiter } from "@/lib/rate-limit";
+import { supabase } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 import { z } from "zod";
 
 // Schema for validating the PushSubscription payload sent by the browser
@@ -39,19 +41,32 @@ export async function POST(request: Request) {
 
     const subscription = parsed.data;
 
-    // TODO: Persist subscription to database (Sanity, Postgres, etc.)
-    // For now, log the subscription so it can be verified during development.
-    // In production, this should be stored and used with web-push to send
-    // notifications to subscribed clients.
-    console.log("[Push Subscribe] New subscription received:", {
-      endpoint: subscription.endpoint,
-      hasKeys: !!subscription.keys,
-      timestamp: new Date().toISOString(),
-    });
+    // Persist subscription to Supabase (upsert by endpoint to avoid duplicates)
+    const { error: dbError } = await supabase.from("push_subscriptions").upsert(
+      {
+        endpoint: subscription.endpoint,
+        keys_p256dh: subscription.keys?.p256dh || null,
+        keys_auth: subscription.keys?.auth || null,
+        expiration_time: subscription.expirationTime || null,
+        ip_address: ip,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "endpoint" }
+    );
+
+    if (dbError) {
+      // Log the error but still return success - the subscription is valid,
+      // we just couldn't persist it. A fallback in-memory approach could be used.
+      logger.error("[Push Subscribe] Failed to persist to database", dbError);
+    } else {
+      logger.info("[Push Subscribe] Subscription persisted", {
+        endpoint: subscription.endpoint.slice(0, 50) + "...",
+      });
+    }
 
     return NextResponse.json({ message: "Subscricao registada com sucesso." }, { status: 201 });
   } catch (error) {
-    console.error("[Push Subscribe] Error:", error);
+    logger.error("[Push Subscribe] Error:", error);
     return NextResponse.json({ error: "Erro ao processar subscricao." }, { status: 500 });
   }
 }

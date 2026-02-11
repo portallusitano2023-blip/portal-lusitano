@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Search, Heart, User, ShoppingBag, Menu, X } from "lucide-react";
+import { Search, Heart, User, ShoppingBag, Menu, X, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 interface NavIconsProps {
   language: string;
@@ -26,8 +27,23 @@ export function NavIcons({
   onCartClick,
   onMobileToggle,
 }: NavIconsProps) {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <div className="flex items-center gap-2 md:gap-4">
+      {/* Tema */}
+      <button
+        onClick={toggleTheme}
+        className="text-zinc-400 hover:text-[#C5A059] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
+        aria-label={theme === "dark" ? "Mudar para modo claro" : "Mudar para modo escuro"}
+      >
+        {theme === "dark" ? (
+          <Sun size={20} strokeWidth={1.5} />
+        ) : (
+          <Moon size={20} strokeWidth={1.5} />
+        )}
+      </button>
+
       {/* Pesquisa */}
       <button
         onClick={onSearchClick}

@@ -153,7 +153,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
       </head>
-      <body className="bg-[#050505] text-white antialiased selection:bg-[#C5A059] selection:text-black">
+      <body className="bg-[var(--background)] text-[var(--foreground)] antialiased">
         <Providers>
           {/* ✅ ErrorBoundary global - captura render errors em toda a aplicação */}
           <ErrorBoundary>

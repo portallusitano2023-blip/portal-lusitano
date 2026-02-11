@@ -7,6 +7,7 @@ import { ToastProvider } from "@/context/ToastContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { HorseFavoritesProvider } from "@/context/HorseFavoritesContext";
 import { AuthProvider } from "@/components/auth/AuthProvider";
+import { ThemeProvider } from "@/context/ThemeContext";
 import { type ReactNode, type FC } from "react";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -32,6 +33,7 @@ function composeProviders(...providers: FC<{ children: ReactNode }>[]) {
 // ErrorBoundary > Auth > Language > Toast > Cart > Wishlist > HorseFavorites
 const ComposedProviders = composeProviders(
   ErrorBoundary as unknown as FC<{ children: ReactNode }>,
+  ThemeProvider,
   AuthProvider,
   LanguageProvider,
   ToastProvider,

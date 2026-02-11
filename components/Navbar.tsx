@@ -48,7 +48,7 @@ export default function Navbar({}: { dev?: boolean } = {}) {
       id="main-navigation"
       role="navigation"
       aria-label="Navegação principal"
-      className={`fixed w-full z-50 border-b transition-all duration-300 ${scrolled ? "bg-[#050505] border-white/10 shadow-lg" : "bg-[#050505]/[0.97] border-white/5"}`}
+      className={`fixed w-full z-50 border-b transition-all duration-300 ${scrolled ? "bg-[var(--nav-bg-scrolled)] border-[var(--border)] shadow-lg" : "bg-[var(--nav-bg)] border-[var(--border)]"}`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 md:h-24 flex items-center justify-between gap-4">
         {/* LOGÓTIPO COM IMAGEM */}

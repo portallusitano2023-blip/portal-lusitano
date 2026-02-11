@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import { sendEmail } from "./resend";
+import { logger } from "@/lib/logger";
 
 // Tabelas chave para backup
 const BACKUP_TABLES = [
@@ -34,7 +35,7 @@ export async function exportAllTables(): Promise<BackupResult> {
       const { data, error } = await supabase.from(tableName).select("*");
 
       if (error) {
-        console.warn(`Aviso: Tabela ${tableName} não encontrada ou erro: ${error.message}`);
+        logger.warn(`Aviso: Tabela ${tableName} não encontrada ou erro: ${error.message}`);
         tables[tableName] = { count: 0, data: [] };
         continue;
       }
@@ -45,7 +46,7 @@ export async function exportAllTables(): Promise<BackupResult> {
       };
       totalRecords += data?.length || 0;
     } catch {
-      console.warn(`Erro ao exportar tabela ${tableName}`);
+      logger.warn(`Erro ao exportar tabela ${tableName}`);
       tables[tableName] = { count: 0, data: [] };
     }
   }

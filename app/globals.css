@@ -1,8 +1,49 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ===== THEME SYSTEM ===== */
+/* Dark mode (default) */
+:root,
+html.dark {
+  --background: #050505;
+  --background-secondary: #0a0a0a;
+  --background-card: #111111;
+  --background-elevated: #1a1a1a;
+  --foreground: #ededed;
+  --foreground-secondary: #a1a1aa;
+  --foreground-muted: #71717a;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  --gold: #c5a059;
+  --gold-hover: #d4af6a;
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --scrollbar-track: #0a0a0a;
+  --scrollbar-thumb: #333;
+  --selection-bg: #c5a059;
+  --selection-fg: black;
+  --nav-bg: #050505;
+  --nav-bg-scrolled: #050505;
+}
+
+/* Light mode */
+html.light {
+  --background: #f8f7f4;
+  --background-secondary: #ffffff;
+  --background-card: #ffffff;
+  --background-elevated: #f0efe8;
+  --foreground: #1a1a1a;
+  --foreground-secondary: #555555;
+  --foreground-muted: #888888;
+  --border: rgba(0, 0, 0, 0.1);
+  --border-hover: rgba(0, 0, 0, 0.2);
+  --gold: #a8873a;
+  --gold-hover: #c5a059;
+  --surface-hover: rgba(0, 0, 0, 0.05);
+  --scrollbar-track: #f0f0f0;
+  --scrollbar-thumb: #ccc;
+  --selection-bg: #a8873a;
+  --selection-fg: white;
+  --nav-bg: rgba(255, 255, 255, 0.97);
+  --nav-bg-scrolled: #ffffff;
 }
 
 @theme inline {
@@ -12,17 +53,13 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* ... (mantém o que já lá estava) */
@@ -178,33 +215,33 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #c5a059;
+  background: var(--gold);
 }
 
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #333 #0a0a0a;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 /* ===== SELEÇÃO DE TEXTO ===== */
 ::selection {
-  background: #c5a059;
-  color: black;
+  background: var(--selection-bg);
+  color: var(--selection-fg);
 }
 
 ::-moz-selection {
-  background: #c5a059;
-  color: black;
+  background: var(--selection-bg);
+  color: var(--selection-fg);
 }
 
 /* ===== MOBILE OPTIMIZATIONS ===== */

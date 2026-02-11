@@ -73,7 +73,8 @@
       "Bash(npx tsx:*)",
       "Bash(git stash)",
       "Bash(git stash pop)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(npm run type-check:*)"
     ]
   }
 }
