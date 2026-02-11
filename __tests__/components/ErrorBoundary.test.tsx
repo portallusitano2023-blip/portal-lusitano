@@ -117,10 +117,7 @@ describe("ErrorBoundary", () => {
   });
 
   it("shows error details in development mode", () => {
-    const originalEnv = process.env.NODE_ENV;
-
-    // Force development mode
-    Object.defineProperty(process.env, "NODE_ENV", { value: "development", writable: true });
+    vi.stubEnv("NODE_ENV", "development");
 
     render(
       <ErrorBoundary>
@@ -131,7 +128,7 @@ describe("ErrorBoundary", () => {
     // The componentDidCatch should have called console.error in dev
     expect(console.error).toHaveBeenCalled();
 
-    Object.defineProperty(process.env, "NODE_ENV", { value: originalEnv, writable: true });
+    vi.unstubAllEnvs();
   });
 
   it("renders a link to the homepage in the default fallback", () => {
