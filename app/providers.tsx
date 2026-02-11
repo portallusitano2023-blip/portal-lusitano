@@ -16,6 +16,9 @@ import Preloader from "@/components/Preloader";
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
 const CookieConsent = dynamic(() => import("@/components/CookieConsent"), { ssr: false });
 const NewsletterPopup = dynamic(() => import("@/components/NewsletterPopup"), { ssr: false });
+const PushNotificationPrompt = dynamic(() => import("@/components/PushNotificationPrompt"), {
+  ssr: false,
+});
 
 // Compose multiple providers to avoid deeply nested JSX
 // Each provider only re-renders its own consumers, not siblings
@@ -45,6 +48,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <ScrollToTop />
       <CookieConsent />
       <NewsletterPopup />
+      <PushNotificationPrompt />
     </ComposedProviders>
   );
 }

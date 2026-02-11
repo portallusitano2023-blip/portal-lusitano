@@ -133,7 +133,7 @@ describe("SearchModal", () => {
 
   it("renders search input when isOpen is true", () => {
     render(<SearchModal isOpen={true} onClose={vi.fn()} />);
-    expect(screen.getByRole("textbox")).toBeInTheDocument();
+    expect(screen.getByRole("combobox")).toBeInTheDocument();
   });
 
   it("shows placeholder text in search input", () => {
@@ -168,7 +168,7 @@ describe("SearchModal", () => {
   it("fetches results when user types 2+ characters", async () => {
     render(<SearchModal isOpen={true} onClose={vi.fn()} />);
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("combobox");
     fireEvent.change(input, { target: { value: "xa" } });
 
     // Wait for the 300ms debounce and the fetch call
@@ -180,7 +180,7 @@ describe("SearchModal", () => {
   it("displays search results with type badges", async () => {
     render(<SearchModal isOpen={true} onClose={vi.fn()} />);
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("combobox");
     fireEvent.change(input, { target: { value: "xaquiro" } });
 
     // Wait for the debounce, fetch, and render
