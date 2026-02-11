@@ -61,10 +61,10 @@ export default function Navbar({}: { dev?: boolean } = {}) {
             className="w-9 h-9 md:w-11 md:h-11 object-contain group-hover:scale-105 transition-transform"
           />
           <div className="flex flex-col justify-center">
-            <span className="text-base md:text-lg lg:text-xl font-serif text-white tracking-wide group-hover:text-[#C5A059] transition-colors leading-none whitespace-nowrap">
+            <span className="text-base md:text-lg lg:text-xl font-serif text-[var(--foreground)] tracking-wide group-hover:text-[var(--gold)] transition-colors leading-none whitespace-nowrap">
               PORTAL LUSITANO
             </span>
-            <span className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.3em] text-zinc-500 mt-0.5 group-hover:text-[#C5A059]/70 transition-colors leading-none">
+            <span className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.3em] text-[var(--foreground-muted)] mt-0.5 group-hover:text-[var(--gold)]/70 transition-colors leading-none">
               EST. 2023
             </span>
           </div>

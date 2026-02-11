@@ -43,7 +43,7 @@ export default function WhatsAppButton({
 
       {/* Chat Widget */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 bg-white rounded-2xl shadow-2xl overflow-hidden opacity-0 animate-[scaleIn_0.3s_ease-out_forwards]">
+        <div className="fixed bottom-24 right-6 z-50 w-80 bg-[var(--background-card)] rounded-2xl shadow-2xl overflow-hidden opacity-0 animate-[scaleIn_0.3s_ease-out_forwards] border border-[var(--border)]">
           {/* Header */}
           <div className="bg-[#25D366] p-4">
             <div className="flex items-center gap-3">
@@ -58,13 +58,14 @@ export default function WhatsAppButton({
           </div>
 
           {/* Chat Area */}
-          <div className="p-4 bg-gray-50">
+          <div className="p-4 bg-[var(--background-elevated)]">
             {/* Message bubble */}
-            <div className="bg-white rounded-lg p-3 shadow-sm mb-4">
-              <p className="text-gray-700 text-sm">
-                Ola! Como podemos ajuda-lo? Envie-nos uma mensagem e responderemos o mais breve possivel.
+            <div className="bg-[var(--background-card)] rounded-lg p-3 shadow-sm mb-4 border border-[var(--border)]">
+              <p className="text-[var(--foreground-secondary)] text-sm">
+                Ola! Como podemos ajuda-lo? Envie-nos uma mensagem e responderemos o mais breve
+                possivel.
               </p>
-              <span className="text-gray-400 text-xs mt-1 block">
+              <span className="text-[var(--foreground-muted)] text-xs mt-1 block">
                 Equipa Portal Lusitano
               </span>
             </div>
@@ -76,7 +77,7 @@ export default function WhatsAppButton({
                 onChange={(e) => setCustomMessage(e.target.value)}
                 placeholder="Escreva a sua mensagem..."
                 aria-label="Mensagem para WhatsApp"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
+                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg text-sm resize-none bg-[var(--background-secondary)] text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
                 rows={3}
               />
               <button
@@ -91,10 +92,8 @@ export default function WhatsAppButton({
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 bg-gray-100 text-center">
-            <p className="text-gray-500 text-xs">
-              Powered by WhatsApp Business
-            </p>
+          <div className="px-4 py-2 bg-[var(--background-secondary)] text-center border-t border-[var(--border)]">
+            <p className="text-[var(--foreground-muted)] text-xs">Powered by WhatsApp Business</p>
           </div>
         </div>
       )}
