@@ -120,7 +120,7 @@ describe("ErrorBoundary", () => {
     const originalEnv = process.env.NODE_ENV;
 
     // Force development mode
-    process.env.NODE_ENV = "development";
+    Object.defineProperty(process.env, "NODE_ENV", { value: "development", writable: true });
 
     render(
       <ErrorBoundary>
@@ -131,7 +131,7 @@ describe("ErrorBoundary", () => {
     // The componentDidCatch should have called console.error in dev
     expect(console.error).toHaveBeenCalled();
 
-    process.env.NODE_ENV = originalEnv!;
+    Object.defineProperty(process.env, "NODE_ENV", { value: originalEnv, writable: true });
   });
 
   it("renders a link to the homepage in the default fallback", () => {
