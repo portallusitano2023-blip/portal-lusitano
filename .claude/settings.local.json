@@ -65,7 +65,8 @@
       "Bash(gh issue list:*)",
       "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" status --short)",
       "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" diff --name-only)",
-      "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" diff \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\vitest.config.ts\")"
+      "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" diff \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\vitest.config.ts\")",
+      "Bash(file public/screenshots/*.svg)"
     ]
   }
 }
