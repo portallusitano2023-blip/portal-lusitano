@@ -60,7 +60,36 @@
   "categories": ["shopping", "lifestyle"],
   "lang": "pt-PT",
   "dir": "ltr",
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Portal Lusitano - Página Inicial"
+    },
+    {
+      "src": "/screenshots/desktop-marketplace.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Marketplace de Cavalos Lusitanos"
+    },
+    {
+      "src": "/screenshots/mobile-home.webp",
+      "sizes": "750x1334",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Portal Lusitano - Mobile"
+    },
+    {
+      "src": "/screenshots/mobile-marketplace.webp",
+      "sizes": "750x1334",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Marketplace - Mobile"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Loja",

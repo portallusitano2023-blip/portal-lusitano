@@ -69,7 +69,10 @@
       "Bash(file public/screenshots/*.svg)",
       "Bash(git pull:*)",
       "Bash(npm install:*)",
-      "Bash(if not exist \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\public\\\\screenshots\" mkdir \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\public\\\\screenshots\")"
+      "Bash(if not exist \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\public\\\\screenshots\" mkdir \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\public\\\\screenshots\")",
+      "Bash(npx tsx:*)",
+      "Bash(git stash)",
+      "Bash(git stash pop)"
     ]
   }
 }
