@@ -327,7 +327,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               </div>
             ) : !showHistory && query.length < 2 ? (
               <div className="py-12 text-center">
-                <p className="text-zinc-400 text-sm">{t.search.min_chars}</p>
+                <p className="text-[var(--foreground-secondary)] text-sm">{t.search.min_chars}</p>
               </div>
             ) : null}
           </div>

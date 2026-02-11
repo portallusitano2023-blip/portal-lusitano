@@ -125,28 +125,28 @@ export function MobileMenu({
         </div>
 
         {/* Favorites Section */}
-        <div className="border-t border-white/10 pt-4 mt-4">
+        <div className="border-t border-[var(--border)] pt-4 mt-4">
           <div className="grid grid-cols-2 gap-2">
             <Link
               href="/cavalos-favoritos"
-              className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
+              className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
             >
               <Heart size={18} className="text-red-400" />
               <span>Cavalos Favoritos</span>
               {favoritesCount > 0 && (
-                <span className="ml-auto bg-[#C5A059] text-black text-xs px-2 py-0.5 rounded-full font-bold">
+                <span className="ml-auto bg-[var(--gold)] text-black text-xs px-2 py-0.5 rounded-full font-bold">
                   {favoritesCount}
                 </span>
               )}
             </Link>
             <Link
               href="/favoritos"
-              className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
+              className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
             >
               <Heart size={18} className="text-pink-400" />
               <span>Loja Favoritos</span>
               {wishlistCount > 0 && (
-                <span className="ml-auto bg-[#C5A059] text-black text-xs px-2 py-0.5 rounded-full font-bold">
+                <span className="ml-auto bg-[var(--gold)] text-black text-xs px-2 py-0.5 rounded-full font-bold">
                   {wishlistCount}
                 </span>
               )}
@@ -155,18 +155,18 @@ export function MobileMenu({
         </div>
 
         {/* Additional Links */}
-        <div className="border-t border-white/10 pt-4 mt-4 space-y-2">
+        <div className="border-t border-[var(--border)] pt-4 mt-4 space-y-2">
           <Link
             href="/instagram"
-            className="flex items-center gap-4 py-3 px-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
+            className="flex items-center gap-4 py-3 px-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
             Publicidade / Instagram
           </Link>
           <Link
             href="/minha-conta"
-            className="flex items-center gap-4 py-3 px-3 text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
+            className="flex items-center gap-4 py-3 px-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
-            <User size={18} className="text-zinc-500" />
+            <User size={18} className="text-[var(--foreground-muted)]" />
             Minha Conta
           </Link>
         </div>

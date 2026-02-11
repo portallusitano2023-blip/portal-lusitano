@@ -231,7 +231,9 @@ export default function CavalosFamososPage() {
             <Trophy size={24} className="text-[var(--foreground-muted)]" />
           </div>
           <h3 className="text-lg font-medium mb-2">{t.cavalos_famosos.no_results}</h3>
-          <p className="text-sm text-zinc-500">{t.cavalos_famosos.no_results_hint}</p>
+          <p className="text-sm text-[var(--foreground-muted)]">
+            {t.cavalos_famosos.no_results_hint}
+          </p>
         </div>
       )}
 

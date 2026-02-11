@@ -42,7 +42,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
+        <div className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
           <div className="max-w-md w-full text-center">
             {/* Icone */}
             <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
@@ -50,10 +50,10 @@ export default class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Titulo */}
-            <h1 className="text-3xl font-serif text-white mb-4">Algo correu mal</h1>
+            <h1 className="text-3xl font-serif text-[var(--foreground)] mb-4">Algo correu mal</h1>
 
             {/* Descricao */}
-            <p className="text-zinc-400 mb-8">
+            <p className="text-[var(--foreground-secondary)] mb-8">
               Ocorreu um erro inesperado. Por favor, tente novamente ou volte à página inicial.
             </p>
 
@@ -68,7 +68,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={this.handleRetry}
-                className="inline-flex items-center justify-center gap-2 bg-[#C5A059] text-black px-6 py-3 text-xs uppercase tracking-widest font-bold hover:bg-white transition-colors"
+                className="inline-flex items-center justify-center gap-2 bg-[var(--gold)] text-black px-6 py-3 text-xs uppercase tracking-widest font-bold hover:bg-white transition-colors"
               >
                 <RefreshCw size={16} />
                 Tentar Novamente
@@ -76,7 +76,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 
               <Link
                 href="/"
-                className="inline-flex items-center justify-center gap-2 border border-white/20 text-white px-6 py-3 text-xs uppercase tracking-widest hover:border-[#C5A059] hover:text-[#C5A059] transition-colors"
+                className="inline-flex items-center justify-center gap-2 border border-[var(--border-hover)] text-[var(--foreground)] px-6 py-3 text-xs uppercase tracking-widest hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
               >
                 <Home size={16} />
                 Página Inicial
