@@ -16,21 +16,23 @@ interface Task {
   created_at: string;
 }
 
+interface TaskFormData {
+  title: string;
+  description: string;
+  task_type: string;
+  due_date: string;
+  priority: string;
+  related_email: string;
+  notes: string;
+}
+
 interface TaskModalProps {
   isOpen: boolean;
   editingTask: Task | null;
-  formData: {
-    title: string;
-    description: string;
-    task_type: string;
-    due_date: string;
-    priority: string;
-    related_email: string;
-    notes: string;
-  };
+  formData: TaskFormData;
   onClose: () => void;
   onSubmit: (e: React.FormEvent) => void;
-  onFormChange: (data: Partial<typeof formData>) => void;
+  onFormChange: (data: Partial<TaskFormData>) => void;
 }
 
 export default function TaskModal({

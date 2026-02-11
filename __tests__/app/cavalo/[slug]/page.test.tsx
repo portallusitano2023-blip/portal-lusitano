@@ -82,7 +82,7 @@ describe("CavaloPage [slug]", () => {
 
   it("deve exibir loading state inicialmente", () => {
     vi.mocked(client.fetch).mockImplementation(
-      () => new Promise(() => {}) // Never resolves
+      () => new Promise(() => {}) as never // Never resolves
     );
 
     const mockParams = Promise.resolve({ slug: "test-cavalo" });
@@ -92,7 +92,7 @@ describe("CavaloPage [slug]", () => {
   });
 
   it("deve carregar e exibir dados do cavalo corretamente", async () => {
-    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData);
+    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData as never);
 
     const mockParams = Promise.resolve({ slug: "lusitano-elite" });
     render(<CavaloPage params={mockParams} />);
@@ -124,7 +124,7 @@ describe("CavaloPage [slug]", () => {
       },
     };
 
-    vi.mocked(client.fetch).mockResolvedValue(cavaloSemPreco);
+    vi.mocked(client.fetch).mockResolvedValue(cavaloSemPreco as never);
 
     const mockParams = Promise.resolve({ slug: "cavalo-sem-preco" });
     render(<CavaloPage params={mockParams} />);
@@ -135,7 +135,7 @@ describe("CavaloPage [slug]", () => {
   });
 
   it("deve renderizar galeria com imagem principal e miniaturas", async () => {
-    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData);
+    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData as never);
 
     const mockParams = Promise.resolve({ slug: "lusitano-elite" });
     const { container } = render(<CavaloPage params={mockParams} />);
@@ -155,7 +155,7 @@ describe("CavaloPage [slug]", () => {
   });
 
   it("deve incluir todas as fotos da galeria (principal + extras)", async () => {
-    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData);
+    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData as never);
 
     const mockParams = Promise.resolve({ slug: "lusitano-elite" });
     const { container } = render(<CavaloPage params={mockParams} />);
@@ -172,7 +172,7 @@ describe("CavaloPage [slug]", () => {
   });
 
   it("deve exibir exemplares relacionados quando disponíveis", async () => {
-    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData);
+    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData as never);
 
     const mockParams = Promise.resolve({ slug: "lusitano-elite" });
     render(<CavaloPage params={mockParams} />);
@@ -198,7 +198,7 @@ describe("CavaloPage [slug]", () => {
       relacionados: [],
     };
 
-    vi.mocked(client.fetch).mockResolvedValue(cavaloSemRelacionados);
+    vi.mocked(client.fetch).mockResolvedValue(cavaloSemRelacionados as never);
 
     const mockParams = Promise.resolve({ slug: "cavalo-sem-relacionados" });
     render(<CavaloPage params={mockParams} />);
@@ -212,7 +212,7 @@ describe("CavaloPage [slug]", () => {
   });
 
   it("deve exibir botões de contacto (WhatsApp e Email)", async () => {
-    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData);
+    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData as never);
 
     const mockParams = Promise.resolve({ slug: "lusitano-elite" });
     render(<CavaloPage params={mockParams} />);
@@ -233,7 +233,7 @@ describe("CavaloPage [slug]", () => {
   });
 
   it("deve formatar link do WhatsApp com nome do cavalo", async () => {
-    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData);
+    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData as never);
 
     const mockParams = Promise.resolve({ slug: "lusitano-elite" });
     render(<CavaloPage params={mockParams} />);
@@ -248,7 +248,7 @@ describe("CavaloPage [slug]", () => {
   });
 
   it("deve exibir link voltar ao marketplace", async () => {
-    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData);
+    vi.mocked(client.fetch).mockResolvedValue(mockCavaloData as never);
 
     const mockParams = Promise.resolve({ slug: "lusitano-elite" });
     render(<CavaloPage params={mockParams} />);
@@ -267,7 +267,7 @@ describe("CavaloPage [slug]", () => {
       vi.mocked(client.fetch).mockResolvedValue({
         atual: null,
         relacionados: [],
-      });
+      } as never);
 
       const mockParams = Promise.resolve({ slug: "cavalo-nao-existe" });
       render(<CavaloPage params={mockParams} />);
@@ -279,7 +279,7 @@ describe("CavaloPage [slug]", () => {
 
   describe("Acessibilidade e UX", () => {
     it("deve ter classes para impressão (no-print)", async () => {
-      vi.mocked(client.fetch).mockResolvedValue(mockCavaloData);
+      vi.mocked(client.fetch).mockResolvedValue(mockCavaloData as never);
 
       const mockParams = Promise.resolve({ slug: "lusitano-elite" });
       const { container } = render(<CavaloPage params={mockParams} />);
@@ -294,7 +294,7 @@ describe("CavaloPage [slug]", () => {
     });
 
     it("deve ter estrutura semântica com main", async () => {
-      vi.mocked(client.fetch).mockResolvedValue(mockCavaloData);
+      vi.mocked(client.fetch).mockResolvedValue(mockCavaloData as never);
 
       const mockParams = Promise.resolve({ slug: "lusitano-elite" });
       const { container } = render(<CavaloPage params={mockParams} />);

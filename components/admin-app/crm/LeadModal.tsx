@@ -3,26 +3,28 @@
 import { X } from "lucide-react";
 import { Lead } from "@/types/lead";
 
+interface LeadFormData {
+  name: string;
+  email: string;
+  telefone: string;
+  company: string;
+  estimated_value: string;
+  probability: string;
+  source_type: string;
+  interests: string;
+  notes: string;
+  budget_min: string;
+  budget_max: string;
+  next_follow_up: string;
+}
+
 interface LeadModalProps {
   isOpen: boolean;
   editingLead: Lead | null;
-  formData: {
-    name: string;
-    email: string;
-    telefone: string;
-    company: string;
-    estimated_value: string;
-    probability: string;
-    source_type: string;
-    interests: string;
-    notes: string;
-    budget_min: string;
-    budget_max: string;
-    next_follow_up: string;
-  };
+  formData: LeadFormData;
   onClose: () => void;
   onSubmit: (e: React.FormEvent) => void;
-  onFormChange: (data: Partial<typeof formData>) => void;
+  onFormChange: (data: Partial<LeadFormData>) => void;
 }
 
 export default function LeadModal({

@@ -137,7 +137,7 @@ describe("MinhaContaPage (Server Component)", () => {
   });
 
   it("redirects to login if customer not found", async () => {
-    vi.mocked(getCustomer).mockResolvedValue(null);
+    vi.mocked(getCustomer).mockResolvedValue(null as never);
 
     await MinhaContaPage();
 

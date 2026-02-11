@@ -84,7 +84,7 @@ const mockQuizLogic = {
   accessLoading: false,
   handleAnswer: vi.fn(),
   goBack: vi.fn(),
-  result: null,
+  result: null as { perfil: string; pontuacao: number; descricao?: string } | null,
   scorePercentages: {},
   saved: false,
   copied: false,

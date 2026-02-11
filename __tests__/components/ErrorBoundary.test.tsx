@@ -131,7 +131,7 @@ describe("ErrorBoundary", () => {
     // The componentDidCatch should have called console.error in dev
     expect(console.error).toHaveBeenCalled();
 
-    process.env.NODE_ENV = originalEnv;
+    process.env.NODE_ENV = originalEnv!;
   });
 
   it("renders a link to the homepage in the default fallback", () => {

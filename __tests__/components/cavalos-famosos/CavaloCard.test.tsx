@@ -13,11 +13,16 @@ describe("CavaloCard", () => {
     disciplina: "Dressage",
     linhagem: "Veiga",
     pelagem: "Castanho",
-    genealogia: { pai: "Xaquiro", mae: "Danúbia", avoPat: "Novilheiro" },
+    descricao: "Primeiro Lusitano a competir em Dressage nos Jogos Olímpicos.",
+    destaque: true,
+    pedigree: {
+      pai: { nome: "Xaquiro" },
+      mae: { nome: "Danúbia" },
+      avoPaterno: { nome: "Novilheiro" },
+    },
     conquistas: ["Jogos Olímpicos Londres 2012", "Campeão Nacional"],
     legado: "Primeiro Lusitano a competir em Dressage nos Jogos Olímpicos.",
-    notasHistoricas: ["Revolucionou a presença do Lusitano no Dressage"],
-    fontes: [{ titulo: "Eurodressage", url: "https://eurodressage.com", consultadoEm: "2024-01" }],
+    curiosidades: ["Revolucionou a presença do Lusitano no Dressage"],
   };
 
   const mockCavaloCompleto: CavaloFamoso = {
@@ -28,8 +33,11 @@ describe("CavaloCard", () => {
     influenciaGenetica: 12,
     estatisticasDescendentes: {
       totalDescendentes: 4500,
-      descendentesRegistados: 3200,
-      geracoes: 5,
+      descendentesAprovados: 3200,
+      campeoes: 10,
+      reprodutoresAtivos: 50,
+      paisesComDescendentes: ["Portugal", "Brasil"],
+      melhoresFilhos: [{ nome: "Filho 1", conquista: "Campeão Nacional" }],
     },
   };
 

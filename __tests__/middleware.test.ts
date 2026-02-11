@@ -127,7 +127,7 @@ describe("middleware", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env = { ...originalEnv };
-    process.env.NODE_ENV = "production";
+    Object.defineProperty(process.env, "NODE_ENV", { value: "production", writable: true });
     process.env.NEXT_PUBLIC_APP_URL = "https://portal-lusitano.com";
     process.env.ADMIN_SECRET = "test-secret-key";
   });

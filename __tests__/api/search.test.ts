@@ -58,15 +58,15 @@ describe("GET /api/search", () => {
 
     vi.mocked(supabase.from).mockImplementation((table: string) => {
       if (table === "cavalos_venda") {
-        return createChain([]) as ReturnType<typeof supabase.from>;
+        return createChain([]) as unknown as ReturnType<typeof supabase.from>;
       }
       if (table === "eventos") {
-        return createChain([]) as ReturnType<typeof supabase.from>;
+        return createChain([]) as unknown as ReturnType<typeof supabase.from>;
       }
       if (table === "coudelarias") {
-        return createChain([]) as ReturnType<typeof supabase.from>;
+        return createChain([]) as unknown as ReturnType<typeof supabase.from>;
       }
-      return createChain([]) as ReturnType<typeof supabase.from>;
+      return createChain([]) as unknown as ReturnType<typeof supabase.from>;
     });
 
     const routeModule = await import("@/app/api/search/route");

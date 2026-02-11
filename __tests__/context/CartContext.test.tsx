@@ -86,7 +86,7 @@ describe("CartContext", () => {
         },
       };
 
-      vi.mocked(shopify.getCart).mockResolvedValue(mockCartData);
+      vi.mocked(shopify.getCart).mockResolvedValue(mockCartData as never);
 
       const { result } = renderHook(() => useCart(), {
         wrapper: CartProvider,
@@ -145,9 +145,9 @@ describe("CartContext", () => {
         },
       };
 
-      vi.mocked(shopify.createCart).mockResolvedValue(mockNewCart);
-      vi.mocked(shopify.addToCart).mockResolvedValue({ cart: mockCartData });
-      vi.mocked(shopify.getCart).mockResolvedValue(mockCartData);
+      vi.mocked(shopify.createCart).mockResolvedValue(mockNewCart as never);
+      vi.mocked(shopify.addToCart).mockResolvedValue({ cart: mockCartData } as never);
+      vi.mocked(shopify.getCart).mockResolvedValue(mockCartData as never);
 
       const { result } = renderHook(() => useCart(), {
         wrapper: CartProvider,
@@ -205,8 +205,8 @@ describe("CartContext", () => {
       };
 
       localStorageMock.setItem("shopify_cart_id", mockCartId);
-      vi.mocked(shopify.getCart).mockResolvedValue(mockCartData);
-      vi.mocked(shopify.addToCart).mockResolvedValue({ cart: mockCartData });
+      vi.mocked(shopify.getCart).mockResolvedValue(mockCartData as never);
+      vi.mocked(shopify.addToCart).mockResolvedValue({ cart: mockCartData } as never);
 
       const { result } = renderHook(() => useCart(), {
         wrapper: CartProvider,
@@ -262,14 +262,14 @@ describe("CartContext", () => {
       // createCart cria novo
       // Segundo addToCart sucede
       vi.mocked(shopify.getCart)
-        .mockResolvedValueOnce(null) // Inicialização
-        .mockResolvedValueOnce(mockNewCartData); // Após criar novo
+        .mockResolvedValueOnce(null as never) // Inicialização
+        .mockResolvedValueOnce(mockNewCartData as never); // Após criar novo
 
       vi.mocked(shopify.addToCart)
-        .mockResolvedValueOnce(null) // Falha com expired
-        .mockResolvedValueOnce({ cart: mockNewCartData }); // Sucesso com novo
+        .mockResolvedValueOnce(null as never) // Falha com expired
+        .mockResolvedValueOnce({ cart: mockNewCartData } as never); // Sucesso com novo
 
-      vi.mocked(shopify.createCart).mockResolvedValue(mockNewCart);
+      vi.mocked(shopify.createCart).mockResolvedValue(mockNewCart as never);
 
       const { result } = renderHook(() => useCart(), {
         wrapper: CartProvider,
@@ -338,9 +338,9 @@ describe("CartContext", () => {
       };
 
       vi.mocked(shopify.getCart)
-        .mockResolvedValueOnce(initialCartData)
-        .mockResolvedValueOnce(updatedCartData);
-      vi.mocked(shopify.updateCartLines).mockResolvedValue({});
+        .mockResolvedValueOnce(initialCartData as never)
+        .mockResolvedValueOnce(updatedCartData as never);
+      vi.mocked(shopify.updateCartLines).mockResolvedValue({} as never);
 
       const { result } = renderHook(() => useCart(), {
         wrapper: CartProvider,
@@ -411,9 +411,9 @@ describe("CartContext", () => {
       };
 
       vi.mocked(shopify.getCart)
-        .mockResolvedValueOnce(initialCartData)
-        .mockResolvedValueOnce(afterRemoveCartData);
-      vi.mocked(shopify.removeFromCart).mockResolvedValue({});
+        .mockResolvedValueOnce(initialCartData as never)
+        .mockResolvedValueOnce(afterRemoveCartData as never);
+      vi.mocked(shopify.removeFromCart).mockResolvedValue({} as never);
 
       const { result } = renderHook(() => useCart(), {
         wrapper: CartProvider,
@@ -467,9 +467,9 @@ describe("CartContext", () => {
         lines: { edges: [] },
       };
 
-      vi.mocked(shopify.createCart).mockResolvedValue({ id: mockCartId });
-      vi.mocked(shopify.addToCart).mockResolvedValue({ cart: mockCartData });
-      vi.mocked(shopify.getCart).mockResolvedValue(mockCartData);
+      vi.mocked(shopify.createCart).mockResolvedValue({ id: mockCartId } as never);
+      vi.mocked(shopify.addToCart).mockResolvedValue({ cart: mockCartData } as never);
+      vi.mocked(shopify.getCart).mockResolvedValue(mockCartData as never);
 
       const { result } = renderHook(() => useCart(), {
         wrapper: CartProvider,
