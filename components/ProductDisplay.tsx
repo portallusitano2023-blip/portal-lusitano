@@ -32,7 +32,7 @@ export default function ProductDisplay({ product }: { product: Product }) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
       {/* --- COLUNA DA ESQUERDA: GALERIA --- */}
       <div className="space-y-6">
-        <div className="aspect-[4/5] w-full bg-[#0a0a0a] border border-zinc-900 overflow-hidden relative group">
+        <div className="aspect-[4/5] w-full bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative group">
           <Image
             src={selectedImage}
             alt={product.title}
@@ -50,7 +50,7 @@ export default function ProductDisplay({ product }: { product: Product }) {
                 key={index}
                 onClick={() => setSelectedImage(img.url)}
                 aria-label={`Ver imagem ${index + 1} de ${product.title}`}
-                className={`w-20 h-24 flex-shrink-0 border transition-all relative ${selectedImage === img.url ? "border-[#C5A059] opacity-100" : "border-transparent opacity-50 hover:opacity-100"}`}
+                className={`w-20 h-24 flex-shrink-0 border transition-all relative ${selectedImage === img.url ? "border-[var(--gold)] opacity-100" : "border-transparent opacity-50 hover:opacity-100"}`}
               >
                 <Image
                   src={img.url}
@@ -67,16 +67,16 @@ export default function ProductDisplay({ product }: { product: Product }) {
 
       {/* --- COLUNA DA DIREITA: DETALHES --- */}
       <div className="flex flex-col justify-center pt-8 md:pt-0">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-[#C5A059] mb-6">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-6">
           Coleção Heritage
         </span>
 
-        <h1 className="text-4xl md:text-5xl font-serif text-white mb-6 leading-tight">
+        <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-6 leading-tight">
           {product.title}
         </h1>
 
-        <div className="text-2xl font-serif text-zinc-300 mb-8 border-b border-white/10 pb-8">
-          {price} <span className="text-sm text-zinc-500 ml-1">EUR</span>
+        <div className="text-2xl font-serif text-[var(--foreground-secondary)] mb-8 border-b border-[var(--border)] pb-8">
+          {price} <span className="text-sm text-[var(--foreground-muted)] ml-1">EUR</span>
         </div>
 
         {/* MENU DESDOBRÁVEL (DROPDOWN) */}
@@ -84,7 +84,7 @@ export default function ProductDisplay({ product }: { product: Product }) {
           <div className="mb-8">
             <label
               htmlFor="variant-select"
-              className="text-[10px] uppercase tracking-widest text-zinc-500 mb-4 block"
+              className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] mb-4 block"
             >
               Modelo
             </label>
@@ -94,13 +94,13 @@ export default function ProductDisplay({ product }: { product: Product }) {
                 id="variant-select"
                 value={selectedVariantId}
                 onChange={(e) => setSelectedVariantId(e.target.value)}
-                className="w-full appearance-none bg-transparent border border-zinc-800 text-white py-4 pl-4 pr-12 font-serif text-sm focus:border-[#C5A059] focus:outline-none transition-colors cursor-pointer uppercase tracking-wider rounded-none"
+                className="w-full appearance-none bg-transparent border border-[var(--border)] text-[var(--foreground)] py-4 pl-4 pr-12 font-serif text-sm focus:border-[var(--gold)] focus:outline-none transition-colors cursor-pointer uppercase tracking-wider rounded-none"
               >
                 {product.variants.map((variant) => (
                   <option
                     key={variant.id}
                     value={variant.id}
-                    className="bg-[#1a1a1a] text-zinc-300 py-2"
+                    className="bg-[var(--background-elevated)] text-[var(--foreground-secondary)] py-2"
                   >
                     {variant.title}
                   </option>
@@ -108,14 +108,14 @@ export default function ProductDisplay({ product }: { product: Product }) {
               </select>
 
               <ChevronDown
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] pointer-events-none"
                 size={16}
               />
             </div>
           </div>
         )}
 
-        <p className="text-zinc-400 font-serif leading-loose mb-12">
+        <p className="text-[var(--foreground-secondary)] font-serif leading-loose mb-12">
           &ldquo;Uma peça desenhada para perdurar. A união entre a funcionalidade equestre e a
           estética intemporal.&rdquo;
         </p>
@@ -125,13 +125,13 @@ export default function ProductDisplay({ product }: { product: Product }) {
           <AddToCartButton variantId={activeVariant.id} available={isAvailable} />
         </div>
 
-        <div className="space-y-4 text-[10px] uppercase tracking-widest text-zinc-600">
+        <div className="space-y-4 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
           <div className="flex items-center gap-3">
-            <div className="w-1 h-1 bg-[#C5A059] rounded-full"></div>
+            <div className="w-1 h-1 bg-[var(--gold)] rounded-full"></div>
             <span>Envio Premium em 24/48h</span>
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-1 h-1 bg-[#C5A059] rounded-full"></div>
+            <div className="w-1 h-1 bg-[var(--gold)] rounded-full"></div>
             <span>Embalagem Exclusiva Portal Lusitano</span>
           </div>
         </div>

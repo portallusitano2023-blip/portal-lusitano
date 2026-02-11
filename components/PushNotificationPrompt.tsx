@@ -135,11 +135,11 @@ export default function PushNotificationPrompt() {
       aria-live="polite"
       className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-md z-[9990] animate-[fadeSlideIn_0.3s_ease-out_forwards]"
     >
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg shadow-2xl p-4">
+      <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-lg shadow-2xl p-4">
         {/* Close button */}
         <button
           onClick={handleDismiss}
-          className="absolute top-3 right-3 text-zinc-500 hover:text-white transition-colors"
+          className="absolute top-3 right-3 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
           aria-label={language === "pt" ? "Fechar" : language === "es" ? "Cerrar" : "Close"}
         >
           <X size={16} />
@@ -147,27 +147,27 @@ export default function PushNotificationPrompt() {
 
         <div className="flex items-start gap-3 pr-6">
           {/* Icon */}
-          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#C5A059]/10 flex items-center justify-center">
-            <Bell className="text-[#C5A059]" size={18} />
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[var(--gold)]/10 flex items-center justify-center">
+            <Bell className="text-[var(--gold)]" size={18} />
           </div>
 
           {/* Content */}
           <div className="flex-1 min-w-0">
             {showDeniedMessage ? (
-              <p className="text-sm text-zinc-400">{t.denied}</p>
+              <p className="text-sm text-[var(--foreground-secondary)]">{t.denied}</p>
             ) : (
               <>
-                <p className="text-sm text-zinc-300 mb-3">{t.message}</p>
+                <p className="text-sm text-[var(--foreground-secondary)] mb-3">{t.message}</p>
                 <div className="flex gap-2">
                   <button
                     onClick={handleAccept}
-                    className="px-4 py-1.5 bg-[#C5A059] text-black text-xs font-bold uppercase tracking-wider hover:bg-white transition-colors rounded"
+                    className="px-4 py-1.5 bg-[var(--gold)] text-black text-xs font-bold uppercase tracking-wider hover:bg-white transition-colors rounded"
                   >
                     {t.accept}
                   </button>
                   <button
                     onClick={handleDismiss}
-                    className="px-4 py-1.5 bg-white/5 text-zinc-400 text-xs font-medium hover:text-white hover:bg-white/10 transition-colors rounded"
+                    className="px-4 py-1.5 bg-[var(--surface-hover)] text-[var(--foreground-secondary)] text-xs font-medium hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors rounded"
                   >
                     {t.dismiss}
                   </button>

@@ -46,23 +46,23 @@ export function MobileMenu({
   ];
 
   return (
-    <div className="lg:hidden bg-[#050505] border-t border-white/5 max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain">
+    <div className="lg:hidden bg-[var(--background)] border-t border-[var(--border)] max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain">
       <div className="px-4 py-6 space-y-2">
         {/* Main Navigation */}
         {mainNavItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className="flex items-center gap-4 py-4 px-3 text-lg text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
+            className="flex items-center gap-4 py-4 px-3 text-lg text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
-            <item.icon size={20} className="text-zinc-500" />
+            <item.icon size={20} className="text-[var(--foreground-muted)]" />
             {item.name}
           </Link>
         ))}
 
         {/* Lusitano Section Mobile - Grid Layout */}
-        <div className="border-t border-white/10 pt-4 mt-4">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] mb-3 block px-3 font-medium">
+        <div className="border-t border-[var(--border)] pt-4 mt-4">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block px-3 font-medium">
             Base de Dados
           </span>
           <div className="grid grid-cols-2 gap-2">
@@ -73,12 +73,12 @@ export function MobileMenu({
                 className={`flex items-center gap-3 py-3 px-3 text-sm transition-colors rounded-lg active:scale-[0.98] touch-manipulation ${
                   item.highlight
                     ? "text-green-400 bg-green-500/10 border border-green-500/30"
-                    : "text-zinc-300 hover:text-[#C5A059] hover:bg-white/5"
+                    : "text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)]"
                 }`}
               >
                 <item.icon
                   size={18}
-                  className={item.highlight ? "text-green-400" : "text-[#C5A059]/70"}
+                  className={item.highlight ? "text-green-400" : "text-[var(--gold)]/70"}
                 />
                 <span className="truncate">{item.label}</span>
               </Link>
@@ -87,8 +87,8 @@ export function MobileMenu({
         </div>
 
         {/* Ferramentas Mobile */}
-        <div className="border-t border-white/10 pt-4 mt-4">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] mb-3 block px-3 font-medium">
+        <div className="border-t border-[var(--border)] pt-4 mt-4">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block px-3 font-medium">
             Ferramentas
           </span>
           <div className="grid grid-cols-2 gap-2">
@@ -96,9 +96,9 @@ export function MobileMenu({
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
+                className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
               >
-                <item.icon size={18} className="text-[#C5A059]/70" />
+                <item.icon size={18} className="text-[var(--gold)]/70" />
                 <span className="truncate">{item.label}</span>
               </Link>
             ))}

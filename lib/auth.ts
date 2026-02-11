@@ -1,18 +1,18 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === "production") {
-  throw new Error("ADMIN_SECRET environment variable is required in production");
+function getSecret() {
+  if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === "production") {
+    throw new Error("ADMIN_SECRET environment variable is required in production");
+  }
+  return new TextEncoder().encode(process.env.ADMIN_SECRET || "dev-only-secret-not-for-production");
 }
-const secret = new TextEncoder().encode(
-  process.env.ADMIN_SECRET || "dev-only-secret-not-for-production"
-);
 
 export async function createSession(email: string) {
   const token = await new SignJWT({ email })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("7d")
-    .sign(secret);
+    .sign(getSecret());
 
   (await cookies()).set("admin_session", token, {
     httpOnly: true,
@@ -33,7 +33,7 @@ export async function verifySession() {
   }
 
   try {
-    const verified = await jwtVerify(cookie.value, secret);
+    const verified = await jwtVerify(cookie.value, getSecret());
     return verified.payload.email as string;
   } catch {
     return null;

@@ -40,10 +40,13 @@ export function SearchButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="p-2 hover:bg-white/5 rounded-full transition-colors"
+      className="p-2 hover:bg-[var(--surface-hover)] rounded-full transition-colors"
       aria-label={t.common.search}
     >
-      <SearchIcon size={20} className="text-white/70 hover:text-white" />
+      <SearchIcon
+        size={20}
+        className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
+      />
     </button>
   );
 }
@@ -204,10 +207,10 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
         className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 px-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
         style={{ animationDelay: "0.05s" }}
       >
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg shadow-2xl overflow-hidden">
+        <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-lg shadow-2xl overflow-hidden">
           {/* Input */}
-          <div className="flex items-center gap-4 p-4 border-b border-white/10">
-            <SearchIcon size={20} className="text-zinc-500" />
+          <div className="flex items-center gap-4 p-4 border-b border-[var(--border)]">
+            <SearchIcon size={20} className="text-[var(--foreground-muted)]" />
             <input
               ref={inputRef}
               type="search"
@@ -218,29 +221,29 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t.search.placeholder}
-              className="flex-1 bg-transparent text-white placeholder-zinc-500 outline-none text-lg"
+              className="flex-1 bg-transparent text-[var(--foreground)] placeholder-[var(--foreground-muted)] outline-none text-lg"
             />
-            {isLoading && <Loader2 size={20} className="text-[#C5A059] animate-spin" />}
+            {isLoading && <Loader2 size={20} className="text-[var(--gold)] animate-spin" />}
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/5 rounded-full transition-colors"
+              className="p-2 hover:bg-[var(--surface-hover)] rounded-full transition-colors"
               aria-label={t.common.close}
             >
-              <X size={20} className="text-zinc-500" />
+              <X size={20} className="text-[var(--foreground-muted)]" />
             </button>
           </div>
 
           {/* Filter tabs */}
           {query.length >= 2 && (
-            <div className="flex gap-1 px-4 py-2 border-b border-white/5 overflow-x-auto">
+            <div className="flex gap-1 px-4 py-2 border-b border-[var(--border)] overflow-x-auto">
               {FILTER_TABS.map((tab) => (
                 <button
                   key={tab.key}
                   onClick={() => setActiveFilter(tab.key)}
                   className={`px-3 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
                     activeFilter === tab.key
-                      ? "bg-[#C5A059]/20 text-[#C5A059] border border-[#C5A059]/30"
-                      : "text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent"
+                      ? "bg-[var(--gold)]/20 text-[var(--gold)] border border-[var(--gold)]/30"
+                      : "text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] border border-transparent"
                   }`}
                 >
                   {tab.label}
@@ -254,18 +257,18 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
             {/* Search history */}
             {showHistory && (
               <div className="py-3">
-                <p className="px-4 text-xs text-zinc-500 uppercase tracking-wider mb-2">
+                <p className="px-4 text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
                   {t.search.recent_searches}
                 </p>
                 {history.map((term) => (
                   <button
                     key={term}
                     onClick={() => handleHistoryClick(term)}
-                    className="flex items-center gap-3 w-full px-4 py-2 hover:bg-white/5 transition-colors text-left"
+                    className="flex items-center gap-3 w-full px-4 py-2 hover:bg-[var(--surface-hover)] transition-colors text-left"
                   >
-                    <Clock size={14} className="text-zinc-600" />
-                    <span className="text-sm text-zinc-300">{term}</span>
-                    <ChevronRight size={14} className="text-zinc-600 ml-auto" />
+                    <Clock size={14} className="text-[var(--foreground-muted)]" />
+                    <span className="text-sm text-[var(--foreground-secondary)]">{term}</span>
+                    <ChevronRight size={14} className="text-[var(--foreground-muted)] ml-auto" />
                   </button>
                 ))}
               </div>
@@ -283,19 +286,21 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                         onClick={handleResultClick}
                         className={`flex items-center gap-4 px-4 py-3 transition-colors ${
                           index === selectedIndex
-                            ? "bg-[#C5A059]/10 border-l-2 border-[#C5A059]"
-                            : "hover:bg-white/5"
+                            ? "bg-[var(--gold)]/10 border-l-2 border-[var(--gold)]"
+                            : "hover:bg-[var(--surface-hover)]"
                         }`}
                       >
-                        <div className="w-8 h-8 rounded bg-[#C5A059]/10 flex items-center justify-center flex-shrink-0">
-                          <span className="text-[#C5A059] text-xs uppercase font-medium">
+                        <div className="w-8 h-8 rounded bg-[var(--gold)]/10 flex items-center justify-center flex-shrink-0">
+                          <span className="text-[var(--gold)] text-xs uppercase font-medium">
                             {typeInfo.badge}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-white font-medium truncate">{result.title}</p>
+                          <p className="text-[var(--foreground)] font-medium truncate">
+                            {result.title}
+                          </p>
                           {result.description && (
-                            <p className="text-sm text-zinc-500 line-clamp-1">
+                            <p className="text-sm text-[var(--foreground-muted)] line-clamp-1">
                               {result.description}
                             </p>
                           )}
