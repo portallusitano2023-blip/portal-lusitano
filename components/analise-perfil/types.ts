@@ -5,13 +5,15 @@ export interface Question {
   description?: string;
   icon: React.ReactNode;
   weight: number;
-  options: {
-    text: string;
-    description?: string;
-    value: string;
-    traits: string[];
-    points: Record<string, number>;
-  }[];
+  options: QuestionOption[];
+}
+
+export interface QuestionOption {
+  text: string;
+  description?: string;
+  value: string;
+  traits: string[];
+  points: Record<string, number>;
 }
 
 export interface FamousHorse {
@@ -89,3 +91,5 @@ export interface ScorePercentage {
   percentage: number;
   label: string;
 }
+
+export type ResultTab = "perfil" | "cavalo" | "custos" | "cronograma" | "analise" | "proximos";

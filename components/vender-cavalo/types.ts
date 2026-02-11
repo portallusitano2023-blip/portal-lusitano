@@ -1,15 +1,15 @@
 export interface FormData {
-  // Dados do Proprietário
+  // Dados do Proprietario
   proprietario_nome: string;
   proprietario_email: string;
   proprietario_telefone: string;
   proprietario_nif: string;
   proprietario_morada: string;
 
-  // Identificação do Cavalo
+  // Identificacao do Cavalo
   nome: string;
-  nome_registo: string; // Nome no Livro Azul
-  numero_registo: string; // Número APSL
+  nome_registo: string;
+  numero_registo: string;
   microchip: string;
   passaporte_equino: string;
 
@@ -20,19 +20,19 @@ export interface FormData {
   mae_registo: string;
   coudelaria_origem: string;
 
-  // Características
+  // Caracteristicas
   data_nascimento: string;
   sexo: string;
   pelagem: string;
   altura: string;
 
-  // Treino e Competição
+  // Treino e Competicao
   nivel_treino: string;
   disciplinas: string[];
   competicoes: string;
   premios: string;
 
-  // Saúde
+  // Saude
   estado_saude: string;
   vacinacao_atualizada: boolean;
   desparasitacao_atualizada: boolean;
@@ -46,7 +46,7 @@ export interface FormData {
   localizacao: string;
   disponibilidade_visita: string;
 
-  // Descrição
+  // Descricao
   descricao: string;
   videos_url: string;
 }
@@ -57,81 +57,9 @@ export interface Documentos {
   exameVet?: File;
 }
 
-export const initialFormData: FormData = {
-  proprietario_nome: "",
-  proprietario_email: "",
-  proprietario_telefone: "",
-  proprietario_nif: "",
-  proprietario_morada: "",
-  nome: "",
-  nome_registo: "",
-  numero_registo: "",
-  microchip: "",
-  passaporte_equino: "",
-  pai_nome: "",
-  pai_registo: "",
-  mae_nome: "",
-  mae_registo: "",
-  coudelaria_origem: "",
-  data_nascimento: "",
-  sexo: "",
-  pelagem: "",
-  altura: "",
-  nivel_treino: "",
-  disciplinas: [],
-  competicoes: "",
-  premios: "",
-  estado_saude: "",
-  vacinacao_atualizada: false,
-  desparasitacao_atualizada: false,
-  exame_veterinario: false,
-  observacoes_saude: "",
-  preco: "",
-  negociavel: false,
-  aceita_troca: false,
-  localizacao: "",
-  disponibilidade_visita: "",
-  descricao: "",
-  videos_url: "",
-};
+export type DocumentType = keyof Documentos;
 
-export const pelagens = [
-  "Ruço",
-  "Castanho",
-  "Preto",
-  "Alazão",
-  "Baio",
-  "Palomino",
-  "Tordilho",
-  "Isabelo",
-  "Malhado",
-];
-const niveis_treino = [
-  "Potro (sem desbaste)",
-  "Desbravado",
-  "Iniciado",
-  "Intermédio",
-  "Avançado",
-  "Alta Escola",
-  "Competição",
-];
-const disciplinas_opcoes = [
-  "Dressage",
-  "Equitação de Trabalho",
-  "Toureio",
-  "Atrelagem",
-  "Saltos",
-  "Lazer",
-  "Reprodução",
-  "Ensino",
-];
-const disponibilidades = [
-  "Imediata",
-  "Após acordo",
-  "Fins de semana",
-  "Dias úteis",
-  "Por marcação",
-];
-
-const PRECO_ANUNCIO = 49; // Preço base
-const PRECO_DESTAQUE = 29; // Extra para destaque
+export interface StepProps {
+  formData: FormData;
+  updateField: (field: keyof FormData, value: FormData[keyof FormData]) => void;
+}

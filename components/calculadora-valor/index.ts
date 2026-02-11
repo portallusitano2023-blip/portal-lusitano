@@ -1,0 +1,11 @@
+export { default as CalculadoraHeader } from "./CalculadoraHeader";
+export { default as IntroSection } from "./IntroSection";
+export { default as StepIdentificacao } from "./StepIdentificacao";
+export { default as StepGeneticaMorfologia } from "./StepGeneticaMorfologia";
+export { default as StepAndamentosTemperamento } from "./StepAndamentosTemperamento";
+export { default as StepTreinoSaude } from "./StepTreinoSaude";
+export { default as StepReproducaoMercado } from "./StepReproducaoMercado";
+export { default as StepNavigation } from "./StepNavigation";
+export { default as ResultadoDisplay } from "./ResultadoDisplay";
+export { calcularValor } from "./utils";
+export type { FormData, Resultado, StepProps } from "./types";
