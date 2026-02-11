@@ -16,6 +16,10 @@ import {
   Code,
   Eye,
   EyeOff,
+  Download,
+  Send,
+  Database,
+  Loader2,
 } from "lucide-react";
 
 interface Setting {
@@ -67,6 +71,9 @@ export default function DefinicoesContent() {
   const [editedValues, setEditedValues] = useState<Record<string, any>>({});
   const [showSuccess, setShowSuccess] = useState(false);
   const [showJsonPreview, setShowJsonPreview] = useState<Record<string, boolean>>({});
+  const [backupLoading, setBackupLoading] = useState(false);
+  const [backupEmailLoading, setBackupEmailLoading] = useState(false);
+  const [backupEmail, setBackupEmail] = useState("");
 
   useEffect(() => {
     fetchSettings();
@@ -310,6 +317,54 @@ export default function DefinicoesContent() {
     }
   };
 
+  const handleDownloadBackup = async () => {
+    setBackupLoading(true);
+    try {
+      const response = await fetch("/api/admin/backup");
+      if (!response.ok) throw new Error("Erro ao gerar backup");
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download =
+        response.headers.get("Content-Disposition")?.split("filename=")[1]?.replace(/"/g, "") ||
+        "backup.json";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    } catch (error) {
+      console.error("Erro ao descarregar backup:", error);
+      alert("Erro ao descarregar backup. Tente novamente.");
+    } finally {
+      setBackupLoading(false);
+    }
+  };
+
+  const handleEmailBackup = async () => {
+    if (!backupEmail) {
+      alert("Insira um email de destino");
+      return;
+    }
+    setBackupEmailLoading(true);
+    try {
+      const response = await fetch("/api/admin/backup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: backupEmail }),
+      });
+      if (!response.ok) throw new Error("Erro ao enviar backup");
+      const data = await response.json();
+      alert(data.message || "Backup enviado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao enviar backup por email:", error);
+      alert("Erro ao enviar backup por email.");
+    } finally {
+      setBackupEmailLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -354,10 +409,31 @@ export default function DefinicoesContent() {
           })}
         </nav>
 
+        {/* Separador */}
+        <div className="mt-6 mb-4 border-t border-white/10 pt-4">
+          <span className="text-xs text-gray-600 uppercase tracking-wider">Ferramentas</span>
+        </div>
+
+        <button
+          onClick={() => setActiveCategory("backup")}
+          className={`
+            w-full flex items-center gap-3 px-4 py-3 rounded-lg
+            transition-all duration-200 text-left
+            ${
+              activeCategory === "backup"
+                ? "bg-[#C5A059] text-black font-semibold"
+                : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }
+          `}
+        >
+          <Database className="w-5 h-5 flex-shrink-0" />
+          <span className="flex-1 text-sm">Backups</span>
+        </button>
+
         {/* Botão Recarregar */}
         <button
           onClick={fetchSettings}
-          className="mt-6 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-all"
+          className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-all"
         >
           <RefreshCw className="w-4 h-4" />
           <span className="text-sm">Recarregar</span>
