@@ -339,25 +339,25 @@ const QuickActionsWidget = () => {
       label: "Novo Cavalo",
       icon: Plus,
       color: "bg-green-500",
-      action: () => console.log("novo cavalo"),
+      action: () => {},
     },
     {
       label: "Novo Evento",
       icon: Calendar,
       color: "bg-blue-500",
-      action: () => console.log("novo evento"),
+      action: () => {},
     },
     {
       label: "Ver Mensagens",
       icon: Mail,
       color: "bg-purple-500",
-      action: () => console.log("mensagens"),
+      action: () => {},
     },
     {
       label: "Analytics",
       icon: TrendingUp,
       color: "bg-orange-500",
-      action: () => console.log("analytics"),
+      action: () => {},
     },
   ];
 

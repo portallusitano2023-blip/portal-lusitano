@@ -129,7 +129,6 @@ function trackGA4(eventName: string, eventParams?: Record<string, unknown>) {
 
   try {
     window.gtag?.("event", eventName, eventParams);
-    console.log(`[GA4] ${eventName}`, eventParams);
   } catch (error) {
     console.error("[GA4] Error tracking event:", error);
   }
@@ -146,7 +145,6 @@ function trackMetaPixel(eventName: string, eventParams?: Record<string, unknown>
 
   try {
     window.fbq?.("track", eventName, eventParams);
-    console.log(`[Meta Pixel] ${eventName}`, eventParams);
   } catch (error) {
     console.error("[Meta Pixel] Error tracking event:", error);
   }

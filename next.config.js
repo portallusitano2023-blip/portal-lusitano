@@ -71,6 +71,22 @@ const nextConfig = {
         destination: "/jornal/novilheiro-rubi-revolucao-olimpica",
         permanent: true,
       },
+      // Rotas duplicadas → canónicas
+      {
+        source: "/favoritos",
+        destination: "/cavalos-favoritos",
+        permanent: true,
+      },
+      {
+        source: "/vender",
+        destination: "/vender-cavalo",
+        permanent: true,
+      },
+      {
+        source: "/marketplace",
+        destination: "/comprar",
+        permanent: true,
+      },
     ];
   },
 
