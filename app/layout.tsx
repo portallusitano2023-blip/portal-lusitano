@@ -13,6 +13,7 @@ import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import PushNotificationPrompt from "@/components/PushNotificationPrompt";
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -118,6 +119,12 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: siteUrl,
+    languages: {
+      "pt-PT": siteUrl,
+      "en-US": `${siteUrl}/en`,
+      "es-ES": `${siteUrl}/es`,
+      "x-default": siteUrl,
+    },
   },
 };
 
@@ -157,6 +164,7 @@ export default function RootLayout({
             <Footer />
             <MobileBottomNav />
             <WhatsAppButton />
+            <PushNotificationPrompt />
           </ErrorBoundary>
           <ServiceWorkerRegistration />
         </Providers>
