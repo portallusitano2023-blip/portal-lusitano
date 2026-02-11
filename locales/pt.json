@@ -305,7 +305,8 @@
     "highlight": "Destaque",
     "no_results": "Nenhuma coudelaria encontrada",
     "no_results_hint": "Tente ajustar os filtros de pesquisa",
-    "loading": "A carregar coudelarias..."
+    "loading": "A carregar coudelarias...",
+    "region_all": "Todas"
   },
   "eventos": {
     "badge": "Calendário Equestre",
@@ -860,6 +861,30 @@
     "no": "Nao",
     "close": "Fechar",
     "home": "Inicio"
+  },
+  "search": {
+    "type_labels": {
+      "horse": "Cavalo",
+      "product": "Produto",
+      "article": "Artigo",
+      "event": "Evento",
+      "stud": "Coudelaria",
+      "page": "Página"
+    },
+    "filter_tabs": {
+      "all": "Tudo",
+      "horses": "Cavalos",
+      "events": "Eventos",
+      "studs": "Coudelarias",
+      "pages": "Páginas"
+    },
+    "placeholder": "Pesquisar...",
+    "no_results": "Nenhum resultado encontrado",
+    "search_all": "Pesquisar em tudo",
+    "min_chars": "Digite pelo menos 2 caracteres",
+    "recent_searches": "Pesquisas recentes",
+    "navigate": "navegar",
+    "open": "abrir"
   },
   "footer": {
     "rights": "Todos os direitos reservados",

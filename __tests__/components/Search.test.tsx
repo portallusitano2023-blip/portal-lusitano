@@ -35,6 +35,30 @@ vi.mock("@/context/LanguageContext", () => ({
         search_placeholder: "Pesquisar...",
         close: "Fechar",
       },
+      search: {
+        type_labels: {
+          horse: "Cavalo",
+          product: "Produto",
+          article: "Artigo",
+          event: "Evento",
+          stud: "Coudelaria",
+          page: "Página",
+        },
+        filter_tabs: {
+          all: "Tudo",
+          horses: "Cavalos",
+          events: "Eventos",
+          studs: "Coudelarias",
+          pages: "Páginas",
+        },
+        placeholder: "Pesquisar...",
+        no_results: "Nenhum resultado encontrado",
+        search_all: "Pesquisar em tudo",
+        min_chars: "Digite pelo menos 2 caracteres",
+        recent_searches: "Pesquisas recentes",
+        navigate: "navegar",
+        open: "abrir",
+      },
     },
   }),
 }));
@@ -172,6 +196,6 @@ describe("SearchModal", () => {
   it("renders ESC hint in footer", () => {
     render(<SearchModal isOpen={true} onClose={vi.fn()} />);
     expect(screen.getByText("ESC")).toBeInTheDocument();
-    expect(screen.getByText("fechar")).toBeInTheDocument();
+    expect(screen.getByText("Fechar")).toBeInTheDocument();
   });
 });

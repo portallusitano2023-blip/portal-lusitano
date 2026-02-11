@@ -305,7 +305,8 @@
     "highlight": "Destacado",
     "no_results": "Ninguna yeguada encontrada",
     "no_results_hint": "Intente ajustar los filtros de busqueda",
-    "loading": "Cargando yeguadas..."
+    "loading": "Cargando yeguadas...",
+    "region_all": "Todas"
   },
   "eventos": {
     "badge": "Calendario Ecuestre",
@@ -860,6 +861,30 @@
     "no": "No",
     "close": "Cerrar",
     "home": "Inicio"
+  },
+  "search": {
+    "type_labels": {
+      "horse": "Caballo",
+      "product": "Producto",
+      "article": "Articulo",
+      "event": "Evento",
+      "stud": "Yeguada",
+      "page": "Pagina"
+    },
+    "filter_tabs": {
+      "all": "Todo",
+      "horses": "Caballos",
+      "events": "Eventos",
+      "studs": "Yeguadas",
+      "pages": "Paginas"
+    },
+    "placeholder": "Buscar...",
+    "no_results": "Ningun resultado encontrado",
+    "search_all": "Buscar en todo",
+    "min_chars": "Escriba al menos 2 caracteres",
+    "recent_searches": "Busquedas recientes",
+    "navigate": "navegar",
+    "open": "abrir"
   },
   "footer": {
     "rights": "Todos los derechos reservados",

@@ -52,7 +52,16 @@
       "Bash(npx jest --passWithNoTests)",
       "Bash(npx jest --listReporters)",
       "Bash(npx jest --showConfig)",
-      "Bash(npx vitest run)"
+      "Bash(npx vitest run)",
+      "Bash(npm run lint:fix:*)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: limpar console.logs, adicionar redirects e corrigir .env.example\n\n- Remover console.log de DashboardContent \\(mock actions\\) e analytics-events \\(debug GA4/Meta\\)\n- Adicionar redirects 301: /favoritos → /cavalos-favoritos, /vender → /vender-cavalo, /marketplace → /comprar\n- .env.example: corrigir naming Shopify \\(NEXT_PUBLIC_\\), adicionar STRIPE_TOOLS_PRICE_ID, SANITY_API_WRITE_TOKEN, ADMIN_EMAIL/PASSWORD, NEXT_PUBLIC_BASE_URL\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npm run test:run:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(npm ls:*)",
+      "Bash(taskkill:*)",
+      "Bash(del /f \"c:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.next\\\\dev\\\\lock\")",
+      "Bash(npx next dev:*)"
     ]
   }
 }

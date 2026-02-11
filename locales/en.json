@@ -305,7 +305,8 @@
     "highlight": "Featured",
     "no_results": "No stud farms found",
     "no_results_hint": "Try adjusting the search filters",
-    "loading": "Loading stud farms..."
+    "loading": "Loading stud farms...",
+    "region_all": "All"
   },
   "eventos": {
     "badge": "Equestrian Calendar",
@@ -860,6 +861,30 @@
     "no": "No",
     "close": "Close",
     "home": "Home"
+  },
+  "search": {
+    "type_labels": {
+      "horse": "Horse",
+      "product": "Product",
+      "article": "Article",
+      "event": "Event",
+      "stud": "Stud",
+      "page": "Page"
+    },
+    "filter_tabs": {
+      "all": "All",
+      "horses": "Horses",
+      "events": "Events",
+      "studs": "Studs",
+      "pages": "Pages"
+    },
+    "placeholder": "Search...",
+    "no_results": "No results found",
+    "search_all": "Search in all",
+    "min_chars": "Type at least 2 characters",
+    "recent_searches": "Recent searches",
+    "navigate": "navigate",
+    "open": "open"
   },
   "footer": {
     "rights": "All rights reserved",

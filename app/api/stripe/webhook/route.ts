@@ -400,8 +400,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         </div>
       `,
     });
-
-    console.log(`Profissional registered: ${metadata.nome}`);
   }
 
   // Handle tools subscription
@@ -496,8 +494,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         <p><strong>Subscription ID:</strong> ${subscriptionId}</p>
       `,
     });
-
-    console.log(`Tools PRO subscription activated for user: ${userId}`);
   }
 }
 
@@ -517,12 +513,8 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
         .from("user_profiles")
         .update({ tools_subscription_status: "active" })
         .eq("id", profile.id);
-
-      console.log(`Tools subscription reactivated for user: ${profile.id}`);
     }
   }
-
-  console.log(`Payment succeeded for invoice: ${invoice.id}`);
 }
 
 async function handleSubscriptionCancelled(subscription: Stripe.Subscription) {
@@ -539,6 +531,4 @@ async function handleSubscriptionCancelled(subscription: Stripe.Subscription) {
     .from("user_profiles")
     .update({ tools_subscription_status: "cancelled" })
     .eq("stripe_customer_id", customerId);
-
-  console.log(`Subscription cancelled: ${subscription.id}`);
 }

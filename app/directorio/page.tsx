@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { MapPin, Search, Filter, Crown, ArrowRight, Plus, Users, Star } from "lucide-react";
 import Link from "next/link";
@@ -30,7 +30,16 @@ interface Coudelaria {
   views_count: number;
 }
 
-const regioes = ["Todas", "Ribatejo", "Alentejo", "Lisboa", "Porto", "Minho", "Douro", "Centro"];
+const regioesValues = [
+  "Todas",
+  "Ribatejo",
+  "Alentejo",
+  "Lisboa",
+  "Porto",
+  "Minho",
+  "Douro",
+  "Centro",
+];
 
 // Placeholder images
 const placeholderImages = [
@@ -49,6 +58,12 @@ export default function DirectorioPage() {
   const currentPage = Number(searchParams.get("page")) || 1;
 
   const { t } = useLanguage();
+
+  const regioes = useMemo(() => {
+    const r = [...regioesValues];
+    r[0] = t.directorio.region_all;
+    return r;
+  }, [t]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRegiao, setSelectedRegiao] = useState("Todas");
@@ -120,7 +135,7 @@ export default function DirectorioPage() {
               <div className="text-sm text-zinc-500">{t.directorio.coudelarias}</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059]">{regioes.length - 1}</div>
+              <div className="text-3xl font-serif text-[#C5A059]">{regioesValues.length - 1}</div>
               <div className="text-sm text-zinc-500">{t.directorio.regioes}</div>
             </div>
             <div className="text-center p-4 bg-white/[0.02] border border-white/5">

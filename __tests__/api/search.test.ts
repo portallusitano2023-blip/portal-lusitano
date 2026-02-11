@@ -4,10 +4,10 @@ import { NextRequest } from "next/server";
 // ---------------------------------------------------------------------------
 // Mocks
 // ---------------------------------------------------------------------------
-const mockSelect = vi.fn();
-const mockEq = vi.fn();
-const mockOr = vi.fn();
-const mockLimit = vi.fn();
+const _mockSelect = vi.fn();
+const _mockEq = vi.fn();
+const _mockOr = vi.fn();
+const _mockLimit = vi.fn();
 
 vi.mock("@/lib/supabase", () => ({
   supabase: {

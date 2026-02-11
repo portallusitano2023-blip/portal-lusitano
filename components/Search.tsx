@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Search as SearchIcon, X, Loader2, Clock, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
@@ -15,23 +15,6 @@ interface SearchResult {
 }
 
 type FilterType = "all" | "horse" | "event" | "stud" | "page";
-
-const TYPE_LABELS: Record<string, { pt: string; en: string; badge: string }> = {
-  horse: { pt: "Cavalo", en: "Horse", badge: "C" },
-  product: { pt: "Produto", en: "Product", badge: "P" },
-  article: { pt: "Artigo", en: "Article", badge: "A" },
-  event: { pt: "Evento", en: "Event", badge: "E" },
-  stud: { pt: "Coudelaria", en: "Stud", badge: "S" },
-  page: { pt: "Página", en: "Page", badge: "Pg" },
-};
-
-const FILTER_TABS: Array<{ key: FilterType; pt: string; en: string }> = [
-  { key: "all", pt: "Tudo", en: "All" },
-  { key: "horse", pt: "Cavalos", en: "Horses" },
-  { key: "event", pt: "Eventos", en: "Events" },
-  { key: "stud", pt: "Coudelarias", en: "Studs" },
-  { key: "page", pt: "Páginas", en: "Pages" },
-];
 
 const HISTORY_KEY = "portal-lusitano-search-history";
 const MAX_HISTORY = 5;
@@ -66,7 +49,7 @@ export function SearchButton({ onClick }: { onClick: () => void }) {
 }
 
 export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -75,6 +58,31 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
   const [history, setHistory] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLUListElement>(null);
+
+  // Type labels with translations
+  const TYPE_LABELS = useMemo(
+    () => ({
+      horse: { label: t.search.type_labels.horse, badge: "C" },
+      product: { label: t.search.type_labels.product, badge: "P" },
+      article: { label: t.search.type_labels.article, badge: "A" },
+      event: { label: t.search.type_labels.event, badge: "E" },
+      stud: { label: t.search.type_labels.stud, badge: "S" },
+      page: { label: t.search.type_labels.page, badge: "Pg" },
+    }),
+    [t]
+  );
+
+  // Filter tabs with translations
+  const FILTER_TABS = useMemo(
+    () => [
+      { key: "all" as FilterType, label: t.search.filter_tabs.all },
+      { key: "horse" as FilterType, label: t.search.filter_tabs.horses },
+      { key: "event" as FilterType, label: t.search.filter_tabs.events },
+      { key: "stud" as FilterType, label: t.search.filter_tabs.studs },
+      { key: "page" as FilterType, label: t.search.filter_tabs.pages },
+    ],
+    [t]
+  );
 
   // Load history on open
   useEffect(() => {
@@ -205,7 +213,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={t.common.search_placeholder || "Pesquisar..."}
+              placeholder={t.search.placeholder}
               className="flex-1 bg-transparent text-white placeholder-zinc-500 outline-none text-lg"
             />
             {isLoading && <Loader2 size={20} className="text-[#C5A059] animate-spin" />}
@@ -231,7 +239,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                       : "text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent"
                   }`}
                 >
-                  {language === "pt" ? tab.pt : tab.en}
+                  {tab.label}
                 </button>
               ))}
             </div>
@@ -243,7 +251,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
             {showHistory && (
               <div className="py-3">
                 <p className="px-4 text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                  {language === "pt" ? "Pesquisas recentes" : "Recent searches"}
+                  {t.search.recent_searches}
                 </p>
                 {history.map((term) => (
                   <button
@@ -289,7 +297,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                           )}
                         </div>
                         <span className="text-xs text-zinc-400 uppercase tracking-wider flex-shrink-0">
-                          {language === "pt" ? typeInfo.pt : typeInfo.en}
+                          {typeInfo.label}
                         </span>
                       </Link>
                     </li>
@@ -298,25 +306,19 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               </ul>
             ) : query.length >= 2 && !isLoading ? (
               <div className="py-12 text-center">
-                <p className="text-zinc-500">
-                  {language === "pt" ? "Nenhum resultado encontrado" : "No results found"}
-                </p>
+                <p className="text-zinc-500">{t.search.no_results}</p>
                 {activeFilter !== "all" && (
                   <button
                     onClick={() => setActiveFilter("all")}
                     className="mt-2 text-sm text-[#C5A059] hover:underline"
                   >
-                    {language === "pt" ? "Pesquisar em tudo" : "Search in all"}
+                    {t.search.search_all}
                   </button>
                 )}
               </div>
             ) : !showHistory && query.length < 2 ? (
               <div className="py-12 text-center">
-                <p className="text-zinc-400 text-sm">
-                  {language === "pt"
-                    ? "Digite pelo menos 2 caracteres"
-                    : "Type at least 2 characters"}
-                </p>
+                <p className="text-zinc-400 text-sm">{t.search.min_chars}</p>
               </div>
             ) : null}
           </div>
@@ -325,15 +327,15 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
           <div className="px-4 py-3 border-t border-white/5 flex items-center gap-4 text-xs text-zinc-400">
             <span className="flex items-center gap-1">
               <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-zinc-500">ESC</kbd>
-              {language === "pt" ? "fechar" : "close"}
+              {t.common.close}
             </span>
             <span className="flex items-center gap-1">
               <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-zinc-500">↑↓</kbd>
-              {language === "pt" ? "navegar" : "navigate"}
+              {t.search.navigate}
             </span>
             <span className="flex items-center gap-1">
               <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-zinc-500">↵</kbd>
-              {language === "pt" ? "abrir" : "open"}
+              {t.search.open}
             </span>
           </div>
         </div>
