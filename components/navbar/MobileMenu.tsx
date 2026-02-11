@@ -106,8 +106,8 @@ export function MobileMenu({
         </div>
 
         {/* Comunidade Mobile */}
-        <div className="border-t border-white/10 pt-4 mt-4">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] mb-3 block px-3 font-medium">
+        <div className="border-t border-[var(--border)] pt-4 mt-4">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block px-3 font-medium">
             Comunidade
           </span>
           <div className="grid grid-cols-2 gap-2">
@@ -115,9 +115,9 @@ export function MobileMenu({
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 py-3 px-3 text-sm text-zinc-300 hover:text-[#C5A059] hover:bg-white/5 transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
+                className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
               >
-                <item.icon size={18} className="text-[#C5A059]/70" />
+                <item.icon size={18} className="text-[var(--gold)]/70" />
                 <span className="truncate">{item.label}</span>
               </Link>
             ))}

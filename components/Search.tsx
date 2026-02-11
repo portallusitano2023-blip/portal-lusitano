@@ -305,7 +305,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                             </p>
                           )}
                         </div>
-                        <span className="text-xs text-zinc-400 uppercase tracking-wider flex-shrink-0">
+                        <span className="text-xs text-[var(--foreground-secondary)] uppercase tracking-wider flex-shrink-0">
                           {typeInfo.label}
                         </span>
                       </Link>
@@ -315,11 +315,11 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               </ul>
             ) : query.length >= 2 && !isLoading ? (
               <div className="py-12 text-center">
-                <p className="text-zinc-500">{t.search.no_results}</p>
+                <p className="text-[var(--foreground-muted)]">{t.search.no_results}</p>
                 {activeFilter !== "all" && (
                   <button
                     onClick={() => setActiveFilter("all")}
-                    className="mt-2 text-sm text-[#C5A059] hover:underline"
+                    className="mt-2 text-sm text-[var(--gold)] hover:underline"
                   >
                     {t.search.search_all}
                   </button>

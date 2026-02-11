@@ -132,18 +132,18 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto space-y-8">
           <p
-            className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#C5A059] opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+            className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[var(--gold)] opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
             style={{ animationDelay: "0.4s" }}
           >
             {t.home.est}
           </p>
 
-          <h1 className="text-6xl md:text-8xl font-serif text-white leading-tight drop-shadow-lg">
+          <h1 className="text-6xl md:text-8xl font-serif text-[var(--foreground)] leading-tight drop-shadow-lg">
             <TextSplit text={t.home.title_main} baseDelay={0.5} wordDelay={0.12} />
           </h1>
 
           <p
-            className="text-sm md:text-base font-serif italic text-zinc-200 max-w-lg mx-auto leading-relaxed drop-shadow-md opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+            className="text-sm md:text-base font-serif italic text-[var(--foreground)] max-w-lg mx-auto leading-relaxed drop-shadow-md opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
             style={{ animationDelay: "0.9s" }}
           >
             &ldquo;{t.home.hero_text}&rdquo;

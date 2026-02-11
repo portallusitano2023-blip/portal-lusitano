@@ -177,8 +177,8 @@ export default function CavalosFamososPage() {
       {/* Cavalos em Destaque */}
       {cavalosDestaque.length > 0 && (
         <section className="max-w-6xl mx-auto mb-12">
-          <h2 className="text-lg font-serif text-[#C5A059] mb-6 flex items-center gap-2">
-            <Sparkles size={20} className="fill-[#C5A059]" />
+          <h2 className="text-lg font-serif text-[var(--gold)] mb-6 flex items-center gap-2">
+            <Sparkles size={20} className="fill-[var(--gold)]" />
             {t.cavalos_famosos.featured}
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -197,7 +197,7 @@ export default function CavalosFamososPage() {
       {/* Outros Cavalos */}
       {outrosCavalos.length > 0 && (
         <section className="max-w-6xl mx-auto">
-          <h2 className="text-lg font-serif text-zinc-400 mb-6 flex items-center gap-2">
+          <h2 className="text-lg font-serif text-[var(--foreground-secondary)] mb-6 flex items-center gap-2">
             <History size={20} />
             {t.cavalos_famosos.others}
           </h2>
@@ -227,8 +227,8 @@ export default function CavalosFamososPage() {
       {/* Empty State */}
       {cavalosFiltrados.length === 0 && (
         <div className="max-w-6xl mx-auto text-center py-16">
-          <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Trophy size={24} className="text-zinc-600" />
+          <div className="w-16 h-16 bg-[var(--background-secondary)] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Trophy size={24} className="text-[var(--foreground-muted)]" />
           </div>
           <h3 className="text-lg font-medium mb-2">{t.cavalos_famosos.no_results}</h3>
           <p className="text-sm text-zinc-500">{t.cavalos_famosos.no_results_hint}</p>
