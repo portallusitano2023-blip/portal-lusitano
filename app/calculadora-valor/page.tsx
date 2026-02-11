@@ -186,16 +186,18 @@ export default function CalculadoraValorPage() {
             )}
 
             {/* Result */}
-            {resultado && (
-              <ResultadoDisplay
-                ref={resultRef}
-                resultado={resultado}
-                form={form}
-                onExportPDF={handleExportPDF}
-                onShare={handleShare}
-                isExporting={isExporting}
-              />
-            )}
+            <div aria-live="polite">
+              {resultado && (
+                <ResultadoDisplay
+                  ref={resultRef}
+                  resultado={resultado}
+                  form={form}
+                  onExportPDF={handleExportPDF}
+                  onShare={handleShare}
+                  isExporting={isExporting}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>

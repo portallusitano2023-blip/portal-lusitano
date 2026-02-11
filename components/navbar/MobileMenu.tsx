@@ -187,7 +187,11 @@ export function MobileMenu({
             }}
             className="w-full text-center py-3 px-3 text-zinc-400 hover:text-white transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
-            {language === "pt" ? "🇬🇧 Switch to English" : "🇵🇹 Mudar para Português"}
+            {language === "pt"
+              ? "🇬🇧 Switch to English"
+              : language === "en"
+                ? "🇪🇸 Cambiar a Español"
+                : "🇵🇹 Mudar para Português"}
           </button>
         </div>
       </div>

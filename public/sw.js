@@ -6,7 +6,12 @@ const API_CACHE = `portal-lusitano-api-${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
   '/',
+  '/comprar',
   '/loja',
+  '/cavalos-famosos',
+  '/jornal',
+  '/eventos',
+  '/ferramentas',
   '/offline',
 ];
 
@@ -170,4 +175,64 @@ self.addEventListener('fetch', (event) => {
 
   // ✅ STRATEGY 5: Stale-While-Revalidate para OUTROS
   event.respondWith(staleWhileRevalidateStrategy(request, CACHE_NAME));
+});
+
+// ============================================================================
+// Push Notifications
+// ============================================================================
+
+/**
+ * Push event - receives push messages from the server and displays a notification.
+ * The payload should be JSON with: { title, body, icon?, url?, tag? }
+ */
+self.addEventListener('push', (event) => {
+  if (!event.data) return;
+
+  let data;
+  try {
+    data = event.data.json();
+  } catch {
+    data = {
+      title: 'Portal Lusitano',
+      body: event.data.text(),
+    };
+  }
+
+  const title = data.title || 'Portal Lusitano';
+  const options = {
+    body: data.body || '',
+    icon: data.icon || '/icons/icon-192x192.png',
+    badge: '/icons/icon-72x72.png',
+    tag: data.tag || 'portal-lusitano-notification',
+    data: {
+      url: data.url || '/',
+    },
+    vibrate: [100, 50, 100],
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+/**
+ * Notification click - opens or focuses the relevant page when the user
+ * taps the notification.
+ */
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  const targetUrl = event.notification.data?.url || '/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      // If there is already an open tab with this origin, focus it and navigate
+      for (const client of clientList) {
+        if (client.url.startsWith(self.location.origin) && 'focus' in client) {
+          client.focus();
+          return client.navigate(targetUrl);
+        }
+      }
+      // Otherwise open a new window
+      return clients.openWindow(targetUrl);
+    })
+  );
 });
