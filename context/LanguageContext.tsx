@@ -16,15 +16,14 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof window === "undefined") return "pt";
-    const cookieLocale = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("locale="))
-      ?.split("=")[1];
-    return cookieLocale === "en" ? "en" : cookieLocale === "es" ? "es" : "pt";
-  });
+export function LanguageProvider({
+  children,
+  initialLanguage = "pt",
+}: {
+  children: ReactNode;
+  initialLanguage?: Language;
+}) {
+  const [language, setLanguage] = useState<Language>(initialLanguage);
 
   // Actualizar documento quando idioma muda
   useEffect(() => {

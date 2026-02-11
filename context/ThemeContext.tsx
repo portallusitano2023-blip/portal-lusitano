@@ -14,14 +14,18 @@ const ThemeContext = createContext<ThemeContextType>({
   toggleTheme: () => {},
 });
 
-function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
-  const stored = localStorage.getItem("portal-lusitano-theme");
-  return stored === "light" ? "light" : "dark";
-}
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  // Always start with "dark" to match server render (inline script handles visual)
+  const [theme, setTheme] = useState<Theme>("dark");
+
+  // Sync React state with localStorage after hydration
+  useEffect(() => {
+    const stored = localStorage.getItem("portal-lusitano-theme");
+    if (stored === "light" || stored === "dark") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync with external storage on mount
+      setTheme(stored);
+    }
+  }, []);
 
   // Sync class on <html> whenever theme changes
   useEffect(() => {

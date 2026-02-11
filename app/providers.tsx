@@ -30,27 +30,35 @@ function composeProviders(...providers: FC<{ children: ReactNode }>[]) {
 }
 
 // Providers ordered by dependency:
-// ErrorBoundary > Auth > Language > Toast > Cart > Wishlist > HorseFavorites
+// ErrorBoundary > Theme > Auth > Toast > Cart > Wishlist > HorseFavorites
+// LanguageProvider extracted from compose because it needs initialLanguage prop
 const ComposedProviders = composeProviders(
   ErrorBoundary as unknown as FC<{ children: ReactNode }>,
   ThemeProvider,
   AuthProvider,
-  LanguageProvider,
   ToastProvider,
   CartProvider,
   WishlistProvider,
   HorseFavoritesProvider
 );
 
-export function Providers({ children }: { children: ReactNode }) {
+export function Providers({
+  children,
+  initialLanguage = "pt",
+}: {
+  children: ReactNode;
+  initialLanguage?: "pt" | "en" | "es";
+}) {
   return (
-    <ComposedProviders>
-      <Preloader />
-      {children}
-      <ScrollToTop />
-      <CookieConsent />
-      <NewsletterPopup />
-      <PushNotificationPrompt />
-    </ComposedProviders>
+    <LanguageProvider initialLanguage={initialLanguage}>
+      <ComposedProviders>
+        <Preloader />
+        {children}
+        <ScrollToTop />
+        <CookieConsent />
+        <NewsletterPopup />
+        <PushNotificationPrompt />
+      </ComposedProviders>
+    </LanguageProvider>
   );
 }

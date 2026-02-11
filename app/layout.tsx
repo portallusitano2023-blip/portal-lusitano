@@ -128,14 +128,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  const localeCookie = cookieStore.get("locale")?.value;
+  const initialLanguage = (localeCookie === "en" ? "en" : localeCookie === "es" ? "es" : "pt") as
+    | "pt"
+    | "en"
+    | "es";
+
   return (
-    <html lang="pt" className={`${playfair.variable} ${montserrat.variable} dark`}>
+    <html lang={initialLanguage} className={`${playfair.variable} ${montserrat.variable} dark`}>
       <head>
+        {/* Inline script to set theme before React hydration (prevents FOUC) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('portal-lusitano-theme');if(t==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light')}}catch(e){}})()`,
+          }}
+        />
         {/* Preconnect para recursos críticos, dns-prefetch para os restantes */}
         <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
@@ -154,7 +168,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[var(--background)] text-[var(--foreground)] antialiased">
-        <Providers>
+        <Providers initialLanguage={initialLanguage}>
           {/* ✅ ErrorBoundary global - captura render errors em toda a aplicação */}
           <ErrorBoundary>
             <SkipLinks />
