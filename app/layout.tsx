@@ -81,7 +81,6 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_PT",
-    alternateLocale: ["en_US", "es_ES"],
     url: siteUrl,
     siteName: "Portal Lusitano",
     title: "Portal Lusitano | Cavalos Lusitanos de Elite",
@@ -119,11 +118,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: siteUrl,
-    languages: {
-      "pt-PT": siteUrl,
-      "en-US": `${siteUrl}/en`,
-      "es-ES": `${siteUrl}/es`,
-    },
   },
 };
 
@@ -135,11 +129,11 @@ export default function RootLayout({
   return (
     <html lang="pt" className={`${playfair.variable} ${montserrat.variable} dark`}>
       <head>
-        {/* DNS-Prefetch para recursos externos */}
+        {/* Preconnect para recursos críticos, dns-prefetch para os restantes */}
+        <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <OrganizationSchema />
         <WebsiteSchema />

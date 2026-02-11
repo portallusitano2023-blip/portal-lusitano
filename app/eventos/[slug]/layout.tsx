@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
+
 export async function generateMetadata({
   params,
 }: {
@@ -19,6 +21,7 @@ export async function generateMetadata({
       return {
         title: "Evento | Portal Lusitano",
         description: "Eventos equestres e do mundo Lusitano em Portugal.",
+        alternates: { canonical: `${siteUrl}/eventos/${slug}` },
       };
     }
 
@@ -33,6 +36,7 @@ export async function generateMetadata({
     return {
       title,
       description,
+      alternates: { canonical: `${siteUrl}/eventos/${slug}` },
       openGraph: {
         title,
         description,
@@ -50,6 +54,7 @@ export async function generateMetadata({
     return {
       title: "Evento | Portal Lusitano",
       description: "Eventos equestres e do mundo Lusitano em Portugal.",
+      alternates: { canonical: `${siteUrl}/eventos/${slug}` },
     };
   }
 }

@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Autenticação",
+  description:
+    "Aceda à sua conta no Portal Lusitano — o maior portal de cavalos Lusitanos em Portugal.",
+  robots: { index: false, follow: false },
+};
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (

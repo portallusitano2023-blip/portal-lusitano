@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { createClient } from "next-sanity";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
+
 const client = createClient({
   projectId: "ofrzpaxa",
   dataset: "production",
@@ -28,6 +30,7 @@ export async function generateMetadata({
       return {
         title: "Cavalo | Portal Lusitano",
         description: "Descubra cavalos Lusitanos de qualidade no Portal Lusitano.",
+        alternates: { canonical: `${siteUrl}/cavalo/${slug}` },
       };
     }
 
@@ -39,6 +42,7 @@ export async function generateMetadata({
     return {
       title,
       description,
+      alternates: { canonical: `${siteUrl}/cavalo/${slug}` },
       openGraph: {
         title,
         description,
@@ -56,6 +60,7 @@ export async function generateMetadata({
     return {
       title: "Cavalo Lusitano | Portal Lusitano",
       description: "Descubra cavalos Lusitanos de qualidade no Portal Lusitano.",
+      alternates: { canonical: `${siteUrl}/cavalo/${slug}` },
     };
   }
 }

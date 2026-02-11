@@ -61,7 +61,11 @@
       "Bash(npm ls:*)",
       "Bash(taskkill:*)",
       "Bash(del /f \"c:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.next\\\\dev\\\\lock\")",
-      "Bash(npx next dev:*)"
+      "Bash(npx next dev:*)",
+      "Bash(gh issue list:*)",
+      "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" status --short)",
+      "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" diff --name-only)",
+      "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" diff \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\vitest.config.ts\")"
     ]
   }
 }
