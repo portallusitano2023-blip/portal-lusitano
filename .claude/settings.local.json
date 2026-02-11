@@ -66,7 +66,10 @@
       "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" status --short)",
       "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" diff --name-only)",
       "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" diff \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\vitest.config.ts\")",
-      "Bash(file public/screenshots/*.svg)"
+      "Bash(file public/screenshots/*.svg)",
+      "Bash(git pull:*)",
+      "Bash(npm install:*)",
+      "Bash(if not exist \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\public\\\\screenshots\" mkdir \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\public\\\\screenshots\")"
     ]
   }
 }
