@@ -19,7 +19,7 @@ export default function FormErrors({ errors }: FormErrorsProps) {
           </p>
           <ul className="text-sm text-red-300 space-y-1">
             {errors.map((error, i) => (
-              <li key={i}>&#8226; {error}</li>
+              <li key={i}>• {error}</li>
             ))}
           </ul>
         </div>

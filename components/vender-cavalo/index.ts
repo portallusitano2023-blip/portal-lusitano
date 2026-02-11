@@ -1,0 +1,11 @@
+export { default as PageHeader } from "@/components/vender-cavalo/PageHeader";
+export { default as PricingBanner } from "@/components/vender-cavalo/PricingBanner";
+export { default as StepIndicator } from "@/components/vender-cavalo/StepIndicator";
+export { default as FormErrors } from "@/components/vender-cavalo/FormErrors";
+export { default as FormNavigation } from "@/components/vender-cavalo/FormNavigation";
+export { default as StepProprietario } from "@/components/vender-cavalo/StepProprietario";
+export { default as StepIdentificacao } from "@/components/vender-cavalo/StepIdentificacao";
+export { default as StepLinhagem } from "@/components/vender-cavalo/StepLinhagem";
+export { default as StepTreinoSaude } from "@/components/vender-cavalo/StepTreinoSaude";
+export { default as StepPrecoApresentacao } from "@/components/vender-cavalo/StepPrecoApresentacao";
+export { default as StepPagamento } from "@/components/vender-cavalo/StepPagamento";

@@ -47,7 +47,12 @@
       "Bash(echo:*)",
       "Bash(done)",
       "Bash(timeout:*)",
-      "Bash(npm outdated:*)"
+      "Bash(npm outdated:*)",
+      "Bash(git push:*)",
+      "Bash(npx jest --passWithNoTests)",
+      "Bash(npx jest --listReporters)",
+      "Bash(npx jest --showConfig)",
+      "Bash(npx vitest run)"
     ]
   }
 }

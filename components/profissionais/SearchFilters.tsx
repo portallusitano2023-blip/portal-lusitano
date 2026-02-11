@@ -50,7 +50,7 @@ export function SearchFilters({
           onChange={(e) => onVerificacaoChange(e.target.value as NivelVerificacao | "todos")}
           className="bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C5A059]/50"
         >
-          <option value="todos">Todos os niveis</option>
+          <option value="todos">Todos os níveis</option>
           <option value="expert">Expert</option>
           <option value="certificado">Certificado</option>
           <option value="verificado">Verificado</option>

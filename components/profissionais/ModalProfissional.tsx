@@ -169,7 +169,7 @@ function TabInfo({ profissional }: { profissional: Profissional }) {
         )}
         {profissional.precoMedio && (
           <div className="bg-zinc-800/50 rounded-lg px-3 py-2">
-            <span className="text-xs text-zinc-500 block">Preco Medio</span>
+            <span className="text-xs text-zinc-500 block">Preço Médio</span>
             <span className="text-sm text-[#C5A059]">{profissional.precoMedio}</span>
           </div>
         )}
@@ -253,7 +253,7 @@ function TabEspecializacoes({ profissional }: { profissional: Profissional }) {
         <div className="mt-6">
           <h3 className="text-sm font-semibold text-[#C5A059] mb-3 flex items-center gap-2">
             <Trophy size={16} />
-            Premios
+            Prémios
           </h3>
           {profissional.premios.map((p, i) => (
             <div key={i} className="bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-lg p-3 mb-2">
@@ -322,7 +322,7 @@ function TabTestemunhos({ profissional }: { profissional: Profissional }) {
       ) : (
         <div className="text-center py-8 text-zinc-500">
           <MessageCircle size={32} className="mx-auto mb-2 opacity-50" />
-          <p>Ainda sem testemunhos publicos</p>
+          <p>Ainda sem testemunhos públicos</p>
         </div>
       )}
     </div>
@@ -333,7 +333,7 @@ function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-sm font-semibold text-zinc-400 mb-3">Horario de Funcionamento</h3>
+        <h3 className="text-sm font-semibold text-zinc-400 mb-3">Horário de Funcionamento</h3>
         <div className="bg-zinc-800/30 rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-white">
@@ -342,12 +342,12 @@ function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
             {profissional.disponibilidade.emergencias24h && (
               <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs flex items-center gap-1">
                 <Siren size={10} />
-                Emergencias 24h
+                Emergências 24h
               </span>
             )}
           </div>
           <div className="flex flex-wrap gap-2">
-            {["Segunda", "Terca", "Quarta", "Quinta", "Sexta", "Sabado", "Domingo"].map((d) => (
+            {["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"].map((d) => (
               <span
                 key={d}
                 className={`px-3 py-1 rounded text-xs ${profissional.disponibilidade.diasSemana.includes(d) ? "bg-[#C5A059]/20 text-[#C5A059] border border-[#C5A059]/30" : "bg-zinc-800 text-zinc-500"}`}
@@ -359,7 +359,7 @@ function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
         </div>
       </div>
       <div>
-        <h3 className="text-sm font-semibold text-zinc-400 mb-3">Area de Cobertura</h3>
+        <h3 className="text-sm font-semibold text-zinc-400 mb-3">Área de Cobertura</h3>
         <div className="bg-zinc-800/30 rounded-lg p-4 flex items-center gap-4">
           <Globe size={24} className="text-[#C5A059]" />
           <div>
@@ -374,7 +374,7 @@ function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
         {profissional.disponibilidade.deslocacaoIncluida && (
           <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 flex items-center gap-2">
             <Truck size={16} className="text-green-400" />
-            <span className="text-xs text-green-400">Deslocacao incluida</span>
+            <span className="text-xs text-green-400">Deslocação incluída</span>
           </div>
         )}
         {profissional.disponibilidade.consultaOnline && (
@@ -412,7 +412,7 @@ function TabFormacao({ profissional }: { profissional: Profissional }) {
     <div className="space-y-4">
       {profissional.formacao && profissional.formacao.length > 0 ? (
         <>
-          <h3 className="text-sm font-semibold text-zinc-400 mb-3">Formacao Academica</h3>
+          <h3 className="text-sm font-semibold text-zinc-400 mb-3">Formação Académica</h3>
           {profissional.formacao.map((f, i) => (
             <div key={i} className="bg-zinc-800/30 rounded-lg p-4 flex items-start gap-3">
               <div className="p-2 bg-[#C5A059]/20 rounded-lg">
@@ -427,11 +427,11 @@ function TabFormacao({ profissional }: { profissional: Profissional }) {
           ))}
         </>
       ) : (
-        <p className="text-zinc-500 text-sm">Informacao de formacao nao disponivel</p>
+        <p className="text-zinc-500 text-sm">Informação de formação não disponível</p>
       )}
       {profissional.publicacoes && profissional.publicacoes.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-sm font-semibold text-zinc-400 mb-3">Publicacoes</h3>
+          <h3 className="text-sm font-semibold text-zinc-400 mb-3">Publicações</h3>
           {profissional.publicacoes.map((p, i) => (
             <div key={i} className="bg-zinc-800/30 rounded-lg p-4 flex items-start gap-3">
               <div className="p-2 bg-blue-500/20 rounded-lg">
@@ -462,7 +462,7 @@ function TabFormacao({ profissional }: { profissional: Profissional }) {
               <div className="flex items-center gap-3 mt-2 text-xs text-zinc-400">
                 <span>{c.duracao}</span>
                 <span className="text-[#C5A059] font-medium">{c.preco}</span>
-                {c.proximaData && <span>Proxima: {c.proximaData}</span>}
+                {c.proximaData && <span>Próxima: {c.proximaData}</span>}
                 {c.vagas && <span>{c.vagas} vagas</span>}
               </div>
             </div>
