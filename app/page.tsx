@@ -155,13 +155,13 @@ export default function Home() {
           >
             <Link
               href="/comprar"
-              className="inline-block border border-white/30 bg-black/20 backdrop-blur-md px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-white hover:bg-[#C5A059] hover:text-black hover:border-[#C5A059] transition-all duration-500"
+              className="inline-block border border-[var(--border)] bg-black/20 backdrop-blur-md px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-500"
             >
               {isPt ? "Comprar Cavalo" : "Buy a Horse"}
             </Link>
             <Link
               href="/loja"
-              className="inline-block px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-zinc-400 hover:text-white transition-colors duration-300"
+              className="inline-block px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300"
             >
               {t.home.cta} →
             </Link>

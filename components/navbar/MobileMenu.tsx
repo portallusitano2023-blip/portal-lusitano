@@ -172,10 +172,10 @@ export function MobileMenu({
         </div>
 
         {/* CTA & Language */}
-        <div className="border-t border-white/10 pt-4 mt-4 space-y-3">
+        <div className="border-t border-[var(--border)] pt-4 mt-4 space-y-3">
           <Link
             href="/ebook-gratis"
-            className="flex items-center justify-center gap-3 bg-gradient-to-r from-[#C5A059] to-[#D4B06A] text-black px-4 py-4 text-sm uppercase tracking-widest font-bold w-full rounded-lg active:scale-[0.98] touch-manipulation shadow-[0_0_20px_rgba(197,160,89,0.2)]"
+            className="flex items-center justify-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-4 py-4 text-sm uppercase tracking-widest font-bold w-full rounded-lg active:scale-[0.98] touch-manipulation shadow-[0_0_20px_rgba(197,160,89,0.2)]"
           >
             <Gift size={18} />
             Ebook Grátis
@@ -185,7 +185,7 @@ export function MobileMenu({
               onLanguageToggle();
               onClose();
             }}
-            className="w-full text-center py-3 px-3 text-zinc-400 hover:text-white transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
+            className="w-full text-center py-3 px-3 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
             {language === "pt"
               ? "🇬🇧 Switch to English"

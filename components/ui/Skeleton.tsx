@@ -26,7 +26,7 @@ export function Skeleton({
 
   return (
     <div
-      className={`bg-white/5 animate-pulse ${variantStyles[variant]} ${className}`}
+      className={`bg-[var(--surface-hover)] animate-pulse ${variantStyles[variant]} ${className}`}
       style={style}
     />
   );
@@ -38,7 +38,7 @@ export function SkeletonList({ items = 5 }: { items?: number }) {
       {Array.from({ length: items }).map((_, i) => (
         <div
           key={i}
-          className="bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-4 flex items-center gap-4"
+          className="bg-gradient-to-br from-[var(--surface-hover)] to-[var(--surface-hover)] border border-[var(--border)] rounded-xl p-4 flex items-center gap-4"
         >
           <Skeleton variant="circular" width={48} height={48} />
           <div className="flex-1 space-y-2">

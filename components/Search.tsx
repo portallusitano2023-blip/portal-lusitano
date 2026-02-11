@@ -333,17 +333,23 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
           </div>
 
           {/* Atalhos */}
-          <div className="px-4 py-3 border-t border-white/5 flex items-center gap-4 text-xs text-zinc-400">
+          <div className="px-4 py-3 border-t border-[var(--border)] flex items-center gap-4 text-xs text-[var(--foreground-secondary)]">
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-zinc-500">ESC</kbd>
+              <kbd className="px-1.5 py-0.5 bg-[var(--surface-hover)] rounded text-[var(--foreground-muted)]">
+                ESC
+              </kbd>
               {t.common.close}
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-zinc-500">↑↓</kbd>
+              <kbd className="px-1.5 py-0.5 bg-[var(--surface-hover)] rounded text-[var(--foreground-muted)]">
+                ↑↓
+              </kbd>
               {t.search.navigate}
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-zinc-500">↵</kbd>
+              <kbd className="px-1.5 py-0.5 bg-[var(--surface-hover)] rounded text-[var(--foreground-muted)]">
+                ↵
+              </kbd>
               {t.search.open}
             </span>
           </div>

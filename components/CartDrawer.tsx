@@ -75,12 +75,12 @@ export default function CartDrawer() {
       />
 
       <div
-        className={`absolute top-0 right-0 h-full w-full md:w-[450px] bg-[#050505] border-l border-white/10 shadow-2xl transform transition-transform duration-700 ease-out ${
+        className={`absolute top-0 right-0 h-full w-full md:w-[450px] bg-[var(--background)] border-l border-[var(--border)] shadow-2xl transform transition-transform duration-700 ease-out ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="h-full flex flex-col p-8">
-          <div className="flex items-center justify-between mb-12 pb-6 border-b border-white/10">
+          <div className="flex items-center justify-between mb-12 pb-6 border-b border-[var(--border)]">
             <div className="flex items-center gap-4">
               <ShoppingBag size={20} className="text-[#C5A059]" />
               <h2 className="text-2xl font-serif italic text-white">{ct.title}</h2>
