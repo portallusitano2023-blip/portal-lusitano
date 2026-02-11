@@ -1,10 +1,19 @@
 import { Resend } from "resend";
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("RESEND_API_KEY is not defined");
+function getResend(): Resend {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is not defined");
+  }
+  return new Resend(process.env.RESEND_API_KEY);
 }
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend: Resend | null = null;
+export const resend = new Proxy({} as Resend, {
+  get(_, prop) {
+    if (!_resend) _resend = getResend();
+    return (_resend as unknown as Record<string | symbol, unknown>)[prop];
+  },
+});
 
 // Email configuration
 export const EMAIL_CONFIG = {
