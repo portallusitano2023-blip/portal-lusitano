@@ -20,7 +20,12 @@ import MarketPositionChart from "@/components/tools/MarketPositionChart";
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import ResultActions from "@/components/tools/ResultActions";
+import RegionalMarketMap from "@/components/tools/RegionalMarketMap";
+import InvestmentTimeline from "@/components/tools/InvestmentTimeline";
+import TrainingROI from "@/components/tools/TrainingROI";
 import { useLanguage } from "@/context/LanguageContext";
+import { MERCADOS } from "./data";
+import { calcularProjecaoValor, calcularTrainingROI } from "./projections";
 import type { FormData, Resultado } from "./types";
 
 interface ResultadoDisplayProps {
@@ -38,6 +43,14 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
     ref
   ) {
     const { t } = useLanguage();
+
+    // PRO projections
+    const investmentProjections = calcularProjecaoValor(resultado.valorFinal, form.idade);
+    const trainingROILevels = calcularTrainingROI(
+      form,
+      resultado.valorFinal,
+      resultado.multiplicador
+    );
 
     return (
       <div
@@ -280,6 +293,61 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
                   </li>
                 ))}
               </ul>
+            </div>
+          </BlurredProSection>
+        )}
+
+        {/* PRO: Mapa de Mercados Regionais */}
+        <BlurredProSection isSubscribed={isSubscribed} title={t.calculadora.regional_market_title}>
+          <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)]">
+            <RegionalMarketMap
+              baseValue={resultado.valorFinal}
+              currentMarket={form.mercado}
+              markets={MERCADOS}
+            />
+            <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed mt-3">
+              {t.calculadora.pro_projections_disclaimer}
+            </p>
+          </div>
+        </BlurredProSection>
+
+        {/* PRO: Projecção de Investimento */}
+        <BlurredProSection isSubscribed={isSubscribed} title={t.calculadora.investment_title}>
+          <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)]">
+            <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-2">
+              {t.calculadora.investment_title}
+            </h3>
+            <p className="text-xs text-[var(--foreground-muted)] mb-6">
+              {t.calculadora.investment_subtitle}
+            </p>
+            <InvestmentTimeline
+              projections={investmentProjections}
+              currentValue={resultado.valorFinal}
+            />
+            <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed mt-3">
+              {t.calculadora.pro_projections_disclaimer}
+            </p>
+          </div>
+        </BlurredProSection>
+
+        {/* PRO: ROI de Treino */}
+        {trainingROILevels.length > 0 && (
+          <BlurredProSection isSubscribed={isSubscribed} title={t.calculadora.training_roi_title}>
+            <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)]">
+              <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-2">
+                {t.calculadora.training_roi_title}
+              </h3>
+              <p className="text-xs text-[var(--foreground-muted)] mb-6">
+                {t.calculadora.training_roi_subtitle}
+              </p>
+              <TrainingROI
+                currentLevel={form.treino.replace("_", " ")}
+                currentValue={resultado.valorFinal}
+                levels={trainingROILevels}
+              />
+              <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed mt-4">
+                {t.calculadora.pro_projections_disclaimer}
+              </p>
             </div>
           </BlurredProSection>
         )}
