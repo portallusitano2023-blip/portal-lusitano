@@ -57,7 +57,7 @@ export const journalComponents: PortableTextComponents = {
             ? children.toString().toLowerCase().replace(/\s+/g, "-")
             : undefined
         }
-        className="text-4xl font-serif text-[#C5A059] mb-6 mt-16 border-b border-white/10 pb-4"
+        className="text-4xl font-serif text-[var(--gold)] mb-6 mt-16 border-b border-[var(--border)] pb-4"
       >
         {children}
       </h2>
@@ -69,34 +69,36 @@ export const journalComponents: PortableTextComponents = {
             ? children.toString().toLowerCase().replace(/\s+/g, "-")
             : undefined
         }
-        className="text-2xl font-serif text-white mb-4 mt-10"
+        className="text-2xl font-serif text-[var(--foreground)] mb-4 mt-10"
       >
         {children}
       </h3>
     ),
-    h4: ({ children }) => <h4 className="text-xl font-bold text-white mb-3 mt-8">{children}</h4>,
+    h4: ({ children }) => (
+      <h4 className="text-xl font-bold text-[var(--foreground)] mb-3 mt-8">{children}</h4>
+    ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-[#C5A059] pl-6 my-8 text-zinc-300 italic font-serif text-lg">
+      <blockquote className="border-l-4 border-[var(--gold)] pl-6 my-8 text-[var(--foreground-secondary)] italic font-serif text-lg">
         {children}
       </blockquote>
     ),
     leadParagraph: ({ children }) => (
-      <p className="text-xl text-zinc-300 leading-relaxed mb-8 first-letter:float-left first-letter:text-7xl first-letter:font-serif first-letter:text-[#C5A059] first-letter:mr-4 first-letter:leading-none first-letter:mt-2">
+      <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed mb-8 first-letter:float-left first-letter:text-7xl first-letter:font-serif first-letter:text-[var(--gold)] first-letter:mr-4 first-letter:leading-none first-letter:mt-2">
         {children}
       </p>
     ),
     normal: ({ children }) => (
-      <p className="text-lg text-zinc-300 leading-relaxed mb-6">{children}</p>
+      <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-6">{children}</p>
     ),
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="list-disc list-inside space-y-2 mb-6 text-zinc-300 text-lg ml-4">
+      <ul className="list-disc list-inside space-y-2 mb-6 text-[var(--foreground-secondary)] text-lg ml-4">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="list-decimal list-inside space-y-2 mb-6 text-zinc-300 text-lg ml-4">
+      <ol className="list-decimal list-inside space-y-2 mb-6 text-[var(--foreground-secondary)] text-lg ml-4">
         {children}
       </ol>
     ),
@@ -106,14 +108,16 @@ export const journalComponents: PortableTextComponents = {
     number: ({ children }) => <li className="leading-relaxed">{children}</li>,
   },
   marks: {
-    strong: ({ children }) => <strong className="text-white font-bold">{children}</strong>,
+    strong: ({ children }) => (
+      <strong className="text-[var(--foreground)] font-bold">{children}</strong>
+    ),
     em: ({ children }) => <em className="italic">{children}</em>,
     link: ({ children, value }) => (
       <a
         href={value?.href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[#C5A059] hover:text-[#d4b06a] underline underline-offset-4 transition-colors"
+        className="text-[var(--gold)] hover:text-[#d4b06a] underline underline-offset-4 transition-colors"
       >
         {children}
       </a>
@@ -136,7 +140,7 @@ export const journalComponents: PortableTextComponents = {
       return (
         <ArticleInfoBox title={value.title} icon={Icon} variant={value.variant || "default"}>
           {value.content && (
-            <div className="text-zinc-300 text-base leading-relaxed">
+            <div className="text-[var(--foreground-secondary)] text-base leading-relaxed">
               <PortableText value={value.content} components={journalComponents} />
             </div>
           )}
@@ -146,7 +150,7 @@ export const journalComponents: PortableTextComponents = {
     statCardGroup: ({ value }) => (
       <div className="my-12">
         {value.title && (
-          <h4 className="text-2xl font-serif text-[#C5A059] mb-6 flex items-center gap-3">
+          <h4 className="text-2xl font-serif text-[var(--gold)] mb-6 flex items-center gap-3">
             {value.icon &&
               (() => {
                 const I = getIcon(value.icon);
@@ -204,7 +208,7 @@ export const journalComponents: PortableTextComponents = {
       return (
         <ArticleWarningBox title={value.title} icon={Icon}>
           {value.content && (
-            <div className="text-zinc-300 text-base leading-relaxed">
+            <div className="text-[var(--foreground-secondary)] text-base leading-relaxed">
               <PortableText value={value.content} components={journalComponents} />
             </div>
           )}

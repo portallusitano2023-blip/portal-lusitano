@@ -17,10 +17,10 @@ export default function SourcesList({ sources, language = "pt" }: SourcesListPro
 
   return (
     <section
-      className="mt-16 pt-8 border-t border-white/10"
+      className="mt-16 pt-8 border-t border-[var(--border)]"
       aria-label={language === "pt" ? "Fontes e Referências" : "Sources and References"}
     >
-      <h3 className="text-xl font-serif text-[#C5A059] mb-6 flex items-center gap-3">
+      <h3 className="text-xl font-serif text-[var(--gold)] mb-6 flex items-center gap-3">
         <BookOpen size={20} />
         {language === "pt" ? "Fontes e Referências" : "Sources & References"}
       </h3>
@@ -31,13 +31,13 @@ export default function SourcesList({ sources, language = "pt" }: SourcesListPro
               href={source.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-start gap-3 text-sm text-zinc-400 hover:text-[#C5A059] transition-colors"
+              className="group flex items-start gap-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors"
             >
               <ExternalLink
                 size={14}
-                className="mt-0.5 flex-shrink-0 text-zinc-600 group-hover:text-[#C5A059]"
+                className="mt-0.5 flex-shrink-0 text-[var(--foreground-muted)] group-hover:text-[var(--gold)]"
               />
-              <span className="underline underline-offset-4 decoration-zinc-700 group-hover:decoration-[#C5A059]">
+              <span className="underline underline-offset-4 decoration-[var(--border)] group-hover:decoration-[var(--gold)]">
                 {source.label}
               </span>
             </a>

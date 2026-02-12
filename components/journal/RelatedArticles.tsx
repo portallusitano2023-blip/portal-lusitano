@@ -42,8 +42,8 @@ export default function RelatedArticles({ articles, language = "pt" }: RelatedAr
   if (!articles || articles.length === 0) return null;
 
   return (
-    <section className="max-w-7xl mx-auto px-8 py-16 border-t border-white/5">
-      <h3 className="text-2xl font-serif text-white mb-8">
+    <section className="max-w-7xl mx-auto px-8 py-16 border-t border-[var(--border)]">
+      <h3 className="text-2xl font-serif text-[var(--foreground)] mb-8">
         {language === "pt" ? "Artigos Relacionados" : "Related Articles"}
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -56,7 +56,7 @@ export default function RelatedArticles({ articles, language = "pt" }: RelatedAr
 
           return (
             <Link key={article._id} href={`/jornal/${article.slug.current}`}>
-              <article className="group cursor-pointer h-full flex flex-col border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02]">
+              <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors bg-[var(--surface-hover)]">
                 <div className="w-full h-48 overflow-hidden relative">
                   {getImageUrl(article) && (
                     <Image
@@ -68,28 +68,28 @@ export default function RelatedArticles({ articles, language = "pt" }: RelatedAr
                     />
                   )}
                   {category && (
-                    <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm px-2 py-0.5 text-[9px] uppercase text-white tracking-widest border border-white/10">
+                    <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm px-2 py-0.5 text-[9px] uppercase text-white tracking-widest border border-[var(--border)]">
                       {category}
                     </div>
                   )}
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
-                  <div className="mb-3 text-[#C5A059] text-[10px] uppercase tracking-widest flex justify-between">
+                  <div className="mb-3 text-[var(--gold)] text-[10px] uppercase tracking-widest flex justify-between">
                     <span>{formatDate(article.publishedAt, language)}</span>
                     <span className="flex items-center gap-1">
                       <Clock size={10} /> {article.estimatedReadTime} min
                     </span>
                   </div>
-                  <h4 className="text-lg font-serif text-white mb-2 group-hover:text-[#C5A059] transition-colors leading-tight">
+                  <h4 className="text-lg font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--gold)] transition-colors leading-tight">
                     {title}
                   </h4>
-                  <p className="text-zinc-500 text-sm leading-relaxed flex-grow font-serif line-clamp-2">
+                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed flex-grow font-serif line-clamp-2">
                     {subtitle}
                   </p>
-                  <div className="border-t border-white/10 pt-3 mt-4">
-                    <span className="flex items-center gap-2 text-white text-xs uppercase tracking-widest group-hover:gap-3 transition-all">
+                  <div className="border-t border-[var(--border)] pt-3 mt-4">
+                    <span className="flex items-center gap-2 text-[var(--foreground)] text-xs uppercase tracking-widest group-hover:gap-3 transition-all">
                       {language === "pt" ? "Ler" : "Read"}{" "}
-                      <ArrowRight size={12} className="text-[#C5A059]" />
+                      <ArrowRight size={12} className="text-[var(--gold)]" />
                     </span>
                   </div>
                 </div>

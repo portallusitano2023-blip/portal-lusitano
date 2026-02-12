@@ -2,7 +2,7 @@ import { Ban, Globe, XCircle, MapPin, TrendingUp, Info } from "lucide-react";
 
 export function SeccaoConclusao() {
   return (
-    <div className="space-y-6 text-sm text-zinc-300 leading-relaxed">
+    <div className="space-y-6 text-sm text-[var(--foreground-secondary)] leading-relaxed">
       <div className="grid sm:grid-cols-2 gap-4">
         {[
           {
@@ -36,7 +36,7 @@ export function SeccaoConclusao() {
           },
           {
             icone: TrendingUp,
-            corIcone: "text-[#C5A059]",
+            corIcone: "text-[var(--gold)]",
             titulo: "Duas categorias de mercado",
             texto:
               'Cavalos "piro-free" são comercializados como categoria premium, criando dois níveis de valor dentro da raça.',
@@ -44,34 +44,36 @@ export function SeccaoConclusao() {
         ].map((item, i) => (
           <div
             key={i}
-            className={`bg-zinc-800/40 border border-zinc-700/30 rounded-xl p-5 ${i === 4 ? "sm:col-span-2" : ""}`}
+            className={`bg-[var(--background-card)]/40 border border-[var(--border)]/30 rounded-xl p-5 ${i === 4 ? "sm:col-span-2" : ""}`}
           >
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-zinc-700/30 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[var(--border)]/30 flex items-center justify-center flex-shrink-0">
                 <item.icone size={16} className={item.corIcone} />
               </div>
-              <p className="text-white font-semibold text-sm">{item.titulo}</p>
+              <p className="text-[var(--foreground)] font-semibold text-sm">{item.titulo}</p>
             </div>
-            <p className="text-[13px] text-zinc-400 leading-relaxed">{item.texto}</p>
+            <p className="text-[13px] text-[var(--foreground-secondary)] leading-relaxed">
+              {item.texto}
+            </p>
           </div>
         ))}
       </div>
 
-      <div className="bg-[#C5A059]/8 border border-[#C5A059]/20 rounded-xl p-5 sm:p-6">
+      <div className="bg-[var(--gold)]/8 border border-[var(--gold)]/20 rounded-xl p-5 sm:p-6">
         <div className="flex items-start gap-3 sm:gap-4">
-          <div className="w-10 h-10 rounded-xl bg-[#C5A059]/20 flex items-center justify-center flex-shrink-0">
-            <Info size={18} className="text-[#C5A059]" />
+          <div className="w-10 h-10 rounded-xl bg-[var(--gold)]/20 flex items-center justify-center flex-shrink-0">
+            <Info size={18} className="text-[var(--gold)]" />
           </div>
           <div>
-            <p className="text-[#C5A059] font-semibold text-sm mb-2">
+            <p className="text-[var(--gold)] font-semibold text-sm mb-2">
               Para compradores internacionais
             </p>
-            <p className="text-[13px] text-zinc-400 leading-relaxed">
+            <p className="text-[13px] text-[var(--foreground-secondary)] leading-relaxed">
               Antes de adquirir um Lusitano em Portugal ou Espanha, solicite sempre o teste de
               piroplasmose actualizado. Se planeia exportar para um país não-endémico, certifique-se
               de que o cavalo testa negativo antes de concluir a compra. O custo do teste (
-              <strong className="text-white">~60€ em Portugal</strong>) é insignificante comparado
-              com o risco.
+              <strong className="text-[var(--foreground)]">~60€ em Portugal</strong>) é
+              insignificante comparado com o risco.
             </p>
           </div>
         </div>

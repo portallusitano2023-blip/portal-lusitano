@@ -24,7 +24,7 @@ export default function ResultActions({
       <button
         onClick={onExportPDF}
         disabled={isExporting}
-        className="flex-1 min-w-[140px] py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 text-sm font-medium hover:text-white hover:border-zinc-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+        className="flex-1 min-w-[140px] py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
       >
         {isExporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
         {isExporting ? "A gerar..." : "Exportar PDF"}
@@ -32,7 +32,7 @@ export default function ResultActions({
 
       <button
         onClick={onShare}
-        className="flex-1 min-w-[140px] py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 text-sm font-medium hover:text-white hover:border-zinc-700 transition-all flex items-center justify-center gap-2"
+        className="flex-1 min-w-[140px] py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2"
       >
         <Share2 size={16} />
         Partilhar
@@ -43,8 +43,8 @@ export default function ResultActions({
           onClick={onSave}
           className={`flex-1 min-w-[140px] py-3 rounded-xl border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
             isPremium
-              ? "bg-[#C5A059]/10 border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/20"
-              : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700"
+              ? "bg-[var(--gold)]/10 border-[var(--gold)]/30 text-[var(--gold)] hover:bg-[var(--gold)]/20"
+              : "bg-[var(--background-secondary)] border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]"
           }`}
         >
           <Save size={16} />
@@ -55,7 +55,7 @@ export default function ResultActions({
       {onPrint && (
         <button
           onClick={onPrint}
-          className="py-3 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 text-sm font-medium hover:text-white hover:border-zinc-700 transition-all flex items-center justify-center"
+          className="py-3 px-4 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center"
         >
           <Printer size={16} />
         </button>

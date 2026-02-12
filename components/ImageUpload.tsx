@@ -109,8 +109,10 @@ export default function ImageUpload({
   return (
     <div className={className}>
       <div
-        className={`relative ${aspectClasses[aspectRatio]} bg-gray-100 border-2 border-dashed rounded-lg overflow-hidden transition-colors ${
-          dragOver ? "border-amber-500 bg-amber-50" : "border-gray-300 hover:border-gray-400"
+        className={`relative ${aspectClasses[aspectRatio]} bg-[var(--surface-hover)] border-2 border-dashed rounded-lg overflow-hidden transition-colors ${
+          dragOver
+            ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10"
+            : "border-[var(--border)] hover:border-[var(--foreground-muted)]"
         }`}
         onDragOver={(e) => {
           e.preventDefault();
@@ -154,7 +156,7 @@ export default function ImageUpload({
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700"
+            className="absolute inset-0 flex flex-col items-center justify-center text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)]"
             disabled={uploading}
           >
             {uploading ? (
@@ -163,7 +165,9 @@ export default function ImageUpload({
               <>
                 <ImageIcon className="w-10 h-10 mb-2" />
                 <span className="text-sm font-medium">Clique ou arraste uma imagem</span>
-                <span className="text-xs text-gray-400 mt-1">PNG, JPG, WebP ate 5MB</span>
+                <span className="text-xs text-[var(--foreground-muted)] mt-1">
+                  PNG, JPG, WebP ate 5MB
+                </span>
               </>
             )}
           </button>
@@ -171,7 +175,7 @@ export default function ImageUpload({
 
         {/* Loading overlay */}
         {uploading && preview && (
-          <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
+          <div className="absolute inset-0 bg-white/80 dark:bg-black/60 flex items-center justify-center">
             <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
           </div>
         )}
@@ -257,7 +261,7 @@ export function MultiImageUpload({
         {images.map((url, index) => (
           <div
             key={index}
-            className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden group"
+            className="relative aspect-square bg-[var(--surface-hover)] rounded-lg overflow-hidden group"
           >
             <Image
               src={url}
@@ -282,7 +286,7 @@ export function MultiImageUpload({
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={uploading}
-            className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:border-gray-400 hover:text-gray-700 transition-colors"
+            className="aspect-square border-2 border-dashed border-[var(--border)] rounded-lg flex flex-col items-center justify-center text-[var(--foreground-muted)] hover:border-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-colors"
           >
             {uploading ? (
               <Loader2 className="w-8 h-8 animate-spin" />
@@ -305,7 +309,7 @@ export function MultiImageUpload({
         className="hidden"
       />
 
-      <p className="text-xs text-gray-500 mt-2">
+      <p className="text-xs text-[var(--foreground-muted)] mt-2">
         {images.length}/{maxImages} imagens
       </p>
     </div>

@@ -886,6 +886,17 @@
     "navigate": "navegar",
     "open": "abrir"
   },
+  "pro_upgrade_card": {
+    "title": "Herramientas PRO",
+    "price_suffix": "EUR/mes",
+    "benefit_unlimited": "Uso ilimitado de las 4 herramientas",
+    "benefit_pdf": "Exportación PDF profesional",
+    "benefit_save": "Guardar y compartir resultados",
+    "benefit_history": "Historial completo de evaluaciones",
+    "subscribe": "Suscribirse PRO",
+    "processing": "Procesando...",
+    "see_plans": "Ver todos los planes"
+  },
   "footer": {
     "rights": "Todos los derechos reservados",
     "privacy": "Privacidad",

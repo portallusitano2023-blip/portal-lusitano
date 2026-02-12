@@ -20,11 +20,11 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`flex items-center gap-2 text-sm text-zinc-500 ${className}`}
+      className={`flex items-center gap-2 text-sm text-[var(--foreground-muted)] ${className}`}
     >
       <Link
         href="/"
-        className="hover:text-[#C5A059] transition-colors flex items-center gap-1"
+        className="hover:text-[var(--gold)] transition-colors flex items-center gap-1"
         aria-label={t.common.home}
       >
         <Home size={14} />
@@ -32,16 +32,13 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 
       {items.map((item, index) => (
         <span key={index} className="flex items-center gap-2">
-          <ChevronRight size={14} className="text-zinc-700" />
+          <ChevronRight size={14} className="text-[var(--foreground-muted)]" />
           {item.href ? (
-            <Link
-              href={item.href}
-              className="hover:text-[#C5A059] transition-colors"
-            >
+            <Link href={item.href} className="hover:text-[var(--gold)] transition-colors">
               {item.label}
             </Link>
           ) : (
-            <span className="text-zinc-400" aria-current="page">
+            <span className="text-[var(--foreground-secondary)]" aria-current="page">
               {item.label}
             </span>
           )}

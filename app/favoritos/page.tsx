@@ -46,20 +46,22 @@ export default function FavoritosPage() {
   const t = text[language];
 
   return (
-    <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
+    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-          <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Heart className="text-[#C5A059]" size={32} />
+          <div className="w-16 h-16 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Heart className="text-[var(--gold)]" size={32} />
           </div>
-          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">{t.title}</h1>
-          <p className="text-zinc-400 font-serif italic">{t.subtitle}</p>
+          <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
+            {t.title}
+          </h1>
+          <p className="text-[var(--foreground-secondary)] font-serif italic">{t.subtitle}</p>
 
           {wishlist.length > 0 && (
             <button
               onClick={clearWishlist}
-              className="mt-6 text-xs uppercase tracking-widest text-zinc-500 hover:text-red-500 transition-colors"
+              className="mt-6 text-xs uppercase tracking-widest text-[var(--foreground-muted)] hover:text-red-500 transition-colors"
             >
               {t.clearAll}
             </button>
@@ -71,12 +73,12 @@ export default function FavoritosPage() {
             className="text-center py-20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.2s" }}
           >
-            <Heart className="text-zinc-800 mx-auto mb-6" size={64} />
-            <h2 className="text-2xl font-serif text-white mb-3">{t.empty}</h2>
-            <p className="text-zinc-500 mb-8">{t.emptySubtitle}</p>
+            <Heart className="text-[var(--foreground-muted)] mx-auto mb-6" size={64} />
+            <h2 className="text-2xl font-serif text-[var(--foreground)] mb-3">{t.empty}</h2>
+            <p className="text-[var(--foreground-muted)] mb-8">{t.emptySubtitle}</p>
             <Link
               href="/loja"
-              className="inline-block bg-[#C5A059] text-black px-8 py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors"
+              className="inline-block bg-[var(--gold)] text-black px-8 py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-[var(--gold-hover)] transition-colors"
             >
               {t.explore}
             </Link>
@@ -86,12 +88,12 @@ export default function FavoritosPage() {
             {wishlist.map((item, index) => (
               <div
                 key={item.id}
-                className="group border border-white/5 bg-white/[0.02] overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                className="group border border-[var(--border)] bg-[var(--surface-hover)] overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Imagem */}
                 <Link href={`/loja/${item.handle}`} className="block">
-                  <div className="aspect-[4/5] bg-zinc-900 overflow-hidden relative">
+                  <div className="aspect-[4/5] bg-[var(--background-secondary)] overflow-hidden relative">
                     {item.image && (
                       <Image
                         src={item.image}
@@ -107,11 +109,11 @@ export default function FavoritosPage() {
                 {/* Info */}
                 <div className="p-6">
                   <Link href={`/loja/${item.handle}`}>
-                    <h3 className="text-lg font-serif text-white mb-2 group-hover:text-[#C5A059] transition-colors">
+                    <h3 className="text-lg font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--gold)] transition-colors">
                       {item.title}
                     </h3>
                   </Link>
-                  <p className="text-[#C5A059] font-serif mb-4">
+                  <p className="text-[var(--gold)] font-serif mb-4">
                     {Number(item.price).toFixed(2)} EUR
                   </p>
 
@@ -119,13 +121,13 @@ export default function FavoritosPage() {
                   <div className="flex gap-3">
                     <Link
                       href={`/loja/${item.handle}`}
-                      className="flex-1 bg-[#C5A059] text-black py-3 text-xs uppercase tracking-widest font-bold hover:bg-white transition-colors text-center"
+                      className="flex-1 bg-[var(--gold)] text-black py-3 text-xs uppercase tracking-widest font-bold hover:bg-[var(--gold-hover)] transition-colors text-center"
                     >
                       {t.view}
                     </Link>
                     <button
                       onClick={() => removeFromWishlist(item.id)}
-                      className="w-12 border border-white/10 text-zinc-400 hover:text-red-500 hover:border-red-500 transition-colors flex items-center justify-center"
+                      className="w-12 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-red-500 hover:border-red-500 transition-colors flex items-center justify-center"
                     >
                       <Trash2 size={16} />
                     </button>

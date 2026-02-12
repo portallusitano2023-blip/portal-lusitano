@@ -159,10 +159,10 @@ export default function AdvancedFilters({
   return (
     <div className="space-y-4">
       {/* Main filter bar */}
-      <div className="bg-[#0A0A0A] border border-white/10 rounded-xl p-4">
+      <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
-            <Filter className="w-5 h-5 text-[#C5A059]" />
+          <h3 className="text-lg font-bold text-[var(--foreground)] flex items-center gap-2">
+            <Filter className="w-5 h-5 text-[var(--gold)]" />
             Filtros Avancados
           </h3>
 
@@ -171,7 +171,7 @@ export default function AdvancedFilters({
               <>
                 <button
                   onClick={() => setShowSaveModal(true)}
-                  className="px-3 py-1.5 bg-[#C5A059]/20 text-[#C5A059] rounded-lg text-sm font-medium hover:bg-[#C5A059]/30 transition-all flex items-center gap-2"
+                  className="px-3 py-1.5 bg-[var(--gold)]/20 text-[var(--gold)] rounded-lg text-sm font-medium hover:bg-[var(--gold)]/30 transition-all flex items-center gap-2"
                   aria-label="Guardar filtros actuais como preset"
                 >
                   <Save className="w-4 h-4" />
@@ -208,19 +208,19 @@ export default function AdvancedFilters({
             <div>
               <label
                 htmlFor="filter-search"
-                className="block text-xs font-medium text-gray-400 mb-1.5"
+                className="block text-xs font-medium text-[var(--foreground-secondary)] mb-1.5"
               >
                 Pesquisa
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--foreground-muted)]" />
                 <input
                   id="filter-search"
                   type="text"
                   value={filters.search}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   placeholder="Pesquisar..."
-                  className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#C5A059] transition-colors"
+                  className="w-full pl-9 pr-3 py-2 bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:outline-none focus:border-[var(--gold)] transition-colors"
                 />
               </div>
             </div>
@@ -229,25 +229,27 @@ export default function AdvancedFilters({
           {/* Date range */}
           {showDateRange && (
             <div className="md:col-span-1 lg:col-span-1">
-              <label className="block text-xs font-medium text-gray-400 mb-1.5">Periodo</label>
+              <label className="block text-xs font-medium text-[var(--foreground-secondary)] mb-1.5">
+                Periodo
+              </label>
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--foreground-muted)] pointer-events-none" />
                   <input
                     type="date"
                     value={filters.dateFrom}
                     onChange={(e) => handleDateFromChange(e.target.value)}
                     aria-label="Data de inicio"
-                    className="w-full pl-9 pr-2 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#C5A059] transition-colors [color-scheme:dark]"
+                    className="w-full pl-9 pr-2 py-2 bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg text-[var(--foreground)] text-sm focus:outline-none focus:border-[var(--gold)] transition-colors [color-scheme:dark]"
                   />
                 </div>
-                <span className="text-gray-500 text-sm shrink-0">ate</span>
+                <span className="text-[var(--foreground-muted)] text-sm shrink-0">ate</span>
                 <input
                   type="date"
                   value={filters.dateTo}
                   onChange={(e) => handleDateToChange(e.target.value)}
                   aria-label="Data de fim"
-                  className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#C5A059] transition-colors [color-scheme:dark]"
+                  className="flex-1 px-3 py-2 bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg text-[var(--foreground)] text-sm focus:outline-none focus:border-[var(--gold)] transition-colors [color-scheme:dark]"
                 />
               </div>
             </div>
@@ -258,7 +260,7 @@ export default function AdvancedFilters({
             <div>
               <label
                 htmlFor="filter-status"
-                className="block text-xs font-medium text-gray-400 mb-1.5"
+                className="block text-xs font-medium text-[var(--foreground-secondary)] mb-1.5"
               >
                 Estado
               </label>
@@ -266,7 +268,7 @@ export default function AdvancedFilters({
                 id="filter-status"
                 value={filters.status}
                 onChange={(e) => handleStatusChange(e.target.value)}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#C5A059] transition-colors"
+                className="w-full px-3 py-2 bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg text-[var(--foreground)] focus:outline-none focus:border-[var(--gold)] transition-colors"
               >
                 {resolvedStatusOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -282,7 +284,7 @@ export default function AdvancedFilters({
             <div>
               <label
                 htmlFor="filter-type"
-                className="block text-xs font-medium text-gray-400 mb-1.5"
+                className="block text-xs font-medium text-[var(--foreground-secondary)] mb-1.5"
               >
                 Tipo
               </label>
@@ -290,7 +292,7 @@ export default function AdvancedFilters({
                 id="filter-type"
                 value={filters.type}
                 onChange={(e) => handleTypeChange(e.target.value)}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#C5A059] transition-colors"
+                className="w-full px-3 py-2 bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg text-[var(--foreground)] focus:outline-none focus:border-[var(--gold)] transition-colors"
               >
                 <option value="">Todos</option>
                 {typeOptions.map((opt) => (
@@ -305,65 +307,65 @@ export default function AdvancedFilters({
 
         {/* Active filter pills */}
         {hasActiveFilters && (
-          <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-white/5">
-            <span className="text-xs text-gray-500">Filtros activos:</span>
+          <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-[var(--border)]">
+            <span className="text-xs text-[var(--foreground-muted)]">Filtros activos:</span>
             {filters.search && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--gold)]/10 text-[var(--gold)] text-xs rounded-full">
                 Pesquisa: &quot;{filters.search}&quot;
                 <button
                   onClick={() => handleSearchChange("")}
                   aria-label="Remover filtro de pesquisa"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[var(--foreground)] transition-colors"
                 >
                   <X className="w-3 h-3" />
                 </button>
               </span>
             )}
             {filters.dateFrom && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--gold)]/10 text-[var(--gold)] text-xs rounded-full">
                 De: {filters.dateFrom}
                 <button
                   onClick={() => handleDateFromChange("")}
                   aria-label="Remover data de inicio"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[var(--foreground)] transition-colors"
                 >
                   <X className="w-3 h-3" />
                 </button>
               </span>
             )}
             {filters.dateTo && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--gold)]/10 text-[var(--gold)] text-xs rounded-full">
                 Ate: {filters.dateTo}
                 <button
                   onClick={() => handleDateToChange("")}
                   aria-label="Remover data de fim"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[var(--foreground)] transition-colors"
                 >
                   <X className="w-3 h-3" />
                 </button>
               </span>
             )}
             {filters.status && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--gold)]/10 text-[var(--gold)] text-xs rounded-full">
                 Estado:{" "}
                 {resolvedStatusOptions.find((o) => o.value === filters.status)?.label ||
                   filters.status}
                 <button
                   onClick={() => handleStatusChange("")}
                   aria-label="Remover filtro de estado"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[var(--foreground)] transition-colors"
                 >
                   <X className="w-3 h-3" />
                 </button>
               </span>
             )}
             {filters.type && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs rounded-full">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--gold)]/10 text-[var(--gold)] text-xs rounded-full">
                 Tipo: {typeOptions?.find((o) => o.value === filters.type)?.label || filters.type}
                 <button
                   onClick={() => handleTypeChange("")}
                   aria-label="Remover filtro de tipo"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[var(--foreground)] transition-colors"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -375,17 +377,17 @@ export default function AdvancedFilters({
 
       {/* Saved presets */}
       {savedPresets.length > 0 && (
-        <div className="bg-[#0A0A0A] border border-white/10 rounded-xl p-4">
-          <h4 className="text-sm font-bold text-white mb-3">Filtros Guardados</h4>
+        <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-4">
+          <h4 className="text-sm font-bold text-[var(--foreground)] mb-3">Filtros Guardados</h4>
           <div className="flex flex-wrap gap-2">
             {savedPresets.map((preset) => (
               <div
                 key={preset.id}
-                className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2"
+                className="flex items-center gap-2 bg-[var(--surface-hover)] rounded-lg px-3 py-2"
               >
                 <button
                   onClick={() => loadPreset(preset)}
-                  className="text-sm text-[#C5A059] hover:underline"
+                  className="text-sm text-[var(--gold)] hover:underline"
                 >
                   {preset.name}
                 </button>
@@ -410,14 +412,14 @@ export default function AdvancedFilters({
           aria-modal="true"
           aria-label="Guardar preset de filtros"
         >
-          <div className="bg-[#1A1A1A] border border-white/10 rounded-xl p-6 max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold text-white mb-4">Guardar Filtros</h3>
+          <div className="bg-[var(--background-card)] border border-[var(--border)] rounded-xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold text-[var(--foreground)] mb-4">Guardar Filtros</h3>
             <input
               type="text"
               value={presetName}
               onChange={(e) => setPresetName(e.target.value)}
               placeholder="Nome do preset..."
-              className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 mb-4 focus:outline-none focus:border-[#C5A059]"
+              className="w-full px-4 py-2 bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--foreground-muted)] mb-4 focus:outline-none focus:border-[var(--gold)]"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") savePreset();
@@ -431,7 +433,7 @@ export default function AdvancedFilters({
               <button
                 onClick={savePreset}
                 disabled={!presetName.trim()}
-                className="flex-1 px-4 py-2 bg-[#C5A059] text-black rounded-lg font-semibold hover:bg-[#B39048] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-[var(--gold)] text-black rounded-lg font-semibold hover:bg-[#B39048] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Guardar
               </button>
@@ -440,7 +442,7 @@ export default function AdvancedFilters({
                   setShowSaveModal(false);
                   setPresetName("");
                 }}
-                className="flex-1 px-4 py-2 bg-white/5 text-white rounded-lg font-semibold hover:bg-white/10 transition-all"
+                className="flex-1 px-4 py-2 bg-[var(--surface-hover)] text-[var(--foreground)] rounded-lg font-semibold hover:bg-[var(--background-card)] transition-all"
               >
                 Cancelar
               </button>

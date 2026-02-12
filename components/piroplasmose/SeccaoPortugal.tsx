@@ -3,34 +3,36 @@ import { EstudoCard } from "./EstudoCard";
 
 export function SeccaoPortugal() {
   return (
-    <div className="space-y-6 text-sm text-zinc-300 leading-relaxed">
+    <div className="space-y-6 text-sm text-[var(--foreground-secondary)] leading-relaxed">
       <p className="text-[15px] leading-relaxed">
-        A piroplasmose é <strong className="text-white">endémica</strong> em Portugal e Espanha,
-        onde as carraças vectoras estão amplamente estabelecidas. A maioria dos cavalos nascidos em
-        pastagens portuguesas é exposta ao parasita enquanto jovem, desenvolvendo anticorpos.
+        A piroplasmose é <strong className="text-[var(--foreground)]">endémica</strong> em Portugal
+        e Espanha, onde as carraças vectoras estão amplamente estabelecidas. A maioria dos cavalos
+        nascidos em pastagens portuguesas é exposta ao parasita enquanto jovem, desenvolvendo
+        anticorpos.
       </p>
 
       {/* FONTE: Lusitano Horse Finder */}
-      <div className="bg-[#C5A059]/8 border border-[#C5A059]/20 rounded-xl p-5 sm:p-6">
+      <div className="bg-[var(--gold)]/8 border border-[var(--gold)]/20 rounded-xl p-5 sm:p-6">
         <div className="flex items-start gap-3 sm:gap-4">
-          <div className="w-10 h-10 rounded-xl bg-[#C5A059]/20 flex items-center justify-center flex-shrink-0">
-            <AlertTriangle size={18} className="text-[#C5A059]" />
+          <div className="w-10 h-10 rounded-xl bg-[var(--gold)]/20 flex items-center justify-center flex-shrink-0">
+            <AlertTriangle size={18} className="text-[var(--gold)]" />
           </div>
           <div>
-            <p className="text-[#C5A059] font-semibold text-sm mb-2">O Problema Central</p>
-            <p className="text-zinc-400 text-[13px] leading-relaxed">
+            <p className="text-[var(--gold)] font-semibold text-sm mb-2">O Problema Central</p>
+            <p className="text-[var(--foreground-secondary)] text-[13px] leading-relaxed">
               Um Lusitano perfeitamente saudável, que simplesmente cresceu em pastagens portuguesas,
-              pode testar <strong className="text-white">positivo para anticorpos</strong> de
+              pode testar{" "}
+              <strong className="text-[var(--foreground)]">positivo para anticorpos</strong> de
               piroplasmose e ser automaticamente{" "}
-              <strong className="text-white">impedido de ser exportado</strong> para países livres
-              da doença, como os EUA, Canadá, Austrália ou Japão.
+              <strong className="text-[var(--foreground)]">impedido de ser exportado</strong> para
+              países livres da doença, como os EUA, Canadá, Austrália ou Japão.
             </p>
           </div>
         </div>
       </div>
 
-      <h3 className="text-white font-semibold text-base flex items-center gap-2">
-        <FlaskConical size={16} className="text-[#C5A059]" />
+      <h3 className="text-[var(--foreground)] font-semibold text-base flex items-center gap-2">
+        <FlaskConical size={16} className="text-[var(--gold)]" />
         Estudos Científicos Publicados
       </h3>
 
@@ -61,22 +63,23 @@ export function SeccaoPortugal() {
         />
       </div>
 
-      <div className="bg-zinc-800/40 rounded-xl p-4 sm:p-5 border border-zinc-700/30">
+      <div className="bg-[var(--background-card)]/40 rounded-xl p-4 sm:p-5 border border-[var(--border)]/30">
         <div className="flex items-start gap-3">
-          <Info size={16} className="text-[#C5A059] mt-0.5 flex-shrink-0" />
+          <Info size={16} className="text-[var(--gold)] mt-0.5 flex-shrink-0" />
           <div>
             {/* FONTE: Cabete et al. 2024 - "location was found to play a significant role" */}
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              <strong className="text-white">Nota:</strong> A prevalência varia significativamente
-              por região. O estudo de Cabete et al. (2024) confirma que a localização geográfica é
-              um factor significativo na seroprevalência. A co-infecção por ambos os parasitas foi
-              registada em <strong className="text-white">7.4%</strong> dos casos analisados.
+            <p className="text-xs text-[var(--foreground-secondary)] leading-relaxed">
+              <strong className="text-[var(--foreground)]">Nota:</strong> A prevalência varia
+              significativamente por região. O estudo de Cabete et al. (2024) confirma que a
+              localização geográfica é um factor significativo na seroprevalência. A co-infecção por
+              ambos os parasitas foi registada em{" "}
+              <strong className="text-[var(--foreground)]">7.4%</strong> dos casos analisados.
             </p>
           </div>
         </div>
       </div>
 
-      <p className="text-[10px] text-zinc-600">
+      <p className="text-[10px] text-[var(--foreground-muted)]">
         Fontes: ScienceDirect (sciencedirect.com), PubMed (pubmed.ncbi.nlm.nih.gov), Frontiers in
         Veterinary Science (frontiersin.org), Lusitano Horse Finder (lusitanohorsefinder.com)
       </p>

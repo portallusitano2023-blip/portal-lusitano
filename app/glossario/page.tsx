@@ -378,14 +378,14 @@ function TermCard({ term, language }: { term: GlossaryTerm; language: string }) 
     language === "en" ? term.definitionEn : language === "es" ? term.definitionEs : term.definition;
 
   return (
-    <article className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-[#C5A059]/30 transition-colors duration-200">
+    <article className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6 hover:border-[var(--gold)]/30 transition-colors duration-200">
       <div className="flex items-start justify-between gap-4 mb-3">
-        <h3 className="text-lg font-serif text-white">{term.pt}</h3>
-        <span className="text-xs font-medium px-2.5 py-1 bg-[#C5A059]/10 text-[#C5A059] rounded-full whitespace-nowrap flex-shrink-0">
+        <h3 className="text-lg font-serif text-[var(--foreground)]">{term.pt}</h3>
+        <span className="text-xs font-medium px-2.5 py-1 bg-[var(--gold)]/10 text-[var(--gold)] rounded-full whitespace-nowrap flex-shrink-0">
           {term.en}
         </span>
       </div>
-      <p className="text-sm text-zinc-400 leading-relaxed">{definition}</p>
+      <p className="text-sm text-[var(--foreground-secondary)] leading-relaxed">{definition}</p>
     </article>
   );
 }
@@ -487,18 +487,22 @@ export default function GlossarioPage() {
         : `${filteredTerms.length} termo${filteredTerms.length !== 1 ? "s" : ""}`;
 
   return (
-    <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
+    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
       <div className="max-w-5xl mx-auto">
         {/* ===== HEADER ===== */}
         <div className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-          <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <BookOpen className="text-[#C5A059]" size={32} />
+          <div className="w-16 h-16 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <BookOpen className="text-[var(--gold)]" size={32} />
           </div>
-          <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
+          <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
             {language === "en" ? "Reference" : language === "es" ? "Referencia" : "Referencia"}
           </span>
-          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">{pageTitle}</h1>
-          <p className="text-zinc-400 font-serif italic max-w-xl mx-auto">{pageSubtitle}</p>
+          <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
+            {pageTitle}
+          </h1>
+          <p className="text-[var(--foreground-secondary)] font-serif italic max-w-xl mx-auto">
+            {pageSubtitle}
+          </p>
         </div>
 
         {/* ===== SEARCH ===== */}
@@ -511,7 +515,7 @@ export default function GlossarioPage() {
               {searchPlaceholder}
             </label>
             <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] pointer-events-none"
               size={18}
               aria-hidden="true"
             />
@@ -521,7 +525,7 @@ export default function GlossarioPage() {
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full pl-11 pr-4 py-3.5 bg-zinc-900/80 border border-zinc-800 rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#C5A059]/50 focus:border-[#C5A059]/50 transition-colors text-sm"
+              className="w-full pl-11 pr-4 py-3.5 bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/50 focus:border-[var(--gold)]/50 transition-colors text-sm"
             />
           </div>
         </div>
@@ -556,10 +560,10 @@ export default function GlossarioPage() {
                   }
                   className={`w-9 h-9 rounded-lg text-sm font-medium transition-all duration-150 ${
                     isActive
-                      ? "bg-[#C5A059] text-black"
+                      ? "bg-[var(--gold)] text-black"
                       : isAvailable
-                        ? "bg-zinc-900/80 text-zinc-400 hover:bg-zinc-800 hover:text-white border border-zinc-800 hover:border-zinc-700"
-                        : "bg-transparent text-zinc-800 cursor-not-allowed"
+                        ? "bg-[var(--background-secondary)]/80 text-[var(--foreground-secondary)] hover:bg-[var(--background-card)] hover:text-[var(--foreground)] border border-[var(--border)] hover:border-[var(--border)]"
+                        : "bg-transparent text-[var(--foreground-muted)] cursor-not-allowed"
                   }`}
                 >
                   {letter}
@@ -574,13 +578,13 @@ export default function GlossarioPage() {
           className="flex items-center justify-between mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.2s" }}
         >
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-[var(--foreground-muted)]">
             {termsCountLabel}
             {activeLetter && (
               <span>
                 {" "}
                 &mdash; {language === "en" ? "letter" : language === "es" ? "letra" : "letra"}{" "}
-                <span className="text-[#C5A059] font-medium">{activeLetter}</span>
+                <span className="text-[var(--gold)] font-medium">{activeLetter}</span>
               </span>
             )}
           </p>
@@ -590,7 +594,7 @@ export default function GlossarioPage() {
                 setActiveLetter(null);
                 setSearchQuery("");
               }}
-              className="text-sm text-[#C5A059] hover:text-white transition-colors"
+              className="text-sm text-[var(--gold)] hover:text-[var(--foreground)] transition-colors"
             >
               {language === "en"
                 ? "Clear filters"
@@ -610,9 +614,13 @@ export default function GlossarioPage() {
           style={{ animationDelay: "0.25s" }}
         >
           {filteredTerms.length === 0 ? (
-            <div className="text-center py-16 bg-zinc-900/30 border border-zinc-800 rounded-xl">
-              <Search className="mx-auto text-zinc-700 mb-4" size={40} aria-hidden="true" />
-              <p className="text-zinc-500">{noResultsMessage}</p>
+            <div className="text-center py-16 bg-[var(--background-secondary)]/30 border border-[var(--border)] rounded-xl">
+              <Search
+                className="mx-auto text-[var(--foreground-muted)] mb-4"
+                size={40}
+                aria-hidden="true"
+              />
+              <p className="text-[var(--foreground-muted)]">{noResultsMessage}</p>
             </div>
           ) : (
             <div className="space-y-10">
@@ -621,11 +629,11 @@ export default function GlossarioPage() {
                   <div className="flex items-center gap-4 mb-4">
                     <h2
                       id={`letter-heading-${letter}`}
-                      className="text-3xl font-serif text-[#C5A059] flex-shrink-0"
+                      className="text-3xl font-serif text-[var(--gold)] flex-shrink-0"
                     >
                       {letter}
                     </h2>
-                    <div className="h-px flex-1 bg-zinc-800" aria-hidden="true" />
+                    <div className="h-px flex-1 bg-[var(--background-card)]" aria-hidden="true" />
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     {groupedTerms[letter].map((term) => (
@@ -640,10 +648,10 @@ export default function GlossarioPage() {
 
         {/* ===== FOOTER NOTE ===== */}
         <div
-          className="mt-16 text-center p-8 bg-white/[0.02] border border-white/5 rounded-xl opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          className="mt-16 text-center p-8 bg-[var(--surface-hover)] border border-[var(--border)] rounded-xl opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <p className="text-zinc-500 text-sm leading-relaxed">
+          <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
             {language === "en"
               ? "All terms follow standard FEI and APSL terminology. This glossary is for educational reference only."
               : language === "es"

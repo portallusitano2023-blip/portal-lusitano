@@ -23,7 +23,14 @@ export function LanguageProvider({
   children: ReactNode;
   initialLanguage?: Language;
 }) {
-  const [language, setLanguage] = useState<Language>(initialLanguage);
+  const [language, setLanguage] = useState<Language>(() => {
+    // Ler idioma do cookie no cliente (evita cookies() no server layout = páginas estáticas)
+    if (typeof document !== "undefined") {
+      const match = document.cookie.match(/(?:^|; )locale=(pt|en|es)(?:;|$)/);
+      if (match) return match[1] as Language;
+    }
+    return initialLanguage;
+  });
 
   // Actualizar documento quando idioma muda
   useEffect(() => {

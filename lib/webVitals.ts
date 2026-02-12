@@ -1,38 +1,40 @@
-import type { Metric } from 'web-vitals';
+import type { Metric } from "web-vitals";
 
-// Funcao para enviar metricas para analytics
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+// Enviar metricas para Google Analytics 4
 const sendToAnalytics = (metric: Metric) => {
-  // Em producao, enviar para Google Analytics, Vercel Analytics, etc.
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     console.log(`[Web Vitals] ${metric.name}: ${metric.value.toFixed(2)}`);
   }
 
-  // Exemplo: enviar para Google Analytics
-  // window.gtag?.('event', metric.name, {
-  //   value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
-  //   event_label: metric.id,
-  //   non_interaction: true,
-  // });
-
-  // Exemplo: enviar para Vercel Analytics
-  // window.va?.('vitals', { name: metric.name, value: metric.value });
+  // Enviar para GA4
+  window.gtag?.("event", metric.name, {
+    value: Math.round(metric.name === "CLS" ? metric.value * 1000 : metric.value),
+    event_label: metric.id,
+    non_interaction: true,
+  });
 };
 
 export function reportWebVitals(metric: Metric) {
   switch (metric.name) {
-    case 'CLS': // Cumulative Layout Shift - deve ser < 0.1
+    case "CLS": // Cumulative Layout Shift - deve ser < 0.1
       sendToAnalytics(metric);
       break;
-    case 'FCP': // First Contentful Paint - deve ser < 1.8s
+    case "FCP": // First Contentful Paint - deve ser < 1.8s
       sendToAnalytics(metric);
       break;
-    case 'LCP': // Largest Contentful Paint - deve ser < 2.5s
+    case "LCP": // Largest Contentful Paint - deve ser < 2.5s
       sendToAnalytics(metric);
       break;
-    case 'TTFB': // Time to First Byte - deve ser < 800ms
+    case "TTFB": // Time to First Byte - deve ser < 800ms
       sendToAnalytics(metric);
       break;
-    case 'INP': // Interaction to Next Paint - deve ser < 200ms (substitui FID)
+    case "INP": // Interaction to Next Paint - deve ser < 200ms (substitui FID)
       sendToAnalytics(metric);
       break;
     default:
@@ -42,8 +44,8 @@ export function reportWebVitals(metric: Metric) {
 
 // Inicializar Web Vitals
 export async function initWebVitals() {
-  if (typeof window !== 'undefined') {
-    const { onCLS, onFCP, onLCP, onTTFB, onINP } = await import('web-vitals');
+  if (typeof window !== "undefined") {
+    const { onCLS, onFCP, onLCP, onTTFB, onINP } = await import("web-vitals");
 
     onCLS(reportWebVitals);
     onFCP(reportWebVitals);

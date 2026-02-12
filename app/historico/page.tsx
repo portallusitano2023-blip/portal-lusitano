@@ -205,7 +205,7 @@ function ResultCard({
       <div className="flex gap-3">
         <Link
           href={`/resultado/${result.id}`}
-          className="flex-1 bg-[var(--gold)] text-black py-2.5 text-xs uppercase tracking-[0.15em] font-bold hover:bg-white transition-colors text-center flex items-center justify-center gap-2"
+          className="flex-1 bg-[var(--gold)] text-black py-2.5 text-xs uppercase tracking-[0.15em] font-bold hover:bg-[var(--gold-hover)] transition-colors text-center flex items-center justify-center gap-2"
         >
           <Search size={14} />
           Ver
@@ -386,7 +386,7 @@ function HistoricoContent() {
         <h2 className="text-xl font-serif text-[var(--foreground)] mb-3">{error}</h2>
         <button
           onClick={fetchResults}
-          className="mt-4 bg-[var(--gold)] text-black px-6 py-3 text-xs uppercase tracking-[0.15em] font-bold hover:bg-white transition-colors"
+          className="mt-4 bg-[var(--gold)] text-black px-6 py-3 text-xs uppercase tracking-[0.15em] font-bold hover:bg-[var(--gold-hover)] transition-colors"
         >
           Tentar novamente
         </button>

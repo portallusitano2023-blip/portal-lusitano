@@ -58,17 +58,17 @@ export function SeccaoCard({
           onClick={handleToggleWithMount}
           className={`relative z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center touch-manipulation transition-all duration-200 hover:scale-110 active:scale-90 ${
             aberta
-              ? "bg-[#C5A059] shadow-[0_0_20px_rgba(197,160,89,0.3)]"
-              : "bg-zinc-900 border-2 border-zinc-700 hover:border-[#C5A059]/50 group"
+              ? "bg-[var(--gold)] shadow-[0_0_20px_rgba(197,160,89,0.3)]"
+              : "bg-[var(--background-secondary)] border-2 border-[var(--border)] hover:border-[var(--gold)]/50 group"
           }`}
           aria-label={`Expandir ${seccao.titulo}`}
         >
           <Icone
             size={16}
-            className={`transition-colors duration-150 ${aberta ? "text-black" : "text-zinc-500 group-hover:text-[#C5A059]"}`}
+            className={`transition-colors duration-150 ${aberta ? "text-black" : "text-[var(--foreground-muted)] group-hover:text-[var(--gold)]"}`}
           />
           {primeiraFechada && (
-            <span className="absolute inset-0 rounded-full border-2 border-[#C5A059]/40 animate-ping" />
+            <span className="absolute inset-0 rounded-full border-2 border-[var(--gold)]/40 animate-ping" />
           )}
         </button>
         {/* Linha vertical - CSS transition nativa */}
@@ -76,7 +76,7 @@ export function SeccaoCard({
           <div
             className={`w-[2px] flex-1 origin-top transition-all duration-500 ease-out ${
               inView ? "scale-y-100" : "scale-y-0"
-            } ${aberta ? "bg-gradient-to-b from-[#C5A059]/40 to-zinc-800/40" : "bg-zinc-800/60"}`}
+            } ${aberta ? "bg-gradient-to-b from-[var(--gold)]/40 to-[var(--border)]/40" : "bg-[var(--border)]/60"}`}
             style={{ transitionDelay: `${indice * 60 + 150}ms` }}
           />
         )}
@@ -91,18 +91,18 @@ export function SeccaoCard({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <h2
-                className={`text-[15px] sm:text-xl font-serif leading-tight transition-colors duration-150 ${aberta ? "text-[#C5A059]" : "text-zinc-200 group-hover:text-white"}`}
+                className={`text-[15px] sm:text-xl font-serif leading-tight transition-colors duration-150 ${aberta ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)] group-hover:text-[var(--foreground)]"}`}
               >
                 {seccao.titulo}
               </h2>
               <p
-                className={`text-[11px] sm:text-[13px] mt-1 transition-colors duration-150 ${aberta ? "text-zinc-400" : "text-zinc-600 group-hover:text-zinc-500"}`}
+                className={`text-[11px] sm:text-[13px] mt-1 transition-colors duration-150 ${aberta ? "text-[var(--foreground-secondary)]" : "text-[var(--foreground-muted)] group-hover:text-[var(--foreground-muted)]"}`}
               >
                 {seccao.subtitulo}
               </p>
               {!aberta && (
                 <span
-                  className={`inline-flex items-center gap-1.5 mt-2.5 text-[11px] sm:text-xs font-medium transition-colors duration-150 ${primeiraFechada ? "text-[#C5A059]" : "text-zinc-600 group-hover:text-[#C5A059]"}`}
+                  className={`inline-flex items-center gap-1.5 mt-2.5 text-[11px] sm:text-xs font-medium transition-colors duration-150 ${primeiraFechada ? "text-[var(--gold)]" : "text-[var(--foreground-muted)] group-hover:text-[var(--gold)]"}`}
                 >
                   Toque para ler
                   <span
@@ -118,7 +118,7 @@ export function SeccaoCard({
               )}
             </div>
             {aberta && (
-              <span className="flex-shrink-0 inline-flex items-center gap-1 text-[10px] text-[#C5A059]/60 mt-1">
+              <span className="flex-shrink-0 inline-flex items-center gap-1 text-[10px] text-[var(--gold)]/60 mt-1">
                 Fechar
                 <ChevronDown size={12} className="rotate-180" />
               </span>
@@ -134,7 +134,7 @@ export function SeccaoCard({
           <div className="overflow-hidden">
             {hasBeenOpened && (
               <div
-                className={`mt-5 sm:mt-6 bg-zinc-900/50 border border-zinc-800/60 rounded-xl p-5 sm:p-7 transition-opacity duration-200 ${aberta ? "opacity-100" : "opacity-0"}`}
+                className={`mt-5 sm:mt-6 bg-[var(--background-secondary)]/50 border border-[var(--border)]/60 rounded-xl p-5 sm:p-7 transition-opacity duration-200 ${aberta ? "opacity-100" : "opacity-0"}`}
               >
                 {seccao.conteudo}
               </div>

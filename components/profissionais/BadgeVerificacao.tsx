@@ -21,7 +21,7 @@ export function BarraExpertise({ nivel }: { nivel: NivelExpertise }) {
       {niveis.map((n, i) => (
         <div
           key={n}
-          className={`h-1.5 w-4 rounded-full ${i <= index ? config.cor : "bg-zinc-700"}`}
+          className={`h-1.5 w-4 rounded-full ${i <= index ? config.cor : "bg-[var(--border)]"}`}
         />
       ))}
     </div>

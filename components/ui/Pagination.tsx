@@ -66,7 +66,7 @@ export default function Pagination({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2 border border-zinc-800 bg-zinc-900/50 text-white hover:bg-[#C5A059] hover:border-[#C5A059] hover:text-black transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-zinc-900/50 disabled:hover:text-white disabled:hover:border-zinc-800"
+        className="p-2 border border-[var(--border)] bg-[var(--background-secondary)]/50 text-[var(--foreground)] hover:bg-[var(--gold)] hover:border-[var(--gold)] hover:text-black transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[var(--background-secondary)]/50 disabled:hover:text-[var(--foreground)] disabled:hover:border-[var(--border)]"
         aria-label="Página anterior"
       >
         <ChevronLeft size={20} />
@@ -77,7 +77,7 @@ export default function Pagination({
         {pageNumbers.map((page, index) => {
           if (page === "...") {
             return (
-              <span key={`ellipsis-${index}`} className="px-3 py-2 text-zinc-500">
+              <span key={`ellipsis-${index}`} className="px-3 py-2 text-[var(--foreground-muted)]">
                 ...
               </span>
             );
@@ -92,8 +92,8 @@ export default function Pagination({
               onClick={() => onPageChange(pageNum)}
               className={`min-w-[40px] px-3 py-2 border transition-all ${
                 isActive
-                  ? "bg-[#C5A059] border-[#C5A059] text-black font-bold"
-                  : "border-zinc-800 bg-zinc-900/50 text-white hover:bg-[#C5A059]/20 hover:border-[#C5A059]/50"
+                  ? "bg-[var(--gold)] border-[var(--gold)] text-black font-bold"
+                  : "border-[var(--border)] bg-[var(--background-secondary)]/50 text-[var(--foreground)] hover:bg-[var(--gold)]/20 hover:border-[var(--gold)]/50"
               }`}
               aria-label={`Página ${pageNum}`}
               aria-current={isActive ? "page" : undefined}
@@ -108,7 +108,7 @@ export default function Pagination({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2 border border-zinc-800 bg-zinc-900/50 text-white hover:bg-[#C5A059] hover:border-[#C5A059] hover:text-black transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-zinc-900/50 disabled:hover:text-white disabled:hover:border-zinc-800"
+        className="p-2 border border-[var(--border)] bg-[var(--background-secondary)]/50 text-[var(--foreground)] hover:bg-[var(--gold)] hover:border-[var(--gold)] hover:text-black transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[var(--background-secondary)]/50 disabled:hover:text-[var(--foreground)] disabled:hover:border-[var(--border)]"
         aria-label="Próxima página"
       >
         <ChevronRight size={20} />

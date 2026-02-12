@@ -42,15 +42,9 @@ const ComposedProviders = composeProviders(
   HorseFavoritesProvider
 );
 
-export function Providers({
-  children,
-  initialLanguage = "pt",
-}: {
-  children: ReactNode;
-  initialLanguage?: "pt" | "en" | "es";
-}) {
+export function Providers({ children }: { children: ReactNode }) {
   return (
-    <LanguageProvider initialLanguage={initialLanguage}>
+    <LanguageProvider>
       <ComposedProviders>
         <Preloader />
         {children}

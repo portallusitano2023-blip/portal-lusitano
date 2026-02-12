@@ -158,11 +158,11 @@ export default function PiroplasmosePage() {
   );
 
   return (
-    <main className="min-h-screen bg-black text-white pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">
       {/* Barra de progresso - manipulação directa do DOM, zero re-renders */}
       <div
         ref={progressRef}
-        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#C5A059] via-[#d4b76a] to-[#C5A059] z-[9999] origin-left will-change-transform"
+        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[var(--gold)] via-[#d4b76a] to-[var(--gold)] z-[9999] origin-left will-change-transform"
         style={{ transform: "scaleX(0)" }}
       />
 
@@ -172,9 +172,9 @@ export default function PiroplasmosePage() {
           seccaoActiva ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
         }`}
       >
-        <div className="bg-black/95 border border-[#C5A059]/30 rounded-full px-4 py-2 shadow-lg shadow-black/50">
-          <span className="text-[11px] sm:text-xs text-[#C5A059] font-medium tracking-wide">
-            {seccaoActiva || " "}
+        <div className="bg-[var(--background)]/95 border border-[var(--gold)]/30 rounded-full px-4 py-2 shadow-lg shadow-black/50">
+          <span className="text-[11px] sm:text-xs text-[var(--gold)] font-medium tracking-wide">
+            {seccaoActiva || " "}
           </span>
         </div>
       </div>

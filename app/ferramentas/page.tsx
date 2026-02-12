@@ -141,7 +141,7 @@ function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number
   return (
     <Link
       href={tool.href}
-      className="group relative bg-zinc-900/80 border border-white/10 rounded-2xl p-8 transition-all duration-300 hover:border-[#C5A059]/50 hover:shadow-lg hover:shadow-[#C5A059]/5 hover:-translate-y-1 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      className="group relative bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8 transition-all duration-300 hover:border-[var(--gold)]/50 hover:shadow-lg hover:shadow-[var(--gold)]/5 hover:-translate-y-1 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       style={{ animationDelay: `${0.2 + index * 0.1}s` }}
     >
       {/* Gradient background on hover */}
@@ -158,25 +158,27 @@ function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number
         </div>
 
         {/* Title */}
-        <h3 className="text-xl font-serif text-white mb-3 group-hover:text-[#C5A059] transition-colors">
+        <h3 className="text-xl font-serif text-[var(--foreground)] mb-3 group-hover:text-[var(--gold)] transition-colors">
           {tool.title}
         </h3>
 
         {/* Description */}
-        <p className="text-zinc-400 text-sm leading-relaxed mb-6">{tool.description}</p>
+        <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-6">
+          {tool.description}
+        </p>
 
         {/* Features */}
         <ul className="space-y-2 mb-6">
           {tool.features.map((feature, i) => (
-            <li key={i} className="flex items-center gap-2 text-zinc-500 text-xs">
-              <Check size={14} className="text-[#C5A059] flex-shrink-0" />
+            <li key={i} className="flex items-center gap-2 text-[var(--foreground-muted)] text-xs">
+              <Check size={14} className="text-[var(--gold)] flex-shrink-0" />
               <span>{feature}</span>
             </li>
           ))}
         </ul>
 
         {/* CTA */}
-        <div className="flex items-center gap-2 text-sm font-medium text-[#C5A059] group-hover:gap-3 transition-all">
+        <div className="flex items-center gap-2 text-sm font-medium text-[var(--gold)] group-hover:gap-3 transition-all">
           <span>{t.ferramentas.try}</span>
           <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
         </div>
@@ -195,14 +197,14 @@ function FAQAccordion({
   onClick: () => void;
 }) {
   return (
-    <div className="border-b border-white/10">
+    <div className="border-b border-[var(--border)]">
       <button
         onClick={onClick}
         className="w-full py-6 flex items-center justify-between text-left group"
         aria-expanded={isOpen}
         aria-controls={`faq-answer-${item.question.slice(0, 20).replace(/\s/g, "-")}`}
       >
-        <span className="text-lg font-serif text-white group-hover:text-[#C5A059] transition-colors pr-8">
+        <span className="text-lg font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors pr-8">
           {item.question}
         </span>
         <div
@@ -210,7 +212,7 @@ function FAQAccordion({
           style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
         >
           <ChevronDown
-            className={`${isOpen ? "text-[#C5A059]" : "text-zinc-500"} transition-colors`}
+            className={`${isOpen ? "text-[var(--gold)]" : "text-[var(--foreground-muted)]"} transition-colors`}
             size={20}
           />
         </div>
@@ -221,7 +223,7 @@ function FAQAccordion({
         style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
       >
         <div className="overflow-hidden">
-          <p className="pb-6 text-zinc-400 leading-relaxed">{item.answer}</p>
+          <p className="pb-6 text-[var(--foreground-secondary)] leading-relaxed">{item.answer}</p>
         </div>
       </div>
     </div>
@@ -232,11 +234,19 @@ function PricingFeature({ text, included }: { text: string; included: boolean })
   return (
     <li className="flex items-center gap-3">
       {included ? (
-        <Check size={16} className="text-[#C5A059] flex-shrink-0" />
+        <Check size={16} className="text-[var(--gold)] flex-shrink-0" />
       ) : (
-        <X size={16} className="text-zinc-600 flex-shrink-0" />
+        <X size={16} className="text-[var(--foreground-muted)] flex-shrink-0" />
       )}
-      <span className={included ? "text-zinc-300 text-sm" : "text-zinc-600 text-sm"}>{text}</span>
+      <span
+        className={
+          included
+            ? "text-[var(--foreground-secondary)] text-sm"
+            : "text-[var(--foreground-muted)] text-sm"
+        }
+      >
+        {text}
+      </span>
     </li>
   );
 }
@@ -275,7 +285,7 @@ function ProSubscribeButton({ className }: { className?: string }) {
       disabled={loading}
       className={
         className ||
-        "block w-full py-3 text-center bg-gradient-to-r from-[#C5A059] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all hover:shadow-lg hover:shadow-[#C5A059]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+        "block w-full py-3 text-center bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all hover:shadow-lg hover:shadow-[var(--gold)]/20 disabled:opacity-50 disabled:cursor-not-allowed"
       }
     >
       {loading ? (
@@ -332,14 +342,14 @@ function CheckoutFeedback() {
   if (isCancelled) {
     return (
       <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
-        <div className="flex items-center gap-3 px-6 py-4 bg-zinc-800/90 border border-zinc-700 rounded-xl backdrop-blur-sm shadow-lg">
-          <X size={20} className="text-zinc-400" />
-          <span className="text-zinc-300 font-medium text-sm">
+        <div className="flex items-center gap-3 px-6 py-4 bg-[var(--background-card)]/90 border border-[var(--border)] rounded-xl backdrop-blur-sm shadow-lg">
+          <X size={20} className="text-[var(--foreground-secondary)]" />
+          <span className="text-[var(--foreground-secondary)] font-medium text-sm">
             Pagamento cancelado. Pode subscrever a qualquer momento.
           </span>
           <button
             onClick={() => setDismissed(true)}
-            className="text-zinc-400 hover:text-zinc-300 ml-2"
+            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground-secondary)] ml-2"
           >
             <X size={16} />
           </button>
@@ -394,13 +404,15 @@ function ToolReviewsSection() {
       <div className="max-w-4xl mx-auto">
         {/* Section header */}
         <AnimateOnScroll className="text-center mb-12">
-          <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
+          <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">
             {t.ferramentas.reviews_badge}
           </span>
-          <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4">
             {t.ferramentas.reviews_title}
           </h2>
-          <p className="text-zinc-400 max-w-lg mx-auto">{t.ferramentas.reviews_subtitle}</p>
+          <p className="text-[var(--foreground-secondary)] max-w-lg mx-auto">
+            {t.ferramentas.reviews_subtitle}
+          </p>
         </AnimateOnScroll>
 
         {/* Tool filter */}
@@ -409,8 +421,8 @@ function ToolReviewsSection() {
             onClick={() => setFilterSlug("all")}
             className={`px-4 py-2 rounded-full text-sm font-medium transition ${
               filterSlug === "all"
-                ? "bg-[#C5A059] text-black"
-                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                ? "bg-[var(--gold)] text-black"
+                : "bg-[var(--background-card)] text-[var(--foreground-secondary)] hover:bg-zinc-700 hover:text-[var(--foreground)]"
             }`}
             aria-pressed={filterSlug === "all"}
           >
@@ -422,8 +434,8 @@ function ToolReviewsSection() {
               onClick={() => setFilterSlug(slug)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition ${
                 filterSlug === slug
-                  ? "bg-[#C5A059] text-black"
-                  : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                  ? "bg-[var(--gold)] text-black"
+                  : "bg-[var(--background-card)] text-[var(--foreground-secondary)] hover:bg-zinc-700 hover:text-[var(--foreground)]"
               }`}
               aria-pressed={filterSlug === slug}
             >
@@ -434,24 +446,28 @@ function ToolReviewsSection() {
 
         {/* Stats summary */}
         {stats.total > 0 && (
-          <div className="flex items-center justify-center gap-6 mb-10 p-4 bg-[#C5A059]/5 border border-[#C5A059]/10 rounded-xl">
+          <div className="flex items-center justify-center gap-6 mb-10 p-4 bg-[var(--gold)]/5 border border-[var(--gold)]/10 rounded-xl">
             <div className="text-center">
-              <p className="text-3xl font-serif text-[#C5A059]">{stats.media}</p>
+              <p className="text-3xl font-serif text-[var(--gold)]">{stats.media}</p>
               <div className="flex gap-0.5 justify-center mt-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
                     size={14}
-                    className={star <= Math.round(stats.media) ? "text-[#C5A059]" : "text-zinc-600"}
+                    className={
+                      star <= Math.round(stats.media)
+                        ? "text-[var(--gold)]"
+                        : "text-[var(--foreground-muted)]"
+                    }
                     fill={star <= Math.round(stats.media) ? "currentColor" : "none"}
                   />
                 ))}
               </div>
             </div>
-            <div className="border-l border-[#C5A059]/20 pl-6">
-              <p className="text-sm text-zinc-400">
+            <div className="border-l border-[var(--gold)]/20 pl-6">
+              <p className="text-sm text-[var(--foreground-secondary)]">
                 {t.ferramentas.reviews_based_on}{" "}
-                <span className="font-semibold text-white">{stats.total}</span>{" "}
+                <span className="font-semibold text-[var(--foreground)]">{stats.total}</span>{" "}
                 {stats.total === 1 ? t.ferramentas.reviews_single : t.ferramentas.reviews_plural}
               </p>
             </div>
@@ -464,26 +480,28 @@ function ToolReviewsSection() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="animate-pulse bg-zinc-900/50 border border-white/5 rounded-xl p-6"
+                className="animate-pulse bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6"
               >
-                <div className="h-4 bg-zinc-800 rounded w-1/4 mb-3" />
-                <div className="h-3 bg-zinc-800 rounded w-1/3 mb-4" />
-                <div className="h-16 bg-zinc-800 rounded" />
+                <div className="h-4 bg-[var(--background-card)] rounded w-1/4 mb-3" />
+                <div className="h-3 bg-[var(--background-card)] rounded w-1/3 mb-4" />
+                <div className="h-16 bg-[var(--background-card)] rounded" />
               </div>
             ))}
           </div>
         ) : reviews.length === 0 ? (
-          <div className="text-center py-12 bg-zinc-900/50 border border-white/5 rounded-xl mb-10">
-            <MessageSquare className="mx-auto text-zinc-600 mb-4" size={40} />
-            <p className="text-zinc-500">{t.ferramentas.reviews_none}</p>
-            <p className="text-zinc-600 text-sm mt-1">{t.ferramentas.reviews_be_first}</p>
+          <div className="text-center py-12 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl mb-10">
+            <MessageSquare className="mx-auto text-[var(--foreground-muted)] mb-4" size={40} />
+            <p className="text-[var(--foreground-muted)]">{t.ferramentas.reviews_none}</p>
+            <p className="text-[var(--foreground-muted)] text-sm mt-1">
+              {t.ferramentas.reviews_be_first}
+            </p>
           </div>
         ) : (
           <div className="space-y-4 mb-10">
             {reviews.map((review) => (
               <div
                 key={review.id}
-                className="bg-zinc-900/50 border border-white/5 rounded-xl p-6 hover:border-white/10 transition"
+                className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6 hover:border-[var(--border)] transition"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div>
@@ -494,27 +512,33 @@ function ToolReviewsSection() {
                             key={star}
                             size={16}
                             className={
-                              star <= review.avaliacao ? "text-[#C5A059]" : "text-zinc-600"
+                              star <= review.avaliacao
+                                ? "text-[var(--gold)]"
+                                : "text-[var(--foreground-muted)]"
                             }
                             fill={star <= review.avaliacao ? "currentColor" : "none"}
                           />
                         ))}
                       </div>
                       {review.ferramenta_slug && filterSlug === "all" && (
-                        <span className="text-xs px-2 py-0.5 bg-zinc-800 text-zinc-400 rounded-full">
+                        <span className="text-xs px-2 py-0.5 bg-[var(--background-card)] text-[var(--foreground-secondary)] rounded-full">
                           {toolSlugToName[review.ferramenta_slug] || review.ferramenta_slug}
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-zinc-500">
+                    <div className="flex items-center gap-2 text-sm text-[var(--foreground-muted)]">
                       <User size={14} />
                       <span>{review.autor_nome}</span>
                     </div>
                   </div>
-                  <span className="text-xs text-zinc-600">{formatDate(review.created_at)}</span>
+                  <span className="text-xs text-[var(--foreground-muted)]">
+                    {formatDate(review.created_at)}
+                  </span>
                 </div>
 
-                <p className="text-zinc-300 text-sm leading-relaxed mb-3">{review.comentario}</p>
+                <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-3">
+                  {review.comentario}
+                </p>
 
                 {review.recomenda && (
                   <span className="inline-flex items-center gap-1 text-xs text-green-500">
@@ -528,19 +552,23 @@ function ToolReviewsSection() {
         )}
 
         {/* Review form */}
-        <div className="bg-zinc-900/80 border border-white/10 rounded-2xl p-8">
-          <h3 className="text-xl font-serif text-white mb-2">{t.ferramentas.reviews_leave}</h3>
-          <p className="text-zinc-500 text-sm mb-6">{t.ferramentas.reviews_share}</p>
+        <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8">
+          <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
+            {t.ferramentas.reviews_leave}
+          </h3>
+          <p className="text-[var(--foreground-muted)] text-sm mb-6">
+            {t.ferramentas.reviews_share}
+          </p>
 
           {/* Tool selector dropdown */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
+            <label className="block text-sm font-medium text-[var(--foreground-secondary)] mb-2">
               {t.ferramentas.reviews_tool}
             </label>
             <select
               value={formSlug}
               onChange={(e) => setFormSlug(e.target.value)}
-              className="w-full px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition"
+              className="w-full px-4 py-2.5 bg-[var(--background-card)] border border-[var(--border)] rounded-lg text-[var(--foreground)] focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent transition"
             >
               {toolSlugs.map((slug) => (
                 <option key={slug} value={slug}>
@@ -571,7 +599,7 @@ export default function FerramentasPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
 
   return (
-    <main className="min-h-screen bg-[#050505]">
+    <main className="min-h-screen bg-[var(--background)]">
       <Suspense fallback={null}>
         <CheckoutFeedback />
       </Suspense>
@@ -579,40 +607,40 @@ export default function FerramentasPage() {
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#C5A059]/5 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#C5A059]/3 rounded-full blur-[100px]" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--gold)]/5 rounded-full blur-[120px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[var(--gold)]/3 rounded-full blur-[100px]" />
         </div>
 
         <div className="relative max-w-5xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-full mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-            <Sparkles size={14} className="text-[#C5A059]" />
-            <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] font-medium">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[var(--gold)]/10 border border-[var(--gold)]/20 rounded-full mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+            <Sparkles size={14} className="text-[var(--gold)]" />
+            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-medium">
               {t.ferramentas.badge}
             </span>
           </div>
 
           {/* Title */}
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-[var(--foreground)] mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.1s" }}
           >
             {t.ferramentas.title}{" "}
-            <span className="bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] bg-clip-text text-transparent">
               {t.ferramentas.title_accent}
             </span>
           </h1>
 
           {/* Subtitle */}
           <p
-            className="text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-lg md:text-xl text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.2s" }}
           >
             {t.ferramentas.subtitle}
           </p>
 
           <p
-            className="text-sm text-zinc-500 max-w-xl mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-sm text-[var(--foreground-muted)] max-w-xl mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.3s" }}
           >
             {t.ferramentas.subtitle_detail}
@@ -625,7 +653,7 @@ export default function FerramentasPage() {
         <div className="max-w-6xl mx-auto">
           {/* Section label */}
           <div className="text-center mb-12">
-            <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059]">
+            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)]">
               {t.ferramentas.available}
             </span>
           </div>
@@ -666,13 +694,13 @@ export default function FerramentasPage() {
               },
             ].map((benefit, i) => (
               <AnimateOnScroll key={benefit.label} delay={i * 80}>
-                <div className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
-                  <div className="w-10 h-10 bg-[#C5A059]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <benefit.icon size={20} className="text-[#C5A059]" />
+                <div className="flex items-center gap-4 p-4 bg-[var(--surface-hover)] border border-[var(--border)] rounded-xl">
+                  <div className="w-10 h-10 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <benefit.icon size={20} className="text-[var(--gold)]" />
                   </div>
                   <div>
-                    <p className="text-white text-sm font-medium">{benefit.label}</p>
-                    <p className="text-zinc-500 text-xs">{benefit.text}</p>
+                    <p className="text-[var(--foreground)] text-sm font-medium">{benefit.label}</p>
+                    <p className="text-[var(--foreground-muted)] text-xs">{benefit.text}</p>
                   </div>
                 </div>
               </AnimateOnScroll>
@@ -686,27 +714,35 @@ export default function FerramentasPage() {
         <div className="max-w-4xl mx-auto">
           {/* Section header */}
           <AnimateOnScroll className="text-center mb-16">
-            <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
+            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">
               {t.ferramentas.plans_title}
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4">
               {t.ferramentas.choose_plan}
             </h2>
-            <p className="text-zinc-400 max-w-lg mx-auto">{t.ferramentas.plans_subtitle}</p>
+            <p className="text-[var(--foreground-secondary)] max-w-lg mx-auto">
+              {t.ferramentas.plans_subtitle}
+            </p>
           </AnimateOnScroll>
 
           {/* Pricing cards */}
           <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
             {/* Free Tier */}
-            <div className="bg-zinc-900/80 border border-white/10 rounded-2xl p-8">
+            <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8">
               <div className="mb-8">
-                <h3 className="text-xl font-serif text-white mb-2">{t.ferramentas.free}</h3>
-                <p className="text-zinc-500 text-sm mb-6">{t.ferramentas.free_subtitle}</p>
+                <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
+                  {t.ferramentas.free}
+                </h3>
+                <p className="text-[var(--foreground-muted)] text-sm mb-6">
+                  {t.ferramentas.free_subtitle}
+                </p>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-serif text-white">0</span>
-                  <span className="text-zinc-500 text-lg">EUR</span>
+                  <span className="text-4xl font-serif text-[var(--foreground)]">0</span>
+                  <span className="text-[var(--foreground-muted)] text-lg">EUR</span>
                 </div>
-                <p className="text-zinc-600 text-xs mt-1">1 uso gratuito por ferramenta</p>
+                <p className="text-[var(--foreground-muted)] text-xs mt-1">
+                  1 uso gratuito por ferramenta
+                </p>
               </div>
 
               <ul className="space-y-4 mb-8">
@@ -717,32 +753,40 @@ export default function FerramentasPage() {
 
               <Link
                 href="/registar"
-                className="block w-full py-3 text-center border border-white/20 text-white text-sm font-medium rounded-lg hover:bg-white/5 transition-colors"
+                className="block w-full py-3 text-center border border-[var(--border)] text-[var(--foreground)] text-sm font-medium rounded-lg hover:bg-[var(--surface-hover)] transition-colors"
               >
                 {t.ferramentas.create_free}
               </Link>
             </div>
 
             {/* PRO Tier */}
-            <div className="relative bg-zinc-900/80 border-2 border-[#C5A059]/60 rounded-2xl p-8 shadow-lg shadow-[#C5A059]/5">
+            <div className="relative bg-[var(--background-secondary)]/80 border-2 border-[var(--gold)]/60 rounded-2xl p-8 shadow-lg shadow-[var(--gold)]/5">
               {/* Badge */}
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                <span className="inline-flex items-center gap-1.5 px-4 py-1 bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] text-black text-xs font-bold uppercase tracking-[0.15em] rounded-full">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1 bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] text-black text-xs font-bold uppercase tracking-[0.15em] rounded-full">
                   <Crown size={12} />
                   {t.ferramentas.most_popular}
                 </span>
               </div>
 
               <div className="mb-8">
-                <h3 className="text-xl font-serif text-white mb-2">{t.ferramentas.pro}</h3>
-                <p className="text-zinc-500 text-sm mb-6">{t.ferramentas.pro_subtitle}</p>
+                <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
+                  {t.ferramentas.pro}
+                </h3>
+                <p className="text-[var(--foreground-muted)] text-sm mb-6">
+                  {t.ferramentas.pro_subtitle}
+                </p>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-serif bg-gradient-to-r from-[#C5A059] to-[#E8D5A3] bg-clip-text text-transparent">
+                  <span className="text-4xl font-serif bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] bg-clip-text text-transparent">
                     4,99
                   </span>
-                  <span className="text-zinc-500 text-lg">{t.ferramentas.per_month}</span>
+                  <span className="text-[var(--foreground-muted)] text-lg">
+                    {t.ferramentas.per_month}
+                  </span>
                 </div>
-                <p className="text-zinc-600 text-xs mt-1">{t.ferramentas.cancel_anytime}</p>
+                <p className="text-[var(--foreground-muted)] text-xs mt-1">
+                  {t.ferramentas.cancel_anytime}
+                </p>
               </div>
 
               <ul className="space-y-4 mb-8">
@@ -756,27 +800,29 @@ export default function FerramentasPage() {
           </div>
 
           {/* Trust note */}
-          <p className="text-center text-zinc-600 text-xs mt-8">{t.ferramentas.payment_note}</p>
+          <p className="text-center text-[var(--foreground-muted)] text-xs mt-8">
+            {t.ferramentas.payment_note}
+          </p>
         </div>
       </section>
 
       {/* ===== PRO FEATURES DETAIL ===== */}
       <section className="px-6 pb-24">
         <div className="max-w-5xl mx-auto">
-          <div className="bg-gradient-to-br from-[#C5A059]/5 to-transparent border border-[#C5A059]/10 rounded-2xl p-8 md:p-12">
+          <div className="bg-gradient-to-br from-[var(--gold)]/5 to-transparent border border-[var(--gold)]/10 rounded-2xl p-8 md:p-12">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               {/* Left: Text */}
               <div>
-                <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
+                <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">
                   {t.ferramentas.pro_advantages}
                 </span>
-                <h2 className="text-2xl md:text-3xl font-serif text-white mb-6">
+                <h2 className="text-2xl md:text-3xl font-serif text-[var(--foreground)] mb-6">
                   {t.ferramentas.pro_title}
                 </h2>
-                <p className="text-zinc-400 text-sm leading-relaxed mb-8">
+                <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-8">
                   {t.ferramentas.pro_desc}
                 </p>
-                <ProSubscribeButton className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#C5A059] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all disabled:opacity-50 disabled:cursor-not-allowed" />
+                <ProSubscribeButton className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all disabled:opacity-50 disabled:cursor-not-allowed" />
               </div>
 
               {/* Right: Feature grid */}
@@ -805,11 +851,13 @@ export default function FerramentasPage() {
                 ].map((feat) => (
                   <div
                     key={feat.title}
-                    className="p-4 bg-white/[0.03] border border-white/5 rounded-xl"
+                    className="p-4 bg-[var(--surface-hover)] border border-[var(--border)] rounded-xl"
                   >
-                    <feat.icon size={20} className="text-[#C5A059] mb-3" />
-                    <p className="text-white text-sm font-medium mb-1">{feat.title}</p>
-                    <p className="text-zinc-500 text-xs">{feat.desc}</p>
+                    <feat.icon size={20} className="text-[var(--gold)] mb-3" />
+                    <p className="text-[var(--foreground)] text-sm font-medium mb-1">
+                      {feat.title}
+                    </p>
+                    <p className="text-[var(--foreground-muted)] text-xs">{feat.desc}</p>
                   </div>
                 ))}
               </div>
@@ -823,13 +871,15 @@ export default function FerramentasPage() {
         <div className="max-w-3xl mx-auto">
           {/* Section header */}
           <AnimateOnScroll className="text-center mb-12">
-            <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-4">
+            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">
               {t.ferramentas.faq_badge}
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4">
               {t.ferramentas.faq_title}
             </h2>
-            <p className="text-zinc-400 max-w-lg mx-auto">{t.ferramentas.faq_subtitle}</p>
+            <p className="text-[var(--foreground-secondary)] max-w-lg mx-auto">
+              {t.ferramentas.faq_subtitle}
+            </p>
           </AnimateOnScroll>
 
           {/* FAQ items */}
@@ -845,11 +895,13 @@ export default function FerramentasPage() {
           </div>
 
           {/* Contact CTA */}
-          <div className="mt-12 text-center p-8 bg-white/[0.02] border border-white/5 rounded-xl">
-            <p className="text-zinc-400 mb-4 text-sm">{t.ferramentas.faq_not_found}</p>
+          <div className="mt-12 text-center p-8 bg-[var(--surface-hover)] border border-[var(--border)] rounded-xl">
+            <p className="text-[var(--foreground-secondary)] mb-4 text-sm">
+              {t.ferramentas.faq_not_found}
+            </p>
             <Link
               href="/faq"
-              className="inline-flex items-center gap-2 text-[#C5A059] text-sm font-medium hover:underline"
+              className="inline-flex items-center gap-2 text-[var(--gold)] text-sm font-medium hover:underline"
             >
               {t.ferramentas.faq_see_all}
               <ArrowRight size={14} />

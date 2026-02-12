@@ -59,7 +59,9 @@ export default function LazyImage({
   return (
     <div ref={imgRef} className={`relative overflow-hidden ${className}`}>
       {/* Placeholder skeleton */}
-      {!isLoaded && <div className="absolute inset-0 bg-zinc-800/50 animate-pulse" />}
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-[var(--background-card)]/50 animate-pulse" />
+      )}
 
       {/* Image */}
       {isInView && (

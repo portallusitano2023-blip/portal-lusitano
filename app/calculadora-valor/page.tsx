@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
+import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
@@ -130,7 +131,7 @@ export default function CalculadoraValorPage() {
   const progress = step === 0 ? 0 : (step / TOTAL_STEPS) * 100;
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <CalculadoraHeader
         step={step}
         totalSteps={TOTAL_STEPS}
@@ -157,6 +158,7 @@ export default function CalculadoraValorPage() {
                 requiresAuth={requiresAuth}
               />
             )}
+            <ProUpgradeCard isSubscribed={isSubscribed} />
 
             {/* Form steps */}
             {step > 0 && !resultado && (

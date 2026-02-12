@@ -64,17 +64,17 @@ export default function SubscriptionBanner({
 
   if (isSubscribed) {
     return (
-      <div className="flex items-center justify-between px-4 py-2 bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg">
+      <div className="flex items-center justify-between px-4 py-2 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-lg">
         <div className="flex items-center gap-2">
-          <Crown size={16} className="text-[#C5A059]" />
-          <span className="text-xs text-[#C5A059] font-medium">
+          <Crown size={16} className="text-[var(--gold)]" />
+          <span className="text-xs text-[var(--gold)] font-medium">
             Ferramentas PRO - Uso Ilimitado
           </span>
         </div>
         <button
           onClick={handleManageSubscription}
           disabled={loading}
-          className="text-xs text-[#C5A059]/70 hover:text-[#C5A059] font-medium transition-colors disabled:opacity-50"
+          className="text-xs text-[var(--gold)]/70 hover:text-[var(--gold)] font-medium transition-colors disabled:opacity-50"
         >
           {loading ? <Loader2 size={12} className="animate-spin" /> : "Gerir"}
         </button>
@@ -86,10 +86,13 @@ export default function SubscriptionBanner({
     return (
       <Link
         href="/registar"
-        className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-[#C5A059]/30 transition-colors group"
+        className="flex items-center gap-2 px-4 py-2 bg-[var(--background-secondary)] border border-[var(--border)] rounded-lg hover:border-[var(--gold)]/30 transition-colors group"
       >
-        <Zap size={16} className="text-zinc-500 group-hover:text-[#C5A059] transition-colors" />
-        <span className="text-xs text-zinc-400 group-hover:text-zinc-300 transition-colors">
+        <Zap
+          size={16}
+          className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] transition-colors"
+        />
+        <span className="text-xs text-[var(--foreground-secondary)] group-hover:text-[var(--foreground-secondary)] transition-colors">
           Crie uma conta para usar gratuitamente
         </span>
       </Link>
@@ -109,7 +112,7 @@ export default function SubscriptionBanner({
         <button
           onClick={handleSubscribe}
           disabled={loading}
-          className="text-xs text-[#C5A059] hover:text-[#D4AF6A] font-medium transition-colors disabled:opacity-50"
+          className="text-xs text-[var(--gold)] hover:text-[#D4AF6A] font-medium transition-colors disabled:opacity-50"
         >
           {loading ? <Loader2 size={12} className="animate-spin" /> : "Subscrever PRO"}
         </button>

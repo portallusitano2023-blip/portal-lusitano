@@ -77,10 +77,10 @@ export default function FloatingTOC({ body, language = "pt" }: FloatingTOCProps)
       className="sticky top-24"
       aria-label={language === "pt" ? "Índice do artigo" : "Table of contents"}
     >
-      <h4 className="text-xs uppercase tracking-[0.2em] text-zinc-500 mb-4 font-bold">
+      <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--foreground-muted)] mb-4 font-bold">
         {language === "pt" ? "Índice" : "Contents"}
       </h4>
-      <ul className="space-y-2 border-l border-white/10">
+      <ul className="space-y-2 border-l border-[var(--border)]">
         {headings.map((heading) => (
           <li key={heading.id}>
             <a
@@ -96,8 +96,8 @@ export default function FloatingTOC({ body, language = "pt" }: FloatingTOCProps)
                 heading.level === "h3" ? "pl-6" : "pl-4"
               } ${
                 activeId === heading.id
-                  ? "border-[#C5A059] text-[#C5A059]"
-                  : "border-transparent text-zinc-500 hover:text-zinc-300"
+                  ? "border-[var(--gold)] text-[var(--gold)]"
+                  : "border-transparent text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)]"
               }`}
             >
               {heading.text}

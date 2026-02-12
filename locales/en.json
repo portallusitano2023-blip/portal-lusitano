@@ -886,6 +886,17 @@
     "navigate": "navigate",
     "open": "open"
   },
+  "pro_upgrade_card": {
+    "title": "PRO Tools",
+    "price_suffix": "EUR/month",
+    "benefit_unlimited": "Unlimited use of all 4 tools",
+    "benefit_pdf": "Professional PDF export",
+    "benefit_save": "Save and share results",
+    "benefit_history": "Complete evaluation history",
+    "subscribe": "Subscribe PRO",
+    "processing": "Processing...",
+    "see_plans": "See all plans"
+  },
   "footer": {
     "rights": "All rights reserved",
     "privacy": "Privacy",

@@ -95,7 +95,7 @@ export default function DownloadPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#050505] pt-32 pb-20">
+    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20">
       {/* Success Hero */}
       <section className="max-w-4xl mx-auto px-6 text-center mb-20">
         <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
@@ -107,22 +107,26 @@ export default function DownloadPage() {
             <Check className="text-green-500" size={48} />
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-serif text-white mb-6">Parabéns!</h1>
+          <h1 className="text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6">
+            Parabéns!
+          </h1>
 
-          <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-[var(--foreground-secondary)] mb-8 max-w-2xl mx-auto">
             O teu ebook gratuito está pronto para leres. Também enviámos o link para o teu email.
           </p>
 
           {/* View Ebook Button */}
           <button
             onClick={handleViewEbook}
-            className="inline-flex items-center gap-3 bg-[#C5A059] text-black px-10 py-5 text-sm font-bold uppercase tracking-widest hover:bg-white hover:scale-[1.05] active:scale-[0.95] transition-all mb-4"
+            className="inline-flex items-center gap-3 bg-[var(--gold)] text-black px-10 py-5 text-sm font-bold uppercase tracking-widest hover:bg-[var(--gold-hover)] hover:scale-[1.05] active:scale-[0.95] transition-all mb-4"
           >
             <BookOpen size={20} />
             Ler Ebook Agora
           </button>
 
-          <p className="text-zinc-600 text-sm">Versão interativa otimizada para browser</p>
+          <p className="text-[var(--foreground-muted)] text-sm">
+            Versão interativa otimizada para browser
+          </p>
         </div>
       </section>
 
@@ -132,28 +136,28 @@ export default function DownloadPage() {
           className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <h2 className="text-3xl font-serif text-white mb-4">Próximos Passos</h2>
+          <h2 className="text-3xl font-serif text-[var(--foreground)] mb-4">Próximos Passos</h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {nextSteps.map((step, index) => (
             <div
               key={step.title}
-              className="bg-zinc-900/50 border border-white/5 p-8 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-8 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
               style={{ animationDelay: `${0.4 + index * 0.1}s` }}
             >
-              <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <step.icon className="text-[#C5A059]" size={28} />
+              <div className="w-16 h-16 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <step.icon className="text-[var(--gold)]" size={28} />
               </div>
-              <h3 className="text-xl font-serif text-white mb-3">{step.title}</h3>
-              <p className="text-zinc-400">{step.description}</p>
+              <h3 className="text-xl font-serif text-[var(--foreground)] mb-3">{step.title}</h3>
+              <p className="text-[var(--foreground-secondary)]">{step.description}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Bonus Content */}
-      <section className="max-w-6xl mx-auto px-6 mb-20 py-20 border-t border-white/5">
+      <section className="max-w-6xl mx-auto px-6 mb-20 py-20 border-t border-[var(--border)]">
         <div
           className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
@@ -162,8 +166,10 @@ export default function DownloadPage() {
             <Sparkles className="text-green-500" size={16} />
             <span className="text-green-500 text-sm font-medium">Bónus Incluídos</span>
           </div>
-          <h2 className="text-3xl font-serif text-white mb-4">Mas Espera, Há Mais!</h2>
-          <p className="text-zinc-400 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-serif text-[var(--foreground)] mb-4">
+            Mas Espera, Há Mais!
+          </h2>
+          <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto">
             Ao descarregares este ebook, também ganhaste acesso a:
           </p>
         </div>
@@ -172,14 +178,14 @@ export default function DownloadPage() {
           {bonuses.map((bonus, index) => (
             <div
               key={bonus.title}
-              className="bg-gradient-to-b from-[#C5A059]/5 to-transparent border border-[#C5A059]/20 p-8 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+              className="bg-gradient-to-b from-[var(--gold)]/5 to-transparent border border-[var(--gold)]/20 p-8 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
               style={{ animationDelay: `${0.4 + index * 0.1}s` }}
             >
-              <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <bonus.icon className="text-[#C5A059]" size={28} />
+              <div className="w-16 h-16 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <bonus.icon className="text-[var(--gold)]" size={28} />
               </div>
-              <h3 className="text-lg font-serif text-white mb-3">{bonus.title}</h3>
-              <p className="text-zinc-400 text-sm">{bonus.description}</p>
+              <h3 className="text-lg font-serif text-[var(--foreground)] mb-3">{bonus.title}</h3>
+              <p className="text-[var(--foreground-secondary)] text-sm">{bonus.description}</p>
             </div>
           ))}
         </div>
@@ -188,12 +194,14 @@ export default function DownloadPage() {
       {/* Share Section */}
       <section className="max-w-4xl mx-auto px-6 mb-20">
         <div
-          className="bg-zinc-900/50 border border-white/5 rounded-2xl p-12 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-2xl p-12 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <Share2 className="text-[#C5A059] mx-auto mb-6" size={40} />
-          <h3 className="text-2xl font-serif text-white mb-4">Partilha com os Teus Amigos</h3>
-          <p className="text-zinc-400 mb-8">
+          <Share2 className="text-[var(--gold)] mx-auto mb-6" size={40} />
+          <h3 className="text-2xl font-serif text-[var(--foreground)] mb-4">
+            Partilha com os Teus Amigos
+          </h3>
+          <p className="text-[var(--foreground-secondary)] mb-8">
             Conheces alguém que gostaria deste ebook? Partilha nas redes sociais!
           </p>
 
@@ -204,7 +212,7 @@ export default function DownloadPage() {
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`w-12 h-12 bg-zinc-800 border border-white/10 rounded-full flex items-center justify-center text-white transition-all ${social.color}`}
+                className={`w-12 h-12 bg-[var(--background-card)] border border-[var(--border)] rounded-full flex items-center justify-center text-[var(--foreground)] transition-all ${social.color}`}
                 title={`Partilhar no ${social.name}`}
               >
                 <social.icon size={20} />
@@ -217,11 +225,16 @@ export default function DownloadPage() {
       {/* Final Message */}
       <section className="max-w-4xl mx-auto px-6 text-center">
         <div
-          className="py-12 border-t border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          className="py-12 border-t border-[var(--border)] opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <p className="text-zinc-400 mb-2">Tens alguma dúvida ou precisas de ajuda?</p>
-          <Link href="/faq" className="text-[#C5A059] hover:text-white transition-colors">
+          <p className="text-[var(--foreground-secondary)] mb-2">
+            Tens alguma dúvida ou precisas de ajuda?
+          </p>
+          <Link
+            href="/faq"
+            className="text-[var(--gold)] hover:text-[var(--foreground)] transition-colors"
+          >
             Visita a nossa página de FAQ
           </Link>
         </div>

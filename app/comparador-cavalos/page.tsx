@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import ResultActions from "@/components/tools/ResultActions";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
+import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
@@ -342,13 +343,13 @@ export default function ComparadorCavalosPage() {
         ? "text-emerald-400 font-semibold"
         : val < melhor * 0.8
           ? "text-red-400"
-          : "text-zinc-300";
+          : "text-[var(--foreground-secondary)]";
     }
     return val === melhor
       ? "text-emerald-400 font-semibold"
       : val > melhor * 1.2
         ? "text-red-400"
-        : "text-zinc-300";
+        : "text-[var(--foreground-secondary)]";
   };
 
   const vencedor = cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b));
@@ -363,13 +364,13 @@ export default function ComparadorCavalosPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-xl border-b border-zinc-900">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/90 backdrop-blur-xl border-b border-[var(--border)]">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-3 text-zinc-400 hover:text-white transition-colors"
+            className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
           >
             <ArrowLeft size={18} />
             <span className="text-sm font-medium hidden sm:block">Portal Lusitano</span>
@@ -380,10 +381,12 @@ export default function ComparadorCavalosPage() {
               <Scale size={18} className="text-white" />
             </div>
             <div className="hidden sm:block">
-              <span className="text-sm font-medium text-white block leading-tight">
+              <span className="text-sm font-medium text-[var(--foreground)] block leading-tight">
                 {t.comparador.tool_name}
               </span>
-              <span className="text-xs text-zinc-500">{t.comparador.tool_subtitle}</span>
+              <span className="text-xs text-[var(--foreground-muted)]">
+                {t.comparador.tool_subtitle}
+              </span>
             </div>
           </div>
 
@@ -426,7 +429,7 @@ export default function ComparadorCavalosPage() {
                     backgroundPosition: "center 40%",
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-black/60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/80 to-black/60" />
               </div>
 
               <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
@@ -438,7 +441,7 @@ export default function ComparadorCavalosPage() {
                 </span>
 
                 <h1
-                  className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  className="text-4xl sm:text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.3s" }}
                 >
                   {t.comparador.title_prefix}
@@ -448,14 +451,14 @@ export default function ComparadorCavalosPage() {
                 </h1>
 
                 <p
-                  className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  className="text-lg text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.4s" }}
                 >
                   &ldquo;{t.comparador.intro_quote}&rdquo;
                 </p>
 
                 <p
-                  className="text-sm text-zinc-500 max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  className="text-sm text-[var(--foreground-muted)] max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.5s" }}
                 >
                   {t.comparador.intro_desc}
@@ -480,34 +483,40 @@ export default function ComparadorCavalosPage() {
                   className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.7s" }}
                 >
-                  <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+                  <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
                     <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
                       <BarChart3 className="text-blue-400" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">
+                    <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
                       {t.comparador.feat_radar}
                     </h3>
-                    <p className="text-sm text-zinc-400">{t.comparador.feat_radar_desc}</p>
+                    <p className="text-sm text-[var(--foreground-secondary)]">
+                      {t.comparador.feat_radar_desc}
+                    </p>
                   </div>
 
-                  <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+                  <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
                     <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-4">
                       <Scale className="text-emerald-400" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">
+                    <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
                       {t.comparador.feat_table}
                     </h3>
-                    <p className="text-sm text-zinc-400">{t.comparador.feat_table_desc}</p>
+                    <p className="text-sm text-[var(--foreground-secondary)]">
+                      {t.comparador.feat_table_desc}
+                    </p>
                   </div>
 
-                  <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+                  <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
                     <div className="w-12 h-12 bg-amber-500/10 rounded-lg flex items-center justify-center mb-4">
                       <Euro className="text-amber-400" size={24} />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">
+                    <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
                       {t.comparador.feat_value}
                     </h3>
-                    <p className="text-sm text-zinc-400">{t.comparador.feat_value_desc}</p>
+                    <p className="text-sm text-[var(--foreground-secondary)]">
+                      {t.comparador.feat_value_desc}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -531,12 +540,12 @@ export default function ComparadorCavalosPage() {
               {cavalos.map((c, i) => (
                 <div
                   key={c.id}
-                  className="bg-zinc-900/50 rounded-2xl border border-zinc-800 overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  className="bg-[var(--background-secondary)]/50 rounded-2xl border border-[var(--border)] overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: `${i * 0.1}s` }}
                 >
                   {/* Header do Card */}
                   <div
-                    className="p-4 border-b border-zinc-800"
+                    className="p-4 border-b border-[var(--border)]"
                     style={{ borderTopWidth: 3, borderTopColor: cores[i] }}
                   >
                     <div className="flex items-center justify-between">
@@ -544,13 +553,13 @@ export default function ComparadorCavalosPage() {
                         type="text"
                         value={c.nome}
                         onChange={(e) => update(c.id, "nome", e.target.value)}
-                        className="bg-transparent text-lg font-semibold outline-none flex-1 text-white"
+                        className="bg-transparent text-lg font-semibold outline-none flex-1 text-[var(--foreground)]"
                         placeholder={t.comparador.placeholder_horse_name}
                       />
                       {cavalos.length > 2 && (
                         <button
                           onClick={() => remover(c.id)}
-                          className="text-zinc-500 hover:text-red-400 transition-colors"
+                          className="text-[var(--foreground-muted)] hover:text-red-400 transition-colors"
                         >
                           <X size={18} />
                         </button>
@@ -578,7 +587,7 @@ export default function ComparadorCavalosPage() {
                   <div className="p-4 space-y-4 text-sm">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">
+                        <label className="text-xs text-[var(--foreground-muted)] block mb-1">
                           {t.comparador.label_age}
                         </label>
                         <input
@@ -587,11 +596,11 @@ export default function ComparadorCavalosPage() {
                           max="30"
                           value={c.idade}
                           onChange={(e) => update(c.id, "idade", +e.target.value || 1)}
-                          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                         />
                       </div>
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">
+                        <label className="text-xs text-[var(--foreground-muted)] block mb-1">
                           {t.comparador.label_height}
                         </label>
                         <input
@@ -600,19 +609,19 @@ export default function ComparadorCavalosPage() {
                           max="180"
                           value={c.altura}
                           onChange={(e) => update(c.id, "altura", +e.target.value || 160)}
-                          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-xs text-zinc-500 block mb-1">
+                      <label className="text-xs text-[var(--foreground-muted)] block mb-1">
                         {t.comparador.label_sex}
                       </label>
                       <select
                         value={c.sexo}
                         onChange={(e) => update(c.id, "sexo", e.target.value)}
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                        className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                       >
                         {SEXOS.map((s) => (
                           <option key={s.value} value={s.value}>
@@ -624,13 +633,13 @@ export default function ComparadorCavalosPage() {
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">
+                        <label className="text-xs text-[var(--foreground-muted)] block mb-1">
                           {t.comparador.label_coat}
                         </label>
                         <select
                           value={c.pelagem}
                           onChange={(e) => update(c.id, "pelagem", e.target.value)}
-                          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                         >
                           {PELAGENS.map((p) => (
                             <option key={p.value} value={p.value}>
@@ -640,13 +649,13 @@ export default function ComparadorCavalosPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">
+                        <label className="text-xs text-[var(--foreground-muted)] block mb-1">
                           {t.comparador.label_lineage}
                         </label>
                         <select
                           value={c.linhagem}
                           onChange={(e) => update(c.id, "linhagem", e.target.value)}
-                          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                         >
                           {LINHAGENS.map((l) => (
                             <option key={l.value} value={l.value}>
@@ -658,13 +667,13 @@ export default function ComparadorCavalosPage() {
                     </div>
 
                     <div>
-                      <label className="text-xs text-zinc-500 block mb-1">
+                      <label className="text-xs text-[var(--foreground-muted)] block mb-1">
                         {t.comparador.label_training}
                       </label>
                       <select
                         value={c.treino}
                         onChange={(e) => update(c.id, "treino", e.target.value)}
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                        className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                       >
                         {TREINOS.map((t) => (
                           <option key={t.value} value={t.value}>
@@ -683,7 +692,7 @@ export default function ComparadorCavalosPage() {
                     ].map(({ field, label }) => (
                       <div key={field}>
                         <div className="flex justify-between mb-1">
-                          <label className="text-xs text-zinc-500">{label}</label>
+                          <label className="text-xs text-[var(--foreground-muted)]">{label}</label>
                           <span className="text-xs font-medium" style={{ color: cores[i] }}>
                             {c[field]}/10
                           </span>
@@ -694,7 +703,7 @@ export default function ComparadorCavalosPage() {
                           max="10"
                           value={c[field]}
                           onChange={(e) => update(c.id, field, +e.target.value)}
-                          className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer"
+                          className="w-full h-1.5 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer"
                           style={{ accentColor: cores[i] }}
                         />
                       </div>
@@ -702,13 +711,13 @@ export default function ComparadorCavalosPage() {
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">
+                        <label className="text-xs text-[var(--foreground-muted)] block mb-1">
                           {t.comparador.label_competitions}
                         </label>
                         <select
                           value={c.competicoes}
                           onChange={(e) => update(c.id, "competicoes", e.target.value)}
-                          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                         >
                           {COMPETICOES.map((co) => (
                             <option key={co.value} value={co.value}>
@@ -718,20 +727,22 @@ export default function ComparadorCavalosPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="text-xs text-zinc-500 block mb-1">BLUP</label>
+                        <label className="text-xs text-[var(--foreground-muted)] block mb-1">
+                          BLUP
+                        </label>
                         <input
                           type="number"
                           min="50"
                           max="150"
                           value={c.blup}
                           onChange={(e) => update(c.id, "blup", +e.target.value || 100)}
-                          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                          className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-xs text-zinc-500 block mb-1">
+                      <label className="text-xs text-[var(--foreground-muted)] block mb-1">
                         {t.comparador.label_price}
                       </label>
                       <input
@@ -740,7 +751,7 @@ export default function ComparadorCavalosPage() {
                         step="1000"
                         value={c.preco}
                         onChange={(e) => update(c.id, "preco", +e.target.value || 0)}
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                        className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                       />
                     </div>
 
@@ -749,7 +760,7 @@ export default function ComparadorCavalosPage() {
                       className={`w-full py-2 px-3 rounded-lg border text-xs font-medium transition-all flex items-center justify-center gap-2 ${
                         c.registoAPSL
                           ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
-                          : "border-zinc-700 text-zinc-400 hover:border-zinc-600"
+                          : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
                       }`}
                     >
                       {c.registoAPSL && <Check size={14} />}
@@ -759,14 +770,16 @@ export default function ComparadorCavalosPage() {
 
                   {/* Score Preview */}
                   {showAnalise && (
-                    <div className="p-4 bg-zinc-800/50 border-t border-zinc-800">
+                    <div className="p-4 bg-[var(--background-card)]/50 border-t border-[var(--border)]">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-zinc-400">{t.comparador.score_total}</span>
+                        <span className="text-sm text-[var(--foreground-secondary)]">
+                          {t.comparador.score_total}
+                        </span>
                         <span className="text-2xl font-bold" style={{ color: cores[i] }}>
                           {calcularScore(c)}
                         </span>
                       </div>
-                      <div className="text-xs text-zinc-500">
+                      <div className="text-xs text-[var(--foreground-muted)]">
                         {t.comparador.value_per_point}{" "}
                         <span className="text-zinc-300">
                           {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
@@ -790,6 +803,7 @@ export default function ComparadorCavalosPage() {
                 requiresAuth={requiresAuth}
               />
             )}
+            <ProUpgradeCard isSubscribed={isSubscribed} />
 
             {/* Botão Analisar */}
             {!showAnalise && (
@@ -830,7 +844,7 @@ export default function ComparadorCavalosPage() {
                 />
 
                 {/* Gráfico Radar */}
-                <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800">
+                <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)]">
                   <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
                     <Activity className="text-blue-400" size={20} />
                     {t.comparador.visual_comparison}
@@ -858,7 +872,9 @@ export default function ComparadorCavalosPage() {
                             className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: cores[i] }}
                           />
-                          <span className="text-sm text-zinc-300">{c.nome}</span>
+                          <span className="text-sm text-[var(--foreground-secondary)]">
+                            {c.nome}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -866,14 +882,14 @@ export default function ComparadorCavalosPage() {
                 </div>
 
                 {/* Tabela Comparativa */}
-                <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800 overflow-x-auto">
+                <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)] overflow-x-auto">
                   <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
                     <Scale className="text-blue-400" size={20} />
                     {t.comparador.comparative_table}
                   </h3>
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="text-zinc-400 border-b border-zinc-800">
+                      <tr className="text-[var(--foreground-secondary)] border-b border-[var(--border)]">
                         <th className="text-left py-3 px-2">{t.comparador.param_header}</th>
                         {cavalos.map((c, i) => (
                           <th
@@ -932,8 +948,8 @@ export default function ComparadorCavalosPage() {
                           suffix: "€",
                         },
                       ].map(({ label, campo, maior, suffix }) => (
-                        <tr key={campo} className="border-b border-zinc-800/50">
-                          <td className="py-3 px-2 text-zinc-400">{label}</td>
+                        <tr key={campo} className="border-b border-[var(--border)]/50">
+                          <td className="py-3 px-2 text-[var(--foreground-secondary)]">{label}</td>
                           {cavalos.map((c) => (
                             <td
                               key={c.id}
@@ -946,8 +962,8 @@ export default function ComparadorCavalosPage() {
                           ))}
                         </tr>
                       ))}
-                      <tr className="border-t-2 border-zinc-700">
-                        <td className="py-4 px-2 font-semibold text-white">
+                      <tr className="border-t-2 border-[var(--border)]">
+                        <td className="py-4 px-2 font-semibold text-[var(--foreground)]">
                           {t.comparador.total_score}
                         </td>
                         {cavalos.map((c, i) => (
@@ -961,15 +977,17 @@ export default function ComparadorCavalosPage() {
                           </td>
                         ))}
                       </tr>
-                      <tr className="border-t border-zinc-800">
-                        <td className="py-3 px-2 text-zinc-400">{t.comparador.value_per_pt}</td>
+                      <tr className="border-t border-[var(--border)]">
+                        <td className="py-3 px-2 text-[var(--foreground-secondary)]">
+                          {t.comparador.value_per_pt}
+                        </td>
                         {cavalos.map((c) => (
                           <td
                             key={c.id}
                             className={`text-center py-3 px-2 ${
                               c.id === melhorValor.id
                                 ? "text-emerald-400 font-semibold"
-                                : "text-zinc-300"
+                                : "text-[var(--foreground-secondary)]"
                             }`}
                           >
                             {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
@@ -982,7 +1000,7 @@ export default function ComparadorCavalosPage() {
 
                 {/* Recomendação */}
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-amber-900/30 to-zinc-900 rounded-2xl p-6 border border-amber-500/30">
+                  <div className="bg-gradient-to-br from-amber-900/30 to-[var(--background-secondary)] rounded-2xl p-6 border border-amber-500/30">
                     <h3 className="text-lg font-serif mb-4 flex items-center gap-3">
                       <Trophy className="text-amber-400" size={20} />
                       {t.comparador.best_quality}
@@ -993,17 +1011,17 @@ export default function ComparadorCavalosPage() {
                       </div>
                       <div>
                         <p className="text-xl font-bold text-amber-400">{vencedor.nome}</p>
-                        <p className="text-sm text-zinc-400">
+                        <p className="text-sm text-[var(--foreground-secondary)]">
                           Score: {calcularScore(vencedor)} {t.comparador.points}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1">
+                        <p className="text-xs text-[var(--foreground-muted)] mt-1">
                           {vencedor.treino} • {vencedor.linhagem}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-br from-emerald-900/30 to-zinc-900 rounded-2xl p-6 border border-emerald-500/30">
+                  <div className="bg-gradient-to-br from-emerald-900/30 to-[var(--background-secondary)] rounded-2xl p-6 border border-emerald-500/30">
                     <h3 className="text-lg font-serif mb-4 flex items-center gap-3">
                       <Euro className="text-emerald-400" size={20} />
                       {t.comparador.best_cost_benefit}
@@ -1014,11 +1032,11 @@ export default function ComparadorCavalosPage() {
                       </div>
                       <div>
                         <p className="text-xl font-bold text-emerald-400">{melhorValor.nome}</p>
-                        <p className="text-sm text-zinc-400">
+                        <p className="text-sm text-[var(--foreground-secondary)]">
                           {calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")}€{" "}
                           {t.comparador.per_point}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1">
+                        <p className="text-xs text-[var(--foreground-muted)] mt-1">
                           {melhorValor.preco.toLocaleString("pt-PT")}€ • Score{" "}
                           {calcularScore(melhorValor)}
                         </p>
@@ -1028,9 +1046,11 @@ export default function ComparadorCavalosPage() {
                 </div>
 
                 {/* Disclaimer */}
-                <div className="p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
-                  <p className="text-xs text-zinc-500 leading-relaxed">
-                    <strong className="text-zinc-400">{t.comparador.disclaimer_title}</strong>{" "}
+                <div className="p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--border)]/50">
+                  <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
+                    <strong className="text-[var(--foreground-secondary)]">
+                      {t.comparador.disclaimer_title}
+                    </strong>{" "}
                     {t.comparador.disclaimer_text}
                   </p>
                 </div>

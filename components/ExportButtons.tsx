@@ -63,7 +63,7 @@ export function ExportButton({
       onClick={handleExport}
       disabled={data.length === 0}
       className={`
-        flex items-center gap-2 px-4 py-2 bg-[#C5A059] hover:bg-[#d4b469]
+        flex items-center gap-2 px-4 py-2 bg-[var(--gold)] hover:bg-[#d4b469]
         text-black font-semibold rounded-lg transition-all
         disabled:opacity-50 disabled:cursor-not-allowed
         ${className}
@@ -94,12 +94,12 @@ export function ExportMenu({ data, filename, columns, headers }: ExportMenuProps
 
   return (
     <div className="relative group">
-      <button className="flex items-center gap-2 px-4 py-2 bg-[#C5A059] hover:bg-[#d4b469] text-black font-semibold rounded-lg transition-all">
+      <button className="flex items-center gap-2 px-4 py-2 bg-[var(--gold)] hover:bg-[#d4b469] text-black font-semibold rounded-lg transition-all">
         <Download className="w-4 h-4" />
         Exportar
       </button>
 
-      <div className="absolute right-0 top-full mt-2 w-48 bg-[#0A0A0A] border border-white/10 rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+      <div className="absolute right-0 top-full mt-2 w-48 bg-[var(--background-secondary)] border border-[var(--border)] rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
         {formats.map(({ format, label, icon: Icon }) => (
           <button
             key={format}
@@ -110,10 +110,10 @@ export function ExportMenu({ data, filename, columns, headers }: ExportMenuProps
               else if (format === "excel") exportToExcel(data, options);
             }}
             disabled={data.length === 0}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors text-left disabled:opacity-50 disabled:cursor-not-allowed first:rounded-t-lg last:rounded-b-lg"
+            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--surface-hover)] transition-colors text-left disabled:opacity-50 disabled:cursor-not-allowed first:rounded-t-lg last:rounded-b-lg"
           >
-            <Icon className="w-4 h-4 text-gray-400" />
-            <span className="text-white text-sm font-medium">Exportar {label}</span>
+            <Icon className="w-4 h-4 text-[var(--foreground-secondary)]" />
+            <span className="text-[var(--foreground)] text-sm font-medium">Exportar {label}</span>
           </button>
         ))}
       </div>

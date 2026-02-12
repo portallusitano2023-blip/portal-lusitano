@@ -109,40 +109,40 @@ function formatDate(dateStr: string): string {
 
 function ResultSkeleton() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white pt-24 pb-16 px-4">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 pb-16 px-4">
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Back link skeleton */}
-        <div className="h-5 w-32 bg-zinc-800 rounded animate-pulse" />
+        <div className="h-5 w-32 bg-[var(--background-card)] rounded animate-pulse" />
 
         {/* Header skeleton */}
-        <div className="bg-zinc-900/80 border border-white/10 rounded-xl p-8 space-y-4">
+        <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8 space-y-4">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 bg-zinc-800 rounded-lg animate-pulse" />
             <div className="space-y-2 flex-1">
-              <div className="h-6 w-48 bg-zinc-800 rounded animate-pulse" />
-              <div className="h-4 w-32 bg-zinc-800 rounded animate-pulse" />
+              <div className="h-6 w-48 bg-[var(--background-card)] rounded animate-pulse" />
+              <div className="h-4 w-32 bg-[var(--background-card)] rounded animate-pulse" />
             </div>
           </div>
-          <div className="h-4 w-64 bg-zinc-800 rounded animate-pulse" />
+          <div className="h-4 w-64 bg-[var(--background-card)] rounded animate-pulse" />
         </div>
 
         {/* Content skeleton */}
-        <div className="bg-zinc-900/80 border border-white/10 rounded-xl p-8 space-y-6">
+        <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8 space-y-6">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="space-y-2">
-              <div className="h-3 w-24 bg-zinc-800 rounded animate-pulse" />
-              <div className="h-5 w-full bg-zinc-800 rounded animate-pulse" />
+              <div className="h-3 w-24 bg-[var(--background-card)] rounded animate-pulse" />
+              <div className="h-5 w-full bg-[var(--background-card)] rounded animate-pulse" />
             </div>
           ))}
         </div>
 
         {/* Result skeleton */}
-        <div className="bg-zinc-900/80 border border-white/10 rounded-xl p-8 space-y-6">
+        <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8 space-y-6">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="space-y-2">
-              <div className="h-3 w-28 bg-zinc-800 rounded animate-pulse" />
+              <div className="h-3 w-28 bg-[var(--background-card)] rounded animate-pulse" />
               <div
-                className="h-5 bg-zinc-800 rounded animate-pulse"
+                className="h-5 bg-[var(--background-card)] rounded animate-pulse"
                 style={{ width: `${60 + (i + 1) * 7}%` }}
               />
             </div>
@@ -167,7 +167,7 @@ function DataGrid({
   const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined && v !== "");
 
   if (entries.length === 0) {
-    return <p className="text-zinc-500 text-sm italic">Sem dados disponiveis.</p>;
+    return <p className="text-[var(--foreground-muted)] text-sm italic">Sem dados disponiveis.</p>;
   }
 
   return (
@@ -182,9 +182,9 @@ function DataGrid({
           return (
             <div
               key={key}
-              className="col-span-1 sm:col-span-2 bg-zinc-800/40 border border-white/5 rounded-lg p-4"
+              className="col-span-1 sm:col-span-2 bg-[var(--background-card)]/40 border border-[var(--border)] rounded-lg p-4"
             >
-              <span className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-3">
+              <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] block mb-3">
                 {formatLabel(key)}
               </span>
               <DataGrid data={value as Record<string, unknown>} />
@@ -197,14 +197,17 @@ function DataGrid({
           return (
             <div
               key={key}
-              className="col-span-1 sm:col-span-2 bg-zinc-800/40 border border-white/5 rounded-lg p-4"
+              className="col-span-1 sm:col-span-2 bg-[var(--background-card)]/40 border border-[var(--border)] rounded-lg p-4"
             >
-              <span className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-3">
+              <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] block mb-3">
                 {formatLabel(key)}
               </span>
               <div className="space-y-3">
                 {(value as Record<string, unknown>[]).map((item, idx) => (
-                  <div key={idx} className="bg-zinc-900/60 border border-white/5 rounded-lg p-3">
+                  <div
+                    key={idx}
+                    className="bg-[var(--background-secondary)]/60 border border-[var(--border)] rounded-lg p-3"
+                  >
                     <DataGrid data={item} />
                   </div>
                 ))}
@@ -215,12 +218,14 @@ function DataGrid({
 
         return (
           <div key={key}>
-            <span className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-1">
+            <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] block mb-1">
               {formatLabel(key)}
             </span>
             <p
               className={`text-base ${
-                isHighlighted ? "text-[#C5A059] font-semibold text-lg" : "text-white"
+                isHighlighted
+                  ? "text-[var(--gold)] font-semibold text-lg"
+                  : "text-[var(--foreground)]"
               }`}
             >
               {formatValue(value)}
@@ -246,14 +251,14 @@ function CalculadoraResult({
   return (
     <div className="space-y-8">
       {/* Form inputs */}
-      <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-        <h2 className="text-lg font-serif text-[#C5A059] mb-6">Caracteristicas do Cavalo</h2>
+      <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+        <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Caracteristicas do Cavalo</h2>
         <DataGrid data={formData} />
       </section>
 
       {/* Result */}
-      <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-        <h2 className="text-lg font-serif text-[#C5A059] mb-6">Resultado da Avaliacao</h2>
+      <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+        <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Resultado da Avaliacao</h2>
         <DataGrid
           data={resultData}
           highlightKeys={["valorFinal", "valorMin", "valorMax", "confianca"]}
@@ -272,13 +277,13 @@ function ComparadorResult({
 }) {
   return (
     <div className="space-y-8">
-      <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-        <h2 className="text-lg font-serif text-[#C5A059] mb-6">Cavalos Comparados</h2>
+      <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+        <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Cavalos Comparados</h2>
         <DataGrid data={formData} />
       </section>
 
-      <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-        <h2 className="text-lg font-serif text-[#C5A059] mb-6">Resultado da Comparacao</h2>
+      <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+        <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Resultado da Comparacao</h2>
         <DataGrid data={resultData} />
       </section>
     </div>
@@ -294,13 +299,13 @@ function CompatibilidadeResult({
 }) {
   return (
     <div className="space-y-8">
-      <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-        <h2 className="text-lg font-serif text-[#C5A059] mb-6">Garanhao e Egua</h2>
+      <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+        <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Garanhao e Egua</h2>
         <DataGrid data={formData} />
       </section>
 
-      <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-        <h2 className="text-lg font-serif text-[#C5A059] mb-6">Resultado de Compatibilidade</h2>
+      <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+        <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Resultado de Compatibilidade</h2>
         <DataGrid
           data={resultData}
           highlightKeys={["compatibilidade", "score", "pontuacao", "resultado"]}
@@ -319,13 +324,13 @@ function PerfilResult({
 }) {
   return (
     <div className="space-y-8">
-      <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-        <h2 className="text-lg font-serif text-[#C5A059] mb-6">Dados do Perfil</h2>
+      <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+        <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Dados do Perfil</h2>
         <DataGrid data={formData} />
       </section>
 
-      <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-        <h2 className="text-lg font-serif text-[#C5A059] mb-6">Analise de Perfil</h2>
+      <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+        <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Analise de Perfil</h2>
         <DataGrid data={resultData} highlightKeys={["tipo", "perfil", "categoria"]} />
       </section>
     </div>
@@ -342,14 +347,14 @@ function GenericResult({
   return (
     <div className="space-y-8">
       {Object.keys(formData).length > 0 && (
-        <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-          <h2 className="text-lg font-serif text-[#C5A059] mb-6">Dados Submetidos</h2>
+        <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+          <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Dados Submetidos</h2>
           <DataGrid data={formData} />
         </section>
       )}
 
-      <section className="bg-zinc-900/80 border border-white/10 rounded-xl p-8">
-        <h2 className="text-lg font-serif text-[#C5A059] mb-6">Resultado</h2>
+      <section className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8">
+        <h2 className="text-lg font-serif text-[var(--gold)] mb-6">Resultado</h2>
         <DataGrid data={resultData} />
       </section>
     </div>
@@ -362,26 +367,28 @@ function GenericResult({
 
 function NotFoundState() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white pt-24 pb-16 px-4">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 pb-16 px-4">
       <div className="max-w-3xl mx-auto">
         <Link
           href="/ferramentas"
-          className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#C5A059] transition-colors mb-12 text-sm"
+          className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-12 text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           Voltar as Ferramentas
         </Link>
 
-        <div className="bg-zinc-900/80 border border-white/10 rounded-xl p-12 text-center">
-          <AlertCircle className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-          <h1 className="text-2xl font-serif text-white mb-2">Resultado nao encontrado</h1>
-          <p className="text-zinc-400 max-w-md mx-auto">
+        <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-12 text-center">
+          <AlertCircle className="w-12 h-12 text-[var(--foreground-muted)] mx-auto mb-4" />
+          <h1 className="text-2xl font-serif text-[var(--foreground)] mb-2">
+            Resultado nao encontrado
+          </h1>
+          <p className="text-[var(--foreground-secondary)] max-w-md mx-auto">
             Este resultado pode ter sido removido, ou o link de partilha pode estar incorreto.
             Verifique o URL e tente novamente.
           </p>
           <Link
             href="/ferramentas"
-            className="inline-flex items-center gap-2 mt-8 px-6 py-3 bg-[#C5A059] text-black text-sm font-semibold rounded-lg hover:bg-[#d4b06a] transition-colors"
+            className="inline-flex items-center gap-2 mt-8 px-6 py-3 bg-[var(--gold)] text-black text-sm font-semibold rounded-lg hover:bg-[#d4b06a] transition-colors"
           >
             Explorar Ferramentas
             <ExternalLink className="w-4 h-4" />
@@ -478,37 +485,39 @@ export default function ResultadoPage() {
     }[result.tool_name] || GenericResult;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white pt-24 pb-16 px-4">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 pb-16 px-4">
       <div className="max-w-3xl mx-auto">
         {/* Back navigation */}
         <Link
           href={isOwner ? "/historico" : "/ferramentas"}
-          className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#C5A059] transition-colors mb-8 text-sm"
+          className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-8 text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           {isOwner ? "Voltar ao Historico" : "Voltar as Ferramentas"}
         </Link>
 
         {/* Header card */}
-        <div className="bg-zinc-900/80 border border-white/10 rounded-xl p-8 mb-8">
+        <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8 mb-8">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
             {/* Tool info */}
             <div className="flex items-start gap-4 min-w-0">
-              <div className="flex-shrink-0 w-12 h-12 bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-xl flex items-center justify-center text-[#C5A059]">
+              <div className="flex-shrink-0 w-12 h-12 bg-[var(--gold)]/10 border border-[#C5A059]/20 rounded-xl flex items-center justify-center text-[var(--gold)]">
                 {toolConfig.icon}
               </div>
               <div className="min-w-0">
-                <h1 className="text-2xl font-serif text-white truncate">{result.title}</h1>
+                <h1 className="text-2xl font-serif text-[var(--foreground)] truncate">
+                  {result.title}
+                </h1>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
                   <Link
                     href={toolConfig.href}
-                    className="text-sm text-[#C5A059] hover:underline inline-flex items-center gap-1"
+                    className="text-sm text-[var(--gold)] hover:underline inline-flex items-center gap-1"
                   >
                     {toolConfig.label}
                     <ExternalLink className="w-3 h-3" />
                   </Link>
-                  <span className="text-zinc-600">|</span>
-                  <span className="text-sm text-zinc-400 inline-flex items-center gap-1.5">
+                  <span className="text-[var(--foreground-muted)]">|</span>
+                  <span className="text-sm text-[var(--foreground-secondary)] inline-flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" />
                     {formatDate(result.created_at)}
                   </span>
@@ -537,7 +546,7 @@ export default function ResultadoPage() {
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <Link
             href={isOwner ? "/historico" : "/ferramentas"}
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#C5A059] transition-colors text-sm"
+            className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             {isOwner ? "Voltar ao Historico" : "Voltar as Ferramentas"}
@@ -545,7 +554,7 @@ export default function ResultadoPage() {
 
           <Link
             href={toolConfig.href}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#C5A059] text-black text-sm font-semibold rounded-lg hover:bg-[#d4b06a] transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-black text-sm font-semibold rounded-lg hover:bg-[#d4b06a] transition-colors"
           >
             Usar {toolConfig.label}
             <ExternalLink className="w-4 h-4" />

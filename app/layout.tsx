@@ -13,7 +13,6 @@ import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import PushNotificationPrompt from "@/components/PushNotificationPrompt";
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -128,21 +127,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { cookies } = await import("next/headers");
-  const cookieStore = await cookies();
-  const localeCookie = cookieStore.get("locale")?.value;
-  const initialLanguage = (localeCookie === "en" ? "en" : localeCookie === "es" ? "es" : "pt") as
-    | "pt"
-    | "en"
-    | "es";
-
   return (
-    <html lang={initialLanguage} className={`${playfair.variable} ${montserrat.variable} dark`}>
+    <html lang="pt" className={`${playfair.variable} ${montserrat.variable} dark`}>
       <head>
         {/* Inline script to set theme before React hydration (prevents FOUC) */}
         <script
@@ -168,7 +159,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="bg-[var(--background)] text-[var(--foreground)] antialiased">
-        <Providers initialLanguage={initialLanguage}>
+        <Providers>
           {/* ✅ ErrorBoundary global - captura render errors em toda a aplicação */}
           <ErrorBoundary>
             <SkipLinks />
@@ -178,7 +169,6 @@ export default async function RootLayout({
             <Footer />
             <MobileBottomNav />
             <WhatsAppButton />
-            <PushNotificationPrompt />
           </ErrorBoundary>
           <ServiceWorkerRegistration />
         </Providers>

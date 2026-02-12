@@ -784,7 +784,7 @@ function CavaloModal({
               {cavalo.vendedor_telefone && (
                 <a
                   href={`tel:${cavalo.vendedor_telefone}`}
-                  className="flex items-center gap-2 w-full bg-[var(--gold)] text-black py-3 px-4 font-bold hover:bg-white transition-colors"
+                  className="flex items-center gap-2 w-full bg-[var(--gold)] text-black py-3 px-4 font-bold hover:bg-[var(--gold-hover)] transition-colors"
                 >
                   <Phone size={18} />
                   {cavalo.vendedor_telefone}

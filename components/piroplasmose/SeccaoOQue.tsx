@@ -12,13 +12,13 @@ import { DadoDestaque } from "./DadoDestaque";
 
 export function SeccaoOQue() {
   return (
-    <div className="space-y-6 text-sm text-zinc-300 leading-relaxed">
+    <div className="space-y-6 text-sm text-[var(--foreground-secondary)] leading-relaxed">
       <p className="text-[15px] leading-relaxed">
-        A <strong className="text-white">piroplasmose equina</strong> (EP) é uma doença parasitária
-        transmitida por carraças que afecta cavalos, mulas, burros e zebras. É causada por dois
-        protozoários que infectam os glóbulos vermelhos:{" "}
-        <em className="text-[#C5A059]">Theileria equi</em> e{" "}
-        <em className="text-[#C5A059]">Babesia caballi</em>.
+        A <strong className="text-[var(--foreground)]">piroplasmose equina</strong> (EP) é uma
+        doença parasitária transmitida por carraças que afecta cavalos, mulas, burros e zebras. É
+        causada por dois protozoários que infectam os glóbulos vermelhos:{" "}
+        <em className="text-[var(--gold)]">Theileria equi</em> e{" "}
+        <em className="text-[var(--gold)]">Babesia caballi</em>.
       </p>
 
       {/* FONTE: PMC11349644, Frontiers Vet Sci 2024 */}
@@ -40,7 +40,12 @@ export function SeccaoOQue() {
           label="mortalidade em animais sem exposição prévia"
           cor="text-red-500"
         />
-        <DadoDestaque icone={XCircle} valor="0" label="vacinas disponíveis" cor="text-zinc-400" />
+        <DadoDestaque
+          icone={XCircle}
+          valor="0"
+          label="vacinas disponíveis"
+          cor="text-[var(--foreground-secondary)]"
+        />
       </div>
 
       {/* FONTE: PMC11349644 - T. equi "persistent infections"; B. caballi "can be naturally cleared" */}
@@ -50,7 +55,7 @@ export function SeccaoOQue() {
             <Microscope size={16} className="text-red-400" />
             <span className="text-sm font-semibold text-red-300">Theileria equi</span>
           </div>
-          <ul className="space-y-2 text-xs text-zinc-400">
+          <ul className="space-y-2 text-xs text-[var(--foreground-secondary)]">
             <li className="flex items-start gap-2">
               <CircleDot size={10} className="text-red-400 mt-1 flex-shrink-0" />
               <span>Parasita mais agressivo e difícil de tratar</span>
@@ -59,7 +64,9 @@ export function SeccaoOQue() {
               <CircleDot size={10} className="text-red-400 mt-1 flex-shrink-0" />
               <span>
                 Cavalos infectados tornam-se{" "}
-                <strong className="text-white">portadores crónicos persistentes</strong>
+                <strong className="text-[var(--foreground)]">
+                  portadores crónicos persistentes
+                </strong>
               </span>
             </li>
             <li className="flex items-start gap-2">
@@ -73,7 +80,7 @@ export function SeccaoOQue() {
             <Microscope size={16} className="text-orange-400" />
             <span className="text-sm font-semibold text-orange-300">Babesia caballi</span>
           </div>
-          <ul className="space-y-2 text-xs text-zinc-400">
+          <ul className="space-y-2 text-xs text-[var(--foreground-secondary)]">
             <li className="flex items-start gap-2">
               <CircleDot size={10} className="text-orange-400 mt-1 flex-shrink-0" />
               <span>Parasita menos agressivo</span>
@@ -81,8 +88,9 @@ export function SeccaoOQue() {
             <li className="flex items-start gap-2">
               <CircleDot size={10} className="text-orange-400 mt-1 flex-shrink-0" />
               <span>
-                Infecções podem ser <strong className="text-white">eliminadas naturalmente</strong>{" "}
-                pelo organismo
+                Infecções podem ser{" "}
+                <strong className="text-[var(--foreground)]">eliminadas naturalmente</strong> pelo
+                organismo
               </span>
             </li>
             <li className="flex items-start gap-2">
@@ -95,8 +103,8 @@ export function SeccaoOQue() {
 
       {/* Transmissão */}
       <div>
-        <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
-          <Droplets size={16} className="text-[#C5A059]" />
+        <h3 className="text-[var(--foreground)] font-semibold text-base mb-4 flex items-center gap-2">
+          <Droplets size={16} className="text-[var(--gold)]" />
           Vias de Transmissão
         </h3>
         {/* FONTE: USDA APHIS, WOAH */}
@@ -126,14 +134,16 @@ export function SeccaoOQue() {
           ].map((via, i) => (
             <div
               key={i}
-              className={`rounded-xl p-3 sm:p-4 border ${via.principal ? "bg-[#C5A059]/10 border-[#C5A059]/20 col-span-2 sm:col-span-1" : "bg-zinc-800/40 border-zinc-700/30"}`}
+              className={`rounded-xl p-3 sm:p-4 border ${via.principal ? "bg-[var(--gold)]/10 border-[var(--gold)]/20 col-span-2 sm:col-span-1" : "bg-[var(--background-card)]/40 border-[var(--border)]/30"}`}
             >
               <p
-                className={`text-xs font-semibold mb-1 ${via.principal ? "text-[#C5A059]" : "text-white"}`}
+                className={`text-xs font-semibold mb-1 ${via.principal ? "text-[var(--gold)]" : "text-[var(--foreground)]"}`}
               >
                 {via.label}
               </p>
-              <p className="text-[10px] text-zinc-500 leading-relaxed">{via.detalhe}</p>
+              <p className="text-[10px] text-[var(--foreground-muted)] leading-relaxed">
+                {via.detalhe}
+              </p>
             </div>
           ))}
         </div>
@@ -141,8 +151,8 @@ export function SeccaoOQue() {
 
       {/* Formas Clínicas */}
       <div>
-        <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
-          <HeartPulse size={16} className="text-[#C5A059]" />
+        <h3 className="text-[var(--foreground)] font-semibold text-base mb-4 flex items-center gap-2">
+          <HeartPulse size={16} className="text-[var(--gold)]" />
           Formas Clínicas
         </h3>
         {/* FONTE: PMC/PubMed - New insights in diagnosis and treatment */}
@@ -183,7 +193,7 @@ export function SeccaoOQue() {
             >
               <div className="flex items-center gap-3 sm:w-44 flex-shrink-0">
                 <span className={`text-sm font-bold ${forma.corTexto}`}>{forma.nome}</span>
-                <span className="text-[9px] bg-zinc-800 text-zinc-500 px-2 py-0.5 rounded-full">
+                <span className="text-[9px] bg-[var(--background-card)] text-[var(--foreground-muted)] px-2 py-0.5 rounded-full">
                   {forma.freq}
                 </span>
               </div>
@@ -191,7 +201,7 @@ export function SeccaoOQue() {
                 {forma.sintomas.map((s, j) => (
                   <span
                     key={j}
-                    className="text-[11px] text-zinc-400 bg-zinc-800/60 px-2.5 py-1 rounded-lg"
+                    className="text-[11px] text-[var(--foreground-secondary)] bg-[var(--background-card)]/60 px-2.5 py-1 rounded-lg"
                   >
                     {s}
                   </span>
@@ -202,7 +212,7 @@ export function SeccaoOQue() {
         </div>
       </div>
 
-      <p className="text-[10px] text-zinc-600 pt-2">
+      <p className="text-[10px] text-[var(--foreground-muted)] pt-2">
         Fontes: WOAH (woah.org), USDA APHIS (aphis.usda.gov), PMC/PubMed (pmc.ncbi.nlm.nih.gov)
       </p>
     </div>

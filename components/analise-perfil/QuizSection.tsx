@@ -4,6 +4,7 @@ import { forwardRef } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
+import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Paywall from "@/components/tools/Paywall";
 import type { Question, QuestionOption } from "@/components/analise-perfil/types";
 
@@ -57,6 +58,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             requiresAuth={requiresAuth}
           />
         )}
+        <ProUpgradeCard isSubscribed={isSubscribed} />
         <div className="text-center mb-8">
           <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-2">
             {question.category}
@@ -103,7 +105,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
                 )}
               </div>
             </div>
-            {currentQuestion === questions.length - 1 && !canUse ? (
+            {!canUse ? (
               <div className="mt-4">
                 <Paywall toolName={t.analise_perfil.title_line1} requiresAuth={requiresAuth} />
               </div>

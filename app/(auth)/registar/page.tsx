@@ -73,14 +73,15 @@ export default function RegistarPage() {
         <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
           <CheckCircle className="text-emerald-400" size={32} />
         </div>
-        <h2 className="text-xl font-serif text-white mb-2">Conta Criada!</h2>
-        <p className="text-sm text-zinc-400 mb-6">
-          Enviamos um email de confirmacao para <strong className="text-white">{email}</strong>.
-          Verifique a sua caixa de correio para activar a conta.
+        <h2 className="text-xl font-serif text-[var(--foreground)] mb-2">Conta Criada!</h2>
+        <p className="text-sm text-[var(--foreground-secondary)] mb-6">
+          Enviamos um email de confirmacao para{" "}
+          <strong className="text-[var(--foreground)]">{email}</strong>. Verifique a sua caixa de
+          correio para activar a conta.
         </p>
         <Link
           href={redirect ? `/login?returnUrl=${encodeURIComponent(redirect)}` : "/login"}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-[#C5A059] text-black font-semibold rounded-lg hover:bg-[#D4AF6A] transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[#D4AF6A] transition-colors"
         >
           Ir para Login
         </Link>
@@ -90,8 +91,8 @@ export default function RegistarPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-serif text-white mb-2">Criar Conta</h1>
-      <p className="text-sm text-zinc-500 mb-6">
+      <h1 className="text-2xl font-serif text-[var(--foreground)] mb-2">Criar Conta</h1>
+      <p className="text-sm text-[var(--foreground-muted)] mb-6">
         Registe-se para aceder as ferramentas do Portal Lusitano.
       </p>
 
@@ -103,53 +104,66 @@ export default function RegistarPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
             Nome Completo
           </label>
           <div className="relative">
-            <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <User
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+            />
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="O seu nome"
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-10 pr-4 py-3 text-white placeholder:text-zinc-600 focus:border-[#C5A059] outline-none transition-colors"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-10 pr-4 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--gold)] outline-none transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">Email</label>
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            Email
+          </label>
           <div className="relative">
-            <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Mail
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+            />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-10 pr-4 py-3 text-white placeholder:text-zinc-600 focus:border-[#C5A059] outline-none transition-colors"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-10 pr-4 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--gold)] outline-none transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">Senha</label>
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            Senha
+          </label>
           <div className="relative">
-            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Lock
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+            />
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="Minimo 8 caracteres"
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-10 pr-12 py-3 text-white placeholder:text-zinc-600 focus:border-[#C5A059] outline-none transition-colors"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-10 pr-12 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--gold)] outline-none transition-colors"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -164,12 +178,12 @@ export default function RegistarPage() {
                 <div
                   key={item.label}
                   className={`text-xs flex items-center gap-1.5 ${
-                    item.check ? "text-emerald-400" : "text-zinc-500"
+                    item.check ? "text-emerald-400" : "text-[var(--foreground-muted)]"
                   }`}
                 >
                   <div
                     className={`w-1.5 h-1.5 rounded-full ${
-                      item.check ? "bg-emerald-400" : "bg-zinc-600"
+                      item.check ? "bg-emerald-400" : "bg-[var(--foreground-muted)]"
                     }`}
                   />
                   {item.label}
@@ -180,21 +194,24 @@ export default function RegistarPage() {
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
             Confirmar Senha
           </label>
           <div className="relative">
-            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Lock
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+            />
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               placeholder="Repita a senha"
-              className={`w-full bg-zinc-800 border rounded-lg pl-10 pr-4 py-3 text-white placeholder:text-zinc-600 outline-none transition-colors ${
+              className={`w-full bg-[var(--background-card)] border rounded-lg pl-10 pr-4 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] outline-none transition-colors ${
                 confirmPassword && confirmPassword !== password
                   ? "border-red-500"
-                  : "border-zinc-700 focus:border-[#C5A059]"
+                  : "border-[var(--border)] focus:border-[var(--gold)]"
               }`}
             />
           </div>
@@ -210,11 +227,11 @@ export default function RegistarPage() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-zinc-500">
+      <p className="mt-6 text-center text-sm text-[var(--foreground-muted)]">
         Ja tem conta?{" "}
         <Link
           href={redirect ? `/login?returnUrl=${encodeURIComponent(redirect)}` : "/login"}
-          className="text-[#C5A059] hover:text-[#D4AF6A] font-medium transition-colors"
+          className="text-[var(--gold)] hover:text-[var(--gold)] font-medium transition-colors"
         >
           Iniciar sessao
         </Link>

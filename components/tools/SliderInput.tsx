@@ -29,9 +29,11 @@ export default function SliderInput({
     <div className="mb-5">
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-1.5">
-          <label className="text-sm text-zinc-300">{label}</label>
+          <label className="text-sm text-[var(--foreground-secondary)]">{label}</label>
           {description && (
-            <span className="text-xs text-zinc-600 hidden sm:inline">{description}</span>
+            <span className="text-xs text-[var(--foreground-muted)] hidden sm:inline">
+              {description}
+            </span>
           )}
           {tooltip && <Tooltip text={tooltip} />}
         </div>
@@ -39,7 +41,7 @@ export default function SliderInput({
           {value}/{max}
         </span>
       </div>
-      <div className="relative h-2 bg-zinc-800 rounded-full">
+      <div className="relative h-2 bg-[var(--background-card)] rounded-full">
         <div
           className="absolute h-full rounded-full transition-all duration-150"
           style={{ width: `${percentage}%`, backgroundColor: color }}

@@ -13,13 +13,13 @@ import {
 
 export function SeccaoRegulamentacao() {
   return (
-    <div className="space-y-6 text-sm text-zinc-300 leading-relaxed">
+    <div className="space-y-6 text-sm text-[var(--foreground-secondary)] leading-relaxed">
       <div className="grid gap-4">
         {/* FONTE: WOAH */}
-        <div className="bg-zinc-800/40 border border-zinc-700/30 rounded-xl overflow-hidden">
-          <div className="bg-[#C5A059]/10 px-5 py-3 flex items-center gap-3 border-b border-zinc-700/30">
-            <Globe size={16} className="text-[#C5A059]" />
-            <span className="text-sm font-semibold text-white">
+        <div className="bg-[var(--background-card)]/40 border border-[var(--border)]/30 rounded-xl overflow-hidden">
+          <div className="bg-[var(--gold)]/10 px-5 py-3 flex items-center gap-3 border-b border-[var(--border)]/30">
+            <Globe size={16} className="text-[var(--gold)]" />
+            <span className="text-sm font-semibold text-[var(--foreground)]">
               WOAH (Organização Mundial de Saúde Animal)
             </span>
           </div>
@@ -50,10 +50,10 @@ export function SeccaoRegulamentacao() {
               <div key={i} className="flex items-start gap-3">
                 <item.icone
                   size={14}
-                  className={`mt-0.5 flex-shrink-0 ${item.destaque ? "text-[#C5A059]" : "text-zinc-500"}`}
+                  className={`mt-0.5 flex-shrink-0 ${item.destaque ? "text-[var(--gold)]" : "text-[var(--foreground-muted)]"}`}
                 />
                 <span
-                  className={`text-[13px] ${item.destaque ? "text-white font-medium" : "text-zinc-400"}`}
+                  className={`text-[13px] ${item.destaque ? "text-[var(--foreground)] font-medium" : "text-[var(--foreground-secondary)]"}`}
                 >
                   {item.texto}
                 </span>
@@ -63,10 +63,12 @@ export function SeccaoRegulamentacao() {
         </div>
 
         {/* FONTE: USDA APHIS */}
-        <div className="bg-zinc-800/40 border border-zinc-700/30 rounded-xl overflow-hidden">
-          <div className="bg-blue-500/10 px-5 py-3 flex items-center gap-3 border-b border-zinc-700/30">
+        <div className="bg-[var(--background-card)]/40 border border-[var(--border)]/30 rounded-xl overflow-hidden">
+          <div className="bg-blue-500/10 px-5 py-3 flex items-center gap-3 border-b border-[var(--border)]/30">
             <Flag size={16} className="text-blue-400" />
-            <span className="text-sm font-semibold text-white">USDA (Estados Unidos)</span>
+            <span className="text-sm font-semibold text-[var(--foreground)]">
+              USDA (Estados Unidos)
+            </span>
           </div>
           <div className="p-5 space-y-3">
             {[
@@ -96,10 +98,10 @@ export function SeccaoRegulamentacao() {
               <div key={i} className="flex items-start gap-3">
                 <item.icone
                   size={14}
-                  className={`mt-0.5 flex-shrink-0 ${item.destaque ? "text-blue-400" : "text-zinc-500"}`}
+                  className={`mt-0.5 flex-shrink-0 ${item.destaque ? "text-blue-400" : "text-[var(--foreground-muted)]"}`}
                 />
                 <span
-                  className={`text-[13px] ${item.destaque ? "text-white font-medium" : "text-zinc-400"}`}
+                  className={`text-[13px] ${item.destaque ? "text-[var(--foreground)] font-medium" : "text-[var(--foreground-secondary)]"}`}
                 >
                   {item.texto}
                 </span>
@@ -109,17 +111,18 @@ export function SeccaoRegulamentacao() {
         </div>
 
         {/* EU */}
-        <div className="bg-zinc-800/40 border border-zinc-700/30 rounded-xl overflow-hidden">
-          <div className="bg-blue-600/10 px-5 py-3 flex items-center gap-3 border-b border-zinc-700/30">
+        <div className="bg-[var(--background-card)]/40 border border-[var(--border)]/30 rounded-xl overflow-hidden">
+          <div className="bg-blue-600/10 px-5 py-3 flex items-center gap-3 border-b border-[var(--border)]/30">
             <Shield size={16} className="text-blue-300" />
-            <span className="text-sm font-semibold text-white">União Europeia</span>
+            <span className="text-sm font-semibold text-[var(--foreground)]">União Europeia</span>
           </div>
           <div className="p-5">
-            <p className="text-[13px] text-zinc-400 leading-relaxed">
+            <p className="text-[13px] text-[var(--foreground-secondary)] leading-relaxed">
               Dentro da UE, a movimentação de cavalos entre estados membros{" "}
-              <strong className="text-white">não requer teste de piroplasmose</strong>. No entanto,
-              cavalos de países endémicos da UE (como Portugal e Espanha) para países não-endémicos
-              ou para nações fora da UE devem cumprir os requisitos específicos do país importador.
+              <strong className="text-[var(--foreground)]">não requer teste de piroplasmose</strong>
+              . No entanto, cavalos de países endémicos da UE (como Portugal e Espanha) para países
+              não-endémicos ou para nações fora da UE devem cumprir os requisitos específicos do
+              país importador.
             </p>
           </div>
         </div>
@@ -127,7 +130,7 @@ export function SeccaoRegulamentacao() {
 
       {/* Países não-endémicos */}
       <div>
-        <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
+        <h3 className="text-[var(--foreground)] font-semibold text-base mb-4 flex items-center gap-2">
           <CheckCircle2 size={16} className="text-green-400" />
           Países Considerados Não-Endémicos
         </h3>
@@ -154,7 +157,7 @@ export function SeccaoRegulamentacao() {
         </div>
       </div>
 
-      <p className="text-[10px] text-zinc-600">
+      <p className="text-[10px] text-[var(--foreground-muted)]">
         Fontes: WOAH (woah.org), USDA APHIS (aphis.usda.gov), FEI (fei.org)
       </p>
     </div>

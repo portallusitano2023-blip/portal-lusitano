@@ -107,7 +107,7 @@ describe("MobileBottomNav", () => {
 
     const cavalosLink = screen.getByText("Cavalos").closest("a");
     expect(cavalosLink).toBeTruthy();
-    expect(cavalosLink?.className).toContain("text-[#C5A059]");
+    expect(cavalosLink?.className).toContain("text-[var(--gold)]");
   });
 
   it("shows favorites badge when favoritesCount > 0", () => {

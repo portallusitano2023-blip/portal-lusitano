@@ -4,26 +4,28 @@ import type { Profissional } from "./types";
 
 export function CardProfissional({ prof, onClick }: { prof: Profissional; onClick: () => void }) {
   return (
-    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden hover:border-[#C5A059]/30 transition-all group">
+    <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl overflow-hidden hover:border-[var(--gold)]/30 transition-all group">
       <div className="p-4">
         <div className="flex items-start gap-3">
           <div className="relative">
-            <div className="w-14 h-14 bg-gradient-to-br from-[#C5A059]/30 to-zinc-800 rounded-xl flex items-center justify-center text-xl font-serif text-[#C5A059]">
+            <div className="w-14 h-14 bg-gradient-to-br from-[var(--gold)]/30 to-[var(--background-card)] rounded-xl flex items-center justify-center text-xl font-serif text-[var(--gold)]">
               {prof.nome.charAt(0)}
             </div>
             {prof.disponivel && (
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[var(--background-secondary)]" />
             )}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="font-semibold text-white truncate text-sm">{prof.nome}</h3>
-              {prof.destaque && <Sparkles size={12} className="text-[#C5A059]" />}
+              <h3 className="font-semibold text-[var(--foreground)] truncate text-sm">
+                {prof.nome}
+              </h3>
+              {prof.destaque && <Sparkles size={12} className="text-[var(--gold)]" />}
             </div>
-            <p className="text-xs text-[#C5A059] truncate">{prof.especialidade}</p>
+            <p className="text-xs text-[var(--gold)] truncate">{prof.especialidade}</p>
             <div className="flex items-center gap-2 mt-1">
-              <MapPin size={10} className="text-zinc-500" />
-              <span className="text-xs text-zinc-400">{prof.localizacao}</span>
+              <MapPin size={10} className="text-[var(--foreground-muted)]" />
+              <span className="text-xs text-[var(--foreground-secondary)]">{prof.localizacao}</span>
             </div>
           </div>
         </div>
@@ -31,22 +33,24 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
         <div className="mt-3 flex items-center justify-between">
           <BadgeVerificacao nivel={prof.nivelVerificacao} />
           <div className="flex items-center gap-1">
-            <Star size={12} className="text-[#C5A059] fill-[#C5A059]" />
-            <span className="text-xs font-medium text-white">{prof.avaliacao}</span>
-            <span className="text-xs text-zinc-500">({prof.numAvaliacoes})</span>
+            <Star size={12} className="text-[var(--gold)] fill-[var(--gold)]" />
+            <span className="text-xs font-medium text-[var(--foreground)]">{prof.avaliacao}</span>
+            <span className="text-xs text-[var(--foreground-muted)]">({prof.numAvaliacoes})</span>
           </div>
         </div>
 
         <div className="mt-3 grid grid-cols-2 gap-2">
-          <div className="bg-zinc-800/30 rounded px-2 py-1.5 text-center">
-            <div className="text-xs text-[#C5A059] font-medium">
+          <div className="bg-[var(--background-card)]/30 rounded px-2 py-1.5 text-center">
+            <div className="text-xs text-[var(--gold)] font-medium">
               {prof.metricas.taxaSatisfacao}%
             </div>
-            <div className="text-[10px] text-zinc-500">Satisfação</div>
+            <div className="text-[10px] text-[var(--foreground-muted)]">Satisfação</div>
           </div>
-          <div className="bg-zinc-800/30 rounded px-2 py-1.5 text-center">
-            <div className="text-xs text-zinc-300 font-medium">{prof.experienciaAnos} anos</div>
-            <div className="text-[10px] text-zinc-500">Experiência</div>
+          <div className="bg-[var(--background-card)]/30 rounded px-2 py-1.5 text-center">
+            <div className="text-xs text-[var(--foreground-secondary)] font-medium">
+              {prof.experienciaAnos} anos
+            </div>
+            <div className="text-[10px] text-[var(--foreground-muted)]">Experiência</div>
           </div>
         </div>
 
@@ -58,16 +62,16 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
         )}
       </div>
 
-      <div className="border-t border-zinc-800 p-3 flex gap-2">
+      <div className="border-t border-[var(--border)] p-3 flex gap-2">
         <button
           onClick={onClick}
-          className="flex-1 py-2 bg-[#C5A059] rounded-lg text-xs text-black font-medium hover:bg-[#D4AF6A] transition-colors flex items-center justify-center gap-1"
+          className="flex-1 py-2 bg-[var(--gold)] rounded-lg text-xs text-black font-medium hover:bg-[#D4AF6A] transition-colors flex items-center justify-center gap-1"
         >
           Ver Perfil <ChevronRight size={14} />
         </button>
         <a
           href={`tel:${prof.telefone}`}
-          className="p-2 bg-zinc-800 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors"
+          className="p-2 bg-[var(--background-card)] rounded-lg text-[var(--foreground-secondary)] hover:bg-[var(--surface-hover)] transition-colors"
         >
           <Phone size={14} />
         </a>

@@ -6,9 +6,6 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Output standalone para Docker
-  output: "standalone",
-
   // Nota: optimizePackageImports removido - Turbopack (Next 16) faz tree-shaking automaticamente
   // e a opção causava erros HMR com lucide-react
   images: {

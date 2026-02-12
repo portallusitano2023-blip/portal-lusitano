@@ -31,17 +31,17 @@ export default function RecuperarSenhaPage() {
   if (sent) {
     return (
       <div className="text-center py-6">
-        <div className="w-16 h-16 bg-[#C5A059]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <CheckCircle className="text-[#C5A059]" size={32} />
+        <div className="w-16 h-16 bg-[var(--gold)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <CheckCircle className="text-[var(--gold)]" size={32} />
         </div>
-        <h2 className="text-xl font-serif text-white mb-2">Email Enviado</h2>
-        <p className="text-sm text-zinc-400 mb-6">
-          Se o email <strong className="text-white">{email}</strong> estiver registado, recebera um
-          link para redefinir a senha.
+        <h2 className="text-xl font-serif text-[var(--foreground)] mb-2">Email Enviado</h2>
+        <p className="text-sm text-[var(--foreground-secondary)] mb-6">
+          Se o email <strong className="text-[var(--foreground)]">{email}</strong> estiver
+          registado, recebera um link para redefinir a senha.
         </p>
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 text-[#C5A059] hover:text-[#D4AF6A] text-sm transition-colors"
+          className="inline-flex items-center gap-2 text-[var(--gold)] hover:text-[var(--gold)] text-sm transition-colors"
         >
           <ArrowLeft size={16} />
           Voltar ao login
@@ -52,23 +52,28 @@ export default function RecuperarSenhaPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-serif text-white mb-2">Recuperar Senha</h1>
-      <p className="text-sm text-zinc-500 mb-6">
+      <h1 className="text-2xl font-serif text-[var(--foreground)] mb-2">Recuperar Senha</h1>
+      <p className="text-sm text-[var(--foreground-muted)] mb-6">
         Introduza o seu email e enviaremos um link para redefinir a senha.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">Email</label>
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            Email
+          </label>
           <div className="relative">
-            <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Mail
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+            />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-10 pr-4 py-3 text-white placeholder:text-zinc-600 focus:border-[#C5A059] outline-none transition-colors"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-10 pr-4 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--gold)] outline-none transition-colors"
             />
           </div>
         </div>
@@ -86,7 +91,7 @@ export default function RecuperarSenhaPage() {
       <p className="mt-6 text-center">
         <Link
           href="/login"
-          className="text-sm text-zinc-500 hover:text-[#C5A059] transition-colors flex items-center justify-center gap-2"
+          className="text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors flex items-center justify-center gap-2"
         >
           <ArrowLeft size={14} />
           Voltar ao login

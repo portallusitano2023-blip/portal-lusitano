@@ -53,7 +53,7 @@ function AnalisePerfilContent() {
   } = useQuizLogic();
 
   return (
-    <main className="min-h-screen bg-[#050505]">
+    <main className="min-h-screen bg-[var(--background)]">
       {showIntro ? (
         <IntroSection onStart={startQuiz} />
       ) : !showResult ? (
@@ -107,11 +107,11 @@ function AnalisePerfilContent() {
                   {selectedTab === "proximos" && <NextStepsTab result={result} />}
                 </div>
               </section>
-              <section className="py-12 border-t border-white/5">
+              <section className="py-12 border-t border-[var(--border)]">
                 <div className="max-w-5xl mx-auto px-6 text-center">
                   <button
                     onClick={resetQuiz}
-                    className="inline-flex items-center justify-center gap-2 border border-white/20 text-zinc-400 px-6 py-3 hover:text-white transition-colors"
+                    className="inline-flex items-center justify-center gap-2 border border-[var(--border)] text-[var(--foreground-secondary)] px-6 py-3 hover:text-[var(--foreground)] transition-colors"
                   >
                     <RotateCcw size={18} />
                     {t.analise_perfil.repeat_analysis}
@@ -131,8 +131,8 @@ export default function AnalisePerfil() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#050505] flex items-center justify-center">
-          <div className="text-[#C5A059]">{t.analise_perfil.loading}</div>
+        <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+          <div className="text-[var(--gold)]">{t.analise_perfil.loading}</div>
         </div>
       }
     >

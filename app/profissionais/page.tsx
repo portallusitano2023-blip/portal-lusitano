@@ -62,22 +62,22 @@ export default function ProfissionaisPage() {
   }, [pesquisa, categoriaAtiva, distritoAtivo, filtroVerificacao]);
 
   return (
-    <main className="min-h-screen bg-black text-white pt-20 pb-32 px-4 sm:px-6 md:px-12">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 pb-32 px-4 sm:px-6 md:px-12">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#C5A059] transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-6"
         >
           <ArrowLeft size={18} />
           <span className="text-sm">Voltar</span>
         </Link>
         <div className="text-center">
-          <span className="text-[#C5A059] uppercase tracking-[0.3em] text-[9px] font-bold block mb-2">
+          <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-[9px] font-bold block mb-2">
             Comunidade Lusitana
           </span>
           <h1 className="text-2xl sm:text-4xl font-serif italic mb-4">Rede Profissional</h1>
-          <p className="text-zinc-400 text-sm max-w-2xl mx-auto">
+          <p className="text-[var(--foreground-secondary)] text-sm max-w-2xl mx-auto">
             A maior rede de profissionais especializados em cavalos Lusitanos em Portugal.
             Veterinários, ferradores, treinadores e mais.
           </p>
@@ -91,7 +91,7 @@ export default function ProfissionaisPage() {
 
       {/* Tabs principais */}
       <div className="max-w-7xl mx-auto mb-6">
-        <div className="flex gap-2 border-b border-zinc-800 pb-3">
+        <div className="flex gap-2 border-b border-[var(--border)] pb-3">
           {[
             { id: "profissionais" as const, label: "Profissionais", icon: Users },
             { id: "eventos" as const, label: "Eventos", icon: CalendarDays },
@@ -100,7 +100,7 @@ export default function ProfissionaisPage() {
             <button
               key={t.id}
               onClick={() => setAbaAtiva(t.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors ${abaAtiva === t.id ? "bg-[#C5A059] text-black font-medium" : "bg-zinc-900 text-zinc-400 hover:text-white"}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors ${abaAtiva === t.id ? "bg-[var(--gold)] text-black font-medium" : "bg-[var(--background-secondary)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"}`}
             >
               <t.icon size={16} />
               {t.label}
@@ -143,9 +143,9 @@ export default function ProfissionaisPage() {
               </div>
             ) : (
               <div className="text-center py-16">
-                <Search size={32} className="mx-auto mb-4 text-zinc-600" />
+                <Search size={32} className="mx-auto mb-4 text-[var(--foreground-muted)]" />
                 <h3 className="text-lg font-medium mb-2">Nenhum profissional encontrado</h3>
-                <p className="text-sm text-zinc-500">Tente ajustar os filtros</p>
+                <p className="text-sm text-[var(--foreground-muted)]">Tente ajustar os filtros</p>
               </div>
             )}
           </div>
@@ -166,12 +166,12 @@ export default function ProfissionaisPage() {
             {artigosDB.map((a) => (
               <div
                 key={a.id}
-                className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 hover:border-[#C5A059]/30 transition-colors"
+                className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-4 hover:border-[var(--gold)]/30 transition-colors"
               >
-                <span className="text-xs text-[#C5A059]">{a.categoria}</span>
-                <h3 className="font-medium text-white mt-1">{a.titulo}</h3>
-                <p className="text-sm text-zinc-400 mt-2">{a.resumo}</p>
-                <div className="flex items-center justify-between mt-3 text-xs text-zinc-500">
+                <span className="text-xs text-[var(--gold)]">{a.categoria}</span>
+                <h3 className="font-medium text-[var(--foreground)] mt-1">{a.titulo}</h3>
+                <p className="text-sm text-[var(--foreground-secondary)] mt-2">{a.resumo}</p>
+                <div className="flex items-center justify-between mt-3 text-xs text-[var(--foreground-muted)]">
                   <span>{a.autor}</span>
                   <span>{a.leituras.toLocaleString()} leituras</span>
                 </div>
@@ -183,15 +183,15 @@ export default function ProfissionaisPage() {
 
       {/* CTA */}
       <div className="max-w-7xl mx-auto mt-12">
-        <div className="bg-gradient-to-r from-[#C5A059]/10 to-transparent border border-[#C5A059]/20 rounded-xl p-6">
+        <div className="bg-gradient-to-r from-[var(--gold)]/10 to-transparent border border-[var(--gold)]/20 rounded-xl p-6">
           <div className="sm:flex sm:items-center sm:justify-between">
             <div>
               <h3 className="text-lg font-semibold mb-1">É profissional do sector equestre?</h3>
-              <p className="text-sm text-zinc-400">
+              <p className="text-sm text-[var(--foreground-secondary)]">
                 Junte-se à nossa rede verificada e alcance milhares de criadores e proprietários.
               </p>
             </div>
-            <button className="mt-4 sm:mt-0 px-6 py-3 bg-[#C5A059] text-black font-medium rounded-lg hover:bg-[#D4AF6A] transition-colors flex items-center gap-2">
+            <button className="mt-4 sm:mt-0 px-6 py-3 bg-[var(--gold)] text-black font-medium rounded-lg hover:bg-[var(--gold-hover)] transition-colors flex items-center gap-2">
               <ShieldCheck size={18} />
               Registar-se
             </button>

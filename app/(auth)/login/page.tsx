@@ -48,8 +48,10 @@ export default function LoginPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-serif text-white mb-2">Iniciar Sessao</h1>
-      <p className="text-sm text-zinc-500 mb-6">Aceda a sua conta para usar as ferramentas PRO.</p>
+      <h1 className="text-2xl font-serif text-[var(--foreground)] mb-2">Iniciar Sessao</h1>
+      <p className="text-sm text-[var(--foreground-muted)] mb-6">
+        Aceda a sua conta para usar as ferramentas PRO.
+      </p>
 
       {error && (
         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">
@@ -59,36 +61,46 @@ export default function LoginPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">Email</label>
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            Email
+          </label>
           <div className="relative">
-            <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Mail
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+            />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-10 pr-4 py-3 text-white placeholder:text-zinc-600 focus:border-[#C5A059] outline-none transition-colors"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-10 pr-4 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--gold)] outline-none transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">Senha</label>
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            Senha
+          </label>
           <div className="relative">
-            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Lock
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+            />
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="A sua senha"
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-10 pr-12 py-3 text-white placeholder:text-zinc-600 focus:border-[#C5A059] outline-none transition-colors"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-10 pr-12 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--gold)] outline-none transition-colors"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -98,7 +110,7 @@ export default function LoginPage() {
         <div className="flex justify-end">
           <Link
             href="/recuperar-senha"
-            className="text-xs text-[#C5A059] hover:text-[#D4AF6A] transition-colors"
+            className="text-xs text-[var(--gold)] hover:text-[var(--gold)] transition-colors"
           >
             Esqueceu a senha?
           </Link>
@@ -114,13 +126,13 @@ export default function LoginPage() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-zinc-500">
+      <p className="mt-6 text-center text-sm text-[var(--foreground-muted)]">
         Nao tem conta?{" "}
         <Link
           href={
             returnUrl !== "/" ? `/registar?redirect=${encodeURIComponent(returnUrl)}` : "/registar"
           }
-          className="text-[#C5A059] hover:text-[#D4AF6A] font-medium transition-colors"
+          className="text-[var(--gold)] hover:text-[var(--gold)] font-medium transition-colors"
         >
           Criar conta
         </Link>

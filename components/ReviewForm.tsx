@@ -71,14 +71,14 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
 
   if (isSubmitted) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Star className="w-6 h-6 text-green-600" fill="currentColor" />
+      <div className="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 rounded-lg p-6 text-center">
+        <div className="w-12 h-12 bg-green-100 dark:bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Star className="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" />
         </div>
-        <h3 className="text-lg font-semibold text-green-800 mb-2">
+        <h3 className="text-lg font-semibold text-green-800 dark:text-green-300 mb-2">
           Obrigado pela sua avaliacao!
         </h3>
-        <p className="text-green-600 text-sm">
+        <p className="text-green-600 dark:text-green-400 text-sm">
           A sua review foi submetida e sera publicada apos aprovacao.
         </p>
       </div>
@@ -88,7 +88,7 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
           A sua avaliacao de {coudelariaNome}
         </label>
         <div className="flex gap-1">
@@ -105,7 +105,7 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
                 className={`w-8 h-8 ${
                   star <= (hoverRating || rating)
                     ? "text-yellow-400"
-                    : "text-gray-300"
+                    : "text-[var(--foreground-muted)]"
                 }`}
                 fill={star <= (hoverRating || rating) ? "currentColor" : "none"}
               />
@@ -113,7 +113,7 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
           ))}
         </div>
         {rating > 0 && (
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-[var(--foreground-muted)] mt-1">
             {rating === 1 && "Fraco"}
             {rating === 2 && "Razoavel"}
             {rating === 3 && "Bom"}
@@ -125,27 +125,25 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Nome *
-          </label>
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Nome *</label>
           <input
             type="text"
             value={formData.autor_nome}
             onChange={(e) => setFormData({ ...formData, autor_nome: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             placeholder="O seu nome"
             required
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
             Email (opcional)
           </label>
           <input
             type="email"
             value={formData.autor_email}
             onChange={(e) => setFormData({ ...formData, autor_email: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             placeholder="email@exemplo.com"
           />
         </div>
@@ -153,38 +151,38 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
             Localizacao (opcional)
           </label>
           <input
             type="text"
             value={formData.autor_localizacao}
             onChange={(e) => setFormData({ ...formData, autor_localizacao: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             placeholder="Ex: Lisboa, Portugal"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
             Data da visita (opcional)
           </label>
           <input
             type="date"
             value={formData.data_visita}
             onChange={(e) => setFormData({ ...formData, data_visita: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
           Tipo de interacao
         </label>
         <select
           value={formData.tipo_visita}
           onChange={(e) => setFormData({ ...formData, tipo_visita: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
         >
           <option value="visita">Visita presencial</option>
           <option value="compra">Compra de cavalo</option>
@@ -195,27 +193,27 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
           Titulo da avaliacao (opcional)
         </label>
         <input
           type="text"
           value={formData.titulo}
           onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           placeholder="Resuma a sua experiencia"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
           A sua experiencia *
         </label>
         <textarea
           value={formData.comentario}
           onChange={(e) => setFormData({ ...formData, comentario: e.target.value })}
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+          className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
           placeholder="Conte-nos sobre a sua experiencia com esta coudelaria..."
           required
         />
@@ -227,15 +225,15 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
           id="recomenda"
           checked={formData.recomenda}
           onChange={(e) => setFormData({ ...formData, recomenda: e.target.checked })}
-          className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
+          className="w-4 h-4 text-amber-600 border-[var(--border)] rounded focus:ring-amber-500"
         />
-        <label htmlFor="recomenda" className="text-sm text-gray-700">
+        <label htmlFor="recomenda" className="text-sm text-[var(--foreground)]">
           Recomendo esta coudelaria
         </label>
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+        <div className="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg text-red-600 dark:text-red-400 text-sm">
           {error}
         </div>
       )}
@@ -247,8 +245,7 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            A submeter...
+            <Loader2 className="w-5 h-5 animate-spin" />A submeter...
           </>
         ) : (
           <>

@@ -9,20 +9,18 @@ export default function OfflinePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
+    <main className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
       <div className="max-w-md w-full text-center">
         {/* Icone */}
-        <div className="w-24 h-24 bg-zinc-800/50 rounded-full flex items-center justify-center mx-auto mb-8">
-          <WifiOff className="text-zinc-500" size={48} />
+        <div className="w-24 h-24 bg-[var(--background-card)]/50 rounded-full flex items-center justify-center mx-auto mb-8">
+          <WifiOff className="text-[var(--foreground-muted)]" size={48} />
         </div>
 
         {/* Titulo */}
-        <h1 className="text-4xl font-serif text-white mb-4">
-          Sem Conexão
-        </h1>
+        <h1 className="text-4xl font-serif text-[var(--foreground)] mb-4">Sem Conexão</h1>
 
         {/* Descricao */}
-        <p className="text-zinc-400 mb-8 leading-relaxed">
+        <p className="text-[var(--foreground-secondary)] mb-8 leading-relaxed">
           Parece que está offline. Verifique a sua conexão à internet e tente novamente.
         </p>
 
@@ -30,7 +28,7 @@ export default function OfflinePage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={handleRefresh}
-            className="inline-flex items-center justify-center gap-2 bg-[#C5A059] text-black px-8 py-4 text-xs uppercase tracking-widest font-bold hover:bg-white transition-colors"
+            className="inline-flex items-center justify-center gap-2 bg-[var(--gold)] text-black px-8 py-4 text-xs uppercase tracking-widest font-bold hover:bg-[var(--gold-hover)] transition-colors"
           >
             <RefreshCw size={16} />
             Tentar Novamente
@@ -38,7 +36,7 @@ export default function OfflinePage() {
 
           <Link
             href="/"
-            className="inline-flex items-center justify-center gap-2 border border-white/20 text-white px-8 py-4 text-xs uppercase tracking-widest hover:border-[#C5A059] hover:text-[#C5A059] transition-colors"
+            className="inline-flex items-center justify-center gap-2 border border-[var(--border)] text-[var(--foreground)] px-8 py-4 text-xs uppercase tracking-widest hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
           >
             <Home size={16} />
             Página Inicial
@@ -46,7 +44,7 @@ export default function OfflinePage() {
         </div>
 
         {/* Nota */}
-        <p className="mt-12 text-[10px] text-zinc-600 uppercase tracking-widest">
+        <p className="mt-12 text-[10px] text-[var(--foreground-muted)] uppercase tracking-widest">
           Portal Lusitano • Disponível Offline
         </p>
       </div>

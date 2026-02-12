@@ -41,12 +41,12 @@ export default function BuyButton({ variantId, available }: BuyButtonProps) {
       onClick={handleBuy}
       disabled={!available || loading}
       className={`
-        group relative block w-full py-6 text-center text-xs uppercase font-bold tracking-[0.3em] 
+        group relative block w-full py-6 text-center text-xs uppercase font-bold tracking-[0.3em]
         transition-all duration-500 border
         ${
           available
-            ? "bg-[#C5A059] text-black border-[#C5A059] hover:bg-white hover:text-black hover:border-white"
-            : "bg-zinc-900 text-zinc-400 border-zinc-800 cursor-not-allowed"
+            ? "bg-[var(--gold)] text-black border-[var(--gold)] hover:bg-[var(--foreground)] hover:text-black hover:border-[var(--foreground)]"
+            : "bg-[var(--background-secondary)] text-[var(--foreground-secondary)] border-[var(--border)] cursor-not-allowed"
         }
       `}
     >

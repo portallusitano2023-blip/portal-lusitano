@@ -2,11 +2,11 @@ import { CheckCircle2, XCircle, AlertTriangle, CircleDot, Scale } from "lucide-r
 
 export function SeccaoTratamento() {
   return (
-    <div className="space-y-6 text-sm text-zinc-300 leading-relaxed">
+    <div className="space-y-6 text-sm text-[var(--foreground-secondary)] leading-relaxed">
       {/* FONTE: PMC/PubMed, Frontiers, Lusitano World */}
       <p className="text-[15px] leading-relaxed">
-        O <strong className="text-white">dipropionato de imidocarb</strong> é o tratamento de
-        referência mundial. No entanto, apresenta limitações significativas.
+        O <strong className="text-[var(--foreground)]">dipropionato de imidocarb</strong> é o
+        tratamento de referência mundial. No entanto, apresenta limitações significativas.
       </p>
 
       <div className="grid sm:grid-cols-2 gap-4">
@@ -28,7 +28,7 @@ export function SeccaoTratamento() {
                 ) : (
                   <XCircle size={12} className="text-red-400 mt-0.5 flex-shrink-0" />
                 )}
-                <span className="text-xs text-zinc-400">{item.texto}</span>
+                <span className="text-xs text-[var(--foreground-secondary)]">{item.texto}</span>
               </div>
             ))}
           </div>
@@ -49,7 +49,7 @@ export function SeccaoTratamento() {
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-2">
                 <CircleDot size={10} className="text-red-400 mt-0.5 flex-shrink-0" />
-                <span className="text-xs text-zinc-400">{item}</span>
+                <span className="text-xs text-[var(--foreground-secondary)]">{item}</span>
               </div>
             ))}
           </div>
@@ -64,7 +64,7 @@ export function SeccaoTratamento() {
           </div>
           <div>
             <p className="text-red-300 font-semibold text-sm mb-2">Aviso: Lusitano World</p>
-            <p className="text-[13px] text-zinc-400 leading-relaxed">
+            <p className="text-[13px] text-[var(--foreground-secondary)] leading-relaxed">
               <strong className="text-red-300">Desaconselha fortemente</strong> a compra de cavalos
               piro-positivos com a intenção de os tratar e depois exportar, citando efeitos
               secundários graves e a impraticabilidade de reduzir os títulos sanguíneos abaixo dos
@@ -75,22 +75,22 @@ export function SeccaoTratamento() {
       </div>
 
       {/* FONTE: FEI Vet Regs 2026 */}
-      <div className="bg-[#C5A059]/8 border border-[#C5A059]/20 rounded-xl p-5 sm:p-6">
+      <div className="bg-[var(--gold)]/8 border border-[var(--gold)]/20 rounded-xl p-5 sm:p-6">
         <div className="flex items-start gap-3 sm:gap-4">
-          <div className="w-10 h-10 rounded-xl bg-[#C5A059]/20 flex items-center justify-center flex-shrink-0">
-            <Scale size={18} className="text-[#C5A059]" />
+          <div className="w-10 h-10 rounded-xl bg-[var(--gold)]/20 flex items-center justify-center flex-shrink-0">
+            <Scale size={18} className="text-[var(--gold)]" />
           </div>
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <p className="text-[#C5A059] font-semibold text-sm">Regulamentação FEI 2026</p>
-              <span className="text-[9px] bg-[#C5A059]/20 text-[#C5A059] px-2 py-0.5 rounded-full font-bold">
+              <p className="text-[var(--gold)] font-semibold text-sm">Regulamentação FEI 2026</p>
+              <span className="text-[9px] bg-[var(--gold)]/20 text-[var(--gold)] px-2 py-0.5 rounded-full font-bold">
                 NOVO
               </span>
             </div>
-            <p className="text-[13px] text-zinc-400 leading-relaxed">
-              A partir de <strong className="text-white">1 de Janeiro de 2026</strong>, a FEI
-              adicionou o imidocarb como{" "}
-              <strong className="text-[#C5A059]">Medicação Controlada</strong> sob as
+            <p className="text-[13px] text-[var(--foreground-secondary)] leading-relaxed">
+              A partir de <strong className="text-[var(--foreground)]">1 de Janeiro de 2026</strong>
+              , a FEI adicionou o imidocarb como{" "}
+              <strong className="text-[var(--gold)]">Medicação Controlada</strong> sob as
               regulamentações EADCM. Pode ser administrado a cavalos de competição sob condições
               reguladas, com notificação obrigatória aos delegados veterinários e restrições
               temporais relativas à competição.
@@ -99,7 +99,7 @@ export function SeccaoTratamento() {
         </div>
       </div>
 
-      <p className="text-[10px] text-zinc-600">
+      <p className="text-[10px] text-[var(--foreground-muted)]">
         Fontes: PMC/PubMed (pmc.ncbi.nlm.nih.gov), Frontiers in Veterinary Science
         (frontiersin.org), Lusitano World (lusitanoworld.com), FEI Veterinary Regulations 2026
         (fei.org)

@@ -298,18 +298,22 @@ export default function PublicidadePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
+    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-          <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Megaphone className="text-[#C5A059]" size={32} />
+          <div className="w-16 h-16 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Megaphone className="text-[var(--gold)]" size={32} />
           </div>
-          <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
+          <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
             {t.subtitle}
           </span>
-          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">{t.title}</h1>
-          <p className="text-zinc-400 font-serif italic max-w-xl mx-auto">{t.description}</p>
+          <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
+            {t.title}
+          </h1>
+          <p className="text-[var(--foreground-secondary)] font-serif italic max-w-xl mx-auto">
+            {t.description}
+          </p>
         </div>
 
         {/* Stats */}
@@ -318,26 +322,32 @@ export default function PublicidadePage() {
           style={{ animationDelay: "0.1s" }}
         >
           {t.stats.map((stat, index) => (
-            <div key={index} className="text-center p-6 bg-white/[0.02] border border-white/5">
-              <div className="text-3xl font-serif text-[#C5A059] mb-1">{stat.value}</div>
-              <div className="text-sm text-zinc-500">{stat.label}</div>
+            <div
+              key={index}
+              className="text-center p-6 bg-[var(--surface-hover)] border border-[var(--border)]"
+            >
+              <div className="text-3xl font-serif text-[var(--gold)] mb-1">{stat.value}</div>
+              <div className="text-sm text-[var(--foreground-muted)]">{stat.label}</div>
             </div>
           ))}
         </div>
 
         {/* Audience */}
         <div
-          className="mb-16 p-8 bg-white/[0.02] border border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          className="mb-16 p-8 bg-[var(--surface-hover)] border border-[var(--border)] opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.15s" }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <Users className="text-[#C5A059]" size={24} />
-            <h2 className="text-2xl font-serif text-white">{t.audience.title}</h2>
+            <Users className="text-[var(--gold)]" size={24} />
+            <h2 className="text-2xl font-serif text-[var(--foreground)]">{t.audience.title}</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-3">
             {t.audience.items.map((item, index) => (
-              <div key={index} className="flex items-center gap-2 text-zinc-400">
-                <Check className="text-[#C5A059]" size={16} />
+              <div
+                key={index}
+                className="flex items-center gap-2 text-[var(--foreground-secondary)]"
+              >
+                <Check className="text-[var(--gold)]" size={16} />
                 <span>{item}</span>
               </div>
             ))}
@@ -350,8 +360,8 @@ export default function PublicidadePage() {
           style={{ animationDelay: "0.2s" }}
         >
           <div className="flex items-center gap-3 mb-8 justify-center">
-            <TrendingUp className="text-[#C5A059]" size={24} />
-            <h2 className="text-2xl font-serif text-white">Pacotes</h2>
+            <TrendingUp className="text-[var(--gold)]" size={24} />
+            <h2 className="text-2xl font-serif text-[var(--foreground)]">Pacotes</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -360,24 +370,27 @@ export default function PublicidadePage() {
                 key={index}
                 className={`p-6 border ${
                   pkg.popular
-                    ? "bg-[#C5A059]/10 border-[#C5A059]/30"
-                    : "bg-white/[0.02] border-white/5"
+                    ? "bg-[var(--gold)]/10 border-[var(--gold)]/30"
+                    : "bg-[var(--surface-hover)] border-[var(--border)]"
                 } relative`}
               >
                 {pkg.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#C5A059] text-black text-xs px-3 py-1 uppercase tracking-wider">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--gold)] text-black text-xs px-3 py-1 uppercase tracking-wider">
                     Popular
                   </div>
                 )}
-                <h3 className="text-xl font-serif text-white mb-2">{pkg.name}</h3>
+                <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">{pkg.name}</h3>
                 <div className="mb-6">
-                  <span className="text-3xl font-serif text-[#C5A059]">{pkg.price}</span>
-                  <span className="text-zinc-500">{pkg.period}</span>
+                  <span className="text-3xl font-serif text-[var(--gold)]">{pkg.price}</span>
+                  <span className="text-[var(--foreground-muted)]">{pkg.period}</span>
                 </div>
                 <ul className="space-y-3 mb-6">
                   {pkg.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-zinc-400">
-                      <Check className="text-[#C5A059] mt-0.5 flex-shrink-0" size={14} />
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2 text-sm text-[var(--foreground-secondary)]"
+                    >
+                      <Check className="text-[var(--gold)] mt-0.5 flex-shrink-0" size={14} />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -386,8 +399,8 @@ export default function PublicidadePage() {
                   onClick={() => handleOpenCheckout(pkg.packageId)}
                   className={`w-full py-3 text-sm uppercase tracking-wider font-bold transition-all ${
                     pkg.popular
-                      ? "bg-[#C5A059] text-black hover:bg-white"
-                      : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
+                      ? "bg-[var(--gold)] text-black hover:bg-[var(--gold-hover)]"
+                      : "bg-[var(--surface-hover)] text-[var(--foreground)] hover:bg-[var(--surface-hover)] border border-[var(--border)]"
                   }`}
                 >
                   {language === "pt" ? "Começar Agora" : "Get Started"}
@@ -399,18 +412,18 @@ export default function PublicidadePage() {
 
         {/* Other Options */}
         <div
-          className="mb-16 p-8 bg-white/[0.02] border border-white/5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          className="mb-16 p-8 bg-[var(--surface-hover)] border border-[var(--border)] opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.25s" }}
         >
-          <h2 className="text-2xl font-serif text-white mb-6">{t.other.title}</h2>
+          <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6">{t.other.title}</h2>
           <div className="grid md:grid-cols-2 gap-4">
             {t.other.items.map((item, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center py-3 border-b border-white/5"
+                className="flex justify-between items-center py-3 border-b border-[var(--border)]"
               >
-                <span className="text-zinc-400">{item.name}</span>
-                <span className="text-[#C5A059] font-medium">{item.price}</span>
+                <span className="text-[var(--foreground-secondary)]">{item.name}</span>
+                <span className="text-[var(--gold)] font-medium">{item.price}</span>
               </div>
             ))}
           </div>
@@ -418,80 +431,82 @@ export default function PublicidadePage() {
 
         {/* CTA */}
         <div
-          className="text-center p-10 bg-gradient-to-b from-[#C5A059]/10 to-transparent border border-[#C5A059]/20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          className="text-center p-10 bg-gradient-to-b from-[var(--gold)]/10 to-transparent border border-[var(--gold)]/20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <Mail className="text-[#C5A059] mx-auto mb-4" size={32} />
-          <h2 className="text-2xl font-serif text-white mb-2">{t.cta.title}</h2>
-          <p className="text-zinc-400 mb-6 max-w-md mx-auto">{t.cta.description}</p>
+          <Mail className="text-[var(--gold)] mx-auto mb-4" size={32} />
+          <h2 className="text-2xl font-serif text-[var(--foreground)] mb-2">{t.cta.title}</h2>
+          <p className="text-[var(--foreground-secondary)] mb-6 max-w-md mx-auto">
+            {t.cta.description}
+          </p>
           <a
             href={`mailto:${t.cta.email}`}
-            className="inline-block bg-[#C5A059] text-black px-8 py-3 text-sm uppercase tracking-widest hover:bg-white transition-colors"
+            className="inline-block bg-[var(--gold)] text-black px-8 py-3 text-sm uppercase tracking-widest hover:bg-[var(--gold-hover)] transition-colors"
           >
             {t.cta.button}
           </a>
-          <p className="mt-4 text-zinc-500 text-sm">{t.cta.email}</p>
+          <p className="mt-4 text-[var(--foreground-muted)] text-sm">{t.cta.email}</p>
         </div>
       </div>
 
       {/* Modal de Checkout */}
       {showModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl max-w-md w-full p-6 relative">
+          <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl max-w-md w-full p-6 relative">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-zinc-400 hover:text-white"
+              className="absolute top-4 right-4 text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
             >
               <X size={20} />
             </button>
 
-            <h3 className="text-xl font-serif text-white mb-4">
+            <h3 className="text-xl font-serif text-[var(--foreground)] mb-4">
               {language === "pt" ? "Dados da Empresa" : "Company Details"}
             </h3>
 
             <form onSubmit={handleCheckout} className="space-y-4">
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
                   {language === "pt" ? "Email" : "Email"} *
                 </label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-black border border-zinc-800 rounded px-4 py-3 text-white focus:outline-none focus:border-[#C5A059]"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded px-4 py-3 text-[var(--foreground)] focus:outline-none focus:border-[var(--gold)]"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
                   {language === "pt" ? "Nome da Empresa" : "Company Name"} *
                 </label>
                 <input
                   type="text"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full bg-black border border-zinc-800 rounded px-4 py-3 text-white focus:outline-none focus:border-[#C5A059]"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded px-4 py-3 text-[var(--foreground)] focus:outline-none focus:border-[var(--gold)]"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
                   {language === "pt" ? "Telefone (Opcional)" : "Phone (Optional)"}
                 </label>
                 <input
                   type="tel"
                   value={formData.telefone}
                   onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-                  className="w-full bg-black border border-zinc-800 rounded px-4 py-3 text-white focus:outline-none focus:border-[#C5A059]"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded px-4 py-3 text-[var(--foreground)] focus:outline-none focus:border-[var(--gold)]"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#C5A059] hover:bg-white text-black font-bold py-3 uppercase tracking-wider transition-all disabled:opacity-50"
+                className="w-full bg-[var(--gold)] hover:bg-[var(--gold-hover)] text-black font-bold py-3 uppercase tracking-wider transition-all disabled:opacity-50"
               >
                 {loading
                   ? language === "pt"

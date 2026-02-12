@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Heart, RefreshCw } from "lucide-react";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
+import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
@@ -76,13 +77,13 @@ export default function VerificadorCompatibilidadePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-xl border-b border-zinc-900">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/90 backdrop-blur-xl border-b border-[var(--border)]">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-3 text-zinc-400 hover:text-white transition-colors"
+            className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
           >
             <ArrowLeft size={18} />
             <span className="text-sm font-medium hidden sm:block">Portal Lusitano</span>
@@ -93,10 +94,12 @@ export default function VerificadorCompatibilidadePage() {
               <Heart size={18} className="text-white" />
             </div>
             <div className="hidden sm:block">
-              <span className="text-sm font-medium text-white block leading-tight">
+              <span className="text-sm font-medium text-[var(--foreground)] block leading-tight">
                 {t.verificador.tool_name}
               </span>
-              <span className="text-xs text-zinc-500">{t.verificador.tool_subtitle}</span>
+              <span className="text-xs text-[var(--foreground-muted)]">
+                {t.verificador.tool_subtitle}
+              </span>
             </div>
           </div>
 
@@ -126,6 +129,7 @@ export default function VerificadorCompatibilidadePage() {
               requiresAuth={requiresAuth}
             />
           )}
+          <ProUpgradeCard isSubscribed={isSubscribed} />
         </div>
 
         {/* Intro */}

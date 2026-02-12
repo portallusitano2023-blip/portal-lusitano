@@ -144,7 +144,9 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
       <Icon className={`w-5 h-5 ${textColor} flex-shrink-0 mt-0.5`} />
       <div className="flex-1 min-w-0">
         <p className={`font-semibold ${textColor}`}>{toast.title}</p>
-        {toast.message && <p className="text-sm text-gray-300 mt-1">{toast.message}</p>}
+        {toast.message && (
+          <p className="text-sm text-[var(--foreground-secondary)] mt-1">{toast.message}</p>
+        )}
         {toast.action && (
           <button
             onClick={toast.action.onClick}
@@ -154,7 +156,10 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
           </button>
         )}
       </div>
-      <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
+      <button
+        onClick={onClose}
+        className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
+      >
         <X className="w-4 h-4" />
       </button>
     </div>

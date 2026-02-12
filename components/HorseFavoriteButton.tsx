@@ -51,7 +51,7 @@ export default function HorseFavoriteButton({
         ${
           isLiked
             ? "bg-red-500/20 text-red-500 hover:bg-red-500/30"
-            : "bg-black/50 text-white/70 hover:text-white hover:bg-black/70"
+            : "bg-black/50 text-[var(--foreground)]/70 hover:text-[var(--foreground)] hover:bg-black/70"
         }
         backdrop-blur-sm
         ${className}

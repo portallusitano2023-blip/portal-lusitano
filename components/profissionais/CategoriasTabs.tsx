@@ -13,7 +13,7 @@ export function CategoriasTabs({ categoriaAtiva, onCategoriaChange }: Categorias
         <button
           key={cat.id}
           onClick={() => onCategoriaChange(cat.id)}
-          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs whitespace-nowrap transition-colors ${categoriaAtiva === cat.id ? "bg-[#C5A059] text-black font-medium" : "bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800"}`}
+          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs whitespace-nowrap transition-colors ${categoriaAtiva === cat.id ? "bg-[var(--gold)] text-black font-medium" : "bg-[var(--background-secondary)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)]"}`}
         >
           <cat.icon size={14} />
           {cat.label}

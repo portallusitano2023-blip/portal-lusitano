@@ -185,7 +185,10 @@ export default function EventosPage() {
       exposicao: "bg-purple-500/20 text-purple-400 border-purple-500/30",
       workshop: "bg-pink-500/20 text-pink-400 border-pink-500/30",
     };
-    return colors[tipo] || "bg-zinc-500/20 text-zinc-400 border-zinc-500/30";
+    return (
+      colors[tipo] ||
+      "bg-[var(--foreground-muted)]/20 text-[var(--foreground-muted)] border-[var(--foreground-muted)]/30"
+    );
   }
 
   function getTipoIcon(tipo: string) {
@@ -461,7 +464,7 @@ export default function EventosPage() {
               <div className="flex flex-col gap-3">
                 <Link
                   href={`/eventos/${selectedEvento.slug}`}
-                  className="flex items-center justify-center gap-2 w-full bg-[var(--gold)] text-black py-3 font-bold uppercase tracking-wider hover:bg-white transition-colors"
+                  className="flex items-center justify-center gap-2 w-full bg-[var(--gold)] text-black py-3 font-bold uppercase tracking-wider hover:bg-[var(--gold-hover)] transition-colors"
                 >
                   {t.eventos.view_full_page}
                 </Link>
@@ -562,7 +565,7 @@ function EventoCard({
       exposicao: "bg-purple-500/20 text-purple-400",
       workshop: "bg-pink-500/20 text-pink-400",
     };
-    return colors[tipo] || "bg-zinc-500/20 text-zinc-400";
+    return colors[tipo] || "bg-[var(--foreground-muted)]/20 text-[var(--foreground-muted)]";
   }
 
   function getConfirmacaoIcon(confirmado?: string) {
