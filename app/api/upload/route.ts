@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { verifySession } from "@/lib/auth";
 
 // Cliente Supabase com service role para upload
 const supabaseAdmin = createClient(
@@ -12,15 +13,16 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 export async function POST(request: NextRequest) {
   try {
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
     const formData = await request.formData();
     const file = formData.get("file") as File;
-    const folder = formData.get("folder") as string || "uploads";
+    const folder = (formData.get("folder") as string) || "uploads";
 
     if (!file) {
-      return NextResponse.json(
-        { error: "Ficheiro nao fornecido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Ficheiro nao fornecido" }, { status: 400 });
     }
 
     // Validar tipo
@@ -49,25 +51,18 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Upload para Supabase Storage
-    const { data, error } = await supabaseAdmin.storage
-      .from("images")
-      .upload(fileName, buffer, {
-        contentType: file.type,
-        upsert: false,
-      });
+    const { data, error } = await supabaseAdmin.storage.from("images").upload(fileName, buffer, {
+      contentType: file.type,
+      upsert: false,
+    });
 
     if (error) {
       console.error("Erro no upload:", error);
-      return NextResponse.json(
-        { error: "Erro ao fazer upload da imagem" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Erro ao fazer upload da imagem" }, { status: 500 });
     }
 
     // Obter URL publica
-    const { data: urlData } = supabaseAdmin.storage
-      .from("images")
-      .getPublicUrl(data.path);
+    const { data: urlData } = supabaseAdmin.storage.from("images").getPublicUrl(data.path);
 
     return NextResponse.json({
       success: true,
@@ -76,44 +71,34 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
 
 // DELETE - Remover imagem
 export async function DELETE(request: NextRequest) {
   try {
+    const email = await verifySession();
+    if (!email) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
     const { searchParams } = new URL(request.url);
     const path = searchParams.get("path");
 
     if (!path) {
-      return NextResponse.json(
-        { error: "Path da imagem nao fornecido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Path da imagem nao fornecido" }, { status: 400 });
     }
 
-    const { error } = await supabaseAdmin.storage
-      .from("images")
-      .remove([path]);
+    const { error } = await supabaseAdmin.storage.from("images").remove([path]);
 
     if (error) {
       console.error("Erro ao remover:", error);
-      return NextResponse.json(
-        { error: "Erro ao remover imagem" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Erro ao remover imagem" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

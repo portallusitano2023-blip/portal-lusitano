@@ -14,7 +14,7 @@ export default function FormNavigation({ step, onPrev, onNext }: FormNavigationP
       {step > 1 ? (
         <button
           onClick={onPrev}
-          className="px-6 py-3 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors touch-manipulation"
+          className="px-6 py-3 bg-[var(--background-card)] text-[var(--foreground)] rounded-lg hover:bg-[var(--surface-hover)] transition-colors touch-manipulation"
         >
           Anterior
         </button>
@@ -25,7 +25,7 @@ export default function FormNavigation({ step, onPrev, onNext }: FormNavigationP
       {step < TOTAL_STEPS && (
         <button
           onClick={onNext}
-          className="px-6 py-3 bg-[#C5A059] text-black font-medium rounded-lg hover:bg-[#D4AF6A] transition-colors touch-manipulation"
+          className="px-6 py-3 bg-[var(--gold)] text-black font-medium rounded-lg hover:bg-[var(--gold-hover)] transition-colors touch-manipulation"
         >
           Continuar
         </button>

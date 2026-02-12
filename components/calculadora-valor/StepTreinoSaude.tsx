@@ -107,19 +107,19 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
   return (
     <section className="space-y-6">
       <div className="text-center mb-8">
-        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs font-medium rounded-full mb-3">
+        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--gold)]/10 text-[var(--gold)] text-xs font-medium rounded-full mb-3">
           <Target size={12} />
           {t.calculadora.step4_badge}
         </span>
         <h2 className="text-2xl sm:text-3xl font-serif">{t.calculadora.step4_title}</h2>
-        <p className="text-zinc-500 text-sm mt-2">{t.calculadora.step4_desc}</p>
+        <p className="text-[var(--foreground-muted)] text-sm mt-2">{t.calculadora.step4_desc}</p>
       </div>
 
       <div className="space-y-6">
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_training}{" "}
-            <span className="text-zinc-600">{t.calculadora.label_fei_scale}</span>
+            <span className="text-[var(--foreground-muted)]">{t.calculadora.label_fei_scale}</span>
           </label>
           <div className="grid grid-cols-2 gap-2">
             {trainingOptions.map((opt) => (
@@ -128,32 +128,32 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                 onClick={() => update("treino", opt.value as FormData["treino"])}
                 className={`py-3 px-4 rounded-lg border text-left transition-all ${
                   form.treino === opt.value
-                    ? "border-[#C5A059] bg-[#C5A059]/10"
-                    : "border-zinc-800 hover:border-zinc-700"
+                    ? "border-[var(--gold)] bg-[var(--gold)]/10"
+                    : "border-[var(--border)] hover:border-[var(--border)]"
                 }`}
               >
                 <div className="flex justify-between items-start">
                   <span
-                    className={`text-sm font-medium ${form.treino === opt.value ? "text-[#C5A059]" : "text-zinc-300"}`}
+                    className={`text-sm font-medium ${form.treino === opt.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
                   >
                     {opt.label}
                   </span>
-                  <span className="text-xs text-zinc-600">{opt.price}</span>
+                  <span className="text-xs text-[var(--foreground-muted)]">{opt.price}</span>
                 </div>
-                <span className="text-xs text-zinc-500">{opt.desc}</span>
+                <span className="text-xs text-[var(--foreground-muted)]">{opt.desc}</span>
               </button>
             ))}
           </div>
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_discipline}
           </label>
           <select
             value={form.disciplina}
             onChange={(e) => update("disciplina", e.target.value)}
-            className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-3 px-4 text-zinc-300 focus:border-[#C5A059] outline-none transition-colors"
+            className="w-full bg-[var(--background-secondary)] border border-[var(--border)] rounded-lg py-3 px-4 text-[var(--foreground-secondary)] focus:border-[var(--gold)] outline-none transition-colors"
           >
             {DISCIPLINAS.map((d) => (
               <option key={d} value={d}>
@@ -164,7 +164,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_competition_history}
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -174,8 +174,8 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                 onClick={() => update("competicoes", opt.value as FormData["competicoes"])}
                 className={`py-3 px-4 rounded-lg border text-sm font-medium transition-all flex items-center gap-2 ${
                   form.competicoes === opt.value
-                    ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                    : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                    ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                    : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
                 } ${opt.value === "campeonato_mundo" ? "col-span-2" : ""}`}
               >
                 {opt.icon && <opt.icon size={16} />}
@@ -185,8 +185,8 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-zinc-900">
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+        <div className="pt-4 border-t border-[var(--background-secondary)]">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_health}
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -196,16 +196,16 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                 onClick={() => update("saude", opt.value as FormData["saude"])}
                 className={`py-3 px-4 rounded-lg border text-left transition-all ${
                   form.saude === opt.value
-                    ? "border-[#C5A059] bg-[#C5A059]/10"
-                    : "border-zinc-800 hover:border-zinc-700"
+                    ? "border-[var(--gold)] bg-[var(--gold)]/10"
+                    : "border-[var(--border)] hover:border-[var(--border)]"
                 }`}
               >
                 <span
-                  className={`block text-sm font-medium ${form.saude === opt.value ? "text-[#C5A059]" : "text-zinc-300"}`}
+                  className={`block text-sm font-medium ${form.saude === opt.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
                 >
                   {opt.label}
                 </span>
-                <span className="text-xs text-zinc-500">{opt.desc}</span>
+                <span className="text-xs text-[var(--foreground-muted)]">{opt.desc}</span>
               </button>
             ))}
           </div>
@@ -215,8 +215,8 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
               onClick={() => update("raioX", !form.raioX)}
               className={`py-3 px-4 rounded-lg border text-sm transition-all flex items-center justify-center gap-2 ${
                 form.raioX
-                  ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                  : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                  ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                  : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
               }`}
             >
               {form.raioX && <Check size={16} />}
@@ -226,8 +226,8 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
               onClick={() => update("exameVeterinario", !form.exameVeterinario)}
               className={`py-3 px-4 rounded-lg border text-sm transition-all flex items-center justify-center gap-2 ${
                 form.exameVeterinario
-                  ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                  : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                  ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                  : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
               }`}
             >
               {form.exameVeterinario && <Check size={16} />}

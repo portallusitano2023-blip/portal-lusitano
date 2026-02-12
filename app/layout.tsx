@@ -13,6 +13,7 @@ import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import Analytics from "@/components/Analytics";
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -171,6 +172,7 @@ export default function RootLayout({
             <WhatsAppButton />
           </ErrorBoundary>
           <ServiceWorkerRegistration />
+          <Analytics />
         </Providers>
       </body>
     </html>

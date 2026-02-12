@@ -27,7 +27,7 @@ export default function StepNavigation({
       {step > 1 && (
         <button
           onClick={onPrevious}
-          className="flex-1 py-4 rounded-xl border border-zinc-800 text-zinc-400 font-medium hover:border-zinc-700 hover:text-white transition-all flex items-center justify-center gap-2"
+          className="flex-1 py-4 rounded-xl border border-[var(--border)] text-[var(--foreground-secondary)] font-medium hover:border-[var(--border)] hover:text-[var(--foreground)] transition-all flex items-center justify-center gap-2"
         >
           <ChevronLeft size={18} />
           {t.calculadora.btn_previous}
@@ -37,7 +37,7 @@ export default function StepNavigation({
       {step < totalSteps ? (
         <button
           onClick={onNext}
-          className="flex-1 py-4 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all flex items-center justify-center gap-2"
+          className="flex-1 py-4 rounded-xl bg-gradient-to-r from-[var(--gold)] to-[#B8956F] text-black font-semibold hover:from-[#D4AF6A] hover:to-[var(--gold)] transition-all flex items-center justify-center gap-2"
         >
           {t.calculadora.btn_continue}
           <ChevronRight size={18} />
@@ -46,7 +46,7 @@ export default function StepNavigation({
         <button
           onClick={onCalculate}
           disabled={isCalculating}
-          className="flex-1 py-4 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-bold hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+          className="flex-1 py-4 rounded-xl bg-gradient-to-r from-[var(--gold)] to-[#B8956F] text-black font-bold hover:from-[#D4AF6A] hover:to-[var(--gold)] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {isCalculating ? (
             <>

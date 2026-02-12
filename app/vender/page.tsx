@@ -4,12 +4,14 @@ import Navbar from "@/components/Navbar";
 
 // Componente de Upload Simulado (Visual de Engenharia)
 const UploadZone = ({ label, icon }: { label: string; icon: string }) => (
-  <div className="border border-dashed border-zinc-800 bg-zinc-900/50 p-8 text-center hover:border-[#C5A059] hover:bg-zinc-900 transition-all cursor-pointer group">
-    <div className="text-2xl mb-3 text-zinc-600 group-hover:text-[#C5A059] transition-colors">
+  <div className="border border-dashed border-[var(--border)] bg-[var(--background-secondary)]/50 p-8 text-center hover:border-[var(--gold)] hover:bg-[var(--background-secondary)] transition-all cursor-pointer group">
+    <div className="text-2xl mb-3 text-[var(--foreground-muted)] group-hover:text-[var(--gold)] transition-colors">
       {icon}
     </div>
-    <p className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1">{label}</p>
-    <p className="text-[9px] text-zinc-600">Arraste o ficheiro PDF ou JPG</p>
+    <p className="text-[10px] uppercase tracking-widest text-[var(--foreground-secondary)] font-bold mb-1">
+      {label}
+    </p>
+    <p className="text-[9px] text-[var(--foreground-muted)]">Arraste o ficheiro PDF ou JPG</p>
   </div>
 );
 
@@ -27,19 +29,19 @@ export default function VenderPage() {
   return (
     <>
       <Navbar dev={true} />
-      <main className="min-h-screen bg-black text-white pt-32 pb-20 px-6">
+      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-32 pb-20 px-6">
         {/* HEADER: A SEGURANÇA PRIMEIRO */}
         <header className="max-w-4xl mx-auto mb-12 text-center">
-          <div className="inline-flex items-center gap-2 border border-zinc-800 px-4 py-2 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 border border-[var(--border)] px-4 py-2 rounded-full mb-6">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-[9px] uppercase tracking-widest text-zinc-400">
+            <span className="text-[9px] uppercase tracking-widest text-[var(--foreground-secondary)]">
               Ambiente Seguro • SSL Encriptado
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-serif italic mb-6">
-            Protocolo de <span className="text-[#C5A059]">Certificação</span>
+            Protocolo de <span className="text-[var(--gold)]">Certificação</span>
           </h1>
-          <p className="text-zinc-500 font-light text-sm max-w-xl mx-auto">
+          <p className="text-[var(--foreground-muted)] font-light text-sm max-w-xl mx-auto">
             Para garantir a integridade do Portal Lusitano, exigimos dados completos de cada
             exemplar. O seu cavalo será submetido a uma <strong>auditoria técnica</strong> antes de
             ficar online.
@@ -50,16 +52,19 @@ export default function VenderPage() {
         <div className="max-w-5xl mx-auto mb-16">
           <div className="flex justify-between relative">
             {/* Linha de fundo */}
-            <div className="absolute top-1/2 left-0 w-full h-px bg-zinc-900 -z-10"></div>
+            <div className="absolute top-1/2 left-0 w-full h-px bg-[var(--background-secondary)] -z-10"></div>
 
             {steps.map((step) => (
-              <div key={step.id} className="flex flex-col items-center gap-4 bg-black px-4">
+              <div
+                key={step.id}
+                className="flex flex-col items-center gap-4 bg-[var(--background)] px-4"
+              >
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold border transition-all duration-500
                     ${
                       currentStep >= step.id
-                        ? "border-[#C5A059] text-black bg-[#C5A059]"
-                        : "border-zinc-800 text-zinc-600 bg-black"
+                        ? "border-[var(--gold)] text-black bg-[var(--gold)]"
+                        : "border-[var(--border)] text-[var(--foreground-muted)] bg-[var(--background)]"
                     }
                   `}
                 >
@@ -67,7 +72,7 @@ export default function VenderPage() {
                 </div>
                 <div className="text-center hidden md:block">
                   <p
-                    className={`text-[9px] uppercase tracking-widest font-bold ${currentStep >= step.id ? "text-white" : "text-zinc-700"}`}
+                    className={`text-[9px] uppercase tracking-widest font-bold ${currentStep >= step.id ? "text-[var(--foreground)]" : "text-[var(--foreground-secondary)]"}`}
                   >
                     {step.title}
                   </p>
@@ -78,59 +83,61 @@ export default function VenderPage() {
         </div>
 
         {/* CONTEÚDO DOS PASSOS */}
-        <div className="max-w-4xl mx-auto bg-zinc-950 border border-zinc-900 p-8 md:p-16 relative">
+        <div className="max-w-4xl mx-auto bg-[var(--background-secondary)] border border-[var(--border)] p-8 md:p-16 relative">
           {/* STEP 1: GENÉTICA (RIGOROSO) */}
           {currentStep === 1 && (
             <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="flex justify-between items-end border-b border-zinc-800 pb-4">
-                <h3 className="text-xl font-serif italic text-white">Dados do Stud-Book (APSL)</h3>
-                <span className="text-xs text-zinc-500">Passo 1/4</span>
+              <div className="flex justify-between items-end border-b border-[var(--border)] pb-4">
+                <h3 className="text-xl font-serif italic text-[var(--foreground)]">
+                  Dados do Stud-Book (APSL)
+                </h3>
+                <span className="text-xs text-[var(--foreground-muted)]">Passo 1/4</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="text-[9px] uppercase tracking-widest text-zinc-500">
+                  <label className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)]">
                     Nome Completo (Livro Azul)
                   </label>
                   <input
                     type="text"
-                    className="w-full bg-black border border-zinc-800 p-4 text-white text-sm focus:border-[#C5A059] outline-none"
+                    className="w-full bg-[var(--background)] border border-[var(--border)] p-4 text-[var(--foreground)] text-sm focus:border-[var(--gold)] outline-none"
                     placeholder="Ex: IMPERADOR II"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[9px] uppercase tracking-widest text-zinc-500">
+                  <label className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)]">
                     Nº UELN (Universal Equine Life Number)
                   </label>
                   <input
                     type="text"
-                    className="w-full bg-black border border-zinc-800 p-4 text-white text-sm focus:border-[#C5A059] outline-none font-mono"
+                    className="w-full bg-[var(--background)] border border-[var(--border)] p-4 text-[var(--foreground)] text-sm focus:border-[var(--gold)] outline-none font-mono"
                     placeholder="724015..."
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[9px] uppercase tracking-widest text-zinc-500">
+                  <label className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)]">
                     Nº do Microchip
                   </label>
                   <input
                     type="text"
-                    className="w-full bg-black border border-zinc-800 p-4 text-white text-sm focus:border-[#C5A059] outline-none font-mono"
+                    className="w-full bg-[var(--background)] border border-[var(--border)] p-4 text-[var(--foreground)] text-sm focus:border-[var(--gold)] outline-none font-mono"
                     placeholder="9811000..."
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[9px] uppercase tracking-widest text-zinc-500">
+                  <label className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)]">
                     Data de Nascimento
                   </label>
                   <input
                     type="date"
-                    className="w-full bg-black border border-zinc-800 p-4 text-white text-sm focus:border-[#C5A059] outline-none text-zinc-400"
+                    className="w-full bg-[var(--background)] border border-[var(--border)] p-4 text-[var(--foreground)] text-sm focus:border-[var(--gold)] outline-none text-[var(--foreground-secondary)]"
                   />
                 </div>
               </div>
 
               <div className="pt-4">
-                <label className="text-[9px] uppercase tracking-widest text-zinc-500 block mb-4">
+                <label className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)] block mb-4">
                   Comprovativo de Propriedade (Obrigatório)
                 </label>
                 <UploadZone label="Carregar Foto do Livro Azul (Página Resenho)" icon="📘" />
@@ -141,9 +148,11 @@ export default function VenderPage() {
           {/* STEP 2: VETERINÁRIA (SEGURANÇA PARA O COMPRADOR) */}
           {currentStep === 2 && (
             <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="flex justify-between items-end border-b border-zinc-800 pb-4">
-                <h3 className="text-xl font-serif italic text-white">Status Clínico</h3>
-                <span className="text-xs text-zinc-500">Passo 2/4</span>
+              <div className="flex justify-between items-end border-b border-[var(--border)] pb-4">
+                <h3 className="text-xl font-serif italic text-[var(--foreground)]">
+                  Status Clínico
+                </h3>
+                <span className="text-xs text-[var(--foreground-muted)]">Passo 2/4</span>
               </div>
 
               <div className="bg-red-950/20 border border-red-900/30 p-6 flex gap-4 items-start">
@@ -156,29 +165,35 @@ export default function VenderPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <p className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">
+                  <p className="text-[10px] uppercase tracking-widest text-[var(--foreground-secondary)] font-bold">
                     Exames Disponíveis
                   </p>
-                  <label className="flex items-center gap-3 p-4 border border-zinc-800 bg-black cursor-pointer hover:border-zinc-600">
+                  <label className="flex items-center gap-3 p-4 border border-[var(--border)] bg-[var(--background)] cursor-pointer hover:border-[var(--border)]">
                     <input type="checkbox" className="accent-[#C5A059]" />
-                    <span className="text-sm text-zinc-300">Raio-X (Set Completo)</span>
+                    <span className="text-sm text-[var(--foreground-secondary)]">
+                      Raio-X (Set Completo)
+                    </span>
                   </label>
-                  <label className="flex items-center gap-3 p-4 border border-zinc-800 bg-black cursor-pointer hover:border-zinc-600">
+                  <label className="flex items-center gap-3 p-4 border border-[var(--border)] bg-[var(--background)] cursor-pointer hover:border-[var(--border)]">
                     <input type="checkbox" className="accent-[#C5A059]" />
-                    <span className="text-sm text-zinc-300">Análises Piroplasmose</span>
+                    <span className="text-sm text-[var(--foreground-secondary)]">
+                      Análises Piroplasmose
+                    </span>
                   </label>
-                  <label className="flex items-center gap-3 p-4 border border-zinc-800 bg-black cursor-pointer hover:border-zinc-600">
+                  <label className="flex items-center gap-3 p-4 border border-[var(--border)] bg-[var(--background)] cursor-pointer hover:border-[var(--border)]">
                     <input type="checkbox" className="accent-[#C5A059]" />
-                    <span className="text-sm text-zinc-300">Exame Clínico de Compra</span>
+                    <span className="text-sm text-[var(--foreground-secondary)]">
+                      Exame Clínico de Compra
+                    </span>
                   </label>
                 </div>
 
                 <div className="space-y-4">
-                  <p className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">
+                  <p className="text-[10px] uppercase tracking-widest text-[var(--foreground-secondary)] font-bold">
                     Vícios e Comportamento
                   </p>
                   <textarea
-                    className="w-full h-40 bg-black border border-zinc-800 p-4 text-white text-sm focus:border-[#C5A059] outline-none"
+                    className="w-full h-40 bg-[var(--background)] border border-[var(--border)] p-4 text-[var(--foreground)] text-sm focus:border-[var(--gold)] outline-none"
                     placeholder="Descreva honestamente o temperamento (box, transporte, ferrar) e se existe algum vício de estábulo..."
                   ></textarea>
                 </div>
@@ -191,12 +206,14 @@ export default function VenderPage() {
           {/* STEP 3: MEDIA (QUALIDADE VISUAL) */}
           {currentStep === 3 && (
             <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="flex justify-between items-end border-b border-zinc-800 pb-4">
-                <h3 className="text-xl font-serif italic text-white">Dossier Visual</h3>
-                <span className="text-xs text-zinc-500">Passo 3/4</span>
+              <div className="flex justify-between items-end border-b border-[var(--border)] pb-4">
+                <h3 className="text-xl font-serif italic text-[var(--foreground)]">
+                  Dossier Visual
+                </h3>
+                <span className="text-xs text-[var(--foreground-muted)]">Passo 3/4</span>
               </div>
 
-              <p className="text-zinc-500 text-sm italic">
+              <p className="text-[var(--foreground-muted)] text-sm italic">
                 Não aceitamos fotos de telemóvel de baixa qualidade. O seu cavalo será avaliado pelo
                 que mostra aqui.
               </p>
@@ -209,12 +226,12 @@ export default function VenderPage() {
               </div>
 
               <div className="space-y-2 pt-6">
-                <label className="text-[9px] uppercase tracking-widest text-zinc-500">
+                <label className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)]">
                   Link de Vídeo (Obrigatório: Passo, Trote, Galope)
                 </label>
                 <input
                   type="url"
-                  className="w-full bg-black border border-zinc-800 p-4 text-white text-sm focus:border-[#C5A059] outline-none font-mono"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] p-4 text-[var(--foreground)] text-sm focus:border-[var(--gold)] outline-none font-mono"
                   placeholder="https://youtube.com/..."
                 />
               </div>
@@ -224,19 +241,21 @@ export default function VenderPage() {
           {/* STEP 4: REVISÃO (O CONTRATO) */}
           {currentStep === 4 && (
             <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="flex justify-between items-end border-b border-zinc-800 pb-4">
-                <h3 className="text-xl font-serif italic text-white">Submissão para Auditoria</h3>
-                <span className="text-xs text-zinc-500">Passo Final</span>
+              <div className="flex justify-between items-end border-b border-[var(--border)] pb-4">
+                <h3 className="text-xl font-serif italic text-[var(--foreground)]">
+                  Submissão para Auditoria
+                </h3>
+                <span className="text-xs text-[var(--foreground-muted)]">Passo Final</span>
               </div>
 
-              <div className="bg-zinc-900 p-8 text-center space-y-6">
-                <div className="w-16 h-16 bg-[#C5A059]/10 text-[#C5A059] rounded-full flex items-center justify-center text-2xl mx-auto border border-[#C5A059]/30">
+              <div className="bg-[var(--background-secondary)] p-8 text-center space-y-6">
+                <div className="w-16 h-16 bg-[var(--gold)]/10 text-[var(--gold)] rounded-full flex items-center justify-center text-2xl mx-auto border border-[var(--gold)]/30">
                   🔒
                 </div>
-                <h4 className="text-white text-lg font-serif">
+                <h4 className="text-[var(--foreground)] text-lg font-serif">
                   O cavalo entrará em &ldquo;Quarentena Digital&rdquo;
                 </h4>
-                <p className="text-zinc-400 text-sm leading-relaxed max-w-lg mx-auto">
+                <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed max-w-lg mx-auto">
                   Após o pagamento da taxa de listagem (75€), a equipa do Portal Lusitano irá
                   verificar o UELN e o Chip junto da base de dados oficial.
                   <br />
@@ -245,9 +264,9 @@ export default function VenderPage() {
                 </p>
               </div>
 
-              <div className="flex items-start gap-4 p-4 border border-zinc-800">
+              <div className="flex items-start gap-4 p-4 border border-[var(--border)]">
                 <input type="checkbox" className="mt-1 accent-[#C5A059]" />
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-[var(--foreground-muted)]">
                   Declaro sob compromisso de honra que sou o legítimo proprietário deste animal e
                   autorizo o Portal Lusitano a verificar os dados clínicos junto do médico
                   veterinário indicado.
@@ -257,10 +276,10 @@ export default function VenderPage() {
           )}
 
           {/* BOTÕES DE NAVEGAÇÃO */}
-          <div className="flex justify-between mt-12 pt-8 border-t border-zinc-900">
+          <div className="flex justify-between mt-12 pt-8 border-t border-[var(--border)]">
             <button
               onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
-              className={`text-xs uppercase tracking-widest text-zinc-500 hover:text-white transition-colors ${currentStep === 1 ? "invisible" : ""}`}
+              className={`text-xs uppercase tracking-widest text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors ${currentStep === 1 ? "invisible" : ""}`}
             >
               ← Voltar
             </button>
@@ -268,12 +287,12 @@ export default function VenderPage() {
             {currentStep < 4 ? (
               <button
                 onClick={() => setCurrentStep((prev) => Math.min(4, prev + 1))}
-                className="bg-white text-black px-8 py-3 text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-[#C5A059] transition-colors"
+                className="bg-white text-black px-8 py-3 text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-[var(--gold)] transition-colors"
               >
                 Próximo Passo
               </button>
             ) : (
-              <button className="bg-[#C5A059] text-black px-10 py-4 text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-white hover:text-black transition-all shadow-[0_0_20px_rgba(197,160,89,0.3)]">
+              <button className="bg-[var(--gold)] text-black px-10 py-4 text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-white hover:text-black transition-all shadow-[0_0_20px_rgba(197,160,89,0.3)]">
                 Pagar e Submeter para Análise
               </button>
             )}

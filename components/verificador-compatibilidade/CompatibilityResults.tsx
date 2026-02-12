@@ -12,7 +12,9 @@ import {
   TrendingUp,
   Sparkles,
 } from "lucide-react";
-import AnimatedCounter from "@/components/tools/AnimatedCounter";
+import AnimatedRing from "@/components/tools/AnimatedRing";
+import Confetti from "@/components/tools/Confetti";
+import BlurredProSection from "@/components/tools/BlurredProSection";
 import ResultActions from "@/components/tools/ResultActions";
 import { useLanguage } from "@/context/LanguageContext";
 import type { ResultadoCompatibilidade } from "@/components/verificador-compatibilidade/types";
@@ -24,6 +26,7 @@ interface CompatibilityResultsProps {
   onExportPDF: () => Promise<void>;
   onShare: () => Promise<void>;
   isExporting: boolean;
+  isSubscribed: boolean;
 }
 
 export default function CompatibilityResults({
@@ -33,13 +36,19 @@ export default function CompatibilityResults({
   onExportPDF,
   onShare,
   isExporting,
+  isSubscribed,
 }: CompatibilityResultsProps) {
   const { t } = useLanguage();
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+      {/* Confetti celebration */}
+      <div className="relative">
+        <Confetti trigger={true} particleCount={50} duration={2800} />
+      </div>
+
       {/* Score Principal */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-800 p-8 border border-zinc-800 mb-6">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--background-secondary)] via-[var(--background-secondary)] to-[var(--background-card)] p-8 border border-[var(--border)] mb-6">
         <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/5 rounded-full blur-3xl" />
 
@@ -59,16 +68,17 @@ export default function CompatibilityResults({
             </span>
           </div>
 
-          <div className="flex items-baseline justify-center gap-2 mb-2">
-            <AnimatedCounter
+          {/* AnimatedRing replaces AnimatedCounter */}
+          <div className="flex justify-center my-4">
+            <AnimatedRing
               value={resultado.score}
-              duration={2000}
-              className="text-6xl sm:text-7xl font-light text-white"
+              label={t.verificador.compatibility}
+              size={200}
+              strokeWidth={10}
             />
-            <span className="text-2xl text-zinc-500">/ 100</span>
           </div>
 
-          <p className="text-zinc-400 text-sm">
+          <p className="text-[var(--foreground-muted)] text-sm">
             {garanhaoNome || t.verificador.tab_stallion} × {eguaNome || t.verificador.tab_mare}
           </p>
         </div>
@@ -86,8 +96,8 @@ export default function CompatibilityResults({
 
       {/* Metricas Geneticas */}
       <div className="grid sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-zinc-900/50 rounded-xl p-5 border border-zinc-800">
-          <div className="flex items-center gap-2 text-zinc-400 text-sm mb-2">
+        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)]">
+          <div className="flex items-center gap-2 text-[var(--foreground-muted)] text-sm mb-2">
             <Dna size={16} className="text-purple-400" />
             {t.verificador.coi_predicted}
           </div>
@@ -96,26 +106,40 @@ export default function CompatibilityResults({
           >
             {resultado.coi.toFixed(1)}%
           </div>
-          <div className="text-xs text-zinc-500 mt-1">
+          <div className="text-xs text-[var(--foreground-muted)] mt-1">
             {resultado.coi <= 3
               ? t.verificador.coi_excellent
               : resultado.coi <= 6.25
                 ? t.verificador.coi_acceptable
                 : t.verificador.coi_high}
           </div>
+          <div className="mt-3 h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-purple-500 to-purple-400"
+              style={{ width: `${Math.min((resultado.coi / 12.5) * 100, 100)}%` }}
+            />
+          </div>
         </div>
 
-        <div className="bg-zinc-900/50 rounded-xl p-5 border border-zinc-800">
-          <div className="flex items-center gap-2 text-zinc-400 text-sm mb-2">
+        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)]">
+          <div className="flex items-center gap-2 text-[var(--foreground-muted)] text-sm mb-2">
             <Activity size={16} className="text-blue-400" />
             {t.verificador.blup_predicted}
           </div>
           <div className="text-3xl font-light text-blue-400">{resultado.blup}</div>
-          <div className="text-xs text-zinc-500 mt-1">{t.verificador.blup_breed_avg}</div>
+          <div className="text-xs text-[var(--foreground-muted)] mt-1">
+            {t.verificador.blup_breed_avg}
+          </div>
+          <div className="mt-3 h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-blue-500 to-blue-400"
+              style={{ width: `${Math.min((resultado.blup / 150) * 100, 100)}%` }}
+            />
+          </div>
         </div>
 
-        <div className="bg-zinc-900/50 rounded-xl p-5 border border-zinc-800">
-          <div className="flex items-center gap-2 text-zinc-400 text-sm mb-2">
+        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)]">
+          <div className="flex items-center gap-2 text-[var(--foreground-muted)] text-sm mb-2">
             <Baby size={16} className="text-pink-400" />
             {t.verificador.estimated_height}
           </div>
@@ -123,7 +147,15 @@ export default function CompatibilityResults({
             {resultado.altura.min}-{resultado.altura.max}
             <span className="text-lg">cm</span>
           </div>
-          <div className="text-xs text-zinc-500 mt-1">{t.verificador.of_adult_foal}</div>
+          <div className="text-xs text-[var(--foreground-muted)] mt-1">
+            {t.verificador.of_adult_foal}
+          </div>
+          <div className="mt-3 h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-pink-500 to-pink-400"
+              style={{ width: `${((resultado.altura.max - 140) / 30) * 100}%` }}
+            />
+          </div>
         </div>
       </div>
 
@@ -139,7 +171,10 @@ export default function CompatibilityResults({
               </h3>
               <ul className="space-y-2">
                 {resultado.pontosForteseFracos.fortes.map((ponto, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-zinc-300">
+                  <li
+                    key={i}
+                    className="flex items-start gap-2 text-sm text-[var(--foreground-secondary)]"
+                  >
                     <CheckCircle size={14} className="text-emerald-400 mt-0.5 flex-shrink-0" />
                     {ponto}
                   </li>
@@ -155,7 +190,10 @@ export default function CompatibilityResults({
               </h3>
               <ul className="space-y-2">
                 {resultado.pontosForteseFracos.fracos.map((ponto, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-zinc-300">
+                  <li
+                    key={i}
+                    className="flex items-start gap-2 text-sm text-[var(--foreground-secondary)]"
+                  >
                     <Info size={14} className="text-orange-400 mt-0.5 flex-shrink-0" />
                     {ponto}
                   </li>
@@ -167,25 +205,27 @@ export default function CompatibilityResults({
       )}
 
       {/* Previsao de Pelagem */}
-      <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-800 mb-6">
+      <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
         <h3 className="font-medium mb-4 flex items-center gap-2">
           <Palette className="text-purple-400" size={18} />
           {t.verificador.coat_prediction}
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {resultado.pelagens.map((p, i) => (
-            <div key={i} className="bg-zinc-800/50 rounded-lg p-4">
+            <div key={i} className="bg-[var(--background-card)]/50 rounded-lg p-4">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-zinc-300 font-medium">{p.cor}</span>
+                <span className="text-[var(--foreground-secondary)] font-medium">{p.cor}</span>
                 <span className="text-purple-400 font-bold">{p.prob}%</span>
               </div>
-              <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
+              <div className="h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
                   style={{ width: `${p.prob}%` }}
                 />
               </div>
-              <span className="text-xs text-zinc-500 mt-1 block">{p.genetica}</span>
+              <span className="text-xs text-[var(--foreground-muted)] mt-1 block">
+                {p.genetica}
+              </span>
             </div>
           ))}
         </div>
@@ -219,84 +259,95 @@ export default function CompatibilityResults({
                       : "text-yellow-400"
                 }
               />
-              <span className="text-sm text-zinc-300">{r.texto}</span>
+              <span className="text-sm text-[var(--foreground-secondary)]">{r.texto}</span>
             </div>
           ))}
         </div>
       )}
 
-      {/* Factores Detalhados */}
-      <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-800 mb-6">
-        <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-4">
-          {t.verificador.detailed_analysis}
-        </h3>
-        <div className="space-y-4">
-          {resultado.factores.map((f, i) => (
-            <div key={i}>
-              <div className="flex items-center justify-between mb-1">
-                <div>
-                  <span className="text-sm text-zinc-300">{f.nome}</span>
-                  <span className="text-xs text-zinc-600 ml-2 hidden sm:inline">{f.descricao}</span>
-                </div>
-                <span
-                  className={`text-sm font-bold ${
-                    f.tipo === "excelente"
-                      ? "text-emerald-400"
-                      : f.tipo === "bom"
-                        ? "text-blue-400"
-                        : f.tipo === "aviso"
-                          ? "text-amber-400"
-                          : f.tipo === "risco"
-                            ? "text-red-400"
-                            : "text-zinc-400"
-                  }`}
-                >
-                  {f.score}/{f.max}
-                </span>
-              </div>
-              <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-                <div
-                  className={`h-full transition-all duration-500 ${
-                    f.tipo === "excelente"
-                      ? "bg-emerald-500"
-                      : f.tipo === "bom"
-                        ? "bg-blue-500"
-                        : f.tipo === "aviso"
-                          ? "bg-amber-500"
-                          : f.tipo === "risco"
-                            ? "bg-red-500"
-                            : "bg-zinc-500"
-                  }`}
-                  style={{ width: `${(f.score / f.max) * 100}%` }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Recomendacoes */}
-      {resultado.recomendacoes.length > 0 && (
-        <div className="bg-pink-500/5 rounded-xl p-6 border border-pink-500/20 mb-6">
-          <h3 className="text-sm font-medium text-pink-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Sparkles size={16} />
-            {t.verificador.recommendations}
+      {/* Factores Detalhados - PRO only */}
+      <BlurredProSection isSubscribed={isSubscribed} title={t.verificador.detailed_analysis}>
+        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
+          <h3 className="text-sm font-medium text-[var(--foreground-muted)] uppercase tracking-wider mb-4">
+            {t.verificador.detailed_analysis}
           </h3>
-          <ul className="space-y-3">
-            {resultado.recomendacoes.map((rec, i) => (
-              <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
-                <ChevronRight size={16} className="text-pink-400 flex-shrink-0 mt-0.5" />
-                {rec}
-              </li>
+          <div className="space-y-4">
+            {resultado.factores.map((f, i) => (
+              <div key={i}>
+                <div className="flex items-center justify-between mb-1">
+                  <div>
+                    <span className="text-sm text-[var(--foreground-secondary)]">{f.nome}</span>
+                    <span className="text-xs text-[var(--foreground-muted)] ml-2 hidden sm:inline">
+                      {f.descricao}
+                    </span>
+                  </div>
+                  <span
+                    className={`text-sm font-bold ${
+                      f.tipo === "excelente"
+                        ? "text-emerald-400"
+                        : f.tipo === "bom"
+                          ? "text-blue-400"
+                          : f.tipo === "aviso"
+                            ? "text-amber-400"
+                            : f.tipo === "risco"
+                              ? "text-red-400"
+                              : "text-[var(--foreground-muted)]"
+                    }`}
+                  >
+                    {f.score}/{f.max}
+                  </span>
+                </div>
+                <div className="h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
+                  <div
+                    className={`h-full transition-all duration-500 ${
+                      f.tipo === "excelente"
+                        ? "bg-emerald-500"
+                        : f.tipo === "bom"
+                          ? "bg-blue-500"
+                          : f.tipo === "aviso"
+                            ? "bg-amber-500"
+                            : f.tipo === "risco"
+                              ? "bg-red-500"
+                              : "bg-[var(--foreground-muted)]"
+                    }`}
+                    style={{ width: `${(f.score / f.max) * 100}%` }}
+                  />
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
+      </BlurredProSection>
+
+      {/* Recomendacoes - PRO only */}
+      {resultado.recomendacoes.length > 0 && (
+        <BlurredProSection isSubscribed={isSubscribed} title={t.verificador.recommendations}>
+          <div className="bg-pink-500/5 rounded-xl p-6 border border-pink-500/20 mb-6">
+            <h3 className="text-sm font-medium text-pink-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <Sparkles size={16} />
+              {t.verificador.recommendations}
+            </h3>
+            <ul className="space-y-3">
+              {resultado.recomendacoes.map((rec, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]"
+                >
+                  <ChevronRight size={16} className="text-pink-400 flex-shrink-0 mt-0.5" />
+                  {rec}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </BlurredProSection>
       )}
 
       {/* Disclaimer */}
-      <div className="p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
-        <p className="text-xs text-zinc-500 leading-relaxed">
-          <strong className="text-zinc-400">{t.verificador.disclaimer_title}</strong>{" "}
+      <div className="p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--border)]">
+        <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
+          <strong className="text-[var(--foreground-secondary)]">
+            {t.verificador.disclaimer_title}
+          </strong>{" "}
           {t.verificador.disclaimer_text}
         </p>
       </div>

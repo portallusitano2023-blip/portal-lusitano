@@ -2,6 +2,8 @@
 
 import { Suspense } from "react";
 import { RotateCcw } from "lucide-react";
+import Confetti from "@/components/tools/Confetti";
+import BlurredProSection from "@/components/tools/BlurredProSection";
 import { useLanguage } from "@/context/LanguageContext";
 import { useQuizLogic } from "@/components/analise-perfil/useQuizLogic";
 import IntroSection from "@/components/analise-perfil/IntroSection";
@@ -74,6 +76,11 @@ function AnalisePerfilContent() {
         <div key="result" className="min-h-screen animate-[fadeSlideIn_0.4s_ease-out_forwards]">
           {result && (
             <>
+              {/* Confetti celebration */}
+              <div className="relative">
+                <Confetti trigger={true} particleCount={50} duration={2800} />
+              </div>
+
               <ResultHeader
                 result={result}
                 scorePercentages={scorePercentages}
@@ -94,15 +101,27 @@ function AnalisePerfilContent() {
                 <div className="max-w-5xl mx-auto px-6">
                   {selectedTab === "perfil" && <ProfileTab result={result} />}
                   {selectedTab === "cavalo" && <HorseTab result={result} />}
-                  {selectedTab === "custos" && <CostsTab result={result} />}
+                  {selectedTab === "custos" && (
+                    <BlurredProSection
+                      isSubscribed={isSubscribed}
+                      title={t.analise_perfil.tab_costs}
+                    >
+                      <CostsTab result={result} />
+                    </BlurredProSection>
+                  )}
                   {selectedTab === "cronograma" && <TimelineTab result={result} />}
                   {selectedTab === "analise" && (
-                    <AnalysisTab
-                      result={result}
-                      answerDetails={answerDetails}
-                      scorePercentages={scorePercentages}
-                      confidence={calculateConfidence()}
-                    />
+                    <BlurredProSection
+                      isSubscribed={isSubscribed}
+                      title={t.analise_perfil.tab_analysis}
+                    >
+                      <AnalysisTab
+                        result={result}
+                        answerDetails={answerDetails}
+                        scorePercentages={scorePercentages}
+                        confidence={calculateConfidence()}
+                      />
+                    </BlurredProSection>
                   )}
                   {selectedTab === "proximos" && <NextStepsTab result={result} />}
                 </div>

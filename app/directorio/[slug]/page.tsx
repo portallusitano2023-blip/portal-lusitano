@@ -255,18 +255,23 @@ export default function CoudelariaPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#050505] pt-32 flex items-center justify-center">
-        <div className="animate-pulse text-[#C5A059]">A carregar...</div>
+      <main className="min-h-screen bg-[var(--background)] pt-32 flex items-center justify-center">
+        <div className="animate-pulse text-[var(--gold)]">A carregar...</div>
       </main>
     );
   }
 
   if (!coudelaria) {
     return (
-      <main className="min-h-screen bg-[#050505] pt-32 px-6">
+      <main className="min-h-screen bg-[var(--background)] pt-32 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl font-serif text-white mb-4">Coudelaria não encontrada</h1>
-          <Link href="/directorio" className="text-[#C5A059] hover:text-white transition-colors">
+          <h1 className="text-3xl font-serif text-[var(--foreground)] mb-4">
+            Coudelaria não encontrada
+          </h1>
+          <Link
+            href="/directorio"
+            className="text-[var(--gold)] hover:text-[var(--foreground)] transition-colors"
+          >
             ← Voltar ao diretório
           </Link>
         </div>
@@ -307,7 +312,7 @@ export default function CoudelariaPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505]">
+    <main className="min-h-screen bg-[var(--background)]">
       <DynamicSEO
         title={`${coudelaria.nome} - Coudelaria Lusitano - Portal Lusitano`}
         description={
@@ -327,7 +332,7 @@ export default function CoudelariaPage() {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/60 to-transparent" />
         </div>
 
         {/* Back Button */}
@@ -356,19 +361,21 @@ export default function CoudelariaPage() {
           <div className="max-w-6xl mx-auto">
             <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
               {coudelaria.ano_fundacao && (
-                <span className="text-[#C5A059] text-sm uppercase tracking-widest mb-2 block">
+                <span className="text-[var(--gold)] text-sm uppercase tracking-widest mb-2 block">
                   Fundada em {coudelaria.ano_fundacao}
                 </span>
               )}
-              <h1 className="text-4xl md:text-6xl font-serif text-white mb-4">{coudelaria.nome}</h1>
-              <div className="flex flex-wrap items-center gap-4 text-zinc-300">
+              <h1 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-4">
+                {coudelaria.nome}
+              </h1>
+              <div className="flex flex-wrap items-center gap-4 text-[var(--foreground-secondary)]">
                 <span className="flex items-center gap-2">
-                  <MapPin size={16} className="text-[#C5A059]" />
+                  <MapPin size={16} className="text-[var(--gold)]" />
                   {coudelaria.localizacao}, {coudelaria.regiao}
                 </span>
                 {coudelaria.num_cavalos && (
                   <span className="flex items-center gap-2">
-                    <Users size={16} className="text-[#C5A059]" />
+                    <Users size={16} className="text-[var(--gold)]" />
                     {coudelaria.num_cavalos} cavalos
                   </span>
                 )}
@@ -387,7 +394,9 @@ export default function CoudelariaPage() {
               className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
               style={{ animationDelay: "0.1s" }}
             >
-              <p className="text-xl text-zinc-300 leading-relaxed">{coudelaria.descricao}</p>
+              <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed">
+                {coudelaria.descricao}
+              </p>
             </section>
 
             {/* Especialidades */}
@@ -396,15 +405,15 @@ export default function CoudelariaPage() {
                 className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.2s" }}
               >
-                <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
-                  <Sparkles className="text-[#C5A059]" size={24} />
+                <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 flex items-center gap-3">
+                  <Sparkles className="text-[var(--gold)]" size={24} />
                   Especialidades
                 </h2>
                 <div className="flex flex-wrap gap-3">
                   {coudelaria.especialidades.map((esp, i) => (
                     <span
                       key={i}
-                      className="px-4 py-2 bg-[#C5A059]/10 border border-[#C5A059]/30 text-[#C5A059] text-sm"
+                      className="px-4 py-2 bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-sm"
                     >
                       {esp}
                     </span>
@@ -419,13 +428,13 @@ export default function CoudelariaPage() {
                 className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.3s" }}
               >
-                <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
-                  <Calendar className="text-[#C5A059]" size={24} />
+                <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 flex items-center gap-3">
+                  <Calendar className="text-[var(--gold)]" size={24} />
                   História
                 </h2>
                 <div className="prose prose-invert prose-lg max-w-none">
                   {coudelaria.historia.split("\n\n").map((paragraph, i) => (
-                    <p key={i} className="text-zinc-400 mb-4 leading-relaxed">
+                    <p key={i} className="text-[var(--foreground-secondary)] mb-4 leading-relaxed">
                       {paragraph}
                     </p>
                   ))}
@@ -439,9 +448,9 @@ export default function CoudelariaPage() {
                 className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.4s" }}
               >
-                <h2 className="text-2xl font-serif text-white mb-6">Galeria</h2>
+                <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6">Galeria</h2>
                 <div className="relative">
-                  <div className="aspect-video relative overflow-hidden bg-zinc-900">
+                  <div className="aspect-video relative overflow-hidden bg-[var(--background-secondary)]">
                     <Image
                       src={images[activeImage]}
                       alt={`${coudelaria.nome} - Imagem ${activeImage + 1}`}
@@ -474,7 +483,7 @@ export default function CoudelariaPage() {
                         onClick={() => setActiveImage(i)}
                         className={`flex-shrink-0 w-20 h-14 overflow-hidden border-2 transition-colors relative ${
                           activeImage === i
-                            ? "border-[#C5A059]"
+                            ? "border-[var(--gold)]"
                             : "border-transparent opacity-60 hover:opacity-100"
                         }`}
                       >
@@ -492,18 +501,18 @@ export default function CoudelariaPage() {
                 className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.5s" }}
               >
-                <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
-                  <Trophy className="text-[#C5A059]" size={24} />
+                <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 flex items-center gap-3">
+                  <Trophy className="text-[var(--gold)]" size={24} />
                   Prémios e Reconhecimentos
                 </h2>
                 <div className="space-y-3">
                   {coudelaria.premios.map((premio, i) => (
                     <div
                       key={i}
-                      className="flex items-start gap-3 p-4 bg-zinc-900/50 border border-white/5"
+                      className="flex items-start gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)]"
                     >
-                      <Award className="text-[#C5A059] flex-shrink-0 mt-1" size={20} />
-                      <span className="text-zinc-300">{premio}</span>
+                      <Award className="text-[var(--gold)] flex-shrink-0 mt-1" size={20} />
+                      <span className="text-[var(--foreground-secondary)]">{premio}</span>
                     </div>
                   ))}
                 </div>
@@ -516,8 +525,8 @@ export default function CoudelariaPage() {
                 className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.6s" }}
               >
-                <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
-                  <Star className="text-[#C5A059]" size={24} />
+                <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 flex items-center gap-3">
+                  <Star className="text-[var(--gold)]" size={24} />
                   Cavalos em Destaque
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -526,31 +535,35 @@ export default function CoudelariaPage() {
                       key={i}
                       className={`p-6 border ${
                         cavalo.vendido
-                          ? "bg-zinc-900/30 border-zinc-800 opacity-60"
-                          : "bg-zinc-900/50 border-white/10"
+                          ? "bg-[var(--background-secondary)]/30 border-[var(--border)] opacity-60"
+                          : "bg-[var(--background-secondary)]/50 border-[var(--border)]"
                       }`}
                     >
                       <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-lg font-medium text-white">{cavalo.nome}</h3>
+                        <h3 className="text-lg font-medium text-[var(--foreground)]">
+                          {cavalo.nome}
+                        </h3>
                         {cavalo.vendido && (
                           <span className="text-xs bg-red-500/20 text-red-400 px-2 py-1">
                             VENDIDO
                           </span>
                         )}
                       </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm text-zinc-400 mb-4">
+                      <div className="grid grid-cols-2 gap-2 text-sm text-[var(--foreground-secondary)] mb-4">
                         <div>
-                          <span className="text-zinc-500">Ano:</span> {cavalo.ano}
+                          <span className="text-[var(--foreground-muted)]">Ano:</span> {cavalo.ano}
                         </div>
                         <div>
-                          <span className="text-zinc-500">Pelagem:</span> {cavalo.pelagem}
+                          <span className="text-[var(--foreground-muted)]">Pelagem:</span>{" "}
+                          {cavalo.pelagem}
                         </div>
                         <div className="col-span-2">
-                          <span className="text-zinc-500">Aptidão:</span> {cavalo.aptidao}
+                          <span className="text-[var(--foreground-muted)]">Aptidão:</span>{" "}
+                          {cavalo.aptidao}
                         </div>
                       </div>
                       {cavalo.preco && !cavalo.vendido && (
-                        <div className="text-[#C5A059] font-bold text-lg">
+                        <div className="text-[var(--gold)] font-bold text-lg">
                           €{cavalo.preco.toLocaleString()}
                         </div>
                       )}
@@ -566,17 +579,20 @@ export default function CoudelariaPage() {
                 className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.7s" }}
               >
-                <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
-                  <Quote className="text-[#C5A059]" size={24} />
+                <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 flex items-center gap-3">
+                  <Quote className="text-[var(--gold)]" size={24} />
                   Testemunhos
                 </h2>
                 <div className="space-y-4">
                   {coudelaria.testemunhos.map((test, i) => (
-                    <div key={i} className="p-6 bg-zinc-900/50 border border-white/5">
-                      <p className="text-zinc-300 italic mb-4">{`\u201C${test.texto}\u201D`}</p>
+                    <div
+                      key={i}
+                      className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)]"
+                    >
+                      <p className="text-[var(--foreground-secondary)] italic mb-4">{`\u201C${test.texto}\u201D`}</p>
                       <div className="flex items-center justify-between">
-                        <span className="text-[#C5A059] font-medium">— {test.autor}</span>
-                        <span className="text-zinc-500 text-sm">{test.data}</span>
+                        <span className="text-[var(--gold)] font-medium">— {test.autor}</span>
+                        <span className="text-[var(--foreground-muted)] text-sm">{test.data}</span>
                       </div>
                     </div>
                   ))}
@@ -590,18 +606,18 @@ export default function CoudelariaPage() {
               style={{ animationDelay: "0.8s" }}
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-serif text-white flex items-center gap-3">
-                  <MessageSquare className="text-[#C5A059]" size={24} />
+                <h2 className="text-2xl font-serif text-[var(--foreground)] flex items-center gap-3">
+                  <MessageSquare className="text-[var(--gold)]" size={24} />
                   Avaliações
                   {reviewStats.total > 0 && (
-                    <span className="text-sm bg-[#C5A059]/20 text-[#C5A059] px-2 py-1 rounded-full">
+                    <span className="text-sm bg-[var(--gold)]/20 text-[var(--gold)] px-2 py-1 rounded-full">
                       {reviewStats.total}
                     </span>
                   )}
                 </h2>
                 <button
                   onClick={() => setShowReviewForm(!showReviewForm)}
-                  className="flex items-center gap-2 bg-[#C5A059] text-black px-4 py-2 text-sm font-bold hover:bg-white transition-colors"
+                  className="flex items-center gap-2 bg-[var(--gold)] text-black px-4 py-2 text-sm font-bold hover:bg-white transition-colors"
                 >
                   <Star size={16} />
                   Avaliar
@@ -610,9 +626,11 @@ export default function CoudelariaPage() {
 
               {/* Estatísticas */}
               {reviewStats.total > 0 && (
-                <div className="flex items-center gap-6 mb-6 p-4 bg-zinc-900/50 border border-white/10">
+                <div className="flex items-center gap-6 mb-6 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)]">
                   <div className="text-center">
-                    <div className="text-4xl font-serif text-[#C5A059]">{reviewStats.media}</div>
+                    <div className="text-4xl font-serif text-[var(--gold)]">
+                      {reviewStats.media}
+                    </div>
                     <div className="flex justify-center mb-1">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
@@ -620,13 +638,15 @@ export default function CoudelariaPage() {
                           size={16}
                           className={
                             star <= Math.round(reviewStats.media)
-                              ? "text-[#C5A059] fill-[#C5A059]"
-                              : "text-zinc-600"
+                              ? "text-[var(--gold)] fill-[var(--gold)]"
+                              : "text-[var(--foreground-muted)]"
                           }
                         />
                       ))}
                     </div>
-                    <div className="text-zinc-500 text-sm">{reviewStats.total} avaliações</div>
+                    <div className="text-[var(--foreground-muted)] text-sm">
+                      {reviewStats.total} avaliações
+                    </div>
                   </div>
                 </div>
               )}
@@ -635,9 +655,11 @@ export default function CoudelariaPage() {
               {showReviewForm && (
                 <form
                   onSubmit={submitReview}
-                  className="mb-8 p-6 bg-zinc-900/50 border border-[#C5A059]/30 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  className="mb-8 p-6 bg-[var(--background-secondary)]/50 border border-[var(--gold)]/30 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 >
-                  <h3 className="text-lg font-serif text-white mb-4">Partilhe a sua experiência</h3>
+                  <h3 className="text-lg font-serif text-[var(--foreground)] mb-4">
+                    Partilhe a sua experiência
+                  </h3>
 
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <input
@@ -646,7 +668,7 @@ export default function CoudelariaPage() {
                       value={reviewForm.autor_nome}
                       onChange={(e) => setReviewForm({ ...reviewForm, autor_nome: e.target.value })}
                       required
-                      className="bg-zinc-800 border border-white/10 px-4 py-3 text-white placeholder-zinc-500 focus:border-[#C5A059] focus:outline-none"
+                      className="bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                     />
                     <input
                       type="email"
@@ -655,7 +677,7 @@ export default function CoudelariaPage() {
                       onChange={(e) =>
                         setReviewForm({ ...reviewForm, autor_email: e.target.value })
                       }
-                      className="bg-zinc-800 border border-white/10 px-4 py-3 text-white placeholder-zinc-500 focus:border-[#C5A059] focus:outline-none"
+                      className="bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                     />
                   </div>
 
@@ -667,14 +689,14 @@ export default function CoudelariaPage() {
                       onChange={(e) =>
                         setReviewForm({ ...reviewForm, autor_localizacao: e.target.value })
                       }
-                      className="bg-zinc-800 border border-white/10 px-4 py-3 text-white placeholder-zinc-500 focus:border-[#C5A059] focus:outline-none"
+                      className="bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                     />
                     <select
                       value={reviewForm.tipo_visita}
                       onChange={(e) =>
                         setReviewForm({ ...reviewForm, tipo_visita: e.target.value })
                       }
-                      className="bg-zinc-800 border border-white/10 px-4 py-3 text-white focus:border-[#C5A059] focus:outline-none"
+                      className="bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] focus:border-[var(--gold)] focus:outline-none"
                     >
                       <option value="visita">Visita</option>
                       <option value="compra">Compra de cavalo</option>
@@ -685,7 +707,9 @@ export default function CoudelariaPage() {
 
                   {/* Avaliação por estrelas */}
                   <div className="mb-4">
-                    <label className="text-zinc-400 text-sm block mb-2">Avaliação *</label>
+                    <label className="text-[var(--foreground-secondary)] text-sm block mb-2">
+                      Avaliação *
+                    </label>
                     <div className="flex gap-2">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
@@ -698,8 +722,8 @@ export default function CoudelariaPage() {
                             size={32}
                             className={
                               star <= reviewForm.avaliacao
-                                ? "text-[#C5A059] fill-[#C5A059]"
-                                : "text-zinc-600 hover:text-[#C5A059]"
+                                ? "text-[var(--gold)] fill-[var(--gold)]"
+                                : "text-[var(--foreground-muted)] hover:text-[var(--gold)]"
                             }
                           />
                         </button>
@@ -712,7 +736,7 @@ export default function CoudelariaPage() {
                     placeholder="Título da avaliação (opcional)"
                     value={reviewForm.titulo}
                     onChange={(e) => setReviewForm({ ...reviewForm, titulo: e.target.value })}
-                    className="w-full bg-zinc-800 border border-white/10 px-4 py-3 text-white placeholder-zinc-500 focus:border-[#C5A059] focus:outline-none mb-4"
+                    className="w-full bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none mb-4"
                   />
 
                   <textarea
@@ -721,7 +745,7 @@ export default function CoudelariaPage() {
                     onChange={(e) => setReviewForm({ ...reviewForm, comentario: e.target.value })}
                     required
                     rows={4}
-                    className="w-full bg-zinc-800 border border-white/10 px-4 py-3 text-white placeholder-zinc-500 focus:border-[#C5A059] focus:outline-none mb-4"
+                    className="w-full bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none mb-4"
                   />
 
                   <div className="flex items-center gap-3 mb-6">
@@ -734,7 +758,7 @@ export default function CoudelariaPage() {
                       }
                       className="w-5 h-5"
                     />
-                    <label htmlFor="recomenda" className="text-zinc-300">
+                    <label htmlFor="recomenda" className="text-[var(--foreground-secondary)]">
                       Recomendo esta coudelaria
                     </label>
                   </div>
@@ -742,7 +766,7 @@ export default function CoudelariaPage() {
                   <button
                     type="submit"
                     disabled={submittingReview}
-                    className="flex items-center gap-2 bg-[#C5A059] text-black px-6 py-3 font-bold hover:bg-white transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 bg-[var(--gold)] text-black px-6 py-3 font-bold hover:bg-white transition-colors disabled:opacity-50"
                   >
                     <Send size={18} />
                     {submittingReview ? "A enviar..." : "Submeter Avaliação"}
@@ -754,14 +778,19 @@ export default function CoudelariaPage() {
               {reviews.length > 0 ? (
                 <div className="space-y-4">
                   {reviews.map((review) => (
-                    <div key={review.id} className="p-6 bg-zinc-900/50 border border-white/5">
+                    <div
+                      key={review.id}
+                      className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)]"
+                    >
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-white font-medium">{review.autor_nome}</span>
+                            <span className="text-[var(--foreground)] font-medium">
+                              {review.autor_nome}
+                            </span>
                             {review.recomenda && <ThumbsUp size={14} className="text-green-500" />}
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-zinc-500">
+                          <div className="flex items-center gap-2 text-sm text-[var(--foreground-muted)]">
                             {review.autor_localizacao && <span>{review.autor_localizacao}</span>}
                             {review.tipo_visita && <span>• {review.tipo_visita}</span>}
                           </div>
@@ -773,27 +802,32 @@ export default function CoudelariaPage() {
                               size={14}
                               className={
                                 star <= review.avaliacao
-                                  ? "text-[#C5A059] fill-[#C5A059]"
-                                  : "text-zinc-600"
+                                  ? "text-[var(--gold)] fill-[var(--gold)]"
+                                  : "text-[var(--foreground-muted)]"
                               }
                             />
                           ))}
                         </div>
                       </div>
                       {review.titulo && (
-                        <h4 className="text-white font-medium mb-2">{review.titulo}</h4>
+                        <h4 className="text-[var(--foreground)] font-medium mb-2">
+                          {review.titulo}
+                        </h4>
                       )}
-                      <p className="text-zinc-400">{review.comentario}</p>
-                      <div className="mt-3 text-zinc-600 text-xs">
+                      <p className="text-[var(--foreground-secondary)]">{review.comentario}</p>
+                      <div className="mt-3 text-[var(--foreground-muted)] text-xs">
                         {new Date(review.created_at).toLocaleDateString("pt-PT")}
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 bg-zinc-900/30 border border-white/5">
-                  <MessageSquare className="mx-auto text-zinc-600 mb-3" size={32} />
-                  <p className="text-zinc-500">
+                <div className="text-center py-8 bg-[var(--background-secondary)]/30 border border-[var(--border)]">
+                  <MessageSquare
+                    className="mx-auto text-[var(--foreground-muted)] mb-3"
+                    size={32}
+                  />
+                  <p className="text-[var(--foreground-muted)]">
                     Ainda não há avaliações. Seja o primeiro a avaliar!
                   </p>
                 </div>
@@ -806,27 +840,29 @@ export default function CoudelariaPage() {
             <div className="sticky top-32 space-y-6">
               {/* Contact Card */}
               <div
-                className="bg-zinc-900/50 border border-white/10 p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.2s" }}
               >
-                <h3 className="text-lg font-medium text-white mb-6">Informações de Contacto</h3>
+                <h3 className="text-lg font-medium text-[var(--foreground)] mb-6">
+                  Informações de Contacto
+                </h3>
 
                 <div className="space-y-4">
                   {coudelaria.telefone && (
                     <a
                       href={`tel:${coudelaria.telefone}`}
-                      className="flex items-center gap-3 text-zinc-300 hover:text-[#C5A059] transition-colors"
+                      className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors"
                     >
-                      <Phone size={18} className="text-[#C5A059]" />
+                      <Phone size={18} className="text-[var(--gold)]" />
                       {coudelaria.telefone}
                     </a>
                   )}
                   {coudelaria.email && (
                     <a
                       href={`mailto:${coudelaria.email}`}
-                      className="flex items-center gap-3 text-zinc-300 hover:text-[#C5A059] transition-colors"
+                      className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors"
                     >
-                      <Mail size={18} className="text-[#C5A059]" />
+                      <Mail size={18} className="text-[var(--gold)]" />
                       {coudelaria.email}
                     </a>
                   )}
@@ -835,9 +871,9 @@ export default function CoudelariaPage() {
                       href={coudelaria.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3 text-zinc-300 hover:text-[#C5A059] transition-colors"
+                      className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors"
                     >
-                      <Globe size={18} className="text-[#C5A059]" />
+                      <Globe size={18} className="text-[var(--gold)]" />
                       Website
                       <ExternalLink size={14} />
                     </a>
@@ -845,13 +881,13 @@ export default function CoudelariaPage() {
 
                   {/* Social */}
                   {(coudelaria.instagram || coudelaria.facebook || coudelaria.youtube) && (
-                    <div className="flex gap-3 pt-4 border-t border-white/10">
+                    <div className="flex gap-3 pt-4 border-t border-[var(--border)]">
                       {coudelaria.instagram && (
                         <a
                           href={`https://instagram.com/${coudelaria.instagram.replace("@", "")}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-10 h-10 bg-zinc-800 hover:bg-[#C5A059] text-zinc-400 hover:text-black flex items-center justify-center transition-colors"
+                          className="w-10 h-10 bg-[var(--background-card)] hover:bg-[var(--gold)] text-[var(--foreground-secondary)] hover:text-black flex items-center justify-center transition-colors"
                         >
                           <Instagram size={18} />
                         </a>
@@ -861,7 +897,7 @@ export default function CoudelariaPage() {
                           href={coudelaria.facebook}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-10 h-10 bg-zinc-800 hover:bg-[#C5A059] text-zinc-400 hover:text-black flex items-center justify-center transition-colors"
+                          className="w-10 h-10 bg-[var(--background-card)] hover:bg-[var(--gold)] text-[var(--foreground-secondary)] hover:text-black flex items-center justify-center transition-colors"
                         >
                           <Facebook size={18} />
                         </a>
@@ -871,7 +907,7 @@ export default function CoudelariaPage() {
                           href={coudelaria.youtube}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-10 h-10 bg-zinc-800 hover:bg-[#C5A059] text-zinc-400 hover:text-black flex items-center justify-center transition-colors"
+                          className="w-10 h-10 bg-[var(--background-card)] hover:bg-[var(--gold)] text-[var(--foreground-secondary)] hover:text-black flex items-center justify-center transition-colors"
                         >
                           <Youtube size={18} />
                         </a>
@@ -881,18 +917,22 @@ export default function CoudelariaPage() {
 
                   {/* Horário */}
                   {coudelaria.horario && (
-                    <div className="pt-4 border-t border-white/10">
-                      <div className="flex items-center gap-2 text-zinc-400 mb-2">
-                        <Clock size={16} className="text-[#C5A059]" />
+                    <div className="pt-4 border-t border-[var(--border)]">
+                      <div className="flex items-center gap-2 text-[var(--foreground-secondary)] mb-2">
+                        <Clock size={16} className="text-[var(--gold)]" />
                         <span className="text-sm">Horário</span>
                       </div>
-                      <p className="text-zinc-300 text-sm">{coudelaria.horario}</p>
+                      <p className="text-[var(--foreground-secondary)] text-sm">
+                        {coudelaria.horario}
+                      </p>
                     </div>
                   )}
 
                   {/* Sem contactos */}
                   {!coudelaria.telefone && !coudelaria.email && !coudelaria.website && (
-                    <p className="text-zinc-500 text-sm italic">Contactos não disponíveis</p>
+                    <p className="text-[var(--foreground-muted)] text-sm italic">
+                      Contactos não disponíveis
+                    </p>
                   )}
                 </div>
               </div>
@@ -900,13 +940,16 @@ export default function CoudelariaPage() {
               {/* Serviços */}
               {coudelaria.servicos && coudelaria.servicos.length > 0 && (
                 <div
-                  className="bg-zinc-900/50 border border-white/10 p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.3s" }}
                 >
-                  <h3 className="text-lg font-medium text-white mb-4">Serviços</h3>
+                  <h3 className="text-lg font-medium text-[var(--foreground)] mb-4">Serviços</h3>
                   <ul className="space-y-2">
                     {coudelaria.servicos.map((servico, i) => (
-                      <li key={i} className="flex items-center gap-2 text-zinc-400 text-sm">
+                      <li
+                        key={i}
+                        className="flex items-center gap-2 text-[var(--foreground-secondary)] text-sm"
+                      >
                         <CheckCircle size={14} className="text-green-500" />
                         {servico}
                       </li>
@@ -918,13 +961,16 @@ export default function CoudelariaPage() {
               {/* Linhagens */}
               {coudelaria.linhagens && coudelaria.linhagens.length > 0 && (
                 <div
-                  className="bg-zinc-900/50 border border-white/10 p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.4s" }}
                 >
-                  <h3 className="text-lg font-medium text-white mb-4">Linhagens</h3>
+                  <h3 className="text-lg font-medium text-[var(--foreground)] mb-4">Linhagens</h3>
                   <div className="flex flex-wrap gap-2">
                     {coudelaria.linhagens.map((linhagem, i) => (
-                      <span key={i} className="px-3 py-1 bg-zinc-800 text-zinc-300 text-sm">
+                      <span
+                        key={i}
+                        className="px-3 py-1 bg-[var(--background-card)] text-[var(--foreground-secondary)] text-sm"
+                      >
                         {linhagem}
                       </span>
                     ))}
@@ -935,19 +981,19 @@ export default function CoudelariaPage() {
               {/* Map Placeholder */}
               {coudelaria.latitude && coudelaria.longitude && (
                 <div
-                  className="bg-zinc-900/50 border border-white/10 overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  className="bg-[var(--background-secondary)]/50 border border-[var(--border)] overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: "0.5s" }}
                 >
                   <a
                     href={`https://www.google.com/maps?q=${coudelaria.latitude},${coudelaria.longitude}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block aspect-video bg-zinc-800 relative group"
+                    className="block aspect-video bg-[var(--background-card)] relative group"
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center">
-                        <MapPin className="text-[#C5A059] mx-auto mb-2" size={32} />
-                        <span className="text-zinc-400 text-sm group-hover:text-[#C5A059] transition-colors">
+                        <MapPin className="text-[var(--gold)] mx-auto mb-2" size={32} />
+                        <span className="text-[var(--foreground-secondary)] text-sm group-hover:text-[var(--gold)] transition-colors">
                           Ver no Google Maps
                         </span>
                       </div>
@@ -958,17 +1004,19 @@ export default function CoudelariaPage() {
 
               {/* CTA para registo */}
               <div
-                className="bg-gradient-to-br from-[#C5A059]/20 to-[#C5A059]/5 border border-[#C5A059]/30 p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                className="bg-gradient-to-br from-[#C5A059]/20 to-[#C5A059]/5 border border-[var(--gold)]/30 p-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.6s" }}
               >
-                <h3 className="text-lg font-medium text-white mb-2">Tem uma coudelaria?</h3>
-                <p className="text-zinc-400 text-sm mb-4">
+                <h3 className="text-lg font-medium text-[var(--foreground)] mb-2">
+                  Tem uma coudelaria?
+                </h3>
+                <p className="text-[var(--foreground-secondary)] text-sm mb-4">
                   Adicione a sua coudelaria ao diretório e mostre os seus cavalos a milhares de
                   entusiastas.
                 </p>
                 <Link
                   href="/directorio/registar"
-                  className="block w-full bg-[#C5A059] text-black py-3 text-sm font-bold uppercase tracking-widest hover:bg-white transition-colors text-center"
+                  className="block w-full bg-[var(--gold)] text-black py-3 text-sm font-bold uppercase tracking-widest hover:bg-white transition-colors text-center"
                 >
                   Registar Coudelaria
                 </Link>

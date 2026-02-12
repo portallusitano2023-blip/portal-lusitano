@@ -30,14 +30,14 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <span
-            className="inline-block px-4 py-1.5 bg-[var(--gold)]/10 border border-[#C5A059]/30 text-[var(--gold)] text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="inline-block px-4 py-1.5 bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.2s" }}
           >
             {t.calculadora.badge}
           </span>
 
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-4xl sm:text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.3s" }}
           >
             {t.calculadora.title}
@@ -45,14 +45,14 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
           </h1>
 
           <p
-            className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-lg text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.4s" }}
           >
             &ldquo;{t.calculadora.intro_quote}&rdquo;
           </p>
 
           <p
-            className="text-sm text-zinc-500 max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-sm text-[var(--foreground-muted)] max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.5s" }}
           >
             {t.calculadora.intro_desc}
@@ -60,7 +60,7 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
 
           <button
             onClick={onStart}
-            className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all shadow-lg shadow-[#C5A059]/20 hover:shadow-[#C5A059]/30 hover:scale-[1.02] active:scale-[0.98] transition-transform opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[var(--gold)] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[var(--gold)] transition-all shadow-lg shadow-[var(--gold)]/20 hover:shadow-[var(--gold)]/30 hover:scale-[1.02] active:scale-[0.98] transition-transform opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.6s" }}
           >
             <Calculator size={20} />
@@ -77,41 +77,55 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
             className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.7s" }}
           >
-            <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+            <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
               <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center mb-4">
                 <Dna className="text-[var(--gold)]" size={24} />
               </div>
-              <h3 className="text-lg font-serif text-white mb-2">{t.calculadora.feat_genetic}</h3>
-              <p className="text-sm text-zinc-400">{t.calculadora.feat_genetic_desc}</p>
+              <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
+                {t.calculadora.feat_genetic}
+              </h3>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                {t.calculadora.feat_genetic_desc}
+              </p>
             </div>
 
-            <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+            <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
               <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center mb-4">
                 <BarChart3 className="text-[var(--gold)]" size={24} />
               </div>
-              <h3 className="text-lg font-serif text-white mb-2">{t.calculadora.feat_blup}</h3>
-              <p className="text-sm text-zinc-400">{t.calculadora.feat_blup_desc}</p>
+              <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
+                {t.calculadora.feat_blup}
+              </h3>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                {t.calculadora.feat_blup_desc}
+              </p>
             </div>
 
-            <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+            <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
               <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center mb-4">
                 <Globe className="text-[var(--gold)]" size={24} />
               </div>
-              <h3 className="text-lg font-serif text-white mb-2">{t.calculadora.feat_market}</h3>
-              <p className="text-sm text-zinc-400">{t.calculadora.feat_market_desc}</p>
+              <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
+                {t.calculadora.feat_market}
+              </h3>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                {t.calculadora.feat_market_desc}
+              </p>
             </div>
           </div>
 
           {/* Info Box */}
           <div
-            className="mt-12 p-6 bg-[var(--gold)]/5 border border-[#C5A059]/20 rounded-xl opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="mt-12 p-6 bg-[var(--gold)]/5 border border-[var(--gold)]/20 rounded-xl opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.8s" }}
           >
             <div className="flex items-start gap-4">
               <Info className="text-[var(--gold)] flex-shrink-0 mt-1" size={20} />
               <div>
-                <h4 className="text-white font-medium mb-2">{t.calculadora.methodology_title}</h4>
-                <p className="text-sm text-zinc-400 leading-relaxed">
+                <h4 className="text-[var(--foreground)] font-medium mb-2">
+                  {t.calculadora.methodology_title}
+                </h4>
+                <p className="text-sm text-[var(--foreground-secondary)] leading-relaxed">
                   {t.calculadora.methodology_desc}
                 </p>
               </div>

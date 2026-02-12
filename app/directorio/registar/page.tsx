@@ -94,19 +94,17 @@ export default function RegistarCoudelariaPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] pt-32 pb-20">
+    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20">
       <div className="max-w-4xl mx-auto px-6">
         {/* Header */}
-        <div
-          className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-        >
-          <span className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
+        <div className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+          <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
             Diretório de Coudelarias
           </span>
-          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
             Registar Coudelaria
           </h1>
-          <p className="text-zinc-400 max-w-xl mx-auto">
+          <p className="text-[var(--foreground-secondary)] max-w-xl mx-auto">
             Junte-se ao maior diretório de coudelarias Lusitanas de Portugal
           </p>
         </div>
@@ -118,8 +116,8 @@ export default function RegistarCoudelariaPage() {
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
                   step >= s
-                    ? "bg-[#C5A059] text-black"
-                    : "bg-zinc-800 text-zinc-500"
+                    ? "bg-[var(--gold)] text-black"
+                    : "bg-[var(--background-card)] text-[var(--foreground-muted)]"
                 }`}
               >
                 {step > s ? <Check size={16} /> : s}
@@ -127,7 +125,7 @@ export default function RegistarCoudelariaPage() {
               {s < 2 && (
                 <div
                   className={`w-16 h-0.5 transition-colors ${
-                    step > s ? "bg-[#C5A059]" : "bg-zinc-800"
+                    step > s ? "bg-[var(--gold)]" : "bg-[var(--background-card)]"
                   }`}
                 />
               )}
@@ -137,17 +135,15 @@ export default function RegistarCoudelariaPage() {
 
         {/* Step 1: Informações */}
         {step === 1 && (
-          <div
-            className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
-            <h2 className="text-2xl font-serif text-white mb-6 text-center">
+          <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+            <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 text-center">
               Informações da Coudelaria
             </h2>
 
             <div className="space-y-6 max-w-2xl mx-auto">
               {/* Nome */}
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
                   Nome da Coudelaria *
                 </label>
                 <input
@@ -156,14 +152,14 @@ export default function RegistarCoudelariaPage() {
                   value={formData.nome}
                   onChange={handleInputChange}
                   placeholder="Ex: Coudelaria Vale do Tejo"
-                  className="w-full bg-zinc-900 border border-white/10 px-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none"
+                  className="w-full bg-[var(--background-secondary)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                   required
                 />
               </div>
 
               {/* Descrição */}
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
                   Descrição *
                 </label>
                 <textarea
@@ -172,7 +168,7 @@ export default function RegistarCoudelariaPage() {
                   onChange={handleInputChange}
                   placeholder="Descreva a sua coudelaria, história, especialidades..."
                   rows={4}
-                  className="w-full bg-zinc-900 border border-white/10 px-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none resize-none"
+                  className="w-full bg-[var(--background-secondary)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none resize-none"
                   required
                 />
               </div>
@@ -180,99 +176,124 @@ export default function RegistarCoudelariaPage() {
               {/* Localização */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-2">
+                  <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
                     Localidade *
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                    <MapPin
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+                      size={18}
+                    />
                     <input
                       type="text"
                       name="localizacao"
                       value={formData.localizacao}
                       onChange={handleInputChange}
                       placeholder="Ex: Santarém"
-                      className="w-full bg-zinc-900 border border-white/10 pl-10 pr-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none"
+                      className="w-full bg-[var(--background-secondary)] border border-[var(--border)] pl-10 pr-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                       required
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-2">
+                  <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
                     Região *
                   </label>
                   <select
                     name="regiao"
                     value={formData.regiao}
                     onChange={handleInputChange}
-                    className="w-full bg-zinc-900 border border-white/10 px-4 py-3 text-white focus:border-[#C5A059] focus:outline-none"
+                    className="w-full bg-[var(--background-secondary)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] focus:border-[var(--gold)] focus:outline-none"
                     required
                   >
                     <option value="">Selecione...</option>
                     {regioes.map((r) => (
-                      <option key={r} value={r}>{r}</option>
+                      <option key={r} value={r}>
+                        {r}
+                      </option>
                     ))}
                   </select>
                 </div>
               </div>
 
               {/* Contactos */}
-              <div className="pt-4 border-t border-white/10">
-                <span className="text-[#C5A059] text-sm font-medium mb-4 block">Contactos</span>
+              <div className="pt-4 border-t border-[var(--border)]">
+                <span className="text-[var(--gold)] text-sm font-medium mb-4 block">Contactos</span>
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-2">Telefone</label>
+                    <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+                      Telefone
+                    </label>
                     <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                      <Phone
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+                        size={18}
+                      />
                       <input
                         type="tel"
                         name="telefone"
                         value={formData.telefone}
                         onChange={handleInputChange}
                         placeholder="+351 912 345 678"
-                        className="w-full bg-zinc-900 border border-white/10 pl-10 pr-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none"
+                        className="w-full bg-[var(--background-secondary)] border border-[var(--border)] pl-10 pr-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-2">Email</label>
+                    <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+                      Email
+                    </label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                      <Mail
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+                        size={18}
+                      />
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="email@coudelaria.pt"
-                        className="w-full bg-zinc-900 border border-white/10 pl-10 pr-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none"
+                        className="w-full bg-[var(--background-secondary)] border border-[var(--border)] pl-10 pr-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-2">Website</label>
+                    <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+                      Website
+                    </label>
                     <div className="relative">
-                      <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                      <Globe
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+                        size={18}
+                      />
                       <input
                         type="url"
                         name="website"
                         value={formData.website}
                         onChange={handleInputChange}
                         placeholder="https://www.coudelaria.pt"
-                        className="w-full bg-zinc-900 border border-white/10 pl-10 pr-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none"
+                        className="w-full bg-[var(--background-secondary)] border border-[var(--border)] pl-10 pr-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-2">Instagram</label>
+                    <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+                      Instagram
+                    </label>
                     <div className="relative">
-                      <Instagram className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                      <Instagram
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+                        size={18}
+                      />
                       <input
                         type="text"
                         name="instagram"
                         value={formData.instagram}
                         onChange={handleInputChange}
                         placeholder="@coudelaria"
-                        className="w-full bg-zinc-900 border border-white/10 pl-10 pr-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none"
+                        className="w-full bg-[var(--background-secondary)] border border-[var(--border)] pl-10 pr-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                       />
                     </div>
                   </div>
@@ -281,7 +302,7 @@ export default function RegistarCoudelariaPage() {
 
               {/* Número de cavalos */}
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
                   Número de Cavalos (aproximado)
                 </label>
                 <input
@@ -290,13 +311,13 @@ export default function RegistarCoudelariaPage() {
                   value={formData.num_cavalos}
                   onChange={handleInputChange}
                   placeholder="Ex: 25"
-                  className="w-full bg-zinc-900 border border-white/10 px-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none"
+                  className="w-full bg-[var(--background-secondary)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                 />
               </div>
 
               {/* Especialidades */}
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
                   Especialidades
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -307,8 +328,8 @@ export default function RegistarCoudelariaPage() {
                       onClick={() => handleEspecialidadeToggle(esp)}
                       className={`px-3 py-2 text-sm transition-colors ${
                         formData.especialidades.includes(esp)
-                          ? "bg-[#C5A059] text-black"
-                          : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                          ? "bg-[var(--gold)] text-black"
+                          : "bg-[var(--background-card)] text-[var(--foreground-secondary)] hover:bg-[var(--surface-hover)]"
                       }`}
                     >
                       {esp}
@@ -321,8 +342,13 @@ export default function RegistarCoudelariaPage() {
               <div className="flex justify-end pt-6">
                 <button
                   onClick={() => setStep(2)}
-                  disabled={!formData.nome || !formData.descricao || !formData.localizacao || !formData.regiao}
-                  className="inline-flex items-center gap-2 bg-[#C5A059] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={
+                    !formData.nome ||
+                    !formData.descricao ||
+                    !formData.localizacao ||
+                    !formData.regiao
+                  }
+                  className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Continuar
                   <ArrowRight size={18} />
@@ -334,37 +360,37 @@ export default function RegistarCoudelariaPage() {
 
         {/* Step 2: Confirmar */}
         {step === 2 && (
-          <div
-            className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
-            <h2 className="text-2xl font-serif text-white mb-6 text-center">
+          <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+            <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 text-center">
               Confirmar Registo
             </h2>
 
             <div className="max-w-2xl mx-auto">
               {/* Resumo */}
-              <div className="bg-zinc-900/50 border border-white/10 p-6 mb-6">
-                <h3 className="text-lg font-medium text-white mb-4">Resumo</h3>
+              <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-6 mb-6">
+                <h3 className="text-lg font-medium text-[var(--foreground)] mb-4">Resumo</h3>
 
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-zinc-500">Coudelaria:</span>
-                    <span className="text-white">{formData.nome}</span>
+                    <span className="text-[var(--foreground-muted)]">Coudelaria:</span>
+                    <span className="text-[var(--foreground)]">{formData.nome}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-500">Localização:</span>
-                    <span className="text-white">{formData.localizacao}, {formData.regiao}</span>
+                    <span className="text-[var(--foreground-muted)]">Localização:</span>
+                    <span className="text-[var(--foreground)]">
+                      {formData.localizacao}, {formData.regiao}
+                    </span>
                   </div>
                   {formData.telefone && (
                     <div className="flex justify-between">
-                      <span className="text-zinc-500">Telefone:</span>
-                      <span className="text-white">{formData.telefone}</span>
+                      <span className="text-[var(--foreground-muted)]">Telefone:</span>
+                      <span className="text-[var(--foreground)]">{formData.telefone}</span>
                     </div>
                   )}
                   {formData.email && (
                     <div className="flex justify-between">
-                      <span className="text-zinc-500">Email:</span>
-                      <span className="text-white">{formData.email}</span>
+                      <span className="text-[var(--foreground-muted)]">Email:</span>
+                      <span className="text-[var(--foreground)]">{formData.email}</span>
                     </div>
                   )}
                 </div>
@@ -380,19 +406,18 @@ export default function RegistarCoudelariaPage() {
               <div className="flex justify-between">
                 <button
                   onClick={() => setStep(1)}
-                  className="text-zinc-400 hover:text-white transition-colors"
+                  className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
                 >
                   Voltar
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="inline-flex items-center gap-2 bg-[#C5A059] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="animate-spin" size={18} />
-                      A processar...
+                      <Loader2 className="animate-spin" size={18} />A processar...
                     </>
                   ) : (
                     <>
@@ -408,21 +433,19 @@ export default function RegistarCoudelariaPage() {
 
         {/* Step 3: Sucesso */}
         {step === 3 && (
-          <div
-            className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          >
+          <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <Check className="text-green-500" size={40} />
             </div>
-            <h2 className="text-3xl font-serif text-white mb-4">
+            <h2 className="text-3xl font-serif text-[var(--foreground)] mb-4">
               Registo Submetido!
             </h2>
-            <p className="text-zinc-400 mb-8 max-w-md mx-auto">
+            <p className="text-[var(--foreground-secondary)] mb-8 max-w-md mx-auto">
               A sua coudelaria foi registada com sucesso e será revista e publicada em breve.
             </p>
             <Link
               href="/directorio"
-              className="inline-flex items-center gap-2 bg-[#C5A059] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors"
+              className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors"
             >
               Ver Diretório
               <ArrowRight size={18} />

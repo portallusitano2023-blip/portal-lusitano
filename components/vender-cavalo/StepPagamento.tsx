@@ -29,48 +29,48 @@ export default function StepPagamento({
   onSubmit,
 }: StepPagamentoProps) {
   return (
-    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
+    <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">
       <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
-        <span className="w-8 h-8 bg-[#C5A059] rounded-full flex items-center justify-center text-black text-sm font-bold">
+        <span className="w-8 h-8 bg-[var(--gold)] rounded-full flex items-center justify-center text-black text-sm font-bold">
           6
         </span>
         Revisão e Pagamento
       </h2>
 
       {/* Resumo */}
-      <div className="bg-zinc-800/50 rounded-lg p-4 mb-6">
+      <div className="bg-[var(--background-card)]/50 rounded-lg p-4 mb-6">
         <h3 className="text-sm font-medium mb-4">Resumo do Anúncio</h3>
         <div className="grid grid-cols-2 gap-y-2 text-sm">
-          <span className="text-zinc-500">Cavalo:</span>
+          <span className="text-[var(--foreground-muted)]">Cavalo:</span>
           <span>{formData.nome || "-"}</span>
-          <span className="text-zinc-500">Registo:</span>
+          <span className="text-[var(--foreground-muted)]">Registo:</span>
           <span>{formData.numero_registo || "-"}</span>
-          <span className="text-zinc-500">Preço:</span>
+          <span className="text-[var(--foreground-muted)]">Preço:</span>
           <span>{formData.preco ? `${parseInt(formData.preco).toLocaleString()}€` : "-"}</span>
-          <span className="text-zinc-500">Localização:</span>
+          <span className="text-[var(--foreground-muted)]">Localização:</span>
           <span>{formData.localizacao || "-"}</span>
-          <span className="text-zinc-500">Fotografias:</span>
+          <span className="text-[var(--foreground-muted)]">Fotografias:</span>
           <span>{imagens.length} foto(s)</span>
         </div>
       </div>
 
       {/* Opção Destaque */}
-      <div className="border border-[#C5A059]/30 rounded-lg p-4 mb-6">
+      <div className="border border-[var(--gold)]/30 rounded-lg p-4 mb-6">
         <label className="flex items-start gap-4 cursor-pointer touch-manipulation">
           <input
             type="checkbox"
             checked={opcaoDestaque}
             onChange={(e) => onOpcaoDestaqueChange(e.target.checked)}
-            className="w-5 h-5 accent-[#C5A059] mt-1"
+            className="w-5 h-5 accent-[var(--gold)] mt-1"
           />
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <span className="font-medium">Anúncio em Destaque</span>
-              <span className="px-2 py-0.5 bg-[#C5A059] text-black text-xs font-bold rounded">
+              <span className="px-2 py-0.5 bg-[var(--gold)] text-black text-xs font-bold rounded">
                 +{PRECO_DESTAQUE}€
               </span>
             </div>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-[var(--foreground-secondary)]">
               Apareça no topo da lista e na homepage durante 7 dias. 3x mais visualizações!
             </p>
           </div>
@@ -78,15 +78,15 @@ export default function StepPagamento({
       </div>
 
       {/* Preço Total */}
-      <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-4 mb-6">
+      <div className="bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-lg p-4 mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-sm text-zinc-400">Total a pagar</span>
-            <div className="text-2xl font-bold text-[#C5A059]">{precoTotal}€</div>
+            <span className="text-sm text-[var(--foreground-secondary)]">Total a pagar</span>
+            <div className="text-2xl font-bold text-[var(--gold)]">{precoTotal}€</div>
           </div>
-          <CreditCard size={32} className="text-[#C5A059]" />
+          <CreditCard size={32} className="text-[var(--gold)]" />
         </div>
-        <div className="text-xs text-zinc-500 mt-2">
+        <div className="text-xs text-[var(--foreground-muted)] mt-2">
           Anúncio base ({PRECO_ANUNCIO}€) {opcaoDestaque && `+ Destaque (${PRECO_DESTAQUE}€)`}
         </div>
       </div>
@@ -98,15 +98,15 @@ export default function StepPagamento({
             type="checkbox"
             checked={termsAccepted}
             onChange={(e) => onTermsChange(e.target.checked)}
-            className="w-5 h-5 accent-[#C5A059] mt-0.5"
+            className="w-5 h-5 accent-[var(--gold)] mt-0.5"
           />
-          <span className="text-sm text-zinc-400">
+          <span className="text-sm text-[var(--foreground-secondary)]">
             Li e aceito os{" "}
-            <Link href="/termos" className="text-[#C5A059] hover:underline">
+            <Link href="/termos" className="text-[var(--gold)] hover:underline">
               Termos e Condições
             </Link>{" "}
             e a{" "}
-            <Link href="/privacidade" className="text-[#C5A059] hover:underline">
+            <Link href="/privacidade" className="text-[var(--gold)] hover:underline">
               Política de Privacidade
             </Link>
             . Confirmo que todas as informações fornecidas são verdadeiras e que sou o proprietário
@@ -133,7 +133,7 @@ export default function StepPagamento({
       <button
         onClick={onSubmit}
         disabled={loading || !termsAccepted}
-        className="w-full py-4 bg-[#C5A059] text-black font-semibold rounded-lg hover:bg-[#D4AF6A] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3 touch-manipulation active:scale-[0.98]"
+        className="w-full py-4 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3 touch-manipulation active:scale-[0.98]"
       >
         {loading ? (
           <>
@@ -148,7 +148,7 @@ export default function StepPagamento({
         )}
       </button>
 
-      <p className="text-center text-xs text-zinc-500 mt-4">
+      <p className="text-center text-xs text-[var(--foreground-muted)] mt-4">
         Pagamento seguro processado por Stripe. Os seus dados estão protegidos.
       </p>
     </div>

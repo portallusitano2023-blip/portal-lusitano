@@ -1,11 +1,5 @@
 import type { Metric } from "web-vitals";
 
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
-
 // Enviar metricas para Google Analytics 4
 const sendToAnalytics = (metric: Metric) => {
   if (process.env.NODE_ENV === "development") {

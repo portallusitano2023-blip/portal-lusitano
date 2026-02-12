@@ -23,7 +23,7 @@ export default function IntroHero({ onStart }: IntroHeroProps) {
               backgroundPosition: "center 40%",
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/80 to-black/60" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
@@ -35,7 +35,7 @@ export default function IntroHero({ onStart }: IntroHeroProps) {
           </span>
 
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-4xl sm:text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.3s" }}
           >
             {t.verificador.title_prefix}
@@ -45,14 +45,14 @@ export default function IntroHero({ onStart }: IntroHeroProps) {
           </h1>
 
           <p
-            className="text-lg text-zinc-300 max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-lg text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.4s" }}
           >
             &ldquo;{t.verificador.intro_quote}&rdquo;
           </p>
 
           <p
-            className="text-sm text-zinc-500 max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-sm text-[var(--foreground-muted)] max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.5s" }}
           >
             {t.verificador.intro_desc}
@@ -77,28 +77,40 @@ export default function IntroHero({ onStart }: IntroHeroProps) {
             className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.7s" }}
           >
-            <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+            <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
               <div className="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center mb-4">
                 <Dna className="text-pink-400" size={24} />
               </div>
-              <h3 className="text-lg font-serif text-white mb-2">{t.verificador.feat_coi}</h3>
-              <p className="text-sm text-zinc-400">{t.verificador.feat_coi_desc}</p>
+              <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
+                {t.verificador.feat_coi}
+              </h3>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                {t.verificador.feat_coi_desc}
+              </p>
             </div>
 
-            <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+            <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
               <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-4">
                 <Palette className="text-purple-400" size={24} />
               </div>
-              <h3 className="text-lg font-serif text-white mb-2">{t.verificador.feat_coat}</h3>
-              <p className="text-sm text-zinc-400">{t.verificador.feat_coat_desc}</p>
+              <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
+                {t.verificador.feat_coat}
+              </h3>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                {t.verificador.feat_coat_desc}
+              </p>
             </div>
 
-            <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+            <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
               <div className="w-12 h-12 bg-amber-500/10 rounded-lg flex items-center justify-center mb-4">
                 <AlertTriangle className="text-amber-400" size={24} />
               </div>
-              <h3 className="text-lg font-serif text-white mb-2">{t.verificador.feat_risks}</h3>
-              <p className="text-sm text-zinc-400">{t.verificador.feat_risks_desc}</p>
+              <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
+                {t.verificador.feat_risks}
+              </h3>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                {t.verificador.feat_risks_desc}
+              </p>
             </div>
           </div>
 
@@ -109,8 +121,12 @@ export default function IntroHero({ onStart }: IntroHeroProps) {
             <div className="flex items-start gap-4">
               <Info className="text-pink-400 flex-shrink-0 mt-1" size={20} />
               <div>
-                <h4 className="text-white font-medium mb-2">{t.verificador.about_title}</h4>
-                <p className="text-sm text-zinc-400 leading-relaxed">{t.verificador.about_desc}</p>
+                <h4 className="text-[var(--foreground)] font-medium mb-2">
+                  {t.verificador.about_title}
+                </h4>
+                <p className="text-sm text-[var(--foreground-secondary)] leading-relaxed">
+                  {t.verificador.about_desc}
+                </p>
               </div>
             </div>
           </div>

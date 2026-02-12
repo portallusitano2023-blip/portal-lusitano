@@ -67,7 +67,7 @@ export default function HorseForm({
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
             tab === "garanhao"
               ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/20"
-              : "bg-zinc-900 border border-zinc-800 text-zinc-400 hover:border-zinc-700"
+              : "bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--foreground-muted)]"
           }`}
         >
           <Crown size={20} />
@@ -83,7 +83,7 @@ export default function HorseForm({
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
             tab === "egua"
               ? "bg-gradient-to-r from-pink-600 to-pink-500 text-white shadow-lg shadow-pink-500/20"
-              : "bg-zinc-900 border border-zinc-800 text-zinc-400 hover:border-zinc-700"
+              : "bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--foreground-muted)]"
           }`}
         >
           <Heart size={20} />
@@ -95,37 +95,37 @@ export default function HorseForm({
       </div>
 
       {/* Formulario do Cavalo */}
-      <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800 space-y-6">
-        <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
+      <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)] space-y-6">
+        <div className="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
           {tab === "garanhao" ? (
             <Crown className="text-blue-400" size={24} />
           ) : (
             <Heart className="text-pink-400" size={24} />
           )}
           <div>
-            <h2 className="text-xl font-serif text-white">
+            <h2 className="text-xl font-serif text-[var(--foreground)]">
               {t.verificador.horse_data} {cavalo.sexo}
             </h2>
-            <p className="text-sm text-zinc-500">{t.verificador.form_desc}</p>
+            <p className="text-sm text-[var(--foreground-muted)]">{t.verificador.form_desc}</p>
           </div>
         </div>
 
         {/* Identificacao */}
         <div className="grid sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_name}
             </label>
             <input
               type="text"
               value={cavalo.nome}
               onChange={(e) => update("nome", e.target.value)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
               placeholder={`Nome do ${cavalo.sexo}`}
             />
           </div>
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_age}
             </label>
             <div className="relative">
@@ -135,15 +135,15 @@ export default function HorseForm({
                 max="30"
                 value={cavalo.idade}
                 onChange={(e) => update("idade", +e.target.value || 1)}
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-sm">
                 {t.verificador.label_years}
               </span>
             </div>
           </div>
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_height}
             </label>
             <div className="relative">
@@ -153,9 +153,9 @@ export default function HorseForm({
                 max="180"
                 value={cavalo.altura}
                 onChange={(e) => update("altura", +e.target.value || 160)}
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-sm">
                 {t.verificador.label_cm}
               </span>
             </div>
@@ -165,13 +165,13 @@ export default function HorseForm({
         {/* Origem e Linhagem */}
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_origin}
             </label>
             <select
               value={cavalo.coudelaria}
               onChange={(e) => update("coudelaria", e.target.value)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
             >
               {COUDELARIAS.map((c) => (
                 <option key={c.value} value={c.value}>
@@ -181,13 +181,13 @@ export default function HorseForm({
             </select>
           </div>
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_lineage_quality}
             </label>
             <select
               value={cavalo.linhagem}
               onChange={(e) => update("linhagem", e.target.value)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
             >
               {LINHAGENS.map((l) => (
                 <option key={l.value} value={l.value}>
@@ -200,7 +200,7 @@ export default function HorseForm({
 
         {/* Linhagem Famosa */}
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.verificador.label_main_lineage}
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -211,15 +211,15 @@ export default function HorseForm({
                 className={`py-2 px-3 rounded-lg border text-left transition-all ${
                   cavalo.linhagemFamosa === lin.value
                     ? "border-pink-500 bg-pink-500/10"
-                    : "border-zinc-800 hover:border-zinc-700"
+                    : "border-[var(--border)] hover:border-[var(--foreground-muted)]"
                 }`}
               >
                 <span
-                  className={`block text-sm font-medium ${cavalo.linhagemFamosa === lin.value ? "text-pink-400" : "text-zinc-300"}`}
+                  className={`block text-sm font-medium ${cavalo.linhagemFamosa === lin.value ? "text-pink-400" : "text-[var(--foreground-secondary)]"}`}
                 >
                   {lin.label}
                 </span>
-                <span className="text-xs text-zinc-500">{lin.desc}</span>
+                <span className="text-xs text-[var(--foreground-muted)]">{lin.desc}</span>
               </button>
             ))}
           </div>
@@ -229,7 +229,7 @@ export default function HorseForm({
         <div>
           <div className="flex items-center gap-2 mb-3">
             <Palette className="text-purple-400" size={18} />
-            <label className="text-sm font-medium text-zinc-300">
+            <label className="text-sm font-medium text-[var(--foreground-secondary)]">
               {t.verificador.label_coat_genetics}
             </label>
           </div>
@@ -242,11 +242,11 @@ export default function HorseForm({
               { gene: "dun" as const, label: "Dun", options: ["DD", "Dd", "dd"] },
             ].map(({ gene, label, options }) => (
               <div key={gene}>
-                <label className="block text-xs text-zinc-500 mb-1">{label}</label>
+                <label className="block text-xs text-[var(--foreground-muted)] mb-1">{label}</label>
                 <select
                   value={cavalo.genetica[gene]}
                   onChange={(e) => updateGen(gene, e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-2 text-sm focus:border-purple-500 outline-none"
+                  className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded px-2 py-2 text-sm focus:border-purple-500 outline-none"
                 >
                   {options.map((o) => (
                     <option key={o} value={o}>
@@ -257,7 +257,9 @@ export default function HorseForm({
               </div>
             ))}
           </div>
-          <p className="text-xs text-zinc-600 mt-2">{t.verificador.coat_genetics_hint}</p>
+          <p className="text-xs text-[var(--foreground-muted)] mt-2">
+            {t.verificador.coat_genetics_hint}
+          </p>
         </div>
 
         {/* Avaliacoes */}
@@ -282,8 +284,8 @@ export default function HorseForm({
             <div key={field}>
               <div className="flex justify-between mb-2">
                 <div>
-                  <label className="text-sm text-zinc-300">{label}</label>
-                  <span className="text-xs text-zinc-500 ml-2">{desc}</span>
+                  <label className="text-sm text-[var(--foreground-secondary)]">{label}</label>
+                  <span className="text-xs text-[var(--foreground-muted)] ml-2">{desc}</span>
                 </div>
                 <span className="text-pink-400 font-medium">{cavalo[field]}/10</span>
               </div>
@@ -293,13 +295,13 @@ export default function HorseForm({
                 max="10"
                 value={cavalo[field]}
                 onChange={(e) => update(field, +e.target.value)}
-                className="w-full h-2 bg-zinc-800 rounded-full appearance-none cursor-pointer accent-pink-500"
+                className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-pink-500"
               />
             </div>
           ))}
 
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_blup}
             </label>
             <input
@@ -308,22 +310,22 @@ export default function HorseForm({
               max="150"
               value={cavalo.blup}
               onChange={(e) => update("blup", +e.target.value || 100)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
             />
-            <p className="text-xs text-zinc-600 mt-1">{t.verificador.blup_avg}</p>
+            <p className="text-xs text-[var(--foreground-muted)] mt-1">{t.verificador.blup_avg}</p>
           </div>
         </div>
 
         {/* Temperamento e Fertilidade */}
         <div className="grid sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_temperament}
             </label>
             <select
               value={cavalo.temperamento}
               onChange={(e) => update("temperamento", e.target.value)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
             >
               {TEMPERAMENTOS.map((temp) => (
                 <option key={temp.value} value={temp.value}>
@@ -333,13 +335,13 @@ export default function HorseForm({
             </select>
           </div>
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_fertility}
             </label>
             <select
               value={cavalo.fertilidade}
               onChange={(e) => update("fertilidade", e.target.value)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
             >
               {FERTILIDADES.map((f) => (
                 <option key={f.value} value={f.value}>
@@ -349,7 +351,7 @@ export default function HorseForm({
             </select>
           </div>
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_coi}
             </label>
             <input
@@ -359,7 +361,7 @@ export default function HorseForm({
               step="0.5"
               value={cavalo.coi}
               onChange={(e) => update("coi", +e.target.value || 0)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
             />
           </div>
         </div>
@@ -371,7 +373,7 @@ export default function HorseForm({
             className={`w-full py-3 px-4 rounded-lg border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
               cavalo.aprovado
                 ? "border-green-500 bg-green-500/10 text-green-400"
-                : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--foreground-muted)]"
             }`}
           >
             {cavalo.aprovado && <CheckCircle size={16} />}
@@ -381,7 +383,7 @@ export default function HorseForm({
 
         {/* Defeitos Geneticos */}
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.verificador.label_defects}
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -396,7 +398,7 @@ export default function HorseForm({
                       : d.risco === "medio"
                         ? "border-amber-500 bg-amber-500/10"
                         : "border-yellow-500 bg-yellow-500/10"
-                    : "border-zinc-800 hover:border-zinc-700"
+                    : "border-[var(--border)] hover:border-[var(--foreground-muted)]"
                 }`}
               >
                 <span
@@ -407,12 +409,12 @@ export default function HorseForm({
                         : d.risco === "medio"
                           ? "text-amber-400"
                           : "text-yellow-400"
-                      : "text-zinc-300"
+                      : "text-[var(--foreground-secondary)]"
                   }`}
                 >
                   {d.label}
                 </span>
-                <span className="text-xs text-zinc-500">{d.desc}</span>
+                <span className="text-xs text-[var(--foreground-muted)]">{d.desc}</span>
               </button>
             ))}
           </div>

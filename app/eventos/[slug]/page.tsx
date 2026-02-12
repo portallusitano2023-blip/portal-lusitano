@@ -236,13 +236,13 @@ END:VCALENDAR`;
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#050505] pt-32">
+      <main className="min-h-screen bg-[var(--background)] pt-32">
         <div className="max-w-4xl mx-auto px-6">
           <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-zinc-800 rounded w-1/4" />
-            <div className="h-64 bg-zinc-800 rounded" />
-            <div className="h-12 bg-zinc-800 rounded w-3/4" />
-            <div className="h-32 bg-zinc-800 rounded" />
+            <div className="h-8 bg-[var(--background-card)] rounded w-1/4" />
+            <div className="h-64 bg-[var(--background-card)] rounded" />
+            <div className="h-12 bg-[var(--background-card)] rounded w-3/4" />
+            <div className="h-32 bg-[var(--background-card)] rounded" />
           </div>
         </div>
       </main>
@@ -251,15 +251,17 @@ END:VCALENDAR`;
 
   if (error || !evento) {
     return (
-      <main className="min-h-screen bg-[#050505] pt-32">
+      <main className="min-h-screen bg-[var(--background)] pt-32">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h1 className="text-3xl font-serif text-white mb-4">
+          <h1 className="text-3xl font-serif text-[var(--foreground)] mb-4">
             {error || "Evento não encontrado"}
           </h1>
-          <p className="text-zinc-400 mb-8">O evento que procura não existe ou foi removido.</p>
+          <p className="text-[var(--foreground-secondary)] mb-8">
+            O evento que procura não existe ou foi removido.
+          </p>
           <Link
             href="/eventos"
-            className="inline-flex items-center gap-2 text-[#C5A059] hover:underline"
+            className="inline-flex items-center gap-2 text-[var(--gold)] hover:underline"
           >
             <ArrowLeft size={18} />
             Voltar aos eventos
@@ -272,12 +274,12 @@ END:VCALENDAR`;
   const tipoInfo = tiposEvento[evento.tipo] || {
     label: evento.tipo,
     icon: "📅",
-    color: "bg-zinc-500/20 text-zinc-400",
+    color: "bg-zinc-500/20 text-[var(--foreground-secondary)]",
   };
   const confirmacaoBadge = getConfirmacaoBadge(evento.confirmado);
 
   return (
-    <main className="min-h-screen bg-[#050505]">
+    <main className="min-h-screen bg-[var(--background)]">
       <DynamicSEO
         title={`${evento.titulo} - ${tipoInfo.label} - Portal Lusitano`}
         description={
@@ -307,16 +309,16 @@ END:VCALENDAR`;
 
         <div className="relative max-w-4xl mx-auto px-6 pt-16">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-zinc-400 mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+          <nav className="flex items-center gap-2 text-sm text-[var(--foreground-secondary)] mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <Link
               href="/eventos"
-              className="hover:text-[#C5A059] transition-colors flex items-center gap-1"
+              className="hover:text-[var(--gold)] transition-colors flex items-center gap-1"
             >
               <ArrowLeft size={16} />
               Eventos
             </Link>
             <span>/</span>
-            <span className="text-zinc-500 truncate">{evento.titulo}</span>
+            <span className="text-[var(--foreground-muted)] truncate">{evento.titulo}</span>
           </nav>
 
           {/* Badges */}
@@ -332,7 +334,7 @@ END:VCALENDAR`;
             </span>
 
             {evento.destaque && (
-              <span className="flex items-center gap-1.5 text-[#C5A059] bg-[#C5A059]/10 border border-[#C5A059]/30 px-3 py-1.5 text-sm">
+              <span className="flex items-center gap-1.5 text-[var(--gold)] bg-[var(--gold)]/10 border border-[#C5A059]/30 px-3 py-1.5 text-sm">
                 <Star size={14} /> Destaque
               </span>
             )}
@@ -347,7 +349,7 @@ END:VCALENDAR`;
             )}
 
             {evento.views_count && evento.views_count > 0 && (
-              <span className="flex items-center gap-1.5 text-zinc-500 text-sm">
+              <span className="flex items-center gap-1.5 text-[var(--foreground-muted)] text-sm">
                 <Eye size={14} />
                 {evento.views_count} visualizações
               </span>
@@ -356,7 +358,7 @@ END:VCALENDAR`;
 
           {/* Título */}
           <h1
-            className="text-3xl md:text-5xl font-serif text-white mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+            className="text-3xl md:text-5xl font-serif text-[var(--foreground)] mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.2s" }}
           >
             {evento.titulo}
@@ -367,33 +369,39 @@ END:VCALENDAR`;
             className="grid md:grid-cols-2 gap-4 mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.3s" }}
           >
-            <div className="flex items-center gap-3 text-zinc-300">
-              <div className="w-10 h-10 bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center">
-                <Calendar size={20} className="text-[#C5A059]" />
+            <div className="flex items-center gap-3 text-[var(--foreground-secondary)]">
+              <div className="w-10 h-10 bg-[var(--gold)]/10 border border-[#C5A059]/30 flex items-center justify-center">
+                <Calendar size={20} className="text-[var(--gold)]" />
               </div>
               <div>
-                <span className="text-xs text-zinc-500 uppercase tracking-wider">Data</span>
+                <span className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                  Data
+                </span>
                 <p className="capitalize">{formatDateRange(evento.data_inicio, evento.data_fim)}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 text-zinc-300">
-              <div className="w-10 h-10 bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center">
-                <MapPin size={20} className="text-[#C5A059]" />
+            <div className="flex items-center gap-3 text-[var(--foreground-secondary)]">
+              <div className="w-10 h-10 bg-[var(--gold)]/10 border border-[#C5A059]/30 flex items-center justify-center">
+                <MapPin size={20} className="text-[var(--gold)]" />
               </div>
               <div>
-                <span className="text-xs text-zinc-500 uppercase tracking-wider">Local</span>
+                <span className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                  Local
+                </span>
                 <p>{evento.localizacao}</p>
               </div>
             </div>
 
             {evento.hora_inicio && (
-              <div className="flex items-center gap-3 text-zinc-300">
-                <div className="w-10 h-10 bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center">
-                  <Clock size={20} className="text-[#C5A059]" />
+              <div className="flex items-center gap-3 text-[var(--foreground-secondary)]">
+                <div className="w-10 h-10 bg-[var(--gold)]/10 border border-[#C5A059]/30 flex items-center justify-center">
+                  <Clock size={20} className="text-[var(--gold)]" />
                 </div>
                 <div>
-                  <span className="text-xs text-zinc-500 uppercase tracking-wider">Horário</span>
+                  <span className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                    Horário
+                  </span>
                   <p>
                     {evento.hora_inicio}
                     {evento.hora_fim && ` - ${evento.hora_fim}`}
@@ -403,12 +411,14 @@ END:VCALENDAR`;
             )}
 
             {evento.preco_entrada && (
-              <div className="flex items-center gap-3 text-zinc-300">
-                <div className="w-10 h-10 bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center">
-                  <Euro size={20} className="text-[#C5A059]" />
+              <div className="flex items-center gap-3 text-[var(--foreground-secondary)]">
+                <div className="w-10 h-10 bg-[var(--gold)]/10 border border-[#C5A059]/30 flex items-center justify-center">
+                  <Euro size={20} className="text-[var(--gold)]" />
                 </div>
                 <div>
-                  <span className="text-xs text-zinc-500 uppercase tracking-wider">Entrada</span>
+                  <span className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                    Entrada
+                  </span>
                   <p>{evento.preco_entrada}</p>
                 </div>
               </div>
@@ -425,10 +435,10 @@ END:VCALENDAR`;
             className="md:col-span-2 space-y-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.4s" }}
           >
-            <div className="bg-zinc-900/50 border border-white/10 p-6">
-              <h2 className="text-xl font-serif text-white mb-4">Sobre o Evento</h2>
+            <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-6">
+              <h2 className="text-xl font-serif text-[var(--foreground)] mb-4">Sobre o Evento</h2>
               <div className="prose prose-invert prose-zinc max-w-none">
-                <p className="text-zinc-300 whitespace-pre-line leading-relaxed">
+                <p className="text-[var(--foreground-secondary)] whitespace-pre-line leading-relaxed">
                   {evento.descricao_completa || evento.descricao}
                 </p>
               </div>
@@ -440,7 +450,7 @@ END:VCALENDAR`;
                 {evento.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="flex items-center gap-1.5 text-sm bg-zinc-800/50 text-zinc-400 px-3 py-1.5 border border-white/5"
+                    className="flex items-center gap-1.5 text-sm bg-[var(--background-card)]/50 text-[var(--foreground-secondary)] px-3 py-1.5 border border-[var(--border)]"
                   >
                     <Tag size={12} />
                     {tag}
@@ -451,12 +461,12 @@ END:VCALENDAR`;
 
             {/* Organizador */}
             {evento.organizador && (
-              <div className="bg-zinc-900/50 border border-white/10 p-6">
-                <h3 className="text-lg font-serif text-white mb-2 flex items-center gap-2">
-                  <Users size={18} className="text-[#C5A059]" />
+              <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-6">
+                <h3 className="text-lg font-serif text-[var(--foreground)] mb-2 flex items-center gap-2">
+                  <Users size={18} className="text-[var(--gold)]" />
                   Organizador
                 </h3>
-                <p className="text-zinc-400">{evento.organizador}</p>
+                <p className="text-[var(--foreground-secondary)]">{evento.organizador}</p>
               </div>
             )}
           </div>
@@ -467,11 +477,11 @@ END:VCALENDAR`;
             style={{ animationDelay: "0.5s" }}
           >
             {/* Ações */}
-            <div className="bg-zinc-900/50 border border-white/10 p-4 space-y-3">
+            <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-4 space-y-3">
               {/* Adicionar ao Calendário */}
               <button
                 onClick={generateICS}
-                className="w-full flex items-center justify-center gap-2 bg-[#C5A059] text-black py-3 font-bold uppercase tracking-wider hover:bg-white transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-[var(--gold)] text-black py-3 font-bold uppercase tracking-wider hover:bg-white transition-colors"
               >
                 <Download size={18} />
                 Adicionar ao Calendário
@@ -483,7 +493,7 @@ END:VCALENDAR`;
                   href={evento.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-zinc-800 text-white py-3 font-medium hover:bg-zinc-700 transition-colors border border-white/10"
+                  className="w-full flex items-center justify-center gap-2 bg-[var(--background-card)] text-[var(--foreground)] py-3 font-medium hover:bg-[var(--surface-hover)] transition-colors border border-[var(--border)]"
                 >
                   <ExternalLink size={18} />
                   Site Oficial
@@ -494,38 +504,38 @@ END:VCALENDAR`;
               <div className="relative">
                 <button
                   onClick={() => setShowShareMenu(!showShareMenu)}
-                  className="w-full flex items-center justify-center gap-2 bg-zinc-800 text-white py-3 font-medium hover:bg-zinc-700 transition-colors border border-white/10"
+                  className="w-full flex items-center justify-center gap-2 bg-[var(--background-card)] text-[var(--foreground)] py-3 font-medium hover:bg-[var(--surface-hover)] transition-colors border border-[var(--border)]"
                 >
                   <Share2 size={18} />
                   Partilhar
                 </button>
 
                 {showShareMenu && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-800 border border-white/10 p-2 z-10">
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--background-card)] border border-[var(--border)] p-2 z-10">
                     <button
                       onClick={() => shareOnSocial("facebook")}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-zinc-700 transition-colors text-sm"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-[var(--surface-hover)] transition-colors text-sm"
                     >
                       <Facebook size={16} className="text-blue-500" />
                       Facebook
                     </button>
                     <button
                       onClick={() => shareOnSocial("twitter")}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-zinc-700 transition-colors text-sm"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-[var(--surface-hover)] transition-colors text-sm"
                     >
                       <Twitter size={16} className="text-sky-400" />
                       Twitter
                     </button>
                     <button
                       onClick={() => shareOnSocial("linkedin")}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-zinc-700 transition-colors text-sm"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-[var(--surface-hover)] transition-colors text-sm"
                     >
                       <Linkedin size={16} className="text-blue-600" />
                       LinkedIn
                     </button>
                     <button
                       onClick={copyLink}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-zinc-700 transition-colors text-sm"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-[var(--surface-hover)] transition-colors text-sm"
                     >
                       {copied ? (
                         <>
@@ -546,9 +556,11 @@ END:VCALENDAR`;
 
             {/* Região */}
             {evento.regiao && (
-              <div className="bg-zinc-900/50 border border-white/10 p-4">
-                <span className="text-xs text-zinc-500 uppercase tracking-wider">Região</span>
-                <p className="text-white font-medium mt-1">{evento.regiao}</p>
+              <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-4">
+                <span className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                  Região
+                </span>
+                <p className="text-[var(--foreground)] font-medium mt-1">{evento.regiao}</p>
               </div>
             )}
           </aside>
@@ -560,18 +572,20 @@ END:VCALENDAR`;
             className="mt-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
             style={{ animationDelay: "0.6s" }}
           >
-            <h2 className="text-2xl font-serif text-white mb-6">Eventos Relacionados</h2>
+            <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6">
+              Eventos Relacionados
+            </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {relacionados.map((rel) => {
                 const relTipo = tiposEvento[rel.tipo] || {
                   icon: "📅",
-                  color: "bg-zinc-500/20 text-zinc-400",
+                  color: "bg-zinc-500/20 text-[var(--foreground-secondary)]",
                 };
                 return (
                   <Link
                     key={rel.id}
                     href={`/eventos/${rel.slug}`}
-                    className="group bg-zinc-900/50 border border-white/10 hover:border-[#C5A059]/50 transition-all overflow-hidden"
+                    className="group bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/50 transition-all overflow-hidden"
                   >
                     {rel.imagem_capa ? (
                       <div className="relative h-32">
@@ -581,7 +595,7 @@ END:VCALENDAR`;
                           fill
                           className="object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[var(--background-secondary)] to-transparent" />
                       </div>
                     ) : (
                       <div className="h-32 bg-gradient-to-br from-[#C5A059]/10 to-transparent flex items-center justify-center">
@@ -592,10 +606,10 @@ END:VCALENDAR`;
                       <span className={`inline-block px-2 py-0.5 text-xs ${relTipo.color} mb-2`}>
                         {rel.tipo}
                       </span>
-                      <h3 className="font-serif text-white group-hover:text-[#C5A059] transition-colors mb-2 line-clamp-2">
+                      <h3 className="font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors mb-2 line-clamp-2">
                         {rel.titulo}
                       </h3>
-                      <p className="text-zinc-500 text-sm flex items-center gap-1">
+                      <p className="text-[var(--foreground-muted)] text-sm flex items-center gap-1">
                         <Calendar size={12} />
                         {new Date(rel.data_inicio).toLocaleDateString("pt-PT", {
                           day: "numeric",

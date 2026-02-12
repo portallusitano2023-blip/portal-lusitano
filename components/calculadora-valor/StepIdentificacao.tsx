@@ -58,32 +58,32 @@ export default function StepIdentificacao({ form, update }: StepProps) {
   return (
     <section className="space-y-6">
       <div className="text-center mb-8">
-        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs font-medium rounded-full mb-3">
+        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--gold)]/10 text-[var(--gold)] text-xs font-medium rounded-full mb-3">
           <Shield size={12} />
           {t.calculadora.step1_badge}
         </span>
         <h2 className="text-2xl sm:text-3xl font-serif">{t.calculadora.step1_title}</h2>
-        <p className="text-zinc-500 text-sm mt-2">{t.calculadora.step1_desc}</p>
+        <p className="text-[var(--foreground-muted)] text-sm mt-2">{t.calculadora.step1_desc}</p>
       </div>
 
       <div className="space-y-5">
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
             {t.calculadora.label_horse_name}{" "}
-            <span className="text-zinc-600">{t.calculadora.label_optional}</span>
+            <span className="text-[var(--foreground-muted)]">{t.calculadora.label_optional}</span>
           </label>
           <input
             type="text"
             value={form.nome}
             onChange={(e) => update("nome", e.target.value)}
             placeholder="Ex: Ícaro III, Novilheiro, Opus"
-            className="w-full bg-transparent border-b border-zinc-800 py-3 text-lg focus:border-[#C5A059] outline-none transition-colors placeholder:text-zinc-700"
+            className="w-full bg-transparent border-b border-[var(--border)] py-3 text-lg focus:border-[var(--gold)] outline-none transition-colors placeholder:text-[var(--foreground-muted)]"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.calculadora.label_age}
             </label>
             <div className="relative">
@@ -93,19 +93,19 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                 onChange={(e) => update("idade", Math.max(0, Math.min(30, Number(e.target.value))))}
                 min={0}
                 max={30}
-                className="w-full bg-transparent border-b border-zinc-800 py-3 text-lg focus:border-[#C5A059] outline-none transition-colors"
+                className="w-full bg-transparent border-b border-[var(--border)] py-3 text-lg focus:border-[var(--gold)] outline-none transition-colors"
               />
-              <span className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
+              <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-sm">
                 {t.calculadora.label_years}
               </span>
             </div>
-            <span className="text-xs text-zinc-600 mt-1 block">
+            <span className="text-xs text-[var(--foreground-muted)] mt-1 block">
               {t.calculadora.label_ideal_age}
             </span>
           </div>
 
           <div>
-            <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.calculadora.label_height}
             </label>
             <div className="relative">
@@ -115,20 +115,20 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                 onChange={(e) => update("altura", Number(e.target.value))}
                 min={140}
                 max={180}
-                className="w-full bg-transparent border-b border-zinc-800 py-3 text-lg focus:border-[#C5A059] outline-none transition-colors"
+                className="w-full bg-transparent border-b border-[var(--border)] py-3 text-lg focus:border-[var(--gold)] outline-none transition-colors"
               />
-              <span className="absolute right-0 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
+              <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-sm">
                 {t.calculadora.label_cm}
               </span>
             </div>
-            <span className="text-xs text-zinc-600 mt-1 block">
+            <span className="text-xs text-[var(--foreground-muted)] mt-1 block">
               {t.calculadora.label_standard_height}
             </span>
           </div>
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_sex}
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -138,8 +138,8 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                 onClick={() => update("sexo", opt.value as typeof form.sexo)}
                 className={`py-3 px-4 rounded-lg border text-sm font-medium transition-all flex flex-col items-center gap-1 ${
                   form.sexo === opt.value
-                    ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                    : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                    ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                    : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
                 }`}
               >
                 <opt.icon size={18} />
@@ -150,7 +150,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_coat}
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -160,23 +160,23 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                 onClick={() => update("pelagem", p.value)}
                 className={`py-3 px-4 rounded-lg border text-left transition-all ${
                   form.pelagem === p.value
-                    ? "border-[#C5A059] bg-[#C5A059]/10"
-                    : "border-zinc-800 hover:border-zinc-700"
+                    ? "border-[var(--gold)] bg-[var(--gold)]/10"
+                    : "border-[var(--border)] hover:border-[var(--border)]"
                 }`}
               >
                 <span
-                  className={`block text-sm font-medium ${form.pelagem === p.value ? "text-[#C5A059]" : "text-zinc-300"}`}
+                  className={`block text-sm font-medium ${form.pelagem === p.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
                 >
                   {p.label}
                 </span>
-                <span className="text-xs text-zinc-500">{p.desc}</span>
+                <span className="text-xs text-[var(--foreground-muted)]">{p.desc}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="pt-4 border-t border-zinc-900">
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+        <div className="pt-4 border-t border-[var(--background-secondary)]">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_apsl_reg}
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -184,8 +184,8 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               onClick={() => update("registoAPSL", true)}
               className={`py-3 px-4 rounded-lg border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
                 form.registoAPSL
-                  ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                  : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                  ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                  : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
               }`}
             >
               {form.registoAPSL && <Check size={16} />}
@@ -195,8 +195,8 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               onClick={() => update("registoAPSL", false)}
               className={`py-3 px-4 rounded-lg border text-sm font-medium transition-all ${
                 !form.registoAPSL
-                  ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                  : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                  ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                  : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
               }`}
             >
               {t.calculadora.btn_no_reg}
@@ -205,7 +205,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
 
           {form.registoAPSL && (
             <div className="mt-4 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
-              <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
+              <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
                 {t.calculadora.label_book_type}
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -215,8 +215,8 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                     onClick={() => update("livroAPSL", opt.value as typeof form.livroAPSL)}
                     className={`py-2 px-3 rounded-lg border text-xs font-medium transition-all ${
                       form.livroAPSL === opt.value
-                        ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                        : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                        ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                        : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
                     }`}
                   >
                     {opt.label}

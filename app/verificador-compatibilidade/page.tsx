@@ -160,6 +160,7 @@ export default function VerificadorCompatibilidadePage() {
             onExportPDF={handleExportPDF}
             onShare={handleShare}
             isExporting={isExporting}
+            isSubscribed={isSubscribed}
           />
         )}
       </div>

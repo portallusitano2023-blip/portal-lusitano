@@ -20,6 +20,8 @@ import {
 import ResultActions from "@/components/tools/ResultActions";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
+import Confetti from "@/components/tools/Confetti";
+import BlurredProSection from "@/components/tools/BlurredProSection";
 import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
@@ -781,7 +783,7 @@ export default function ComparadorCavalosPage() {
                       </div>
                       <div className="text-xs text-[var(--foreground-muted)]">
                         {t.comparador.value_per_point}{" "}
-                        <span className="text-zinc-300">
+                        <span className="text-[var(--foreground-secondary)]">
                           {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
                         </span>
                       </div>
@@ -835,6 +837,11 @@ export default function ComparadorCavalosPage() {
             {/* Análise */}
             {showAnalise && (
               <div className="space-y-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+                {/* Confetti celebration */}
+                <div className="relative">
+                  <Confetti trigger={true} particleCount={50} duration={2800} />
+                </div>
+
                 {/* Acções: PDF, Partilhar, Imprimir */}
                 <ResultActions
                   onExportPDF={handleExportPDF}
@@ -881,122 +888,129 @@ export default function ComparadorCavalosPage() {
                   </div>
                 </div>
 
-                {/* Tabela Comparativa */}
-                <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)] overflow-x-auto">
-                  <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
-                    <Scale className="text-blue-400" size={20} />
-                    {t.comparador.comparative_table}
-                  </h3>
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="text-[var(--foreground-secondary)] border-b border-[var(--border)]">
-                        <th className="text-left py-3 px-2">{t.comparador.param_header}</th>
-                        {cavalos.map((c, i) => (
-                          <th
-                            key={c.id}
-                            className="text-center py-3 px-2"
-                            style={{ color: cores[i] }}
-                          >
-                            {c.nome}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        {
-                          label: t.comparador.param_age,
-                          campo: "idade" as const,
-                          maior: false,
-                          suffix: " anos",
-                        },
-                        {
-                          label: t.comparador.param_height,
-                          campo: "altura" as const,
-                          maior: false,
-                          suffix: " cm",
-                        },
-                        {
-                          label: t.comparador.param_conformation,
-                          campo: "conformacao" as const,
-                          maior: true,
-                          suffix: "/10",
-                        },
-                        {
-                          label: t.comparador.param_gaits,
-                          campo: "andamentos" as const,
-                          maior: true,
-                          suffix: "/10",
-                        },
-                        {
-                          label: t.comparador.param_temperament,
-                          campo: "temperamento" as const,
-                          maior: true,
-                          suffix: "/10",
-                        },
-                        {
-                          label: t.comparador.param_health,
-                          campo: "saude" as const,
-                          maior: true,
-                          suffix: "/10",
-                        },
-                        { label: "BLUP", campo: "blup" as const, maior: true, suffix: "" },
-                        {
-                          label: t.comparador.param_price,
-                          campo: "preco" as const,
-                          maior: false,
-                          suffix: "€",
-                        },
-                      ].map(({ label, campo, maior, suffix }) => (
-                        <tr key={campo} className="border-b border-[var(--border)]/50">
-                          <td className="py-3 px-2 text-[var(--foreground-secondary)]">{label}</td>
-                          {cavalos.map((c) => (
-                            <td
+                {/* Tabela Comparativa - PRO only */}
+                <BlurredProSection
+                  isSubscribed={isSubscribed}
+                  title={t.comparador.comparative_table}
+                >
+                  <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)] overflow-x-auto">
+                    <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
+                      <Scale className="text-blue-400" size={20} />
+                      {t.comparador.comparative_table}
+                    </h3>
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-[var(--foreground-secondary)] border-b border-[var(--border)]">
+                          <th className="text-left py-3 px-2">{t.comparador.param_header}</th>
+                          {cavalos.map((c, i) => (
+                            <th
                               key={c.id}
-                              className={`text-center py-3 px-2 ${getClasseCor(c[campo] as number, getMelhor(campo, maior), maior)}`}
+                              className="text-center py-3 px-2"
+                              style={{ color: cores[i] }}
                             >
-                              {campo === "preco"
-                                ? `${(c[campo] as number).toLocaleString("pt-PT")}${suffix}`
-                                : `${c[campo]}${suffix}`}
+                              {c.nome}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          {
+                            label: t.comparador.param_age,
+                            campo: "idade" as const,
+                            maior: false,
+                            suffix: " anos",
+                          },
+                          {
+                            label: t.comparador.param_height,
+                            campo: "altura" as const,
+                            maior: false,
+                            suffix: " cm",
+                          },
+                          {
+                            label: t.comparador.param_conformation,
+                            campo: "conformacao" as const,
+                            maior: true,
+                            suffix: "/10",
+                          },
+                          {
+                            label: t.comparador.param_gaits,
+                            campo: "andamentos" as const,
+                            maior: true,
+                            suffix: "/10",
+                          },
+                          {
+                            label: t.comparador.param_temperament,
+                            campo: "temperamento" as const,
+                            maior: true,
+                            suffix: "/10",
+                          },
+                          {
+                            label: t.comparador.param_health,
+                            campo: "saude" as const,
+                            maior: true,
+                            suffix: "/10",
+                          },
+                          { label: "BLUP", campo: "blup" as const, maior: true, suffix: "" },
+                          {
+                            label: t.comparador.param_price,
+                            campo: "preco" as const,
+                            maior: false,
+                            suffix: "€",
+                          },
+                        ].map(({ label, campo, maior, suffix }) => (
+                          <tr key={campo} className="border-b border-[var(--border)]/50">
+                            <td className="py-3 px-2 text-[var(--foreground-secondary)]">
+                              {label}
+                            </td>
+                            {cavalos.map((c) => (
+                              <td
+                                key={c.id}
+                                className={`text-center py-3 px-2 ${getClasseCor(c[campo] as number, getMelhor(campo, maior), maior)}`}
+                              >
+                                {campo === "preco"
+                                  ? `${(c[campo] as number).toLocaleString("pt-PT")}${suffix}`
+                                  : `${c[campo]}${suffix}`}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                        <tr className="border-t-2 border-[var(--border)]">
+                          <td className="py-4 px-2 font-semibold text-[var(--foreground)]">
+                            {t.comparador.total_score}
+                          </td>
+                          {cavalos.map((c, i) => (
+                            <td key={c.id} className="text-center py-4 px-2">
+                              <span className="text-2xl font-bold" style={{ color: cores[i] }}>
+                                {calcularScore(c)}
+                              </span>
+                              {c.id === vencedor.id && (
+                                <Crown className="inline ml-2 text-amber-400" size={16} />
+                              )}
                             </td>
                           ))}
                         </tr>
-                      ))}
-                      <tr className="border-t-2 border-[var(--border)]">
-                        <td className="py-4 px-2 font-semibold text-[var(--foreground)]">
-                          {t.comparador.total_score}
-                        </td>
-                        {cavalos.map((c, i) => (
-                          <td key={c.id} className="text-center py-4 px-2">
-                            <span className="text-2xl font-bold" style={{ color: cores[i] }}>
-                              {calcularScore(c)}
-                            </span>
-                            {c.id === vencedor.id && (
-                              <Crown className="inline ml-2 text-amber-400" size={16} />
-                            )}
+                        <tr className="border-t border-[var(--border)]">
+                          <td className="py-3 px-2 text-[var(--foreground-secondary)]">
+                            {t.comparador.value_per_pt}
                           </td>
-                        ))}
-                      </tr>
-                      <tr className="border-t border-[var(--border)]">
-                        <td className="py-3 px-2 text-[var(--foreground-secondary)]">
-                          {t.comparador.value_per_pt}
-                        </td>
-                        {cavalos.map((c) => (
-                          <td
-                            key={c.id}
-                            className={`text-center py-3 px-2 ${
-                              c.id === melhorValor.id
-                                ? "text-emerald-400 font-semibold"
-                                : "text-[var(--foreground-secondary)]"
-                            }`}
-                          >
-                            {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
-                          </td>
-                        ))}
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                          {cavalos.map((c) => (
+                            <td
+                              key={c.id}
+                              className={`text-center py-3 px-2 ${
+                                c.id === melhorValor.id
+                                  ? "text-emerald-400 font-semibold"
+                                  : "text-[var(--foreground-secondary)]"
+                              }`}
+                            >
+                              {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </BlurredProSection>
 
                 {/* Recomendação */}
                 <div className="grid md:grid-cols-2 gap-4">

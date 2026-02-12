@@ -43,31 +43,31 @@ export default function UnsubscribePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
-      <div className="max-w-md w-full bg-zinc-900/40 backdrop-blur-md border border-white/5 p-10 text-center">
-        <h1 className="text-2xl font-serif text-white mb-4">Cancelar Subscrição</h1>
+    <main className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
+      <div className="max-w-md w-full bg-[var(--background-secondary)]/40 backdrop-blur-md border border-[var(--border)] p-10 text-center">
+        <h1 className="text-2xl font-serif text-[var(--foreground)] mb-4">Cancelar Subscrição</h1>
 
         <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059] to-transparent mx-auto mb-8"></div>
 
         {status === "idle" && (
           <>
-            <p className="text-zinc-400 mb-6">
+            <p className="text-[var(--foreground-secondary)] mb-6">
               Tens a certeza que queres deixar de receber os nossos emails?
             </p>
             {email && (
-              <p className="text-zinc-500 text-sm mb-6">
-                Email: <span className="text-white">{email}</span>
+              <p className="text-[var(--foreground-muted)] text-sm mb-6">
+                Email: <span className="text-[var(--foreground)]">{email}</span>
               </p>
             )}
             <button
               onClick={handleUnsubscribe}
-              className="w-full bg-red-600 text-white font-bold uppercase text-xs tracking-[0.2em] py-4 hover:bg-red-700 transition-all"
+              className="w-full bg-red-600 text-[var(--foreground)] font-bold uppercase text-xs tracking-[0.2em] py-4 hover:bg-red-700 transition-all"
             >
               Sim, cancelar subscrição
             </button>
             <Link
               href="/"
-              className="block mt-4 text-zinc-500 text-sm hover:text-[#C5A059] transition-colors"
+              className="block mt-4 text-[var(--foreground-muted)] text-sm hover:text-[var(--gold)] transition-colors"
             >
               Não, quero continuar a receber
             </Link>
@@ -76,21 +76,21 @@ export default function UnsubscribePage() {
 
         {status === "loading" && (
           <div className="py-8">
-            <div className="w-8 h-8 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <p className="text-zinc-400 mt-4">A processar...</p>
+            <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <p className="text-[var(--foreground-secondary)] mt-4">A processar...</p>
           </div>
         )}
 
         {status === "success" && (
           <>
             <div className="text-green-500 text-5xl mb-4">✓</div>
-            <p className="text-zinc-300 mb-6">{message}</p>
-            <p className="text-zinc-500 text-sm mb-6">
+            <p className="text-[var(--foreground-secondary)] mb-6">{message}</p>
+            <p className="text-[var(--foreground-muted)] text-sm mb-6">
               Vamos sentir a tua falta! Podes sempre voltar a subscrever.
             </p>
             <Link
               href="/"
-              className="inline-block bg-[#C5A059] text-black font-bold uppercase text-xs tracking-[0.2em] py-4 px-8 hover:bg-white transition-all"
+              className="inline-block bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] py-4 px-8 hover:bg-white transition-all"
             >
               Voltar ao Portal
             </Link>
@@ -103,14 +103,14 @@ export default function UnsubscribePage() {
             <p className="text-red-400 mb-6">{message}</p>
             <button
               onClick={() => setStatus("idle")}
-              className="inline-block bg-zinc-800 text-white font-bold uppercase text-xs tracking-[0.2em] py-4 px-8 hover:bg-zinc-700 transition-all"
+              className="inline-block bg-[var(--background-card)] text-[var(--foreground)] font-bold uppercase text-xs tracking-[0.2em] py-4 px-8 hover:bg-[var(--surface-hover)] transition-all"
             >
               Tentar novamente
             </button>
           </>
         )}
 
-        <p className="text-zinc-600 text-xs mt-8">
+        <p className="text-[var(--foreground-muted)] text-xs mt-8">
           Portal Lusitano &copy; {new Date().getFullYear()}
         </p>
       </div>

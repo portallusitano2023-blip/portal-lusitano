@@ -77,42 +77,52 @@ export default function InstagramUploadPage() {
 
   if (uploaded) {
     return (
-      <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
+      <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
         <div className="max-w-xl mx-auto text-center">
           <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check className="text-green-500" size={40} />
           </div>
-          <h1 className="text-3xl font-serif text-white mb-4">Materiais Recebidos!</h1>
-          <p className="text-zinc-400 mb-6">
+          <h1 className="text-3xl font-serif text-[var(--foreground)] mb-4">
+            Materiais Recebidos!
+          </h1>
+          <p className="text-[var(--foreground-secondary)] mb-6">
             Obrigado! Recebemos os seus materiais e vamos publicar no Instagram nas próximas 48
             horas.
           </p>
-          <p className="text-zinc-500 text-sm">A redirecionar...</p>
+          <p className="text-[var(--foreground-muted)] text-sm">A redirecionar...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
+    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <Instagram className="text-white" size={32} />
+            <Instagram className="text-[var(--foreground)]" size={32} />
           </div>
-          <h1 className="text-3xl md:text-4xl font-serif text-white mb-4">Upload de Materiais</h1>
-          <p className="text-zinc-400">Envie as imagens/vídeos e instruções para a publicação</p>
+          <h1 className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4">
+            Upload de Materiais
+          </h1>
+          <p className="text-[var(--foreground-secondary)]">
+            Envie as imagens/vídeos e instruções para a publicação
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* File Upload */}
-          <div className="bg-zinc-900/50 border border-white/10 p-8 rounded-xl">
-            <h2 className="text-xl font-serif text-white mb-4">1. Imagens/Vídeos</h2>
-            <label className="block border-2 border-dashed border-white/20 rounded-xl p-12 text-center cursor-pointer hover:border-[#C5A059] transition-colors">
-              <Upload className="text-zinc-500 mx-auto mb-4" size={48} />
-              <p className="text-white font-medium mb-2">Clique para seleccionar ficheiros</p>
-              <p className="text-zinc-500 text-sm">Máximo 5 ficheiros (imagens ou vídeos)</p>
+          <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-8 rounded-xl">
+            <h2 className="text-xl font-serif text-[var(--foreground)] mb-4">1. Imagens/Vídeos</h2>
+            <label className="block border-2 border-dashed border-[var(--border)] rounded-xl p-12 text-center cursor-pointer hover:border-[var(--gold)] transition-colors">
+              <Upload className="text-[var(--foreground-muted)] mx-auto mb-4" size={48} />
+              <p className="text-[var(--foreground)] font-medium mb-2">
+                Clique para seleccionar ficheiros
+              </p>
+              <p className="text-[var(--foreground-muted)] text-sm">
+                Máximo 5 ficheiros (imagens ou vídeos)
+              </p>
               <input
                 type="file"
                 multiple
@@ -128,16 +138,16 @@ export default function InstagramUploadPage() {
                 {files.map((file, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between bg-zinc-800 p-3 rounded"
+                    className="flex items-center justify-between bg-[var(--background-card)] p-3 rounded"
                   >
                     <div className="flex items-center gap-3">
                       {file.type.startsWith("image/") ? (
-                        <FileImage className="text-[#C5A059]" size={20} />
+                        <FileImage className="text-[var(--gold)]" size={20} />
                       ) : (
-                        <FileVideo className="text-[#C5A059]" size={20} />
+                        <FileVideo className="text-[var(--gold)]" size={20} />
                       )}
-                      <span className="text-white text-sm">{file.name}</span>
-                      <span className="text-zinc-500 text-xs">
+                      <span className="text-[var(--foreground)] text-sm">{file.name}</span>
+                      <span className="text-[var(--foreground-muted)] text-xs">
                         ({(file.size / 1024 / 1024).toFixed(2)} MB)
                       </span>
                     </div>
@@ -155,38 +165,46 @@ export default function InstagramUploadPage() {
           </div>
 
           {/* Caption */}
-          <div className="bg-zinc-900/50 border border-white/10 p-8 rounded-xl">
-            <h2 className="text-xl font-serif text-white mb-4">2. Caption e Hashtags</h2>
+          <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-8 rounded-xl">
+            <h2 className="text-xl font-serif text-[var(--foreground)] mb-4">
+              2. Caption e Hashtags
+            </h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">Caption do Post</label>
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+                  Caption do Post
+                </label>
                 <textarea
                   value={formData.caption}
                   onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
                   rows={4}
-                  className="w-full bg-zinc-800 border border-white/10 px-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none resize-none"
+                  className="w-full bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none resize-none"
                   placeholder="Escreva a caption para o post..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">Hashtags (opcional)</label>
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+                  Hashtags (opcional)
+                </label>
                 <input
                   type="text"
                   value={formData.hashtags}
                   onChange={(e) => setFormData({ ...formData, hashtags: e.target.value })}
-                  className="w-full bg-zinc-800 border border-white/10 px-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none"
+                  className="w-full bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                   placeholder="#lusitano #cavalos #portugal"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">Link (se aplicável)</label>
+                <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+                  Link (se aplicável)
+                </label>
                 <input
                   type="url"
                   value={formData.link}
                   onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-                  className="w-full bg-zinc-800 border border-white/10 px-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none"
+                  className="w-full bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
                   placeholder="https://..."
                 />
               </div>
@@ -194,13 +212,15 @@ export default function InstagramUploadPage() {
           </div>
 
           {/* Observações */}
-          <div className="bg-zinc-900/50 border border-white/10 p-8 rounded-xl">
-            <h2 className="text-xl font-serif text-white mb-4">3. Observações Adicionais</h2>
+          <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-8 rounded-xl">
+            <h2 className="text-xl font-serif text-[var(--foreground)] mb-4">
+              3. Observações Adicionais
+            </h2>
             <textarea
               value={formData.observacoes}
               onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
               rows={3}
-              className="w-full bg-zinc-800 border border-white/10 px-4 py-3 text-white placeholder-zinc-600 focus:border-[#C5A059] focus:outline-none resize-none"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none resize-none"
               placeholder="Alguma instrução especial? Melhor dia/hora para publicar?"
             />
           </div>
@@ -209,7 +229,7 @@ export default function InstagramUploadPage() {
           <button
             type="submit"
             disabled={uploading || files.length === 0}
-            className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white py-4 text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-[var(--foreground)] py-4 text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {uploading ? (
               <>

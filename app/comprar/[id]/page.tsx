@@ -38,7 +38,10 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
   }
 
   // Se não houver cavalo (nem demo nem real), não mostra nada
-  if (!cavalo) return <div className="text-white pt-40 text-center">Exemplar não encontrado.</div>;
+  if (!cavalo)
+    return (
+      <div className="text-[var(--foreground)] pt-40 text-center">Exemplar não encontrado.</div>
+    );
 
   return (
     <>
@@ -58,9 +61,9 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
       />
       <Navbar />
 
-      <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
+      <div className="flex flex-col lg:flex-row min-h-screen bg-[var(--background)] text-[var(--foreground)]">
         {/* LADO ESQUERDO: A IMAGEM FIXA (Visual Hero) */}
-        <div className="lg:w-1/2 h-[50vh] lg:h-screen lg:fixed lg:top-0 lg:left-0 relative border-r border-zinc-900 z-0">
+        <div className="lg:w-1/2 h-[50vh] lg:h-screen lg:fixed lg:top-0 lg:left-0 relative border-r border-[var(--background-secondary)] z-0">
           <Image
             src={cavalo.image_url}
             alt={cavalo.nome_cavalo}
@@ -80,73 +83,73 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
         </div>
 
         {/* LADO DIREITO: O DOSSIER TÉCNICO (Scrollable) */}
-        <div className="lg:w-1/2 lg:ml-[50%] bg-black relative z-10">
+        <div className="lg:w-1/2 lg:ml-[50%] bg-[var(--background)] relative z-10">
           <div className="px-8 py-20 lg:p-24 max-w-3xl mx-auto space-y-20">
             {/* CABEÇALHO */}
-            <header className="space-y-6 border-b border-zinc-900 pb-12">
+            <header className="space-y-6 border-b border-[var(--background-secondary)] pb-12">
               <div className="flex items-center gap-4">
-                <span className="px-3 py-1 border border-[#C5A059] text-[#C5A059] text-[9px] uppercase tracking-widest font-bold">
+                <span className="px-3 py-1 border border-[var(--gold)] text-[var(--gold)] text-[9px] uppercase tracking-widest font-bold">
                   {cavalo.linhagem || "Linhagem Pura"}
                 </span>
-                <span className="text-zinc-500 text-[9px] uppercase tracking-widest">
+                <span className="text-[var(--foreground-muted)] text-[9px] uppercase tracking-widest">
                   REG: {cavalo.id.slice(0, 4).toUpperCase()}
                 </span>
               </div>
-              <h1 className="text-6xl md:text-7xl font-serif italic text-white">
+              <h1 className="text-6xl md:text-7xl font-serif italic text-[var(--foreground)]">
                 {cavalo.nome_cavalo}
               </h1>
-              <p className="text-3xl text-[#C5A059] font-serif">
+              <p className="text-3xl text-[var(--gold)] font-serif">
                 {Number(cavalo.preco).toLocaleString("pt-PT")} €
               </p>
             </header>
 
             {/* ESPECIFICAÇÕES BIOMÉTRICAS */}
-            <section className="grid grid-cols-2 gap-8 text-zinc-400">
+            <section className="grid grid-cols-2 gap-8 text-[var(--foreground-secondary)]">
               <div>
-                <span className="text-[10px] uppercase tracking-widest block mb-2 text-zinc-600">
+                <span className="text-[10px] uppercase tracking-widest block mb-2 text-[var(--foreground-muted)]">
                   Idade
                 </span>
-                <p className="text-2xl text-white font-serif">{cavalo.idade} Anos</p>
+                <p className="text-2xl text-[var(--foreground)] font-serif">{cavalo.idade} Anos</p>
               </div>
               <div>
-                <span className="text-[10px] uppercase tracking-widest block mb-2 text-zinc-600">
+                <span className="text-[10px] uppercase tracking-widest block mb-2 text-[var(--foreground-muted)]">
                   Localização
                 </span>
-                <p className="text-2xl text-white font-serif">{cavalo.localizacao}</p>
+                <p className="text-2xl text-[var(--foreground)] font-serif">{cavalo.localizacao}</p>
               </div>
               <div>
-                <span className="text-[10px] uppercase tracking-widest block mb-2 text-zinc-600">
+                <span className="text-[10px] uppercase tracking-widest block mb-2 text-[var(--foreground-muted)]">
                   Pontuação APSL
                 </span>
-                <p className="text-2xl text-white font-serif">
+                <p className="text-2xl text-[var(--foreground)] font-serif">
                   {cavalo.pontuacao_apsl || "N/A"} pts
                 </p>
               </div>
               <div className="col-span-2 mt-8">
-                <span className="text-[10px] uppercase tracking-widest block mb-4 text-[#C5A059] font-bold">
+                <span className="text-[10px] uppercase tracking-widest block mb-4 text-[var(--gold)] font-bold">
                   Parecer Técnico
                 </span>
-                <p className="font-light leading-relaxed text-lg italic text-zinc-300">
+                <p className="font-light leading-relaxed text-lg italic text-[var(--foreground-secondary)]">
                   &ldquo;{cavalo.descricao}&rdquo;
                 </p>
               </div>
             </section>
 
             {/* A ÁRVORE GENEALÓGICA VISUAL */}
-            <section className="py-10 border-t border-zinc-900">
-              <h3 className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold mb-12">
+            <section className="py-10 border-t border-[var(--background-secondary)]">
+              <h3 className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold mb-12">
                 Certificado de Sangue
               </h3>
               <Pedigree cavalo={cavalo} />
-              <p className="text-center text-[9px] text-zinc-600 mt-6 uppercase tracking-widest">
+              <p className="text-center text-[9px] text-[var(--foreground-muted)] mt-6 uppercase tracking-widest">
                 Dados verificados via Stud-Book Digital
               </p>
             </section>
 
             {/* SECÇÃO BLOCKCHAIN / INOVAÇÃO (NOVA) */}
-            <section className="py-12 border-t border-zinc-900">
+            <section className="py-12 border-t border-[var(--background-secondary)]">
               <div className="flex items-center gap-4 mb-8">
-                <h3 className="text-[#C5A059] uppercase tracking-[0.5em] text-[10px] font-bold">
+                <h3 className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold">
                   Digital Asset
                 </h3>
                 <div className="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 text-[8px] uppercase tracking-widest rounded-full animate-pulse">
@@ -154,7 +157,7 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
                 </div>
               </div>
 
-              <div className="bg-zinc-950 border border-zinc-800 p-8 relative overflow-hidden group hover:border-blue-500/30 transition-all duration-500">
+              <div className="bg-[var(--background-secondary)] border border-[var(--border)] p-8 relative overflow-hidden group hover:border-blue-500/30 transition-all duration-500">
                 {/* Efeito de Código de Fundo */}
                 <div className="absolute top-0 right-0 p-4 opacity-10 font-mono text-[10px] text-blue-400 pointer-events-none select-none">
                   0x71C...9A21
@@ -162,32 +165,38 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
                   <div>
-                    <h4 className="text-white font-serif italic text-2xl mb-2">
+                    <h4 className="text-[var(--foreground)] font-serif italic text-2xl mb-2">
                       Certificado NFT #8829
                     </h4>
-                    <p className="text-zinc-500 text-xs font-light leading-relaxed mb-6">
+                    <p className="text-[var(--foreground-muted)] text-xs font-light leading-relaxed mb-6">
                       Este exemplar possui um Gémeo Digital registado na rede Polygon. A propriedade
                       é transferida via Smart Contract no momento da venda, garantindo autenticidade
                       e histórico imutável.
                     </p>
-                    <div className="flex gap-4 font-mono text-[9px] text-zinc-400">
+                    <div className="flex gap-4 font-mono text-[9px] text-[var(--foreground-secondary)]">
                       <div>
-                        <span className="block text-zinc-600 uppercase">Token ID</span>
-                        <span className="text-white">8829304...</span>
+                        <span className="block text-[var(--foreground-muted)] uppercase">
+                          Token ID
+                        </span>
+                        <span className="text-[var(--foreground)]">8829304...</span>
                       </div>
                       <div>
-                        <span className="block text-zinc-600 uppercase">Contract</span>
-                        <span className="text-[#C5A059]">0xPort...Lusi</span>
+                        <span className="block text-[var(--foreground-muted)] uppercase">
+                          Contract
+                        </span>
+                        <span className="text-[var(--gold)]">0xPort...Lusi</span>
                       </div>
                       <div>
-                        <span className="block text-zinc-600 uppercase">Standard</span>
-                        <span className="text-white">ERC-721</span>
+                        <span className="block text-[var(--foreground-muted)] uppercase">
+                          Standard
+                        </span>
+                        <span className="text-[var(--foreground)]">ERC-721</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Visualização do Smart Contract (Simulada) */}
-                  <div className="bg-black border border-zinc-900 p-4 font-mono text-[8px] text-zinc-500 leading-loose rounded overflow-hidden">
+                  <div className="bg-[var(--background)] border border-[var(--background-secondary)] p-4 font-mono text-[8px] text-[var(--foreground-muted)] leading-loose rounded overflow-hidden">
                     <p>
                       <span className="text-blue-400">function</span>{" "}
                       <span className="text-yellow-400">transferOwnership</span>(address _newOwner){" "}
@@ -204,11 +213,11 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
             </section>
 
             {/* CALL TO ACTION */}
-            <div className="pt-10 sticky bottom-0 bg-black/95 backdrop-blur-md py-6 border-t border-zinc-900">
-              <button className="w-full bg-[#C5A059] text-black py-6 text-[11px] uppercase font-bold tracking-[0.4em] hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(197,160,89,0.3)]">
+            <div className="pt-10 sticky bottom-0 bg-[var(--background)]/95 backdrop-blur-md py-6 border-t border-[var(--background-secondary)]">
+              <button className="w-full bg-[var(--gold)] text-black py-6 text-[11px] uppercase font-bold tracking-[0.4em] hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(197,160,89,0.3)]">
                 Solicitar Dossier & Visita
               </button>
-              <p className="text-center text-[8px] text-zinc-500 mt-4 uppercase tracking-widest">
+              <p className="text-center text-[8px] text-[var(--foreground-muted)] mt-4 uppercase tracking-widest">
                 Exclusivo para membros Portal Lusitano
               </p>
             </div>

@@ -21,14 +21,14 @@ export default function UserMenu() {
   }, []);
 
   if (isLoading) {
-    return <div className="w-8 h-8 rounded-full bg-zinc-800 animate-pulse" />;
+    return <div className="w-8 h-8 rounded-full bg-[var(--background-card)] animate-pulse" />;
   }
 
   if (!user) {
     return (
       <Link
         href="/login"
-        className="hidden md:flex items-center gap-2 text-zinc-400 hover:text-[#C5A059] transition-colors text-sm"
+        className="hidden md:flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors text-sm"
       >
         <User size={18} />
         <span className="hidden xl:inline">Entrar</span>
@@ -43,7 +43,7 @@ export default function UserMenu() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
+        className="flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
       >
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#C5A059] to-[#8B7355] flex items-center justify-center text-black text-sm font-bold">
           {initial}
@@ -56,46 +56,46 @@ export default function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden z-50">
-          <div className="px-4 py-3 border-b border-zinc-800">
-            <p className="text-sm font-medium text-white truncate">{name}</p>
-            <p className="text-xs text-zinc-500 truncate">{user.email}</p>
+        <div className="absolute right-0 top-full mt-2 w-56 bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden z-50">
+          <div className="px-4 py-3 border-b border-[var(--border)]">
+            <p className="text-sm font-medium text-[var(--foreground)] truncate">{name}</p>
+            <p className="text-xs text-[var(--foreground-muted)] truncate">{user.email}</p>
           </div>
 
           <div className="py-1">
             <Link
               href="/perfil"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-300 hover:text-white hover:bg-zinc-800/50 transition-colors"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
             >
-              <Settings size={16} className="text-zinc-500" />
+              <Settings size={16} className="text-[var(--foreground-muted)]" />
               Meu Perfil
             </Link>
             <Link
               href="/historico"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-300 hover:text-white hover:bg-zinc-800/50 transition-colors"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
             >
-              <History size={16} className="text-zinc-500" />
+              <History size={16} className="text-[var(--foreground-muted)]" />
               Historico
             </Link>
             <Link
               href="/ferramentas"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#C5A059] hover:bg-zinc-800/50 transition-colors"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors"
             >
               <Crown size={16} />
               Ferramentas PRO
             </Link>
           </div>
 
-          <div className="border-t border-zinc-800 py-1">
+          <div className="border-t border-[var(--border)] py-1">
             <button
               onClick={async () => {
                 setOpen(false);
                 await signOut();
               }}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-400 hover:text-red-400 hover:bg-zinc-800/50 transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground-secondary)] hover:text-red-400 hover:bg-[var(--surface-hover)] transition-colors"
             >
               <LogOut size={16} />
               Terminar Sessao

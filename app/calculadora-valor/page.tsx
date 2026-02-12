@@ -197,6 +197,7 @@ export default function CalculadoraValorPage() {
                   onExportPDF={handleExportPDF}
                   onShare={handleShare}
                   isExporting={isExporting}
+                  isSubscribed={isSubscribed}
                 />
               )}
             </div>

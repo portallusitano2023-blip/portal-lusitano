@@ -45,7 +45,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
         setLoading(true);
         setError(null);
 
-        // ✅ Timeout de 10 segundos
+        // Timeout de 10 segundos
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
 
@@ -76,7 +76,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
           setFotoAtiva(result.atual.imageUrl);
           setRelacionados(result.relacionados || []);
 
-          // ✅ Track view do cavalo
+          // Track view do cavalo
           analytics.viewCavalo({
             id: slug,
             nome: result.atual.nome,
@@ -85,13 +85,13 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
             idade: result.atual.idade,
           });
         } else {
-          // ✅ Cavalo não encontrado (404)
+          // Cavalo nao encontrado (404)
           setError("not_found");
         }
       } catch (err) {
         console.error("Erro ao carregar cavalo:", err);
 
-        // ✅ Tratamento de erro específico
+        // Tratamento de erro especifico
         if (err instanceof Error) {
           if (err.name === "AbortError") {
             setError("timeout");
@@ -109,31 +109,33 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
     fetchData();
   }, [slug]);
 
-  // ✅ Loading state
+  // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)]">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#C5A059] mb-4"></div>
-          <p className="italic text-zinc-400">Carregando exemplar de elite...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--gold)] mb-4"></div>
+          <p className="italic text-[var(--foreground-secondary)]">
+            Carregando exemplar de elite...
+          </p>
         </div>
       </div>
     );
   }
 
-  // ✅ Error 404 - Cavalo não encontrado
+  // Error 404 - Cavalo nao encontrado
   if (error === "not_found") {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white px-6">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)] px-6">
         <div className="text-center max-w-md">
-          <h1 className="text-6xl font-serif mb-4 text-[#C5A059]">404</h1>
-          <p className="text-xl mb-6 text-zinc-400">Exemplar não encontrado</p>
-          <p className="text-sm text-zinc-500 mb-8">
-            O cavalo que procura pode ter sido vendido ou o link está incorreto.
+          <h1 className="text-6xl font-serif mb-4 text-[var(--gold)]">404</h1>
+          <p className="text-xl mb-6 text-[var(--foreground-secondary)]">Exemplar nao encontrado</p>
+          <p className="text-sm text-[var(--foreground-muted)] mb-8">
+            O cavalo que procura pode ter sido vendido ou o link esta incorreto.
           </p>
           <Link
             href="/marketplace"
-            className="inline-block px-8 py-3 bg-[#C5A059] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
+            className="inline-block px-8 py-3 bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
           >
             Ver Marketplace
           </Link>
@@ -142,18 +144,18 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
     );
   }
 
-  // ✅ Error timeout
+  // Error timeout
   if (error === "timeout") {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white px-6">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)] px-6">
         <div className="text-center max-w-md">
-          <h1 className="text-4xl font-serif mb-4 text-[#C5A059]">Tempo esgotado</h1>
-          <p className="text-sm text-zinc-400 mb-8">
-            A conexão demorou muito tempo. Verifique sua internet e tente novamente.
+          <h1 className="text-4xl font-serif mb-4 text-[var(--gold)]">Tempo esgotado</h1>
+          <p className="text-sm text-[var(--foreground-secondary)] mb-8">
+            A conexao demorou muito tempo. Verifique sua internet e tente novamente.
           </p>
           <button
             onClick={() => window.location.reload()}
-            className="inline-block px-8 py-3 bg-[#C5A059] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
+            className="inline-block px-8 py-3 bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
           >
             Tentar Novamente
           </button>
@@ -162,25 +164,25 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
     );
   }
 
-  // ✅ Error network/unknown
+  // Error network/unknown
   if (error) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white px-6">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)] px-6">
         <div className="text-center max-w-md">
-          <h1 className="text-4xl font-serif mb-4 text-[#C5A059]">Erro ao carregar</h1>
-          <p className="text-sm text-zinc-400 mb-8">
+          <h1 className="text-4xl font-serif mb-4 text-[var(--gold)]">Erro ao carregar</h1>
+          <p className="text-sm text-[var(--foreground-secondary)] mb-8">
             Ocorreu um erro ao carregar o cavalo. Por favor, tente novamente.
           </p>
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => window.location.reload()}
-              className="px-8 py-3 bg-[#C5A059] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
+              className="px-8 py-3 bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
             >
               Tentar Novamente
             </button>
             <Link
               href="/marketplace"
-              className="px-8 py-3 bg-zinc-900 border border-[#C5A059]/30 text-[#C5A059] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#C5A059] hover:text-black transition-all"
+              className="px-8 py-3 bg-[var(--background-secondary)] border border-[var(--gold)]/30 text-[var(--gold)] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[var(--gold)] hover:text-black transition-all"
             >
               Voltar
             </Link>
@@ -190,10 +192,10 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
     );
   }
 
-  // ✅ Safety check (nunca deve acontecer, mas por precaução)
+  // Safety check (nunca deve acontecer, mas por precaucao)
   if (!data) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white italic">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)] italic">
         Carregando exemplar de elite...
       </div>
     );
@@ -206,12 +208,12 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
   const todasAsFotos = [data.imageUrl, ...(data.galeriaUrls || [])];
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white pt-24 pb-20">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 pb-20">
       <DynamicSEO
-        title={`${data.nome} - Cavalo Lusitano à Venda - Portal Lusitano`}
+        title={`${data.nome} - Cavalo Lusitano a Venda - Portal Lusitano`}
         description={
           data.descricao ||
-          `${data.nome}, ${data.idade} anos, ${data.ferro}. Cavalo Lusitano de elite disponível para venda.`
+          `${data.nome}, ${data.idade} anos, ${data.ferro}. Cavalo Lusitano de elite disponivel para venda.`
         }
         image={data.imageUrl}
         url={`https://portallusitano.com/cavalo/${slug}`}
@@ -219,7 +221,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
       <div className="max-w-6xl mx-auto px-6">
         <Link
           href="/marketplace"
-          className="inline-flex items-center text-zinc-500 hover:text-white mb-8 text-xs uppercase tracking-[0.2em] transition-colors no-print"
+          className="inline-flex items-center text-[var(--foreground-muted)] hover:text-[var(--foreground)] mb-8 text-xs uppercase tracking-[0.2em] transition-colors no-print"
         >
           &larr; Voltar ao Marketplace
         </Link>
@@ -227,7 +229,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* GALERIA INTERATIVA */}
           <div className="space-y-4">
-            <div className="relative aspect-[4/5] overflow-hidden border border-zinc-900 bg-zinc-900 shadow-2xl">
+            <div className="relative aspect-[4/5] overflow-hidden border border-[var(--background-secondary)] bg-[var(--background-secondary)] shadow-2xl">
               {fotoAtiva && (
                 <Image
                   src={fotoAtiva}
@@ -242,7 +244,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                 <button
                   key={idx}
                   onClick={() => setFotoAtiva(url)}
-                  className={`relative aspect-square border-2 transition-all ${fotoAtiva === url ? "border-[#C5A059]" : "border-transparent opacity-50 hover:opacity-100"}`}
+                  className={`relative aspect-square border-2 transition-all ${fotoAtiva === url ? "border-[var(--gold)]" : "border-transparent opacity-50 hover:opacity-100"}`}
                 >
                   <Image src={url} fill className="object-cover" alt={`Miniatura ${idx}`} />
                 </button>
@@ -252,15 +254,17 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
 
           {/* DETALHES */}
           <div className="flex flex-col">
-            <span className="text-[#C5A059] uppercase tracking-[0.3em] text-sm mb-2 font-bold">
+            <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-sm mb-2 font-bold">
               Puro Sangue Lusitano
             </span>
             <h1 className="text-6xl font-serif mb-6">{data.nome}</h1>
 
-            <div className="bg-zinc-900/50 border border-[#C5A059]/30 p-8 mb-10 shadow-2xl backdrop-blur-sm">
+            <div className="bg-[var(--background-secondary)]/50 border border-[var(--gold)]/30 p-8 mb-10 shadow-2xl backdrop-blur-sm">
               <div className="mb-8">
-                <p className="text-zinc-500 text-[10px] uppercase tracking-widest mb-1">Preco</p>
-                <p className="text-3xl font-serif text-[#C5A059]">
+                <p className="text-[var(--foreground-muted)] text-[10px] uppercase tracking-widest mb-1">
+                  Preco
+                </p>
+                <p className="text-3xl font-serif text-[var(--gold)]">
                   {data.preco ? `${data.preco.toLocaleString("pt-PT")} €` : "Sob Consulta"}
                 </p>
               </div>
@@ -271,7 +275,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => {
-                    // ✅ Track contacto WhatsApp
+                    // Track contacto WhatsApp
                     analytics.contactCavalo({
                       id: slug!,
                       nome: data.nome,
@@ -286,7 +290,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                 <a
                   href="mailto:portal.lusitano2023@gmail.com"
                   onClick={() => {
-                    // ✅ Track contacto Email
+                    // Track contacto Email
                     analytics.contactCavalo({
                       id: slug!,
                       nome: data.nome,
@@ -294,7 +298,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                       method: "email",
                     });
                   }}
-                  className="w-full py-4 bg-zinc-900 border border-[#C5A059]/30 text-[#C5A059] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#C5A059] hover:text-black transition-all text-center"
+                  className="w-full py-4 bg-[var(--background-secondary)] border border-[var(--gold)]/30 text-[var(--gold)] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[var(--gold)] hover:text-black transition-all text-center"
                 >
                   Enviar Email
                 </a>
@@ -303,29 +307,33 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
 
             {/* FICHA TECNICA */}
             <div className="space-y-6 text-sm">
-              <div className="grid grid-cols-2 gap-y-4 border-t border-zinc-800 pt-6">
+              <div className="grid grid-cols-2 gap-y-4 border-t border-[var(--border)] pt-6">
                 <p>
-                  <span className="text-zinc-500 uppercase tracking-tighter block mb-1">Idade</span>{" "}
+                  <span className="text-[var(--foreground-muted)] uppercase tracking-tighter block mb-1">
+                    Idade
+                  </span>{" "}
                   {data.idade} anos
                 </p>
                 <p>
-                  <span className="text-zinc-500 uppercase tracking-tighter block mb-1">Ferro</span>{" "}
+                  <span className="text-[var(--foreground-muted)] uppercase tracking-tighter block mb-1">
+                    Ferro
+                  </span>{" "}
                   {data.ferro}
                 </p>
               </div>
               {data.genealogia && (
-                <div className="border-t border-zinc-800 pt-6">
-                  <span className="text-zinc-500 uppercase tracking-tighter block mb-2">
+                <div className="border-t border-[var(--border)] pt-6">
+                  <span className="text-[var(--foreground-muted)] uppercase tracking-tighter block mb-2">
                     Genealogia
                   </span>
-                  <p className="text-zinc-400">{data.genealogia}</p>
+                  <p className="text-[var(--foreground-secondary)]">{data.genealogia}</p>
                 </div>
               )}
-              <div className="border-t border-zinc-800 pt-6">
-                <span className="text-zinc-500 uppercase tracking-tighter block mb-2">
+              <div className="border-t border-[var(--border)] pt-6">
+                <span className="text-[var(--foreground-muted)] uppercase tracking-tighter block mb-2">
                   Descricao
                 </span>
-                <p className="text-zinc-400 leading-relaxed text-base italic font-serif">
+                <p className="text-[var(--foreground-secondary)] leading-relaxed text-base italic font-serif">
                   {data.descricao}
                 </p>
               </div>
@@ -335,14 +343,14 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
 
         {/* EXEMPLARES RELACIONADOS */}
         {relacionados.length > 0 && (
-          <div className="mt-32 pt-20 border-t border-zinc-900">
-            <h3 className="font-serif text-3xl mb-12 text-center text-white">
-              Outros <span className="text-[#C5A059]">Exemplares de Elite</span>
+          <div className="mt-32 pt-20 border-t border-[var(--background-secondary)]">
+            <h3 className="font-serif text-3xl mb-12 text-center text-[var(--foreground)]">
+              Outros <span className="text-[var(--gold)]">Exemplares de Elite</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relacionados.map((rel) => (
                 <Link key={rel.slug} href={`/cavalo/${rel.slug}`} className="group block">
-                  <div className="aspect-[4/5] overflow-hidden bg-zinc-900 mb-4 border border-zinc-800 group-hover:border-[#C5A059] transition-all relative">
+                  <div className="aspect-[4/5] overflow-hidden bg-[var(--background-secondary)] mb-4 border border-[var(--border)] group-hover:border-[var(--gold)] transition-all relative">
                     <Image
                       src={rel.imageUrl}
                       alt={rel.nome}
@@ -350,13 +358,13 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                       className="object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
                     />
                   </div>
-                  <p className="text-[#C5A059] uppercase tracking-widest text-[10px] mb-1 font-bold">
+                  <p className="text-[var(--gold)] uppercase tracking-widest text-[10px] mb-1 font-bold">
                     Puro Sangue Lusitano
                   </p>
-                  <h4 className="text-xl font-serif text-white group-hover:text-[#C5A059] transition-colors">
+                  <h4 className="text-xl font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors">
                     {rel.nome}
                   </h4>
-                  <p className="text-zinc-500 text-xs mt-1">{rel.idade} anos</p>
+                  <p className="text-[var(--foreground-muted)] text-xs mt-1">{rel.idade} anos</p>
                 </Link>
               ))}
             </div>

@@ -70,12 +70,16 @@ export default function ToolReviewForm({
 
   if (isSubmitted) {
     return (
-      <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-6 text-center">
-        <div className="w-12 h-12 bg-[#C5A059]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Star className="w-6 h-6 text-[#C5A059]" fill="currentColor" />
+      <div className="bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-lg p-6 text-center">
+        <div className="w-12 h-12 bg-[var(--gold)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Star className="w-6 h-6 text-[var(--gold)]" fill="currentColor" />
         </div>
-        <h3 className="text-lg font-semibold text-white mb-2">Obrigado pela sua avaliação!</h3>
-        <p className="text-zinc-400 text-sm">A sua review será publicada após aprovação.</p>
+        <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2">
+          Obrigado pela sua avaliação!
+        </h3>
+        <p className="text-[var(--foreground-secondary)] text-sm">
+          A sua review será publicada após aprovação.
+        </p>
       </div>
     );
   }
@@ -84,7 +88,7 @@ export default function ToolReviewForm({
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Star Rating */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">
+        <label className="block text-sm font-medium text-[var(--foreground-secondary)] mb-2">
           A sua avaliação de {ferramentaNome}
         </label>
         <div className="flex gap-1">
@@ -100,7 +104,9 @@ export default function ToolReviewForm({
             >
               <Star
                 className={`w-8 h-8 ${
-                  star <= (hoverRating || rating) ? "text-[#C5A059]" : "text-zinc-600"
+                  star <= (hoverRating || rating)
+                    ? "text-[var(--gold)]"
+                    : "text-[var(--foreground-muted)]"
                 }`}
                 fill={star <= (hoverRating || rating) ? "currentColor" : "none"}
               />
@@ -108,7 +114,7 @@ export default function ToolReviewForm({
           ))}
         </div>
         {rating > 0 && (
-          <p className="text-sm text-zinc-500 mt-1">
+          <p className="text-sm text-[var(--foreground-muted)] mt-1">
             {rating === 1 && "Fraco"}
             {rating === 2 && "Razoável"}
             {rating === 3 && "Bom"}
@@ -120,12 +126,14 @@ export default function ToolReviewForm({
 
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-1">Nome *</label>
+        <label className="block text-sm font-medium text-[var(--foreground-secondary)] mb-1">
+          Nome *
+        </label>
         <input
           type="text"
           value={formData.autor_nome}
           onChange={(e) => setFormData({ ...formData, autor_nome: e.target.value })}
-          className="w-full px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:ring-2 focus:ring-[#C5A059] focus:border-transparent transition"
+          className="w-full px-4 py-2.5 bg-[var(--background-card)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent transition"
           placeholder="O seu nome"
           required
         />
@@ -133,12 +141,14 @@ export default function ToolReviewForm({
 
       {/* Comment */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-1">Comentário *</label>
+        <label className="block text-sm font-medium text-[var(--foreground-secondary)] mb-1">
+          Comentário *
+        </label>
         <textarea
           value={formData.comentario}
           onChange={(e) => setFormData({ ...formData, comentario: e.target.value })}
           rows={4}
-          className="w-full px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:ring-2 focus:ring-[#C5A059] focus:border-transparent resize-none transition"
+          className="w-full px-4 py-2.5 bg-[var(--background-card)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent resize-none transition"
           placeholder="O que achou desta ferramenta?"
           required
         />
@@ -151,9 +161,12 @@ export default function ToolReviewForm({
           id={`recomenda-${ferramentaSlug}`}
           checked={formData.recomenda}
           onChange={(e) => setFormData({ ...formData, recomenda: e.target.checked })}
-          className="w-4 h-4 text-[#C5A059] bg-zinc-800 border-zinc-600 rounded focus:ring-[#C5A059]"
+          className="w-4 h-4 text-[var(--gold)] bg-[var(--background-card)] border-[var(--border)] rounded focus:ring-[var(--gold)]"
         />
-        <label htmlFor={`recomenda-${ferramentaSlug}`} className="text-sm text-zinc-400">
+        <label
+          htmlFor={`recomenda-${ferramentaSlug}`}
+          className="text-sm text-[var(--foreground-secondary)]"
+        >
           Recomendo esta ferramenta
         </label>
       </div>
@@ -169,7 +182,7 @@ export default function ToolReviewForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full py-3 bg-gradient-to-r from-[#C5A059] to-[#D4B068] text-black font-semibold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black font-semibold rounded-lg hover:from-[var(--gold-hover)] hover:to-[var(--gold-hover)] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isSubmitting ? (
           <>

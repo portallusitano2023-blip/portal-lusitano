@@ -21,28 +21,30 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
   return (
     <section className="space-y-6">
       <div className="text-center mb-8">
-        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#C5A059]/10 text-[#C5A059] text-xs font-medium rounded-full mb-3">
+        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--gold)]/10 text-[var(--gold)] text-xs font-medium rounded-full mb-3">
           <Star size={12} />
           {t.calculadora.step5_badge}
         </span>
         <h2 className="text-2xl sm:text-3xl font-serif">{t.calculadora.step5_title}</h2>
-        <p className="text-zinc-500 text-sm mt-2">{t.calculadora.step5_desc}</p>
+        <p className="text-[var(--foreground-muted)] text-sm mt-2">{t.calculadora.step5_desc}</p>
       </div>
 
       <div className="space-y-6">
         {form.sexo !== "castrado" && (
-          <div className="p-5 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+          <div className="p-5 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
             <div className="flex items-center gap-3 mb-4">
-              <GitBranch className="text-[#C5A059]" size={20} />
-              <h3 className="text-sm font-medium text-zinc-300">{t.calculadora.repro_value}</h3>
+              <GitBranch className="text-[var(--gold)]" size={20} />
+              <h3 className="text-sm font-medium text-[var(--foreground-secondary)]">
+                {t.calculadora.repro_value}
+              </h3>
             </div>
 
             <button
               onClick={() => update("reproducao", !form.reproducao)}
               className={`w-full py-3 px-4 rounded-lg border text-sm font-medium transition-all flex items-center justify-center gap-2 mb-4 ${
                 form.reproducao
-                  ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                  : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                  ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                  : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
               }`}
             >
               {form.reproducao && <Check size={16} />}
@@ -54,7 +56,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
             {form.reproducao && (
               <div className="grid grid-cols-2 gap-4 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-2">
+                  <label className="block text-xs text-[var(--foreground-muted)] mb-2">
                     {t.calculadora.label_registered_offspring}
                   </label>
                   <input
@@ -62,11 +64,11 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                     value={form.descendentes}
                     onChange={(e) => update("descendentes", Math.max(0, Number(e.target.value)))}
                     min={0}
-                    className="w-full bg-transparent border border-zinc-800 rounded-lg py-2 px-3 focus:border-[#C5A059] outline-none transition-colors"
+                    className="w-full bg-transparent border border-[var(--border)] rounded-lg py-2 px-3 focus:border-[var(--gold)] outline-none transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-2">
+                  <label className="block text-xs text-[var(--foreground-muted)] mb-2">
                     {t.calculadora.label_approved_offspring}
                   </label>
                   <input
@@ -76,7 +78,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                       update("descendentesAprovados", Math.max(0, Number(e.target.value)))
                     }
                     min={0}
-                    className="w-full bg-transparent border border-zinc-800 rounded-lg py-2 px-3 focus:border-[#C5A059] outline-none transition-colors"
+                    className="w-full bg-transparent border border-[var(--border)] rounded-lg py-2 px-3 focus:border-[var(--gold)] outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -85,7 +87,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
         )}
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_target_market}
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -95,19 +97,21 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                 onClick={() => update("mercado", m.value)}
                 className={`py-2 px-3 rounded-lg border text-sm transition-all ${
                   form.mercado === m.value
-                    ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                    : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                    ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                    : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
                 }`}
               >
                 {m.label}
               </button>
             ))}
           </div>
-          <p className="text-xs text-zinc-600 mt-2">{t.calculadora.market_influence}</p>
+          <p className="text-xs text-[var(--foreground-muted)] mt-2">
+            {t.calculadora.market_influence}
+          </p>
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_market_trend}
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -117,13 +121,13 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                 onClick={() => update("tendencia", opt.value as FormData["tendencia"])}
                 className={`py-4 px-4 rounded-lg border text-sm font-medium transition-all flex flex-col items-center gap-2 ${
                   form.tendencia === opt.value
-                    ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059]"
-                    : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
+                    ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                    : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
                 }`}
               >
                 <opt.icon size={20} />
                 <span>{opt.label}</span>
-                <span className="text-xs text-zinc-500">{opt.desc}</span>
+                <span className="text-xs text-[var(--foreground-muted)]">{opt.desc}</span>
               </button>
             ))}
           </div>

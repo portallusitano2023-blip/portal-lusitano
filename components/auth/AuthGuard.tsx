@@ -22,8 +22,8 @@ export default function AuthGuard({ children, fallback }: AuthGuardProps) {
   if (isLoading) {
     return (
       fallback || (
-        <div className="min-h-screen bg-[#050505] flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
+        <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-[var(--gold)]/30 border-t-[var(--gold)] rounded-full animate-spin" />
         </div>
       )
     );

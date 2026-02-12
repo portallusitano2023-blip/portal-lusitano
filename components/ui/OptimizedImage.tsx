@@ -34,10 +34,10 @@ export default function OptimizedImage({
   if (hasError) {
     return (
       <div
-        className={`bg-zinc-900 flex items-center justify-center ${containerClassName}`}
+        className={`bg-[var(--background-secondary)] flex items-center justify-center ${containerClassName}`}
         style={!fill ? { width, height } : undefined}
       >
-        <span className="text-zinc-600 text-xs uppercase tracking-widest">
+        <span className="text-[var(--foreground-muted)] text-xs uppercase tracking-widest">
           Imagem indisponível
         </span>
       </div>
@@ -47,9 +47,7 @@ export default function OptimizedImage({
   return (
     <div className={`relative overflow-hidden ${containerClassName}`}>
       {/* Skeleton loader */}
-      {isLoading && (
-        <div className="absolute inset-0 bg-zinc-900 animate-pulse" />
-      )}
+      {isLoading && <div className="absolute inset-0 bg-zinc-900 animate-pulse" />}
 
       <Image
         src={src}

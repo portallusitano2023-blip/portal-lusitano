@@ -22,14 +22,14 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
   ];
 
   return (
-    <section className="sticky top-0 z-20 bg-[#050505]/95 backdrop-blur-sm border-b border-white/5">
+    <section className="sticky top-0 z-20 bg-[var(--background)]/95 backdrop-blur-sm border-b border-[var(--border)]">
       <div className="max-w-5xl mx-auto px-6">
         <div className="flex gap-1 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => onSelectTab(tab.id)}
-              className={`flex items-center gap-2 px-5 py-4 text-sm font-medium whitespace-nowrap ${selectedTab === tab.id ? "text-[#C5A059] border-b-2 border-[#C5A059]" : "text-zinc-500 hover:text-zinc-300"}`}
+              className={`flex items-center gap-2 px-5 py-4 text-sm font-medium whitespace-nowrap ${selectedTab === tab.id ? "text-[var(--gold)] border-b-2 border-[var(--gold)]" : "text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)]"}`}
             >
               <tab.icon size={16} />
               {tab.label}
