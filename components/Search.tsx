@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Search as SearchIcon, X, Loader2, Clock, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface SearchResult {
   id: string;
@@ -61,6 +62,9 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
   const [history, setHistory] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLUListElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(modalRef, isOpen, onClose);
 
   // Type labels with translations
   const TYPE_LABELS = useMemo(
@@ -204,6 +208,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
 
       {/* Modal */}
       <div
+        ref={modalRef}
         role="dialog"
         aria-modal="true"
         aria-label="Pesquisar no site"

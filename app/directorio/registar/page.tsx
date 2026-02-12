@@ -87,7 +87,7 @@ export default function RegistarCoudelariaPage() {
         setStep(3); // Sucesso
       }
     } catch (error) {
-      console.error("Erro ao registar:", error);
+      void error;
     } finally {
       setIsSubmitting(false);
     }

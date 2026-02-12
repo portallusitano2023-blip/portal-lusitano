@@ -68,7 +68,7 @@ export default function LogsContent() {
       setPagination(data.pagination || {});
       setAvailableAdmins(data.filters?.admins || []);
     } catch (error) {
-      console.error("Erro ao carregar logs:", error);
+      void error;
     } finally {
       setLoading(false);
     }

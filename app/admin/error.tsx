@@ -10,7 +10,7 @@ export default function AdminError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Admin error:", error);
+    void error;
   }, [error]);
 
   return (
@@ -18,19 +18,11 @@ export default function AdminError({
       <div className="max-w-md w-full bg-zinc-900/50 border border-zinc-800 p-8 text-center rounded-lg">
         <div className="text-red-500 text-5xl mb-4">!</div>
 
-        <h1 className="text-xl font-semibold text-white mb-2">
-          Erro na Administração
-        </h1>
+        <h1 className="text-xl font-semibold text-white mb-2">Erro na Administração</h1>
 
-        <p className="text-zinc-400 text-sm mb-6">
-          Ocorreu um erro ao carregar esta página.
-        </p>
+        <p className="text-zinc-400 text-sm mb-6">Ocorreu um erro ao carregar esta página.</p>
 
-        {error.digest && (
-          <p className="text-zinc-400 text-xs mb-4 font-mono">
-            {error.digest}
-          </p>
-        )}
+        {error.digest && <p className="text-zinc-400 text-xs mb-4 font-mono">{error.digest}</p>}
 
         <div className="flex gap-3 justify-center">
           <button

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(_req: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function GET(_req: NextRequest) {
         totalCavalosViews = data.reduce((sum, cavalo) => sum + (cavalo.views_count || 0), 0);
       }
     } catch (e) {
-      console.warn("views_count column might not exist on cavalos_venda:", e);
+      logger.warn("views_count column might not exist on cavalos_venda:", e);
     }
 
     // 2. TOTAL DE VISUALIZAÇÕES DE EVENTOS
@@ -37,7 +38,7 @@ export async function GET(_req: NextRequest) {
         totalEventosViews = data.reduce((sum, evento) => sum + (evento.views_count || 0), 0);
       }
     } catch (e) {
-      console.warn("views_count column might not exist on eventos:", e);
+      logger.warn("views_count column might not exist on eventos:", e);
     }
 
     // 3. TOTAL GERAL DE VISUALIZAÇÕES
@@ -57,7 +58,7 @@ export async function GET(_req: NextRequest) {
         topCavalos = data;
       }
     } catch (e) {
-      console.warn("Error fetching top cavalos:", e);
+      logger.warn("Error fetching top cavalos:", e);
     }
 
     // 5. EVENTOS MAIS VISTOS (Top 10)
@@ -74,7 +75,7 @@ export async function GET(_req: NextRequest) {
         topEventos = data;
       }
     } catch (e) {
-      console.warn("Error fetching top eventos:", e);
+      logger.warn("Error fetching top eventos:", e);
     }
 
     // 6. FONTES DE TRÁFEGO (UTM Source da tabela leads)
@@ -93,7 +94,7 @@ export async function GET(_req: NextRequest) {
         leads = data;
       }
     } catch (e) {
-      console.warn("Error fetching leads:", e);
+      logger.warn("Error fetching leads:", e);
     }
 
     // Agregar por fonte
@@ -138,7 +139,7 @@ export async function GET(_req: NextRequest) {
         totalLeads = count || 0;
       }
     } catch (e) {
-      console.warn("Error counting leads:", e);
+      logger.warn("Error counting leads:", e);
     }
 
     // 10. CRESCIMENTO DE LEADS (últimos 30 dias vs 30 dias anteriores)
@@ -160,7 +161,7 @@ export async function GET(_req: NextRequest) {
         recentLeads = count || 0;
       }
     } catch (e) {
-      console.warn("Error counting recent leads:", e);
+      logger.warn("Error counting recent leads:", e);
     }
 
     try {
@@ -174,7 +175,7 @@ export async function GET(_req: NextRequest) {
         previousLeads = count || 0;
       }
     } catch (e) {
-      console.warn("Error counting previous leads:", e);
+      logger.warn("Error counting previous leads:", e);
     }
 
     const leadsGrowth =
@@ -208,7 +209,7 @@ export async function GET(_req: NextRequest) {
       contentTypeBreakdown,
     });
   } catch (error) {
-    console.error("Traffic analytics error:", error);
+    logger.error("Traffic analytics error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao buscar analytics de tráfego" },
       { status: 500 }

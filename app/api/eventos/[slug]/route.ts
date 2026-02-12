@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 // GET - Buscar evento por slug
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
 
@@ -16,10 +14,7 @@ export async function GET(
       .single();
 
     if (error || !evento) {
-      return NextResponse.json(
-        { error: "Evento não encontrado" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Evento não encontrado" }, { status: 404 });
     }
 
     // Incrementar views
@@ -44,10 +39,7 @@ export async function GET(
       relacionados: relacionados || [],
     });
   } catch (error) {
-    console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    logger.error("Erro:", error);
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

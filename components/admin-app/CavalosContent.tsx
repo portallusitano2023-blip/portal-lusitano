@@ -67,7 +67,7 @@ export default function CavalosContent() {
         setCavalos(data.cavalos || []);
       }
     } catch (error) {
-      console.error("Erro ao carregar cavalos:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -95,7 +95,7 @@ export default function CavalosContent() {
         resetForm();
       }
     } catch (error) {
-      console.error("Erro ao guardar cavalo:", error);
+      void error;
     }
   }
 
@@ -110,7 +110,7 @@ export default function CavalosContent() {
         fetchCavalos();
       }
     } catch (error) {
-      console.error("Erro ao atualizar status:", error);
+      void error;
     }
   }
 
@@ -125,7 +125,7 @@ export default function CavalosContent() {
         fetchCavalos();
       }
     } catch (error) {
-      console.error("Erro ao eliminar cavalo:", error);
+      void error;
     }
   }
 

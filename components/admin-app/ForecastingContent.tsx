@@ -84,7 +84,7 @@ export default function ForecastingContent() {
         setMetrics(data.metrics);
       }
     } catch (error) {
-      console.error("Erro ao carregar previsões:", error);
+      void error;
     } finally {
       setLoading(false);
     }

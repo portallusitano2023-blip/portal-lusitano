@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Listar profissionais com filtros
 export async function GET(req: NextRequest) {
@@ -67,9 +68,7 @@ export async function GET(req: NextRequest) {
     };
 
     // Calcular receita mensal recorrente (MRR)
-    const mrr = all
-      .filter((p) => p.plano_ativo)
-      .reduce((sum, p) => sum + (p.plano_valor || 0), 0);
+    const mrr = all.filter((p) => p.plano_ativo).reduce((sum, p) => sum + (p.plano_valor || 0), 0);
 
     return NextResponse.json({
       profissionais,
@@ -78,9 +77,12 @@ export async function GET(req: NextRequest) {
       count,
     });
   } catch (error) {
-    console.error("Error fetching profissionais:", error);
+    logger.error("Error fetching profissionais:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar profissionais", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar profissionais",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
@@ -98,10 +100,7 @@ export async function POST(req: NextRequest) {
 
     // Validações
     if (!body.nome || !body.tipo) {
-      return NextResponse.json(
-        { error: "Nome e tipo são obrigatórios" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Nome e tipo são obrigatórios" }, { status: 400 });
     }
 
     // Criar profissional
@@ -132,9 +131,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ profissional }, { status: 201 });
   } catch (error) {
-    console.error("Error creating profissional:", error);
+    logger.error("Error creating profissional:", error);
     return NextResponse.json(
-      { error: "Erro ao criar profissional", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao criar profissional",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

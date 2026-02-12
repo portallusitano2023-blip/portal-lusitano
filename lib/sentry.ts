@@ -6,6 +6,7 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
+import { logger } from "@/lib/logger";
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
 const ENV = process.env.NODE_ENV;
@@ -13,7 +14,7 @@ const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
 
 export function initSentry() {
   if (!SENTRY_DSN) {
-    console.warn("Sentry DSN not configured");
+    logger.warn("Sentry DSN not configured");
     return;
   }
 

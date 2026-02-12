@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BreadcrumbSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, FAQSchema } from "@/components/JsonLd";
 
 const siteUrl = "https://portal-lusitano.pt";
 
@@ -48,6 +48,30 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         items={[
           { name: "Portal Lusitano", url: siteUrl },
           { name: "Sobre Nós", url: `${siteUrl}/sobre` },
+        ]}
+      />
+      <FAQSchema
+        items={[
+          {
+            question: "O que é o Portal Lusitano?",
+            answer:
+              "O Portal Lusitano é a plataforma digital mais completa dedicada ao cavalo Lusitano. Oferece marketplace de cavalos, directório de coudelarias, ferramentas de avaliação, jornal editorial e loja equestre.",
+          },
+          {
+            question: "O Portal Lusitano é gratuito?",
+            answer:
+              "Sim, a maior parte do conteúdo é gratuito: artigos, glossário, directório de coudelarias, eventos e o ebook introdutório. As ferramentas avançadas de análise têm versão gratuita e versão Pro.",
+          },
+          {
+            question: "Como posso vender o meu cavalo no Portal Lusitano?",
+            answer:
+              "Pode registar o seu cavalo para venda na secção Vender Cavalo. Inclua fotos, vídeos, linhagem e informações veterinárias para maximizar o interesse dos compradores.",
+          },
+          {
+            question: "O Portal Lusitano verifica a informação publicada?",
+            answer:
+              "Sim. Toda a informação editorial é verificada com fontes credíveis como a APSL, FEI, Eurodressage e outras publicações de referência. Dados não verificáveis são omitidos.",
+          },
         ]}
       />
       {children}

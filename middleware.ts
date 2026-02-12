@@ -165,7 +165,7 @@ export async function middleware(request: NextRequest) {
     // Verify JWT token using jose (same as lib/auth.ts)
     try {
       if (!process.env.ADMIN_SECRET) {
-        console.error("ADMIN_SECRET not set - rejecting admin access");
+        // ADMIN_SECRET not set - rejecting admin access
         return NextResponse.redirect(new URL("/admin/login", request.url));
       }
       const secret = new TextEncoder().encode(process.env.ADMIN_SECRET);

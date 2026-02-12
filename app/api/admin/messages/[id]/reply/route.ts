@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { resend } from "@/lib/resend";
 import { verifySession } from "@/lib/auth";
+import { SUPPORT_EMAIL } from "@/lib/constants";
+import { logger } from "@/lib/logger";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Verificar autenticação
     const adminEmail = await verifySession();
@@ -18,10 +17,7 @@ export async function POST(
     const { subject, message } = await req.json();
 
     if (!subject || !message) {
-      return NextResponse.json(
-        { error: "Assunto e mensagem são obrigatórios" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Assunto e mensagem são obrigatórios" }, { status: 400 });
     }
 
     // Buscar contacto
@@ -32,10 +28,7 @@ export async function POST(
       .single();
 
     if (fetchError || !contact) {
-      return NextResponse.json(
-        { error: "Mensagem não encontrada" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Mensagem não encontrada" }, { status: 404 });
     }
 
     // Determinar tipo de formulário para personalizar email
@@ -50,7 +43,7 @@ export async function POST(
 
     // Enviar email via Resend
     await resend.emails.send({
-      from: "Portal Lusitano <suporte@portal-lusitano.pt>",
+      from: `Portal Lusitano <${SUPPORT_EMAIL}>`,
       to: contact.email,
       subject: subject,
       replyTo: adminEmail,
@@ -66,20 +59,24 @@ export async function POST(
               ${message}
             </div>
 
-            ${contact.form_data && Object.keys(contact.form_data).length > 0 ? `
+            ${
+              contact.form_data && Object.keys(contact.form_data).length > 0
+                ? `
               <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 30px 0;">
                 <p style="margin: 0 0 10px 0; color: #666; font-size: 12px;">
                   <strong>Em resposta ao seu pedido:</strong> ${formTypeLabel}
                 </p>
                 <p style="margin: 0; color: #999; font-size: 12px;">
-                  Enviado em ${new Date(contact.created_at).toLocaleDateString('pt-PT', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
+                  Enviado em ${new Date(contact.created_at).toLocaleDateString("pt-PT", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
                   })}
                 </p>
               </div>
-            ` : ''}
+            `
+                : ""
+            }
 
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
               <p style="color: #666; margin: 0; font-size: 14px;">
@@ -114,7 +111,7 @@ export async function POST(
       message: "Email enviado com sucesso",
     });
   } catch (error) {
-    console.error("Reply error:", error);
+    logger.error("Reply error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao enviar email" },
       { status: 500 }

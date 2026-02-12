@@ -3,19 +3,35 @@
 import { useState, useEffect } from "react";
 
 export default function Preloader() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [show, setShow] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    // Preloader rápido - 600ms (antes 1200ms)
-    const timer = setTimeout(() => setIsLoading(false), 600);
-    return () => clearTimeout(timer);
+    // Only show preloader on first visit per session
+    if (sessionStorage.getItem("pl-loaded")) return;
+    sessionStorage.setItem("pl-loaded", "1");
+    queueMicrotask(() => setShow(true));
+
+    // Start fade out quickly - 300ms is enough for the brand impression
+    const timer = setTimeout(() => setFadeOut(true), 300);
+    // Remove from DOM after fade animation completes
+    const remove = setTimeout(() => setShow(false), 550);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(remove);
+    };
   }, []);
 
-  if (!isLoading) return null;
+  if (!show) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[10000] bg-[var(--background)] flex flex-col items-center justify-center preloader-exit"
+      className="fixed inset-0 z-[10000] bg-[var(--background)] flex flex-col items-center justify-center"
+      style={{
+        opacity: fadeOut ? 0 : 1,
+        transition: "opacity 0.25s ease-out",
+        pointerEvents: fadeOut ? "none" : "auto",
+      }}
       aria-hidden
     >
       <div className="relative mb-12">
@@ -27,9 +43,6 @@ export default function Preloader() {
       <div className="w-48 h-[1px] bg-[var(--background-elevated)] overflow-hidden">
         <div className="h-full bg-[var(--gold)] w-0 preloader-bar" />
       </div>
-      <p className="mt-6 text-[10px] uppercase tracking-[0.4em] text-[var(--foreground-muted)]">
-        A carregar experiência...
-      </p>
     </div>
   );
 }

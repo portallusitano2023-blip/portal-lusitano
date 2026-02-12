@@ -90,7 +90,7 @@ export function useCartAbandonment() {
             }
           }
         } catch (error) {
-          console.warn("Failed to track cart abandonment:", error);
+          // Failed to track cart abandonment - silenced
         }
       },
       2 * 60 * 1000
@@ -137,7 +137,7 @@ export function useCartRecovery() {
         );
 
         if (!response.ok) {
-          console.error("Failed to recover cart");
+          // Failed to recover cart
           return;
         }
 

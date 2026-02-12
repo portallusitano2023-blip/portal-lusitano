@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,10 +14,7 @@ export async function POST(req: NextRequest) {
     const { action, ids, data } = await req.json();
 
     if (!action || !ids || !Array.isArray(ids) || ids.length === 0) {
-      return NextResponse.json(
-        { error: "Ação e IDs são obrigatórios" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Ação e IDs são obrigatórios" }, { status: 400 });
     }
 
     let updateData: Record<string, unknown> = {};
@@ -46,10 +44,7 @@ export async function POST(req: NextRequest) {
 
       case "set_priority":
         if (!data?.priority) {
-          return NextResponse.json(
-            { error: "Prioridade é obrigatória" },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: "Prioridade é obrigatória" }, { status: 400 });
         }
         updateData = {
           priority: data.priority,
@@ -58,10 +53,7 @@ export async function POST(req: NextRequest) {
 
       case "add_tag":
         if (!data?.tag) {
-          return NextResponse.json(
-            { error: "Tag é obrigatória" },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: "Tag é obrigatória" }, { status: 400 });
         }
         // Para tags, precisamos fazer update individual para adicionar ao array
         for (const id of ids) {
@@ -91,10 +83,7 @@ export async function POST(req: NextRequest) {
 
       case "remove_tag":
         if (!data?.tag) {
-          return NextResponse.json(
-            { error: "Tag é obrigatória" },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: "Tag é obrigatória" }, { status: 400 });
         }
         // Para remover tags, update individual
         for (const id of ids) {
@@ -133,21 +122,15 @@ export async function POST(req: NextRequest) {
         break;
 
       default:
-        return NextResponse.json(
-          { error: "Ação inválida" },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Ação inválida" }, { status: 400 });
     }
 
     // Executar update em massa para ações que não precisam de lógica individual
     if (Object.keys(updateData).length > 0) {
-      const { error } = await supabase
-        .from("contact_submissions")
-        .update(updateData)
-        .in("id", ids);
+      const { error } = await supabase.from("contact_submissions").update(updateData).in("id", ids);
 
       if (error) {
-        console.error("Bulk update error:", error);
+        logger.error("Bulk update error:", error);
         throw new Error(error.message);
       }
     }
@@ -157,7 +140,7 @@ export async function POST(req: NextRequest) {
       updated: ids.length,
     });
   } catch (error) {
-    console.error("Bulk operation error:", error);
+    logger.error("Bulk operation error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao executar ação em massa" },
       { status: 500 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Calendar } from "lucide-react";
 import HorseFavoriteButton from "./HorseFavoriteButton";
+import { getBlurDataURL } from "@/lib/image-utils";
 
 interface HorseCardProps {
   horse: {
@@ -45,11 +46,17 @@ export default function HorseCard({ horse, href, compact = false }: HorseCardPro
               alt={horse.nome_cavalo}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              quality={85}
+              placeholder="blur"
+              blurDataURL={getBlurDataURL("horse")}
               className="object-cover grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-              priority={false}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-[10px] tracking-widest uppercase">
+            <div
+              className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-[10px] tracking-widest uppercase"
+              role="img"
+              aria-label={`${horse.nome_cavalo} — sem fotografia`}
+            >
               Sem Foto
             </div>
           )}

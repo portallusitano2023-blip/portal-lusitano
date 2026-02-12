@@ -60,7 +60,7 @@ export default function CoudelariasContent() {
       setCoudelarias(data.coudelarias || []);
       setStats(data.stats);
     } catch (error) {
-      console.error("Error loading coudelarias:", error);
+      void error;
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +78,7 @@ export default function CoudelariasContent() {
         loadCoudelarias();
       }
     } catch (error) {
-      console.error("Error updating coudelaria:", error);
+      void error;
     }
   };
 
@@ -94,7 +94,7 @@ export default function CoudelariasContent() {
         loadCoudelarias();
       }
     } catch (error) {
-      console.error("Error deleting coudelaria:", error);
+      void error;
     }
   };
 

@@ -103,7 +103,7 @@ export default function AdminFinanceiroPage() {
         setIsAuthenticated(true);
         fetchAllData();
       } catch (error) {
-        console.error("Auth check error:", error);
+        void error;
         router.push("/admin/login");
       } finally {
         setIsLoading(false);
@@ -119,7 +119,7 @@ export default function AdminFinanceiroPage() {
     try {
       await Promise.all([fetchOverview(), fetchCharts(), fetchTransactions()]);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      void error;
     }
   };
 
@@ -131,7 +131,7 @@ export default function AdminFinanceiroPage() {
       const data = await res.json();
       setOverviewData(data);
     } catch (error) {
-      console.error("Overview error:", error);
+      void error;
     }
   };
 
@@ -143,7 +143,7 @@ export default function AdminFinanceiroPage() {
       const data = await res.json();
       setChartData(data);
     } catch (error) {
-      console.error("Charts error:", error);
+      void error;
     }
   };
 
@@ -161,7 +161,7 @@ export default function AdminFinanceiroPage() {
       const data = await res.json();
       setTransactionsData(data);
     } catch (error) {
-      console.error("Transactions error:", error);
+      void error;
     }
   };
 
@@ -193,7 +193,7 @@ export default function AdminFinanceiroPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      console.error("Export error:", error);
+      void error;
       alert("Erro ao exportar CSV");
     }
   };
@@ -220,7 +220,7 @@ export default function AdminFinanceiroPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      console.error("PDF error:", error);
+      void error;
       alert("Erro ao gerar relatório PDF");
     } finally {
       setIsGeneratingPDF(false);

@@ -7,6 +7,8 @@
  * - Eventos customizados
  */
 
+import { logger } from "@/lib/logger";
+
 // ============================================================================
 // TIPOS
 // ============================================================================
@@ -32,7 +34,7 @@ function getWindow(): AnalyticsWindow | undefined {
 
 function debugLog(action: string, data: unknown) {
   if (DEBUG_MODE) {
-    console.log(`[Analytics] ${action}:`, data);
+    logger.debug(`[Analytics] ${action}:`, data);
   }
 }
 

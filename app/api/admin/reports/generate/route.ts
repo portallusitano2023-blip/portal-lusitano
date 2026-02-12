@@ -3,6 +3,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { MonthlyReportPDF } from "@/components/admin/MonthlyReportPDF";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -182,7 +183,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Erro ao gerar relatório PDF:", error);
+    logger.error("Erro ao gerar relatório PDF:", error);
     return NextResponse.json(
       {
         error: "Erro ao gerar relatório",

@@ -6,8 +6,9 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Nota: optimizePackageImports removido - Turbopack (Next 16) faz tree-shaking automaticamente
-  // e a opção causava erros HMR com lucide-react
+  // Tree-shake heavy icon/component libraries
+  optimizePackageImports: ["lucide-react", "@sanity/icons"],
+
   images: {
     remotePatterns: [
       {
@@ -23,7 +24,15 @@ const nextConfig = {
         hostname: "cdn.sanity.io",
       },
     ],
+    // Prefer modern formats for smaller payloads
+    formats: ["image/avif", "image/webp"],
   },
+
+  // Compress responses
+  compress: true,
+
+  // Strict powered-by removal (minor security + saves bytes)
+  poweredByHeader: false,
 
   // Redirects para URLs antigos (blog -> jornal, IDs numéricos -> slugs)
   async redirects() {
@@ -122,12 +131,21 @@ const nextConfig = {
             value: "camera=(), microphone=(), geolocation=()",
           },
           // CSP é agora gerido no middleware.ts com nonces por request
-          // (eliminando a necessidade de 'unsafe-inline' para scripts)
         ],
       },
       // Cache static assets for 1 year
       {
         source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // Cache icons for 1 year
+      {
+        source: "/icons/:path*",
         headers: [
           {
             key: "Cache-Control",
@@ -142,6 +160,30 @@ const nextConfig = {
           {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // Service worker - short cache so updates propagate fast
+      {
+        source: "/sw.js",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, must-revalidate",
+          },
+          {
+            key: "Service-Worker-Allowed",
+            value: "/",
+          },
+        ],
+      },
+      // Manifest - cache 1 day
+      {
+        source: "/manifest.json",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400",
           },
         ],
       },

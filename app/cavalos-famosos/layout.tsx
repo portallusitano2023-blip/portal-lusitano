@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema, ItemListSchema } from "@/components/JsonLd";
 import { cavalosFamosos } from "./data";
 
+// ISR: Revalidate daily (historical data changes rarely)
+export const revalidate = 86400;
+
 const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {

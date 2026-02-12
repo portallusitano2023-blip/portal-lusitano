@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // PATCH - Atualizar status do depoimento
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -18,17 +16,14 @@ export async function PATCH(
 
     // Validar status
     if (!["aprovado", "rejeitado"].includes(status)) {
-      return NextResponse.json(
-        { error: "Status inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Status inválido" }, { status: 400 });
     }
 
     const { data: depoimento, error } = await supabase
       .from("depoimentos_cavalos")
       .update({
         status,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", id)
       .select()
@@ -38,9 +33,12 @@ export async function PATCH(
 
     return NextResponse.json({ depoimento });
   } catch (error) {
-    console.error("Error updating depoimento:", error);
+    logger.error("Error updating depoimento:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar depoimento", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao atualizar depoimento",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

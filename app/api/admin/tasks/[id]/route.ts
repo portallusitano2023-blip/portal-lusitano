@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Obter uma tarefa específica
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -29,19 +27,19 @@ export async function GET(
 
     return NextResponse.json({ task });
   } catch (error) {
-    console.error("Error fetching task:", error);
+    logger.error("Error fetching task:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar tarefa", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar tarefa",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
 }
 
 // PATCH - Atualizar tarefa
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -97,19 +95,19 @@ export async function PATCH(
 
     return NextResponse.json({ task });
   } catch (error) {
-    console.error("Error updating task:", error);
+    logger.error("Error updating task:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar tarefa", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao atualizar tarefa",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
 }
 
 // DELETE - Eliminar tarefa
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -118,18 +116,18 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const { error } = await supabase
-      .from("admin_tasks")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("admin_tasks").delete().eq("id", id);
 
     if (error) throw error;
 
     return NextResponse.json({ message: "Tarefa eliminada com sucesso" });
   } catch (error) {
-    console.error("Error deleting task:", error);
+    logger.error("Error deleting task:", error);
     return NextResponse.json(
-      { error: "Erro ao eliminar tarefa", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao eliminar tarefa",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

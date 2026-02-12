@@ -8,5 +8,10 @@ export const COLORS = {
   darkBg: "#050505",
 } as const;
 
-export const ARTICLE_IMAGE_SIZES =
-  "(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px";
+export const ARTICLE_IMAGE_SIZES = "(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px";
+
+/** Email principal de contacto / admin notifications */
+export const CONTACT_EMAIL = "portal.lusitano2023@gmail.com";
+
+/** Email de suporte (domínio próprio) */
+export const SUPPORT_EMAIL = "suporte@portal-lusitano.pt";

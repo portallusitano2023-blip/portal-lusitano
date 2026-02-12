@@ -19,7 +19,7 @@ const SearchModal = dynamic(
   { ssr: false }
 );
 
-export default memo(function Navbar({}: { dev?: boolean } = {}) {
+export default memo(function Navbar() {
   const { totalQuantity, openCart } = useCart();
   const { language, toggleLanguage, t } = useLanguage();
   const { wishlist } = useWishlist();
@@ -34,13 +34,20 @@ export default memo(function Navbar({}: { dev?: boolean } = {}) {
     setIsMobileOpen(false); // eslint-disable-line react-hooks/set-state-in-effect
   }, [pathname]);
 
-  // Detect scroll for better mobile UX
+  // Detect scroll for better mobile UX (RAF-throttled to avoid layout thrashing)
   useEffect(() => {
+    let rafId = 0;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 20);
+      });
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
@@ -58,6 +65,8 @@ export default memo(function Navbar({}: { dev?: boolean } = {}) {
             alt="Portal Lusitano"
             width={44}
             height={44}
+            quality={90}
+            priority
             className="w-9 h-9 md:w-11 md:h-11 object-contain group-hover:scale-105 transition-transform"
           />
           <div className="flex flex-col justify-center">

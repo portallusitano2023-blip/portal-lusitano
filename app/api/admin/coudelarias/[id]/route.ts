@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Obter uma coudelaria específica
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -25,10 +23,7 @@ export async function GET(
     if (error) throw error;
 
     if (!coudelaria) {
-      return NextResponse.json(
-        { error: "Coudelaria não encontrada" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Coudelaria não encontrada" }, { status: 404 });
     }
 
     // Buscar histórico de planos
@@ -43,19 +38,19 @@ export async function GET(
       plano_historico: historico || [],
     });
   } catch (error) {
-    console.error("Error fetching coudelaria:", error);
+    logger.error("Error fetching coudelaria:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar coudelaria", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar coudelaria",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
 }
 
 // PATCH - Atualizar coudelaria
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -184,19 +179,19 @@ export async function PATCH(
 
     return NextResponse.json({ coudelaria });
   } catch (error) {
-    console.error("Error updating coudelaria:", error);
+    logger.error("Error updating coudelaria:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar coudelaria", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao atualizar coudelaria",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
 }
 
 // DELETE - Eliminar coudelaria (soft delete)
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -218,9 +213,12 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Coudelaria eliminada com sucesso" });
   } catch (error) {
-    console.error("Error deleting coudelaria:", error);
+    logger.error("Error deleting coudelaria:", error);
     return NextResponse.json(
-      { error: "Erro ao eliminar coudelaria", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao eliminar coudelaria",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

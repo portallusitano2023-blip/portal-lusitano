@@ -281,7 +281,18 @@
     "reviews_leave": "Leave your review",
     "reviews_share": "Share your experience with our tools",
     "reviews_tool": "Tool",
-    "recommends": "Recommends"
+    "recommends": "Recommends",
+    "constellation_badge": "Lusitano Constellation",
+    "constellation_title": "The Stars of the Breed",
+    "constellation_subtitle": "Explore the 15 horses that defined the history of the Lusitano and their genetic connections",
+    "constellation_aria": "Interactive constellation of famous Lusitano horses",
+    "constellation_years": "Period",
+    "constellation_lineage": "Lineage",
+    "constellation_discipline": "Discipline",
+    "constellation_sire": "Sire",
+    "constellation_achievements": "Achievements",
+    "constellation_founder": "Line Chief",
+    "constellation_connection": "Sire-offspring connection"
   },
   "directorio": {
     "badge": "Official Directory",
@@ -965,7 +976,9 @@
     "benefit_history": "Complete evaluation history",
     "subscribe": "Subscribe PRO",
     "processing": "Processing...",
-    "see_plans": "See all plans"
+    "see_plans": "See all plans",
+    "peek_hint": "Move cursor to preview",
+    "peek_hint_mobile": "Touch and drag to preview"
   },
   "footer": {
     "rights": "All rights reserved",

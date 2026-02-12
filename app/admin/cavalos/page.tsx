@@ -48,7 +48,7 @@ export default function AdminCavalosPage() {
         setCavalos(data.cavalos || []);
       }
     } catch (error) {
-      console.error("Erro ao carregar cavalos:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ export default function AdminCavalosPage() {
         resetForm();
       }
     } catch (error) {
-      console.error("Erro ao guardar cavalo:", error);
+      void error;
     }
   }
 
@@ -91,7 +91,7 @@ export default function AdminCavalosPage() {
         fetchCavalos();
       }
     } catch (error) {
-      console.error("Erro ao atualizar status:", error);
+      void error;
     }
   }
 
@@ -106,7 +106,7 @@ export default function AdminCavalosPage() {
         fetchCavalos();
       }
     } catch (error) {
-      console.error("Erro ao eliminar cavalo:", error);
+      void error;
     }
   }
 

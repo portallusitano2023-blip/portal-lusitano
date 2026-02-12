@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // Mock AI responses - Replace with real OpenAI/Anthropic API calls
 // To use real AI: npm install openai
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("AI API error:", error);
+    logger.error("AI API error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao processar pedido de IA" },
       { status: 500 }

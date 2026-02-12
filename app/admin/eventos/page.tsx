@@ -56,7 +56,7 @@ export default function AdminEventosPage() {
         setEventos(data.eventos || []);
       }
     } catch (error) {
-      console.error("Erro ao carregar eventos:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,7 @@ export default function AdminEventosPage() {
         resetForm();
       }
     } catch (error) {
-      console.error("Erro ao guardar evento:", error);
+      void error;
     }
   }
 
@@ -94,7 +94,7 @@ export default function AdminEventosPage() {
         fetchEventos();
       }
     } catch (error) {
-      console.error("Erro ao eliminar evento:", error);
+      void error;
     }
   }
 

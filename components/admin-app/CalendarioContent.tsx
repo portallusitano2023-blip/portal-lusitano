@@ -69,7 +69,7 @@ export default function CalendarioContent() {
       setTasks(data.tasks || []);
       setStats(data.stats || null);
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      void error;
     }
   };
 
@@ -115,7 +115,7 @@ export default function CalendarioContent() {
       fetchTasks();
       closeModal();
     } catch (error) {
-      console.error("Error creating task:", error);
+      void error;
       alert("Erro ao criar tarefa");
     }
   };
@@ -132,7 +132,7 @@ export default function CalendarioContent() {
 
       fetchTasks();
     } catch (error) {
-      console.error("Error updating task:", error);
+      void error;
       alert("Erro ao atualizar tarefa");
     }
   };
@@ -149,7 +149,7 @@ export default function CalendarioContent() {
 
       fetchTasks();
     } catch (error) {
-      console.error("Error deleting task:", error);
+      void error;
       alert("Erro ao eliminar tarefa");
     }
   };

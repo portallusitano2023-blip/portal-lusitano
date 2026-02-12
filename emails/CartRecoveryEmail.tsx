@@ -1,4 +1,5 @@
 import * as React from "react";
+import { CONTACT_EMAIL } from "@/lib/constants";
 import {
   Html,
   Head,
@@ -162,8 +163,8 @@ export default function CartRecoveryEmail({
             <Text style={footerText}>Este carrinho estará disponível por mais 7 dias.</Text>
             <Text style={footerText}>
               Tem dúvidas? Contacte-nos em{" "}
-              <a href="mailto:portal.lusitano2023@gmail.com" style={link}>
-                portal.lusitano2023@gmail.com
+              <a href={`mailto:${CONTACT_EMAIL}`} style={link}>
+                {CONTACT_EMAIL}
               </a>
             </Text>
             <Hr style={divider} />

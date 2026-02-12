@@ -56,7 +56,7 @@ export default function BulkActions({
     try {
       await action.action(selectedIds);
     } catch (error) {
-      console.error("Bulk action error:", error);
+      void error;
     } finally {
       setIsProcessing(false);
     }

@@ -4,6 +4,8 @@ import { stripe } from "@/lib/stripe";
 import { supabase } from "@/lib/supabase";
 import { resend } from "@/lib/resend";
 import Stripe from "stripe";
+import { CONTACT_EMAIL } from "@/lib/constants";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -19,7 +21,7 @@ export async function POST(req: Request) {
   try {
     event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err) {
-    console.error(
+    logger.error(
       `Webhook signature verification failed: ${err instanceof Error ? err.message : "Unknown error"}`
     );
     return Response.json({ error: "Invalid signature" }, { status: 400 });
@@ -42,7 +44,7 @@ export async function POST(req: Request) {
 
     return Response.json({ received: true });
   } catch (error) {
-    console.error(
+    logger.error(
       `Webhook handler error: ${error instanceof Error ? error.message : "Unknown error"}`
     );
     return Response.json({ error: "Webhook handler failed" }, { status: 500 });
@@ -76,7 +78,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
 
     if (!formData) {
-      console.error("Form data not found for session:", session.id);
+      logger.error("Form data not found for session:", session.id);
       throw new Error("Form data not found - unable to process order");
     }
 
@@ -112,7 +114,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .single();
 
     if (error) {
-      console.error("Error inserting cavalo:", error);
+      logger.error("Error inserting cavalo:", error);
       throw new Error(`Failed to insert cavalo: ${error.message}`);
     }
 
@@ -193,7 +195,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // Notificar admin
     await resend.emails.send({
       from: "Portal Lusitano <admin@portal-lusitano.pt>",
-      to: "portal.lusitano2023@gmail.com",
+      to: CONTACT_EMAIL,
       subject: `Novo Anúncio: ${formData.nomeCavalo} - Aprovação Pendente`,
       html: `
         <h2>Novo anúncio aguarda aprovação</h2>
@@ -244,7 +246,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // Notificar admin com todos os detalhes
     await resend.emails.send({
       from: "Portal Lusitano <instagram@portal-lusitano.pt>",
-      to: "portal.lusitano2023@gmail.com",
+      to: CONTACT_EMAIL,
       subject: `Nova Compra Instagram: ${metadata.package} - ${metadata.nome}`,
       html: `
         <h2>Nova compra de publicidade no Instagram</h2>
@@ -336,7 +338,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // Notificar admin
     await resend.emails.send({
       from: "Portal Lusitano <admin@portal-lusitano.pt>",
-      to: "portal.lusitano2023@gmail.com",
+      to: CONTACT_EMAIL,
       subject: `Nova Compra de Publicidade: ${metadata.package}`,
       html: `
         <h2>Nova compra de publicidade</h2>
@@ -366,7 +368,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     });
 
     if (error) {
-      console.error("Error inserting profissional:", error);
+      logger.error("Error inserting profissional:", error);
       throw new Error(`Failed to insert profissional: ${error.message}`);
     }
 
@@ -408,7 +410,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     const subscriptionId = session.subscription as string;
 
     if (!userId) {
-      console.error("tools_subscription: missing user_id in metadata");
+      logger.error("tools_subscription: missing user_id in metadata");
       return;
     }
 
@@ -423,7 +425,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .eq("id", userId);
 
     if (error) {
-      console.error("Error updating tools subscription:", error);
+      logger.error("Error updating tools subscription:", error);
       throw new Error(`Failed to activate tools subscription: ${error.message}`);
     }
 
@@ -484,7 +486,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // Notify admin
     await resend.emails.send({
       from: "Portal Lusitano <admin@portal-lusitano.pt>",
-      to: "portal.lusitano2023@gmail.com",
+      to: CONTACT_EMAIL,
       subject: `Nova Subscrição PRO: ${session.customer_details?.email}`,
       html: `
         <h2>Nova subscrição Ferramentas PRO</h2>

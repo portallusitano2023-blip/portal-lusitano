@@ -28,7 +28,7 @@ export default function VenderPage() {
 
   return (
     <>
-      <Navbar dev={true} />
+      <Navbar />
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-32 pb-20 px-6">
         {/* HEADER: A SEGURANÇA PRIMEIRO */}
         <header className="max-w-4xl mx-auto mb-12 text-center">

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import DynamicSEO from "@/components/DynamicSEO";
+import Breadcrumb from "@/components/Breadcrumb";
 import {
   Calendar,
   MapPin,
@@ -119,7 +120,7 @@ export default function EventoPage() {
         setEvento(data.evento);
         setRelacionados(data.relacionados || []);
       } catch (err) {
-        console.error("Erro:", err);
+        void err;
         setError("Erro ao carregar evento");
       } finally {
         setLoading(false);
@@ -309,17 +310,15 @@ END:VCALENDAR`;
 
         <div className="relative max-w-4xl mx-auto px-6 pt-16">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-[var(--foreground-secondary)] mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-            <Link
-              href="/eventos"
-              className="hover:text-[var(--gold)] transition-colors flex items-center gap-1"
-            >
-              <ArrowLeft size={16} />
-              Eventos
-            </Link>
-            <span>/</span>
-            <span className="text-[var(--foreground-muted)] truncate">{evento.titulo}</span>
-          </nav>
+          <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+            <Breadcrumb
+              items={[
+                { label: "Home", href: "/" },
+                { label: "Eventos", href: "/eventos" },
+                { label: evento.titulo },
+              ]}
+            />
+          </div>
 
           {/* Badges */}
           <div

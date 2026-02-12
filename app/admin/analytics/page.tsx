@@ -76,7 +76,7 @@ export default function AdminAnalyticsPage() {
     try {
       await Promise.all([loadTraffic(), loadConversions(), loadSources()]);
     } catch (error) {
-      console.error("Error loading analytics:", error);
+      void error;
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +89,7 @@ export default function AdminAnalyticsPage() {
       const data = await res.json();
       setTraffic(data);
     } catch (error) {
-      console.error("Traffic error:", error);
+      void error;
     }
   };
 
@@ -100,7 +100,7 @@ export default function AdminAnalyticsPage() {
       const data = await res.json();
       setConversions(data);
     } catch (error) {
-      console.error("Conversions error:", error);
+      void error;
     }
   };
 
@@ -111,7 +111,7 @@ export default function AdminAnalyticsPage() {
       const data = await res.json();
       setSources(data);
     } catch (error) {
-      console.error("Sources error:", error);
+      void error;
     }
   };
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { resend } from "@/lib/resend";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,17 +15,11 @@ export async function POST(req: NextRequest) {
     const { id, status } = await req.json();
 
     if (!id || !status) {
-      return NextResponse.json(
-        { error: "ID e status são obrigatórios" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "ID e status são obrigatórios" }, { status: 400 });
     }
 
     if (!["published", "cancelled"].includes(status)) {
-      return NextResponse.json(
-        { error: "Status inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Status inválido" }, { status: 400 });
     }
 
     // Buscar o upload para obter o email do cliente
@@ -35,10 +30,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (fetchError || !upload) {
-      return NextResponse.json(
-        { error: "Upload não encontrado" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Upload não encontrado" }, { status: 404 });
     }
 
     // Atualizar status
@@ -99,7 +91,7 @@ export async function POST(req: NextRequest) {
           `,
         });
       } catch (emailError) {
-        console.error("Erro ao enviar email:", emailError);
+        logger.error("Erro ao enviar email:", emailError);
         // Não falhar a operação se o email falhar
       }
     }
@@ -109,7 +101,7 @@ export async function POST(req: NextRequest) {
       message: `Status atualizado para ${status}`,
     });
   } catch (error) {
-    console.error("Update status error:", error);
+    logger.error("Update status error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao atualizar status" },
       { status: 500 }

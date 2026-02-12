@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(_req: NextRequest) {
   try {
@@ -185,7 +186,7 @@ export async function GET(_req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Financial charts error:", error);
+    logger.error("Financial charts error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao gerar gráficos" },
       { status: 500 }

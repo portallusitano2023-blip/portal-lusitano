@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Buscar uma definição específica
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ key: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ key: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -22,15 +20,12 @@ export async function GET(
       .single();
 
     if (error || !setting) {
-      return NextResponse.json(
-        { error: "Definição não encontrada" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Definição não encontrada" }, { status: 404 });
     }
 
     return NextResponse.json({ setting });
   } catch (error) {
-    console.error("Setting get error:", error);
+    logger.error("Setting get error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao buscar definição" },
       { status: 500 }
@@ -39,10 +34,7 @@ export async function GET(
 }
 
 // PATCH - Atualizar uma definição
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ key: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ key: string }> }) {
   try {
     const adminEmail = await verifySession();
     if (!adminEmail) {
@@ -81,13 +73,13 @@ export async function PATCH(
       .single();
 
     if (error) {
-      console.error("Setting update error:", error);
+      logger.error("Setting update error:", error);
       throw error;
     }
 
     return NextResponse.json({ setting });
   } catch (error) {
-    console.error("Setting update error:", error);
+    logger.error("Setting update error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao atualizar definição" },
       { status: 500 }
@@ -96,10 +88,7 @@ export async function PATCH(
 }
 
 // DELETE - Eliminar uma definição (apenas custom, não as padrão)
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ key: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ key: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -110,12 +99,12 @@ export async function DELETE(
 
     // Lista de keys protegidas que não podem ser eliminadas
     const protectedKeys = [
-      'email_template_welcome',
-      'email_template_anuncio_aprovado',
-      'email_template_payment_received',
-      'notifications_admin_email',
-      'site_name',
-      'site_url',
+      "email_template_welcome",
+      "email_template_anuncio_aprovado",
+      "email_template_payment_received",
+      "notifications_admin_email",
+      "site_name",
+      "site_url",
     ];
 
     if (protectedKeys.includes(key)) {
@@ -125,19 +114,16 @@ export async function DELETE(
       );
     }
 
-    const { error } = await supabase
-      .from("site_settings")
-      .delete()
-      .eq("key", key);
+    const { error } = await supabase.from("site_settings").delete().eq("key", key);
 
     if (error) {
-      console.error("Setting delete error:", error);
+      logger.error("Setting delete error:", error);
       throw error;
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Setting delete error:", error);
+    logger.error("Setting delete error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao eliminar definição" },
       { status: 500 }

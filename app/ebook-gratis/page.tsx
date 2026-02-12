@@ -63,7 +63,7 @@ export default function EbookGratisPage() {
         window.location.href = "/ebook-gratis/download";
       }, 2000);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      void error;
       setLoading(false);
       alert(error instanceof Error ? error.message : "Erro ao processar pedido. Tenta novamente.");
     }

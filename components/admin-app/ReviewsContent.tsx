@@ -23,7 +23,7 @@ export default function ReviewsContent() {
         setReviews(data.reviews || []);
       }
     } catch (error) {
-      console.error("Erro ao carregar reviews:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -41,7 +41,7 @@ export default function ReviewsContent() {
         setSelectedReview(null);
       }
     } catch (error) {
-      console.error("Erro ao atualizar review:", error);
+      void error;
     }
   }
 

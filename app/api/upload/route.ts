@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // Cliente Supabase com service role para upload
 const supabaseAdmin = createClient(
@@ -57,7 +58,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (error) {
-      console.error("Erro no upload:", error);
+      logger.error("Erro no upload:", error);
       return NextResponse.json({ error: "Erro ao fazer upload da imagem" }, { status: 500 });
     }
 
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
       path: data.path,
     });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
@@ -92,13 +93,13 @@ export async function DELETE(request: NextRequest) {
     const { error } = await supabaseAdmin.storage.from("images").remove([path]);
 
     if (error) {
-      console.error("Erro ao remover:", error);
+      logger.error("Erro ao remover:", error);
       return NextResponse.json({ error: "Erro ao remover imagem" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

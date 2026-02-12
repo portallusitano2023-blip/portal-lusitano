@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
       discount: cart.emails_sent >= 2 ? Math.round(cart.cart_total * 0.1) : 0, // 10% discount on final offer
     });
   } catch (error: unknown) {
-    console.error("Cart recovery error:", error);
+    logger.error("Cart recovery error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 }
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (error) {
-      console.error("Error marking cart as recovered:", error);
+      logger.error("Error marking cart as recovered:", error);
       return NextResponse.json({ error: "Failed to mark cart as recovered" }, { status: 500 });
     }
 
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
       message: "Cart marked as recovered",
     });
   } catch (error: unknown) {
-    console.error("Cart recovery POST error:", error);
+    logger.error("Cart recovery POST error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 }

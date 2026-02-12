@@ -1,12 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 export default function ReadingProgressBar() {
-  const [progress, setProgress] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
+  const rafId = useRef(0);
 
   useEffect(() => {
-    function handleScroll() {
+    const bar = barRef.current;
+    if (!bar) return;
+
+    const update = () => {
       const article = document.querySelector("article");
       if (!article) return;
 
@@ -14,26 +18,39 @@ export default function ReadingProgressBar() {
       const articleTop = rect.top + window.scrollY;
       const articleHeight = rect.height;
       const scrolled = window.scrollY - articleTop;
-      const percentage = Math.min(Math.max((scrolled / (articleHeight - window.innerHeight)) * 100, 0), 100);
-      setProgress(percentage);
-    }
+      const pct = Math.min(
+        Math.max((scrolled / (articleHeight - window.innerHeight)) * 100, 0),
+        100
+      );
+      bar.style.width = `${pct}%`;
+      bar.setAttribute("aria-valuenow", String(Math.round(pct)));
+    };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => {
+      cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId.current);
+    };
   }, []);
 
   return (
     <div
       className="fixed top-0 left-0 w-full h-[3px] z-50"
       role="progressbar"
-      aria-valuenow={Math.round(progress)}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label="Progresso de leitura"
     >
       <div
-        className="h-full bg-[#C5A059] transition-[width] duration-150 ease-out"
-        style={{ width: `${progress}%` }}
+        ref={barRef}
+        className="h-full bg-[var(--gold)]"
+        style={{ width: "0%", willChange: "width" }}
       />
     </div>
   );

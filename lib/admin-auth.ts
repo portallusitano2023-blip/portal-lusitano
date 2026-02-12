@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto";
+import { logger } from "@/lib/logger";
 
 function getAdminSecret(): string {
   if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === "production") {
@@ -63,7 +64,7 @@ export function verifyAdminCredentials(email: string, password: string): boolean
   const adminPassword = process.env.ADMIN_PASSWORD;
 
   if (!adminEmail || !adminPassword) {
-    console.error("ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables");
+    logger.error("ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables");
     return false;
   }
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // Eventos CONFIRMADOS oficialmente para 2026 (com fontes verificadas)
 const eventosConfirmados2026 = [
@@ -81,7 +82,7 @@ export async function POST() {
       results,
     });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

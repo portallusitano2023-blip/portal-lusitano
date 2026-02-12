@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Listar depoimentos pendentes
 export async function GET(_req: NextRequest) {
@@ -20,7 +21,7 @@ export async function GET(_req: NextRequest) {
 
     return NextResponse.json({ pendentes: pendentes || [] });
   } catch (error) {
-    console.error("Error fetching depoimentos:", error);
+    logger.error("Error fetching depoimentos:", error);
     return NextResponse.json(
       {
         error: "Erro ao carregar depoimentos",

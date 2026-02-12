@@ -6,14 +6,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { Providers } from "./providers";
-import CartDrawer from "@/components/CartDrawer";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Analytics from "@/components/Analytics";
+// CartDrawer + WhatsAppButton moved to providers.tsx (lazy loaded, ssr: false)
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -142,12 +141,12 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('portal-lusitano-theme');if(t==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light')}}catch(e){}})()`,
           }}
         />
-        {/* Preconnect para recursos críticos, dns-prefetch para os restantes */}
+        {/* Preconnect para recursos críticos (hero image + CMS), dns-prefetch para os restantes */}
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <OrganizationSchema />
         <WebsiteSchema />
         <AnalyticsScripts />
@@ -165,11 +164,9 @@ export default function RootLayout({
           <ErrorBoundary>
             <SkipLinks />
             <Navbar />
-            <CartDrawer />
             <main id="main-content">{children}</main>
             <Footer />
             <MobileBottomNav />
-            <WhatsAppButton />
           </ErrorBoundary>
           <ServiceWorkerRegistration />
           <Analytics />

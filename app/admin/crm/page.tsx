@@ -68,7 +68,7 @@ export default function CRMPage() {
         setIsAuthenticated(true);
         fetchLeads();
       } catch (error) {
-        console.error("Auth check error:", error);
+        void error;
         router.push("/admin/login");
       } finally {
         setIsLoading(false);
@@ -89,7 +89,7 @@ export default function CRMPage() {
       setPipelineValue(data.pipelineValue || 0);
       setWonValue(data.wonValue || 0);
     } catch (error) {
-      console.error("Error fetching leads:", error);
+      void error;
     }
   };
 
@@ -112,7 +112,7 @@ export default function CRMPage() {
       fetchLeads();
       closeModal();
     } catch (error) {
-      console.error("Error creating lead:", error);
+      void error;
       alert("Erro ao criar lead");
     }
   };
@@ -129,7 +129,7 @@ export default function CRMPage() {
 
       fetchLeads();
     } catch (error) {
-      console.error("Error updating lead:", error);
+      void error;
       alert("Erro ao atualizar lead");
     }
   };
@@ -146,7 +146,7 @@ export default function CRMPage() {
 
       fetchLeads();
     } catch (error) {
-      console.error("Error deleting lead:", error);
+      void error;
       alert("Erro ao eliminar lead");
     }
   };

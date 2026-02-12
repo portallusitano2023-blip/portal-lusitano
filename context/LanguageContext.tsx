@@ -46,7 +46,9 @@ export function LanguageProvider({
     });
   };
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t: translations[language] }}>
+    <LanguageContext.Provider
+      value={{ language, toggleLanguage, t: translations[language] as (typeof translations)["pt"] }}
+    >
       {children}
     </LanguageContext.Provider>
   );

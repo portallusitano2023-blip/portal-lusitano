@@ -465,7 +465,7 @@ export default function DashboardContentNew() {
         const parsed = JSON.parse(savedOrder);
         setWidgets(parsed);
       } catch (error) {
-        console.error("Error loading widget order:", error);
+        void error;
       }
     }
   };
@@ -482,7 +482,7 @@ export default function DashboardContentNew() {
 
       // Se não autorizado (401), redirecionar para login
       if (response.status === 401) {
-        console.warn("Não autorizado - redirecionando para login");
+        // Not authorized - redirecting to login
         window.location.href = "/admin/login";
         return;
       }
@@ -502,7 +502,7 @@ export default function DashboardContentNew() {
         quickStats: data.quickStats,
       });
     } catch (error) {
-      console.error("Erro ao carregar dashboard:", error);
+      void error;
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Instagram, Music2, Mail, MapPin, ArrowUpRight, Gift } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { CONTACT_EMAIL } from "@/lib/constants";
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -58,7 +59,7 @@ export default function Footer() {
                   icon: Instagram,
                 },
                 { href: "https://tiktok.com/@portal_lusitano", label: "TikTok", icon: Music2 },
-                { href: "mailto:portal.lusitano2023@gmail.com", label: "Email", icon: Mail },
+                { href: `mailto:${CONTACT_EMAIL}`, label: "Email", icon: Mail },
               ].map((social) => (
                 <a
                   key={social.label}
@@ -135,9 +136,7 @@ export default function Footer() {
             <div className="pt-4 border-t border-[var(--border)] space-y-3">
               <div className="flex items-center gap-3">
                 <MapPin className="text-[var(--gold)]" size={14} />
-                <span className="text-[var(--foreground-muted)] text-xs">
-                  portal.lusitano2023@gmail.com
-                </span>
+                <span className="text-[var(--foreground-muted)] text-xs">{CONTACT_EMAIL}</span>
               </div>
               <Link
                 href="/ebook-gratis"

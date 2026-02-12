@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { apiLimiter } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 interface SearchResult {
   id: string;
@@ -189,7 +190,7 @@ export async function GET(request: NextRequest) {
     // Limitar resultados
     return NextResponse.json({ results: results.slice(0, limit) });
   } catch (error) {
-    console.error("Erro na pesquisa:", error);
+    logger.error("Erro na pesquisa:", error);
     return NextResponse.json({ error: "Erro na pesquisa" }, { status: 500 });
   }
 }

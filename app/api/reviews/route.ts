@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { reviewSchema, toolReviewSchema, parseWithZod } from "@/lib/schemas";
+import { logger } from "@/lib/logger";
 
 const VALID_TOOL_SLUGS = [
   "calculadora-valor",
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Erro ao buscar reviews:", error);
+      logger.error("Erro ao buscar reviews:", error);
       return NextResponse.json({ error: "Erro ao buscar reviews" }, { status: 500 });
     }
 
@@ -59,7 +60,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error) {
-        console.error("Erro ao criar review de ferramenta:", error);
+        logger.error("Erro ao criar review de ferramenta:", error);
         return NextResponse.json({ error: "Erro ao submeter avaliação" }, { status: 500 });
       }
 
@@ -158,7 +159,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error) {
-        console.error("Erro ao criar review:", error);
+        logger.error("Erro ao criar review:", error);
         return NextResponse.json({ error: "Erro ao submeter avaliação" }, { status: 500 });
       }
 
@@ -169,7 +170,7 @@ export async function POST(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

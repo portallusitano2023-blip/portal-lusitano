@@ -17,6 +17,8 @@
  * ```
  */
 
+import { logger } from "@/lib/logger";
+
 // ============================================================================
 // Error Types
 // ============================================================================
@@ -213,7 +215,7 @@ export async function fetchWithErrorHandling<T>(
     const error = err instanceof Error ? err : new Error(String(err));
     const errorType = getErrorType(error);
 
-    console.error(`[fetchWithErrorHandling] ${errorType}:`, error);
+    logger.error(`[fetchWithErrorHandling] ${errorType}:`, error);
 
     onError?.(error, errorType);
 

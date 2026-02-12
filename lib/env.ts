@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { logger } from "@/lib/logger";
 
 /**
  * Validação de variáveis de ambiente no servidor.
@@ -56,7 +57,7 @@ export function validateEnv(): ServerEnv {
     if (process.env.NODE_ENV === "production") {
       throw new Error(`Variáveis de ambiente inválidas:\n${errors}`);
     } else {
-      console.warn(`[env] Variáveis de ambiente com problemas (ignorado em dev):\n${errors}`);
+      logger.warn(`[env] Variáveis de ambiente com problemas (ignorado em dev):\n${errors}`);
     }
   }
 

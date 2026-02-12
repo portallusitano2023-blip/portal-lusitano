@@ -2,6 +2,7 @@ import { stripe } from "@/lib/stripe";
 import { supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (submissionError || !submission) {
-      console.error("Erro ao guardar contacto:", submissionError);
+      logger.error("Erro ao guardar contacto:", submissionError);
       return NextResponse.json(
         { error: "Erro ao processar formulário. Tente novamente." },
         { status: 500 }
@@ -94,7 +95,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error("Checkout creation error:", error);
+    logger.error("Checkout creation error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao criar checkout" },
       { status: 500 }

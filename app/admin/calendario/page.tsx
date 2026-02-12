@@ -67,7 +67,7 @@ export default function CalendarioPage() {
         setIsAuthenticated(true);
         fetchTasks();
       } catch (error) {
-        console.error("Auth check error:", error);
+        void error;
         router.push("/admin/login");
       } finally {
         setIsLoading(false);
@@ -88,7 +88,7 @@ export default function CalendarioPage() {
       setTasks(data.tasks || []);
       setStats(data.stats || null);
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      void error;
     }
   }, [currentDate]);
 
@@ -111,7 +111,7 @@ export default function CalendarioPage() {
       fetchTasks();
       closeModal();
     } catch (error) {
-      console.error("Error creating task:", error);
+      void error;
       alert("Erro ao criar tarefa");
     }
   };
@@ -128,7 +128,7 @@ export default function CalendarioPage() {
 
       fetchTasks();
     } catch (error) {
-      console.error("Error updating task:", error);
+      void error;
       alert("Erro ao atualizar tarefa");
     }
   };
@@ -145,7 +145,7 @@ export default function CalendarioPage() {
 
       fetchTasks();
     } catch (error) {
-      console.error("Error deleting task:", error);
+      void error;
       alert("Erro ao eliminar tarefa");
     }
   };

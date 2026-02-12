@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
       .eq("email", normalizedEmail);
 
     if (updateError) {
-      console.error("Error unsubscribing:", updateError);
+      logger.error("Error unsubscribing:", updateError);
       return NextResponse.json({ error: "Erro ao processar pedido" }, { status: 500 });
     }
 
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
       message: "Subscrição cancelada com sucesso. Não receberás mais emails nossos.",
     });
   } catch (error) {
-    console.error("Unsubscribe error:", error);
+    logger.error("Unsubscribe error:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

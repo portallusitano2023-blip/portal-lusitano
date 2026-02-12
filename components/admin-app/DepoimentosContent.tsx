@@ -31,7 +31,7 @@ export default function DepoimentosContent() {
       const data = await res.json();
       setDepoimentos(data.pendentes || []);
     } catch (error) {
-      console.error("Error fetching depoimentos:", error);
+      void error;
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +50,7 @@ export default function DepoimentosContent() {
       // Remover da lista local
       setDepoimentos((prev) => prev.filter((dep) => dep.id !== id));
     } catch (error) {
-      console.error("Error updating status:", error);
+      void error;
       alert("Erro ao atualizar depoimento");
     }
   };

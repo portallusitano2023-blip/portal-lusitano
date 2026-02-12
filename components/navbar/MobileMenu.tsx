@@ -46,7 +46,11 @@ export function MobileMenu({
   ];
 
   return (
-    <div className="lg:hidden bg-[var(--background)] border-t border-[var(--border)] max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain">
+    <div
+      role="menu"
+      aria-label="Menu mobile"
+      className="lg:hidden bg-[var(--background)] border-t border-[var(--border)] max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain"
+    >
       <div className="px-4 py-6 space-y-2">
         {/* Main Navigation */}
         {mainNavItems.map((item) => (

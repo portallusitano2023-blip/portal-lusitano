@@ -11,7 +11,7 @@ export default function MarketplaceError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Marketplace error:", error);
+    void error;
   }, [error]);
 
   return (

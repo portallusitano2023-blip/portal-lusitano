@@ -13,7 +13,7 @@ import {
   Sparkles,
   BookOpen,
 } from "lucide-react";
-import AnimatedCounter from "@/components/tools/AnimatedCounter";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import AnimatedGauge from "@/components/tools/AnimatedGauge";
 import HorseSilhouette from "@/components/tools/HorseSilhouette";
 import MarketPositionChart from "@/components/tools/MarketPositionChart";
@@ -87,7 +87,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
 
             <div className="flex items-baseline justify-center gap-2">
               <span className="text-5xl sm:text-7xl font-light tracking-tight text-[var(--foreground)]">
-                <AnimatedCounter value={resultado.valorFinal} duration={2000} />
+                <AnimatedCounter end={resultado.valorFinal} duration={2000} />
               </span>
               <span className="text-2xl text-[var(--gold)]">&euro;</span>
             </div>

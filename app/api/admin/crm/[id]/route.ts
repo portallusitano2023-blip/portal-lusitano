@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Obter um lead específico
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -29,19 +27,19 @@ export async function GET(
 
     return NextResponse.json({ lead });
   } catch (error) {
-    console.error("Error fetching lead:", error);
+    logger.error("Error fetching lead:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar lead", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar lead",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
 }
 
 // PATCH - Atualizar lead (incluindo mover para outro stage)
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -117,19 +115,19 @@ export async function PATCH(
 
     return NextResponse.json({ lead });
   } catch (error) {
-    console.error("Error updating lead:", error);
+    logger.error("Error updating lead:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar lead", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao atualizar lead",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
 }
 
 // DELETE - Eliminar lead
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -138,18 +136,18 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const { error } = await supabase
-      .from("crm_leads")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("crm_leads").delete().eq("id", id);
 
     if (error) throw error;
 
     return NextResponse.json({ message: "Lead eliminado com sucesso" });
   } catch (error) {
-    console.error("Error deleting lead:", error);
+    logger.error("Error deleting lead:", error);
     return NextResponse.json(
-      { error: "Erro ao eliminar lead", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao eliminar lead",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

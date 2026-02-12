@@ -57,7 +57,7 @@ export function useQuizLogic() {
           setShowResult(true);
         }
       } catch {
-        console.error("Invalid shared result");
+        // Invalid shared result - silenced
       }
     }
   }, [searchParams]);

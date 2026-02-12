@@ -1,15 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 export default function CartDrawer() {
   const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart, checkoutUrl } = useCart();
   const { language } = useLanguage();
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(drawerRef, isCartOpen, closeCart);
 
   // Fechar com tecla Escape
   useEffect(() => {
@@ -75,6 +79,7 @@ export default function CartDrawer() {
       />
 
       <div
+        ref={drawerRef}
         className={`absolute top-0 right-0 h-full w-full md:w-[450px] bg-[var(--background)] border-l border-[var(--border)] shadow-2xl transform transition-transform duration-700 ease-out ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}

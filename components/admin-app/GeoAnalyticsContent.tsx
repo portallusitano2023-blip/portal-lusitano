@@ -63,7 +63,7 @@ export default function GeoAnalyticsContent() {
         setTotal(result.total || 0);
       }
     } catch (error) {
-      console.error("Erro ao carregar dados geográficos:", error);
+      void error;
     } finally {
       setLoading(false);
     }

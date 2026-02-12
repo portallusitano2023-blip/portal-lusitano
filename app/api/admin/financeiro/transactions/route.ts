@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -62,35 +63,36 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
 
     // Formatar transações para o frontend
-    const formattedTransactions = transactions?.map((transaction) => {
-      const productLabels: Record<string, string> = {
-        cavalo_anuncio: "Anúncio de Cavalo",
-        instagram_ad: "Instagram",
-        publicidade: "Publicidade",
-      };
+    const formattedTransactions =
+      transactions?.map((transaction) => {
+        const productLabels: Record<string, string> = {
+          cavalo_anuncio: "Anúncio de Cavalo",
+          instagram_ad: "Instagram",
+          publicidade: "Publicidade",
+        };
 
-      const statusLabels: Record<string, string> = {
-        succeeded: "Sucesso",
-        pending: "Pendente",
-        failed: "Falhado",
-      };
+        const statusLabels: Record<string, string> = {
+          succeeded: "Sucesso",
+          pending: "Pendente",
+          failed: "Falhado",
+        };
 
-      return {
-        id: transaction.id,
-        date: transaction.created_at,
-        email: transaction.email,
-        productType: productLabels[transaction.product_type || ""] || "Outros",
-        productTypeKey: transaction.product_type,
-        amount: transaction.amount / 100, // Converter para euros
-        currency: transaction.currency?.toUpperCase() || "EUR",
-        status: statusLabels[transaction.status] || transaction.status,
-        statusKey: transaction.status,
-        description: transaction.description,
-        stripePaymentId: transaction.stripe_payment_intent_id,
-        stripeSessionId: transaction.stripe_session_id,
-        metadata: transaction.product_metadata,
-      };
-    }) || [];
+        return {
+          id: transaction.id,
+          date: transaction.created_at,
+          email: transaction.email,
+          productType: productLabels[transaction.product_type || ""] || "Outros",
+          productTypeKey: transaction.product_type,
+          amount: transaction.amount / 100, // Converter para euros
+          currency: transaction.currency?.toUpperCase() || "EUR",
+          status: statusLabels[transaction.status] || transaction.status,
+          statusKey: transaction.status,
+          description: transaction.description,
+          stripePaymentId: transaction.stripe_payment_intent_id,
+          stripeSessionId: transaction.stripe_session_id,
+          metadata: transaction.product_metadata,
+        };
+      }) || [];
 
     return NextResponse.json({
       transactions: formattedTransactions,
@@ -102,7 +104,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Transactions fetch error:", error);
+    logger.error("Transactions fetch error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao buscar transações" },
       { status: 500 }

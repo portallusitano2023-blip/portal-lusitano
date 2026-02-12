@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { resend } from "@/lib/resend";
 import { supabase } from "@/lib/supabase";
 import { stripe } from "@/lib/stripe";
+import { CONTACT_EMAIL } from "@/lib/constants";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,7 +25,7 @@ export async function POST(req: NextRequest) {
       const session = await stripe.checkout.sessions.retrieve(sessionId);
       customerEmail = session.customer_details?.email || null;
     } catch (error) {
-      console.error("Erro ao buscar sessão Stripe:", error);
+      logger.error("Erro ao buscar sessão Stripe:", error);
       // Continuar mesmo se falhar
     }
 
@@ -52,7 +54,7 @@ export async function POST(req: NextRequest) {
       });
 
       if (error) {
-        console.error("Supabase upload error:", error);
+        logger.error("Supabase upload error:", error);
         throw new Error(`Erro ao fazer upload: ${error.message}`);
       }
 
@@ -93,7 +95,7 @@ export async function POST(req: NextRequest) {
 
     await resend.emails.send({
       from: "Portal Lusitano <instagram@portal-lusitano.pt>",
-      to: "portal.lusitano2023@gmail.com",
+      to: CONTACT_EMAIL,
       subject: `📸 Materiais Instagram Recebidos - ${sessionId}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto;">
@@ -193,7 +195,7 @@ export async function POST(req: NextRequest) {
       filesCount: files.length,
     });
   } catch (error) {
-    console.error("Instagram upload error:", error);
+    logger.error("Instagram upload error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao processar upload" },
       { status: 500 }

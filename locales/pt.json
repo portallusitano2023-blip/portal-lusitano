@@ -281,7 +281,18 @@
     "reviews_leave": "Deixe a sua avaliação",
     "reviews_share": "Partilhe a sua experiência com as nossas ferramentas",
     "reviews_tool": "Ferramenta",
-    "recommends": "Recomenda"
+    "recommends": "Recomenda",
+    "constellation_badge": "Constelacao Lusitana",
+    "constellation_title": "As Estrelas da Raca",
+    "constellation_subtitle": "Explore os 15 cavalos que definiram a historia do Lusitano e as suas ligacoes geneticas",
+    "constellation_aria": "Constelacao interactiva dos cavalos lusitanos famosos",
+    "constellation_years": "Periodo",
+    "constellation_lineage": "Linhagem",
+    "constellation_discipline": "Disciplina",
+    "constellation_sire": "Pai",
+    "constellation_achievements": "Conquistas",
+    "constellation_founder": "Chefe de Linhagem",
+    "constellation_connection": "Ligacao pai-filho"
   },
   "directorio": {
     "badge": "Diretório Oficial",
@@ -965,7 +976,9 @@
     "benefit_history": "Histórico completo de avaliações",
     "subscribe": "Subscrever PRO",
     "processing": "A processar...",
-    "see_plans": "Ver todos os planos"
+    "see_plans": "Ver todos os planos",
+    "peek_hint": "Mova o cursor para pre-visualizar",
+    "peek_hint_mobile": "Toque e arraste para pre-visualizar"
   },
   "footer": {
     "rights": "Todos os direitos reservados",

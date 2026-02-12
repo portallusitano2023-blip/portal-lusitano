@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { logger } from "@/lib/logger";
 
 /**
  * Trigger automations based on event type
@@ -17,7 +18,7 @@ export async function triggerAutomations(
       .eq("enabled", true);
 
     if (error) {
-      console.error("Error fetching automations:", error);
+      logger.error("Error fetching automations:", error);
       return;
     }
 
@@ -53,14 +54,14 @@ export async function triggerAutomations(
         );
 
         if (!response.ok) {
-          console.error(`Failed to execute automation ${automation.id}`);
+          logger.error(`Failed to execute automation ${automation.id}`);
         }
       } catch (execError) {
-        console.error(`Error executing automation ${automation.id}:`, execError);
+        logger.error(`Error executing automation ${automation.id}:`, execError);
       }
     }
   } catch (error) {
-    console.error("Error in triggerAutomations:", error);
+    logger.error("Error in triggerAutomations:", error);
   }
 }
 
@@ -93,10 +94,10 @@ function scheduleDelayedAutomation(
       );
 
       if (!response.ok) {
-        console.error(`Delayed automation ${automation.id} failed`);
+        logger.error(`Delayed automation ${automation.id} failed`);
       }
     } catch (error) {
-      console.error(`Error executing delayed automation ${automation.id}:`, error);
+      logger.error(`Error executing delayed automation ${automation.id}:`, error);
     } finally {
       scheduledJobs.delete(jobKey);
     }

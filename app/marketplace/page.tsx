@@ -130,7 +130,7 @@ export default function MarketplacePage() {
           setCavalos(data.cavalos || []);
         }
       } catch (error) {
-        console.error("Erro ao carregar cavalos:", error);
+        void error;
       } finally {
         setLoading(false);
       }

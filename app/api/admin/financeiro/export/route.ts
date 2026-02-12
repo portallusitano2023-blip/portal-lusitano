@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -20,10 +21,7 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get("search");
 
     // Construir query (sem paginação, todos os resultados)
-    let query = supabase
-      .from("payments")
-      .select("*")
-      .order("created_at", { ascending: false });
+    let query = supabase.from("payments").select("*").order("created_at", { ascending: false });
 
     // Aplicar filtros
     if (productType && productType !== "all") {
@@ -108,7 +106,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("CSV export error:", error);
+    logger.error("CSV export error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao exportar CSV" },
       { status: 500 }

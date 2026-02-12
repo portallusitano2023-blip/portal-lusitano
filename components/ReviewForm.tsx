@@ -86,12 +86,12 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" aria-label={`Avaliar ${coudelariaNome}`}>
       <div>
         <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
           A sua avaliacao de {coudelariaNome}
         </label>
-        <div className="flex gap-1">
+        <div className="flex gap-1" role="radiogroup" aria-label="Avaliacao">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
@@ -99,6 +99,8 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
               onClick={() => setRating(star)}
               onMouseEnter={() => setHoverRating(star)}
               onMouseLeave={() => setHoverRating(0)}
+              aria-label={`${star} estrela${star > 1 ? "s" : ""}`}
+              aria-pressed={rating === star}
               className="p-1 transition-transform hover:scale-110"
             >
               <Star
@@ -133,6 +135,7 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
             className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             placeholder="O seu nome"
             required
+            aria-required="true"
           />
         </div>
         <div>
@@ -216,6 +219,7 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
           className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
           placeholder="Conte-nos sobre a sua experiencia com esta coudelaria..."
           required
+          aria-required="true"
         />
       </div>
 
@@ -232,15 +236,18 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
         </label>
       </div>
 
-      {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg text-red-600 dark:text-red-400 text-sm">
-          {error}
-        </div>
-      )}
+      <div role="alert" aria-live="assertive">
+        {error && (
+          <div className="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg text-red-600 dark:text-red-400 text-sm">
+            {error}
+          </div>
+        )}
+      </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
+        aria-busy={isSubmitting}
         className="w-full py-3 bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isSubmitting ? (

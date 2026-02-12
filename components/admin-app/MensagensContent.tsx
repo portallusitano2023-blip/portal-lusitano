@@ -82,7 +82,7 @@ export default function MensagensContent() {
       const data = await response.json();
       setStats(data);
     } catch (error) {
-      console.error("Erro ao carregar estatísticas:", error);
+      void error;
     }
   };
 
@@ -100,7 +100,7 @@ export default function MensagensContent() {
       const data = await response.json();
       setMessages(data.messages || []);
     } catch (error) {
-      console.error("Erro ao carregar mensagens:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -137,7 +137,7 @@ export default function MensagensContent() {
 
       fetchStats();
     } catch (error) {
-      console.error("Erro ao atualizar status:", error);
+      void error;
       alert("Erro ao atualizar status");
     }
   };
@@ -167,7 +167,7 @@ export default function MensagensContent() {
       setReplyMessage("");
       handleUpdateStatus(selectedMessage.id, "respondido");
     } catch (error) {
-      console.error("Erro ao enviar email:", error);
+      void error;
       alert("Erro ao enviar email");
     } finally {
       setSending(false);

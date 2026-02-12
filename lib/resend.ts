@@ -1,4 +1,6 @@
 import { Resend } from "resend";
+import { logger } from "@/lib/logger";
+import { SUPPORT_EMAIL } from "@/lib/constants";
 
 function getResend(): Resend {
   if (!process.env.RESEND_API_KEY) {
@@ -18,7 +20,7 @@ export const resend = new Proxy({} as Resend, {
 // Email configuration
 export const EMAIL_CONFIG = {
   from: "Portal Lusitano <noreply@portal-lusitano.pt>",
-  replyTo: "suporte@portal-lusitano.pt",
+  replyTo: SUPPORT_EMAIL,
 };
 
 // Email types
@@ -52,7 +54,7 @@ export async function sendEmail({
 
     return { success: true, id: result.data?.id };
   } catch (error) {
-    console.error("Failed to send email:", error);
+    logger.error("Failed to send email:", error);
     return { success: false, error };
   }
 }
@@ -118,7 +120,7 @@ function getEbookWelcomeEmail(name: string, baseUrl: string) {
       </ul>
 
       <p><strong>Precisas de ajuda?</strong><br>
-      Responde a este email ou contacta-nos em suporte@portal-lusitano.pt</p>
+      Responde a este email ou contacta-nos em ${SUPPORT_EMAIL}</p>
 
       <p>Abraço,<br>
       <em>Equipa Portal Lusitano</em></p>

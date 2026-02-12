@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Listar coudelarias com filtros
 export async function GET(req: NextRequest) {
@@ -58,9 +59,12 @@ export async function GET(req: NextRequest) {
       count,
     });
   } catch (error) {
-    console.error("Error fetching coudelarias:", error);
+    logger.error("Error fetching coudelarias:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar coudelarias", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar coudelarias",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
@@ -107,10 +111,7 @@ export async function POST(req: NextRequest) {
 
     // Validações
     if (!nome) {
-      return NextResponse.json(
-        { error: "Nome é obrigatório" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Nome é obrigatório" }, { status: 400 });
     }
 
     // Criar coudelaria
@@ -152,9 +153,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ coudelaria }, { status: 201 });
   } catch (error) {
-    console.error("Error creating coudelaria:", error);
+    logger.error("Error creating coudelaria:", error);
     return NextResponse.json(
-      { error: "Erro ao criar coudelaria", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao criar coudelaria",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

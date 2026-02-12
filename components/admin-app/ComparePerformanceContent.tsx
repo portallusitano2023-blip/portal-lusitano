@@ -28,7 +28,7 @@ export default function ComparePerformanceContent() {
       const data = await response.json();
       setItems(data.items || []);
     } catch (error) {
-      console.error("Erro ao carregar comparação:", error);
+      void error;
       setItems([]);
     } finally {
       setLoading(false);

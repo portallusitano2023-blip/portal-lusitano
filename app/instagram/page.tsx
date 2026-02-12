@@ -115,7 +115,7 @@ export default function InstagramPage() {
       // Redirecionar para Stripe
       window.location.href = data.url;
     } catch (error: unknown) {
-      console.error("Erro ao processar:", error);
+      void error;
       alert(`Erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
       setIsSubmitting(false);
     }

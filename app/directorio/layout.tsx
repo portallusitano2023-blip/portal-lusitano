@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
 
+// ISR: Revalidate directory every hour
+export const revalidate = 3600;
+
 const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
@@ -43,11 +46,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DirectorioLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DirectorioLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <BreadcrumbSchema

@@ -69,7 +69,7 @@ export default function CRMContent() {
       setPipelineValue(data.pipelineValue || 0);
       setWonValue(data.wonValue || 0);
     } catch (error) {
-      console.error("Error fetching leads:", error);
+      void error;
     }
   }, []);
 
@@ -98,7 +98,7 @@ export default function CRMContent() {
       fetchLeads();
       closeModal();
     } catch (error) {
-      console.error("Error creating lead:", error);
+      void error;
       alert("Erro ao criar lead");
     }
   };
@@ -115,7 +115,7 @@ export default function CRMContent() {
 
       fetchLeads();
     } catch (error) {
-      console.error("Error updating lead:", error);
+      void error;
       alert("Erro ao atualizar lead");
     }
   };
@@ -132,7 +132,7 @@ export default function CRMContent() {
 
       fetchLeads();
     } catch (error) {
-      console.error("Error deleting lead:", error);
+      void error;
       alert("Erro ao eliminar lead");
     }
   };

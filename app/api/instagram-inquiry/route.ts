@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { strictLimiter } from "@/lib/rate-limit";
+import { CONTACT_EMAIL } from "@/lib/constants";
+import { logger } from "@/lib/logger";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -27,7 +29,7 @@ export async function POST(request: NextRequest) {
     // Enviar email para ti (dono do site)
     await resend.emails.send({
       from: "Portal Lusitano <noreply@portal-lusitano.pt>",
-      to: ["portal.lusitano2023@gmail.com"],
+      to: [CONTACT_EMAIL],
       subject: `💰 Novo Pedido Instagram: ${pacote} - €${preco}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -146,7 +148,7 @@ export async function POST(request: NextRequest) {
       message: "Pedido enviado com sucesso",
     });
   } catch (error) {
-    console.error("Erro ao processar pedido Instagram:", error);
+    logger.error("Erro ao processar pedido Instagram:", error);
     return NextResponse.json({ error: "Erro ao enviar pedido" }, { status: 500 });
   }
 }

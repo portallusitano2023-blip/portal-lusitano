@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, Heart, ShoppingBag, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
@@ -9,6 +9,7 @@ import { useToast } from "@/context/ToastContext";
 import Link from "next/link";
 import Image from "next/image";
 import { ProductListing } from "@/types/product";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface QuickViewProps {
   product: ProductListing | null;
@@ -20,6 +21,9 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { language } = useLanguage();
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(modalRef, isOpen, onClose);
   const { addItemToCart } = useCart();
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist();
   const { showToast } = useToast();
@@ -77,7 +81,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
         showToast("cart", t.addedToCart);
       }
     } catch (error) {
-      console.error("Error adding to cart:", error);
+      // Error adding to cart silenced
     } finally {
       setIsLoading(false);
     }
@@ -121,6 +125,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
           <div className="fixed inset-0 z-[9998] flex items-center justify-center p-4">
             {/* Inner modal */}
             <div
+              ref={modalRef}
               role="dialog"
               aria-modal="true"
               aria-label="Pré-visualização do produto"

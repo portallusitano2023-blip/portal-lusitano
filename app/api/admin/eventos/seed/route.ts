@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // Eventos reais do Cavalo Lusitano pesquisados em fontes oficiais (APSL, etc.)
 const eventosReais = [
@@ -280,7 +281,7 @@ export async function POST() {
       .select();
 
     if (error) {
-      console.error("Erro ao inserir eventos:", error);
+      logger.error("Erro ao inserir eventos:", error);
       return NextResponse.json(
         { error: "Erro ao inserir eventos", details: error.message },
         { status: 500 }
@@ -294,7 +295,7 @@ export async function POST() {
       eventos: data.map((e) => e.titulo),
     });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

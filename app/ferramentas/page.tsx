@@ -32,6 +32,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import ToolReviewForm from "@/components/ToolReviewForm";
 import { Review, ReviewStats } from "@/types/review";
 import { faqItems } from "./faq-data";
+import ConstellationSection from "@/components/tools/ConstellationSection";
 
 // ============================================
 // DATA
@@ -270,11 +271,9 @@ function ProSubscribeButton({ className }: { className?: string }) {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error("Checkout error:", data.error);
         setLoading(false);
       }
-    } catch (err) {
-      console.error("Checkout error:", err);
+    } catch {
       setLoading(false);
     }
   };
@@ -380,8 +379,7 @@ function ToolReviewsSection() {
         setReviews(data.reviews || []);
         setStats(data.stats || { total: 0, media: 0 });
       }
-    } catch (err) {
-      console.error("Erro ao carregar reviews:", err);
+    } catch {
     } finally {
       setLoading(false);
     }
@@ -708,6 +706,9 @@ export default function FerramentasPage() {
           </div>
         </div>
       </section>
+
+      {/* ===== CONSTELLATION SECTION ===== */}
+      <ConstellationSection />
 
       {/* ===== PRICING SECTION ===== */}
       <section className="px-6 pb-24" id="precos">

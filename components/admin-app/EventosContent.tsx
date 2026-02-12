@@ -2,16 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Calendar,
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  Star,
-  MapPin,
-  X,
-} from "lucide-react";
+import { Calendar, Plus, Edit, Trash2, Eye, Star, MapPin, X } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 
 interface Evento {
@@ -33,10 +24,22 @@ interface Evento {
 
 const tiposEvento = [
   { value: "feira", label: "Feira", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-  { value: "competicao", label: "Competição", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+  {
+    value: "competicao",
+    label: "Competição",
+    color: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  },
   { value: "leilao", label: "Leilão", color: "bg-green-500/20 text-green-400 border-green-500/30" },
-  { value: "exposicao", label: "Exposição", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-  { value: "workshop", label: "Workshop", color: "bg-pink-500/20 text-pink-400 border-pink-500/30" },
+  {
+    value: "exposicao",
+    label: "Exposição",
+    color: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+  },
+  {
+    value: "workshop",
+    label: "Workshop",
+    color: "bg-pink-500/20 text-pink-400 border-pink-500/30",
+  },
 ];
 
 export default function EventosContent() {
@@ -73,7 +76,7 @@ export default function EventosContent() {
         setEventos(data.eventos || []);
       }
     } catch (error) {
-      console.error("Erro ao carregar eventos:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -82,9 +85,7 @@ export default function EventosContent() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const url = editingEvento
-        ? `/api/admin/eventos/${editingEvento.id}`
-        : "/api/admin/eventos";
+      const url = editingEvento ? `/api/admin/eventos/${editingEvento.id}` : "/api/admin/eventos";
       const method = editingEvento ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -98,7 +99,7 @@ export default function EventosContent() {
         resetForm();
       }
     } catch (error) {
-      console.error("Erro ao guardar evento:", error);
+      void error;
     }
   }
 
@@ -113,7 +114,7 @@ export default function EventosContent() {
         fetchEventos();
       }
     } catch (error) {
-      console.error("Erro ao eliminar evento:", error);
+      void error;
     }
   }
 
@@ -177,9 +178,7 @@ export default function EventosContent() {
             <Calendar className="text-[#C5A059]" />
             Gestão de Eventos
           </h1>
-          <p className="text-gray-400 text-sm mt-1">
-            Criar, editar e gerir eventos equestres
-          </p>
+          <p className="text-gray-400 text-sm mt-1">Criar, editar e gerir eventos equestres</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
@@ -254,9 +253,7 @@ export default function EventosContent() {
                       {evento.destaque && (
                         <Star size={16} className="text-[#C5A059] fill-[#C5A059]" />
                       )}
-                      <span className="font-medium text-white">
-                        {evento.titulo}
-                      </span>
+                      <span className="font-medium text-white">{evento.titulo}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -266,8 +263,7 @@ export default function EventosContent() {
                         "bg-gray-500/20 text-gray-400 border-gray-500/30"
                       }`}
                     >
-                      {tiposEvento.find((t) => t.value === evento.tipo)?.label ||
-                        evento.tipo}
+                      {tiposEvento.find((t) => t.value === evento.tipo)?.label || evento.tipo}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-gray-400">
@@ -279,9 +275,7 @@ export default function EventosContent() {
                       {evento.localizacao}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-gray-400">
-                    {evento.views_count || 0}
-                  </td>
+                  <td className="px-6 py-4 text-gray-400">{evento.views_count || 0}</td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
                       <Link
@@ -334,9 +328,7 @@ export default function EventosContent() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Título *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Título *</label>
                   <input
                     type="text"
                     value={formData.titulo}
@@ -353,9 +345,7 @@ export default function EventosContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Tipo *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Tipo *</label>
                   <select
                     value={formData.tipo}
                     onChange={(e) => setFormData({ ...formData, tipo: e.target.value })}
@@ -376,9 +366,7 @@ export default function EventosContent() {
                   <input
                     type="text"
                     value={formData.preco_entrada}
-                    onChange={(e) =>
-                      setFormData({ ...formData, preco_entrada: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, preco_entrada: e.target.value })}
                     placeholder="Ex: 15€ ou Gratuito"
                     className="w-full bg-[#050505] border border-white/10 text-white rounded-lg px-4 py-2 focus:ring-[#C5A059] focus:border-[#C5A059]"
                   />
@@ -391,24 +379,18 @@ export default function EventosContent() {
                   <input
                     type="date"
                     value={formData.data_inicio}
-                    onChange={(e) =>
-                      setFormData({ ...formData, data_inicio: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, data_inicio: e.target.value })}
                     required
                     className="w-full bg-[#050505] border border-white/10 text-white rounded-lg px-4 py-2 focus:ring-[#C5A059] focus:border-[#C5A059]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Data Fim
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Data Fim</label>
                   <input
                     type="date"
                     value={formData.data_fim}
-                    onChange={(e) =>
-                      setFormData({ ...formData, data_fim: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, data_fim: e.target.value })}
                     className="w-full bg-[#050505] border border-white/10 text-white rounded-lg px-4 py-2 focus:ring-[#C5A059] focus:border-[#C5A059]"
                   />
                 </div>
@@ -420,24 +402,18 @@ export default function EventosContent() {
                   <input
                     type="text"
                     value={formData.localizacao}
-                    onChange={(e) =>
-                      setFormData({ ...formData, localizacao: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, localizacao: e.target.value })}
                     required
                     className="w-full bg-[#050505] border border-white/10 text-white rounded-lg px-4 py-2 focus:ring-[#C5A059] focus:border-[#C5A059]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Região
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Região</label>
                   <input
                     type="text"
                     value={formData.regiao}
-                    onChange={(e) =>
-                      setFormData({ ...formData, regiao: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, regiao: e.target.value })}
                     placeholder="Ex: Ribatejo"
                     className="w-full bg-[#050505] border border-white/10 text-white rounded-lg px-4 py-2 focus:ring-[#C5A059] focus:border-[#C5A059]"
                   />
@@ -449,9 +425,7 @@ export default function EventosContent() {
                   </label>
                   <textarea
                     value={formData.descricao}
-                    onChange={(e) =>
-                      setFormData({ ...formData, descricao: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
                     required
                     rows={3}
                     className="w-full bg-[#050505] border border-white/10 text-white rounded-lg px-4 py-2 focus:ring-[#C5A059] focus:border-[#C5A059]"
@@ -475,9 +449,7 @@ export default function EventosContent() {
                     type="checkbox"
                     id="destaque"
                     checked={formData.destaque}
-                    onChange={(e) =>
-                      setFormData({ ...formData, destaque: e.target.checked })
-                    }
+                    onChange={(e) => setFormData({ ...formData, destaque: e.target.checked })}
                     className="w-4 h-4 text-[#C5A059] focus:ring-[#C5A059] bg-[#050505] border-white/10"
                   />
                   <label htmlFor="destaque" className="text-gray-300">

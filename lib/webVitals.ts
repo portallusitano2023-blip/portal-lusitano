@@ -1,9 +1,10 @@
 import type { Metric } from "web-vitals";
+import { logger } from "@/lib/logger";
 
 // Enviar metricas para Google Analytics 4
 const sendToAnalytics = (metric: Metric) => {
   if (process.env.NODE_ENV === "development") {
-    console.log(`[Web Vitals] ${metric.name}: ${metric.value.toFixed(2)}`);
+    logger.debug(`[Web Vitals] ${metric.name}: ${metric.value.toFixed(2)}`);
   }
 
   // Enviar para GA4

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/lib/resend";
 import { supabase } from "@/lib/supabase";
+import { SUPPORT_EMAIL } from "@/lib/constants";
+import { logger } from "@/lib/logger";
 
 // Rate limiting: simple in-memory store (use Redis in production for multiple instances)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -135,7 +137,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (dbError) {
-      console.error("Failed to save lead:", dbError);
+      logger.error("Failed to save lead:", dbError);
       // Continue anyway - don't block email send if DB fails
     }
 
@@ -150,7 +152,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!emailResult.success) {
-      console.error("Failed to send ebook email:", emailResult.error);
+      logger.error("Failed to send ebook email:", emailResult.error);
       return NextResponse.json(
         { error: "Erro ao enviar email. Tenta novamente." },
         { status: 500 }
@@ -162,7 +164,7 @@ export async function POST(request: NextRequest) {
       message: "Email enviado com sucesso!",
     });
   } catch (error) {
-    console.error("Error processing ebook subscription:", error);
+    logger.error("Error processing ebook subscription:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
@@ -362,7 +364,7 @@ function getEbookDownloadEmail(name: string, email: string, baseUrl: string) {
 
       <!-- Support -->
       <p><strong>💬 Precisas de Ajuda?</strong></p>
-      <p>Responde a este email ou contacta-nos em <a href="mailto:suporte@portal-lusitano.pt" style="color: #C5A059;">suporte@portal-lusitano.pt</a></p>
+      <p>Responde a este email ou contacta-nos em <a href="mailto:${SUPPORT_EMAIL}" style="color: #C5A059;">${SUPPORT_EMAIL}</a></p>
 
       <p style="margin-top: 30px;">
         Bem-vindo à família! 🐴<br>

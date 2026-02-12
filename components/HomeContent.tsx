@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { getBlurDataURL } from "@/lib/image-utils";
 
 interface ShopifyProduct {
   id: string;
@@ -82,6 +83,9 @@ export default function HomeContent({ products }: { products: ShopifyProduct[] }
                     alt={product.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
+                    quality={85}
+                    placeholder="blur"
+                    blurDataURL={getBlurDataURL("product")}
                     className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
                   />
                 )}

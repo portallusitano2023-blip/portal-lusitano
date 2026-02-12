@@ -84,7 +84,7 @@ export default function DirectorioPage() {
           setCoudelarias(data.coudelarias || []);
         }
       } catch (error) {
-        console.error("Erro ao carregar coudelarias:", error);
+        void error;
       } finally {
         setLoading(false);
       }

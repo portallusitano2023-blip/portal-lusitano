@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // Calcular média móvel simples
 function simpleMovingAverage(data: number[], period: number): number[] {
@@ -202,7 +203,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Forecasting error:", error);
+    logger.error("Forecasting error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao calcular previsões" },
       { status: 500 }

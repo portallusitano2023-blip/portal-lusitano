@@ -39,7 +39,7 @@ export default function GlobalSearch({ onNavigate }: GlobalSearchProps) {
       try {
         setRecentSearches(JSON.parse(saved));
       } catch (e) {
-        console.error("Erro ao carregar pesquisas recentes:", e);
+        void e;
       }
     }
   }, []);
@@ -99,7 +99,7 @@ export default function GlobalSearch({ onNavigate }: GlobalSearchProps) {
         setResults(data.results || []);
         setTotal(data.total || 0);
       } catch (error) {
-        console.error("Erro ao pesquisar:", error);
+        void error;
       } finally {
         setLoading(false);
       }

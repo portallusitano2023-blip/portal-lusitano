@@ -56,7 +56,7 @@ export default function UsersContent() {
         setTotal(data.total || 0);
       }
     } catch (error) {
-      console.error("Erro ao carregar utilizadores:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -99,7 +99,7 @@ export default function UsersContent() {
         alert(data.error || "Erro");
       }
     } catch (error) {
-      console.error("Erro ao submeter:", error);
+      void error;
       alert("Erro ao processar pedido");
     }
   };
@@ -126,7 +126,7 @@ export default function UsersContent() {
         alert(data.error || "Erro");
       }
     } catch (error) {
-      console.error("Erro:", error);
+      void error;
       alert("Erro ao processar pedido");
     }
   };
@@ -151,7 +151,7 @@ export default function UsersContent() {
         alert(data.error || "Erro");
       }
     } catch (error) {
-      console.error("Erro:", error);
+      void error;
       alert("Erro ao eliminar");
     }
   };

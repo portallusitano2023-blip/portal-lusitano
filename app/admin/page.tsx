@@ -82,7 +82,7 @@ export default function AdminDashboard() {
     try {
       await Promise.all([loadStats(), loadFinancial(), loadMessages(), loadRecentMessages()]);
     } catch (err) {
-      console.error("Erro ao carregar dados:", err);
+      void err;
       setError("Erro ao carregar alguns dados");
     } finally {
       setIsLoading(false);
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
       const data = await response.json();
       setStats(data);
     } catch (err) {
-      console.error("Erro stats:", err);
+      void err;
     }
   };
 
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
       const data = await response.json();
       setFinancial(data.overview);
     } catch (err) {
-      console.error("Erro financial:", err);
+      void err;
     }
   };
 
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
       const data = await response.json();
       setMessages(data.stats);
     } catch (err) {
-      console.error("Erro messages:", err);
+      void err;
     }
   };
 
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
       const data = await response.json();
       setRecentMessages(data.messages);
     } catch (err) {
-      console.error("Erro recent messages:", err);
+      void err;
     }
   };
 
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
       await fetch("/api/auth/logout", { method: "POST" });
       router.push("/admin/login");
     } catch (error) {
-      console.error("Erro ao fazer logout:", error);
+      void error;
     }
   };
 

@@ -95,7 +95,7 @@ export default function AdminInstagramPage() {
       setAuthenticated(false);
       setUploads([]);
     } catch (error) {
-      console.error("Erro ao fazer logout:", error);
+      void error;
     }
   };
 
@@ -105,7 +105,7 @@ export default function AdminInstagramPage() {
       const data = await response.json();
       setUploads(data.uploads || []);
     } catch (error) {
-      console.error("Erro ao carregar uploads:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -125,7 +125,7 @@ export default function AdminInstagramPage() {
       // Refresh list
       await fetchUploads();
     } catch (error) {
-      console.error("Erro:", error);
+      void error;
       alert("Erro ao atualizar status");
     } finally {
       setProcessingId(null);

@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Obter um profissional específico
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -25,10 +23,7 @@ export async function GET(
     if (error) throw error;
 
     if (!profissional) {
-      return NextResponse.json(
-        { error: "Profissional não encontrado" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Profissional não encontrado" }, { status: 404 });
     }
 
     // Buscar histórico de subscrições
@@ -43,19 +38,19 @@ export async function GET(
       subscription_historico: historico || [],
     });
   } catch (error) {
-    console.error("Error fetching profissional:", error);
+    logger.error("Error fetching profissional:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar profissional", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar profissional",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
 }
 
 // PATCH - Atualizar profissional
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -106,19 +101,19 @@ export async function PATCH(
 
     return NextResponse.json({ profissional });
   } catch (error) {
-    console.error("Error updating profissional:", error);
+    logger.error("Error updating profissional:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar profissional", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao atualizar profissional",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
 }
 
 // DELETE - Eliminar profissional (soft delete)
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -141,9 +136,12 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Profissional eliminado com sucesso" });
   } catch (error) {
-    console.error("Error deleting profissional:", error);
+    logger.error("Error deleting profissional:", error);
     return NextResponse.json(
-      { error: "Erro ao eliminar profissional", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao eliminar profissional",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

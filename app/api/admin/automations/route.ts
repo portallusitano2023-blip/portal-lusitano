@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Listar todas as automações com filtros
 export async function GET(req: NextRequest) {
@@ -58,9 +59,12 @@ export async function GET(req: NextRequest) {
       stats,
     });
   } catch (error) {
-    console.error("Error fetching automations:", error);
+    logger.error("Error fetching automations:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar automações", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar automações",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
@@ -95,19 +99,31 @@ export async function POST(req: NextRequest) {
     }
 
     // Validar tipos
-    const validTriggers = ['lead_created', 'payment_succeeded', 'review_submitted', 'cavalo_created', 'time_based'];
-    const validActions = ['send_email', 'create_task', 'update_field', 'approve_review', 'send_notification'];
+    const validTriggers = [
+      "lead_created",
+      "payment_succeeded",
+      "review_submitted",
+      "cavalo_created",
+      "time_based",
+    ];
+    const validActions = [
+      "send_email",
+      "create_task",
+      "update_field",
+      "approve_review",
+      "send_notification",
+    ];
 
     if (!validTriggers.includes(trigger_type)) {
       return NextResponse.json(
-        { error: `Trigger type inválido. Válidos: ${validTriggers.join(', ')}` },
+        { error: `Trigger type inválido. Válidos: ${validTriggers.join(", ")}` },
         { status: 400 }
       );
     }
 
     if (!validActions.includes(action_type)) {
       return NextResponse.json(
-        { error: `Action type inválido. Válidos: ${validActions.join(', ')}` },
+        { error: `Action type inválido. Válidos: ${validActions.join(", ")}` },
         { status: 400 }
       );
     }
@@ -133,9 +149,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ automation }, { status: 201 });
   } catch (error) {
-    console.error("Error creating automation:", error);
+    logger.error("Error creating automation:", error);
     return NextResponse.json(
-      { error: "Erro ao criar automação", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao criar automação",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
@@ -153,10 +172,7 @@ export async function PUT(req: NextRequest) {
     const { id, ...updates } = body;
 
     if (!id) {
-      return NextResponse.json(
-        { error: "ID da automação é obrigatório" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "ID da automação é obrigatório" }, { status: 400 });
     }
 
     // Atualizar automação
@@ -171,9 +187,12 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({ automation });
   } catch (error) {
-    console.error("Error updating automation:", error);
+    logger.error("Error updating automation:", error);
     return NextResponse.json(
-      { error: "Erro ao atualizar automação", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao atualizar automação",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
@@ -191,25 +210,22 @@ export async function DELETE(req: NextRequest) {
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { error: "ID da automação é obrigatório" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "ID da automação é obrigatório" }, { status: 400 });
     }
 
     // Apagar automação (logs serão apagados em cascata)
-    const { error } = await supabase
-      .from("admin_automations")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("admin_automations").delete().eq("id", id);
 
     if (error) throw error;
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting automation:", error);
+    logger.error("Error deleting automation:", error);
     return NextResponse.json(
-      { error: "Erro ao apagar automação", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao apagar automação",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

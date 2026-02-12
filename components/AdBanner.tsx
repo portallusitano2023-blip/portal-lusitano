@@ -15,17 +15,12 @@ declare global {
   }
 }
 
-export default function AdBanner({
-  slot,
-  format = "auto",
-  style,
-  className = ""
-}: AdBannerProps) {
+export default function AdBanner({ slot, format = "auto", style, className = "" }: AdBannerProps) {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (e) {
-      console.error("AdSense error:", e);
+      // AdSense initialization error silenced
     }
   }, []);
 

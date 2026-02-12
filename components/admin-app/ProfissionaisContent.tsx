@@ -85,7 +85,7 @@ export default function ProfissionaisContent() {
       setStats(data.stats);
       setMrr(data.mrr || 0);
     } catch (error) {
-      console.error("Error loading profissionais:", error);
+      void error;
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +103,7 @@ export default function ProfissionaisContent() {
         loadProfissionais();
       }
     } catch (error) {
-      console.error("Error updating profissional:", error);
+      void error;
     }
   };
 
@@ -119,7 +119,7 @@ export default function ProfissionaisContent() {
         loadProfissionais();
       }
     } catch (error) {
-      console.error("Error deleting profissional:", error);
+      void error;
     }
   };
 

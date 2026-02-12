@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <main className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6 relative overflow-hidden">
       {/* Background decorativo */}
-      <div className="absolute inset-0 opacity-5">
+      <div className="absolute inset-0 opacity-5" aria-hidden="true">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--gold)] rounded-full blur-[150px]" />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[var(--gold)] rounded-full blur-[100px]" />
       </div>

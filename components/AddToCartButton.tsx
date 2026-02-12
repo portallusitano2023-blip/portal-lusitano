@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useToast } from "@/context/ToastContext";
 import { Loader2 } from "lucide-react";
 
 export default function AddToCartButton({
@@ -14,6 +15,7 @@ export default function AddToCartButton({
 }) {
   const { addItemToCart, openCart } = useCart();
   const { language } = useLanguage();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
 
   const buttonText = {
@@ -27,12 +29,12 @@ export default function AddToCartButton({
   async function handleAddToCart() {
     // 1. VERIFICAÇÃO DE DIAGNÓSTICO
     if (!variantId) {
-      alert("ERRO CRÍTICO: O botão não recebeu o ID do produto. Verifica o ProductDisplay.");
+      showToast("error", "ERRO: O botão não recebeu o ID do produto. Verifica o ProductDisplay.");
       return;
     }
 
     if (!available) {
-      alert("Este produto está marcado como esgotado.");
+      showToast("error", "Este produto está marcado como esgotado.");
       return;
     }
 
@@ -45,9 +47,10 @@ export default function AddToCartButton({
       openCart();
     } catch (error) {
       // 4. ERRO DO SHOPIFY
-      console.error("Erro no Shopify:", error);
-      alert(
-        "ERRO DE LIGAÇÃO: Não foi possível conectar ao Shopify. \n\n1. Verifica se o ficheiro .env.local existe.\n2. Verifica se as chaves da API estão corretas.\n3. Abre a Consola (F12) para ver o erro técnico."
+      // Shopify error silenced
+      showToast(
+        "error",
+        "Não foi possível conectar ao Shopify. Verifica a consola (F12) para detalhes."
       );
     } finally {
       setLoading(false);

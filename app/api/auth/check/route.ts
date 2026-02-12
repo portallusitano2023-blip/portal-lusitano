@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET() {
   try {
     const email = await verifySession();
 
     if (!email) {
-      return NextResponse.json(
-        { authenticated: false },
-        { status: 401 }
-      );
+      return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
     return NextResponse.json({
@@ -17,10 +15,7 @@ export async function GET() {
       email,
     });
   } catch (error) {
-    console.error("Auth check error:", error);
-    return NextResponse.json(
-      { authenticated: false },
-      { status: 500 }
-    );
+    logger.error("Auth check error:", error);
+    return NextResponse.json({ authenticated: false }, { status: 500 });
   }
 }

@@ -55,11 +55,11 @@ export default function ProUpgradeCard({ isSubscribed }: ProUpgradeCardProps) {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error("Checkout error:", data.error);
+        // Checkout error
         setLoading(false);
       }
     } catch (err) {
-      console.error("Checkout error:", err);
+      // Checkout error
       setLoading(false);
     }
   };

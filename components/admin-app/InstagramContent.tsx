@@ -34,7 +34,7 @@ export default function InstagramContent() {
       const data = await response.json();
       setUploads(data.uploads || []);
     } catch (error) {
-      console.error("Erro ao carregar uploads:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export default function InstagramContent() {
 
       await fetchUploads();
     } catch (error) {
-      console.error("Erro:", error);
+      void error;
       alert("Erro ao atualizar status");
     } finally {
       setProcessingId(null);

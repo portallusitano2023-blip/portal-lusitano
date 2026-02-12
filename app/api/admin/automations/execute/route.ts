@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { Resend } from "resend";
+import { logger } from "@/lib/logger";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -119,7 +120,7 @@ export async function POST(req: NextRequest) {
       error: errorMessage,
     });
   } catch (error) {
-    console.error("Error executing automation:", error);
+    logger.error("Error executing automation:", error);
     return NextResponse.json(
       {
         error: "Erro ao executar automação",

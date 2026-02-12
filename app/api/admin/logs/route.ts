@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -43,7 +44,7 @@ export async function GET(req: NextRequest) {
     const { data: logs, error, count } = await query;
 
     if (error) {
-      console.error("Error fetching logs:", error);
+      logger.error("Error fetching logs:", error);
       throw error;
     }
 
@@ -68,7 +69,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Logs error:", error);
+    logger.error("Logs error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao buscar logs" },
       { status: 500 }
@@ -84,13 +85,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const {
-      action_type,
-      entity_type,
-      entity_id,
-      changes,
-      ip_address,
-    } = await req.json();
+    const { action_type, entity_type, entity_id, changes, ip_address } = await req.json();
 
     const { data: log, error } = await supabase
       .from("admin_activity_log")
@@ -100,19 +95,20 @@ export async function POST(req: NextRequest) {
         entity_type,
         entity_id,
         changes: changes || {},
-        ip_address: ip_address || req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip"),
+        ip_address:
+          ip_address || req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip"),
       })
       .select()
       .single();
 
     if (error) {
-      console.error("Error creating log:", error);
+      logger.error("Error creating log:", error);
       throw error;
     }
 
     return NextResponse.json({ log });
   } catch (error) {
-    console.error("Log creation error:", error);
+    logger.error("Log creation error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao criar log" },
       { status: 500 }

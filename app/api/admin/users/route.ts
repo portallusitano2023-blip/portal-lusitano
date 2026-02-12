@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Listar utilizadores admin
 export async function GET(req: NextRequest) {
@@ -35,7 +36,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ users: users || [], total: count || 0 });
   } catch (error) {
-    console.error("Users list error:", error);
+    logger.error("Users list error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao listar utilizadores" },
       { status: 500 }
@@ -55,10 +56,7 @@ export async function POST(req: NextRequest) {
 
     // Validações
     if (!email) {
-      return NextResponse.json(
-        { error: "Email é obrigatório" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email é obrigatório" }, { status: 400 });
     }
 
     // Verificar se email já existe
@@ -69,10 +67,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (existing) {
-      return NextResponse.json(
-        { error: "Email já existe" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email já existe" }, { status: 400 });
     }
 
     // Criar utilizador
@@ -100,7 +95,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ user, message: "Utilizador criado com sucesso" });
   } catch (error) {
-    console.error("User creation error:", error);
+    logger.error("User creation error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao criar utilizador" },
       { status: 500 }

@@ -180,7 +180,7 @@ export default function CRMPipelineContent() {
       const data = await response.json();
       setLeads(data.leads || []);
     } catch (error) {
-      console.error("Erro ao carregar leads:", error);
+      void error;
       setLeads([]);
     } finally {
       setLoading(false);

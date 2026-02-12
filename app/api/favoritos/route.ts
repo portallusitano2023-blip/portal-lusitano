@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { supabase } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 // GET - Listar favoritos do utilizador
 export async function GET(_request: NextRequest) {
@@ -32,13 +33,13 @@ export async function GET(_request: NextRequest) {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Erro ao buscar favoritos:", error);
+      logger.error("Erro ao buscar favoritos:", error);
       return NextResponse.json({ favoritos: [] });
     }
 
     return NextResponse.json({ favoritos: data || [] });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ favoritos: [] });
   }
 }
@@ -81,13 +82,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (error) {
-      console.error("Erro ao adicionar favorito:", error);
+      logger.error("Erro ao adicionar favorito:", error);
       return NextResponse.json({ error: "Erro ao adicionar favorito" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }
@@ -118,13 +119,13 @@ export async function DELETE(request: NextRequest) {
       .eq("item_type", item_type);
 
     if (error) {
-      console.error("Erro ao remover favorito:", error);
+      logger.error("Erro ao remover favorito:", error);
       return NextResponse.json({ error: "Erro ao remover favorito" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

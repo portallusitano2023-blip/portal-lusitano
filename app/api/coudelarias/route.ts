@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 // Criar slug a partir do nome
 function createSlug(name: string): string {
@@ -42,20 +43,14 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Erro ao buscar coudelarias:", error);
-      return NextResponse.json(
-        { error: "Erro ao buscar coudelarias" },
-        { status: 500 }
-      );
+      logger.error("Erro ao buscar coudelarias:", error);
+      return NextResponse.json({ error: "Erro ao buscar coudelarias" }, { status: 500 });
     }
 
     return NextResponse.json({ coudelarias: data });
   } catch (error) {
-    console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    logger.error("Erro:", error);
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
 
@@ -78,10 +73,7 @@ export async function POST(request: NextRequest) {
 
     // Validações básicas
     if (!nome || !descricao || !localizacao || !regiao) {
-      return NextResponse.json(
-        { error: "Campos obrigatórios em falta" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Campos obrigatórios em falta" }, { status: 400 });
     }
 
     // Criar slug único
@@ -120,11 +112,8 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error("Erro ao criar coudelaria:", error);
-      return NextResponse.json(
-        { error: "Erro ao registar coudelaria" },
-        { status: 500 }
-      );
+      logger.error("Erro ao criar coudelaria:", error);
+      return NextResponse.json({ error: "Erro ao registar coudelaria" }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -133,10 +122,7 @@ export async function POST(request: NextRequest) {
       message: "Coudelaria submetida para revisão",
     });
   } catch (error) {
-    console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    logger.error("Erro:", error);
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

@@ -35,11 +35,12 @@ export default function SubscriptionBanner({
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error("Checkout error:", data.error);
+        // Checkout error
         setLoading(false);
       }
     } catch (err) {
-      console.error("Checkout error:", err);
+      void err;
+      // Checkout error
       setLoading(false);
     }
   };
@@ -53,11 +54,12 @@ export default function SubscriptionBanner({
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error("Portal error:", data.error);
+        // Portal error
         setLoading(false);
       }
     } catch (err) {
-      console.error("Portal error:", err);
+      void err;
+      // Portal error
       setLoading(false);
     }
   };

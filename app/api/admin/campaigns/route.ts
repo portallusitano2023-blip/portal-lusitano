@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { resend } from "@/lib/resend";
+import { logger } from "@/lib/logger";
 
 // GET - Listar campanhas
 export async function GET(_req: NextRequest) {
@@ -20,7 +21,7 @@ export async function GET(_req: NextRequest) {
 
     return NextResponse.json({ campaigns: campaigns || [] });
   } catch (error) {
-    console.error("Campaigns list error:", error);
+    logger.error("Campaigns list error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao listar campanhas" },
       { status: 500 }
@@ -135,7 +136,7 @@ export async function POST(req: NextRequest) {
       message: "Campanha agendada com sucesso",
     });
   } catch (error) {
-    console.error("Campaign creation error:", error);
+    logger.error("Campaign creation error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao criar campanha" },
       { status: 500 }
@@ -164,7 +165,7 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ message: "Campanha eliminada com sucesso" });
   } catch (error) {
-    console.error("Campaign deletion error:", error);
+    logger.error("Campaign deletion error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao eliminar campanha" },
       { status: 500 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -166,7 +167,7 @@ export async function GET(req: NextRequest) {
       total: notifications.length,
     });
   } catch (error) {
-    console.error("Notifications error:", error);
+    logger.error("Notifications error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao carregar notificações" },
       { status: 500 }

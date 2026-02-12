@@ -92,7 +92,7 @@ export default function DefinicoesContent() {
         setActiveCategory(data.categories[0]);
       }
     } catch (error) {
-      console.error("Erro ao carregar definições:", error);
+      void error;
     } finally {
       setLoading(false);
     }
@@ -137,7 +137,7 @@ export default function DefinicoesContent() {
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
-      console.error("Erro ao guardar definição:", error);
+      void error;
       alert("Erro ao guardar. Tente novamente.");
     } finally {
       setSaving(null);
@@ -335,7 +335,7 @@ export default function DefinicoesContent() {
       window.URL.revokeObjectURL(url);
       a.remove();
     } catch (error) {
-      console.error("Erro ao descarregar backup:", error);
+      void error;
       alert("Erro ao descarregar backup. Tente novamente.");
     } finally {
       setBackupLoading(false);
@@ -358,7 +358,7 @@ export default function DefinicoesContent() {
       const data = await response.json();
       alert(data.message || "Backup enviado com sucesso!");
     } catch (error) {
-      console.error("Erro ao enviar backup por email:", error);
+      void error;
       alert("Erro ao enviar backup por email.");
     } finally {
       setBackupEmailLoading(false);

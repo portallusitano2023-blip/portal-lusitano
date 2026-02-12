@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -23,56 +24,54 @@ export async function GET(req: NextRequest) {
     const searchTerm = query.trim().toLowerCase();
 
     // Pesquisar em paralelo em todas as tabelas
-    const [
-      cavalosRes,
-      eventosRes,
-      mensagensRes,
-      coudelariasRes,
-      profissionaisRes,
-      reviewsRes,
-    ] = await Promise.all([
-      // Cavalos
-      supabase
-        .from("cavalos_venda")
-        .select("id, nome, preco, status, created_at")
-        .or(`nome.ilike.%${searchTerm}%,descricao.ilike.%${searchTerm}%`)
-        .limit(limit),
+    const [cavalosRes, eventosRes, mensagensRes, coudelariasRes, profissionaisRes, reviewsRes] =
+      await Promise.all([
+        // Cavalos
+        supabase
+          .from("cavalos_venda")
+          .select("id, nome, preco, status, created_at")
+          .or(`nome.ilike.%${searchTerm}%,descricao.ilike.%${searchTerm}%`)
+          .limit(limit),
 
-      // Eventos
-      supabase
-        .from("eventos")
-        .select("id, nome, data_inicio, tipo, created_at")
-        .or(`nome.ilike.%${searchTerm}%,descricao.ilike.%${searchTerm}%`)
-        .limit(limit),
+        // Eventos
+        supabase
+          .from("eventos")
+          .select("id, nome, data_inicio, tipo, created_at")
+          .or(`nome.ilike.%${searchTerm}%,descricao.ilike.%${searchTerm}%`)
+          .limit(limit),
 
-      // Mensagens
-      supabase
-        .from("contact_submissions")
-        .select("id, name, email, form_type, status, created_at")
-        .or(`name.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%,company.ilike.%${searchTerm}%`)
-        .limit(limit),
+        // Mensagens
+        supabase
+          .from("contact_submissions")
+          .select("id, name, email, form_type, status, created_at")
+          .or(
+            `name.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%,company.ilike.%${searchTerm}%`
+          )
+          .limit(limit),
 
-      // Coudelarias
-      supabase
-        .from("coudelarias")
-        .select("id, nome, localizacao, plano, created_at")
-        .or(`nome.ilike.%${searchTerm}%,descricao.ilike.%${searchTerm}%,localizacao.ilike.%${searchTerm}%`)
-        .limit(limit),
+        // Coudelarias
+        supabase
+          .from("coudelarias")
+          .select("id, nome, localizacao, plano, created_at")
+          .or(
+            `nome.ilike.%${searchTerm}%,descricao.ilike.%${searchTerm}%,localizacao.ilike.%${searchTerm}%`
+          )
+          .limit(limit),
 
-      // Profissionais
-      supabase
-        .from("profissionais")
-        .select("id, nome, categoria, localizacao, status, created_at")
-        .or(`nome.ilike.%${searchTerm}%,especialidade.ilike.%${searchTerm}%`)
-        .limit(limit),
+        // Profissionais
+        supabase
+          .from("profissionais")
+          .select("id, nome, categoria, localizacao, status, created_at")
+          .or(`nome.ilike.%${searchTerm}%,especialidade.ilike.%${searchTerm}%`)
+          .limit(limit),
 
-      // Reviews
-      supabase
-        .from("reviews_cavalos")
-        .select("id, nome_avaliador, comentario, rating, created_at")
-        .or(`nome_avaliador.ilike.%${searchTerm}%,comentario.ilike.%${searchTerm}%`)
-        .limit(limit),
-    ]);
+        // Reviews
+        supabase
+          .from("reviews_cavalos")
+          .select("id, nome_avaliador, comentario, rating, created_at")
+          .or(`nome_avaliador.ilike.%${searchTerm}%,comentario.ilike.%${searchTerm}%`)
+          .limit(limit),
+      ]);
 
     // Formatar resultados
     const results = [];
@@ -182,7 +181,7 @@ export async function GET(req: NextRequest) {
       query: searchTerm,
     });
   } catch (error) {
-    console.error("Search error:", error);
+    logger.error("Search error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao pesquisar" },
       { status: 500 }

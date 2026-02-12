@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown, HelpCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { faqData, type FAQItem } from "@/data/faqData";
+import { CONTACT_EMAIL } from "@/lib/constants";
 
 function FAQAccordion({
   item,
@@ -18,6 +19,7 @@ function FAQAccordion({
     <div className="border-b border-[var(--border)]">
       <button
         onClick={onClick}
+        aria-expanded={isOpen}
         className="w-full py-6 flex items-center justify-between text-left group"
       >
         <span className="text-lg font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors pr-8">
@@ -98,7 +100,7 @@ export default function FAQPage() {
               : "Didn't find what you were looking for?"}
           </p>
           <a
-            href="mailto:portal.lusitano2023@gmail.com"
+            href={`mailto:${CONTACT_EMAIL}`}
             className="inline-block text-[var(--gold)] hover:text-[var(--foreground)] transition-colors text-sm uppercase tracking-widest"
           >
             {language === "pt" ? "Contacte-nos" : "Contact us"} →

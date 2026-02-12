@@ -47,7 +47,9 @@ export default function OptimizedImage({
   return (
     <div className={`relative overflow-hidden ${containerClassName}`}>
       {/* Skeleton loader */}
-      {isLoading && <div className="absolute inset-0 bg-zinc-900 animate-pulse" />}
+      {isLoading && (
+        <div className="absolute inset-0 bg-[var(--background-secondary)] animate-pulse" />
+      )}
 
       <Image
         src={src}

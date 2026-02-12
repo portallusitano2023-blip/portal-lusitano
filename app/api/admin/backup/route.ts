@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySession } from "@/lib/auth";
 import { exportAllTables, getBackupFileName, sendBackupByEmail } from "@/lib/backup";
+import { logger } from "@/lib/logger";
 
 export async function GET() {
   const email = await verifySession();
@@ -21,7 +22,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("Erro ao gerar backup:", error);
+    logger.error("Erro ao gerar backup:", error);
     return NextResponse.json({ error: "Erro ao gerar backup" }, { status: 500 });
   }
 }
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Erro ao enviar email de backup" }, { status: 500 });
     }
   } catch (error) {
-    console.error("Erro ao enviar backup por email:", error);
+    logger.error("Erro ao enviar backup por email:", error);
     return NextResponse.json({ error: "Erro ao enviar backup por email" }, { status: 500 });
   }
 }

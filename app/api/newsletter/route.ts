@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server';
-import { client } from '@/lib/client';
-import { apiLimiter } from '@/lib/rate-limit';
-import { newsletterSchema, parseWithZod } from '@/lib/schemas';
+import { NextResponse } from "next/server";
+import { client } from "@/lib/client";
+import { apiLimiter } from "@/lib/rate-limit";
+import { newsletterSchema, parseWithZod } from "@/lib/schemas";
+import { logger } from "@/lib/logger";
 
 export async function POST(request: Request) {
   try {
@@ -25,14 +26,14 @@ export async function POST(request: Request) {
 
     // Escreve o novo subscritor diretamente no Sanity
     await client.create({
-      _type: 'subscritor',
+      _type: "subscritor",
       email: email,
       dataInscricao: new Date().toISOString(),
     });
 
-    return NextResponse.json({ message: 'Subscrição concluída' }, { status: 200 });
+    return NextResponse.json({ message: "Subscrição concluída" }, { status: 200 });
   } catch (error) {
-    console.error('Erro na Newsletter:', error);
-    return NextResponse.json({ error: 'Erro ao salvar e-mail' }, { status: 500 });
+    logger.error("Erro na Newsletter:", error);
+    return NextResponse.json({ error: "Erro ao salvar e-mail" }, { status: 500 });
   }
 }

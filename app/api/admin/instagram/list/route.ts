@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -25,13 +26,13 @@ export async function GET(req: NextRequest) {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Supabase error:", error);
+      logger.error("Supabase error:", error);
       throw new Error(error.message);
     }
 
     return NextResponse.json({ uploads: data || [] });
   } catch (error) {
-    console.error("List error:", error);
+    logger.error("List error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao listar uploads" },
       { status: 500 }

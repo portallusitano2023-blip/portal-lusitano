@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkCredentials, createSession } from "@/lib/auth";
 import { authLimiter } from "@/lib/rate-limit";
 import { loginSchema, parseWithZod } from "@/lib/schemas";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,19 +20,13 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsed = parseWithZod(loginSchema, body);
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: parsed.error },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
     const { email, password } = parsed.data;
 
     // Verificar credenciais
     if (!checkCredentials(email, password)) {
-      return NextResponse.json(
-        { error: "Credenciais inválidas" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 });
     }
 
     // Criar sessão
@@ -39,10 +34,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Login error:", error);
-    return NextResponse.json(
-      { error: "Erro ao fazer login" },
-      { status: 500 }
-    );
+    logger.error("Login error:", error);
+    return NextResponse.json({ error: "Erro ao fazer login" }, { status: 500 });
   }
 }

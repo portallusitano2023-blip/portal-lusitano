@@ -281,7 +281,18 @@
     "reviews_leave": "Deje su valoracion",
     "reviews_share": "Comparta su experiencia con nuestras herramientas",
     "reviews_tool": "Herramienta",
-    "recommends": "Recomienda"
+    "recommends": "Recomienda",
+    "constellation_badge": "Constelacion Lusitana",
+    "constellation_title": "Las Estrellas de la Raza",
+    "constellation_subtitle": "Explore los 15 caballos que definieron la historia del Lusitano y sus conexiones geneticas",
+    "constellation_aria": "Constelacion interactiva de los caballos lusitanos famosos",
+    "constellation_years": "Periodo",
+    "constellation_lineage": "Linaje",
+    "constellation_discipline": "Disciplina",
+    "constellation_sire": "Padre",
+    "constellation_achievements": "Logros",
+    "constellation_founder": "Jefe de Linea",
+    "constellation_connection": "Conexion padre-hijo"
   },
   "directorio": {
     "badge": "Directorio Oficial",
@@ -965,7 +976,9 @@
     "benefit_history": "Historial completo de evaluaciones",
     "subscribe": "Suscribirse PRO",
     "processing": "Procesando...",
-    "see_plans": "Ver todos los planes"
+    "see_plans": "Ver todos los planes",
+    "peek_hint": "Mueve el cursor para previsualizar",
+    "peek_hint_mobile": "Toca y arrastra para previsualizar"
   },
   "footer": {
     "rights": "Todos los derechos reservados",

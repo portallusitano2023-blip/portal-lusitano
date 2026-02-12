@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
 
+// ISR: Revalidate journal daily
+export const revalidate = 86400;
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
@@ -45,11 +48,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function JornalLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function JornalLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <BreadcrumbSchema

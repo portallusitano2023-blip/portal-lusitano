@@ -3,6 +3,9 @@ import Navbar from "@/components/Navbar";
 import HorseCard from "@/components/HorseCard";
 import Link from "next/link";
 
+// ISR: Revalidate marketplace every hour (cavalos can be added/updated)
+export const revalidate = 3600;
+
 export default async function ComprarPage({
   searchParams,
 }: {
@@ -21,12 +24,12 @@ export default async function ComprarPage({
 
   // Tratamento de erro básico para evitar que o build rebente
   if (error) {
-    console.error("Erro Supabase:", error.message);
+    void error.message;
   }
 
   return (
     <>
-      <Navbar dev={isDev} />
+      <Navbar />
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 sm:pt-32 md:pt-48 px-4 sm:px-6 md:px-12 lg:px-20 pb-24 sm:pb-32">
         {/* Header - Responsive */}
         <header className="mb-8 sm:mb-12 md:mb-24 text-center">

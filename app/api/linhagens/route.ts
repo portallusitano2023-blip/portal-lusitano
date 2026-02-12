@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 // GET - Listar linhagens
 export async function GET() {
@@ -10,13 +11,13 @@ export async function GET() {
       .order("nome", { ascending: true });
 
     if (error) {
-      console.error("Erro ao buscar linhagens:", error);
+      logger.error("Erro ao buscar linhagens:", error);
       return NextResponse.json({ error: "Erro ao buscar linhagens" }, { status: 500 });
     }
 
     return NextResponse.json({ linhagens: data });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

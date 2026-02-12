@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { analytics } from "@/lib/analytics-events";
 import Image from "next/image";
 import DynamicSEO from "@/components/DynamicSEO";
+import Breadcrumb from "@/components/Breadcrumb";
 import {
   MapPin,
   Phone,
@@ -143,7 +144,7 @@ export default function CoudelariaPage() {
           throw new Error(`Erro ${res.status}: ${res.statusText}`);
         }
       } catch (error) {
-        console.error("Erro ao carregar coudelaria:", error);
+        void error;
         // ✅ Se houver erro de rede, mostra mensagem genérica
         setLoading(false);
       } finally {
@@ -168,7 +169,7 @@ export default function CoudelariaPage() {
           setReviewStats(data.stats || { total: 0, media: 0 });
         }
       } catch (error) {
-        console.error("Erro ao carregar reviews:", error);
+        void error;
       }
     }
     fetchReviews();
@@ -238,7 +239,7 @@ export default function CoudelariaPage() {
         });
       }
     } catch (error) {
-      console.error("Erro ao submeter review:", error);
+      void error;
       // ✅ Erro de rede
       toast.error("Erro de conexão. Verifique sua internet e tente novamente.", {
         duration: 5000,
@@ -386,6 +387,14 @@ export default function CoudelariaPage() {
       </section>
 
       <div className="max-w-6xl mx-auto px-6 py-12">
+        <Breadcrumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Directorio", href: "/directorio" },
+            { label: coudelaria.nome },
+          ]}
+        />
+
         <div className="grid lg:grid-cols-3 gap-12">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-12">

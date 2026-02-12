@@ -1,19 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 // GET - Obter coudelaria por slug
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
 
     if (!slug) {
-      return NextResponse.json(
-        { error: "Slug não fornecido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Slug não fornecido" }, { status: 400 });
     }
 
     // Buscar coudelaria
@@ -25,11 +20,8 @@ export async function GET(
       .single();
 
     if (error || !coudelaria) {
-      console.error("Erro ao buscar coudelaria:", error);
-      return NextResponse.json(
-        { error: "Coudelaria não encontrada" },
-        { status: 404 }
-      );
+      logger.error("Erro ao buscar coudelaria:", error);
+      return NextResponse.json({ error: "Coudelaria não encontrada" }, { status: 404 });
     }
 
     // Incrementar views (não bloqueia a resposta)
@@ -41,10 +33,7 @@ export async function GET(
 
     return NextResponse.json({ coudelaria });
   } catch (error) {
-    console.error("Erro:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    logger.error("Erro:", error);
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

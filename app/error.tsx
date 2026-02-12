@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { SUPPORT_EMAIL } from "@/lib/constants";
 
 export default function Error({
   error,
@@ -13,7 +14,7 @@ export default function Error({
   useEffect(() => {
     // Sentry captura automaticamente em produção
     if (process.env.NODE_ENV === "development") {
-      console.error("Application error:", error);
+      void error;
     }
   }, [error]);
 
@@ -52,11 +53,8 @@ export default function Error({
 
         <p className="text-[var(--foreground-secondary)] text-xs mt-12">
           Se o problema persistir, contacta-nos em{" "}
-          <a
-            href="mailto:suporte@portal-lusitano.pt"
-            className="text-[var(--gold)] hover:underline"
-          >
-            suporte@portal-lusitano.pt
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="text-[var(--gold)] hover:underline">
+            {SUPPORT_EMAIL}
           </a>
         </p>
       </div>

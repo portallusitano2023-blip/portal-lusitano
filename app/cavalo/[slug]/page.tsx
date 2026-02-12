@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import DynamicSEO from "@/components/DynamicSEO";
+import Breadcrumb from "@/components/Breadcrumb";
 import { analytics } from "@/lib/analytics-events";
+import { CONTACT_EMAIL } from "@/lib/constants";
 
 interface CavaloSanity {
   nome: string;
@@ -89,7 +91,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
           setError("not_found");
         }
       } catch (err) {
-        console.error("Erro ao carregar cavalo:", err);
+        void err;
 
         // Tratamento de erro especifico
         if (err instanceof Error) {
@@ -219,12 +221,13 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
         url={`https://portallusitano.com/cavalo/${slug}`}
       />
       <div className="max-w-6xl mx-auto px-6">
-        <Link
-          href="/marketplace"
-          className="inline-flex items-center text-[var(--foreground-muted)] hover:text-[var(--foreground)] mb-8 text-xs uppercase tracking-[0.2em] transition-colors no-print"
-        >
-          &larr; Voltar ao Marketplace
-        </Link>
+        <Breadcrumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Comprar", href: "/marketplace" },
+            { label: data.nome },
+          ]}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* GALERIA INTERATIVA */}
@@ -288,7 +291,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   Contactar por WhatsApp
                 </a>
                 <a
-                  href="mailto:portal.lusitano2023@gmail.com"
+                  href={`mailto:${CONTACT_EMAIL}`}
                   onClick={() => {
                     // Track contacto Email
                     analytics.contactCavalo({

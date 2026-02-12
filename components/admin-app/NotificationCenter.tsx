@@ -32,7 +32,7 @@ export default function NotificationCenter() {
       setNotifications(data.notifications || []);
       setUnreadCount(data.unreadCount || 0);
     } catch (error) {
-      console.error("Erro ao carregar notificações:", error);
+      void error;
     } finally {
       setLoading(false);
     }

@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Ver um utilizador
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
     if (!email) {
@@ -24,15 +22,12 @@ export async function GET(
     if (error) throw error;
 
     if (!user) {
-      return NextResponse.json(
-        { error: "Utilizador não encontrado" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Utilizador não encontrado" }, { status: 404 });
     }
 
     return NextResponse.json({ user });
   } catch (error) {
-    console.error("User fetch error:", error);
+    logger.error("User fetch error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao buscar utilizador" },
       { status: 500 }
@@ -41,10 +36,7 @@ export async function GET(
 }
 
 // PUT - Atualizar utilizador
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const adminEmail = await verifySession();
     if (!adminEmail) {
@@ -62,18 +54,12 @@ export async function PUT(
       .single();
 
     if (!currentUser) {
-      return NextResponse.json(
-        { error: "Utilizador não encontrado" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Utilizador não encontrado" }, { status: 404 });
     }
 
     // Não permitir desativar o próprio utilizador
     if (currentUser.email === adminEmail && updates.ativo === false) {
-      return NextResponse.json(
-        { error: "Não pode desativar a própria conta" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Não pode desativar a própria conta" }, { status: 400 });
     }
 
     // Não permitir remover role de super_admin se for o próprio
@@ -113,7 +99,7 @@ export async function PUT(
 
     return NextResponse.json({ user, message: "Utilizador atualizado" });
   } catch (error) {
-    console.error("User update error:", error);
+    logger.error("User update error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao atualizar utilizador" },
       { status: 500 }
@@ -122,10 +108,7 @@ export async function PUT(
 }
 
 // DELETE - Eliminar utilizador
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const adminEmail = await verifySession();
     if (!adminEmail) {
@@ -135,32 +118,19 @@ export async function DELETE(
     const { id } = await params;
 
     // Buscar utilizador
-    const { data: user } = await supabase
-      .from("admin_users")
-      .select("*")
-      .eq("id", id)
-      .single();
+    const { data: user } = await supabase.from("admin_users").select("*").eq("id", id).single();
 
     if (!user) {
-      return NextResponse.json(
-        { error: "Utilizador não encontrado" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Utilizador não encontrado" }, { status: 404 });
     }
 
     // Não permitir eliminar o próprio utilizador
     if (user.email === adminEmail) {
-      return NextResponse.json(
-        { error: "Não pode eliminar a própria conta" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Não pode eliminar a própria conta" }, { status: 400 });
     }
 
     // Eliminar
-    const { error } = await supabase
-      .from("admin_users")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("admin_users").delete().eq("id", id);
 
     if (error) throw error;
 
@@ -175,7 +145,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Utilizador eliminado" });
   } catch (error) {
-    console.error("User deletion error:", error);
+    logger.error("User deletion error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao eliminar utilizador" },
       { status: 500 }

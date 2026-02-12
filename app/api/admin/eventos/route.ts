@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Listar todos os eventos (admin)
 export async function GET() {
@@ -16,13 +17,13 @@ export async function GET() {
       .order("data_inicio", { ascending: false });
 
     if (error) {
-      console.error("Erro ao buscar eventos:", error);
+      logger.error("Erro ao buscar eventos:", error);
       return NextResponse.json({ error: "Erro ao buscar eventos" }, { status: 500 });
     }
 
     return NextResponse.json({ eventos: data });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
@@ -48,13 +49,13 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error("Erro ao criar evento:", error);
+      logger.error("Erro ao criar evento:", error);
       return NextResponse.json({ error: "Erro ao criar evento" }, { status: 500 });
     }
 
     return NextResponse.json({ evento: data });
   } catch (error) {
-    console.error("Erro:", error);
+    logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

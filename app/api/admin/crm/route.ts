@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Listar leads com filtros
 export async function GET(req: NextRequest) {
@@ -27,7 +28,9 @@ export async function GET(req: NextRequest) {
 
     // Pesquisa
     if (search) {
-      query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%,interests.ilike.%${search}%`);
+      query = query.or(
+        `name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%,interests.ilike.%${search}%`
+      );
     }
 
     const { data: leads, error, count } = await query;
@@ -63,9 +66,12 @@ export async function GET(req: NextRequest) {
       wonValue,
     });
   } catch (error) {
-    console.error("Error fetching CRM leads:", error);
+    logger.error("Error fetching CRM leads:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar leads", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar leads",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }
@@ -98,10 +104,7 @@ export async function POST(req: NextRequest) {
 
     // Validações
     if (!name || !leadEmail) {
-      return NextResponse.json(
-        { error: "Nome e email são obrigatórios" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Nome e email são obrigatórios" }, { status: 400 });
     }
 
     // Criar lead
@@ -130,9 +133,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ lead }, { status: 201 });
   } catch (error) {
-    console.error("Error creating lead:", error);
+    logger.error("Error creating lead:", error);
     return NextResponse.json(
-      { error: "Erro ao criar lead", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao criar lead",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

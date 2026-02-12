@@ -20,7 +20,8 @@ const NewsletterPopup = dynamic(() => import("@/components/NewsletterPopup"), { 
 const PushNotificationPrompt = dynamic(() => import("@/components/PushNotificationPrompt"), {
   ssr: false,
 });
-
+const WhatsAppButton = dynamic(() => import("@/components/WhatsAppButton"), { ssr: false });
+const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
 // Compose multiple providers to avoid deeply nested JSX
 // Each provider only re-renders its own consumers, not siblings
 function composeProviders(...providers: FC<{ children: ReactNode }>[]) {
@@ -52,6 +53,8 @@ export function Providers({ children }: { children: ReactNode }) {
         <CookieConsent />
         <NewsletterPopup />
         <PushNotificationPrompt />
+        <WhatsAppButton />
+        <CartDrawer />
       </ComposedProviders>
     </LanguageProvider>
   );

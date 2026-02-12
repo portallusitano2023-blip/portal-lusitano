@@ -38,7 +38,7 @@ export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
         if (Array.isArray(parsed)) return parsed;
       }
     } catch (error) {
-      console.error("Error loading horse favorites:", error);
+      // Error loading horse favorites silenced
     }
     return [];
   });
@@ -50,7 +50,7 @@ export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
     } catch (error) {
-      console.error("Error saving horse favorites:", error);
+      // Error saving horse favorites silenced
     }
   }, [favorites]);
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Listar todas as definições (com filtro opcional por categoria)
 export async function GET(req: NextRequest) {
@@ -26,7 +27,7 @@ export async function GET(req: NextRequest) {
     const { data: settings, error } = await query;
 
     if (error) {
-      console.error("Error fetching settings:", error);
+      logger.error("Error fetching settings:", error);
       throw error;
     }
 
@@ -45,7 +46,7 @@ export async function GET(req: NextRequest) {
       categories: Object.keys(grouped),
     });
   } catch (error) {
-    console.error("Settings list error:", error);
+    logger.error("Settings list error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao listar definições" },
       { status: 500 }
@@ -97,13 +98,13 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (error) {
-      console.error("Error creating setting:", error);
+      logger.error("Error creating setting:", error);
       throw error;
     }
 
     return NextResponse.json({ setting });
   } catch (error) {
-    console.error("Setting creation error:", error);
+    logger.error("Setting creation error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao criar definição" },
       { status: 500 }

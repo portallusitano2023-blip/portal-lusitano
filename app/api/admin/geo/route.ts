@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // Mapeamento de cidades/localidades para distritos (simplificado)
 const CITY_TO_DISTRICT: Record<string, string> = {
@@ -195,7 +196,7 @@ export async function GET(req: NextRequest) {
       total: districtData.reduce((sum, d) => sum + d.value, 0),
     });
   } catch (error) {
-    console.error("Geo data error:", error);
+    logger.error("Geo data error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao buscar dados geográficos" },
       { status: 500 }

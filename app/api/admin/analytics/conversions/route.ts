@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(_req: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function GET(_req: NextRequest) {
         (cavalos?.reduce((sum, c) => sum + (c.views_count || 0), 0) || 0) +
         (eventos?.reduce((sum, e) => sum + (e.views_count || 0), 0) || 0);
     } catch (e) {
-      console.warn("Error fetching views:", e);
+      logger.warn("Error fetching views:", e);
     }
 
     // 2. LEADS GERADOS (ebook grátis)
@@ -33,7 +34,7 @@ export async function GET(_req: NextRequest) {
 
       totalLeads = count || 0;
     } catch (e) {
-      console.warn("Error counting leads:", e);
+      logger.warn("Error counting leads:", e);
     }
 
     // 3. CLIENTES PAGOS (pessoas que compraram algo)
@@ -47,7 +48,7 @@ export async function GET(_req: NextRequest) {
 
       payments = data || [];
     } catch (e) {
-      console.warn("Error fetching payments:", e);
+      logger.warn("Error fetching payments:", e);
     }
 
     // Contar emails únicos (clientes únicos)
@@ -115,7 +116,7 @@ export async function GET(_req: NextRequest) {
         });
       }
     } catch (e) {
-      console.warn("Error fetching leads data:", e);
+      logger.warn("Error fetching leads data:", e);
     }
 
     // Contar clientes por mês
@@ -185,7 +186,7 @@ export async function GET(_req: NextRequest) {
       monthlyConversions: monthlyChart,
     });
   } catch (error) {
-    console.error("Conversions analytics error:", error);
+    logger.error("Conversions analytics error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao buscar analytics de conversões" },
       { status: 500 }

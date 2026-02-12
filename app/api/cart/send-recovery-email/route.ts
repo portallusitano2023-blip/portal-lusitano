@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import CartRecoveryEmail from "@/emails/CartRecoveryEmail";
+import { logger } from "@/lib/logger";
 
 interface AbandonedCart {
   id: string;
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
         .limit(50); // Process max 50 per run
 
       if (error) {
-        console.error("Error fetching carts:", error);
+        logger.error("Error fetching carts:", error);
         return NextResponse.json({ error: "Failed to fetch abandoned carts" }, { status: 500 });
       }
 
@@ -139,7 +140,7 @@ export async function POST(request: NextRequest) {
         });
 
         if (emailError) {
-          console.error(`Failed to send email for cart ${cart.id}:`, emailError);
+          logger.error(`Failed to send email for cart ${cart.id}:`, emailError);
           results.push({ cartId: cart.id, success: false, error: emailError.message });
           continue;
         }
@@ -164,7 +165,7 @@ export async function POST(request: NextRequest) {
 
         results.push({ cartId: cart.id, success: true, emailId: emailData?.id });
       } catch (error: unknown) {
-        console.error(`Error processing cart ${cart.id}:`, error);
+        logger.error(`Error processing cart ${cart.id}:`, error);
         results.push({
           cartId: cart.id,
           success: false,
@@ -181,7 +182,7 @@ export async function POST(request: NextRequest) {
       results,
     });
   } catch (error: unknown) {
-    console.error("Send recovery email error:", error);
+    logger.error("Send recovery email error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 }

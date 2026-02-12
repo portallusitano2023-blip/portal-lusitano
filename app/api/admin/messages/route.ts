@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -52,7 +53,7 @@ export async function GET(req: NextRequest) {
     const { data, error, count } = await query;
 
     if (error) {
-      console.error("Error fetching messages:", error);
+      logger.error("Error fetching messages:", error);
       throw new Error(error.message);
     }
 
@@ -66,7 +67,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Messages list error:", error);
+    logger.error("Messages list error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao listar mensagens" },
       { status: 500 }

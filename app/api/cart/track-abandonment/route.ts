@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -81,7 +82,7 @@ export async function POST(request: NextRequest) {
         .eq("id", existingCart.id);
 
       if (updateError) {
-        console.error("Error updating abandoned cart:", updateError);
+        logger.error("Error updating abandoned cart:", updateError);
         return NextResponse.json({ error: "Failed to update cart tracking" }, { status: 500 });
       }
 
@@ -113,7 +114,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
-      console.error("Error inserting abandoned cart:", insertError);
+      logger.error("Error inserting abandoned cart:", insertError);
       return NextResponse.json({ error: "Failed to track cart abandonment" }, { status: 500 });
     }
 
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
       recoveryToken: recoveryToken, // Return for client-side storage (optional)
     });
   } catch (error: unknown) {
-    console.error("Cart tracking error:", error);
+    logger.error("Cart tracking error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 }

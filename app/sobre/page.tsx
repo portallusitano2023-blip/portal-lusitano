@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { CONTACT_EMAIL } from "@/lib/constants";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import {
   BookOpen,
@@ -251,7 +252,7 @@ export default function SobrePage() {
                 {isPt ? "Criar Conta Grátis" : "Create Free Account"}
               </Link>
               <a
-                href="mailto:portal.lusitano2023@gmail.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] text-[11px] uppercase tracking-[0.15em] transition-colors"
               >
                 <Mail size={14} />

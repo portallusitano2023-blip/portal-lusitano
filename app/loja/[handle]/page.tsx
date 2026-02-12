@@ -1,6 +1,42 @@
+import type { Metadata } from "next";
 import { getProduct } from "@/lib/shopify";
 import ProductDisplay from "@/components/ProductDisplay";
+import Breadcrumb from "@/components/Breadcrumb";
 import Link from "next/link";
+
+const siteUrl = "https://portal-lusitano.pt";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ handle: string }>;
+}): Promise<Metadata> {
+  const { handle } = await params;
+  const product = await getProduct(decodeURIComponent(handle));
+
+  if (!product) {
+    return { title: "Produto não encontrado" };
+  }
+
+  const price = product.variants?.[0]?.price?.amount;
+  const image = product.images?.[0]?.url;
+  const description = `${product.title} — disponível na Loja Portal Lusitano.${price ? ` Desde ${parseFloat(price).toFixed(2)}€.` : ""}`;
+
+  return {
+    title: product.title,
+    description,
+    alternates: { canonical: `${siteUrl}/loja/${handle}` },
+    openGraph: {
+      title: `${product.title} | Loja Portal Lusitano`,
+      description,
+      url: `${siteUrl}/loja/${handle}`,
+      siteName: "Portal Lusitano",
+      locale: "pt_PT",
+      type: "website",
+      ...(image && { images: [{ url: image, width: 800, height: 800, alt: product.title }] }),
+    },
+  };
+}
 
 export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
   const resolvedParams = await params;
@@ -31,6 +67,14 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   return (
     <main className="bg-[var(--background)] min-h-screen pt-40 pb-20 selection:bg-[var(--gold)] selection:text-black">
       <div className="max-w-7xl mx-auto px-6">
+        <Breadcrumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Loja", href: "/loja" },
+            { label: product.title },
+          ]}
+        />
+
         {/* Componente Principal */}
         <ProductDisplay product={product} />
 

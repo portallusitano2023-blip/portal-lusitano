@@ -2,7 +2,7 @@
 
 export const requestNotificationPermission = async (): Promise<boolean> => {
   if (!("Notification" in window)) {
-    console.warn("Este browser não suporta notificações");
+    // Browser does not support notifications
     return false;
   }
 
@@ -18,10 +18,7 @@ export const requestNotificationPermission = async (): Promise<boolean> => {
   return false;
 };
 
-export const showNotification = (
-  title: string,
-  options?: NotificationOptions
-) => {
+export const showNotification = (title: string, options?: NotificationOptions) => {
   if (Notification.permission === "granted") {
     const notification = new Notification(title, {
       icon: "/logo.png",
@@ -37,11 +34,7 @@ export const showNotification = (
   return null;
 };
 
-export const notifyNewMessage = (data: {
-  name: string;
-  type: string;
-  id: string;
-}) => {
+export const notifyNewMessage = (data: { name: string; type: string; id: string }) => {
   const typeLabels: Record<string, string> = {
     vender_cavalo: "Vender Cavalo",
     publicidade: "Publicidade",
@@ -56,11 +49,7 @@ export const notifyNewMessage = (data: {
   });
 };
 
-export const notifyNewPayment = (data: {
-  email: string;
-  amount: number;
-  type: string;
-}) => {
+export const notifyNewPayment = (data: { email: string; amount: number; type: string }) => {
   const amountEuros = (data.amount / 100).toFixed(2);
 
   showNotification("💰 Novo Pagamento Recebido!", {
@@ -71,10 +60,7 @@ export const notifyNewPayment = (data: {
   });
 };
 
-export const notifyNewLead = (data: {
-  name: string;
-  stage: string;
-}) => {
+export const notifyNewLead = (data: { name: string; stage: string }) => {
   showNotification("🎯 Novo Lead no CRM!", {
     body: `${data.name} - ${data.stage}`,
     tag: `lead-${Date.now()}`,
@@ -83,10 +69,7 @@ export const notifyNewLead = (data: {
   });
 };
 
-export const notifyTaskDue = (data: {
-  title: string;
-  dueDate: string;
-}) => {
+export const notifyTaskDue = (data: { title: string; dueDate: string }) => {
   showNotification("⏰ Tarefa Pendente!", {
     body: `${data.title} - Vence: ${data.dueDate}`,
     tag: `task-${Date.now()}`,

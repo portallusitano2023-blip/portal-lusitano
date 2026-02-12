@@ -308,7 +308,7 @@ function HistoricoContent() {
 
       setResults(data || []);
     } catch (err) {
-      console.error("Erro ao carregar resultados:", err);
+      void err;
       setError("Nao foi possivel carregar os resultados. Tente novamente.");
     } finally {
       setIsLoading(false);
@@ -336,7 +336,7 @@ function HistoricoContent() {
 
       setResults((prev) => prev.filter((r) => r.id !== deleteId));
     } catch (err) {
-      console.error("Erro ao eliminar resultado:", err);
+      void err;
       setError("Nao foi possivel eliminar o resultado. Tente novamente.");
     } finally {
       setDeleteId(null);

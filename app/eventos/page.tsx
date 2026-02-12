@@ -105,7 +105,7 @@ export default function EventosPage() {
           setEventos(data.eventos || []);
         }
       } catch (error) {
-        console.error("Erro ao carregar eventos:", error);
+        void error;
       } finally {
         setLoading(false);
       }

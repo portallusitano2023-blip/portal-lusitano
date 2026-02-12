@@ -11,7 +11,7 @@ export default function LojaError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Loja error:", error);
+    void error;
   }, [error]);
 
   return (

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET() {
   try {
@@ -15,7 +16,7 @@ export async function GET() {
     const { data: leads, error: leadsError } = await supabase.from("leads").select("*");
 
     if (leadsError) {
-      console.error("Erro ao buscar leads:", leadsError);
+      logger.error("Erro ao buscar leads:", leadsError);
     }
 
     // Buscar cavalos
@@ -24,7 +25,7 @@ export async function GET() {
       .select("id, status, views_count, created_at");
 
     if (cavalosError) {
-      console.error("Erro ao buscar cavalos:", cavalosError);
+      logger.error("Erro ao buscar cavalos:", cavalosError);
     }
 
     // Buscar eventos
@@ -33,7 +34,7 @@ export async function GET() {
       .select("id, destaque, data_inicio, views_count");
 
     if (eventosError) {
-      console.error("Erro ao buscar eventos:", eventosError);
+      logger.error("Erro ao buscar eventos:", eventosError);
     }
 
     // Buscar coudelarias
@@ -42,7 +43,7 @@ export async function GET() {
       .select("id, destaque");
 
     if (coudError) {
-      console.error("Erro ao buscar coudelarias:", coudError);
+      logger.error("Erro ao buscar coudelarias:", coudError);
     }
 
     // Buscar reviews
@@ -51,7 +52,7 @@ export async function GET() {
       .select("id, status, created_at");
 
     if (reviewsError) {
-      console.error("Erro ao buscar reviews:", reviewsError);
+      logger.error("Erro ao buscar reviews:", reviewsError);
     }
 
     // Stats de leads/ebooks
@@ -110,7 +111,7 @@ export async function GET() {
 
     return NextResponse.json(stats);
   } catch (error) {
-    console.error("Erro ao buscar estatísticas:", error);
+    logger.error("Erro ao buscar estatísticas:", error);
     return NextResponse.json({ error: "Erro ao buscar estatísticas" }, { status: 500 });
   }
 }

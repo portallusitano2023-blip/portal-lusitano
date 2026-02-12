@@ -16,7 +16,7 @@ export default async function AdminDepoimentosPage({
 
   return (
     <>
-      <Navbar dev={true} />
+      <Navbar />
       <main className="min-h-screen bg-black text-white pt-48 px-10">
         <header className="mb-16 border-b border-zinc-900 pb-8">
           <h1 className="text-4xl font-serif italic">

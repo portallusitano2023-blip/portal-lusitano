@@ -1,23 +1,21 @@
 import { stripe } from "@/lib/stripe";
 import { supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
     const { package: pkg, email, company, telefone } = await req.json();
 
     if (!pkg || !email || !company) {
-      return NextResponse.json(
-        { error: "Dados incompletos" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
     }
 
     // ===== NOVO: Guardar contacto em BD ANTES de criar sessão Stripe =====
     const { data: submission, error: submissionError } = await supabase
-      .from('contact_submissions')
+      .from("contact_submissions")
       .insert({
-        form_type: 'publicidade',
+        form_type: "publicidade",
         name: company, // Nome da empresa
         email: email,
         telefone: telefone || null,
@@ -28,28 +26,31 @@ export async function POST(req: NextRequest) {
           telefone: telefone,
           email: email,
         },
-        status: 'novo',
-        priority: pkg === 'anual' ? 'alta' : 'normal', // Pacote anual = prioridade alta
-        ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || null,
-        user_agent: req.headers.get('user-agent') || null,
+        status: "novo",
+        priority: pkg === "anual" ? "alta" : "normal", // Pacote anual = prioridade alta
+        ip_address: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || null,
+        user_agent: req.headers.get("user-agent") || null,
       })
       .select()
       .single();
 
     if (submissionError || !submission) {
-      console.error('Erro ao guardar contacto publicidade:', submissionError);
+      logger.error("Erro ao guardar contacto publicidade:", submissionError);
       return NextResponse.json(
-        { error: 'Erro ao processar formulário. Tente novamente.' },
+        { error: "Erro ao processar formulário. Tente novamente." },
         { status: 500 }
       );
     }
 
-    const packages: Record<string, {
-      price: number;
-      name: string;
-      description: string;
-      recurring: boolean;
-    }> = {
+    const packages: Record<
+      string,
+      {
+        price: number;
+        name: string;
+        description: string;
+        recurring: boolean;
+      }
+    > = {
       lateral: {
         price: 2500, // €25/mês
         name: "Banner Lateral",
@@ -73,10 +74,7 @@ export async function POST(req: NextRequest) {
     const selected = packages[pkg];
 
     if (!selected) {
-      return NextResponse.json(
-        { error: "Pacote inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Pacote inválido" }, { status: 400 });
     }
 
     // Criar sessão de checkout Stripe
@@ -114,7 +112,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error("Checkout creation error:", error);
+    logger.error("Checkout creation error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao criar checkout" },
       { status: 500 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(_req: NextRequest) {
   try {
@@ -138,7 +139,7 @@ export async function GET(_req: NextRequest) {
       evolution: mrrChart,
     });
   } catch (error) {
-    console.error("MRR calculation error:", error);
+    logger.error("MRR calculation error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao calcular MRR" },
       { status: 500 }

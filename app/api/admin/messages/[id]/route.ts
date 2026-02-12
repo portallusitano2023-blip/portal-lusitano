@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Verificar autenticação
     const email = await verifySession();
@@ -22,10 +20,7 @@ export async function GET(
       .single();
 
     if (error || !data) {
-      return NextResponse.json(
-        { error: "Mensagem não encontrada" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Mensagem não encontrada" }, { status: 404 });
     }
 
     // Marcar como lida se ainda estiver como 'novo'
@@ -44,7 +39,7 @@ export async function GET(
 
     return NextResponse.json({ message: data });
   } catch (error) {
-    console.error("Message get error:", error);
+    logger.error("Message get error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao buscar mensagem" },
       { status: 500 }
@@ -52,10 +47,7 @@ export async function GET(
   }
 }
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Verificar autenticação
     const adminEmail = await verifySession();
@@ -103,13 +95,13 @@ export async function PATCH(
       .single();
 
     if (error) {
-      console.error("Message update error:", error);
+      logger.error("Message update error:", error);
       throw new Error(error.message);
     }
 
     return NextResponse.json({ message: data });
   } catch (error) {
-    console.error("Message update error:", error);
+    logger.error("Message update error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao atualizar mensagem" },
       { status: 500 }
@@ -117,10 +109,7 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Verificar autenticação
     const email = await verifySession();
@@ -140,13 +129,13 @@ export async function DELETE(
       .eq("id", id);
 
     if (error) {
-      console.error("Message delete error:", error);
+      logger.error("Message delete error:", error);
       throw new Error(error.message);
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Message delete error:", error);
+    logger.error("Message delete error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao eliminar mensagem" },
       { status: 500 }

@@ -1,5 +1,6 @@
 import { createCart, addToCart } from "@/lib/shopify";
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ checkoutUrl });
   } catch (error: unknown) {
-    console.error("Erro no checkout:", error);
+    logger.error("Erro no checkout:", error);
     return NextResponse.json(
       {
         error: "Erro ao criar checkout",

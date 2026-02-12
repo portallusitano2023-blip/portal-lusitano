@@ -11,7 +11,7 @@ export default function MinhaContaError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Minha conta error:", error);
+    void error;
   }, [error]);
 
   return (

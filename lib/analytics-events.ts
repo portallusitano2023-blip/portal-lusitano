@@ -123,14 +123,14 @@ function isMetaPixelAvailable(): boolean {
  */
 function trackGA4(eventName: string, eventParams?: Record<string, unknown>) {
   if (!isGA4Available()) {
-    console.warn("[Analytics] GA4 not available");
+    // GA4 not available
     return;
   }
 
   try {
     window.gtag?.("event", eventName, eventParams);
   } catch (error) {
-    console.error("[GA4] Error tracking event:", error);
+    // GA4 tracking error silenced
   }
 }
 
@@ -139,14 +139,14 @@ function trackGA4(eventName: string, eventParams?: Record<string, unknown>) {
  */
 function trackMetaPixel(eventName: string, eventParams?: Record<string, unknown>) {
   if (!isMetaPixelAvailable()) {
-    console.warn("[Analytics] Meta Pixel not available");
+    // Meta Pixel not available
     return;
   }
 
   try {
     window.fbq?.("track", eventName, eventParams);
   } catch (error) {
-    console.error("[Meta Pixel] Error tracking event:", error);
+    // Meta Pixel tracking error silenced
   }
 }
 

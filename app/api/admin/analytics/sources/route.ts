@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET(_req: NextRequest) {
   try {
@@ -26,7 +27,7 @@ export async function GET(_req: NextRequest) {
 
       leads = data || [];
     } catch (e) {
-      console.warn("Error fetching leads:", e);
+      logger.warn("Error fetching leads:", e);
     }
 
     // Agregar por fonte
@@ -67,7 +68,7 @@ export async function GET(_req: NextRequest) {
 
       payments = data || [];
     } catch (e) {
-      console.warn("Error fetching payments:", e);
+      logger.warn("Error fetching payments:", e);
     }
 
     // Criar mapa email → utm_source
@@ -172,7 +173,7 @@ export async function GET(_req: NextRequest) {
       ),
     });
   } catch (error) {
-    console.error("Sources analytics error:", error);
+    logger.error("Sources analytics error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Erro ao buscar analytics de fontes" },
       { status: 500 }

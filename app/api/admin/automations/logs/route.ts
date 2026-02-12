@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 
 // GET - Listar logs de uma automação específica
 export async function GET(req: NextRequest) {
@@ -15,10 +16,7 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10");
 
     if (!automation_id) {
-      return NextResponse.json(
-        { error: "automation_id é obrigatório" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "automation_id é obrigatório" }, { status: 400 });
     }
 
     // Buscar logs
@@ -33,9 +31,12 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ logs: logs || [] });
   } catch (error) {
-    console.error("Error fetching automation logs:", error);
+    logger.error("Error fetching automation logs:", error);
     return NextResponse.json(
-      { error: "Erro ao carregar logs", details: error instanceof Error ? error.message : "Erro desconhecido" },
+      {
+        error: "Erro ao carregar logs",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      },
       { status: 500 }
     );
   }

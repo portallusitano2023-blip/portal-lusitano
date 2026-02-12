@@ -241,7 +241,7 @@ export function MultiImageUpload({
           newUrls.push(data.url);
         }
       } catch (err) {
-        console.error("Erro ao fazer upload:", err);
+        // Upload error silenced
       }
     }
 

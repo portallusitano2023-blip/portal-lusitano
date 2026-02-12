@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { supabase } from "@/lib/supabase";
 import { fetchArticleSlugs } from "@/lib/sanity-queries";
+import { logger } from "@/lib/logger";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
@@ -172,7 +173,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
     }
   } catch (error) {
-    console.error("Erro ao buscar coudelarias para sitemap:", error);
+    logger.error("Erro ao buscar coudelarias para sitemap:", error);
   }
 
   // Buscar eventos dinâmicos
@@ -192,7 +193,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
     }
   } catch (error) {
-    console.error("Erro ao buscar eventos para sitemap:", error);
+    logger.error("Erro ao buscar eventos para sitemap:", error);
   }
 
   // Buscar cavalos à venda
@@ -212,7 +213,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
     }
   } catch (error) {
-    console.error("Erro ao buscar cavalos para sitemap:", error);
+    logger.error("Erro ao buscar cavalos para sitemap:", error);
   }
 
   // Buscar linhagens
@@ -229,7 +230,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
     }
   } catch (error) {
-    console.error("Erro ao buscar linhagens para sitemap:", error);
+    logger.error("Erro ao buscar linhagens para sitemap:", error);
   }
 
   // Artigos do jornal (dinâmico via Sanity)
