@@ -204,6 +204,9 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
 
       {/* Modal */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Pesquisar no site"
         className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 px-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
         style={{ animationDelay: "0.05s" }}
       >

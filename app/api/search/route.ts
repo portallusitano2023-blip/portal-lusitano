@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { apiLimiter } from "@/lib/rate-limit";
 
 interface SearchResult {
   id: string;
@@ -73,6 +74,12 @@ const STATIC_PAGES: Array<{ title_pt: string; title_en: string; url: string; key
 
 export async function GET(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    try {
+      await apiLimiter.check(30, ip);
+    } catch {
+      return NextResponse.json({ error: "Demasiados pedidos" }, { status: 429 });
+    }
     const { searchParams } = new URL(request.url);
     const q = searchParams.get("q")?.trim();
     const limit = Math.min(parseInt(searchParams.get("limit") || "12"), 30);

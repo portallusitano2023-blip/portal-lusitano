@@ -34,7 +34,16 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
+    const adminEmail = process.env.ADMIN_EMAIL;
     const targetEmail = body.email || sessionEmail;
+
+    // Restringir envio apenas para o email do admin ou o email da sessão
+    if (targetEmail !== sessionEmail && targetEmail !== adminEmail) {
+      return NextResponse.json(
+        { error: "Backup só pode ser enviado para o email do administrador" },
+        { status: 403 }
+      );
+    }
 
     const backup = await exportAllTables();
     const result = await sendBackupByEmail(targetEmail, backup);

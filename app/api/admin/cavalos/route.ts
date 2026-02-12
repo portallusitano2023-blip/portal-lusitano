@@ -40,7 +40,27 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from("cavalos_venda")
       .insert({
-        ...body,
+        nome: body.nome,
+        nome_cavalo: body.nome_cavalo,
+        descricao: body.descricao,
+        preco: body.preco,
+        linhagem: body.linhagem,
+        idade: body.idade,
+        sexo: body.sexo,
+        pelagem: body.pelagem,
+        altura: body.altura,
+        peso: body.peso,
+        disciplinas: body.disciplinas,
+        nivel: body.nivel,
+        localizacao: body.localizacao,
+        coudelaria: body.coudelaria,
+        imagens: body.imagens,
+        image_url: body.image_url,
+        slug: body.slug,
+        destaque: body.destaque,
+        contacto_nome: body.contacto_nome,
+        contacto_email: body.contacto_email,
+        contacto_telefone: body.contacto_telefone,
         status: "active",
         views_count: 0,
       })

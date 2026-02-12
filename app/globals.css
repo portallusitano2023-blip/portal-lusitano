@@ -128,9 +128,10 @@ body {
 }
 
 /* Focus styles visíveis para navegação por teclado */
+/* !important necessário para sobrescrever outline-none do Tailwind */
 :focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
+  outline: 2px solid var(--gold) !important;
+  outline-offset: 2px !important;
 }
 
 /* Remove outline em cliques de rato mas mantém para teclado */

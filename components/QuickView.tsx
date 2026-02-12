@@ -121,6 +121,9 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
           <div className="fixed inset-0 z-[9998] flex items-center justify-center p-4">
             {/* Inner modal */}
             <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Pré-visualização do produto"
               className="relative bg-[var(--background-secondary)] border border-[var(--border)] max-w-4xl w-full max-h-[90vh] overflow-hidden opacity-0 animate-[scaleIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
               style={{ animationDelay: "0.05s", willChange: "transform, opacity" }}
               onClick={(e) => e.stopPropagation()}

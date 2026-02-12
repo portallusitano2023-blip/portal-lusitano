@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { usePathname } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
@@ -19,7 +19,7 @@ const SearchModal = dynamic(
   { ssr: false }
 );
 
-export default function Navbar({}: { dev?: boolean } = {}) {
+export default memo(function Navbar({}: { dev?: boolean } = {}) {
   const { totalQuantity, openCart } = useCart();
   const { language, toggleLanguage, t } = useLanguage();
   const { wishlist } = useWishlist();
@@ -103,4 +103,4 @@ export default function Navbar({}: { dev?: boolean } = {}) {
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </nav>
   );
-}
+});

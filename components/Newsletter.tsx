@@ -30,7 +30,7 @@ export default function Newsletter() {
         </p>
 
         {status === "success" ? (
-          <p className="text-[var(--gold)] font-bold">
+          <p className="text-[var(--gold)] font-bold" role="status" aria-live="polite">
             Bem-vindo à elite. A sua subscrição foi confirmada.
           </p>
         ) : (

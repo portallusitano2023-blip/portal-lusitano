@@ -13,12 +13,38 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const { id } = await params;
     const body = await request.json();
 
+    const allowedFields = [
+      "nome",
+      "nome_cavalo",
+      "descricao",
+      "preco",
+      "linhagem",
+      "idade",
+      "sexo",
+      "pelagem",
+      "altura",
+      "peso",
+      "disciplinas",
+      "nivel",
+      "localizacao",
+      "coudelaria",
+      "imagens",
+      "image_url",
+      "slug",
+      "destaque",
+      "status",
+      "contacto_nome",
+      "contacto_email",
+      "contacto_telefone",
+    ];
+    const updateData: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    for (const key of allowedFields) {
+      if (key in body) updateData[key] = body[key];
+    }
+
     const { data, error } = await supabase
       .from("cavalos_venda")
-      .update({
-        ...body,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq("id", id)
       .select()
       .single();

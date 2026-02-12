@@ -58,6 +58,7 @@ export default function AddToCartButton({
     <button
       onClick={handleAddToCart}
       disabled={!available || loading}
+      aria-busy={loading}
       className={`
         group relative block w-full py-6 text-center text-xs uppercase font-bold tracking-[0.3em]
         transition-all duration-500 border

@@ -1,19 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { strictLimiter } from "@/lib/rate-limit";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    try {
+      await strictLimiter.check(5, ip);
+    } catch {
+      return NextResponse.json(
+        { error: "Demasiados pedidos. Tente novamente mais tarde." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { nome, empresa, email, instagram, pacote, preco, mensagem } = body;
 
     // Validações básicas
     if (!nome || !email || !mensagem) {
-      return NextResponse.json(
-        { error: "Campos obrigatórios em falta" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Campos obrigatórios em falta" }, { status: 400 });
     }
 
     // Enviar email para ti (dono do site)
@@ -40,26 +48,34 @@ export async function POST(request: NextRequest) {
                   <td style="padding: 8px 0; color: #666;">Nome:</td>
                   <td style="padding: 8px 0; font-weight: bold;">${nome}</td>
                 </tr>
-                ${empresa ? `
+                ${
+                  empresa
+                    ? `
                 <tr>
                   <td style="padding: 8px 0; color: #666;">Empresa:</td>
                   <td style="padding: 8px 0; font-weight: bold;">${empresa}</td>
                 </tr>
-                ` : ''}
+                `
+                    : ""
+                }
                 <tr>
                   <td style="padding: 8px 0; color: #666;">Email:</td>
                   <td style="padding: 8px 0; font-weight: bold;">
                     <a href="mailto:${email}">${email}</a>
                   </td>
                 </tr>
-                ${instagram ? `
+                ${
+                  instagram
+                    ? `
                 <tr>
                   <td style="padding: 8px 0; color: #666;">Instagram:</td>
                   <td style="padding: 8px 0; font-weight: bold;">
-                    <a href="https://instagram.com/${instagram.replace('@', '')}">${instagram}</a>
+                    <a href="https://instagram.com/${instagram.replace("@", "")}">${instagram}</a>
                   </td>
                 </tr>
-                ` : ''}
+                `
+                    : ""
+                }
               </table>
 
               <h3 style="color: #333; margin-top: 20px;">O que pretende promover:</h3>
@@ -131,9 +147,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Erro ao processar pedido Instagram:", error);
-    return NextResponse.json(
-      { error: "Erro ao enviar pedido" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao enviar pedido" }, { status: 500 });
   }
 }
