@@ -1,6 +1,15 @@
 "use client";
 
-import { Users, Feather, DollarSign, Calendar, BarChart3, Compass } from "lucide-react";
+import {
+  Users,
+  Feather,
+  DollarSign,
+  Calendar,
+  BarChart3,
+  Compass,
+  ClipboardCheck,
+  PiggyBank,
+} from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import type { ResultTab } from "@/components/analise-perfil/types";
 
@@ -19,6 +28,8 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
     { id: "cronograma", label: t.analise_perfil.tab_timeline, icon: Calendar },
     { id: "analise", label: t.analise_perfil.tab_analysis, icon: BarChart3 },
     { id: "proximos", label: t.analise_perfil.tab_next_steps, icon: Compass },
+    { id: "checklist", label: t.analise_perfil.tab_checklist, icon: ClipboardCheck },
+    { id: "budget", label: t.analise_perfil.tab_budget, icon: PiggyBank },
   ];
 
   return (

@@ -92,4 +92,12 @@ export interface ScorePercentage {
   label: string;
 }
 
-export type ResultTab = "perfil" | "cavalo" | "custos" | "cronograma" | "analise" | "proximos";
+export type ResultTab =
+  | "perfil"
+  | "cavalo"
+  | "custos"
+  | "cronograma"
+  | "analise"
+  | "proximos"
+  | "checklist"
+  | "budget";

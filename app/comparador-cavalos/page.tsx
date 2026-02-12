@@ -22,6 +22,8 @@ import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
+import HorseVerdictCard from "@/components/tools/HorseVerdictCard";
+import CostProjectionTable from "@/components/tools/CostProjectionTable";
 import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
@@ -358,6 +360,84 @@ export default function ComparadorCavalosPage() {
   const melhorValor = cavalos.reduce((a, b) =>
     calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b
   );
+
+  // ============================================
+  // PRO: Verdict generation
+  // ============================================
+  const gerarVeredicto = (c: Cavalo) => {
+    const score = calcularScore(c);
+    const strengths: string[] = [];
+    const weaknesses: string[] = [];
+
+    if (c.conformacao >= 8) strengths.push("Conformação excelente");
+    else if (c.conformacao <= 5) weaknesses.push("Conformação abaixo da média");
+    if (c.andamentos >= 8) strengths.push("Andamentos de alta qualidade");
+    else if (c.andamentos <= 5) weaknesses.push("Andamentos precisam de trabalho");
+    if (c.temperamento >= 8) strengths.push("Temperamento exemplar");
+    else if (c.temperamento <= 5) weaknesses.push("Temperamento pode ser desafiante");
+    if (c.saude >= 8) strengths.push("Excelente estado de saúde");
+    else if (c.saude <= 5) weaknesses.push("Saúde requer atenção");
+    if (c.blup > 110) strengths.push("BLUP acima da média da raça");
+    else if (c.blup < 90) weaknesses.push("BLUP abaixo da média");
+    if (c.registoAPSL) strengths.push("Registo APSL confirmado");
+    else weaknesses.push("Sem registo APSL");
+    if (c.idade >= 6 && c.idade <= 12) strengths.push("Idade ideal de performance");
+    else if (c.idade > 16) weaknesses.push("Idade avançada");
+    if (c.competicoes === "Internacional") strengths.push("Experiência internacional");
+    if (c.competicoes === "Nacional") strengths.push("Experiência em competição nacional");
+
+    const bestUse =
+      c.competicoes !== "Nenhuma"
+        ? "Competição"
+        : c.sexo === "Égua" && c.conformacao >= 7
+          ? "Criação"
+          : score >= 60
+            ? "Investimento"
+            : "Lazer";
+
+    const riskLevel: "Baixo" | "Medio" | "Alto" =
+      c.idade > 16 || c.saude <= 5 ? "Alto" : c.idade > 14 || c.saude <= 6 ? "Medio" : "Baixo";
+
+    const recommendation =
+      score >= 75
+        ? `${c.nome} é um cavalo excepcional com elevado potencial. A combinação de ${c.treino.toLowerCase()} com ${c.linhagem.toLowerCase()} torna-o uma escolha sólida para ${bestUse.toLowerCase()}.`
+        : score >= 50
+          ? `${c.nome} apresenta qualidades interessantes para ${bestUse.toLowerCase()}. Recomenda-se investir em treino para maximizar o potencial demonstrado.`
+          : `${c.nome} necessita de desenvolvimento em várias áreas. Considere uma avaliação veterinária detalhada antes de avançar.`;
+
+    return {
+      strengths: strengths.slice(0, 3),
+      weaknesses: weaknesses.slice(0, 3),
+      bestUse,
+      riskLevel,
+      recommendation,
+    };
+  };
+
+  // ============================================
+  // PRO: Cost projections
+  // ============================================
+  const gerarCustos = (c: Cavalo) => {
+    const treino = TREINOS.find((t) => t.value === c.treino);
+    const nivel = treino?.nivel ?? 4;
+    const baseTraining = 200 + nivel * 100;
+
+    return {
+      nome: c.nome,
+      purchasePrice: c.preco,
+      annualCosts: {
+        pensao: 400 * 12,
+        alimentacao: 150 * 12,
+        veterinario: 80 * 12,
+        ferrador: 60 * 12,
+        treino: baseTraining * 12,
+        seguro: Math.round(c.preco * 0.04),
+      },
+      estimatedValue5yr: Math.round(
+        c.preco * (c.idade >= 4 && c.idade <= 10 ? 1.1 : c.idade > 14 ? 0.6 : 0.85)
+      ),
+    };
+  };
 
   const resetar = () => {
     setStep(0);
@@ -1058,6 +1138,54 @@ export default function ComparadorCavalosPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* PRO: Veredicto por Cavalo */}
+                <BlurredProSection isSubscribed={isSubscribed} title={t.comparador.verdict_title}>
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-2">
+                      {t.comparador.verdict_title}
+                    </h3>
+                    <p className="text-xs text-[var(--foreground-muted)] mb-4">
+                      {t.comparador.verdict_desc}
+                    </p>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {cavalos.map((c) => {
+                        const v = gerarVeredicto(c);
+                        return (
+                          <HorseVerdictCard
+                            key={c.id}
+                            nome={c.nome}
+                            score={calcularScore(c)}
+                            strengths={v.strengths}
+                            weaknesses={v.weaknesses}
+                            bestUse={v.bestUse}
+                            riskLevel={v.riskLevel}
+                            recommendation={v.recommendation}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                </BlurredProSection>
+
+                {/* PRO: Projecção de Custo 5 Anos */}
+                <BlurredProSection
+                  isSubscribed={isSubscribed}
+                  title={t.comparador.cost_projection_title}
+                >
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-2">
+                      {t.comparador.cost_projection_title}
+                    </h3>
+                    <p className="text-xs text-[var(--foreground-muted)] mb-4">
+                      {t.comparador.cost_projection_desc}
+                    </p>
+                    <CostProjectionTable horses={cavalos.map(gerarCustos)} />
+                    <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed mt-3">
+                      {t.comparador.cost_disclaimer}
+                    </p>
+                  </div>
+                </BlurredProSection>
 
                 {/* Disclaimer */}
                 <div className="p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--border)]/50">

@@ -17,6 +17,8 @@ import CostsTab from "@/components/analise-perfil/tabs/CostsTab";
 import TimelineTab from "@/components/analise-perfil/tabs/TimelineTab";
 import AnalysisTab from "@/components/analise-perfil/tabs/AnalysisTab";
 import NextStepsTab from "@/components/analise-perfil/tabs/NextStepsTab";
+import ShoppingChecklistTab from "@/components/analise-perfil/tabs/ShoppingChecklistTab";
+import BudgetPlannerTab from "@/components/analise-perfil/tabs/BudgetPlannerTab";
 
 function AnalisePerfilContent() {
   const { t } = useLanguage();
@@ -124,6 +126,205 @@ function AnalisePerfilContent() {
                     </BlurredProSection>
                   )}
                   {selectedTab === "proximos" && <NextStepsTab result={result} />}
+                  {selectedTab === "checklist" && (
+                    <BlurredProSection
+                      isSubscribed={isSubscribed}
+                      title={t.analise_perfil.tab_checklist}
+                    >
+                      <ShoppingChecklistTab
+                        phases={[
+                          {
+                            title: t.analise_perfil.checklist_before,
+                            icon: "search",
+                            items: [
+                              {
+                                id: "budget",
+                                label: "Definir orçamento total",
+                                description:
+                                  "Inclui compra, transporte, primeiros meses de estábulo",
+                                priority: "essential" as const,
+                              },
+                              {
+                                id: "stable",
+                                label: "Garantir lugar em estábulo",
+                                description: "Confirmar vaga, condições e custos mensais",
+                                priority: "essential" as const,
+                              },
+                              {
+                                id: "insurance",
+                                label: "Pesquisar seguros equinos",
+                                description:
+                                  "Comparar apólices de saúde, vida e responsabilidade civil",
+                                priority: "important" as const,
+                              },
+                              {
+                                id: "trainer",
+                                label: "Contactar treinador",
+                                description:
+                                  "Identificar profissional para acompanhamento pós-compra",
+                                priority: "important" as const,
+                              },
+                              {
+                                id: "transport",
+                                label: "Organizar transporte",
+                                description: "Reservar transporte especializado para equinos",
+                                priority: "optional" as const,
+                              },
+                            ],
+                          },
+                          {
+                            title: t.analise_perfil.checklist_visit,
+                            icon: "eye",
+                            items: [
+                              {
+                                id: "vet-exam",
+                                label: "Exame veterinário completo",
+                                description:
+                                  "Incluir radiografias, análises sanguíneas e exame de fertilidade se aplicável",
+                                priority: "essential" as const,
+                              },
+                              {
+                                id: "conformation",
+                                label: "Avaliar conformação",
+                                description: "Verificar aprumos, dorso, garupa, pescoço e cabeça",
+                                priority: "essential" as const,
+                              },
+                              {
+                                id: "test-ride",
+                                label: "Ensaio montado",
+                                description: "Testar nos 3 andamentos, transições e temperamento",
+                                priority: "essential" as const,
+                              },
+                              {
+                                id: "papers",
+                                label: "Verificar documentação",
+                                description: "Registo APSL, passaporte equino, vacinações em dia",
+                                priority: "important" as const,
+                              },
+                              {
+                                id: "history",
+                                label: "Histórico de saúde",
+                                description: "Pedir relatórios veterinários anteriores",
+                                priority: "important" as const,
+                              },
+                            ],
+                          },
+                          {
+                            title: t.analise_perfil.checklist_first30,
+                            icon: "calendar",
+                            items: [
+                              {
+                                id: "adaptation",
+                                label: "Período de adaptação",
+                                description:
+                                  "Dar 7-14 dias para o cavalo se habituar ao novo ambiente",
+                                priority: "essential" as const,
+                              },
+                              {
+                                id: "vet-visit",
+                                label: "Visita veterinária inicial",
+                                description: "Check-up completo no novo local",
+                                priority: "essential" as const,
+                              },
+                              {
+                                id: "training-plan",
+                                label: "Plano de treino",
+                                description: "Definir objectivos e rotina com o treinador",
+                                priority: "important" as const,
+                              },
+                              {
+                                id: "farrier",
+                                label: "Visita do ferrador",
+                                description: "Avaliar cascos e ferrar se necessário",
+                                priority: "important" as const,
+                              },
+                              {
+                                id: "socialisation",
+                                label: "Socialização",
+                                description: "Introduzir gradualmente a outros cavalos do estábulo",
+                                priority: "optional" as const,
+                              },
+                            ],
+                          },
+                        ]}
+                      />
+                    </BlurredProSection>
+                  )}
+                  {selectedTab === "budget" && (
+                    <BlurredProSection
+                      isSubscribed={isSubscribed}
+                      title={t.analise_perfil.tab_budget}
+                    >
+                      <BudgetPlannerTab
+                        profileName={result.profile}
+                        categories={[
+                          {
+                            label: "Pensão",
+                            monthly:
+                              result.profile === "competidor"
+                                ? 500
+                                : result.profile === "criador"
+                                  ? 450
+                                  : 350,
+                            color: "#C5A059",
+                            icon: "Home",
+                          },
+                          {
+                            label: "Alimentação",
+                            monthly: result.profile === "competidor" ? 180 : 140,
+                            color: "#60A5FA",
+                            icon: "Apple",
+                          },
+                          {
+                            label: "Veterinário",
+                            monthly:
+                              result.profile === "competidor"
+                                ? 120
+                                : result.profile === "criador"
+                                  ? 100
+                                  : 70,
+                            color: "#F472B6",
+                            icon: "Stethoscope",
+                          },
+                          {
+                            label: "Ferrador",
+                            monthly: result.profile === "competidor" ? 75 : 55,
+                            color: "#A78BFA",
+                            icon: "Hammer",
+                          },
+                          {
+                            label: "Treino",
+                            monthly:
+                              result.profile === "competidor"
+                                ? 800
+                                : result.profile === "tradicional"
+                                  ? 400
+                                  : 250,
+                            color: "#34D399",
+                            icon: "GraduationCap",
+                          },
+                          {
+                            label: "Seguro",
+                            monthly: result.profile === "competidor" ? 150 : 80,
+                            color: "#FBBF24",
+                            icon: "Shield",
+                          },
+                          {
+                            label: "Competições",
+                            monthly: result.profile === "competidor" ? 200 : 0,
+                            color: "#FB923C",
+                            icon: "Trophy",
+                          },
+                          {
+                            label: "Equipamento",
+                            monthly: result.profile === "competidor" ? 100 : 50,
+                            color: "#94A3B8",
+                            icon: "Wrench",
+                          },
+                        ]}
+                      />
+                    </BlurredProSection>
+                  )}
                 </div>
               </section>
               <section className="py-12 border-t border-[var(--border)]">
