@@ -100,9 +100,9 @@ function ToolsSubscriptionCard() {
   const isActive = status === "active";
 
   return (
-    <div className="bg-zinc-900/30 p-8 border border-white/5 mt-6">
-      <h3 className="text-lg font-serif italic text-white mb-4 flex items-center gap-2">
-        <Crown size={18} className="text-[#C5A059]" />
+    <div className="bg-[var(--background-secondary)]/30 p-8 border border-[var(--border)] mt-6">
+      <h3 className="text-lg font-serif italic text-[var(--foreground)] mb-4 flex items-center gap-2">
+        <Crown size={18} className="text-[var(--gold)]" />
         Ferramentas PRO
       </h3>
 
@@ -112,13 +112,13 @@ function ToolsSubscriptionCard() {
             <span className="inline-block w-2 h-2 bg-emerald-400 rounded-full" />
             <span className="text-sm text-emerald-400">Subscricao activa</span>
           </div>
-          <p className="text-xs text-zinc-500 mb-4">
+          <p className="text-xs text-[var(--foreground-muted)] mb-4">
             4,99 EUR/mes — Acesso ilimitado a todas as ferramentas.
           </p>
           <button
             onClick={handleManagePortal}
             disabled={portalLoading}
-            className="inline-flex items-center gap-2 text-xs text-[#C5A059] hover:text-[#D4AF6A] font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 text-xs text-[var(--gold)] hover:text-[#D4AF6A] font-medium transition-colors disabled:opacity-50"
           >
             {portalLoading ? (
               <Loader2 size={14} className="animate-spin" />
@@ -130,9 +130,9 @@ function ToolsSubscriptionCard() {
         </>
       ) : (
         <>
-          <p className="text-sm text-zinc-400 mb-4">
-            Subscreva por <span className="text-[#C5A059] font-semibold">4,99 EUR/mes</span> para
-            acesso ilimitado a todas as ferramentas.
+          <p className="text-sm text-[var(--foreground-secondary)] mb-4">
+            Subscreva por <span className="text-[var(--gold)] font-semibold">4,99 EUR/mes</span>{" "}
+            para acesso ilimitado a todas as ferramentas.
           </p>
           <button
             onClick={handleSubscribe}
@@ -158,22 +158,22 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white pt-32 pb-20 px-6 selection:bg-[#C5A059] selection:text-black">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-32 pb-20 px-6 selection:bg-[var(--gold)] selection:text-black">
       <div className="max-w-6xl mx-auto">
         {/* CABECALHO DO DASHBOARD */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-zinc-800 pb-8 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-[var(--border)] pb-8 gap-6">
           <div>
-            <span className="text-[#C5A059] text-[9px] uppercase tracking-[0.4em] font-bold block mb-4">
+            <span className="text-[var(--gold)] text-[9px] uppercase tracking-[0.4em] font-bold block mb-4">
               {t.account.private_area}
             </span>
-            <h1 className="text-4xl md:text-5xl font-serif italic text-white">
+            <h1 className="text-4xl md:text-5xl font-serif italic text-[var(--foreground)]">
               {t.account.hello}, {customer.firstName || "Membro"}
             </h1>
           </div>
 
           {/* Botao de Logout */}
           <form action={logout}>
-            <button className="text-[10px] uppercase tracking-widest text-zinc-500 hover:text-white border border-zinc-800 hover:border-red-900 px-6 py-3 transition-all hover:bg-red-900/10">
+            <button className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] hover:text-[var(--foreground)] border border-[var(--border)] hover:border-red-900 px-6 py-3 transition-all hover:bg-red-900/10">
               {t.account.logout}
             </button>
           </form>
@@ -182,22 +182,24 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* --- COLUNA 1: DADOS PESSOAIS --- */}
           <div className="lg:col-span-1">
-            <div className="bg-zinc-900/30 p-8 border border-white/5">
-              <h3 className="text-lg font-serif italic text-white mb-6">{t.account.profile}</h3>
-              <div className="space-y-4 text-sm font-light text-zinc-400">
+            <div className="bg-[var(--background-secondary)]/30 p-8 border border-[var(--border)]">
+              <h3 className="text-lg font-serif italic text-[var(--foreground)] mb-6">
+                {t.account.profile}
+              </h3>
+              <div className="space-y-4 text-sm font-light text-[var(--foreground-secondary)]">
                 <div>
-                  <p className="text-[9px] uppercase tracking-widest text-zinc-600 mb-1">
+                  <p className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
                     {t.account.name}
                   </p>
-                  <p className="text-white">
+                  <p className="text-[var(--foreground)]">
                     {customer.firstName} {customer.lastName}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[9px] uppercase tracking-widest text-zinc-600 mb-1">
+                  <p className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
                     {t.account.email}
                   </p>
-                  <p className="text-white">{customer.email}</p>
+                  <p className="text-[var(--foreground)]">{customer.email}</p>
                 </div>
               </div>
             </div>
@@ -207,9 +209,9 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
 
           {/* --- COLUNA 2: HISTORICO DE ENCOMENDAS --- */}
           <div className="lg:col-span-2">
-            <h3 className="text-lg font-serif italic text-white mb-6 flex items-center gap-4">
+            <h3 className="text-lg font-serif italic text-[var(--foreground)] mb-6 flex items-center gap-4">
               {t.account.history}
-              <span className="h-[1px] flex-1 bg-zinc-800"></span>
+              <span className="h-[1px] flex-1 bg-[var(--border)]"></span>
             </h3>
 
             {customer.orders.edges.length > 0 ? (
@@ -217,33 +219,33 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
                 {customer.orders.edges.map(({ node: order }) => (
                   <div
                     key={order.id}
-                    className="bg-zinc-900/20 border border-white/5 p-6 hover:border-[#C5A059]/30 transition-colors group"
+                    className="bg-[var(--background-secondary)]/20 border border-[var(--border)] p-6 hover:border-[var(--gold)]/30 transition-colors group"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <p className="text-[#C5A059] font-mono text-sm">
+                        <p className="text-[var(--gold)] font-mono text-sm">
                           {t.account.order} #{order.orderNumber}
                         </p>
-                        <p className="text-zinc-500 text-xs mt-1">
+                        <p className="text-[var(--foreground-muted)] text-xs mt-1">
                           {new Date(order.processedAt).toLocaleDateString("pt-PT")}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-white font-mono">
+                        <p className="text-[var(--foreground)] font-mono">
                           {formatPrice(order.totalPrice.amount, order.totalPrice.currencyCode)}
                         </p>
-                        <span className="inline-block mt-2 px-2 py-1 bg-zinc-800 text-[8px] uppercase tracking-widest rounded text-zinc-300">
+                        <span className="inline-block mt-2 px-2 py-1 bg-[var(--background-card)] text-[8px] uppercase tracking-widest rounded text-[var(--foreground-secondary)]">
                           {order.financialStatus}
                         </span>
                       </div>
                     </div>
 
                     {/* Produtos da Encomenda */}
-                    <div className="flex gap-2 overflow-x-auto pt-4 border-t border-white/5">
+                    <div className="flex gap-2 overflow-x-auto pt-4 border-t border-[var(--border)]">
                       {order.lineItems.edges.map(({ node: item }) => (
                         <div
                           key={item.title}
-                          className="w-12 h-16 bg-zinc-800 flex-shrink-0 relative overflow-hidden"
+                          className="w-12 h-16 bg-[var(--background-card)] flex-shrink-0 relative overflow-hidden"
                         >
                           {item.variant?.image?.url ? (
                             <Image
@@ -254,7 +256,7 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
                               className="object-cover opacity-70 group-hover:opacity-100 transition-opacity"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[8px] text-zinc-600">
+                            <div className="w-full h-full flex items-center justify-center text-[8px] text-[var(--foreground-muted)]">
                               IMG
                             </div>
                           )}
@@ -265,11 +267,13 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 border border-dashed border-zinc-800 bg-zinc-900/10">
-                <p className="text-zinc-500 font-serif italic mb-4">{t.account.no_orders}</p>
+              <div className="text-center py-20 border border-dashed border-[var(--border)] bg-[var(--background-secondary)]/10">
+                <p className="text-[var(--foreground-muted)] font-serif italic mb-4">
+                  {t.account.no_orders}
+                </p>
                 <Link
                   href="/loja"
-                  className="text-[#C5A059] text-xs uppercase tracking-widest hover:text-white transition-colors"
+                  className="text-[var(--gold)] text-xs uppercase tracking-widest hover:text-[var(--foreground)] transition-colors"
                 >
                   {t.account.explore} →
                 </Link>

@@ -55,7 +55,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       case "info":
         return <Info className="text-blue-500" size={20} />;
       case "cart":
-        return <ShoppingBag className="text-[#C5A059]" size={20} />;
+        return <ShoppingBag className="text-[var(--gold)]" size={20} />;
     }
   };
 
@@ -68,7 +68,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       case "info":
         return "border-blue-500/30";
       case "cart":
-        return "border-[#C5A059]/30";
+        return "border-[var(--gold)]/30";
     }
   };
 
@@ -81,13 +81,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`bg-[#0a0a0a] border ${getBorderColor(toast.type)} backdrop-blur-xl shadow-2xl rounded-sm px-5 py-4 flex items-center gap-4 min-w-[300px] max-w-[400px] ${toast.removing ? "animate-[slideOutRight_0.3s_ease-out_forwards]" : "animate-[slideInRight_0.3s_ease-out_forwards]"}`}
+            className={`bg-[var(--background-secondary)] border ${getBorderColor(toast.type)} backdrop-blur-xl shadow-2xl rounded-sm px-5 py-4 flex items-center gap-4 min-w-[300px] max-w-[400px] ${toast.removing ? "animate-[slideOutRight_0.3s_ease-out_forwards]" : "animate-[slideInRight_0.3s_ease-out_forwards]"}`}
           >
             {getIcon(toast.type)}
-            <p className="text-sm text-white flex-1">{toast.message}</p>
+            <p className="text-sm text-[var(--foreground)] flex-1">{toast.message}</p>
             <button
               onClick={() => hideToast(toast.id)}
-              className="text-zinc-500 hover:text-white transition-colors"
+              className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
             >
               <X size={16} />
             </button>

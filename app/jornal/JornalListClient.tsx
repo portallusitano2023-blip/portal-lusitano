@@ -119,20 +119,20 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
   const gridInView = useInViewOnce(gridRef);
 
   return (
-    <main className="min-h-screen bg-[#050505] pt-32 pb-20 px-6">
+    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
       {/* HEADER */}
       <div className="text-center mb-16 max-w-4xl mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
         <span
-          className="text-xs uppercase tracking-[0.3em] text-[#C5A059] block mb-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.2s" }}
         >
           {t.journal.archive}
         </span>
-        <h1 className="text-5xl md:text-7xl font-serif text-white mb-6">
+        <h1 className="text-5xl md:text-7xl font-serif text-[var(--foreground)] mb-6">
           <TextSplit text={t.journal.title} baseDelay={0.3} wordDelay={0.1} />
         </h1>
         <p
-          className="text-zinc-400 font-serif italic text-lg opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+          className="text-[var(--foreground-secondary)] font-serif italic text-lg opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.5s" }}
         >
           &ldquo;{t.journal.subtitle}&rdquo;
@@ -146,7 +146,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
           style={{ animationDelay: "0.4s" }}
         >
           <Link href={`/jornal/${featuredArticle.slug.current}`}>
-            <div className="group relative w-full h-[600px] overflow-hidden border border-white/10 rounded-sm cursor-pointer">
+            <div className="group relative w-full h-[600px] overflow-hidden border border-[var(--border)] rounded-sm cursor-pointer">
               {getImageUrl(featuredArticle) && (
                 <Image
                   src={getImageUrl(featuredArticle)}
@@ -161,7 +161,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
 
               <div className="absolute bottom-0 left-0 p-8 md:p-16 w-full md:w-2/3">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="inline-block bg-[#C5A059] text-black px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em]">
+                  <span className="inline-block bg-[var(--gold)] text-black px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em]">
                     {featuredArticle.category}
                   </span>
                   {featuredArticle.contentType === "post" && (
@@ -170,13 +170,13 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                     </span>
                   )}
                 </div>
-                <h2 className="text-4xl md:text-6xl font-serif text-white mb-4 leading-tight">
+                <h2 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-4 leading-tight">
                   {featuredArticle.title}
                 </h2>
-                <p className="text-zinc-300 text-lg mb-6 font-serif italic">
+                <p className="text-[var(--foreground-secondary)] text-lg mb-6 font-serif italic">
                   {featuredArticle.subtitle}
                 </p>
-                <div className="flex items-center gap-6 text-xs text-zinc-400 uppercase tracking-wider">
+                <div className="flex items-center gap-6 text-xs text-[var(--foreground-secondary)] uppercase tracking-wider">
                   <div className="flex items-center gap-2">
                     <BookOpen size={14} /> {t.journal.technical_read}
                   </div>
@@ -195,13 +195,16 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
           {/* Pesquisa */}
           <div className="relative flex-1 w-full md:max-w-sm">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Search
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+            />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={language === "pt" ? "Pesquisar artigos..." : "Search articles..."}
-              className="w-full bg-white/5 border border-white/10 rounded-sm pl-10 pr-4 py-2.5 text-sm text-white placeholder-zinc-500 outline-none focus:border-[#C5A059]/50 transition-colors"
+              className="w-full bg-[var(--surface-hover)] border border-[var(--border)] rounded-sm pl-10 pr-4 py-2.5 text-sm text-[var(--foreground)] placeholder-[var(--foreground-muted)] outline-none focus:border-[var(--gold)]/50 transition-colors"
             />
           </div>
 
@@ -211,8 +214,8 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
               onClick={() => setSelectedCategory(null)}
               className={`whitespace-nowrap px-4 py-2 text-xs uppercase tracking-wider rounded-sm transition-all ${
                 !selectedCategory
-                  ? "bg-[#C5A059] text-black font-bold"
-                  : "bg-white/5 text-zinc-400 hover:text-white border border-white/10"
+                  ? "bg-[var(--gold)] text-black font-bold"
+                  : "bg-[var(--surface-hover)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] border border-[var(--border)]"
               }`}
             >
               {language === "pt" ? "Todos" : "All"}
@@ -223,8 +226,8 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                 onClick={() => setSelectedCategory(cat === selectedCategory ? null : cat)}
                 className={`whitespace-nowrap px-4 py-2 text-xs uppercase tracking-wider rounded-sm transition-all ${
                   selectedCategory === cat
-                    ? "bg-[#C5A059] text-black font-bold"
-                    : "bg-white/5 text-zinc-400 hover:text-white border border-white/10"
+                    ? "bg-[var(--gold)] text-black font-bold"
+                    : "bg-[var(--surface-hover)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] border border-[var(--border)]"
                 }`}
               >
                 {cat}
@@ -238,8 +241,8 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
               onClick={() => setSelectedType(selectedType === "article" ? null : "article")}
               className={`flex items-center gap-1.5 px-3 py-2 text-xs uppercase tracking-wider rounded-sm transition-all ${
                 selectedType === "article"
-                  ? "bg-[#C5A059] text-black font-bold"
-                  : "bg-white/5 text-zinc-400 hover:text-white border border-white/10"
+                  ? "bg-[var(--gold)] text-black font-bold"
+                  : "bg-[var(--surface-hover)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] border border-[var(--border)]"
               }`}
             >
               <Newspaper size={12} /> {language === "pt" ? "Artigo" : "Article"}
@@ -248,8 +251,8 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
               onClick={() => setSelectedType(selectedType === "post" ? null : "post")}
               className={`flex items-center gap-1.5 px-3 py-2 text-xs uppercase tracking-wider rounded-sm transition-all ${
                 selectedType === "post"
-                  ? "bg-[#C5A059] text-black font-bold"
-                  : "bg-white/5 text-zinc-400 hover:text-white border border-white/10"
+                  ? "bg-[var(--gold)] text-black font-bold"
+                  : "bg-[var(--surface-hover)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] border border-[var(--border)]"
               }`}
             >
               <FileText size={12} /> {language === "pt" ? "Crónica" : "Chronicle"}
@@ -260,14 +263,14 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
           <div className="flex items-center gap-1 ml-auto">
             <button
               onClick={() => handleViewChange("grid")}
-              className={`p-2 rounded-sm transition-colors ${viewMode === "grid" ? "bg-[#C5A059]/20 text-[#C5A059]" : "text-zinc-500 hover:text-white"}`}
+              className={`p-2 rounded-sm transition-colors ${viewMode === "grid" ? "bg-[var(--gold)]/20 text-[var(--gold)]" : "text-[var(--foreground-muted)] hover:text-[var(--foreground)]"}`}
               aria-label={language === "pt" ? "Vista grelha" : "Grid view"}
             >
               <LayoutGrid size={18} />
             </button>
             <button
               onClick={() => handleViewChange("list")}
-              className={`p-2 rounded-sm transition-colors ${viewMode === "list" ? "bg-[#C5A059]/20 text-[#C5A059]" : "text-zinc-500 hover:text-white"}`}
+              className={`p-2 rounded-sm transition-colors ${viewMode === "list" ? "bg-[var(--gold)]/20 text-[var(--gold)]" : "text-[var(--foreground-muted)] hover:text-[var(--foreground)]"}`}
               aria-label={language === "pt" ? "Vista lista" : "List view"}
             >
               <List size={18} />
@@ -279,7 +282,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
       {/* SEM RESULTADOS */}
       {filteredArticles.length === 0 && (
         <div className="max-w-7xl mx-auto text-center py-20">
-          <p className="text-zinc-500 text-lg">
+          <p className="text-[var(--foreground-muted)] text-lg">
             {language === "pt" ? "Nenhum artigo encontrado." : "No articles found."}
           </p>
         </div>
@@ -303,7 +306,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
             >
               {viewMode === "grid" ? (
                 <Link href={`/jornal/${article.slug.current}`}>
-                  <article className="group cursor-pointer h-full flex flex-col border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02]">
+                  <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors bg-[var(--surface-hover)]">
                     <div className="w-full h-64 overflow-hidden relative">
                       {getImageUrl(article) && (
                         /* eslint-disable-next-line @next/next/no-img-element */
@@ -319,26 +322,27 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                             {language === "pt" ? "Crónica" : "Chronicle"}
                           </span>
                         )}
-                        <span className="bg-black/60 backdrop-blur-sm px-3 py-1 text-[10px] uppercase text-white tracking-widest border border-white/10">
+                        <span className="bg-black/60 backdrop-blur-sm px-3 py-1 text-[10px] uppercase text-white tracking-widest border border-[var(--border)]">
                           {article.category}
                         </span>
                       </div>
                     </div>
 
                     <div className="p-8 flex flex-col flex-grow">
-                      <div className="mb-4 text-[#C5A059] text-[10px] uppercase tracking-widest flex justify-between">
+                      <div className="mb-4 text-[var(--gold)] text-[10px] uppercase tracking-widest flex justify-between">
                         <span>{formatDate(article.publishedAt, language)}</span>
                         <span>{article.estimatedReadTime} min</span>
                       </div>
-                      <h3 className="text-2xl font-serif text-white mb-3 group-hover:text-[#C5A059] transition-colors leading-tight">
+                      <h3 className="text-2xl font-serif text-[var(--foreground)] mb-3 group-hover:text-[var(--gold)] transition-colors leading-tight">
                         {article.title}
                       </h3>
-                      <p className="text-zinc-500 text-sm leading-relaxed mb-6 flex-grow font-serif">
+                      <p className="text-[var(--foreground-muted)] text-sm leading-relaxed mb-6 flex-grow font-serif">
                         {article.subtitle}
                       </p>
-                      <div className="border-t border-white/10 pt-4 mt-auto">
-                        <span className="flex items-center gap-2 text-white text-xs uppercase tracking-widest group-hover:gap-4 transition-all">
-                          {t.journal.read_study} <ArrowRight size={14} className="text-[#C5A059]" />
+                      <div className="border-t border-[var(--border)] pt-4 mt-auto">
+                        <span className="flex items-center gap-2 text-[var(--foreground)] text-xs uppercase tracking-widest group-hover:gap-4 transition-all">
+                          {t.journal.read_study}{" "}
+                          <ArrowRight size={14} className="text-[var(--gold)]" />
                         </span>
                       </div>
                     </div>
@@ -346,7 +350,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                 </Link>
               ) : (
                 <Link href={`/jornal/${article.slug.current}`}>
-                  <article className="group cursor-pointer flex gap-6 border border-white/5 hover:border-[#C5A059]/30 transition-colors bg-white/[0.02] p-4">
+                  <article className="group cursor-pointer flex gap-6 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors bg-[var(--surface-hover)] p-4">
                     <div className="w-32 h-32 flex-shrink-0 overflow-hidden relative">
                       {getImageUrl(article) && (
                         /* eslint-disable-next-line @next/next/no-img-element */
@@ -359,26 +363,26 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                     </div>
                     <div className="flex flex-col justify-center flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-[#C5A059] text-[10px] uppercase tracking-widest">
+                        <span className="text-[var(--gold)] text-[10px] uppercase tracking-widest">
                           {article.category}
                         </span>
-                        <span className="text-zinc-600 text-[10px]">
+                        <span className="text-[var(--foreground-muted)] text-[10px]">
                           {formatDate(article.publishedAt, language)}
                         </span>
-                        <span className="text-zinc-600 text-[10px]">
+                        <span className="text-[var(--foreground-muted)] text-[10px]">
                           {article.estimatedReadTime} min
                         </span>
                       </div>
-                      <h3 className="text-xl font-serif text-white mb-1 group-hover:text-[#C5A059] transition-colors truncate">
+                      <h3 className="text-xl font-serif text-[var(--foreground)] mb-1 group-hover:text-[var(--gold)] transition-colors truncate">
                         {article.title}
                       </h3>
-                      <p className="text-zinc-500 text-sm line-clamp-1 font-serif">
+                      <p className="text-[var(--foreground-muted)] text-sm line-clamp-1 font-serif">
                         {article.subtitle}
                       </p>
                     </div>
                     <ArrowRight
                       size={16}
-                      className="text-zinc-600 group-hover:text-[#C5A059] self-center flex-shrink-0 transition-colors"
+                      className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] self-center flex-shrink-0 transition-colors"
                     />
                   </article>
                 </Link>

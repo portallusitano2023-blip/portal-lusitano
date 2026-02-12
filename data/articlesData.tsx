@@ -79,27 +79,27 @@ export const articlesDataPT: Record<string, Article> = {
 
         <ArticleInfoBox title="EVIDÊNCIA ARQUEOLÓGICA ESTRATIFICADA" icon={Microscope}>
           <div className="space-y-6">
-            <div className="border-l-2 border-zinc-700 pl-6">
-              <h5 className="text-white font-bold mb-2 text-lg">
+            <div className="border-l-2 border-[var(--border)] pl-6">
+              <h5 className="text-[var(--foreground)] font-bold mb-2 text-lg">
                 Gruta do Escoural (Montemor-o-Novo)
               </h5>
-              <p className="text-zinc-400 text-sm mb-3">
+              <p className="text-[var(--foreground-secondary)] text-sm mb-3">
                 Datação: 20.000-18.000 BP (Before Present)
               </p>
-              <p className="text-zinc-300 leading-relaxed">
+              <p className="text-[var(--foreground-secondary)] leading-relaxed">
                 Pinturas rupestres com cavalos de perfil subconvexo, pescoço arqueado e garupa
                 arredondada. A análise morfométrica das representações revela uma correspondência de
                 87% com o padrão morfológico do Lusitano moderno.
               </p>
             </div>
-            <div className="border-l-2 border-zinc-700 pl-6">
-              <h5 className="text-white font-bold mb-2 text-lg">
+            <div className="border-l-2 border-[var(--border)] pl-6">
+              <h5 className="text-[var(--foreground)] font-bold mb-2 text-lg">
                 Concheiros de Muge (Vale do Tejo)
               </h5>
-              <p className="text-zinc-400 text-sm mb-3">
+              <p className="text-[var(--foreground-secondary)] text-sm mb-3">
                 Datação: 5.500-3.000 a.C. | Cultura Mesolítica
               </p>
-              <p className="text-zinc-300 leading-relaxed">
+              <p className="text-[var(--foreground-secondary)] leading-relaxed">
                 Evidências osteológicas de cavalos domesticados encontradas em Moita do Sebastião e
                 Cabeço da Arruda. A análise de isótopos estáveis revelou padrões de alimentação
                 controlada.
@@ -115,20 +115,20 @@ export const articlesDataPT: Record<string, Article> = {
         />
 
         <ArticleSection title="I. A Revolução Genética: Haplogrupos e Filogeografia">
-          <p className="text-lg text-zinc-300 leading-relaxed mb-6">
+          <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-6">
             O estudo revolucionário de <strong>Jansen et al. (2002)</strong> sequenciou o ADN
             mitocondrial de 652 cavalos de 37 raças. Os resultados foram inequívocos:
           </p>
 
           <section
-            className="bg-zinc-900 p-10 rounded-sm border border-white/5 my-12"
+            className="bg-[var(--background-secondary)] p-10 rounded-sm border border-[var(--border)] my-12"
             aria-labelledby="haplogrupos"
           >
             <h4
               id="haplogrupos"
-              className="text-white text-xl font-bold mb-6 flex items-center gap-3"
+              className="text-[var(--foreground)] text-xl font-bold mb-6 flex items-center gap-3"
             >
-              <Dna className="text-[#C5A059]" size={24} />
+              <Dna className="text-[var(--gold)]" size={24} />
               Distribuição de Haplogrupos por Região Geográfica
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -161,36 +161,41 @@ export const articlesDataPT: Record<string, Article> = {
         </ArticleSection>
 
         <ArticleSection title="II. A Escola de Gineta vs. A Brida">
-          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
             A morfologia do Lusitano foi esculpida por uma necessidade militar específica: o{" "}
             <strong>combate de guerrilha em terreno acidentado</strong>.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 my-16">
-            <article className="bg-zinc-900 p-10 rounded-sm border-l-4 border-zinc-600">
-              <h4 className="text-white text-2xl font-serif mb-6 flex items-center gap-3">
-                <Shield size={24} className="text-zinc-500" />A Brida (Norte da Europa)
+            <article className="bg-[var(--background-secondary)] p-10 rounded-sm border-l-4 border-[var(--border)]">
+              <h4 className="text-[var(--foreground)] text-2xl font-serif mb-6 flex items-center gap-3">
+                <Shield size={24} className="text-[var(--foreground-muted)]" />A Brida (Norte da
+                Europa)
               </h4>
               <div className="space-y-4 mb-6">
-                <p className="text-zinc-400 text-sm">
-                  <strong className="text-white">Morfologia:</strong> Cavalos pesados (600-700kg)
+                <p className="text-[var(--foreground-secondary)] text-sm">
+                  <strong className="text-[var(--foreground)]">Morfologia:</strong> Cavalos pesados
+                  (600-700kg)
                 </p>
-                <p className="text-zinc-400 text-sm">
-                  <strong className="text-white">Tática:</strong> Choque frontal em formação cerrada
+                <p className="text-[var(--foreground-secondary)] text-sm">
+                  <strong className="text-[var(--foreground)]">Tática:</strong> Choque frontal em
+                  formação cerrada
                 </p>
               </div>
             </article>
 
-            <article className="bg-zinc-900 p-10 rounded-sm border-l-4 border-[#C5A059] shadow-xl">
-              <h4 className="text-[#C5A059] text-2xl font-serif mb-6 flex items-center gap-3">
+            <article className="bg-[var(--background-secondary)] p-10 rounded-sm border-l-4 border-[var(--gold)] shadow-xl">
+              <h4 className="text-[var(--gold)] text-2xl font-serif mb-6 flex items-center gap-3">
                 <Swords size={24} />A Gineta (Ibéria)
               </h4>
               <div className="space-y-4 mb-6">
-                <p className="text-zinc-300 text-sm">
-                  <strong className="text-white">Morfologia:</strong> Cavalos médios (450-550kg)
+                <p className="text-[var(--foreground-secondary)] text-sm">
+                  <strong className="text-[var(--foreground)]">Morfologia:</strong> Cavalos médios
+                  (450-550kg)
                 </p>
-                <p className="text-zinc-300 text-sm">
-                  <strong className="text-white">Tática:</strong> Hit-and-run, falsas retiradas
+                <p className="text-[var(--foreground-secondary)] text-sm">
+                  <strong className="text-[var(--foreground)]">Tática:</strong> Hit-and-run, falsas
+                  retiradas
                 </p>
               </div>
             </article>
@@ -199,17 +204,18 @@ export const articlesDataPT: Record<string, Article> = {
 
         <ArticleSection title="III. O Saque Napoleónico (1807)">
           <ArticleWarningBox title="A Perda Irreparável" icon={Flame}>
-            <p className="text-zinc-300 leading-relaxed mb-6 text-lg">
+            <p className="text-[var(--foreground-secondary)] leading-relaxed mb-6 text-lg">
               Durante as Invasões Francesas (1807-1814), o General Junot ordenou o roubo sistemático
               dos melhores garanhões da Coudelaria de Alter Real.
             </p>
-            <ul className="space-y-3 text-zinc-400">
+            <ul className="space-y-3 text-[var(--foreground-secondary)]">
               <li>
-                <strong className="text-white">317 garanhões</strong> registados em Alter (1807) →{" "}
-                <strong className="text-red-400">41 sobreviventes</strong> (1814)
+                <strong className="text-[var(--foreground)]">317 garanhões</strong> registados em
+                Alter (1807) → <strong className="text-red-400">41 sobreviventes</strong> (1814)
               </li>
               <li>
-                <strong className="text-white">89%</strong> das éguas reprodutoras foram abatidas
+                <strong className="text-[var(--foreground)]">89%</strong> das éguas reprodutoras
+                foram abatidas
               </li>
             </ul>
           </ArticleWarningBox>
@@ -242,50 +248,51 @@ export const articlesDataPT: Record<string, Article> = {
         </p>
 
         <ArticleInfoBox title="DEFINIÇÃO BIOMECÂNICA FORMAL" icon={Activity}>
-          <p className="text-zinc-300 leading-relaxed text-lg mb-6">
+          <p className="text-[var(--foreground-secondary)] leading-relaxed text-lg mb-6">
             A <strong>Reunião</strong> (Collection) é o resultado de:
           </p>
-          <ol className="space-y-4 text-zinc-400">
+          <ol className="space-y-4 text-[var(--foreground-secondary)]">
             <li>
-              <strong className="text-white">1. Flexão dos Posteriores</strong> - Redução dos
-              ângulos articulares
+              <strong className="text-[var(--foreground)]">1. Flexão dos Posteriores</strong> -
+              Redução dos ângulos articulares
             </li>
             <li>
-              <strong className="text-white">2. Elevação da Base do Pescoço</strong> - Ativação
-              muscular
+              <strong className="text-[var(--foreground)]">2. Elevação da Base do Pescoço</strong> -
+              Ativação muscular
             </li>
             <li>
-              <strong className="text-white">3. Engagement dos Abdominais</strong> - Rotação pélvica
+              <strong className="text-[var(--foreground)]">3. Engagement dos Abdominais</strong> -
+              Rotação pélvica
             </li>
           </ol>
         </ArticleInfoBox>
 
         <ArticleSection title="I. A Geometria do Jarrete">
-          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
             O jarrete do cavalo funciona como um sistema de alavancas classe III. A eficiência
             mecânica é determinada pelo <strong>ângulo de repouso</strong> e pela{" "}
             <strong>capacidade de flexão</strong>.
           </p>
 
-          <div className="bg-zinc-900 p-12 rounded-sm border border-white/5 my-16">
+          <div className="bg-[var(--background-secondary)] p-12 rounded-sm border border-[var(--border)] my-16">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               <article className="space-y-6">
-                <h4 className="text-[#C5A059] text-2xl font-serif mb-4 flex items-center gap-3">
+                <h4 className="text-[var(--gold)] text-2xl font-serif mb-4 flex items-center gap-3">
                   <CheckCircle2 size={24} />
                   Jarrete Angulado (Lusitano 142-148)
                 </h4>
-                <p className="text-zinc-400 text-sm leading-relaxed">
+                <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed">
                   Funciona como uma <strong>mola pré-comprimida</strong>. Permite &quot;fechar&quot;
                   o jarrete com <strong>40% menos esforço muscular</strong>.
                 </p>
               </article>
 
               <article className="space-y-6">
-                <h4 className="text-white text-2xl font-serif mb-4 flex items-center gap-3">
+                <h4 className="text-[var(--foreground)] text-2xl font-serif mb-4 flex items-center gap-3">
                   <AlertTriangle size={24} className="text-yellow-500" />
                   Jarrete Reto (Warmblood 152-160)
                 </h4>
-                <p className="text-zinc-400 text-sm leading-relaxed">
+                <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed">
                   Maximiza a <strong>propulsão horizontal</strong> mas luta contra a física para
                   reunir.
                 </p>
@@ -296,19 +303,25 @@ export const articlesDataPT: Record<string, Article> = {
 
         <ArticleSection title="II. Bioquímica Muscular: Fibras Tipo IIb">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-            <article className="bg-zinc-900 p-8 rounded-sm border-t-4 border-red-500">
+            <article className="bg-[var(--background-secondary)] p-8 rounded-sm border-t-4 border-red-500">
               <h5 className="text-red-400 font-bold mb-4 text-lg">TIPO I (Slow Twitch)</h5>
-              <p className="text-zinc-400 text-sm">Metabolismo aeróbio, fadiga lenta</p>
+              <p className="text-[var(--foreground-secondary)] text-sm">
+                Metabolismo aeróbio, fadiga lenta
+              </p>
             </article>
 
-            <article className="bg-zinc-900 p-8 rounded-sm border-t-4 border-yellow-500">
+            <article className="bg-[var(--background-secondary)] p-8 rounded-sm border-t-4 border-yellow-500">
               <h5 className="text-yellow-400 font-bold mb-4 text-lg">TIPO IIa (Fast Oxidative)</h5>
-              <p className="text-zinc-400 text-sm">Metabolismo misto, fadiga moderada</p>
+              <p className="text-[var(--foreground-secondary)] text-sm">
+                Metabolismo misto, fadiga moderada
+              </p>
             </article>
 
-            <article className="bg-zinc-900 p-8 rounded-sm border-t-4 border-[#C5A059]">
-              <h5 className="text-[#C5A059] font-bold mb-4 text-lg">TIPO IIb (Fast Glycolytic)</h5>
-              <p className="text-zinc-300 text-sm">
+            <article className="bg-[var(--background-secondary)] p-8 rounded-sm border-t-4 border-[var(--gold)]">
+              <h5 className="text-[var(--gold)] font-bold mb-4 text-lg">
+                TIPO IIb (Fast Glycolytic)
+              </h5>
+              <p className="text-[var(--foreground-secondary)] text-sm">
                 <strong>Explosão máxima</strong> - Presente em Lusitanos
               </p>
             </article>
@@ -338,7 +351,7 @@ export const articlesDataPT: Record<string, Article> = {
         </p>
 
         <ArticleSection title="I. A Cabeça: Espelho da Raça">
-          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
             A cabeça do Lusitano deve ser{" "}
             <strong>seca, de comprimento médio, e bem proporcionada</strong>. O perfil deve ser{" "}
             <strong>subconvexo</strong>.
@@ -347,23 +360,29 @@ export const articlesDataPT: Record<string, Article> = {
           <ArticleInfoBox title="CARACTERÍSTICAS DA CABEÇA" icon={Eye}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
-                <div className="border-l-2 border-zinc-700 pl-4">
-                  <h5 className="text-white font-bold mb-2">Olhos</h5>
-                  <p className="text-zinc-400 text-sm">Grandes, vivos, expressivos e elípticos.</p>
+                <div className="border-l-2 border-[var(--border)] pl-4">
+                  <h5 className="text-[var(--foreground)] font-bold mb-2">Olhos</h5>
+                  <p className="text-[var(--foreground-secondary)] text-sm">
+                    Grandes, vivos, expressivos e elípticos.
+                  </p>
                 </div>
-                <div className="border-l-2 border-zinc-700 pl-4">
-                  <h5 className="text-white font-bold mb-2">Orelhas</h5>
-                  <p className="text-zinc-400 text-sm">Médias, finas, bem inseridas e paralelas.</p>
+                <div className="border-l-2 border-[var(--border)] pl-4">
+                  <h5 className="text-[var(--foreground)] font-bold mb-2">Orelhas</h5>
+                  <p className="text-[var(--foreground-secondary)] text-sm">
+                    Médias, finas, bem inseridas e paralelas.
+                  </p>
                 </div>
               </div>
               <div className="space-y-4">
-                <div className="border-l-2 border-zinc-700 pl-4">
-                  <h5 className="text-white font-bold mb-2">Chanfro</h5>
-                  <p className="text-zinc-400 text-sm">Perfil subconvexo característico.</p>
+                <div className="border-l-2 border-[var(--border)] pl-4">
+                  <h5 className="text-[var(--foreground)] font-bold mb-2">Chanfro</h5>
+                  <p className="text-[var(--foreground-secondary)] text-sm">
+                    Perfil subconvexo característico.
+                  </p>
                 </div>
-                <div className="border-l-2 border-zinc-700 pl-4">
-                  <h5 className="text-white font-bold mb-2">Narinas</h5>
-                  <p className="text-zinc-400 text-sm">Amplas e flexíveis.</p>
+                <div className="border-l-2 border-[var(--border)] pl-4">
+                  <h5 className="text-[var(--foreground)] font-bold mb-2">Narinas</h5>
+                  <p className="text-[var(--foreground-secondary)] text-sm">Amplas e flexíveis.</p>
                 </div>
               </div>
             </div>
@@ -372,7 +391,7 @@ export const articlesDataPT: Record<string, Article> = {
 
         <ArticleSection title="II. Defeitos Eliminatórios">
           <ArticleWarningBox title="DEFEITOS QUE IMPEDEM REGISTO" icon={AlertTriangle}>
-            <ul className="space-y-3 text-zinc-300">
+            <ul className="space-y-3 text-[var(--foreground-secondary)]">
               <li>• Prognatismo ou retrognatismo acentuado</li>
               <li>• Criptorquidismo (machos)</li>
               <li>• Pelagens não reconhecidas pela APSL</li>
@@ -394,65 +413,73 @@ export const articlesDataPT: Record<string, Article> = {
       "https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">
+        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[var(--gold)] mr-4 leading-none mt-2">
             A
           </span>
           genetica das pelagens equinas e fascinante e complexa. No Cavalo Lusitano, encontramos uma
           grande variedade de cores, todas determinadas pela interacao de multiplos genes.
         </p>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           I. Os Genes Fundamentais
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-black">
-            <h4 className="text-white font-bold text-xl mb-4">Locus Extension (E)</h4>
-            <p className="text-zinc-400 text-sm mb-4">Controla a producao de pigmento negro.</p>
-            <p className="text-zinc-300 text-sm">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-l-4 border-black">
+            <h4 className="text-[var(--foreground)] font-bold text-xl mb-4">Locus Extension (E)</h4>
+            <p className="text-[var(--foreground-secondary)] text-sm mb-4">
+              Controla a producao de pigmento negro.
+            </p>
+            <p className="text-[var(--foreground-secondary)] text-sm">
               <strong>E/E ou E/e:</strong> Permite pigmento negro
             </p>
-            <p className="text-zinc-300 text-sm">
+            <p className="text-[var(--foreground-secondary)] text-sm">
               <strong>e/e:</strong> Castanho (sem negro)
             </p>
           </div>
 
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-amber-700">
-            <h4 className="text-white font-bold text-xl mb-4">Locus Agouti (A)</h4>
-            <p className="text-zinc-400 text-sm mb-4">Distribui o pigmento negro pelo corpo.</p>
-            <p className="text-zinc-300 text-sm">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-l-4 border-amber-700">
+            <h4 className="text-[var(--foreground)] font-bold text-xl mb-4">Locus Agouti (A)</h4>
+            <p className="text-[var(--foreground-secondary)] text-sm mb-4">
+              Distribui o pigmento negro pelo corpo.
+            </p>
+            <p className="text-[var(--foreground-secondary)] text-sm">
               <strong>A/A ou A/a:</strong> Negro restrito a pontos
             </p>
-            <p className="text-zinc-300 text-sm">
+            <p className="text-[var(--foreground-secondary)] text-sm">
               <strong>a/a:</strong> Negro uniforme
             </p>
           </div>
         </div>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           II. Pelagens Base do Lusitano
         </h3>
 
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm">
-          <h4 className="text-[#C5A059] font-bold text-2xl mb-6">
+        <div className="bg-[var(--background-card)] border-l-4 border-[var(--gold)] p-10 my-12 rounded-sm">
+          <h4 className="text-[var(--gold)] font-bold text-2xl mb-6">
             Pelagens Reconhecidas pela APSL
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-black/40 p-6 rounded-sm">
-              <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-600 mb-4"></div>
-              <h5 className="text-white font-bold mb-2">Preto</h5>
-              <p className="text-sm text-zinc-400">Pelagem negra uniforme.</p>
+            <div className="bg-[var(--background)]/40 p-6 rounded-sm">
+              <div className="w-8 h-8 rounded-full bg-[var(--background-card)] border border-[var(--border)] mb-4"></div>
+              <h5 className="text-[var(--foreground)] font-bold mb-2">Preto</h5>
+              <p className="text-sm text-[var(--foreground-secondary)]">Pelagem negra uniforme.</p>
             </div>
-            <div className="bg-black/40 p-6 rounded-sm">
+            <div className="bg-[var(--background)]/40 p-6 rounded-sm">
               <div className="w-8 h-8 rounded-full bg-amber-800 border border-amber-700 mb-4"></div>
-              <h5 className="text-white font-bold mb-2">Castanho</h5>
-              <p className="text-sm text-zinc-400">Corpo castanho com pontos negros.</p>
+              <h5 className="text-[var(--foreground)] font-bold mb-2">Castanho</h5>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                Corpo castanho com pontos negros.
+              </p>
             </div>
-            <div className="bg-black/40 p-6 rounded-sm">
+            <div className="bg-[var(--background)]/40 p-6 rounded-sm">
               <div className="w-8 h-8 rounded-full bg-zinc-400 border border-zinc-300 mb-4"></div>
-              <h5 className="text-white font-bold mb-2">Ruco</h5>
-              <p className="text-sm text-zinc-400">Progressivo branqueamento.</p>
+              <h5 className="text-[var(--foreground)] font-bold mb-2">Ruco</h5>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                Progressivo branqueamento.
+              </p>
             </div>
           </div>
         </div>
@@ -523,13 +550,13 @@ export const articlesDataPT: Record<string, Article> = {
         </p>
 
         <ArticleSection title="I. O Pioneiro: Novilheiro">
-          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
             <strong>Novilheiro</strong> (1966-1993) foi o primeiro Lusitano a competir com sucesso
             ao mais alto nível internacional.
           </p>
 
           <ArticleInfoBox title="PALMARÉS DE NOVILHEIRO" icon={Trophy}>
-            <ul className="space-y-3 text-zinc-300">
+            <ul className="space-y-3 text-[var(--foreground-secondary)]">
               <li>• Jogos Olímpicos Los Angeles 1984 - 4.º lugar individual</li>
               <li>• Campeonato da Europa 1983 - Medalha de Bronze</li>
               <li>• Primeiro Lusitano a pontuar acima de 70% em Grand Prix</li>
@@ -538,23 +565,25 @@ export const articlesDataPT: Record<string, Article> = {
         </ArticleSection>
 
         <ArticleSection title="II. A Era Moderna: Rubi AR">
-          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+          <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
             <strong>Rubi AR</strong>, montado por João Victor Oliva, levou Portugal aos Jogos
             Olímpicos de Tóquio 2020.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-            <article className="bg-zinc-900 p-6 rounded-sm text-center">
-              <div className="text-4xl font-bold text-[#C5A059] mb-2">73.4%</div>
-              <p className="text-sm text-zinc-400">Melhor pontuação GP Special</p>
+            <article className="bg-[var(--background-secondary)] p-6 rounded-sm text-center">
+              <div className="text-4xl font-bold text-[var(--gold)] mb-2">73.4%</div>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                Melhor pontuação GP Special
+              </p>
             </article>
-            <article className="bg-zinc-900 p-6 rounded-sm text-center">
-              <div className="text-4xl font-bold text-[#C5A059] mb-2">Top 30</div>
-              <p className="text-sm text-zinc-400">Ranking Mundial FEI</p>
+            <article className="bg-[var(--background-secondary)] p-6 rounded-sm text-center">
+              <div className="text-4xl font-bold text-[var(--gold)] mb-2">Top 30</div>
+              <p className="text-sm text-[var(--foreground-secondary)]">Ranking Mundial FEI</p>
             </article>
-            <article className="bg-zinc-900 p-6 rounded-sm text-center">
-              <div className="text-4xl font-bold text-[#C5A059] mb-2">2020</div>
-              <p className="text-sm text-zinc-400">Jogos Olímpicos Tóquio</p>
+            <article className="bg-[var(--background-secondary)] p-6 rounded-sm text-center">
+              <div className="text-4xl font-bold text-[var(--gold)] mb-2">2020</div>
+              <p className="text-sm text-[var(--foreground-secondary)]">Jogos Olímpicos Tóquio</p>
             </article>
           </div>
         </ArticleSection>
@@ -585,8 +614,8 @@ export const articlesDataEN: Record<string, Article> = {
       "https://images.unsplash.com/photo-1551884831-bbf3ddd77501?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">
+        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[var(--gold)] mr-4 leading-none mt-2">
             T
           </span>
           he traditional narrative that the horse arrived in the Iberian Peninsula from the East
@@ -594,37 +623,39 @@ export const articlesDataEN: Record<string, Article> = {
           (Jansen et al., 2002; CIES, 2010) identified <strong>Haplogroup D1</strong> as an
           exclusive marker of the Iberian Peninsula, present in over 70% of Lusitano horses tested.
         </p>
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+        <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
           This confirms the &quot;Glacial Refuge&quot; theory. During the Last Glacial Maximum
           (about 20,000 years ago), while northern Europe was covered in ice, the Iberian Peninsula
           maintained a temperate microclimate. The <em>Equus ferus ibericus</em> not only survived
           here but was domesticated locally in the Tagus and Sado river basins.
         </p>
 
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-16 rounded-sm shadow-2xl">
-          <h4 className="text-[#C5A059] font-bold text-2xl mb-6 flex items-center gap-3">
+        <div className="bg-[var(--background-card)] border-l-4 border-[var(--gold)] p-10 my-16 rounded-sm shadow-2xl">
+          <h4 className="text-[var(--gold)] font-bold text-2xl mb-6 flex items-center gap-3">
             <Microscope size={24} /> STRATIFIED ARCHAEOLOGICAL EVIDENCE
           </h4>
           <div className="space-y-6">
-            <div className="border-l-2 border-zinc-700 pl-6">
-              <h5 className="text-white font-bold mb-2 text-lg">Escoural Cave (Montemor-o-Novo)</h5>
-              <p className="text-zinc-400 text-sm mb-3">
+            <div className="border-l-2 border-[var(--border)] pl-6">
+              <h5 className="text-[var(--foreground)] font-bold mb-2 text-lg">
+                Escoural Cave (Montemor-o-Novo)
+              </h5>
+              <p className="text-[var(--foreground-secondary)] text-sm mb-3">
                 Dating: 20,000-18,000 BP (Before Present)
               </p>
-              <p className="text-zinc-300 leading-relaxed">
+              <p className="text-[var(--foreground-secondary)] leading-relaxed">
                 Cave paintings featuring horses with subconvex profile, arched neck and rounded
                 croup. Morphometric analysis reveals 87% correspondence with the modern Lusitano
                 morphological pattern.
               </p>
             </div>
-            <div className="border-l-2 border-zinc-700 pl-6">
-              <h5 className="text-white font-bold mb-2 text-lg">
+            <div className="border-l-2 border-[var(--border)] pl-6">
+              <h5 className="text-[var(--foreground)] font-bold mb-2 text-lg">
                 Muge Shell Middens (Tagus Valley)
               </h5>
-              <p className="text-zinc-400 text-sm mb-3">
+              <p className="text-[var(--foreground-secondary)] text-sm mb-3">
                 Dating: 5,500-3,000 BC | Mesolithic Culture
               </p>
-              <p className="text-zinc-300 leading-relaxed">
+              <p className="text-[var(--foreground-secondary)] leading-relaxed">
                 Osteological evidence of domesticated horses found at Moita do Sebastiao and Cabeco
                 da Arruda. Stable isotope analysis revealed controlled feeding patterns.
               </p>
@@ -638,91 +669,101 @@ export const articlesDataEN: Record<string, Article> = {
           caption="Artistic representation of primitive Iberian horses"
         />
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           I. The Genetic Revolution: Haplogroups and Phylogeography
         </h3>
 
-        <p className="text-lg text-zinc-300 leading-relaxed mb-6">
+        <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-6">
           The revolutionary study by <strong>Jansen et al. (2002)</strong> sequenced the
           mitochondrial DNA of 652 horses from 37 breeds. The results were unequivocal:
         </p>
 
-        <div className="bg-zinc-900 p-10 rounded-sm border border-white/5 my-12">
-          <h4 className="text-white text-xl font-bold mb-6 flex items-center gap-3">
-            <Dna className="text-[#C5A059]" size={24} />
+        <div className="bg-[var(--background-secondary)] p-10 rounded-sm border border-[var(--border)] my-12">
+          <h4 className="text-[var(--foreground)] text-xl font-bold mb-6 flex items-center gap-3">
+            <Dna className="text-[var(--gold)]" size={24} />
             Haplogroup Distribution by Geographic Region
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-black/40 p-6 rounded-sm border-l-4 border-[#C5A059]">
-              <h5 className="text-[#C5A059] font-bold mb-2">HAPLOGROUP D1</h5>
-              <p className="text-3xl font-bold text-white mb-2">72.3%</p>
-              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-3">
+            <div className="bg-[var(--background)]/40 p-6 rounded-sm border-l-4 border-[var(--gold)]">
+              <h5 className="text-[var(--gold)] font-bold mb-2">HAPLOGROUP D1</h5>
+              <p className="text-3xl font-bold text-[var(--foreground)] mb-2">72.3%</p>
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
                 Iberian Peninsula
               </p>
-              <p className="text-sm text-zinc-400">
+              <p className="text-sm text-[var(--foreground-secondary)]">
                 Present in Lusitanos, PRE, Alter Real.{" "}
                 <strong>Absent in all northern European breeds</strong>.
               </p>
             </div>
-            <div className="bg-black/40 p-6 rounded-sm border-l-4 border-zinc-600">
-              <h5 className="text-white font-bold mb-2">HAPLOGROUP A</h5>
-              <p className="text-3xl font-bold text-white mb-2">68.1%</p>
-              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-3">
+            <div className="bg-[var(--background)]/40 p-6 rounded-sm border-l-4 border-[var(--border)]">
+              <h5 className="text-[var(--foreground)] font-bold mb-2">HAPLOGROUP A</h5>
+              <p className="text-3xl font-bold text-[var(--foreground)] mb-2">68.1%</p>
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
                 Central/Northern Europe
               </p>
-              <p className="text-sm text-zinc-400">Dominant in Warmbloods, Hanoverians.</p>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                Dominant in Warmbloods, Hanoverians.
+              </p>
             </div>
-            <div className="bg-black/40 p-6 rounded-sm border-l-4 border-zinc-600">
-              <h5 className="text-white font-bold mb-2">HAPLOGROUP B</h5>
-              <p className="text-3xl font-bold text-white mb-2">51.7%</p>
-              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-3">Central Asia</p>
-              <p className="text-sm text-zinc-400">Present in Arabs, Turkomans, Akhal-Teke.</p>
+            <div className="bg-[var(--background)]/40 p-6 rounded-sm border-l-4 border-[var(--border)]">
+              <h5 className="text-[var(--foreground)] font-bold mb-2">HAPLOGROUP B</h5>
+              <p className="text-3xl font-bold text-[var(--foreground)] mb-2">51.7%</p>
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
+                Central Asia
+              </p>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                Present in Arabs, Turkomans, Akhal-Teke.
+              </p>
             </div>
           </div>
         </div>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           II. The Gineta School vs. The Bridle
         </h3>
 
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+        <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
           The Lusitano&apos;s morphology was sculpted by a specific military necessity:{" "}
           <strong>guerrilla warfare in rugged terrain</strong>.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 my-16">
-          <div className="bg-zinc-900 p-10 rounded-sm border-l-4 border-zinc-600">
-            <h4 className="text-white text-2xl font-serif mb-6 flex items-center gap-3">
-              <Shield size={24} className="text-zinc-500" />
+          <div className="bg-[var(--background-secondary)] p-10 rounded-sm border-l-4 border-[var(--border)]">
+            <h4 className="text-[var(--foreground)] text-2xl font-serif mb-6 flex items-center gap-3">
+              <Shield size={24} className="text-[var(--foreground-muted)]" />
               The Bridle (Northern Europe)
             </h4>
             <div className="space-y-4 mb-6">
-              <p className="text-zinc-400 text-sm">
-                <strong className="text-white">Morphology:</strong> Heavy horses (600-700kg)
+              <p className="text-[var(--foreground-secondary)] text-sm">
+                <strong className="text-[var(--foreground)]">Morphology:</strong> Heavy horses
+                (600-700kg)
               </p>
-              <p className="text-zinc-400 text-sm">
-                <strong className="text-white">Tactics:</strong> Frontal shock in tight formation
+              <p className="text-[var(--foreground-secondary)] text-sm">
+                <strong className="text-[var(--foreground)]">Tactics:</strong> Frontal shock in
+                tight formation
               </p>
             </div>
           </div>
 
-          <div className="bg-zinc-900 p-10 rounded-sm border-l-4 border-[#C5A059] shadow-xl">
-            <h4 className="text-[#C5A059] text-2xl font-serif mb-6 flex items-center gap-3">
+          <div className="bg-[var(--background-secondary)] p-10 rounded-sm border-l-4 border-[var(--gold)] shadow-xl">
+            <h4 className="text-[var(--gold)] text-2xl font-serif mb-6 flex items-center gap-3">
               <Swords size={24} />
               The Gineta (Iberia)
             </h4>
             <div className="space-y-4 mb-6">
-              <p className="text-zinc-300 text-sm">
-                <strong className="text-white">Morphology:</strong> Medium horses (450-550kg)
+              <p className="text-[var(--foreground-secondary)] text-sm">
+                <strong className="text-[var(--foreground)]">Morphology:</strong> Medium horses
+                (450-550kg)
               </p>
-              <p className="text-zinc-300 text-sm">
-                <strong className="text-white">Tactics:</strong> Hit-and-run, feigned retreats
+              <p className="text-[var(--foreground-secondary)] text-sm">
+                <strong className="text-[var(--foreground)]">Tactics:</strong> Hit-and-run, feigned
+                retreats
               </p>
             </div>
           </div>
         </div>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           III. The Napoleonic Plunder (1807)
         </h3>
 
@@ -730,17 +771,18 @@ export const articlesDataEN: Record<string, Article> = {
           <h4 className="text-red-400 text-2xl font-serif mb-6 flex items-center gap-3">
             <Flame size={28} /> The Irreparable Loss
           </h4>
-          <p className="text-zinc-300 leading-relaxed mb-6 text-lg">
+          <p className="text-[var(--foreground-secondary)] leading-relaxed mb-6 text-lg">
             During the French Invasions (1807-1814), General Junot ordered the systematic theft of
             the best stallions from the Alter Real Stud.
           </p>
-          <ul className="space-y-3 text-zinc-400">
+          <ul className="space-y-3 text-[var(--foreground-secondary)]">
             <li>
-              <strong className="text-white">317 stallions</strong> registered at Alter (1807) →{" "}
-              <strong className="text-red-400">41 survivors</strong> (1814)
+              <strong className="text-[var(--foreground)]">317 stallions</strong> registered at
+              Alter (1807) → <strong className="text-red-400">41 survivors</strong> (1814)
             </li>
             <li>
-              <strong className="text-white">89%</strong> of breeding mares were slaughtered
+              <strong className="text-[var(--foreground)]">89%</strong> of breeding mares were
+              slaughtered
             </li>
           </ul>
         </div>
@@ -761,8 +803,8 @@ export const articlesDataEN: Record<string, Article> = {
       "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">
+        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[var(--gold)] mr-4 leading-none mt-2">
             I
           </span>
           n high-level equestrian sport, <strong>&quot;Collection&quot;</strong> is the Holy Grail.
@@ -774,55 +816,57 @@ export const articlesDataEN: Record<string, Article> = {
           .
         </p>
 
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm shadow-2xl">
-          <h4 className="text-[#C5A059] font-bold text-2xl mb-6 flex items-center gap-3">
+        <div className="bg-[var(--background-card)] border-l-4 border-[var(--gold)] p-10 my-12 rounded-sm shadow-2xl">
+          <h4 className="text-[var(--gold)] font-bold text-2xl mb-6 flex items-center gap-3">
             <Activity size={24} /> FORMAL BIOMECHANICAL DEFINITION
           </h4>
-          <p className="text-zinc-300 leading-relaxed text-lg mb-6">
+          <p className="text-[var(--foreground-secondary)] leading-relaxed text-lg mb-6">
             <strong>Collection</strong> is the result of:
           </p>
-          <ol className="space-y-4 text-zinc-400">
+          <ol className="space-y-4 text-[var(--foreground-secondary)]">
             <li>
-              <strong className="text-white">1. Hindquarter Flexion</strong> - Reduction of joint
-              angles
+              <strong className="text-[var(--foreground)]">1. Hindquarter Flexion</strong> -
+              Reduction of joint angles
             </li>
             <li>
-              <strong className="text-white">2. Neck Base Elevation</strong> - Muscle activation
+              <strong className="text-[var(--foreground)]">2. Neck Base Elevation</strong> - Muscle
+              activation
             </li>
             <li>
-              <strong className="text-white">3. Abdominal Engagement</strong> - Pelvic rotation
+              <strong className="text-[var(--foreground)]">3. Abdominal Engagement</strong> - Pelvic
+              rotation
             </li>
           </ol>
         </div>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           I. The Hock Geometry
         </h3>
 
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+        <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
           The horse&apos;s hock functions as a class III lever system. Mechanical efficiency is
           determined by the <strong>resting angle</strong> and <strong>flexion capacity</strong>.
         </p>
 
-        <div className="bg-zinc-900 p-12 rounded-sm border border-white/5 my-16">
+        <div className="bg-[var(--background-secondary)] p-12 rounded-sm border border-[var(--border)] my-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-6">
-              <h4 className="text-[#C5A059] text-2xl font-serif mb-4 flex items-center gap-3">
+              <h4 className="text-[var(--gold)] text-2xl font-serif mb-4 flex items-center gap-3">
                 <CheckCircle2 size={24} />
                 Angled Hock (Lusitano 142-148)
               </h4>
-              <p className="text-zinc-400 text-sm leading-relaxed">
+              <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed">
                 Functions like a <strong>pre-compressed spring</strong>. Allows &quot;closing&quot;
                 the hock with <strong>40% less muscular effort</strong>.
               </p>
             </div>
 
             <div className="space-y-6">
-              <h4 className="text-white text-2xl font-serif mb-4 flex items-center gap-3">
+              <h4 className="text-[var(--foreground)] text-2xl font-serif mb-4 flex items-center gap-3">
                 <AlertTriangle size={24} className="text-yellow-500" />
                 Straight Hock (Warmblood 152-160)
               </h4>
-              <p className="text-zinc-400 text-sm leading-relaxed">
+              <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed">
                 Maximizes <strong>horizontal propulsion</strong> but fights against physics to
                 collect.
               </p>
@@ -830,24 +874,30 @@ export const articlesDataEN: Record<string, Article> = {
           </div>
         </div>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           II. Muscle Biochemistry: Type IIb Fibers
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-          <div className="bg-zinc-900 p-8 rounded-sm border-t-4 border-red-500">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-t-4 border-red-500">
             <h5 className="text-red-400 font-bold mb-4 text-lg">TYPE I (Slow Twitch)</h5>
-            <p className="text-zinc-400 text-sm">Aerobic metabolism, slow fatigue</p>
+            <p className="text-[var(--foreground-secondary)] text-sm">
+              Aerobic metabolism, slow fatigue
+            </p>
           </div>
 
-          <div className="bg-zinc-900 p-8 rounded-sm border-t-4 border-yellow-500">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-t-4 border-yellow-500">
             <h5 className="text-yellow-400 font-bold mb-4 text-lg">TYPE IIa (Fast Oxidative)</h5>
-            <p className="text-zinc-400 text-sm">Mixed metabolism, moderate fatigue</p>
+            <p className="text-[var(--foreground-secondary)] text-sm">
+              Mixed metabolism, moderate fatigue
+            </p>
           </div>
 
-          <div className="bg-zinc-900 p-8 rounded-sm border-t-4 border-[#C5A059]">
-            <h5 className="text-[#C5A059] font-bold mb-4 text-lg">TYPE IIb (Fast Glycolytic)</h5>
-            <p className="text-zinc-300 text-sm">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-t-4 border-[var(--gold)]">
+            <h5 className="text-[var(--gold)] font-bold mb-4 text-lg">
+              TYPE IIb (Fast Glycolytic)
+            </h5>
+            <p className="text-[var(--foreground-secondary)] text-sm">
               <strong>Maximum explosion</strong> - Present in Lusitanos
             </p>
           </div>
@@ -869,52 +919,58 @@ export const articlesDataEN: Record<string, Article> = {
       "https://images.unsplash.com/photo-1447993661623-28b9c8a994a5?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">
+        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[var(--gold)] mr-4 leading-none mt-2">
             T
           </span>
           he official Lusitano Pure Blood standard, maintained by <strong>APSL</strong>, is a
           technical document that precisely defines the ideal characteristics of the breed.
         </p>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           I. The Head: Mirror of the Breed
         </h3>
 
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+        <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
           The Lusitano head should be <strong>dry, of medium length, and well proportioned</strong>.
           The profile should be <strong>subconvex</strong>.
         </p>
 
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm shadow-2xl">
-          <h4 className="text-[#C5A059] font-bold text-2xl mb-6 flex items-center gap-3">
+        <div className="bg-[var(--background-card)] border-l-4 border-[var(--gold)] p-10 my-12 rounded-sm shadow-2xl">
+          <h4 className="text-[var(--gold)] font-bold text-2xl mb-6 flex items-center gap-3">
             <Eye size={24} /> HEAD CHARACTERISTICS
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div className="border-l-2 border-zinc-700 pl-4">
-                <h5 className="text-white font-bold mb-2">Eyes</h5>
-                <p className="text-zinc-400 text-sm">Large, lively, expressive and elliptical.</p>
+              <div className="border-l-2 border-[var(--border)] pl-4">
+                <h5 className="text-[var(--foreground)] font-bold mb-2">Eyes</h5>
+                <p className="text-[var(--foreground-secondary)] text-sm">
+                  Large, lively, expressive and elliptical.
+                </p>
               </div>
-              <div className="border-l-2 border-zinc-700 pl-4">
-                <h5 className="text-white font-bold mb-2">Ears</h5>
-                <p className="text-zinc-400 text-sm">Medium, fine, well set and parallel.</p>
+              <div className="border-l-2 border-[var(--border)] pl-4">
+                <h5 className="text-[var(--foreground)] font-bold mb-2">Ears</h5>
+                <p className="text-[var(--foreground-secondary)] text-sm">
+                  Medium, fine, well set and parallel.
+                </p>
               </div>
             </div>
             <div className="space-y-4">
-              <div className="border-l-2 border-zinc-700 pl-4">
-                <h5 className="text-white font-bold mb-2">Profile</h5>
-                <p className="text-zinc-400 text-sm">Characteristic subconvex profile.</p>
+              <div className="border-l-2 border-[var(--border)] pl-4">
+                <h5 className="text-[var(--foreground)] font-bold mb-2">Profile</h5>
+                <p className="text-[var(--foreground-secondary)] text-sm">
+                  Characteristic subconvex profile.
+                </p>
               </div>
-              <div className="border-l-2 border-zinc-700 pl-4">
-                <h5 className="text-white font-bold mb-2">Nostrils</h5>
-                <p className="text-zinc-400 text-sm">Wide and flexible.</p>
+              <div className="border-l-2 border-[var(--border)] pl-4">
+                <h5 className="text-[var(--foreground)] font-bold mb-2">Nostrils</h5>
+                <p className="text-[var(--foreground-secondary)] text-sm">Wide and flexible.</p>
               </div>
             </div>
           </div>
         </div>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           II. Disqualifying Defects
         </h3>
 
@@ -922,7 +978,7 @@ export const articlesDataEN: Record<string, Article> = {
           <h4 className="text-red-400 font-bold text-xl mb-6 flex items-center gap-3">
             <AlertTriangle size={24} /> DEFECTS THAT PREVENT REGISTRATION
           </h4>
-          <ul className="space-y-3 text-zinc-300">
+          <ul className="space-y-3 text-[var(--foreground-secondary)]">
             <li>• Severe prognathism or retrognathism</li>
             <li>• Cryptorchidism (males)</li>
             <li>• Coat colors not recognized by APSL</li>
@@ -946,63 +1002,71 @@ export const articlesDataEN: Record<string, Article> = {
       "https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">
+        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[var(--gold)] mr-4 leading-none mt-2">
             E
           </span>
           quine coat genetics is fascinating and complex. In the Lusitano Horse, we find a great
           variety of colors, all determined by the interaction of multiple genes.
         </p>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           I. The Fundamental Genes
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-black">
-            <h4 className="text-white font-bold text-xl mb-4">Extension Locus (E)</h4>
-            <p className="text-zinc-400 text-sm mb-4">Controls black pigment production.</p>
-            <p className="text-zinc-300 text-sm">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-l-4 border-black">
+            <h4 className="text-[var(--foreground)] font-bold text-xl mb-4">Extension Locus (E)</h4>
+            <p className="text-[var(--foreground-secondary)] text-sm mb-4">
+              Controls black pigment production.
+            </p>
+            <p className="text-[var(--foreground-secondary)] text-sm">
               <strong>E/E or E/e:</strong> Allows black pigment
             </p>
-            <p className="text-zinc-300 text-sm">
+            <p className="text-[var(--foreground-secondary)] text-sm">
               <strong>e/e:</strong> Chestnut (no black)
             </p>
           </div>
 
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-amber-700">
-            <h4 className="text-white font-bold text-xl mb-4">Agouti Locus (A)</h4>
-            <p className="text-zinc-400 text-sm mb-4">Distributes black pigment across the body.</p>
-            <p className="text-zinc-300 text-sm">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-l-4 border-amber-700">
+            <h4 className="text-[var(--foreground)] font-bold text-xl mb-4">Agouti Locus (A)</h4>
+            <p className="text-[var(--foreground-secondary)] text-sm mb-4">
+              Distributes black pigment across the body.
+            </p>
+            <p className="text-[var(--foreground-secondary)] text-sm">
               <strong>A/A or A/a:</strong> Black restricted to points
             </p>
-            <p className="text-zinc-300 text-sm">
+            <p className="text-[var(--foreground-secondary)] text-sm">
               <strong>a/a:</strong> Uniform black
             </p>
           </div>
         </div>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           II. Lusitano Base Coat Colors
         </h3>
 
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm">
-          <h4 className="text-[#C5A059] font-bold text-2xl mb-6">Coat Colors Recognized by APSL</h4>
+        <div className="bg-[var(--background-card)] border-l-4 border-[var(--gold)] p-10 my-12 rounded-sm">
+          <h4 className="text-[var(--gold)] font-bold text-2xl mb-6">
+            Coat Colors Recognized by APSL
+          </h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-black/40 p-6 rounded-sm">
-              <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-600 mb-4"></div>
-              <h5 className="text-white font-bold mb-2">Black</h5>
-              <p className="text-sm text-zinc-400">Uniform black coat.</p>
+            <div className="bg-[var(--background)]/40 p-6 rounded-sm">
+              <div className="w-8 h-8 rounded-full bg-[var(--background-card)] border border-[var(--border)] mb-4"></div>
+              <h5 className="text-[var(--foreground)] font-bold mb-2">Black</h5>
+              <p className="text-sm text-[var(--foreground-secondary)]">Uniform black coat.</p>
             </div>
-            <div className="bg-black/40 p-6 rounded-sm">
+            <div className="bg-[var(--background)]/40 p-6 rounded-sm">
               <div className="w-8 h-8 rounded-full bg-amber-800 border border-amber-700 mb-4"></div>
-              <h5 className="text-white font-bold mb-2">Bay</h5>
-              <p className="text-sm text-zinc-400">Bay body with black points.</p>
+              <h5 className="text-[var(--foreground)] font-bold mb-2">Bay</h5>
+              <p className="text-sm text-[var(--foreground-secondary)]">
+                Bay body with black points.
+              </p>
             </div>
-            <div className="bg-black/40 p-6 rounded-sm">
+            <div className="bg-[var(--background)]/40 p-6 rounded-sm">
               <div className="w-8 h-8 rounded-full bg-zinc-400 border border-zinc-300 mb-4"></div>
-              <h5 className="text-white font-bold mb-2">Grey</h5>
-              <p className="text-sm text-zinc-400">Progressive whitening.</p>
+              <h5 className="text-[var(--foreground)] font-bold mb-2">Grey</h5>
+              <p className="text-sm text-[var(--foreground-secondary)]">Progressive whitening.</p>
             </div>
           </div>
         </div>
@@ -1023,47 +1087,53 @@ export const articlesDataEN: Record<string, Article> = {
       "https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">
+        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[var(--gold)] mr-4 leading-none mt-2">
             B
           </span>
           ullfighting aptitude is the set of psychological and physical characteristics that allow a
           horse to work facing a brave bull.
         </p>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           I. The Pillars of Bullfighting Aptitude
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
-            <Flame className="text-[#C5A059] mb-4" size={32} />
-            <h4 className="text-white font-bold text-xl mb-4">Bravery</h4>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-l-4 border-[var(--gold)]">
+            <Flame className="text-[var(--gold)] mb-4" size={32} />
+            <h4 className="text-[var(--foreground)] font-bold text-xl mb-4">Bravery</h4>
+            <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed">
               The ability to face danger without hesitation. A <strong>controlled courage</strong>.
             </p>
           </div>
 
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
-            <Brain className="text-[#C5A059] mb-4" size={32} />
-            <h4 className="text-white font-bold text-xl mb-4">Tactical Intelligence</h4>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-l-4 border-[var(--gold)]">
+            <Brain className="text-[var(--gold)] mb-4" size={32} />
+            <h4 className="text-[var(--foreground)] font-bold text-xl mb-4">
+              Tactical Intelligence
+            </h4>
+            <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed">
               The horse must <strong>anticipate</strong> the bull&apos;s movements.
             </p>
           </div>
 
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
-            <Zap className="text-[#C5A059] mb-4" size={32} />
-            <h4 className="text-white font-bold text-xl mb-4">Controlled Explosion</h4>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-l-4 border-[var(--gold)]">
+            <Zap className="text-[var(--gold)] mb-4" size={32} />
+            <h4 className="text-[var(--foreground)] font-bold text-xl mb-4">
+              Controlled Explosion
+            </h4>
+            <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed">
               Instant acceleration from 0 to 35 km/h.
             </p>
           </div>
 
-          <div className="bg-zinc-900 p-8 rounded-sm border-l-4 border-[#C5A059]">
-            <Award className="text-[#C5A059] mb-4" size={32} />
-            <h4 className="text-white font-bold text-xl mb-4">Willingness to Please</h4>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+          <div className="bg-[var(--background-secondary)] p-8 rounded-sm border-l-4 border-[var(--gold)]">
+            <Award className="text-[var(--gold)] mb-4" size={32} />
+            <h4 className="text-[var(--foreground)] font-bold text-xl mb-4">
+              Willingness to Please
+            </h4>
+            <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed">
               Maintains the <strong>connection with the rider</strong> even under extreme stress.
             </p>
           </div>
@@ -1085,55 +1155,55 @@ export const articlesDataEN: Record<string, Article> = {
       "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
     content: (
       <>
-        <p className="text-xl text-zinc-300 leading-relaxed mb-8">
-          <span className="float-left text-7xl font-serif text-[#C5A059] mr-4 leading-none mt-2">
+        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed mb-8">
+          <span className="float-left text-7xl font-serif text-[var(--gold)] mr-4 leading-none mt-2">
             F
           </span>
           or decades, the Lusitano Horse was considered &quot;unsuitable&quot; for high-level
           Dressage competition. Everything changed with <strong>Novilheiro</strong>.
         </p>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           I. The Pioneer: Novilheiro
         </h3>
 
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+        <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
           <strong>Novilheiro</strong> (1966-1993) was the first Lusitano to compete successfully at
           the highest international level.
         </p>
 
-        <div className="bg-[#1a1410] border-l-4 border-[#C5A059] p-10 my-12 rounded-sm">
-          <h4 className="text-[#C5A059] font-bold text-xl mb-6 flex items-center gap-3">
+        <div className="bg-[var(--background-card)] border-l-4 border-[var(--gold)] p-10 my-12 rounded-sm">
+          <h4 className="text-[var(--gold)] font-bold text-xl mb-6 flex items-center gap-3">
             <Trophy size={24} /> NOVILHEIRO&apos;S ACHIEVEMENTS
           </h4>
-          <ul className="space-y-3 text-zinc-300">
+          <ul className="space-y-3 text-[var(--foreground-secondary)]">
             <li>• Los Angeles 1984 Olympics - 4th place individual</li>
             <li>• European Championship 1983 - Bronze Medal</li>
             <li>• First Lusitano to score above 70% in Grand Prix</li>
           </ul>
         </div>
 
-        <h3 className="text-4xl font-serif text-[#C5A059] mb-8 mt-20 border-b border-white/10 pb-4">
+        <h3 className="text-4xl font-serif text-[var(--gold)] mb-8 mt-20 border-b border-[var(--border)] pb-4">
           II. The Modern Era: Rubi AR
         </h3>
 
-        <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+        <p className="text-lg text-[var(--foreground-secondary)] leading-relaxed mb-8">
           <strong>Rubi AR</strong>, ridden by Joao Victor Oliva, took Portugal to the Tokyo 2020
           Olympics.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-          <div className="bg-zinc-900 p-6 rounded-sm text-center">
-            <div className="text-4xl font-bold text-[#C5A059] mb-2">73.4%</div>
-            <p className="text-sm text-zinc-400">Best GP Special score</p>
+          <div className="bg-[var(--background-secondary)] p-6 rounded-sm text-center">
+            <div className="text-4xl font-bold text-[var(--gold)] mb-2">73.4%</div>
+            <p className="text-sm text-[var(--foreground-secondary)]">Best GP Special score</p>
           </div>
-          <div className="bg-zinc-900 p-6 rounded-sm text-center">
-            <div className="text-4xl font-bold text-[#C5A059] mb-2">Top 30</div>
-            <p className="text-sm text-zinc-400">FEI World Ranking</p>
+          <div className="bg-[var(--background-secondary)] p-6 rounded-sm text-center">
+            <div className="text-4xl font-bold text-[var(--gold)] mb-2">Top 30</div>
+            <p className="text-sm text-[var(--foreground-secondary)]">FEI World Ranking</p>
           </div>
-          <div className="bg-zinc-900 p-6 rounded-sm text-center">
-            <div className="text-4xl font-bold text-[#C5A059] mb-2">2020</div>
-            <p className="text-sm text-zinc-400">Tokyo Olympics</p>
+          <div className="bg-[var(--background-secondary)] p-6 rounded-sm text-center">
+            <div className="text-4xl font-bold text-[var(--gold)] mb-2">2020</div>
+            <p className="text-sm text-[var(--foreground-secondary)]">Tokyo Olympics</p>
           </div>
         </div>
       </>

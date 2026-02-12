@@ -63,13 +63,13 @@ export default function ArticlePageClient({
 
     if (!localArticle) {
       return (
-        <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white">
+        <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)]">
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-serif">{t.journal.unavailable}</h1>
-            <p className="text-zinc-500">{t.journal.unavailable_text}</p>
+            <p className="text-[var(--foreground-muted)]">{t.journal.unavailable_text}</p>
             <Link
               href="/jornal"
-              className="text-[#C5A059] border-b border-[#C5A059] pb-1 uppercase text-xs tracking-widest"
+              className="text-[var(--gold)] border-b border-[var(--gold)] pb-1 uppercase text-xs tracking-widest"
             >
               {t.journal.back}
             </Link>
@@ -80,7 +80,7 @@ export default function ArticlePageClient({
 
     // Renderizar artigo local (sem Portable Text, com JSX directo)
     return (
-      <article className="min-h-screen bg-[#050505] pb-40">
+      <article className="min-h-screen bg-[var(--background)] pb-40">
         <ReadingProgressBar />
         <header className="relative h-screen w-full overflow-hidden">
           <div className="absolute inset-0">
@@ -102,25 +102,25 @@ export default function ArticlePageClient({
             <div className="max-w-7xl mx-auto space-y-8">
               <Link
                 href="/jornal"
-                className="inline-flex items-center text-white/60 hover:text-[#C5A059] transition-colors text-xs uppercase tracking-[0.2em] gap-2 mb-4"
+                className="inline-flex items-center text-white/60 hover:text-[var(--gold)] transition-colors text-xs uppercase tracking-[0.2em] gap-2 mb-4"
               >
                 <ArrowLeft size={16} /> {t.journal.back_archive}
               </Link>
               <div className="flex items-center gap-6 text-white/60 text-xs">
                 <span className="flex items-center gap-2">
-                  <Calendar size={14} className="text-[#C5A059]" /> {localArticle.date}
+                  <Calendar size={14} className="text-[var(--gold)]" /> {localArticle.date}
                 </span>
                 <span className="flex items-center gap-2">
-                  <Clock size={14} className="text-[#C5A059]" /> {localArticle.readTime}
+                  <Clock size={14} className="text-[var(--gold)]" /> {localArticle.readTime}
                 </span>
               </div>
-              <span className="inline-block text-[#C5A059] text-[9px] uppercase tracking-[0.4em] font-bold border border-[#C5A059]/30 px-4 py-2">
+              <span className="inline-block text-[var(--gold)] text-[9px] uppercase tracking-[0.4em] font-bold border border-[var(--gold)]/30 px-4 py-2">
                 {localArticle.category}
               </span>
               <h1 className="text-5xl md:text-7xl font-serif text-white max-w-5xl leading-none tracking-tight">
                 {localArticle.title}
               </h1>
-              <p className="text-lg md:text-xl text-zinc-400 max-w-3xl font-light italic">
+              <p className="text-lg md:text-xl text-[var(--foreground-secondary)] max-w-3xl font-light italic">
                 {localArticle.subtitle}
               </p>
             </div>
@@ -138,13 +138,13 @@ export default function ArticlePageClient({
 
   if (!article) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)]">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-serif">{t.journal.unavailable}</h1>
-          <p className="text-zinc-500">{t.journal.unavailable_text}</p>
+          <p className="text-[var(--foreground-muted)]">{t.journal.unavailable_text}</p>
           <Link
             href="/jornal"
-            className="text-[#C5A059] border-b border-[#C5A059] pb-1 uppercase text-xs tracking-widest"
+            className="text-[var(--gold)] border-b border-[var(--gold)] pb-1 uppercase text-xs tracking-widest"
           >
             {t.journal.back}
           </Link>
@@ -162,7 +162,7 @@ export default function ArticlePageClient({
   const isPost = article.contentType === "post";
 
   return (
-    <article className="min-h-screen bg-[#050505] pb-20">
+    <article className="min-h-screen bg-[var(--background)] pb-20">
       <ReadingProgressBar />
 
       {/* HERO */}
@@ -189,13 +189,13 @@ export default function ArticlePageClient({
           <div className="max-w-7xl mx-auto space-y-6">
             <Link
               href="/jornal"
-              className="inline-flex items-center text-white/60 hover:text-[#C5A059] transition-colors text-xs uppercase tracking-[0.2em] gap-2"
+              className="inline-flex items-center text-white/60 hover:text-[var(--gold)] transition-colors text-xs uppercase tracking-[0.2em] gap-2"
             >
               <ArrowLeft size={16} /> {t.journal.back_archive}
             </Link>
 
             <div className="flex items-center gap-3">
-              <span className="inline-block text-[#C5A059] text-[9px] uppercase tracking-[0.4em] font-bold border border-[#C5A059]/30 px-4 py-2">
+              <span className="inline-block text-[var(--gold)] text-[9px] uppercase tracking-[0.4em] font-bold border border-[var(--gold)]/30 px-4 py-2">
                 {category}
               </span>
               {isPost ? (
@@ -211,11 +211,11 @@ export default function ArticlePageClient({
 
             <div className="flex items-center gap-6 text-white/60 text-xs">
               <span className="flex items-center gap-2">
-                <Calendar size={14} className="text-[#C5A059]" />
+                <Calendar size={14} className="text-[var(--gold)]" />
                 {formatDate(article.publishedAt, language)}
               </span>
               <span className="flex items-center gap-2">
-                <Clock size={14} className="text-[#C5A059]" />
+                <Clock size={14} className="text-[var(--gold)]" />
                 {article.estimatedReadTime} min
               </span>
               {article.author?.name && (
@@ -230,7 +230,7 @@ export default function ArticlePageClient({
             </h1>
 
             {subtitle && (
-              <p className="text-lg md:text-xl text-zinc-400 max-w-3xl font-light italic">
+              <p className="text-lg md:text-xl text-[var(--foreground-secondary)] max-w-3xl font-light italic">
                 {subtitle}
               </p>
             )}
@@ -249,7 +249,7 @@ export default function ArticlePageClient({
                 <PortableTextRenderer value={body} language={language} />
               </div>
             ) : (
-              <div className="mt-8 text-zinc-500 italic">
+              <div className="mt-8 text-[var(--foreground-muted)] italic">
                 {language === "pt" ? "Conteúdo em preparação..." : "Content in preparation..."}
               </div>
             )}
@@ -260,7 +260,7 @@ export default function ArticlePageClient({
             )}
 
             {/* SHARE (bottom) */}
-            <div className="mt-16 pt-8 border-t border-white/10">
+            <div className="mt-16 pt-8 border-t border-[var(--border)]">
               <ShareButtons title={title} />
             </div>
           </div>
