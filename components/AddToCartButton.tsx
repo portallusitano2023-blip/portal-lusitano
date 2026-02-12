@@ -45,7 +45,7 @@ export default function AddToCartButton({
 
       // 3. SUCESSO
       openCart();
-    } catch (error) {
+    } catch (_error) {
       // 4. ERRO DO SHOPIFY
       // Shopify error silenced
       showToast(

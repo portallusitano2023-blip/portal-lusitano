@@ -58,7 +58,7 @@ export default function ProUpgradeCard({ isSubscribed }: ProUpgradeCardProps) {
         // Checkout error
         setLoading(false);
       }
-    } catch (err) {
+    } catch (_err) {
       // Checkout error
       setLoading(false);
     }

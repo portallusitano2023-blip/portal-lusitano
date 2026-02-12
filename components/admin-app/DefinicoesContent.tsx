@@ -91,8 +91,8 @@ export default function DefinicoesContent() {
       if (data.categories && data.categories.length > 0 && !activeCategory) {
         setActiveCategory(data.categories[0]);
       }
-    } catch (error) {
-      void error;
+    } catch (_error) {
+      void _error;
     } finally {
       setLoading(false);
     }
@@ -136,8 +136,8 @@ export default function DefinicoesContent() {
       // Mostrar sucesso
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
-    } catch (error) {
-      void error;
+    } catch (_error) {
+      void _error;
       alert("Erro ao guardar. Tente novamente.");
     } finally {
       setSaving(null);
@@ -334,8 +334,8 @@ export default function DefinicoesContent() {
       a.click();
       window.URL.revokeObjectURL(url);
       a.remove();
-    } catch (error) {
-      void error;
+    } catch (_error) {
+      void _error;
       alert("Erro ao descarregar backup. Tente novamente.");
     } finally {
       setBackupLoading(false);
@@ -357,8 +357,8 @@ export default function DefinicoesContent() {
       if (!response.ok) throw new Error("Erro ao enviar backup");
       const data = await response.json();
       alert(data.message || "Backup enviado com sucesso!");
-    } catch (error) {
-      void error;
+    } catch (_error) {
+      void _error;
       alert("Erro ao enviar backup por email.");
     } finally {
       setBackupEmailLoading(false);

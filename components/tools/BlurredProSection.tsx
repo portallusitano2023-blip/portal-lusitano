@@ -52,6 +52,7 @@ export default function BlurredProSection({
   // Skip to INTERACTIVE immediately for reduced motion
   useEffect(() => {
     if (reducedMotion && phase === "REVEAL") {
+       
       queueMicrotask(() => setPhase("INTERACTIVE"));
     }
   }, [reducedMotion, phase]);

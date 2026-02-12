@@ -73,8 +73,8 @@ export default function ImageUpload({
         }
 
         onUpload(data.url);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erro ao fazer upload");
+      } catch (_err) {
+        setError(_err instanceof Error ? _err.message : "Erro ao fazer upload");
         setPreview(currentImage || null);
       } finally {
         setUploading(false);
@@ -240,7 +240,7 @@ export function MultiImageUpload({
         if (response.ok) {
           newUrls.push(data.url);
         }
-      } catch (err) {
+      } catch (_err) {
         // Upload error silenced
       }
     }

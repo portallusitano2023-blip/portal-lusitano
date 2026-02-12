@@ -89,7 +89,7 @@ export function useCartAbandonment() {
               }
             }
           }
-        } catch (error) {
+        } catch (_error) {
           // Failed to track cart abandonment - silenced
         }
       },

@@ -80,7 +80,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
         await addItemToCart(variantId, 1);
         showToast("cart", t.addedToCart);
       }
-    } catch (error) {
+    } catch (_error) {
       // Error adding to cart silenced
     } finally {
       setIsLoading(false);

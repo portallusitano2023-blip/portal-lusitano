@@ -29,7 +29,7 @@ export default function BuyButton({ variantId, available }: BuyButtonProps) {
 
       // 3. Redirecionamos o utilizador
       window.location.href = checkoutUrl;
-    } catch (error) {
+    } catch (_error) {
       // Processing error silenced
       alert("Erro ao iniciar compra. Tente novamente.");
       setLoading(false);

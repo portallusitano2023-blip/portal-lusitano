@@ -33,7 +33,7 @@ export default function Paywall({ toolName, requiresAuth = false }: PaywallProps
         // Checkout error
         setLoading(false);
       }
-    } catch (err) {
+    } catch (_err) {
       // Checkout error
       setLoading(false);
     }

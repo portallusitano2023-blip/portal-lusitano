@@ -19,7 +19,7 @@ export default function AdBanner({ slot, format = "auto", style, className = "" 
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {
+    } catch (_e) {
       // AdSense initialization error silenced
     }
   }, []);

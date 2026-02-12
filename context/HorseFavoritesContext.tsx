@@ -37,7 +37,7 @@ export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) return parsed;
       }
-    } catch (error) {
+    } catch (_error) {
       // Error loading horse favorites silenced
     }
     return [];
@@ -49,7 +49,7 @@ export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-    } catch (error) {
+    } catch (_error) {
       // Error saving horse favorites silenced
     }
   }, [favorites]);

@@ -24,7 +24,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo) {
     // Sentry captura automaticamente via sentry.client.config.ts
     if (process.env.NODE_ENV === "development") {
       // ErrorBoundary caught error (Sentry captures automatically)

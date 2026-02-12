@@ -10,6 +10,7 @@ export default function Preloader() {
     // Only show preloader on first visit per session
     if (sessionStorage.getItem("pl-loaded")) return;
     sessionStorage.setItem("pl-loaded", "1");
+     
     queueMicrotask(() => setShow(true));
 
     // Start fade out quickly - 300ms is enough for the brand impression

@@ -129,7 +129,7 @@ function trackGA4(eventName: string, eventParams?: Record<string, unknown>) {
 
   try {
     window.gtag?.("event", eventName, eventParams);
-  } catch (error) {
+  } catch (_error) {
     // GA4 tracking error silenced
   }
 }
@@ -145,7 +145,7 @@ function trackMetaPixel(eventName: string, eventParams?: Record<string, unknown>
 
   try {
     window.fbq?.("track", eventName, eventParams);
-  } catch (error) {
+  } catch (_error) {
     // Meta Pixel tracking error silenced
   }
 }
