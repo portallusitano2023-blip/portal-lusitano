@@ -155,6 +155,8 @@ export default function VerificadorCompatibilidadePage() {
         {resultado && (
           <CompatibilityResults
             resultado={resultado}
+            garanhao={garanhao}
+            egua={egua}
             garanhaoNome={garanhao.nome}
             eguaNome={egua.nome}
             onExportPDF={handleExportPDF}

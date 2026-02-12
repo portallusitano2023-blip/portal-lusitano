@@ -16,11 +16,24 @@ import AnimatedRing from "@/components/tools/AnimatedRing";
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import ResultActions from "@/components/tools/ResultActions";
+import BreedingCalendar from "@/components/tools/BreedingCalendar";
+import OffspringRadar from "@/components/tools/OffspringRadar";
+import FoalValueProjection from "@/components/tools/FoalValueProjection";
 import { useLanguage } from "@/context/LanguageContext";
-import type { ResultadoCompatibilidade } from "@/components/verificador-compatibilidade/types";
+import type {
+  Cavalo,
+  ResultadoCompatibilidade,
+} from "@/components/verificador-compatibilidade/types";
+import {
+  calcularAptidoesPotro,
+  calcularValorPotro,
+  calcularQualidadePais,
+} from "@/components/verificador-compatibilidade/breeding";
 
 interface CompatibilityResultsProps {
   resultado: ResultadoCompatibilidade;
+  garanhao: Cavalo;
+  egua: Cavalo;
   garanhaoNome: string;
   eguaNome: string;
   onExportPDF: () => Promise<void>;
@@ -31,6 +44,8 @@ interface CompatibilityResultsProps {
 
 export default function CompatibilityResults({
   resultado,
+  garanhao,
+  egua,
   garanhaoNome,
   eguaNome,
   onExportPDF,
@@ -39,6 +54,11 @@ export default function CompatibilityResults({
   isSubscribed,
 }: CompatibilityResultsProps) {
   const { t } = useLanguage();
+
+  // PRO breeding projections
+  const offspringAxes = calcularAptidoesPotro(garanhao, egua);
+  const foalValues = calcularValorPotro(resultado, garanhao, egua);
+  const parentQuality = calcularQualidadePais(garanhao, egua);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
@@ -341,6 +361,42 @@ export default function CompatibilityResults({
           </div>
         </BlurredProSection>
       )}
+
+      {/* PRO: Calendário de Criação */}
+      <BlurredProSection isSubscribed={isSubscribed} title={t.verificador.breeding_calendar_title}>
+        <div className="mb-6">
+          <BreedingCalendar />
+        </div>
+      </BlurredProSection>
+
+      {/* PRO: Radar de Aptidão do Potro */}
+      <BlurredProSection isSubscribed={isSubscribed} title={t.verificador.offspring_radar_title}>
+        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
+          <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-2">
+            {t.verificador.offspring_radar_title}
+          </h3>
+          <p className="text-xs text-[var(--foreground-muted)] mb-6">
+            {t.verificador.offspring_radar_desc}
+          </p>
+          <OffspringRadar axes={offspringAxes} />
+        </div>
+      </BlurredProSection>
+
+      {/* PRO: Estimativa de Valor do Potro */}
+      <BlurredProSection isSubscribed={isSubscribed} title={t.verificador.foal_value_title}>
+        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
+          <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-2">
+            {t.verificador.foal_value_title}
+          </h3>
+          <p className="text-xs text-[var(--foreground-muted)] mb-6">
+            {t.verificador.foal_value_desc}
+          </p>
+          <FoalValueProjection foalValues={foalValues} parentQuality={parentQuality} />
+          <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed mt-4">
+            {t.verificador.foal_value_disclaimer}
+          </p>
+        </div>
+      </BlurredProSection>
 
       {/* Disclaimer */}
       <div className="p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--border)]">
