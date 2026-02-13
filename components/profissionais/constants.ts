@@ -18,6 +18,15 @@ import {
   BookOpen,
   Wrench,
   HandHeart,
+  Sparkles,
+  Wheat,
+  ShoppingBag,
+  Building2,
+  Home,
+  Handshake,
+  TreePine,
+  HeartPulse,
+  Flower2,
 } from "lucide-react";
 import type { CategoriaProf, NivelVerificacao, NivelExpertise } from "./types";
 
@@ -90,6 +99,66 @@ export const categorias: {
     label: "Massagistas",
     icon: HandHeart,
     descricao: "Massagem e fisioterapia equina",
+  },
+  {
+    id: "groomer",
+    label: "Groomers",
+    icon: Sparkles,
+    descricao: "Tratamento e cuidado diário de cavalos",
+  },
+  {
+    id: "fornecedor_racoes",
+    label: "Rações e Alimentação",
+    icon: Wheat,
+    descricao: "Rações, feno, suplementos",
+  },
+  {
+    id: "loja_equipamento",
+    label: "Lojas de Equipamento",
+    icon: ShoppingBag,
+    descricao: "Equipamento e acessórios equestres",
+  },
+  {
+    id: "centro_hipico",
+    label: "Centros Hípicos",
+    icon: Building2,
+    descricao: "Escolas, manèges, instalações",
+  },
+  {
+    id: "hospedagem",
+    label: "Pensão/Hospedagem",
+    icon: Home,
+    descricao: "Alojamento e pensão para cavalos",
+  },
+  {
+    id: "seguros",
+    label: "Seguros Equestres",
+    icon: ShieldCheck,
+    descricao: "Seguros para cavalos e actividades",
+  },
+  {
+    id: "mediador",
+    label: "Mediadores",
+    icon: Handshake,
+    descricao: "Compra, venda e intermediação",
+  },
+  {
+    id: "desbastador",
+    label: "Desbastadores",
+    icon: TreePine,
+    descricao: "Desbaste e doma inicial",
+  },
+  {
+    id: "fisioterapeuta",
+    label: "Fisioterapeutas",
+    icon: HeartPulse,
+    descricao: "Fisioterapia e reabilitação equina",
+  },
+  {
+    id: "terapeuta_alternativo",
+    label: "Terapias Alternativas",
+    icon: Flower2,
+    descricao: "Acupuntura, homeopatia, holísticas",
   },
 ];
 

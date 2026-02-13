@@ -19,6 +19,11 @@ import AnalysisTab from "@/components/analise-perfil/tabs/AnalysisTab";
 import NextStepsTab from "@/components/analise-perfil/tabs/NextStepsTab";
 import ShoppingChecklistTab from "@/components/analise-perfil/tabs/ShoppingChecklistTab";
 import BudgetPlannerTab from "@/components/analise-perfil/tabs/BudgetPlannerTab";
+import PriorityMapTab from "@/components/analise-perfil/tabs/PriorityMapTab";
+import AffinityTab from "@/components/analise-perfil/tabs/AffinityTab";
+import FirstYearSimTab from "@/components/analise-perfil/tabs/FirstYearSimTab";
+import ReadinessTab from "@/components/analise-perfil/tabs/ReadinessTab";
+import MethodologyPanel from "@/components/tools/MethodologyPanel";
 
 function AnalisePerfilContent() {
   const { t } = useLanguage();
@@ -103,6 +108,14 @@ function AnalisePerfilContent() {
                 <div className="max-w-5xl mx-auto px-6">
                   {selectedTab === "perfil" && <ProfileTab result={result} />}
                   {selectedTab === "cavalo" && <HorseTab result={result} />}
+                  {selectedTab === "afinidade" && (
+                    <AffinityTab
+                      result={result}
+                      scorePercentages={Object.fromEntries(
+                        scorePercentages.map((sp) => [sp.profile, sp.percentage])
+                      )}
+                    />
+                  )}
                   {selectedTab === "custos" && (
                     <BlurredProSection
                       isSubscribed={isSubscribed}
@@ -126,6 +139,14 @@ function AnalisePerfilContent() {
                     </BlurredProSection>
                   )}
                   {selectedTab === "proximos" && <NextStepsTab result={result} />}
+                  {selectedTab === "prioridades" && (
+                    <PriorityMapTab
+                      result={result}
+                      scorePercentages={Object.fromEntries(
+                        scorePercentages.map((sp) => [sp.profile, sp.percentage])
+                      )}
+                    />
+                  )}
                   {selectedTab === "checklist" && (
                     <BlurredProSection
                       isSubscribed={isSubscribed}
@@ -325,6 +346,116 @@ function AnalisePerfilContent() {
                       />
                     </BlurredProSection>
                   )}
+                  {selectedTab === "simulador" && (
+                    <BlurredProSection
+                      isSubscribed={isSubscribed}
+                      title={
+                        (t.analise_perfil as Record<string, string>).tab_simulator ??
+                        "Simulador do 1o Ano"
+                      }
+                    >
+                      <FirstYearSimTab result={result} />
+                    </BlurredProSection>
+                  )}
+                  {selectedTab === "preparacao" && (
+                    <BlurredProSection
+                      isSubscribed={isSubscribed}
+                      title={
+                        (t.analise_perfil as Record<string, string>).tab_readiness ??
+                        "Score de Preparacao"
+                      }
+                    >
+                      <ReadinessTab
+                        result={result}
+                        answerDetails={answerDetails}
+                        confidence={calculateConfidence()}
+                      />
+                    </BlurredProSection>
+                  )}
+                </div>
+              </section>
+              {/* Methodology Panel + Disclaimer */}
+              <section className="py-8">
+                <div className="max-w-5xl mx-auto px-6 space-y-6">
+                  <MethodologyPanel
+                    title={
+                      (t.analise_perfil as Record<string, string>).methodology_panel_title ??
+                      "Metodologia de Analise de Perfil"
+                    }
+                    factors={[
+                      {
+                        name: "Experiencia",
+                        weight: "25%",
+                        description:
+                          (t.analise_perfil as Record<string, string>).method_experience ??
+                          "Nivel de experiencia equestre declarado",
+                      },
+                      {
+                        name: "Objectivos",
+                        weight: "20%",
+                        description:
+                          (t.analise_perfil as Record<string, string>).method_objectives ??
+                          "Objectivos primarios com o cavalo",
+                      },
+                      {
+                        name: "Orcamento",
+                        weight: "15%",
+                        description:
+                          (t.analise_perfil as Record<string, string>).method_budget ??
+                          "Capacidade financeira declarada",
+                      },
+                      {
+                        name: "Disponibilidade",
+                        weight: "15%",
+                        description:
+                          (t.analise_perfil as Record<string, string>).method_availability ??
+                          "Tempo disponivel para dedicar ao cavalo",
+                      },
+                      {
+                        name: "Infraestrutura",
+                        weight: "15%",
+                        description:
+                          (t.analise_perfil as Record<string, string>).method_infrastructure ??
+                          "Condicoes de alojamento e instalacoes",
+                      },
+                      {
+                        name: "Preferencias",
+                        weight: "10%",
+                        description:
+                          (t.analise_perfil as Record<string, string>).method_preferences ??
+                          "Preferencias pessoais de raca e disciplina",
+                      },
+                    ]}
+                    limitations={[
+                      (t.analise_perfil as Record<string, string>).limitation_1 ??
+                        "Perfil baseado apenas nas respostas do quiz",
+                      (t.analise_perfil as Record<string, string>).limitation_2 ??
+                        "Custos sao medias nacionais e podem variar por regiao",
+                      (t.analise_perfil as Record<string, string>).limitation_3 ??
+                        "Nao considera circunstancias pessoais especificas",
+                    ]}
+                    version={
+                      (t.analise_perfil as Record<string, string>).methodology_version ??
+                      "v2.1 — Fev 2026"
+                    }
+                    references={[
+                      "Medias mercado equestre PT",
+                      "Perfis de cavaleiro (tipologia APSL)",
+                    ]}
+                  />
+                  <div className="p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--border)] mt-6">
+                    <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
+                      <strong className="text-[var(--foreground-secondary)]">
+                        {(t.analise_perfil as Record<string, string>).disclaimer_title ?? "Aviso:"}
+                      </strong>{" "}
+                      {(t.analise_perfil as Record<string, string>).disclaimer_text ??
+                        "Esta analise e uma ferramenta de orientacao baseada nas suas respostas ao questionario. Os resultados sao indicativos e nao substituem o aconselhamento de profissionais do sector equestre. Custos e recomendacoes podem variar significativamente conforme a regiao, o mercado local e as circunstancias individuais."}
+                      <span className="block mt-1 text-[10px] text-[var(--foreground-muted)]/40 font-mono">
+                        {(t.analise_perfil as Record<string, string>).methodology_version ??
+                          "v2.1 — Fev 2026"}
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </section>
               <section className="py-12 border-t border-[var(--border)]">

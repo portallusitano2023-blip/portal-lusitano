@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
 import { analytics } from "@/lib/analytics-events";
 import Image from "next/image";
@@ -32,7 +33,17 @@ import {
   MessageSquare,
   ThumbsUp,
   Send,
+  Loader2,
 } from "lucide-react";
+
+const LeafletMap = dynamic(() => import("@/components/LeafletMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-[var(--background-secondary)]/80">
+      <Loader2 className="text-[var(--gold)] animate-spin" size={28} />
+    </div>
+  ),
+});
 
 interface Review {
   id: string;
@@ -68,8 +79,8 @@ interface Coudelaria {
   premios?: string[];
   servicos?: string[];
   horario?: string;
-  latitude?: number;
-  longitude?: number;
+  coordenadas_lat?: number;
+  coordenadas_lng?: number;
   foto_capa?: string;
   galeria?: string[];
   video_url?: string;
@@ -987,29 +998,31 @@ export default function CoudelariaPage() {
                 </div>
               )}
 
-              {/* Map Placeholder */}
-              {coudelaria.latitude && coudelaria.longitude && (
-                <div
-                  className="bg-[var(--background-secondary)]/50 border border-[var(--border)] overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                  style={{ animationDelay: "0.5s" }}
-                >
-                  <a
-                    href={`https://www.google.com/maps?q=${coudelaria.latitude},${coudelaria.longitude}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block aspect-video bg-[var(--background-card)] relative group"
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <MapPin className="text-[var(--gold)] mx-auto mb-2" size={32} />
-                        <span className="text-[var(--foreground-secondary)] text-sm group-hover:text-[var(--gold)] transition-colors">
-                          Ver no Google Maps
-                        </span>
-                      </div>
-                    </div>
-                  </a>
+              {/* Interactive Map */}
+              <div
+                className="bg-[var(--background-secondary)]/50 border border-[var(--border)] overflow-hidden rounded-lg opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.5s" }}
+              >
+                <div style={{ height: 300 }}>
+                  <LeafletMap
+                    coudelarias={[
+                      {
+                        id: coudelaria.id,
+                        nome: coudelaria.nome,
+                        slug: coudelaria.slug,
+                        descricao: coudelaria.descricao,
+                        localizacao: coudelaria.localizacao,
+                        regiao: coudelaria.regiao,
+                        foto_capa: coudelaria.foto_capa,
+                        is_pro: coudelaria.is_pro,
+                        destaque: coudelaria.destaque,
+                        coordenadas_lat: coudelaria.coordenadas_lat,
+                        coordenadas_lng: coudelaria.coordenadas_lng,
+                      },
+                    ]}
+                  />
                 </div>
-              )}
+              </div>
 
               {/* CTA para registo */}
               <div

@@ -9,6 +9,10 @@ import {
   Compass,
   ClipboardCheck,
   PiggyBank,
+  Heart,
+  LayoutGrid,
+  Play,
+  Gauge,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import type { ResultTab } from "@/components/analise-perfil/types";
@@ -24,12 +28,32 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
   const tabs: { id: ResultTab; label: string; icon: typeof Users }[] = [
     { id: "perfil", label: t.analise_perfil.tab_profile, icon: Users },
     { id: "cavalo", label: t.analise_perfil.tab_ideal_horse, icon: Feather },
+    {
+      id: "afinidade",
+      label: (t.analise_perfil as Record<string, string>).tab_affinity ?? "Afinidade",
+      icon: Heart,
+    },
     { id: "custos", label: t.analise_perfil.tab_costs, icon: DollarSign },
     { id: "cronograma", label: t.analise_perfil.tab_timeline, icon: Calendar },
     { id: "analise", label: t.analise_perfil.tab_analysis, icon: BarChart3 },
     { id: "proximos", label: t.analise_perfil.tab_next_steps, icon: Compass },
+    {
+      id: "prioridades",
+      label: (t.analise_perfil as Record<string, string>).tab_priorities ?? "Prioridades",
+      icon: LayoutGrid,
+    },
     { id: "checklist", label: t.analise_perfil.tab_checklist, icon: ClipboardCheck },
     { id: "budget", label: t.analise_perfil.tab_budget, icon: PiggyBank },
+    {
+      id: "simulador",
+      label: (t.analise_perfil as Record<string, string>).tab_simulator ?? "Simulador",
+      icon: Play,
+    },
+    {
+      id: "preparacao",
+      label: (t.analise_perfil as Record<string, string>).tab_readiness ?? "Preparacao",
+      icon: Gauge,
+    },
   ];
 
   return (

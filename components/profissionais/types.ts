@@ -18,7 +18,17 @@ export type CategoriaProf =
   | "inseminador"
   | "instrutor"
   | "seleiro"
-  | "massagista";
+  | "massagista"
+  | "groomer"
+  | "fornecedor_racoes"
+  | "loja_equipamento"
+  | "centro_hipico"
+  | "hospedagem"
+  | "seguros"
+  | "mediador"
+  | "desbastador"
+  | "fisioterapeuta"
+  | "terapeuta_alternativo";
 
 export interface Especializacao {
   nome: string;

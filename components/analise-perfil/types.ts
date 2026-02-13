@@ -95,9 +95,13 @@ export interface ScorePercentage {
 export type ResultTab =
   | "perfil"
   | "cavalo"
+  | "afinidade"
   | "custos"
   | "cronograma"
   | "analise"
   | "proximos"
+  | "prioridades"
   | "checklist"
-  | "budget";
+  | "budget"
+  | "simulador"
+  | "preparacao";

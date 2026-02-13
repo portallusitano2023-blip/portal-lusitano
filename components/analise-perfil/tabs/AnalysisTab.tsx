@@ -3,6 +3,7 @@
 import { Percent, BarChart3, Activity } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { results } from "@/components/analise-perfil/data/results";
+import Tooltip from "@/components/tools/Tooltip";
 import type { Result, AnswerDetail, ScorePercentage } from "@/components/analise-perfil/types";
 
 interface AnalysisTabProps {
@@ -33,6 +34,12 @@ export default function AnalysisTab({
         <h3 className="flex items-center gap-2 text-xl font-serif text-[var(--foreground)] mb-6">
           <Percent className="text-[var(--gold)]" size={24} />
           {t.analise_perfil.confidence_index}
+          <Tooltip
+            text={
+              (t.analise_perfil as Record<string, string>).tooltip_confidence ??
+              "Indica quao completas e consistentes sao as suas respostas. Valores altos indicam um perfil bem definido."
+            }
+          />
         </h3>
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-32 h-32 rounded-full border-4 border-[var(--gold)] relative">

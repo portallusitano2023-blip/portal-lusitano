@@ -23,6 +23,14 @@ import ResultActions from "@/components/tools/ResultActions";
 import RegionalMarketMap from "@/components/tools/RegionalMarketMap";
 import InvestmentTimeline from "@/components/tools/InvestmentTimeline";
 import TrainingROI from "@/components/tools/TrainingROI";
+import ValueWaterfall from "@/components/tools/ValueWaterfall";
+import LiquidityScore from "@/components/tools/LiquidityScore";
+import InvestmentSafety from "@/components/tools/InvestmentSafety";
+import DisciplineComparison from "@/components/tools/DisciplineComparison";
+import Tooltip from "@/components/tools/Tooltip";
+import SourceBadge from "@/components/tools/SourceBadge";
+import MethodologyPanel from "@/components/tools/MethodologyPanel";
+import ConfidenceRange from "@/components/tools/ConfidenceRange";
 import { useLanguage } from "@/context/LanguageContext";
 import { MERCADOS } from "./data";
 import { calcularProjecaoValor, calcularTrainingROI } from "./projections";
@@ -92,41 +100,88 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               <span className="text-2xl text-[var(--gold)]">&euro;</span>
             </div>
 
-            <div className="flex items-center justify-center gap-6 mt-4 text-sm text-[var(--foreground-muted)]">
-              <span>Min: {resultado.valorMin.toLocaleString("pt-PT")}&euro;</span>
-              <span className="w-1 h-1 rounded-full bg-[var(--border)]" />
-              <span>Max: {resultado.valorMax.toLocaleString("pt-PT")}&euro;</span>
+            <div className="mt-4 max-w-sm mx-auto">
+              <ConfidenceRange
+                value={resultado.valorFinal}
+                min={resultado.valorMin}
+                max={resultado.valorMax}
+                confidence={resultado.confianca}
+                unit="€"
+                explanation={
+                  (t.calculadora as Record<string, string>).confidence_range_explanation ??
+                  "Baseado na completude dos dados fornecidos"
+                }
+              />
             </div>
 
             {/* Gauge indicators */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-10 mt-8">
-              <AnimatedGauge
-                value={resultado.confianca}
-                label={t.calculadora.confidence}
-                size={160}
-              />
-              <AnimatedGauge
-                value={resultado.percentil}
-                label={t.calculadora.market_psl}
-                size={160}
-              />
+              <div className="flex flex-col items-center">
+                <AnimatedGauge
+                  value={resultado.confianca}
+                  label={t.calculadora.confidence}
+                  size={160}
+                />
+                <div className="flex items-center gap-1 mt-1">
+                  <span className="text-[10px] text-[var(--foreground-muted)]">
+                    {t.calculadora.confidence}
+                  </span>
+                  <Tooltip
+                    text={
+                      (t.calculadora as Record<string, string>).tooltip_confidence ??
+                      "Indica o grau de fiabilidade da estimativa. Valores acima de 70% indicam dados completos e coerentes."
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col items-center">
+                <AnimatedGauge
+                  value={resultado.percentil}
+                  label={t.calculadora.market_psl}
+                  size={160}
+                />
+                <div className="flex items-center gap-1 mt-1">
+                  <span className="text-[10px] text-[var(--foreground-muted)]">
+                    {t.calculadora.market_psl}
+                  </span>
+                  <Tooltip
+                    text={
+                      (t.calculadora as Record<string, string>).tooltip_percentile ??
+                      "Posicao relativa no mercado PSL. O percentil 80 significa que o cavalo vale mais que 80% dos cavalos comparaveis."
+                    }
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center flex items-center justify-center gap-1">
               <span className="text-sm text-[var(--foreground-muted)]">
                 {t.calculadora.multiplier}:{" "}
               </span>
               <span className="text-lg font-medium text-[var(--foreground)]">
                 {resultado.multiplicador}x
               </span>
+              <Tooltip
+                text={
+                  (t.calculadora as Record<string, string>).tooltip_multiplier ??
+                  "Factor aplicado ao valor base. Resulta da combinacao de treino, competicoes, linhagem e conformacao."
+                }
+              />
             </div>
           </div>
         </div>
 
         {/* Horse Silhouette - Morphology Map */}
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)]">
-          <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-4">
+          <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-4 flex items-center gap-2">
             {t.calculadora.morph_title || "Mapa Morfológico"}
+            <SourceBadge
+              source="APSL"
+              tooltip={
+                (t.calculadora as Record<string, string>).source_conformacao ??
+                "Criterios de conformacao segundo o padrao da raca Lusitana"
+              }
+            />
           </h3>
           <HorseSilhouette
             zones={{
@@ -146,6 +201,19 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             <div className="flex items-center gap-2 text-[var(--foreground-secondary)] text-sm mb-3">
               <Dna size={16} className="text-purple-400" />
               <span>{t.calculadora.blup_estimated}</span>
+              <Tooltip
+                text={
+                  (t.calculadora as Record<string, string>).tooltip_blup ??
+                  "Best Linear Unbiased Prediction — indicador de merito genetico. O BLUP aqui e uma estimativa simplificada, NAO um BLUP oficial APSL."
+                }
+              />
+              <SourceBadge
+                source="modelo"
+                tooltip={
+                  (t.calculadora as Record<string, string>).source_blup ??
+                  "Estimativa simplificada — nao substitui BLUP oficial APSL"
+                }
+              />
             </div>
             <div className="text-3xl font-light text-[var(--foreground)]">{resultado.blup}</div>
             <div className="text-xs text-[var(--foreground-muted)] mt-1">
@@ -163,6 +231,19 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             <div className="flex items-center gap-2 text-[var(--foreground-secondary)] text-sm mb-3">
               <BarChart3 size={16} className="text-amber-400" />
               <span>{t.calculadora.market_percentile}</span>
+              <Tooltip
+                text={
+                  (t.calculadora as Record<string, string>).tooltip_percentile_card ??
+                  "Baseado em faixas de valor do mercado equestre portugues para cavalos PSL."
+                }
+              />
+              <SourceBadge
+                source="mercado"
+                tooltip={
+                  (t.calculadora as Record<string, string>).source_mercado ??
+                  "Faixas baseadas em medias do sector equestre portugues"
+                }
+              />
             </div>
             <div className="text-3xl font-light text-[var(--foreground)]">
               {resultado.percentil}%
@@ -178,6 +259,9 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             </div>
           </div>
         </div>
+
+        {/* Liquidity Score */}
+        <LiquidityScore form={form} percentil={resultado.percentil} />
 
         {/* Pontos Fortes e Fracos */}
         {(resultado.pontosForteseFracos.fortes.length > 0 ||
@@ -238,6 +322,15 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             }))}
           />
         </div>
+
+        {/* Value Waterfall - Decomposicao do Valor */}
+        <ValueWaterfall
+          categorias={resultado.categorias}
+          valorBase={
+            resultado.valorFinal - resultado.categorias.reduce((sum, c) => sum + c.impacto, 0)
+          }
+          valorFinal={resultado.valorFinal}
+        />
 
         {/* Analise por Categoria - PRO only */}
         <BlurredProSection isSubscribed={isSubscribed} title={t.calculadora.category_impact}>
@@ -352,6 +445,28 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
           </BlurredProSection>
         )}
 
+        {/* PRO: Investment Safety Analysis */}
+        <BlurredProSection
+          isSubscribed={isSubscribed}
+          title={
+            (t.calculadora as Record<string, string>).safety_title ??
+            "Analise de Seguranca do Investimento"
+          }
+        >
+          <InvestmentSafety form={form} resultado={resultado} />
+        </BlurredProSection>
+
+        {/* PRO: Discipline Comparison */}
+        <BlurredProSection
+          isSubscribed={isSubscribed}
+          title={
+            (t.calculadora as Record<string, string>).discipline_title ??
+            "Comparacao por Disciplina"
+          }
+        >
+          <DisciplineComparison form={form} valorBase={resultado.valorFinal} />
+        </BlurredProSection>
+
         {/* Informacoes do Cavalo */}
         <div className="bg-[var(--background-secondary)]/30 rounded-xl p-6 border border-[var(--border)]">
           <h3 className="text-sm font-medium text-[var(--foreground-muted)] uppercase tracking-wider mb-4">
@@ -379,8 +494,15 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               </span>
             </div>
             <div>
-              <span className="text-[var(--foreground-muted)] block">
+              <span className="text-[var(--foreground-muted)] flex items-center gap-1">
                 {t.calculadora.result_level}
+                <SourceBadge
+                  source="FEI"
+                  tooltip={
+                    (t.calculadora as Record<string, string>).source_treino ??
+                    "Niveis de treino referenciados as escalas da FEI"
+                  }
+                />
               </span>
               <span className="text-[var(--foreground-secondary)] capitalize">
                 {form.treino.replace("_", " ")}
@@ -402,12 +524,119 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
           isExporting={isExporting}
         />
 
+        <MethodologyPanel
+          title={
+            (t.calculadora as Record<string, string>).methodology_panel_title ??
+            "Metodologia de Avaliacao"
+          }
+          factors={[
+            {
+              name: (t.calculadora as Record<string, string>).factor_conformacao ?? "Conformacao",
+              weight: "15%",
+              description:
+                (t.calculadora as Record<string, string>).factor_conformacao_desc ??
+                "Avaliacao segundo padroes APSL",
+              standard: "APSL",
+            },
+            {
+              name: (t.calculadora as Record<string, string>).factor_andamentos ?? "Andamentos",
+              weight: "15%",
+              description:
+                (t.calculadora as Record<string, string>).factor_andamentos_desc ??
+                "Elevacao, suspensao, regularidade",
+              standard: "FEI",
+            },
+            {
+              name: (t.calculadora as Record<string, string>).factor_treino ?? "Treino",
+              weight: "15%",
+              description:
+                (t.calculadora as Record<string, string>).factor_treino_desc ??
+                "Nivel conforme escalas FEI",
+              standard: "FEI",
+            },
+            {
+              name: (t.calculadora as Record<string, string>).factor_linhagem ?? "Linhagem",
+              weight: "12%",
+              description:
+                (t.calculadora as Record<string, string>).factor_linhagem_desc ??
+                "Qualidade do pedigree e registo",
+            },
+            {
+              name: (t.calculadora as Record<string, string>).factor_competicoes ?? "Competicoes",
+              weight: "10%",
+              description:
+                (t.calculadora as Record<string, string>).factor_competicoes_desc ??
+                "Historial competitivo e resultados",
+            },
+            {
+              name: (t.calculadora as Record<string, string>).factor_blup ?? "BLUP",
+              weight: "8%",
+              description:
+                (t.calculadora as Record<string, string>).factor_blup_desc ??
+                "Estimativa de merito genetico",
+              standard: "modelo",
+            },
+            {
+              name: (t.calculadora as Record<string, string>).factor_temperamento ?? "Temperamento",
+              weight: "8%",
+              description:
+                (t.calculadora as Record<string, string>).factor_temperamento_desc ??
+                "Docilidade e predisposicao para trabalho",
+            },
+            {
+              name: (t.calculadora as Record<string, string>).factor_saude ?? "Saude",
+              weight: "7%",
+              description:
+                (t.calculadora as Record<string, string>).factor_saude_desc ??
+                "Historial clinico e documentacao veterinaria",
+              standard: "veterinário",
+            },
+            {
+              name: (t.calculadora as Record<string, string>).factor_idade ?? "Idade",
+              weight: "5%",
+              description:
+                (t.calculadora as Record<string, string>).factor_idade_desc ??
+                "Faixa etaria ideal: 6-12 anos",
+            },
+            {
+              name: (t.calculadora as Record<string, string>).factor_mercado ?? "Mercado",
+              weight: "5%",
+              description:
+                (t.calculadora as Record<string, string>).factor_mercado_desc ??
+                "Dinamicas regionais de oferta e procura",
+              standard: "mercado",
+            },
+          ]}
+          limitations={[
+            (t.calculadora as Record<string, string>).limitation_1 ??
+              "Nao considera condicao fisica actual do cavalo",
+            (t.calculadora as Record<string, string>).limitation_2 ??
+              "BLUP e uma estimativa simplificada, nao oficial APSL",
+            (t.calculadora as Record<string, string>).limitation_3 ??
+              "Valores de mercado baseados em medias sectoriais",
+            (t.calculadora as Record<string, string>).limitation_4 ??
+              "Nao substitui avaliacao presencial por profissional qualificado",
+          ]}
+          version={
+            (t.calculadora as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"
+          }
+          references={[
+            (t.calculadora as Record<string, string>).ref_apsl ?? "Padroes de conformacao APSL",
+            (t.calculadora as Record<string, string>).ref_fei ?? "Escalas de treino FEI",
+            (t.calculadora as Record<string, string>).ref_mercado ??
+              "Medias mercado equestre PT (2024-2025)",
+          ]}
+        />
+
         <div className="p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--border)]">
           <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
             <strong className="text-[var(--foreground-secondary)]">
               {t.calculadora.disclaimer_title}
             </strong>{" "}
             {t.calculadora.disclaimer_text}
+            <span className="block mt-1 text-[10px] text-[var(--foreground-muted)]/40 font-mono">
+              {(t.calculadora as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"}
+            </span>
           </p>
         </div>
 

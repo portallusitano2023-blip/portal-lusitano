@@ -1,16 +1,24 @@
-import { MapPin, Star, Phone, Sparkles, Siren, ChevronRight } from "lucide-react";
+import { MapPin, Star, Phone, Sparkles, Siren, ArrowRight } from "lucide-react";
 import { BadgeVerificacao } from "./BadgeVerificacao";
 import type { Profissional } from "./types";
 
 export function CardProfissional({ prof, onClick }: { prof: Profissional; onClick: () => void }) {
   return (
-    <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl overflow-hidden hover:border-[var(--gold)]/30 transition-all group">
+    <div className="card-premium shimmer-gold rounded-xl overflow-hidden group">
       <div className="p-4">
         <div className="flex items-start gap-3">
           <div className="relative">
-            <div className="w-14 h-14 bg-gradient-to-br from-[var(--gold)]/30 to-[var(--background-card)] rounded-xl flex items-center justify-center text-xl font-serif text-[var(--gold)]">
-              {prof.nome.charAt(0)}
-            </div>
+            {prof.fotoUrl ? (
+              <img
+                src={prof.fotoUrl}
+                alt={prof.nome}
+                className="w-14 h-14 rounded-xl object-cover"
+              />
+            ) : (
+              <div className="w-14 h-14 bg-gradient-to-br from-[var(--gold)]/30 to-[var(--background-card)] rounded-xl flex items-center justify-center text-xl font-serif text-[var(--gold)]">
+                {prof.nome.charAt(0)}
+              </div>
+            )}
             {prof.disponivel && (
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[var(--background-secondary)]" />
             )}
@@ -32,8 +40,20 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
 
         <div className="mt-3 flex items-center justify-between">
           <BadgeVerificacao nivel={prof.nivelVerificacao} />
-          <div className="flex items-center gap-1">
-            <Star size={12} className="text-[var(--gold)] fill-[var(--gold)]" />
+          <div className="flex items-center gap-1.5">
+            <div className="flex gap-0.5">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <Star
+                  key={s}
+                  size={10}
+                  className={
+                    s <= Math.round(prof.avaliacao)
+                      ? "text-[var(--gold)] fill-[var(--gold)]"
+                      : "text-[var(--foreground-muted)]"
+                  }
+                />
+              ))}
+            </div>
             <span className="text-xs font-medium text-[var(--foreground)]">{prof.avaliacao}</span>
             <span className="text-xs text-[var(--foreground-muted)]">({prof.numAvaliacoes})</span>
           </div>
@@ -54,6 +74,20 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
           </div>
         </div>
 
+        {/* Top 3 service tags */}
+        {prof.servicos.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1">
+            {prof.servicos.slice(0, 3).map((s) => (
+              <span
+                key={s}
+                className="px-2 py-0.5 text-[9px] rounded-full border border-[var(--gold)]/15 bg-[var(--gold)]/5 text-[var(--gold)]"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        )}
+
         {prof.disponibilidade.emergencias24h && (
           <div className="mt-2 flex items-center gap-1 text-xs text-red-400">
             <Siren size={10} />
@@ -67,7 +101,8 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
           onClick={onClick}
           className="flex-1 py-2 bg-[var(--gold)] rounded-lg text-xs text-black font-medium hover:bg-[#D4AF6A] transition-colors flex items-center justify-center gap-1"
         >
-          Ver Perfil <ChevronRight size={14} />
+          Ver Perfil
+          <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
         </button>
         <a
           href={`tel:${prof.telefone}`}

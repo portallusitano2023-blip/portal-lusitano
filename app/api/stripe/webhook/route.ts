@@ -354,52 +354,167 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   // Handle profissional
   if (metadata.type === "profissional") {
-    const { error } = await supabase.from("profissionais").insert({
-      nome: metadata.nome,
-      categoria: metadata.categoria,
-      email: session.customer_details?.email!,
-      telefone: metadata.telefone,
-      localizacao: metadata.localizacao,
-      stripe_customer_id: session.customer as string,
-      stripe_subscription_id: session.subscription as string,
-      plano: metadata.plano,
-      destaque: metadata.plano === "premium",
-      status: "active",
-    });
+    // Buscar dados completos do formulário
+    let formData: Record<string, string | boolean | number | string[]> | null = null;
+    let submissionId: string | null = null;
+
+    if (metadata.contact_submission_id) {
+      const { data: submission } = await supabase
+        .from("contact_submissions")
+        .select("*")
+        .eq("id", metadata.contact_submission_id)
+        .single();
+
+      if (submission) {
+        formData = submission.form_data;
+        submissionId = submission.id;
+      }
+    }
+
+    // Gerar slug único a partir do nome
+    const baseSlug = (metadata.nome || "profissional")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    const slug = `${baseSlug}-${Date.now().toString(36)}`;
+
+    const { data: profissional, error } = await supabase
+      .from("profissionais")
+      .insert({
+        nome: metadata.nome,
+        slug,
+        tipo: metadata.categoria,
+        especialidade: metadata.especialidade || (formData?.especialidade as string) || null,
+        descricao_curta: formData?.descricao ? String(formData.descricao).substring(0, 160) : null,
+        descricao_completa: (formData?.descricao as string) || null,
+        cidade: metadata.cidade || (formData?.cidade as string) || null,
+        distrito: metadata.distrito || (formData?.distrito as string) || null,
+        telemovel: metadata.telefone || (formData?.telefone as string) || "",
+        email: session.customer_details?.email!,
+        website: (formData?.website as string) || null,
+        instagram: (formData?.instagram as string) || null,
+        facebook: (formData?.facebook as string) || null,
+        linkedin: (formData?.linkedin as string) || null,
+        servicos_oferecidos: formData?.servicos || "[]",
+        foto_perfil_url: (formData?.fotoBase64 as string) || null,
+        anos_experiencia: formData?.anosExperiencia ? Number(formData.anosExperiencia) : null,
+        formacao_academica: (formData?.formacaoAcademica as string) || null,
+        certificacoes: formData?.certificacoes ? JSON.stringify(formData.certificacoes) : "[]",
+        linguas: formData?.idiomas || ["Português"],
+        morada: (formData?.morada as string) || null,
+        codigo_postal: (formData?.codigoPostal as string) || null,
+        raio_deslocacao: formData?.raioServico ? Number(formData.raioServico) : null,
+        aceita_deslocacoes: formData?.aceitaDeslocacoes || false,
+        disponibilidade_urgencias: formData?.emergencias24h || false,
+        horario_atendimento: formData?.disponibilidade
+          ? JSON.stringify(formData.disponibilidade)
+          : "{}",
+        plano: "bronze",
+        plano_valor: 6.0,
+        plano_inicio: new Date().toISOString(),
+        plano_ativo: true,
+        plano_renovacao_automatica: true,
+        plano_metodo_pagamento: "stripe",
+        status: "pendente",
+        destaque: false,
+      })
+      .select()
+      .single();
 
     if (error) {
       logger.error("Error inserting profissional:", error);
       throw new Error(`Failed to insert profissional: ${error.message}`);
     }
 
-    // Email de boas-vindas
+    // Registar pagamento
+    const { data: payment } = await supabase
+      .from("payments")
+      .insert({
+        stripe_payment_intent_id: session.subscription as string,
+        stripe_session_id: session.id,
+        email: session.customer_details?.email!,
+        amount: session.amount_total!,
+        currency: session.currency!,
+        status: "succeeded",
+        product_type: "profissional",
+        product_metadata: {
+          nome: metadata.nome,
+          categoria: metadata.categoria,
+          subscription_id: session.subscription as string,
+          customer_id: session.customer as string,
+        },
+        description: `Profissional: ${metadata.nome} (€6/mês)`,
+      })
+      .select()
+      .single();
+
+    // Ligar pagamento ao contacto
+    if (submissionId && payment) {
+      await supabase
+        .from("contact_submissions")
+        .update({ payment_id: payment.id })
+        .eq("id", submissionId);
+    }
+
+    // Email ao profissional - perfil em análise
     await resend.emails.send({
       from: "Portal Lusitano <profissionais@portal-lusitano.pt>",
       to: session.customer_details?.email!,
-      subject: "Bem-vindo ao Directório de Profissionais! 👨‍⚕️",
+      subject: "Registo Recebido - Perfil em Análise",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #C5A059 0%, #8B7042 100%); padding: 30px; text-align: center;">
             <h1 style="color: #000; margin: 0;">Portal Lusitano</h1>
           </div>
           <div style="padding: 40px 30px; background: #fff;">
-            <h2 style="color: #333;">O seu perfil está activo!</h2>
+            <h2 style="color: #333;">Pagamento Confirmado!</h2>
             <p style="color: #666; line-height: 1.6;">
-              Parabéns, <strong>${metadata.nome}</strong>! O seu perfil no Directório de Profissionais está agora visível.
+              Obrigado, <strong>${metadata.nome}</strong>! O seu pagamento foi processado com sucesso.
+            </p>
+            <p style="color: #666; line-height: 1.6;">
+              O seu perfil profissional está agora <strong>em análise</strong> e será aprovado pela nossa equipa nas próximas 24 horas.
             </p>
             <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="margin: 0 0 10px 0; color: #333;">Detalhes da Subscrição:</h3>
-              <p style="margin: 5px 0; color: #666;"><strong>Plano:</strong> ${metadata.plano === "premium" ? "Premium" : "Básico"}</p>
+              <h3 style="margin: 0 0 10px 0; color: #333;">Detalhes:</h3>
               <p style="margin: 5px 0; color: #666;"><strong>Categoria:</strong> ${metadata.categoria}</p>
-              <p style="margin: 5px 0; color: #666;"><strong>Valor:</strong> €${metadata.plano === "premium" ? "30" : "20"}/mês</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Subscrição:</strong> €6/mês</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Estado:</strong> Em análise</p>
             </div>
+            <p style="color: #666; line-height: 1.6;">
+              Receberá um email assim que o seu perfil for aprovado e estiver visível no directório.
+            </p>
             <div style="text-align: center; margin-top: 30px;">
               <a href="https://portal-lusitano.pt/profissionais" style="background: #C5A059; color: #000; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
-                Ver o Meu Perfil
+                Ver Directório
               </a>
             </div>
           </div>
+          <div style="background: #f5f5f5; padding: 20px; text-align: center; color: #999; font-size: 12px;">
+            <p>Portal Lusitano - Rede Profissional Equestre</p>
+          </div>
         </div>
+      `,
+    });
+
+    // Notificar admin - aprovação pendente
+    await resend.emails.send({
+      from: "Portal Lusitano <admin@portal-lusitano.pt>",
+      to: CONTACT_EMAIL,
+      subject: `Novo Profissional: ${metadata.nome} - Aprovação Pendente`,
+      html: `
+        <h2>Novo profissional aguarda aprovação</h2>
+        <p><strong>Nome:</strong> ${metadata.nome}</p>
+        <p><strong>Categoria:</strong> ${metadata.categoria}</p>
+        <p><strong>Email:</strong> ${session.customer_details?.email}</p>
+        <p><strong>Telefone:</strong> ${metadata.telefone || "N/A"}</p>
+        <p><strong>Distrito:</strong> ${metadata.distrito || "N/A"}</p>
+        <p><strong>Especialidade:</strong> ${metadata.especialidade || "N/A"}</p>
+        <p><strong>Pagamento:</strong> €6/mês (subscrição activa)</p>
+        <hr>
+        <p><strong>ID:</strong> ${profissional?.id || "N/A"}</p>
+        <p><a href="https://portal-lusitano.pt/admin">Ir para Admin Panel para aprovar</a></p>
       `,
     });
   }

@@ -3,6 +3,7 @@
 import { DollarSign, Check, Activity } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { results } from "@/components/analise-perfil/data/results";
+import Tooltip from "@/components/tools/Tooltip";
 import type { Result } from "@/components/analise-perfil/types";
 
 interface CostsTabProps {
@@ -18,6 +19,12 @@ export default function CostsTab({ result }: CostsTabProps) {
         <h3 className="flex items-center gap-2 text-xl font-serif text-[var(--foreground)] mb-6">
           <DollarSign className="text-[var(--gold)]" size={24} />
           {t.analise_perfil.annual_costs}
+          <Tooltip
+            text={
+              (t.analise_perfil as Record<string, string>).tooltip_costs ??
+              "Baseados em medias do mercado portugues para o seu perfil. Valores reais variam por regiao e nivel de servico."
+            }
+          />
         </h3>
         <div className="text-center mb-8">
           <p className="text-sm text-[var(--foreground-muted)] mb-2">

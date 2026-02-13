@@ -32,7 +32,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import ToolReviewForm from "@/components/ToolReviewForm";
 import { Review, ReviewStats } from "@/types/review";
 import { faqItems } from "./faq-data";
-import ConstellationSection from "@/components/tools/ConstellationSection";
 
 // ============================================
 // DATA
@@ -706,9 +705,6 @@ export default function FerramentasPage() {
           </div>
         </div>
       </section>
-
-      {/* ===== CONSTELLATION SECTION ===== */}
-      <ConstellationSection />
 
       {/* ===== PRICING SECTION ===== */}
       <section className="px-6 pb-24" id="precos">

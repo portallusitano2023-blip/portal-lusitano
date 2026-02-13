@@ -19,6 +19,13 @@ import ResultActions from "@/components/tools/ResultActions";
 import BreedingCalendar from "@/components/tools/BreedingCalendar";
 import OffspringRadar from "@/components/tools/OffspringRadar";
 import FoalValueProjection from "@/components/tools/FoalValueProjection";
+import GeneticSummary from "@/components/tools/GeneticSummary";
+import PhysicalMatch from "@/components/tools/PhysicalMatch";
+import MatingScenarios from "@/components/tools/MatingScenarios";
+import BreedingCosts from "@/components/tools/BreedingCosts";
+import Tooltip from "@/components/tools/Tooltip";
+import SourceBadge from "@/components/tools/SourceBadge";
+import MethodologyPanel from "@/components/tools/MethodologyPanel";
 import { useLanguage } from "@/context/LanguageContext";
 import type {
   Cavalo,
@@ -97,11 +104,27 @@ export default function CompatibilityResults({
               strokeWidth={10}
             />
           </div>
+          <div className="flex items-center justify-center gap-1.5">
+            <span className="text-xs text-[var(--foreground-muted)]">
+              {t.verificador.compatibility}
+            </span>
+            <Tooltip
+              text={
+                (t.verificador as Record<string, string>).tooltip_score ??
+                "Score de compatibilidade genetica (0-100) baseado em COI, BLUP, conformacao, andamentos e historial de ambos os progenitores."
+              }
+            />
+          </div>
 
           <p className="text-[var(--foreground-muted)] text-sm">
             {garanhaoNome || t.verificador.tab_stallion} × {eguaNome || t.verificador.tab_mare}
           </p>
         </div>
+      </div>
+
+      {/* Genetic Summary */}
+      <div className="mb-6">
+        <GeneticSummary garanhao={garanhao} egua={egua} resultado={resultado} />
       </div>
 
       {/* Result Actions */}
@@ -120,6 +143,19 @@ export default function CompatibilityResults({
           <div className="flex items-center gap-2 text-[var(--foreground-muted)] text-sm mb-2">
             <Dna size={16} className="text-purple-400" />
             {t.verificador.coi_predicted}
+            <Tooltip
+              text={
+                (t.verificador as Record<string, string>).tooltip_coi ??
+                "Coeficiente de Consanguinidade — mede o grau de parentesco genetico. Abaixo de 3% e excelente; acima de 6.25% aumenta o risco de problemas hereditarios."
+              }
+            />
+            <SourceBadge
+              source="modelo"
+              tooltip={
+                (t.verificador as Record<string, string>).source_coi ??
+                "Calculado a partir de pedigree declarado — para COI oficial consulte a APSL"
+              }
+            />
           </div>
           <div
             className={`text-3xl font-light ${resultado.coi > 6.25 ? "text-amber-400" : "text-emerald-400"}`}
@@ -145,6 +181,19 @@ export default function CompatibilityResults({
           <div className="flex items-center gap-2 text-[var(--foreground-muted)] text-sm mb-2">
             <Activity size={16} className="text-blue-400" />
             {t.verificador.blup_predicted}
+            <Tooltip
+              text={
+                (t.verificador as Record<string, string>).tooltip_blup ??
+                "Estimativa do merito genetico do potro, baseada na media dos progenitores. BLUP simplificado — nao oficial."
+              }
+            />
+            <SourceBadge
+              source="modelo"
+              tooltip={
+                (t.verificador as Record<string, string>).source_blup ??
+                "Estimativa simplificada — BLUP oficial requer base de dados APSL completa"
+              }
+            />
           </div>
           <div className="text-3xl font-light text-blue-400">{resultado.blup}</div>
           <div className="text-xs text-[var(--foreground-muted)] mt-1">
@@ -162,6 +211,12 @@ export default function CompatibilityResults({
           <div className="flex items-center gap-2 text-[var(--foreground-muted)] text-sm mb-2">
             <Baby size={16} className="text-pink-400" />
             {t.verificador.estimated_height}
+            <Tooltip
+              text={
+                (t.verificador as Record<string, string>).tooltip_altura ??
+                "Estimativa baseada na media dos progenitores ±2cm. Factores ambientais podem causar variacoes significativas."
+              }
+            />
           </div>
           <div className="text-3xl font-light text-pink-400">
             {resultado.altura.min}-{resultado.altura.max}
@@ -229,6 +284,19 @@ export default function CompatibilityResults({
         <h3 className="font-medium mb-4 flex items-center gap-2">
           <Palette className="text-purple-400" size={18} />
           {t.verificador.coat_prediction}
+          <Tooltip
+            text={
+              (t.verificador as Record<string, string>).tooltip_pelagem ??
+              "Probabilidades baseadas em genetica mendeliana simplificada. Resultados reais dependem de alelos nao testados."
+            }
+          />
+          <SourceBadge
+            source="modelo"
+            tooltip={
+              (t.verificador as Record<string, string>).source_pelagem ??
+              "Genetica mendeliana basica — nao substitui teste genetico"
+            }
+          />
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {resultado.pelagens.map((p, i) => (
@@ -249,6 +317,11 @@ export default function CompatibilityResults({
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Physical Match */}
+      <div className="mb-6">
+        <PhysicalMatch garanhao={garanhao} egua={egua} resultado={resultado} />
       </div>
 
       {/* Riscos */}
@@ -398,6 +471,109 @@ export default function CompatibilityResults({
         </div>
       </BlurredProSection>
 
+      {/* PRO: Mating Scenarios */}
+      <BlurredProSection
+        isSubscribed={isSubscribed}
+        title={
+          (t.verificador as Record<string, string>).scenarios_title ?? "Cenarios de Acasalamento"
+        }
+      >
+        <div className="mb-6">
+          <MatingScenarios garanhao={garanhao} egua={egua} resultado={resultado} />
+        </div>
+      </BlurredProSection>
+
+      {/* PRO: Breeding Costs */}
+      <BlurredProSection
+        isSubscribed={isSubscribed}
+        title={
+          (t.verificador as Record<string, string>).breeding_costs_title ?? "Custos de Criacao"
+        }
+      >
+        <div className="mb-6">
+          <BreedingCosts garanhao={garanhao} egua={egua} />
+        </div>
+      </BlurredProSection>
+
+      {/* Methodology Panel */}
+      <div className="mb-6">
+        <MethodologyPanel
+          title={
+            (t.verificador as Record<string, string>).methodology_panel_title ??
+            "Metodologia de Compatibilidade"
+          }
+          factors={[
+            {
+              name: "COI",
+              weight: "25%",
+              description:
+                (t.verificador as Record<string, string>).method_coi ??
+                "Coeficiente de consanguinidade estimado",
+              standard: "modelo",
+            },
+            {
+              name: "BLUP Parental",
+              weight: "20%",
+              description:
+                (t.verificador as Record<string, string>).method_blup ??
+                "Media ponderada do merito genetico dos progenitores",
+              standard: "modelo",
+            },
+            {
+              name: "Conformacao",
+              weight: "15%",
+              description:
+                (t.verificador as Record<string, string>).method_conformacao ??
+                "Complementaridade morfologica do par",
+              standard: "APSL",
+            },
+            {
+              name: "Andamentos",
+              weight: "15%",
+              description:
+                (t.verificador as Record<string, string>).method_andamentos ??
+                "Compatibilidade da qualidade de andamentos",
+            },
+            {
+              name: "Hist. Reprodutivo",
+              weight: "10%",
+              description:
+                (t.verificador as Record<string, string>).method_repro ??
+                "Historial de fertilidade e partos",
+            },
+            {
+              name: "Registo APSL",
+              weight: "10%",
+              description:
+                (t.verificador as Record<string, string>).method_apsl ??
+                "Bonus para ambos com registo oficial",
+              standard: "APSL",
+            },
+            {
+              name: "Linhagem",
+              weight: "5%",
+              description:
+                (t.verificador as Record<string, string>).method_linhagem ??
+                "Diversidade e qualidade do pedigree",
+            },
+          ]}
+          limitations={[
+            (t.verificador as Record<string, string>).limitation_1 ??
+              "Nao considera doencas geneticas especificas",
+            (t.verificador as Record<string, string>).limitation_2 ??
+              "COI baseado em pedigree declarado, nao em analise DNA",
+            (t.verificador as Record<string, string>).limitation_3 ??
+              "BLUP estimado, nao oficial APSL",
+            (t.verificador as Record<string, string>).limitation_4 ??
+              "Nao substitui consulta veterinaria reprodutiva",
+          ]}
+          version={
+            (t.verificador as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"
+          }
+          references={["Genetica quantitativa equina", "Padroes APSL", "Wright (1922) — COI"]}
+        />
+      </div>
+
       {/* Disclaimer */}
       <div className="p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--border)]">
         <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
@@ -405,6 +581,9 @@ export default function CompatibilityResults({
             {t.verificador.disclaimer_title}
           </strong>{" "}
           {t.verificador.disclaimer_text}
+          <span className="block mt-1 text-[10px] text-[var(--foreground-muted)]/40 font-mono">
+            {(t.verificador as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"}
+          </span>
         </p>
       </div>
     </div>

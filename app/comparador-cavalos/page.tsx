@@ -25,9 +25,17 @@ import BlurredProSection from "@/components/tools/BlurredProSection";
 import HorseVerdictCard from "@/components/tools/HorseVerdictCard";
 import CostProjectionTable from "@/components/tools/CostProjectionTable";
 import Paywall from "@/components/tools/Paywall";
+import CategoryRanking from "@/components/tools/CategoryRanking";
+import SuitabilityProfile from "@/components/tools/SuitabilityProfile";
+import GapAnalysis from "@/components/tools/GapAnalysis";
+import PurchaseConfidence from "@/components/tools/PurchaseConfidence";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
+import Tooltip from "@/components/tools/Tooltip";
+import SourceBadge from "@/components/tools/SourceBadge";
+import MethodologyPanel from "@/components/tools/MethodologyPanel";
+import ScoreBreakdown from "@/components/tools/ScoreBreakdown";
 
 // ============================================
 // TIPOS
@@ -334,6 +342,69 @@ export default function ComparadorCavalosPage() {
   const calcularValorPorPonto = (c: Cavalo): number => {
     const score = calcularScore(c);
     return score > 0 ? Math.round(c.preco / score) : 0;
+  };
+
+  const getScoreFactors = (
+    c: Cavalo
+  ): { name: string; weight: string; score: number; max: number }[] => {
+    // Idade (ideal 6-12) - 10pts
+    const idadeScore = c.idade >= 6 && c.idade <= 12 ? 10 : c.idade >= 4 && c.idade <= 15 ? 7 : 4;
+
+    // Altura (ideal 158-168) - 8pts
+    const alturaScore =
+      c.altura >= 158 && c.altura <= 168 ? 8 : c.altura >= 155 && c.altura <= 170 ? 6 : 4;
+
+    // Linhagem - 15pts
+    const linPoints: Record<string, number> = {
+      Desconhecida: 3,
+      Registada: 8,
+      Certificada: 11,
+      Premium: 13,
+      Elite: 15,
+    };
+    const linhagemScore = linPoints[c.linhagem] || 8;
+
+    // Treino - 15pts
+    const treinoObj = TREINOS.find((tr) => tr.value === c.treino);
+    const treinoScore = treinoObj ? Math.round(treinoObj.nivel * 1.9) : 5;
+
+    // Elevacao - 5pts
+    const elevacaoScore = Math.round(c.elevacao / 2);
+
+    // Regularidade - 5pts
+    const regularidadeScore = Math.round(c.regularidade / 2);
+
+    // Temperamento - 7pts
+    const temperamentoScore = Math.round(c.temperamento * 0.7);
+
+    // Saude - 7pts
+    const saudeScore = Math.round(c.saude * 0.7);
+
+    // Competicoes - 8pts
+    const comp = COMPETICOES.find((co) => co.value === c.competicoes);
+    const compScore = comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
+
+    // BLUP - 5pts
+    const blupScore = c.blup > 110 ? 5 : c.blup > 100 ? 3 : 1;
+
+    // APSL - 3pts
+    const apslScore = c.registoAPSL ? 3 : 0;
+
+    return [
+      { name: "Linhagem", weight: "15%", score: linhagemScore, max: 15 },
+      { name: "Treino", weight: "15%", score: treinoScore, max: 15 },
+      { name: "Conformacao", weight: "10%", score: c.conformacao, max: 10 },
+      { name: "Andamentos", weight: "10%", score: c.andamentos, max: 10 },
+      { name: "Idade", weight: "10%", score: idadeScore, max: 10 },
+      { name: "Competicoes", weight: "8%", score: compScore, max: 8 },
+      { name: "Altura", weight: "8%", score: alturaScore, max: 8 },
+      { name: "Temperamento", weight: "7%", score: temperamentoScore, max: 7 },
+      { name: "Saude", weight: "7%", score: saudeScore, max: 7 },
+      { name: "BLUP", weight: "5%", score: blupScore, max: 5 },
+      { name: "Elevacao", weight: "5%", score: elevacaoScore, max: 5 },
+      { name: "Regularidade", weight: "5%", score: regularidadeScore, max: 5 },
+      { name: "Registo APSL", weight: "3%", score: apslScore, max: 3 },
+    ];
   };
 
   const getMelhor = (campo: keyof Cavalo, maior = true) => {
@@ -854,18 +925,36 @@ export default function ComparadorCavalosPage() {
                   {showAnalise && (
                     <div className="p-4 bg-[var(--background-card)]/50 border-t border-[var(--border)]">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-[var(--foreground-secondary)]">
+                        <span className="text-sm text-[var(--foreground-secondary)] flex items-center gap-1.5">
                           {t.comparador.score_total}
+                          <Tooltip
+                            text={
+                              (t.comparador as Record<string, string>).tooltip_score ??
+                              "Score composto (0-100) que pondera: Linhagem (15%), Treino (15%), Conformacao (10%), Andamentos (10%), Idade (10%), Altura (8%), Temperamento (7%), Saude (7%), BLUP (5%), Competicoes (8%), APSL (3%), Elevacao+Regularidade (5%)."
+                            }
+                          />
                         </span>
-                        <span className="text-2xl font-bold" style={{ color: cores[i] }}>
-                          {calcularScore(c)}
+                        <span className="flex items-center gap-2">
+                          <span className="text-2xl font-bold" style={{ color: cores[i] }}>
+                            {calcularScore(c)}
+                          </span>
+                          <SourceBadge source="modelo" />
                         </span>
                       </div>
-                      <div className="text-xs text-[var(--foreground-muted)]">
+                      <div className="text-xs text-[var(--foreground-muted)] flex items-center gap-1.5">
                         {t.comparador.value_per_point}{" "}
                         <span className="text-[var(--foreground-secondary)]">
                           {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
                         </span>
+                        <Tooltip
+                          text={
+                            (t.comparador as Record<string, string>).tooltip_valor_ponto ??
+                            "Preco dividido pelo score total. Quanto menor, melhor a relacao custo-beneficio."
+                          }
+                        />
+                      </div>
+                      <div className="mt-3">
+                        <ScoreBreakdown factors={getScoreFactors(c)} total={calcularScore(c)} />
                       </div>
                     </div>
                   )}
@@ -935,6 +1024,12 @@ export default function ComparadorCavalosPage() {
                   <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
                     <Activity className="text-blue-400" size={20} />
                     {t.comparador.visual_comparison}
+                    <Tooltip
+                      text={
+                        (t.comparador as Record<string, string>).tooltip_radar ??
+                        "Cada eixo representa uma dimensao avaliada de 0 a 10. A area total reflecte o perfil global do cavalo."
+                      }
+                    />
                   </h3>
                   <div className="flex flex-col items-center">
                     <RadarChart
@@ -967,6 +1062,12 @@ export default function ComparadorCavalosPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Category Ranking */}
+                <CategoryRanking cavalos={cavalos} cores={cores} />
+
+                {/* Suitability Profile */}
+                <SuitabilityProfile cavalos={cavalos} cores={cores} />
 
                 {/* Tabela Comparativa - PRO only */}
                 <BlurredProSection
@@ -1061,12 +1162,21 @@ export default function ComparadorCavalosPage() {
                           </td>
                           {cavalos.map((c, i) => (
                             <td key={c.id} className="text-center py-4 px-2">
-                              <span className="text-2xl font-bold" style={{ color: cores[i] }}>
-                                {calcularScore(c)}
-                              </span>
-                              {c.id === vencedor.id && (
-                                <Crown className="inline ml-2 text-amber-400" size={16} />
-                              )}
+                              <div className="flex items-center justify-center gap-2">
+                                <span className="text-2xl font-bold" style={{ color: cores[i] }}>
+                                  {calcularScore(c)}
+                                </span>
+                                <SourceBadge source="modelo" />
+                                {c.id === vencedor.id && (
+                                  <Crown className="inline text-amber-400" size={16} />
+                                )}
+                              </div>
+                              <div className="mt-2 text-left">
+                                <ScoreBreakdown
+                                  factors={getScoreFactors(c)}
+                                  total={calcularScore(c)}
+                                />
+                              </div>
                             </td>
                           ))}
                         </tr>
@@ -1098,6 +1208,12 @@ export default function ComparadorCavalosPage() {
                     <h3 className="text-lg font-serif mb-4 flex items-center gap-3">
                       <Trophy className="text-amber-400" size={20} />
                       {t.comparador.best_quality}
+                      <Tooltip
+                        text={
+                          (t.comparador as Record<string, string>).tooltip_melhor_score ??
+                          "O cavalo com maior score total no conjunto de factores avaliados."
+                        }
+                      />
                     </h3>
                     <div className="flex items-center gap-4">
                       <div className="p-4 bg-amber-500/20 rounded-xl">
@@ -1119,6 +1235,12 @@ export default function ComparadorCavalosPage() {
                     <h3 className="text-lg font-serif mb-4 flex items-center gap-3">
                       <Euro className="text-emerald-400" size={20} />
                       {t.comparador.best_cost_benefit}
+                      <Tooltip
+                        text={
+                          (t.comparador as Record<string, string>).tooltip_melhor_valor ??
+                          "O cavalo com menor custo por ponto de score."
+                        }
+                      />
                     </h3>
                     <div className="flex items-center gap-4">
                       <div className="p-4 bg-emerald-500/20 rounded-xl">
@@ -1187,6 +1309,114 @@ export default function ComparadorCavalosPage() {
                   </div>
                 </BlurredProSection>
 
+                {/* PRO: Gap Analysis */}
+                <BlurredProSection
+                  isSubscribed={isSubscribed}
+                  title={(t.comparador as Record<string, string>).gap_title ?? "Analise de Gap"}
+                >
+                  <GapAnalysis cavalos={cavalos} cores={cores} calcularScore={calcularScore} />
+                </BlurredProSection>
+
+                {/* PRO: Purchase Confidence */}
+                <BlurredProSection
+                  isSubscribed={isSubscribed}
+                  title={
+                    (t.comparador as Record<string, string>).confidence_title ??
+                    "Indice de Confianca na Compra"
+                  }
+                >
+                  <PurchaseConfidence
+                    cavalos={cavalos}
+                    vencedorId={vencedor.id}
+                    calcularScore={calcularScore}
+                  />
+                </BlurredProSection>
+
+                {/* Methodology Panel */}
+                <MethodologyPanel
+                  title={
+                    (t.comparador as Record<string, string>).methodology_panel_title ??
+                    "Metodologia de Comparacao"
+                  }
+                  factors={[
+                    {
+                      name: "Linhagem",
+                      weight: "15pts",
+                      description: "Qualidade do pedigree: Desconhecida a Elite",
+                      standard: "APSL",
+                    },
+                    {
+                      name: "Treino",
+                      weight: "15pts",
+                      description: "Nivel de treino conforme escalas FEI",
+                      standard: "FEI",
+                    },
+                    {
+                      name: "Conformacao",
+                      weight: "10pts",
+                      description: "Avaliacao morfologica segundo padroes APSL",
+                      standard: "APSL",
+                    },
+                    {
+                      name: "Andamentos",
+                      weight: "10pts",
+                      description: "Qualidade dos tres andamentos basicos",
+                    },
+                    {
+                      name: "Idade",
+                      weight: "10pts",
+                      description: "Faixa ideal: 6-12 anos (maximo); 4-15 (bom)",
+                    },
+                    {
+                      name: "Competicoes",
+                      weight: "8pts",
+                      description: "Historial competitivo e classificacoes",
+                    },
+                    { name: "Altura", weight: "8pts", description: "Faixa ideal: 158-168cm" },
+                    {
+                      name: "Temperamento",
+                      weight: "7pts",
+                      description: "Docilidade e capacidade de trabalho",
+                    },
+                    {
+                      name: "Saude",
+                      weight: "7pts",
+                      description: "Historial clinico e condicao geral",
+                      standard: "veterinário",
+                    },
+                    {
+                      name: "BLUP",
+                      weight: "5pts",
+                      description: "Estimativa de merito genetico",
+                      standard: "modelo",
+                    },
+                    {
+                      name: "Elev.+Reg.",
+                      weight: "5pts",
+                      description: "Elevacao e regularidade dos andamentos",
+                    },
+                    {
+                      name: "Registo APSL",
+                      weight: "3pts",
+                      description: "Bonus para cavalos com registo oficial",
+                      standard: "APSL",
+                    },
+                  ]}
+                  limitations={[
+                    (t.comparador as Record<string, string>).limitation_1 ??
+                      "Comparacao limitada aos dados declarados pelo utilizador",
+                    (t.comparador as Record<string, string>).limitation_2 ??
+                      "O score nao captura a quimica cavaleiro-cavalo",
+                    (t.comparador as Record<string, string>).limitation_3 ??
+                      "Precos declarados pelo utilizador, nao verificados",
+                  ]}
+                  version={
+                    (t.comparador as Record<string, string>).methodology_version ??
+                    "v2.1 — Fev 2026"
+                  }
+                  references={["Padroes APSL", "Escalas FEI"]}
+                />
+
                 {/* Disclaimer */}
                 <div className="p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--border)]/50">
                   <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
@@ -1194,6 +1424,10 @@ export default function ComparadorCavalosPage() {
                       {t.comparador.disclaimer_title}
                     </strong>{" "}
                     {t.comparador.disclaimer_text}
+                    <span className="block mt-1 text-[10px] text-[var(--foreground-muted)]/40 font-mono">
+                      {(t.comparador as Record<string, string>).methodology_version ??
+                        "v2.1 — Fev 2026"}
+                    </span>
                   </p>
                 </div>
               </div>

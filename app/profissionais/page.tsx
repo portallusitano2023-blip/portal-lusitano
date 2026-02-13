@@ -1,8 +1,20 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { ArrowLeft, Search, Users, CalendarDays, FileText, ShieldCheck } from "lucide-react";
+import {
+  Search,
+  Users,
+  CalendarDays,
+  FileText,
+  ChevronDown,
+  ArrowRight,
+  Star,
+  ShieldCheck,
+  CheckCircle2,
+  LayoutGrid,
+  TrendingUp,
+} from "lucide-react";
 
 import type {
   CategoriaProf,
@@ -16,7 +28,6 @@ import {
   calcularEstatisticas,
 } from "@/components/profissionais/data";
 import {
-  EstatisticasCard,
   CardProfissional,
   ModalProfissional,
   EventosSection,
@@ -24,6 +35,11 @@ import {
   CategoriasTabs,
 } from "@/components/profissionais";
 
+import RevealOnScroll from "@/components/ui/RevealOnScroll";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
+import MagneticButton from "@/components/ui/MagneticButton";
+import ParallaxSection from "@/components/ui/ParallaxSection";
+import TextSplit from "@/components/TextSplit";
 // =============================================================================
 // MAIN PAGE COMPONENT
 // =============================================================================
@@ -37,11 +53,86 @@ export default function ProfissionaisPage() {
   const [abaAtiva, setAbaAtiva] = useState<"profissionais" | "eventos" | "artigos">(
     "profissionais"
   );
+  const [profissionaisBD, setProfissionaisBD] = useState<Profissional[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/profissionais");
+        if (!res.ok || cancelled) return;
+        const data = await res.json();
+        if (cancelled) return;
+        if (data.profissionais && data.profissionais.length > 0) {
+          const mapped: Profissional[] = data.profissionais.map((p: Record<string, unknown>) => ({
+            id: p.id as string,
+            nome: p.nome as string,
+            titulo: (p.especialidade as string) || "",
+            especialidade: (p.especialidade as string) || (p.tipo as string) || "",
+            categoria: (p.tipo as CategoriaProf) || "veterinario",
+            localizacao: (p.cidade as string) || (p.distrito as string) || "",
+            distrito: (p.distrito as string) || "",
+            telefone: (p.telemovel as string) || "",
+            email: (p.email as string) || "",
+            descricao: (p.descricao_completa as string) || (p.descricao_curta as string) || "",
+            avaliacao: (p.rating_average as number) || 0,
+            numAvaliacoes: (p.rating_count as number) || 0,
+            servicos: Array.isArray(p.servicos_oferecidos)
+              ? (p.servicos_oferecidos as { nome: string }[]).map((s) => s.nome || String(s))
+              : [],
+            nivelVerificacao: p.verificado
+              ? ("verificado" as NivelVerificacao)
+              : ("basico" as NivelVerificacao),
+            experienciaAnos: (p.anos_experiencia as number) || 0,
+            especializacoes: [],
+            credenciais: [],
+            metricas: {
+              tempoResposta: "< 24h",
+              taxaSatisfacao: 0,
+              casosConcluidosAno: 0,
+              clientesRecorrentes: 0,
+              recomendacoes: 0,
+              anosAtivo: 0,
+              cavalosAtendidos: 0,
+            },
+            disponibilidade: {
+              diasSemana: [],
+              horaInicio: "",
+              horaFim: "",
+              emergencias24h: false,
+              raioServico: 0,
+            },
+            idiomas: ["Português"],
+            associacoes: [],
+            destaque: (p.destaque as boolean) || false,
+            fotoUrl: (p.foto_perfil_url as string) || undefined,
+            redesSociais: {
+              website: (p.website as string) || undefined,
+              instagram: (p.instagram as string) || undefined,
+            },
+          }));
+          setProfissionaisBD(mapped);
+        }
+      } catch {
+        // Fallback silencioso - usa dados hardcoded
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const todosProfissionais = useMemo(() => {
+    const bdIds = new Set(profissionaisBD.map((p) => p.id));
+    const hardcodedFiltered = profissionaisDB.filter((p) => !bdIds.has(p.id));
+    return [...profissionaisBD, ...hardcodedFiltered];
+  }, [profissionaisBD]);
 
   const stats = useMemo(() => calcularEstatisticas(), []);
 
   const profissionaisFiltrados = useMemo(() => {
-    return profissionaisDB
+    return todosProfissionais
       .filter((p) => {
         const matchPesquisa =
           p.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
@@ -59,147 +150,428 @@ export default function ProfissionaisPage() {
         if (nivelDiff !== 0) return nivelDiff;
         return b.avaliacao - a.avaliacao;
       });
-  }, [pesquisa, categoriaAtiva, distritoAtivo, filtroVerificacao]);
+  }, [pesquisa, categoriaAtiva, distritoAtivo, filtroVerificacao, todosProfissionais]);
+
+  const profissionaisDestaque = useMemo(() => {
+    return todosProfissionais
+      .filter((p) => p.destaque)
+      .sort((a, b) => b.avaliacao - a.avaliacao)
+      .slice(0, 3);
+  }, [todosProfissionais]);
+
+  const handleScrollToDirectory = () => {
+    document.getElementById("directorio")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 pb-32 px-4 sm:px-6 md:px-12">
-      {/* Header */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-6"
-        >
-          <ArrowLeft size={18} />
-          <span className="text-sm">Voltar</span>
-        </Link>
-        <div className="text-center">
-          <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-[9px] font-bold block mb-2">
-            Comunidade Lusitana
-          </span>
-          <h1 className="text-2xl sm:text-4xl font-serif italic mb-4">Rede Profissional</h1>
-          <p className="text-[var(--foreground-secondary)] text-sm max-w-2xl mx-auto">
-            A maior rede de profissionais especializados em cavalos Lusitanos em Portugal.
-            Veterinários, ferradores, treinadores e mais.
-          </p>
-        </div>
-      </div>
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      {/* ================================================================= */}
+      {/* S1: HERO CINEMATOGRÁFICO */}
+      {/* ================================================================= */}
+      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+        {/* Parallax background */}
+        <ParallaxSection speed={0.4} className="absolute inset-0 z-0">
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-50"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=1920&q=80')",
+            }}
+          />
+        </ParallaxSection>
 
-      {/* Estatisticas */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <EstatisticasCard stats={stats} />
-      </div>
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--background)] via-[var(--background)]/50 to-black/40 z-[1]" />
+        <div className="absolute inset-0 noise-overlay z-[2]" />
 
-      {/* Tabs principais */}
-      <div className="max-w-7xl mx-auto mb-6">
-        <div className="flex gap-2 border-b border-[var(--border)] pb-3">
-          {[
-            { id: "profissionais" as const, label: "Profissionais", icon: Users },
-            { id: "eventos" as const, label: "Eventos", icon: CalendarDays },
-            { id: "artigos" as const, label: "Artigos", icon: FileText },
-          ].map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setAbaAtiva(t.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors ${abaAtiva === t.id ? "bg-[var(--gold)] text-black font-medium" : "bg-[var(--background-secondary)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"}`}
-            >
-              <t.icon size={16} />
-              {t.label}
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* Gradient orbs */}
+        <div
+          className="gradient-orb absolute top-[20%] left-[15%] w-[500px] h-[500px] z-[1]"
+          style={{ background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)" }}
+        />
+        <div
+          className="gradient-orb absolute bottom-[10%] right-[10%] w-[400px] h-[400px] z-[1]"
+          style={{ background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)" }}
+        />
 
-      {abaAtiva === "profissionais" && (
-        <>
-          {/* Categorias */}
-          <div className="max-w-7xl mx-auto mb-6">
-            <CategoriasTabs categoriaAtiva={categoriaAtiva} onCategoriaChange={setCategoriaAtiva} />
-          </div>
+        {/* Content */}
+        <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
+          {/* Label */}
+          <RevealOnScroll variant="fade-up" delay={400}>
+            <span className="inline-block text-[var(--gold)] uppercase tracking-[0.3em] text-[10px] font-bold mb-6">
+              Comunidade Lusitana
+            </span>
+          </RevealOnScroll>
 
-          {/* Filtros e Pesquisa */}
-          <div className="max-w-7xl mx-auto mb-6">
-            <SearchFilters
-              pesquisa={pesquisa}
-              onPesquisaChange={setPesquisa}
-              distritoAtivo={distritoAtivo}
-              onDistritoChange={setDistritoAtivo}
-              filtroVerificacao={filtroVerificacao}
-              onVerificacaoChange={setFiltroVerificacao}
-              totalResultados={profissionaisFiltrados.length}
-            />
-          </div>
+          {/* Title */}
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic mb-6">
+            <TextSplit text="Rede Profissional" baseDelay={0.5} />
+          </h1>
 
-          {/* Grid de Profissionais */}
-          <div className="max-w-7xl mx-auto" aria-live="polite" aria-atomic="true">
-            {profissionaisFiltrados.length > 0 ? (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {profissionaisFiltrados.map((prof) => (
-                  <CardProfissional
-                    key={prof.id}
-                    prof={prof}
-                    onClick={() => setProfissionalSelecionado(prof)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <Search size={32} className="mx-auto mb-4 text-[var(--foreground-muted)]" />
-                <h3 className="text-lg font-medium mb-2">Nenhum profissional encontrado</h3>
-                <p className="text-sm text-[var(--foreground-muted)]">Tente ajustar os filtros</p>
-              </div>
-            )}
-          </div>
-        </>
-      )}
+          {/* Decorative line */}
+          <RevealOnScroll variant="fade-scale" delay={900}>
+            <div className="w-24 h-px mx-auto mb-6 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+          </RevealOnScroll>
 
-      {abaAtiva === "eventos" && (
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-lg font-semibold mb-4">Próximos Eventos</h2>
-          <EventosSection eventos={eventosDB} />
-        </div>
-      )}
+          {/* Subtitle */}
+          <RevealOnScroll variant="blur-up" delay={1000}>
+            <p className="text-lg sm:text-xl font-serif italic text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-10">
+              A maior rede de profissionais especializados em cavalos Lusitanos em Portugal
+            </p>
+          </RevealOnScroll>
 
-      {abaAtiva === "artigos" && (
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-lg font-semibold mb-4">Artigos Educativos</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {artigosDB.map((a) => (
-              <div
-                key={a.id}
-                className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-4 hover:border-[var(--gold)]/30 transition-colors"
+          {/* CTAs */}
+          <RevealOnScroll variant="fade-up" delay={1200}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <MagneticButton>
+                <Link
+                  href="/profissionais/registar"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors text-sm"
+                >
+                  <ShieldCheck size={18} />
+                  Registar-se
+                </Link>
+              </MagneticButton>
+              <MagneticButton>
+                <button
+                  onClick={handleScrollToDirectory}
+                  className="inline-flex items-center gap-2 px-8 py-4 border border-[var(--gold)]/30 text-[var(--foreground)] rounded-lg hover:border-[var(--gold)]/60 hover:bg-[var(--gold)]/5 transition-all text-sm"
+                >
+                  Explorar Rede
+                  <ArrowRight size={16} />
+                </button>
+              </MagneticButton>
+            </div>
+          </RevealOnScroll>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+            <RevealOnScroll variant="fade-up" delay={1800}>
+              <button
+                onClick={handleScrollToDirectory}
+                className="text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors animate-bounce"
+                aria-label="Scroll para baixo"
               >
-                <span className="text-xs text-[var(--gold)]">{a.categoria}</span>
-                <h3 className="font-medium text-[var(--foreground)] mt-1">{a.titulo}</h3>
-                <p className="text-sm text-[var(--foreground-secondary)] mt-2">{a.resumo}</p>
-                <div className="flex items-center justify-between mt-3 text-xs text-[var(--foreground-muted)]">
-                  <span>{a.autor}</span>
-                  <span>{a.leituras.toLocaleString()} leituras</span>
+                <ChevronDown size={24} />
+              </button>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* S2: STATS BAR */}
+      {/* ================================================================= */}
+      <section className="border-y border-[var(--border)] bg-[var(--background-secondary)]/50 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { end: stats.totalProfissionais, suffix: "+", label: "Profissionais", icon: Users },
+              {
+                end: stats.profissionaisVerificados,
+                suffix: "",
+                label: "Verificados",
+                icon: CheckCircle2,
+              },
+              { end: 14, suffix: "", label: "Categorias", icon: LayoutGrid },
+              {
+                end: stats.clientesSatisfeitos,
+                suffix: "%",
+                label: "Satisfação",
+                icon: TrendingUp,
+              },
+            ].map((stat, i) => (
+              <RevealOnScroll key={stat.label} variant="fade-up" delay={i * 100}>
+                <div className="text-center">
+                  <stat.icon size={20} className="mx-auto mb-2 text-[var(--gold)]/60" />
+                  <div className="text-2xl sm:text-3xl font-bold text-gradient-gold mb-1">
+                    <AnimatedCounter end={stat.end} suffix={stat.suffix} />
+                  </div>
+                  <div className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                    {stat.label}
+                  </div>
                 </div>
-              </div>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* S3: DESTAQUE (top 3 profissionais) */}
+      {/* ================================================================= */}
+      {profissionaisDestaque.length > 0 && (
+        <section className="py-16 px-4 sm:px-6 bg-[var(--background-secondary)]/30">
+          <div className="max-w-7xl mx-auto">
+            <RevealOnScroll variant="fade-up">
+              <div className="text-center mb-10">
+                <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-[9px] font-bold block mb-2">
+                  Destaque
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-serif italic">
+                  Profissionais de Excelência
+                </h2>
+              </div>
+            </RevealOnScroll>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {profissionaisDestaque.map((prof, i) => (
+                <RevealOnScroll key={prof.id} variant="fade-up" delay={i * 150}>
+                  <button
+                    onClick={() => setProfissionalSelecionado(prof)}
+                    className="card-premium shimmer-gold w-full text-left rounded-xl overflow-hidden group"
+                  >
+                    {/* Gradient header band */}
+                    <div className="h-2 bg-gradient-to-r from-[var(--gold)]/60 via-[var(--gold)] to-[var(--gold)]/60" />
+
+                    <div className="p-6">
+                      {/* Avatar + info */}
+                      <div className="flex items-start gap-4 mb-4">
+                        {prof.fotoUrl ? (
+                          <img
+                            src={prof.fotoUrl}
+                            alt={prof.nome}
+                            className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 bg-gradient-to-br from-[var(--gold)]/30 to-[var(--background-card)] rounded-xl flex items-center justify-center text-2xl font-serif text-[var(--gold)] flex-shrink-0">
+                            {prof.nome.charAt(0)}
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-[var(--foreground)] truncate">
+                              {prof.nome}
+                            </h3>
+                            {prof.nivelVerificacao !== "basico" && (
+                              <ShieldCheck size={14} className="text-[var(--gold)] flex-shrink-0" />
+                            )}
+                          </div>
+                          <p className="text-sm text-[var(--gold)] truncate mt-0.5">
+                            {prof.especialidade}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Rating */}
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <Star
+                              key={s}
+                              size={14}
+                              className={
+                                s <= Math.round(prof.avaliacao)
+                                  ? "text-[var(--gold)] fill-[var(--gold)]"
+                                  : "text-[var(--foreground-muted)]"
+                              }
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs text-[var(--foreground-secondary)]">
+                          {prof.avaliacao} ({prof.numAvaliacoes})
+                        </span>
+                      </div>
+
+                      {/* Top 3 services */}
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {prof.servicos.slice(0, 3).map((s) => (
+                          <span
+                            key={s}
+                            className="px-2.5 py-1 text-[10px] rounded-full border border-[var(--gold)]/20 bg-[var(--gold)]/5 text-[var(--gold)]"
+                          >
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* CTA */}
+                      <div className="flex items-center gap-1 text-sm text-[var(--gold)] font-medium group-hover:gap-2 transition-all">
+                        Ver Perfil
+                        <ArrowRight
+                          size={14}
+                          className="transition-transform group-hover:translate-x-1"
+                        />
+                      </div>
+                    </div>
+                  </button>
+                </RevealOnScroll>
+              ))}
+            </div>
+          </div>
+        </section>
       )}
 
-      {/* CTA */}
-      <div className="max-w-7xl mx-auto mt-12">
-        <div className="bg-gradient-to-r from-[var(--gold)]/10 to-transparent border border-[var(--gold)]/20 rounded-xl p-6">
-          <div className="sm:flex sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-lg font-semibold mb-1">É profissional do sector equestre?</h3>
-              <p className="text-sm text-[var(--foreground-secondary)]">
-                Junte-se à nossa rede verificada e alcance milhares de criadores e proprietários.
-              </p>
+      {/* ================================================================= */}
+      {/* S5: DIRECTÓRIO */}
+      {/* ================================================================= */}
+      <section id="directorio" className="py-16 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Tabs */}
+          <RevealOnScroll variant="fade-up">
+            <div className="flex gap-2 border-b border-[var(--border)] pb-3 mb-6">
+              {[
+                { id: "profissionais" as const, label: "Profissionais", icon: Users },
+                { id: "eventos" as const, label: "Eventos", icon: CalendarDays },
+                { id: "artigos" as const, label: "Artigos", icon: FileText },
+              ].map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setAbaAtiva(t.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors ${
+                    abaAtiva === t.id
+                      ? "bg-[var(--gold)] text-black font-medium"
+                      : "bg-[var(--background-secondary)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
+                  }`}
+                >
+                  <t.icon size={16} />
+                  {t.label}
+                </button>
+              ))}
             </div>
-            <button className="mt-4 sm:mt-0 px-6 py-3 bg-[var(--gold)] text-black font-medium rounded-lg hover:bg-[var(--gold-hover)] transition-colors flex items-center gap-2">
-              <ShieldCheck size={18} />
-              Registar-se
-            </button>
-          </div>
-        </div>
-      </div>
+          </RevealOnScroll>
 
-      {/* Modal */}
+          {abaAtiva === "profissionais" && (
+            <>
+              {/* Categorias compactas */}
+              <RevealOnScroll variant="fade-up" delay={100}>
+                <div className="mb-6">
+                  <CategoriasTabs
+                    categoriaAtiva={categoriaAtiva}
+                    onCategoriaChange={setCategoriaAtiva}
+                  />
+                </div>
+              </RevealOnScroll>
+
+              {/* Filtros */}
+              <RevealOnScroll variant="fade-up" delay={200}>
+                <div className="mb-6">
+                  <SearchFilters
+                    pesquisa={pesquisa}
+                    onPesquisaChange={setPesquisa}
+                    distritoAtivo={distritoAtivo}
+                    onDistritoChange={setDistritoAtivo}
+                    filtroVerificacao={filtroVerificacao}
+                    onVerificacaoChange={setFiltroVerificacao}
+                    totalResultados={profissionaisFiltrados.length}
+                  />
+                </div>
+              </RevealOnScroll>
+
+              {/* Grid */}
+              <div aria-live="polite" aria-atomic="true">
+                {profissionaisFiltrados.length > 0 ? (
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {profissionaisFiltrados.map((prof, i) => (
+                      <RevealOnScroll key={prof.id} variant="fade-up" delay={Math.min(i * 80, 600)}>
+                        <CardProfissional
+                          prof={prof}
+                          onClick={() => setProfissionalSelecionado(prof)}
+                        />
+                      </RevealOnScroll>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-16">
+                    <Search size={32} className="mx-auto mb-4 text-[var(--foreground-muted)]" />
+                    <h3 className="text-lg font-medium mb-2">Nenhum profissional encontrado</h3>
+                    <p className="text-sm text-[var(--foreground-muted)]">
+                      Tente ajustar os filtros
+                    </p>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {abaAtiva === "eventos" && (
+            <RevealOnScroll variant="fade-up">
+              <h2 className="text-lg font-semibold mb-4">Próximos Eventos</h2>
+              <EventosSection eventos={eventosDB} />
+            </RevealOnScroll>
+          )}
+
+          {abaAtiva === "artigos" && (
+            <RevealOnScroll variant="fade-up">
+              <h2 className="text-lg font-semibold mb-4">Artigos Educativos</h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {artigosDB.map((a, i) => (
+                  <RevealOnScroll key={a.id} variant="fade-up" delay={i * 100}>
+                    <div className="card-premium shimmer-gold rounded-xl p-4">
+                      <span className="text-xs text-[var(--gold)]">{a.categoria}</span>
+                      <h3 className="font-medium text-[var(--foreground)] mt-1">{a.titulo}</h3>
+                      <p className="text-sm text-[var(--foreground-secondary)] mt-2">{a.resumo}</p>
+                      <div className="flex items-center justify-between mt-3 text-xs text-[var(--foreground-muted)]">
+                        <span>{a.autor}</span>
+                        <span>{a.leituras.toLocaleString()} leituras</span>
+                      </div>
+                    </div>
+                  </RevealOnScroll>
+                ))}
+              </div>
+            </RevealOnScroll>
+          )}
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* S6: CTA BANNER */}
+      {/* ================================================================= */}
+      <section className="py-16 px-4 sm:px-6 relative overflow-hidden">
+        {/* Background orb */}
+        <div
+          className="gradient-orb absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px]"
+          style={{ background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)" }}
+        />
+
+        <div className="max-w-3xl mx-auto relative z-10">
+          <RevealOnScroll variant="fade-scale">
+            <div className="bg-gradient-to-r from-[var(--gold)]/10 to-transparent border border-[var(--gold)]/20 rounded-2xl p-8 sm:p-12 backdrop-blur-sm text-center">
+              <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-[9px] font-bold block mb-3">
+                Junte-se à Rede
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-serif italic mb-4">
+                É profissional do sector equestre?
+              </h2>
+              <p className="text-[var(--foreground-secondary)] text-sm max-w-xl mx-auto mb-4">
+                Junte-se à nossa rede verificada e alcance milhares de criadores e proprietários de
+                cavalos Lusitanos em Portugal.
+              </p>
+
+              {/* Price badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--gold)]/20 bg-[var(--gold)]/5 mb-8">
+                <span className="text-xs text-[var(--foreground-secondary)]">A partir de</span>
+                <span className="text-sm font-bold text-gradient-gold">€6/mês</span>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <MagneticButton>
+                  <Link
+                    href="/profissionais/registar"
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors text-sm"
+                  >
+                    <ShieldCheck size={18} />
+                    Registar-se Agora
+                  </Link>
+                </MagneticButton>
+                <MagneticButton>
+                  <Link
+                    href="/profissionais/registar"
+                    className="inline-flex items-center gap-2 px-8 py-4 border border-[var(--gold)]/30 text-[var(--foreground)] rounded-lg hover:border-[var(--gold)]/60 hover:bg-[var(--gold)]/5 transition-all text-sm"
+                  >
+                    Como Funciona
+                    <ArrowRight size={16} />
+                  </Link>
+                </MagneticButton>
+              </div>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* S7: MODAL */}
+      {/* ================================================================= */}
       {profissionalSelecionado && (
         <ModalProfissional
           profissional={profissionalSelecionado}

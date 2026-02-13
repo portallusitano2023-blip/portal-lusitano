@@ -59,9 +59,17 @@ export function ModalProfissional({
             <X size={20} />
           </button>
           <div className="flex items-start gap-4">
-            <div className="w-20 h-20 bg-gradient-to-br from-[var(--gold)]/40 to-[var(--background-card)] rounded-xl flex items-center justify-center text-3xl font-serif text-[var(--gold)]">
-              {profissional.nome.charAt(0)}
-            </div>
+            {profissional.fotoUrl ? (
+              <img
+                src={profissional.fotoUrl}
+                alt={profissional.nome}
+                className="w-20 h-20 rounded-xl object-cover"
+              />
+            ) : (
+              <div className="w-20 h-20 bg-gradient-to-br from-[var(--gold)]/40 to-[var(--background-card)] rounded-xl flex items-center justify-center text-3xl font-serif text-[var(--gold)]">
+                {profissional.nome.charAt(0)}
+              </div>
+            )}
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h2 className="text-xl font-semibold text-[var(--foreground)]">

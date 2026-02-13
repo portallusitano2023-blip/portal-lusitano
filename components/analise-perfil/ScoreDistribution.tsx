@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 import RadarChart from "@/components/analise-perfil/RadarChart";
+import Tooltip from "@/components/tools/Tooltip";
 import type { RadarChartData, ScorePercentage } from "@/components/analise-perfil/types";
 
 interface ScoreDistributionProps {
@@ -23,8 +24,14 @@ export default function ScoreDistribution({ radarData, scorePercentages }: Score
             <RadarChart data={radarData} />
           </div>
           <div>
-            <h3 className="text-sm uppercase tracking-wider text-[var(--foreground-muted)] mb-6">
+            <h3 className="text-sm uppercase tracking-wider text-[var(--foreground-muted)] mb-6 flex items-center gap-2">
               {t.analise_perfil.profile_distribution}
+              <Tooltip
+                text={
+                  (t.analise_perfil as Record<string, string>).tooltip_distribution ??
+                  "Mostra a afinidade relativa com cada arquetipo. A maioria dos cavaleiros combina elementos de varios perfis."
+                }
+              />
             </h3>
             <div className="space-y-4">
               {scorePercentages.map((item, i) => (
