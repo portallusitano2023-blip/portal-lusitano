@@ -1,0 +1,621 @@
+Categoria,Subcategoria,Nome,Rota/Caminho,Descrição,Tipo,Estado,Integrações
+=== PÁGINAS PÚBLICAS ===,,,,,,
+Página,Homepage,Homepage,/,Página principal com conteúdo em destaque,Página,Ativo,
+Página,Homepage,Layout Raiz,/layout,Layout global com providers,Layout,Ativo,
+Página,Homepage,Loading Global,/loading,Estado de carregamento global,Loading,Ativo,
+Página,Homepage,Erro Global,/error,Boundary de erro global,Erro,Ativo,Sentry
+Página,Homepage,Erro Fallback,/global-error,Página de erro de reserva,Erro,Ativo,Sentry
+Página,Homepage,404,/not-found,Página não encontrada,Erro,Ativo,
+=== CAVALOS & CRIAÇÃO ===,,,,,,
+Página,Cavalos,Cavalos Famosos,/cavalos-famosos,Diretório de cavalos famosos,Página,Ativo,Sanity CMS
+Página,Cavalos,Cavalos Favoritos,/cavalos-favoritos,Página de favoritos do utilizador,Página,Ativo,LocalStorage
+Página,Cavalos,Detalhe do Cavalo,/cavalo/[slug],Página de detalhe individual do cavalo,Página Dinâmica,Ativo,Sanity CMS
+Página,Cavalos,Coudelarias,/coudelarias,Diretório de coudelarias,Página,Ativo,Supabase
+Página,Cavalos,Linhagens,/linhagens,Informação sobre linhagens de sangue,Página,Ativo,
+Página,Cavalos,Histórico,/historico,Historial do Lusitano,Página,Ativo,
+=== FERRAMENTAS INTERATIVAS ===,,,,,,
+Página,Ferramentas,Hub de Ferramentas,/ferramentas,Centro de todas as ferramentas,Página,Ativo,
+Página,Ferramentas,Calculadora de Valor,/calculadora-valor,Calculadora de valor do cavalo (multi-step),Página,Ativo,Stripe (Premium)
+Página,Ferramentas,Comparador de Cavalos,/comparador-cavalos,Comparação lado a lado de cavalos,Página,Ativo,Stripe (Premium)
+Página,Ferramentas,Análise de Perfil,/analise-perfil,Quiz de análise de perfil equestre,Página,Ativo,Stripe (Premium)
+Página,Ferramentas,Verificador Compatibilidade,/verificador-compatibilidade,Verificação de compatibilidade entre cavalos,Página,Ativo,Stripe (Premium)
+Página,Ferramentas,Resultado,/resultado/[id],Página de resultado das ferramentas,Página Dinâmica,Ativo,
+Página,Ferramentas,Piroplasmose,/piroplasmose,Informação sobre piroplasmose equina,Página,Ativo,
+=== MARKETPLACE & LOJA ===,,,,,,
+Página,Loja,Loja,/loja,Loja de produtos,Página,Ativo,Shopify
+Página,Loja,Produto Individual,/loja/[handle],Detalhe do produto,Página Dinâmica,Ativo,Shopify
+Página,Marketplace,Marketplace,/marketplace,Marketplace geral de cavalos,Página,Ativo,
+Página,Marketplace,Comprar,/comprar,Página de compra de cavalos,Página,Ativo,
+Página,Marketplace,Detalhe Compra,/comprar/[id],Detalhe do cavalo à venda,Página Dinâmica,Ativo,
+Página,Marketplace,Vender,/vender,Ponto de entrada para venda,Página,Ativo,
+Página,Marketplace,Vender Cavalo,/vender-cavalo,Formulário de venda multi-step,Página,Ativo,Stripe
+Página,Marketplace,Sucesso Venda,/vender-cavalo/sucesso,Confirmação de submissão de venda,Página,Ativo,
+=== CONTEÚDO & INFORMAÇÃO ===,,,,,,
+Página,Conteúdo,Jornal,/jornal,Blog/Jornal de artigos,Página,Ativo,Sanity CMS
+Página,Conteúdo,Artigo Individual,/jornal/[slug],Detalhe do artigo,Página Dinâmica,Ativo,Sanity CMS
+Página,Conteúdo,Eventos,/eventos,Lista de eventos equestres,Página,Ativo,Supabase
+Página,Conteúdo,Detalhe Evento,/eventos/[slug],Detalhe do evento,Página Dinâmica,Ativo,Supabase
+Página,Conteúdo,Glossário,/glossario,Glossário de termos equestres,Página,Ativo,
+Página,Conteúdo,FAQ,/faq,Perguntas frequentes,Página,Ativo,
+Página,Conteúdo,Sobre,/sobre,Sobre o Portal Lusitano,Página,Ativo,
+=== DIRETÓRIO PROFISSIONAL ===,,,,,,
+Página,Diretório,Diretório,/directorio,Diretório de profissionais equestres,Página,Ativo,Supabase
+Página,Diretório,Profissional Individual,/directorio/[slug],Perfil do profissional,Página Dinâmica,Ativo,Supabase
+Página,Diretório,Registar Profissional,/directorio/registar,Registo de novo profissional,Página,Ativo,Supabase
+Página,Diretório,Profissionais,/profissionais,Lista de profissionais,Página,Ativo,Supabase
+Página,Diretório,Mapa,/mapa,Mapa interativo de profissionais,Página,Ativo,Leaflet
+=== UTILIZADOR & CONTA ===,,,,,,
+Página,Autenticação,Login,/(auth)/login,Login do utilizador,Página,Ativo,Supabase Auth
+Página,Autenticação,Registar,/(auth)/registar,Registo de novo utilizador,Página,Ativo,Supabase Auth
+Página,Autenticação,Recuperar Senha,/(auth)/recuperar-senha,Recuperação de password,Página,Ativo,Supabase Auth
+Página,Autenticação,Perfil,/(auth)/perfil,Perfil do utilizador,Página,Ativo,Supabase Auth
+Página,Conta,Minha Conta,/minha-conta,Gestão de conta do utilizador,Página,Ativo,
+Página,Conta,Favoritos,/favoritos,Gestão de favoritos,Página,Ativo,LocalStorage
+=== MARKETING & GROWTH ===,,,,,,
+Página,Marketing,Newsletter,/newsletter,Subscrição de newsletter,Página,Ativo,Resend
+Página,Marketing,eBook Grátis,/ebook-gratis,Download de eBook gratuito,Página,Ativo,Resend
+Página,Marketing,Download eBook,/ebook-gratis/download,Página de download do eBook,Página,Ativo,
+Página,Marketing,Publicidade,/publicidade,Página de publicidade/patrocínios,Página,Ativo,Stripe
+Página,Marketing,Sucesso Publicidade,/publicidade/sucesso,Confirmação de compra publicidade,Página,Ativo,
+Página,Marketing,Instagram,/instagram,Integração Instagram,Página,Ativo,Instagram
+Página,Marketing,Instagram Sucesso,/instagram/sucesso,Confirmação Instagram,Página,Ativo,
+Página,Marketing,Upload Instagram,/instagram/upload/[id],Upload de conteúdo Instagram,Página Dinâmica,Ativo,
+Página,Marketing,Unsubscribe,/unsubscribe,Cancelamento de newsletter,Página,Ativo,
+=== LEGAL ===,,,,,,
+Página,Legal,Termos de Serviço,/termos,Termos e condições,Página,Ativo,
+Página,Legal,Privacidade,/privacidade,Política de privacidade,Página,Ativo,
+=== UTILIDADES ===,,,,,,
+Página,Utilidade,Sucesso,/sucesso,Página de confirmação genérica,Página,Ativo,
+Página,Utilidade,Offline,/offline,Página offline (PWA),Página,Ativo,
+=== ADMIN - DASHBOARD ===,,,,,,
+Página,Admin,Dashboard,/admin,Painel principal do admin,Página,Ativo,Supabase
+Página,Admin,Login Admin,/admin/login,Login do administrador,Página,Ativo,JWT
+Página,Admin,Gestão Cavalos,/admin/cavalos,CRUD de cavalos,Página,Ativo,Supabase
+Página,Admin,Gestão Coudelarias,/admin/coudelarias,CRUD de coudelarias,Página,Ativo,Supabase
+Página,Admin,CRM/Leads,/admin/crm,Gestão de leads e CRM,Página,Ativo,Supabase
+Página,Admin,Eventos,/admin/eventos,Gestão de eventos,Página,Ativo,Supabase
+Página,Admin,Depoimentos,/admin/depoimentos,Gestão de testemunhos,Página,Ativo,Supabase
+Página,Admin,Profissionais,/admin/profissionais/[id],Gestão de perfis profissionais,Página Dinâmica,Ativo,Supabase
+Página,Admin,Reviews,/admin/reviews,Gestão de avaliações,Página,Ativo,Supabase
+Página,Admin,Mensagens,/admin/mensagens,Centro de mensagens,Página,Ativo,Supabase
+Página,Admin,Calendário,/admin/calendario,Calendário e tarefas,Página,Ativo,Supabase
+Página,Admin,Instagram,/admin/instagram,Gestão Instagram,Página,Ativo,Supabase
+Página,Admin,Analytics,/admin/analytics,Dashboard de analytics,Página,Ativo,Custom Analytics
+Página,Admin,Financeiro,/admin/financeiro,Dashboard financeiro,Página,Ativo,Stripe
+Página,Admin,Estatísticas,/admin/stats,Estatísticas gerais,Página,Ativo,
+Página,Admin,Estatísticas Vendas,/admin/stats/vendas,Estatísticas de vendas,Página,Ativo,Stripe
+=== ADMIN APP (Experimental) ===,,,,,,
+Página,Admin App,Admin App Home,/admin-app,Dashboard admin experimental,Página,Ativo,
+=== CMS STUDIO ===,,,,,,
+Página,CMS,Sanity Studio,/studio/[[...tool]],Interface do Sanity CMS Studio,Página,Ativo,Sanity CMS
+=== META ROUTES ===,,,,,,
+Página,SEO,Robots.txt,/robots.ts,Geração dinâmica de robots.txt,Ficheiro,Ativo,
+Página,SEO,Sitemap,/sitemap.ts,Geração dinâmica de sitemap.xml,Ficheiro,Ativo,
+Página,SEO,OG Image,/opengraph-image.tsx,Geração dinâmica de Open Graph image,Ficheiro,Ativo,
+=== API - AUTENTICAÇÃO ===,,,,,,
+API,Autenticação,Login,POST /api/auth/login,Autenticação de utilizador,Endpoint,Ativo,Supabase Auth
+API,Autenticação,Logout,POST /api/auth/logout,Terminar sessão,Endpoint,Ativo,Supabase Auth
+API,Autenticação,Check,GET /api/auth/check,Verificar estado da autenticação,Endpoint,Ativo,Supabase Auth
+=== API - DADOS PÚBLICOS ===,,,,,,
+API,Dados,Cavalos,GET /api/cavalos,Listar cavalos,Endpoint,Ativo,Supabase
+API,Dados,Coudelarias,GET /api/coudelarias,Listar coudelarias,Endpoint,Ativo,Supabase
+API,Dados,Coudelaria Detalhe,GET /api/coudelarias/[slug],Detalhe de coudelaria,Endpoint,Ativo,Supabase
+API,Dados,Eventos,GET /api/eventos,Listar eventos,Endpoint,Ativo,Supabase
+API,Dados,Evento Detalhe,GET /api/eventos/[slug],Detalhe de evento,Endpoint,Ativo,Supabase
+API,Dados,Linhagens,GET /api/linhagens,Listar linhagens,Endpoint,Ativo,
+API,Dados,Search,GET /api/search,Pesquisa global,Endpoint,Ativo,
+API,Dados,Favoritos,GET /api/favoritos,Favoritos do utilizador,Endpoint,Ativo,
+API,Dados,Reviews,GET /api/reviews,Listar avaliações,Endpoint,Ativo,Supabase
+=== API - E-COMMERCE & PAGAMENTOS ===,,,,,,
+API,Pagamentos,Cart Recover,POST /api/cart/recover,Recuperar carrinho abandonado,Endpoint,Ativo,
+API,Pagamentos,Cart Recovery Email,POST /api/cart/send-recovery-email,Enviar email recuperação carrinho,Endpoint,Ativo,Resend
+API,Pagamentos,Cart Track,POST /api/cart/track-abandonment,Tracking de abandono de carrinho,Endpoint,Ativo,
+API,Pagamentos,Checkout,POST /api/checkout,Criar sessão de checkout,Endpoint,Ativo,Stripe
+API,Pagamentos,Tools Checkout,POST /api/tools/create-checkout,Checkout de ferramentas premium,Endpoint,Ativo,Stripe
+API,Pagamentos,Customer Portal,GET /api/tools/customer-portal,Portal do cliente Stripe,Endpoint,Ativo,Stripe
+API,Pagamentos,Stripe Webhook,POST /api/stripe/webhook,Recetor de webhooks Stripe,Endpoint,Ativo,Stripe
+API,Pagamentos,Publicidade Checkout,POST /api/publicidade/checkout,Checkout de publicidade,Endpoint,Ativo,Stripe
+API,Pagamentos,Instagram Checkout,POST /api/instagram/checkout,Checkout da loja Instagram,Endpoint,Ativo,Stripe
+API,Pagamentos,Vender Checkout,POST /api/vender-cavalo/checkout,Checkout de venda de cavalo,Endpoint,Ativo,Stripe
+=== API - CONTEÚDO & FEATURES ===,,,,,,
+API,Conteúdo,Newsletter,POST /api/newsletter,Subscrição de newsletter,Endpoint,Ativo,Resend
+API,Conteúdo,eBook Subscribe,POST /api/ebook-gratis/subscribe,Subscrição para eBook grátis,Endpoint,Ativo,Resend
+API,Conteúdo,Push Subscribe,POST /api/push/subscribe,Subscrição push notifications,Endpoint,Ativo,
+API,Conteúdo,Unsubscribe,POST /api/unsubscribe,Cancelar subscrição,Endpoint,Ativo,
+API,Conteúdo,Submit Review,POST /api/reviews,Submeter avaliação,Endpoint,Ativo,Supabase
+API,Conteúdo,Upload,POST /api/upload,Upload de ficheiros,Endpoint,Ativo,
+API,Conteúdo,Vender,POST /api/vender,Formulário de venda de cavalo,Endpoint,Ativo,Supabase
+API,Conteúdo,Instagram Inquiry,POST /api/instagram-inquiry,Pedido de informação Instagram,Endpoint,Ativo,
+API,Conteúdo,Instagram Upload,POST /api/instagram/upload,Upload de post Instagram,Endpoint,Ativo,
+API,Conteúdo,Health Check,GET /api/health,Verificação de saúde do sistema,Endpoint,Ativo,
+=== API - ADMIN ANALYTICS ===,,,,,,
+API,Admin,Traffic Analytics,GET /api/admin/analytics/traffic,Analytics de tráfego,Endpoint,Ativo,Custom Analytics
+API,Admin,Conversion Analytics,GET /api/admin/analytics/conversions,Analytics de conversões,Endpoint,Ativo,Custom Analytics
+API,Admin,Sources Analytics,GET /api/admin/analytics/sources,Analytics de fontes de tráfego,Endpoint,Ativo,Custom Analytics
+API,Admin,Estatísticas,GET /api/admin/stats,Estatísticas gerais,Endpoint,Ativo,
+API,Admin,Geo Data,GET /api/admin/geo,Dados geográficos,Endpoint,Ativo,
+API,Admin,Forecasting,GET /api/admin/forecasting,Previsões ML,Endpoint,Ativo,Custom ML
+=== API - ADMIN CRUD ===,,,,,,
+API,Admin CRUD,Cavalos List/Create,GET+POST /api/admin/cavalos,CRUD cavalos,Endpoint,Ativo,Supabase
+API,Admin CRUD,Cavalo Detail,GET+PUT+DELETE /api/admin/cavalos/[id],Detalhe cavalo,Endpoint,Ativo,Supabase
+API,Admin CRUD,Coudelarias List/Create,GET+POST /api/admin/coudelarias,CRUD coudelarias,Endpoint,Ativo,Supabase
+API,Admin CRUD,Coudelaria Detail,GET+PUT+DELETE /api/admin/coudelarias/[id],Detalhe coudelaria,Endpoint,Ativo,Supabase
+API,Admin CRUD,Eventos List/Create,GET+POST /api/admin/eventos,CRUD eventos,Endpoint,Ativo,Supabase
+API,Admin CRUD,Evento Detail,GET+PUT+DELETE /api/admin/eventos/[id],Detalhe evento,Endpoint,Ativo,Supabase
+API,Admin CRUD,Eventos Seed,POST /api/admin/eventos/seed,Seeding de eventos,Endpoint,Ativo,Supabase
+API,Admin CRUD,Eventos Confirmação,POST /api/admin/eventos/update-confirmacao,Atualizar confirmações,Endpoint,Ativo,Supabase
+API,Admin CRUD,Depoimentos List/Create,GET+POST /api/admin/depoimentos,CRUD testemunhos,Endpoint,Ativo,Supabase
+API,Admin CRUD,Depoimento Detail,GET+PUT+DELETE /api/admin/depoimentos/[id],Detalhe testemunho,Endpoint,Ativo,Supabase
+=== API - ADMIN UTILIZADORES & LEADS ===,,,,,,
+API,Admin CRM,Leads List/Create,GET+POST /api/admin/crm,CRUD de leads,Endpoint,Ativo,Supabase
+API,Admin CRM,Lead Detail,GET+PUT+DELETE /api/admin/crm/[id],Detalhe de lead,Endpoint,Ativo,Supabase
+API,Admin CRM,Users List/Create,GET+POST /api/admin/users,CRUD utilizadores,Endpoint,Ativo,Supabase
+API,Admin CRM,User Detail,GET+PUT+DELETE /api/admin/users/[id],Detalhe utilizador,Endpoint,Ativo,Supabase
+API,Admin CRM,Profissionais List/Create,GET+POST /api/admin/profissionais,CRUD profissionais,Endpoint,Ativo,Supabase
+API,Admin CRM,Profissional Detail,GET+PUT+DELETE /api/admin/profissionais/[id],Detalhe profissional,Endpoint,Ativo,Supabase
+=== API - ADMIN COMUNICAÇÕES ===,,,,,,
+API,Admin Comms,Messages List/Create,GET+POST /api/admin/messages,CRUD mensagens,Endpoint,Ativo,Supabase
+API,Admin Comms,Message Detail,GET+PUT+DELETE /api/admin/messages/[id],Detalhe mensagem,Endpoint,Ativo,Supabase
+API,Admin Comms,Message Reply,POST /api/admin/messages/[id]/reply,Responder a mensagem,Endpoint,Ativo,Supabase + Resend
+API,Admin Comms,Message Stats,GET /api/admin/messages/stats,Estatísticas mensagens,Endpoint,Ativo,Supabase
+API,Admin Comms,Bulk Messages,POST /api/admin/messages/bulk,Mensagens em massa,Endpoint,Ativo,Supabase + Resend
+API,Admin Comms,Notifications,GET+POST /api/admin/notifications,Notificações,Endpoint,Ativo,Supabase
+=== API - ADMIN REVIEWS ===,,,,,,
+API,Admin Reviews,Reviews List/Create,GET+POST /api/admin/reviews,CRUD avaliações,Endpoint,Ativo,Supabase
+API,Admin Reviews,Review Detail,GET+PUT+DELETE /api/admin/reviews/[id],Detalhe avaliação,Endpoint,Ativo,Supabase
+=== API - ADMIN FINANCEIRO ===,,,,,,
+API,Admin Finance,Overview,GET /api/admin/financeiro/overview,Resumo financeiro,Endpoint,Ativo,Stripe
+API,Admin Finance,Transactions,GET /api/admin/financeiro/transactions,Lista transações,Endpoint,Ativo,Stripe
+API,Admin Finance,MRR,GET /api/admin/financeiro/mrr,Receita recorrente mensal,Endpoint,Ativo,Stripe
+API,Admin Finance,Charts,GET /api/admin/financeiro/charts,Gráficos financeiros,Endpoint,Ativo,Stripe
+API,Admin Finance,Export,POST /api/admin/financeiro/export,Exportar dados financeiros,Endpoint,Ativo,Stripe
+=== API - ADMIN AVANÇADO ===,,,,,,
+API,Admin Avançado,Automations CRUD,GET+POST /api/admin/automations,Regras de automação,Endpoint,Ativo,Supabase
+API,Admin Avançado,Automation Logs,GET /api/admin/automations/logs,Logs de automação,Endpoint,Ativo,Supabase
+API,Admin Avançado,Execute Automation,POST /api/admin/automations/execute,Executar automação,Endpoint,Ativo,Supabase
+API,Admin Avançado,Tasks CRUD,GET+POST /api/admin/tasks,CRUD tarefas,Endpoint,Ativo,Supabase
+API,Admin Avançado,Task Detail,GET+PUT+DELETE /api/admin/tasks/[id],Detalhe tarefa,Endpoint,Ativo,Supabase
+API,Admin Avançado,Settings CRUD,GET+POST /api/admin/definicoes,CRUD definições,Endpoint,Ativo,Supabase
+API,Admin Avançado,Setting Detail,GET+PUT /api/admin/definicoes/[key],Detalhe definição,Endpoint,Ativo,Supabase
+API,Admin Avançado,Email Campaigns,POST /api/admin/campaigns,Campanhas email,Endpoint,Ativo,Resend
+API,Admin Avançado,Admin Search,POST /api/admin/search,Pesquisa admin,Endpoint,Ativo,
+API,Admin Avançado,AI Assistant,POST /api/admin/ai,Assistente IA,Endpoint,Ativo,
+API,Admin Avançado,System Logs,GET /api/admin/logs,Logs do sistema,Endpoint,Ativo,
+API,Admin Avançado,Backup,POST /api/admin/backup,Backup da base de dados,Endpoint,Ativo,Supabase
+API,Admin Avançado,Diagnostics,POST /api/admin/diagnostico,Diagnóstico do sistema,Endpoint,Ativo,
+API,Admin Avançado,Generate Report,POST /api/admin/reports/generate,Gerar relatório,Endpoint,Ativo,jsPDF
+API,Admin Avançado,Instagram List,GET+POST /api/admin/instagram/list,Lista Instagram,Endpoint,Ativo,
+API,Admin Avançado,Instagram Status,POST /api/admin/instagram/update-status,Atualizar status Instagram,Endpoint,Ativo,
+=== COMPONENTES - NAVEGAÇÃO & LAYOUT ===,,,,,,
+Componente,Layout,Navbar,/components/Navbar.tsx,Barra de navegação principal,Componente React,Ativo,
+Componente,Layout,Footer,/components/Footer.tsx,Rodapé da página,Componente React,Ativo,
+Componente,Layout,MobileBottomNav,/components/MobileBottomNav.tsx,Navegação mobile inferior,Componente React,Ativo,
+Componente,Layout,Breadcrumb,/components/Breadcrumb.tsx,Breadcrumb de navegação,Componente React,Ativo,
+Componente,Layout,ScrollToTop,/components/ScrollToTop.tsx,Botão voltar ao topo,Componente React,Ativo,
+Componente,Layout,SkipLinks,/components/SkipLinks.tsx,Links de acessibilidade,Componente React,Ativo,
+Componente,Navbar,DesktopMenu,/components/navbar/DesktopMenu.tsx,Menu desktop,Componente React,Ativo,
+Componente,Navbar,MobileMenu,/components/navbar/MobileMenu.tsx,Menu mobile,Componente React,Ativo,
+Componente,Navbar,LusitanoDropdown,/components/navbar/LusitanoDropdown.tsx,Dropdown de raça Lusitano,Componente React,Ativo,
+Componente,Navbar,NavIcons,/components/navbar/NavIcons.tsx,Ícones de navegação,Componente React,Ativo,
+=== COMPONENTES - HOMEPAGE ===,,,,,,
+Componente,Homepage,HomePage,/components/HomePage.tsx,Layout da homepage,Componente React,Ativo,
+Componente,Homepage,HomeContent,/components/HomeContent.tsx,Conteúdo da homepage,Componente React,Ativo,
+Componente,Homepage,LandingContent,/components/LandingContent.tsx,Conteúdo da landing page,Componente React,Ativo,
+Componente,Homepage,AboutContent,/components/AboutContent.tsx,Conteúdo da página sobre,Componente React,Ativo,
+=== COMPONENTES - E-COMMERCE ===,,,,,,
+Componente,Loja,CartDrawer,/components/CartDrawer.tsx,Drawer do carrinho de compras,Componente React,Ativo,Shopify
+Componente,Loja,AddToCartButton,/components/AddToCartButton.tsx,Botão adicionar ao carrinho,Componente React,Ativo,Shopify
+Componente,Loja,BuyButton,/components/BuyButton.tsx,Botão de compra,Componente React,Ativo,Shopify
+Componente,Loja,ProductDisplay,/components/ProductDisplay.tsx,Exibição de produto,Componente React,Ativo,Shopify
+Componente,Loja,ProductForm,/components/ProductForm.tsx,Formulário de produto,Componente React,Ativo,Shopify
+Componente,Loja,QuickView,/components/QuickView.tsx,Modal de visualização rápida,Componente React,Ativo,Shopify
+=== COMPONENTES - CAVALOS ===,,,,,,
+Componente,Cavalos,HorseCard,/components/HorseCard.tsx,Card de cavalo,Componente React,Ativo,
+Componente,Cavalos,HorseFavoriteButton,/components/HorseFavoriteButton.tsx,Botão de favorito,Componente React,Ativo,
+Componente,Cavalos,Pedigree,/components/Pedigree.tsx,Árvore genealógica,Componente React,Ativo,
+Componente,Cavalos,GenealogyTree,/components/GenealogyTree.tsx,Visualização de genealogia,Componente React,Ativo,
+Componente,Cavalos,LeafletMap,/components/LeafletMap.tsx,Mapa interativo,Componente React,Ativo,Leaflet
+=== COMPONENTES - INTERAÇÃO & SOCIAL ===,,,,,,
+Componente,Social,Newsletter,/components/Newsletter.tsx,Formulário de newsletter,Componente React,Ativo,Resend
+Componente,Social,NewsletterPopup,/components/NewsletterPopup.tsx,Popup de newsletter,Componente React,Ativo,Resend
+Componente,Social,ShareButtons,/components/ShareButtons.tsx,Botões de partilha social,Componente React,Ativo,
+Componente,Social,ExportButtons,/components/ExportButtons.tsx,Botões de exportação,Componente React,Ativo,
+Componente,Social,ReviewForm,/components/ReviewForm.tsx,Formulário de avaliação,Componente React,Ativo,
+Componente,Social,ReviewList,/components/ReviewList.tsx,Lista de avaliações,Componente React,Ativo,
+Componente,Social,ToolReviewForm,/components/ToolReviewForm.tsx,Avaliação de ferramentas,Componente React,Ativo,
+Componente,Social,WhatsAppButton,/components/WhatsAppButton.tsx,Botão WhatsApp,Componente React,Ativo,WhatsApp
+Componente,Social,Search,/components/Search.tsx,Pesquisa global,Componente React,Ativo,
+=== COMPONENTES - UI GENÉRICOS ===,,,,,,
+Componente,UI,AIAssistant,/components/ui/AIAssistant.tsx,Assistente IA chat,Componente React,Ativo,
+Componente,UI,AdvancedFilters,/components/ui/AdvancedFilters.tsx,Filtros avançados,Componente React,Ativo,
+Componente,UI,AnimatedCounter,/components/ui/AnimatedCounter.tsx,Contador animado,Componente React,Ativo,
+Componente,UI,Breadcrumbs,/components/ui/Breadcrumbs.tsx,Breadcrumbs UI,Componente React,Ativo,
+Componente,UI,HorizontalScrollGallery,/components/ui/HorizontalScrollGallery.tsx,Galeria horizontal,Componente React,Ativo,
+Componente,UI,MagneticButton,/components/ui/MagneticButton.tsx,Botão magnético interativo,Componente React,Ativo,
+Componente,UI,OptimizedImage,/components/ui/OptimizedImage.tsx,Imagem otimizada,Componente React,Ativo,
+Componente,UI,Pagination,/components/ui/Pagination.tsx,Paginação,Componente React,Ativo,
+Componente,UI,ParallaxSection,/components/ui/ParallaxSection.tsx,Secção parallax,Componente React,Ativo,
+Componente,UI,RevealOnScroll,/components/ui/RevealOnScroll.tsx,Reveal ao scroll,Componente React,Ativo,
+Componente,UI,Skeleton,/components/ui/Skeleton.tsx,Skeleton loader,Componente React,Ativo,
+Componente,UI,Toast,/components/ui/Toast.tsx,Notificações toast,Componente React,Ativo,
+Componente,UI,BulkActionsAdvanced,/components/ui/BulkActionsAdvanced.tsx,Ações em massa avançadas,Componente React,Ativo,
+=== COMPONENTES - TÉCNICOS ===,,,,,,
+Componente,Técnico,ErrorBoundary,/components/ErrorBoundary.tsx,Boundary de erro,Componente React,Ativo,
+Componente,Técnico,Preloader,/components/Preloader.tsx,Animação de carregamento,Componente React,Ativo,
+Componente,Técnico,SkeletonLoader,/components/SkeletonLoader.tsx,Loader esqueleto,Componente React,Ativo,
+Componente,Técnico,AnimateOnScroll,/components/AnimateOnScroll.tsx,Animação ao scroll,Componente React,Ativo,
+Componente,Técnico,LazyImage,/components/LazyImage.tsx,Imagem lazy load,Componente React,Ativo,
+Componente,Técnico,CustomCursor,/components/CustomCursor.tsx,Cursor customizado,Componente React,Ativo,
+Componente,Técnico,TextSplit,/components/TextSplit.tsx,Animação de texto,Componente React,Ativo,
+Componente,Técnico,ImageUpload,/components/ImageUpload.tsx,Upload de imagens,Componente React,Ativo,
+=== COMPONENTES - ANALYTICS & TRACKING ===,,,,,,
+Componente,Analytics,Analytics,/components/Analytics.tsx,Tracking de analytics,Componente React,Ativo,GA
+Componente,Analytics,AnalyticsScripts,/components/AnalyticsScripts.tsx,Scripts de analytics terceiros,Componente React,Ativo,GA
+Componente,Analytics,DynamicSEO,/components/DynamicSEO.tsx,SEO dinâmico,Componente React,Ativo,
+Componente,Analytics,JsonLd,/components/JsonLd.tsx,Dados estruturados JSON-LD,Componente React,Ativo,
+=== COMPONENTES - OUTROS ===,,,,,,
+Componente,Outros,CookieConsent,/components/CookieConsent.tsx,Banner de cookies,Componente React,Ativo,
+Componente,Outros,PushNotificationPrompt,/components/PushNotificationPrompt.tsx,Prompt push notifications,Componente React,Ativo,
+Componente,Outros,ServiceWorkerRegistration,/components/ServiceWorkerRegistration.tsx,Registo service worker PWA,Componente React,Ativo,
+Componente,Outros,Maintenance,/components/Maintenance.tsx,Página de manutenção,Componente React,Ativo,
+Componente,Outros,AdBanner,/components/AdBanner.tsx,Banner publicitário,Componente React,Ativo,
+Componente,Outros,AdminLogoutButton,/components/AdminLogoutButton.tsx,Botão logout admin,Componente React,Ativo,
+=== COMPONENTES - AUTENTICAÇÃO ===,,,,,,
+Componente,Auth,AuthProvider,/components/auth/AuthProvider.tsx,Provider de autenticação,Componente React,Ativo,Supabase Auth
+Componente,Auth,AuthGuard,/components/auth/AuthGuard.tsx,Proteção de rotas,Componente React,Ativo,Supabase Auth
+Componente,Auth,UserMenu,/components/auth/UserMenu.tsx,Menu de utilizador,Componente React,Ativo,
+=== COMPONENTES - CALCULADORA VALOR (14 ficheiros) ===,,,,,,
+Componente,Calculadora,CalculadoraHeader,/components/calculadora-valor/CalculadoraHeader.tsx,Cabeçalho da calculadora,Componente React,Ativo,
+Componente,Calculadora,IntroSection,/components/calculadora-valor/IntroSection.tsx,Secção introdutória,Componente React,Ativo,
+Componente,Calculadora,ResultadoDisplay,/components/calculadora-valor/ResultadoDisplay.tsx,Exibição de resultados,Componente React,Ativo,
+Componente,Calculadora,StepIdentificacao,/components/calculadora-valor/StepIdentificacao.tsx,Step identificação,Componente React,Ativo,
+Componente,Calculadora,StepGeneticaMorfologia,/components/calculadora-valor/StepGeneticaMorfologia.tsx,Step genética/morfologia,Componente React,Ativo,
+Componente,Calculadora,StepTreinoSaude,/components/calculadora-valor/StepTreinoSaude.tsx,Step treino/saúde,Componente React,Ativo,
+Componente,Calculadora,StepAndamentosTemperamento,/components/calculadora-valor/StepAndamentosTemperamento.tsx,Step andamentos/temperamento,Componente React,Ativo,
+Componente,Calculadora,StepReproducaoMercado,/components/calculadora-valor/StepReproducaoMercado.tsx,Step reprodução/mercado,Componente React,Ativo,
+Componente,Calculadora,StepNavigation,/components/calculadora-valor/StepNavigation.tsx,Navegação entre steps,Componente React,Ativo,
+=== COMPONENTES - ANÁLISE PERFIL (20 ficheiros) ===,,,,,,
+Componente,Análise Perfil,IntroSection,/components/analise-perfil/IntroSection.tsx,Introdução do quiz,Componente React,Ativo,
+Componente,Análise Perfil,QuizSection,/components/analise-perfil/QuizSection.tsx,Secção de perguntas,Componente React,Ativo,
+Componente,Análise Perfil,ResultHeader,/components/analise-perfil/ResultHeader.tsx,Cabeçalho resultados,Componente React,Ativo,
+Componente,Análise Perfil,ResultTabs,/components/analise-perfil/ResultTabs.tsx,Tabs de resultados,Componente React,Ativo,
+Componente,Análise Perfil,RadarChart,/components/analise-perfil/RadarChart.tsx,Gráfico radar,Componente React,Ativo,
+Componente,Análise Perfil,ScoreDistribution,/components/analise-perfil/ScoreDistribution.tsx,Distribuição de pontuação,Componente React,Ativo,
+Componente,Análise Perfil,ProfileTab,/components/analise-perfil/tabs/ProfileTab.tsx,Tab de perfil,Componente React,Ativo,
+Componente,Análise Perfil,HorseTab,/components/analise-perfil/tabs/HorseTab.tsx,Tab recomendações cavalos,Componente React,Ativo,
+Componente,Análise Perfil,AnalysisTab,/components/analise-perfil/tabs/AnalysisTab.tsx,Tab análise detalhada,Componente React,Ativo,
+Componente,Análise Perfil,BudgetPlannerTab,/components/analise-perfil/tabs/BudgetPlannerTab.tsx,Tab planeamento orçamento,Componente React,Ativo,
+Componente,Análise Perfil,CostsTab,/components/analise-perfil/tabs/CostsTab.tsx,Tab custos,Componente React,Ativo,
+Componente,Análise Perfil,NextStepsTab,/components/analise-perfil/tabs/NextStepsTab.tsx,Tab próximos passos,Componente React,Ativo,
+Componente,Análise Perfil,TimelineTab,/components/analise-perfil/tabs/TimelineTab.tsx,Tab timeline,Componente React,Ativo,
+Componente,Análise Perfil,ShoppingChecklistTab,/components/analise-perfil/tabs/ShoppingChecklistTab.tsx,Tab checklist compras,Componente React,Ativo,
+=== COMPONENTES - VENDER CAVALO (12 ficheiros) ===,,,,,,
+Componente,Vender,PageHeader,/components/vender-cavalo/PageHeader.tsx,Cabeçalho da página,Componente React,Ativo,
+Componente,Vender,StepIndicator,/components/vender-cavalo/StepIndicator.tsx,Indicador de progresso,Componente React,Ativo,
+Componente,Vender,StepIdentificacao,/components/vender-cavalo/StepIdentificacao.tsx,Step identificação,Componente React,Ativo,
+Componente,Vender,StepLinhagem,/components/vender-cavalo/StepLinhagem.tsx,Step linhagem,Componente React,Ativo,
+Componente,Vender,StepTreinoSaude,/components/vender-cavalo/StepTreinoSaude.tsx,Step treino/saúde,Componente React,Ativo,
+Componente,Vender,StepPrecoApresentacao,/components/vender-cavalo/StepPrecoApresentacao.tsx,Step preço/apresentação,Componente React,Ativo,
+Componente,Vender,StepProprietario,/components/vender-cavalo/StepProprietario.tsx,Step proprietário,Componente React,Ativo,
+Componente,Vender,StepPagamento,/components/vender-cavalo/StepPagamento.tsx,Step pagamento,Componente React,Ativo,Stripe
+Componente,Vender,FormNavigation,/components/vender-cavalo/FormNavigation.tsx,Navegação do formulário,Componente React,Ativo,
+Componente,Vender,FormErrors,/components/vender-cavalo/FormErrors.tsx,Exibição de erros,Componente React,Ativo,
+Componente,Vender,PricingBanner,/components/vender-cavalo/PricingBanner.tsx,Banner de preços,Componente React,Ativo,
+=== COMPONENTES - VERIFICADOR COMPATIBILIDADE (8 ficheiros) ===,,,,,,
+Componente,Compatibilidade,IntroHero,/components/verificador-compatibilidade/IntroHero.tsx,Hero introdutório,Componente React,Ativo,
+Componente,Compatibilidade,HorseForm,/components/verificador-compatibilidade/HorseForm.tsx,Formulário de cavalo,Componente React,Ativo,
+Componente,Compatibilidade,CompatibilityResults,/components/verificador-compatibilidade/CompatibilityResults.tsx,Resultados compatibilidade,Componente React,Ativo,
+=== COMPONENTES - JORNAL (6 ficheiros) ===,,,,,,
+Componente,Jornal,ArticleComponents,/components/journal/ArticleComponents.tsx,Componentes de artigo,Componente React,Ativo,
+Componente,Jornal,PortableTextComponents,/components/journal/PortableTextComponents.tsx,Renderização rich text Sanity,Componente React,Ativo,Sanity
+Componente,Jornal,FloatingTOC,/components/journal/FloatingTOC.tsx,Índice flutuante,Componente React,Ativo,
+Componente,Jornal,ReadingProgressBar,/components/journal/ReadingProgressBar.tsx,Barra de progresso leitura,Componente React,Ativo,
+Componente,Jornal,RelatedArticles,/components/journal/RelatedArticles.tsx,Artigos relacionados,Componente React,Ativo,
+Componente,Jornal,SourcesList,/components/journal/SourcesList.tsx,Lista de fontes,Componente React,Ativo,
+=== COMPONENTES - PROFISSIONAIS (11 ficheiros) ===,,,,,,
+Componente,Profissionais,CardProfissional,/components/profissionais/CardProfissional.tsx,Card de profissional,Componente React,Ativo,
+Componente,Profissionais,ModalProfissional,/components/profissionais/ModalProfissional.tsx,Modal de profissional,Componente React,Ativo,
+Componente,Profissionais,CategoriasTabs,/components/profissionais/CategoriasTabs.tsx,Tabs de categorias,Componente React,Ativo,
+Componente,Profissionais,SearchFilters,/components/profissionais/SearchFilters.tsx,Filtros de pesquisa,Componente React,Ativo,
+Componente,Profissionais,EstatisticasCard,/components/profissionais/EstatisticasCard.tsx,Card de estatísticas,Componente React,Ativo,
+Componente,Profissionais,MetricasPanel,/components/profissionais/MetricasPanel.tsx,Painel de métricas,Componente React,Ativo,
+Componente,Profissionais,BadgeVerificacao,/components/profissionais/BadgeVerificacao.tsx,Badge de verificação,Componente React,Ativo,
+Componente,Profissionais,EventosSection,/components/profissionais/EventosSection.tsx,Secção de eventos,Componente React,Ativo,
+=== COMPONENTES - PIROPLASMOSE (15 ficheiros) ===,,,,,,
+Componente,Piroplasmose,SeccaoHeader,/components/piroplasmose/SeccaoHeader.tsx,Cabeçalho de secção,Componente React,Ativo,
+Componente,Piroplasmose,SeccaoOQue,/components/piroplasmose/SeccaoOQue.tsx,O que é a piroplasmose,Componente React,Ativo,
+Componente,Piroplasmose,SeccaoOlimpiadas,/components/piroplasmose/SeccaoOlimpiadas.tsx,Contexto olímpico,Componente React,Ativo,
+Componente,Piroplasmose,SeccaoPortugal,/components/piroplasmose/SeccaoPortugal.tsx,Info específica Portugal,Componente React,Ativo,
+Componente,Piroplasmose,SeccaoRegulamentacao,/components/piroplasmose/SeccaoRegulamentacao.tsx,Regulamentação,Componente React,Ativo,
+Componente,Piroplasmose,SeccaoTratamento,/components/piroplasmose/SeccaoTratamento.tsx,Tratamento,Componente React,Ativo,
+Componente,Piroplasmose,SeccaoExportacao,/components/piroplasmose/SeccaoExportacao.tsx,Regulamentos exportação,Componente React,Ativo,
+Componente,Piroplasmose,SeccaoFontes,/components/piroplasmose/SeccaoFontes.tsx,Fontes e referências,Componente React,Ativo,
+Componente,Piroplasmose,SeccaoConclusao,/components/piroplasmose/SeccaoConclusao.tsx,Conclusão,Componente React,Ativo,
+=== COMPONENTES - CAVALOS FAMOSOS (7 ficheiros) ===,,,,,,
+Componente,Cavalos Famosos,CavaloCard,/components/cavalos-famosos/CavaloCard.tsx,Card de cavalo famoso,Componente React,Ativo,
+Componente,Cavalos Famosos,ArvoreGenealogica,/components/cavalos-famosos/ArvoreGenealogica.tsx,Árvore genealógica,Componente React,Ativo,
+Componente,Cavalos Famosos,ModalDetalhes,/components/cavalos-famosos/ModalDetalhes.tsx,Modal de detalhes,Componente React,Ativo,
+Componente,Cavalos Famosos,TimelinePerformance,/components/cavalos-famosos/TimelinePerformance.tsx,Timeline de performance,Componente React,Ativo,
+Componente,Cavalos Famosos,EstatisticasDescendentes,/components/cavalos-famosos/EstatisticasDescendentes.tsx,Estatísticas descendentes,Componente React,Ativo,
+Componente,Cavalos Famosos,IndiceReproducao,/components/cavalos-famosos/IndiceReproducao.tsx,Índice de reprodução,Componente React,Ativo,
+=== COMPONENTES - FERRAMENTAS PREMIUM (24 ficheiros) ===,,,,,,
+Componente,Tools,AnimatedGauge,/components/tools/AnimatedGauge.tsx,Gauge animado,Componente React,Ativo,
+Componente,Tools,AnimatedRing,/components/tools/AnimatedRing.tsx,Anel animado,Componente React,Ativo,
+Componente,Tools,BlurredProSection,/components/tools/BlurredProSection.tsx,Secção premium bloqueada,Componente React,Ativo,
+Componente,Tools,BreedingCalendar,/components/tools/BreedingCalendar.tsx,Calendário de reprodução,Componente React,Ativo,
+Componente,Tools,Confetti,/components/tools/Confetti.tsx,Animação confetti,Componente React,Ativo,
+Componente,Tools,CostProjectionTable,/components/tools/CostProjectionTable.tsx,Tabela projeção custos,Componente React,Ativo,
+Componente,Tools,FoalValueProjection,/components/tools/FoalValueProjection.tsx,Projeção valor potro,Componente React,Ativo,
+Componente,Tools,HorseSilhouette,/components/tools/HorseSilhouette.tsx,Silhueta de cavalo,Componente React,Ativo,
+Componente,Tools,HorseVerdictCard,/components/tools/HorseVerdictCard.tsx,Card de veredicto,Componente React,Ativo,
+Componente,Tools,InvestmentTimeline,/components/tools/InvestmentTimeline.tsx,Timeline investimento,Componente React,Ativo,
+Componente,Tools,MarketPositionChart,/components/tools/MarketPositionChart.tsx,Gráfico posição mercado,Componente React,Ativo,
+Componente,Tools,OffspringRadar,/components/tools/OffspringRadar.tsx,Radar descendentes,Componente React,Ativo,
+Componente,Tools,Paywall,/components/tools/Paywall.tsx,Paywall premium,Componente React,Ativo,Stripe
+Componente,Tools,ProUpgradeCard,/components/tools/ProUpgradeCard.tsx,Upsell Pro,Componente React,Ativo,
+Componente,Tools,RegionalMarketMap,/components/tools/RegionalMarketMap.tsx,Mapa mercado regional,Componente React,Ativo,
+Componente,Tools,ResultActions,/components/tools/ResultActions.tsx,Ações de resultado,Componente React,Ativo,
+Componente,Tools,SliderInput,/components/tools/SliderInput.tsx,Input slider,Componente React,Ativo,
+Componente,Tools,SubscriptionBanner,/components/tools/SubscriptionBanner.tsx,Banner subscrição,Componente React,Ativo,
+Componente,Tools,Tooltip,/components/tools/Tooltip.tsx,Tooltip,Componente React,Ativo,
+Componente,Tools,TrainingROI,/components/tools/TrainingROI.tsx,ROI treino,Componente React,Ativo,
+=== COMPONENTES - ADMIN APP (37 ficheiros) ===,,,,,,
+Componente,Admin App,DashboardContent,/components/admin-app/DashboardContent.tsx,Dashboard principal,Componente React,Ativo,
+Componente,Admin App,CavalosContent,/components/admin-app/CavalosContent.tsx,Gestão cavalos,Componente React,Ativo,
+Componente,Admin App,CoudelariasContent,/components/admin-app/CoudelariasContent.tsx,Gestão coudelarias,Componente React,Ativo,
+Componente,Admin App,EventosContent,/components/admin-app/EventosContent.tsx,Gestão eventos,Componente React,Ativo,
+Componente,Admin App,MensagensContent,/components/admin-app/MensagensContent.tsx,Mensagens,Componente React,Ativo,
+Componente,Admin App,DepoimentosContent,/components/admin-app/DepoimentosContent.tsx,Testemunhos,Componente React,Ativo,
+Componente,Admin App,ProfissionaisContent,/components/admin-app/ProfissionaisContent.tsx,Profissionais,Componente React,Ativo,
+Componente,Admin App,UsersContent,/components/admin-app/UsersContent.tsx,Gestão utilizadores,Componente React,Ativo,
+Componente,Admin App,ReviewsContent,/components/admin-app/ReviewsContent.tsx,Gestão reviews,Componente React,Ativo,
+Componente,Admin App,CRMContent,/components/admin-app/CRMContent.tsx,CRM básico,Componente React,Ativo,
+Componente,Admin App,CRMAdvancedContent,/components/admin-app/CRMAdvancedContent.tsx,CRM avançado,Componente React,Ativo,
+Componente,Admin App,CRMPipelineContent,/components/admin-app/CRMPipelineContent.tsx,Pipeline vendas,Componente React,Ativo,
+Componente,Admin App,AnalyticsContent,/components/admin-app/AnalyticsContent.tsx,Dashboard analytics,Componente React,Ativo,
+Componente,Admin App,FinanceiroContent,/components/admin-app/FinanceiroContent.tsx,Dashboard financeiro,Componente React,Ativo,
+Componente,Admin App,InstagramContent,/components/admin-app/InstagramContent.tsx,Gestão Instagram,Componente React,Ativo,
+Componente,Admin App,LogsContent,/components/admin-app/LogsContent.tsx,Logs do sistema,Componente React,Ativo,
+Componente,Admin App,NotificationCenter,/components/admin-app/NotificationCenter.tsx,Centro notificações,Componente React,Ativo,
+Componente,Admin App,AutomationsContent,/components/admin-app/AutomationsContent.tsx,Automações,Componente React,Ativo,
+Componente,Admin App,TasksContent,/components/admin-app/TasksContent.tsx,Gestão tarefas,Componente React,Ativo,
+Componente,Admin App,DefinicoesContent,/components/admin-app/DefinicoesContent.tsx,Definições,Componente React,Ativo,
+Componente,Admin App,CupoesContent,/components/admin-app/CupoesContent.tsx,Cupões/Descontos,Componente React,Ativo,
+Componente,Admin App,GeoAnalyticsContent,/components/admin-app/GeoAnalyticsContent.tsx,Analytics geográfico,Componente React,Ativo,
+Componente,Admin App,ForecastingContent,/components/admin-app/ForecastingContent.tsx,Previsões,Componente React,Ativo,
+Componente,Admin App,EmailCampaignsContent,/components/admin-app/EmailCampaignsContent.tsx,Campanhas email,Componente React,Ativo,
+Componente,Admin App,ComparePerformanceContent,/components/admin-app/ComparePerformanceContent.tsx,Comparação performance,Componente React,Ativo,
+Componente,Admin App,ConversionFunnel,/components/admin-app/ConversionFunnel.tsx,Funil conversão,Componente React,Ativo,
+Componente,Admin App,PortugalHeatmap,/components/admin-app/PortugalHeatmap.tsx,Heatmap Portugal,Componente React,Ativo,
+Componente,Admin App,TemporalComparison,/components/admin-app/TemporalComparison.tsx,Comparação temporal,Componente React,Ativo,
+Componente,Admin App,ChatContent,/components/admin-app/ChatContent.tsx,Chat/Mensagens,Componente React,Ativo,
+Componente,Admin App,BulkActions,/components/admin-app/BulkActions.tsx,Ações em massa,Componente React,Ativo,
+Componente,Admin App,GlobalSearch,/components/admin-app/GlobalSearch.tsx,Pesquisa global admin,Componente React,Ativo,
+=== HOOKS CUSTOMIZADOS ===,,,,,,
+Hook,React Hook,useAnalytics,/hooks/useAnalytics.ts,Tracking de analytics,Hook,Ativo,GA
+Hook,React Hook,useCartAbandonment,/hooks/useCartAbandonment.ts,Tracking abandono carrinho,Hook,Ativo,
+Hook,React Hook,useCountUp,/hooks/useCountUp.ts,Animação numérica,Hook,Ativo,
+Hook,React Hook,useDebounce,/hooks/useDebounce.ts,Debounce de valores,Hook,Ativo,
+Hook,React Hook,useFocusTrap,/hooks/useFocusTrap.ts,Gestão de foco (a11y),Hook,Ativo,
+Hook,React Hook,useInViewOnce,/hooks/useInViewOnce.ts,Intersection Observer,Hook,Ativo,
+Hook,React Hook,useLocalStorage,/hooks/useLocalStorage.ts,Persistência local storage,Hook,Ativo,
+Hook,React Hook,useMediaQuery,/hooks/useMediaQuery.ts,Deteção media queries,Hook,Ativo,
+Hook,React Hook,useTilt3D,/hooks/useTilt3D.ts,Efeito tilt 3D,Hook,Ativo,
+Hook,React Hook,useToolAccess,/hooks/useToolAccess.ts,Controlo acesso ferramentas,Hook,Ativo,Stripe
+Hook,React Hook,useKeyboardShortcuts,/hooks/useKeyboardShortcuts.ts,Atalhos de teclado,Hook,Ativo,
+=== CONTEXT PROVIDERS ===,,,,,,
+Context,Provider,CartContext,/context/CartContext.tsx,Estado do carrinho,Context Provider,Ativo,Shopify
+Context,Provider,HorseFavoritesContext,/context/HorseFavoritesContext.tsx,Gestão de favoritos,Context Provider,Ativo,
+Context,Provider,LanguageContext,/context/LanguageContext.tsx,Troca de idioma i18n,Context Provider,Ativo,
+Context,Provider,TabContext,/context/TabContext.tsx,Estado de tabs,Context Provider,Ativo,
+Context,Provider,ThemeContext,/context/ThemeContext.tsx,Tema claro/escuro,Context Provider,Ativo,
+Context,Provider,ToastContext,/context/ToastContext.tsx,Sistema notificações,Context Provider,Ativo,
+Context,Provider,WishlistContext,/context/WishlistContext.tsx,Gestão wishlist,Context Provider,Ativo,
+=== SERVIÇOS & UTILITÁRIOS ===,,,,,,
+Serviço,Auth,admin-auth,/lib/admin-auth.ts,Autenticação admin (JWT),Utilitário,Ativo,Jose JWT
+Serviço,Auth,auth,/lib/auth.ts,Autenticação utilizador,Utilitário,Ativo,Supabase
+Serviço,API,client,/lib/client.ts,Cliente API,Utilitário,Ativo,
+Serviço,Analytics,analytics,/lib/analytics.ts,Motor de analytics,Utilitário,Ativo,GA
+Serviço,Analytics,analytics-events,/lib/analytics-events.ts,Definições de eventos,Utilitário,Ativo,
+Serviço,Analytics,webVitals,/lib/webVitals.ts,Web Vitals tracking,Utilitário,Ativo,
+Serviço,Pagamentos,stripe,/lib/stripe.ts,SDK Stripe,Utilitário,Ativo,Stripe
+Serviço,E-commerce,shopify,/lib/shopify.ts,Integração Shopify,Utilitário,Ativo,Shopify
+Serviço,Email,resend,/lib/resend.ts,Serviço de email,Utilitário,Ativo,Resend
+Serviço,Base Dados,supabase,/lib/supabase.ts,Cliente Supabase,Utilitário,Ativo,Supabase
+Serviço,Base Dados,supabase-server,/lib/supabase-server.ts,Supabase server-side,Utilitário,Ativo,Supabase
+Serviço,Base Dados,supabase-browser,/lib/supabase-browser.ts,Supabase browser,Utilitário,Ativo,Supabase
+Serviço,CMS,sanity-queries,/lib/sanity-queries.ts,Queries GROQ Sanity,Utilitário,Ativo,Sanity
+Serviço,CMS,live,/lib/live.ts,Sanity Live Preview,Utilitário,Ativo,Sanity
+Serviço,Imagem,image,/lib/image.ts,Utilitários de imagem,Utilitário,Ativo,
+Serviço,Imagem,image-utils,/lib/image-utils.ts,Helpers de imagem,Utilitário,Ativo,
+Serviço,Cache,cache,/lib/cache.ts,Cache em memória,Utilitário,Ativo,
+Serviço,Utilitários,utils,/lib/utils.ts,Utilitários gerais,Utilitário,Ativo,
+Serviço,Config,constants,/lib/constants.ts,Constantes da app,Utilitário,Ativo,
+Serviço,Config,env,/lib/env.ts,Validação de ambiente,Utilitário,Ativo,
+Serviço,i18n,i18n,/lib/i18n.ts,Internacionalização,Utilitário,Ativo,
+Serviço,Validação,validation,/lib/validation.ts,Validação de input,Utilitário,Ativo,Zod
+Serviço,Validação,schemas,/lib/schemas.ts,Schemas Zod,Utilitário,Ativo,Zod
+Serviço,Segurança,rate-limit,/lib/rate-limit.ts,Rate limiting,Utilitário,Ativo,
+Serviço,Erros,error-handling,/lib/error-handling.ts,Gestão de erros,Utilitário,Ativo,Sentry
+Serviço,Logging,logger,/lib/logger.ts,Logger,Utilitário,Ativo,
+Serviço,Notificações,notifications,/lib/notifications.ts,Sistema notificações,Utilitário,Ativo,
+Serviço,API,api-response,/lib/api-response.ts,Helpers resposta API,Utilitário,Ativo,
+Serviço,Export,export,/lib/export.ts,Exportação de dados,Utilitário,Ativo,
+Serviço,Backup,backup,/lib/backup.ts,Utilitários de backup,Utilitário,Ativo,Supabase
+Serviço,Automação,automations,/lib/automations.ts,Motor de automação,Utilitário,Ativo,
+Serviço,ML,mlForecasting,/lib/mlForecasting.ts,Previsões ML,Utilitário,Ativo,
+Serviço,PDF,generatePDF,/lib/generatePDF.ts,Geração de PDF,Utilitário,Ativo,jsPDF
+Serviço,Monitoring,sentry,/lib/sentry.ts,Error tracking,Utilitário,Ativo,Sentry
+=== MODELOS DE DADOS / TIPOS ===,,,,,,
+Tipo,TypeScript,Cavalo,/types/cavalo.ts,Modelo de cavalo,Type Definition,Ativo,
+Tipo,TypeScript,Product,/types/product.ts,Modelo de produto/loja,Type Definition,Ativo,
+Tipo,TypeScript,Lead,/types/lead.ts,Modelo de lead CRM,Type Definition,Ativo,
+Tipo,TypeScript,Review,/types/review.ts,Modelo de avaliação,Type Definition,Ativo,
+=== DADOS ESTÁTICOS ===,,,,,,
+Dados,Conteúdo,Articles Data,/data/articlesData.tsx,Dados de artigos do blog (57.8 KB),Dados,Ativo,
+Dados,Conteúdo,Articles List,/data/articlesList.ts,Índice de artigos,Dados,Ativo,
+Dados,Conteúdo,Blog,/data/blog.ts,Metadata do blog,Dados,Ativo,
+Dados,Conteúdo,Cavalos,/data/cavalos.ts,Dados de referência cavalos,Dados,Ativo,
+Dados,Conteúdo,FAQ,/data/faqData.ts,Entradas FAQ,Dados,Ativo,
+=== SCHEMAS SANITY CMS ===,,,,,,
+Schema,Sanity,Cavalo,/sanity/schemaTypes/cavalo.ts,Schema documento cavalo,Schema CMS,Ativo,Sanity
+Schema,Sanity,Empresa,/sanity/schemaTypes/empresa.ts,Schema negócio/coudelaria,Schema CMS,Ativo,Sanity
+Schema,Sanity,Subscritor,/sanity/schemaTypes/subscritor.ts,Schema subscritor,Schema CMS,Ativo,Sanity
+Schema,Sanity,Artigo,/sanity/schemaTypes/artigoType.ts,Schema artigo/blog,Schema CMS,Ativo,Sanity
+Schema,Sanity,Post,/sanity/schemaTypes/postType.ts,Schema post,Schema CMS,Ativo,Sanity
+Schema,Sanity,Category,/sanity/schemaTypes/categoryType.ts,Schema categoria,Schema CMS,Ativo,Sanity
+Schema,Sanity,Author,/sanity/schemaTypes/authorType.ts,Schema autor,Schema CMS,Ativo,Sanity
+Schema,Sanity,Block Content,/sanity/schemaTypes/blockContentType.ts,Schema rich text,Schema CMS,Ativo,Sanity
+=== SCHEMAS SQL (SUPABASE) ===,,,,,,
+Database,SQL,Schema Base,/supabase/schema.sql,Schema base PostgreSQL,SQL,Ativo,Supabase
+Database,SQL,Coudelarias,/supabase/coudelarias.sql,Schema coudelarias,SQL,Ativo,Supabase
+Database,SQL,Instagram,/supabase/instagram_uploads.sql,Schema uploads Instagram,SQL,Ativo,Supabase
+=== INTEGRAÇÕES TERCEIROS ===,,,,,,
+Integração,Pagamentos,Stripe,stripe.ts + webhooks,Checkout + Subscrições + Portal cliente,SDK,Ativo,v20.3.0
+Integração,Email,Resend,resend.ts,Envio emails transacionais e campanhas,SDK,Ativo,v6.9.1
+Integração,E-commerce,Shopify,shopify.ts,Catálogo produtos + inventário,SDK,Ativo,v20.3.0
+Integração,CMS,Sanity,sanity.config.ts,Gestão conteúdo + Studio,SDK,Ativo,v5.9.0
+Integração,Base Dados,Supabase,supabase.ts,PostgreSQL + Auth + Storage,SDK,Ativo,
+Integração,Monitoring,Sentry,sentry.*.config.ts,Error tracking + Performance,SDK,Ativo,v10.38.0
+Integração,Analytics,Google Analytics,Analytics.tsx,Tracking visitantes,Script,Ativo,
+Integração,Maps,Leaflet,LeafletMap.tsx,Mapas interativos,SDK,Ativo,v1.9.4
+Integração,Social,WhatsApp,WhatsAppButton.tsx,Contacto via WhatsApp,Widget,Ativo,
+Integração,Social,Instagram,instagram/,Loja Instagram + uploads,Custom,Ativo,
+=== INTERNACIONALIZAÇÃO ===,,,,,,
+i18n,Locale,Português,/locales/pt.json,Tradução portuguesa (46.6 KB),JSON,Ativo,
+i18n,Locale,English,/locales/en.json,Tradução inglesa (44.3 KB),JSON,Ativo,
+i18n,Locale,Español,/locales/es.json,Tradução espanhola (46.6 KB),JSON,Ativo,
+=== TESTES ===,,,,,,
+Teste,API,Auth Login,/__tests__/api/auth-login.test.ts,Teste login API,Test,Ativo,Vitest
+Teste,API,Cavalos,/__tests__/api/cavalos.test.ts,Teste API cavalos,Test,Ativo,Vitest
+Teste,API,eBook,/__tests__/api/ebook-subscribe.test.ts,Teste subscrição eBook,Test,Ativo,Vitest
+Teste,API,Favoritos,/__tests__/api/favoritos.test.ts,Teste API favoritos,Test,Ativo,Vitest
+Teste,API,Health,/__tests__/api/health.test.ts,Teste health check,Test,Ativo,Vitest
+Teste,API,Newsletter,/__tests__/api/newsletter.test.ts,Teste API newsletter,Test,Ativo,Vitest
+Teste,API,Reviews,/__tests__/api/reviews.test.ts,Teste API reviews,Test,Ativo,Vitest
+Teste,API,Search,/__tests__/api/search.test.ts,Teste API pesquisa,Test,Ativo,Vitest
+Teste,API,Unsubscribe,/__tests__/api/unsubscribe.test.ts,Teste cancelar subscrição,Test,Ativo,Vitest
+Teste,Página,Análise Perfil,/__tests__/app/analise-perfil/page.test.tsx,Teste página análise,Test,Ativo,Vitest
+Teste,Página,Calculadora,/__tests__/app/calculadora-valor/page.test.tsx,Teste calculadora valor,Test,Ativo,Vitest
+Teste,Página,Cavalo Detalhe,/__tests__/app/cavalo/[slug]/page.test.tsx,Teste detalhe cavalo,Test,Ativo,Vitest
+Teste,Página,Cavalos Famosos,/__tests__/app/cavalos-famosos/page.test.tsx,Teste cavalos famosos,Test,Ativo,Vitest
+Teste,Página,Comparador,/__tests__/app/comparador-cavalos/page.test.tsx,Teste comparador,Test,Ativo,Vitest
+Teste,Página,Diretório,/__tests__/app/directorio/page.test.tsx,Teste diretório,Test,Ativo,Vitest
+Teste,Página,Eventos,/__tests__/app/eventos/page.test.tsx,Teste eventos,Test,Ativo,Vitest
+Teste,Página,Ferramentas,/__tests__/app/ferramentas/page.test.tsx,Teste ferramentas,Test,Ativo,Vitest
+Teste,Página,Jornal,/__tests__/app/jornal/page.test.tsx,Teste jornal,Test,Ativo,Vitest
+Teste,Página,Linhagens,/__tests__/app/linhagens/page.test.tsx,Teste linhagens,Test,Ativo,Vitest
+Teste,Página,Loja,/__tests__/app/loja/page.test.tsx,Teste loja,Test,Ativo,Vitest
+Teste,Página,Marketplace,/__tests__/app/marketplace/page.test.tsx,Teste marketplace,Test,Ativo,Vitest
+Teste,Página,Minha Conta,/__tests__/app/minha-conta/page.test.tsx,Teste conta,Test,Ativo,Vitest
+Teste,Página,Vender Cavalo,/__tests__/app/vender-cavalo/page.test.tsx,Teste vender cavalo,Test,Ativo,Vitest
+Teste,Página,Compatibilidade,/__tests__/app/verificador-compatibilidade/page.test.tsx,Teste compatibilidade,Test,Ativo,Vitest
+Teste,Componente,AddToCartButton,/__tests__/components/AddToCartButton.test.tsx,Teste botão carrinho,Test,Ativo,Vitest
+Teste,Componente,CartDrawer,/__tests__/components/CartDrawer.test.tsx,Teste drawer carrinho,Test,Ativo,Vitest
+Teste,Componente,ErrorBoundary,/__tests__/components/ErrorBoundary.test.tsx,Teste error boundary,Test,Ativo,Vitest
+Teste,Componente,Footer,/__tests__/components/Footer.test.tsx,Teste footer,Test,Ativo,Vitest
+Teste,Componente,HomeContent,/__tests__/components/HomeContent.test.tsx,Teste homepage,Test,Ativo,Vitest
+Teste,Componente,JsonLd,/__tests__/components/JsonLd.test.tsx,Teste JSON-LD,Test,Ativo,Vitest
+Teste,Componente,MobileBottomNav,/__tests__/components/MobileBottomNav.test.tsx,Teste nav mobile,Test,Ativo,Vitest
+Teste,Componente,Navbar,/__tests__/components/Navbar.test.tsx,Teste navbar,Test,Ativo,Vitest
+Teste,Componente,Newsletter,/__tests__/components/Newsletter.test.tsx,Teste newsletter,Test,Ativo,Vitest
+Teste,Componente,Paywall,/__tests__/components/Paywall.test.tsx,Teste paywall,Test,Ativo,Vitest
+Teste,Componente,QuickView,/__tests__/components/QuickView.test.tsx,Teste quick view,Test,Ativo,Vitest
+Teste,Componente,Search,/__tests__/components/Search.test.tsx,Teste pesquisa,Test,Ativo,Vitest
+Teste,Componente,SubscriptionBanner,/__tests__/components/SubscriptionBanner.test.tsx,Teste banner subscrição,Test,Ativo,Vitest
+Teste,Componente,ToolReviewForm,/__tests__/components/ToolReviewForm.test.tsx,Teste review form,Test,Ativo,Vitest
+Teste,Componente,CavaloCard,/__tests__/components/cavalos-famosos/CavaloCard.test.tsx,Teste card cavalo,Test,Ativo,Vitest
+Teste,Context,CartContext,/__tests__/context/CartContext.test.tsx,Teste contexto carrinho,Test,Ativo,Vitest
+Teste,Context,HorseFavorites,/__tests__/context/HorseFavoritesContext.test.tsx,Teste contexto favoritos,Test,Ativo,Vitest
+Teste,Lib,Analytics,/__tests__/lib/analytics.test.ts,Teste analytics,Test,Ativo,Vitest
+Teste,Lib,Automations,/__tests__/lib/automations.test.ts,Teste automações,Test,Ativo,Vitest
+Teste,Lib,Cache,/__tests__/lib/cache.test.ts,Teste cache,Test,Ativo,Vitest
+Teste,Lib,Error Handling,/__tests__/lib/error-handling.test.ts,Teste erros,Test,Ativo,Vitest
+Teste,Lib,Export,/__tests__/lib/export.test.ts,Teste exportação,Test,Ativo,Vitest
+Teste,Lib,i18n,/__tests__/lib/i18n.test.ts,Teste i18n,Test,Ativo,Vitest
+Teste,Lib,ML Forecasting,/__tests__/lib/mlForecasting.test.ts,Teste ML,Test,Ativo,Vitest
+Teste,Lib,Rate Limit,/__tests__/lib/rate-limit.test.ts,Teste rate limit,Test,Ativo,Vitest
+Teste,Lib,Schemas,/__tests__/lib/schemas.test.ts,Teste schemas,Test,Ativo,Vitest
+Teste,Lib,Shopify,/__tests__/lib/shopify.test.ts,Teste Shopify,Test,Ativo,Vitest
+Teste,Lib,Validation,/__tests__/lib/validation.test.ts,Teste validação,Test,Ativo,Vitest
+Teste,Middleware,Middleware,/__tests__/middleware.test.ts,Teste middleware,Test,Ativo,Vitest
+=== ASSETS PÚBLICOS ===,,,,,,
+Asset,Logo,Logo Principal,/public/logo.png,Logo do Portal Lusitano,Imagem,Ativo,
+Asset,Ícone PWA,72x72,/public/icons/icon-72x72.png,Ícone PWA 72px,Imagem,Ativo,
+Asset,Ícone PWA,96x96,/public/icons/icon-96x96.png,Ícone PWA 96px,Imagem,Ativo,
+Asset,Ícone PWA,128x128,/public/icons/icon-128x128.png,Ícone PWA 128px,Imagem,Ativo,
+Asset,Ícone PWA,144x144,/public/icons/icon-144x144.png,Ícone PWA 144px,Imagem,Ativo,
+Asset,Ícone PWA,152x152,/public/icons/icon-152x152.png,Ícone PWA 152px,Imagem,Ativo,
+Asset,Ícone PWA,192x192,/public/icons/icon-192x192.png,Ícone PWA 192px,Imagem,Ativo,
+Asset,Ícone PWA,384x384,/public/icons/icon-384x384.png,Ícone PWA 384px,Imagem,Ativo,
+Asset,Ícone PWA,512x512,/public/icons/icon-512x512.png,Ícone PWA 512px,Imagem,Ativo,
+Asset,Pagamentos,Visa,/public/images/payments/visa.svg,Logo Visa,SVG,Ativo,
+Asset,Pagamentos,Mastercard,/public/images/payments/mastercard.svg,Logo Mastercard,SVG,Ativo,
+Asset,Screenshots,Desktop/Mobile,/public/screenshots/,Screenshots PWA,WebP/SVG,Ativo,
+Asset,SVG,Globe,/public/globe.svg,Ícone globo,SVG,Ativo,
+Asset,SVG,Window,/public/window.svg,Ícone janela,SVG,Ativo,
+Asset,SVG,File,/public/file.svg,Ícone ficheiro,SVG,Ativo,
+Asset,Manifest,PWA Manifest,/public/manifest.json,Manifesto PWA,JSON,Ativo,
+=== EBOOKS ===,,,,,,
+eBook,Guia,Guia Completo Lusitano,/public/ebooks/01-GUIA-COMPLETO-LUSITANO/,Guia completo (18 capítulos),Markdown,Ativo,
+eBook,Manual,Manual Criador Profissional,/public/ebooks/02-MANUAL-CRIADOR-PROFISSIONAL/,Manual para criadores,Markdown,Ativo,
+eBook,Guia,Linhagens de Elite,/public/ebooks/03-LINHAGENS-ELITE/,Guia de linhagens,Markdown,Ativo,
+eBook,Guia,Saúde Equina,/public/ebooks/06-SAUDE-EQUINA/,Guia saúde equina,Markdown,Ativo,
+=== CONFIGURAÇÃO ===,,,,,,
+Config,Framework,next.config.js,/next.config.js,Configuração Next.js (images + headers + cache),Config,Ativo,
+Config,TypeScript,tsconfig.json,/tsconfig.json,Opções compilador TS (strict),Config,Ativo,
+Config,CSS,tailwind.config.ts,/tailwind.config.ts,Configuração Tailwind v4,Config,Ativo,
+Config,CSS,postcss.config.mjs,/postcss.config.mjs,Configuração PostCSS,Config,Ativo,
+Config,Testes,vitest.config.ts,/vitest.config.ts,Configuração Vitest,Config,Ativo,
+Config,Lint,eslint.config.mjs,/eslint.config.mjs,Configuração ESLint,Config,Ativo,
+Config,Formato,.prettierrc,/.prettierrc,Configuração Prettier,Config,Ativo,
+Config,Git,.husky/pre-commit,/.husky/pre-commit,Git hooks (lint-staged),Config,Ativo,
+Config,Performance,lighthouserc.json,/lighthouserc.json,Lighthouse CI,Config,Ativo,
+Config,Performance,lighthouse-budget.json,/lighthouse-budget.json,Budgets performance,Config,Ativo,
+Config,Deploy,vercel.json,/vercel.json,Config Vercel,Config,Ativo,
+Config,Deploy,Dockerfile,/Dockerfile,Build multi-stage Docker,Config,Ativo,
+Config,Deploy,docker-compose.yml,/docker-compose.yml,Serviços Docker,Config,Ativo,
+Config,CMS,sanity.config.ts,/sanity.config.ts,Configuração Sanity CMS,Config,Ativo,
+Config,CMS,sanity.cli.ts,/sanity.cli.ts,CLI Sanity,Config,Ativo,
+Config,Sentry,sentry.client.config.ts,/sentry.client.config.ts,Sentry client,Config,Ativo,
+Config,Sentry,sentry.server.config.ts,/sentry.server.config.ts,Sentry server,Config,Ativo,
+Config,Sentry,sentry.edge.config.ts,/sentry.edge.config.ts,Sentry edge,Config,Ativo,
+=== CI/CD ===,,,,,,
+CI/CD,GitHub,CI Pipeline,/.github/workflows/ci.yml,Lint + Build + Test,Workflow,Ativo,GitHub Actions
+CI/CD,GitHub,Lighthouse CI,/.github/workflows/lighthouse-ci.yml,Performance monitoring,Workflow,Ativo,GitHub Actions
+=== SCRIPTS ===,,,,,,
+Script,eBook,PDF Generation,/scripts/generate-ebook-pdf.js,Geração PDF eBook básico,Script,Ativo,
+Script,eBook,PDF Premium,/scripts/generate-ebook-pdf-premium.js,Geração PDF eBook premium,Script,Ativo,
+Script,eBook,PDF Simple,/scripts/generate-ebook-simple.js,Geração PDF simples,Script,Ativo,
+Script,eBook,PDF from HTML,/scripts/generate-ebook-from-html.js,HTML para PDF,Script,Ativo,
+Script,Imagens,Optimize,/scripts/optimize-images.js,Otimização de imagens,Script,Ativo,Sharp
+Script,PWA,Screenshots JS,/scripts/generate-pwa-screenshots.js,Screenshots PWA (JS),Script,Ativo,
+Script,PWA,Screenshots TS,/scripts/generate-pwa-screenshots.ts,Screenshots PWA (TS),Script,Ativo,
+Script,Stripe,Check,/scripts/check-stripe.js,Verificação conexão Stripe,Script,Ativo,Stripe
+Script,Stripe,Test Connection,/scripts/test-stripe-connection.js,Teste conexão Stripe,Script,Ativo,Stripe
+Script,Stripe,Fetch Prices,/scripts/fetch-stripe-prices.js,Buscar dados preços,Script,Ativo,Stripe
+Script,Stripe,Get Prices,/scripts/get-prices.js,Obter preços,Script,Ativo,Stripe
+Script,Debug,Diagnose Webhooks,/scripts/diagnose-webhooks.js,Diagnóstico webhooks,Script,Ativo,
+Script,Email,Test Email,/scripts/test-email.js,Teste envio email,Script,Ativo,Resend
+Script,Email,Test My Email,/scripts/test-my-email.js,Teste email pessoal,Script,Ativo,Resend
+Script,Validação,Validate Cavalos,/scripts/validate-cavalos-data.ts,Validação dados cavalos,Script,Ativo,
+Script,Validação,Validate PWA,/scripts/validate-pwa-screenshots.ts,Validação screenshots PWA,Script,Ativo,
+=== RESUMO ESTATÍSTICO ===,,,,,,
+Resumo,Total,Páginas/Rotas,,120+ páginas e rotas,Estatística,,
+Resumo,Total,Endpoints API,,74 endpoints API,Estatística,,
+Resumo,Total,Componentes React,,200+ componentes,Estatística,,
+Resumo,Total,Hooks Customizados,,11 hooks,Estatística,,
+Resumo,Total,Context Providers,,7 providers,Estatística,,
+Resumo,Total,Utilitários,,34 ficheiros utilitários,Estatística,,
+Resumo,Total,Testes,,54 ficheiros de teste,Estatística,,
+Resumo,Total,Schemas CMS,,10 schemas Sanity + SQL,Estatística,,
+Resumo,Total,Integrações,,12 serviços terceiros,Estatística,,
+Resumo,Total,Idiomas,,3 (PT + EN + ES),Estatística,,
+Resumo,Stack,Frontend,,Next.js 16 + React 19 + TypeScript 5 + Tailwind 4,Tech Stack,,
+Resumo,Stack,Backend,,Next.js API Routes + Supabase (PostgreSQL),Tech Stack,,
+Resumo,Stack,CMS,,Sanity CMS v3,Tech Stack,,
+Resumo,Stack,Pagamentos,,Stripe + Shopify,Tech Stack,,
+Resumo,Stack,Email,,Resend,Tech Stack,,
+Resumo,Stack,Monitoring,,Sentry + Custom Analytics + Lighthouse CI,Tech Stack,,
+Resumo,Stack,Deploy,,Vercel + Docker,Tech Stack,,
+Resumo,Stack,Testes,,Vitest + React Testing Library,Tech Stack,,
