@@ -87,7 +87,12 @@
       "Bash(git -C \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\" commit -m \"$\\(cat <<''EOF''\nfeat: add premium visual components and BlurredProSection to all tools\n\n- Create 6 new visual components: AnimatedGauge, AnimatedRing, HorseSilhouette, Confetti, MarketPositionChart, BlurredProSection\n- Integrate AnimatedGauge \\(speedometer\\) and HorseSilhouette \\(morphology map\\) into Calculadora results\n- Integrate AnimatedRing \\(Apple Watch style\\) into Verificador results\n- Add Confetti celebration on all 4 tool results\n- Wrap premium content \\(detailed analysis, recommendations, costs\\) in BlurredProSection across all tools\n- Add MarketPositionChart to Calculadora replacing static comparison table\n- Migrate hardcoded zinc colors to CSS variables for theme support\n- Continue CSS variable migration across remaining components\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(more:*)",
       "Bash(git diff:*)",
-      "Bash(del \"components\\\\tools\\\\constellation-data.ts\" \"components\\\\tools\\\\LusitanoConstellation.tsx\" \"components\\\\tools\\\\ConstellationSection.tsx\")"
+      "Bash(del \"components\\\\tools\\\\constellation-data.ts\" \"components\\\\tools\\\\LusitanoConstellation.tsx\" \"components\\\\tools\\\\ConstellationSection.tsx\")",
+      "WebFetch(domain:www.svgrepo.com)",
+      "WebFetch(domain:freesvg.org)",
+      "WebFetch(domain:upload.wikimedia.org)",
+      "WebFetch(domain:gist.github.com)",
+      "Bash(del \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.next\\\\lock\")"
     ]
   }
 }
