@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, ArrowRight, Mail, Clock } from "lucide-react";
 
-export default function RegistarProfissionalSucessoPage() {
+function SucessoContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
@@ -90,5 +90,13 @@ export default function RegistarProfissionalSucessoPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function RegistarProfissionalSucessoPage() {
+  return (
+    <Suspense>
+      <SucessoContent />
+    </Suspense>
   );
 }

@@ -16,10 +16,7 @@ import {
   Code,
   Eye,
   EyeOff,
-  Download,
-  Send,
   Database,
-  Loader2,
 } from "lucide-react";
 
 interface Setting {
@@ -71,9 +68,6 @@ export default function DefinicoesContent() {
   const [editedValues, setEditedValues] = useState<Record<string, any>>({});
   const [showSuccess, setShowSuccess] = useState(false);
   const [showJsonPreview, setShowJsonPreview] = useState<Record<string, boolean>>({});
-  const [backupLoading, setBackupLoading] = useState(false);
-  const [backupEmailLoading, setBackupEmailLoading] = useState(false);
-  const [backupEmail, setBackupEmail] = useState("");
 
   useEffect(() => {
     fetchSettings();
@@ -314,54 +308,6 @@ export default function DefinicoesContent() {
             className="w-full bg-black/30 border border-white/10 px-4 py-2 rounded-lg text-white focus:outline-none focus:border-[#C5A059]"
           />
         );
-    }
-  };
-
-  const handleDownloadBackup = async () => {
-    setBackupLoading(true);
-    try {
-      const response = await fetch("/api/admin/backup");
-      if (!response.ok) throw new Error("Erro ao gerar backup");
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download =
-        response.headers.get("Content-Disposition")?.split("filename=")[1]?.replace(/"/g, "") ||
-        "backup.json";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-    } catch (_error) {
-      void _error;
-      alert("Erro ao descarregar backup. Tente novamente.");
-    } finally {
-      setBackupLoading(false);
-    }
-  };
-
-  const handleEmailBackup = async () => {
-    if (!backupEmail) {
-      alert("Insira um email de destino");
-      return;
-    }
-    setBackupEmailLoading(true);
-    try {
-      const response = await fetch("/api/admin/backup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: backupEmail }),
-      });
-      if (!response.ok) throw new Error("Erro ao enviar backup");
-      const data = await response.json();
-      alert(data.message || "Backup enviado com sucesso!");
-    } catch (_error) {
-      void _error;
-      alert("Erro ao enviar backup por email.");
-    } finally {
-      setBackupEmailLoading(false);
     }
   };
 

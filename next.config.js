@@ -6,9 +6,6 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Tree-shake heavy icon/component libraries
-  optimizePackageImports: ["lucide-react", "@sanity/icons"],
-
   images: {
     remotePatterns: [
       {

@@ -130,7 +130,7 @@ export default function CoudelariasPage() {
           <p className="text-[var(--foreground-muted)] text-xs uppercase tracking-widest">
             {t.studs.breeder}{" "}
             <Link
-              href="/contacto"
+              href="/sobre"
               className="text-[var(--gold)] hover:text-[var(--foreground)] underline underline-offset-4"
             >
               {t.studs.join}

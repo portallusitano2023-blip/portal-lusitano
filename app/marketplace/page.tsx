@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, memo, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, memo, useCallback, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Search,
@@ -44,7 +44,7 @@ const placeholderHorses = [
 
 const ITENS_POR_PAGINA = 20;
 
-export default function MarketplacePage() {
+function MarketplaceContent() {
   const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -804,5 +804,13 @@ function CavaloModal({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MarketplacePage() {
+  return (
+    <Suspense>
+      <MarketplaceContent />
+    </Suspense>
   );
 }

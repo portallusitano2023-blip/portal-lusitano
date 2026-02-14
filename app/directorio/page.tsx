@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { MapPin, Search, Filter, Crown, ArrowRight, Plus, Users, Star } from "lucide-react";
 import Link from "next/link";
@@ -52,7 +52,7 @@ const placeholderImages = [
 
 const ITENS_POR_PAGINA = 15;
 
-export default function DirectorioPage() {
+function DirectorioContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
@@ -445,5 +445,13 @@ function CoudelariaCard({
         </div>
       </Link>
     </div>
+  );
+}
+
+export default function DirectorioPage() {
+  return (
+    <Suspense>
+      <DirectorioContent />
+    </Suspense>
   );
 }

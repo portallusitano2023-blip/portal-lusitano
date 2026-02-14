@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, ArrowRight, Mail, Megaphone, TrendingUp } from "lucide-react";
 
-export default function PublicidadeSucessoPage() {
+function PublicidadeSucessoContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [countdown, setCountdown] = useState(5);
@@ -124,5 +124,13 @@ export default function PublicidadeSucessoPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function PublicidadeSucessoPage() {
+  return (
+    <Suspense>
+      <PublicidadeSucessoContent />
+    </Suspense>
   );
 }

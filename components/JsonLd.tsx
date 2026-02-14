@@ -511,7 +511,7 @@ export function MedicalWebPageSchema() {
     description:
       "Guia completo sobre piroplasmose equina: prevalência em Portugal, impacto na exportação, diagnóstico, tratamento e prevenção.",
     url: `${siteUrl}/piroplasmose`,
-    lastReviewed: "2025-01-01",
+    lastReviewed: "2026-02-01",
     about: {
       "@type": "MedicalCondition",
       name: "Piroplasmose Equina",

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, ArrowRight, Upload, Mail, Instagram } from "lucide-react";
 
-export default function InstagramSucessoPage() {
+function InstagramSucessoContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [countdown, setCountdown] = useState(5);
@@ -133,5 +133,13 @@ export default function InstagramSucessoPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function InstagramSucessoPage() {
+  return (
+    <Suspense>
+      <InstagramSucessoContent />
+    </Suspense>
   );
 }

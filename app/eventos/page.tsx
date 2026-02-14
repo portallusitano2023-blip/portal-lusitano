@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -68,7 +68,7 @@ const meses = [
 
 const ITENS_POR_PAGINA = 12;
 
-export default function EventosPage() {
+function EventosContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
@@ -643,5 +643,13 @@ function EventoCard({
         <ChevronRight size={24} />
       </div>
     </button>
+  );
+}
+
+export default function EventosPage() {
+  return (
+    <Suspense>
+      <EventosContent />
+    </Suspense>
   );
 }

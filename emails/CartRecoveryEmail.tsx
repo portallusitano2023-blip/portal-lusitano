@@ -170,7 +170,7 @@ export default function CartRecoveryEmail({
             <Hr style={divider} />
             <Text style={footerSmall}>
               Portal Lusitano — Marketplace Premium de Cavalos Lusitanos
-              <br />© 2024 Portal Lusitano. Todos os direitos reservados.
+              <br />© 2026 Portal Lusitano. Todos os direitos reservados.
             </Text>
           </Section>
         </Container>

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, ArrowRight, Mail, Clock, Eye } from "lucide-react";
 
-export default function VenderCavaloSucessoPage() {
+function VenderCavaloSucessoContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [countdown, setCountdown] = useState(5);
@@ -120,5 +120,13 @@ export default function VenderCavaloSucessoPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function VenderCavaloSucessoPage() {
+  return (
+    <Suspense>
+      <VenderCavaloSucessoContent />
+    </Suspense>
   );
 }

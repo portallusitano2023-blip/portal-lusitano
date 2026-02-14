@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { Mail, Lock, Eye, EyeOff, User, UserPlus, Loader2, CheckCircle } from "lucide-react";
 
-export default function RegistarPage() {
+function RegistarContent() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "";
   const [name, setName] = useState("");
@@ -237,5 +237,13 @@ export default function RegistarPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function RegistarPage() {
+  return (
+    <Suspense>
+      <RegistarContent />
+    </Suspense>
   );
 }
