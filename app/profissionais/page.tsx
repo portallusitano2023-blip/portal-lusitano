@@ -21,12 +21,7 @@ import type {
   NivelVerificacao,
   Profissional,
 } from "@/components/profissionais/types";
-import {
-  profissionaisDB,
-  eventosDB,
-  artigosDB,
-  calcularEstatisticas,
-} from "@/components/profissionais/data";
+import { eventosDB, artigosDB, calcularEstatisticas } from "@/components/profissionais/data";
 import {
   CardProfissional,
   ModalProfissional,
@@ -124,13 +119,9 @@ export default function ProfissionaisPage() {
     };
   }, []);
 
-  const todosProfissionais = useMemo(() => {
-    const bdIds = new Set(profissionaisBD.map((p) => p.id));
-    const hardcodedFiltered = profissionaisDB.filter((p) => !bdIds.has(p.id));
-    return [...profissionaisBD, ...hardcodedFiltered];
-  }, [profissionaisBD]);
+  const todosProfissionais = useMemo(() => profissionaisBD, [profissionaisBD]);
 
-  const stats = useMemo(() => calcularEstatisticas(), []);
+  const stats = useMemo(() => calcularEstatisticas(profissionaisBD), [profissionaisBD]);
 
   const profissionaisFiltrados = useMemo(() => {
     return todosProfissionais
