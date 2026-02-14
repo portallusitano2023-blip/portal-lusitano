@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { apiLimiter } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 interface SearchResult {
   id: string;
@@ -90,6 +91,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ results: [] });
     }
 
+    const safeQ = sanitizeSearchInput(q);
     const searchTerm = q.toLowerCase();
     const results: SearchResult[] = [];
 
@@ -106,7 +108,7 @@ export async function GET(request: NextRequest) {
             .from("cavalos_venda")
             .select("id, nome, descricao, imagens, slug")
             .eq("status", "active")
-            .or(`nome.ilike.%${q}%,descricao.ilike.%${q}%`)
+            .or(`nome.ilike.%${safeQ}%,descricao.ilike.%${safeQ}%`)
             .limit(perTypeLimit)
         : Promise.resolve({ data: null }),
       searchEvents
@@ -114,7 +116,7 @@ export async function GET(request: NextRequest) {
             .from("eventos")
             .select("id, titulo, descricao, slug, imagem")
             .eq("status", "active")
-            .or(`titulo.ilike.%${q}%,descricao.ilike.%${q}%`)
+            .or(`titulo.ilike.%${safeQ}%,descricao.ilike.%${safeQ}%`)
             .limit(perTypeLimit)
         : Promise.resolve({ data: null }),
       searchStuds
@@ -122,7 +124,7 @@ export async function GET(request: NextRequest) {
             .from("coudelarias")
             .select("id, nome, descricao, slug, logo")
             .eq("status", "active")
-            .or(`nome.ilike.%${q}%,descricao.ilike.%${q}%`)
+            .or(`nome.ilike.%${safeQ}%,descricao.ilike.%${safeQ}%`)
             .limit(perTypeLimit)
         : Promise.resolve({ data: null }),
     ]);

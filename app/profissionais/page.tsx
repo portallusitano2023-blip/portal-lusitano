@@ -34,6 +34,7 @@ import {
   SearchFilters,
   CategoriasTabs,
 } from "@/components/profissionais";
+import { categorias as categoriasConfig } from "@/components/profissionais/constants";
 
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
@@ -273,7 +274,12 @@ export default function ProfissionaisPage() {
                 label: "Verificados",
                 icon: CheckCircle2,
               },
-              { end: 14, suffix: "", label: "Categorias", icon: LayoutGrid },
+              {
+                end: categoriasConfig.filter((c) => c.id !== "todos").length,
+                suffix: "",
+                label: "Categorias",
+                icon: LayoutGrid,
+              },
               {
                 end: stats.clientesSatisfeitos,
                 suffix: "%",

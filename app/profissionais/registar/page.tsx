@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   Check,
@@ -138,6 +138,40 @@ export default function RegistarProfissionalPage() {
     autorizaVerificacao: false,
   });
 
+  // ── localStorage persistence ──────────────────────────────────────────
+  const STORAGE_KEY = "profissional_registo_form";
+
+  // Restore form from localStorage on mount (when user returns from Stripe cancel)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved) as {
+          step: number;
+          formData: FormData;
+          fotoPreview: string;
+        };
+        setFormData(parsed.formData);
+        setStep(parsed.step);
+        if (parsed.fotoPreview) setFotoPreview(parsed.fotoPreview);
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  }, []);
+
+  // Save form to localStorage on every change
+  const persistForm = useCallback((data: FormData, currentStep: number, foto: string) => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ step: currentStep, formData: data, fotoPreview: foto })
+      );
+    } catch {
+      // Ignore quota errors
+    }
+  }, []);
+
   const [fotoPreview, setFotoPreview] = useState("");
   const [servicoInput, setServicoInput] = useState("");
   const [associacaoInput, setAssociacaoInput] = useState("");
@@ -146,6 +180,11 @@ export default function RegistarProfissionalPage() {
     entidade: "",
     ano: "",
   });
+
+  // Persist form on every change
+  useEffect(() => {
+    persistForm(formData, step, fotoPreview);
+  }, [formData, step, fotoPreview, persistForm]);
 
   // ── Handlers ──────────────────────────────────────────────────────────
 
@@ -333,6 +372,8 @@ export default function RegistarProfissionalPage() {
       }
 
       if (data.url) {
+        // Keep localStorage — user may cancel at Stripe and return
+        // It's cleared on the success page after payment
         window.location.href = data.url;
       }
     } catch (err) {

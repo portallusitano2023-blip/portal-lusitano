@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, ArrowRight, Mail, Clock } from "lucide-react";
@@ -7,6 +8,11 @@ import { CheckCircle, ArrowRight, Mail, Clock } from "lucide-react";
 export default function RegistarProfissionalSucessoPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
+
+  // Clear saved form data after successful payment
+  useEffect(() => {
+    localStorage.removeItem("profissional_registo_form");
+  }, []);
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">

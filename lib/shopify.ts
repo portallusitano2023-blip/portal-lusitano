@@ -16,6 +16,7 @@ export interface ShopifyProductNode {
   id: string;
   handle?: string;
   title: string;
+  description?: string;
   descriptionHtml?: string;
   images: { edges: Array<{ node: ShopifyImage }> };
   priceRange?: { minVariantPrice: ShopifyPrice };
@@ -103,7 +104,7 @@ async function shopifyFetch({
   query,
   variables = {},
 }: ShopifyFetchParams): Promise<ShopifyResponse> {
-  const endpoint = `https://${domain}/api/2024-01/graphql.json`;
+  const endpoint = `https://${domain}/api/2025-01/graphql.json`;
   if (!domain || !storefrontAccessToken) return { data: null };
   try {
     const response = await fetch(endpoint, {
@@ -126,16 +127,19 @@ export async function getProducts(): Promise<
     id: string;
     handle?: string;
     title: string;
+    description?: string;
     images: ShopifyImage[];
     priceRange?: { minVariantPrice: ShopifyPrice };
+    variants?: Array<{ id: string; title: string; price: ShopifyPrice }>;
   }>
 > {
-  const query = `query { products(first: 20) { edges { node { id handle title images(first: 1) { edges { node { url } } } priceRange { minVariantPrice { amount } } } } } }`;
+  const query = `query { products(first: 20) { edges { node { id handle title description images(first: 3) { edges { node { url } } } priceRange { minVariantPrice { amount } } variants(first: 1) { edges { node { id title price { amount } } } } } } } }`;
   const res = await shopifyFetch({ query });
   return (
     res.data?.products?.edges.map((edge) => ({
       ...edge.node,
       images: edge.node.images.edges.map((img) => img.node),
+      variants: edge.node.variants?.edges.map((v) => v.node),
     })) || []
   );
 }

@@ -25,7 +25,11 @@ export default function BuyButton({ variantId, available }: BuyButtonProps) {
 
       // 2. Construímos o link direto para o Checkout do Shopify
       // Formato: /cart/{id}:{quantidade}
-      const checkoutUrl = `https://irdip0-dq.myshopify.com/cart/${numericId}:1`;
+      const shopifyDomain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN;
+      if (!shopifyDomain) {
+        throw new Error("Shopify domain não configurado");
+      }
+      const checkoutUrl = `https://${shopifyDomain}/cart/${numericId}:1`;
 
       // 3. Redirecionamos o utilizador
       window.location.href = checkoutUrl;

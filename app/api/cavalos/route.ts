@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 // GET - Listar cavalos à venda
 export async function GET(request: NextRequest) {
@@ -46,7 +47,8 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      query = query.or(`nome.ilike.%${search}%,descricao.ilike.%${search}%`);
+      const safeSearch = sanitizeSearchInput(search);
+      query = query.or(`nome.ilike.%${safeSearch}%,descricao.ilike.%${safeSearch}%`);
     }
 
     const { data, error } = await query;

@@ -6,6 +6,7 @@ import { resend } from "@/lib/resend";
 import Stripe from "stripe";
 import { CONTACT_EMAIL } from "@/lib/constants";
 import { logger } from "@/lib/logger";
+import { escapeHtml } from "@/lib/sanitize";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -37,6 +38,12 @@ export async function POST(req: Request) {
         break;
       case "customer.subscription.deleted":
         await handleSubscriptionCancelled(event.data.object as Stripe.Subscription);
+        break;
+      case "invoice.payment_failed":
+        await handlePaymentFailed(event.data.object as Stripe.Invoice);
+        break;
+      case "customer.subscription.updated":
+        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
         break;
       default:
         break;
@@ -164,15 +171,15 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
           <div style="padding: 40px 30px; background: #fff;">
             <h2 style="color: #333;">Anúncio Recebido!</h2>
             <p style="color: #666; line-height: 1.6;">
-              O seu anúncio do cavalo <strong>${formData.nomeCavalo}</strong> foi recebido e está em análise.
+              O seu anúncio do cavalo <strong>${escapeHtml(String(formData.nomeCavalo))}</strong> foi recebido e está em análise.
             </p>
             <p style="color: #666; line-height: 1.6;">
               Estará visível no marketplace após verificação dos documentos (máximo 24 horas).
             </p>
             <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="margin: 0 0 10px 0; color: #333;">Detalhes do Anúncio:</h3>
-              <p style="margin: 5px 0; color: #666;"><strong>Cavalo:</strong> ${formData.nomeCavalo}</p>
-              <p style="margin: 5px 0; color: #666;"><strong>Preço:</strong> €${formData.preco}</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Cavalo:</strong> ${escapeHtml(String(formData.nomeCavalo))}</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Preço:</strong> &euro;${escapeHtml(String(formData.preco))}</p>
               <p style="margin: 5px 0; color: #666;"><strong>Destaque:</strong> ${metadata.destaque === "true" ? "Sim (7 dias no topo)" : "Não"}</p>
               <p style="margin: 5px 0; color: #666;"><strong>Validade:</strong> 30 dias</p>
             </div>
@@ -196,14 +203,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     await resend.emails.send({
       from: "Portal Lusitano <admin@portal-lusitano.pt>",
       to: CONTACT_EMAIL,
-      subject: `Novo Anúncio: ${formData.nomeCavalo} - Aprovação Pendente`,
+      subject: `Novo Anúncio: ${escapeHtml(String(formData.nomeCavalo))} - Aprovação Pendente`,
       html: `
         <h2>Novo anúncio aguarda aprovação</h2>
-        <p><strong>Cavalo:</strong> ${formData.nomeCavalo}</p>
-        <p><strong>Vendedor:</strong> ${formData.proprietarioNome}</p>
-        <p><strong>Email:</strong> ${session.customer_details?.email}</p>
-        <p><strong>Telefone:</strong> ${formData.proprietarioTelefone}</p>
-        <p><strong>Preço:</strong> €${formData.preco}</p>
+        <p><strong>Cavalo:</strong> ${escapeHtml(String(formData.nomeCavalo))}</p>
+        <p><strong>Vendedor:</strong> ${escapeHtml(String(formData.proprietarioNome))}</p>
+        <p><strong>Email:</strong> ${escapeHtml(session.customer_details?.email || "")}</p>
+        <p><strong>Telefone:</strong> ${escapeHtml(String(formData.proprietarioTelefone))}</p>
+        <p><strong>Preço:</strong> &euro;${escapeHtml(String(formData.preco))}</p>
         <p><strong>Destaque:</strong> ${metadata.destaque === "true" ? "Sim" : "Não"}</p>
         <p><strong>Pagamento:</strong> €${(session.amount_total! / 100).toFixed(2)}</p>
         <p><a href="https://portal-lusitano.pt/admin">Ir para Admin Panel</a></p>
@@ -247,15 +254,15 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     await resend.emails.send({
       from: "Portal Lusitano <instagram@portal-lusitano.pt>",
       to: CONTACT_EMAIL,
-      subject: `Nova Compra Instagram: ${metadata.package} - ${metadata.nome}`,
+      subject: `Nova Compra Instagram: ${escapeHtml(metadata.package || "")} - ${escapeHtml(metadata.nome || "")}`,
       html: `
         <h2>Nova compra de publicidade no Instagram</h2>
-        <p><strong>Pacote:</strong> ${metadata.package}</p>
-        <p><strong>Nome:</strong> ${metadata.nome}</p>
-        <p><strong>Empresa:</strong> ${metadata.empresa || "N/A"}</p>
-        <p><strong>Email:</strong> ${session.customer_details?.email}</p>
-        <p><strong>Instagram:</strong> ${metadata.instagram || "N/A"}</p>
-        <p><strong>Mensagem:</strong><br>${metadata.mensagem}</p>
+        <p><strong>Pacote:</strong> ${escapeHtml(metadata.package || "")}</p>
+        <p><strong>Nome:</strong> ${escapeHtml(metadata.nome || "")}</p>
+        <p><strong>Empresa:</strong> ${escapeHtml(metadata.empresa || "N/A")}</p>
+        <p><strong>Email:</strong> ${escapeHtml(session.customer_details?.email || "")}</p>
+        <p><strong>Instagram:</strong> ${escapeHtml(metadata.instagram || "N/A")}</p>
+        <p><strong>Mensagem:</strong><br>${escapeHtml(metadata.mensagem || "")}</p>
         <p><strong>Valor:</strong> €${(session.amount_total! / 100).toFixed(2)}</p>
         <hr>
         <p><strong>PRÓXIMO PASSO:</strong> Cliente deve fazer upload dos materiais em:</p>
@@ -339,13 +346,13 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     await resend.emails.send({
       from: "Portal Lusitano <admin@portal-lusitano.pt>",
       to: CONTACT_EMAIL,
-      subject: `Nova Compra de Publicidade: ${metadata.package}`,
+      subject: `Nova Compra de Publicidade: ${escapeHtml(metadata.package || "")}`,
       html: `
         <h2>Nova compra de publicidade</h2>
-        <p><strong>Pacote:</strong> ${metadata.package}</p>
-        <p><strong>Empresa:</strong> ${metadata.company}</p>
-        <p><strong>Email:</strong> ${session.customer_details?.email}</p>
-        <p><strong>Telefone:</strong> ${metadata.telefone}</p>
+        <p><strong>Pacote:</strong> ${escapeHtml(metadata.package || "")}</p>
+        <p><strong>Empresa:</strong> ${escapeHtml(metadata.company || "")}</p>
+        <p><strong>Email:</strong> ${escapeHtml(session.customer_details?.email || "")}</p>
+        <p><strong>Telefone:</strong> ${escapeHtml(metadata.telefone || "")}</p>
         <p><strong>Valor:</strong> €${(session.amount_total! / 100).toFixed(2)}</p>
         <p><strong>Tipo:</strong> ${session.mode === "subscription" ? "Recorrente (mensal)" : "Pagamento único"}</p>
       `,
@@ -417,6 +424,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         plano_ativo: true,
         plano_renovacao_automatica: true,
         plano_metodo_pagamento: "stripe",
+        stripe_customer_id: session.customer as string,
+        stripe_subscription_id: session.subscription as string,
         status: "pendente",
         destaque: false,
       })
@@ -471,14 +480,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
           <div style="padding: 40px 30px; background: #fff;">
             <h2 style="color: #333;">Pagamento Confirmado!</h2>
             <p style="color: #666; line-height: 1.6;">
-              Obrigado, <strong>${metadata.nome}</strong>! O seu pagamento foi processado com sucesso.
+              Obrigado, <strong>${escapeHtml(metadata.nome || "")}</strong>! O seu pagamento foi processado com sucesso.
             </p>
             <p style="color: #666; line-height: 1.6;">
               O seu perfil profissional está agora <strong>em análise</strong> e será aprovado pela nossa equipa nas próximas 24 horas.
             </p>
             <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="margin: 0 0 10px 0; color: #333;">Detalhes:</h3>
-              <p style="margin: 5px 0; color: #666;"><strong>Categoria:</strong> ${metadata.categoria}</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Categoria:</strong> ${escapeHtml(metadata.categoria || "")}</p>
               <p style="margin: 5px 0; color: #666;"><strong>Subscrição:</strong> €6/mês</p>
               <p style="margin: 5px 0; color: #666;"><strong>Estado:</strong> Em análise</p>
             </div>
@@ -502,15 +511,15 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     await resend.emails.send({
       from: "Portal Lusitano <admin@portal-lusitano.pt>",
       to: CONTACT_EMAIL,
-      subject: `Novo Profissional: ${metadata.nome} - Aprovação Pendente`,
+      subject: `Novo Profissional: ${escapeHtml(metadata.nome || "")} - Aprovação Pendente`,
       html: `
         <h2>Novo profissional aguarda aprovação</h2>
-        <p><strong>Nome:</strong> ${metadata.nome}</p>
-        <p><strong>Categoria:</strong> ${metadata.categoria}</p>
-        <p><strong>Email:</strong> ${session.customer_details?.email}</p>
-        <p><strong>Telefone:</strong> ${metadata.telefone || "N/A"}</p>
-        <p><strong>Distrito:</strong> ${metadata.distrito || "N/A"}</p>
-        <p><strong>Especialidade:</strong> ${metadata.especialidade || "N/A"}</p>
+        <p><strong>Nome:</strong> ${escapeHtml(metadata.nome || "")}</p>
+        <p><strong>Categoria:</strong> ${escapeHtml(metadata.categoria || "")}</p>
+        <p><strong>Email:</strong> ${escapeHtml(session.customer_details?.email || "")}</p>
+        <p><strong>Telefone:</strong> ${escapeHtml(metadata.telefone || "N/A")}</p>
+        <p><strong>Distrito:</strong> ${escapeHtml(metadata.distrito || "N/A")}</p>
+        <p><strong>Especialidade:</strong> ${escapeHtml(metadata.especialidade || "N/A")}</p>
         <p><strong>Pagamento:</strong> €6/mês (subscrição activa)</p>
         <hr>
         <p><strong>ID:</strong> ${profissional?.id || "N/A"}</p>
@@ -640,7 +649,7 @@ async function handleSubscriptionCancelled(subscription: Stripe.Subscription) {
   // Deactivate profissional if applicable
   await supabase
     .from("profissionais")
-    .update({ status: "cancelled" })
+    .update({ status: "cancelled", plano_ativo: false })
     .eq("stripe_customer_id", customerId);
 
   // Deactivate tools subscription if applicable
@@ -648,4 +657,52 @@ async function handleSubscriptionCancelled(subscription: Stripe.Subscription) {
     .from("user_profiles")
     .update({ tools_subscription_status: "cancelled" })
     .eq("stripe_customer_id", customerId);
+}
+
+async function handlePaymentFailed(invoice: Stripe.Invoice) {
+  const customerId = invoice.customer as string;
+
+  logger.error(`Payment failed for customer ${customerId}, invoice ${invoice.id}`);
+
+  // Notify admin
+  await resend.emails.send({
+    from: "Portal Lusitano <admin@portal-lusitano.pt>",
+    to: CONTACT_EMAIL,
+    subject: `Pagamento Falhado - ${escapeHtml(invoice.customer_email || customerId)}`,
+    html: `
+      <h2>Pagamento falhado</h2>
+      <p><strong>Cliente:</strong> ${escapeHtml(invoice.customer_email || customerId)}</p>
+      <p><strong>Valor:</strong> &euro;${((invoice.amount_due || 0) / 100).toFixed(2)}</p>
+      <p><strong>Invoice ID:</strong> ${escapeHtml(invoice.id)}</p>
+      <p>O Stripe tentará novamente automaticamente.</p>
+    `,
+  });
+}
+
+async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+  const customerId = subscription.customer as string;
+  const status = subscription.status;
+
+  // Update profissional status based on subscription status
+  if (status === "past_due" || status === "unpaid") {
+    await supabase
+      .from("profissionais")
+      .update({ plano_ativo: false })
+      .eq("stripe_customer_id", customerId);
+
+    await supabase
+      .from("user_profiles")
+      .update({ tools_subscription_status: status })
+      .eq("stripe_customer_id", customerId);
+  } else if (status === "active") {
+    await supabase
+      .from("profissionais")
+      .update({ plano_ativo: true })
+      .eq("stripe_customer_id", customerId);
+
+    await supabase
+      .from("user_profiles")
+      .update({ tools_subscription_status: "active" })
+      .eq("stripe_customer_id", customerId);
+  }
 }

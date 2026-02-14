@@ -72,16 +72,18 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
 
   if (!product) return null;
 
+  const hasVariant = !!product.variants?.[0]?.id;
+
   const handleAddToCart = async () => {
+    const variantId = product.variants?.[0]?.id;
+    if (!variantId) return;
+
     setIsLoading(true);
     try {
-      const variantId = product.variants?.[0]?.id;
-      if (variantId) {
-        await addItemToCart(variantId, 1);
-        showToast("cart", t.addedToCart);
-      }
-    } catch (_error) {
-      // Error adding to cart silenced
+      await addItemToCart(variantId, 1);
+      showToast("cart", t.addedToCart);
+    } catch {
+      showToast("error", language === "pt" ? "Erro ao adicionar ao saco" : "Error adding to bag");
     } finally {
       setIsLoading(false);
     }
@@ -145,12 +147,18 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
               <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Galeria de imagens */}
                 <div className="relative aspect-square bg-[var(--background-secondary)]">
-                  <Image
-                    src={product.images[selectedImage]?.url}
-                    alt={product.title}
-                    fill
-                    className="object-cover"
-                  />
+                  {product.images[selectedImage]?.url ? (
+                    <Image
+                      src={product.images[selectedImage].url}
+                      alt={product.title}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-xs uppercase tracking-widest">
+                      Sem Imagem
+                    </div>
+                  )}
 
                   {/* Navegacao de imagens */}
                   {product.images.length > 1 && (
@@ -209,8 +217,8 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                     <div className="flex gap-4">
                       <button
                         onClick={handleAddToCart}
-                        disabled={isLoading}
-                        className="flex-1 bg-[var(--gold)] text-black py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                        disabled={isLoading || !hasVariant}
+                        className="flex-1 bg-[var(--gold)] text-black py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                       >
                         {isLoading ? (
                           <Loader2 className="animate-spin" size={18} />

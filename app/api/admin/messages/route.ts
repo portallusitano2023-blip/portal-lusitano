@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 export async function GET(req: NextRequest) {
   try {
@@ -42,7 +43,10 @@ export async function GET(req: NextRequest) {
 
     // Busca por texto (nome, email, empresa)
     if (search && search.trim()) {
-      query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`);
+      const safeSearch = sanitizeSearchInput(search);
+      query = query.or(
+        `name.ilike.%${safeSearch}%,email.ilike.%${safeSearch}%,company.ilike.%${safeSearch}%`
+      );
     }
 
     // Paginação

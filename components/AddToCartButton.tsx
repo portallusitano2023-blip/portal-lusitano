@@ -19,9 +19,24 @@ export default function AddToCartButton({
   const [loading, setLoading] = useState(false);
 
   const buttonText = {
-    pt: { add: "Adicionar ao Saco", adding: "A Adicionar...", sold_out: "Esgotado" },
-    en: { add: "Add to Bag", adding: "Adding...", sold_out: "Sold Out" },
-    es: { add: "Anadir a la Bolsa", adding: "Anadiendo...", sold_out: "Agotado" },
+    pt: {
+      add: "Adicionar ao Saco",
+      adding: "A Adicionar...",
+      sold_out: "Esgotado",
+      error: "Erro ao adicionar. Tente novamente.",
+    },
+    en: {
+      add: "Add to Bag",
+      adding: "Adding...",
+      sold_out: "Sold Out",
+      error: "Error adding to bag. Try again.",
+    },
+    es: {
+      add: "Anadir a la Bolsa",
+      adding: "Anadiendo...",
+      sold_out: "Agotado",
+      error: "Error al anadir. Intente de nuevo.",
+    },
   };
 
   const t = buttonText[language];
@@ -45,13 +60,8 @@ export default function AddToCartButton({
 
       // 3. SUCESSO
       openCart();
-    } catch (_error) {
-      // 4. ERRO DO SHOPIFY
-      // Shopify error silenced
-      showToast(
-        "error",
-        "Não foi possível conectar ao Shopify. Verifica a consola (F12) para detalhes."
-      );
+    } catch {
+      showToast("error", t.error);
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 export async function GET(req: NextRequest) {
   try {
@@ -21,7 +22,7 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const searchTerm = query.trim().toLowerCase();
+    const searchTerm = sanitizeSearchInput(query.trim().toLowerCase());
 
     // Pesquisar em paralelo em todas as tabelas
     const [cavalosRes, eventosRes, mensagensRes, coudelariasRes, profissionaisRes, reviewsRes] =

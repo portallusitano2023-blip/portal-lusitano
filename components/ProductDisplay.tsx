@@ -6,24 +6,22 @@ import AddToCartButton from "@/components/AddToCartButton";
 import { ChevronDown } from "lucide-react";
 import { Product } from "@/types/product";
 
+const PLACEHOLDER_IMAGE = "/placeholder-product.svg";
+
 export default function ProductDisplay({ product }: { product: Product }) {
-  // 1. Estados iniciais
-  const [selectedImage, setSelectedImage] = useState(product.images[0]?.url);
-  const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id);
+  const firstImage = product.images[0]?.url || PLACEHOLDER_IMAGE;
+  const firstVariant = product.variants[0];
 
-  // Encontra a variante ativa com base na escolha
-  const activeVariant =
-    product.variants.find((v) => v.id === selectedVariantId) || product.variants[0];
+  const [selectedImage, setSelectedImage] = useState(firstImage);
+  const [selectedVariantId, setSelectedVariantId] = useState(firstVariant?.id || "");
 
-  // --- NOVO: ATUALIZAR IMAGEM AUTOMATICAMENTE ---
-  // Sempre que a variante muda (activeVariant), verificamos se ela tem uma imagem específica.
-  // Se tiver, mudamos a imagem principal para essa.
+  const activeVariant = product.variants.find((v) => v.id === selectedVariantId) || firstVariant;
+
   useEffect(() => {
     if (activeVariant?.image?.url) {
       setSelectedImage(activeVariant.image.url); // eslint-disable-line react-hooks/set-state-in-effect
     }
-  }, [activeVariant]); // Este "listener" corre sempre que activeVariant muda
-  // ----------------------------------------------
+  }, [activeVariant]);
 
   const isAvailable = activeVariant?.availableForSale || false;
   const price = Number(activeVariant?.price?.amount || 0).toFixed(2);
@@ -122,7 +120,13 @@ export default function ProductDisplay({ product }: { product: Product }) {
 
         {/* Botão de Compra */}
         <div className="mb-8">
-          <AddToCartButton variantId={activeVariant.id} available={isAvailable} />
+          {activeVariant ? (
+            <AddToCartButton variantId={activeVariant.id} available={isAvailable} />
+          ) : (
+            <div className="w-full py-6 text-center text-xs uppercase tracking-[0.3em] bg-[var(--background-secondary)] text-[var(--foreground-secondary)] border border-[var(--border)]">
+              Indisponível
+            </div>
+          )}
         </div>
 
         <div className="space-y-4 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">

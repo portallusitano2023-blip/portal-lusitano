@@ -4,6 +4,19 @@ import { supabase } from "@/lib/supabase";
 import { stripe } from "@/lib/stripe";
 import { CONTACT_EMAIL } from "@/lib/constants";
 import { logger } from "@/lib/logger";
+import { escapeHtml } from "@/lib/sanitize";
+
+const ALLOWED_FILE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "video/mp4",
+  "video/quicktime",
+  "video/webm",
+]);
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB per file
+const MAX_FILES = 10;
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,17 +32,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Session ID é obrigatório" }, { status: 400 });
     }
 
-    // Buscar email do cliente no Stripe
+    // Verify Stripe payment before accepting upload
     let customerEmail: string | null = null;
     try {
       const session = await stripe.checkout.sessions.retrieve(sessionId);
+      if (session.payment_status !== "paid") {
+        return NextResponse.json({ error: "Pagamento não confirmado" }, { status: 403 });
+      }
       customerEmail = session.customer_details?.email || null;
-    } catch (error) {
-      logger.error("Erro ao buscar sessão Stripe:", error);
-      // Continuar mesmo se falhar
+    } catch {
+      return NextResponse.json({ error: "Sessão de pagamento inválida" }, { status: 400 });
     }
 
-    // Recolher ficheiros
+    // Recolher e validar ficheiros
     const files: File[] = [];
     let index = 0;
     while (formData.get(`file${index}`)) {
@@ -39,6 +54,29 @@ export async function POST(req: NextRequest) {
 
     if (files.length === 0) {
       return NextResponse.json({ error: "Nenhum ficheiro enviado" }, { status: 400 });
+    }
+
+    if (files.length > MAX_FILES) {
+      return NextResponse.json(
+        { error: `Máximo de ${MAX_FILES} ficheiros permitidos` },
+        { status: 400 }
+      );
+    }
+
+    // Validate file types and sizes
+    for (const file of files) {
+      if (!ALLOWED_FILE_TYPES.has(file.type)) {
+        return NextResponse.json(
+          { error: `Tipo de ficheiro não permitido: ${file.type}. Apenas imagens e vídeos.` },
+          { status: 400 }
+        );
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        return NextResponse.json(
+          { error: `Ficheiro demasiado grande: ${file.name}. Máximo 50MB.` },
+          { status: 400 }
+        );
+      }
     }
 
     // Upload ficheiros para Supabase Storage
@@ -86,7 +124,7 @@ export async function POST(req: NextRequest) {
           <p style="margin: 0 0 5px 0;"><strong>${isImage ? "📷 Imagem" : "🎥 Vídeo"} ${i + 1}:</strong></p>
           ${isImage ? `<img src="${url}" style="max-width: 300px; border-radius: 4px; display: block; margin: 5px 0;">` : ""}
           <a href="${url}" style="color: #007bff; text-decoration: none; font-size: 12px;" download>
-            ⬇️ Download ${file.name}
+            ⬇️ Download ${escapeHtml(file.name)}
           </a>
         </div>
       `;
@@ -110,13 +148,13 @@ export async function POST(req: NextRequest) {
 
             <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="margin: 0 0 15px 0; color: #333;">📝 Caption:</h3>
-              <p style="color: #666; line-height: 1.6; white-space: pre-wrap;">${caption || "(Não especificado)"}</p>
+              <p style="color: #666; line-height: 1.6; white-space: pre-wrap;">${escapeHtml(caption || "(Não especificado)")}</p>
 
               ${
                 hashtags
                   ? `
                 <h3 style="margin: 15px 0 10px 0; color: #333;">#️⃣ Hashtags:</h3>
-                <p style="color: #666;">${hashtags}</p>
+                <p style="color: #666;">${escapeHtml(hashtags)}</p>
               `
                   : ""
               }
@@ -125,7 +163,7 @@ export async function POST(req: NextRequest) {
                 link
                   ? `
                 <h3 style="margin: 15px 0 10px 0; color: #333;">🔗 Link:</h3>
-                <p style="color: #666;"><a href="${link}" style="color: #007bff;">${link}</a></p>
+                <p style="color: #666;"><a href="${escapeHtml(link)}" style="color: #007bff;">${escapeHtml(link)}</a></p>
               `
                   : ""
               }
@@ -134,7 +172,7 @@ export async function POST(req: NextRequest) {
                 observacoes
                   ? `
                 <h3 style="margin: 15px 0 10px 0; color: #333;">💬 Observações:</h3>
-                <p style="color: #666; white-space: pre-wrap;">${observacoes}</p>
+                <p style="color: #666; white-space: pre-wrap;">${escapeHtml(observacoes)}</p>
               `
                   : ""
               }
@@ -150,7 +188,7 @@ export async function POST(req: NextRequest) {
             </div>
 
             <p style="color: #999; font-size: 12px; margin-top: 20px;">
-              ID da Sessão: ${sessionId}
+              ID da Sessão: ${escapeHtml(sessionId)}
             </p>
           </div>
         </div>

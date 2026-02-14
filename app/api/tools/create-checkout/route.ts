@@ -36,7 +36,7 @@ export async function POST() {
         .eq("id", user.id);
     }
 
-    const priceId = process.env.STRIPE_TOOLS_PRICE_ID;
+    const priceId = process.env.STRIPE_TOOLS_PRICE_ID || process.env.STRIPE_PRICE_FERRAMENTAS_PRO;
     if (!priceId) {
       return NextResponse.json({ error: "Preco nao configurado" }, { status: 500 });
     }

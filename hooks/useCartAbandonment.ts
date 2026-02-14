@@ -62,7 +62,8 @@ export function useCartAbandonment() {
               email: userEmail,
               sessionId,
               cartItems: cart.map((item) => ({
-                product_id: item.id,
+                variant_id: item.variantId,
+                line_id: item.id,
                 name: item.title,
                 image: item.image,
                 price: item.price,
@@ -144,9 +145,12 @@ export function useCartRecovery() {
         const data = await response.json();
 
         if (data.recovered && data.cart) {
-          // Restore cart items
+          // Restore cart items using variant IDs
           for (const item of data.cart.items) {
-            await addItemToCart(item.product_id, item.quantity);
+            const variantId = item.variant_id || item.product_id;
+            if (variantId) {
+              await addItemToCart(variantId, item.quantity);
+            }
           }
 
           // Remove token from URL (clean URL)

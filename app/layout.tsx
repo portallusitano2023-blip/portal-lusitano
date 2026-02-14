@@ -8,11 +8,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import { Providers } from "./providers";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
-import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
-import AnalyticsScripts from "@/components/AnalyticsScripts";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import Analytics from "@/components/Analytics";
-// CartDrawer + WhatsAppButton moved to providers.tsx (lazy loaded, ssr: false)
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -88,7 +84,7 @@ export const metadata: Metadata = {
       "Marketplace premium de cavalos Lusitanos. Loja equestre, coudelarias certificadas e arquivo editorial.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Portal Lusitano - Cavalos Lusitanos de Elite",
@@ -100,7 +96,7 @@ export const metadata: Metadata = {
     title: "Portal Lusitano | Cavalos Lusitanos de Elite",
     description:
       "Marketplace premium de cavalos Lusitanos. Loja equestre, coudelarias certificadas e arquivo editorial.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
@@ -149,18 +145,9 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
         <OrganizationSchema />
         <WebsiteSchema />
-        <AnalyticsScripts />
-        {/* Google AdSense */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7254357453133228"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
       </head>
       <body className="bg-[var(--background)] text-[var(--foreground)] antialiased">
         <Providers>
-          {/* ✅ ErrorBoundary global - captura render errors em toda a aplicação */}
           <ErrorBoundary>
             <SkipLinks />
             <Navbar />
@@ -168,9 +155,14 @@ export default function RootLayout({
             <Footer />
             <MobileBottomNav />
           </ErrorBoundary>
-          <ServiceWorkerRegistration />
-          <Analytics />
         </Providers>
+        {/* Google AdSense - afterInteractive carrega após hidratação */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7254357453133228"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

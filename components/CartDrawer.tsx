@@ -46,6 +46,7 @@ export default function CartDrawer() {
       subtotal: "Subtotal",
       shipping_note: "Envio e impostos calculados no checkout.",
       checkout: "Finalizar Compra",
+      remove: "Remover",
     },
     en: {
       title: "Your Bag",
@@ -54,6 +55,7 @@ export default function CartDrawer() {
       subtotal: "Subtotal",
       shipping_note: "Shipping and taxes calculated at checkout.",
       checkout: "Checkout",
+      remove: "Remove",
     },
     es: {
       title: "Su Bolsa",
@@ -62,6 +64,7 @@ export default function CartDrawer() {
       subtotal: "Subtotal",
       shipping_note: "Envio e impuestos calculados en el checkout.",
       checkout: "Finalizar Compra",
+      remove: "Eliminar",
     },
   };
 
@@ -117,13 +120,19 @@ export default function CartDrawer() {
                 {cart.map((item) => (
                   <div key={item.id} className="flex gap-6 animate-fade-in">
                     <div className="w-24 h-32 flex-shrink-0 bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative">
-                      <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                        sizes="96px"
-                      />
+                      {item.image ? (
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                          sizes="96px"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-xs">
+                          {ct.title}
+                        </div>
+                      )}
                     </div>
                     <div className="flex-grow flex flex-col justify-between py-1">
                       <div>
@@ -135,7 +144,7 @@ export default function CartDrawer() {
                             onClick={() => removeFromCart(item.id)}
                             className="text-[var(--foreground-secondary)] hover:text-red-400 text-xs uppercase"
                           >
-                            Remover
+                            {ct.remove}
                           </button>
                         </div>
                         <p className="text-[var(--gold)] font-serif text-md mt-2">

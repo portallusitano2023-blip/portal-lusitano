@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 export async function GET(req: NextRequest) {
   try {
@@ -29,8 +30,9 @@ export async function GET(req: NextRequest) {
     }
 
     if (pesquisa) {
+      const safePesquisa = sanitizeSearchInput(pesquisa);
       query = query.or(
-        `nome.ilike.%${pesquisa}%,especialidade.ilike.%${pesquisa}%,descricao_curta.ilike.%${pesquisa}%`
+        `nome.ilike.%${safePesquisa}%,especialidade.ilike.%${safePesquisa}%,descricao_curta.ilike.%${safePesquisa}%`
       );
     }
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 // Criar slug a partir do nome
 function createSlug(name: string): string {
@@ -33,7 +34,8 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      query = query.or(`nome.ilike.%${search}%,localizacao.ilike.%${search}%`);
+      const safeSearch = sanitizeSearchInput(search);
+      query = query.or(`nome.ilike.%${safeSearch}%,localizacao.ilike.%${safeSearch}%`);
     }
 
     if (onlyPro) {

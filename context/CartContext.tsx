@@ -1,10 +1,17 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { createCart, addToCart, getCart, removeFromCart, updateCartLines } from "@/lib/shopify";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from "react";
 
 interface CartItem {
   id: string;
+  variantId: string;
   title: string;
   price: string;
   image: string;
@@ -26,119 +33,188 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | null>(null);
 
+// --- Helper: chamadas ao servidor via API routes ---
+
+async function apiCreateCart() {
+  const res = await fetch("/api/cart/create", { method: "POST" });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.cart as { id: string; checkoutUrl?: string; totalQuantity?: number } | null;
+}
+
+async function apiAddToCart(cartId: string, variantId: string, quantity: number) {
+  const res = await fetch("/api/cart/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cartId, variantId, quantity }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.cart as { id: string; checkoutUrl?: string; totalQuantity?: number } | null;
+}
+
+async function apiGetCart(cartId: string) {
+  const res = await fetch("/api/cart/get", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cartId }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.cart;
+}
+
+async function apiRemoveFromCart(cartId: string, lineId: string) {
+  const res = await fetch("/api/cart/remove", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cartId, lineId }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.cart;
+}
+
+async function apiUpdateCartLines(cartId: string, lineId: string, quantity: number) {
+  const res = await fetch("/api/cart/update", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cartId, lineId, quantity }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.cart;
+}
+
+// --- Provider ---
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartId, setCartId] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // 1. Ao iniciar, tenta recuperar o carrinho antigo
-  useEffect(() => {
-    const localCartId = localStorage.getItem("shopify_cart_id");
-    if (localCartId) {
-      setCartId(localCartId);
-      refreshCart(localCartId);
+  // Função auxiliar para atualizar os dados visuais do carrinho
+  const refreshCart = useCallback(async (id: string) => {
+    try {
+      const cartData = await apiGetCart(id);
+      if (!cartData) {
+        // Carrinho expirado ou inválido
+        setCart([]);
+        setCheckoutUrl(null);
+        return false;
+      }
+
+      setCheckoutUrl(cartData.checkoutUrl ?? null);
+
+      if (cartData.lines) {
+        interface CartEdge {
+          node: {
+            id: string;
+            quantity: number;
+            merchandise: {
+              id?: string;
+              price: { amount: string };
+              product: {
+                title: string;
+                images: { edges: { node: { url: string } }[] };
+              };
+            };
+          };
+        }
+        const formattedCart = cartData.lines.edges.map((edge: CartEdge) => ({
+          id: edge.node.id,
+          variantId: edge.node.merchandise.id || "",
+          title: edge.node.merchandise.product.title,
+          price: edge.node.merchandise.price.amount,
+          image: edge.node.merchandise.product.images.edges[0]?.node.url || "",
+          quantity: edge.node.quantity,
+        }));
+        setCart(formattedCart);
+      }
+      return true;
+    } catch {
+      return false;
     }
   }, []);
 
-  // Função auxiliar para atualizar os dados visuais
-  const refreshCart = async (id: string) => {
-    try {
-      const cartData = await getCart(id);
-      if (cartData) {
-        setCheckoutUrl(cartData.checkoutUrl ?? null);
-
-        if (cartData.lines) {
-          interface CartEdge {
-            node: {
-              id: string;
-              quantity: number;
-              merchandise: {
-                price: { amount: string };
-                product: {
-                  title: string;
-                  images: { edges: { node: { url: string } }[] };
-                };
-              };
-            };
-          }
-          const formattedCart = cartData.lines.edges.map((edge: CartEdge) => ({
-            id: edge.node.id,
-            title: edge.node.merchandise.product.title,
-            price: edge.node.merchandise.price.amount,
-            image: edge.node.merchandise.product.images.edges[0]?.node.url,
-            quantity: edge.node.quantity,
-          }));
-          setCart(formattedCart);
+  // Ao iniciar, tenta recuperar o carrinho antigo
+  useEffect(() => {
+    let cancelled = false;
+    const localCartId = localStorage.getItem("shopify_cart_id");
+    if (localCartId) {
+      (async () => {
+        const valid = await refreshCart(localCartId);
+        if (cancelled) return;
+        if (valid) {
+          setCartId(localCartId);
+        } else {
+          localStorage.removeItem("shopify_cart_id");
+          setCartId(null);
         }
-      }
-    } catch {
-      // Silently handle cart refresh errors
+      })();
     }
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshCart]);
+
+  // Criar carrinho novo
+  const ensureCart = async (): Promise<string | null> => {
+    // Usar cartId do state ou localStorage
+    let activeId = cartId || localStorage.getItem("shopify_cart_id");
+
+    if (!activeId) {
+      const newCart = await apiCreateCart();
+      if (!newCart) return null;
+      activeId = newCart.id;
+      setCartId(activeId);
+      localStorage.setItem("shopify_cart_id", activeId);
+    }
+
+    return activeId;
   };
 
-  // --- A FUNÇÃO "BLINDADA" COM AUTO-REPARAÇÃO ---
+  // Adicionar item com auto-reparação
   const addItemToCart = async (variantId: string, quantity: number) => {
-    let activeId = cartId;
-    let result;
+    let activeId = await ensureCart();
+    if (!activeId) throw new Error("Não foi possível criar carrinho");
 
-    // Passo 1: Se não temos ID, criamos um novo
-    if (!activeId) {
-      const newCart = await createCart();
-      if (newCart) {
-        activeId = newCart.id;
-        setCartId(newCart.id);
-        localStorage.setItem("shopify_cart_id", newCart.id);
-      }
+    // Tentar adicionar
+    let result = await apiAddToCart(activeId, variantId, quantity);
+
+    // Se falhou, carrinho pode estar expirado — criar novo e tentar outra vez
+    if (!result) {
+      localStorage.removeItem("shopify_cart_id");
+      const newCart = await apiCreateCart();
+      if (!newCart) throw new Error("Não foi possível criar carrinho");
+
+      activeId = newCart.id;
+      setCartId(activeId);
+      localStorage.setItem("shopify_cart_id", activeId);
+
+      result = await apiAddToCart(activeId, variantId, quantity);
+      if (!result) throw new Error("Não foi possível adicionar ao carrinho");
     }
 
-    // Passo 2: Tenta adicionar ao carrinho atual
-    if (activeId) {
-      try {
-        result = await addToCart(activeId, variantId, quantity);
-
-        if (!result) {
-          throw new Error("Carrinho expirado");
-        }
-
-        await refreshCart(activeId);
-        setIsCartOpen(true);
-      } catch {
-        // Carrinho expirado - criar novo silenciosamente
-        localStorage.removeItem("shopify_cart_id");
-        const retryCart = await createCart();
-
-        if (retryCart) {
-          activeId = retryCart.id;
-          setCartId(retryCart.id);
-          localStorage.setItem("shopify_cart_id", retryCart.id);
-
-          await addToCart(retryCart.id, variantId, quantity);
-          await refreshCart(retryCart.id);
-          setIsCartOpen(true);
-        }
-      }
-    }
+    await refreshCart(activeId);
+    setIsCartOpen(true);
   };
 
   const updateQuantity = async (lineId: string, quantity: number) => {
-    if (cartId) {
-      await updateCartLines(cartId, lineId, quantity);
-      await refreshCart(cartId);
-    }
+    if (!cartId) return;
+    await apiUpdateCartLines(cartId, lineId, quantity);
+    await refreshCart(cartId);
   };
 
   const removeLineItem = async (lineId: string) => {
-    if (cartId) {
-      await removeFromCart(cartId, lineId);
-      await refreshCart(cartId);
-    }
+    if (!cartId) return;
+    await apiRemoveFromCart(cartId, lineId);
+    await refreshCart(cartId);
   };
 
-  // --- AS LINHAS QUE FALTAVAM ---
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
-  // ------------------------------
 
   return (
     <CartContext.Provider
@@ -147,8 +223,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         cartId,
         checkoutUrl,
         isCartOpen,
-        openCart, // Agora já está definido aqui em cima!
-        closeCart, // E este também!
+        openCart,
+        closeCart,
         addItemToCart,
         removeFromCart: removeLineItem,
         updateQuantity,
