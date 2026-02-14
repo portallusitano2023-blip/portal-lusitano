@@ -17,6 +17,25 @@ interface QuickViewProps {
   onClose: () => void;
 }
 
+// Module-level constant — not recreated on every render
+const quickViewText = {
+  pt: {
+    addToCart: "Adicionar ao Saco",
+    viewDetails: "Ver Detalhes",
+    addedToCart: "Adicionado ao saco!",
+  },
+  en: {
+    addToCart: "Add to Bag",
+    viewDetails: "View Details",
+    addedToCart: "Added to bag!",
+  },
+  es: {
+    addToCart: "Anadir a la Bolsa",
+    viewDetails: "Ver Detalles",
+    addedToCart: "Anadido a la bolsa!",
+  },
+};
+
 export default function QuickView({ product, isOpen, onClose }: QuickViewProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,25 +47,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist();
   const { showToast } = useToast();
 
-  const text = {
-    pt: {
-      addToCart: "Adicionar ao Saco",
-      viewDetails: "Ver Detalhes",
-      addedToCart: "Adicionado ao saco!",
-    },
-    en: {
-      addToCart: "Add to Bag",
-      viewDetails: "View Details",
-      addedToCart: "Added to bag!",
-    },
-    es: {
-      addToCart: "Anadir a la Bolsa",
-      viewDetails: "Ver Detalles",
-      addedToCart: "Anadido a la bolsa!",
-    },
-  };
-
-  const t = text[language];
+  const t = quickViewText[language];
 
   // Reset image when product changes
   useEffect(() => {
@@ -152,6 +153,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                       src={product.images[selectedImage].url}
                       alt={product.title}
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"
                     />
                   ) : (

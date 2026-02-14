@@ -9,9 +9,10 @@ Sentry.init({
   // Performance Monitoring
   tracesSampleRate: 0.1, // 10% das transacoes
 
-  // Session Replay (opcional)
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
+  // Session Replay desactivado para performance
+  // ~150KB de JS que não precisa de carregar no cliente
+  replaysSessionSampleRate: 0,
+  replaysOnErrorSampleRate: 0,
 
   // Ignorar erros comuns
   ignoreErrors: [

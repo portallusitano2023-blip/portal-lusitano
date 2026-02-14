@@ -1,33 +1,32 @@
 import Link from "next/link";
 import { Search, Heart, User, ShoppingBag, Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 
 interface NavIconsProps {
   language: string;
   t: { cart: string };
-  wishlistCount: number;
-  favoritesCount: number;
-  totalQuantity: number;
   isMobileOpen: boolean;
   onSearchClick: () => void;
   onLanguageToggle: () => void;
-  onCartClick: () => void;
   onMobileToggle: () => void;
 }
 
 export function NavIcons({
   language,
   t,
-  wishlistCount,
-  favoritesCount,
-  totalQuantity,
   isMobileOpen,
   onSearchClick,
   onLanguageToggle,
-  onCartClick,
   onMobileToggle,
 }: NavIconsProps) {
   const { theme, toggleTheme } = useTheme();
+  const { totalQuantity, openCart } = useCart();
+  const { wishlist } = useWishlist();
+  const { favoritesCount } = useHorseFavorites();
+  const wishlistCount = wishlist.length;
 
   return (
     <div className="flex items-center gap-2 md:gap-4">
@@ -91,7 +90,7 @@ export function NavIcons({
 
       {/* Carrinho */}
       <button
-        onClick={onCartClick}
+        onClick={openCart}
         className="flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group active:scale-95 touch-manipulation"
         aria-label={`${language === "pt" ? "Carrinho" : "Cart"} (${totalQuantity} ${language === "pt" ? "itens" : "items"})`}
       >

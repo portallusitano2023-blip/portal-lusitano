@@ -423,6 +423,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         plano_inicio: new Date().toISOString(),
         plano_ativo: true,
         plano_renovacao_automatica: true,
+        modalidade: metadata.modalidade || "presencial",
+        pais: metadata.pais || null,
         plano_metodo_pagamento: "stripe",
         stripe_customer_id: session.customer as string,
         stripe_subscription_id: session.subscription as string,
@@ -519,6 +521,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         <p><strong>Email:</strong> ${escapeHtml(session.customer_details?.email || "")}</p>
         <p><strong>Telefone:</strong> ${escapeHtml(metadata.telefone || "N/A")}</p>
         <p><strong>Distrito:</strong> ${escapeHtml(metadata.distrito || "N/A")}</p>
+        <p><strong>Modalidade:</strong> ${escapeHtml(metadata.modalidade || "presencial")}</p>
         <p><strong>Especialidade:</strong> ${escapeHtml(metadata.especialidade || "N/A")}</p>
         <p><strong>Pagamento:</strong> €6/mês (subscrição activa)</p>
         <hr>

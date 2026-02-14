@@ -11,7 +11,9 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { type ReactNode, type FC } from "react";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import Preloader from "@/components/Preloader";
+
+// Preloader is session-dependent and purely visual — lazy load it
+const Preloader = dynamic(() => import("@/components/Preloader"), { ssr: false });
 
 // Lazy load - carregam apenas quando necessários (reduz bundle inicial)
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
@@ -27,6 +29,7 @@ const Analytics = dynamic(() => import("@/components/Analytics"), { ssr: false }
 const ServiceWorkerRegistration = dynamic(() => import("@/components/ServiceWorkerRegistration"), {
   ssr: false,
 });
+const MobileBottomNav = dynamic(() => import("@/components/MobileBottomNav"), { ssr: false });
 // Compose multiple providers to avoid deeply nested JSX
 // Each provider only re-renders its own consumers, not siblings
 function composeProviders(...providers: FC<{ children: ReactNode }>[]) {
@@ -62,6 +65,7 @@ export function Providers({ children }: { children: ReactNode }) {
         <CartDrawer />
         <ServiceWorkerRegistration />
         <Analytics />
+        <MobileBottomNav />
         <AnalyticsScripts />
       </ComposedProviders>
     </LanguageProvider>

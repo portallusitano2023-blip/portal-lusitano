@@ -37,34 +37,34 @@ function cleanupRateLimitMap() {
   }
 }
 
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-  const pathname = request.nextUrl.pathname;
+// Pre-computed at module load — avoids string concatenation on every request
+const IS_DEV = process.env.NODE_ENV === "development";
+const CSP_DIRECTIVES = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com",
+  "font-src 'self' https://fonts.gstatic.com",
+  "connect-src 'self' https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google",
+  "frame-src 'self' https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
+  "object-src 'none'",
+  "base-uri 'self'",
+].join("; ");
 
-  const isDev = process.env.NODE_ENV === "development";
-
-  // CSP com 'unsafe-inline' — necessário porque o Next.js injeta scripts inline
-  // para hidratação e navegação client-side que não suportam nonces automaticamente.
-  // Google AdSense: wildcards cobrem todos os subdomínios (pagead2, tpc, ep1/ep2, etc.)
-  const cspDirectives = [
-    "default-src 'self'",
-    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com",
-    "font-src 'self' https://fonts.gstatic.com",
-    "connect-src 'self' https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google",
-    "frame-src 'self' https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
-    "object-src 'none'",
-    "base-uri 'self'",
-  ].join("; ");
-
-  response.headers.set("Content-Security-Policy", cspDirectives);
-
-  // Additional security headers
+function applySecurityHeaders(response: NextResponse, contentLanguage = "pt") {
+  response.headers.set("Content-Security-Policy", CSP_DIRECTIVES);
   response.headers.set("X-DNS-Prefetch-Control", "on");
   response.headers.set("X-Download-Options", "noopen");
   response.headers.set("X-Permitted-Cross-Domain-Policies", "none");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Content-Language", contentLanguage);
+}
+
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+  const pathname = request.nextUrl.pathname;
+
+  applySecurityHeaders(response);
 
   // API routes: Rate Limiting + CORS
   if (pathname.startsWith("/api/")) {
@@ -118,41 +118,18 @@ export async function middleware(request: NextRequest) {
 
   // i18n: Rewrite /en/* and /es/* routes to serve the same pages with locale cookie
   // Isto permite que o Google indexe /en/comprar, /en/loja, /es/comprar, /es/loja, etc.
-  if (pathname.startsWith("/en/") || pathname === "/en") {
-    // Strip /en prefix and rewrite to the Portuguese route
-    const strippedPath = pathname.replace(/^\/en/, "") || "/";
+  const i18nMatch = pathname.match(/^\/(en|es)(\/|$)/);
+  if (i18nMatch) {
+    const locale = i18nMatch[1] as "en" | "es";
+    const strippedPath = pathname.replace(/^\/(en|es)/, "") || "/";
     const url = request.nextUrl.clone();
     url.pathname = strippedPath;
 
     const rewriteResponse = NextResponse.rewrite(url);
-    rewriteResponse.cookies.set("locale", "en", { path: "/", sameSite: "lax" });
-    rewriteResponse.headers.set("Content-Security-Policy", cspDirectives);
-    rewriteResponse.headers.set("X-DNS-Prefetch-Control", "on");
-    rewriteResponse.headers.set("X-Download-Options", "noopen");
-    rewriteResponse.headers.set("X-Permitted-Cross-Domain-Policies", "none");
-    rewriteResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-    rewriteResponse.headers.set("Content-Language", "en");
+    rewriteResponse.cookies.set("locale", locale, { path: "/", sameSite: "lax" });
+    applySecurityHeaders(rewriteResponse, locale);
     return rewriteResponse;
   }
-
-  if (pathname.startsWith("/es/") || pathname === "/es") {
-    const strippedPath = pathname.replace(/^\/es/, "") || "/";
-    const url = request.nextUrl.clone();
-    url.pathname = strippedPath;
-
-    const rewriteResponse = NextResponse.rewrite(url);
-    rewriteResponse.cookies.set("locale", "es", { path: "/", sameSite: "lax" });
-    rewriteResponse.headers.set("Content-Security-Policy", cspDirectives);
-    rewriteResponse.headers.set("X-DNS-Prefetch-Control", "on");
-    rewriteResponse.headers.set("X-Download-Options", "noopen");
-    rewriteResponse.headers.set("X-Permitted-Cross-Domain-Policies", "none");
-    rewriteResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-    rewriteResponse.headers.set("Content-Language", "es");
-    return rewriteResponse;
-  }
-
-  // Set Content-Language for Portuguese routes
-  response.headers.set("Content-Language", "pt");
 
   // Protect admin routes (except login page)
   if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {

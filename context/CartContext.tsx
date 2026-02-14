@@ -6,6 +6,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   ReactNode,
 } from "react";
 
@@ -39,7 +40,7 @@ async function apiCreateCart() {
   const res = await fetch("/api/cart/create", { method: "POST" });
   if (!res.ok) return null;
   const data = await res.json();
-  return data.cart as { id: string; checkoutUrl?: string; totalQuantity?: number } | null;
+  return data.cart;
 }
 
 async function apiAddToCart(cartId: string, variantId: string, quantity: number) {
@@ -50,7 +51,7 @@ async function apiAddToCart(cartId: string, variantId: string, quantity: number)
   });
   if (!res.ok) return null;
   const data = await res.json();
-  return data.cart as { id: string; checkoutUrl?: string; totalQuantity?: number } | null;
+  return data.cart;
 }
 
 async function apiGetCart(cartId: string) {
@@ -86,6 +87,39 @@ async function apiUpdateCartLines(cartId: string, lineId: string, quantity: numb
   return data.cart;
 }
 
+// --- Helper: parse cart data from API response ---
+interface CartEdge {
+  node: {
+    id: string;
+    quantity: number;
+    merchandise: {
+      id?: string;
+      price: { amount: string };
+      product: {
+        title: string;
+        images: { edges: { node: { url: string } }[] };
+      };
+    };
+  };
+}
+
+function parseCartData(cartData: { checkoutUrl?: string; lines?: { edges: CartEdge[] } }): {
+  checkoutUrl: string | null;
+  items: CartItem[];
+} {
+  const checkoutUrl = cartData.checkoutUrl ?? null;
+  const items =
+    cartData.lines?.edges.map((edge: CartEdge) => ({
+      id: edge.node.id,
+      variantId: edge.node.merchandise.id || "",
+      title: edge.node.merchandise.product.title,
+      price: edge.node.merchandise.price.amount,
+      image: edge.node.merchandise.product.images.edges[0]?.node.url || "",
+      quantity: edge.node.quantity,
+    })) || [];
+  return { checkoutUrl, items };
+}
+
 // --- Provider ---
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -94,48 +128,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Função auxiliar para atualizar os dados visuais do carrinho
-  const refreshCart = useCallback(async (id: string) => {
-    try {
-      const cartData = await apiGetCart(id);
-      if (!cartData) {
-        // Carrinho expirado ou inválido
-        setCart([]);
-        setCheckoutUrl(null);
-        return false;
-      }
-
-      setCheckoutUrl(cartData.checkoutUrl ?? null);
-
-      if (cartData.lines) {
-        interface CartEdge {
-          node: {
-            id: string;
-            quantity: number;
-            merchandise: {
-              id?: string;
-              price: { amount: string };
-              product: {
-                title: string;
-                images: { edges: { node: { url: string } }[] };
-              };
-            };
-          };
-        }
-        const formattedCart = cartData.lines.edges.map((edge: CartEdge) => ({
-          id: edge.node.id,
-          variantId: edge.node.merchandise.id || "",
-          title: edge.node.merchandise.product.title,
-          price: edge.node.merchandise.price.amount,
-          image: edge.node.merchandise.product.images.edges[0]?.node.url || "",
-          quantity: edge.node.quantity,
-        }));
-        setCart(formattedCart);
-      }
-      return true;
-    } catch {
-      return false;
-    }
+  // Apply cart data from any API response that includes lines
+  const applyCartData = useCallback((cartData: Parameters<typeof parseCartData>[0]) => {
+    const { checkoutUrl: url, items } = parseCartData(cartData);
+    setCheckoutUrl(url);
+    setCart(items);
   }, []);
 
   // Ao iniciar, tenta recuperar o carrinho antigo
@@ -144,96 +141,129 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const localCartId = localStorage.getItem("shopify_cart_id");
     if (localCartId) {
       (async () => {
-        const valid = await refreshCart(localCartId);
-        if (cancelled) return;
-        if (valid) {
-          setCartId(localCartId);
-        } else {
-          localStorage.removeItem("shopify_cart_id");
-          setCartId(null);
+        try {
+          const cartData = await apiGetCart(localCartId);
+          if (cancelled) return;
+          if (cartData?.lines) {
+            setCartId(localCartId);
+            applyCartData(cartData);
+          } else {
+            localStorage.removeItem("shopify_cart_id");
+            setCartId(null);
+          }
+        } catch {
+          if (!cancelled) {
+            localStorage.removeItem("shopify_cart_id");
+            setCartId(null);
+          }
         }
       })();
     }
     return () => {
       cancelled = true;
     };
-  }, [refreshCart]);
+  }, [applyCartData]);
 
   // Criar carrinho novo
-  const ensureCart = async (): Promise<string | null> => {
-    // Usar cartId do state ou localStorage
-    let activeId = cartId || localStorage.getItem("shopify_cart_id");
+  const ensureCart = useCallback(async (): Promise<string | null> => {
+    const activeId = cartId || localStorage.getItem("shopify_cart_id");
+    if (activeId) return activeId;
 
-    if (!activeId) {
-      const newCart = await apiCreateCart();
-      if (!newCart) return null;
-      activeId = newCart.id;
-      setCartId(activeId);
-      localStorage.setItem("shopify_cart_id", activeId);
-    }
+    const newCart = await apiCreateCart();
+    if (!newCart) return null;
+    setCartId(newCart.id);
+    localStorage.setItem("shopify_cart_id", newCart.id);
+    if (newCart.lines) applyCartData(newCart);
+    return newCart.id;
+  }, [cartId, applyCartData]);
 
-    return activeId;
-  };
+  // Adicionar item — mutations now return full cart data, no need for refreshCart
+  const addItemToCart = useCallback(
+    async (variantId: string, quantity: number) => {
+      let activeId = await ensureCart();
+      if (!activeId) throw new Error("Não foi possível criar carrinho");
 
-  // Adicionar item com auto-reparação
-  const addItemToCart = async (variantId: string, quantity: number) => {
-    let activeId = await ensureCart();
-    if (!activeId) throw new Error("Não foi possível criar carrinho");
+      let result = await apiAddToCart(activeId, variantId, quantity);
 
-    // Tentar adicionar
-    let result = await apiAddToCart(activeId, variantId, quantity);
+      // Se falhou, carrinho pode estar expirado — criar novo e tentar outra vez
+      if (!result) {
+        localStorage.removeItem("shopify_cart_id");
+        const newCart = await apiCreateCart();
+        if (!newCart) throw new Error("Não foi possível criar carrinho");
 
-    // Se falhou, carrinho pode estar expirado — criar novo e tentar outra vez
-    if (!result) {
-      localStorage.removeItem("shopify_cart_id");
-      const newCart = await apiCreateCart();
-      if (!newCart) throw new Error("Não foi possível criar carrinho");
+        const newId = newCart.id;
+        activeId = newId;
+        setCartId(newId);
+        localStorage.setItem("shopify_cart_id", newId);
 
-      activeId = newCart.id;
-      setCartId(activeId);
-      localStorage.setItem("shopify_cart_id", activeId);
+        result = await apiAddToCart(newId, variantId, quantity);
+        if (!result) throw new Error("Não foi possível adicionar ao carrinho");
+      }
 
-      result = await apiAddToCart(activeId, variantId, quantity);
-      if (!result) throw new Error("Não foi possível adicionar ao carrinho");
-    }
-
-    await refreshCart(activeId);
-    setIsCartOpen(true);
-  };
-
-  const updateQuantity = async (lineId: string, quantity: number) => {
-    if (!cartId) return;
-    await apiUpdateCartLines(cartId, lineId, quantity);
-    await refreshCart(cartId);
-  };
-
-  const removeLineItem = async (lineId: string) => {
-    if (!cartId) return;
-    await apiRemoveFromCart(cartId, lineId);
-    await refreshCart(cartId);
-  };
-
-  const openCart = () => setIsCartOpen(true);
-  const closeCart = () => setIsCartOpen(false);
-
-  return (
-    <CartContext.Provider
-      value={{
-        cart,
-        cartId,
-        checkoutUrl,
-        isCartOpen,
-        openCart,
-        closeCart,
-        addItemToCart,
-        removeFromCart: removeLineItem,
-        updateQuantity,
-        totalQuantity: cart.reduce((acc, item) => acc + item.quantity, 0),
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+      // Apply cart data directly from mutation response — no second API call needed
+      if (result.lines) {
+        applyCartData(result);
+      }
+      setIsCartOpen(true);
+    },
+    [ensureCart, applyCartData]
   );
+
+  const updateQuantity = useCallback(
+    async (lineId: string, quantity: number) => {
+      if (!cartId) return;
+      const result = await apiUpdateCartLines(cartId, lineId, quantity);
+      if (result?.lines) {
+        applyCartData(result);
+      }
+    },
+    [cartId, applyCartData]
+  );
+
+  const removeLineItem = useCallback(
+    async (lineId: string) => {
+      if (!cartId) return;
+      const result = await apiRemoveFromCart(cartId, lineId);
+      if (result?.lines) {
+        applyCartData(result);
+      }
+    },
+    [cartId, applyCartData]
+  );
+
+  const openCart = useCallback(() => setIsCartOpen(true), []);
+  const closeCart = useCallback(() => setIsCartOpen(false), []);
+
+  const totalQuantity = useMemo(() => cart.reduce((acc, item) => acc + item.quantity, 0), [cart]);
+
+  const value = useMemo<CartContextType>(
+    () => ({
+      cart,
+      cartId,
+      checkoutUrl,
+      isCartOpen,
+      openCart,
+      closeCart,
+      addItemToCart,
+      removeFromCart: removeLineItem,
+      updateQuantity,
+      totalQuantity,
+    }),
+    [
+      cart,
+      cartId,
+      checkoutUrl,
+      isCartOpen,
+      openCart,
+      closeCart,
+      addItemToCart,
+      removeLineItem,
+      updateQuantity,
+      totalQuantity,
+    ]
+  );
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 export const useCart = () => {

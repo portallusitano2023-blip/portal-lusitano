@@ -4,7 +4,6 @@ import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MobileBottomNav from "@/components/MobileBottomNav";
 import { Providers } from "./providers";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
@@ -138,6 +137,7 @@ export default function RootLayout({
         {/* Preconnect para recursos críticos (hero image + CMS), dns-prefetch para os restantes */}
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
@@ -151,7 +151,6 @@ export default function RootLayout({
             <Navbar />
             <main id="main-content">{children}</main>
             <Footer />
-            <MobileBottomNav />
           </ErrorBoundary>
         </Providers>
         {/* Google AdSense - afterInteractive carrega após hidratação */}

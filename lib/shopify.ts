@@ -114,7 +114,7 @@ async function shopifyFetch({
         "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
       },
       body: JSON.stringify({ query, variables }),
-      cache: "no-store",
+      next: { revalidate: 120 },
     });
     return await response.json();
   } catch {
@@ -190,23 +190,72 @@ export async function getProduct(handle: string): Promise<{
   };
 }
 
+// Uncached fetch for mutations (cart operations)
+async function shopifyMutate({
+  query,
+  variables = {},
+}: ShopifyFetchParams): Promise<ShopifyResponse> {
+  const endpoint = `https://${domain}/api/2025-01/graphql.json`;
+  if (!domain || !storefrontAccessToken) return { data: null };
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
+      },
+      body: JSON.stringify({ query, variables }),
+      cache: "no-store",
+    });
+    return await response.json();
+  } catch {
+    return { data: null };
+  }
+}
+
+// Cart lines fragment for mutation responses
+const CART_LINES_FRAGMENT = `
+  id
+  checkoutUrl
+  totalQuantity
+  lines(first: 20) {
+    edges {
+      node {
+        id
+        quantity
+        merchandise {
+          ... on ProductVariant {
+            id
+            title
+            price { amount }
+            product {
+              title
+              images(first: 1) { edges { node { url } } }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 // --- FUNÇÕES DE CARRINHO ---
 
 export async function createCart() {
-  const query = `mutation { cartCreate { cart { id checkoutUrl totalQuantity } } }`;
-  const res = await shopifyFetch({ query });
+  const query = `mutation { cartCreate { cart { ${CART_LINES_FRAGMENT} } } }`;
+  const res = await shopifyMutate({ query });
   return res.data?.cartCreate?.cart;
 }
 
 export async function getCart(cartId: string) {
-  const query = `query($cartId: ID!) { cart(id: $cartId) { id checkoutUrl totalQuantity lines(first: 10) { edges { node { id quantity merchandise { ... on ProductVariant { id title price { amount } product { title images(first: 1) { edges { node { url } } } } } } } } } } }`;
-  const res = await shopifyFetch({ query, variables: { cartId } });
+  const query = `query($cartId: ID!) { cart(id: $cartId) { ${CART_LINES_FRAGMENT} } }`;
+  const res = await shopifyMutate({ query, variables: { cartId } });
   return res.data?.cart;
 }
 
 export async function addToCart(cartId: string, variantId: string, quantity: number = 1) {
-  const query = `mutation($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { id checkoutUrl totalQuantity } } }`;
-  const res = await shopifyFetch({
+  const query = `mutation($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ${CART_LINES_FRAGMENT} } } }`;
+  const res = await shopifyMutate({
     query,
     variables: { cartId, lines: [{ merchandiseId: variantId, quantity }] },
   });
@@ -214,14 +263,14 @@ export async function addToCart(cartId: string, variantId: string, quantity: num
 }
 
 export async function removeFromCart(cartId: string, lineId: string) {
-  const query = `mutation($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { id checkoutUrl totalQuantity } } }`;
-  const res = await shopifyFetch({ query, variables: { cartId, lineIds: [lineId] } });
+  const query = `mutation($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { ${CART_LINES_FRAGMENT} } } }`;
+  const res = await shopifyMutate({ query, variables: { cartId, lineIds: [lineId] } });
   return res.data?.cartLinesRemove?.cart;
 }
 
 export async function updateCartLines(cartId: string, lineId: string, quantity: number) {
-  const query = `mutation($cartId: ID!, $lines: [CartLineUpdateInput!]!) { cartLinesUpdate(cartId: $cartId, lines: $lines) { cart { id checkoutUrl totalQuantity } } }`;
-  const res = await shopifyFetch({
+  const query = `mutation($cartId: ID!, $lines: [CartLineUpdateInput!]!) { cartLinesUpdate(cartId: $cartId, lines: $lines) { cart { ${CART_LINES_FRAGMENT} } } }`;
+  const res = await shopifyMutate({
     query,
     variables: { cartId, lines: [{ id: lineId, quantity }] },
   });

@@ -6,6 +6,28 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useToast } from "@/context/ToastContext";
 import { Loader2 } from "lucide-react";
 
+// Module-level constant — not recreated on every render
+const buttonText = {
+  pt: {
+    add: "Adicionar ao Saco",
+    adding: "A Adicionar...",
+    sold_out: "Esgotado",
+    error: "Erro ao adicionar. Tente novamente.",
+  },
+  en: {
+    add: "Add to Bag",
+    adding: "Adding...",
+    sold_out: "Sold Out",
+    error: "Error adding to bag. Try again.",
+  },
+  es: {
+    add: "Anadir a la Bolsa",
+    adding: "Anadiendo...",
+    sold_out: "Agotado",
+    error: "Error al anadir. Intente de nuevo.",
+  },
+};
+
 export default function AddToCartButton({
   variantId,
   available,
@@ -17,27 +39,6 @@ export default function AddToCartButton({
   const { language } = useLanguage();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
-
-  const buttonText = {
-    pt: {
-      add: "Adicionar ao Saco",
-      adding: "A Adicionar...",
-      sold_out: "Esgotado",
-      error: "Erro ao adicionar. Tente novamente.",
-    },
-    en: {
-      add: "Add to Bag",
-      adding: "Adding...",
-      sold_out: "Sold Out",
-      error: "Error adding to bag. Try again.",
-    },
-    es: {
-      add: "Anadir a la Bolsa",
-      adding: "Anadiendo...",
-      sold_out: "Agotado",
-      error: "Error al anadir. Intente de nuevo.",
-    },
-  };
 
   const t = buttonText[language];
 

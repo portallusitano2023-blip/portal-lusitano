@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Heart, User, Gift } from "lucide-react";
+import { useWishlist } from "@/context/WishlistContext";
+import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import {
   MOBILE_DB_ITEMS,
   MOBILE_TOOLS_ITEMS,
@@ -17,21 +19,15 @@ interface MobileMenuProps {
       journal: string;
     };
   };
-  wishlistCount: number;
-  favoritesCount: number;
   onLanguageToggle: () => void;
   onClose: () => void;
 }
 
-export function MobileMenu({
-  isOpen,
-  language,
-  t,
-  wishlistCount,
-  favoritesCount,
-  onLanguageToggle,
-  onClose,
-}: MobileMenuProps) {
+export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: MobileMenuProps) {
+  const { wishlist } = useWishlist();
+  const { favoritesCount } = useHorseFavorites();
+  const wishlistCount = wishlist.length;
+
   if (!isOpen) return null;
 
   const mainNavItems = [

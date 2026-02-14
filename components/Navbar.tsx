@@ -3,12 +3,9 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
-import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useState, useEffect, memo } from "react";
 import { usePathname } from "next/navigation";
-import { useWishlist } from "@/context/WishlistContext";
-import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import { DesktopMenu } from "./navbar/DesktopMenu";
 import { NavIcons } from "./navbar/NavIcons";
 import { MobileMenu } from "./navbar/MobileMenu";
@@ -20,10 +17,7 @@ const SearchModal = dynamic(
 );
 
 export default memo(function Navbar() {
-  const { totalQuantity, openCart } = useCart();
   const { language, toggleLanguage, t } = useLanguage();
-  const { wishlist } = useWishlist();
-  const { favoritesCount } = useHorseFavorites();
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -86,13 +80,9 @@ export default memo(function Navbar() {
         <NavIcons
           language={language}
           t={t}
-          wishlistCount={wishlist.length}
-          favoritesCount={favoritesCount}
-          totalQuantity={totalQuantity}
           isMobileOpen={isMobileOpen}
           onSearchClick={() => setIsSearchOpen(true)}
           onLanguageToggle={toggleLanguage}
-          onCartClick={openCart}
           onMobileToggle={() => setIsMobileOpen(!isMobileOpen)}
         />
       </div>
@@ -102,8 +92,6 @@ export default memo(function Navbar() {
         isOpen={isMobileOpen}
         language={language}
         t={t}
-        wishlistCount={wishlist.length}
-        favoritesCount={favoritesCount}
         onLanguageToggle={toggleLanguage}
         onClose={() => setIsMobileOpen(false)}
       />

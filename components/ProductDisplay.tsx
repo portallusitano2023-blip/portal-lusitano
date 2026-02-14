@@ -21,7 +21,7 @@ export default function ProductDisplay({ product }: { product: Product }) {
     if (activeVariant?.image?.url) {
       setSelectedImage(activeVariant.image.url); // eslint-disable-line react-hooks/set-state-in-effect
     }
-  }, [activeVariant]);
+  }, [selectedVariantId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isAvailable = activeVariant?.availableForSale || false;
   const price = Number(activeVariant?.price?.amount || 0).toFixed(2);
@@ -114,8 +114,8 @@ export default function ProductDisplay({ product }: { product: Product }) {
         )}
 
         <p className="text-[var(--foreground-secondary)] font-serif leading-loose mb-12">
-          &ldquo;Uma peça desenhada para perdurar. A união entre a funcionalidade equestre e a
-          estética intemporal.&rdquo;
+          &ldquo;Produção artesanal sob encomenda. Cada peça é impressa individualmente com a mais
+          alta qualidade, unindo a tradição equestre Lusitana ao design contemporâneo.&rdquo;
         </p>
 
         {/* Botão de Compra */}
@@ -132,7 +132,7 @@ export default function ProductDisplay({ product }: { product: Product }) {
         <div className="space-y-4 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
           <div className="flex items-center gap-3">
             <div className="w-1 h-1 bg-[var(--gold)] rounded-full"></div>
-            <span>Envio Premium em 24/48h</span>
+            <span>Entrega estimada: 5-15 dias úteis</span>
           </div>
           <div className="flex items-center gap-3">
             <div className="w-1 h-1 bg-[var(--gold)] rounded-full"></div>

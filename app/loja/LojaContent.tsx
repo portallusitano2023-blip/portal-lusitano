@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { ProductListing } from "@/types/product";
 
@@ -56,19 +57,22 @@ export default function LojaContent({ products }: { products: ProductListing[] }
               <div
                 key={product.id}
                 className="flex flex-col items-center opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-                style={{ animationDelay: `${index * 0.15 + 0.3}s` }}
+                style={{ animationDelay: `${Math.min(index * 0.1, 0.6) + 0.3}s` }}
               >
                 <a href={`/loja/${product.handle}`} className="group block w-full max-w-[380px]">
                   {/* MOLDURA DA IMAGEM */}
                   <div className="aspect-[4/5] w-full bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative mb-6">
                     <div className="absolute inset-0 z-10 shadow-[inset_0_0_40px_rgba(0,0,0,0.2)] pointer-events-none transition-opacity duration-700 group-hover:opacity-40"></div>
 
-                    { }
                     {product.images[0]?.url ? (
-                      <img
+                      <Image
                         src={product.images[0].url}
                         alt={product.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 380px"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        priority={index < 2}
+                        quality={80}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-xs uppercase tracking-widest">

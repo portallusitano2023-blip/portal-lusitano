@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import toast from "react-hot-toast";
+import { useToast } from "@/context/ToastContext";
 import { analytics } from "@/lib/analytics-events";
 import Image from "next/image";
 import DynamicSEO from "@/components/DynamicSEO";
@@ -114,6 +114,7 @@ const placeholderImages = [
 export default function CoudelariaPage() {
   const params = useParams();
   const slug = params.slug as string;
+  const { showToast } = useToast();
   const [coudelaria, setCoudelaria] = useState<Coudelaria | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
@@ -221,14 +222,7 @@ export default function CoudelariaPage() {
           recomenda: true,
         });
         // ✅ Toast de sucesso
-        toast.success("Avaliação submetida com sucesso! Será publicada após revisão.", {
-          duration: 5000,
-          style: {
-            background: "#1a1a1a",
-            color: "#C5A059",
-            border: "1px solid #C5A059",
-          },
-        });
+        showToast("success", "Avaliação submetida com sucesso! Será publicada após revisão.");
 
         // ✅ Recarregar reviews
         const reviewsRes = await fetch(`/api/reviews?coudelaria_id=${coudelaria.id}`);
@@ -240,26 +234,12 @@ export default function CoudelariaPage() {
       } else {
         // ✅ Erro do servidor (validação, etc.)
         const errorData = await res.json().catch(() => ({ message: "Erro desconhecido" }));
-        toast.error(errorData.message || "Erro ao submeter avaliação. Tente novamente.", {
-          duration: 5000,
-          style: {
-            background: "#1a1a1a",
-            color: "#ff4444",
-            border: "1px solid #ff4444",
-          },
-        });
+        showToast("error", errorData.message || "Erro ao submeter avaliação. Tente novamente.");
       }
     } catch (error) {
       void error;
       // ✅ Erro de rede
-      toast.error("Erro de conexão. Verifique sua internet e tente novamente.", {
-        duration: 5000,
-        style: {
-          background: "#1a1a1a",
-          color: "#ff4444",
-          border: "1px solid #ff4444",
-        },
-      });
+      showToast("error", "Erro de conexão. Verifique sua internet e tente novamente.");
     } finally {
       setSubmittingReview(false);
     }

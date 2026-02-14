@@ -250,7 +250,7 @@ export default function Home() {
       </section>
 
       {/* ===== STATS BAR — Animated Counters ===== */}
-      <section className="relative py-16 border-y border-[var(--border)] bg-[var(--background-secondary)]/50">
+      <section className="relative py-16 border-y border-[var(--border)] bg-[var(--background-secondary)]/50 content-auto">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
@@ -274,7 +274,7 @@ export default function Home() {
       </section>
 
       {/* ===== HORIZONTAL SCROLL — Lusitano Qualities ===== */}
-      <section className="py-20 sm:py-24 overflow-hidden">
+      <section className="py-20 sm:py-24 overflow-hidden content-auto">
         <RevealOnScroll className="text-center mb-10 px-4">
           <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3 block">
             {isPt ? "A Essência" : "The Essence"}
@@ -306,7 +306,7 @@ export default function Home() {
       </section>
 
       {/* ===== DISCOVER SECTION ===== */}
-      <section className="py-24 sm:py-32 px-4 sm:px-6">
+      <section className="py-24 sm:py-32 px-4 sm:px-6 content-auto">
         <div className="max-w-6xl mx-auto">
           <RevealOnScroll variant="blur-up" className="text-center mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
@@ -358,7 +358,7 @@ export default function Home() {
       </section>
 
       {/* ===== PILLARS ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)] relative overflow-hidden">
+      <section className="py-20 sm:py-28 border-t border-[var(--border)] relative overflow-hidden content-auto">
         {/* Background orb */}
         <div className="gradient-orb w-[600px] h-[600px] bg-[var(--gold)] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
@@ -393,7 +393,7 @@ export default function Home() {
       </section>
 
       {/* ===== EBOOK CTA ===== */}
-      <section className="relative py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden noise-overlay">
+      <section className="relative py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden noise-overlay content-auto">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--gold)]/5 rounded-full blur-[120px]" />
         </div>
@@ -445,7 +445,7 @@ export default function Home() {
       </section>
 
       {/* ===== LOJA CTA ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)]">
+      <section className="py-20 sm:py-28 border-t border-[var(--border)] content-auto">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <RevealOnScroll variant="fade-scale">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
