@@ -70,6 +70,8 @@ export async function POST(req: NextRequest) {
         cidade: formData.cidade || "",
         especialidade: formData.especialidade || "",
         anos_experiencia: String(formData.anosExperiencia || 0),
+        modalidade: formData.modalidade || "presencial",
+        pais: formData.pais || "",
         emergencias_24h: formData.emergencias24h ? "true" : "false",
         seguro_profissional: formData.seguroProfissional ? "true" : "false",
       },

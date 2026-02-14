@@ -24,8 +24,8 @@ import {
   Facebook,
   Linkedin,
 } from "lucide-react";
-import { categorias, distritos } from "@/components/profissionais/constants";
-import type { CategoriaProf } from "@/components/profissionais/types";
+import { categorias, distritos, modalidades } from "@/components/profissionais/constants";
+import type { CategoriaProf, Modalidade } from "@/components/profissionais/types";
 
 const categoriasOptions = categorias.filter((c) => c.id !== "todos") as {
   id: CategoriaProf;
@@ -52,9 +52,11 @@ interface FormData {
   email: string;
   telefone: string;
   categoria: CategoriaProf | "";
+  modalidade: Modalidade;
   especialidade: string;
   anosExperiencia: number;
   // Passo 2
+  pais: string;
   cidade: string;
   distrito: string;
   morada: string;
@@ -105,8 +107,10 @@ export default function RegistarProfissionalPage() {
     email: "",
     telefone: "",
     categoria: "",
+    modalidade: "presencial",
     especialidade: "",
     anosExperiencia: 0,
+    pais: "",
     cidade: "",
     distrito: "",
     morada: "",
@@ -392,7 +396,9 @@ export default function RegistarProfissionalPage() {
     formData.categoria !== "" &&
     formData.anosExperiencia > 0;
 
-  const isStep2Valid = formData.distrito !== "" && formData.servicos.length >= 1;
+  const isStep2Valid =
+    formData.servicos.length >= 1 &&
+    (formData.modalidade !== "presencial" || formData.distrito !== "");
 
   const isStep3Valid = formData.descricao.trim().length >= 100;
 
@@ -610,6 +616,28 @@ export default function RegistarProfissionalPage() {
                 </select>
               </div>
 
+              {/* Modalidade de Serviço */}
+              <div>
+                <label className={labelClass}>Modalidade de Serviço *</label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {modalidades.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => setFormData((prev) => ({ ...prev, modalidade: m.id }))}
+                      className={`p-3 border rounded-lg text-left transition-all ${
+                        formData.modalidade === m.id
+                          ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--foreground)]"
+                          : "border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--foreground-muted)]"
+                      }`}
+                    >
+                      <span className="block text-sm font-medium">{m.label}</span>
+                      <span className="block text-xs mt-1 opacity-70">{m.descricao}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Especialidade + Anos Experiência */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -662,100 +690,139 @@ export default function RegistarProfissionalPage() {
             </h2>
 
             <div className="space-y-6 max-w-2xl mx-auto">
-              {/* Cidade + Distrito */}
-              <div className="grid md:grid-cols-2 gap-4">
+              {/* Modalidade info banner */}
+              <div className="p-3 bg-[var(--gold)]/5 border border-[var(--gold)]/20 rounded-lg text-sm text-[var(--foreground-secondary)]">
+                {formData.modalidade === "presencial" &&
+                  "Preencha a sua localização em Portugal para os clientes o encontrarem."}
+                {formData.modalidade === "online" &&
+                  "Como profissional online, o distrito não é obrigatório. Pode indicar o seu país de base."}
+                {formData.modalidade === "clinicas_internacionais" &&
+                  "Como clinicista internacional, não precisa de indicar localização fixa."}
+              </div>
+
+              {/* País (only for online) */}
+              {formData.modalidade === "online" && (
                 <div>
-                  <label className={labelClass}>Cidade</label>
+                  <label className={labelClass}>País</label>
                   <div className="relative">
-                    <MapPin
+                    <Globe
                       className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
                       size={18}
                     />
                     <input
                       type="text"
-                      name="cidade"
-                      value={formData.cidade}
+                      name="pais"
+                      value={formData.pais}
                       onChange={handleInputChange}
-                      placeholder="Ex: Santarém"
+                      placeholder="Ex: Portugal, Brasil, Espanha"
                       className={`${inputClass} pl-10`}
                     />
                   </div>
                 </div>
-                <div>
-                  <label className={labelClass}>Distrito *</label>
-                  <select
-                    name="distrito"
-                    value={formData.distrito}
-                    onChange={handleInputChange}
-                    className={inputClass}
-                  >
-                    <option value="">Selecione...</option>
-                    {distritosOptions.map((d) => (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+              )}
 
-              {/* Morada + Código Postal */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass}>Morada Completa</label>
-                  <input
-                    type="text"
-                    name="morada"
-                    value={formData.morada}
-                    onChange={handleInputChange}
-                    placeholder="Rua, número, localidade"
-                    className={inputClass}
-                  />
+              {/* Cidade + Distrito (presencial or online) */}
+              {formData.modalidade !== "clinicas_internacionais" && (
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelClass}>Cidade</label>
+                    <div className="relative">
+                      <MapPin
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+                        size={18}
+                      />
+                      <input
+                        type="text"
+                        name="cidade"
+                        value={formData.cidade}
+                        onChange={handleInputChange}
+                        placeholder="Ex: Santarém"
+                        className={`${inputClass} pl-10`}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>
+                      Distrito {formData.modalidade === "presencial" ? "*" : ""}
+                    </label>
+                    <select
+                      name="distrito"
+                      value={formData.distrito}
+                      onChange={handleInputChange}
+                      className={inputClass}
+                    >
+                      <option value="">Selecione...</option>
+                      {distritosOptions.map((d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className={labelClass}>Código Postal</label>
-                  <input
-                    type="text"
-                    name="codigoPostal"
-                    value={formData.codigoPostal}
-                    onChange={handleInputChange}
-                    placeholder="0000-000"
-                    className={inputClass}
-                  />
-                </div>
-              </div>
+              )}
 
-              {/* Raio de Serviço + Deslocações */}
-              <div className="grid md:grid-cols-2 gap-4 items-end">
-                <div>
-                  <label className={labelClass}>Raio de Serviço (km)</label>
-                  <input
-                    type="number"
-                    name="raioServico"
-                    value={formData.raioServico || ""}
-                    onChange={handleInputChange}
-                    placeholder="Ex: 50"
-                    min={0}
-                    className={inputClass}
-                  />
+              {/* Morada + Código Postal (only presencial) */}
+              {formData.modalidade === "presencial" && (
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelClass}>Morada Completa</label>
+                    <input
+                      type="text"
+                      name="morada"
+                      value={formData.morada}
+                      onChange={handleInputChange}
+                      placeholder="Rua, número, localidade"
+                      className={inputClass}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Código Postal</label>
+                    <input
+                      type="text"
+                      name="codigoPostal"
+                      value={formData.codigoPostal}
+                      onChange={handleInputChange}
+                      placeholder="0000-000"
+                      className={inputClass}
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 py-3">
-                  <input
-                    type="checkbox"
-                    name="aceitaDeslocacoes"
-                    checked={formData.aceitaDeslocacoes}
-                    onChange={handleInputChange}
-                    id="aceitaDeslocacoes"
-                    className="w-4 h-4 accent-[#C5A059]"
-                  />
-                  <label
-                    htmlFor="aceitaDeslocacoes"
-                    className="text-sm text-[var(--foreground-secondary)]"
-                  >
-                    Aceita deslocações
-                  </label>
+              )}
+
+              {/* Raio de Serviço + Deslocações (only presencial) */}
+              {formData.modalidade === "presencial" && (
+                <div className="grid md:grid-cols-2 gap-4 items-end">
+                  <div>
+                    <label className={labelClass}>Raio de Serviço (km)</label>
+                    <input
+                      type="number"
+                      name="raioServico"
+                      value={formData.raioServico || ""}
+                      onChange={handleInputChange}
+                      placeholder="Ex: 50"
+                      min={0}
+                      className={inputClass}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 py-3">
+                    <input
+                      type="checkbox"
+                      name="aceitaDeslocacoes"
+                      checked={formData.aceitaDeslocacoes}
+                      onChange={handleInputChange}
+                      id="aceitaDeslocacoes"
+                      className="w-4 h-4 accent-[#C5A059]"
+                    />
+                    <label
+                      htmlFor="aceitaDeslocacoes"
+                      className="text-sm text-[var(--foreground-secondary)]"
+                    >
+                      Aceita deslocações
+                    </label>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Serviços Oferecidos */}
               <div className="pt-4 border-t border-[var(--border)]">
@@ -1322,12 +1389,24 @@ export default function RegistarProfissionalPage() {
                   <span className={sectionTitleClass}>Localização e Serviços</span>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-[var(--foreground-muted)]">Localização:</span>
+                      <span className="text-[var(--foreground-muted)]">Modalidade:</span>
                       <span className="text-[var(--foreground)]">
-                        {formData.cidade ? `${formData.cidade}, ` : ""}
-                        {formData.distrito}
+                        {modalidades.find((m) => m.id === formData.modalidade)?.label ||
+                          formData.modalidade}
                       </span>
                     </div>
+                    {(formData.distrito || formData.cidade || formData.pais) && (
+                      <div className="flex justify-between">
+                        <span className="text-[var(--foreground-muted)]">Localização:</span>
+                        <span className="text-[var(--foreground)]">
+                          {formData.modalidade === "clinicas_internacionais"
+                            ? "Internacional"
+                            : formData.modalidade === "online"
+                              ? formData.pais || "Online"
+                              : `${formData.cidade ? `${formData.cidade}, ` : ""}${formData.distrito}`}
+                        </span>
+                      </div>
+                    )}
                     {formData.morada && (
                       <div className="flex justify-between">
                         <span className="text-[var(--foreground-muted)]">Morada:</span>

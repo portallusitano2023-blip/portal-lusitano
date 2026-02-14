@@ -14,23 +14,29 @@ import {
   CheckCircle2,
   LayoutGrid,
   TrendingUp,
+  Plus,
 } from "lucide-react";
 
 import type {
   CategoriaProf,
   NivelVerificacao,
   Profissional,
+  Evento,
+  ArtigoEducativo,
 } from "@/components/profissionais/types";
-import { eventosDB, artigosDB, calcularEstatisticas } from "@/components/profissionais/data";
+import { calcularEstatisticas } from "@/components/profissionais/data";
 import {
   CardProfissional,
   ModalProfissional,
   EventosSection,
+  EventoForm,
+  ArtigoForm,
   SearchFilters,
   CategoriasTabs,
 } from "@/components/profissionais";
 import { categorias as categoriasConfig } from "@/components/profissionais/constants";
 
+import { useAuth } from "@/components/auth/AuthProvider";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import MagneticButton from "@/components/ui/MagneticButton";
@@ -41,6 +47,7 @@ import TextSplit from "@/components/TextSplit";
 // =============================================================================
 
 export default function ProfissionaisPage() {
+  const { user } = useAuth();
   const [pesquisa, setPesquisa] = useState("");
   const [categoriaAtiva, setCategoriaAtiva] = useState<CategoriaProf | "todos">("todos");
   const [distritoAtivo, setDistritoAtivo] = useState("Todos");
@@ -50,6 +57,10 @@ export default function ProfissionaisPage() {
     "profissionais"
   );
   const [profissionaisBD, setProfissionaisBD] = useState<Profissional[]>([]);
+  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [artigos, setArtigos] = useState<ArtigoEducativo[]>([]);
+  const [showEventoForm, setShowEventoForm] = useState(false);
+  const [showArtigoForm, setShowArtigoForm] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -100,6 +111,9 @@ export default function ProfissionaisPage() {
             },
             idiomas: ["Português"],
             associacoes: [],
+            modalidade:
+              (p.modalidade as "presencial" | "online" | "clinicas_internacionais") || "presencial",
+            pais: (p.pais as string) || undefined,
             destaque: (p.destaque as boolean) || false,
             fotoUrl: (p.foto_perfil_url as string) || undefined,
             redesSociais: {
@@ -118,6 +132,30 @@ export default function ProfissionaisPage() {
       cancelled = true;
     };
   }, []);
+
+  // Fetch events and articles from DB
+  const fetchEventos = () => {
+    fetch("/api/profissionais/eventos")
+      .then((r) => r.json())
+      .then((d) => setEventos(d.eventos || []))
+      .catch(() => {});
+  };
+  const fetchArtigos = () => {
+    fetch("/api/profissionais/artigos")
+      .then((r) => r.json())
+      .then((d) => setArtigos(d.artigos || []))
+      .catch(() => {});
+  };
+
+  useEffect(() => {
+    fetchEventos();
+    fetchArtigos();
+  }, []);
+
+  const isProfissional = useMemo(() => {
+    if (!user?.email) return false;
+    return profissionaisBD.some((p) => p.email.toLowerCase() === user.email?.toLowerCase());
+  }, [user, profissionaisBD]);
 
   const todosProfissionais = useMemo(() => profissionaisBD, [profissionaisBD]);
 
@@ -483,29 +521,77 @@ export default function ProfissionaisPage() {
 
           {abaAtiva === "eventos" && (
             <RevealOnScroll variant="fade-up">
-              <h2 className="text-lg font-semibold mb-4">Próximos Eventos</h2>
-              <EventosSection eventos={eventosDB} />
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Próximos Eventos</h2>
+                {isProfissional && (
+                  <button
+                    onClick={() => setShowEventoForm(true)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--gold)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors"
+                  >
+                    <Plus size={14} />
+                    Criar Evento
+                  </button>
+                )}
+              </div>
+              {eventos.length > 0 ? (
+                <EventosSection eventos={eventos} />
+              ) : (
+                <div className="text-center py-12">
+                  <CalendarDays size={32} className="mx-auto mb-4 text-[var(--foreground-muted)]" />
+                  <h3 className="text-lg font-medium mb-2">Sem eventos de momento</h3>
+                  <p className="text-sm text-[var(--foreground-muted)]">
+                    {isProfissional
+                      ? "Crie o primeiro evento para divulgar as suas clínicas e workshops."
+                      : "Os profissionais registados podem publicar eventos aqui."}
+                  </p>
+                </div>
+              )}
             </RevealOnScroll>
           )}
 
           {abaAtiva === "artigos" && (
             <RevealOnScroll variant="fade-up">
-              <h2 className="text-lg font-semibold mb-4">Artigos Educativos</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {artigosDB.map((a, i) => (
-                  <RevealOnScroll key={a.id} variant="fade-up" delay={i * 100}>
-                    <div className="card-premium shimmer-gold rounded-xl p-4">
-                      <span className="text-xs text-[var(--gold)]">{a.categoria}</span>
-                      <h3 className="font-medium text-[var(--foreground)] mt-1">{a.titulo}</h3>
-                      <p className="text-sm text-[var(--foreground-secondary)] mt-2">{a.resumo}</p>
-                      <div className="flex items-center justify-between mt-3 text-xs text-[var(--foreground-muted)]">
-                        <span>{a.autor}</span>
-                        <span>{a.leituras.toLocaleString()} leituras</span>
-                      </div>
-                    </div>
-                  </RevealOnScroll>
-                ))}
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Artigos Educativos</h2>
+                {isProfissional && (
+                  <button
+                    onClick={() => setShowArtigoForm(true)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--gold)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors"
+                  >
+                    <Plus size={14} />
+                    Escrever Artigo
+                  </button>
+                )}
               </div>
+              {artigos.length > 0 ? (
+                <div className="grid md:grid-cols-2 gap-4">
+                  {artigos.map((a, i) => (
+                    <RevealOnScroll key={a.id} variant="fade-up" delay={i * 100}>
+                      <div className="card-premium shimmer-gold rounded-xl p-4">
+                        <span className="text-xs text-[var(--gold)]">{a.categoria}</span>
+                        <h3 className="font-medium text-[var(--foreground)] mt-1">{a.titulo}</h3>
+                        <p className="text-sm text-[var(--foreground-secondary)] mt-2">
+                          {a.resumo}
+                        </p>
+                        <div className="flex items-center justify-between mt-3 text-xs text-[var(--foreground-muted)]">
+                          <span>{a.autor}</span>
+                          <span>{a.leituras.toLocaleString()} leituras</span>
+                        </div>
+                      </div>
+                    </RevealOnScroll>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <FileText size={32} className="mx-auto mb-4 text-[var(--foreground-muted)]" />
+                  <h3 className="text-lg font-medium mb-2">Sem artigos de momento</h3>
+                  <p className="text-sm text-[var(--foreground-muted)]">
+                    {isProfissional
+                      ? "Escreva o primeiro artigo e partilhe o seu conhecimento."
+                      : "Os profissionais registados podem publicar artigos aqui."}
+                  </p>
+                </div>
+              )}
             </RevealOnScroll>
           )}
         </div>
@@ -573,6 +659,26 @@ export default function ProfissionaisPage() {
         <ModalProfissional
           profissional={profissionalSelecionado}
           onClose={() => setProfissionalSelecionado(null)}
+        />
+      )}
+
+      {showEventoForm && (
+        <EventoForm
+          onClose={() => setShowEventoForm(false)}
+          onSuccess={() => {
+            setShowEventoForm(false);
+            fetchEventos();
+          }}
+        />
+      )}
+
+      {showArtigoForm && (
+        <ArtigoForm
+          onClose={() => setShowArtigoForm(false)}
+          onSuccess={() => {
+            setShowArtigoForm(false);
+            fetchArtigos();
+          }}
         />
       )}
     </main>

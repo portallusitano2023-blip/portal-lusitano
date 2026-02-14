@@ -1,4 +1,4 @@
-import { MapPin, Star, Phone, Sparkles, Siren, ArrowRight } from "lucide-react";
+import { MapPin, Star, Phone, Sparkles, Siren, ArrowRight, Globe, Plane } from "lucide-react";
 import { BadgeVerificacao } from "./BadgeVerificacao";
 import type { Profissional } from "./types";
 
@@ -32,8 +32,26 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
             </div>
             <p className="text-xs text-[var(--gold)] truncate">{prof.especialidade}</p>
             <div className="flex items-center gap-2 mt-1">
-              <MapPin size={10} className="text-[var(--foreground-muted)]" />
-              <span className="text-xs text-[var(--foreground-secondary)]">{prof.localizacao}</span>
+              {prof.modalidade === "online" ? (
+                <>
+                  <Globe size={10} className="text-blue-400" />
+                  <span className="text-xs text-blue-400">
+                    Online{prof.pais ? ` — ${prof.pais}` : ""}
+                  </span>
+                </>
+              ) : prof.modalidade === "clinicas_internacionais" ? (
+                <>
+                  <Plane size={10} className="text-purple-400" />
+                  <span className="text-xs text-purple-400">Internacional</span>
+                </>
+              ) : (
+                <>
+                  <MapPin size={10} className="text-[var(--foreground-muted)]" />
+                  <span className="text-xs text-[var(--foreground-secondary)]">
+                    {prof.localizacao}
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </div>

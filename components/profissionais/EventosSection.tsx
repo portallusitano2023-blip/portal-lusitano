@@ -1,4 +1,4 @@
-import { MapPin } from "lucide-react";
+import { MapPin, Globe } from "lucide-react";
 import type { Evento } from "./types";
 
 const tipoConfig: Record<Evento["tipo"], { cor: string; bg: string }> = {
@@ -9,37 +9,46 @@ const tipoConfig: Record<Evento["tipo"], { cor: string; bg: string }> = {
   webinar: { cor: "text-pink-400", bg: "bg-pink-500/20" },
 };
 
-function formatDate(dateStr: string): { dia: string; mes: string } {
-  const parts = dateStr.split(/[\/\-\.]/);
-  if (parts.length >= 2) {
-    return { dia: parts[0].padStart(2, "0"), mes: parts[1].padStart(2, "0") };
-  }
-  return { dia: "--", mes: "--" };
-}
+function parseDate(dateStr: string): { dia: string; mesLabel: string } {
+  const mesesAbrev = [
+    "",
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ];
 
-const mesesAbrev = [
-  "",
-  "Jan",
-  "Fev",
-  "Mar",
-  "Abr",
-  "Mai",
-  "Jun",
-  "Jul",
-  "Ago",
-  "Set",
-  "Out",
-  "Nov",
-  "Dez",
-];
+  // Handle ISO date (yyyy-mm-dd) or dd-mm-yyyy
+  const parts = dateStr.split(/[\/\-\.]/);
+  if (parts.length >= 3 && parts[0].length === 4) {
+    // ISO: yyyy-mm-dd
+    const mesNum = parseInt(parts[1], 10);
+    return {
+      dia: parts[2].padStart(2, "0"),
+      mesLabel: mesNum >= 1 && mesNum <= 12 ? mesesAbrev[mesNum] : parts[1],
+    };
+  }
+  // Fallback: dd-mm-yyyy
+  const mesNum = parseInt(parts[1], 10);
+  return {
+    dia: parts[0].padStart(2, "0"),
+    mesLabel: mesNum >= 1 && mesNum <= 12 ? mesesAbrev[mesNum] : parts[1],
+  };
+}
 
 export function EventosSection({ eventos }: { eventos: Evento[] }) {
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {eventos.slice(0, 3).map((e) => {
-        const { dia, mes } = formatDate(e.data);
-        const mesNum = parseInt(mes, 10);
-        const mesLabel = mesNum >= 1 && mesNum <= 12 ? mesesAbrev[mesNum] : mes;
+      {eventos.map((e) => {
+        const { dia, mesLabel } = parseDate(e.data);
 
         return (
           <div key={e.id} className="card-premium shimmer-gold rounded-xl p-4 flex gap-4">
@@ -55,10 +64,15 @@ export function EventosSection({ eventos }: { eventos: Evento[] }) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
                 <span
-                  className={`px-2 py-0.5 rounded text-[10px] ${tipoConfig[e.tipo].bg} ${tipoConfig[e.tipo].cor}`}
+                  className={`px-2 py-0.5 rounded text-[10px] ${tipoConfig[e.tipo]?.bg || "bg-gray-500/20"} ${tipoConfig[e.tipo]?.cor || "text-gray-400"}`}
                 >
                   {e.tipo}
                 </span>
+                {e.online && (
+                  <span className="px-2 py-0.5 rounded text-[10px] bg-blue-500/20 text-blue-400">
+                    Online
+                  </span>
+                )}
               </div>
               <h3 className="font-medium text-[var(--foreground)] text-sm mb-1 truncate">
                 {e.titulo}
@@ -68,12 +82,14 @@ export function EventosSection({ eventos }: { eventos: Evento[] }) {
               </p>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-xs text-[var(--foreground-secondary)]">
-                  <MapPin size={10} />
-                  <span className="truncate">{e.local}</span>
+                  {e.online ? <Globe size={10} /> : <MapPin size={10} />}
+                  <span className="truncate">{e.local || e.organizador}</span>
                 </div>
-                <span className="text-xs text-[var(--gold)] font-medium flex-shrink-0">
-                  {e.preco}
-                </span>
+                {e.preco && (
+                  <span className="text-xs text-[var(--gold)] font-medium flex-shrink-0">
+                    {e.preco}
+                  </span>
+                )}
               </div>
             </div>
           </div>

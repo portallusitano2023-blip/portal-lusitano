@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     let query = supabase
       .from("profissionais")
       .select(
-        "id, nome, slug, tipo, especialidade, descricao_curta, descricao_completa, cidade, distrito, telemovel, email, website, instagram, foto_perfil_url, servicos_oferecidos, rating_average, rating_count, destaque, ordem_destaque, verificado, plano, anos_experiencia, created_at"
+        "id, nome, slug, tipo, especialidade, descricao_curta, descricao_completa, cidade, distrito, pais, modalidade, telemovel, email, website, instagram, foto_perfil_url, servicos_oferecidos, rating_average, rating_count, destaque, ordem_destaque, verificado, plano, anos_experiencia, created_at"
       )
       .eq("status", "aprovado")
       .is("deleted_at", null)

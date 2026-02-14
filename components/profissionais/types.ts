@@ -4,6 +4,7 @@
 
 export type NivelVerificacao = "basico" | "verificado" | "certificado" | "expert";
 export type NivelExpertise = "iniciante" | "intermedio" | "avancado" | "especialista";
+export type Modalidade = "presencial" | "online" | "clinicas_internacionais";
 export type CategoriaProf =
   | "veterinario"
   | "ferrador"
@@ -153,6 +154,8 @@ export interface Profissional {
   cursosOferecidos?: CursoOferecido[];
   seguroProfissional?: boolean;
   nif?: string;
+  modalidade?: Modalidade;
+  pais?: string;
   destaque?: boolean;
   disponivel?: boolean;
   ultimaAtividade?: string;
@@ -164,11 +167,15 @@ export interface Evento {
   titulo: string;
   tipo: "clinica" | "workshop" | "conferencia" | "curso" | "webinar";
   data: string;
+  dataFim?: string;
   local: string;
+  pais?: string;
+  online?: boolean;
   organizador: string;
   preco?: string;
   vagas?: number;
   descricao: string;
+  linkInscricao?: string;
 }
 
 export interface ArtigoEducativo {
@@ -177,6 +184,7 @@ export interface ArtigoEducativo {
   autor: string;
   categoria: string;
   resumo: string;
+  conteudo?: string;
   data: string;
   leituras: number;
 }

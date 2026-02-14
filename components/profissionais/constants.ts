@@ -28,7 +28,7 @@ import {
   HeartPulse,
   Flower2,
 } from "lucide-react";
-import type { CategoriaProf, NivelVerificacao, NivelExpertise } from "./types";
+import type { CategoriaProf, Modalidade, NivelVerificacao, NivelExpertise } from "./types";
 
 // =============================================================================
 // CONSTANTES - Profissionais
@@ -159,6 +159,28 @@ export const categorias: {
     label: "Terapias Alternativas",
     icon: Flower2,
     descricao: "Acupuntura, homeopatia, holísticas",
+  },
+];
+
+export const modalidades: {
+  id: Modalidade;
+  label: string;
+  descricao: string;
+}[] = [
+  {
+    id: "presencial",
+    label: "Presencial",
+    descricao: "Atendimento local em Portugal",
+  },
+  {
+    id: "online",
+    label: "Online",
+    descricao: "Aulas e serviços remotos",
+  },
+  {
+    id: "clinicas_internacionais",
+    label: "Clínicas Internacionais",
+    descricao: "Clínicas e workshops pelo mundo",
   },
 ];
 
