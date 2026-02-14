@@ -331,7 +331,7 @@ export default function BreedingCalendar({ currentMonth }: BreedingCalendarProps
   const breedingYear = new Date().getFullYear();
   const yearMarkers: { label: string; x: number }[] = [];
   for (let yr = 0; yr <= 3; yr++) {
-    const monthOffset = yr * 12 - (3 - 1); // Relative to March start (month 3 = offset 0)
+    const _monthOffset = yr * 12 - (3 - 1); // Relative to March start (month 3 = offset 0)
     // We just mark each 12-month boundary from breeding start
     if (yr * 12 <= totalMonths) {
       yearMarkers.push({

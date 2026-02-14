@@ -169,7 +169,7 @@ export default function FoalValueProjection({
             const Icon = STAGE_ICONS[i] || TrendingUp;
             const growth = getGrowthPercent(stage.value);
             const isFirst = i === 0;
-            const isLast = i === foalValues.length - 1;
+            const _isLast = i === foalValues.length - 1;
 
             return (
               <div key={`${uid}-stage-${i}`} className="flex flex-col items-center relative">

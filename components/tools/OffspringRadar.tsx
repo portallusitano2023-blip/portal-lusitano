@@ -112,7 +112,7 @@ export default function OffspringRadar({ axes }: OffspringRadarProps) {
 
   // Tooltip handler via pointer events on the SVG
   const handleVertexInteraction = useCallback(
-    (index: number, event: React.MouseEvent | React.FocusEvent) => {
+    (index: number, _event: React.MouseEvent | React.FocusEvent) => {
       const axis = axes[index];
       const rect = containerRef.current?.getBoundingClientRect();
       if (!rect) return;

@@ -15,7 +15,7 @@ export interface BreedingMilestone {
   description: string;
 }
 
-export function calcularCalendarioCriacao(mesActual: number): BreedingMilestone[] {
+export function calcularCalendarioCriacao(_mesActual: number): BreedingMilestone[] {
   return [
     {
       label: "Época de Cobrição",
