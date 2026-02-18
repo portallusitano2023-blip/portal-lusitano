@@ -96,7 +96,21 @@
       "Bash(__NEW_LINE_4689e62a5ef0116a__ echo \"\")",
       "Bash(__NEW_LINE_e2c41bc3636f83e9__ echo \"\")",
       "Bash(__NEW_LINE_585e5f170d9443f6__ echo \"\")",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(cmd /c \"dir C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\public\\\\ /b\")",
+      "Bash(python3:*)",
+      "Bash(test:*)",
+      "Bash(cmd /c \"dir C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\components\\\\admin-app\")",
+      "Bash(cmd /c dir:*)",
+      "Bash(git -C \"c:/Users/USUARIO/portal-lusitano\" show HEAD:lib/supabase.ts)",
+      "Bash(node_modules/.bin/tsc:*)",
+      "Bash(git -C \"c:/Users/USUARIO/portal-lusitano\" diff lib/supabase.ts)",
+      "Bash(git -C \"c:/Users/USUARIO/portal-lusitano\" checkout -- lib/supabase.ts)",
+      "mcp__ide__getDiagnostics",
+      "Bash(printf:*)",
+      "Bash(cmd /c \"echo. >> C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.env.local && echo UPSTASH_REDIS_REST_URL=https://humane-kite-39161.upstash.io >> C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.env.local && echo UPSTASH_REDIS_REST_TOKEN=AZj5AAIncDJkNWUxOGY0YzRhZjk0OTE2OWZjOWExMWQ3NzEyMzIwOXAyMzkxNjE >> C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.env.local && echo OK\")",
+      "Bash(Remove-Item -Recurse -Force \"c:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.next\" -ErrorAction SilentlyContinue)",
+      "Bash(Write-Host \"Cache limpo\")"
     ]
   }
 }

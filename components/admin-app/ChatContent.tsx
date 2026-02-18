@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Send, Paperclip, Smile, MoreVertical, Search, Users, Hash } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -142,21 +142,18 @@ export default function ChatContent() {
       .slice(0, 2);
   };
 
-  const escapeHtml = (text: string) => {
-    return text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  };
-
-  const highlightMentions = (text: string) => {
-    const escaped = escapeHtml(text);
-    return escaped.replace(
-      /@(\S+@\S+\.\S+)/g,
-      '<span class="bg-[#C5A059]/20 text-[#C5A059] px-1 rounded">@$1</span>'
-    );
+  const highlightMentions = (text: string): React.ReactNode[] => {
+    const parts = text.split(/(@\S+@\S+\.\S+)/g);
+    return parts.map((part, i) => {
+      if (/^@\S+@\S+\.\S+$/.test(part)) {
+        return (
+          <span key={i} className="bg-[#C5A059]/20 text-[#C5A059] px-1 rounded">
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
   };
 
   return (
@@ -232,10 +229,7 @@ export default function ChatContent() {
                         : "bg-white/5 border border-white/10 text-white"
                     }`}
                   >
-                    <p
-                      className="text-sm"
-                      dangerouslySetInnerHTML={{ __html: highlightMentions(msg.message) }}
-                    />
+                    <p className="text-sm">{highlightMentions(msg.message)}</p>
 
                     {msg.has_attachment && msg.attachment_name && (
                       <div className="mt-2 flex items-center gap-2 text-xs opacity-80">

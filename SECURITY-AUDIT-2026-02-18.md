@@ -17,41 +17,21 @@
 
 ## ⚠️ HIGH PRIORITY ISSUES (5)
 
-### HIGH-01: In-Memory Rate Limiting Ineffective in Serverless
+### ✅ HIGH-01: In-Memory Rate Limiting Ineffective in Serverless — CORRIGIDO 2026-02-18
 
 **File:** `middleware.ts:27-61`
 **Impact:** Attackers can bypass rate limits by triggering new serverless instances
-**Fix:** Migrate to Upstash Redis (serverless-safe)
+**Fix:** Migrado para Upstash Redis sliding window. `lib/ratelimit.ts` criado. Database: `humane-kite-39161.upstash.io` (AWS eu-west-1, Free Tier 500k req/mês).
 
-```typescript
-npm install @upstash/ratelimit @upstash/redis
-
-// lib/ratelimit.ts
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
-
-export const authLimiter = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(10, "15 m"),
-  analytics: true,
-});
-
-export const apiLimiter = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(60, "1 m"),
-  analytics: true,
-});
-```
-
-**Timeline:** 1 week
+**Status:** ✅ `@upstash/ratelimit @upstash/redis` instalados. middleware.ts atualizado.
 
 ---
 
-### HIGH-02: XSS in Admin Chat
+### ✅ HIGH-02: XSS in Admin Chat — CORRIGIDO 2026-02-18
 
 **File:** `components/admin-app/ChatContent.tsx:154-159`
 **Impact:** Admin session hijacking via malicious messages
-**Fix:** Use DOMPurify or avoid dangerouslySetInnerHTML
+**Fix:** Removido `dangerouslySetInnerHTML` — substituído por React elements seguros (`highlightMentions` retorna `React.ReactNode[]`). React faz escape automático de todo o texto.
 
 ```typescript
 npm install dompurify @types/dompurify
@@ -75,43 +55,21 @@ const highlightMentions = (text: string) => {
 
 ---
 
-### HIGH-03: No JWT Revocation Mechanism
+### ✅ HIGH-03: No JWT Revocation Mechanism — CORRIGIDO 2026-02-18
 
 **File:** `lib/auth.ts:32-46`
 **Impact:** Stolen tokens valid for 7 days, can't force logout
-**Fix:** Implement Redis session store with JTI tracking
+**Fix:** JTI (JWT ID) adicionado a cada token. Redis como fonte de verdade: `createSession` regista JTI com TTL 7d; `verifySession` valida JTI no Redis; `deleteSession` revoga JTI imediatamente.
 
-```typescript
-npm install @upstash/redis
-
-export async function createSession(email: string) {
-  const jti = crypto.randomUUID();
-
-  const token = await new SignJWT({ email, jti })
-    .setExpirationTime("7d")
-    .sign(getSecret());
-
-  await redis.setex(`session:${jti}`, 604800, email);
-  return token;
-}
-
-export async function verifySession() {
-  const { jti } = verified.payload;
-  const session = await redis.get(`session:${jti}`);
-  if (!session) return null; // Revoked
-  return email;
-}
-```
-
-**Timeline:** 2 weeks
+**Status:** ✅ Implementado em `lib/auth.ts`.
 
 ---
 
-### HIGH-04: Supabase Service Role Key Used in Public Code
+### ✅ HIGH-04: Supabase Service Role Key Used in Public Code — CORRIGIDO 2026-02-18
 
 **File:** `lib/supabase.ts:16,22`
 **Risk:** Admin key could leak into client bundles
-**Fix:** Use server-only package for admin client
+**Fix:** Adicionado guard `typeof window !== "undefined"` no topo do ficheiro — lança erro imediatamente se importado client-side.
 
 ```typescript
 // lib/supabase-admin.ts
@@ -127,11 +85,11 @@ export default supabasePublic;
 
 ---
 
-### HIGH-05: Missing Stripe Webhook Failure Alerting
+### ✅ HIGH-05: Missing Stripe Webhook Failure Alerting — CORRIGIDO 2026-02-18
 
 **File:** `app/api/stripe/webhook/route.ts:22-28`
 **Risk:** Replay attacks undetected
-**Fix:** Alert on repeated signature failures
+**Fix:** Email de alerta enviado ao admin (via Resend, fire-and-forget) em cada falha de assinatura, com timestamp e diagnóstico.
 
 ```typescript
 const FAILURE_THRESHOLD = 5;
