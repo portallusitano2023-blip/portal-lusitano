@@ -1,5 +1,5 @@
 import { stripe } from "@/lib/stripe";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 

@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import { revalidatePath } from "next/cache";
 

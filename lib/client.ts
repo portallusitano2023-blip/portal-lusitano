@@ -1,7 +1,7 @@
 import { createClient } from "next-sanity";
 
-const projectId = "ofrzpaxa";
-const dataset = "production";
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "ofrzpaxa";
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 const apiVersion = "2024-01-01";
 
 // Read client — CDN, sem token (para queries públicas)

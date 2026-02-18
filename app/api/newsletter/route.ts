@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { client } from "@/lib/client";
+import { writeClient } from "@/lib/client";
 import { apiLimiter } from "@/lib/rate-limit";
 import { newsletterSchema, parseWithZod } from "@/lib/schemas";
 import { logger } from "@/lib/logger";
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     const { email } = parsed.data;
 
     // Escreve o novo subscritor diretamente no Sanity
-    await client.create({
+    await writeClient.create({
       _type: "subscritor",
       email: email,
       dataInscricao: new Date().toISOString(),

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { headers } from "next/headers";
 import { stripe } from "@/lib/stripe";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { resend } from "@/lib/resend";
 import Stripe from "stripe";
 import { CONTACT_EMAIL } from "@/lib/constants";
