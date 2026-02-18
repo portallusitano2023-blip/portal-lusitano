@@ -131,8 +131,18 @@ export default function ChatContent() {
       .slice(0, 2);
   };
 
+  const escapeHtml = (text: string) => {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
   const highlightMentions = (text: string) => {
-    return text.replace(
+    const escaped = escapeHtml(text);
+    return escaped.replace(
       /@(\S+@\S+\.\S+)/g,
       '<span class="bg-[#C5A059]/20 text-[#C5A059] px-1 rounded">@$1</span>'
     );

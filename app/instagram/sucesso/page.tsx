@@ -16,8 +16,10 @@ function InstagramSucessoContent() {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
+    } else if (sessionId) {
+      window.location.href = `/instagram/upload/${encodeURIComponent(sessionId)}`;
     }
-  }, [countdown]);
+  }, [countdown, sessionId]);
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">
@@ -123,13 +125,7 @@ function InstagramSucessoContent() {
           </p>
         )}
 
-        {countdown === 0 && sessionId && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.location.href = '/instagram/upload/${sessionId}';`,
-            }}
-          />
-        )}
+        {/* Redirect handled by useEffect — no dangerouslySetInnerHTML */}
       </div>
     </main>
   );

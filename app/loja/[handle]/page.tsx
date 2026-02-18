@@ -6,6 +6,17 @@ import Link from "next/link";
 
 const siteUrl = "https://portal-lusitano.pt";
 
+/** Strip script tags, event handlers, and dangerous elements from HTML */
+function sanitizeHtml(html: string): string {
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+    .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/gi, "")
+    .replace(/<object\b[^>]*>[\s\S]*?<\/object>/gi, "")
+    .replace(/<embed\b[^>]*\/?>/gi, "")
+    .replace(/\bon\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/javascript\s*:/gi, "");
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -83,7 +94,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
           <div
             className="prose prose-invert prose-p:text-[var(--foreground-secondary)] prose-p:leading-relaxed prose-p:font-light prose-strong:text-[var(--foreground)]"
             dangerouslySetInnerHTML={{
-              __html: product.descriptionHtml || "",
+              __html: sanitizeHtml(product.descriptionHtml || ""),
             }}
           />
         </div>

@@ -32,7 +32,10 @@ export async function POST(request: NextRequest) {
     }
     const formData = await request.formData();
     const file = formData.get("file") as File;
-    const folder = (formData.get("folder") as string) || "uploads";
+    const rawFolder = (formData.get("folder") as string) || "uploads";
+
+    // Sanitize folder — only allow alphanumeric, hyphens, and underscores
+    const folder = rawFolder.replace(/[^a-zA-Z0-9_-]/g, "");
 
     if (!file) {
       return NextResponse.json({ error: "Ficheiro nao fornecido" }, { status: 400 });
@@ -54,9 +57,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Gerar nome unico
+    // Gerar nome unico — derive extension from validated MIME type, not filename
+    const MIME_TO_EXT: Record<string, string> = {
+      "image/jpeg": "jpg",
+      "image/png": "png",
+      "image/webp": "webp",
+      "image/gif": "gif",
+    };
     const timestamp = Date.now();
-    const extension = file.name.split(".").pop();
+    const extension = MIME_TO_EXT[file.type] || "jpg";
     const fileName = `${folder}/${timestamp}-${Math.random().toString(36).substring(7)}.${extension}`;
 
     // Converter File para ArrayBuffer
@@ -111,6 +120,11 @@ export async function DELETE(request: NextRequest) {
 
     if (!path) {
       return NextResponse.json({ error: "Path da imagem nao fornecido" }, { status: 400 });
+    }
+
+    // Prevent path traversal attacks
+    if (path.includes("..") || path.startsWith("/") || path.startsWith("\\")) {
+      return NextResponse.json({ error: "Path inválido" }, { status: 400 });
     }
 
     const { error } = await supabaseAdmin.storage.from("images").remove([path]);
