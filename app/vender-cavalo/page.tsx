@@ -22,6 +22,7 @@ import StepLinhagem from "@/components/vender-cavalo/StepLinhagem";
 import StepTreinoSaude from "@/components/vender-cavalo/StepTreinoSaude";
 import StepPrecoApresentacao from "@/components/vender-cavalo/StepPrecoApresentacao";
 import StepPagamento from "@/components/vender-cavalo/StepPagamento";
+import { useLanguage } from "@/context/LanguageContext";
 
 function calcularIdade(dataNascimento: string): number {
   if (!dataNascimento) return 0;
@@ -40,6 +41,7 @@ function calcularIdade(dataNascimento: string): number {
 }
 
 export default function VenderCavaloPage() {
+  const { t } = useLanguage();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [imagens, setImagens] = useState<File[]>([]);
@@ -66,46 +68,46 @@ export default function VenderCavaloPage() {
     const newErrors: string[] = [];
 
     if (currentStep === 1) {
-      if (!formData.proprietario_nome) newErrors.push("Nome do proprietário é obrigatório");
-      if (!formData.proprietario_email) newErrors.push("Email é obrigatório");
-      if (!formData.proprietario_telefone) newErrors.push("Telefone é obrigatório");
-      if (!formData.proprietario_nif) newErrors.push("NIF é obrigatório");
+      if (!formData.proprietario_nome) newErrors.push(t.form_validation.required_owner_name);
+      if (!formData.proprietario_email) newErrors.push(t.form_validation.required_email);
+      if (!formData.proprietario_telefone) newErrors.push(t.form_validation.required_phone);
+      if (!formData.proprietario_nif) newErrors.push(t.form_validation.required_nif);
     }
 
     if (currentStep === 2) {
-      if (!formData.nome) newErrors.push("Nome do cavalo é obrigatório");
-      if (!formData.nome_registo) newErrors.push("Nome de registo (Livro Azul) é obrigatório");
-      if (!formData.numero_registo) newErrors.push("Número de registo APSL é obrigatório");
-      if (!formData.microchip) newErrors.push("Número do microchip é obrigatório");
-      if (!formData.data_nascimento) newErrors.push("Data de nascimento é obrigatória");
-      if (!formData.sexo) newErrors.push("Sexo é obrigatório");
-      if (!formData.pelagem) newErrors.push("Pelagem é obrigatória");
+      if (!formData.nome) newErrors.push(t.form_validation.required_horse_name);
+      if (!formData.nome_registo) newErrors.push(t.form_validation.required_registration_name);
+      if (!formData.numero_registo) newErrors.push(t.form_validation.required_registration_number);
+      if (!formData.microchip) newErrors.push(t.form_validation.required_microchip);
+      if (!formData.data_nascimento) newErrors.push(t.form_validation.required_birth_date);
+      if (!formData.sexo) newErrors.push(t.form_validation.required_sex);
+      if (!formData.pelagem) newErrors.push(t.form_validation.required_coat);
     }
 
     if (currentStep === 3) {
       if (!formData.pai_nome || !formData.pai_registo)
-        newErrors.push("Dados do pai são obrigatórios");
+        newErrors.push(t.form_validation.required_sire);
       if (!formData.mae_nome || !formData.mae_registo)
-        newErrors.push("Dados da mãe são obrigatórios");
-      if (!documentos.livroAzul) newErrors.push("Upload do Livro Azul é obrigatório");
+        newErrors.push(t.form_validation.required_dam);
+      if (!documentos.livroAzul) newErrors.push(t.form_validation.required_blue_book);
     }
 
     if (currentStep === 4) {
-      if (!formData.nivel_treino) newErrors.push("Nível de treino é obrigatório");
-      if (!formData.estado_saude) newErrors.push("Estado de saúde é obrigatório");
-      if (!formData.vacinacao_atualizada) newErrors.push("Vacinação deve estar atualizada");
+      if (!formData.nivel_treino) newErrors.push(t.form_validation.required_training_level);
+      if (!formData.estado_saude) newErrors.push(t.form_validation.required_health_status);
+      if (!formData.vacinacao_atualizada) newErrors.push(t.form_validation.required_vaccination);
     }
 
     if (currentStep === 5) {
-      if (!formData.preco) newErrors.push("Preço é obrigatório");
-      if (!formData.localizacao) newErrors.push("Localização é obrigatória");
+      if (!formData.preco) newErrors.push(t.form_validation.required_price);
+      if (!formData.localizacao) newErrors.push(t.vender_cavalo.error_location_required);
       if (!formData.descricao || formData.descricao.length < MIN_DESCRIPTION_LENGTH)
-        newErrors.push("Descrição deve ter pelo menos 100 caracteres");
-      if (imagens.length < MIN_IMAGES) newErrors.push("Mínimo de 3 fotografias é obrigatório");
+        newErrors.push(t.vender_cavalo.error_description_min);
+      if (imagens.length < MIN_IMAGES) newErrors.push(t.vender_cavalo.error_photos_min);
     }
 
     if (currentStep === 6) {
-      if (!termsAccepted) newErrors.push("Deve aceitar os termos e condições");
+      if (!termsAccepted) newErrors.push(t.vender_cavalo.error_terms_required);
     }
 
     setErrors(newErrors);
@@ -125,7 +127,7 @@ export default function VenderCavaloPage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (imagens.length + files.length > MAX_IMAGES) {
-      setErrors(["Máximo de 10 imagens permitidas"]);
+      setErrors([t.vender_cavalo.error_max_images]);
       return;
     }
     setImagens((prev) => [...prev, ...files]);
@@ -195,20 +197,18 @@ export default function VenderCavaloPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Erro ao criar checkout");
+        throw new Error(data.error || t.vender_cavalo.error_checkout);
       }
 
       if (!data.url) {
-        throw new Error("URL de checkout não retornada");
+        throw new Error(t.vender_cavalo.error_no_checkout_url);
       }
 
       window.location.href = data.url;
     } catch (error: unknown) {
       if (process.env.NODE_ENV === "development") console.error("[VenderCavalo]", error);
-      const message = error instanceof Error ? error.message : "Erro desconhecido";
-      alert(
-        `Erro ao processar pagamento: ${message}. Por favor, tente novamente ou contacte o suporte.`
-      );
+      const message = error instanceof Error ? error.message : "Unknown error";
+      alert(t.vender_cavalo.error_payment.replace("{message}", message));
       setLoading(false);
     }
   };

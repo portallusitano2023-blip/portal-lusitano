@@ -1,6 +1,7 @@
 "use client";
 
 import { TOTAL_STEPS } from "@/components/vender-cavalo/data";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface FormNavigationProps {
   step: number;
@@ -9,6 +10,8 @@ interface FormNavigationProps {
 }
 
 export default function FormNavigation({ step, onPrev, onNext }: FormNavigationProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="flex items-center justify-between mt-6">
       {step > 1 ? (
@@ -16,7 +19,7 @@ export default function FormNavigation({ step, onPrev, onNext }: FormNavigationP
           onClick={onPrev}
           className="px-6 py-3 bg-[var(--background-card)] text-[var(--foreground)] rounded-lg hover:bg-[var(--surface-hover)] transition-colors touch-manipulation"
         >
-          Anterior
+          {t.vender_cavalo.previous}
         </button>
       ) : (
         <div />
@@ -27,7 +30,7 @@ export default function FormNavigation({ step, onPrev, onNext }: FormNavigationP
           onClick={onNext}
           className="px-6 py-3 bg-[var(--gold)] text-black font-medium rounded-lg hover:bg-[var(--gold-hover)] transition-colors touch-manipulation"
         >
-          Continuar
+          {t.vender_cavalo.continue}
         </button>
       )}
     </div>

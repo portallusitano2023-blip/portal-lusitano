@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Upload, Check, Loader2, FileImage, FileVideo, Instagram, Send } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function InstagramUploadPage() {
+  const { t } = useLanguage();
   const params = useParams();
   const router = useRouter();
   const sessionId = params.id as string;
@@ -34,7 +36,7 @@ export default function InstagramUploadPage() {
     e.preventDefault();
 
     if (files.length === 0) {
-      alert("Por favor adicione pelo menos 1 ficheiro");
+      alert(t.instagram_upload.error_no_files);
       return;
     }
 
@@ -58,7 +60,7 @@ export default function InstagramUploadPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao fazer upload");
+        throw new Error(t.instagram_upload.error_upload);
       }
 
       setUploaded(true);
@@ -69,7 +71,9 @@ export default function InstagramUploadPage() {
       }, 3000);
     } catch (error: unknown) {
       if (process.env.NODE_ENV === "development") console.error("[InstagramUpload]", error);
-      alert(`Erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
+      alert(
+        `${t.instagram_upload.error_upload}: ${error instanceof Error ? error.message : t.instagram_upload.error_unknown}`
+      );
     } finally {
       setUploading(false);
     }
@@ -83,13 +87,12 @@ export default function InstagramUploadPage() {
             <Check className="text-green-500" size={40} />
           </div>
           <h1 className="text-3xl font-serif text-[var(--foreground)] mb-4">
-            Materiais Recebidos!
+            {t.instagram_upload.materials_received}
           </h1>
           <p className="text-[var(--foreground-secondary)] mb-6">
-            Obrigado! Recebemos os seus materiais e vamos publicar no Instagram nas próximas 48
-            horas.
+            {t.instagram_upload.materials_received_desc}
           </p>
-          <p className="text-[var(--foreground-muted)] text-sm">A redirecionar...</p>
+          <p className="text-[var(--foreground-muted)] text-sm">{t.instagram_upload.redirecting}</p>
         </div>
       </main>
     );
@@ -104,24 +107,24 @@ export default function InstagramUploadPage() {
             <Instagram className="text-[var(--foreground)]" size={32} />
           </div>
           <h1 className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4">
-            Upload de Materiais
+            {t.instagram_upload.title}
           </h1>
-          <p className="text-[var(--foreground-secondary)]">
-            Envie as imagens/vídeos e instruções para a publicação
-          </p>
+          <p className="text-[var(--foreground-secondary)]">{t.instagram_upload.description}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* File Upload */}
           <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-8 rounded-xl">
-            <h2 className="text-xl font-serif text-[var(--foreground)] mb-4">1. Imagens/Vídeos</h2>
+            <h2 className="text-xl font-serif text-[var(--foreground)] mb-4">
+              {t.instagram_upload.section_files}
+            </h2>
             <label className="block border-2 border-dashed border-[var(--border)] rounded-xl p-12 text-center cursor-pointer hover:border-[var(--gold)] transition-colors">
               <Upload className="text-[var(--foreground-muted)] mx-auto mb-4" size={48} />
               <p className="text-[var(--foreground)] font-medium mb-2">
-                Clique para seleccionar ficheiros
+                {t.instagram_upload.click_to_select}
               </p>
               <p className="text-[var(--foreground-muted)] text-sm">
-                Máximo 5 ficheiros (imagens ou vídeos)
+                {t.instagram_upload.max_files}
               </p>
               <input
                 type="file"
@@ -156,7 +159,7 @@ export default function InstagramUploadPage() {
                       onClick={() => removeFile(index)}
                       className="text-red-400 hover:text-red-300 text-sm"
                     >
-                      Remover
+                      {t.instagram_upload.btn_remove}
                     </button>
                   </div>
                 ))}
@@ -167,38 +170,38 @@ export default function InstagramUploadPage() {
           {/* Caption */}
           <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-8 rounded-xl">
             <h2 className="text-xl font-serif text-[var(--foreground)] mb-4">
-              2. Caption e Hashtags
+              {t.instagram_upload.section_caption}
             </h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-                  Caption do Post
+                  {t.instagram_upload.field_caption}
                 </label>
                 <textarea
                   value={formData.caption}
                   onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
                   rows={4}
                   className="w-full bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none resize-none"
-                  placeholder="Escreva a caption para o post..."
+                  placeholder={t.instagram_upload.field_caption_placeholder}
                 />
               </div>
 
               <div>
                 <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-                  Hashtags (opcional)
+                  {t.instagram_upload.field_hashtags}
                 </label>
                 <input
                   type="text"
                   value={formData.hashtags}
                   onChange={(e) => setFormData({ ...formData, hashtags: e.target.value })}
                   className="w-full bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none"
-                  placeholder="#lusitano #cavalos #portugal"
+                  placeholder={t.instagram_upload.field_hashtags_placeholder}
                 />
               </div>
 
               <div>
                 <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-                  Link (se aplicável)
+                  {t.instagram_upload.field_link}
                 </label>
                 <input
                   type="url"
@@ -214,14 +217,14 @@ export default function InstagramUploadPage() {
           {/* Observações */}
           <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-8 rounded-xl">
             <h2 className="text-xl font-serif text-[var(--foreground)] mb-4">
-              3. Observações Adicionais
+              {t.instagram_upload.section_notes}
             </h2>
             <textarea
               value={formData.observacoes}
               onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
               rows={3}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none resize-none"
-              placeholder="Alguma instrução especial? Melhor dia/hora para publicar?"
+              placeholder={t.instagram_upload.field_notes_placeholder}
             />
           </div>
 
@@ -233,12 +236,13 @@ export default function InstagramUploadPage() {
           >
             {uploading ? (
               <>
-                <Loader2 className="animate-spin" size={18} />A enviar...
+                <Loader2 className="animate-spin" size={18} />
+                {t.instagram_upload.btn_submitting}
               </>
             ) : (
               <>
                 <Send size={18} />
-                Enviar Materiais
+                {t.instagram_upload.btn_submit}
               </>
             )}
           </button>

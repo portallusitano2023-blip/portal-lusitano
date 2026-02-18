@@ -3,10 +3,12 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "./AuthProvider";
+import { useLanguage } from "@/context/LanguageContext";
 import { User, LogOut, Crown, History, Settings, ChevronDown } from "lucide-react";
 
 export default function UserMenu() {
   const { user, isLoading, signOut } = useAuth();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,12 +33,13 @@ export default function UserMenu() {
         className="hidden md:flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors text-sm"
       >
         <User size={18} />
-        <span className="hidden xl:inline">Entrar</span>
+        <span className="hidden xl:inline">{t.login.enter}</span>
       </Link>
     );
   }
 
-  const name = user.user_metadata?.full_name || user.email?.split("@")[0] || "Utilizador";
+  const name =
+    (user.user_metadata?.full_name as string) || user.email?.split("@")[0] || "Utilizador";
   const initial = name.charAt(0).toUpperCase();
 
   return (
@@ -69,7 +72,7 @@ export default function UserMenu() {
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
             >
               <Settings size={16} className="text-[var(--foreground-muted)]" />
-              Meu Perfil
+              {t.account.profile}
             </Link>
             <Link
               href="/historico"
@@ -77,7 +80,7 @@ export default function UserMenu() {
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
             >
               <History size={16} className="text-[var(--foreground-muted)]" />
-              Historico
+              {t.account.history}
             </Link>
             <Link
               href="/ferramentas"
@@ -85,7 +88,7 @@ export default function UserMenu() {
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors"
             >
               <Crown size={16} />
-              Ferramentas PRO
+              {t.nav.tools} PRO
             </Link>
           </div>
 
@@ -98,7 +101,7 @@ export default function UserMenu() {
               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground-secondary)] hover:text-red-400 hover:bg-[var(--surface-hover)] transition-colors"
             >
               <LogOut size={16} />
-              Terminar Sessao
+              {t.account.logout}
             </button>
           </div>
         </div>

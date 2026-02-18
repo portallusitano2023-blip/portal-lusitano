@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import {
   Check,
@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { categorias, distritos, modalidades } from "@/components/profissionais/constants";
 import type { CategoriaProf, Modalidade } from "@/components/profissionais/types";
+import { useLanguage } from "@/context/LanguageContext";
 
 const categoriasOptions = categorias.filter((c) => c.id !== "todos") as {
   id: CategoriaProf;
@@ -34,10 +35,6 @@ const categoriasOptions = categorias.filter((c) => c.id !== "todos") as {
 }[];
 
 const distritosOptions = distritos.filter((d) => d !== "Todos");
-
-const DIAS_SEMANA = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
-
-const IDIOMAS_OPCOES = ["Português", "Inglês", "Espanhol", "Francês", "Alemão"];
 
 interface Certificacao {
   nome: string;
@@ -90,14 +87,46 @@ interface FormData {
   autorizaVerificacao: boolean;
 }
 
-const steps = [
-  { num: 1, label: "Identificação", icon: User },
-  { num: 2, label: "Localização", icon: MapPin },
-  { num: 3, label: "Credenciais", icon: Award },
-  { num: 4, label: "Confirmar", icon: CheckCircle },
-];
-
 export default function RegistarProfissionalPage() {
+  const { t } = useLanguage();
+  const tp = t.registar_profissional;
+
+  const steps = useMemo(
+    () => [
+      { num: 1, label: tp.step_identity, icon: User },
+      { num: 2, label: tp.step_location, icon: MapPin },
+      { num: 3, label: tp.step_credentials, icon: Award },
+      { num: 4, label: tp.step_confirm, icon: CheckCircle },
+    ],
+    [tp.step_identity, tp.step_location, tp.step_credentials, tp.step_confirm]
+  );
+
+  const DIAS_SEMANA = useMemo(
+    () => [
+      tp.day_monday,
+      tp.day_tuesday,
+      tp.day_wednesday,
+      tp.day_thursday,
+      tp.day_friday,
+      tp.day_saturday,
+      tp.day_sunday,
+    ],
+    [
+      tp.day_monday,
+      tp.day_tuesday,
+      tp.day_wednesday,
+      tp.day_thursday,
+      tp.day_friday,
+      tp.day_saturday,
+      tp.day_sunday,
+    ]
+  );
+
+  const IDIOMAS_OPCOES = useMemo(
+    () => [tp.lang_portuguese, tp.lang_english, tp.lang_spanish, tp.lang_french, tp.lang_german],
+    [tp.lang_portuguese, tp.lang_english, tp.lang_spanish, tp.lang_french, tp.lang_german]
+  );
+
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -119,7 +148,7 @@ export default function RegistarProfissionalPage() {
     aceitaDeslocacoes: false,
     servicos: [],
     precoMedio: "",
-    idiomas: ["Português"],
+    idiomas: [tp.lang_portuguese],
     formacaoAcademica: "",
     certificacoes: [],
     associacoes: [],
@@ -211,11 +240,11 @@ export default function RegistarProfissionalPage() {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      setError("A foto deve ter no máximo 5MB.");
+      setError(tp.error_photo_size);
       return;
     }
     if (!file.type.startsWith("image/")) {
-      setError("Por favor selecione um ficheiro de imagem.");
+      setError(tp.error_photo_type);
       return;
     }
     setError("");
@@ -324,17 +353,17 @@ export default function RegistarProfissionalPage() {
     if (!files) return;
 
     if (formData.documentos.length + files.length > 3) {
-      setError("Pode enviar no máximo 3 documentos.");
+      setError(tp.error_max_documents);
       return;
     }
 
     Array.from(files).forEach((file) => {
       if (file.size > 5 * 1024 * 1024) {
-        setError(`O ficheiro "${file.name}" excede o limite de 5MB.`);
+        setError(`${tp.error_file_size_prefix}${file.name}${tp.error_file_size_suffix}`);
         return;
       }
       if (!file.type.startsWith("image/") && file.type !== "application/pdf") {
-        setError(`O ficheiro "${file.name}" deve ser uma imagem ou PDF.`);
+        setError(`${tp.error_file_type_prefix}${file.name}${tp.error_file_type_suffix}`);
         return;
       }
       const reader = new FileReader();
@@ -372,7 +401,7 @@ export default function RegistarProfissionalPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Erro ao processar");
+        throw new Error(data.error || tp.error_generic);
       }
 
       if (data.url) {
@@ -381,7 +410,7 @@ export default function RegistarProfissionalPage() {
         window.location.href = data.url;
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao processar. Tente novamente.");
+      setError(err instanceof Error ? err.message : tp.error_generic);
     } finally {
       setIsSubmitting(false);
     }
@@ -427,17 +456,17 @@ export default function RegistarProfissionalPage() {
             className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-6"
           >
             <ArrowLeft size={18} />
-            <span className="text-sm">Voltar</span>
+            <span className="text-sm">{tp.back}</span>
           </Link>
           <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
-            Rede Profissional
+            {tp.badge}
           </span>
           <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
-            Registar como Profissional
+            {tp.title}
           </h1>
           <p className="text-[var(--foreground-secondary)] max-w-xl mx-auto">
-            Junte-se ao maior directório de profissionais equestres em Portugal por apenas
-            <strong className="text-[var(--gold)]"> €6/mês</strong>
+            {tp.subtitle_before_price}
+            <strong className="text-[var(--gold)]"> {tp.subtitle_price}</strong>
           </p>
         </div>
 
@@ -501,13 +530,13 @@ export default function RegistarProfissionalPage() {
         {step === 1 && (
           <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 text-center">
-              Identificação
+              {tp.heading_identity}
             </h2>
 
             <div className="space-y-6 max-w-2xl mx-auto">
               {/* Foto de Perfil */}
               <div>
-                <label className={labelClass}>Foto de Perfil</label>
+                <label className={labelClass}>{tp.photo_label}</label>
                 <div className="flex items-center gap-4">
                   {fotoPreview ? (
                     <div className="relative">
@@ -532,7 +561,7 @@ export default function RegistarProfissionalPage() {
                   <div className="flex-1">
                     <label className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--background-secondary)] border border-[var(--border)] text-sm text-[var(--foreground-secondary)] hover:border-[var(--gold)]/50 hover:text-[var(--foreground)] transition-colors cursor-pointer">
                       <Camera size={16} />
-                      {fotoPreview ? "Alterar foto" : "Escolher foto"}
+                      {fotoPreview ? tp.photo_change : tp.photo_choose}
                       <input
                         type="file"
                         accept="image/*"
@@ -541,7 +570,7 @@ export default function RegistarProfissionalPage() {
                       />
                     </label>
                     <p className="text-[10px] text-[var(--foreground-muted)] mt-1">
-                      JPG, PNG ou WebP. Máx. 5MB. Será redimensionada para 400x400.
+                      {tp.photo_hint}
                     </p>
                   </div>
                 </div>
@@ -549,13 +578,13 @@ export default function RegistarProfissionalPage() {
 
               {/* Nome Completo */}
               <div>
-                <label className={labelClass}>Nome Completo *</label>
+                <label className={labelClass}>{tp.field_name}</label>
                 <input
                   type="text"
                   name="nome"
                   value={formData.nome}
                   onChange={handleInputChange}
-                  placeholder="Ex: Dr. António Silva"
+                  placeholder={tp.field_name_placeholder}
                   className={inputClass}
                 />
               </div>
@@ -563,7 +592,7 @@ export default function RegistarProfissionalPage() {
               {/* Email + Telefone */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>Email *</label>
+                  <label className={labelClass}>{tp.field_email}</label>
                   <div className="relative">
                     <Mail
                       className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
@@ -574,13 +603,13 @@ export default function RegistarProfissionalPage() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="email@profissional.pt"
+                      placeholder={tp.field_email_placeholder}
                       className={`${inputClass} pl-10`}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className={labelClass}>Telefone *</label>
+                  <label className={labelClass}>{tp.field_phone}</label>
                   <div className="relative">
                     <Phone
                       className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
@@ -591,7 +620,7 @@ export default function RegistarProfissionalPage() {
                       name="telefone"
                       value={formData.telefone}
                       onChange={handleInputChange}
-                      placeholder="+351 912 345 678"
+                      placeholder={tp.field_phone_placeholder}
                       className={`${inputClass} pl-10`}
                     />
                   </div>
@@ -600,14 +629,14 @@ export default function RegistarProfissionalPage() {
 
               {/* Categoria */}
               <div>
-                <label className={labelClass}>Categoria *</label>
+                <label className={labelClass}>{tp.field_category}</label>
                 <select
                   name="categoria"
                   value={formData.categoria}
                   onChange={handleInputChange}
                   className={inputClass}
                 >
-                  <option value="">Selecione a categoria...</option>
+                  <option value="">{tp.field_category_placeholder}</option>
                   {categoriasOptions.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.label} - {c.descricao}
@@ -618,7 +647,7 @@ export default function RegistarProfissionalPage() {
 
               {/* Modalidade de Serviço */}
               <div>
-                <label className={labelClass}>Modalidade de Serviço *</label>
+                <label className={labelClass}>{tp.field_modality}</label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {modalidades.map((m) => (
                     <button
@@ -641,24 +670,24 @@ export default function RegistarProfissionalPage() {
               {/* Especialidade + Anos Experiência */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>Especialidade</label>
+                  <label className={labelClass}>{tp.field_specialty}</label>
                   <input
                     type="text"
                     name="especialidade"
                     value={formData.especialidade}
                     onChange={handleInputChange}
-                    placeholder="Ex: Ortopedia Equina"
+                    placeholder={tp.field_specialty_placeholder}
                     className={inputClass}
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>Anos de Experiência *</label>
+                  <label className={labelClass}>{tp.field_experience}</label>
                   <input
                     type="number"
                     name="anosExperiencia"
                     value={formData.anosExperiencia || ""}
                     onChange={handleInputChange}
-                    placeholder="Ex: 10"
+                    placeholder={tp.field_experience_placeholder}
                     min={1}
                     className={inputClass}
                   />
@@ -672,7 +701,7 @@ export default function RegistarProfissionalPage() {
                   disabled={!isStep1Valid}
                   className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Continuar
+                  {tp.btn_continue}
                   <ArrowRight size={18} />
                 </button>
               </div>
@@ -686,24 +715,22 @@ export default function RegistarProfissionalPage() {
         {step === 2 && (
           <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 text-center">
-              Localização e Serviços
+              {tp.heading_location}
             </h2>
 
             <div className="space-y-6 max-w-2xl mx-auto">
               {/* Modalidade info banner */}
               <div className="p-3 bg-[var(--gold)]/5 border border-[var(--gold)]/20 rounded-lg text-sm text-[var(--foreground-secondary)]">
-                {formData.modalidade === "presencial" &&
-                  "Preencha a sua localização em Portugal para os clientes o encontrarem."}
-                {formData.modalidade === "online" &&
-                  "Como profissional online, o distrito não é obrigatório. Pode indicar o seu país de base."}
+                {formData.modalidade === "presencial" && tp.modality_presencial_info}
+                {formData.modalidade === "online" && tp.modality_online_info}
                 {formData.modalidade === "clinicas_internacionais" &&
-                  "Como clinicista internacional, não precisa de indicar localização fixa."}
+                  tp.modality_international_info}
               </div>
 
               {/* País (only for online) */}
               {formData.modalidade === "online" && (
                 <div>
-                  <label className={labelClass}>País</label>
+                  <label className={labelClass}>{tp.field_country}</label>
                   <div className="relative">
                     <Globe
                       className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
@@ -714,7 +741,7 @@ export default function RegistarProfissionalPage() {
                       name="pais"
                       value={formData.pais}
                       onChange={handleInputChange}
-                      placeholder="Ex: Portugal, Brasil, Espanha"
+                      placeholder={tp.field_country_placeholder}
                       className={`${inputClass} pl-10`}
                     />
                   </div>
@@ -725,7 +752,7 @@ export default function RegistarProfissionalPage() {
               {formData.modalidade !== "clinicas_internacionais" && (
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClass}>Cidade</label>
+                    <label className={labelClass}>{tp.field_city}</label>
                     <div className="relative">
                       <MapPin
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
@@ -736,14 +763,16 @@ export default function RegistarProfissionalPage() {
                         name="cidade"
                         value={formData.cidade}
                         onChange={handleInputChange}
-                        placeholder="Ex: Santarém"
+                        placeholder={tp.field_city_placeholder}
                         className={`${inputClass} pl-10`}
                       />
                     </div>
                   </div>
                   <div>
                     <label className={labelClass}>
-                      Distrito {formData.modalidade === "presencial" ? "*" : ""}
+                      {formData.modalidade === "presencial"
+                        ? tp.field_district_required
+                        : tp.field_district}
                     </label>
                     <select
                       name="distrito"
@@ -751,7 +780,7 @@ export default function RegistarProfissionalPage() {
                       onChange={handleInputChange}
                       className={inputClass}
                     >
-                      <option value="">Selecione...</option>
+                      <option value="">{tp.field_district_placeholder}</option>
                       {distritosOptions.map((d) => (
                         <option key={d} value={d}>
                           {d}
@@ -766,24 +795,24 @@ export default function RegistarProfissionalPage() {
               {formData.modalidade === "presencial" && (
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClass}>Morada Completa</label>
+                    <label className={labelClass}>{tp.field_address}</label>
                     <input
                       type="text"
                       name="morada"
                       value={formData.morada}
                       onChange={handleInputChange}
-                      placeholder="Rua, número, localidade"
+                      placeholder={tp.field_address_placeholder}
                       className={inputClass}
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>Código Postal</label>
+                    <label className={labelClass}>{tp.field_postal_code}</label>
                     <input
                       type="text"
                       name="codigoPostal"
                       value={formData.codigoPostal}
                       onChange={handleInputChange}
-                      placeholder="0000-000"
+                      placeholder={tp.field_postal_code_placeholder}
                       className={inputClass}
                     />
                   </div>
@@ -794,13 +823,13 @@ export default function RegistarProfissionalPage() {
               {formData.modalidade === "presencial" && (
                 <div className="grid md:grid-cols-2 gap-4 items-end">
                   <div>
-                    <label className={labelClass}>Raio de Serviço (km)</label>
+                    <label className={labelClass}>{tp.field_service_radius}</label>
                     <input
                       type="number"
                       name="raioServico"
                       value={formData.raioServico || ""}
                       onChange={handleInputChange}
-                      placeholder="Ex: 50"
+                      placeholder={tp.field_service_radius_placeholder}
                       min={0}
                       className={inputClass}
                     />
@@ -818,7 +847,7 @@ export default function RegistarProfissionalPage() {
                       htmlFor="aceitaDeslocacoes"
                       className="text-sm text-[var(--foreground-secondary)]"
                     >
-                      Aceita deslocações
+                      {tp.field_accepts_travel}
                     </label>
                   </div>
                 </div>
@@ -826,7 +855,7 @@ export default function RegistarProfissionalPage() {
 
               {/* Serviços Oferecidos */}
               <div className="pt-4 border-t border-[var(--border)]">
-                <span className={sectionTitleClass}>Serviços Oferecidos *</span>
+                <span className={sectionTitleClass}>{tp.section_services}</span>
                 <div className="flex gap-2 mb-3">
                   <input
                     type="text"
@@ -838,7 +867,7 @@ export default function RegistarProfissionalPage() {
                         handleAddServico();
                       }
                     }}
-                    placeholder="Ex: Consultas ao domicílio"
+                    placeholder={tp.field_service_placeholder}
                     className={`flex-1 ${inputClass}`}
                   />
                   <button
@@ -846,7 +875,7 @@ export default function RegistarProfissionalPage() {
                     onClick={handleAddServico}
                     className="px-4 py-3 bg-[var(--gold)] text-black text-sm font-medium hover:bg-[var(--gold-hover)] transition-colors"
                   >
-                    Adicionar
+                    {tp.btn_add}
                   </button>
                 </div>
                 {formData.servicos.length > 0 && (
@@ -869,28 +898,26 @@ export default function RegistarProfissionalPage() {
                   </div>
                 )}
                 {formData.servicos.length === 0 && (
-                  <p className="text-xs text-[var(--foreground-muted)]">
-                    Adicione pelo menos 1 serviço.
-                  </p>
+                  <p className="text-xs text-[var(--foreground-muted)]">{tp.services_min_hint}</p>
                 )}
               </div>
 
               {/* Preço Médio */}
               <div>
-                <label className={labelClass}>Preço Médio / A partir de</label>
+                <label className={labelClass}>{tp.field_average_price}</label>
                 <input
                   type="text"
                   name="precoMedio"
                   value={formData.precoMedio}
                   onChange={handleInputChange}
-                  placeholder="Ex: A partir de €50/consulta"
+                  placeholder={tp.field_average_price_placeholder}
                   className={inputClass}
                 />
               </div>
 
               {/* Idiomas */}
               <div>
-                <label className={labelClass}>Idiomas</label>
+                <label className={labelClass}>{tp.field_languages}</label>
                 <div className="flex flex-wrap gap-3">
                   {IDIOMAS_OPCOES.map((idioma) => (
                     <label key={idioma} className="flex items-center gap-2 cursor-pointer">
@@ -913,14 +940,14 @@ export default function RegistarProfissionalPage() {
                   className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
                 >
                   <ArrowLeft size={18} />
-                  Voltar
+                  {tp.btn_back}
                 </button>
                 <button
                   onClick={() => setStep(3)}
                   disabled={!isStep2Valid}
                   className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Continuar
+                  {tp.btn_continue}
                   <ArrowRight size={18} />
                 </button>
               </div>
@@ -934,26 +961,26 @@ export default function RegistarProfissionalPage() {
         {step === 3 && (
           <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 text-center">
-              Credenciais e Presença
+              {tp.heading_credentials}
             </h2>
 
             <div className="space-y-6 max-w-2xl mx-auto">
               {/* Formação Académica */}
               <div>
-                <label className={labelClass}>Formação Académica</label>
+                <label className={labelClass}>{tp.field_education}</label>
                 <input
                   type="text"
                   name="formacaoAcademica"
                   value={formData.formacaoAcademica}
                   onChange={handleInputChange}
-                  placeholder="Ex: Licenciatura em Medicina Veterinária - UTAD"
+                  placeholder={tp.field_education_placeholder}
                   className={inputClass}
                 />
               </div>
 
               {/* Certificações */}
               <div className="pt-4 border-t border-[var(--border)]">
-                <span className={sectionTitleClass}>Certificações</span>
+                <span className={sectionTitleClass}>{tp.section_certifications}</span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
                   <input
                     type="text"
@@ -961,7 +988,7 @@ export default function RegistarProfissionalPage() {
                     onChange={(e) =>
                       setNovaCertificacao({ ...novaCertificacao, nome: e.target.value })
                     }
-                    placeholder="Nome da certificação"
+                    placeholder={tp.field_cert_name_placeholder}
                     className={inputClass}
                   />
                   <input
@@ -970,7 +997,7 @@ export default function RegistarProfissionalPage() {
                     onChange={(e) =>
                       setNovaCertificacao({ ...novaCertificacao, entidade: e.target.value })
                     }
-                    placeholder="Entidade emissora"
+                    placeholder={tp.field_cert_entity_placeholder}
                     className={inputClass}
                   />
                   <div className="flex gap-2">
@@ -980,7 +1007,7 @@ export default function RegistarProfissionalPage() {
                       onChange={(e) =>
                         setNovaCertificacao({ ...novaCertificacao, ano: e.target.value })
                       }
-                      placeholder="Ano"
+                      placeholder={tp.field_cert_year_placeholder}
                       className={`flex-1 ${inputClass}`}
                     />
                     <button
@@ -1017,7 +1044,7 @@ export default function RegistarProfissionalPage() {
 
               {/* Associações Profissionais */}
               <div>
-                <label className={labelClass}>Associações Profissionais</label>
+                <label className={labelClass}>{tp.field_associations}</label>
                 <div className="flex gap-2 mb-3">
                   <input
                     type="text"
@@ -1029,7 +1056,7 @@ export default function RegistarProfissionalPage() {
                         handleAddAssociacao();
                       }
                     }}
-                    placeholder="Ex: Ordem dos Médicos Veterinários"
+                    placeholder={tp.field_associations_placeholder}
                     className={`flex-1 ${inputClass}`}
                   />
                   <button
@@ -1037,7 +1064,7 @@ export default function RegistarProfissionalPage() {
                     onClick={handleAddAssociacao}
                     className="px-4 py-3 bg-[var(--gold)] text-black text-sm font-medium hover:bg-[var(--gold-hover)] transition-colors"
                   >
-                    Adicionar
+                    {tp.btn_add}
                   </button>
                 </div>
                 {formData.associacoes.length > 0 && (
@@ -1076,18 +1103,18 @@ export default function RegistarProfissionalPage() {
                     htmlFor="seguroProfissional"
                     className="text-sm text-[var(--foreground-secondary)]"
                   >
-                    Seguro profissional activo
+                    {tp.field_insurance}
                   </label>
                 </div>
                 {formData.seguroProfissional && (
                   <div>
-                    <label className={labelClass}>Nome da Seguradora</label>
+                    <label className={labelClass}>{tp.field_insurer}</label>
                     <input
                       type="text"
                       name="seguradora"
                       value={formData.seguradora}
                       onChange={handleInputChange}
-                      placeholder="Ex: Fidelidade"
+                      placeholder={tp.field_insurer_placeholder}
                       className={inputClass}
                     />
                   </div>
@@ -1096,7 +1123,7 @@ export default function RegistarProfissionalPage() {
 
               {/* Disponibilidade */}
               <div className="pt-4 border-t border-[var(--border)]">
-                <span className={sectionTitleClass}>Disponibilidade</span>
+                <span className={sectionTitleClass}>{tp.section_availability}</span>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {DIAS_SEMANA.map((dia) => (
                     <button
@@ -1115,7 +1142,7 @@ export default function RegistarProfissionalPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className={labelClass}>Hora Início</label>
+                    <label className={labelClass}>{tp.field_start_time}</label>
                     <input
                       type="time"
                       value={formData.disponibilidade.horaInicio}
@@ -1132,7 +1159,7 @@ export default function RegistarProfissionalPage() {
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>Hora Fim</label>
+                    <label className={labelClass}>{tp.field_end_time}</label>
                     <input
                       type="time"
                       value={formData.disponibilidade.horaFim}
@@ -1159,7 +1186,7 @@ export default function RegistarProfissionalPage() {
                     htmlFor="emergencias24h"
                     className="text-sm text-[var(--foreground-secondary)]"
                   >
-                    Disponível para emergências 24h
+                    {tp.field_emergencies}
                   </label>
                 </div>
               </div>
@@ -1167,30 +1194,30 @@ export default function RegistarProfissionalPage() {
               {/* Descrição Completa */}
               <div className="pt-4 border-t border-[var(--border)]">
                 <label className={labelClass}>
-                  Descrição Completa *{" "}
-                  <span className="text-[var(--foreground-muted)]">(mín. 100 caracteres)</span>
+                  {tp.field_description}{" "}
+                  <span className="text-[var(--foreground-muted)]">{tp.field_description_min}</span>
                 </label>
                 <textarea
                   name="descricao"
                   value={formData.descricao}
                   onChange={handleInputChange}
-                  placeholder="Descreva a sua experiência, serviços, especialidades, filosofia de trabalho..."
+                  placeholder={tp.field_description_placeholder}
                   rows={5}
                   className={`${inputClass} resize-none`}
                 />
                 <p
                   className={`text-xs mt-1 ${formData.descricao.length >= 100 ? "text-green-400" : "text-[var(--foreground-muted)]"}`}
                 >
-                  {formData.descricao.length}/100 caracteres
+                  {formData.descricao.length}/100 {tp.field_description_count}
                 </p>
               </div>
 
               {/* Redes Sociais */}
               <div className="pt-4 border-t border-[var(--border)]">
-                <span className={sectionTitleClass}>Presença Online</span>
+                <span className={sectionTitleClass}>{tp.section_online_presence}</span>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClass}>Website</label>
+                    <label className={labelClass}>{tp.field_website}</label>
                     <div className="relative">
                       <Globe
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
@@ -1201,13 +1228,13 @@ export default function RegistarProfissionalPage() {
                         name="website"
                         value={formData.website}
                         onChange={handleInputChange}
-                        placeholder="https://www.exemplo.pt"
+                        placeholder={tp.field_website_placeholder}
                         className={`${inputClass} pl-10`}
                       />
                     </div>
                   </div>
                   <div>
-                    <label className={labelClass}>Instagram</label>
+                    <label className={labelClass}>{tp.field_instagram}</label>
                     <div className="relative">
                       <Instagram
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
@@ -1218,13 +1245,13 @@ export default function RegistarProfissionalPage() {
                         name="instagram"
                         value={formData.instagram}
                         onChange={handleInputChange}
-                        placeholder="@exemplo"
+                        placeholder={tp.field_instagram_placeholder}
                         className={`${inputClass} pl-10`}
                       />
                     </div>
                   </div>
                   <div>
-                    <label className={labelClass}>Facebook</label>
+                    <label className={labelClass}>{tp.field_facebook}</label>
                     <div className="relative">
                       <Facebook
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
@@ -1235,13 +1262,13 @@ export default function RegistarProfissionalPage() {
                         name="facebook"
                         value={formData.facebook}
                         onChange={handleInputChange}
-                        placeholder="https://facebook.com/..."
+                        placeholder={tp.field_facebook_placeholder}
                         className={`${inputClass} pl-10`}
                       />
                     </div>
                   </div>
                   <div>
-                    <label className={labelClass}>LinkedIn</label>
+                    <label className={labelClass}>{tp.field_linkedin}</label>
                     <div className="relative">
                       <Linkedin
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
@@ -1252,7 +1279,7 @@ export default function RegistarProfissionalPage() {
                         name="linkedin"
                         value={formData.linkedin}
                         onChange={handleInputChange}
-                        placeholder="https://linkedin.com/in/..."
+                        placeholder={tp.field_linkedin_placeholder}
                         className={`${inputClass} pl-10`}
                       />
                     </div>
@@ -1262,14 +1289,12 @@ export default function RegistarProfissionalPage() {
 
               {/* Documentos Comprovativos */}
               <div className="pt-4 border-t border-[var(--border)]">
-                <span className={sectionTitleClass}>Documentos Comprovativos</span>
-                <p className="text-xs text-[var(--foreground-muted)] mb-3">
-                  Até 3 ficheiros (PDF ou imagem, máx. 5MB cada). Certificados, diplomas, etc.
-                </p>
+                <span className={sectionTitleClass}>{tp.section_documents}</span>
+                <p className="text-xs text-[var(--foreground-muted)] mb-3">{tp.documents_hint}</p>
                 {formData.documentos.length < 3 && (
                   <label className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--background-secondary)] border border-[var(--border)] text-sm text-[var(--foreground-secondary)] hover:border-[var(--gold)]/50 hover:text-[var(--foreground)] transition-colors cursor-pointer mb-3">
                     <FileText size={16} />
-                    Selecionar ficheiro
+                    {tp.btn_select_file}
                     <input
                       type="file"
                       accept="image/*,.pdf"
@@ -1287,7 +1312,8 @@ export default function RegistarProfissionalPage() {
                       >
                         <span className="text-[var(--foreground-secondary)]">
                           <FileText size={14} className="inline mr-2" />
-                          Documento {i + 1} ({doc.startsWith("data:image") ? "Imagem" : "PDF"})
+                          {tp.document_label} {i + 1} (
+                          {doc.startsWith("data:image") ? tp.document_image : tp.document_pdf})
                         </span>
                         <button
                           type="button"
@@ -1309,14 +1335,14 @@ export default function RegistarProfissionalPage() {
                   className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
                 >
                   <ArrowLeft size={18} />
-                  Voltar
+                  {tp.btn_back}
                 </button>
                 <button
                   onClick={() => setStep(4)}
                   disabled={!isStep3Valid}
                   className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Continuar
+                  {tp.btn_continue}
                   <ArrowRight size={18} />
                 </button>
               </div>
@@ -1330,22 +1356,22 @@ export default function RegistarProfissionalPage() {
         {step === 4 && (
           <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6 text-center">
-              Confirmar e Subscrever
+              {tp.heading_confirm}
             </h2>
 
             <div className="max-w-2xl mx-auto">
               {/* Resumo Completo */}
               <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] p-6 mb-6">
                 <h3 className="text-lg font-medium text-[var(--foreground)] mb-4">
-                  Resumo do Registo
+                  {tp.summary_title}
                 </h3>
 
                 {/* Identificação */}
                 <div className="mb-4">
-                  <span className={sectionTitleClass}>Identificação</span>
+                  <span className={sectionTitleClass}>{tp.heading_identity}</span>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between items-center">
-                      <span className="text-[var(--foreground-muted)]">Nome:</span>
+                      <span className="text-[var(--foreground-muted)]">{tp.summary_name}</span>
                       <div className="flex items-center gap-3">
                         {fotoPreview && (
                           <img
@@ -1358,27 +1384,31 @@ export default function RegistarProfissionalPage() {
                       </div>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[var(--foreground-muted)]">Email:</span>
+                      <span className="text-[var(--foreground-muted)]">{tp.summary_email}</span>
                       <span className="text-[var(--foreground)]">{formData.email}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[var(--foreground-muted)]">Telefone:</span>
+                      <span className="text-[var(--foreground-muted)]">{tp.summary_phone}</span>
                       <span className="text-[var(--foreground)]">{formData.telefone}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[var(--foreground-muted)]">Categoria:</span>
+                      <span className="text-[var(--foreground-muted)]">{tp.summary_category}</span>
                       <span className="text-[var(--foreground)]">{categoriaLabel}</span>
                     </div>
                     {formData.especialidade && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Especialidade:</span>
+                        <span className="text-[var(--foreground-muted)]">
+                          {tp.summary_specialty}
+                        </span>
                         <span className="text-[var(--foreground)]">{formData.especialidade}</span>
                       </div>
                     )}
                     <div className="flex justify-between">
-                      <span className="text-[var(--foreground-muted)]">Experiência:</span>
+                      <span className="text-[var(--foreground-muted)]">
+                        {tp.summary_experience}
+                      </span>
                       <span className="text-[var(--foreground)]">
-                        {formData.anosExperiencia} anos
+                        {formData.anosExperiencia} {tp.summary_experience_suffix}
                       </span>
                     </div>
                   </div>
@@ -1386,10 +1416,10 @@ export default function RegistarProfissionalPage() {
 
                 {/* Localização */}
                 <div className="mb-4 pt-4 border-t border-[var(--border)]/50">
-                  <span className={sectionTitleClass}>Localização e Serviços</span>
+                  <span className={sectionTitleClass}>{tp.summary_section_location}</span>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-[var(--foreground-muted)]">Modalidade:</span>
+                      <span className="text-[var(--foreground-muted)]">{tp.summary_modality}</span>
                       <span className="text-[var(--foreground)]">
                         {modalidades.find((m) => m.id === formData.modalidade)?.label ||
                           formData.modalidade}
@@ -1397,37 +1427,41 @@ export default function RegistarProfissionalPage() {
                     </div>
                     {(formData.distrito || formData.cidade || formData.pais) && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Localização:</span>
+                        <span className="text-[var(--foreground-muted)]">
+                          {tp.summary_location}
+                        </span>
                         <span className="text-[var(--foreground)]">
                           {formData.modalidade === "clinicas_internacionais"
-                            ? "Internacional"
+                            ? tp.summary_international
                             : formData.modalidade === "online"
-                              ? formData.pais || "Online"
+                              ? formData.pais || tp.summary_online
                               : `${formData.cidade ? `${formData.cidade}, ` : ""}${formData.distrito}`}
                         </span>
                       </div>
                     )}
                     {formData.morada && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Morada:</span>
+                        <span className="text-[var(--foreground-muted)]">{tp.summary_address}</span>
                         <span className="text-[var(--foreground)]">{formData.morada}</span>
                       </div>
                     )}
                     {formData.raioServico > 0 && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Raio:</span>
+                        <span className="text-[var(--foreground-muted)]">{tp.summary_radius}</span>
                         <span className="text-[var(--foreground)]">{formData.raioServico} km</span>
                       </div>
                     )}
                     {formData.aceitaDeslocacoes && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Deslocações:</span>
-                        <span className="text-green-400">Sim</span>
+                        <span className="text-[var(--foreground-muted)]">{tp.summary_travel}</span>
+                        <span className="text-green-400">{tp.summary_yes}</span>
                       </div>
                     )}
                     {formData.servicos.length > 0 && (
                       <div>
-                        <span className="text-[var(--foreground-muted)] block mb-1">Serviços:</span>
+                        <span className="text-[var(--foreground-muted)] block mb-1">
+                          {tp.summary_services}
+                        </span>
                         <div className="flex flex-wrap gap-1">
                           {formData.servicos.map((s) => (
                             <span
@@ -1442,7 +1476,9 @@ export default function RegistarProfissionalPage() {
                     )}
                     {formData.idiomas.length > 0 && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Idiomas:</span>
+                        <span className="text-[var(--foreground-muted)]">
+                          {tp.summary_languages}
+                        </span>
                         <span className="text-[var(--foreground)]">
                           {formData.idiomas.join(", ")}
                         </span>
@@ -1453,11 +1489,13 @@ export default function RegistarProfissionalPage() {
 
                 {/* Credenciais */}
                 <div className="pt-4 border-t border-[var(--border)]/50">
-                  <span className={sectionTitleClass}>Credenciais</span>
+                  <span className={sectionTitleClass}>{tp.summary_section_credentials}</span>
                   <div className="space-y-2 text-sm">
                     {formData.formacaoAcademica && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Formação:</span>
+                        <span className="text-[var(--foreground-muted)]">
+                          {tp.summary_education}
+                        </span>
                         <span className="text-[var(--foreground)]">
                           {formData.formacaoAcademica}
                         </span>
@@ -1466,7 +1504,7 @@ export default function RegistarProfissionalPage() {
                     {formData.certificacoes.length > 0 && (
                       <div>
                         <span className="text-[var(--foreground-muted)] block mb-1">
-                          Certificações:
+                          {tp.summary_certifications}
                         </span>
                         {formData.certificacoes.map((c, i) => (
                           <p key={i} className="text-[var(--foreground-secondary)] text-xs ml-2">
@@ -1477,23 +1515,30 @@ export default function RegistarProfissionalPage() {
                     )}
                     {formData.seguroProfissional && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Seguro:</span>
+                        <span className="text-[var(--foreground-muted)]">
+                          {tp.summary_insurance}
+                        </span>
                         <span className="text-green-400">
-                          Sim{formData.seguradora ? ` (${formData.seguradora})` : ""}
+                          {tp.summary_yes}
+                          {formData.seguradora ? ` (${formData.seguradora})` : ""}
                         </span>
                       </div>
                     )}
                     {formData.emergencias24h && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Emergências 24h:</span>
-                        <span className="text-green-400">Sim</span>
+                        <span className="text-[var(--foreground-muted)]">
+                          {tp.summary_emergencies}
+                        </span>
+                        <span className="text-green-400">{tp.summary_yes}</span>
                       </div>
                     )}
                     {formData.documentos.length > 0 && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--foreground-muted)]">Documentos:</span>
+                        <span className="text-[var(--foreground-muted)]">
+                          {tp.summary_documents}
+                        </span>
                         <span className="text-[var(--foreground)]">
-                          {formData.documentos.length} ficheiro(s)
+                          {formData.documentos.length} {tp.summary_documents_suffix}
                         </span>
                       </div>
                     )}
@@ -1506,17 +1551,19 @@ export default function RegistarProfissionalPage() {
                 <div className="flex items-center gap-3 mb-3">
                   <ShieldCheck className="text-[var(--gold)]" size={24} />
                   <h3 className="text-lg font-medium text-[var(--foreground)]">
-                    Subscrição Profissional
+                    {tp.subscription_title}
                   </h3>
                 </div>
                 <div className="space-y-2 text-sm text-[var(--foreground-secondary)]">
-                  <p>Perfil verificado no directório de profissionais</p>
-                  <p>Contacto directo com proprietários e criadores</p>
-                  <p>Visibilidade na maior rede equestre de Portugal</p>
+                  <p>{tp.subscription_benefit_1}</p>
+                  <p>{tp.subscription_benefit_2}</p>
+                  <p>{tp.subscription_benefit_3}</p>
                 </div>
                 <div className="mt-4 pt-4 border-t border-[var(--gold)]/20">
-                  <span className="text-2xl font-bold text-[var(--gold)]">€6</span>
-                  <span className="text-[var(--foreground-muted)]">/mês</span>
+                  <span className="text-2xl font-bold text-[var(--gold)]">
+                    {tp.subscription_price}
+                  </span>
+                  <span className="text-[var(--foreground-muted)]">{tp.subscription_period}</span>
                 </div>
               </div>
 
@@ -1531,7 +1578,7 @@ export default function RegistarProfissionalPage() {
                     className="w-4 h-4 mt-0.5 accent-[#C5A059]"
                   />
                   <span className="text-sm text-[var(--foreground-secondary)]">
-                    Li e aceito os Termos e Condições do Portal Lusitano. *
+                    {tp.terms_accept}
                   </span>
                 </label>
                 <label className="flex items-start gap-3 cursor-pointer">
@@ -1543,8 +1590,7 @@ export default function RegistarProfissionalPage() {
                     className="w-4 h-4 mt-0.5 accent-[#C5A059]"
                   />
                   <span className="text-sm text-[var(--foreground-secondary)]">
-                    Declaro que toda a informação fornecida é verdadeira e verificável. Compreendo
-                    que informação falsa resultará na remoção do perfil sem reembolso. *
+                    {tp.terms_truthfulness}
                   </span>
                 </label>
                 <label className="flex items-start gap-3 cursor-pointer">
@@ -1556,17 +1602,13 @@ export default function RegistarProfissionalPage() {
                     className="w-4 h-4 mt-0.5 accent-[#C5A059]"
                   />
                   <span className="text-sm text-[var(--foreground-secondary)]">
-                    Autorizo o Portal Lusitano a verificar a informação fornecida junto das
-                    entidades competentes. *
+                    {tp.terms_verification}
                   </span>
                 </label>
               </div>
 
               {/* Info */}
-              <p className="text-xs text-[var(--foreground-muted)] mb-6">
-                Após o pagamento, o seu perfil ficará pendente de aprovação pela nossa equipa
-                (máximo 24h). Pode cancelar a subscrição a qualquer momento.
-              </p>
+              <p className="text-xs text-[var(--foreground-muted)] mb-6">{tp.info_after_payment}</p>
 
               {/* Botões */}
               <div className="flex justify-between">
@@ -1575,7 +1617,7 @@ export default function RegistarProfissionalPage() {
                   className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
                 >
                   <ArrowLeft size={18} />
-                  Voltar
+                  {tp.btn_back}
                 </button>
                 <button
                   onClick={handleSubmit}
@@ -1584,11 +1626,12 @@ export default function RegistarProfissionalPage() {
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="animate-spin" size={18} />A processar...
+                      <Loader2 className="animate-spin" size={18} />
+                      {tp.btn_processing}
                     </>
                   ) : (
                     <>
-                      Subscrever por €6/mês
+                      {tp.btn_subscribe}
                       <ArrowRight size={18} />
                     </>
                   )}

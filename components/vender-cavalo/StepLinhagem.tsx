@@ -2,6 +2,7 @@
 
 import { Upload, CheckCircle, FileText } from "lucide-react";
 import type { StepProps, Documentos, DocumentType } from "@/components/vender-cavalo/types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface StepLinhagemProps extends StepProps {
   documentos: Documentos;
@@ -14,23 +15,25 @@ export default function StepLinhagem({
   documentos,
   onDocUpload,
 }: StepLinhagemProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">
       <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
         <span className="w-8 h-8 bg-[var(--gold)] rounded-full flex items-center justify-center text-black text-sm font-bold">
           3
         </span>
-        Linhagem e Documentação
+        {t.vender_cavalo.step_lineage_title}
       </h2>
 
       <div className="space-y-6">
         {/* Pai */}
         <div>
-          <h3 className="text-sm font-medium text-[var(--gold)] mb-3">Pai</h3>
+          <h3 className="text-sm font-medium text-[var(--gold)] mb-3">{t.vender_cavalo.sire}</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-                Nome do Pai *
+                {t.vender_cavalo.sire_name} *
               </label>
               <input
                 type="text"
@@ -43,7 +46,7 @@ export default function StepLinhagem({
             </div>
             <div>
               <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-                Registo APSL do Pai *
+                {t.vender_cavalo.sire_registration} *
               </label>
               <input
                 type="text"
@@ -58,11 +61,11 @@ export default function StepLinhagem({
 
         {/* Mãe */}
         <div>
-          <h3 className="text-sm font-medium text-[var(--gold)] mb-3">Mãe</h3>
+          <h3 className="text-sm font-medium text-[var(--gold)] mb-3">{t.vender_cavalo.dam}</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-                Nome da Mãe *
+                {t.vender_cavalo.dam_name} *
               </label>
               <input
                 type="text"
@@ -75,7 +78,7 @@ export default function StepLinhagem({
             </div>
             <div>
               <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-                Registo APSL da Mãe *
+                {t.vender_cavalo.dam_registration} *
               </label>
               <input
                 type="text"
@@ -91,14 +94,14 @@ export default function StepLinhagem({
         {/* Coudelaria */}
         <div>
           <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-            Coudelaria de Origem
+            {t.vender_cavalo.stud_origin}
           </label>
           <input
             type="text"
             value={formData.coudelaria_origem}
             onChange={(e) => updateField("coudelaria_origem", e.target.value)}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
-            placeholder="Nome da coudelaria onde nasceu"
+            placeholder={t.vender_cavalo.placeholder_stud_origin}
           />
         </div>
 
@@ -106,25 +109,23 @@ export default function StepLinhagem({
         <div className="border-t border-[var(--border)] pt-6">
           <h3 className="text-sm font-medium text-[var(--foreground)] mb-4 flex items-center gap-2">
             <FileText size={18} className="text-[var(--gold)]" />
-            Upload de Documentos Obrigatórios
+            {t.vender_cavalo.required_docs_upload}
           </h3>
 
           <div className="space-y-4">
             {/* Livro Azul */}
             <div className="bg-[var(--background-card)]/50 border border-[var(--border)] rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">Livro Azul (APSL) *</span>
+                <span className="text-sm font-medium">{t.vender_cavalo.blue_book} *</span>
                 {documentos.livroAzul && <CheckCircle size={18} className="text-green-400" />}
               </div>
               <p className="text-xs text-[var(--foreground-muted)] mb-3">
-                Cópia do registo oficial do cavalo
+                {t.vender_cavalo.blue_book_desc}
               </p>
               <label className="flex items-center justify-center gap-2 px-4 py-3 border border-dashed border-[var(--border)] rounded-lg cursor-pointer hover:border-[var(--gold)] transition-colors touch-manipulation">
                 <Upload size={18} className="text-[var(--foreground-muted)]" />
                 <span className="text-sm text-[var(--foreground-secondary)]">
-                  {documentos.livroAzul
-                    ? documentos.livroAzul.name
-                    : "Escolher ficheiro (PDF ou imagem)"}
+                  {documentos.livroAzul ? documentos.livroAzul.name : t.vender_cavalo.choose_file}
                 </span>
                 <input
                   type="file"
@@ -140,16 +141,18 @@ export default function StepLinhagem({
             {/* Passaporte */}
             <div className="bg-[var(--background-card)]/50 border border-[var(--border)] rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">Passaporte Equino</span>
+                <span className="text-sm font-medium">{t.vender_cavalo.equine_passport}</span>
                 {documentos.passaporte && <CheckCircle size={18} className="text-green-400" />}
               </div>
               <p className="text-xs text-[var(--foreground-muted)] mb-3">
-                Documento de identificação europeu
+                {t.vender_cavalo.equine_passport_desc}
               </p>
               <label className="flex items-center justify-center gap-2 px-4 py-3 border border-dashed border-[var(--border)] rounded-lg cursor-pointer hover:border-[var(--gold)] transition-colors touch-manipulation">
                 <Upload size={18} className="text-[var(--foreground-muted)]" />
                 <span className="text-sm text-[var(--foreground-secondary)]">
-                  {documentos.passaporte ? documentos.passaporte.name : "Escolher ficheiro"}
+                  {documentos.passaporte
+                    ? documentos.passaporte.name
+                    : t.vender_cavalo.choose_file_short}
                 </span>
                 <input
                   type="file"

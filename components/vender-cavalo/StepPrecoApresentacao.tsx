@@ -3,6 +3,7 @@
 import { Euro, Camera, X, Plus } from "lucide-react";
 import type { StepProps } from "@/components/vender-cavalo/types";
 import { disponibilidades, MAX_IMAGES } from "@/components/vender-cavalo/data";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface StepPrecoApresentacaoProps extends StepProps {
   imagens: File[];
@@ -17,13 +18,15 @@ export default function StepPrecoApresentacao({
   onImageUpload,
   onRemoveImage,
 }: StepPrecoApresentacaoProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">
       <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
         <span className="w-8 h-8 bg-[var(--gold)] rounded-full flex items-center justify-center text-black text-sm font-bold">
           5
         </span>
-        Preço e Apresentação
+        {t.vender_cavalo.step_price_title}
       </h2>
 
       <div className="space-y-6">
@@ -31,7 +34,7 @@ export default function StepPrecoApresentacao({
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Preço (€) *
+              {t.vender_cavalo.price_eur} *
             </label>
             <div className="relative">
               <Euro
@@ -51,7 +54,7 @@ export default function StepPrecoApresentacao({
           </div>
           <div>
             <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Localização *
+              {t.vender_cavalo.location} *
             </label>
             <input
               type="text"
@@ -60,7 +63,7 @@ export default function StepPrecoApresentacao({
               value={formData.localizacao}
               onChange={(e) => updateField("localizacao", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
-              placeholder="Distrito ou localidade"
+              placeholder={t.vender_cavalo.placeholder_location}
             />
           </div>
         </div>
@@ -73,7 +76,7 @@ export default function StepPrecoApresentacao({
               onChange={(e) => updateField("negociavel", e.target.checked)}
               className="w-5 h-5 accent-[var(--gold)]"
             />
-            <span className="text-sm">Preço negociável</span>
+            <span className="text-sm">{t.vender_cavalo.price_negotiable}</span>
           </label>
           <label className="flex items-center gap-3 cursor-pointer touch-manipulation">
             <input
@@ -82,20 +85,20 @@ export default function StepPrecoApresentacao({
               onChange={(e) => updateField("aceita_troca", e.target.checked)}
               className="w-5 h-5 accent-[var(--gold)]"
             />
-            <span className="text-sm">Aceita trocas</span>
+            <span className="text-sm">{t.vender_cavalo.accepts_trade}</span>
           </label>
         </div>
 
         <div>
           <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-            Disponibilidade para Visitas
+            {t.vender_cavalo.visit_availability}
           </label>
           <select
             value={formData.disponibilidade_visita}
             onChange={(e) => updateField("disponibilidade_visita", e.target.value)}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
           >
-            <option value="">Selecionar</option>
+            <option value="">{t.vender_cavalo.select}</option>
             {disponibilidades.map((d) => (
               <option key={d} value={d}>
                 {d}
@@ -108,11 +111,10 @@ export default function StepPrecoApresentacao({
         <div className="border-t border-[var(--border)] pt-6">
           <h3 className="text-sm font-medium text-[var(--foreground)] mb-2 flex items-center gap-2">
             <Camera size={18} className="text-[var(--gold)]" />
-            Fotografias * (mínimo 3, máximo 10)
+            {t.vender_cavalo.photos_title} * ({t.vender_cavalo.photos_min_max})
           </h3>
           <p className="text-xs text-[var(--foreground-muted)] mb-4">
-            Inclua fotos de diferentes ângulos: perfil, frente, traseira, cascos, e em movimento se
-            possível.
+            {t.vender_cavalo.photos_tip}
           </p>
 
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4">
@@ -138,7 +140,9 @@ export default function StepPrecoApresentacao({
             {imagens.length < MAX_IMAGES && (
               <label className="aspect-square bg-[var(--background-card)] rounded-lg border-2 border-dashed border-[var(--border)] flex flex-col items-center justify-center cursor-pointer hover:border-[var(--gold)] transition-colors touch-manipulation">
                 <Plus size={24} className="text-[var(--foreground-muted)] mb-1" />
-                <span className="text-xs text-[var(--foreground-muted)]">Adicionar</span>
+                <span className="text-xs text-[var(--foreground-muted)]">
+                  {t.vender_cavalo.add}
+                </span>
                 <input
                   type="file"
                   accept="image/*"
@@ -154,7 +158,8 @@ export default function StepPrecoApresentacao({
         {/* Descrição */}
         <div>
           <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-            Descrição * ({formData.descricao.length}/100 caracteres mínimos)
+            {t.vender_cavalo.description} * ({formData.descricao.length}/100{" "}
+            {t.vender_cavalo.min_chars})
           </label>
           <textarea
             required
@@ -162,14 +167,14 @@ export default function StepPrecoApresentacao({
             value={formData.descricao}
             onChange={(e) => updateField("descricao", e.target.value)}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] h-40 resize-none"
-            placeholder="Descreva o cavalo em detalhe: temperamento, qualidades, razão da venda, características especiais..."
+            placeholder={t.vender_cavalo.placeholder_description}
           />
         </div>
 
         {/* Vídeos */}
         <div>
           <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-            Link para Vídeos (YouTube/Vimeo)
+            {t.vender_cavalo.video_link}
           </label>
           <input
             type="url"

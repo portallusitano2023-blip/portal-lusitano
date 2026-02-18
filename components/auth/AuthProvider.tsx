@@ -3,11 +3,10 @@
 import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 
 // Inline minimal types to avoid importing @supabase/supabase-js in the initial bundle
-type MinimalUser = { id: string; email?: string; user_metadata: Record<string, unknown> } & Record<
-  string,
-  unknown
->;
-type MinimalSession = { user: MinimalUser; access_token: string } & Record<string, unknown>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MinimalUser = { id: string; email?: string; user_metadata: Record<string, any> };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MinimalSession = { user: MinimalUser; access_token: string } & Record<string, any>;
 
 interface AuthContextType {
   user: MinimalUser | null;

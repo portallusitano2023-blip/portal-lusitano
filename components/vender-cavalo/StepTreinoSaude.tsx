@@ -3,6 +3,7 @@
 import { Upload, CheckCircle, Shield } from "lucide-react";
 import type { StepProps, Documentos, DocumentType } from "@/components/vender-cavalo/types";
 import { niveisTreino, disciplinasOpcoes } from "@/components/vender-cavalo/data";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface StepTreinoSaudeProps extends StepProps {
   documentos: Documentos;
@@ -17,20 +18,22 @@ export default function StepTreinoSaude({
   onDocUpload,
   onToggleDisciplina,
 }: StepTreinoSaudeProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">
       <h2 className="text-xl font-serif mb-6 flex items-center gap-3">
         <span className="w-8 h-8 bg-[var(--gold)] rounded-full flex items-center justify-center text-black text-sm font-bold">
           4
         </span>
-        Treino e Saúde
+        {t.vender_cavalo.step_training_title}
       </h2>
 
       <div className="space-y-6">
         {/* Treino */}
         <div>
           <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-            Nível de Treino *
+            {t.vender_cavalo.training_level} *
           </label>
           <select
             required
@@ -38,7 +41,7 @@ export default function StepTreinoSaude({
             onChange={(e) => updateField("nivel_treino", e.target.value)}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
           >
-            <option value="">Selecionar</option>
+            <option value="">{t.vender_cavalo.select}</option>
             {niveisTreino.map((n) => (
               <option key={n} value={n}>
                 {n}
@@ -50,7 +53,7 @@ export default function StepTreinoSaude({
         {/* Disciplinas */}
         <div>
           <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-            Disciplinas
+            {t.vender_cavalo.disciplines}
           </label>
           <div className="flex flex-wrap gap-2">
             {disciplinasOpcoes.map((disc) => (
@@ -74,26 +77,26 @@ export default function StepTreinoSaude({
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Competições
+              {t.vender_cavalo.competitions}
             </label>
             <input
               type="text"
               value={formData.competicoes}
               onChange={(e) => updateField("competicoes", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
-              placeholder="Competições em que participou"
+              placeholder={t.vender_cavalo.placeholder_competitions}
             />
           </div>
           <div>
             <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Prémios/Classificações
+              {t.vender_cavalo.awards}
             </label>
             <input
               type="text"
               value={formData.premios}
               onChange={(e) => updateField("premios", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
-              placeholder="Resultados obtidos"
+              placeholder={t.vender_cavalo.placeholder_awards}
             />
           </div>
         </div>
@@ -102,12 +105,12 @@ export default function StepTreinoSaude({
         <div className="border-t border-[var(--border)] pt-6">
           <h3 className="text-sm font-medium text-[var(--foreground)] mb-4 flex items-center gap-2">
             <Shield size={18} className="text-[var(--gold)]" />
-            Estado de Saúde
+            {t.vender_cavalo.health_status_section}
           </h3>
 
           <div>
             <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-              Estado Geral *
+              {t.vender_cavalo.general_status} *
             </label>
             <select
               required
@@ -115,10 +118,10 @@ export default function StepTreinoSaude({
               onChange={(e) => updateField("estado_saude", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
             >
-              <option value="">Selecionar</option>
-              <option value="Excelente">Excelente - Sem qualquer problema</option>
-              <option value="Bom">Bom - Pequenas questões menores</option>
-              <option value="Regular">Regular - Requer atenção específica</option>
+              <option value="">{t.vender_cavalo.select}</option>
+              <option value="Excelente">{t.vender_cavalo.health_excellent}</option>
+              <option value="Bom">{t.vender_cavalo.health_good}</option>
+              <option value="Regular">{t.vender_cavalo.health_fair}</option>
             </select>
           </div>
 
@@ -130,7 +133,7 @@ export default function StepTreinoSaude({
                 onChange={(e) => updateField("vacinacao_atualizada", e.target.checked)}
                 className="w-5 h-5 accent-[var(--gold)]"
               />
-              <span className="text-sm">Vacinação atualizada *</span>
+              <span className="text-sm">{t.vender_cavalo.vaccination_updated} *</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer touch-manipulation">
               <input
@@ -139,7 +142,7 @@ export default function StepTreinoSaude({
                 onChange={(e) => updateField("desparasitacao_atualizada", e.target.checked)}
                 className="w-5 h-5 accent-[var(--gold)]"
               />
-              <span className="text-sm">Desparasitação atualizada</span>
+              <span className="text-sm">{t.vender_cavalo.deworming_updated}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer touch-manipulation">
               <input
@@ -148,19 +151,19 @@ export default function StepTreinoSaude({
                 onChange={(e) => updateField("exame_veterinario", e.target.checked)}
                 className="w-5 h-5 accent-[var(--gold)]"
               />
-              <span className="text-sm">Exame veterinário disponível</span>
+              <span className="text-sm">{t.vender_cavalo.vet_exam_available}</span>
             </label>
           </div>
 
           <div className="mt-4">
             <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Observações de Saúde
+              {t.vender_cavalo.health_notes}
             </label>
             <textarea
               value={formData.observacoes_saude}
               onChange={(e) => updateField("observacoes_saude", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] h-24 resize-none"
-              placeholder="Informações relevantes sobre a saúde do cavalo"
+              placeholder={t.vender_cavalo.placeholder_health_notes}
             />
           </div>
 
@@ -168,13 +171,13 @@ export default function StepTreinoSaude({
           {formData.exame_veterinario && (
             <div className="mt-4 bg-[var(--background-card)]/50 border border-[var(--border)] rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">Relatório Veterinário</span>
+                <span className="text-sm font-medium">{t.vender_cavalo.vet_report}</span>
                 {documentos.exameVet && <CheckCircle size={18} className="text-green-400" />}
               </div>
               <label className="flex items-center justify-center gap-2 px-4 py-3 border border-dashed border-[var(--border)] rounded-lg cursor-pointer hover:border-[var(--gold)] transition-colors touch-manipulation">
                 <Upload size={18} className="text-[var(--foreground-muted)]" />
                 <span className="text-sm text-[var(--foreground-secondary)]">
-                  {documentos.exameVet ? documentos.exameVet.name : "Anexar relatório"}
+                  {documentos.exameVet ? documentos.exameVet.name : t.vender_cavalo.attach_report}
                 </span>
                 <input
                   type="file"

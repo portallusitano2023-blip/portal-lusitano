@@ -13,7 +13,7 @@ function PerfilContent() {
   const { t } = useLanguage();
   const router = useRouter();
   const [editingName, setEditingName] = useState(false);
-  const [name, setName] = useState(user?.user_metadata?.full_name || "");
+  const [name, setName] = useState<string>((user?.user_metadata?.full_name as string) || "");
   const [saving, setSaving] = useState(false);
 
   const handleSaveName = async () => {

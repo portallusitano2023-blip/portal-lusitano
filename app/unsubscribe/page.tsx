@@ -3,10 +3,12 @@
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
 
 function UnsubscribeContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  const { t } = useLanguage();
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -14,7 +16,7 @@ function UnsubscribeContent() {
   async function handleUnsubscribe() {
     if (!email) {
       setStatus("error");
-      setMessage("Email não encontrado. Por favor, usa o link do email.");
+      setMessage(t.unsubscribe_page.email_not_found);
       return;
     }
 
@@ -31,45 +33,48 @@ function UnsubscribeContent() {
 
       if (response.ok) {
         setStatus("success");
-        setMessage(data.message || "Subscrição cancelada com sucesso.");
+        setMessage(data.message || t.unsubscribe_page.success_default);
       } else {
         setStatus("error");
-        setMessage(data.error || "Erro ao cancelar subscrição.");
+        setMessage(data.error || t.unsubscribe_page.error_default);
       }
     } catch {
       setStatus("error");
-      setMessage("Erro de conexão. Tenta novamente.");
+      setMessage(t.unsubscribe_page.connection_error);
     }
   }
 
   return (
     <main className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
       <div className="max-w-md w-full bg-[var(--background-secondary)]/40 backdrop-blur-md border border-[var(--border)] p-10 text-center">
-        <h1 className="text-2xl font-serif text-[var(--foreground)] mb-4">Cancelar Subscrição</h1>
+        <h1 className="text-2xl font-serif text-[var(--foreground)] mb-4">
+          {t.unsubscribe_page.title}
+        </h1>
 
         <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[#C5A059] to-transparent mx-auto mb-8"></div>
 
         {status === "idle" && (
           <>
             <p className="text-[var(--foreground-secondary)] mb-6">
-              Tens a certeza que queres deixar de receber os nossos emails?
+              {t.unsubscribe_page.confirm_question}
             </p>
             {email && (
               <p className="text-[var(--foreground-muted)] text-sm mb-6">
-                Email: <span className="text-[var(--foreground)]">{email}</span>
+                {t.unsubscribe_page.email_label}{" "}
+                <span className="text-[var(--foreground)]">{email}</span>
               </p>
             )}
             <button
               onClick={handleUnsubscribe}
               className="w-full bg-red-600 text-[var(--foreground)] font-bold uppercase text-xs tracking-[0.2em] py-4 hover:bg-red-700 transition-all"
             >
-              Sim, cancelar subscrição
+              {t.unsubscribe_page.yes_cancel}
             </button>
             <Link
               href="/"
               className="block mt-4 text-[var(--foreground-muted)] text-sm hover:text-[var(--gold)] transition-colors"
             >
-              Não, quero continuar a receber
+              {t.unsubscribe_page.no_continue}
             </Link>
           </>
         )}
@@ -77,7 +82,9 @@ function UnsubscribeContent() {
         {status === "loading" && (
           <div className="py-8">
             <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <p className="text-[var(--foreground-secondary)] mt-4">A processar...</p>
+            <p className="text-[var(--foreground-secondary)] mt-4">
+              {t.unsubscribe_page.processing}
+            </p>
           </div>
         )}
 
@@ -86,13 +93,13 @@ function UnsubscribeContent() {
             <div className="text-green-500 text-5xl mb-4">✓</div>
             <p className="text-[var(--foreground-secondary)] mb-6">{message}</p>
             <p className="text-[var(--foreground-muted)] text-sm mb-6">
-              Vamos sentir a tua falta! Podes sempre voltar a subscrever.
+              {t.unsubscribe_page.goodbye}
             </p>
             <Link
               href="/"
               className="inline-block bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] py-4 px-8 hover:bg-white transition-all"
             >
-              Voltar ao Portal
+              {t.unsubscribe_page.back_to_portal}
             </Link>
           </>
         )}
@@ -105,7 +112,7 @@ function UnsubscribeContent() {
               onClick={() => setStatus("idle")}
               className="inline-block bg-[var(--background-card)] text-[var(--foreground)] font-bold uppercase text-xs tracking-[0.2em] py-4 px-8 hover:bg-[var(--surface-hover)] transition-all"
             >
-              Tentar novamente
+              {t.unsubscribe_page.try_again}
             </button>
           </>
         )}

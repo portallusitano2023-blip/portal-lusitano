@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function PageHeader() {
+  const { t } = useLanguage();
+
   return (
     <div className="max-w-3xl mx-auto mb-8">
       <Link
@@ -11,19 +14,18 @@ export default function PageHeader() {
         className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-6 touch-manipulation"
       >
         <ArrowLeft size={18} />
-        <span className="text-sm">Voltar ao Marketplace</span>
+        <span className="text-sm">{t.vender_cavalo.back_marketplace}</span>
       </Link>
 
       <div className="text-center">
         <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-[9px] sm:text-[10px] font-bold block mb-2">
-          Marketplace Lusitano
+          {t.vender_cavalo.marketplace_title}
         </span>
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif italic mb-4">
-          Vender Cavalo Lusitano
+          {t.vender_cavalo.page_title}
         </h1>
         <p className="text-[var(--foreground-secondary)] text-sm max-w-xl mx-auto">
-          Anuncie o seu cavalo no maior marketplace de Lusitanos em Portugal. Todos os anúncios
-          passam por verificação de documentação.
+          {t.vender_cavalo.page_desc}
         </p>
       </div>
     </div>
