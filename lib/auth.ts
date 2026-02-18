@@ -8,6 +8,27 @@ function getSecret() {
   return new TextEncoder().encode(process.env.ADMIN_SECRET || "dev-only-secret-not-for-production");
 }
 
+/**
+ * TODO [MEDIUM Security]: Add JWT revocation mechanism
+ *
+ * Current JWT tokens are valid for 7 days with no way to revoke them.
+ * If a token is stolen, the attacker has full access for the entire 7-day window.
+ *
+ * To fix:
+ * 1. Store JTI (JWT ID) in Redis with 7-day TTL
+ * 2. On password change / logout, add JTI to blacklist in Redis
+ * 3. In verifySession(), check if JTI is blacklisted
+ * 4. Optional: Implement token rotation (refresh + access tokens)
+ *
+ * Example with Upstash:
+ * ```
+ * const jti = crypto.randomUUID();
+ * await redis.setex(`session:${jti}`, 604800, email); // 7 days
+ * // In verifySession():
+ * const exists = await redis.get(`session:${jti}`);
+ * if (!exists) return null; // revoked
+ * ```
+ */
 export async function createSession(email: string) {
   const token = await new SignJWT({ email })
     .setProtectedHeader({ alg: "HS256" })
