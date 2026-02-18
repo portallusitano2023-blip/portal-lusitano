@@ -48,19 +48,25 @@ export function checkCredentials(email: string, password: string) {
   const adminEmail = process.env.ADMIN_EMAIL || "";
   const adminPassword = process.env.ADMIN_PASSWORD || "";
 
-  // Timing-safe comparison to prevent timing attacks
-  const emailMatch =
-    email.length === adminEmail.length && crypto.subtle !== undefined && email === adminEmail;
+  // Timing-safe email comparison
+  const emailBytes = new TextEncoder().encode(email);
+  const adminEmailBytes = new TextEncoder().encode(adminEmail);
 
+  let emailMismatch = emailBytes.length ^ adminEmailBytes.length;
+  const minEmailLen = Math.min(emailBytes.length, adminEmailBytes.length);
+  for (let i = 0; i < minEmailLen; i++) {
+    emailMismatch |= emailBytes[i] ^ adminEmailBytes[i];
+  }
+
+  // Timing-safe password comparison
   const passBytes = new TextEncoder().encode(password);
   const adminBytes = new TextEncoder().encode(adminPassword);
 
-  // Constant-time comparison: always compare same length
-  if (passBytes.length !== adminBytes.length) return false;
-  let mismatch = 0;
-  for (let i = 0; i < passBytes.length; i++) {
-    mismatch |= passBytes[i] ^ adminBytes[i];
+  let passMismatch = passBytes.length ^ adminBytes.length;
+  const minPassLen = Math.min(passBytes.length, adminBytes.length);
+  for (let i = 0; i < minPassLen; i++) {
+    passMismatch |= passBytes[i] ^ adminBytes[i];
   }
 
-  return emailMatch && mismatch === 0;
+  return emailMismatch === 0 && passMismatch === 0;
 }
