@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import {
-  BreadcrumbSchema,
-  CollectionPageSchema,
-} from "@/components/JsonLd";
+import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
 
 const siteUrl = "https://portal-lusitano.pt";
 
@@ -33,7 +30,7 @@ export const metadata: Metadata = {
     type: "article",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Linhagens do Lusitano | Portal Lusitano",
@@ -45,7 +42,7 @@ export const metadata: Metadata = {
     title: "Linhagens do Lusitano | Portal Lusitano",
     description:
       "Explore as principais linhagens do cavalo Lusitano. Genealogia, características e legado dos grandes garanhões que definiram a raça PSL.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

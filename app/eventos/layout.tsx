@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Eventos Equestres — Portal Lusitano",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "Eventos Equestres | Portal Lusitano",
     description:
       "Calendário de eventos equestres em Portugal: feiras, concursos, leilões, exposições e workshops. Agenda completa e actualizada.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

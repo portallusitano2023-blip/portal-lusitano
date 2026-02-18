@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Análise de Perfil Equestre - Portal Lusitano",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: "Análise de Perfil Equestre | Portal Lusitano",
     description:
       "Descubra o seu perfil como cavaleiro. Análise completa do seu estilo, experiência e objectivos com cavalos Lusitanos.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

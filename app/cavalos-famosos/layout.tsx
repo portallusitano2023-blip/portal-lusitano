@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     type: "article",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Lusitanos Notáveis | Portal Lusitano",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     title: "Lusitanos Notáveis | Portal Lusitano",
     description:
       "Galeria dos cavalos Lusitanos mais famosos da história. Conheça os exemplares que levaram o PSL ao mais alto nível em Dressage, Atrelagem e Working Equitation.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

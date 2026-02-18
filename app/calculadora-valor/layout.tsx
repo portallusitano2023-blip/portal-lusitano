@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Calculadora de Valor - Portal Lusitano",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: "Calculadora de Valor | Portal Lusitano",
     description:
       "Calcule o valor estimado de um cavalo Lusitano com base em idade, linhagem, nível de treino, palmarés e conformação. Ferramenta gratuita.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

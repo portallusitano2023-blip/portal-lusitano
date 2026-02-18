@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Perguntas Frequentes — Portal Lusitano",
@@ -39,9 +39,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Perguntas Frequentes | Portal Lusitano",
-    description:
-      "Respostas às perguntas mais frequentes sobre cavalos Lusitanos.",
-    images: ["/og-image.jpg"],
+    description: "Respostas às perguntas mais frequentes sobre cavalos Lusitanos.",
+    images: ["/opengraph-image"],
   },
 };
 

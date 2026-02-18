@@ -7,10 +7,7 @@ export const metadata: Metadata = {
   title: "Termos e Condições",
   description:
     "Termos e condições de utilização do Portal Lusitano. Regras do marketplace, política de privacidade e direitos do utilizador.",
-  keywords: [
-    "termos condições portal lusitano",
-    "regras marketplace cavalos",
-  ],
+  keywords: ["termos condições portal lusitano", "regras marketplace cavalos"],
   alternates: {
     canonical: `${siteUrl}/termos`,
   },
@@ -24,7 +21,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Termos e Condições — Portal Lusitano",
@@ -36,7 +33,7 @@ export const metadata: Metadata = {
     title: "Termos e Condições | Portal Lusitano",
     description:
       "Termos e condições de utilização do Portal Lusitano. Regras do marketplace, política de privacidade e direitos do utilizador.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

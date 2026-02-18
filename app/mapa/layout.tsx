@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Mapa Equestre de Portugal — Portal Lusitano",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: "Mapa Equestre de Portugal | Portal Lusitano",
     description:
       "Mapa interactivo com coudelarias, centros hípicos, veterinários e eventos equestres em Portugal.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

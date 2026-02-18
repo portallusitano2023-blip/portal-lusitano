@@ -1,52 +1,46 @@
 "use client";
 
-import { WifiOff, RefreshCw, Home } from "lucide-react";
 import Link from "next/link";
-import { useLanguage } from "@/context/LanguageContext";
 
 export default function OfflinePage() {
-  const { t } = useLanguage();
-
-  const handleRefresh = () => {
-    window.location.reload();
-  };
-
   return (
-    <main className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
-      <div className="max-w-md w-full text-center">
-        <div className="w-24 h-24 bg-[var(--background-card)]/50 rounded-full flex items-center justify-center mx-auto mb-8">
-          <WifiOff className="text-[var(--foreground-muted)]" size={48} />
-        </div>
+    <main className="min-h-screen bg-[var(--background)] flex flex-col items-center justify-center px-6 text-center">
+      {/* Linha decorativa */}
+      <div className="w-px h-16 bg-gradient-to-b from-transparent via-[var(--gold)] to-transparent mb-10" />
 
-        <h1 className="text-4xl font-serif text-[var(--foreground)] mb-4">
-          {t.errors.no_connection}
-        </h1>
+      <span className="text-[10px] uppercase tracking-[0.4em] text-[var(--gold)] mb-6 block">
+        Sem Ligação
+      </span>
 
-        <p className="text-[var(--foreground-secondary)] mb-8 leading-relaxed">
-          {t.errors.offline_message}
-        </p>
+      <h1 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-6 leading-tight">
+        Está Offline
+      </h1>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={handleRefresh}
-            className="inline-flex items-center justify-center gap-2 bg-[var(--gold)] text-black px-8 py-4 text-xs uppercase tracking-widest font-bold hover:bg-[var(--gold-hover)] transition-colors"
-          >
-            <RefreshCw size={16} />
-            {t.errors.try_again}
-          </button>
+      <p className="text-[var(--foreground-secondary)] font-serif italic text-sm md:text-base max-w-sm leading-relaxed mb-12">
+        &ldquo;A ligação à internet foi perdida. Verifique a sua rede e tente novamente.&rdquo;
+      </p>
 
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center gap-2 border border-[var(--border)] text-[var(--foreground)] px-8 py-4 text-xs uppercase tracking-widest hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
-          >
-            <Home size={16} />
-            {t.errors.home_page}
-          </Link>
-        </div>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <button
+          onClick={() => window.location.reload()}
+          className="px-8 py-3 text-[10px] uppercase tracking-widest bg-[var(--gold)] text-black hover:bg-white transition-colors font-bold"
+        >
+          Tentar Novamente
+        </button>
+        <Link
+          href="/"
+          className="px-8 py-3 text-[10px] uppercase tracking-widest border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--border-hover)] transition-colors"
+        >
+          Página Inicial
+        </Link>
+      </div>
 
-        <p className="mt-12 text-[10px] text-[var(--foreground-muted)] uppercase tracking-widest">
-          {t.errors.available_offline}
-        </p>
+      <div className="mt-20 flex items-center gap-4">
+        <div className="w-8 h-px bg-[var(--gold)]" />
+        <span className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)]">
+          Portal Lusitano
+        </span>
+        <div className="w-8 h-px bg-[var(--gold)]" />
       </div>
     </main>
   );

@@ -7,11 +7,7 @@ export const metadata: Metadata = {
   title: "Política de Privacidade",
   description:
     "Política de privacidade do Portal Lusitano. Como protegemos os seus dados pessoais e informação de navegação.",
-  keywords: [
-    "privacidade portal lusitano",
-    "protecção dados",
-    "RGPD cavalos",
-  ],
+  keywords: ["privacidade portal lusitano", "protecção dados", "RGPD cavalos"],
   alternates: {
     canonical: `${siteUrl}/privacidade`,
   },
@@ -25,7 +21,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Política de Privacidade — Portal Lusitano",
@@ -37,7 +33,7 @@ export const metadata: Metadata = {
     title: "Política de Privacidade | Portal Lusitano",
     description:
       "Política de privacidade do Portal Lusitano. Como protegemos os seus dados pessoais e informação de navegação.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

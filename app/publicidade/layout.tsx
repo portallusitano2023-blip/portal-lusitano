@@ -19,15 +19,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Publicidade | Portal Lusitano",
-    description:
-      "Anuncie no Portal Lusitano e alcance milhares de entusiastas do cavalo Lusitano.",
+    description: "Anuncie no Portal Lusitano e alcance milhares de entusiastas do cavalo Lusitano.",
     url: `${siteUrl}/publicidade`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Publicidade — Portal Lusitano",
@@ -37,9 +36,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Publicidade | Portal Lusitano",
-    description:
-      "Anuncie no Portal Lusitano e alcance milhares de entusiastas do cavalo Lusitano.",
-    images: ["/og-image.jpg"],
+    description: "Anuncie no Portal Lusitano e alcance milhares de entusiastas do cavalo Lusitano.",
+    images: ["/opengraph-image"],
   },
 };
 

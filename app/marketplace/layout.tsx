@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Marketplace Equestre — Portal Lusitano",
@@ -38,15 +38,11 @@ export const metadata: Metadata = {
     title: "Marketplace Equestre | Portal Lusitano",
     description:
       "Marketplace de cavalos Lusitanos com filtros avançados. Pesquise por linhagem, disciplina, idade, preço e região em todo o território português.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 
-export default function MarketplaceLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MarketplaceLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <BreadcrumbSchema

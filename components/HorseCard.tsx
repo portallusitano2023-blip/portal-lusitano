@@ -43,7 +43,14 @@ export default function HorseCard({ horse, href, compact = false }: HorseCardPro
           {horse.image_url ? (
             <Image
               src={horse.image_url}
-              alt={horse.nome_cavalo}
+              alt={[
+                horse.nome_cavalo,
+                horse.raca || "Cavalo Lusitano",
+                horse.idade ? `${horse.idade} anos` : null,
+                horse.localizacao ? `em ${horse.localizacao}` : null,
+              ]
+                .filter(Boolean)
+                .join(" — ")}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
               quality={85}

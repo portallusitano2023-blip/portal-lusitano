@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Profissionais Equestres — Portal Lusitano",
@@ -39,15 +39,11 @@ export const metadata: Metadata = {
     title: "Profissionais Equestres | Portal Lusitano",
     description:
       "Directório de profissionais equestres em Portugal: veterinários, ferradores, treinadores, nutricionistas e dentistas equinos. Contactos verificados.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 
-export default function ProfissionaisLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ProfissionaisLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <BreadcrumbSchema

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Sobre — Portal Lusitano",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Sobre Nós | Portal Lusitano",
     description: "O Portal Lusitano é a plataforma mais completa dedicada ao Cavalo Lusitano.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

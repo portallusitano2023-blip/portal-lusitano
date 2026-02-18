@@ -15,7 +15,15 @@ export async function GET() {
       return NextResponse.json({ error: "Erro ao buscar linhagens" }, { status: 500 });
     }
 
-    return NextResponse.json({ linhagens: data });
+    return NextResponse.json(
+      { linhagens: data },
+      {
+        headers: {
+          // Linhagens mudam raramente — cache 1h, stale-while-revalidate 24h
+          "Cache-Control": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

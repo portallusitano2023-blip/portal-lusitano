@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     type: "article",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Piroplasmose Equina — Guia Completo | Portal Lusitano",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "Piroplasmose Equina — Guia Completo | Portal Lusitano",
     description:
       "Guia completo sobre piroplasmose equina: prevalência em Portugal, impacto na exportação de cavalos, diagnóstico, tratamento e prevenção. Informação veterinária actualizada.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

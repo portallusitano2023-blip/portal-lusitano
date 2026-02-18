@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Comprar Cavalo Lusitano — Portal Lusitano",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "Comprar Cavalo Lusitano | Portal Lusitano",
     description:
       "Cavalos Lusitanos à venda em Portugal. Exemplares seleccionados com linhagem certificada APSL, veterinário verificado e entrega segura.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

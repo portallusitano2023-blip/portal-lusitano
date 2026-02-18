@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   let title = "Artigo não encontrado";
   let description = "";
-  let imageUrl = "/og-image.jpg";
+  let imageUrl = "/opengraph-image";
 
   try {
     const article = await fetchArticleBySlug(slug);
@@ -136,15 +136,11 @@ export default async function ArticlePage({ params }: Props) {
       <ArticleSchema
         title={article.title}
         description={article.description || article.subtitle || ""}
-        image={article.image?.asset?.url || "/og-image.jpg"}
+        image={article.image?.asset?.url || "/opengraph-image"}
         datePublished={article.publishedAt}
         author={article.author?.name || "Portal Lusitano"}
       />
-      <ArticlePageClient
-        slug={slug}
-        article={article}
-        relatedArticles={relatedArticles}
-      />
+      <ArticlePageClient slug={slug} article={article} relatedArticles={relatedArticles} />
     </>
   );
 }

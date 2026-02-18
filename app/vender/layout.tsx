@@ -7,11 +7,7 @@ export const metadata: Metadata = {
   title: "Vender",
   description:
     "Publique o seu anúncio de venda de cavalo Lusitano. Plataforma segura com alcance nacional e suporte dedicado.",
-  keywords: [
-    "vender cavalo",
-    "publicar anúncio cavalo",
-    "venda equinos portugal",
-  ],
+  keywords: ["vender cavalo", "publicar anúncio cavalo", "venda equinos portugal"],
   alternates: {
     canonical: `${siteUrl}/vender`,
   },
@@ -25,7 +21,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Vender — Portal Lusitano",
@@ -37,7 +33,7 @@ export const metadata: Metadata = {
     title: "Vender | Portal Lusitano",
     description:
       "Publique o seu anúncio de venda de cavalo Lusitano. Plataforma segura com alcance nacional e suporte dedicado.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

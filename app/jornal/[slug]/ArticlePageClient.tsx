@@ -279,6 +279,61 @@ export default function ArticlePageClient({
         <RelatedArticles articles={relatedArticles} language={language} />
       )}
 
+      {/* INTERNAL LINKING — explorar o portal */}
+      <div className="max-w-4xl mx-auto px-8 mt-16 mb-8">
+        <div className="border-t border-[var(--border)] pt-10">
+          <p className="text-[var(--foreground-muted)] text-xs uppercase tracking-widest mb-6">
+            {language === "pt" ? "Explorar o Portal" : "Explore the Portal"}
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Link
+              href="/comprar"
+              className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
+            >
+              <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
+                Marketplace
+              </span>
+              <span className="text-sm font-serif">
+                {language === "pt" ? "Cavalos à Venda" : "Horses for Sale"}
+              </span>
+            </Link>
+            <Link
+              href="/directorio"
+              className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
+            >
+              <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
+                Directório
+              </span>
+              <span className="text-sm font-serif">
+                {language === "pt" ? "Coudelarias" : "Stud Farms"}
+              </span>
+            </Link>
+            <Link
+              href="/cavalos-famosos"
+              className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
+            >
+              <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
+                Arquivo
+              </span>
+              <span className="text-sm font-serif">
+                {language === "pt" ? "Lusitanos Famosos" : "Famous Lusitanos"}
+              </span>
+            </Link>
+            <Link
+              href="/linhagens"
+              className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
+            >
+              <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
+                Genealogia
+              </span>
+              <span className="text-sm font-serif">
+                {language === "pt" ? "Linhagens" : "Bloodlines"}
+              </span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* NEWSLETTER */}
       <div className="max-w-4xl mx-auto px-8 mt-8">
         <Newsletter />

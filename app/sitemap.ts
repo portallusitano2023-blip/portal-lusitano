@@ -23,12 +23,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${siteUrl}/marketplace`,
-      lastModified: currentDate,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
       url: `${siteUrl}/loja`,
       lastModified: currentDate,
       changeFrequency: "daily",
@@ -75,6 +69,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.8,
+    },
+    {
+      url: `${siteUrl}/sobre`,
+      lastModified: currentDate,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/glossario`,
+      lastModified: currentDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
     {
       url: `${siteUrl}/cavalos-famosos`,
@@ -206,7 +212,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     if (cavalos) {
       cavalosPages = cavalos.map((c) => ({
-        url: `${siteUrl}/marketplace/${c.slug}`,
+        url: `${siteUrl}/comprar/${c.slug}`,
         lastModified: c.updated_at || currentDate,
         changeFrequency: "daily" as const,
         priority: 0.7,

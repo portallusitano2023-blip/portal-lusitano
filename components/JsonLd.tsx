@@ -111,6 +111,7 @@ interface ArticleSchemaProps {
   description: string;
   image: string;
   datePublished: string;
+  dateModified?: string;
   author?: string;
 }
 
@@ -119,6 +120,7 @@ export function ArticleSchema({
   description,
   image,
   datePublished,
+  dateModified,
   author = "Portal Lusitano",
 }: ArticleSchemaProps) {
   const schema = {
@@ -128,6 +130,7 @@ export function ArticleSchema({
     description,
     image,
     datePublished,
+    dateModified: dateModified || datePublished,
     author: {
       "@type": "Organization",
       name: author,
@@ -535,6 +538,53 @@ export function MedicalWebPageSchema() {
       name: "Portal Lusitano",
       url: siteUrl,
     },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema DefinedTermSet (para glossários — ajuda Google a identificar definições)
+interface DefinedTerm {
+  name: string;
+  description: string;
+  alternateName?: string;
+}
+
+export function DefinedTermSetSchema({
+  name,
+  description,
+  url,
+  terms,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  terms: DefinedTerm[];
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    name,
+    description,
+    url,
+    inLanguage: "pt-PT",
+    publisher: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+      url: siteUrl,
+    },
+    hasDefinedTerm: terms.map((term) => ({
+      "@type": "DefinedTerm",
+      name: term.name,
+      description: term.description,
+      inDefinedTermSet: url,
+      ...(term.alternateName ? { alternateName: term.alternateName } : {}),
+    })),
   };
 
   return (

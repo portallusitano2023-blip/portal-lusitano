@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Instagram — Portal Lusitano",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Instagram | Portal Lusitano",
     description:
       "Siga o Portal Lusitano no Instagram. Fotografias e vídeos dos mais belos cavalos Lusitanos, eventos equestres e conteúdo exclusivo.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

@@ -49,7 +49,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Erro ao buscar coudelarias" }, { status: 500 });
     }
 
-    return NextResponse.json({ coudelarias: data });
+    return NextResponse.json(
+      { coudelarias: data },
+      {
+        headers: {
+          // Coudelarias mudam pouco — cache 30 min, Vary garante respostas separadas por query
+          "Cache-Control": "public, max-age=1800, s-maxage=1800, stale-while-revalidate=3600",
+          Vary: "Accept-Encoding",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

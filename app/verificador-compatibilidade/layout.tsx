@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Verificador de Compatibilidade - Portal Lusitano",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Verificador de Compatibilidade | Portal Lusitano",
     description:
       "Verifique a compatibilidade entre cavaleiro e cavalo Lusitano. Análise personalizada de nível, objectivos e perfil equestre.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

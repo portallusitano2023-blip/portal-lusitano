@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Directório de Coudelarias — Portal Lusitano",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "Directório de Coudelarias | Portal Lusitano",
     description:
       "Directório completo de coudelarias de cavalos Lusitanos em Portugal. Encontre criadores certificados, veja exemplares e contacte directamente.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

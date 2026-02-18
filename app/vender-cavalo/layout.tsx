@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Vender Cavalo — Portal Lusitano",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Vender Cavalo | Portal Lusitano",
     description:
       "Venda o seu cavalo Lusitano no Portal Lusitano. Alcance milhares de compradores qualificados com anúncio premium e fotografia profissional.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

@@ -20,15 +20,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Ebook Grátis | Portal Lusitano",
-    description:
-      "Descarregue gratuitamente o nosso guia completo sobre o cavalo Lusitano.",
+    description: "Descarregue gratuitamente o nosso guia completo sobre o cavalo Lusitano.",
     url: `${siteUrl}/ebook-gratis`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Ebook Grátis — Portal Lusitano",
@@ -38,9 +37,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Ebook Grátis | Portal Lusitano",
-    description:
-      "Descarregue gratuitamente o nosso guia completo sobre o cavalo Lusitano.",
-    images: ["/og-image.jpg"],
+    description: "Descarregue gratuitamente o nosso guia completo sobre o cavalo Lusitano.",
+    images: ["/opengraph-image"],
   },
 };
 

@@ -54,16 +54,19 @@ export const metadata: Metadata = {
     template: "%s | Portal Lusitano",
   },
   description:
-    "Marketplace premium de cavalos Lusitanos. Loja equestre, coudelarias certificadas e o maior arquivo editorial sobre o cavalo Portugues.",
+    "O maior marketplace de cavalos Lusitanos em Portugal. Compre cavalos PSL certificados, explore coudelarias, linhagens, eventos equestres e glossário gratuito.",
   keywords: [
     "cavalo lusitano",
-    "cavalos portugueses",
-    "equitação",
-    "dressage",
-    "coudelaria",
-    "PRE",
+    "comprar cavalo lusitano",
+    "cavalos lusitanos à venda portugal",
+    "cavalo lusitano preço",
+    "coudelaria lusitano",
     "cavalo ibérico",
-    "comprar cavalo",
+    "lusitano dressage",
+    "lusitano working equitation",
+    "garanhão lusitano",
+    "linhagem lusitano veiga",
+    "cavalos portugueses",
     "equestre portugal",
   ],
   authors: [{ name: "Portal Lusitano" }],
@@ -139,13 +142,16 @@ export default async function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('portal-lusitano-theme');if(t==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light')}}catch(e){}})()`,
           }}
         />
-        {/* Preconnect para recursos críticos (hero image + CMS), dns-prefetch para os restantes */}
+        {/* Preconnect para recursos críticos — reduz latência de first requests */}
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="anonymous" />
+        {/* dns-prefetch para recursos secundários */}
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://js.stripe.com" />
+        <link rel="dns-prefetch" href="https://ofrzpaxa.api.sanity.io" />
         <OrganizationSchema />
         <WebsiteSchema />
       </head>

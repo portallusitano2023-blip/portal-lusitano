@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Ferramentas Equestres — Portal Lusitano",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: "Ferramentas Equestres | Portal Lusitano",
     description:
       "Ferramentas gratuitas para cavaleiros: calculadora de valor, comparador e análise de perfil.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

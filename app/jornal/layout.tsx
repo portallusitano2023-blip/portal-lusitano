@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Jornal Lusitano — Portal Lusitano",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     title: "Jornal Lusitano | Portal Lusitano",
     description:
       "Jornal do Portal Lusitano — artigos, crónicas e investigação aprofundada sobre história, criação, treino e saúde do cavalo Lusitano.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 

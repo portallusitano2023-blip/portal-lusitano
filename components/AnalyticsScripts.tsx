@@ -23,6 +23,32 @@ export default function AnalyticsScripts() {
   return (
     <>
       {/* ============================================================ */}
+      {/* GOOGLE CONSENT MODE V2 (obrigatório UE/GDPR desde março 2024) */}
+      {/* Inicializado ANTES do GA4 com estado "denied" por defeito     */}
+      {/* O CookieConsent component actualiza os estados após aceitação */}
+      {/* ============================================================ */}
+      {GA4_ID && (
+        <Script id="google-consent-mode" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'denied',
+              functionality_storage: 'denied',
+              personalization_storage: 'denied',
+              security_storage: 'granted',
+              wait_for_update: 500,
+            });
+            gtag('set', 'ads_data_redaction', true);
+            gtag('set', 'url_passthrough', true);
+          `}
+        </Script>
+      )}
+
+      {/* ============================================================ */}
       {/* GOOGLE ANALYTICS 4 */}
       {/* ============================================================ */}
       {GA4_ID && (

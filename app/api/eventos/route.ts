@@ -39,7 +39,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Erro ao buscar eventos" }, { status: 500 });
     }
 
-    return NextResponse.json({ eventos: data });
+    return NextResponse.json(
+      { eventos: data },
+      {
+        headers: {
+          // Eventos — cache 15 min (podem ser adicionados/alterados)
+          "Cache-Control": "public, max-age=900, s-maxage=900, stale-while-revalidate=3600",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Coudelarias — Portal Lusitano",
@@ -38,15 +38,11 @@ export const metadata: Metadata = {
     title: "Coudelarias | Portal Lusitano",
     description:
       "Conheça as melhores coudelarias de cavalos Lusitanos em Portugal. Criadores de excelência, tradição e linhagens puras.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 
-export default function CoudelariasLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function CoudelariasLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <BreadcrumbSchema

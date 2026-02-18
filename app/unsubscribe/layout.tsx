@@ -5,8 +5,7 @@ const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
   title: "Cancelar Subscrição",
-  description:
-    "Cancele a sua subscrição da newsletter do Portal Lusitano.",
+  description: "Cancele a sua subscrição da newsletter do Portal Lusitano.",
   keywords: [],
   robots: {
     index: false,
@@ -17,15 +16,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Cancelar Subscrição | Portal Lusitano",
-    description:
-      "Cancele a sua subscrição da newsletter do Portal Lusitano.",
+    description: "Cancele a sua subscrição da newsletter do Portal Lusitano.",
     url: `${siteUrl}/unsubscribe`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Cancelar Subscrição — Portal Lusitano",
@@ -35,9 +33,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Cancelar Subscrição | Portal Lusitano",
-    description:
-      "Cancele a sua subscrição da newsletter do Portal Lusitano.",
-    images: ["/og-image.jpg"],
+    description: "Cancele a sua subscrição da newsletter do Portal Lusitano.",
+    images: ["/opengraph-image"],
   },
 };
 

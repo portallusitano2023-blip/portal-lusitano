@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Comparador de Cavalos - Portal Lusitano",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Comparador de Cavalos | Portal Lusitano",
     description:
       "Compare cavalos Lusitanos lado a lado. Analise linhagem, morfologia, aptidões e preço para encontrar o exemplar ideal.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
 };
 
