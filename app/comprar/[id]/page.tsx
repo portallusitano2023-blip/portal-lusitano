@@ -8,6 +8,22 @@ import { CavaloVenda } from "@/types/cavalo";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
+// ISR: revalidar páginas de cavalos a cada 30 minutos (preços e disponibilidade mudam)
+export const revalidate = 1800;
+
+// Pré-renderizar os cavalos aprovados para indexação imediata pelo Google
+export async function generateStaticParams() {
+  try {
+    const { data: cavalos } = await supabase
+      .from("cavalos_venda")
+      .select("id")
+      .eq("status", "aprovado");
+    return (cavalos || []).map((c) => ({ id: c.id }));
+  } catch {
+    return [{ id: "demo" }];
+  }
+}
+
 export async function generateMetadata({
   params,
 }: {
