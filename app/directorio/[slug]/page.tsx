@@ -312,7 +312,7 @@ export default function CoudelariaPage() {
           `${coudelaria.nome} em ${coudelaria.localizacao}, ${coudelaria.regiao}. ${coudelaria.num_cavalos ? `${coudelaria.num_cavalos} cavalos` : "Coudelaria"} de cavalos Lusitanos.`
         }
         image={heroImage}
-        url={`https://portallusitano.com/directorio/${slug}`}
+        url={`https://portal-lusitano.pt/directorio/${slug}`}
       />
       <script
         type="application/ld+json"

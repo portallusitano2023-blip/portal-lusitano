@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BreadcrumbSchema, MedicalWebPageSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, FAQSchema, MedicalWebPageSchema } from "@/components/JsonLd";
 
 const siteUrl = "https://portal-lusitano.pt";
 
@@ -56,6 +56,35 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         ]}
       />
       <MedicalWebPageSchema />
+      <FAQSchema
+        items={[
+          {
+            question: "O que é a piroplasmose equina?",
+            answer:
+              "A piroplasmose equina é uma doença parasitária transmitida por carraças, causada pelos protozoários Theileria equi e Babesia caballi. Afecta os glóbulos vermelhos do cavalo, podendo causar anemia, febre e fraqueza.",
+          },
+          {
+            question: "Como se diagnostica a piroplasmose em cavalos?",
+            answer:
+              "O diagnóstico é feito por análises serológicas (ELISA, IFAT) ou testes de PCR que detectam o ADN do parasita. Em Portugal, o diagnóstico é obrigatório para cavalos destinados à exportação para países como os EUA.",
+          },
+          {
+            question: "A piroplasmose tem tratamento?",
+            answer:
+              "Sim, o tratamento com imidocarb dipropionato é eficaz em reduzir os sintomas, mas raramente elimina completamente o parasita. Cavalos tratados podem continuar portadores, sendo necessário acompanhamento veterinário regular.",
+          },
+          {
+            question: "A piroplasmose impede a exportação de cavalos?",
+            answer:
+              "Sim. Países como os EUA, Canadá e Austrália exigem que os cavalos importados sejam seronegativos para piroplasmose. Um cavalo seropositivo não pode ser exportado para estes países, o que afecta significativamente o seu valor comercial.",
+          },
+          {
+            question: "Como prevenir a piroplasmose equina em Portugal?",
+            answer:
+              "A prevenção baseia-se no controlo de carraças com acaricidas aprovados, inspeção regular do cavalo após saídas ao campo, e vacinação quando disponível. Em Portugal, a prevalência é elevada, especialmente no Sul.",
+          },
+        ]}
+      />
       {children}
     </>
   );

@@ -19,8 +19,9 @@ type GtagFunction = (command: string, ...args: any[]) => void;
 
 declare global {
   interface Window {
-    gtag: GtagFunction;
-    dataLayer: Record<string, unknown>[];
+    gtag?: GtagFunction;
+    dataLayer?: Record<string, unknown>[];
+    fbq?: (...args: [string, ...unknown[]]) => void;
   }
 }
 

@@ -218,7 +218,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
           `${data.nome}, ${data.idade} anos, ${data.ferro}. Cavalo Lusitano de elite disponivel para venda.`
         }
         image={data.imageUrl}
-        url={`https://portallusitano.com/cavalo/${slug}`}
+        url={`https://portal-lusitano.pt/cavalo/${slug}`}
       />
       <div className="max-w-6xl mx-auto px-6">
         <Breadcrumb

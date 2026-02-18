@@ -127,6 +127,10 @@ const nextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          {
+            key: "X-Permitted-Cross-Domain-Policies",
+            value: "none",
+          },
           // CSP é agora gerido no middleware.ts com nonces por request
         ],
       },

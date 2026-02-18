@@ -80,6 +80,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_PT",
+    alternateLocale: ["en_GB", "es_ES"],
     url: siteUrl,
     siteName: "Portal Lusitano",
     title: "Portal Lusitano | Cavalos Lusitanos de Elite",
@@ -119,6 +120,8 @@ export const metadata: Metadata = {
     canonical: siteUrl,
     languages: {
       "pt-PT": siteUrl,
+      en: `${siteUrl}/en`,
+      es: `${siteUrl}/es`,
       "x-default": siteUrl,
     },
   },

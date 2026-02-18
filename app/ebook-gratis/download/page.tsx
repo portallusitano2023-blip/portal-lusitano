@@ -66,7 +66,7 @@ export default function DownloadPage() {
     },
   ];
 
-  const shareUrl = "https://portal-lusitano.com/ebook-gratis";
+  const shareUrl = "https://portal-lusitano.pt/ebook-gratis";
   const shareText = "Acabei de descarregar um ebook gratuito incrível sobre o Cavalo Lusitano!";
 
   const socialShare = [

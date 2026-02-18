@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import Pedigree from "@/components/Pedigree";
-import { ProductSchema, BreadcrumbSchema } from "@/components/JsonLd";
+import { HorseSchema, BreadcrumbSchema } from "@/components/JsonLd";
 
 import { CavaloVenda } from "@/types/cavalo";
 
@@ -96,12 +96,14 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
 
   return (
     <>
-      <ProductSchema
+      <HorseSchema
         name={cavalo.nome_cavalo}
         description={cavalo.descricao || `Cavalo Lusitano - ${cavalo.nome_cavalo}`}
         image={cavalo.image_url || ""}
-        price={String(cavalo.preco || 0)}
-        sku={cavalo.id}
+        price={cavalo.preco || undefined}
+        breed="Lusitano"
+        age={cavalo.idade || undefined}
+        location={cavalo.localizacao || undefined}
       />
       <BreadcrumbSchema
         items={[

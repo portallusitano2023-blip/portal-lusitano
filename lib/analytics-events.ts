@@ -512,14 +512,4 @@ export const analytics = {
   },
 };
 
-// ============================================================================
-// Declare gtag global para TypeScript
-// Nota: Declaração compatível com lib/analytics.ts
-// ============================================================================
-
-declare global {
-  interface Window {
-    gtag?: (...args: [string, ...unknown[]]) => void;
-    fbq?: (...args: [string, ...unknown[]]) => void;
-  }
-}
+// Declarações globais movidas para types/gtag.d.ts

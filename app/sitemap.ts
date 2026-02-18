@@ -202,19 +202,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     logger.error("Erro ao buscar eventos para sitemap:", error);
   }
 
-  // Buscar cavalos à venda
+  // Buscar cavalos à venda — usa "aprovado" (consistente com comprar/page.tsx) e id (param da rota)
   let cavalosPages: MetadataRoute.Sitemap = [];
   try {
     const { data: cavalos } = await supabase
       .from("cavalos_venda")
-      .select("slug, updated_at")
-      .eq("status", "active");
+      .select("id, updated_at")
+      .eq("status", "aprovado");
 
     if (cavalos) {
       cavalosPages = cavalos.map((c) => ({
-        url: `${siteUrl}/comprar/${c.slug}`,
+        url: `${siteUrl}/comprar/${c.id}`,
         lastModified: c.updated_at || currentDate,
-        changeFrequency: "daily" as const,
+        changeFrequency: "weekly" as const,
         priority: 0.7,
       }));
     }

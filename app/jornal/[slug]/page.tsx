@@ -9,6 +9,9 @@ import { articlesDataPT } from "@/data/articlesData";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
+// ISR: artigos do jornal revalidam a cada 6 horas
+export const revalidate = 21600;
+
 // Mapa de slugs para IDs legados
 const slugToLegacyId: Record<string, string> = {
   "genese-cavalo-iberico": "1",

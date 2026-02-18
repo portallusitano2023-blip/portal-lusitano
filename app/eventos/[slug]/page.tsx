@@ -289,7 +289,7 @@ END:VCALENDAR`;
           `${evento.titulo} em ${evento.localizacao}. ${formatDateRange(evento.data_inicio, evento.data_fim)}`
         }
         image={evento.imagem_capa}
-        url={`https://portallusitano.com/eventos/${slug}`}
+        url={`https://portal-lusitano.pt/eventos/${slug}`}
       />
       {/* Hero com imagem ou gradiente */}
       <section className="relative pt-24 pb-12">

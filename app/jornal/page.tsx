@@ -2,6 +2,9 @@ import { fetchArticlesList } from "@/lib/sanity-queries";
 import { articlesListPT, articlesListEN } from "@/data/articlesList";
 import JornalListClient from "./JornalListClient";
 
+// ISR: Revalidar jornal diariamente (novos artigos via Sanity)
+export const revalidate = 86400;
+
 // Fallback: converter dados locais para formato compatível com Sanity
 function localToSanityFormat(articles: typeof articlesListPT) {
   const slugMap: Record<string, string> = {
@@ -20,7 +23,7 @@ function localToSanityFormat(articles: typeof articlesListPT) {
     contentType: "article" as const,
     featured: i === 0,
     subtitle: a.subtitle,
-    publishedAt: new Date(2026, 0, 25 - (i * 5)).toISOString(),
+    publishedAt: new Date(2026, 0, 25 - i * 5).toISOString(),
     estimatedReadTime: parseInt(a.readTime) || 30,
     category: a.category,
     image: {
