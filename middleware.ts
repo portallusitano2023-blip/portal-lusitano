@@ -1,31 +1,23 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-/**
- * TODO [MEDIUM Security]: Replace in-memory rate limiting with distributed store
- *
- * Current implementation uses Map() which is local to each server instance.
- * In serverless/multi-instance deployments (Vercel, AWS Lambda), each cold start
- * resets the counter, allowing attackers to bypass limits easily.
- *
- * To fix:
- * 1. Use Upstash Redis (@upstash/ratelimit) - serverless-friendly
- * 2. Or use Vercel KV (built on Upstash)
- * 3. Or implement sliding window with Redis
- *
- * Example with Upstash:
- * ```
- * import { Ratelimit } from "@upstash/ratelimit";
- * import { Redis } from "@upstash/redis";
- *
- * const ratelimit = new Ratelimit({
- *   redis: Redis.fromEnv(),
- *   limiter: Ratelimit.slidingWindow(60, "1 m"),
- * });
- * ```
- */
-// --- Rate Limiting (Edge-compatible, in-memory) ---
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+// --- Rate Limiting (Upstash Redis — serverless-safe sliding window) ---
+// HIGH-01 fix: replaces in-memory Map that reset on every cold start
+const redis = Redis.fromEnv();
+
+const authLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(10, "15 m"),
+  prefix: "rl:auth",
+});
+
+const apiLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(60, "1 m"),
+  prefix: "rl:api",
+});
 
 function getClientIp(request: NextRequest): string {
   return (
@@ -33,31 +25,6 @@ function getClientIp(request: NextRequest): string {
     request.headers.get("x-real-ip") ||
     "unknown"
   );
-}
-
-function isRateLimited(ip: string, limit: number, windowMs: number): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
-    return false;
-  }
-
-  entry.count += 1;
-  return entry.count > limit;
-}
-
-// Cleanup stale entries periodically
-let requestCounter = 0;
-function cleanupRateLimitMap() {
-  requestCounter++;
-  if (requestCounter % 1000 === 0) {
-    const now = Date.now();
-    for (const [key, entry] of rateLimitMap) {
-      if (now > entry.resetTime) rateLimitMap.delete(key);
-    }
-  }
 }
 
 // Pre-computed at module load — avoids string concatenation on every request
@@ -106,8 +73,6 @@ export async function middleware(request: NextRequest) {
 
   // API routes: Rate Limiting + CORS
   if (pathname.startsWith("/api/")) {
-    cleanupRateLimitMap();
-
     // Skip rate limiting for webhooks (Stripe needs unrestricted access)
     const isWebhook = pathname.startsWith("/api/stripe/webhook");
 
@@ -115,12 +80,12 @@ export async function middleware(request: NextRequest) {
       const ip = getClientIp(request);
       const isAuth = pathname.startsWith("/api/auth/login");
 
-      // Auth routes: 10 req/15min, other API: 60 req/min
-      const limit = isAuth ? 10 : 60;
-      const window = isAuth ? 15 * 60 * 1000 : 60 * 1000;
-      const key = isAuth ? `auth:${ip}` : `api:${ip}`;
+      // Auth routes: 10 req/15min, other API: 60 req/min (Upstash sliding window)
+      const limiter = isAuth ? authLimiter : apiLimiter;
+      const identifier = isAuth ? `auth:${ip}` : `api:${ip}`;
+      const { success } = await limiter.limit(identifier);
 
-      if (isRateLimited(key, limit, window)) {
+      if (!success) {
         return NextResponse.json(
           { error: "Too many requests. Please try again later." },
           { status: 429 }

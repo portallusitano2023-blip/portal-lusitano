@@ -1,5 +1,14 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { Redis } from "@upstash/redis";
+
+// HIGH-03 fix: Redis session store enables instant JWT revocation
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+const SESSION_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
 
 function getSecret() {
   if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === "production") {
@@ -8,38 +17,23 @@ function getSecret() {
   return new TextEncoder().encode(process.env.ADMIN_SECRET || "dev-only-secret-not-for-production");
 }
 
-/**
- * TODO [MEDIUM Security]: Add JWT revocation mechanism
- *
- * Current JWT tokens are valid for 7 days with no way to revoke them.
- * If a token is stolen, the attacker has full access for the entire 7-day window.
- *
- * To fix:
- * 1. Store JTI (JWT ID) in Redis with 7-day TTL
- * 2. On password change / logout, add JTI to blacklist in Redis
- * 3. In verifySession(), check if JTI is blacklisted
- * 4. Optional: Implement token rotation (refresh + access tokens)
- *
- * Example with Upstash:
- * ```
- * const jti = crypto.randomUUID();
- * await redis.setex(`session:${jti}`, 604800, email); // 7 days
- * // In verifySession():
- * const exists = await redis.get(`session:${jti}`);
- * if (!exists) return null; // revoked
- * ```
- */
 export async function createSession(email: string) {
-  const token = await new SignJWT({ email })
+  // JTI (JWT ID) uniquely identifies this token — deleting it from Redis revokes access instantly
+  const jti = crypto.randomUUID();
+
+  const token = await new SignJWT({ email, jti })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("7d")
     .sign(getSecret());
+
+  // Register session in Redis — the source of truth for session validity
+  await redis.setex(`session:${jti}`, SESSION_TTL, email);
 
   (await cookies()).set("admin_session", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: SESSION_TTL,
     path: "/",
   });
 
@@ -55,6 +49,13 @@ export async function verifySession() {
 
   try {
     const verified = await jwtVerify(cookie.value, getSecret());
+    const jti = verified.payload.jti as string | undefined;
+
+    // Check Redis: session may have been revoked even if JWT signature is valid
+    if (!jti) return null;
+    const session = await redis.get(`session:${jti}`);
+    if (!session) return null; // Revoked or expired in Redis
+
     return verified.payload.email as string;
   } catch {
     return null;
@@ -62,6 +63,19 @@ export async function verifySession() {
 }
 
 export async function deleteSession() {
+  const cookie = (await cookies()).get("admin_session");
+
+  // Revoke JTI in Redis — the cookie JWT becomes permanently invalid even if extracted
+  if (cookie?.value) {
+    try {
+      const verified = await jwtVerify(cookie.value, getSecret());
+      const jti = verified.payload.jti as string | undefined;
+      if (jti) await redis.del(`session:${jti}`);
+    } catch {
+      // Token already invalid, proceed to clear cookie
+    }
+  }
+
   (await cookies()).delete("admin_session");
 }
 

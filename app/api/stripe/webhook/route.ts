@@ -22,9 +22,31 @@ export async function POST(req: Request) {
   try {
     event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err) {
-    logger.error(
-      `Webhook signature verification failed: ${err instanceof Error ? err.message : "Unknown error"}`
-    );
+    const errorMsg = err instanceof Error ? err.message : "Unknown error";
+    logger.error(`Webhook signature verification failed: ${errorMsg}`);
+
+    // Alert admin on signature failure — may indicate replay attack or misconfiguration
+    resend.emails
+      .send({
+        from: "Portal Lusitano <admin@portal-lusitano.pt>",
+        to: CONTACT_EMAIL,
+        subject: "[ALERTA SEGURANÇA] Falha de verificação Stripe Webhook",
+        html: `
+        <h2>⚠️ Falha de Assinatura Stripe Webhook</h2>
+        <p>Uma tentativa de webhook falhou na verificação de assinatura.</p>
+        <p><strong>Erro:</strong> ${errorMsg}</p>
+        <p><strong>Hora:</strong> ${new Date().toISOString()}</p>
+        <p>Isto pode indicar:</p>
+        <ul>
+          <li>Tentativa de replay attack</li>
+          <li>Webhook secret incorreto</li>
+          <li>Request de fonte não autorizada</li>
+        </ul>
+        <p>Verifique o dashboard Stripe para actividade suspeita.</p>
+      `,
+      })
+      .catch(() => {}); // fire-and-forget, don't block the response
+
     return Response.json({ error: "Invalid signature" }, { status: 400 });
   }
 
