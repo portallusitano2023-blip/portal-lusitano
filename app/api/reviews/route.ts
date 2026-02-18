@@ -92,6 +92,12 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
+    // Honeypot: reject if the hidden field is filled (bots fill all fields)
+    if (body.website || body.phone || body.company) {
+      logger.warn("Honeypot triggered - bot detected", { ip });
+      return NextResponse.json({ message: "Review submitted successfully" }, { status: 200 });
+    }
+
     // Detect review type based on presence of ferramenta_slug
     const isToolReview = "ferramenta_slug" in body && body.ferramenta_slug;
 

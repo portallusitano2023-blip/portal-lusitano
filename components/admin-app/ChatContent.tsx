@@ -20,7 +20,7 @@ export default function ChatContent() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [currentUser] = useState("portal.lusitano2023@gmail.com"); // Get from session
+  const [currentUser, setCurrentUser] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -67,6 +67,17 @@ export default function ChatContent() {
   }, [supabase]);
 
   useEffect(() => {
+    // Fetch current user email from session
+    fetch("/api/admin/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.email) setCurrentUser(data.email);
+      })
+      .catch(() => {
+        // Fallback if session fetch fails
+        setCurrentUser("unknown@portal-lusitano.pt");
+      });
+
     loadMessages();
     subscribeToMessages();
   }, [loadMessages, subscribeToMessages]);
