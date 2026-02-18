@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BreadcrumbSchema, FAQSchema } from "@/components/JsonLd";
+import { AboutPageSchema, BreadcrumbSchema, FAQSchema } from "@/components/JsonLd";
 
 const siteUrl = "https://portal-lusitano.pt";
 
@@ -50,6 +50,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           { name: "Sobre Nós", url: `${siteUrl}/sobre` },
         ]}
       />
+      <AboutPageSchema />
       <FAQSchema
         items={[
           {

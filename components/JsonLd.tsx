@@ -113,6 +113,9 @@ interface ArticleSchemaProps {
   datePublished: string;
   dateModified?: string;
   author?: string;
+  authorUrl?: string;
+  newsArticle?: boolean; // true = NewsArticle (Google News eligible), false = Article genérico
+  estimatedReadTime?: number; // em minutos
 }
 
 export function ArticleSchema({
@@ -122,19 +125,30 @@ export function ArticleSchema({
   datePublished,
   dateModified,
   author = "Portal Lusitano",
+  authorUrl,
+  newsArticle = false,
+  estimatedReadTime,
 }: ArticleSchemaProps) {
+  const isNamedAuthor = author !== "Portal Lusitano";
   const schema = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": newsArticle ? "NewsArticle" : "Article",
     headline: title,
     description,
     image,
     datePublished,
     dateModified: dateModified || datePublished,
-    author: {
-      "@type": "Organization",
-      name: author,
-    },
+    author: isNamedAuthor
+      ? {
+          "@type": "Person",
+          name: author,
+          ...(authorUrl ? { url: authorUrl } : {}),
+        }
+      : {
+          "@type": "Organization",
+          name: "Portal Lusitano",
+          url: siteUrl,
+        },
     publisher: {
       "@type": "Organization",
       name: "Portal Lusitano",
@@ -143,6 +157,7 @@ export function ArticleSchema({
         url: `${siteUrl}/logo.png`,
       },
     },
+    ...(estimatedReadTime ? { timeRequired: `PT${estimatedReadTime}M` } : {}),
   };
 
   return (
@@ -621,6 +636,141 @@ export function BookSchema() {
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
       url: `${siteUrl}/ebook-gratis`,
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema de Oferta para eBook Grátis (lead magnet — melhora CTR com "Free" em SERPs)
+export function EbookOfferSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Offer",
+    name: "Introdução ao Cavalo Lusitano — eBook Gratuito",
+    description:
+      "Guia gratuito em formato digital sobre o cavalo Lusitano: história, linhagens, cuidados e dicas para compradores.",
+    price: "0",
+    priceCurrency: "EUR",
+    availability: "https://schema.org/InStock",
+    url: `${siteUrl}/ebook-gratis`,
+    offeredBy: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+      url: siteUrl,
+    },
+    eligibleRegion: {
+      "@type": "Place",
+      name: "Worldwide",
+    },
+    category: "EBook",
+    itemOffered: {
+      "@type": "Book",
+      name: "Introdução ao Cavalo Lusitano",
+      bookFormat: "https://schema.org/EBook",
+      inLanguage: "pt",
+      numberOfPages: 30,
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema de AboutPage (E-E-A-T — sinaliza credibilidade e autoridade ao Google)
+export function AboutPageSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "Sobre o Portal Lusitano",
+    url: `${siteUrl}/sobre`,
+    description:
+      "O Portal Lusitano é a plataforma digital mais completa dedicada ao cavalo Lusitano. Marketplace, directório de coudelarias, ferramentas equestres e arquivo editorial.",
+    mainEntity: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+      url: siteUrl,
+      logo: `${siteUrl}/logo.png`,
+      foundingDate: "2023",
+      description:
+        "Marketplace premium de cavalos Lusitanos. Loja equestre, directório de coudelarias certificadas e arquivo editorial especializado.",
+      location: {
+        "@type": "Place",
+        name: "Portugal",
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: "PT",
+        },
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        availableLanguage: ["Portuguese", "English", "Spanish"],
+      },
+      sameAs: ["https://instagram.com/portal_lusitano", "https://tiktok.com/@portal_lusitano"],
+      knowsAbout: [
+        "Cavalo Lusitano",
+        "Dressage",
+        "Working Equitation",
+        "Atrelagem",
+        "Genealogia Equina",
+        "Raça PSL",
+        "Alta Escola",
+      ],
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// Schema de EducationalArticle (para conteúdo académico — genealogia, linhagens)
+interface EducationalArticleSchemaProps {
+  name: string;
+  description: string;
+  url: string;
+  keywords?: string[];
+  educationalLevel?: "Beginner" | "Intermediate" | "Advanced";
+}
+
+export function EducationalArticleSchema({
+  name,
+  description,
+  url,
+  keywords = [],
+  educationalLevel = "Advanced",
+}: EducationalArticleSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "EducationalOccupationalProgram",
+    name,
+    description,
+    url,
+    educationalCredentialAwarded: educationalLevel,
+    keywords: keywords.join(", "),
+    provider: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+      url: siteUrl,
+    },
+    inLanguage: "pt-PT",
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Portal Lusitano",
+      url: siteUrl,
     },
   };
 

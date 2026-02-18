@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BreadcrumbSchema, BookSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, BookSchema, EbookOfferSchema } from "@/components/JsonLd";
 
 const siteUrl = "https://portal-lusitano.pt";
 
@@ -52,6 +52,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         ]}
       />
       <BookSchema />
+      <EbookOfferSchema />
       {children}
     </>
   );

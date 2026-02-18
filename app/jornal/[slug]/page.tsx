@@ -142,6 +142,8 @@ export default async function ArticlePage({ params }: Props) {
         image={article.image?.asset?.url || "/opengraph-image"}
         datePublished={article.publishedAt}
         author={article.author?.name || "Portal Lusitano"}
+        newsArticle={true}
+        estimatedReadTime={article.estimatedReadTime}
       />
       <ArticlePageClient slug={slug} article={article} relatedArticles={relatedArticles} />
     </>

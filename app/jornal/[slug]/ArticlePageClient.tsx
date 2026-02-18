@@ -82,7 +82,34 @@ export default function ArticlePageClient({
     return (
       <article className="min-h-screen bg-[var(--background)] pb-40">
         <ReadingProgressBar />
-        <header className="relative h-screen w-full overflow-hidden">
+        {/* BREADCRUMB VISUAL */}
+        <nav
+          aria-label="Breadcrumb"
+          className="relative z-20 px-6 md:px-12 pt-24 pb-3 bg-[var(--background)]"
+        >
+          <ol className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
+            <li>
+              <Link href="/" className="hover:text-[var(--gold)] transition-colors">
+                {language === "pt" ? "Início" : "Home"}
+              </Link>
+            </li>
+            <li aria-hidden="true" className="text-[var(--gold)]/40">
+              /
+            </li>
+            <li>
+              <Link href="/jornal" className="hover:text-[var(--gold)] transition-colors">
+                {language === "pt" ? "Jornal" : "Journal"}
+              </Link>
+            </li>
+            <li aria-hidden="true" className="text-[var(--gold)]/40">
+              /
+            </li>
+            <li className="text-[var(--foreground-secondary)] truncate max-w-[200px] sm:max-w-xs">
+              {localArticle.title}
+            </li>
+          </ol>
+        </nav>
+        <header className="relative h-[85vh] w-full overflow-hidden">
           <div className="absolute inset-0">
             <Image
               src={localArticle.image}
@@ -165,8 +192,36 @@ export default function ArticlePageClient({
     <article className="min-h-screen bg-[var(--background)] pb-20">
       <ReadingProgressBar />
 
+      {/* BREADCRUMB VISUAL — acessibilidade + UX */}
+      <nav
+        aria-label="Breadcrumb"
+        className="relative z-20 px-6 md:px-12 pt-24 pb-3 bg-[var(--background)]"
+      >
+        <ol className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
+          <li>
+            <Link href="/" className="hover:text-[var(--gold)] transition-colors">
+              {language === "pt" ? "Início" : "Home"}
+            </Link>
+          </li>
+          <li aria-hidden="true" className="text-[var(--gold)]/40">
+            /
+          </li>
+          <li>
+            <Link href="/jornal" className="hover:text-[var(--gold)] transition-colors">
+              {language === "pt" ? "Jornal" : "Journal"}
+            </Link>
+          </li>
+          <li aria-hidden="true" className="text-[var(--gold)]/40">
+            /
+          </li>
+          <li className="text-[var(--foreground-secondary)] truncate max-w-[200px] sm:max-w-xs">
+            {title}
+          </li>
+        </ol>
+      </nav>
+
       {/* HERO */}
-      <header className="relative h-screen w-full overflow-hidden">
+      <header className="relative h-[85vh] w-full overflow-hidden">
         <div className="absolute inset-0">
           {imageUrl && (
             <Image

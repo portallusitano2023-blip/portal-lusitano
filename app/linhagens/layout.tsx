@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
+import {
+  BreadcrumbSchema,
+  CollectionPageSchema,
+  EducationalArticleSchema,
+} from "@/components/JsonLd";
 
 const siteUrl = "https://portal-lusitano.pt";
 
@@ -59,6 +63,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         name="Linhagens do Lusitano"
         description="Explore as principais linhagens do cavalo Lusitano. Genealogia, características e legado dos grandes garanhões que definiram a raça PSL."
         url={`${siteUrl}/linhagens`}
+      />
+      <EducationalArticleSchema
+        name="Linhagens do Cavalo Lusitano"
+        description="Guia especializado sobre genealogia e linhagens do cavalo Puro Sangue Lusitano (PSL). Andrade, Veiga, Alter Real e Coudelaria Nacional."
+        url={`${siteUrl}/linhagens`}
+        keywords={[
+          "linhagens lusitano",
+          "genealogia PSL",
+          "linha Andrade",
+          "linha Veiga",
+          "Alter Real",
+          "Coudelaria Nacional",
+          "garanhões fundadores",
+          "pedigree cavalo lusitano",
+        ]}
+        educationalLevel="Advanced"
       />
       {children}
     </>
