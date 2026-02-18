@@ -158,9 +158,21 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
     garanhao.coudelaria === egua.coudelaria && garanhao.coudelaria !== "Particular";
   const mesmaLinhagem =
     garanhao.linhagemFamosa === egua.linhagemFamosa && garanhao.linhagemFamosa !== "outra";
+  // Penalidades COI por linhagem fechada (consanguinidade típica de linhas estabelecidas)
+  const COI_LINHAGEM_PENALTY: Record<string, number> = {
+    veiga: 2.5,
+    andrade: 2.0,
+    alter: 2.2,
+    coudelaria_nacional: 1.8,
+    infante_camara: 2.0,
+    interagro: 1.5,
+  };
+
   let coiPrevisto = (garanhao.coi + egua.coi) / 2;
   if (mesmaCoude) coiPrevisto += 3.125;
-  if (mesmaLinhagem) coiPrevisto += 1.5;
+  if (mesmaLinhagem && garanhao.linhagemFamosa !== "outra") {
+    coiPrevisto += COI_LINHAGEM_PENALTY[garanhao.linhagemFamosa] ?? 1.5;
+  }
   const blupPrevisto = Math.round((garanhao.blup + egua.blup) / 2);
 
   if (coiPrevisto > 6.25) {
@@ -197,27 +209,89 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
     });
   }
 
-  // Previsão de pelagem (simplificada mas mais completa)
-  const greyG = garanhao.genetica.grey;
-  const greyE = egua.genetica.grey;
-  const hasGrey = greyG.includes("G") || greyE.includes("G");
+  // Previsão de pelagem — Genética Mendeliana completa (5 loci)
+  // Frequência do alelo recessivo de cada progenitor
+  const pE_e = (g: "EE" | "Ee" | "ee") => (g === "EE" ? 0 : g === "Ee" ? 0.5 : 1.0);
+  const pA_a = (g: "AA" | "Aa" | "aa") => (g === "AA" ? 0 : g === "Aa" ? 0.5 : 1.0);
+  const pG_g = (g: "GG" | "Gg" | "gg") => (g === "GG" ? 0 : g === "Gg" ? 0.5 : 1.0);
+  const pCrA = (g: "CrCr" | "CrN" | "NN") => (g === "CrCr" ? 1.0 : g === "CrN" ? 0.5 : 0);
+  const pD_D = (g: "DD" | "Dd" | "dd") => (g === "DD" ? 1.0 : g === "Dd" ? 0.5 : 0);
 
-  let probGrey = 0;
-  if (greyG === "GG" || greyE === "GG") probGrey = hasGrey ? 100 : 0;
-  else if (greyG === "Gg" && greyE === "Gg") probGrey = 75;
-  else if (greyG === "Gg" || greyE === "Gg") probGrey = 50;
+  // Probs de genotipo offspring
+  const p_ee = pE_e(garanhao.genetica.extension) * pE_e(egua.genetica.extension);
+  const p_E_ = 1 - p_ee;
+  const p_aa = pA_a(garanhao.genetica.agouti) * pA_a(egua.genetica.agouti);
+  const p_A_ = 1 - p_aa;
+  const p_grey = 1 - pG_g(garanhao.genetica.grey) * pG_g(egua.genetica.grey);
+  const ng = 1 - p_grey; // fator não-ruço
 
-  const pelagens: ResultadoCompatibilidade["pelagens"] = [];
-  if (probGrey > 0) {
-    pelagens.push({ cor: "Ruço", prob: probGrey, genetica: "G_" });
+  const pCr_gar = pCrA(garanhao.genetica.cream);
+  const pCr_egu = pCrA(egua.genetica.cream);
+  const p_CrCr = pCr_gar * pCr_egu;
+  const p_CrN = pCr_gar * (1 - pCr_egu) + (1 - pCr_gar) * pCr_egu;
+  const p_NN = (1 - pCr_gar) * (1 - pCr_egu);
+
+  const p_dun = 1 - (1 - pD_D(garanhao.genetica.dun)) * (1 - pD_D(egua.genetica.dun));
+  const p_nodun = 1 - p_dun;
+
+  // Calcular probabilidades de cada pelagem (somam exatamente 100%)
+  const rawPelagens: { cor: string; prob: number; genetica: string }[] = [];
+
+  if (p_grey > 0.01) rawPelagens.push({ cor: "Ruço", prob: p_grey, genetica: "G_" });
+
+  if (ng > 0.01) {
+    // Base Alazão (ee)
+    const p_al = ng * p_ee * p_NN * p_nodun;
+    if (p_al > 0.01) rawPelagens.push({ cor: "Alazão", prob: p_al, genetica: "ee" });
+
+    const p_palomino = ng * p_ee * p_CrN;
+    if (p_palomino > 0.01)
+      rawPelagens.push({ cor: "Palomino", prob: p_palomino, genetica: "ee CrN" });
+
+    const p_cremello = ng * p_ee * p_CrCr;
+    if (p_cremello > 0.01)
+      rawPelagens.push({ cor: "Cremello", prob: p_cremello, genetica: "ee CrCr" });
+
+    const p_redDun = ng * p_ee * p_NN * p_dun;
+    if (p_redDun > 0.01) rawPelagens.push({ cor: "Alazão Dun", prob: p_redDun, genetica: "ee D_" });
+
+    // Base Castanho/Baio (E_A_)
+    const p_cast = ng * p_E_ * p_A_ * p_NN * p_nodun;
+    if (p_cast > 0.01) rawPelagens.push({ cor: "Castanho/Baio", prob: p_cast, genetica: "E_A_" });
+
+    const p_buckskin = ng * p_E_ * p_A_ * p_CrN;
+    if (p_buckskin > 0.01)
+      rawPelagens.push({ cor: "Buckskin", prob: p_buckskin, genetica: "E_A_ CrN" });
+
+    const p_perlino = ng * p_E_ * p_A_ * p_CrCr;
+    if (p_perlino > 0.01)
+      rawPelagens.push({ cor: "Perlino", prob: p_perlino, genetica: "E_A_ CrCr" });
+
+    const p_bayDun = ng * p_E_ * p_A_ * p_NN * p_dun;
+    if (p_bayDun > 0.01) rawPelagens.push({ cor: "Baio Dun", prob: p_bayDun, genetica: "E_A_ D_" });
+
+    // Base Preto (E_aa)
+    const p_preto = ng * p_E_ * p_aa * p_NN * p_nodun;
+    if (p_preto > 0.01) rawPelagens.push({ cor: "Preto", prob: p_preto, genetica: "E_aa" });
+
+    const p_smoky = ng * p_E_ * p_aa * p_CrN;
+    if (p_smoky > 0.01)
+      rawPelagens.push({ cor: "Smoky Black", prob: p_smoky, genetica: "E_aa CrN" });
+
+    const p_smokyCream = ng * p_E_ * p_aa * p_CrCr;
+    if (p_smokyCream > 0.01)
+      rawPelagens.push({ cor: "Smoky Cream", prob: p_smokyCream, genetica: "E_aa CrCr" });
+
+    const p_grullo = ng * p_E_ * p_aa * p_NN * p_dun;
+    if (p_grullo > 0.01) rawPelagens.push({ cor: "Grullo", prob: p_grullo, genetica: "E_aa D_" });
   }
-  if (probGrey < 100) {
-    const restante = 100 - probGrey;
-    // Simplificado - em realidade depende de Extension e Agouti
-    pelagens.push({ cor: "Castanho", prob: Math.round(restante * 0.5), genetica: "E_A_" });
-    pelagens.push({ cor: "Preto", prob: Math.round(restante * 0.3), genetica: "E_aa" });
-    pelagens.push({ cor: "Alazão", prob: Math.round(restante * 0.2), genetica: "ee" });
-  }
+
+  // Normalizar para somar 100% e filtrar pelagens < 2%
+  const totalProb = rawPelagens.reduce((s, p) => s + p.prob, 0);
+  const pelagens: ResultadoCompatibilidade["pelagens"] = rawPelagens
+    .map((p) => ({ ...p, prob: Math.round((p.prob / totalProb) * 100) }))
+    .filter((p) => p.prob >= 2)
+    .sort((a, b) => b.prob - a.prob);
 
   // Altura prevista do potro
   const alturaMedia = (garanhao.altura + egua.altura) / 2;

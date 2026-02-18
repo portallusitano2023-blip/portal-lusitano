@@ -246,7 +246,13 @@ const toolSlugs = Object.keys(toolSlugToName);
 function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number }) {
   const { t } = useLanguage();
   const { user } = useAuth();
+  const [mounted, setMounted] = useState(false);
   const Icon = tool.icon;
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   return (
     <Link
@@ -270,7 +276,7 @@ function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number
               {tool.badge}
             </span>
           )}
-          {!user && (
+          {(!mounted || !user) && (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               <Check size={9} />
               {tool.freeUses} uso grátis

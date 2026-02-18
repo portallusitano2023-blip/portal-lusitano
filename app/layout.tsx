@@ -160,7 +160,7 @@ export default async function RootLayout({
         <WebsiteSchema />
       </head>
       <body className="bg-[var(--background)] text-[var(--foreground)] antialiased">
-        <Providers>
+        <Providers initialLanguage={lang as "pt" | "en" | "es"}>
           <ErrorBoundary>
             <SkipLinks />
             <Navbar />

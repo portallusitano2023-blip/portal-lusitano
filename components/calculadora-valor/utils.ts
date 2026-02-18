@@ -3,7 +3,15 @@
 // ============================================
 
 import type { FormData, Resultado } from "./types";
-import { VALORES_BASE, MERCADOS, MULT_LINHAGEM, MULT_SAUDE, MULT_COMP, MULT_LIVRO } from "./data";
+import {
+  VALORES_BASE,
+  MERCADOS,
+  MULT_LINHAGEM,
+  MULT_SAUDE,
+  MULT_COMP,
+  MULT_LIVRO,
+  DISCIPLINA_PREMIUMS,
+} from "./data";
 
 export function calcularValor(form: FormData): Resultado {
   const base = VALORES_BASE[form.treino];
@@ -39,6 +47,24 @@ export function calcularValor(form: FormData): Resultado {
   // Temperamento
   const tempMedia = (form.temperamento + form.sensibilidade + form.vontadeTrabalho) / 3;
   const multTemp = 0.75 + (tempMedia / 10) * 0.5;
+
+  // Disciplina premium
+  const multDisciplina = DISCIPLINA_PREMIUMS[form.disciplina] ?? 1.0;
+
+  // Pelagem × Mercado (preferências regionais)
+  let multPelagemMercado = 1.0;
+  if (form.pelagem === "Ruço" && (form.mercado === "Brasil" || form.mercado === "EUA"))
+    multPelagemMercado = 1.08;
+  else if (form.pelagem === "Preto" && form.mercado !== "Portugal") multPelagemMercado = 1.06;
+  else if (form.pelagem === "Palomino") multPelagemMercado = 1.05;
+  else if (form.pelagem === "Isabela") multPelagemMercado = 1.04;
+
+  // Certificado de exportação
+  const multExport = (form.certificadoExportacao ?? false) ? 1.06 : 1.0;
+
+  // Proprietários anteriores: histórico simplifica venda
+  const numProp = form.proprietariosAnteriores ?? 0;
+  const multPropAnter = numProp === 0 ? 1.05 : numProp === 1 ? 1.0 : numProp === 2 ? 0.95 : 0.88;
 
   // Bonus documentacao
   const multDoc = (form.raioX ? 1.05 : 1.0) * (form.exameVeterinario ? 1.05 : 1.0);
@@ -83,7 +109,11 @@ export function calcularValor(form: FormData): Resultado {
     multTend *
     multSexo *
     multAltura *
-    multMercado;
+    multMercado *
+    multDisciplina *
+    multPelagemMercado *
+    multExport *
+    multPropAnter;
 
   const valorFinal = Math.round(base * totalMult);
   const variance = form.registoAPSL ? 0.12 : 0.2;
@@ -136,6 +166,12 @@ export function calcularValor(form: FormData): Resultado {
       impacto: Math.round((multRepro - 1) * base),
       score: form.reproducao ? 8 : 4,
       descricao: "Potencial e historial reprodutivo",
+    },
+    {
+      nome: "Disciplina & Vocação",
+      impacto: Math.round((multDisciplina - 1) * base),
+      score: multDisciplina * 7,
+      descricao: "Adequação à disciplina e mercado-alvo",
     },
   ].sort((a, b) => b.impacto - a.impacto);
 
@@ -221,6 +257,32 @@ export function calcularValor(form: FormData): Resultado {
     );
   }
 
+  // Score de liquidez: velocidade estimada de venda (0-100)
+  let liquidezScore = 40;
+  if (form.registoAPSL) liquidezScore += 15;
+  if (form.raioX) liquidezScore += 8;
+  if (form.exameVeterinario) liquidezScore += 5;
+  if (form.certificadoExportacao ?? false) liquidezScore += 10;
+  if (form.mercado !== "Portugal") liquidezScore += 5;
+  if (form.idade >= 5 && form.idade <= 12) liquidezScore += 8;
+  if (form.competicoes !== "nenhuma") liquidezScore += 7;
+  if (form.disciplina === "Alta Escola" || form.disciplina === "Equitação de Trabalho")
+    liquidezScore += 5;
+  if (form.livroAPSL === "definitivo") liquidezScore += 5;
+  if (morfMedia >= 8) liquidezScore += 5;
+  liquidezScore = Math.min(100, liquidezScore);
+
+  const liquidezTempoDias =
+    liquidezScore >= 80 ? 30 : liquidezScore >= 65 ? 60 : liquidezScore >= 50 ? 90 : 180;
+  const liquidezLabel =
+    liquidezScore >= 80
+      ? "Alta Liquidez"
+      : liquidezScore >= 65
+        ? "Boa Liquidez"
+        : liquidezScore >= 50
+          ? "Liquidez Moderada"
+          : "Liquidez Baixa";
+
   return {
     valorFinal,
     valorMin: Math.round(valorFinal * (1 - variance)),
@@ -241,6 +303,11 @@ export function calcularValor(form: FormData): Resultado {
     recomendacoes,
     comparacao,
     pontosForteseFracos: { fortes, fracos },
+    liquidez: {
+      score: liquidezScore,
+      tempoDias: liquidezTempoDias,
+      label: liquidezLabel,
+    },
   };
 }
 

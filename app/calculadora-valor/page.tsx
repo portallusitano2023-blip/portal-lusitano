@@ -67,6 +67,8 @@ const INITIAL_FORM: FormData = {
   descendentesAprovados: 0,
   mercado: "Portugal",
   tendencia: "estavel",
+  certificadoExportacao: false,
+  proprietariosAnteriores: 0,
 };
 
 const TOTAL_STEPS = 5;

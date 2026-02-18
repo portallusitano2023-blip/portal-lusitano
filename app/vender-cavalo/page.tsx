@@ -147,6 +147,27 @@ export default function VenderCavaloPage() {
     setLoading(true);
 
     try {
+      // 1. Upload images to Supabase Storage first
+      let imageUrls: string[] = [];
+      if (imagens.length > 0) {
+        const uploadFormData = new FormData();
+        imagens.forEach((img) => uploadFormData.append("images", img));
+
+        const uploadRes = await fetch("/api/vender-cavalo/upload", {
+          method: "POST",
+          body: uploadFormData,
+        });
+
+        if (!uploadRes.ok) {
+          const uploadErr = await uploadRes.json();
+          throw new Error(uploadErr.error || "Erro ao fazer upload das imagens");
+        }
+
+        const { urls } = await uploadRes.json();
+        imageUrls = urls as string[];
+      }
+
+      // 2. Create Stripe checkout session with image URLs
       const response = await fetch("/api/vender-cavalo/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -190,6 +211,7 @@ export default function VenderCavaloPage() {
             descricao: formData.descricao,
             registoAPSL: formData.numero_registo,
             documentosEmDia: formData.vacinacao_atualizada && formData.desparasitacao_atualizada,
+            imageUrls,
           },
         }),
       });

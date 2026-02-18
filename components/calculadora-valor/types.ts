@@ -30,7 +30,7 @@ export interface FormData {
     | "avancado"
     | "alta_escola"
     | "grand_prix";
-  competicoes: "nenhuma" | "regional" | "nacional" | "internacional" | "campeonato_mundo";
+  competicoes: "nenhuma" | "regional" | "nacional" | "cdi1" | "cdi3" | "cdi5" | "campeonato_mundo";
   disciplina: string;
   saude: "excelente" | "muito_bom" | "bom" | "regular";
   raioX: boolean;
@@ -43,6 +43,8 @@ export interface FormData {
   descendentesAprovados: number;
   mercado: string;
   tendencia: "alta" | "estavel" | "baixa";
+  certificadoExportacao: boolean;
+  proprietariosAnteriores: number; // 0, 1, 2, 3+
 }
 
 export interface Resultado {
@@ -57,6 +59,7 @@ export interface Resultado {
   recomendacoes: string[];
   comparacao: { tipo: string; valorMedio: number; diferenca: number }[];
   pontosForteseFracos: { fortes: string[]; fracos: string[] };
+  liquidez: { score: number; tempoDias: number; label: string };
 }
 
 export interface StepProps {

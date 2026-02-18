@@ -90,7 +90,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // Handle cavalo anuncio
   if (metadata.type === "cavalo_anuncio") {
     // Buscar dados da BD
-    let formData: Record<string, string | boolean | number> | null = null;
+    let formData: Record<string, string | boolean | number | string[]> | null = null;
     let submissionId: string | null = null;
 
     if (metadata.contact_submission_id) {
@@ -111,11 +111,25 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       throw new Error("Form data not found - unable to process order");
     }
 
+    // Gerar slug único a partir do nome do cavalo
+    const baseSlug = String(formData.nomeCavalo || "cavalo")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    const slug = `${baseSlug}-${Date.now().toString(36)}`;
+
+    // Extrair URLs das imagens
+    const imageUrls = Array.isArray(formData.imageUrls) ? (formData.imageUrls as string[]) : [];
+    const fotoPrincipal = imageUrls[0] || null;
+
     // Insert cavalo em cavalos_venda
     const { data, error } = await supabase
       .from("cavalos_venda")
       .insert({
         nome: formData.nomeCavalo,
+        slug,
         sexo: formData.sexo,
         idade: formData.idade,
         cor: formData.pelagem,
@@ -137,6 +151,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         disciplinas: formData.disciplinas || [],
         registro_apsl: formData.registoAPSL,
         documentos_em_dia: formData.documentosEmDia || true,
+        foto_principal: fotoPrincipal,
+        fotos: imageUrls,
         status: "pending", // Pending admin approval
       })
       .select()

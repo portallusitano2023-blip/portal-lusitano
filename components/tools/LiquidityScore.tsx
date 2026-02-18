@@ -13,6 +13,7 @@ interface LiquidityScoreProps {
     tendencia: string;
   };
   percentil: number;
+  liquidez?: { score: number; tempoDias: number; label: string };
 }
 
 function computeScore(form: LiquidityScoreProps["form"]): number {
@@ -44,7 +45,9 @@ function computeScore(form: LiquidityScoreProps["form"]): number {
     nenhuma: 0,
     regional: 5,
     nacional: 10,
-    internacional: 15,
+    cdi1: 13,
+    cdi3: 15,
+    cdi5: 15,
     campeonato_mundo: 15,
   };
   score += compScores[form.competicoes] || 0;
@@ -65,9 +68,10 @@ function computeScore(form: LiquidityScoreProps["form"]): number {
   return Math.min(score, 100);
 }
 
-export default function LiquidityScore({ form, percentil }: LiquidityScoreProps) {
+export default function LiquidityScore({ form, percentil, liquidez }: LiquidityScoreProps) {
   const { t } = useLanguage();
-  const score = computeScore(form);
+  // Use pre-computed score from Resultado if available (more accurate), else compute locally
+  const score = liquidez?.score ?? computeScore(form);
   const [animatedScore, setAnimatedScore] = useState(0);
   const svgRef = useRef<SVGSVGElement>(null);
   const hasAnimated = useRef(false);

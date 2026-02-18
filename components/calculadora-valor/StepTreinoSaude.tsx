@@ -68,7 +68,9 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
       { value: "nenhuma", label: t.calculadora.comp_none, icon: null },
       { value: "regional", label: t.calculadora.comp_regional, icon: Medal },
       { value: "nacional", label: t.calculadora.comp_national, icon: Award },
-      { value: "internacional", label: t.calculadora.comp_international, icon: Globe },
+      { value: "cdi1", label: "CDI1* — Internacional", icon: Globe },
+      { value: "cdi3", label: "CDI3* — Grand Prix Int.", icon: Globe },
+      { value: "cdi5", label: "CDI5*/CDI-O — Top FEI", icon: Globe },
       { value: "campeonato_mundo", label: t.calculadora.comp_world_champ, icon: Crown },
     ],
     [t]

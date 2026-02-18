@@ -80,8 +80,21 @@ export const MULT_COMP: Record<string, number> = {
   nenhuma: 1.0,
   regional: 1.12,
   nacional: 1.3,
-  internacional: 1.55,
+  cdi1: 1.45,
+  cdi3: 1.6,
+  cdi5: 1.8,
   campeonato_mundo: 2.0,
+};
+
+// Premium por disciplina: Alta Escola e Equitação de Trabalho comandam preços mais altos
+export const DISCIPLINA_PREMIUMS: Record<string, number> = {
+  "Alta Escola": 1.15,
+  "Equitação de Trabalho": 1.08,
+  "Dressage Clássica": 1.05,
+  "Toureio a Cavalo": 1.03,
+  Atrelagem: 1.0,
+  "Ensino / Equitação": 0.95,
+  "Lazer / Passeio": 0.85,
 };
 
 export const MULT_LIVRO: Record<string, number> = {

@@ -43,13 +43,7 @@ export function LanguageProvider({
   children: ReactNode;
   initialLanguage?: Language;
 }) {
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof document !== "undefined") {
-      const match = document.cookie.match(/(?:^|; )locale=(pt|en|es)(?:;|$)/);
-      if (match) return match[1] as Language;
-    }
-    return initialLanguage;
-  });
+  const [language, setLanguage] = useState<Language>(initialLanguage);
 
   const [t, setT] = useState<Translations>(translationsCache[language] ?? pt);
 

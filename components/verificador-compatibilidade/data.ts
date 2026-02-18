@@ -68,9 +68,38 @@ export const FERTILIDADES = [
 
 export const DEFEITOS_GENETICOS = [
   { value: "WFFS", label: "WFFS Portador", desc: "Síndrome do Potro Frágil", risco: "alto" },
+  { value: "HYPP", label: "HYPP", desc: "Paralisia Periódica Hipercalémica", risco: "alto" },
   { value: "Lordose", label: "Lordose", desc: "Curvatura anormal da coluna", risco: "medio" },
   { value: "OCD", label: "OCD", desc: "Osteocondrite Dissecante", risco: "medio" },
   { value: "Navicular", label: "Síndrome Navicular", desc: "Problema podal", risco: "medio" },
-  { value: "DPOC", label: "DPOC/RAO", desc: "Doença respiratória", risco: "baixo" },
-  { value: "Melanoma", label: "Predisposição Melanoma", desc: "Em ruços", risco: "baixo" },
+  {
+    value: "EMS",
+    label: "EMS/Síndrome Metabólico",
+    desc: "Resistência à insulina equina",
+    risco: "medio",
+  },
+  {
+    value: "Laminite",
+    label: "Pred. Laminite",
+    desc: "Predisposição genética a laminite crónica",
+    risco: "medio",
+  },
+  {
+    value: "EPM",
+    label: "Pred. EPM",
+    desc: "Susceptibilidade a Mieloencefalite Protozoária",
+    risco: "medio",
+  },
+  {
+    value: "DPOC",
+    label: "DPOC/RAO",
+    desc: "Doença obstrutiva crónica das vias aéreas",
+    risco: "baixo",
+  },
+  {
+    value: "Melanoma",
+    label: "Predisposição Melanoma",
+    desc: "Em ruços — melanoma dérmico",
+    risco: "baixo",
+  },
 ];

@@ -1,7 +1,16 @@
 "use client";
 
 import { useMemo } from "react";
-import { Star, Check, GitBranch, Activity, TrendingUp, TrendingDown } from "lucide-react";
+import {
+  Star,
+  Check,
+  GitBranch,
+  Activity,
+  TrendingUp,
+  TrendingDown,
+  FileCheck,
+  Users,
+} from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { MERCADOS } from "./data";
 import type { FormData, StepProps } from "./types";
@@ -130,6 +139,61 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                 <span className="text-xs text-[var(--foreground-muted)]">{opt.desc}</span>
               </button>
             ))}
+          </div>
+        </div>
+        <div className="pt-6 border-t border-[var(--background-secondary)] grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* Certificado de exportação */}
+          <div className="p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
+            <div className="flex items-center gap-2 mb-3">
+              <FileCheck className="text-[var(--gold)]" size={18} />
+              <h3 className="text-xs font-medium text-[var(--foreground-secondary)] uppercase tracking-wider">
+                Certificado de Exportação
+              </h3>
+            </div>
+            <button
+              onClick={() =>
+                update("certificadoExportacao", !(form.certificadoExportacao ?? false))
+              }
+              className={`w-full py-2.5 px-4 rounded-lg border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+                form.certificadoExportacao
+                  ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                  : "border-[var(--border)] text-[var(--foreground-secondary)]"
+              }`}
+            >
+              {form.certificadoExportacao && <Check size={14} />}
+              {form.certificadoExportacao ? "Com certificado" : "Sem certificado"}
+            </button>
+            <p className="text-xs text-[var(--foreground-muted)] mt-2">
+              +6% — facilita venda internacional
+            </p>
+          </div>
+
+          {/* Proprietários anteriores */}
+          <div className="p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
+            <div className="flex items-center gap-2 mb-3">
+              <Users className="text-[var(--gold)]" size={18} />
+              <h3 className="text-xs font-medium text-[var(--foreground-secondary)] uppercase tracking-wider">
+                Proprietários Anteriores
+              </h3>
+            </div>
+            <div className="grid grid-cols-4 gap-1">
+              {[0, 1, 2, 3].map((n) => (
+                <button
+                  key={n}
+                  onClick={() => update("proprietariosAnteriores", n)}
+                  className={`py-2 rounded-lg border text-sm font-medium transition-all ${
+                    (form.proprietariosAnteriores ?? 0) === n
+                      ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
+                      : "border-[var(--border)] text-[var(--foreground-secondary)]"
+                  }`}
+                >
+                  {n === 3 ? "3+" : n}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-[var(--foreground-muted)] mt-2">
+              0 prop. = +5% &nbsp;|&nbsp; 3+ prop. = −12%
+            </p>
           </div>
         </div>
       </div>

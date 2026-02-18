@@ -279,21 +279,21 @@ export default function PrecosPage() {
                 Marketplace
               </p>
               <div className="flex items-end gap-2 mb-1">
-                <span className="text-4xl font-serif">75 €</span>
+                <span className="text-4xl font-serif">49 €</span>
               </div>
               <p className="text-xs text-[var(--foreground-muted)]">
-                Por anúncio · pagamento único
+                Por anúncio · pagamento único · +29€ destaque opcional
               </p>
             </div>
 
             <ul className="space-y-3 mb-10 flex-1">
               {[
-                "Anúncio activo durante 90 dias",
+                "Anúncio activo durante 30 dias",
                 "Verificação APSL incluída",
-                "Fotos + vídeo ilimitados",
+                "Fotos ilimitadas + vídeo",
                 "Contacto directo com compradores",
-                "Gestão via painel de admin",
-                "Renovação com desconto de 20%",
+                "Destaque no topo por 7 dias (+29€)",
+                "Aprovação em até 24 horas",
               ].map((f, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm">
                   <Check size={14} className="text-[var(--gold)] mt-0.5 shrink-0" />
