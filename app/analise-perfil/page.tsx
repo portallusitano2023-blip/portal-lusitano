@@ -46,6 +46,8 @@ function AnalisePerfilContent() {
     scorePercentages,
     saved,
     copied,
+    error,
+    setError,
     badgeRef,
     saveResult,
     downloadPDF,
@@ -63,22 +65,84 @@ function AnalisePerfilContent() {
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
+      {/* Error Toast */}
+      {error && (
+        <div className="fixed bottom-4 right-4 z-50 bg-red-900/90 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg flex items-center gap-3 max-w-sm">
+          <span className="text-red-400">&#9888;</span>
+          <span className="text-sm">{error}</span>
+          <button
+            onClick={() => setError(null)}
+            className="ml-auto text-red-400 hover:text-red-200"
+          >
+            &#10005;
+          </button>
+        </div>
+      )}
+
       {showIntro ? (
         <IntroSection onStart={startQuiz} />
       ) : !showResult ? (
-        <QuizSection
-          ref={quizRef}
-          questions={questions}
-          currentQuestion={currentQuestion}
-          canUse={canUse}
-          isSubscribed={isSubscribed}
-          freeUsesLeft={freeUsesLeft}
-          requiresAuth={requiresAuth}
-          accessLoading={accessLoading}
-          onAnswer={handleAnswer}
-          onBack={goBack}
-          onReset={resetQuiz}
-        />
+        <>
+          {/* PRO Status Bar — quiz in progress */}
+          {!accessLoading && isSubscribed && (
+            <div className="max-w-2xl mx-auto px-4 pt-6">
+              <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-4 text-sm">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="text-[#C5A059] shrink-0"
+                  aria-hidden="true"
+                >
+                  <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
+                </svg>
+                <span className="text-[#C5A059] font-semibold">PRO Activo</span>
+                <span className="text-[#C5A059]/50">•</span>
+                <span className="text-[#C5A059]/80">Utilizações ilimitadas</span>
+                <span className="text-[#C5A059]/50">•</span>
+                <span className="text-[#C5A059]/80">Análise de Perfil desbloqueada</span>
+                <a
+                  href="/ferramentas/historico"
+                  className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
+                >
+                  Ver histórico →
+                </a>
+              </div>
+            </div>
+          )}
+          {/* Free uses counter — quiz in progress */}
+          {!accessLoading && !isSubscribed && freeUsesLeft > 0 && (
+            <div className="max-w-2xl mx-auto px-4 pt-6">
+              <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-4 text-sm">
+                <span className="text-amber-400/90">
+                  {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
+                  {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
+                  Subscreva PRO para utilizações ilimitadas
+                </span>
+                <a
+                  href="/ferramentas"
+                  className="ml-auto text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
+                >
+                  Subscrever
+                </a>
+              </div>
+            </div>
+          )}
+          <QuizSection
+            ref={quizRef}
+            questions={questions}
+            currentQuestion={currentQuestion}
+            canUse={canUse}
+            isSubscribed={isSubscribed}
+            freeUsesLeft={freeUsesLeft}
+            requiresAuth={requiresAuth}
+            accessLoading={accessLoading}
+            onAnswer={handleAnswer}
+            onBack={goBack}
+            onReset={resetQuiz}
+          />
+        </>
       ) : (
         <div key="result" className="min-h-screen animate-[fadeSlideIn_0.4s_ease-out_forwards]">
           {result && (
@@ -87,6 +151,53 @@ function AnalisePerfilContent() {
               <div className="relative">
                 <Confetti trigger={true} particleCount={50} duration={2800} />
               </div>
+
+              {/* PRO Status Bar — results */}
+              {isSubscribed && (
+                <div className="max-w-5xl mx-auto px-6 pt-6">
+                  <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-4 text-sm">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="text-[#C5A059] shrink-0"
+                      aria-hidden="true"
+                    >
+                      <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
+                    </svg>
+                    <span className="text-[#C5A059] font-semibold">PRO Activo</span>
+                    <span className="text-[#C5A059]/50">•</span>
+                    <span className="text-[#C5A059]/80">Utilizações ilimitadas</span>
+                    <span className="text-[#C5A059]/50">•</span>
+                    <span className="text-[#C5A059]/80">Análise de Perfil desbloqueada</span>
+                    <a
+                      href="/ferramentas/historico"
+                      className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
+                    >
+                      Ver histórico →
+                    </a>
+                  </div>
+                </div>
+              )}
+              {/* Free uses counter — results */}
+              {!isSubscribed && freeUsesLeft > 0 && (
+                <div className="max-w-5xl mx-auto px-6 pt-6">
+                  <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-4 text-sm">
+                    <span className="text-amber-400/90">
+                      {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
+                      {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
+                      Subscreva PRO para utilizações ilimitadas
+                    </span>
+                    <a
+                      href="/ferramentas"
+                      className="ml-auto text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
+                    >
+                      Subscrever
+                    </a>
+                  </div>
+                </div>
+              )}
 
               <ResultHeader
                 result={result}

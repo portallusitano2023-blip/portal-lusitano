@@ -243,3 +243,40 @@ export function calcularValor(form: FormData): Resultado {
     pontosForteseFracos: { fortes, fracos },
   };
 }
+
+// ============================================
+// ESTIMATIVA PARCIAL (para mostrar em tempo real durante o preenchimento)
+// Usa apenas os dados já disponíveis — menos precisa mas imediata
+// ============================================
+
+export function estimarValorParcial(form: Partial<FormData>): { min: number; max: number } | null {
+  // Só estimar quando o treino está definido (passo 1+)
+  if (!form.treino || !VALORES_BASE[form.treino]) return null;
+
+  const base = VALORES_BASE[form.treino];
+
+  // Multiplicadores básicos com os dados disponíveis
+  const multIdade = !form.idade
+    ? 1.0
+    : form.idade >= 7 && form.idade <= 12
+      ? 1.15
+      : form.idade >= 5 && form.idade <= 6
+        ? 1.05
+        : form.idade > 15
+          ? 0.75
+          : form.idade > 12
+            ? 0.9
+            : 1.0;
+
+  const multLinhagem = form.linhagem ? MULT_LINHAGEM[form.linhagem] || 1.0 : 1.0;
+  const multSaude = form.saude ? MULT_SAUDE[form.saude] || 1.0 : 1.0;
+  const multComp = form.competicoes ? MULT_COMP[form.competicoes] || 1.0 : 1.0;
+
+  const estimate = base * multIdade * multLinhagem * multSaude * multComp;
+
+  // Margem ampla para indicar que são dados parciais
+  return {
+    min: Math.round(estimate * 0.72),
+    max: Math.round(estimate * 1.38),
+  };
+}

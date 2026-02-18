@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -156,7 +156,13 @@ const RadarChart = ({
   };
 
   return (
-    <svg width={size} height={size} className="mx-auto">
+    <svg
+      viewBox={`0 0 ${size} ${size}`}
+      width={size}
+      height={size}
+      className="mx-auto w-full max-w-[280px]"
+      style={{ height: "auto" }}
+    >
       {/* Grid circles */}
       {[2, 4, 6, 8, 10].map((level) => (
         <polygon
@@ -228,6 +234,92 @@ const RadarChart = ({
 // COMPONENTE PRINCIPAL
 // ============================================
 
+// ============================================
+// CHAVE DE AUTO-SAVE E TOOL CHAIN
+// ============================================
+
+const DRAFT_KEY = "comparador_draft_v1";
+const CHAIN_KEY = "tool_chain_horse";
+
+// ============================================
+// UTILITÁRIO CSV
+// ============================================
+
+function exportarCSV(cavalos: Cavalo[], calcularScore: (c: Cavalo) => number) {
+  const headers = [
+    "Nome",
+    "Idade",
+    "Sexo",
+    "Altura (cm)",
+    "Pelagem",
+    "Linhagem",
+    "Treino",
+    "Conformação",
+    "Andamentos",
+    "Elevação",
+    "Regularidade",
+    "Temperamento",
+    "Saúde",
+    "Competições",
+    "Prémios",
+    "Preço (€)",
+    "BLUP",
+    "Registo APSL",
+    "Score Global",
+    "Valor por Ponto (€)",
+  ];
+
+  const rows = cavalos.map((c) => {
+    const score = calcularScore(c);
+    const valorPorPonto = score > 0 ? Math.round(c.preco / score) : 0;
+    return [
+      c.nome,
+      c.idade,
+      c.sexo,
+      c.altura,
+      c.pelagem,
+      c.linhagem,
+      c.treino,
+      c.conformacao,
+      c.andamentos,
+      c.elevacao,
+      c.regularidade,
+      c.temperamento,
+      c.saude,
+      c.competicoes,
+      c.premios,
+      c.preco,
+      c.blup,
+      c.registoAPSL ? "Sim" : "Não",
+      score,
+      valorPorPonto,
+    ];
+  });
+
+  const csvContent = [headers, ...rows]
+    .map((row) =>
+      row
+        .map((cell) => {
+          const str = String(cell);
+          // Escapar aspas e envolver em aspas se contiver vírgula ou aspas
+          return str.includes(",") || str.includes('"') ? `"${str.replace(/"/g, '""')}"` : str;
+        })
+        .join(",")
+    )
+    .join("\n");
+
+  // BOM para compatibilidade com Excel (caracteres portugueses)
+  const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `comparacao-cavalos-${new Date().toISOString().split("T")[0]}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 export default function ComparadorCavalosPage() {
   const { t } = useLanguage();
   const [cavalos, setCavalos] = useState<Cavalo[]>([
@@ -236,7 +328,12 @@ export default function ComparadorCavalosPage() {
   ]);
   const [step, setStep] = useState(0); // 0 = intro
   const [showAnalise, setShowAnalise] = useState(false);
+  const [calculando, setCalculando] = useState(false);
+  const [calculandoStep, setCalculandoStep] = useState(0);
   const [isExporting, setIsExporting] = useState(false);
+  const [hasDraft, setHasDraft] = useState(false);
+  const [draftDate, setDraftDate] = useState<string>("");
+  const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
   const {
     canUse,
     isSubscribed,
@@ -245,6 +342,87 @@ export default function ComparadorCavalosPage() {
     recordUsage,
     isLoading: accessLoading,
   } = useToolAccess("comparador");
+
+  // ============================================
+  // AUTO-SAVE + TOOL CHAIN (on mount)
+  // ============================================
+
+  useEffect(() => {
+    try {
+      // Verificar tool chain (vindo de outra ferramenta)
+      const chain = sessionStorage.getItem(CHAIN_KEY);
+      if (chain) {
+        const { source, horse } = JSON.parse(chain) as { source: string; horse: Partial<Cavalo> };
+        if (source === "calculadora" && horse) {
+          const novo = { ...criarCavalo("1", horse.nome || "Cavalo A"), ...horse, id: "1" };
+          setCavalos([novo, criarCavalo("2", "Cavalo B"), criarCavalo("3", "Cavalo C")]);
+          sessionStorage.removeItem(CHAIN_KEY);
+          setStep(1);
+          return; // Não restaurar draft se há chain
+        }
+      }
+
+      // Verificar draft guardado
+      const saved = localStorage.getItem(DRAFT_KEY);
+      if (saved) {
+        const { savedAt } = JSON.parse(saved) as { savedAt: string };
+        const age = Date.now() - new Date(savedAt).getTime();
+        if (age < 7 * 24 * 60 * 60 * 1000) {
+          setHasDraft(true);
+          setDraftDate(
+            new Date(savedAt).toLocaleDateString("pt-PT", {
+              day: "numeric",
+              month: "long",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          );
+        } else {
+          localStorage.removeItem(DRAFT_KEY);
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Auto-save com debounce de 800ms
+  useEffect(() => {
+    if (step === 0 || showAnalise) return; // Não guardar no intro nem depois de analisar
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(() => {
+      try {
+        localStorage.setItem(
+          DRAFT_KEY,
+          JSON.stringify({ cavalos, savedAt: new Date().toISOString() })
+        );
+      } catch {}
+    }, 800);
+    return () => {
+      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    };
+  }, [cavalos, step, showAnalise]);
+
+  const restaurarDraft = () => {
+    try {
+      const saved = localStorage.getItem(DRAFT_KEY);
+      if (saved) {
+        const { cavalos: savedCavalos } = JSON.parse(saved) as { cavalos: Cavalo[] };
+        setCavalos(savedCavalos);
+        setStep(1);
+        setHasDraft(false);
+      }
+    } catch {}
+  };
+
+  const descartarDraft = () => {
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+    } catch {}
+    setHasDraft(false);
+  };
+
+  const handleExportCSV = () => {
+    exportarCSV(cavalos, calcularScore);
+  };
 
   const handleExportPDF = async () => {
     setIsExporting(true);
@@ -517,6 +695,10 @@ export default function ComparadorCavalosPage() {
     setStep(0);
     setShowAnalise(false);
     setCavalos([criarCavalo("1", "Cavalo A"), criarCavalo("2", "Cavalo B")]);
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+    } catch {}
+    setHasDraft(false);
   };
 
   return (
@@ -629,6 +811,32 @@ export default function ComparadorCavalosPage() {
                   {t.comparador.start_btn}
                   <ChevronRight size={18} />
                 </button>
+
+                {/* Banner draft guardado */}
+                {hasDraft && (
+                  <div
+                    className="mt-6 flex flex-col sm:flex-row items-center gap-3 px-5 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl max-w-sm mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.7s" }}
+                  >
+                    <p className="text-xs text-[var(--gold)] flex-1 text-center sm:text-left">
+                      Tem uma comparação guardada de {draftDate}
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={restaurarDraft}
+                        className="px-3 py-1.5 bg-[var(--gold)] text-black text-xs font-bold rounded-lg hover:bg-[#D4B068] transition-colors"
+                      >
+                        Continuar
+                      </button>
+                      <button
+                        onClick={descartarDraft}
+                        className="px-3 py-1.5 bg-transparent border border-[var(--gold)]/40 text-[var(--gold)] text-xs rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
+                      >
+                        Descartar
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
 
@@ -965,6 +1173,39 @@ export default function ComparadorCavalosPage() {
               ))}
             </div>
 
+            {/* PRO Status Bar */}
+            {!accessLoading && isSubscribed && (
+              <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm">
+                <Crown size={14} className="text-[#C5A059] shrink-0" aria-hidden="true" />
+                <span className="text-[#C5A059] font-semibold">PRO Activo</span>
+                <span className="text-[#C5A059]/50">•</span>
+                <span className="text-[#C5A059]/80">Utilizações ilimitadas</span>
+                <span className="text-[#C5A059]/50">•</span>
+                <span className="text-[#C5A059]/80">Comparador desbloqueado</span>
+                <a
+                  href="/ferramentas/historico"
+                  className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
+                >
+                  Ver histórico →
+                </a>
+              </div>
+            )}
+            {/* Free uses counter */}
+            {!accessLoading && !isSubscribed && freeUsesLeft > 0 && (
+              <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm">
+                <span className="text-amber-400/90">
+                  {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
+                  {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
+                  Subscreva PRO para utilizações ilimitadas
+                </span>
+                <a
+                  href="/ferramentas"
+                  className="ml-auto text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
+                >
+                  Subscrever
+                </a>
+              </div>
+            )}
             {/* Subscription Banner */}
             {accessLoading ? (
               <div className="flex items-center justify-center py-4">
@@ -985,7 +1226,8 @@ export default function ComparadorCavalosPage() {
                 <button
                   onClick={() => {
                     if (!canUse) return;
-                    setShowAnalise(true);
+                    setCalculando(true);
+                    setCalculandoStep(0);
                     recordUsage({
                       cavalos: cavalos.map((c) => ({
                         nome: c.nome,
@@ -993,8 +1235,14 @@ export default function ComparadorCavalosPage() {
                         pelagem: c.pelagem,
                       })),
                     });
+                    setTimeout(() => setCalculandoStep(1), 600);
+                    setTimeout(() => setCalculandoStep(2), 1200);
+                    setTimeout(() => {
+                      setCalculando(false);
+                      setShowAnalise(true);
+                    }, 2000);
                   }}
-                  disabled={!canUse}
+                  disabled={!canUse || calculando}
                   className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <BarChart3 size={22} />
@@ -1006,6 +1254,73 @@ export default function ComparadorCavalosPage() {
               </>
             )}
 
+            {/* Loading state */}
+            {calculando && (
+              <div className="flex flex-col items-center justify-center py-16 gap-8 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
+                {/* Spinner */}
+                <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 rounded-full border-4 border-[#C5A059]/15" />
+                  <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#C5A059] animate-spin" />
+                  <div className="absolute inset-2 rounded-full border-2 border-transparent border-t-[#C5A059]/50 animate-[spin_1.5s_linear_infinite_reverse]" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <BarChart3 size={22} className="text-[#C5A059]" />
+                  </div>
+                </div>
+
+                {/* Main text */}
+                <div className="text-center">
+                  <p className="text-lg font-semibold text-[var(--foreground)] mb-1">
+                    A comparar os seus cavalos
+                    <span className="inline-flex gap-0.5 ml-0.5" aria-hidden="true">
+                      <span className="inline-block animate-[pulse-opacity_1.2s_ease-in-out_0s_infinite]">
+                        .
+                      </span>
+                      <span className="inline-block animate-[pulse-opacity_1.2s_ease-in-out_0.4s_infinite]">
+                        .
+                      </span>
+                      <span className="inline-block animate-[pulse-opacity_1.2s_ease-in-out_0.8s_infinite]">
+                        .
+                      </span>
+                    </span>
+                  </p>
+                  <p className="text-sm text-[var(--foreground-muted)]">
+                    Isto demora apenas um momento
+                  </p>
+                </div>
+
+                {/* Animated steps */}
+                <div className="flex flex-col gap-3 w-full max-w-xs">
+                  {[
+                    "Analisando pontuações...",
+                    "Calculando diferenças...",
+                    "Gerando relatório...",
+                  ].map((label, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-500 ${
+                        calculandoStep > idx
+                          ? "border-[#C5A059]/40 bg-[#C5A059]/10 text-[#C5A059]"
+                          : calculandoStep === idx
+                            ? "border-[#C5A059]/30 bg-[#C5A059]/5 text-[var(--foreground-secondary)]"
+                            : "border-[var(--border)]/40 bg-transparent text-[var(--foreground-muted)]"
+                      }`}
+                    >
+                      <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
+                        {calculandoStep > idx ? (
+                          <Check size={14} className="text-[#C5A059]" />
+                        ) : calculandoStep === idx ? (
+                          <div className="w-3 h-3 rounded-full border-2 border-[#C5A059]/60 border-t-[#C5A059] animate-spin" />
+                        ) : (
+                          <div className="w-2 h-2 rounded-full bg-[var(--border)]" />
+                        )}
+                      </div>
+                      <span className="text-sm font-medium">{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Análise */}
             {showAnalise && (
               <div className="space-y-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
@@ -1014,13 +1329,22 @@ export default function ComparadorCavalosPage() {
                   <Confetti trigger={true} particleCount={50} duration={2800} />
                 </div>
 
-                {/* Acções: PDF, Partilhar, Imprimir */}
-                <ResultActions
-                  onExportPDF={handleExportPDF}
-                  onShare={handleShare}
-                  onPrint={() => window.print()}
-                  isExporting={isExporting}
-                />
+                {/* Acções: PDF, CSV, Partilhar, Imprimir */}
+                <div className="space-y-2">
+                  <ResultActions
+                    onExportPDF={handleExportPDF}
+                    onShare={handleShare}
+                    onPrint={() => window.print()}
+                    isExporting={isExporting}
+                  />
+                  <button
+                    onClick={handleExportCSV}
+                    className="w-full py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2"
+                  >
+                    <TrendingUp size={16} />
+                    Exportar CSV (Excel)
+                  </button>
+                </div>
 
                 {/* Gráfico Radar */}
                 <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)]">
@@ -1035,21 +1359,23 @@ export default function ComparadorCavalosPage() {
                     />
                   </h3>
                   <div className="flex flex-col items-center">
-                    <RadarChart
-                      cavalos={cavalos.map((c, i) => ({
-                        nome: c.nome,
-                        valores: [
-                          c.conformacao,
-                          c.andamentos,
-                          c.temperamento,
-                          c.saude,
-                          Math.min(c.blup / 12, 10),
-                          TREINOS.find((t) => t.value === c.treino)?.nivel || 4,
-                        ],
-                        cor: cores[i],
-                      }))}
-                      labels={["Conform.", "Andam.", "Temper.", "Saúde", "BLUP", "Treino"]}
-                    />
+                    <div className="w-full max-w-[280px] overflow-hidden">
+                      <RadarChart
+                        cavalos={cavalos.map((c, i) => ({
+                          nome: c.nome,
+                          valores: [
+                            c.conformacao,
+                            c.andamentos,
+                            c.temperamento,
+                            c.saude,
+                            Math.min(c.blup / 12, 10),
+                            TREINOS.find((t) => t.value === c.treino)?.nivel || 4,
+                          ],
+                          cor: cores[i],
+                        }))}
+                        labels={["Conform.", "Andam.", "Temper.", "Saúde", "BLUP", "Treino"]}
+                      />
+                    </div>
                     <div className="flex flex-wrap justify-center gap-4 mt-6">
                       {cavalos.map((c, i) => (
                         <div key={c.id} className="flex items-center gap-2">
@@ -1077,131 +1403,136 @@ export default function ComparadorCavalosPage() {
                   isSubscribed={isSubscribed}
                   title={t.comparador.comparative_table}
                 >
-                  <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)] overflow-x-auto">
+                  <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-4 sm:p-6 border border-[var(--border)]">
                     <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
                       <Scale className="text-blue-400" size={20} />
                       {t.comparador.comparative_table}
                     </h3>
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="text-[var(--foreground-secondary)] border-b border-[var(--border)]">
-                          <th className="text-left py-3 px-2">{t.comparador.param_header}</th>
-                          {cavalos.map((c, i) => (
-                            <th
-                              key={c.id}
-                              className="text-center py-3 px-2"
-                              style={{ color: cores[i] }}
-                            >
-                              {c.nome}
+                    {/* overflow-x-auto enables horizontal scroll on narrow screens */}
+                    <div className="overflow-x-auto -mx-4 sm:mx-0">
+                      <table className="w-full text-sm" style={{ minWidth: "480px" }}>
+                        <thead>
+                          <tr className="text-[var(--foreground-secondary)] border-b border-[var(--border)]">
+                            <th className="text-left py-3 px-3 min-w-[110px] sticky left-0 bg-[var(--background-secondary)]">
+                              {t.comparador.param_header}
                             </th>
+                            {cavalos.map((c, i) => (
+                              <th
+                                key={c.id}
+                                className="text-center py-3 px-3 min-w-[90px]"
+                                style={{ color: cores[i] }}
+                              >
+                                {c.nome}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            {
+                              label: t.comparador.param_age,
+                              campo: "idade" as const,
+                              maior: false,
+                              suffix: " anos",
+                            },
+                            {
+                              label: t.comparador.param_height,
+                              campo: "altura" as const,
+                              maior: false,
+                              suffix: " cm",
+                            },
+                            {
+                              label: t.comparador.param_conformation,
+                              campo: "conformacao" as const,
+                              maior: true,
+                              suffix: "/10",
+                            },
+                            {
+                              label: t.comparador.param_gaits,
+                              campo: "andamentos" as const,
+                              maior: true,
+                              suffix: "/10",
+                            },
+                            {
+                              label: t.comparador.param_temperament,
+                              campo: "temperamento" as const,
+                              maior: true,
+                              suffix: "/10",
+                            },
+                            {
+                              label: t.comparador.param_health,
+                              campo: "saude" as const,
+                              maior: true,
+                              suffix: "/10",
+                            },
+                            { label: "BLUP", campo: "blup" as const, maior: true, suffix: "" },
+                            {
+                              label: t.comparador.param_price,
+                              campo: "preco" as const,
+                              maior: false,
+                              suffix: "€",
+                            },
+                          ].map(({ label, campo, maior, suffix }) => (
+                            <tr key={campo} className="border-b border-[var(--border)]/50">
+                              <td className="py-3 px-3 text-[var(--foreground-secondary)] sticky left-0 bg-[var(--background-secondary)]">
+                                {label}
+                              </td>
+                              {cavalos.map((c) => (
+                                <td
+                                  key={c.id}
+                                  className={`text-center py-3 px-3 ${getClasseCor(c[campo] as number, getMelhor(campo, maior), maior)}`}
+                                >
+                                  {campo === "preco"
+                                    ? `${(c[campo] as number).toLocaleString("pt-PT")}${suffix}`
+                                    : `${c[campo]}${suffix}`}
+                                </td>
+                              ))}
+                            </tr>
                           ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {[
-                          {
-                            label: t.comparador.param_age,
-                            campo: "idade" as const,
-                            maior: false,
-                            suffix: " anos",
-                          },
-                          {
-                            label: t.comparador.param_height,
-                            campo: "altura" as const,
-                            maior: false,
-                            suffix: " cm",
-                          },
-                          {
-                            label: t.comparador.param_conformation,
-                            campo: "conformacao" as const,
-                            maior: true,
-                            suffix: "/10",
-                          },
-                          {
-                            label: t.comparador.param_gaits,
-                            campo: "andamentos" as const,
-                            maior: true,
-                            suffix: "/10",
-                          },
-                          {
-                            label: t.comparador.param_temperament,
-                            campo: "temperamento" as const,
-                            maior: true,
-                            suffix: "/10",
-                          },
-                          {
-                            label: t.comparador.param_health,
-                            campo: "saude" as const,
-                            maior: true,
-                            suffix: "/10",
-                          },
-                          { label: "BLUP", campo: "blup" as const, maior: true, suffix: "" },
-                          {
-                            label: t.comparador.param_price,
-                            campo: "preco" as const,
-                            maior: false,
-                            suffix: "€",
-                          },
-                        ].map(({ label, campo, maior, suffix }) => (
-                          <tr key={campo} className="border-b border-[var(--border)]/50">
-                            <td className="py-3 px-2 text-[var(--foreground-secondary)]">
-                              {label}
+                          <tr className="border-t-2 border-[var(--border)]">
+                            <td className="py-4 px-3 font-semibold text-[var(--foreground)] sticky left-0 bg-[var(--background-secondary)]">
+                              {t.comparador.total_score}
+                            </td>
+                            {cavalos.map((c, i) => (
+                              <td key={c.id} className="text-center py-4 px-3">
+                                <div className="flex items-center justify-center gap-2">
+                                  <span className="text-2xl font-bold" style={{ color: cores[i] }}>
+                                    {calcularScore(c)}
+                                  </span>
+                                  <SourceBadge source="modelo" />
+                                  {c.id === vencedor.id && (
+                                    <Crown className="inline text-amber-400" size={16} />
+                                  )}
+                                </div>
+                                <div className="mt-2 text-left">
+                                  <ScoreBreakdown
+                                    factors={getScoreFactors(c)}
+                                    total={calcularScore(c)}
+                                  />
+                                </div>
+                              </td>
+                            ))}
+                          </tr>
+                          <tr className="border-t border-[var(--border)]">
+                            <td className="py-3 px-3 text-[var(--foreground-secondary)] sticky left-0 bg-[var(--background-secondary)]">
+                              {t.comparador.value_per_pt}
                             </td>
                             {cavalos.map((c) => (
                               <td
                                 key={c.id}
-                                className={`text-center py-3 px-2 ${getClasseCor(c[campo] as number, getMelhor(campo, maior), maior)}`}
+                                className={`text-center py-3 px-3 ${
+                                  c.id === melhorValor.id
+                                    ? "text-emerald-400 font-semibold"
+                                    : "text-[var(--foreground-secondary)]"
+                                }`}
                               >
-                                {campo === "preco"
-                                  ? `${(c[campo] as number).toLocaleString("pt-PT")}${suffix}`
-                                  : `${c[campo]}${suffix}`}
+                                {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
                               </td>
                             ))}
                           </tr>
-                        ))}
-                        <tr className="border-t-2 border-[var(--border)]">
-                          <td className="py-4 px-2 font-semibold text-[var(--foreground)]">
-                            {t.comparador.total_score}
-                          </td>
-                          {cavalos.map((c, i) => (
-                            <td key={c.id} className="text-center py-4 px-2">
-                              <div className="flex items-center justify-center gap-2">
-                                <span className="text-2xl font-bold" style={{ color: cores[i] }}>
-                                  {calcularScore(c)}
-                                </span>
-                                <SourceBadge source="modelo" />
-                                {c.id === vencedor.id && (
-                                  <Crown className="inline text-amber-400" size={16} />
-                                )}
-                              </div>
-                              <div className="mt-2 text-left">
-                                <ScoreBreakdown
-                                  factors={getScoreFactors(c)}
-                                  total={calcularScore(c)}
-                                />
-                              </div>
-                            </td>
-                          ))}
-                        </tr>
-                        <tr className="border-t border-[var(--border)]">
-                          <td className="py-3 px-2 text-[var(--foreground-secondary)]">
-                            {t.comparador.value_per_pt}
-                          </td>
-                          {cavalos.map((c) => (
-                            <td
-                              key={c.id}
-                              className={`text-center py-3 px-2 ${
-                                c.id === melhorValor.id
-                                  ? "text-emerald-400 font-semibold"
-                                  : "text-[var(--foreground-secondary)]"
-                              }`}
-                            >
-                              {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
-                            </td>
-                          ))}
-                        </tr>
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </BlurredProSection>
 

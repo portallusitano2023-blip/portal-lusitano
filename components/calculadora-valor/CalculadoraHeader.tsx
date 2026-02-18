@@ -10,6 +10,7 @@ interface CalculadoraHeaderProps {
   progress: number;
   hasResultado: boolean;
   onReset: () => void;
+  estimativaParcial?: { min: number; max: number } | null;
 }
 
 export default function CalculadoraHeader({
@@ -18,6 +19,7 @@ export default function CalculadoraHeader({
   progress,
   hasResultado,
   onReset,
+  estimativaParcial,
 }: CalculadoraHeaderProps) {
   const { t } = useLanguage();
 
@@ -54,6 +56,16 @@ export default function CalculadoraHeader({
             <RefreshCw size={14} />
             <span className="hidden sm:inline">{t.calculadora.new_evaluation}</span>
           </button>
+        ) : step > 1 && estimativaParcial ? (
+          <div className="text-right">
+            <p className="text-[10px] text-[var(--foreground-muted)] leading-tight">
+              Estimativa parcial
+            </p>
+            <p className="text-xs font-semibold text-[var(--gold)] leading-tight">
+              €{estimativaParcial.min.toLocaleString("pt-PT")} – €
+              {estimativaParcial.max.toLocaleString("pt-PT")}
+            </p>
+          </div>
         ) : step > 0 ? (
           <div className="text-xs text-[var(--foreground-muted)] flex items-center gap-2">
             <span className="text-[var(--gold)]">{step}</span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -25,6 +25,9 @@ import {
   MessageSquare,
   Loader2,
   CheckCircle,
+  TrendingUp,
+  Users,
+  Activity,
 } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
@@ -32,6 +35,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import ToolReviewForm from "@/components/ToolReviewForm";
 import { Review, ReviewStats } from "@/types/review";
 import { faqItems } from "./faq-data";
+import { useToolAccess } from "@/hooks/useToolAccess";
 
 // ============================================
 // DATA
@@ -51,6 +55,9 @@ const tools = [
     color: "from-amber-500/20 to-amber-600/5",
     iconBg: "bg-amber-500/10",
     iconColor: "text-amber-400",
+    badge: "Mais popular",
+    badgeColor: "bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black",
+    freeUses: 1,
   },
   {
     title: "Comparador de Cavalos",
@@ -65,6 +72,9 @@ const tools = [
     color: "from-blue-500/20 to-blue-600/5",
     iconBg: "bg-blue-500/10",
     iconColor: "text-blue-400",
+    badge: null,
+    badgeColor: null,
+    freeUses: 1,
   },
   {
     title: "Verificador de Compatibilidade",
@@ -79,6 +89,9 @@ const tools = [
     color: "from-rose-500/20 to-rose-600/5",
     iconBg: "bg-rose-500/10",
     iconColor: "text-rose-400",
+    badge: null,
+    badgeColor: null,
+    freeUses: 1,
   },
   {
     title: "Análise de Perfil",
@@ -93,6 +106,9 @@ const tools = [
     color: "from-emerald-500/20 to-emerald-600/5",
     iconBg: "bg-emerald-500/10",
     iconColor: "text-emerald-400",
+    badge: "Recomendado",
+    badgeColor: "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30",
+    freeUses: 1,
   },
 ];
 
@@ -121,6 +137,194 @@ interface FAQItem {
   answer: string;
 }
 
+// ============================================
+// STATS COUNTERS
+// ============================================
+
+interface ToolStats {
+  totalAnalyses: number;
+  totalUsers: number;
+  avgRating: number;
+  reviewCount: number;
+}
+
+function useAnimatedCounter(target: number, duration = 1500) {
+  const [value, setValue] = useState(0);
+  const startRef = useRef<number | null>(null);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (target === 0) return;
+    startRef.current = null;
+    const step = (timestamp: number) => {
+      if (!startRef.current) startRef.current = timestamp;
+      const elapsed = timestamp - startRef.current;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease-out
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(eased * target));
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(step);
+      }
+    };
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [target, duration]);
+
+  return value;
+}
+
+function StatCounter({
+  value,
+  label,
+  icon: Icon,
+}: {
+  value: number;
+  label: string;
+  icon: React.ElementType;
+}) {
+  const animated = useAnimatedCounter(value);
+  return (
+    <div className="flex flex-col items-center gap-2 p-6">
+      <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center mb-1">
+        <Icon size={22} className="text-[var(--gold)]" />
+      </div>
+      <p className="text-3xl font-serif text-[var(--foreground)]">
+        {animated.toLocaleString("pt-PT")}
+      </p>
+      <p className="text-xs text-[var(--foreground-muted)] text-center">{label}</p>
+    </div>
+  );
+}
+
+function StatsSection() {
+  const [stats, setStats] = useState<ToolStats | null>(null);
+
+  useEffect(() => {
+    fetch("/api/tools/stats")
+      .then((r) => r.json())
+      .then((data: ToolStats) => {
+        if (data.totalAnalyses > 0) setStats(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  if (!stats || stats.totalAnalyses === 0) return null;
+
+  return (
+    <AnimateOnScroll>
+      <div className="max-w-3xl mx-auto mb-16 px-6">
+        <div className="bg-[var(--background-secondary)]/60 border border-[var(--gold)]/15 rounded-2xl grid grid-cols-3 divide-x divide-[var(--border)]">
+          <StatCounter value={stats.totalAnalyses} label="análises realizadas" icon={Activity} />
+          <StatCounter value={stats.totalUsers} label="utilizadores activos" icon={Users} />
+          <StatCounter
+            value={stats.reviewCount}
+            label={`avaliações (${stats.avgRating}★)`}
+            icon={TrendingUp}
+          />
+        </div>
+      </div>
+    </AnimateOnScroll>
+  );
+}
+
+// ============================================
+// WELCOME MODAL (ONBOARDING)
+// ============================================
+
+const WELCOME_KEY = "ferramentas_welcomed_v1";
+
+function WelcomeModal() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem(WELCOME_KEY)) {
+        // Pequeno delay para não interferir com o carregamento inicial
+        const t = setTimeout(() => setVisible(true), 800);
+        return () => clearTimeout(t);
+      }
+    } catch {
+      // localStorage bloqueado
+    }
+  }, []);
+
+  const dismiss = () => {
+    try {
+      localStorage.setItem(WELCOME_KEY, "1");
+    } catch {}
+    setVisible(false);
+  };
+
+  if (!visible) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      onClick={dismiss}
+    >
+      <div
+        className="relative bg-[var(--background-secondary)] border border-[var(--gold)]/30 rounded-2xl p-8 max-w-sm w-full shadow-2xl shadow-black/50 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close */}
+        <button
+          onClick={dismiss}
+          className="absolute top-4 right-4 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+          aria-label="Fechar"
+        >
+          <X size={18} />
+        </button>
+
+        {/* Icon */}
+        <div className="w-14 h-14 bg-[var(--gold)]/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
+          <Sparkles size={26} className="text-[var(--gold)]" />
+        </div>
+
+        {/* Content */}
+        <h2 className="text-xl font-serif text-[var(--foreground)] text-center mb-3">
+          Bem-vindo às Ferramentas
+        </h2>
+        <p className="text-sm text-[var(--foreground-secondary)] text-center leading-relaxed mb-6">
+          Cada ferramenta inclui{" "}
+          <strong className="text-[var(--foreground)]">1 uso gratuito</strong>. Comece pela{" "}
+          <strong className="text-[var(--foreground)]">Calculadora de Valor</strong> para obter uma
+          estimativa profissional do seu Lusitano.
+        </p>
+
+        {/* Steps */}
+        <ol className="space-y-2 mb-6 text-left">
+          {[
+            "Escolha uma ferramenta abaixo",
+            "Preencha os dados do seu cavalo",
+            "Obtenha resultados instantâneos",
+          ].map((step, i) => (
+            <li
+              key={i}
+              className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]"
+            >
+              <span className="w-5 h-5 rounded-full bg-[var(--gold)]/20 text-[var(--gold)] text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-medium">
+                {i + 1}
+              </span>
+              {step}
+            </li>
+          ))}
+        </ol>
+
+        {/* CTA */}
+        <button
+          onClick={dismiss}
+          className="w-full py-3 bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black text-sm font-bold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all"
+        >
+          Explorar Ferramentas
+        </button>
+      </div>
+    </div>
+  );
+}
+
 const toolSlugToName: Record<string, string> = {
   "calculadora-valor": "Calculadora de Valor",
   "comparador-cavalos": "Comparador de Cavalos",
@@ -141,7 +345,7 @@ function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number
   return (
     <Link
       href={tool.href}
-      className="group relative bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8 transition-all duration-300 hover:border-[var(--gold)]/50 hover:shadow-lg hover:shadow-[var(--gold)]/5 hover:-translate-y-1 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+      className="group relative bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8 transition-all duration-300 hover:border-[var(--gold)]/60 hover:shadow-2xl hover:shadow-[var(--gold)]/10 hover:-translate-y-2 hover:scale-[1.02] ring-0 hover:ring-1 ring-[var(--gold)]/30 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       style={{ animationDelay: `${0.2 + index * 0.1}s` }}
     >
       {/* Gradient background on hover */}
@@ -150,9 +354,25 @@ function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number
       />
 
       <div className="relative z-10">
+        {/* Badges row */}
+        <div className="flex items-center gap-2 mb-5 min-h-[24px]">
+          {tool.badge && tool.badgeColor && (
+            <span
+              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${tool.badgeColor}`}
+            >
+              {tool.badge === "Mais popular" && <Star size={9} fill="currentColor" />}
+              {tool.badge}
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <Check size={9} />
+            {tool.freeUses} uso grátis
+          </span>
+        </div>
+
         {/* Icon */}
         <div
-          className={`w-14 h-14 ${tool.iconBg} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
+          className={`w-14 h-14 ${tool.iconBg} rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300`}
         >
           <Icon className={tool.iconColor} size={28} />
         </div>
@@ -591,15 +811,49 @@ function ToolReviewsSection() {
 // MAIN PAGE
 // ============================================
 
+function ProBannerSection() {
+  const { isSubscribed, isLoading } = useToolAccess("calculadora");
+
+  if (isLoading || !isSubscribed) return null;
+
+  return (
+    <div className="max-w-6xl mx-auto px-6 pt-6">
+      <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-xl px-5 py-3.5 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-[#C5A059]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Crown size={16} className="text-[#C5A059]" />
+          </div>
+          <div>
+            <p className="text-[#C5A059] font-semibold text-sm">PRO Activo</p>
+            <p className="text-[var(--foreground-muted)] text-xs">
+              Acesso ilimitado a todas as ferramentas
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/ferramentas/historico"
+          className="flex-shrink-0 flex items-center gap-1.5 text-sm text-[#C5A059] hover:text-[#D4B068] transition-colors"
+        >
+          <History size={14} />
+          <span className="hidden sm:inline">Ver histórico</span>
+          <span className="sm:hidden">Histórico</span>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export default function FerramentasPage() {
   const { t } = useLanguage();
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
+      <WelcomeModal />
       <Suspense fallback={null}>
         <CheckoutFeedback />
       </Suspense>
+      <ProBannerSection />
       {/* ===== HERO SECTION ===== */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
         {/* Background decorative elements */}
@@ -664,6 +918,9 @@ export default function FerramentasPage() {
         </div>
       </section>
 
+      {/* ===== STATS COUNTERS ===== */}
+      <StatsSection />
+
       {/* ===== KEY BENEFITS STRIP ===== */}
       <section className="px-6 pb-24">
         <div className="max-w-5xl mx-auto">
@@ -703,6 +960,82 @@ export default function FerramentasPage() {
               </AnimateOnScroll>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ===== COMO FUNCIONA SECTION ===== */}
+      <section className="px-6 pb-24">
+        <div className="max-w-4xl mx-auto">
+          <AnimateOnScroll className="text-center mb-12">
+            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">
+              Simples e rápido
+            </span>
+            <h2 className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4">
+              Como funciona
+            </h2>
+            <p className="text-[var(--foreground-secondary)] max-w-lg mx-auto text-sm">
+              Resultados profissionais em menos de 2 minutos, sem necessidade de conta.
+            </p>
+          </AnimateOnScroll>
+
+          <div className="grid sm:grid-cols-3 gap-8 relative">
+            {/* Connector line (desktop) */}
+            <div className="hidden sm:block absolute top-10 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px bg-gradient-to-r from-transparent via-[var(--gold)]/30 to-transparent" />
+
+            {[
+              {
+                step: "01",
+                title: "Escolhe a ferramenta",
+                desc: "Selecciona a ferramenta adequada ao que precisas: avaliação de valor, comparação, compatibilidade ou perfil de cavaleiro.",
+                icon: Sparkles,
+              },
+              {
+                step: "02",
+                title: "Preenches os dados do cavalo",
+                desc: "Introduz as características do teu Lusitano. O formulário é intuitivo e guia-te em cada passo.",
+                icon: UserCheck,
+              },
+              {
+                step: "03",
+                title: "Recebes a análise instantânea",
+                desc: "O resultado aparece de imediato. Com PRO, exportas em PDF e guardas o histórico completo.",
+                icon: Zap,
+              },
+            ].map((item, i) => (
+              <AnimateOnScroll key={item.step} delay={i * 120}>
+                <div className="relative flex flex-col items-center text-center p-6">
+                  {/* Step number circle */}
+                  <div className="relative mb-6">
+                    <div className="w-20 h-20 rounded-full bg-[var(--background-secondary)] border border-[var(--gold)]/30 flex items-center justify-center shadow-lg shadow-[var(--gold)]/5">
+                      <item.icon size={28} className="text-[var(--gold)]" />
+                    </div>
+                    <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[var(--gold)] text-black text-[10px] font-bold flex items-center justify-center">
+                      {item.step.replace("0", "")}
+                    </span>
+                  </div>
+
+                  <h3 className="text-base font-serif text-[var(--foreground)] mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              </AnimateOnScroll>
+            ))}
+          </div>
+
+          {/* Mini CTA below steps */}
+          <AnimateOnScroll className="text-center mt-10">
+            <Link
+              href="/calculadora-valor"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-sm font-medium rounded-full hover:bg-[var(--gold)]/20 transition-colors"
+            >
+              <Sparkles size={15} />
+              Experimentar agora — é grátis
+              <ArrowRight size={15} />
+            </Link>
+          </AnimateOnScroll>
         </div>
       </section>
 
@@ -785,6 +1118,16 @@ export default function FerramentasPage() {
                   <Check size={14} />
                   {t.ferramentas.cancel_anytime} • Sem fidelização
                 </p>
+
+                {/* Savings callout */}
+                <div className="mt-4 px-4 py-2.5 bg-[var(--gold)]/8 border border-[var(--gold)]/20 rounded-lg text-center">
+                  <p className="text-xs text-[var(--gold)] font-semibold">
+                    Poupa €200+ vs. avaliação profissional
+                  </p>
+                  <p className="text-[10px] text-[var(--foreground-muted)] mt-0.5">
+                    Uma avaliação presencial custa €150–200. Aqui tens análises ilimitadas.
+                  </p>
+                </div>
               </div>
 
               <ul className="space-y-4 mb-8">
@@ -793,7 +1136,24 @@ export default function FerramentasPage() {
                 ))}
               </ul>
 
-              <ProSubscribeButton />
+              {/* Social proof nudge */}
+              <div className="flex items-center justify-center gap-1.5 mb-4">
+                <div className="flex -space-x-1.5">
+                  {["A", "M", "R"].map((initial) => (
+                    <div
+                      key={initial}
+                      className="w-6 h-6 rounded-full bg-[var(--gold)]/20 border border-[var(--gold)]/30 text-[var(--gold)] text-[9px] font-bold flex items-center justify-center"
+                    >
+                      {initial}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[10px] text-[var(--foreground-muted)]">
+                  Juntaram-se esta semana
+                </p>
+              </div>
+
+              <ProSubscribeButton className="block w-full py-4 text-center bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all hover:shadow-xl hover:shadow-[var(--gold)]/30 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed" />
             </div>
           </div>
 
