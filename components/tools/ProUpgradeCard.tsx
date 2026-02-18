@@ -122,7 +122,7 @@ export default function ProUpgradeCard({ isSubscribed }: ProUpgradeCardProps) {
               {loading ? txt.processing : txt.subscribe}
             </button>
             <Link
-              href="/ferramentas#precos"
+              href="/precos"
               className="text-center text-xs text-[#C5A059]/70 hover:text-[#C5A059] transition-colors py-2"
             >
               {txt.see_plans}

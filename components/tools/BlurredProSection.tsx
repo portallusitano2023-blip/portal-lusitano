@@ -52,7 +52,6 @@ export default function BlurredProSection({
   // Skip to INTERACTIVE immediately for reduced motion
   useEffect(() => {
     if (reducedMotion && phase === "REVEAL") {
-       
       queueMicrotask(() => setPhase("INTERACTIVE"));
     }
   }, [reducedMotion, phase]);
@@ -336,7 +335,7 @@ export default function BlurredProSection({
 
           {/* Subtle "See plans" link */}
           <button
-            onClick={() => router.push("/ferramentas#precos")}
+            onClick={() => router.push("/precos")}
             className="block mx-auto mt-2 text-[10px] text-[var(--foreground-muted)]/50 hover:text-[#C5A059] transition-colors cursor-pointer"
           >
             {t.pro_upgrade_card.see_plans}

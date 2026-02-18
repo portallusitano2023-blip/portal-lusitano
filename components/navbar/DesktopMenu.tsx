@@ -20,6 +20,7 @@ export function DesktopMenu({ t }: DesktopMenuProps) {
     { name: t.nav.home, href: "/" },
     { name: t.nav.shop, href: "/loja" },
     { name: t.nav.journal, href: "/jornal" },
+    { name: "Ferramentas", href: "/ferramentas" },
     { name: t.nav.about, href: "/sobre" },
   ];
 
