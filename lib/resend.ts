@@ -23,11 +23,13 @@ export const EMAIL_CONFIG = {
   replyTo: SUPPORT_EMAIL,
 };
 
-// Email types
 export const EMAIL_TEMPLATES = {
   WELCOME: "welcome",
   NEWSLETTER_WEEKLY: "newsletter-weekly",
   EBOOK_DOWNLOAD: "ebook-download",
+  NEWSLETTER_WELCOME: "newsletter-welcome",
+  REGISTRATION_WELCOME: "registration-welcome",
+  TOOL_LIMIT_REACHED: "tool-limit-reached",
 } as const;
 
 // Helper function to send emails
@@ -59,22 +61,315 @@ export async function sendEmail({
   }
 }
 
-// Email workflows
-export const EmailWorkflows = {
-  async sendEbookWelcome(email: string, name: string) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+// ─── BASE TEMPLATE ────────────────────────────────────────────────────────────
+// Dark header + clean white body, consistent with Portal Lusitano brand
 
+function baseEmailTemplate(content: string, footerEmail: string, baseUrl: string): string {
+  return `<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Lusitano</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f4f4f0; font-family: Georgia, 'Times New Roman', serif; }
+    .wrapper { max-width: 600px; margin: 0 auto; }
+    .header { background: #050505; padding: 40px 40px 32px; border-bottom: 2px solid #C5A059; }
+    .header-logo { font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase; color: #C5A059; margin: 0 0 8px; }
+    .header-title { font-size: 22px; color: #ffffff; margin: 0; font-weight: normal; letter-spacing: 0.02em; }
+    .body { background: #ffffff; padding: 48px 40px; }
+    .body p { margin: 0 0 16px; font-size: 16px; line-height: 1.7; color: #333333; font-family: Arial, sans-serif; }
+    .body p.lead { font-size: 18px; color: #1a1a1a; }
+    .divider { border: 0; height: 1px; background: #e8e8e4; margin: 32px 0; }
+    .cta-box { background: #050505; padding: 32px; text-align: center; margin: 32px 0; }
+    .cta-box p { color: #999999; font-size: 13px; font-family: Arial, sans-serif; margin: 0 0 20px; }
+    .btn { display: inline-block; background: #C5A059; color: #000000 !important; text-decoration: none; padding: 14px 36px; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; font-family: Arial, sans-serif; font-weight: bold; }
+    .features { margin: 24px 0; }
+    .feature-row { padding: 12px 0; border-bottom: 1px solid #f0f0ec; display: flex; gap: 12px; align-items: flex-start; }
+    .feature-check { color: #C5A059; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+    .feature-text { font-size: 15px; color: #444444; font-family: Arial, sans-serif; line-height: 1.5; }
+    .feature-text strong { color: #1a1a1a; }
+    .links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+    .link-card { border: 1px solid #e8e8e4; padding: 16px; text-decoration: none; display: block; }
+    .link-card-label { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #999999; font-family: Arial, sans-serif; display: block; margin-bottom: 6px; }
+    .link-card-title { font-size: 14px; color: #1a1a1a; font-family: Georgia, serif; display: block; }
+    .link-card:hover .link-card-title { color: #C5A059; }
+    .highlight-box { border-left: 3px solid #C5A059; padding: 16px 20px; background: #fafaf8; margin: 24px 0; }
+    .highlight-box p { margin: 0; font-size: 14px; color: #555555; font-family: Arial, sans-serif; line-height: 1.6; }
+    .footer { background: #1a1a1a; padding: 32px 40px; }
+    .footer p { margin: 0 0 8px; font-size: 12px; color: #666666; font-family: Arial, sans-serif; line-height: 1.6; }
+    .footer a { color: #C5A059; text-decoration: none; }
+    .footer .footer-name { color: #C5A059; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <p class="header-logo">Portal Lusitano</p>
+      <h1 class="header-title">O Mundo do Cavalo Lusitano</h1>
+    </div>
+    ${content}
+    <div class="footer">
+      <p class="footer-name">Portal Lusitano</p>
+      <p><a href="${baseUrl}">portal-lusitano.pt</a></p>
+      <p style="margin-top: 20px; color: #444444;">
+        Recebeste este email porque tens uma conta ou subscreveste no Portal Lusitano.<br>
+        Podes <a href="${baseUrl}/unsubscribe?email=${encodeURIComponent(footerEmail)}">cancelar a subscrição</a> a qualquer momento.
+      </p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+// ─── TEMPLATE: EBOOK DOWNLOAD ────────────────────────────────────────────────
+// (mantém o existente em api/ebook-gratis/subscribe/route.ts)
+
+// ─── TEMPLATE: NEWSLETTER WELCOME ────────────────────────────────────────────
+
+function getNewsletterWelcomeEmail(baseUrl: string): string {
+  const content = `
+    <div class="body">
+      <p class="lead">Bem-vindo à newsletter do Portal Lusitano.</p>
+      <p>A partir de agora receberás os melhores artigos sobre o mundo do Cavalo Lusitano — linhagens, eventos, técnica de dressage, reprodução e muito mais.</p>
+
+      <hr class="divider">
+
+      <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.3em; color: #999999; font-family: Arial, sans-serif;">O que podes esperar</p>
+      <div class="features">
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Artigos especializados</strong> sobre genealogia, disciplinas e mercado do Lusitano</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Cavalos em destaque</strong> do marketplace com selecção editorial</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Eventos equestres</strong> em Portugal e no mundo</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Dicas e guias</strong> para compradores e criadores</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.3em; color: #999999; font-family: Arial, sans-serif;">Enquanto esperas pelo próximo número</p>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin: 20px 0;">
+        <tr>
+          <td style="padding-right: 8px; vertical-align: top; width: 50%;">
+            <a href="${baseUrl}/ebook-gratis" style="text-decoration: none; display: block; border: 1px solid #e8e8e4; padding: 16px;">
+              <span style="font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #999999; font-family: Arial, sans-serif; display: block; margin-bottom: 6px;">Gratuito</span>
+              <span style="font-size: 14px; color: #1a1a1a; font-family: Georgia, serif; display: block;">Ebook de Introducao ao Lusitano</span>
+            </a>
+          </td>
+          <td style="padding-left: 8px; vertical-align: top; width: 50%;">
+            <a href="${baseUrl}/ferramentas" style="text-decoration: none; display: block; border: 1px solid #e8e8e4; padding: 16px;">
+              <span style="font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #999999; font-family: Arial, sans-serif; display: block; margin-bottom: 6px;">Ferramentas</span>
+              <span style="font-size: 14px; color: #1a1a1a; font-family: Georgia, serif; display: block;">Calculadora de Valor e mais</span>
+            </a>
+          </td>
+        </tr>
+      </table>
+
+      <div class="cta-box">
+        <p>Explora o maior arquivo editorial sobre o Cavalo Lusitano</p>
+        <a href="${baseUrl}/jornal" class="btn">Ler o Jornal</a>
+      </div>
+
+      <p style="font-size: 14px; color: #666666; font-family: Arial, sans-serif;">
+        Com os melhores cumprimentos,<br>
+        <em>Equipa Portal Lusitano</em>
+      </p>
+    </div>`;
+
+  return baseEmailTemplate(content, "", baseUrl);
+}
+
+// ─── TEMPLATE: REGISTRATION WELCOME ──────────────────────────────────────────
+
+function getRegistrationWelcomeEmail(name: string, email: string, baseUrl: string): string {
+  const safeName = name.split(" ")[0] || name; // primeiro nome
+
+  const content = `
+    <div class="body">
+      <p class="lead">${safeName}, a tua conta foi criada.</p>
+      <p>Bem-vindo ao Portal Lusitano. Verifica o teu email para activar a conta e teres acesso completo ao portal.</p>
+
+      <div class="highlight-box">
+        <p>Depois de confirmares o email, podes usar imediatamente todas as ferramentas gratuitas, explorar o marketplace e aceder ao arquivo do jornal.</p>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.3em; color: #999999; font-family: Arial, sans-serif;">O que tens disponivel</p>
+      <div class="features">
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Ferramentas gratuitas</strong> — 1 uso gratuito em cada uma das 4 ferramentas de analise</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Marketplace</strong> — pesquisa cavalos Lusitanos à venda em Portugal</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Directorio</strong> — coudelarias certificadas com avaliações reais</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Jornal</strong> — arquivo de artigos sobre o mundo Lusitano</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Ebook gratuito</strong> — Introducao ao Cavalo Lusitano (30 paginas)</span>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <p>Comeca com a ferramenta mais popular do portal</p>
+        <a href="${baseUrl}/calculadora-valor" class="btn">Calculadora de Valor</a>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.3em; color: #999999; font-family: Arial, sans-serif;">Plano Pro — para uso profissional</p>
+      <p style="font-size: 14px; color: #555555; font-family: Arial, sans-serif; line-height: 1.7;">
+        Se precisares de usos ilimitados, exportacao de relatorios PDF e historico completo de analises, o plano Pro esta disponivel por <strong style="color: #1a1a1a;">4,99 EUR/mes</strong>. Cancela a qualquer momento.
+      </p>
+      <p style="margin-top: 8px;">
+        <a href="${baseUrl}/precos" style="color: #C5A059; font-family: Arial, sans-serif; font-size: 14px; text-decoration: none;">Ver planos e precos &rarr;</a>
+      </p>
+
+      <hr class="divider">
+
+      <p style="font-size: 14px; color: #666666; font-family: Arial, sans-serif;">
+        Qualquer duvida, responde a este email.<br>
+        <em>Equipa Portal Lusitano</em>
+      </p>
+    </div>`;
+
+  return baseEmailTemplate(content, email, baseUrl);
+}
+
+// ─── TEMPLATE: TOOL LIMIT REACHED ────────────────────────────────────────────
+
+const TOOL_NAMES: Record<string, string> = {
+  calculadora: "Calculadora de Valor",
+  comparador: "Comparador de Cavalos",
+  compatibilidade: "Verificador de Compatibilidade",
+  perfil: "Analise de Perfil",
+};
+
+function getToolLimitEmail(name: string, email: string, toolSlug: string, baseUrl: string): string {
+  const safeName = name.split(" ")[0] || name;
+  const toolName = TOOL_NAMES[toolSlug] || "ferramenta";
+
+  const content = `
+    <div class="body">
+      <p class="lead">${safeName}, esgotaste o uso gratuito da ${toolName}.</p>
+      <p>Cada ferramenta inclui 1 analise gratuita para experimentares sem compromisso. Para continuar a usar sem limites, o plano Pro esta disponivel por 4,99 EUR/mes.</p>
+
+      <div class="cta-box">
+        <p>Usos ilimitados em todas as ferramentas, relatorios PDF e historico completo</p>
+        <a href="${baseUrl}/precos" class="btn">Ver Plano Pro — 4,99 EUR/mes</a>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.3em; color: #999999; font-family: Arial, sans-serif;">O que inclui o Pro</p>
+      <div class="features">
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Usos ilimitados</strong> em todas as 4 ferramentas de analise</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Resultados avancados</strong> com analise mais detalhada</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Exportar PDF</strong> — relatorios profissionais para partilhar</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Historico completo</strong> — todas as tuas analises guardadas</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Suporte prioritario</strong> por email</span>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <p>Podes cancelar a qualquer momento, sem compromissos ou taxas adicionais. Manterao acesso ao Pro ate ao final do periodo de facturacao em curso.</p>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size: 14px; color: #666666; font-family: Arial, sans-serif;">
+        Qualquer duvida, responde a este email.<br>
+        <em>Equipa Portal Lusitano</em>
+      </p>
+    </div>`;
+
+  return baseEmailTemplate(content, email, baseUrl);
+}
+
+// ─── EMAIL WORKFLOWS ──────────────────────────────────────────────────────────
+
+export const EmailWorkflows = {
+  // Ebook download (já existia)
+  async sendEbookWelcome(email: string, name: string) {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
     await sendEmail({
       to: email,
       subject: "O teu Ebook Gratuito - Portal Lusitano",
-      html: getEbookWelcomeEmail(name, baseUrl),
+      html: getEbookWelcomeEmailLegacy(name, baseUrl),
       template: EMAIL_TEMPLATES.EBOOK_DOWNLOAD,
+    });
+  },
+
+  // Newsletter welcome — imediato após subscrição
+  async sendNewsletterWelcome(email: string) {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
+    return sendEmail({
+      to: email,
+      subject: "Bem-vindo a newsletter do Portal Lusitano",
+      html: getNewsletterWelcomeEmail(baseUrl),
+      template: EMAIL_TEMPLATES.NEWSLETTER_WELCOME,
+    });
+  },
+
+  // Registration welcome — após criação de conta
+  async sendRegistrationWelcome(email: string, name: string) {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
+    return sendEmail({
+      to: email,
+      subject: "A tua conta no Portal Lusitano esta criada",
+      html: getRegistrationWelcomeEmail(name, email, baseUrl),
+      template: EMAIL_TEMPLATES.REGISTRATION_WELCOME,
+    });
+  },
+
+  // Tool limit reached — quando utilizador esgota uso gratuito
+  async sendToolLimitReached(email: string, name: string, toolSlug: string) {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
+    return sendEmail({
+      to: email,
+      subject: "Actualize para Pro — usos ilimitados por 4,99 EUR/mes",
+      html: getToolLimitEmail(name, email, toolSlug, baseUrl),
+      template: EMAIL_TEMPLATES.TOOL_LIMIT_REACHED,
     });
   },
 };
 
-// Email templates
-function getEbookWelcomeEmail(name: string, baseUrl: string) {
+// Legacy ebook template (mantido para compatibilidade com ebook route existente)
+function getEbookWelcomeEmailLegacy(name: string, baseUrl: string) {
   return `
 <!DOCTYPE html>
 <html>
@@ -94,38 +389,19 @@ function getEbookWelcomeEmail(name: string, baseUrl: string) {
       <h1>Bem-vindo ao Portal Lusitano!</h1>
       <p>Obrigado por descarregares o nosso ebook, ${name}!</p>
     </div>
-
     <div class="content">
-      <h2>O Teu Ebook Está Pronto</h2>
-      <p>Podes aceder ao teu ebook gratuito "Introdução ao Cavalo Lusitano" a qualquer momento.</p>
-
-      <a href="${baseUrl}/ebook-gratis/download" class="button">
-        Ver Ebook
-      </a>
-
+      <h2>O Teu Ebook Esta Pronto</h2>
+      <p>Podes aceder ao teu ebook gratuito "Introducao ao Cavalo Lusitano" a qualquer momento.</p>
+      <a href="${baseUrl}/ebook-gratis/download" class="button">Ver Ebook</a>
       <h3>O Que Vais Aprender:</h3>
       <ul>
-        <li>A história e origem do Cavalo Lusitano</li>
-        <li>Características únicas da raça</li>
-        <li>Temperamento e aptidões</li>
+        <li>A historia e origem do Cavalo Lusitano</li>
+        <li>Caracteristicas unicas da raca</li>
+        <li>Temperamento e aptidoes</li>
         <li>Como identificar um Lusitano puro</li>
       </ul>
-
-      <h3>Explora Mais no Portal:</h3>
-      <ul>
-        <li><a href="${baseUrl}/cavalos-venda">Cavalos à Venda</a></li>
-        <li><a href="${baseUrl}/eventos">Eventos</a></li>
-        <li><a href="${baseUrl}/directorio">Diretório de Coudelarias</a></li>
-        <li><a href="${baseUrl}/linhagens">Linhagens</a></li>
-      </ul>
-
-      <p><strong>Precisas de ajuda?</strong><br>
-      Responde a este email ou contacta-nos em ${SUPPORT_EMAIL}</p>
-
-      <p>Abraço,<br>
-      <em>Equipa Portal Lusitano</em></p>
+      <p>Abraco,<br><em>Equipa Portal Lusitano</em></p>
     </div>
-
     <div class="footer">
       <p>Portal Lusitano - O Mundo do Cavalo Lusitano</p>
       <p>www.portal-lusitano.pt</p>

@@ -55,10 +55,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Listen for auth changes
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, s) => {
+      } = supabase.auth.onAuthStateChange((event, s) => {
         setSession(s);
         setUser(s?.user ?? null);
         setIsLoading(false);
+
+        // Enviar email de boas-vindas apenas no primeiro login após confirmação
+        if (event === "SIGNED_IN" && s?.user?.email_confirmed_at) {
+          const welcomeSentKey = `welcome_sent_${s.user.id}`;
+          if (!sessionStorage.getItem(welcomeSentKey)) {
+            sessionStorage.setItem(welcomeSentKey, "1");
+            fetch("/api/auth/welcome", { method: "POST" }).catch(() => {});
+          }
+        }
       });
 
       // Store unsubscribe for cleanup

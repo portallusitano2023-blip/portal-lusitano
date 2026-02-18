@@ -93,12 +93,22 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
           form_data: formData || null,
           result_data: resultData || null,
         });
-        setUsageCount((prev) => prev + 1);
+        const newCount = usageCount + 1;
+        setUsageCount(newCount);
+
+        // Quando o utilizador esgota o uso gratuito, enviar email de upgrade (non-blocking)
+        if (!isSubscribed && newCount >= FREE_USES_PER_TOOL) {
+          fetch("/api/tools/limit-reached", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ toolSlug: toolName }),
+          }).catch(() => {});
+        }
       } catch {
         // Silently fail - don't block user
       }
     },
-    [user, toolName]
+    [user, toolName, usageCount, isSubscribed]
   );
 
   return {

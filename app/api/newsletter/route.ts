@@ -3,6 +3,7 @@ import { writeClient } from "@/lib/client";
 import { apiLimiter } from "@/lib/rate-limit";
 import { newsletterSchema, parseWithZod } from "@/lib/schemas";
 import { logger } from "@/lib/logger";
+import { EmailWorkflows } from "@/lib/resend";
 
 export async function POST(request: Request) {
   try {
@@ -30,6 +31,11 @@ export async function POST(request: Request) {
       email: email,
       dataInscricao: new Date().toISOString(),
     });
+
+    // Envia email de boas-vindas (non-blocking — falha silenciosa)
+    EmailWorkflows.sendNewsletterWelcome(email).catch((err) =>
+      logger.error("Newsletter welcome email failed:", err)
+    );
 
     return NextResponse.json({ message: "Subscrição concluída" }, { status: 200 });
   } catch (error) {
