@@ -91,10 +91,10 @@ export default function Paywall({ toolName, requiresAuth = false }: PaywallProps
             para acesso ilimitado a todas as ferramentas.
           </p>
 
-          {/* Urgency Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 border border-red-500/40 rounded-full mb-6">
-            <span className="text-red-400 text-xs font-semibold">
-              ⏰ Oferta de lançamento: 50% OFF (preço regular: 9,99€)
+          {/* Offer Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-full mb-6">
+            <span className="text-[var(--gold)] text-xs font-semibold">
+              Oferta de lançamento · 50% OFF · preço regular 9,99€/mês
             </span>
           </div>
 

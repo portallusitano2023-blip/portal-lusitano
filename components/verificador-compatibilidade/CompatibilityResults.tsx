@@ -14,6 +14,8 @@ import {
   BarChart3,
   Calendar,
   ShieldAlert,
+  ListChecks,
+  Circle,
 } from "lucide-react";
 import AnimatedRing from "@/components/tools/AnimatedRing";
 import Confetti from "@/components/tools/Confetti";
@@ -98,14 +100,17 @@ export default function CompatibilityResults({
             </span>
           </div>
 
-          {/* AnimatedRing replaces AnimatedCounter */}
-          <div className="flex justify-center my-4">
-            <AnimatedRing
-              value={resultado.score}
-              label={t.verificador.compatibility}
-              size={200}
-              strokeWidth={10}
-            />
+          {/* Prominent score number */}
+          <div className="flex flex-col items-center mt-2 mb-1">
+            <span className="text-6xl font-serif text-[#C5A059] leading-none tabular-nums">
+              {resultado.score}
+            </span>
+            <span className="text-sm text-[var(--foreground-muted)] mt-1">/100</span>
+          </div>
+
+          {/* AnimatedRing as decorative element */}
+          <div className="flex justify-center my-3">
+            <AnimatedRing value={resultado.score} size={140} strokeWidth={8} />
           </div>
           <div className="flex items-center justify-center gap-1.5">
             <span className="text-xs text-[var(--foreground-muted)]">
@@ -124,6 +129,58 @@ export default function CompatibilityResults({
           </p>
         </div>
       </div>
+
+      {/* O que significa este score? */}
+      {(() => {
+        const s = resultado.score;
+        const interpretation =
+          s >= 80
+            ? {
+                text: "Excelente compatibilidade genética. Esta combinação tem alto potencial para produzir descendentes de qualidade superior. Recomendado para programa de cruzamento seletivo.",
+                border: "border-l-emerald-500",
+                bg: "bg-emerald-500/5",
+                iconColor: "text-emerald-400",
+                titleColor: "text-emerald-400",
+              }
+            : s >= 65
+              ? {
+                  text: "Boa compatibilidade genética. Esta combinação é adequada para cruzamento com expectativas de descendentes competitivos. Considere os fatores específicos abaixo.",
+                  border: "border-l-blue-500",
+                  bg: "bg-blue-500/5",
+                  iconColor: "text-blue-400",
+                  titleColor: "text-blue-400",
+                }
+              : s >= 50
+                ? {
+                    text: "Compatibilidade moderada. Esta combinação pode ser viável, mas requer atenção aos pontos de risco identificados. Consulte um veterinário especializado.",
+                    border: "border-l-amber-500",
+                    bg: "bg-amber-500/5",
+                    iconColor: "text-amber-400",
+                    titleColor: "text-amber-400",
+                  }
+                : {
+                    text: "Compatibilidade limitada. Existem fatores de risco significativos nesta combinação. Recomendamos consultar um especialista em genética equina antes de prosseguir.",
+                    border: "border-l-red-500",
+                    bg: "bg-red-500/5",
+                    iconColor: "text-red-400",
+                    titleColor: "text-red-400",
+                  };
+
+        return (
+          <div
+            className={`rounded-xl p-4 mb-6 border-l-4 border border-[var(--border)] ${interpretation.border} ${interpretation.bg}`}
+          >
+            <h3
+              className={`text-sm font-semibold mb-2 flex items-center gap-2 ${interpretation.titleColor}`}
+            >
+              <Info size={15} className={interpretation.iconColor} />O que significa este score?
+            </h3>
+            <p className="text-sm text-[var(--foreground-secondary)] leading-relaxed">
+              {interpretation.text}
+            </p>
+          </div>
+        );
+      })()}
 
       {/* Genetic Summary */}
       <div className="mb-6">
@@ -360,6 +417,48 @@ export default function CompatibilityResults({
           ))}
         </div>
       )}
+
+      {/* Proximos Passos Recomendados */}
+      {(() => {
+        const s = resultado.score;
+        const passos =
+          s >= 70
+            ? [
+                "Agende a cobrição para o período primaveril (Mar–Mai)",
+                "Realize exame veterinário pré-cobrição",
+                "Documente o pedigree dos progenitores na APSL",
+              ]
+            : s >= 50
+              ? [
+                  "Consulte um veterinário especializado em reprodução equina",
+                  "Peça análise genética detalhada (PRO)",
+                  "Considere alternativas com melhor compatibilidade",
+                ]
+              : [
+                  "Não recomendamos avançar sem consulta veterinária",
+                  "Explore outros garanhões com melhor compatibilidade",
+                  "Consulte o nosso Verificador com outros cavalos",
+                ];
+
+        return (
+          <div className="bg-[#111111] border border-[var(--border)] rounded-xl p-5 mb-6">
+            <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-4 flex items-center gap-2">
+              <ListChecks size={16} className="text-[#C5A059]" />
+              Próximos Passos Recomendados
+            </h3>
+            <ul className="space-y-3">
+              {passos.map((passo, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <Circle size={16} className="text-[#C5A059] mt-0.5 flex-shrink-0 opacity-70" />
+                  <span className="text-sm text-[var(--foreground-secondary)] leading-relaxed">
+                    {passo}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })()}
 
       {/* Factores Detalhados - PRO only */}
       <BlurredProSection isSubscribed={isSubscribed} title={t.verificador.detailed_analysis}>

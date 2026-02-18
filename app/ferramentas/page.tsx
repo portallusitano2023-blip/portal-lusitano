@@ -230,101 +230,6 @@ function StatsSection() {
   );
 }
 
-// ============================================
-// WELCOME MODAL (ONBOARDING)
-// ============================================
-
-const WELCOME_KEY = "ferramentas_welcomed_v1";
-
-function WelcomeModal() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    try {
-      if (!localStorage.getItem(WELCOME_KEY)) {
-        // Pequeno delay para não interferir com o carregamento inicial
-        const t = setTimeout(() => setVisible(true), 800);
-        return () => clearTimeout(t);
-      }
-    } catch {
-      // localStorage bloqueado
-    }
-  }, []);
-
-  const dismiss = () => {
-    try {
-      localStorage.setItem(WELCOME_KEY, "1");
-    } catch {}
-    setVisible(false);
-  };
-
-  if (!visible) return null;
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-      onClick={dismiss}
-    >
-      <div
-        className="relative bg-[var(--background-secondary)] border border-[var(--gold)]/30 rounded-2xl p-8 max-w-sm w-full shadow-2xl shadow-black/50 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close */}
-        <button
-          onClick={dismiss}
-          className="absolute top-4 right-4 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
-          aria-label="Fechar"
-        >
-          <X size={18} />
-        </button>
-
-        {/* Icon */}
-        <div className="w-14 h-14 bg-[var(--gold)]/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
-          <Sparkles size={26} className="text-[var(--gold)]" />
-        </div>
-
-        {/* Content */}
-        <h2 className="text-xl font-serif text-[var(--foreground)] text-center mb-3">
-          Bem-vindo às Ferramentas
-        </h2>
-        <p className="text-sm text-[var(--foreground-secondary)] text-center leading-relaxed mb-6">
-          Cada ferramenta inclui{" "}
-          <strong className="text-[var(--foreground)]">1 uso gratuito</strong>. Comece pela{" "}
-          <strong className="text-[var(--foreground)]">Calculadora de Valor</strong> para obter uma
-          estimativa profissional do seu Lusitano.
-        </p>
-
-        {/* Steps */}
-        <ol className="space-y-2 mb-6 text-left">
-          {[
-            "Escolha uma ferramenta abaixo",
-            "Preencha os dados do seu cavalo",
-            "Obtenha resultados instantâneos",
-          ].map((step, i) => (
-            <li
-              key={i}
-              className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]"
-            >
-              <span className="w-5 h-5 rounded-full bg-[var(--gold)]/20 text-[var(--gold)] text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-medium">
-                {i + 1}
-              </span>
-              {step}
-            </li>
-          ))}
-        </ol>
-
-        {/* CTA */}
-        <button
-          onClick={dismiss}
-          className="w-full py-3 bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black text-sm font-bold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all"
-        >
-          Explorar Ferramentas
-        </button>
-      </div>
-    </div>
-  );
-}
-
 const toolSlugToName: Record<string, string> = {
   "calculadora-valor": "Calculadora de Valor",
   "comparador-cavalos": "Comparador de Cavalos",
@@ -340,6 +245,7 @@ const toolSlugs = Object.keys(toolSlugToName);
 
 function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number }) {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const Icon = tool.icon;
 
   return (
@@ -364,10 +270,12 @@ function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number
               {tool.badge}
             </span>
           )}
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <Check size={9} />
-            {tool.freeUses} uso grátis
-          </span>
+          {!user && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <Check size={9} />
+              {tool.freeUses} uso grátis
+            </span>
+          )}
         </div>
 
         {/* Icon */}
@@ -849,7 +757,6 @@ export default function FerramentasPage() {
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
-      <WelcomeModal />
       <Suspense fallback={null}>
         <CheckoutFeedback />
       </Suspense>

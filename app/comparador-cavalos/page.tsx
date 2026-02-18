@@ -909,10 +909,29 @@ export default function ComparadorCavalosPage() {
                 >
                   {/* Header do Card */}
                   <div
-                    className="p-4 border-b border-[var(--border)]"
+                    className="p-4 border-b border-[var(--border)] relative"
                     style={{ borderTopWidth: 3, borderTopColor: cores[i] }}
                   >
-                    <div className="flex items-center justify-between">
+                    {/* Live score badge — actualiza em tempo real enquanto o utilizador preenche */}
+                    {(() => {
+                      const liveScore = calcularScore(c);
+                      const badgeColor =
+                        liveScore >= 70 ? "#22c55e" : liveScore >= 50 ? "#f59e0b" : "#ef4444";
+                      return (
+                        <div
+                          className="absolute top-3 right-3 w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-lg transition-all duration-300 select-none"
+                          style={{
+                            backgroundColor: badgeColor,
+                            boxShadow: `0 0 8px ${badgeColor}55`,
+                          }}
+                          title={`Pontuação estimada: ${liveScore}/100`}
+                          aria-label={`Pontuação estimada ${liveScore} de 100`}
+                        >
+                          {liveScore}
+                        </div>
+                      );
+                    })()}
+                    <div className="flex items-center justify-between pr-12">
                       <input
                         type="text"
                         value={c.nome}
@@ -1345,6 +1364,105 @@ export default function ComparadorCavalosPage() {
                     Exportar CSV (Excel)
                   </button>
                 </div>
+
+                {/* Recomendação — card hero no topo dos resultados */}
+                {(() => {
+                  const vencedorScore = calcularScore(vencedor);
+                  const fatores = getScoreFactors(vencedor);
+                  const melhorFator = fatores.reduce((a, b) =>
+                    a.score / a.max > b.score / b.max ? a : b
+                  );
+                  const melhorFatorLabel: Record<string, string> = {
+                    Linhagem: "Linhagem",
+                    Treino: "Treino",
+                    Conformacao: "Conformação",
+                    Andamentos: "Andamentos",
+                    Idade: "Idade",
+                    Competicoes: "Competições",
+                    Altura: "Altura",
+                    Temperamento: "Temperamento",
+                    Saude: "Saúde",
+                    BLUP: "BLUP",
+                    Elevacao: "Elevação",
+                    Regularidade: "Regularidade",
+                    "Registo APSL": "Registo APSL",
+                  };
+                  const vencedorIndex = cavalos.findIndex((cv) => cv.id === vencedor.id);
+                  const corVencedor = cores[vencedorIndex] || "#C5A059";
+                  return (
+                    <div className="bg-gradient-to-r from-[#C5A059]/10 to-transparent border border-[#C5A059]/30 rounded-2xl p-6 mb-2">
+                      {/* Título */}
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-9 h-9 rounded-lg bg-[#C5A059]/15 flex items-center justify-center shrink-0">
+                          <Crown size={18} className="text-[#C5A059]" aria-hidden="true" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-medium text-[#C5A059]/70 uppercase tracking-[0.15em]">
+                            Recomendação
+                          </p>
+                          <h3 className="text-lg font-serif text-[var(--foreground)] leading-tight">
+                            <span style={{ color: corVencedor }}>{vencedor.nome}</span> é o mais
+                            equilibrado para a sua decisão
+                          </h3>
+                        </div>
+                      </div>
+
+                      {/* Três estatísticas rápidas do vencedor */}
+                      <div className="grid grid-cols-3 gap-3 mb-4">
+                        <div className="bg-[var(--background-secondary)]/60 rounded-xl p-3 text-center">
+                          <p className="text-2xl font-bold" style={{ color: corVencedor }}>
+                            {vencedorScore}
+                          </p>
+                          <p className="text-xs text-[var(--foreground-muted)] mt-0.5">
+                            Score global
+                          </p>
+                        </div>
+                        <div className="bg-[var(--background-secondary)]/60 rounded-xl p-3 text-center">
+                          <p className="text-sm font-semibold text-[var(--foreground)] truncate">
+                            {melhorFatorLabel[melhorFator.name] ?? melhorFator.name}
+                          </p>
+                          <p className="text-xs text-[var(--foreground-muted)] mt-0.5">
+                            Melhor categoria
+                          </p>
+                        </div>
+                        <div className="bg-[var(--background-secondary)]/60 rounded-xl p-3 text-center">
+                          <p className="text-sm font-semibold text-[var(--foreground)] truncate">
+                            {vencedor.preco > 0
+                              ? `${vencedor.preco.toLocaleString("pt-PT")} €`
+                              : "—"}
+                          </p>
+                          <p className="text-xs text-[var(--foreground-muted)] mt-0.5">Preço</p>
+                        </div>
+                      </div>
+
+                      {/* Melhor custo-benefício (se diferente do vencedor) */}
+                      {melhorValor.id !== vencedor.id && (
+                        <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-emerald-500/8 border border-emerald-500/20 rounded-lg">
+                          <Euro
+                            size={14}
+                            className="text-emerald-400 shrink-0"
+                            aria-hidden="true"
+                          />
+                          <p className="text-xs text-[var(--foreground-secondary)]">
+                            <span className="text-emerald-400 font-medium">
+                              Melhor custo-benefício:
+                            </span>{" "}
+                            <span className="font-medium text-[var(--foreground)]">
+                              {melhorValor.nome}
+                            </span>{" "}
+                            ({calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")} €/ponto
+                            vs. {calcularValorPorPonto(vencedor).toLocaleString("pt-PT")} €/ponto)
+                          </p>
+                        </div>
+                      )}
+
+                      {/* CTA */}
+                      <p className="text-xs text-[#C5A059]/60 text-center">
+                        Consulte a análise completa abaixo ↓
+                      </p>
+                    </div>
+                  );
+                })()}
 
                 {/* Gráfico Radar */}
                 <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)]">

@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Sparkles, Target, ArrowRight, CheckCircle2 } from "lucide-react";
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import { useLanguage } from "@/context/LanguageContext";
@@ -214,6 +214,72 @@ function AnalisePerfilContent() {
                 onCopyLink={copyShareLink}
               />
               <ScoreDistribution radarData={radarData} scorePercentages={scorePercentages} />
+
+              {/* Top 3 Insights */}
+              {(() => {
+                const profileActions: Record<string, string> = {
+                  competidor: "Foque em formação profissional com treinador certificado",
+                  criador: "Explore linhas genéticas de alta qualidade",
+                  amador: "Priorize um cavalo de temperamento calmo e versátil",
+                  aprendiz: "Comece com aulas de equitação antes da compra",
+                  tradicional: "Lusitano de trabalho com boa formação clássica",
+                };
+                const dominantPct = scorePercentages[0]?.percentage ?? 0;
+                const profileName = result.title;
+                const nextAction =
+                  profileActions[result.profile] ??
+                  "Consulte os detalhes do seu perfil para orientação personalizada";
+
+                const insights = [
+                  {
+                    icon: <Target size={18} className="text-[#C5A059]" aria-hidden="true" />,
+                    title: "Perfil dominante",
+                    description: `O seu perfil principal é ${profileName} com ${dominantPct}% de afinidade`,
+                  },
+                  {
+                    icon: <ArrowRight size={18} className="text-emerald-400" aria-hidden="true" />,
+                    title: "Próxima acção",
+                    description: nextAction,
+                  },
+                  {
+                    icon: <CheckCircle2 size={18} className="text-sky-400" aria-hidden="true" />,
+                    title: "Nível de preparação",
+                    description: "Consulte os detalhes PRO para o seu plano completo de preparação",
+                  },
+                ];
+
+                return (
+                  <section className="py-8 border-b border-[var(--border)]">
+                    <div className="max-w-5xl mx-auto px-6">
+                      <h2 className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--foreground-muted)] mb-5">
+                        <Sparkles size={14} className="text-[#C5A059]" aria-hidden="true" />
+                        As suas 3 principais conclusões
+                      </h2>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {insights.map((insight, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-[var(--background-secondary)]/40 border border-[#C5A059]/15 rounded-xl p-5 flex flex-col gap-3"
+                          >
+                            <div className="w-8 h-8 rounded-full bg-[var(--background)]/60 border border-[var(--border)] flex items-center justify-center shrink-0">
+                              {insight.icon}
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold text-[var(--foreground-secondary)] mb-1">
+                                {insight.title}
+                              </p>
+                              <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
+                                {insight.description}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </section>
+                );
+              })()}
+
               <ResultTabs selectedTab={selectedTab} onSelectTab={setSelectedTab} />
               <section className="py-12">
                 <div className="max-w-5xl mx-auto px-6">

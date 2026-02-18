@@ -119,15 +119,15 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             </div>
 
             {/* Gauge indicators */}
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-10 mt-8">
-              <div className="flex flex-col items-center">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-8">
+              <div className="flex flex-col items-center bg-[#111111] border border-[var(--gold)]/15 rounded-2xl px-6 py-4">
                 <AnimatedGauge
                   value={resultado.confianca}
                   label={t.calculadora.confidence}
-                  size={160}
+                  size={180}
                 />
-                <div className="flex items-center gap-1 mt-1">
-                  <span className="text-[10px] text-[var(--foreground-muted)]">
+                <div className="flex items-center gap-1 mt-2">
+                  <span className="text-xs font-medium text-[var(--foreground-secondary)]">
                     {t.calculadora.confidence}
                   </span>
                   <Tooltip
@@ -138,14 +138,14 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
                   />
                 </div>
               </div>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center bg-[#111111] border border-[var(--gold)]/15 rounded-2xl px-6 py-4">
                 <AnimatedGauge
                   value={resultado.percentil}
                   label={t.calculadora.market_psl}
-                  size={160}
+                  size={180}
                 />
-                <div className="flex items-center gap-1 mt-1">
-                  <span className="text-[10px] text-[var(--foreground-muted)]">
+                <div className="flex items-center gap-1 mt-2">
+                  <span className="text-xs font-medium text-[var(--foreground-secondary)]">
                     {t.calculadora.market_psl}
                   </span>
                   <Tooltip
@@ -174,6 +174,60 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             </div>
           </div>
         </div>
+
+        {/* Principais Conclusoes */}
+        {(() => {
+          const topForca =
+            resultado.pontosForteseFracos.fortes.length > 0
+              ? resultado.pontosForteseFracos.fortes[0]
+              : "Genealogia de elite";
+
+          const topFraqueza =
+            resultado.pontosForteseFracos.fracos.length > 0
+              ? resultado.pontosForteseFracos.fracos[0]
+              : "Aumentar participações desportivas";
+
+          const posicaoMercado =
+            resultado.percentil >= 75
+              ? "Top 25% do mercado lusitano"
+              : resultado.percentil >= 50
+                ? "Acima da mediana do mercado"
+                : resultado.percentil >= 25
+                  ? "Abaixo da mediana, com potencial"
+                  : "Valor de entrada no mercado";
+
+          return (
+            <div className="bg-[#111111] border border-[#C5A059]/20 rounded-xl p-5 mb-6">
+              <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-4 flex items-center gap-2">
+                <Lightbulb size={15} className="text-[var(--gold)]" />
+                Principais Conclusoes
+              </h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]">
+                  <span className="mt-1.5 h-2 w-2 rounded-full bg-emerald-400 shrink-0" />
+                  <span>
+                    <span className="text-emerald-400 font-medium">Ponto forte: </span>
+                    {topForca}
+                  </span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]">
+                  <span className="mt-1.5 h-2 w-2 rounded-full bg-amber-400 shrink-0" />
+                  <span>
+                    <span className="text-amber-400 font-medium">Oportunidade: </span>
+                    {topFraqueza}
+                  </span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]">
+                  <span className="mt-1.5 h-2 w-2 rounded-full bg-blue-400 shrink-0" />
+                  <span>
+                    <span className="text-blue-400 font-medium">Posicao de mercado: </span>
+                    {posicaoMercado}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          );
+        })()}
 
         {/* Horse Silhouette - Morphology Map */}
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)]">

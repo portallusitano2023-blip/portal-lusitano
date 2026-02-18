@@ -55,9 +55,20 @@ export default function ResultHeader({
           <span className="text-[var(--gold)] text-xs uppercase tracking-[0.3em] block mb-3">
             {t.analise_perfil.your_profile_is}
           </span>
-          <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-2">
+          <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
             {result.title}
           </h1>
+          {/* Prominent percentage score */}
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <span className="text-5xl font-serif text-[#C5A059] tabular-nums leading-none">
+              {scorePercentages[0]?.percentage ?? 0}%
+            </span>
+            <span className="text-sm text-[var(--foreground-muted)] leading-tight text-left">
+              de
+              <br />
+              afinidade
+            </span>
+          </div>
           <p className="text-lg text-[var(--gold)] italic mb-6">{result.subtitle}</p>
           <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto leading-relaxed mb-8">
             {result.description}
