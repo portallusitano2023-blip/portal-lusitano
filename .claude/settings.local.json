@@ -95,7 +95,8 @@
       "Bash(del \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.next\\\\lock\")",
       "Bash(__NEW_LINE_4689e62a5ef0116a__ echo \"\")",
       "Bash(__NEW_LINE_e2c41bc3636f83e9__ echo \"\")",
-      "Bash(__NEW_LINE_585e5f170d9443f6__ echo \"\")"
+      "Bash(__NEW_LINE_585e5f170d9443f6__ echo \"\")",
+      "Bash(git rm:*)"
     ]
   }
 }

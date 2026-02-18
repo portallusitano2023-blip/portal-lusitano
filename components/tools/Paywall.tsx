@@ -86,10 +86,17 @@ export default function Paywall({ toolName, requiresAuth = false }: PaywallProps
           <p className="text-sm text-[var(--foreground-secondary)] mb-2">
             Ja usou o seu uso gratuito da {toolName}.
           </p>
-          <p className="text-sm text-[var(--foreground-muted)] mb-6">
+          <p className="text-sm text-[var(--foreground-muted)] mb-4">
             Subscreva por apenas <span className="text-[var(--gold)] font-bold">4,99 EUR/mes</span>{" "}
             para acesso ilimitado a todas as ferramentas.
           </p>
+
+          {/* Urgency Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 border border-red-500/40 rounded-full mb-6">
+            <span className="text-red-400 text-xs font-semibold">
+              ⏰ Oferta de lançamento: 50% OFF (preço regular: 9,99€)
+            </span>
+          </div>
 
           <ul className="text-sm text-[var(--foreground-secondary)] space-y-2 mb-6 text-left max-w-xs mx-auto">
             <li className="flex items-center gap-2">

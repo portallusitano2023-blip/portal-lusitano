@@ -781,8 +781,9 @@ export default function FerramentasPage() {
                     {t.ferramentas.per_month}
                   </span>
                 </div>
-                <p className="text-[var(--foreground-muted)] text-xs mt-1">
-                  {t.ferramentas.cancel_anytime}
+                <p className="text-emerald-400 text-sm font-semibold mt-1 flex items-center gap-1.5 justify-center">
+                  <Check size={14} />
+                  {t.ferramentas.cancel_anytime} • Sem fidelização
                 </p>
               </div>
 
@@ -793,6 +794,42 @@ export default function FerramentasPage() {
               </ul>
 
               <ProSubscribeButton />
+            </div>
+          </div>
+
+          {/* ROI Comparison */}
+          <div className="mt-12 p-6 bg-[var(--background-secondary)]/50 border border-[var(--gold)]/20 rounded-xl max-w-2xl mx-auto">
+            <h4 className="text-sm font-serif text-[var(--foreground)] mb-4 flex items-center gap-2">
+              <Calculator size={16} className="text-[var(--gold)]" />
+              Compare: PRO vs. Serviços Tradicionais
+            </h4>
+            <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="space-y-2">
+                <p className="text-[var(--foreground-muted)]">
+                  Avaliação veterinária profissional:
+                </p>
+                <p className="text-[var(--foreground-muted)]">Relatório de pedigree (APSL):</p>
+                <p className="text-[var(--foreground-muted)]">Consultor de compra (1 cavalo):</p>
+                <p className="font-semibold text-[var(--foreground-secondary)] pt-2 border-t border-[var(--border)]">
+                  Total:
+                </p>
+              </div>
+              <div className="space-y-2 text-right">
+                <p className="text-red-400">150€+</p>
+                <p className="text-red-400">80€</p>
+                <p className="text-red-400">200€+</p>
+                <p className="font-semibold text-red-400 pt-2 border-t border-[var(--border)]">
+                  430€+
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
+              <p className="text-xs text-emerald-400 font-semibold">
+                Portal Lusitano PRO: 4,99€/mês = <span className="text-lg">59,88€/ano</span>
+              </p>
+              <p className="text-[10px] text-emerald-400/70 mt-1">
+                Economiza até 370€ vs. serviços tradicionais
+              </p>
             </div>
           </div>
 

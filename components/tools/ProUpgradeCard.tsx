@@ -23,9 +23,10 @@ interface ProUpgradeCardProps {
 const STORAGE_KEY = "pro-upgrade-card-collapsed";
 
 function getInitialCollapsed(): boolean {
-  if (typeof window === "undefined") return true;
+  if (typeof window === "undefined") return false;
   const stored = localStorage.getItem(STORAGE_KEY);
-  return stored === null ? true : stored === "true";
+  // Default to EXPANDED (false) to increase visibility
+  return stored === null ? false : stored === "true";
 }
 
 export default function ProUpgradeCard({ isSubscribed }: ProUpgradeCardProps) {
