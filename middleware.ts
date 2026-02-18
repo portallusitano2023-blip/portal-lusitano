@@ -1,6 +1,29 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+/**
+ * TODO [MEDIUM Security]: Replace in-memory rate limiting with distributed store
+ *
+ * Current implementation uses Map() which is local to each server instance.
+ * In serverless/multi-instance deployments (Vercel, AWS Lambda), each cold start
+ * resets the counter, allowing attackers to bypass limits easily.
+ *
+ * To fix:
+ * 1. Use Upstash Redis (@upstash/ratelimit) - serverless-friendly
+ * 2. Or use Vercel KV (built on Upstash)
+ * 3. Or implement sliding window with Redis
+ *
+ * Example with Upstash:
+ * ```
+ * import { Ratelimit } from "@upstash/ratelimit";
+ * import { Redis } from "@upstash/redis";
+ *
+ * const ratelimit = new Ratelimit({
+ *   redis: Redis.fromEnv(),
+ *   limiter: Ratelimit.slidingWindow(60, "1 m"),
+ * });
+ * ```
+ */
 // --- Rate Limiting (Edge-compatible, in-memory) ---
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
@@ -39,6 +62,21 @@ function cleanupRateLimitMap() {
 
 // Pre-computed at module load — avoids string concatenation on every request
 const IS_DEV = process.env.NODE_ENV === "development";
+
+/**
+ * TODO [MEDIUM Security]: Remove 'unsafe-inline' from script-src
+ *
+ * Current CSP allows inline scripts which weakens XSS protection.
+ * To fix properly:
+ * 1. Generate a nonce per request: crypto.randomUUID()
+ * 2. Add nonce to CSP: script-src 'self' 'nonce-{NONCE}'
+ * 3. Pass nonce via headers (x-nonce) to layouts/pages
+ * 4. Add nonce to <script> tags in Next.js components
+ *
+ * Next.js 14 App Router with nonces: https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
+ *
+ * Alternative: Move all inline scripts to external .js files
+ */
 const CSP_DIRECTIVES = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
