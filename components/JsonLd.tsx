@@ -12,7 +12,7 @@ export function OrganizationSchema() {
     logo: `${siteUrl}/logo.png`,
     description:
       "Marketplace premium de cavalos Lusitanos. Loja equestre, leiloes exclusivos e arquivo editorial.",
-    foundingDate: "2024",
+    foundingDate: "2023",
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
@@ -158,6 +158,15 @@ export function ArticleSchema({
       },
     },
     ...(estimatedReadTime ? { timeRequired: `PT${estimatedReadTime}M` } : {}),
+    // SpeakableSpecification: permite ao Google Assistant ler partes do artigo em voz alta
+    ...(newsArticle
+      ? {
+          speakable: {
+            "@type": "SpeakableSpecification",
+            cssSelector: ["h1", "h2", ".article-intro", "article > p:first-of-type"],
+          },
+        }
+      : {}),
   };
 
   return (
@@ -737,6 +746,48 @@ export function AboutPageSchema() {
   );
 }
 
+// Schema de VideoObject (para cavalos com vídeo — melhora presença nos resultados de pesquisa)
+interface VideoObjectSchemaProps {
+  name: string;
+  description: string;
+  videoUrl: string;
+  thumbnailUrl?: string;
+  uploadDate?: string;
+  duration?: string; // formato ISO 8601: PT2M30S
+}
+
+export function VideoObjectSchema({
+  name,
+  description,
+  videoUrl,
+  thumbnailUrl,
+  uploadDate,
+  duration,
+}: VideoObjectSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name,
+    description,
+    contentUrl: videoUrl,
+    ...(thumbnailUrl ? { thumbnailUrl } : {}),
+    ...(uploadDate ? { uploadDate } : {}),
+    ...(duration ? { duration } : {}),
+    publisher: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+      url: siteUrl,
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 // Schema de EducationalArticle (para conteúdo académico — genealogia, linhagens)
 interface EducationalArticleSchemaProps {
   name: string;
@@ -755,13 +806,20 @@ export function EducationalArticleSchema({
 }: EducationalArticleSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
-    "@type": "EducationalOccupationalProgram",
+    "@type": "LearningResource",
     name,
     description,
     url,
-    educationalCredentialAwarded: educationalLevel,
+    educationalLevel,
+    educationalUse: "Reference",
     keywords: keywords.join(", "),
-    provider: {
+    learningResourceType: "Article",
+    author: {
+      "@type": "Organization",
+      name: "Portal Lusitano",
+      url: siteUrl,
+    },
+    publisher: {
       "@type": "Organization",
       name: "Portal Lusitano",
       url: siteUrl,

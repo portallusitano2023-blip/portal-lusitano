@@ -119,9 +119,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
     languages: {
+      // Site usa troca de idioma client-side — todas as línguas servem a mesma URL
       "pt-PT": siteUrl,
-      en: `${siteUrl}/en`,
-      es: `${siteUrl}/es`,
+      en: siteUrl,
+      es: siteUrl,
       "x-default": siteUrl,
     },
   },
