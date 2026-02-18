@@ -521,21 +521,17 @@ body {
 @keyframes vtFadeOut {
   from {
     opacity: 1;
-    filter: blur(0);
   }
   to {
     opacity: 0;
-    filter: blur(2px);
   }
 }
 @keyframes vtFadeIn {
   from {
     opacity: 0;
-    filter: blur(2px);
   }
   to {
     opacity: 1;
-    filter: blur(0);
   }
 }
 
@@ -545,12 +541,10 @@ body {
   from {
     opacity: 0;
     transform: translateY(20px) rotateX(10deg);
-    filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: translateY(0) rotateX(0);
-    filter: blur(0);
   }
 }
 
@@ -701,22 +695,18 @@ body {
 }
 .float-gentle {
   animation: floatGentle 6s ease-in-out infinite;
+  will-change: transform;
 }
 
-/* Glow pulse for gold accents */
-@keyframes glowPulse {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(197, 160, 89, 0.1);
-  }
-  50% {
-    box-shadow:
-      0 0 40px rgba(197, 160, 89, 0.25),
-      0 0 80px rgba(197, 160, 89, 0.1);
-  }
-}
+/* Glow pulse for gold accents — static shadow, animate only on hover */
 .glow-pulse {
-  animation: glowPulse 3s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(197, 160, 89, 0.1);
+  transition: box-shadow 0.5s ease;
+}
+.glow-pulse:hover {
+  box-shadow:
+    0 0 40px rgba(197, 160, 89, 0.25),
+    0 0 80px rgba(197, 160, 89, 0.1);
 }
 
 /* Gradient border animation */
@@ -742,7 +732,6 @@ body {
   border-radius: inherit;
   background: linear-gradient(45deg, var(--gold), transparent, var(--gold), transparent);
   background-size: 300% 300%;
-  animation: borderGradient 4s linear infinite;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -754,6 +743,7 @@ body {
 }
 .animated-border:hover::before {
   opacity: 1;
+  animation: borderGradient 4s linear infinite;
 }
 
 /* Text gradient animation */
@@ -776,17 +766,15 @@ body {
   animation: textGradientShift 2s linear infinite;
 }
 
-/* Reveal from bottom with blur */
+/* Reveal from bottom */
 @keyframes revealUp {
   from {
     opacity: 0;
     transform: translateY(40px);
-    filter: blur(10px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
   }
 }
 
@@ -795,12 +783,10 @@ body {
   from {
     opacity: 0;
     transform: translateX(-40px);
-    filter: blur(8px);
   }
   to {
     opacity: 1;
     transform: translateX(0);
-    filter: blur(0);
   }
 }
 
@@ -809,12 +795,10 @@ body {
   from {
     opacity: 0;
     transform: scale(0.9);
-    filter: blur(6px);
   }
   to {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0);
   }
 }
 
@@ -959,14 +943,14 @@ body {
   animation-play-state: paused;
 }
 
-/* Gradient orb decorative */
+/* Gradient orb decorative — static blur, no animation for perf */
 .gradient-orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
   pointer-events: none;
   opacity: 0.06;
-  animation: floatGentle 8s ease-in-out infinite;
+  contain: layout style;
 }
 
 /* ===== LIVING BLUR — PRO SECTION ===== */

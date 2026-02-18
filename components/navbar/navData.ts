@@ -32,70 +32,121 @@ export interface MobileNavItem {
   highlight?: boolean;
 }
 
-export const DB_ITEMS: NavDropdownItem[] = [
-  { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo", desc: "Cavalos à venda" },
-  {
-    href: "/vender-cavalo",
-    icon: Euro,
-    label: "Vender Cavalo",
-    desc: "Anuncie aqui",
-    iconClass: "text-green-500",
-  },
-  { href: "/directorio", icon: Crown, label: "Coudelarias", desc: "Diretório completo" },
-  { href: "/mapa", icon: MapPin, label: "Mapa", desc: "Mapa interativo" },
-  { href: "/eventos", icon: Calendar, label: "Eventos", desc: "Feiras e competições" },
-  { href: "/linhagens", icon: BookOpen, label: "Linhagens", desc: "Guia das linhagens" },
-  { href: "/piroplasmose", icon: Shield, label: "Piroplasmose", desc: "Saúde e exportação" },
-];
+interface NavTranslations {
+  buy_horse: string;
+  buy_horse_desc: string;
+  sell_horse: string;
+  sell_horse_desc: string;
+  studs: string;
+  studs_desc: string;
+  map: string;
+  map_desc: string;
+  events: string;
+  events_desc: string;
+  lineages: string;
+  lineages_desc: string;
+  piroplasmosis: string;
+  piroplasmosis_desc: string;
+  calculator: string;
+  calculator_desc: string;
+  comparator: string;
+  comparator_desc: string;
+  compatibility: string;
+  compatibility_desc: string;
+  professionals: string;
+  professionals_desc: string;
+  notable_lusitanos: string;
+  notable_lusitanos_desc: string;
+  profile_analysis: string;
+  profile_analysis_desc: string;
+}
 
-export const TOOLS_ITEMS: NavDropdownItem[] = [
-  { href: "/calculadora-valor", icon: Calculator, label: "Calculadora", desc: "Estimar valor" },
-  { href: "/comparador-cavalos", icon: Scale, label: "Comparador", desc: "Comparar cavalos" },
-  {
-    href: "/verificador-compatibilidade",
-    icon: Dna,
-    label: "Compatibilidade",
-    desc: "Para criação",
-  },
-];
+export function getDbItems(nav: NavTranslations): NavDropdownItem[] {
+  return [
+    { href: "/comprar", icon: ShoppingCart, label: nav.buy_horse, desc: nav.buy_horse_desc },
+    {
+      href: "/vender-cavalo",
+      icon: Euro,
+      label: nav.sell_horse,
+      desc: nav.sell_horse_desc,
+      iconClass: "text-green-500",
+    },
+    { href: "/directorio", icon: Crown, label: nav.studs, desc: nav.studs_desc },
+    { href: "/mapa", icon: MapPin, label: nav.map, desc: nav.map_desc },
+    { href: "/eventos", icon: Calendar, label: nav.events, desc: nav.events_desc },
+    { href: "/linhagens", icon: BookOpen, label: nav.lineages, desc: nav.lineages_desc },
+    { href: "/piroplasmose", icon: Shield, label: nav.piroplasmosis, desc: nav.piroplasmosis_desc },
+  ];
+}
 
-export const COMMUNITY_ITEMS: NavDropdownItem[] = [
-  {
-    href: "/profissionais",
-    icon: Users,
-    label: "Profissionais",
-    desc: "Vets, ferradores, treinadores",
-  },
-  { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis", desc: "Galeria de honra" },
-  {
-    href: "/analise-perfil",
-    icon: HelpCircle,
-    label: "Análise de Perfil",
-    desc: "Descubra o seu perfil equestre",
-  },
-];
+export function getToolsItems(nav: NavTranslations): NavDropdownItem[] {
+  return [
+    {
+      href: "/calculadora-valor",
+      icon: Calculator,
+      label: nav.calculator,
+      desc: nav.calculator_desc,
+    },
+    { href: "/comparador-cavalos", icon: Scale, label: nav.comparator, desc: nav.comparator_desc },
+    {
+      href: "/verificador-compatibilidade",
+      icon: Dna,
+      label: nav.compatibility,
+      desc: nav.compatibility_desc,
+    },
+  ];
+}
 
-export const MOBILE_DB_ITEMS: MobileNavItem[] = [
-  { href: "/comprar", icon: ShoppingCart, label: "Comprar Cavalo" },
-  { href: "/vender-cavalo", icon: Euro, label: "Vender Cavalo", highlight: true },
-  { href: "/directorio", icon: Crown, label: "Coudelarias" },
-  { href: "/mapa", icon: MapPin, label: "Mapa" },
-  { href: "/eventos", icon: Calendar, label: "Eventos" },
-  { href: "/linhagens", icon: BookOpen, label: "Linhagens" },
-  { href: "/piroplasmose", icon: Shield, label: "Piroplasmose" },
-];
+export function getCommunityItems(nav: NavTranslations): NavDropdownItem[] {
+  return [
+    {
+      href: "/profissionais",
+      icon: Users,
+      label: nav.professionals,
+      desc: nav.professionals_desc,
+    },
+    {
+      href: "/cavalos-famosos",
+      icon: Trophy,
+      label: nav.notable_lusitanos,
+      desc: nav.notable_lusitanos_desc,
+    },
+    {
+      href: "/analise-perfil",
+      icon: HelpCircle,
+      label: nav.profile_analysis,
+      desc: nav.profile_analysis_desc,
+    },
+  ];
+}
 
-export const MOBILE_TOOLS_ITEMS: MobileNavItem[] = [
-  { href: "/calculadora-valor", icon: Calculator, label: "Calculadora" },
-  { href: "/comparador-cavalos", icon: Scale, label: "Comparador" },
-  { href: "/verificador-compatibilidade", icon: Dna, label: "Compatibilidade" },
-  { href: "/analise-perfil", icon: HelpCircle, label: "Análise" },
-];
+export function getMobileDbItems(nav: NavTranslations): MobileNavItem[] {
+  return [
+    { href: "/comprar", icon: ShoppingCart, label: nav.buy_horse },
+    { href: "/vender-cavalo", icon: Euro, label: nav.sell_horse, highlight: true },
+    { href: "/directorio", icon: Crown, label: nav.studs },
+    { href: "/mapa", icon: MapPin, label: nav.map },
+    { href: "/eventos", icon: Calendar, label: nav.events },
+    { href: "/linhagens", icon: BookOpen, label: nav.lineages },
+    { href: "/piroplasmose", icon: Shield, label: nav.piroplasmosis },
+  ];
+}
 
-export const MOBILE_COMMUNITY_ITEMS: MobileNavItem[] = [
-  { href: "/profissionais", icon: Users, label: "Profissionais" },
-  { href: "/cavalos-famosos", icon: Trophy, label: "Lusitanos Notáveis" },
-];
+export function getMobileToolsItems(nav: NavTranslations): MobileNavItem[] {
+  return [
+    { href: "/calculadora-valor", icon: Calculator, label: nav.calculator },
+    { href: "/comparador-cavalos", icon: Scale, label: nav.comparator },
+    { href: "/verificador-compatibilidade", icon: Dna, label: nav.compatibility },
+    { href: "/analise-perfil", icon: HelpCircle, label: nav.profile_analysis },
+  ];
+}
+
+export function getMobileCommunityItems(nav: NavTranslations): MobileNavItem[] {
+  return [
+    { href: "/profissionais", icon: Users, label: nav.professionals },
+    { href: "/cavalos-famosos", icon: Trophy, label: nav.notable_lusitanos },
+  ];
+}
 
 export const MAIN_NAV_ITEMS = [
   { nameKey: "home" as const, href: "/" },

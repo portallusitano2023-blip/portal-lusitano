@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Clock, Calendar, Newspaper, FileText } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { useLanguage } from "@/context/LanguageContext";
-import { urlFor } from "@/lib/client";
+import { urlFor } from "@/lib/sanity-image";
 import type { SanityArticle } from "@/lib/sanity-queries";
 import PortableTextRenderer from "@/components/journal/PortableTextComponents";
 import ReadingProgressBar from "@/components/journal/ReadingProgressBar";

@@ -180,31 +180,44 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Adicionar item — mutations now return full cart data, no need for refreshCart
   const addItemToCart = useCallback(
     async (variantId: string, quantity: number) => {
-      let activeId = await ensureCart();
-      if (!activeId) throw new Error("Não foi possível criar carrinho");
+      try {
+        let activeId = await ensureCart();
+        if (!activeId) {
+          console.error("[Cart] Failed to create cart");
+          return;
+        }
 
-      let result = await apiAddToCart(activeId, variantId, quantity);
+        let result = await apiAddToCart(activeId, variantId, quantity);
 
-      // Se falhou, carrinho pode estar expirado — criar novo e tentar outra vez
-      if (!result) {
-        localStorage.removeItem("shopify_cart_id");
-        const newCart = await apiCreateCart();
-        if (!newCart) throw new Error("Não foi possível criar carrinho");
+        // Se falhou, carrinho pode estar expirado — criar novo e tentar outra vez
+        if (!result) {
+          localStorage.removeItem("shopify_cart_id");
+          const newCart = await apiCreateCart();
+          if (!newCart) {
+            console.error("[Cart] Failed to recreate cart");
+            return;
+          }
 
-        const newId = newCart.id;
-        activeId = newId;
-        setCartId(newId);
-        localStorage.setItem("shopify_cart_id", newId);
+          const newId = newCart.id;
+          activeId = newId;
+          setCartId(newId);
+          localStorage.setItem("shopify_cart_id", newId);
 
-        result = await apiAddToCart(newId, variantId, quantity);
-        if (!result) throw new Error("Não foi possível adicionar ao carrinho");
+          result = await apiAddToCart(newId, variantId, quantity);
+          if (!result) {
+            console.error("[Cart] Failed to add item after cart recreation");
+            return;
+          }
+        }
+
+        // Apply cart data directly from mutation response — no second API call needed
+        if (result.lines) {
+          applyCartData(result);
+        }
+        setIsCartOpen(true);
+      } catch (err) {
+        console.error("[Cart] addItemToCart error:", err);
       }
-
-      // Apply cart data directly from mutation response — no second API call needed
-      if (result.lines) {
-        applyCartData(result);
-      }
-      setIsCartOpen(true);
     },
     [ensureCart, applyCartData]
   );

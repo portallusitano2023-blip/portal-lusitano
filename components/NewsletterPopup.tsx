@@ -109,7 +109,7 @@ export default function NewsletterPopup() {
               {/* Botao fechar */}
               <button
                 onClick={handleClose}
-                className="absolute top-4 right-4 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors z-10"
+                className="absolute top-2 right-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors z-10 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
                 aria-label="Fechar"
               >
                 <X size={24} />

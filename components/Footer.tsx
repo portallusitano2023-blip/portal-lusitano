@@ -67,7 +67,7 @@ export default function Footer() {
                   target={social.href.startsWith("http") ? "_blank" : undefined}
                   rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   aria-label={social.label}
-                  className="w-10 h-10 border border-[var(--border)] flex items-center justify-center text-[var(--foreground-muted)] hover:text-[var(--gold)] hover:border-[var(--gold)]/30 transition-all duration-300"
+                  className="w-11 h-11 border border-[var(--border)] flex items-center justify-center text-[var(--foreground-muted)] hover:text-[var(--gold)] hover:border-[var(--gold)]/30 transition-all duration-300"
                 >
                   <social.icon size={17} />
                 </a>
@@ -152,19 +152,19 @@ export default function Footer() {
 
         {/* COPYRIGHT */}
         <div className="pt-10 border-t border-[var(--border)] flex flex-col sm:flex-row justify-between items-center gap-6">
-          <p className="text-[var(--foreground-muted)] text-[9px] uppercase tracking-[0.2em]">
+          <p className="text-[var(--foreground-muted)] text-[11px] sm:text-[9px] uppercase tracking-[0.2em]">
             © 2026 Portal Lusitano. {t.footer.rights}.
           </p>
           <div className="flex gap-8">
             <Link
               href="/privacidade"
-              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-[9px] uppercase tracking-[0.2em] transition-colors"
+              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-[11px] sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
             >
               {t.footer.privacy}
             </Link>
             <Link
               href="/termos"
-              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-[9px] uppercase tracking-[0.2em] transition-colors"
+              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-[11px] sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
             >
               {t.footer.terms}
             </Link>

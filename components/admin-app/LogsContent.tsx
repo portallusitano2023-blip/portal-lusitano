@@ -68,7 +68,7 @@ export default function LogsContent() {
       setPagination(data.pagination || {});
       setAvailableAdmins(data.filters?.admins || []);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[LogsContent]", error);
     } finally {
       setLoading(false);
     }

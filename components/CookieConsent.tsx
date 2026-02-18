@@ -64,7 +64,7 @@ export default function CookieConsent() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-[9998] p-4 md:p-6 opacity-0 animate-[slideUp_0.4s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
+      className="fixed bottom-0 left-0 right-0 z-[9998] p-4 pb-[88px] lg:pb-4 md:p-6 md:pb-[88px] lg:pb-6 opacity-0 animate-[slideUp_0.4s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
       style={{ willChange: "transform, opacity" }}
     >
       <div className="max-w-4xl mx-auto bg-[var(--background-secondary)] border border-[var(--border)] backdrop-blur-xl rounded-sm p-6 md:p-8 shadow-2xl">

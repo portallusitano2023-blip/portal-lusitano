@@ -56,7 +56,7 @@ export default function BulkActions({
     try {
       await action.action(selectedIds);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[BulkActions]", error);
     } finally {
       setIsProcessing(false);
     }

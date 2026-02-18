@@ -82,7 +82,7 @@ export default function MensagensContent() {
       const data = await response.json();
       setStats(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[MensagensContent]", error);
     }
   };
 
@@ -100,7 +100,7 @@ export default function MensagensContent() {
       const data = await response.json();
       setMessages(data.messages || []);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[MensagensContent]", error);
     } finally {
       setLoading(false);
     }
@@ -137,7 +137,7 @@ export default function MensagensContent() {
 
       fetchStats();
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[MensagensContent]", error);
       alert("Erro ao atualizar status");
     }
   };
@@ -167,7 +167,7 @@ export default function MensagensContent() {
       setReplyMessage("");
       handleUpdateStatus(selectedMessage.id, "respondido");
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[MensagensContent]", error);
       alert("Erro ao enviar email");
     } finally {
       setSending(false);

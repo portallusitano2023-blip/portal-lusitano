@@ -69,7 +69,7 @@ export default function CalendarioContent() {
       setTasks(data.tasks || []);
       setStats(data.stats || null);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CalendarioContent]", error);
     }
   };
 
@@ -115,7 +115,7 @@ export default function CalendarioContent() {
       fetchTasks();
       closeModal();
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CalendarioContent]", error);
       alert("Erro ao criar tarefa");
     }
   };
@@ -132,7 +132,7 @@ export default function CalendarioContent() {
 
       fetchTasks();
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CalendarioContent]", error);
       alert("Erro ao atualizar tarefa");
     }
   };
@@ -149,7 +149,7 @@ export default function CalendarioContent() {
 
       fetchTasks();
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CalendarioContent]", error);
       alert("Erro ao eliminar tarefa");
     }
   };

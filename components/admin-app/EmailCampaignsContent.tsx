@@ -80,7 +80,7 @@ export default function EmailCampaignsContent() {
       setCampaigns(data.campaigns || []);
     } catch (err) {
       showError("Erro ao carregar campanhas");
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[EmailCampaigns]", err);
     } finally {
       setIsLoading(false);
     }
@@ -125,7 +125,7 @@ export default function EmailCampaignsContent() {
       fetchCampaigns();
     } catch (err: unknown) {
       showError("Erro ao criar campanha", err instanceof Error ? err.message : "Erro desconhecido");
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[EmailCampaigns]", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -153,7 +153,7 @@ export default function EmailCampaignsContent() {
         "Erro ao eliminar campanha",
         err instanceof Error ? err.message : "Erro desconhecido"
       );
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[EmailCampaigns]", err);
     }
   };
 

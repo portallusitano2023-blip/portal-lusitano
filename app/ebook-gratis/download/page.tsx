@@ -15,9 +15,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import { trackEbookFunnel } from "@/lib/analytics";
 
 export default function DownloadPage() {
+  const { t } = useLanguage();
+
   // Track download page view
   useEffect(() => {
     trackEbookFunnel("download_pdf");
@@ -30,37 +33,36 @@ export default function DownloadPage() {
   const nextSteps = [
     {
       icon: Mail,
-      title: "Verifica o teu Email",
-      description: "Enviámos uma cópia do ebook para o teu email. Verifica também a pasta de spam.",
+      title: t.ebook_download.check_email,
+      description: t.ebook_download.check_email_desc,
     },
     {
       icon: BookOpen,
-      title: "Lê o Ebook",
-      description:
-        "Dedica 20 minutos para ler e absorver o conhecimento essencial sobre Lusitanos.",
+      title: t.ebook_download.read_ebook,
+      description: t.ebook_download.read_ebook_desc,
     },
     {
       icon: Users,
-      title: "Explora o Portal",
-      description: "Descobre cavalos à venda, eventos, coudelarias e muito mais conteúdo.",
+      title: t.ebook_download.explore_portal,
+      description: t.ebook_download.explore_portal_desc,
     },
   ];
 
   const bonuses = [
     {
       icon: Mail,
-      title: "Newsletter Semanal",
-      description: "Recebe dicas, artigos e novidades todas as semanas no teu email",
+      title: t.ebook_download.weekly_newsletter,
+      description: t.ebook_download.weekly_newsletter_desc,
     },
     {
       icon: Gift,
-      title: "Conteúdo Exclusivo",
-      description: "Acesso a artigos e guias especiais para subscritores",
+      title: t.ebook_download.exclusive_content,
+      description: t.ebook_download.exclusive_content_desc,
     },
     {
       icon: Users,
-      title: "Comunidade",
-      description: "Faz parte da comunidade de aficionados do Cavalo Lusitano",
+      title: t.ebook_download.community,
+      description: t.ebook_download.community_desc,
     },
   ];
 
@@ -108,11 +110,11 @@ export default function DownloadPage() {
           </div>
 
           <h1 className="text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6">
-            Parabéns!
+            {t.ebook_download.congratulations}
           </h1>
 
           <p className="text-xl text-[var(--foreground-secondary)] mb-8 max-w-2xl mx-auto">
-            O teu ebook gratuito está pronto para leres. Também enviámos o link para o teu email.
+            {t.ebook_download.ebook_ready}
           </p>
 
           {/* View Ebook Button */}
@@ -121,11 +123,11 @@ export default function DownloadPage() {
             className="inline-flex items-center gap-3 bg-[var(--gold)] text-black px-10 py-5 text-sm font-bold uppercase tracking-widest hover:bg-[var(--gold-hover)] hover:scale-[1.05] active:scale-[0.95] transition-all mb-4"
           >
             <BookOpen size={20} />
-            Ler Ebook Agora
+            {t.ebook_download.read_now}
           </button>
 
           <p className="text-[var(--foreground-muted)] text-sm">
-            Versão interativa otimizada para browser
+            {t.ebook_download.browser_version}
           </p>
         </div>
       </section>
@@ -136,7 +138,9 @@ export default function DownloadPage() {
           className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <h2 className="text-3xl font-serif text-[var(--foreground)] mb-4">Próximos Passos</h2>
+          <h2 className="text-3xl font-serif text-[var(--foreground)] mb-4">
+            {t.ebook_download.next_steps}
+          </h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -164,13 +168,15 @@ export default function DownloadPage() {
         >
           <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-4 py-2 mb-4">
             <Sparkles className="text-green-500" size={16} />
-            <span className="text-green-500 text-sm font-medium">Bónus Incluídos</span>
+            <span className="text-green-500 text-sm font-medium">
+              {t.ebook_download.bonus_included}
+            </span>
           </div>
           <h2 className="text-3xl font-serif text-[var(--foreground)] mb-4">
-            Mas Espera, Há Mais!
+            {t.ebook_download.but_wait}
           </h2>
           <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto">
-            Ao descarregares este ebook, também ganhaste acesso a:
+            {t.ebook_download.bonus_intro}
           </p>
         </div>
 
@@ -199,11 +205,9 @@ export default function DownloadPage() {
         >
           <Share2 className="text-[var(--gold)] mx-auto mb-6" size={40} />
           <h3 className="text-2xl font-serif text-[var(--foreground)] mb-4">
-            Partilha com os Teus Amigos
+            {t.ebook_download.share_friends}
           </h3>
-          <p className="text-[var(--foreground-secondary)] mb-8">
-            Conheces alguém que gostaria deste ebook? Partilha nas redes sociais!
-          </p>
+          <p className="text-[var(--foreground-secondary)] mb-8">{t.ebook_download.share_desc}</p>
 
           <div className="flex items-center justify-center gap-4">
             {socialShare.map((social) => (
@@ -228,14 +232,12 @@ export default function DownloadPage() {
           className="py-12 border-t border-[var(--border)] opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.3s" }}
         >
-          <p className="text-[var(--foreground-secondary)] mb-2">
-            Tens alguma dúvida ou precisas de ajuda?
-          </p>
+          <p className="text-[var(--foreground-secondary)] mb-2">{t.ebook_download.questions}</p>
           <Link
             href="/faq"
             className="text-[var(--gold)] hover:text-[var(--foreground)] transition-colors"
           >
-            Visita a nossa página de FAQ
+            {t.ebook_download.visit_faq}
           </Link>
         </div>
       </section>

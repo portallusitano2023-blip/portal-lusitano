@@ -38,7 +38,7 @@ interface PedigreeProps {
 export default function Pedigree({ cavalo }: PedigreeProps) {
   return (
     <div className="w-full overflow-x-auto py-12 border border-[var(--background-secondary)] bg-[var(--background)]">
-      <div className="flex items-center justify-center min-w-[800px] gap-8 px-8">
+      <div className="flex items-center justify-center min-w-[580px] gap-4 sm:gap-8 px-4 sm:px-8">
         {/* COLUNA 1: O Cavalo (HERÓI) */}
         <div className="flex flex-col justify-center">
           <div className="border border-[var(--gold)] bg-[var(--gold)]/10 p-6 min-w-[200px] relative">

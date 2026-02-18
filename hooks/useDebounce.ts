@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 export function useDebounce<T>(value: T, delay: number = 300): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -23,28 +23,29 @@ export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number = 300
 ): T {
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const callbackRef = useRef(callback);
 
-  const debouncedCallback = ((...args: Parameters<T>) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    const newTimeoutId = setTimeout(() => {
-      callback(...args);
-    }, delay);
-
-    setTimeoutId(newTimeoutId);
-  }) as T;
+  // Keep callbackRef in sync with latest callback (in an effect to satisfy react-hooks/refs)
+  useEffect(() => {
+    callbackRef.current = callback;
+  });
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [timeoutId]);
+  }, []);
+
+  const debouncedCallback = useMemo<T>(
+    () =>
+      ((...args: Parameters<T>) => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => callbackRef.current(...args), delay);
+      }) as T,
+    [delay]
+  );
 
   return debouncedCallback;
 }

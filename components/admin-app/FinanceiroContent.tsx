@@ -90,7 +90,7 @@ export default function FinanceiroContent() {
     try {
       await Promise.all([fetchOverview(), fetchCharts(), fetchTransactions()]);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[FinanceiroContent]", error);
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +103,7 @@ export default function FinanceiroContent() {
       const data = await res.json();
       setOverviewData(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[FinanceiroContent]", error);
     }
   };
 
@@ -114,7 +114,7 @@ export default function FinanceiroContent() {
       const data = await res.json();
       setChartData(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[FinanceiroContent]", error);
     }
   };
 
@@ -131,7 +131,7 @@ export default function FinanceiroContent() {
       const data = await res.json();
       setTransactionsData(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[FinanceiroContent]", error);
     }
   };
 
@@ -160,7 +160,7 @@ export default function FinanceiroContent() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[FinanceiroContent]", error);
       alert("Erro ao exportar CSV");
     }
   };
@@ -186,7 +186,7 @@ export default function FinanceiroContent() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[FinanceiroContent]", error);
       alert("Erro ao gerar relatório PDF");
     } finally {
       setIsGeneratingPDF(false);

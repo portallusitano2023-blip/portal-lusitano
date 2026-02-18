@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
+import { useLanguage } from "@/context/LanguageContext";
 import { Mail, Lock, Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
 
 function LoginContent() {
@@ -15,6 +16,7 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get("returnUrl") || "/";
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ function LoginContent() {
 
       if (authError) {
         if (authError.message.includes("Invalid login")) {
-          setError("Email ou senha incorretos.");
+          setError(t.auth.reserved_access);
         } else {
           setError(authError.message);
         }
@@ -40,7 +42,7 @@ function LoginContent() {
       router.push(returnUrl);
       router.refresh();
     } catch {
-      setError("Erro ao iniciar sessao. Tente novamente.");
+      setError(t.errors.error_generic);
     } finally {
       setLoading(false);
     }
@@ -48,10 +50,8 @@ function LoginContent() {
 
   return (
     <div>
-      <h1 className="text-2xl font-serif text-[var(--foreground)] mb-2">Iniciar Sessao</h1>
-      <p className="text-sm text-[var(--foreground-muted)] mb-6">
-        Aceda a sua conta para usar as ferramentas PRO.
-      </p>
+      <h1 className="text-2xl font-serif text-[var(--foreground)] mb-2">{t.auth.login_account}</h1>
+      <p className="text-sm text-[var(--foreground-muted)] mb-6">{t.auth.recover_desc}</p>
 
       {error && (
         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">
@@ -82,7 +82,7 @@ function LoginContent() {
 
         <div>
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-            Senha
+            {t.auth.password}
           </label>
           <div className="relative">
             <Lock
@@ -112,7 +112,7 @@ function LoginContent() {
             href="/recuperar-senha"
             className="text-xs text-[var(--gold)] hover:text-[var(--gold)] transition-colors"
           >
-            Esqueceu a senha?
+            {t.auth.forgot_password}
           </Link>
         </div>
 
@@ -122,19 +122,19 @@ function LoginContent() {
           className="w-full py-3 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {loading ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
-          {loading ? "A entrar..." : "Entrar"}
+          {loading ? t.auth.logging_in : t.auth.login_account}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-[var(--foreground-muted)]">
-        Nao tem conta?{" "}
+        {t.auth.no_account}{" "}
         <Link
           href={
             returnUrl !== "/" ? `/registar?redirect=${encodeURIComponent(returnUrl)}` : "/registar"
           }
           className="text-[var(--gold)] hover:text-[var(--gold)] font-medium transition-colors"
         >
-          Criar conta
+          {t.auth.create_account}
         </Link>
       </p>
     </div>

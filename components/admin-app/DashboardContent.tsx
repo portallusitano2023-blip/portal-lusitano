@@ -465,7 +465,7 @@ export default function DashboardContentNew() {
         const parsed = JSON.parse(savedOrder);
         setWidgets(parsed);
       } catch (error) {
-        void error;
+        if (process.env.NODE_ENV === "development") console.error("[DashboardContent]", error);
       }
     }
   };
@@ -502,7 +502,7 @@ export default function DashboardContentNew() {
         quickStats: data.quickStats,
       });
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[DashboardContent]", error);
     } finally {
       setLoading(false);
     }

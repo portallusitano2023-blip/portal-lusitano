@@ -52,7 +52,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-28 md:gap-y-32">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-14 sm:gap-y-20 md:gap-y-32">
             {products.map((product, index) => (
               <div
                 key={product.id}

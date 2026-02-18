@@ -67,7 +67,7 @@ export default function CavalosContent() {
         setCavalos(data.cavalos || []);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CavalosContent]", error);
     } finally {
       setLoading(false);
     }
@@ -95,7 +95,7 @@ export default function CavalosContent() {
         resetForm();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CavalosContent]", error);
     }
   }
 
@@ -110,7 +110,7 @@ export default function CavalosContent() {
         fetchCavalos();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CavalosContent]", error);
     }
   }
 
@@ -125,7 +125,7 @@ export default function CavalosContent() {
         fetchCavalos();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CavalosContent]", error);
     }
   }
 

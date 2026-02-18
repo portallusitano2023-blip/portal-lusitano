@@ -105,7 +105,7 @@ function EventosContent() {
           setEventos(data.eventos || []);
         }
       } catch (error) {
-        void error;
+        if (process.env.NODE_ENV === "development") console.error("[Eventos]", error);
       } finally {
         setLoading(false);
       }

@@ -103,7 +103,7 @@ export default function AdminFinanceiroPage() {
         setIsAuthenticated(true);
         fetchAllData();
       } catch (error) {
-        void error;
+        if (process.env.NODE_ENV === "development") console.error("[Financeiro]", error);
         router.push("/admin/login");
       } finally {
         setIsLoading(false);
@@ -119,7 +119,7 @@ export default function AdminFinanceiroPage() {
     try {
       await Promise.all([fetchOverview(), fetchCharts(), fetchTransactions()]);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Financeiro]", error);
     }
   };
 
@@ -131,7 +131,7 @@ export default function AdminFinanceiroPage() {
       const data = await res.json();
       setOverviewData(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Financeiro]", error);
     }
   };
 
@@ -143,7 +143,7 @@ export default function AdminFinanceiroPage() {
       const data = await res.json();
       setChartData(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Financeiro]", error);
     }
   };
 
@@ -161,7 +161,7 @@ export default function AdminFinanceiroPage() {
       const data = await res.json();
       setTransactionsData(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Financeiro]", error);
     }
   };
 
@@ -193,7 +193,7 @@ export default function AdminFinanceiroPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Financeiro]", error);
       alert("Erro ao exportar CSV");
     }
   };
@@ -220,7 +220,7 @@ export default function AdminFinanceiroPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Financeiro]", error);
       alert("Erro ao gerar relatório PDF");
     } finally {
       setIsGeneratingPDF(false);

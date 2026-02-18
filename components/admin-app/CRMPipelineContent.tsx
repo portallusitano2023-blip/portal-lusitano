@@ -180,7 +180,7 @@ export default function CRMPipelineContent() {
       const data = await response.json();
       setLeads(data.leads || []);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CRMPipeline]", error);
       setLeads([]);
     } finally {
       setLoading(false);

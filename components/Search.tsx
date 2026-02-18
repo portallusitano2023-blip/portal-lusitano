@@ -232,6 +232,18 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               className="flex-1 bg-transparent text-[var(--foreground)] placeholder-[var(--foreground-muted)] outline-none text-lg"
             />
             {isLoading && <Loader2 size={20} className="text-[var(--gold)] animate-spin" />}
+            {query.length > 0 && !isLoading && (
+              <button
+                onClick={() => {
+                  setQuery("");
+                  inputRef.current?.focus();
+                }}
+                className="p-2 hover:bg-[var(--surface-hover)] rounded-full transition-colors"
+                aria-label={t.common.close}
+              >
+                <X size={16} className="text-[var(--foreground-muted)]" />
+              </button>
+            )}
             <button
               onClick={onClose}
               className="p-2 hover:bg-[var(--surface-hover)] rounded-full transition-colors"
@@ -248,7 +260,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                 <button
                   key={tab.key}
                   onClick={() => setActiveFilter(tab.key)}
-                  className={`px-3 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
+                  className={`px-4 py-2 text-xs rounded-full transition-colors whitespace-nowrap touch-manipulation ${
                     activeFilter === tab.key
                       ? "bg-[var(--gold)]/20 text-[var(--gold)] border border-[var(--gold)]/30"
                       : "text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] border border-transparent"

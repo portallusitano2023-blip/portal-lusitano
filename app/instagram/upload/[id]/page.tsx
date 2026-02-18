@@ -68,7 +68,7 @@ export default function InstagramUploadPage() {
         router.push("/");
       }, 3000);
     } catch (error: unknown) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[InstagramUpload]", error);
       alert(`Erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
     } finally {
       setUploading(false);

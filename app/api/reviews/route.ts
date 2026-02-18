@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { apiLimiter } from "@/lib/rate-limit";
 import { reviewSchema, toolReviewSchema, parseWithZod } from "@/lib/schemas";
 import { logger } from "@/lib/logger";
 
@@ -13,6 +14,16 @@ const VALID_TOOL_SLUGS = [
 // GET - Listar reviews de uma coudelaria ou ferramenta
 export async function GET(request: NextRequest) {
   try {
+    // Rate limit: 10 requests per minute per IP
+    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    try {
+      await apiLimiter.check(10, ip);
+    } catch {
+      return NextResponse.json(
+        { error: "Demasiados pedidos. Tente novamente em breve." },
+        { status: 429 }
+      );
+    }
     const { searchParams } = new URL(request.url);
     const coudelariaId = searchParams.get("coudelaria_id");
     const ferramentaSlug = searchParams.get("ferramenta_slug");
@@ -68,14 +79,13 @@ export async function GET(request: NextRequest) {
 // POST - Criar nova review (coudelaria ou ferramenta)
 export async function POST(request: NextRequest) {
   try {
-    // Rate limit: 5 reviews per minute per IP
-    const { strictLimiter } = await import("@/lib/rate-limit");
+    // Rate limit: 10 reviews per minute per IP
     const ip = request.headers.get("x-forwarded-for") || "anonymous";
     try {
-      await strictLimiter.check(5, ip);
+      await apiLimiter.check(10, ip);
     } catch {
       return NextResponse.json(
-        { error: "Demasiados pedidos. Tente novamente mais tarde." },
+        { error: "Demasiados pedidos. Tente novamente em breve." },
         { status: 429 }
       );
     }

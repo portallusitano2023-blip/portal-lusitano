@@ -194,15 +194,12 @@ export async function fetchWithErrorHandling<T>(
   onStart?.();
 
   try {
-    // Setup timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    // Execute fetch with timeout via Promise.race
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error(`Request timed out after ${timeout}ms`)), timeout);
+    });
 
-    // Execute fetch
-    const data = await fetchFn();
-
-    // Clear timeout
-    clearTimeout(timeoutId);
+    const data = await Promise.race([fetchFn(), timeoutPromise]);
 
     onSuccess?.(data);
 

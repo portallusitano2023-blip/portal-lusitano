@@ -56,7 +56,7 @@ export default function AdminEventosPage() {
         setEventos(data.eventos || []);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminEventos]", error);
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,7 @@ export default function AdminEventosPage() {
         resetForm();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminEventos]", error);
     }
   }
 
@@ -94,7 +94,7 @@ export default function AdminEventosPage() {
         fetchEventos();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminEventos]", error);
     }
   }
 

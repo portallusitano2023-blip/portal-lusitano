@@ -92,6 +92,7 @@ function MarketplaceContent() {
 
   const [cavalos, setCavalos] = useState<Cavalo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [filters, setFilters] = useState({
@@ -112,31 +113,37 @@ function MarketplaceContent() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  useEffect(() => {
-    async function fetchCavalos() {
-      try {
-        const params = new URLSearchParams();
-        if (filters.sexo !== "todos") params.set("sexo", filters.sexo);
-        if (filters.regiao !== "Todas") params.set("regiao", filters.regiao);
-        if (filters.nivel !== "todos") params.set("nivel", filters.nivel);
-        if (filters.disciplina !== "todas") params.set("disciplina", filters.disciplina);
-        if (filters.precoMin) params.set("precoMin", filters.precoMin);
-        if (filters.precoMax) params.set("precoMax", filters.precoMax);
-        if (debouncedSearch) params.set("search", debouncedSearch);
+  const fetchCavalos = useCallback(async () => {
+    setLoading(true);
+    setFetchError(null);
+    try {
+      const params = new URLSearchParams();
+      if (filters.sexo !== "todos") params.set("sexo", filters.sexo);
+      if (filters.regiao !== "Todas") params.set("regiao", filters.regiao);
+      if (filters.nivel !== "todos") params.set("nivel", filters.nivel);
+      if (filters.disciplina !== "todas") params.set("disciplina", filters.disciplina);
+      if (filters.precoMin) params.set("precoMin", filters.precoMin);
+      if (filters.precoMax) params.set("precoMax", filters.precoMax);
+      if (debouncedSearch) params.set("search", debouncedSearch);
 
-        const res = await fetch(`/api/cavalos?${params.toString()}`);
-        if (res.ok) {
-          const data = await res.json();
-          setCavalos(data.cavalos || []);
-        }
-      } catch (error) {
-        void error;
-      } finally {
-        setLoading(false);
+      const res = await fetch(`/api/cavalos?${params.toString()}`);
+      if (res.ok) {
+        const data = await res.json();
+        setCavalos(data.cavalos || []);
+      } else {
+        setFetchError("Erro ao carregar cavalos. Por favor tente novamente.");
       }
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") console.error("[Marketplace]", error);
+      setFetchError("Erro ao carregar cavalos. Por favor tente novamente.");
+    } finally {
+      setLoading(false);
     }
-    fetchCavalos();
   }, [filters, debouncedSearch]);
+
+  useEffect(() => {
+    fetchCavalos();
+  }, [fetchCavalos]);
 
   const toggleFavorite = useCallback((id: string) => {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
@@ -391,10 +398,21 @@ function MarketplaceContent() {
           )}
         </div>
 
-        {/* Loading */}
+        {/* Loading / Error / Results */}
         {loading ? (
           <div className="text-center py-20">
-            <div className="animate-pulse text-[var(--gold)]">{t.marketplace_page.loading}</div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--gold)] mx-auto" />
+            <p className="animate-pulse text-[var(--gold)] mt-4">{t.marketplace_page.loading}</p>
+          </div>
+        ) : fetchError ? (
+          <div className="text-center py-20">
+            <p className="text-red-400 mb-4">{fetchError}</p>
+            <button
+              onClick={fetchCavalos}
+              className="px-6 py-2 text-sm font-medium text-[var(--gold)] border border-[var(--gold)]/30 rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
+            >
+              Tentar novamente
+            </button>
           </div>
         ) : cavalos.length === 0 ? (
           <div className="text-center py-20">

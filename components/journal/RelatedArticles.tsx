@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
-import { urlFor } from "@/lib/client";
+import { urlFor } from "@/lib/sanity-image";
 import type { SanityArticle } from "@/lib/sanity-queries";
 
 interface RelatedArticlesProps {

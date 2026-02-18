@@ -10,13 +10,13 @@ export default function Preloader() {
     // Only show preloader on first visit per session
     if (sessionStorage.getItem("pl-loaded")) return;
     sessionStorage.setItem("pl-loaded", "1");
-     
+
     queueMicrotask(() => setShow(true));
 
-    // Start fade out quickly - 300ms is enough for the brand impression
-    const timer = setTimeout(() => setFadeOut(true), 300);
+    // Start fade out quickly - 150ms brand impression
+    const timer = setTimeout(() => setFadeOut(true), 150);
     // Remove from DOM after fade animation completes
-    const remove = setTimeout(() => setShow(false), 550);
+    const remove = setTimeout(() => setShow(false), 400);
     return () => {
       clearTimeout(timer);
       clearTimeout(remove);

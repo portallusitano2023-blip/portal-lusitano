@@ -2,7 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
+
+// Lazy singleton — Supabase loaded only when an authenticated user needs tool access
+let supabasePromise: Promise<typeof import("@/lib/supabase-browser")> | null = null;
+function getSupabase() {
+  if (!supabasePromise) supabasePromise = import("@/lib/supabase-browser");
+  return supabasePromise;
+}
 
 type ToolName = "calculadora" | "comparador" | "compatibilidade" | "perfil";
 
@@ -36,6 +42,7 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
 
     const loadAccess = async () => {
       try {
+        const { createSupabaseBrowserClient } = await getSupabase();
         const supabase = createSupabaseBrowserClient();
 
         // Check subscription status
@@ -78,6 +85,7 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
       if (!user) return;
 
       try {
+        const { createSupabaseBrowserClient } = await getSupabase();
         const supabase = createSupabaseBrowserClient();
         await supabase.from("tool_usage").insert({
           user_id: user.id,

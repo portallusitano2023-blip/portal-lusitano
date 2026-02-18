@@ -1,5 +1,4 @@
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+import type jsPDF from "jspdf";
 import {
   createBasePDF,
   addSection,
@@ -39,12 +38,12 @@ interface ResultadoCompat {
   pontosForteseFracos: { fortes: string[]; fracos: string[] };
 }
 
-export function generateCompatibilidadePDF(
+export async function generateCompatibilidadePDF(
   garanhao: CavaloCompat,
   egua: CavaloCompat,
   resultado: ResultadoCompat
-): void {
-  const doc = createBasePDF(
+): Promise<void> {
+  const doc = await createBasePDF(
     "Analise de Compatibilidade",
     `${garanhao.nome || "Garanhao"} x ${egua.nome || "Egua"}`
   );

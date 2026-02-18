@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { Home, ArrowLeft, Search } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function NotFound() {
+  const { t } = useLanguage();
   return (
     <main className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6 relative overflow-hidden">
       {/* Background decorativo */}
@@ -31,7 +33,7 @@ export default function NotFound() {
           className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4 opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
           style={{ animationDelay: "0.4s" }}
         >
-          Pagina Nao Encontrada
+          {t.not_found.title}
         </h1>
 
         {/* Descricao */}
@@ -39,9 +41,9 @@ export default function NotFound() {
           className="text-[var(--foreground-muted)] mb-12 font-serif italic opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
           style={{ animationDelay: "0.5s" }}
         >
-          O caminho que procura perdeu-se nas pastagens lusitanas.
+          {t.not_found.description}
           <br />
-          Permita-nos guia-lo de volta.
+          {t.not_found.guide_back}
         </p>
 
         {/* Botoes */}
@@ -54,7 +56,7 @@ export default function NotFound() {
             className="flex items-center gap-3 bg-[var(--gold)] text-black px-8 py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors"
           >
             <Home size={16} />
-            Voltar ao Inicio
+            {t.not_found.back_home}
           </Link>
 
           <Link
@@ -62,7 +64,7 @@ export default function NotFound() {
             className="flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-xs uppercase tracking-[0.2em] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
           >
             <Search size={16} />
-            Explorar Loja
+            {t.not_found.explore_shop}
           </Link>
         </div>
 
@@ -73,7 +75,7 @@ export default function NotFound() {
           style={{ animationDelay: "0.8s" }}
         >
           <ArrowLeft size={14} />
-          Voltar a pagina anterior
+          {t.not_found.go_back}
         </button>
 
         {/* Decoracao inferior */}

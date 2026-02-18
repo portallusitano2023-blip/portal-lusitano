@@ -3,22 +3,24 @@ import { Gift } from "lucide-react";
 import { LusitanoDropdown } from "./LusitanoDropdown";
 
 interface DesktopMenuProps {
-  language: string;
   t: {
     nav: {
       home: string;
       shop: string;
       journal: string;
+      about: string;
+      advertising: string;
+      free_ebook: string;
     };
   };
 }
 
-export function DesktopMenu({ language, t }: DesktopMenuProps) {
+export function DesktopMenu({ t }: DesktopMenuProps) {
   const navItems = [
     { name: t.nav.home, href: "/" },
     { name: t.nav.shop, href: "/loja" },
     { name: t.nav.journal, href: "/jornal" },
-    { name: language === "pt" ? "Sobre" : "About", href: "/sobre" },
+    { name: t.nav.about, href: "/sobre" },
   ];
 
   return (
@@ -42,7 +44,7 @@ export function DesktopMenu({ language, t }: DesktopMenuProps) {
         href="/instagram"
         className="text-[11px] uppercase tracking-[0.2em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300 relative group py-2"
       >
-        Publicidade
+        {t.nav.advertising}
         <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--gold)] transition-all duration-500 ease-out group-hover:w-full"></span>
       </Link>
 
@@ -52,7 +54,7 @@ export function DesktopMenu({ language, t }: DesktopMenuProps) {
         className="relative flex items-center gap-2 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-5 py-2.5 text-[10px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_20px_rgba(197,160,89,0.15)] hover:shadow-[0_0_25px_rgba(197,160,89,0.3)]"
       >
         <Gift size={14} />
-        Ebook Grátis
+        {t.nav.free_ebook}
       </Link>
     </div>
   );

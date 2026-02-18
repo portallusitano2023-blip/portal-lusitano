@@ -120,7 +120,7 @@ export default function EventoPage() {
         setEvento(data.evento);
         setRelacionados(data.relacionados || []);
       } catch (err) {
-        void err;
+        if (process.env.NODE_ENV === "development") console.error("[EventoSlug]", err);
         setError("Erro ao carregar evento");
       } finally {
         setLoading(false);

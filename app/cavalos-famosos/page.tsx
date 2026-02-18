@@ -159,7 +159,7 @@ export default function CavalosFamososPage() {
             <button
               key={lin}
               onClick={() => setFiltroLinhagem(lin)}
-              className={`px-3 py-1 rounded-full text-xs transition-all touch-manipulation ${
+              className={`px-4 py-2 rounded-full text-xs transition-all touch-manipulation ${
                 filtroLinhagem === lin
                   ? "bg-[var(--gold)]/20 text-[var(--gold)] border border-[var(--gold)]"
                   : "bg-[var(--background-secondary)] text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] border border-[var(--border)]"

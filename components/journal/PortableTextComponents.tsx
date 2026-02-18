@@ -1,7 +1,7 @@
 "use client";
 
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import { urlFor } from "@/lib/client";
+import { urlFor } from "@/lib/sanity-image";
 import {
   ArticleInfoBox,
   ArticleStatCard,

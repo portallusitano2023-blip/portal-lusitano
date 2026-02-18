@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useLanguage } from "@/context/LanguageContext";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 
 // ============================================
@@ -35,34 +36,47 @@ interface SavedResult {
 // CONSTANTES
 // ============================================
 
-const TOOL_CONFIG: Record<string, { label: string; icon: React.ElementType; href: string }> = {
+const TOOL_CONFIG: Record<string, { icon: React.ElementType; href: string }> = {
   calculadora: {
-    label: "Calculadora de Valor",
     icon: Calculator,
     href: "/calculadora-valor",
   },
   comparador: {
-    label: "Comparador de Cavalos",
     icon: BarChart3,
     href: "/comparador-cavalos",
   },
   compatibilidade: {
-    label: "Verificador de Compatibilidade",
     icon: Heart,
     href: "/verificador-compatibilidade",
   },
   "analise-perfil": {
-    label: "Analise de Perfil",
     icon: UserCheck,
     href: "/analise-perfil",
   },
 };
 
 const FALLBACK_TOOL = {
-  label: "Resultado",
   icon: FileText,
   href: "/",
 };
+
+function getToolLabel(
+  tool: string,
+  t: ReturnType<typeof import("@/context/LanguageContext").useLanguage>["t"]
+): string {
+  switch (tool) {
+    case "calculadora":
+      return t.calculadora.tool_name;
+    case "comparador":
+      return t.comparador.tool_name;
+    case "compatibilidade":
+      return t.verificador.tool_name;
+    case "analise-perfil":
+      return t.analise_perfil.title_line1;
+    default:
+      return tool;
+  }
+}
 
 const MESES_PT = [
   "Janeiro",
@@ -92,7 +106,7 @@ function formatDatePT(dateString: string): string {
 }
 
 function getToolConfig(tool: string) {
-  return TOOL_CONFIG[tool] || { ...FALLBACK_TOOL, label: tool };
+  return TOOL_CONFIG[tool] || { ...FALLBACK_TOOL };
 }
 
 // ============================================
@@ -100,12 +114,13 @@ function getToolConfig(tool: string) {
 // ============================================
 
 function SkeletonCard({ index }: { index: number }) {
+  const { t } = useLanguage();
   return (
     <div
       className="bg-[var(--background-secondary)]/80 border border-[var(--border)] p-6 animate-pulse opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       style={{ animationDelay: `${index * 0.1}s` }}
       role="status"
-      aria-label="A carregar resultado"
+      aria-label={t.history_page.loading_results}
     >
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 bg-[var(--background-elevated)] rounded-full" />
@@ -126,6 +141,7 @@ function SkeletonCard({ index }: { index: number }) {
 }
 
 function EmptyState() {
+  const { t } = useLanguage();
   return (
     <div
       className="text-center py-20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
@@ -135,10 +151,10 @@ function EmptyState() {
         <FileText className="text-[var(--foreground-muted)]" size={36} />
       </div>
       <h2 className="text-2xl font-serif text-[var(--foreground)] mb-3">
-        Ainda nao tem resultados guardados
+        {t.history_page.no_results}
       </h2>
       <p className="text-[var(--foreground-muted)] mb-8 max-w-md mx-auto">
-        Utilize as nossas ferramentas e guarde os resultados para consultar mais tarde.
+        {t.history_page.no_results_hint}
       </p>
       <div className="flex flex-wrap justify-center gap-4">
         {Object.entries(TOOL_CONFIG).map(([key, config]) => {
@@ -150,7 +166,7 @@ function EmptyState() {
               className="inline-flex items-center gap-2 bg-[var(--background-secondary)]/80 border border-[var(--border)] text-[var(--foreground)] px-5 py-3 text-xs uppercase tracking-[0.15em] font-medium hover:border-[var(--gold)]/50 hover:text-[var(--gold)] transition-colors"
             >
               <Icon size={14} />
-              {config.label}
+              {getToolLabel(key, t)}
             </Link>
           );
         })}
@@ -170,6 +186,7 @@ function ResultCard({
   onDelete: (id: string) => void;
   onShare: (id: string) => void;
 }) {
+  const { t } = useLanguage();
   const config = getToolConfig(result.tool);
   const Icon = config.icon;
 
@@ -185,7 +202,7 @@ function ResultCard({
         </div>
         <div className="min-w-0">
           <span className="text-xs uppercase tracking-[0.15em] text-[var(--gold)] font-medium">
-            {config.label}
+            {getToolLabel(result.tool, t)}
           </span>
         </div>
       </div>
@@ -208,21 +225,21 @@ function ResultCard({
           className="flex-1 bg-[var(--gold)] text-black py-2.5 text-xs uppercase tracking-[0.15em] font-bold hover:bg-[var(--gold-hover)] transition-colors text-center flex items-center justify-center gap-2"
         >
           <Search size={14} />
-          Ver
+          {t.history_page.view}
         </Link>
         <button
           onClick={() => onShare(result.id)}
           className="w-10 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:border-[var(--gold)]/50 transition-colors flex items-center justify-center"
-          title="Partilhar resultado"
-          aria-label={`Partilhar resultado: ${result.title}`}
+          title={t.history_page.share_result}
+          aria-label={`${t.history_page.share_result}: ${result.title}`}
         >
           <Share2 size={16} />
         </button>
         <button
           onClick={() => onDelete(result.id)}
           className="w-10 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-red-500 hover:border-red-500/50 transition-colors flex items-center justify-center"
-          title="Eliminar resultado"
-          aria-label={`Eliminar resultado: ${result.title}`}
+          title={t.history_page.delete_result}
+          aria-label={`${t.history_page.delete_result}: ${result.title}`}
         >
           <Trash2 size={16} />
         </button>
@@ -240,6 +257,7 @@ function ConfirmDialog({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  const { t } = useLanguage();
   if (!isOpen) return null;
 
   return (
@@ -251,10 +269,10 @@ function ConfirmDialog({
     >
       <div className="bg-[var(--background-secondary)] border border-[var(--border)] p-6 max-w-sm w-full">
         <h3 id="confirm-dialog-title" className="text-lg font-serif text-[var(--foreground)] mb-3">
-          Eliminar resultado?
+          {t.history_page.delete_result}
         </h3>
         <p className="text-[var(--foreground-secondary)] text-sm mb-6">
-          Esta accao nao pode ser desfeita. O resultado sera permanentemente eliminado.
+          {t.history_page.delete_permanent}
         </p>
         <div className="flex gap-3">
           <button
@@ -262,13 +280,13 @@ function ConfirmDialog({
             className="flex-1 border border-[var(--border)] text-[var(--foreground)] py-2.5 text-xs uppercase tracking-[0.15em] font-medium hover:border-[var(--border-hover)] transition-colors"
             autoFocus
           >
-            Cancelar
+            {t.common_actions.cancel}
           </button>
           <button
             onClick={onConfirm}
             className="flex-1 bg-red-600 text-white py-2.5 text-xs uppercase tracking-[0.15em] font-bold hover:bg-red-500 transition-colors"
           >
-            Eliminar
+            {t.common_actions.delete}
           </button>
         </div>
       </div>
@@ -282,6 +300,7 @@ function ConfirmDialog({
 
 function HistoricoContent() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [results, setResults] = useState<SavedResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -308,12 +327,12 @@ function HistoricoContent() {
 
       setResults(data || []);
     } catch (err) {
-      void err;
-      setError("Nao foi possivel carregar os resultados. Tente novamente.");
+      if (process.env.NODE_ENV === "development") console.error("[Historico]", err);
+      setError(t.history_page.error_loading);
     } finally {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user, t]);
 
   useEffect(() => {
     fetchResults();
@@ -336,8 +355,8 @@ function HistoricoContent() {
 
       setResults((prev) => prev.filter((r) => r.id !== deleteId));
     } catch (err) {
-      void err;
-      setError("Nao foi possivel eliminar o resultado. Tente novamente.");
+      if (process.env.NODE_ENV === "development") console.error("[Historico]", err);
+      setError(t.history_page.error_deleting);
     } finally {
       setDeleteId(null);
     }
@@ -388,7 +407,7 @@ function HistoricoContent() {
           onClick={fetchResults}
           className="mt-4 bg-[var(--gold)] text-black px-6 py-3 text-xs uppercase tracking-[0.15em] font-bold hover:bg-[var(--gold-hover)] transition-colors"
         >
-          Tentar novamente
+          {t.errors.try_again}
         </button>
       </div>
     );
@@ -403,8 +422,7 @@ function HistoricoContent() {
   return (
     <>
       <p className="text-[var(--foreground-muted)] text-sm mb-6">
-        {results.length} resultado{results.length !== 1 ? "s" : ""} guardado
-        {results.length !== 1 ? "s" : ""}
+        {results.length} {t.history_page.results_saved}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -427,7 +445,7 @@ function HistoricoContent() {
           aria-live="polite"
         >
           <Share2 size={14} className="text-[var(--gold)]" />
-          Link copiado para a area de transferencia
+          {t.common_actions.link_copied}
         </div>
       )}
 
@@ -446,6 +464,7 @@ function HistoricoContent() {
 // ============================================
 
 export default function HistoricoPage() {
+  const { t } = useLanguage();
   return (
     <AuthGuard>
       <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
@@ -457,7 +476,7 @@ export default function HistoricoPage() {
               className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors text-sm"
             >
               <ArrowLeft size={16} />
-              Voltar ao inicio
+              {t.not_found.back_home}
             </Link>
           </div>
 
@@ -470,10 +489,10 @@ export default function HistoricoPage() {
               <Clock className="text-[var(--gold)]" size={32} />
             </div>
             <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
-              Historico de Resultados
+              {t.history_page.title}
             </h1>
             <p className="text-[var(--foreground-secondary)] font-serif italic">
-              Consulte e partilhe os seus resultados guardados
+              {t.history_page.subtitle}
             </p>
           </div>
 

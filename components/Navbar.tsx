@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { usePathname } from "next/navigation";
 import { DesktopMenu } from "./navbar/DesktopMenu";
 import { NavIcons } from "./navbar/NavIcons";
@@ -28,13 +28,18 @@ export default memo(function Navbar() {
     setIsMobileOpen(false); // eslint-disable-line react-hooks/set-state-in-effect
   }, [pathname]);
 
-  // Detect scroll for better mobile UX (RAF-throttled to avoid layout thrashing)
+  // Detect scroll for better mobile UX (RAF-throttled, only updates on change)
+  const scrolledRef = useRef(false);
   useEffect(() => {
     let rafId = 0;
     const handleScroll = () => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 20);
+        const next = window.scrollY > 20;
+        if (next !== scrolledRef.current) {
+          scrolledRef.current = next;
+          setScrolled(next);
+        }
       });
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -74,7 +79,7 @@ export default memo(function Navbar() {
         </Link>
 
         {/* MENU DESKTOP */}
-        <DesktopMenu language={language} t={t} />
+        <DesktopMenu t={t} />
 
         {/* ICONES E IDIOMA */}
         <NavIcons

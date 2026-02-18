@@ -1,11 +1,12 @@
+import { useMemo } from "react";
 import Link from "next/link";
 import { Heart, User, Gift } from "lucide-react";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import {
-  MOBILE_DB_ITEMS,
-  MOBILE_TOOLS_ITEMS,
-  MOBILE_COMMUNITY_ITEMS,
+  getMobileDbItems,
+  getMobileToolsItems,
+  getMobileCommunityItems,
   MOBILE_MAIN_NAV_ITEMS,
 } from "./navData";
 
@@ -17,6 +18,41 @@ interface MobileMenuProps {
       home: string;
       shop: string;
       journal: string;
+      about: string;
+      database: string;
+      tools: string;
+      community: string;
+      horse_favorites: string;
+      shop_favorites: string;
+      advertising: string;
+      my_account: string;
+      free_ebook: string;
+      buy_horse: string;
+      buy_horse_desc: string;
+      sell_horse: string;
+      sell_horse_desc: string;
+      studs: string;
+      studs_desc: string;
+      map: string;
+      map_desc: string;
+      events: string;
+      events_desc: string;
+      lineages: string;
+      lineages_desc: string;
+      piroplasmosis: string;
+      piroplasmosis_desc: string;
+      calculator: string;
+      calculator_desc: string;
+      comparator: string;
+      comparator_desc: string;
+      compatibility: string;
+      compatibility_desc: string;
+      professionals: string;
+      professionals_desc: string;
+      notable_lusitanos: string;
+      notable_lusitanos_desc: string;
+      profile_analysis: string;
+      profile_analysis_desc: string;
     };
   };
   onLanguageToggle: () => void;
@@ -28,17 +64,17 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
   const { favoritesCount } = useHorseFavorites();
   const wishlistCount = wishlist.length;
 
+  const mobileDbItems = useMemo(() => getMobileDbItems(t.nav), [t]);
+  const mobileToolsItems = useMemo(() => getMobileToolsItems(t.nav), [t]);
+  const mobileCommunityItems = useMemo(() => getMobileCommunityItems(t.nav), [t]);
+
   if (!isOpen) return null;
 
   const mainNavItems = [
     { name: t.nav.home, href: "/", icon: MOBILE_MAIN_NAV_ITEMS[0].icon },
     { name: t.nav.shop, href: "/loja", icon: MOBILE_MAIN_NAV_ITEMS[1].icon },
     { name: t.nav.journal, href: "/jornal", icon: MOBILE_MAIN_NAV_ITEMS[2].icon },
-    {
-      name: language === "pt" ? "Sobre Nós" : "About Us",
-      href: "/sobre",
-      icon: MOBILE_MAIN_NAV_ITEMS[3].icon,
-    },
+    { name: t.nav.about, href: "/sobre", icon: MOBILE_MAIN_NAV_ITEMS[3].icon },
   ];
 
   return (
@@ -63,10 +99,10 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
         {/* Lusitano Section Mobile - Grid Layout */}
         <div className="border-t border-[var(--border)] pt-4 mt-4">
           <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block px-3 font-medium">
-            Base de Dados
+            {t.nav.database}
           </span>
           <div className="grid grid-cols-2 gap-2">
-            {MOBILE_DB_ITEMS.map((item) => (
+            {mobileDbItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -89,10 +125,10 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
         {/* Ferramentas Mobile */}
         <div className="border-t border-[var(--border)] pt-4 mt-4">
           <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block px-3 font-medium">
-            Ferramentas
+            {t.nav.tools}
           </span>
           <div className="grid grid-cols-2 gap-2">
-            {MOBILE_TOOLS_ITEMS.map((item) => (
+            {mobileToolsItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -108,10 +144,10 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
         {/* Comunidade Mobile */}
         <div className="border-t border-[var(--border)] pt-4 mt-4">
           <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block px-3 font-medium">
-            Comunidade
+            {t.nav.community}
           </span>
           <div className="grid grid-cols-2 gap-2">
-            {MOBILE_COMMUNITY_ITEMS.map((item) => (
+            {mobileCommunityItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -132,7 +168,7 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
               className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
             >
               <Heart size={18} className="text-red-400" />
-              <span>Cavalos Favoritos</span>
+              <span>{t.nav.horse_favorites}</span>
               {favoritesCount > 0 && (
                 <span className="ml-auto bg-[var(--gold)] text-black text-xs px-2 py-0.5 rounded-full font-bold">
                   {favoritesCount}
@@ -144,7 +180,7 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
               className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
             >
               <Heart size={18} className="text-pink-400" />
-              <span>Loja Favoritos</span>
+              <span>{t.nav.shop_favorites}</span>
               {wishlistCount > 0 && (
                 <span className="ml-auto bg-[var(--gold)] text-black text-xs px-2 py-0.5 rounded-full font-bold">
                   {wishlistCount}
@@ -160,14 +196,14 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
             href="/instagram"
             className="flex items-center gap-4 py-3 px-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
-            Publicidade / Instagram
+            {t.nav.advertising} / Instagram
           </Link>
           <Link
             href="/minha-conta"
             className="flex items-center gap-4 py-3 px-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
             <User size={18} className="text-[var(--foreground-muted)]" />
-            Minha Conta
+            {t.nav.my_account}
           </Link>
         </div>
 
@@ -178,7 +214,7 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
             className="flex items-center justify-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-4 py-4 text-sm uppercase tracking-widest font-bold w-full rounded-lg active:scale-[0.98] touch-manipulation shadow-[0_0_20px_rgba(197,160,89,0.2)]"
           >
             <Gift size={18} />
-            Ebook Grátis
+            {t.nav.free_ebook}
           </Link>
           <button
             onClick={() => {
@@ -188,10 +224,10 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
             className="w-full text-center py-3 px-3 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
             {language === "pt"
-              ? "🇬🇧 Switch to English"
+              ? "Switch to English"
               : language === "en"
-                ? "🇪🇸 Cambiar a Español"
-                : "🇵🇹 Mudar para Português"}
+                ? "Cambiar a Español"
+                : "Mudar para Português"}
           </button>
         </div>
       </div>

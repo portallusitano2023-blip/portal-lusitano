@@ -258,6 +258,9 @@ export default function ComparadorCavalosPage() {
       ).nome;
       const { generateComparadorPDF } = await import("@/lib/tools/pdf/comparador-pdf");
       generateComparadorPDF(cavalos, scores, vencedorNome, melhorValorNome);
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") console.error("[Comparador]", error);
+      alert("Erro ao exportar PDF. Tente novamente.");
     } finally {
       setIsExporting(false);
     }

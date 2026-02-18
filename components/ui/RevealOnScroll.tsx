@@ -15,29 +15,21 @@ interface RevealOnScrollProps {
 }
 
 const getStyles = (variant: AnimationVariant, visible: boolean, distance: number) => {
-  if (visible) return { opacity: 1, transform: "translate3d(0,0,0) scale(1)", filter: "blur(0px)" };
+  const usesBlur = variant === "blur-up";
+  if (visible) {
+    const base = { opacity: 1, transform: "translate3d(0,0,0) scale(1)" };
+    return usesBlur ? { ...base, filter: "blur(0px)" } : base;
+  }
 
   switch (variant) {
     case "fade-up":
-      return {
-        opacity: 0,
-        transform: `translate3d(0, ${distance}px, 0) scale(1)`,
-        filter: "blur(8px)",
-      };
+      return { opacity: 0, transform: `translate3d(0, ${distance}px, 0) scale(1)` };
     case "fade-left":
-      return {
-        opacity: 0,
-        transform: `translate3d(-${distance}px, 0, 0) scale(1)`,
-        filter: "blur(8px)",
-      };
+      return { opacity: 0, transform: `translate3d(-${distance}px, 0, 0) scale(1)` };
     case "fade-right":
-      return {
-        opacity: 0,
-        transform: `translate3d(${distance}px, 0, 0) scale(1)`,
-        filter: "blur(8px)",
-      };
+      return { opacity: 0, transform: `translate3d(${distance}px, 0, 0) scale(1)` };
     case "fade-scale":
-      return { opacity: 0, transform: "translate3d(0,0,0) scale(0.92)", filter: "blur(6px)" };
+      return { opacity: 0, transform: "translate3d(0,0,0) scale(0.92)" };
     case "blur-up":
       return {
         opacity: 0,
@@ -60,14 +52,24 @@ export default function RevealOnScroll({
 
   const styles = getStyles(variant, inView, distance);
 
+  const easing = `cubic-bezier(0.25,0.46,0.45,0.94)`;
+  const usesBlur = variant === "blur-up";
+  const transitionProps = usesBlur
+    ? `opacity ${duration}ms ${easing} ${delay}ms, transform ${duration}ms ${easing} ${delay}ms, filter ${duration}ms ${easing} ${delay}ms`
+    : `opacity ${duration}ms ${easing} ${delay}ms, transform ${duration}ms ${easing} ${delay}ms`;
+
   return (
     <div
       ref={ref}
       className={className}
       style={{
         ...styles,
-        transition: `opacity ${duration}ms cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms, transform ${duration}ms cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms, filter ${duration}ms cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms`,
-        willChange: inView ? "auto" : "opacity, transform, filter",
+        transition: transitionProps,
+        willChange: inView
+          ? "auto"
+          : usesBlur
+            ? "opacity, transform, filter"
+            : "opacity, transform",
       }}
     >
       {children}

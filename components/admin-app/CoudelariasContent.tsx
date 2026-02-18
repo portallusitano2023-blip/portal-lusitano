@@ -60,7 +60,7 @@ export default function CoudelariasContent() {
       setCoudelarias(data.coudelarias || []);
       setStats(data.stats);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CoudelariasContent]", error);
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +78,7 @@ export default function CoudelariasContent() {
         loadCoudelarias();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CoudelariasContent]", error);
     }
   };
 
@@ -94,7 +94,7 @@ export default function CoudelariasContent() {
         loadCoudelarias();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[CoudelariasContent]", error);
     }
   };
 

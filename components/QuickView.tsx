@@ -132,6 +132,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
               role="dialog"
               aria-modal="true"
               aria-label="Pré-visualização do produto"
+              aria-describedby="quickview-description"
               className="relative bg-[var(--background-secondary)] border border-[var(--border)] max-w-4xl w-full max-h-[90vh] overflow-hidden opacity-0 animate-[scaleIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
               style={{ animationDelay: "0.05s", willChange: "transform, opacity" }}
               onClick={(e) => e.stopPropagation()}
@@ -139,7 +140,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
               {/* Botao fechar */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors z-10"
+                className="absolute top-2 right-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors z-10 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
                 aria-label="Fechar"
               >
                 <X size={24} />
@@ -181,20 +182,24 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                       </button>
 
                       {/* Indicadores */}
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1">
                         {product.images.map((_, index) => (
                           <button
                             key={index}
                             onClick={() => setSelectedImage(index)}
-                            className={`w-2 h-2 rounded-full transition-colors ${
-                              index === selectedImage ? "bg-[var(--gold)]" : "bg-white/30"
-                            }`}
+                            className="min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
                             aria-label={
                               language === "pt"
                                 ? `Ver imagem ${index + 1}`
                                 : `View image ${index + 1}`
                             }
-                          />
+                          >
+                            <span
+                              className={`w-2 h-2 rounded-full transition-colors block ${
+                                index === selectedImage ? "bg-[var(--gold)]" : "bg-white/30"
+                              }`}
+                            />
+                          </button>
                         ))}
                       </div>
                     </>
@@ -210,7 +215,10 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                     {Number(product.priceRange?.minVariantPrice.amount || 0).toFixed(2)} EUR
                   </p>
 
-                  <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-8 line-clamp-4">
+                  <p
+                    id="quickview-description"
+                    className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-8 line-clamp-4"
+                  >
                     {product.description}
                   </p>
 

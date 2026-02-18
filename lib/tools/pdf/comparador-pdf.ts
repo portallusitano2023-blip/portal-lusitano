@@ -1,5 +1,4 @@
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+import type jsPDF from "jspdf";
 import { createBasePDF, addSection, addFooter, addText, GOLD, MARGIN, ZINC400 } from "./base";
 
 interface CavaloComp {
@@ -19,13 +18,13 @@ interface CavaloComp {
   registoAPSL: boolean;
 }
 
-export function generateComparadorPDF(
+export async function generateComparadorPDF(
   cavalos: CavaloComp[],
   scores: number[],
   vencedorNome: string,
   melhorValorNome: string
-): void {
-  const doc = createBasePDF("Comparacao de Cavalos", `${cavalos.length} cavalos analisados`);
+): Promise<void> {
+  const doc = await createBasePDF("Comparacao de Cavalos", `${cavalos.length} cavalos analisados`);
 
   let y = 50;
 

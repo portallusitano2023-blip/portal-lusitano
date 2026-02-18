@@ -85,7 +85,7 @@ export default function ProfissionaisContent() {
       setStats(data.stats);
       setMrr(data.mrr || 0);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[ProfissionaisContent]", error);
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +103,7 @@ export default function ProfissionaisContent() {
         loadProfissionais();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[ProfissionaisContent]", error);
     }
   };
 
@@ -119,7 +119,7 @@ export default function ProfissionaisContent() {
         loadProfissionais();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[ProfissionaisContent]", error);
     }
   };
 

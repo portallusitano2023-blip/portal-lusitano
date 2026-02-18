@@ -1,17 +1,37 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from "react";
 import pt from "@/locales/pt.json";
-import en from "@/locales/en.json";
-import es from "@/locales/es.json";
 
-const translations = { pt, en, es };
-
+type Translations = typeof pt;
 type Language = "pt" | "en" | "es";
+
+// Cache loaded translations — pt always available, en/es loaded on demand
+const translationsCache: Record<Language, Translations | null> = { pt, en: null, es: null };
+
+const loaders: Record<string, () => Promise<{ default: Translations }>> = {
+  en: () => import("@/locales/en.json") as Promise<{ default: Translations }>,
+  es: () => import("@/locales/es.json") as Promise<{ default: Translations }>,
+};
+
+async function loadTranslations(lang: Language): Promise<Translations> {
+  if (translationsCache[lang]) return translationsCache[lang]!;
+  const mod = await loaders[lang]();
+  translationsCache[lang] = mod.default;
+  return mod.default;
+}
+
 interface LanguageContextType {
   language: Language;
   toggleLanguage: () => void;
-  t: (typeof translations)["pt"];
+  t: Translations;
 }
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
@@ -24,7 +44,6 @@ export function LanguageProvider({
   initialLanguage?: Language;
 }) {
   const [language, setLanguage] = useState<Language>(() => {
-    // Ler idioma do cookie no cliente (evita cookies() no server layout = páginas estáticas)
     if (typeof document !== "undefined") {
       const match = document.cookie.match(/(?:^|; )locale=(pt|en|es)(?:;|$)/);
       if (match) return match[1] as Language;
@@ -32,23 +51,34 @@ export function LanguageProvider({
     return initialLanguage;
   });
 
-  // Actualizar documento quando idioma muda
+  const [t, setT] = useState<Translations>(translationsCache[language] ?? pt);
+
+  // Sync browser state when language changes
   useEffect(() => {
     document.documentElement.lang = language;
     document.cookie = `locale=${language}; path=/; samesite=lax; max-age=${60 * 60 * 24 * 365}`;
+
+    // Only async-load uncached translations; cached ones handled below via useMemo
+    if (!translationsCache[language]) {
+      loadTranslations(language).then(setT);
+    }
   }, [language]);
 
-  const toggleLanguage = () => {
+  // Derive final translations: use cache if available (instant), else fall back to state
+  const resolvedT = translationsCache[language] ?? t;
+
+  const toggleLanguage = useCallback(() => {
     setLanguage((prev) => {
-      if (prev === "pt") return "en";
-      if (prev === "en") return "es";
-      return "pt";
+      const next = prev === "pt" ? "en" : prev === "en" ? "es" : "pt";
+      // Pre-fetch the NEXT language so toggle feels instant
+      const afterNext = next === "pt" ? "en" : next === "en" ? "es" : "pt";
+      if (!translationsCache[afterNext]) loadTranslations(afterNext);
+      return next;
     });
-  };
+  }, []);
+
   return (
-    <LanguageContext.Provider
-      value={{ language, toggleLanguage, t: translations[language] as (typeof translations)["pt"] }}
-    >
+    <LanguageContext.Provider value={{ language, toggleLanguage, t: resolvedT }}>
       {children}
     </LanguageContext.Provider>
   );

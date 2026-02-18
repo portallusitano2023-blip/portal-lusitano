@@ -39,7 +39,7 @@ export default function GlobalSearch({ onNavigate }: GlobalSearchProps) {
       try {
         setRecentSearches(JSON.parse(saved));
       } catch (e) {
-        void e;
+        if (process.env.NODE_ENV === "development") console.error("[GlobalSearch]", e);
       }
     }
   }, []);
@@ -99,7 +99,7 @@ export default function GlobalSearch({ onNavigate }: GlobalSearchProps) {
         setResults(data.results || []);
         setTotal(data.total || 0);
       } catch (error) {
-        void error;
+        if (process.env.NODE_ENV === "development") console.error("[GlobalSearch]", error);
       } finally {
         setLoading(false);
       }

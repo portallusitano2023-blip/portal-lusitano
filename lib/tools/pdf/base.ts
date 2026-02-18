@@ -1,5 +1,4 @@
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+import type jsPDF from "jspdf";
 
 // Brand colors
 const GOLD = [197, 160, 89] as const; // #C5A059
@@ -12,8 +11,19 @@ const MARGIN = 20;
 const PAGE_WIDTH = 210; // A4
 const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
 
-export function createBasePDF(title: string, subtitle?: string): jsPDF {
-  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+// Lazy singleton — jsPDF + autotable only loaded when PDF is actually generated (~112KB deferred)
+let jsPDFCtor: typeof import("jspdf").default | null = null;
+async function loadJsPDF() {
+  if (!jsPDFCtor) {
+    const [mod] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
+    jsPDFCtor = mod.default;
+  }
+  return jsPDFCtor;
+}
+
+export async function createBasePDF(title: string, subtitle?: string): Promise<jsPDF> {
+  const JsPDF = await loadJsPDF();
+  const doc = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
   // Header background
   doc.setFillColor(...DARK);

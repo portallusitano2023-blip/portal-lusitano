@@ -39,7 +39,7 @@ export default function SubscriptionBanner({
         setLoading(false);
       }
     } catch (err) {
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[SubscriptionBanner]", err);
       // Checkout error
       setLoading(false);
     }
@@ -58,7 +58,7 @@ export default function SubscriptionBanner({
         setLoading(false);
       }
     } catch (err) {
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[SubscriptionBanner]", err);
       // Portal error
       setLoading(false);
     }

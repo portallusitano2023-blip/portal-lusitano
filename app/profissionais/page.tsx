@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Search,
   Users,
@@ -37,6 +38,7 @@ import {
 import { categorias as categoriasConfig } from "@/components/profissionais/constants";
 
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useLanguage } from "@/context/LanguageContext";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import MagneticButton from "@/components/ui/MagneticButton";
@@ -48,6 +50,7 @@ import TextSplit from "@/components/TextSplit";
 
 export default function ProfissionaisPage() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [pesquisa, setPesquisa] = useState("");
   const [categoriaAtiva, setCategoriaAtiva] = useState<CategoriaProf | "todos">("todos");
   const [distritoAtivo, setDistritoAtivo] = useState("Todos");
@@ -61,77 +64,91 @@ export default function ProfissionaisPage() {
   const [artigos, setArtigos] = useState<ArtigoEducativo[]>([]);
   const [showEventoForm, setShowEventoForm] = useState(false);
   const [showArtigoForm, setShowArtigoForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadProfissionais = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
     let cancelled = false;
-    async function load() {
-      try {
-        const res = await fetch("/api/profissionais");
-        if (!res.ok || cancelled) return;
-        const data = await res.json();
-        if (cancelled) return;
-        if (data.profissionais && data.profissionais.length > 0) {
-          const mapped: Profissional[] = data.profissionais.map((p: Record<string, unknown>) => ({
-            id: p.id as string,
-            nome: p.nome as string,
-            titulo: (p.especialidade as string) || "",
-            especialidade: (p.especialidade as string) || (p.tipo as string) || "",
-            categoria: (p.tipo as CategoriaProf) || "veterinario",
-            localizacao: (p.cidade as string) || (p.distrito as string) || "",
-            distrito: (p.distrito as string) || "",
-            telefone: (p.telemovel as string) || "",
-            email: (p.email as string) || "",
-            descricao: (p.descricao_completa as string) || (p.descricao_curta as string) || "",
-            avaliacao: (p.rating_average as number) || 0,
-            numAvaliacoes: (p.rating_count as number) || 0,
-            servicos: Array.isArray(p.servicos_oferecidos)
-              ? (p.servicos_oferecidos as { nome: string }[]).map((s) => s.nome || String(s))
-              : [],
-            nivelVerificacao: p.verificado
-              ? ("verificado" as NivelVerificacao)
-              : ("basico" as NivelVerificacao),
-            experienciaAnos: (p.anos_experiencia as number) || 0,
-            especializacoes: [],
-            credenciais: [],
-            metricas: {
-              tempoResposta: "< 24h",
-              taxaSatisfacao: 0,
-              casosConcluidosAno: 0,
-              clientesRecorrentes: 0,
-              recomendacoes: 0,
-              anosAtivo: 0,
-              cavalosAtendidos: 0,
-            },
-            disponibilidade: {
-              diasSemana: [],
-              horaInicio: "",
-              horaFim: "",
-              emergencias24h: false,
-              raioServico: 0,
-            },
-            idiomas: ["Português"],
-            associacoes: [],
-            modalidade:
-              (p.modalidade as "presencial" | "online" | "clinicas_internacionais") || "presencial",
-            pais: (p.pais as string) || undefined,
-            destaque: (p.destaque as boolean) || false,
-            fotoUrl: (p.foto_perfil_url as string) || undefined,
-            redesSociais: {
-              website: (p.website as string) || undefined,
-              instagram: (p.instagram as string) || undefined,
-            },
-          }));
-          setProfissionaisBD(mapped);
-        }
-      } catch {
-        // Fallback silencioso - usa dados hardcoded
+    try {
+      const res = await fetch("/api/profissionais");
+      if (cancelled) return;
+      if (!res.ok) {
+        setError("Erro ao carregar profissionais. Por favor tente novamente.");
+        return;
       }
+      const data = await res.json();
+      if (cancelled) return;
+      if (data.profissionais && data.profissionais.length > 0) {
+        const mapped: Profissional[] = data.profissionais.map((p: Record<string, unknown>) => ({
+          id: p.id as string,
+          nome: p.nome as string,
+          titulo: (p.especialidade as string) || "",
+          especialidade: (p.especialidade as string) || (p.tipo as string) || "",
+          categoria: (p.tipo as CategoriaProf) || "veterinario",
+          localizacao: (p.cidade as string) || (p.distrito as string) || "",
+          distrito: (p.distrito as string) || "",
+          telefone: (p.telemovel as string) || "",
+          email: (p.email as string) || "",
+          descricao: (p.descricao_completa as string) || (p.descricao_curta as string) || "",
+          avaliacao: (p.rating_average as number) || 0,
+          numAvaliacoes: (p.rating_count as number) || 0,
+          servicos: Array.isArray(p.servicos_oferecidos)
+            ? (p.servicos_oferecidos as { nome: string }[]).map((s) => s.nome || String(s))
+            : [],
+          nivelVerificacao: p.verificado
+            ? ("verificado" as NivelVerificacao)
+            : ("basico" as NivelVerificacao),
+          experienciaAnos: (p.anos_experiencia as number) || 0,
+          especializacoes: [],
+          credenciais: [],
+          metricas: {
+            tempoResposta: "< 24h",
+            taxaSatisfacao: 0,
+            casosConcluidosAno: 0,
+            clientesRecorrentes: 0,
+            recomendacoes: 0,
+            anosAtivo: 0,
+            cavalosAtendidos: 0,
+          },
+          disponibilidade: {
+            diasSemana: [],
+            horaInicio: "",
+            horaFim: "",
+            emergencias24h: false,
+            raioServico: 0,
+          },
+          idiomas: ["Português"],
+          associacoes: [],
+          modalidade:
+            (p.modalidade as "presencial" | "online" | "clinicas_internacionais") || "presencial",
+          pais: (p.pais as string) || undefined,
+          destaque: (p.destaque as boolean) || false,
+          fotoUrl: (p.foto_perfil_url as string) || undefined,
+          redesSociais: {
+            website: (p.website as string) || undefined,
+            instagram: (p.instagram as string) || undefined,
+          },
+        }));
+        setProfissionaisBD(mapped);
+      }
+    } catch (err) {
+      if (!cancelled) {
+        if (process.env.NODE_ENV === "development") console.error("[Profissionais]", err);
+        setError("Erro ao carregar profissionais. Por favor tente novamente.");
+      }
+    } finally {
+      if (!cancelled) setIsLoading(false);
     }
-    load();
     return () => {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    loadProfissionais();
+  }, [loadProfissionais]);
 
   // Fetch events and articles from DB
   const fetchEventos = () => {
@@ -201,12 +218,13 @@ export default function ProfissionaisPage() {
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
         {/* Parallax background */}
         <ParallaxSection speed={0.4} className="absolute inset-0 z-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-50"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=1920&q=80')",
-            }}
+          <Image
+            src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=1920&q=80"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover opacity-50"
+            priority
           />
         </ParallaxSection>
 
@@ -229,13 +247,13 @@ export default function ProfissionaisPage() {
           {/* Label */}
           <RevealOnScroll variant="fade-up" delay={400}>
             <span className="inline-block text-[var(--gold)] uppercase tracking-[0.3em] text-[10px] font-bold mb-6">
-              Comunidade Lusitana
+              {t.profissionais.badge}
             </span>
           </RevealOnScroll>
 
           {/* Title */}
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic mb-6">
-            <TextSplit text="Rede Profissional" baseDelay={0.5} />
+            <TextSplit text={t.profissionais.title} baseDelay={0.5} />
           </h1>
 
           {/* Decorative line */}
@@ -246,7 +264,7 @@ export default function ProfissionaisPage() {
           {/* Subtitle */}
           <RevealOnScroll variant="blur-up" delay={1000}>
             <p className="text-lg sm:text-xl font-serif italic text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-10">
-              A maior rede de profissionais especializados em cavalos Lusitanos em Portugal
+              {t.profissionais.subtitle}
             </p>
           </RevealOnScroll>
 
@@ -259,7 +277,7 @@ export default function ProfissionaisPage() {
                   className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors text-sm"
                 >
                   <ShieldCheck size={18} />
-                  Registar-se
+                  {t.profissionais.register}
                 </Link>
               </MagneticButton>
               <MagneticButton>
@@ -267,7 +285,7 @@ export default function ProfissionaisPage() {
                   onClick={handleScrollToDirectory}
                   className="inline-flex items-center gap-2 px-8 py-4 border border-[var(--gold)]/30 text-[var(--foreground)] rounded-lg hover:border-[var(--gold)]/60 hover:bg-[var(--gold)]/5 transition-all text-sm"
                 >
-                  Explorar Rede
+                  {t.profissionais.explore}
                   <ArrowRight size={16} />
                 </button>
               </MagneticButton>
@@ -296,23 +314,28 @@ export default function ProfissionaisPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { end: stats.totalProfissionais, suffix: "+", label: "Profissionais", icon: Users },
+              {
+                end: stats.totalProfissionais,
+                suffix: "+",
+                label: t.profissionais.stat_professionals,
+                icon: Users,
+              },
               {
                 end: stats.profissionaisVerificados,
                 suffix: "",
-                label: "Verificados",
+                label: t.profissionais.stat_verified,
                 icon: CheckCircle2,
               },
               {
                 end: categoriasConfig.filter((c) => c.id !== "todos").length,
                 suffix: "",
-                label: "Categorias",
+                label: t.profissionais.stat_categories,
                 icon: LayoutGrid,
               },
               {
                 end: stats.clientesSatisfeitos,
                 suffix: "%",
-                label: "Satisfação",
+                label: t.profissionais.stat_satisfaction,
                 icon: TrendingUp,
               },
             ].map((stat, i) => (
@@ -341,10 +364,10 @@ export default function ProfissionaisPage() {
             <RevealOnScroll variant="fade-up">
               <div className="text-center mb-10">
                 <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-[9px] font-bold block mb-2">
-                  Destaque
+                  {t.profissionais.featured_badge}
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-serif italic">
-                  Profissionais de Excelência
+                  {t.profissionais.featured_title}
                 </h2>
               </div>
             </RevealOnScroll>
@@ -363,11 +386,15 @@ export default function ProfissionaisPage() {
                       {/* Avatar + info */}
                       <div className="flex items-start gap-4 mb-4">
                         {prof.fotoUrl ? (
-                          <img
-                            src={prof.fotoUrl}
-                            alt={prof.nome}
-                            className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
-                          />
+                          <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 relative">
+                            <Image
+                              src={prof.fotoUrl}
+                              alt={prof.nome}
+                              fill
+                              sizes="64px"
+                              className="object-cover"
+                            />
+                          </div>
                         ) : (
                           <div className="w-16 h-16 bg-gradient-to-br from-[var(--gold)]/30 to-[var(--background-card)] rounded-xl flex items-center justify-center text-2xl font-serif text-[var(--gold)] flex-shrink-0">
                             {prof.nome.charAt(0)}
@@ -422,7 +449,7 @@ export default function ProfissionaisPage() {
 
                       {/* CTA */}
                       <div className="flex items-center gap-1 text-sm text-[var(--gold)] font-medium group-hover:gap-2 transition-all">
-                        Ver Perfil
+                        {t.profissionais.view_profile}
                         <ArrowRight
                           size={14}
                           className="transition-transform group-hover:translate-x-1"
@@ -446,21 +473,25 @@ export default function ProfissionaisPage() {
           <RevealOnScroll variant="fade-up">
             <div className="flex gap-2 border-b border-[var(--border)] pb-3 mb-6">
               {[
-                { id: "profissionais" as const, label: "Profissionais", icon: Users },
-                { id: "eventos" as const, label: "Eventos", icon: CalendarDays },
-                { id: "artigos" as const, label: "Artigos", icon: FileText },
-              ].map((t) => (
+                {
+                  id: "profissionais" as const,
+                  label: t.profissionais.stat_professionals,
+                  icon: Users,
+                },
+                { id: "eventos" as const, label: t.nav.events, icon: CalendarDays },
+                { id: "artigos" as const, label: t.journal.article_type, icon: FileText },
+              ].map((tab) => (
                 <button
-                  key={t.id}
-                  onClick={() => setAbaAtiva(t.id)}
+                  key={tab.id}
+                  onClick={() => setAbaAtiva(tab.id)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors ${
-                    abaAtiva === t.id
+                    abaAtiva === tab.id
                       ? "bg-[var(--gold)] text-black font-medium"
                       : "bg-[var(--background-secondary)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
                   }`}
                 >
-                  <t.icon size={16} />
-                  {t.label}
+                  <tab.icon size={16} />
+                  {tab.label}
                 </button>
               ))}
             </div>
@@ -495,7 +526,24 @@ export default function ProfissionaisPage() {
 
               {/* Grid */}
               <div aria-live="polite" aria-atomic="true">
-                {profissionaisFiltrados.length > 0 ? (
+                {isLoading ? (
+                  <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#C5A059] mx-auto" />
+                    <p className="text-sm text-[var(--foreground-muted)] mt-4">
+                      A carregar profissionais...
+                    </p>
+                  </div>
+                ) : error ? (
+                  <div className="text-center py-12">
+                    <p className="text-red-400 mb-4">{error}</p>
+                    <button
+                      onClick={loadProfissionais}
+                      className="px-6 py-2 text-sm font-medium text-[#C5A059] border border-[#C5A059]/30 rounded-lg hover:bg-[#C5A059]/10 transition-colors"
+                    >
+                      Tentar novamente
+                    </button>
+                  </div>
+                ) : profissionaisFiltrados.length > 0 ? (
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {profissionaisFiltrados.map((prof, i) => (
                       <RevealOnScroll key={prof.id} variant="fade-up" delay={Math.min(i * 80, 600)}>
@@ -509,9 +557,9 @@ export default function ProfissionaisPage() {
                 ) : (
                   <div className="text-center py-16">
                     <Search size={32} className="mx-auto mb-4 text-[var(--foreground-muted)]" />
-                    <h3 className="text-lg font-medium mb-2">Nenhum profissional encontrado</h3>
+                    <h3 className="text-lg font-medium mb-2">{t.profissionais.no_results}</h3>
                     <p className="text-sm text-[var(--foreground-muted)]">
-                      Tente ajustar os filtros
+                      {t.profissionais.no_results_hint}
                     </p>
                   </div>
                 )}
@@ -611,14 +659,13 @@ export default function ProfissionaisPage() {
           <RevealOnScroll variant="fade-scale">
             <div className="bg-gradient-to-r from-[var(--gold)]/10 to-transparent border border-[var(--gold)]/20 rounded-2xl p-8 sm:p-12 backdrop-blur-sm text-center">
               <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-[9px] font-bold block mb-3">
-                Junte-se à Rede
+                {t.profissionais.explore}
               </span>
               <h2 className="text-2xl sm:text-3xl font-serif italic mb-4">
-                É profissional do sector equestre?
+                {t.profissionais.cta_title}
               </h2>
               <p className="text-[var(--foreground-secondary)] text-sm max-w-xl mx-auto mb-4">
-                Junte-se à nossa rede verificada e alcance milhares de criadores e proprietários de
-                cavalos Lusitanos em Portugal.
+                {t.profissionais.cta_subtitle}
               </p>
 
               {/* Price badge */}
@@ -634,7 +681,7 @@ export default function ProfissionaisPage() {
                     className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors text-sm"
                   >
                     <ShieldCheck size={18} />
-                    Registar-se Agora
+                    {t.profissionais.cta_button}
                   </Link>
                 </MagneticButton>
                 <MagneticButton>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import { trackEbookFunnel, trackEmailSubscription, trackEbookDownload } from "@/lib/analytics";
 import {
   BookOpen,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 
 export default function EbookGratisPage() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [nome, setNome] = useState("");
   const [loading, setLoading] = useState(false);
@@ -49,7 +51,7 @@ export default function EbookGratisPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Erro ao processar pedido");
+        throw new Error(data.error || t.errors.error_processing);
       }
 
       trackEbookFunnel("submit_form");
@@ -63,9 +65,9 @@ export default function EbookGratisPage() {
         window.location.href = "/ebook-gratis/download";
       }, 2000);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[EbookGratis]", error);
       setLoading(false);
-      alert(error instanceof Error ? error.message : "Erro ao processar pedido. Tenta novamente.");
+      alert(error instanceof Error ? error.message : t.errors.error_processing);
     }
   };
 
@@ -131,15 +133,15 @@ export default function EbookGratisPage() {
             <Check className="text-green-400" size={44} />
           </div>
           <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
-            Sucesso!
+            {t.ebook_page.success}
           </h2>
           <p className="text-[var(--foreground-secondary)] mb-2 text-lg">
-            Enviámos o link de download para
+            {t.ebook_page.sent_download_link}
           </p>
           <p className="text-[var(--gold)] font-medium text-lg mb-6">{email}</p>
           <div className="flex items-center justify-center gap-2 text-[var(--foreground-muted)] text-sm">
             <div className="w-4 h-4 border-2 border-[var(--border)] border-t-[var(--gold)] rounded-full animate-spin" />
-            A redirecionar para o download...
+            {t.ebook_page.redirecting_download}
           </div>
         </div>
       </main>
@@ -162,7 +164,7 @@ export default function EbookGratisPage() {
               <div className="inline-flex items-center gap-2 bg-[var(--gold)]/10 border border-[var(--gold)]/20 px-4 py-2 mb-8">
                 <Gift className="text-[var(--gold)]" size={14} />
                 <span className="text-[var(--gold)] text-[11px] uppercase tracking-[0.15em] font-medium">
-                  100% Gratuito
+                  {t.ebook_page.free_badge}
                 </span>
               </div>
 
@@ -179,10 +181,10 @@ export default function EbookGratisPage() {
 
               <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-3 mb-10">
                 {[
-                  { icon: FileText, text: "30 Páginas" },
-                  { icon: Clock, text: "20 min leitura" },
-                  { icon: Award, text: "Conteúdo verificado" },
-                  { icon: Users, text: "5.000+ downloads" },
+                  { icon: FileText, text: `30 ${t.ebook_page.pages}` },
+                  { icon: Clock, text: `20 ${t.ebook_page.read_time}` },
+                  { icon: Award, text: t.ebook_page.verified_content },
+                  { icon: Users, text: `5.000+ ${t.ebook_page.downloads}` },
                 ].map((item) => (
                   <div
                     key={item.text}
@@ -200,7 +202,7 @@ export default function EbookGratisPage() {
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   onFocus={handleFormStart}
-                  placeholder="O teu nome"
+                  placeholder={t.ebook_page.your_name}
                   required
                   autoComplete="name"
                   className="w-full bg-[var(--surface-hover)] border border-[var(--border)] text-[var(--foreground)] px-5 py-4 text-[15px] focus:outline-none focus:border-[var(--gold)]/50 focus:bg-[var(--surface-hover)] transition-all placeholder:text-[var(--foreground-muted)]"
@@ -210,7 +212,7 @@ export default function EbookGratisPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onFocus={handleFormStart}
-                  placeholder="O teu melhor email"
+                  placeholder={t.ebook_page.your_email}
                   required
                   autoComplete="email"
                   inputMode="email"
@@ -224,17 +226,17 @@ export default function EbookGratisPage() {
                   {loading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-                      A processar...
+                      {t.ebook_page.processing}
                     </>
                   ) : (
                     <>
                       <Download size={18} />
-                      Descarregar Grátis
+                      {t.ebook_page.download_free}
                     </>
                   )}
                 </button>
                 <p className="text-[var(--foreground-muted)] text-[11px] text-center pt-1">
-                  Sem spam. Cancela a qualquer momento.
+                  {t.ebook_page.no_spam}
                 </p>
               </form>
             </div>
@@ -316,10 +318,10 @@ export default function EbookGratisPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              Conteúdo
+              {t.ebook_page.content}
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
-              O Que Vais Aprender
+              {t.ebook_page.what_learn}
             </h2>
             <p className="text-[var(--foreground-muted)] max-w-xl mx-auto">
               4 capítulos essenciais para compreender o Lusitano
@@ -346,7 +348,7 @@ export default function EbookGratisPage() {
                       {chapter.description}
                     </p>
                     <span className="text-[11px] text-[var(--foreground-muted)] uppercase tracking-wider">
-                      {chapter.pages} páginas
+                      {chapter.pages} {t.ebook_page.pages}
                     </span>
                   </div>
                 </div>
@@ -361,10 +363,14 @@ export default function EbookGratisPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12">
             {[
-              { value: "5.000+", label: "Downloads", icon: Download },
-              { value: "4.9/5", label: "Avaliação média", icon: Star },
-              { value: "30", label: "Páginas", icon: FileText },
-              { value: "100%", label: "Gratuito", icon: Gift },
+              { value: "5.000+", label: t.ebook_page.downloads, icon: Download },
+              { value: "4.9/5", label: t.ebook_page.average_rating, icon: Star },
+              {
+                value: "30",
+                label: t.ebook_page.pages.charAt(0).toUpperCase() + t.ebook_page.pages.slice(1),
+                icon: FileText,
+              },
+              { value: "100%", label: t.ebook_page.free_badge, icon: Gift },
             ].map((stat, index) => (
               <div
                 key={stat.label}
@@ -389,17 +395,19 @@ export default function EbookGratisPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              Testemunhos
+              {t.ebook_page.testimonials}
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
-              O Que Dizem Os Leitores
+              {t.ebook_page.what_readers_say}
             </h2>
             <div className="flex items-center justify-center gap-1.5 mb-3">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="fill-[var(--gold)] text-[var(--gold)]" size={16} />
               ))}
             </div>
-            <p className="text-[var(--foreground-muted)] text-sm">Avaliação média: 4.9/5</p>
+            <p className="text-[var(--foreground-muted)] text-sm">
+              {t.ebook_page.average_rating}: 4.9/5
+            </p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto">
@@ -445,7 +453,7 @@ export default function EbookGratisPage() {
 
         <div className="max-w-2xl mx-auto px-4 sm:px-6 relative z-10 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
           <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-6 block">
-            Começa Agora
+            {t.ebook_page.start_now}
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-6">
             Descarrega o Teu Guia <span className="text-[var(--gold)]">Gratuito</span>
@@ -460,7 +468,7 @@ export default function EbookGratisPage() {
               value={nome}
               onChange={(e) => setNome(e.target.value)}
               onFocus={handleFormStart}
-              placeholder="O teu nome"
+              placeholder={t.ebook_page.your_name}
               required
               autoComplete="name"
               className="w-full bg-black/40 border border-[var(--border)] text-white px-5 py-4 text-[15px] focus:outline-none focus:border-[var(--gold)]/50 focus:bg-black/60 transition-all placeholder:text-[var(--foreground-muted)]"
@@ -470,7 +478,7 @@ export default function EbookGratisPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onFocus={handleFormStart}
-              placeholder="O teu melhor email"
+              placeholder={t.ebook_page.your_email}
               required
               autoComplete="email"
               inputMode="email"
@@ -484,17 +492,17 @@ export default function EbookGratisPage() {
               {loading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-                  A processar...
+                  {t.ebook_page.processing}
                 </>
               ) : (
                 <>
                   <Download size={18} />
-                  Quero o Meu Ebook
+                  {t.ebook_page.want_ebook}
                 </>
               )}
             </button>
             <p className="text-[var(--foreground-muted)] text-[11px] text-center pt-1">
-              Sem spam. Cancela a qualquer momento.
+              {t.ebook_page.no_spam}
             </p>
           </form>
 

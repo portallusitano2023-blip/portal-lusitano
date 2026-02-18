@@ -1,12 +1,17 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
-import type { User, Session } from "@supabase/supabase-js";
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
+
+// Inline minimal types to avoid importing @supabase/supabase-js in the initial bundle
+type MinimalUser = { id: string; email?: string; user_metadata: Record<string, unknown> } & Record<
+  string,
+  unknown
+>;
+type MinimalSession = { user: MinimalUser; access_token: string } & Record<string, unknown>;
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: MinimalUser | null;
+  session: MinimalSession | null;
   isLoading: boolean;
   signOut: () => Promise<void>;
 }
@@ -18,45 +23,69 @@ const AuthContext = createContext<AuthContextType>({
   signOut: async () => {},
 });
 
+// Lazy singleton — Supabase client is only loaded when first needed (~181KB deferred)
+let supabasePromise: Promise<typeof import("@/lib/supabase-browser")> | null = null;
+function getSupabase() {
+  if (!supabasePromise) {
+    supabasePromise = import("@/lib/supabase-browser");
+  }
+  return supabasePromise;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<MinimalUser | null>(null);
+  const [session, setSession] = useState<MinimalSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = createSupabaseBrowserClient();
+    let cancelled = false;
+    let cleanupRef: (() => void) | null = null;
 
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
-      setSession(s);
-      setUser(s?.user ?? null);
-      setIsLoading(false);
+    getSupabase().then(({ createSupabaseBrowserClient }) => {
+      if (cancelled) return;
+      const supabase = createSupabaseBrowserClient();
+
+      // Get initial session
+      supabase.auth.getSession().then(({ data: { session: s } }) => {
+        if (cancelled) return;
+        setSession(s);
+        setUser(s?.user ?? null);
+        setIsLoading(false);
+      });
+
+      // Listen for auth changes
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, s) => {
+        setSession(s);
+        setUser(s?.user ?? null);
+        setIsLoading(false);
+      });
+
+      // Store unsubscribe for cleanup
+      cleanupRef = () => subscription.unsubscribe();
     });
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s);
-      setUser(s?.user ?? null);
-      setIsLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      cleanupRef?.();
+    };
   }, []);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
+    const { createSupabaseBrowserClient } = await getSupabase();
     const supabase = createSupabaseBrowserClient();
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
-  };
+  }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, session, isLoading, signOut }}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo<AuthContextType>(
+    () => ({ user, session, isLoading, signOut }),
+    [user, session, isLoading, signOut]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

@@ -1,6 +1,4 @@
 import { createClient } from "next-sanity";
-import { createImageUrlBuilder } from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url";
 
 const projectId = "ofrzpaxa";
 const dataset = "production";
@@ -22,10 +20,3 @@ export const writeClient = createClient({
   useCdn: false,
   token: process.env.SANITY_API_WRITE_TOKEN,
 });
-
-// Image URL builder
-const builder = createImageUrlBuilder(client);
-
-export function urlFor(source: SanityImageSource) {
-  return builder.image(source);
-}

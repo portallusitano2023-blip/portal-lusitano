@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Montserrat } from "next/font/google";
+import { cookies } from "next/headers";
 import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -22,7 +23,7 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
-  display: "swap",
+  display: "optional",
   preload: true,
 });
 
@@ -120,13 +121,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("locale")?.value || "pt";
+  const lang = ["pt", "en", "es"].includes(locale) ? locale : "pt";
+
   return (
-    <html lang="pt" className={`${playfair.variable} ${montserrat.variable} dark`}>
+    <html lang={lang} className={`${playfair.variable} ${montserrat.variable} dark`}>
       <head>
         {/* Inline script to set theme before React hydration (prevents FOUC) */}
         <script

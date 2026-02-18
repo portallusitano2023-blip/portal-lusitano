@@ -65,7 +65,7 @@ export function ArvoreGenealogica({ pedigree, nomeBase }: ArvoreGenealogicaProps
 
       {expandido && (
         <div className="overflow-x-auto pb-4">
-          <div className="flex flex-col items-center min-w-[600px]">
+          <div className="flex flex-col items-center min-w-[480px]">
             {/* Nível 0: Cavalo Principal */}
             <div className="bg-gradient-to-r from-[var(--gold)] to-[#8B7355] text-black px-6 py-3 rounded-xl font-bold text-lg shadow-lg mb-4">
               {nomeBase}

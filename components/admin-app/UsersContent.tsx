@@ -56,7 +56,7 @@ export default function UsersContent() {
         setTotal(data.total || 0);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[UsersContent]", error);
     } finally {
       setLoading(false);
     }
@@ -99,7 +99,7 @@ export default function UsersContent() {
         alert(data.error || "Erro");
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[UsersContent]", error);
       alert("Erro ao processar pedido");
     }
   };
@@ -126,7 +126,7 @@ export default function UsersContent() {
         alert(data.error || "Erro");
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[UsersContent]", error);
       alert("Erro ao processar pedido");
     }
   };
@@ -151,7 +151,7 @@ export default function UsersContent() {
         alert(data.error || "Erro");
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[UsersContent]", error);
       alert("Erro ao eliminar");
     }
   };

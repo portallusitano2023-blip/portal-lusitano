@@ -75,7 +75,7 @@ export default function AnalyticsContent() {
     try {
       await Promise.all([loadTraffic(), loadConversions(), loadSources()]);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AnalyticsContent]", error);
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +88,7 @@ export default function AnalyticsContent() {
       const data = await res.json();
       setTraffic(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AnalyticsContent]", error);
     }
   };
 
@@ -99,7 +99,7 @@ export default function AnalyticsContent() {
       const data = await res.json();
       setConversions(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AnalyticsContent]", error);
     }
   };
 
@@ -110,7 +110,7 @@ export default function AnalyticsContent() {
       const data = await res.json();
       setSources(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AnalyticsContent]", error);
     }
   };
 

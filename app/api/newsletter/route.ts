@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       await apiLimiter.check(10, ip);
     } catch {
       return NextResponse.json(
-        { error: "Demasiados pedidos. Tente novamente mais tarde." },
+        { error: "Demasiados pedidos. Tente novamente em breve." },
         { status: 429 }
       );
     }

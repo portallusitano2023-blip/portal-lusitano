@@ -1,12 +1,63 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
-import Navbar from "@/components/Navbar";
 import Pedigree from "@/components/Pedigree";
 import { ProductSchema, BreadcrumbSchema } from "@/components/JsonLd";
 
 import { CavaloVenda } from "@/types/cavalo";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  if (id === "demo") {
+    return {
+      title: "Imperador do Lagar | Portal Lusitano",
+      description: "Garanhão Lusitano de linhagem Veiga, 6 anos. Disponível no Portal Lusitano.",
+    };
+  }
+
+  try {
+    const { data: cavalo } = await supabase
+      .from("cavalos_venda")
+      .select("nome_cavalo, descricao, image_url, preco")
+      .eq("id", id)
+      .single();
+
+    if (cavalo) {
+      const description = cavalo.descricao || `Cavalo Lusitano - ${cavalo.nome_cavalo}`;
+      return {
+        title: `${cavalo.nome_cavalo} | Portal Lusitano`,
+        description,
+        openGraph: {
+          title: cavalo.nome_cavalo,
+          description,
+          images: cavalo.image_url ? [{ url: cavalo.image_url, alt: cavalo.nome_cavalo }] : [],
+          type: "website",
+          url: `${siteUrl}/comprar/${id}`,
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: cavalo.nome_cavalo,
+          description,
+        },
+        alternates: { canonical: `${siteUrl}/comprar/${id}` },
+      };
+    }
+  } catch {
+    // fallback
+  }
+
+  return {
+    title: "Cavalo Lusitano | Portal Lusitano",
+    description: "Cavalos Lusitanos de elite à venda no Portal Lusitano.",
+  };
+}
 
 export default async function DetalheCavaloPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params; // Next.js 15+ requer await
@@ -59,8 +110,6 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
           { name: cavalo.nome_cavalo, url: `${siteUrl}/comprar/${id}` },
         ]}
       />
-      <Navbar />
-
       <div className="flex flex-col lg:flex-row min-h-screen bg-[var(--background)] text-[var(--foreground)]">
         {/* LADO ESQUERDO: A IMAGEM FIXA (Visual Hero) */}
         <div className="lg:w-1/2 h-[50vh] lg:h-screen lg:fixed lg:top-0 lg:left-0 relative border-r border-[var(--background-secondary)] z-0">

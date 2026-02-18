@@ -84,7 +84,7 @@ export default function ForecastingContent() {
         setMetrics(data.metrics);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[ForecastingContent]", error);
     } finally {
       setLoading(false);
     }

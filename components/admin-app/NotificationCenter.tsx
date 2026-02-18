@@ -32,7 +32,7 @@ export default function NotificationCenter() {
       setNotifications(data.notifications || []);
       setUnreadCount(data.unreadCount || 0);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[NotificationCenter]", error);
     } finally {
       setLoading(false);
     }

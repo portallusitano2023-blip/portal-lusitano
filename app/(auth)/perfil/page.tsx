@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useLanguage } from "@/context/LanguageContext";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { Mail, Crown, LogOut, Loader2, Check, Pencil, Clock } from "lucide-react";
 
 function PerfilContent() {
   const { user, signOut } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
   const [editingName, setEditingName] = useState(false);
   const [name, setName] = useState(user?.user_metadata?.full_name || "");
@@ -37,7 +39,7 @@ function PerfilContent() {
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 pb-16 px-4">
       <div className="max-w-lg mx-auto space-y-6">
-        <h1 className="text-3xl font-serif">Meu Perfil</h1>
+        <h1 className="text-3xl font-serif">{t.profile.my_profile}</h1>
 
         {/* User Info */}
         <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-6 space-y-4">
@@ -64,7 +66,7 @@ function PerfilContent() {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-medium">{name || "Sem nome"}</span>
+                  <span className="text-lg font-medium">{name || t.profile.no_name}</span>
                   <button
                     onClick={() => setEditingName(true)}
                     className="text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
@@ -85,26 +87,25 @@ function PerfilContent() {
         <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-6">
           <div className="flex items-center gap-3 mb-4">
             <Crown className="text-[var(--gold)]" size={20} />
-            <h2 className="text-lg font-medium">Subscricao</h2>
+            <h2 className="text-lg font-medium">{t.profile.subscription}</h2>
           </div>
 
           <div className="bg-[var(--background-card)]/50 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-sm text-[var(--foreground-secondary)]">Plano Actual</span>
-                <p className="text-[var(--foreground)] font-medium">Gratuito</p>
+                <span className="text-sm text-[var(--foreground-secondary)]">
+                  {t.profile.current_plan}
+                </span>
+                <p className="text-[var(--foreground)] font-medium">{t.profile.free}</p>
               </div>
               <a
                 href="/ferramentas"
                 className="px-4 py-2 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black text-sm font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all"
               >
-                Upgrade PRO
+                {t.profile.upgrade_pro}
               </a>
             </div>
-            <p className="text-xs text-[var(--foreground-muted)] mt-2">
-              Com o plano PRO, tenha acesso ilimitado a todas as ferramentas, exportacao PDF
-              profissional e historico guardado.
-            </p>
+            <p className="text-xs text-[var(--foreground-muted)] mt-2">{t.profile.pro_desc}</p>
           </div>
         </div>
 
@@ -112,11 +113,9 @@ function PerfilContent() {
         <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-6">
           <div className="flex items-center gap-3 mb-4">
             <Clock className="text-[var(--foreground-secondary)]" size={20} />
-            <h2 className="text-lg font-medium">Historico de Uso</h2>
+            <h2 className="text-lg font-medium">{t.profile.usage_history}</h2>
           </div>
-          <p className="text-sm text-[var(--foreground-muted)]">
-            O historico das suas avaliacoes aparecera aqui.
-          </p>
+          <p className="text-sm text-[var(--foreground-muted)]">{t.profile.usage_history_desc}</p>
         </div>
 
         {/* Sign Out */}
@@ -125,7 +124,7 @@ function PerfilContent() {
           className="w-full py-3 bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl text-[var(--foreground-secondary)] text-sm font-medium hover:text-red-400 hover:border-red-500/30 transition-all flex items-center justify-center gap-2"
         >
           <LogOut size={16} />
-          Terminar Sessao
+          {t.profile.sign_out}
         </button>
       </div>
     </div>

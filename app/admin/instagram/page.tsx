@@ -95,7 +95,7 @@ export default function AdminInstagramPage() {
       setAuthenticated(false);
       setUploads([]);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Instagram]", error);
     }
   };
 
@@ -105,7 +105,7 @@ export default function AdminInstagramPage() {
       const data = await response.json();
       setUploads(data.uploads || []);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Instagram]", error);
     } finally {
       setLoading(false);
     }
@@ -125,7 +125,7 @@ export default function AdminInstagramPage() {
       // Refresh list
       await fetchUploads();
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Instagram]", error);
       alert("Erro ao atualizar status");
     } finally {
       setProcessingId(null);

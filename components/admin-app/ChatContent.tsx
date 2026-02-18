@@ -39,7 +39,7 @@ export default function ChatContent() {
       if (error) throw error;
       if (data) setMessages(data);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Chat]", error);
     } finally {
       setLoading(false);
     }
@@ -93,7 +93,7 @@ export default function ChatContent() {
 
       setNewMessage("");
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[Chat]", error);
     }
   };
 

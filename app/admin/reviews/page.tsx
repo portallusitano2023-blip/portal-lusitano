@@ -24,7 +24,7 @@ export default function AdminReviewsPage() {
         setReviews(data.reviews || []);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminReviews]", error);
     } finally {
       setLoading(false);
     }
@@ -42,7 +42,7 @@ export default function AdminReviewsPage() {
         setSelectedReview(null);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminReviews]", error);
     }
   }
 

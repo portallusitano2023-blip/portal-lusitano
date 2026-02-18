@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
+import { useLanguage } from "@/context/LanguageContext";
 import { Mail, Lock, Eye, EyeOff, User, UserPlus, Loader2, CheckCircle } from "lucide-react";
 
 function RegistarContent() {
@@ -17,6 +18,7 @@ function RegistarContent() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { t } = useLanguage();
 
   const passwordChecks = {
     length: password.length >= 8,
@@ -30,11 +32,11 @@ function RegistarContent() {
     setError("");
 
     if (!passwordValid) {
-      setError("A senha nao cumpre os requisitos minimos.");
+      setError(t.errors.error_generic);
       return;
     }
     if (password !== confirmPassword) {
-      setError("As senhas nao coincidem.");
+      setError(t.errors.error_generic);
       return;
     }
 
@@ -52,7 +54,7 @@ function RegistarContent() {
 
       if (authError) {
         if (authError.message.includes("already registered")) {
-          setError("Este email ja esta registado.");
+          setError(t.errors.error_generic);
         } else {
           setError(authError.message);
         }
@@ -61,7 +63,7 @@ function RegistarContent() {
 
       setSuccess(true);
     } catch {
-      setError("Erro ao criar conta. Tente novamente.");
+      setError(t.errors.error_generic);
     } finally {
       setLoading(false);
     }
@@ -73,17 +75,15 @@ function RegistarContent() {
         <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
           <CheckCircle className="text-emerald-400" size={32} />
         </div>
-        <h2 className="text-xl font-serif text-[var(--foreground)] mb-2">Conta Criada!</h2>
+        <h2 className="text-xl font-serif text-[var(--foreground)] mb-2">{t.auth.email_sent}</h2>
         <p className="text-sm text-[var(--foreground-secondary)] mb-6">
-          Enviamos um email de confirmacao para{" "}
-          <strong className="text-[var(--foreground)]">{email}</strong>. Verifique a sua caixa de
-          correio para activar a conta.
+          {t.auth.email_sent} <strong className="text-[var(--foreground)]">{email}</strong>
         </p>
         <Link
           href={redirect ? `/login?returnUrl=${encodeURIComponent(redirect)}` : "/login"}
           className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[#D4AF6A] transition-colors"
         >
-          Ir para Login
+          {t.auth.back_to_login}
         </Link>
       </div>
     );
@@ -91,10 +91,8 @@ function RegistarContent() {
 
   return (
     <div>
-      <h1 className="text-2xl font-serif text-[var(--foreground)] mb-2">Criar Conta</h1>
-      <p className="text-sm text-[var(--foreground-muted)] mb-6">
-        Registe-se para aceder as ferramentas do Portal Lusitano.
-      </p>
+      <h1 className="text-2xl font-serif text-[var(--foreground)] mb-2">{t.auth.create_account}</h1>
+      <p className="text-sm text-[var(--foreground-muted)] mb-6">{t.auth.new_member}</p>
 
       {error && (
         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">
@@ -105,7 +103,7 @@ function RegistarContent() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-            Nome Completo
+            {t.auth.full_name}
           </label>
           <div className="relative">
             <User
@@ -117,7 +115,7 @@ function RegistarContent() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              placeholder="O seu nome"
+              placeholder={t.auth.full_name}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-10 pr-4 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--gold)] outline-none transition-colors"
             />
           </div>
@@ -125,7 +123,7 @@ function RegistarContent() {
 
         <div>
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-            Email
+            {t.auth.email}
           </label>
           <div className="relative">
             <Mail
@@ -145,7 +143,7 @@ function RegistarContent() {
 
         <div>
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-            Senha
+            {t.auth.password}
           </label>
           <div className="relative">
             <Lock
@@ -157,7 +155,7 @@ function RegistarContent() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Minimo 8 caracteres"
+              placeholder={t.auth.password}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-10 pr-12 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--gold)] outline-none transition-colors"
             />
             <button
@@ -168,34 +166,11 @@ function RegistarContent() {
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
-          {password.length > 0 && (
-            <div className="mt-2 space-y-1">
-              {[
-                { check: passwordChecks.length, label: "Minimo 8 caracteres" },
-                { check: passwordChecks.upper, label: "Uma letra maiuscula" },
-                { check: passwordChecks.number, label: "Um numero" },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className={`text-xs flex items-center gap-1.5 ${
-                    item.check ? "text-emerald-400" : "text-[var(--foreground-muted)]"
-                  }`}
-                >
-                  <div
-                    className={`w-1.5 h-1.5 rounded-full ${
-                      item.check ? "bg-emerald-400" : "bg-[var(--foreground-muted)]"
-                    }`}
-                  />
-                  {item.label}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         <div>
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-            Confirmar Senha
+            {t.auth.confirm_password}
           </label>
           <div className="relative">
             <Lock
@@ -207,7 +182,7 @@ function RegistarContent() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              placeholder="Repita a senha"
+              placeholder={t.auth.confirm_password}
               className={`w-full bg-[var(--background-card)] border rounded-lg pl-10 pr-4 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] outline-none transition-colors ${
                 confirmPassword && confirmPassword !== password
                   ? "border-red-500"
@@ -223,17 +198,17 @@ function RegistarContent() {
           className="w-full py-3 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {loading ? <Loader2 size={18} className="animate-spin" /> : <UserPlus size={18} />}
-          {loading ? "A criar conta..." : "Criar Conta"}
+          {loading ? t.auth.creating_account : t.auth.create_account}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-[var(--foreground-muted)]">
-        Ja tem conta?{" "}
+        {t.auth.already_have_account}{" "}
         <Link
           href={redirect ? `/login?returnUrl=${encodeURIComponent(redirect)}` : "/login"}
           className="text-[var(--gold)] hover:text-[var(--gold)] font-medium transition-colors"
         >
-          Iniciar sessao
+          {t.auth.login_account}
         </Link>
       </p>
     </div>

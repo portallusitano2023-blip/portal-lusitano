@@ -39,8 +39,11 @@ interface CalcResultado {
   pontosForteseFracos: { fortes: string[]; fracos: string[] };
 }
 
-export function generateCalculadoraPDF(form: CalcForm, resultado: CalcResultado): void {
-  const doc = createBasePDF(
+export async function generateCalculadoraPDF(
+  form: CalcForm,
+  resultado: CalcResultado
+): Promise<void> {
+  const doc = await createBasePDF(
     "Relatorio de Avaliacao",
     form.nome ? `Cavalo: ${form.nome}` : "Avaliacao de Puro Sangue Lusitano"
   );

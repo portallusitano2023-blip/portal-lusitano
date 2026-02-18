@@ -1,8 +1,18 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import { DB_ITEMS, TOOLS_ITEMS, COMMUNITY_ITEMS } from "./navData";
+import { useMemo } from "react";
+import { useLanguage } from "@/context/LanguageContext";
+import { getDbItems, getToolsItems, getCommunityItems } from "./navData";
 
 export function LusitanoDropdown() {
+  const { t } = useLanguage();
+
+  const dbItems = useMemo(() => getDbItems(t.nav), [t]);
+  const toolsItems = useMemo(() => getToolsItems(t.nav), [t]);
+  const communityItems = useMemo(() => getCommunityItems(t.nav), [t]);
+
   return (
     <div className="group/dd relative">
       <span className="flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300 py-2 cursor-pointer">
@@ -22,9 +32,9 @@ export function LusitanoDropdown() {
           {/* Coluna 1 - Base de Dados */}
           <div>
             <span className="text-[9px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2 block font-medium">
-              Base de Dados
+              {t.nav.database}
             </span>
-            {DB_ITEMS.map((item) => (
+            {dbItems.map((item) => (
               <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
                 <item.icon size={16} className={item.iconClass || "text-[var(--gold)]"} />
                 <div>
@@ -38,9 +48,9 @@ export function LusitanoDropdown() {
           {/* Coluna 2 - Ferramentas e Comunidade */}
           <div>
             <span className="text-[9px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2 block font-medium">
-              Ferramentas
+              {t.nav.tools}
             </span>
-            {TOOLS_ITEMS.map((item) => (
+            {toolsItems.map((item) => (
               <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
                 <item.icon size={16} className="text-[var(--gold)]" />
                 <div>
@@ -51,9 +61,9 @@ export function LusitanoDropdown() {
             ))}
 
             <span className="text-[9px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2 mt-4 block font-medium">
-              Comunidade
+              {t.nav.community}
             </span>
-            {COMMUNITY_ITEMS.map((item) => (
+            {communityItems.map((item) => (
               <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
                 <item.icon size={16} className="text-[var(--gold)]" />
                 <div>

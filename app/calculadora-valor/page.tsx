@@ -116,6 +116,9 @@ export default function CalculadoraValorPage() {
     try {
       const { generateCalculadoraPDF } = await import("@/lib/tools/pdf/calculadora-pdf");
       await generateCalculadoraPDF(form, resultado);
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") console.error("[Calculadora]", error);
+      alert("Erro ao exportar PDF. Tente novamente.");
     } finally {
       setIsExporting(false);
     }

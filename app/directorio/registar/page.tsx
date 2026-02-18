@@ -87,7 +87,7 @@ export default function RegistarCoudelariaPage() {
         setStep(3); // Sucesso
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[DirectorioRegistar]", error);
     } finally {
       setIsSubmitting(false);
     }

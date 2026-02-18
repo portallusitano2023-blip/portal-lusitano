@@ -82,7 +82,7 @@ export default function AdminDashboard() {
     try {
       await Promise.all([loadStats(), loadFinancial(), loadMessages(), loadRecentMessages()]);
     } catch (err) {
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[AdminDashboard]", err);
       setError("Erro ao carregar alguns dados");
     } finally {
       setIsLoading(false);
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
       const data = await response.json();
       setStats(data);
     } catch (err) {
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[AdminDashboard]", err);
     }
   };
 
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
       const data = await response.json();
       setFinancial(data.overview);
     } catch (err) {
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[AdminDashboard]", err);
     }
   };
 
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
       const data = await response.json();
       setMessages(data.stats);
     } catch (err) {
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[AdminDashboard]", err);
     }
   };
 
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
       const data = await response.json();
       setRecentMessages(data.messages);
     } catch (err) {
-      void err;
+      if (process.env.NODE_ENV === "development") console.error("[AdminDashboard]", err);
     }
   };
 
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
       await fetch("/api/auth/logout", { method: "POST" });
       router.push("/admin/login");
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminDashboard]", error);
     }
   };
 

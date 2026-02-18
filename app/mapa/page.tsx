@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, memo } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import dynamic from "next/dynamic";
 import {
   MapPin,
@@ -197,6 +198,7 @@ const GridCard = memo(function GridCard({
 });
 
 export default function MapaPage() {
+  const { t } = useLanguage();
   const [coudelarias, setCoudelarias] = useState<Coudelaria[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRegiao, setSelectedRegiao] = useState<string | null>(null);
@@ -214,7 +216,7 @@ export default function MapaPage() {
           setCoudelarias(data.coudelarias || []);
         }
       } catch (error) {
-        void error;
+        if (process.env.NODE_ENV === "development") console.error("[Mapa]", error);
       } finally {
         setLoading(false);
       }
@@ -281,33 +283,33 @@ export default function MapaPage() {
           <div className="inline-flex items-center gap-2 mb-4 px-5 py-2 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-full">
             <Compass className="text-[var(--gold)]" size={16} />
             <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)]">
-              Mapa Interativo
+              {t.mapa.badge}
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif mb-4 text-[var(--foreground)]">
-            Descubra <span className="text-[var(--gold)]">Portugal</span>
+            {t.mapa.title.split("Portugal")[0]}
+            <span className="text-[var(--gold)]">Portugal</span>
+            {t.mapa.title.split("Portugal")[1]}
           </h1>
           <p className="text-[var(--foreground-secondary)] max-w-xl mx-auto mb-8">
-            Explore{" "}
-            <span className="text-[var(--gold)] font-semibold">{stats.total} coudelarias</span> de
-            elite espalhadas pelo país.
+            {t.mapa.subtitle}
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <StatCard
               icon={MapPin}
-              label="Coudelarias"
+              label={t.mapa.stat_studs}
               value={stats.total}
               color="from-[var(--gold)] to-[#E8D5A3]"
             />
             <StatCard
               icon={Map}
-              label="Regiões"
+              label={t.mapa.stat_regions}
               value={stats.regioes}
               color="from-emerald-500 to-emerald-300"
             />
             <StatCard
               icon={Crown}
-              label="Destaque"
+              label={t.mapa.stat_horses}
               value={stats.destaque}
               color="from-purple-500 to-purple-300"
             />
@@ -323,13 +325,13 @@ export default function MapaPage() {
               onClick={() => setViewMode("map")}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm transition-colors ${viewMode === "map" ? "bg-[var(--gold)] text-black" : "text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"}`}
             >
-              <Layers size={16} /> Mapa
+              <Layers size={16} /> {t.mapa.view_map}
             </button>
             <button
               onClick={() => setViewMode("list")}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm transition-colors ${viewMode === "list" ? "bg-[var(--gold)] text-black" : "text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"}`}
             >
-              <List size={16} /> Lista
+              <List size={16} /> {t.mapa.view_list}
             </button>
           </div>
 
@@ -341,7 +343,7 @@ export default function MapaPage() {
               />
               <input
                 type="text"
-                placeholder="Pesquisar..."
+                placeholder={t.mapa.search_placeholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-3 py-2 bg-black/40 border border-[var(--border)] rounded-lg text-white text-sm placeholder-[var(--foreground-muted)] focus:outline-none focus:border-[var(--gold)]/50"
@@ -353,16 +355,13 @@ export default function MapaPage() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24">
             <Compass className="text-[var(--gold)] animate-spin" size={40} />
-            <p className="text-[var(--foreground-secondary)] mt-4">A carregar...</p>
+            <p className="text-[var(--foreground-secondary)] mt-4">{t.mapa.loading}</p>
           </div>
         ) : viewMode === "map" ? (
           <div className="grid lg:grid-cols-12 gap-6">
             {/* Mapa Leaflet */}
             <div className="lg:col-span-8">
-              <div
-                className="relative border border-[var(--border)] rounded-2xl overflow-hidden"
-                style={{ height: "600px" }}
-              >
+              <div className="relative border border-[var(--border)] rounded-2xl overflow-hidden h-[400px] sm:h-[500px] lg:h-[600px]">
                 <LeafletMap
                   coudelarias={searchQuery ? filteredCoudelarias : coudelarias}
                   flyTo={flyTo}
@@ -379,7 +378,7 @@ export default function MapaPage() {
                     <div className="flex items-start justify-between">
                       <div>
                         <span className="text-[9px] text-[var(--gold)] uppercase tracking-wider">
-                          Região
+                          {t.mapa.region}
                         </span>
                         <h2 className="text-xl font-serif text-[var(--foreground)]">
                           {selectedRegiao}
@@ -388,7 +387,7 @@ export default function MapaPage() {
                           <span className="text-[var(--gold)] font-bold">
                             {coudelariasPorRegiao[selectedRegiao]?.length || 0}
                           </span>{" "}
-                          coudelarias
+                          {t.mapa.studs_count}
                         </p>
                       </div>
                       <button
@@ -416,7 +415,9 @@ export default function MapaPage() {
                   <div className="mb-4 p-4 bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl">
                     <div className="flex items-center gap-2 mb-1">
                       <Layers className="text-[var(--gold)]" size={16} />
-                      <h2 className="font-serif text-[var(--foreground)]">Explorar Regiões</h2>
+                      <h2 className="font-serif text-[var(--foreground)]">
+                        {t.mapa.explore_regions}
+                      </h2>
                     </div>
                     <p className="text-[var(--foreground-muted)] text-xs">
                       Selecione uma região ou clique num pin no mapa
@@ -441,7 +442,7 @@ export default function MapaPage() {
                                   {regiao}
                                 </h3>
                                 <p className="text-[var(--foreground-muted)] text-[10px]">
-                                  {list.length} coudelarias
+                                  {list.length} {t.mapa.studs_count}
                                 </p>
                               </div>
                             </div>
@@ -519,7 +520,9 @@ export default function MapaPage() {
                       className="flex flex-col items-center p-2 bg-[var(--background-card)] rounded-lg text-center"
                     >
                       <Phone size={16} className="text-[var(--gold)] mb-1" />
-                      <span className="text-[10px] text-[var(--foreground-secondary)]">Ligar</span>
+                      <span className="text-[10px] text-[var(--foreground-secondary)]">
+                        {t.mapa.call}
+                      </span>
                     </a>
                   )}
                   {selectedCoudelaria.email && (
@@ -528,7 +531,9 @@ export default function MapaPage() {
                       className="flex flex-col items-center p-2 bg-[var(--background-card)] rounded-lg text-center"
                     >
                       <Mail size={16} className="text-[var(--gold)] mb-1" />
-                      <span className="text-[10px] text-[var(--foreground-secondary)]">Email</span>
+                      <span className="text-[10px] text-[var(--foreground-secondary)]">
+                        {t.mapa.email}
+                      </span>
                     </a>
                   )}
                   {selectedCoudelaria.website && (
@@ -540,7 +545,7 @@ export default function MapaPage() {
                     >
                       <Globe size={16} className="text-[var(--gold)] mb-1" />
                       <span className="text-[10px] text-[var(--foreground-secondary)]">
-                        Website
+                        {t.mapa.website}
                       </span>
                     </a>
                   )}
@@ -549,7 +554,7 @@ export default function MapaPage() {
                   href={`/directorio/${selectedCoudelaria.slug}`}
                   className="flex items-center justify-center gap-2 w-full bg-[var(--gold)] text-black py-2.5 font-bold rounded-lg hover:bg-[var(--gold-hover)] transition-colors"
                 >
-                  <Navigation size={16} /> Ver Página
+                  <Navigation size={16} /> {t.mapa.view_page}
                 </Link>
               </div>
             </div>

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { MapPin, Search, Filter, Crown, ArrowRight, Plus, Users, Star } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import Pagination from "@/components/ui/Pagination";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -84,7 +85,8 @@ function DirectorioContent() {
           setCoudelarias(data.coudelarias || []);
         }
       } catch (error) {
-        void error;
+        if (process.env.NODE_ENV === "development")
+          console.error("[Directorio] fetch failed:", error);
       } finally {
         setLoading(false);
       }
@@ -299,6 +301,17 @@ function DirectorioContent() {
                   {t.directorio.no_results}
                 </h3>
                 <p className="text-[var(--foreground-muted)]">{t.directorio.no_results_hint}</p>
+                {(searchTerm || selectedRegiao !== "Todas") && (
+                  <button
+                    onClick={() => {
+                      setSearchTerm("");
+                      setSelectedRegiao("Todas");
+                    }}
+                    className="mt-4 text-sm text-[var(--gold)] hover:underline"
+                  >
+                    {t.directorio.clear_filters || "Limpar filtros"}
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -329,9 +342,12 @@ function FeaturedCard({
         href={`/directorio/${coudelaria.slug}`}
         className="group block relative h-[400px] overflow-hidden"
       >
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-          style={{ backgroundImage: `url(${image})` }}
+        <Image
+          src={image}
+          alt={coudelaria.nome}
+          fill
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
@@ -399,9 +415,12 @@ function CoudelariaCard({
       >
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-            style={{ backgroundImage: `url(${image})` }}
+          <Image
+            src={image}
+            alt={coudelaria.nome}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
           {coudelaria.ano_fundacao && (

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { verifySession } from "@/lib/auth";
+import { strictLimiter } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
 // Cliente Supabase com service role para upload
@@ -17,6 +18,17 @@ export async function POST(request: NextRequest) {
     const email = await verifySession();
     if (!email) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
+    // Rate limit: 5 requests per minute per IP
+    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    try {
+      await strictLimiter.check(5, ip);
+    } catch {
+      return NextResponse.json(
+        { error: "Demasiados pedidos. Tente novamente em breve." },
+        { status: 429 }
+      );
     }
     const formData = await request.formData();
     const file = formData.get("file") as File;
@@ -82,6 +94,17 @@ export async function DELETE(request: NextRequest) {
     const email = await verifySession();
     if (!email) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
+    // Rate limit: 5 requests per minute per IP
+    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    try {
+      await strictLimiter.check(5, ip);
+    } catch {
+      return NextResponse.json(
+        { error: "Demasiados pedidos. Tente novamente em breve." },
+        { status: 429 }
+      );
     }
     const { searchParams } = new URL(request.url);
     const path = searchParams.get("path");

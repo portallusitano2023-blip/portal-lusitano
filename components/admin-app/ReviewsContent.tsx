@@ -23,7 +23,7 @@ export default function ReviewsContent() {
         setReviews(data.reviews || []);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[ReviewsContent]", error);
     } finally {
       setLoading(false);
     }
@@ -41,7 +41,7 @@ export default function ReviewsContent() {
         setSelectedReview(null);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[ReviewsContent]", error);
     }
   }
 

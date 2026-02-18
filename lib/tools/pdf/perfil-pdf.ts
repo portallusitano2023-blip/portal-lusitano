@@ -34,8 +34,8 @@ interface PerfilData {
   nextSteps: string[];
 }
 
-export function generatePerfilPDF(profileData: PerfilData): void {
-  const doc = createBasePDF("Analise de Perfil Equestre", profileData.title);
+export async function generatePerfilPDF(profileData: PerfilData): Promise<void> {
+  const doc = await createBasePDF("Analise de Perfil Equestre", profileData.title);
 
   let y = 50;
 

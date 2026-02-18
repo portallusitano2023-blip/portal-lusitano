@@ -21,7 +21,7 @@ export default function HomeContent({ products }: { products: ShopifyProduct[] }
   return (
     <main className="bg-[var(--background)] min-h-screen text-[var(--foreground)] selection:bg-[var(--gold)] selection:text-black">
       {/* HERO SECTION - VOLTA AO ESTILO NOBREZA */}
-      <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+      <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-6 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[var(--background-secondary)]/30 via-[var(--background)] to-[var(--background)] z-0"></div>
 
         <div className="relative z-10 text-center flex flex-col items-center animate-fade-in-up max-w-4xl">
@@ -109,7 +109,7 @@ export default function HomeContent({ products }: { products: ShopifyProduct[] }
       </section>
 
       {/* MANIFESTO (Rodapé) */}
-      <section className="py-40 bg-[var(--background-secondary)] text-center px-6 mt-20 border-t border-[var(--border)]">
+      <section className="py-20 sm:py-28 md:py-40 bg-[var(--background-secondary)] text-center px-6 mt-20 border-t border-[var(--border)]">
         <div className="max-w-2xl mx-auto">
           <span className="text-3xl text-[var(--gold)] font-serif mb-8 block opacity-80">❦</span>
           <p className="text-xl md:text-2xl font-serif italic leading-relaxed text-[var(--foreground-secondary)]">

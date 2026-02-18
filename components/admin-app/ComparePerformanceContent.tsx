@@ -28,7 +28,7 @@ export default function ComparePerformanceContent() {
       const data = await response.json();
       setItems(data.items || []);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[ComparePerformance]", error);
       setItems([]);
     } finally {
       setLoading(false);

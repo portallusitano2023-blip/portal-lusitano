@@ -60,7 +60,7 @@ export default function CoudelariasPage() {
       setCoudelarias(data.coudelarias || []);
       setStats(data.stats);
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminCoudelarias]", error);
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +78,7 @@ export default function CoudelariasPage() {
         loadCoudelarias();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminCoudelarias]", error);
     }
   };
 
@@ -94,7 +94,7 @@ export default function CoudelariasPage() {
         loadCoudelarias();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminCoudelarias]", error);
     }
   };
 

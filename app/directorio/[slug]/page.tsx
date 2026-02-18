@@ -156,7 +156,7 @@ export default function CoudelariaPage() {
           throw new Error(`Erro ${res.status}: ${res.statusText}`);
         }
       } catch (error) {
-        void error;
+        if (process.env.NODE_ENV === "development") console.error("[DirectorioSlug]", error);
         // ✅ Se houver erro de rede, mostra mensagem genérica
         setLoading(false);
       } finally {
@@ -181,7 +181,7 @@ export default function CoudelariaPage() {
           setReviewStats(data.stats || { total: 0, media: 0 });
         }
       } catch (error) {
-        void error;
+        if (process.env.NODE_ENV === "development") console.error("[DirectorioSlug]", error);
       }
     }
     fetchReviews();
@@ -237,7 +237,7 @@ export default function CoudelariaPage() {
         showToast("error", errorData.message || "Erro ao submeter avaliação. Tente novamente.");
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[DirectorioSlug]", error);
       // ✅ Erro de rede
       showToast("error", "Erro de conexão. Verifique sua internet e tente novamente.");
     } finally {

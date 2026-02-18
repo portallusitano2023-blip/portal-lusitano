@@ -48,7 +48,7 @@ export default function AdminCavalosPage() {
         setCavalos(data.cavalos || []);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminCavalos]", error);
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ export default function AdminCavalosPage() {
         resetForm();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminCavalos]", error);
     }
   }
 
@@ -91,7 +91,7 @@ export default function AdminCavalosPage() {
         fetchCavalos();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminCavalos]", error);
     }
   }
 
@@ -106,7 +106,7 @@ export default function AdminCavalosPage() {
         fetchCavalos();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[AdminCavalos]", error);
     }
   }
 

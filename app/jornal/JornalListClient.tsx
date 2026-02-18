@@ -16,7 +16,7 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import { useInViewOnce } from "@/hooks/useInViewOnce";
 import TextSplit from "@/components/TextSplit";
-import { urlFor } from "@/lib/client";
+import { urlFor } from "@/lib/sanity-image";
 import type { SanityArticle } from "@/lib/sanity-queries";
 
 interface JornalListClientProps {
@@ -146,7 +146,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
           style={{ animationDelay: "0.4s" }}
         >
           <Link href={`/jornal/${featuredArticle.slug.current}`}>
-            <div className="group relative w-full h-[600px] overflow-hidden border border-[var(--border)] rounded-sm cursor-pointer">
+            <div className="group relative w-full h-[350px] sm:h-[450px] md:h-[600px] overflow-hidden border border-[var(--border)] rounded-sm cursor-pointer">
               {getImageUrl(featuredArticle) && (
                 <Image
                   src={getImageUrl(featuredArticle)}
@@ -170,7 +170,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                     </span>
                   )}
                 </div>
-                <h2 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-4 leading-tight">
+                <h2 className="text-2xl sm:text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-4 leading-tight">
                   {featuredArticle.title}
                 </h2>
                 <p className="text-[var(--foreground-secondary)] text-lg mb-6 font-serif italic">
@@ -309,11 +309,12 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                   <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors bg-[var(--surface-hover)]">
                     <div className="w-full h-64 overflow-hidden relative">
                       {getImageUrl(article) && (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
+                        <Image
                           src={getImageUrl(article)}
                           alt={article.image?.alt || article.title}
-                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
                         />
                       )}
                       <div className="absolute top-4 right-4 flex items-center gap-2">
@@ -353,11 +354,12 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                   <article className="group cursor-pointer flex gap-6 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors bg-[var(--surface-hover)] p-4">
                     <div className="w-32 h-32 flex-shrink-0 overflow-hidden relative">
                       {getImageUrl(article) && (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
+                        <Image
                           src={getImageUrl(article)}
                           alt={article.image?.alt || article.title}
-                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500"
+                          fill
+                          sizes="128px"
+                          className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500"
                         />
                       )}
                     </div>

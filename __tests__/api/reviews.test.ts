@@ -13,7 +13,7 @@ vi.mock("@/lib/supabase", () => ({
 }));
 
 vi.mock("@/lib/rate-limit", () => ({
-  strictLimiter: {
+  apiLimiter: {
     check: vi.fn().mockResolvedValue(undefined),
   },
 }));
@@ -88,7 +88,7 @@ describe("GET /api/reviews", () => {
     }));
 
     vi.doMock("@/lib/rate-limit", () => ({
-      strictLimiter: {
+      apiLimiter: {
         check: vi.fn().mockResolvedValue(undefined),
       },
     }));
@@ -201,7 +201,7 @@ describe("POST /api/reviews - coudelaria", () => {
     }));
 
     vi.doMock("@/lib/rate-limit", () => ({
-      strictLimiter: {
+      apiLimiter: {
         check: vi.fn().mockResolvedValue(undefined),
       },
     }));
@@ -278,7 +278,7 @@ describe("POST /api/reviews - coudelaria", () => {
     vi.resetModules();
 
     vi.doMock("@/lib/rate-limit", () => ({
-      strictLimiter: {
+      apiLimiter: {
         check: vi.fn().mockRejectedValue(new Error("Rate limit")),
       },
     }));
@@ -336,7 +336,7 @@ describe("POST /api/reviews - ferramenta", () => {
     }));
 
     vi.doMock("@/lib/rate-limit", () => ({
-      strictLimiter: {
+      apiLimiter: {
         check: vi.fn().mockResolvedValue(undefined),
       },
     }));
@@ -427,7 +427,7 @@ describe("POST /api/reviews - ferramenta", () => {
       }));
 
       vi.doMock("@/lib/rate-limit", () => ({
-        strictLimiter: {
+        apiLimiter: {
           check: vi.fn().mockResolvedValue(undefined),
         },
       }));

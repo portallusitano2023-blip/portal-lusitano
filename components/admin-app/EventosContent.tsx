@@ -76,7 +76,7 @@ export default function EventosContent() {
         setEventos(data.eventos || []);
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[EventosContent]", error);
     } finally {
       setLoading(false);
     }
@@ -99,7 +99,7 @@ export default function EventosContent() {
         resetForm();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[EventosContent]", error);
     }
   }
 
@@ -114,7 +114,7 @@ export default function EventosContent() {
         fetchEventos();
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[EventosContent]", error);
     }
   }
 

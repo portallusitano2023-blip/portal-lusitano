@@ -531,7 +531,7 @@ export default function TasksContent() {
         setAdminUsers(usersData.users.map((u: { email: string }) => u.email));
       }
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[TasksContent]", error);
       showToast("Erro ao carregar dados", "error");
     } finally {
       setLoading(false);
@@ -563,7 +563,7 @@ export default function TasksContent() {
       setShowModal(false);
       loadData();
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[TasksContent]", error);
       showToast("Erro ao criar tarefa", "error");
     }
   };
@@ -585,7 +585,7 @@ export default function TasksContent() {
       setEditingTask(null);
       loadData();
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[TasksContent]", error);
       showToast("Erro ao atualizar tarefa", "error");
     }
   };
@@ -603,7 +603,7 @@ export default function TasksContent() {
       showToast("Tarefa eliminada com sucesso!", "success");
       loadData();
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[TasksContent]", error);
       showToast("Erro ao eliminar tarefa", "error");
     }
   };
@@ -639,7 +639,7 @@ export default function TasksContent() {
       showToast("Tarefa movida com sucesso!", "success");
       loadData();
     } catch (error) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[TasksContent]", error);
       showToast("Erro ao mover tarefa", "error");
       // Revert on error
       loadData();

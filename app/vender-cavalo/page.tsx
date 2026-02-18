@@ -204,7 +204,7 @@ export default function VenderCavaloPage() {
 
       window.location.href = data.url;
     } catch (error: unknown) {
-      void error;
+      if (process.env.NODE_ENV === "development") console.error("[VenderCavalo]", error);
       const message = error instanceof Error ? error.message : "Erro desconhecido";
       alert(
         `Erro ao processar pagamento: ${message}. Por favor, tente novamente ou contacte o suporte.`

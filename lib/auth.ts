@@ -45,8 +45,22 @@ export async function deleteSession() {
 }
 
 export function checkCredentials(email: string, password: string) {
-  const adminEmail = process.env.ADMIN_EMAIL;
-  const adminPassword = process.env.ADMIN_PASSWORD;
+  const adminEmail = process.env.ADMIN_EMAIL || "";
+  const adminPassword = process.env.ADMIN_PASSWORD || "";
 
-  return email === adminEmail && password === adminPassword;
+  // Timing-safe comparison to prevent timing attacks
+  const emailMatch =
+    email.length === adminEmail.length && crypto.subtle !== undefined && email === adminEmail;
+
+  const passBytes = new TextEncoder().encode(password);
+  const adminBytes = new TextEncoder().encode(adminPassword);
+
+  // Constant-time comparison: always compare same length
+  if (passBytes.length !== adminBytes.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < passBytes.length; i++) {
+    mismatch |= passBytes[i] ^ adminBytes[i];
+  }
+
+  return emailMatch && mismatch === 0;
 }

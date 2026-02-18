@@ -91,7 +91,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
           setError("not_found");
         }
       } catch (err) {
-        void err;
+        if (process.env.NODE_ENV === "development") console.error("[CavaloSlug]", err);
 
         // Tratamento de erro especifico
         if (err instanceof Error) {

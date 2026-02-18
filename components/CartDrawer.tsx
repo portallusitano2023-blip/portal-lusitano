@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { X, Minus, Plus, ShoppingBag } from "lucide-react";
@@ -64,13 +64,17 @@ export default function CartDrawer() {
   }, [isCartOpen, closeCart]);
 
   const ct = cartText[language];
+  const subtotal = useMemo(
+    () => cart.reduce((total, item) => total + Number(item.price) * item.quantity, 0).toFixed(2),
+    [cart]
+  );
 
   return (
     <div
       className={`fixed inset-0 z-[100] ${isCartOpen ? "pointer-events-auto" : "pointer-events-none"}`}
     >
       <div
-        className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500 ease-in-out ${
+        className={`absolute inset-0 bg-black/70 transition-opacity duration-300 ease-out ${
           isCartOpen ? "opacity-100" : "opacity-0"
         }`}
         onClick={closeCart}
@@ -78,9 +82,10 @@ export default function CartDrawer() {
 
       <div
         ref={drawerRef}
-        className={`absolute top-0 right-0 h-full w-full md:w-[450px] bg-[var(--background)] border-l border-[var(--border)] shadow-2xl transform transition-transform duration-700 ease-out ${
+        className={`absolute top-0 right-0 h-full w-full md:w-[450px] bg-[var(--background)] border-l border-[var(--border)] shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
+        style={{ willChange: "transform" }}
       >
         {/* Only render inner content when cart is open — avoids rendering images, computing subtotals etc when hidden */}
         {isCartOpen && (
@@ -121,7 +126,7 @@ export default function CartDrawer() {
               ) : (
                 <div className="space-y-8">
                   {cart.map((item) => (
-                    <div key={item.id} className="flex gap-6 animate-fade-in">
+                    <div key={item.id} className="flex gap-6">
                       <div className="w-24 h-32 flex-shrink-0 bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative">
                         {item.image ? (
                           <Image
@@ -145,7 +150,7 @@ export default function CartDrawer() {
                             </h3>
                             <button
                               onClick={() => removeFromCart(item.id)}
-                              className="text-[var(--foreground-secondary)] hover:text-red-400 text-xs uppercase"
+                              className="text-[var(--foreground-secondary)] hover:text-red-400 text-xs uppercase p-2 min-h-[44px] flex items-center touch-manipulation"
                             >
                               {ct.remove}
                             </button>
@@ -154,11 +159,11 @@ export default function CartDrawer() {
                             {Number(item.price).toFixed(2)} EUR
                           </p>
                         </div>
-                        <div className="flex items-center gap-4 border border-[var(--border)] bg-[var(--surface-hover)] w-fit px-3 py-2 mt-4">
+                        <div className="flex items-center gap-2 border border-[var(--border)] bg-[var(--surface-hover)] w-fit mt-4">
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             disabled={item.quantity <= 1}
-                            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
+                            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation disabled:opacity-30"
                             aria-label={
                               language === "pt"
                                 ? `Diminuir quantidade de ${item.title}`
@@ -167,12 +172,12 @@ export default function CartDrawer() {
                           >
                             <Minus size={14} />
                           </button>
-                          <span className="text-[var(--foreground)] font-serif w-6 text-center text-sm">
+                          <span className="text-[var(--foreground)] font-serif w-8 text-center text-sm">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
+                            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
                             aria-label={
                               language === "pt"
                                 ? `Aumentar quantidade de ${item.title}`
@@ -201,10 +206,7 @@ export default function CartDrawer() {
                     </p>
                   </div>
                   <p className="text-3xl font-serif text-[var(--foreground)]">
-                    {cart
-                      .reduce((total, item) => total + Number(item.price) * item.quantity, 0)
-                      .toFixed(2)}{" "}
-                    <span className="text-sm text-[var(--foreground-muted)]">EUR</span>
+                    {subtotal} <span className="text-sm text-[var(--foreground-muted)]">EUR</span>
                   </p>
                 </div>
                 <a
