@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Clock, Calendar, Newspaper, FileText } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { urlFor } from "@/lib/sanity-image";
 import type { SanityArticle } from "@/lib/sanity-queries";
 import PortableTextRenderer from "@/components/journal/PortableTextComponents";
@@ -55,6 +56,7 @@ export default function ArticlePageClient({
   relatedArticles,
 }: ArticlePageClientProps) {
   const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   // Fallback para dados locais se artigo Sanity não existe
   if (!article && legacyId) {
@@ -90,7 +92,7 @@ export default function ArticlePageClient({
           <ol className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
             <li>
               <Link href="/" className="hover:text-[var(--gold)] transition-colors">
-                {language === "pt" ? "Início" : "Home"}
+                {tr("Início", "Home", "Inicio")}
               </Link>
             </li>
             <li aria-hidden="true" className="text-[var(--gold)]/40">
@@ -98,7 +100,7 @@ export default function ArticlePageClient({
             </li>
             <li>
               <Link href="/jornal" className="hover:text-[var(--gold)] transition-colors">
-                {language === "pt" ? "Jornal" : "Journal"}
+                {tr("Jornal", "Journal", "Revista")}
               </Link>
             </li>
             <li aria-hidden="true" className="text-[var(--gold)]/40">
@@ -200,7 +202,7 @@ export default function ArticlePageClient({
         <ol className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
           <li>
             <Link href="/" className="hover:text-[var(--gold)] transition-colors">
-              {language === "pt" ? "Início" : "Home"}
+              {tr("Início", "Home", "Inicio")}
             </Link>
           </li>
           <li aria-hidden="true" className="text-[var(--gold)]/40">
@@ -208,7 +210,7 @@ export default function ArticlePageClient({
           </li>
           <li>
             <Link href="/jornal" className="hover:text-[var(--gold)] transition-colors">
-              {language === "pt" ? "Jornal" : "Journal"}
+              {tr("Jornal", "Journal", "Revista")}
             </Link>
           </li>
           <li aria-hidden="true" className="text-[var(--gold)]/40">
@@ -255,11 +257,11 @@ export default function ArticlePageClient({
               </span>
               {isPost ? (
                 <span className="inline-flex items-center gap-1.5 text-white/60 text-[9px] uppercase tracking-[0.3em] border border-white/20 px-3 py-2">
-                  <FileText size={12} /> {language === "pt" ? "Crónica" : "Chronicle"}
+                  <FileText size={12} /> {tr("Crónica", "Chronicle")}
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1.5 text-white/60 text-[9px] uppercase tracking-[0.3em] border border-white/20 px-3 py-2">
-                  <Newspaper size={12} /> {language === "pt" ? "Artigo" : "Article"}
+                  <Newspaper size={12} /> {tr("Artigo", "Article")}
                 </span>
               )}
             </div>
@@ -275,7 +277,7 @@ export default function ArticlePageClient({
               </span>
               {article.author?.name && (
                 <span className="text-white/40">
-                  {language === "pt" ? "por" : "by"} {article.author.name}
+                  {tr("por", "by")} {article.author.name}
                 </span>
               )}
             </div>
@@ -305,7 +307,7 @@ export default function ArticlePageClient({
               </div>
             ) : (
               <div className="mt-8 text-[var(--foreground-muted)] italic">
-                {language === "pt" ? "Conteúdo em preparação..." : "Content in preparation..."}
+                {tr("Conteúdo em preparação...", "Content in preparation...")}
               </div>
             )}
 
@@ -338,7 +340,7 @@ export default function ArticlePageClient({
       <div className="max-w-4xl mx-auto px-8 mt-16 mb-8">
         <div className="border-t border-[var(--border)] pt-10">
           <p className="text-[var(--foreground-muted)] text-xs uppercase tracking-widest mb-6">
-            {language === "pt" ? "Explorar o Portal" : "Explore the Portal"}
+            {tr("Explorar o Portal", "Explore the Portal")}
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Link
@@ -348,9 +350,7 @@ export default function ArticlePageClient({
               <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
                 Marketplace
               </span>
-              <span className="text-sm font-serif">
-                {language === "pt" ? "Cavalos à Venda" : "Horses for Sale"}
-              </span>
+              <span className="text-sm font-serif">{tr("Cavalos à Venda", "Horses for Sale")}</span>
             </Link>
             <Link
               href="/directorio"
@@ -359,9 +359,7 @@ export default function ArticlePageClient({
               <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
                 Directório
               </span>
-              <span className="text-sm font-serif">
-                {language === "pt" ? "Coudelarias" : "Stud Farms"}
-              </span>
+              <span className="text-sm font-serif">{tr("Coudelarias", "Stud Farms")}</span>
             </Link>
             <Link
               href="/cavalos-famosos"
@@ -371,7 +369,7 @@ export default function ArticlePageClient({
                 Arquivo
               </span>
               <span className="text-sm font-serif">
-                {language === "pt" ? "Lusitanos Famosos" : "Famous Lusitanos"}
+                {tr("Lusitanos Famosos", "Famous Lusitanos")}
               </span>
             </Link>
             <Link
@@ -381,9 +379,7 @@ export default function ArticlePageClient({
               <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
                 Genealogia
               </span>
-              <span className="text-sm font-serif">
-                {language === "pt" ? "Linhagens" : "Bloodlines"}
-              </span>
+              <span className="text-sm font-serif">{tr("Linhagens", "Bloodlines")}</span>
             </Link>
           </div>
         </div>

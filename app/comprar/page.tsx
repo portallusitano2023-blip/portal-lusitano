@@ -1,7 +1,8 @@
 import { supabase } from "@/lib/supabase";
-import HorseCard from "@/components/HorseCard";
 import Link from "next/link";
 import { getServerTranslations } from "@/lib/server-i18n";
+import { logger } from "@/lib/logger";
+import MarketplaceGrid from "@/components/MarketplaceGrid";
 
 // ISR: Revalidate marketplace every hour (cavalos can be added/updated)
 export const revalidate = 3600;
@@ -22,7 +23,7 @@ export default async function ComprarPage({
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("[ComprarPage] Supabase error:", error.message);
+    logger.error("[ComprarPage] Supabase error:", error);
   }
 
   if (error) {
@@ -37,9 +38,37 @@ export default async function ComprarPage({
     );
   }
 
+  // Pass filter translations as a plain object to the client component
+  const filterTranslations = {
+    filter_sex: t.comprar_page.filter_sex,
+    filter_price: t.comprar_page.filter_price,
+    filter_discipline: t.comprar_page.filter_discipline,
+    filter_sort: t.comprar_page.filter_sort,
+    filter_all: t.comprar_page.filter_all,
+    filter_male: t.comprar_page.filter_male,
+    filter_female: t.comprar_page.filter_female,
+    filter_castrated: t.comprar_page.filter_castrated,
+    filter_price_under10: t.comprar_page.filter_price_under10,
+    filter_price_10to25: t.comprar_page.filter_price_10to25,
+    filter_price_25to50: t.comprar_page.filter_price_25to50,
+    filter_price_over50: t.comprar_page.filter_price_over50,
+    sort_recent: t.comprar_page.sort_recent,
+    sort_price_asc: t.comprar_page.sort_price_asc,
+    sort_price_desc: t.comprar_page.sort_price_desc,
+    results_count: t.comprar_page.results_count,
+    results_count_plural: t.comprar_page.results_count_plural,
+    clear_filters: t.comprar_page.clear_filters,
+    no_results: t.comprar_page.no_results,
+    no_results_hint: t.comprar_page.no_results_hint,
+    horses_available: t.comprar_page.horses_available,
+    horse_available: t.comprar_page.horse_available,
+  };
+
+  const totalCount = cavalos?.length ?? 0;
+
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 sm:pt-32 md:pt-48 px-4 sm:px-6 md:px-12 lg:px-20 pb-24 sm:pb-32">
-      {/* Header - Responsive */}
+      {/* Header */}
       <header className="mb-8 sm:mb-12 md:mb-24 text-center">
         <span className="text-[var(--gold)] uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[9px] sm:text-[10px] font-bold block mb-2 sm:mb-4">
           {t.comprar_page.prestige_marketplace}
@@ -47,15 +76,13 @@ export default async function ComprarPage({
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif italic text-[var(--foreground)] mb-4 sm:mb-8">
           {t.comprar_page.buy_specimen}
         </h1>
-        <div className="w-16 sm:w-24 h-[1px] bg-[var(--gold)] mx-auto opacity-40"></div>
+        <div className="w-16 sm:w-24 h-[1px] bg-[var(--gold)] mx-auto opacity-40" />
 
-        {/* Count badge */}
-        {cavalos && cavalos.length > 0 && (
+        {/* Total count badge */}
+        {totalCount > 0 && (
           <p className="mt-4 sm:mt-6 text-[var(--foreground-muted)] text-sm">
-            {cavalos.length}{" "}
-            {cavalos.length === 1
-              ? t.comprar_page.horse_available
-              : t.comprar_page.horses_available}
+            {totalCount}{" "}
+            {totalCount === 1 ? t.comprar_page.horse_available : t.comprar_page.horses_available}
           </p>
         )}
       </header>
@@ -76,13 +103,9 @@ export default async function ComprarPage({
         </div>
       </div>
 
-      {/* Grid - Mobile: 2 cols, Tablet: 3 cols, Desktop: 4 cols */}
+      {/* Client component handles filters + sorting + grid */}
       {cavalos && cavalos.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
-          {cavalos.map((c) => (
-            <HorseCard key={c.id} horse={c} href={`/comprar/${c.id}${isDev ? "?dev=true" : ""}`} />
-          ))}
-        </div>
+        <MarketplaceGrid horses={cavalos} isDev={isDev} t={filterTranslations} />
       ) : (
         <div className="text-center py-20 sm:py-32 md:py-40 px-4">
           <p className="text-[var(--foreground-muted)] font-serif italic text-base sm:text-lg md:text-xl font-light">

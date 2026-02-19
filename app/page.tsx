@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import TextSplit from "@/components/TextSplit";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
@@ -30,60 +31,72 @@ import {
 
 export default function Home() {
   const { language, t } = useLanguage();
-  const isPt = language === "pt";
+  const tr = createTranslator(language);
 
   const features = [
     {
       icon: ShoppingCart,
-      title: isPt ? "Comprar Cavalo" : "Buy a Horse",
-      desc: isPt
-        ? "Marketplace com cavalos Lusitanos verificados à venda"
-        : "Marketplace with verified Lusitano horses for sale",
+      title: tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo"),
+      desc: tr(
+        "Marketplace com cavalos Lusitanos verificados à venda",
+        "Marketplace with verified Lusitano horses for sale",
+        "Mercado con caballos Lusitanos verificados en venta"
+      ),
       href: "/comprar",
       accent: "from-amber-500/20 to-orange-500/20",
     },
     {
       icon: Crown,
-      title: isPt ? "Coudelarias" : "Stud Farms",
-      desc: isPt
-        ? "Directório das melhores coudelarias de Portugal"
-        : "Directory of the best stud farms in Portugal",
+      title: tr("Coudelarias", "Stud Farms", "Haras"),
+      desc: tr(
+        "Directório das melhores coudelarias de Portugal",
+        "Directory of the best stud farms in Portugal",
+        "Directorio de los mejores haras de Portugal"
+      ),
       href: "/directorio",
       accent: "from-yellow-500/20 to-amber-500/20",
     },
     {
       icon: Calculator,
-      title: isPt ? "Ferramentas" : "Tools",
-      desc: isPt
-        ? "Calculadora de valor, comparador e análise de perfil"
-        : "Value calculator, comparator and profile analysis",
+      title: tr("Ferramentas", "Tools", "Herramientas"),
+      desc: tr(
+        "Calculadora de valor, comparador e análise de perfil",
+        "Value calculator, comparator and profile analysis",
+        "Calculadora de valor, comparador y análisis de perfil"
+      ),
       href: "/ferramentas",
       accent: "from-emerald-500/20 to-teal-500/20",
     },
     {
       icon: Newspaper,
-      title: isPt ? "Jornal" : "Journal",
-      desc: isPt
-        ? "Artigos, investigação e crónicas sobre o Lusitano"
-        : "Articles, research and chronicles about the Lusitano",
+      title: tr("Jornal", "Journal", "Revista"),
+      desc: tr(
+        "Artigos, investigação e crónicas sobre o Lusitano",
+        "Articles, research and chronicles about the Lusitano",
+        "Artículos, investigación y crónicas sobre el Lusitano"
+      ),
       href: "/jornal",
       accent: "from-blue-500/20 to-indigo-500/20",
     },
     {
       icon: Trophy,
-      title: isPt ? "Lusitanos Notáveis" : "Notable Lusitanos",
-      desc: isPt
-        ? "Galeria de honra dos cavalos que fizeram história"
-        : "Hall of fame of horses that made history",
+      title: tr("Lusitanos Notáveis", "Notable Lusitanos", "Lusitanos Notables"),
+      desc: tr(
+        "Galeria de honra dos cavalos que fizeram história",
+        "Hall of fame of horses that made history",
+        "Galería de honor de los caballos que hicieron historia"
+      ),
       href: "/cavalos-famosos",
       accent: "from-purple-500/20 to-pink-500/20",
     },
     {
       icon: MapPin,
-      title: isPt ? "Mapa Interativo" : "Interactive Map",
-      desc: isPt
-        ? "Encontre coudelarias, eventos e profissionais no mapa"
-        : "Find stud farms, events and professionals on the map",
+      title: tr("Mapa Interativo", "Interactive Map", "Mapa Interactivo"),
+      desc: tr(
+        "Encontre coudelarias, eventos e profissionais no mapa",
+        "Find stud farms, events and professionals on the map",
+        "Encuentre haras, eventos y profesionales en el mapa"
+      ),
       href: "/mapa",
       accent: "from-rose-500/20 to-red-500/20",
     },
@@ -92,71 +105,136 @@ export default function Home() {
   const pillars = [
     {
       icon: BookOpen,
-      title: isPt ? "Conhecimento" : "Knowledge",
-      desc: isPt
-        ? "Arquivo editorial com investigação sobre a raça"
-        : "Editorial archive with research about the breed",
+      title: tr("Conhecimento", "Knowledge", "Conocimiento"),
+      desc: tr(
+        "Arquivo editorial com investigação sobre a raça",
+        "Editorial archive with research about the breed",
+        "Archivo editorial con investigación sobre la raza"
+      ),
     },
     {
       icon: Shield,
-      title: isPt ? "Verificação" : "Verification",
-      desc: isPt ? "Dados verificados e fontes credíveis" : "Verified data and credible sources",
+      title: tr("Verificação", "Verification", "Verificación"),
+      desc: tr(
+        "Dados verificados e fontes credíveis",
+        "Verified data and credible sources",
+        "Datos verificados y fuentes creíbles"
+      ),
     },
     {
       icon: Crown,
-      title: isPt ? "Tradição" : "Tradition",
-      desc: isPt
-        ? "500 anos de história equestre portuguesa"
-        : "500 years of Portuguese equestrian history",
+      title: tr("Tradição", "Tradition", "Tradición"),
+      desc: tr(
+        "500 anos de história equestre portuguesa",
+        "500 years of Portuguese equestrian history",
+        "500 años de historia ecuestre portuguesa"
+      ),
     },
     {
       icon: Gift,
-      title: isPt ? "Comunidade" : "Community",
-      desc: isPt
-        ? "Uma rede de cavaleiros, criadores e entusiastas"
-        : "A network of riders, breeders and enthusiasts",
+      title: tr("Comunidade", "Community", "Comunidad"),
+      desc: tr(
+        "Uma rede de cavaleiros, criadores e entusiastas",
+        "A network of riders, breeders and enthusiasts",
+        "Una red de jinetes, criadores y entusiastas"
+      ),
     },
   ];
 
   const galleryItems = [
     {
       icon: Trophy,
-      label: isPt ? "Dressage" : "Dressage",
-      value: isPt ? "Excelência" : "Excellence",
+      label: tr("Dressage", "Dressage", "Dressage"),
+      value: tr("Excelência", "Excellence", "Excelencia"),
     },
-    { icon: Shield, label: isPt ? "Linhagem" : "Lineage", value: isPt ? "500 Anos" : "500 Years" },
+    {
+      icon: Shield,
+      label: tr("Linhagem", "Lineage", "Linaje"),
+      value: tr("500 Anos", "500 Years", "500 Años"),
+    },
     {
       icon: Star,
-      label: isPt ? "Morfologia" : "Morphology",
-      value: isPt ? "Perfeição" : "Perfection",
+      label: tr("Morfologia", "Morphology", "Morfología"),
+      value: tr("Perfeição", "Perfection", "Perfección"),
     },
     {
       icon: Heart,
-      label: isPt ? "Temperamento" : "Temperament",
-      value: isPt ? "Nobreza" : "Nobility",
+      label: tr("Temperamento", "Temperament", "Temperamento"),
+      value: tr("Nobreza", "Nobility", "Nobleza"),
     },
     {
       icon: Compass,
-      label: isPt ? "Versatilidade" : "Versatility",
-      value: isPt ? "Completo" : "Complete",
+      label: tr("Versatilidade", "Versatility", "Versatilidad"),
+      value: tr("Completo", "Complete", "Completo"),
     },
-    { icon: Feather, label: isPt ? "Elegância" : "Elegance", value: isPt ? "Inata" : "Innate" },
+    {
+      icon: Feather,
+      label: tr("Elegância", "Elegance", "Elegancia"),
+      value: tr("Inata", "Innate", "Innata"),
+    },
     {
       icon: Sparkles,
-      label: isPt ? "Presença" : "Presence",
-      value: isPt ? "Majestosa" : "Majestic",
+      label: tr("Presença", "Presence", "Presencia"),
+      value: tr("Majestosa", "Majestic", "Majestuosa"),
     },
   ];
 
   const stats = [
-    { value: 500, suffix: "+", label: isPt ? "Anos de História" : "Years of History" },
-    { value: 15, suffix: "", label: isPt ? "Cavalos Notáveis" : "Notable Horses" },
-    { value: 6, suffix: "", label: isPt ? "Ferramentas Exclusivas" : "Exclusive Tools" },
-    { value: 3, suffix: "", label: isPt ? "Idiomas" : "Languages" },
+    {
+      value: 500,
+      suffix: "+",
+      label: tr("Anos de História", "Years of History", "Años de Historia"),
+    },
+    { value: 15, suffix: "", label: tr("Cavalos Notáveis", "Notable Horses", "Caballos Notables") },
+    {
+      value: 4,
+      suffix: "",
+      label: tr("Ferramentas Exclusivas", "Exclusive Tools", "Herramientas Exclusivas"),
+    },
+    { value: 3, suffix: "", label: tr("Idiomas", "Languages", "Idiomas") },
+  ];
+
+  const steps = [
+    {
+      number: "01",
+      icon: Compass,
+      title: tr("Pesquise", "Browse", "Explore"),
+      desc: tr(
+        "Filtre por disciplina, preço e localização no nosso marketplace verificado.",
+        "Filter by discipline, price and location on our verified marketplace.",
+        "Filtre por disciplina, precio y ubicación en nuestro marketplace verificado."
+      ),
+    },
+    {
+      number: "02",
+      icon: Heart,
+      title: tr("Contacte", "Connect", "Contacte"),
+      desc: tr(
+        "Entre em contacto directo com o criador ou proprietário e visite o cavalo.",
+        "Get in direct contact with the breeder or owner and visit the horse.",
+        "Entre en contacto directo con el criador o propietario y visite el caballo."
+      ),
+    },
+    {
+      number: "03",
+      icon: Trophy,
+      title: tr("Adquira", "Acquire", "Adquiera"),
+      desc: tr(
+        "Conclua a transacção com confiança e bem-vindo à família Lusitana.",
+        "Complete the transaction with confidence and welcome to the Lusitano family.",
+        "Complete la transacción con confianza y bienvenido a la familia Lusitana."
+      ),
+    },
   ];
 
   return (
-    <main>
+    <main
+      aria-label={tr(
+        "Portal Lusitano — Página Principal",
+        "Portal Lusitano — Home",
+        "Portal Lusitano — Inicio"
+      )}
+    >
       {/* ===== HERO — Full Screen with Parallax ===== */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
         {/* Parallax Background Image */}
@@ -223,7 +301,7 @@ export default function Home() {
                 href="/comprar"
                 className="ripple-btn shimmer-gold inline-block border border-[var(--gold)]/30 bg-black/20 backdrop-blur-md px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-500"
               >
-                {isPt ? "Comprar Cavalo" : "Buy a Horse"}
+                {tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo")}
               </Link>
             </MagneticButton>
             <MagneticButton strength={0.15}>
@@ -277,10 +355,14 @@ export default function Home() {
       <section className="py-20 sm:py-24 overflow-hidden content-auto">
         <RevealOnScroll className="text-center mb-10 px-4">
           <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3 block">
-            {isPt ? "A Essência" : "The Essence"}
+            {tr("A Essência", "The Essence", "La Esencia")}
           </span>
           <h2 className="text-2xl sm:text-3xl font-serif text-[var(--foreground)]">
-            {isPt ? "O Que Define o Lusitano" : "What Defines the Lusitano"}
+            {tr(
+              "O Que Define o Lusitano",
+              "What Defines the Lusitano",
+              "Lo Que Define al Lusitano"
+            )}
           </h2>
         </RevealOnScroll>
 
@@ -310,15 +392,21 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <RevealOnScroll variant="blur-up" className="text-center mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              {isPt ? "Descubra" : "Discover"}
+              {tr("Descubra", "Discover", "Descubra")}
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
-              {isPt ? "Tudo Sobre o Lusitano" : "Everything About the Lusitano"}
+              {tr(
+                "Tudo Sobre o Lusitano",
+                "Everything About the Lusitano",
+                "Todo Sobre el Lusitano"
+              )}
             </h2>
             <p className="text-[var(--foreground-muted)] max-w-xl mx-auto">
-              {isPt
-                ? "A plataforma mais completa dedicada ao cavalo Lusitano"
-                : "The most complete platform dedicated to the Lusitano horse"}
+              {tr(
+                "A plataforma mais completa dedicada ao cavalo Lusitano",
+                "The most complete platform dedicated to the Lusitano horse",
+                "La plataforma más completa dedicada al caballo Lusitano"
+              )}
             </p>
           </RevealOnScroll>
 
@@ -343,7 +431,7 @@ export default function Home() {
                       {feature.desc}
                     </p>
                     <span className="text-[11px] uppercase tracking-wider text-[var(--foreground-muted)] group-hover:text-[var(--gold)] transition-colors flex items-center gap-2">
-                      {isPt ? "Explorar" : "Explore"}
+                      {tr("Explorar", "Explore", "Explorar")}
                       <ArrowRight
                         size={12}
                         className="group-hover:translate-x-2 transition-transform duration-300"
@@ -365,10 +453,10 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
           <RevealOnScroll variant="fade-scale" className="text-center mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              {isPt ? "Os Nossos Pilares" : "Our Pillars"}
+              {tr("Os Nossos Pilares", "Our Pillars", "Nuestros Pilares")}
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
-              {isPt ? "Porquê o Portal Lusitano" : "Why Portal Lusitano"}
+              {tr("Porquê o Portal Lusitano", "Why Portal Lusitano", "Por Qué Portal Lusitano")}
             </h2>
           </RevealOnScroll>
 
@@ -392,6 +480,64 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== COMO FUNCIONA ===== */}
+      <section className="py-20 sm:py-28 border-t border-[var(--border)] content-auto">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <RevealOnScroll variant="fade-scale" className="text-center mb-16">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
+              {tr("Processo", "Process", "Proceso")}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+              {tr(
+                "Como Encontrar o Seu Cavalo",
+                "How to Find Your Horse",
+                "Cómo Encontrar su Caballo"
+              )}
+            </h2>
+            <p className="text-[var(--foreground-muted)] max-w-md mx-auto">
+              {tr(
+                "Três passos simples para encontrar o Lusitano perfeito.",
+                "Three simple steps to find the perfect Lusitano.",
+                "Tres pasos simples para encontrar el Lusitano perfecto."
+              )}
+            </p>
+          </RevealOnScroll>
+
+          <div className="grid sm:grid-cols-3 gap-8 sm:gap-6">
+            {steps.map((step, i) => (
+              <RevealOnScroll key={step.number} delay={i * 150} variant="fade-up">
+                <div className="relative p-6 sm:p-8 bg-[var(--background-card)] border border-[var(--border)] hover:border-[var(--gold)]/20 transition-all duration-500 group">
+                  {/* Step number */}
+                  <span
+                    className="absolute top-4 right-5 text-[64px] font-serif text-[var(--foreground-muted)]/10 leading-none select-none"
+                    aria-hidden="true"
+                  >
+                    {step.number}
+                  </span>
+                  <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mb-5 group-hover:bg-[var(--gold)]/20 group-hover:scale-110 transition-all duration-500">
+                    <step.icon size={22} className="text-[var(--gold)]" />
+                  </div>
+                  <h3 className="text-xl font-serif text-[var(--foreground)] mb-3">{step.title}</h3>
+                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+              </RevealOnScroll>
+            ))}
+          </div>
+
+          <RevealOnScroll className="text-center mt-12" delay={450}>
+            <Link
+              href="/comprar"
+              className="ripple-btn inline-flex items-center gap-3 bg-[var(--gold)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:bg-white transition-all duration-300"
+            >
+              {tr("Ver Cavalos Disponíveis", "View Available Horses", "Ver Caballos Disponibles")}
+              <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       {/* ===== EBOOK CTA ===== */}
       <section className="relative py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden noise-overlay content-auto">
         <div className="absolute inset-0 pointer-events-none">
@@ -408,10 +554,14 @@ export default function Home() {
                   <div className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-[var(--gold)]/20" />
                   <BookOpen className="text-[var(--gold)]/40 mb-4" size={40} />
                   <p className="text-[var(--foreground)]/80 font-serif text-sm text-center px-6">
-                    Introdução ao Cavalo Lusitano
+                    {tr(
+                      "Introdução ao Cavalo Lusitano",
+                      "Introduction to the Lusitano Horse",
+                      "Introducción al Caballo Lusitano"
+                    )}
                   </p>
                   <p className="text-[var(--foreground-muted)] text-[9px] uppercase tracking-[0.3em] mt-3">
-                    30 {isPt ? "Páginas" : "Pages"}
+                    30 {tr("Páginas", "Pages", "Páginas")}
                   </p>
                 </div>
               </div>
@@ -419,15 +569,21 @@ export default function Home() {
               {/* Text */}
               <div className="text-center md:text-left">
                 <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-                  Ebook {isPt ? "Gratuito" : "Free"}
+                  Ebook {tr("Gratuito", "Free", "Gratuito")}
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
-                  {isPt ? "O Guia Essencial do Lusitano" : "The Essential Lusitano Guide"}
+                  {tr(
+                    "O Guia Essencial do Lusitano",
+                    "The Essential Lusitano Guide",
+                    "La Guía Esencial del Lusitano"
+                  )}
                 </h2>
                 <p className="text-[var(--foreground-secondary)] leading-relaxed mb-8 max-w-lg">
-                  {isPt
-                    ? "Descobre a história, as características e o que torna esta raça única. 30 páginas de conhecimento gratuito."
-                    : "Discover the history, characteristics and what makes this breed unique. 30 pages of free knowledge."}
+                  {tr(
+                    "Descobre a história, as características e o que torna esta raça única. 30 páginas de conhecimento gratuito.",
+                    "Discover the history, characteristics and what makes this breed unique. 30 pages of free knowledge.",
+                    "Descubre la historia, las características y lo que hace única a esta raza. 30 páginas de conocimiento gratuito."
+                  )}
                 </p>
                 <MagneticButton>
                   <Link
@@ -435,10 +591,64 @@ export default function Home() {
                     className="ripple-btn inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.15)]"
                   >
                     <Gift size={16} />
-                    {isPt ? "Descarregar Grátis" : "Download Free"}
+                    {tr("Descarregar Grátis", "Download Free", "Descargar Gratis")}
                   </Link>
                 </MagneticButton>
               </div>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* ===== VENDER CAVALO CTA ===== */}
+      <section className="border-t border-[var(--border)] content-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+          <RevealOnScroll variant="fade-right">
+            <div className="bg-[var(--background-card)] border border-[var(--border)] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-all duration-500">
+              {/* Corner ornaments */}
+              <div
+                className="absolute top-4 left-4 w-8 h-8 border-t border-l border-[var(--gold)]/20"
+                aria-hidden="true"
+              />
+              <div
+                className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-[var(--gold)]/20"
+                aria-hidden="true"
+              />
+              {/* Gold orb */}
+              <div
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--gold)]/5 rounded-full blur-[80px] pointer-events-none"
+                aria-hidden="true"
+              />
+
+              <div className="relative text-center sm:text-left">
+                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block">
+                  {tr("Para Proprietários", "For Owners", "Para Propietarios")}
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-serif text-[var(--foreground)] mb-3">
+                  {tr(
+                    "Tem um Cavalo para Vender?",
+                    "Have a Horse to Sell?",
+                    "¿Tiene un Caballo para Vender?"
+                  )}
+                </h2>
+                <p className="text-[var(--foreground-muted)] leading-relaxed max-w-lg">
+                  {tr(
+                    "Publique o seu anúncio e alcance compradores qualificados em Portugal e no mundo.",
+                    "Publish your listing and reach qualified buyers in Portugal and worldwide.",
+                    "Publique su anuncio y alcance compradores calificados en Portugal y en el mundo."
+                  )}
+                </p>
+              </div>
+
+              <MagneticButton strength={0.15}>
+                <Link
+                  href="/vender-cavalo"
+                  className="ripple-btn shimmer-gold inline-flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-[11px] uppercase tracking-[0.15em] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-300 whitespace-nowrap"
+                >
+                  {tr("Anunciar Cavalo", "List Your Horse", "Anunciar Caballo")}
+                  <ArrowRight size={14} aria-hidden="true" />
+                </Link>
+              </MagneticButton>
             </div>
           </RevealOnScroll>
         </div>
@@ -449,15 +659,21 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <RevealOnScroll variant="fade-scale">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              {isPt ? "Loja" : "Shop"}
+              {tr("Loja", "Shop", "Tienda")}
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
-              {isPt ? "Vestuário & Acessórios Equestres" : "Equestrian Clothing & Accessories"}
+              {tr(
+                "Vestuário & Acessórios Equestres",
+                "Equestrian Clothing & Accessories",
+                "Ropa y Accesorios Ecuestres"
+              )}
             </h2>
             <p className="text-[var(--foreground-muted)] max-w-lg mx-auto mb-10">
-              {isPt
-                ? "Peças que celebram a herança equestre portuguesa. Design contemporâneo, tradição secular."
-                : "Pieces that celebrate Portuguese equestrian heritage. Contemporary design, secular tradition."}
+              {tr(
+                "Peças que celebram a herança equestre portuguesa. Design contemporâneo, tradição secular.",
+                "Pieces that celebrate Portuguese equestrian heritage. Contemporary design, secular tradition.",
+                "Piezas que celebran el patrimonio ecuestre portugués. Diseño contemporáneo, tradición secular."
+              )}
             </p>
             <MagneticButton>
               <Link

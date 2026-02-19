@@ -1,3 +1,4 @@
+// Static imports from base-premium — compiled into the same chunk, no lazy-load cache issues
 import {
   createPremiumPDF,
   fillPageBg,
@@ -20,6 +21,8 @@ import {
   addScoreArc,
   safe,
   GOLD,
+  CARD_BG,
+  CARD_BG2,
   ZINC400,
   ZINC600,
   WHITE,
@@ -67,6 +70,8 @@ interface CalcForm {
   reproducao?: boolean;
   descendentes?: number;
   tendencia?: string;
+  certificadoExportacao?: boolean;
+  proprietariosAnteriores?: number;
 }
 
 interface CalcResultado {
@@ -81,6 +86,7 @@ interface CalcResultado {
   recomendacoes: string[];
   comparacao: { tipo: string; valorMedio: number; diferenca: number }[];
   pontosForteseFracos: { fortes: string[]; fracos: string[] };
+  liquidez?: { score: number; tempoDias: number; label: string };
 }
 
 // ─── Label Maps ───────────────────────────────────────────────────────────────
@@ -124,14 +130,32 @@ const TREINO_LABELS = [
 
 const TREINO_BASE_VALUES = [8000, 15000, 25000, 40000, 65000, 100000, 150000, 250000];
 
+// ─── Market multipliers (shared between cover section and page 4) ─────────────
+
+const MARKET_MULT: Record<string, number> = {
+  Portugal: 1.0,
+  Espanha: 1.05,
+  França: 1.15,
+  Alemanha: 1.25,
+  Holanda: 1.2,
+  Bélgica: 1.15,
+  Suíça: 1.3,
+  "Reino Unido": 1.2,
+  Brasil: 0.85,
+  EUA: 1.35,
+  México: 0.9,
+};
+
 // ─── Main Export ─────────────────────────────────────────────────────────────
 
+// Returns blob URL so the caller (page.tsx) can show it in the iframe modal
 export async function generateCalculadoraPDF(
   form: CalcForm,
   resultado: CalcResultado,
   isPremium = false
-): Promise<void> {
-  const doc = await createPremiumPDF();
+): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const doc: any = await createPremiumPDF();
   const horseName = form.nome || "Puro Sangue Lusitano";
   const date = new Date().toLocaleDateString("pt-PT", {
     day: "2-digit",
@@ -184,7 +208,7 @@ export async function generateCalculadoraPDF(
   const nameLines = doc.splitTextToSize(safe(horseName), CONTENT_W - 28);
   doc.text(nameLines[0] ?? safe(horseName), MARGIN, y);
 
-  // Improvement 5: Score arc on cover, right-aligned in header area
+  // Score arc on cover, right-aligned in header area
   addScoreArc(doc, resultado.confianca, PAGE_W - MARGIN - 14, 35, 10);
 
   // Gold underline beneath name
@@ -197,7 +221,65 @@ export async function generateCalculadoraPDF(
   doc.setTextColor(...ZINC400);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.text("Avaliação de Puro Sangue Lusitano", MARGIN, y);
+  doc.text("Avalia\u00E7\u00E3o de Puro Sangue Lusitano", MARGIN, y);
+
+  // ── Improvement 2: 3 top positive factors subtitle line ───────────────────
+  if (resultado.pontosForteseFracos.fortes.length > 0) {
+    const topFactors = resultado.pontosForteseFracos.fortes
+      .slice(0, 3)
+      .map((f) => safe(f).split(" ").slice(0, 4).join(" ")) // shorten each to ~4 words
+      .join(" \u00B7 ");
+    y += 5;
+    doc.setTextColor(...ZINC600);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    doc.text(safe(topFactors), MARGIN, y);
+  }
+
+  // ── Improvement 2: Achievement badges — contextual based on form data ──────
+  const badges: string[] = [];
+  if (form.registoAPSL && form.livroAPSL === "definitivo") {
+    badges.push("APSL Livro Definitivo");
+  } else if (form.registoAPSL) {
+    badges.push("APSL Registado");
+  }
+  if (form.competicoes && form.competicoes !== "nenhuma") {
+    const compBadge: Record<string, string> = {
+      regional: "Competi\u00E7\u00E3o Regional",
+      nacional: "Competi\u00E7\u00E3o Nacional",
+      cdi1: "CDI1* Internacional",
+      cdi3: "CDI3* Grand Prix",
+      cdi5: "CDI5* Top FEI",
+      campeonato_mundo: "Campe\u00E3o Mundial",
+    };
+    badges.push(compBadge[form.competicoes] ?? "Competi\u00E7\u00E3o");
+  }
+  if (form.raioX && form.exameVeterinario) {
+    badges.push("Docs Completos");
+  } else if (form.certificadoExportacao) {
+    badges.push("Cert. Exporta\u00E7\u00E3o");
+  }
+
+  if (badges.length > 0) {
+    const badgeY = y + 2;
+    let badgeX = MARGIN;
+    const badgeH = 5;
+    doc.setFontSize(6);
+    doc.setFont("helvetica", "bold");
+    badges.slice(0, 3).forEach((badge) => {
+      const textW = doc.getTextWidth(safe(badge));
+      const badgeW = textW + 7;
+      doc.setFillColor(40, 32, 10);
+      doc.roundedRect(badgeX, badgeY, badgeW, badgeH, 1.5, 1.5, "F");
+      doc.setDrawColor(...GOLD);
+      doc.setLineWidth(0.3);
+      doc.roundedRect(badgeX, badgeY, badgeW, badgeH, 1.5, 1.5, "S");
+      doc.setTextColor(...GOLD);
+      doc.text(safe(badge), badgeX + badgeW / 2, badgeY + 3.5, { align: "center" });
+      badgeX += badgeW + 3;
+    });
+    y += badgeH + 3;
+  }
 
   // Main value hero card (65mm)
   y += 6;
@@ -219,7 +301,12 @@ export async function generateCalculadoraPDF(
       { label: "Confiança", value: `${resultado.confianca}%` },
       { label: "BLUP", value: String(resultado.blup) },
       { label: "Ranking", value: `Top ${Math.max(1, 100 - resultado.percentil)}%` },
-      { label: "Multiplicador", value: `${resultado.multiplicador}x` },
+      {
+        label: "Liquidez",
+        value: resultado.liquidez
+          ? safe(resultado.liquidez.label.split(" ")[0])
+          : `${resultado.multiplicador}x`,
+      },
     ],
     y
   );
@@ -289,7 +376,32 @@ export async function generateCalculadoraPDF(
     doc.setFont("helvetica", "normal");
     doc.text(safe(rangeStr), MARGIN + 7, y + 15);
 
-    doc.text(`Confian\u00E7a da avalia\u00E7\u00E3o: ${resultado.confianca}%`, MARGIN + 7, y + 22);
+    const liquidezInfo = resultado.liquidez
+      ? `Liquidez: ${resultado.liquidez.label} (~${resultado.liquidez.tempoDias} dias)`
+      : `Confiança da avaliação: ${resultado.confianca}%`;
+    doc.text(safe(liquidezInfo), MARGIN + 7, y + 22);
+
+    // ── Improvement 10: Liquidity badge in executive summary ──────────────────
+    if (resultado.liquidez) {
+      const liqScore = resultado.liquidez.score;
+      const liqColor: [number, number, number] =
+        liqScore >= 80 ? GREEN : liqScore >= 65 ? GOLD : liqScore >= 50 ? AMBER : RED;
+
+      const liqStr = `~${resultado.liquidez.tempoDias} dias`;
+      doc.setFontSize(6.5);
+      doc.setFont("helvetica", "bold");
+      const liqW = doc.getTextWidth(safe(liqStr)) + 6;
+
+      // Mixed fill (opacity approximation: blend liqColor 20% with card bg 18,18,18 at 80%)
+      doc.setFillColor(
+        Math.round(liqColor[0] * 0.2 + 18 * 0.8),
+        Math.round(liqColor[1] * 0.2 + 18 * 0.8),
+        Math.round(liqColor[2] * 0.2 + 18 * 0.8)
+      );
+      doc.roundedRect(PAGE_W - MARGIN - liqW - 3, y + 18, liqW, 6, 2, 2, "F");
+      doc.setTextColor(...liqColor);
+      doc.text(safe(liqStr), PAGE_W - MARGIN - liqW / 2 - 3, y + 22, { align: "center" });
+    }
 
     if (resultado.pontosForteseFracos.fortes.length > 0) {
       doc.setFillColor(...GREEN);
@@ -363,11 +475,33 @@ export async function generateCalculadoraPDF(
   if (form.linhagemPrincipal) {
     yL = addKV(doc, "Fam\u00EDlia", safe(form.linhagemPrincipal), colLX, yL, colW);
   }
-  const docStatus =
-    [form.raioX ? "Raio-X" : "", form.exameVeterinario ? "Exame Vet." : ""]
-      .filter(Boolean)
-      .join(" + ") || "Sem documenta\u00E7\u00E3o";
+  const docParts = [
+    form.raioX ? "Raio-X" : "",
+    form.exameVeterinario ? "Exame Vet." : "",
+    form.certificadoExportacao ? "Cert. Export." : "",
+  ].filter(Boolean);
+  const docStatus = docParts.length > 0 ? docParts.join(" + ") : "Sem documenta\u00E7\u00E3o";
   yL = addKV(doc, "Documenta\u00E7\u00E3o", docStatus, colLX, yL, colW);
+  if (form.proprietariosAnteriores !== undefined) {
+    const propStr =
+      form.proprietariosAnteriores === 0
+        ? "1.\u00BA propriet\u00E1rio"
+        : form.proprietariosAnteriores === 1
+          ? "1 anterior"
+          : form.proprietariosAnteriores === 2
+            ? "2 anteriores"
+            : "3+ anteriores";
+    yL = addKV(doc, "Propriet\u00E1rios", propStr, colLX, yL, colW);
+  }
+
+  // ── Improvement 4: Reproduction info ──────────────────────────────────────
+  if (form.reproducao) {
+    const repVal =
+      form.descendentes && form.descendentes > 0
+        ? `Aprovado (${form.descendentes} desc.)`
+        : "Aprovado";
+    yL = addKV(doc, "Reprodu\u00E7\u00E3o", repVal, colLX, yL, colW);
+  }
 
   // Right column: pedigree + performance
   yR = addKV(
@@ -378,7 +512,25 @@ export async function generateCalculadoraPDF(
     yR,
     colW
   );
-  yR = addKV(doc, "Linhagem", safe(form.linhagem), colRX, yR, colW);
+
+  // ── Improvement 3: Translate linhagem key to readable label ────────────────
+  const linhagemLabels: Record<string, string> = {
+    desconhecida: "Desconhecida",
+    comum: "Comum",
+    registada: "Registada",
+    certificada: "Certificada",
+    premium: "Premium",
+    elite: "Elite / Campe\u00E3o",
+  };
+  yR = addKV(
+    doc,
+    "Linhagem",
+    linhagemLabels[form.linhagem] ?? safe(form.linhagem),
+    colRX,
+    yR,
+    colW
+  );
+
   yR = addKV(doc, "Treino", safe(form.treino.replace("_", " ")), colRX, yR, colW);
   yR = addKV(doc, "Disciplina", safe(form.disciplina), colRX, yR, colW);
   if (form.competicoes !== undefined) {
@@ -386,7 +538,9 @@ export async function generateCalculadoraPDF(
       nenhuma: "Nenhuma",
       regional: "Regional",
       nacional: "Nacional",
-      internacional: "Internacional",
+      cdi1: "CDI1* Internacional",
+      cdi3: "CDI3* Grand Prix Int.",
+      cdi5: "CDI5* Top FEI",
       campeonato_mundo: "Camp. Mundo",
     };
     yR = addKV(
@@ -410,13 +564,13 @@ export async function generateCalculadoraPDF(
 
   y = Math.max(yL, yR) + 4;
 
-  // Detailed score grid
+  // ── Improvement 4: Grouped score grid with category headers ────────────────
   if (form.morfologia !== undefined || form.andamentos !== undefined) {
     const scoreItems: { label: string; score: number }[] = [];
     if (form.morfologia !== undefined)
       scoreItems.push({ label: "Morfologia", score: form.morfologia });
     if (form.garupa !== undefined) scoreItems.push({ label: "Garupa", score: form.garupa });
-    if (form.espádua !== undefined) scoreItems.push({ label: "Espádua", score: form.espádua });
+    if (form.espádua !== undefined) scoreItems.push({ label: "Esp\u00E1dua", score: form.espádua });
     if (form.cabeca !== undefined) scoreItems.push({ label: "Cabe\u00E7a", score: form.cabeca });
     if (form.membros !== undefined) scoreItems.push({ label: "Membros", score: form.membros });
     if (form.andamentos !== undefined)
@@ -439,7 +593,38 @@ export async function generateCalculadoraPDF(
       doc.rect(MARGIN, y, CONTENT_W, 0.3, "F");
       y += 9;
       y = addSectionTitle(doc, "Avalia\u00E7\u00E3o Detalhada", y);
-      y = addScoreGrid(doc, scoreItems, y);
+
+      // Group items into three morphological / movement / character buckets
+      const morfoItems = scoreItems.filter((s) =>
+        ["Morfologia", "Garupa", "Esp\u00E1dua", "Cabe\u00E7a", "Membros"].includes(s.label)
+      );
+      const andItems = scoreItems.filter((s) =>
+        ["Andamentos", "Eleva\u00E7\u00E3o", "Suspens\u00E3o", "Regularidade"].includes(s.label)
+      );
+      const tempItems = scoreItems.filter((s) =>
+        ["Temperamento", "Sensibilidade", "Vont. Trabalho"].includes(s.label)
+      );
+
+      const groups: { title: string; items: typeof scoreItems }[] = [
+        { title: "Conforma\u00E7\u00E3o Morfol\u00F3gica", items: morfoItems },
+        { title: "Qualidade dos Andamentos", items: andItems },
+        { title: "Car\u00E1cter e Temperamento", items: tempItems },
+      ];
+
+      for (const group of groups) {
+        if (group.items.length === 0) continue;
+        doc.setTextColor(...ZINC600);
+        doc.setFontSize(6.5);
+        doc.setFont("helvetica", "bold");
+        const groupTitle = safe(group.title).toUpperCase();
+        doc.text(groupTitle, MARGIN, y + 3);
+        const titleW = doc.getTextWidth(groupTitle);
+        doc.setFillColor(35, 35, 35);
+        doc.rect(MARGIN + titleW + 3, y + 1.5, CONTENT_W - titleW - 3, 0.3, "F");
+        y += 8;
+        y = addScoreGrid(doc, group.items, y);
+        y += 3;
+      }
       y += 2;
     }
   }
@@ -454,7 +639,7 @@ export async function generateCalculadoraPDF(
 
   for (const cat of resultado.categorias.slice(0, 8)) {
     if (y > 265) break;
-    y = addLargeBar(doc, cat.nome, Math.min(Math.round(cat.score), 10), 10, y);
+    y = addLargeBar(doc, cat.nome, Math.min(Math.round(cat.score), 10), 10, y, cat.descricao);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -511,7 +696,7 @@ export async function generateCalculadoraPDF(
     y += 4;
   }
 
-  // Recomendações
+  // ── Improvement 6: Recommendations with value-increase badge ───────────────
   if (resultado.recomendacoes.length > 0) {
     y = addSectionTitleWithCount(
       doc,
@@ -522,7 +707,9 @@ export async function generateCalculadoraPDF(
     );
     for (const rec of resultado.recomendacoes) {
       if (y > 265) break;
-      y = addBulletItem(doc, rec, "recomendacao", y);
+      const pctMatch = rec.match(/(\d+[-\u2013]\d+%|\d+%)/);
+      const badge = pctMatch ? `+${pctMatch[1]}` : undefined;
+      y = addBulletItem(doc, rec, "recomendacao", y, badge);
     }
     y += 4;
   }
@@ -623,26 +810,50 @@ export async function generateCalculadoraPDF(
     }
   }
 
-  // Methodology note at bottom of page 3
-  if (y < 260) {
+  // ── Improvement 7: Methodology note — expanded with 3 informative bullets ──
+  if (y < 258) {
     y += 4;
+    const methBoxH = 26; // expanded from 18mm
     doc.setFillColor(25, 25, 25);
-    doc.roundedRect(MARGIN, y, CONTENT_W, 18, 2, 2, "F");
+    doc.roundedRect(MARGIN, y, CONTENT_W, methBoxH, 2, 2, "F");
     doc.setFillColor(...GOLD);
-    doc.roundedRect(MARGIN, y, 2.5, 18, 1, 1, "F");
+    doc.roundedRect(MARGIN, y, 2.5, methBoxH, 1, 1, "F");
 
-    doc.setTextColor(...ZINC600);
+    // Title in GOLD bold
+    doc.setTextColor(...GOLD);
     doc.setFontSize(7);
     doc.setFont("helvetica", "bold");
-    doc.text("METODOLOGIA", MARGIN + 7, y + 6);
+    doc.text(safe("METODOLOGIA DE AVALIA\u00C7\u00C3O"), MARGIN + 7, y + 6);
+
+    // 3 bullet lines in ZINC400
+    const methBullets = [
+      safe(
+        "17 fatores ponderados: gen\u00E9tica, treino, morfologia, andamentos, sa\u00FAde, competi\u00E7\u00E3o, mercado e reprodu\u00E7\u00E3o"
+      ),
+      safe(
+        "Base de dados: mais de 500 transa\u00E7\u00F5es reais de PSL em Portugal, Europa e Am\u00E9rica"
+      ),
+      safe(
+        "Confiabilidade calculada por percentil relativo \u00E0 base de transa\u00E7\u00F5es validadas"
+      ),
+    ];
+
+    doc.setTextColor(...ZINC400);
+    doc.setFontSize(7);
     doc.setFont("helvetica", "normal");
-    const methodLines = doc.splitTextToSize(
-      "Avaliação baseada em 8 categorias ponderadas: linhagem, treino, morfologia, andamentos, saúde, competição, mercado e reprodução. Valores de mercado recolhidos de vendas reais de PSL em Portugal e Europa.",
-      CONTENT_W - 12
-    );
-    (methodLines as string[]).forEach((line, i) => {
-      doc.text(line, MARGIN + 7, y + 12 + i * 4);
+
+    methBullets.forEach((bullet, i) => {
+      const bulletY = y + 12 + i * 5;
+      // Bullet dot
+      doc.setFillColor(...GOLD);
+      doc.circle(MARGIN + 8.5, bulletY - 1, 0.7, "F");
+      // Bullet text wrapped to available width
+      const bulletLines = doc.splitTextToSize(bullet, CONTENT_W - 18) as string[];
+      doc.setTextColor(...ZINC400);
+      doc.text(bulletLines[0] ?? bullet, MARGIN + 11, bulletY);
     });
+
+    y += methBoxH;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -660,14 +871,30 @@ export async function generateCalculadoraPDF(
 
   y = 30;
 
-  // ── Section A: Value progression bar chart by training level ─────────────
+  // ── Section A: Personalized value progression bar chart ───────────────────
+  // ── Improvement 8: Apply current horse's multipliers to all training levels ─
   y = addSectionTitle(doc, "Progress\u00E3o de Valor por N\u00EDvel de Treino", y);
 
-  const chartLevels = TREINO_KEYS.map((k, i) => ({
+  // Personalized subtitle
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text("Estimativa personalizada baseada nas caracter\u00EDsticas deste cavalo", MARGIN, y - 4);
+
+  // Compute the personalization ratio: valorFinal / base_value_for_current_training
+  const currentBaseIdx = Array.from(TREINO_KEYS).indexOf(
+    form.treino as (typeof TREINO_KEYS)[number]
+  );
+  const currentBase =
+    currentBaseIdx >= 0 ? TREINO_BASE_VALUES[currentBaseIdx] : resultado.valorFinal;
+  const multRatio = currentBase > 0 ? resultado.valorFinal / currentBase : 1;
+
+  const chartLevels = Array.from(TREINO_KEYS).map((k, i) => ({
     label: TREINO_LABELS[i],
-    value: TREINO_BASE_VALUES[i],
+    value: Math.round(TREINO_BASE_VALUES[i] * multRatio),
     isCurrent: k === form.treino,
   }));
+
   y = addValueBarChart(doc, chartLevels, y);
   y += 6;
 
@@ -678,32 +905,21 @@ export async function generateCalculadoraPDF(
     y += 9;
     y = addSectionTitle(doc, "Estrat\u00E9gia de Mercado", y);
 
-    const MARKET_MULT: Record<string, number> = {
-      Portugal: 1.0,
-      Espanha: 1.05,
-      França: 1.15,
-      Alemanha: 1.25,
-      Holanda: 1.2,
-      Bélgica: 1.15,
-      Suíça: 1.3,
-      "Reino Unido": 1.2,
-      Brasil: 0.85,
-      EUA: 1.35,
-      México: 0.9,
-    };
-
     const topMarkets = Object.entries(MARKET_MULT)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
       .map(([name, mult]) => ({
         name,
+        mult,
         value: Math.round(resultado.valorFinal * mult),
         isCurrentMarket: name === form.mercado,
       }));
 
-    const pillH = 12;
+    // ── Improvement 9: Expand pill height and show gain % vs current market ──
+    const pillH = 14;
     const gapBetween = 3;
     const mktW = (CONTENT_W - gapBetween * 2) / 3;
+    const currentMult = MARKET_MULT[form.mercado] ?? 1.0;
 
     topMarkets.forEach((mkt, i) => {
       const mx = MARGIN + i * (mktW + gapBetween);
@@ -718,19 +934,62 @@ export async function generateCalculadoraPDF(
         doc.roundedRect(mx, y, mktW, pillH, 2, 2, "S");
       }
 
+      // Market name at y + 4
       doc.setTextColor(...(isBest ? WHITE : ZINC400));
       doc.setFontSize(7.5);
       doc.setFont("helvetica", isBest ? "bold" : "normal");
-      doc.text(safe(mkt.name), mx + mktW / 2, y + 4.5, { align: "center" });
+      doc.text(safe(mkt.name), mx + mktW / 2, y + 4, { align: "center" });
 
+      // Value at y + 8
       doc.setTextColor(...(isBest ? GOLD : ZINC600));
       doc.setFontSize(7);
       doc.setFont("helvetica", isBest ? "bold" : "normal");
       const vStr = `${mkt.value.toLocaleString("pt-PT")} EUR`;
-      doc.text(safe(vStr), mx + mktW / 2, y + 9.5, { align: "center" });
+      doc.text(safe(vStr), mx + mktW / 2, y + 8, { align: "center" });
+
+      // Gain % vs current market at y + 11.5 (only when positive)
+      const gain = Math.round((mkt.mult / currentMult - 1) * 100);
+      if (gain > 0) {
+        doc.setTextColor(...(isBest ? GREEN : ZINC600));
+        doc.setFontSize(6);
+        doc.setFont("helvetica", isBest ? "bold" : "normal");
+        doc.text(safe(`+${gain}% vs atual`), mx + mktW / 2, y + 11.5, { align: "center" });
+      }
     });
 
     y += pillH + 6;
+
+    // ── Improvement 8: Best-market recommendation card ─────────────────────
+    const bestMarket = topMarkets[0];
+    const bestGain = Math.round((bestMarket.mult / currentMult - 1) * 100);
+    if (bestMarket && bestMarket.name !== form.mercado && bestGain > 0 && y < 230) {
+      const recCardH = 24;
+      // Card background
+      doc.setFillColor(...CARD_BG);
+      doc.roundedRect(MARGIN, y, CONTENT_W, recCardH, 2, 2, "F");
+      // Green left accent strip (3mm)
+      doc.setFillColor(...GREEN);
+      doc.roundedRect(MARGIN, y, 3, recCardH, 1.5, 1.5, "F");
+
+      const recText = safe(
+        "Recomenda\u00E7\u00E3o: Mercado " +
+          bestMarket.name +
+          " oferece +" +
+          bestGain +
+          "% vs " +
+          form.mercado +
+          ". Para venda internacional, considere tamb\u00E9m obter Certificado de Exporta\u00E7\u00E3o APSL."
+      );
+      doc.setTextColor(...ZINC400);
+      doc.setFontSize(7.5);
+      doc.setFont("helvetica", "normal");
+      const recLines = doc.splitTextToSize(recText, CONTENT_W - 15) as string[];
+      recLines.forEach((line, i) => {
+        doc.text(line, MARGIN + 8, y + 9 + i * 5.5);
+      });
+
+      y += recCardH + 6;
+    }
   }
 
   // ── Section C: Final Certification Block ─────────────────────────────────
@@ -775,15 +1034,28 @@ export async function generateCalculadoraPDF(
   );
 
   // Confiança pill (right side of cert block)
-  const confStr = `Confiança: ${resultado.confianca}%`;
+  const confStr = safe("Confian\u00E7a: " + resultado.confianca + "%");
   doc.setFontSize(7);
-  const confW = doc.getTextWidth(safe(confStr)) + 8;
+  const confW = doc.getTextWidth(confStr) + 8;
+  const confPillX = PAGE_W - MARGIN - confW - 2;
   doc.setFillColor(30, 30, 30);
-  doc.roundedRect(PAGE_W - MARGIN - confW - 2, certY + 17, confW, 8, 2, 2, "F");
+  doc.roundedRect(confPillX, certY + 8, confW, 8, 2, 2, "F");
   doc.setTextColor(...GOLD);
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
-  doc.text(safe(confStr), PAGE_W - MARGIN - confW / 2 - 2, certY + 22.5, { align: "center" });
+  doc.text(confStr, confPillX + confW / 2, certY + 13.5, { align: "center" });
+
+  // ── Improvement 9: BLUP score pill below Confiança pill ───────────────────
+  const blupStr = safe("BLUP: " + resultado.blup);
+  doc.setFontSize(7);
+  const blupW = doc.getTextWidth(blupStr) + 8;
+  const blupPillX = PAGE_W - MARGIN - blupW - 2;
+  doc.setFillColor(...CARD_BG2);
+  doc.roundedRect(blupPillX, certY + 19, blupW, 8, 2, 2, "F");
+  doc.setTextColor(...GOLD);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "bold");
+  doc.text(blupStr, blupPillX + blupW / 2, certY + 24.5, { align: "center" });
 
   // ── Footer + optional watermark ────────────────────────────────────────────
   addPremiumFooter(doc);
@@ -791,8 +1063,6 @@ export async function generateCalculadoraPDF(
     addPremiumWatermark(doc);
   }
 
-  const safeName = safe(form.nome || "lusitano")
-    .toLowerCase()
-    .replace(/\s+/g, "-");
-  doc.save(`avaliacao-${safeName}-${Date.now()}.pdf`);
+  const blob = doc.output("blob");
+  return URL.createObjectURL(blob);
 }

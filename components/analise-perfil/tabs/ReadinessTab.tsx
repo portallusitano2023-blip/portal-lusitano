@@ -49,8 +49,8 @@ export default function ReadinessTab({
   );
 
   const subScores: SubScore[] = [
-    { label: "Experiencia", value: experienceScore, color: "#3b82f6" },
-    { label: "Orcamento", value: budgetScore, color: "#22c55e" },
+    { label: "Experiência", value: experienceScore, color: "#3b82f6" },
+    { label: "Orçamento", value: budgetScore, color: "#22c55e" },
     { label: "Disponibilidade", value: timeScore, color: "#f59e0b" },
     { label: "Infraestrutura", value: infraScore, color: "#8b5cf6" },
   ];
@@ -61,38 +61,38 @@ export default function ReadinessTab({
 
     if (experienceScore < 50) {
       items.push({
-        text: "Considere aulas de equitacao antes de adquirir um cavalo",
+        text: "Considere aulas de equitação antes de adquirir um cavalo",
         met: false,
       });
     } else {
       items.push({
-        text: "Nivel de experiencia adequado ao perfil",
+        text: "Nível de experiência adequado ao perfil",
         met: true,
       });
     }
 
     if (budgetScore < 50) {
       items.push({
-        text: "Reveja o orcamento para garantir sustentabilidade",
+        text: "Reveja o orçamento para garantir sustentabilidade",
         met: false,
       });
     } else {
       items.push({
-        text: "Orcamento dentro do intervalo recomendado",
+        text: "Orçamento dentro do intervalo recomendado",
         met: true,
       });
     }
 
     if (result.profile === "competidor" && confidence < 60) {
       items.push({
-        text: "Ganhe experiencia em competicao antes de investir num cavalo de topo",
+        text: "Ganhe experiência em competição antes de investir num cavalo de topo",
         met: false,
       });
     }
 
     if (result.profile === "criador") {
       items.push({
-        text: "Estude genetica equina e visite coudelarias de referencia",
+        text: "Estude genética equina e visite coudelarias de referência",
         met: false,
       });
     }
@@ -147,7 +147,7 @@ export default function ReadinessTab({
             height={gaugeSize / 2 + 30}
             viewBox={`0 0 ${gaugeSize} ${gaugeSize / 2 + 30}`}
             role="img"
-            aria-label={`Indice de prontidao: ${globalScore} porcento`}
+            aria-label={`Índice de prontidão: ${globalScore} por cento`}
           >
             {/* Background arc */}
             <path
@@ -187,7 +187,7 @@ export default function ReadinessTab({
               className="text-[11px]"
               fill="var(--foreground-muted)"
             >
-              prontidao
+              prontidão
             </text>
 
             {/* Scale labels */}
@@ -215,17 +215,17 @@ export default function ReadinessTab({
         {/* Score interpretation */}
         <p className="text-sm text-center text-[var(--foreground-secondary)] max-w-md mx-auto">
           {globalScore >= 70
-            ? "Bom nivel de prontidao para adquirir um Lusitano. Avance com confianca."
+            ? "Bom nível de prontidão para adquirir um Lusitano. Avance com confiança."
             : globalScore >= 45
-              ? "Nivel moderado. Considere reforcar as areas com pontuacao mais baixa."
-              : "Recomenda-se preparacao adicional antes de avançar com a aquisicao."}
+              ? "Nível moderado. Considere reforçar as áreas com pontuação mais baixa."
+              : "Recomenda-se preparação adicional antes de avançar com a aquisição."}
         </p>
       </div>
 
       {/* Sub-score bars */}
       <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] p-8">
         <h3 className="text-sm font-medium text-[var(--foreground)] mb-6">
-          Pontuacao por Dimensao
+          Pontuação por Dimensão
         </h3>
 
         <div className="space-y-5">
@@ -260,7 +260,7 @@ export default function ReadinessTab({
 
       {/* Prerequisites */}
       <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] p-8">
-        <h3 className="text-sm font-medium text-[var(--foreground)] mb-6">Pre-requisitos</h3>
+        <h3 className="text-sm font-medium text-[var(--foreground)] mb-6">Pré-requisitos</h3>
 
         <div className="space-y-3">
           {prerequisites.map((prereq, i) => (
@@ -296,8 +296,8 @@ export default function ReadinessTab({
       </div>
 
       <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed text-center">
-        A pontuacao de prontidao e baseada nas respostas ao questionario e nas caracteristicas do
-        perfil. Serve como indicador geral e nao substitui aconselhamento profissional.
+        A pontuação de prontidão é baseada nas respostas ao questionário e nas características do
+        perfil. Serve como indicador geral e não substitui aconselhamento profissional.
       </p>
     </div>
   );

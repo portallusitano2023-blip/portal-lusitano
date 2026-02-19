@@ -2,7 +2,7 @@ import type { Cavalo, ResultadoCompatibilidade } from "./types";
 import { DEFEITOS_GENETICOS } from "./data";
 
 // ============================================
-// LOGICA DE CALCULO - Verificador de Compatibilidade
+// LÓGICA DE CÁLCULO - Verificador de Compatibilidade
 // ============================================
 
 export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): ResultadoCompatibilidade {
@@ -153,6 +153,25 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
     fracos.push("Garanhão não aprovado como reprodutor");
   }
 
+  // 10. Historial Reprodutivo (0-5 pts)
+  const matGar = garanhao.matingsRealizados ?? 0;
+  const potGar = garanhao.potradasNascidos ?? 0;
+  const matEgu = egua.matingsRealizados ?? 0;
+  const potEgu = egua.potradasNascidos ?? 0;
+  let historialScore = 0;
+  if (matGar > 0 || matEgu > 0) historialScore += 2;
+  if (potGar > 3 || potEgu > 2) historialScore += 2;
+  if (potGar > 10 || potEgu > 5) historialScore += 1;
+  factores.push({
+    nome: "Historial Reprodutivo",
+    score: historialScore,
+    max: 5,
+    tipo: historialScore >= 4 ? "excelente" : historialScore >= 2 ? "bom" : "neutro",
+    descricao: `Garanhão: ${matGar} coberturas, ${potGar} potros — Égua: ${matEgu} coberturas, ${potEgu} potros`,
+  });
+  if (historialScore >= 4) fortes.push("Historial reprodutivo comprovado");
+  total += historialScore;
+
   // COI e BLUP previstos
   const mesmaCoude =
     garanhao.coudelaria === egua.coudelaria && garanhao.coudelaria !== "Particular";
@@ -210,7 +229,7 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
   }
 
   // Previsão de pelagem — Genética Mendeliana completa (5 loci)
-  // Frequência do alelo recessivo de cada progenitor
+  // Frequência do alelo recessivo de cada progenitor (probabilidades)
   const pE_e = (g: "EE" | "Ee" | "ee") => (g === "EE" ? 0 : g === "Ee" ? 0.5 : 1.0);
   const pA_a = (g: "AA" | "Aa" | "aa") => (g === "AA" ? 0 : g === "Aa" ? 0.5 : 1.0);
   const pG_g = (g: "GG" | "Gg" | "gg") => (g === "GG" ? 0 : g === "Gg" ? 0.5 : 1.0);

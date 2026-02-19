@@ -1,7 +1,7 @@
 import type { Cavalo } from "./types";
 
 // ============================================
-// DADOS - Verificador de Compatibilidade
+// DADOS — Verificador de Compatibilidade
 // ============================================
 
 export const criarCavalo = (sexo: "Garanhão" | "Égua"): Cavalo => ({
@@ -23,6 +23,8 @@ export const criarCavalo = (sexo: "Garanhão" | "Égua"): Cavalo => ({
   coi: 4,
   defeitos: [],
   aprovado: true,
+  matingsRealizados: 0,
+  potradasNascidos: 0,
 });
 
 export const COUDELARIAS = [

@@ -23,8 +23,7 @@ interface PurchaseConfidenceCavalo {
 interface PurchaseConfidenceProps {
   cavalos: PurchaseConfidenceCavalo[];
   vencedorId: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  calcularScore: (c: any) => number;
+  calcularScore: (c: PurchaseConfidenceCavalo) => number;
 }
 
 // ============================================
@@ -44,15 +43,15 @@ function getConfidenceColor(v: number): string {
 
 function getRecommendation(confidence: number): string {
   if (confidence >= 80) {
-    return "Elevada confianca na decisao. Os dados indicam uma escolha clara e bem fundamentada. Recomenda-se prosseguir com avaliacao presencial e exame veterinario.";
+    return "Elevada confiança na decisão. Os dados indicam uma escolha clara e bem fundamentada. Recomenda-se prosseguir com avaliação presencial e exame veterinário.";
   }
   if (confidence >= 60) {
-    return "Confianca moderada. A analise favorece um candidato, mas existem factores a considerar. Sugere-se uma avaliacao mais aprofundada antes da decisao final.";
+    return "Confiança moderada. A análise favorece um candidato, mas existem factores a considerar. Sugere-se uma avaliação mais aprofundada antes da decisão final.";
   }
   if (confidence >= 40) {
-    return "Confianca limitada. Os cavalos apresentam perfis semelhantes ou existem comprometimentos significativos. Considere recolher mais informacao.";
+    return "Confiança limitada. Os cavalos apresentam perfis semelhantes ou existem comprometimentos significativos. Considere recolher mais informação.";
   }
-  return "Confianca baixa na decisao. Os dados sao insuficientes ou os candidatos apresentam limitacoes relevantes. Recomenda-se cautela e analise adicional.";
+  return "Confiança baixa na decisão. Os dados são insuficientes ou os candidatos apresentam limitações relevantes. Recomenda-se cautela e análise adicional.";
 }
 
 // ============================================
@@ -132,7 +131,7 @@ function ConfidenceGauge({ value, size = 200 }: { value: number; size?: number }
         height={size * 0.72}
         viewBox={`0 0 ${size} ${size * 0.72}`}
         role="img"
-        aria-label={`Confianca de compra: ${value} por cento`}
+        aria-label={`Confiança de compra: ${value} por cento`}
       >
         {/* Background track */}
         <path
@@ -222,7 +221,7 @@ function ConfidenceGauge({ value, size = 200 }: { value: number; size?: number }
           letterSpacing="0.1em"
           style={{ textTransform: "uppercase" } as React.CSSProperties}
         >
-          CONFIANCA
+          CONFIANÇA
         </text>
       </svg>
     </div>
@@ -282,10 +281,10 @@ export default function PurchaseConfidence({
     };
   }, [cavalos, vencedorId, calcularScore]);
 
-  const title = (t.comparador as Record<string, string>).confidence_title ?? "Confianca de Compra";
+  const title = (t.comparador as Record<string, string>).confidence_title ?? "Confiança de Compra";
 
   const subIndicators = [
-    { label: "Clareza da Decisao", value: clarity, color: "#3b82f6" },
+    { label: "Clareza da Decisão", value: clarity, color: "#3b82f6" },
     { label: "Seguranca", value: safety, color: "#22c55e" },
     { label: "Valor", value: value, color: "#f59e0b" },
   ];

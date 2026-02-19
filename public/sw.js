@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v2'; // Incrementar ao fazer mudanças significativas
+const CACHE_VERSION = 'v3'; // Incrementar ao fazer mudanças significativas
 const CACHE_NAME = `portal-lusitano-${CACHE_VERSION}`;
 const IMAGE_CACHE = `portal-lusitano-images-${CACHE_VERSION}`;
 const STATIC_CACHE = `portal-lusitano-static-${CACHE_VERSION}`;
@@ -152,11 +152,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // ✅ STRATEGY 2: Cache-First para ASSETS ESTÁTICOS
-  if (
-    /\.(css|js|woff|woff2|ttf|eot)$/i.test(url.pathname) ||
-    url.pathname.startsWith('/_next/static/')
-  ) {
+  // ✅ STRATEGY 2: Network-First para JS chunks (_next/static/) — garante código actualizado
+  // Cache-First para assets verdadeiramente estáticos (fonts, CSS sem hash)
+  if (url.pathname.startsWith('/_next/static/')) {
+    event.respondWith(networkFirstStrategy(request, STATIC_CACHE));
+    return;
+  }
+  if (/\.(css|woff|woff2|ttf|eot)$/i.test(url.pathname)) {
     event.respondWith(cacheFirstStrategy(request, STATIC_CACHE));
     return;
   }

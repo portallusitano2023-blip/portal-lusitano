@@ -118,6 +118,37 @@ body {
   }
 }
 
+/* ===== AUTH ANIMATIONS ===== */
+
+@keyframes auth-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-6px);
+  }
+  30% {
+    transform: translateX(6px);
+  }
+  45% {
+    transform: translateX(-4px);
+  }
+  60% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+  90% {
+    transform: translateX(2px);
+  }
+}
+
+.animate-auth-shake {
+  animation: auth-shake 0.45s ease-in-out;
+}
+
 /* ===== ACESSIBILIDADE ===== */
 
 /* Smooth scrolling (respeita preferências do utilizador) */
@@ -312,6 +343,171 @@ body {
 
 /* line-clamp-1/2/3 — built-in no Tailwind v4, removidos daqui */
 
+/* ===== CSS COMPONENT UTILITIES ===== */
+/* Classes reutilizáveis que eliminam padrões Tailwind repetidos no codebase */
+
+@layer components {
+  /* ----------------------------------------------------------
+   * Icon containers dourados — usados em 20+ lugares
+   * ---------------------------------------------------------- */
+  .icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+  }
+  .icon-box-gold {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--gold) 10%, transparent);
+  }
+  .icon-box-gold-sm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--gold) 10%, transparent);
+    width: 2rem;
+    height: 2rem;
+  }
+  .icon-box-gold-md {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--gold) 10%, transparent);
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .icon-box-gold-lg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--gold) 10%, transparent);
+    width: 3rem;
+    height: 3rem;
+  }
+
+  /* ----------------------------------------------------------
+   * Section label — "SOBRE NÓS", "PLATAFORMA", etc.
+   * ---------------------------------------------------------- */
+  .section-label {
+    display: block;
+    font-size: 0.6875rem; /* 11px */
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+  }
+
+  /* ----------------------------------------------------------
+   * Separador ornamental com losango dourado
+   * ---------------------------------------------------------- */
+  .ornament-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .ornament-divider::before,
+  .ornament-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--border);
+  }
+
+  /* ----------------------------------------------------------
+   * Cards escuros base
+   * ---------------------------------------------------------- */
+  .card-dark {
+    background-color: var(--background-card);
+    border: 1px solid var(--border);
+    transition:
+      border-color 0.3s ease,
+      background-color 0.3s ease;
+  }
+  .card-dark-hover {
+    background-color: var(--background-card);
+    border: 1px solid var(--border);
+    transition:
+      border-color 0.3s ease,
+      background-color 0.3s ease;
+  }
+  .card-dark-hover:hover {
+    border-color: color-mix(in srgb, var(--gold) 20%, transparent);
+  }
+
+  /* ----------------------------------------------------------
+   * Focus ring dourado — acessibilidade por teclado
+   * ---------------------------------------------------------- */
+  .focus-gold:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px color-mix(in srgb, var(--gold) 50%, transparent);
+  }
+
+  /* ----------------------------------------------------------
+   * Botão primário dourado
+   * ---------------------------------------------------------- */
+  .btn-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: var(--gold);
+    color: black;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+  }
+  .btn-gold:hover {
+    background-color: var(--gold-hover);
+  }
+  .btn-gold:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px color-mix(in srgb, var(--gold) 50%, transparent);
+  }
+
+  /* ----------------------------------------------------------
+   * Botão ghost / outline
+   * ---------------------------------------------------------- */
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    color: var(--foreground-secondary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    background: transparent;
+  }
+  .btn-ghost:hover {
+    border-color: color-mix(in srgb, var(--gold) 30%, transparent);
+    color: var(--foreground);
+  }
+  .btn-ghost:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px color-mix(in srgb, var(--gold) 50%, transparent);
+  }
+}
+
 /* Gentle bounce para indicadores interactivos */
 @keyframes gentle-bounce {
   0%,
@@ -487,7 +683,7 @@ body {
 /* Bottom padding for fixed bottom nav */
 @media (max-width: 1024px) {
   main {
-    padding-bottom: 80px;
+    padding-bottom: 5rem;
   }
 }
 

@@ -26,8 +26,9 @@ function getImageUrl(article: SanityArticle): string {
 function formatDate(dateStr: string, lang: string): string {
   try {
     const date = new Date(dateStr);
+    const locale = lang === "pt" ? "pt-PT" : lang === "es" ? "es-ES" : "en-GB";
     return date
-      .toLocaleDateString(lang === "pt" ? "pt-PT" : "en-GB", {
+      .toLocaleDateString(locale, {
         day: "numeric",
         month: "short",
         year: "numeric",
@@ -44,15 +45,32 @@ export default function RelatedArticles({ articles, language = "pt" }: RelatedAr
   return (
     <section className="max-w-7xl mx-auto px-8 py-16 border-t border-[var(--border)]">
       <h3 className="text-2xl font-serif text-[var(--foreground)] mb-8">
-        {language === "pt" ? "Artigos Relacionados" : "Related Articles"}
+        {language === "pt"
+          ? "Artigos Relacionados"
+          : language === "es"
+            ? "Artículos Relacionados"
+            : "Related Articles"}
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {articles.map((article) => {
-          const title = language === "en" ? article.titleEn || article.title : article.title;
+          const title =
+            language === "en"
+              ? article.titleEn || article.title
+              : language === "es"
+                ? article.titleEn || article.title
+                : article.title;
           const subtitle =
-            language === "en" ? article.subtitleEn || article.subtitle : article.subtitle;
+            language === "en"
+              ? article.subtitleEn || article.subtitle
+              : language === "es"
+                ? article.subtitleEn || article.subtitle
+                : article.subtitle;
           const category =
-            language === "en" ? article.categoryEn || article.category : article.category;
+            language === "en"
+              ? article.categoryEn || article.category
+              : language === "es"
+                ? article.categoryEn || article.category
+                : article.category;
 
           return (
             <Link key={article._id} href={`/jornal/${article.slug.current}`}>
@@ -88,7 +106,7 @@ export default function RelatedArticles({ articles, language = "pt" }: RelatedAr
                   </p>
                   <div className="border-t border-[var(--border)] pt-3 mt-4">
                     <span className="flex items-center gap-2 text-[var(--foreground)] text-xs uppercase tracking-widest group-hover:gap-3 transition-all">
-                      {language === "pt" ? "Ler" : "Read"}{" "}
+                      {language === "pt" ? "Ler" : language === "es" ? "Leer" : "Read"}{" "}
                       <ArrowRight size={12} className="text-[var(--gold)]" />
                     </span>
                   </div>

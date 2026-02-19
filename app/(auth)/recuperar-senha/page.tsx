@@ -1,19 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { useLanguage } from "@/context/LanguageContext";
-import { Mail, ArrowLeft, Loader2, CheckCircle } from "lucide-react";
+import { Mail, ArrowLeft, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 
 export default function RecuperarSenhaPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [shaking, setShaking] = useState(false);
   const { t } = useLanguage();
+
+  const triggerShake = useCallback(() => {
+    setShaking(true);
+    setTimeout(() => setShaking(false), 500);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!email) {
+      setError("O email é obrigatório.");
+      triggerShake();
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -21,70 +36,127 @@ export default function RecuperarSenhaPage() {
       await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/perfil`,
       });
+      // Always show success to prevent email enumeration
       setSent(true);
     } catch {
-      // Show success regardless to prevent email enumeration
+      // Still show success — prevents enumeration
       setSent(true);
     } finally {
       setLoading(false);
     }
   };
 
+  // ── Success state ─────────────────────────────────────────────────────────
   if (sent) {
     return (
       <div className="text-center py-6">
-        <div className="w-16 h-16 bg-[var(--gold)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <CheckCircle className="text-[var(--gold)]" size={32} />
+        <div className="w-16 h-16 bg-[var(--gold)]/10 border border-[var(--gold)]/25 rounded-full flex items-center justify-center mx-auto mb-5">
+          <CheckCircle className="text-[var(--gold)]" size={32} aria-hidden="true" />
         </div>
         <h2 className="text-xl font-serif text-[var(--foreground)] mb-2">{t.auth.email_sent}</h2>
-        <p className="text-sm text-[var(--foreground-secondary)] mb-6">
-          <strong className="text-[var(--foreground)]">{email}</strong>
+        <p className="text-sm text-[var(--foreground-secondary)] mb-1">
+          Se existir uma conta associada a
+        </p>
+        <p className="text-sm font-medium text-[var(--foreground)] mb-6">{email}</p>
+        <p className="text-xs text-[var(--foreground-muted)] mb-6 max-w-xs mx-auto">
+          Receberá um link de recuperação. Verifique também a pasta de spam.
         </p>
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 text-[var(--gold)] hover:text-[var(--gold)] text-sm transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-[var(--gold)] hover:text-[var(--gold-hover)] transition-colors"
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={16} aria-hidden="true" />
           {t.auth.back_to_login}
         </Link>
       </div>
     );
   }
 
+  // ── Form ──────────────────────────────────────────────────────────────────
   return (
     <div>
-      <h1 className="text-2xl font-serif text-[var(--foreground)] mb-2">
+      <h1 className="text-2xl font-serif text-[var(--foreground)] mb-1">
         {t.auth.recover_password}
       </h1>
       <p className="text-sm text-[var(--foreground-muted)] mb-6">{t.auth.recover_desc}</p>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div
+          role="alert"
+          className="mb-5 flex items-start gap-2.5 p-3.5 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400"
+        >
+          <AlertCircle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        className={`space-y-4 ${shaking ? "animate-auth-shake" : ""}`}
+        aria-label="Formulário de recuperação de palavra-passe"
+      >
         <div>
-          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+          <label
+            htmlFor="recovery-email"
+            className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2"
+          >
             {t.auth.email}
           </label>
           <div className="relative">
             <Mail
               size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] pointer-events-none"
+              aria-hidden="true"
             />
             <input
+              id="recovery-email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError("");
+              }}
               required
+              autoComplete="email"
               placeholder="seu@email.com"
-              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-10 pr-4 py-3 text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--gold)] outline-none transition-colors"
+              aria-label={t.auth.email}
+              aria-describedby={error ? "recovery-email-error" : undefined}
+              aria-invalid={!!error}
+              className={[
+                "w-full bg-[var(--background-card)] border rounded-lg pl-10 pr-4 py-3",
+                "text-[var(--foreground)] placeholder:text-[var(--foreground-muted)]",
+                "outline-none transition-colors",
+                "focus:border-[var(--gold)]/50 focus:ring-1 focus:ring-[var(--gold)]/30",
+                error
+                  ? "border-red-500/60 focus:border-red-500/60 focus:ring-red-500/20"
+                  : "border-[var(--border)]",
+              ].join(" ")}
             />
           </div>
+          {error && (
+            <p
+              id="recovery-email-error"
+              role="alert"
+              className="mt-1.5 flex items-center gap-1.5 text-xs text-red-400"
+            >
+              <AlertCircle size={12} aria-hidden="true" />
+              {error}
+            </p>
+          )}
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full py-3 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-busy={loading}
         >
-          {loading ? <Loader2 size={18} className="animate-spin" /> : <Mail size={18} />}
+          {loading ? (
+            <Loader2 size={18} className="animate-spin" aria-hidden="true" />
+          ) : (
+            <Mail size={18} aria-hidden="true" />
+          )}
           {loading ? t.auth.sending : t.auth.send_link}
         </button>
       </form>
@@ -92,9 +164,9 @@ export default function RecuperarSenhaPage() {
       <p className="mt-6 text-center">
         <Link
           href="/login"
-          className="text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors flex items-center justify-center gap-2"
+          className="text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors inline-flex items-center justify-center gap-2"
         >
-          <ArrowLeft size={14} />
+          <ArrowLeft size={14} aria-hidden="true" />
           {t.auth.back_to_login}
         </Link>
       </p>

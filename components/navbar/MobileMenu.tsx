@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { Heart, User, Gift } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import {
@@ -63,10 +64,13 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
   const { wishlist } = useWishlist();
   const { favoritesCount } = useHorseFavorites();
   const wishlistCount = wishlist.length;
+  const pathname = usePathname();
 
   const mobileDbItems = useMemo(() => getMobileDbItems(t.nav), [t]);
   const mobileToolsItems = useMemo(() => getMobileToolsItems(t.nav), [t]);
   const mobileCommunityItems = useMemo(() => getMobileCommunityItems(t.nav), [t]);
+
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   if (!isOpen) return null;
 
@@ -78,23 +82,31 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
   ];
 
   return (
-    <div
-      role="menu"
+    <nav
+      id="mobile-menu"
       aria-label="Menu mobile"
       className="lg:hidden bg-[var(--background)] border-t border-[var(--border)] max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain"
     >
       <div className="px-4 py-6 space-y-2">
         {/* Main Navigation */}
-        {mainNavItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="flex items-center gap-4 py-4 px-3 text-lg text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-          >
-            <item.icon size={20} className="text-[var(--foreground-muted)]" />
-            {item.name}
-          </Link>
-        ))}
+        {mainNavItems.map((item) => {
+          const active = isActive(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              className={`flex items-center gap-4 py-4 px-3 text-lg transition-colors rounded-lg active:scale-[0.98] touch-manipulation ${
+                active
+                  ? "text-[var(--gold)] bg-[var(--surface-hover)]"
+                  : "text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)]"
+              }`}
+            >
+              <item.icon size={20} className="text-[var(--foreground-muted)]" />
+              {item.name}
+            </Link>
+          );
+        })}
 
         {/* Lusitano Section Mobile - Grid Layout */}
         <div className="border-t border-[var(--border)] pt-4 mt-4">
@@ -231,6 +243,6 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
           </button>
         </div>
       </div>
-    </div>
+    </nav>
   );
 }

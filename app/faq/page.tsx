@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, HelpCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { faqData, type FAQItem } from "@/data/faqData";
 import { CONTACT_EMAIL } from "@/lib/constants";
 
@@ -51,6 +52,7 @@ function FAQAccordion({
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const { language } = useLanguage();
+  const tr = createTranslator(language);
   const faqs = faqData[language];
 
   return (
@@ -62,15 +64,17 @@ export default function FAQPage() {
             <HelpCircle className="text-[var(--gold)]" size={32} />
           </div>
           <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
-            {language === "pt" ? "Suporte" : "Support"}
+            {tr("Suporte", "Support", "Soporte")}
           </span>
           <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
-            {language === "pt" ? "Perguntas Frequentes" : "Frequently Asked Questions"}
+            {tr("Perguntas Frequentes", "Frequently Asked Questions", "Preguntas Frecuentes")}
           </h1>
           <p className="text-[var(--foreground-secondary)] font-serif italic">
-            {language === "pt"
-              ? "Encontre respostas as duvidas mais comuns"
-              : "Find answers to the most common questions"}
+            {tr(
+              "Encontre respostas as duvidas mais comuns",
+              "Find answers to the most common questions",
+              "Encuentre respuestas a las dudas más comunes"
+            )}
           </p>
         </div>
 
@@ -81,7 +85,7 @@ export default function FAQPage() {
         >
           {faqs.map((faq, index) => (
             <FAQAccordion
-              key={index}
+              key={faq.question}
               item={faq}
               isOpen={openIndex === index}
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
@@ -95,15 +99,17 @@ export default function FAQPage() {
           style={{ animationDelay: "0.2s" }}
         >
           <p className="text-[var(--foreground-secondary)] mb-4">
-            {language === "pt"
-              ? "Nao encontrou o que procurava?"
-              : "Didn't find what you were looking for?"}
+            {tr(
+              "Nao encontrou o que procurava?",
+              "Didn't find what you were looking for?",
+              "¿No encontró lo que buscaba?"
+            )}
           </p>
           <a
             href={`mailto:${CONTACT_EMAIL}`}
             className="inline-block text-[var(--gold)] hover:text-[var(--foreground)] transition-colors text-sm uppercase tracking-widest"
           >
-            {language === "pt" ? "Contacte-nos" : "Contact us"} →
+            {tr("Contacte-nos", "Contact us", "Contáctenos")} →
           </a>
         </div>
       </div>

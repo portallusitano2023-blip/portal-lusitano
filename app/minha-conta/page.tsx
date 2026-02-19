@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import { getCustomer } from "@/lib/shopify";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import MinhaContaContent from "./MinhaContaContent";
+import MinhaContaContent from "@/components/minha-conta/MinhaContaContent";
 
 export const dynamic = "force-dynamic";
 

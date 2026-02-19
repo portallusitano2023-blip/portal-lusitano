@@ -24,7 +24,10 @@ export const CONTENT_W = PAGE_W - MARGIN * 2; // 170mm
 let jsPDFCtor: typeof import("jspdf").default | null = null;
 export async function loadJsPDF() {
   if (!jsPDFCtor) {
-    const [mod] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
+    // jspdf-autotable v5 requires explicit applyPlugin() — side-effect import no longer works
+    const mod = await import("jspdf");
+    const { applyPlugin } = await import("jspdf-autotable");
+    applyPlugin(mod.default);
     jsPDFCtor = mod.default;
   }
   return jsPDFCtor;
@@ -53,10 +56,26 @@ export function safe(s: string | number | null | undefined): string {
 
 // ─── Page Helpers ─────────────────────────────────────────────────────────────
 
-/** Fill entire page with dark background */
+/** Fill entire page with dark background.
+ * Uses a canvas-generated image because doc.rect fill in jsPDF 4.x
+ * can be transparent in some PDF viewers. Images are always rendered. */
 export function fillPageBg(doc: jsPDF): void {
-  doc.setFillColor(...DARK_BG);
-  doc.rect(0, 0, PAGE_W, PAGE_H, "F");
+  // Generate a tiny dark canvas and stretch it to full page — guaranteed
+  // to render as dark background in Chrome, Edge, Windows Reader, Acrobat, etc.
+  const canvas = document.createElement("canvas");
+  canvas.width = 4;
+  canvas.height = 4;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    ctx.fillStyle = `rgb(${DARK_BG[0]},${DARK_BG[1]},${DARK_BG[2]})`;
+    ctx.fillRect(0, 0, 4, 4);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (doc as any).addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, PAGE_W, PAGE_H);
+  } else {
+    // Fallback
+    doc.setFillColor(...DARK_BG);
+    doc.rect(0, 0, PAGE_W, PAGE_H, "F");
+  }
 }
 
 /** Gold gradient top bar with PORTAL LUSITANO branding (cover page) — 18mm tall */
@@ -120,13 +139,13 @@ export interface HeroConfig {
 
 /**
  * Redesigned value hero card — two-panel layout.
- * Left (60%): VALOR ESTIMADO label + EUR value + range.
+ * Left (60%): VALOR ESTIMADO label + EUR value + range + confidence bar.
  * Right (40%): decorative diamond with "Top X%" percentile.
- * Height: 65mm.
+ * Height: 79mm (was 65mm, +14mm for confidence bar section).
  */
 export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number): number {
   const { value, min, max, percentil } = cfg;
-  const cardH = 65;
+  const cardH = 79; // expanded from 65 to fit confidence bar
   const cardX = MARGIN;
   const cardW = CONTENT_W;
 
@@ -145,6 +164,7 @@ export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number): number {
 
   // ── Left panel (60%) ──
   const leftW = cardW * 0.6;
+  const leftPanelInnerW = leftW - 14; // minus left accent + padding
 
   // "VALOR ESTIMADO" label
   doc.setTextColor(...ZINC400);
@@ -166,28 +186,77 @@ export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number): number {
   doc.text("EUR", cardX + 9, y + 47);
 
   // Range below
-  const rangeStr = `${min.toLocaleString("pt-PT")} — ${max.toLocaleString("pt-PT")} EUR`;
+  const rangeStr = `${min.toLocaleString("pt-PT")} \u2014 ${max.toLocaleString("pt-PT")} EUR`;
   doc.setTextColor(...ZINC400);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.text(rangeStr, cardX + 9, y + 57);
+
+  // ── Improvement 3: Confidence bar under range ─────────────────────────────
+  const confBarY = y + 62;
+  const confBarH = 4;
+  const confBarX = cardX + 9;
+  const confBarW = leftPanelInnerW - 4;
+  const confFillW = Math.max(confBarW * (percentil / 100), 4);
+  const topPctLabel = `Top ${Math.max(1, 100 - percentil)}%`;
+
+  // Track background
+  doc.setFillColor(30, 30, 30);
+  doc.roundedRect(confBarX, confBarY, confBarW, confBarH, 1, 1, "F");
+
+  // Filled portion in GOLD
+  doc.setFillColor(...GOLD);
+  doc.roundedRect(confBarX, confBarY, confFillW, confBarH, 1, 1, "F");
+
+  // "Percentil" label to the left, below bar
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(6);
+  doc.setFont("helvetica", "normal");
+  doc.text("Percentil", confBarX, confBarY + confBarH + 4);
+
+  // "Top X%" value to the right in GOLD bold
+  doc.setTextColor(...GOLD);
+  doc.setFontSize(6);
+  doc.setFont("helvetica", "bold");
+  doc.text(safe(topPctLabel), confBarX + confBarW, confBarY + confBarH + 4, { align: "right" });
 
   // ── Right panel (40%) ──
   const rightX = cardX + leftW + 2;
   const rightCenterX = rightX + (cardW * 0.4 - 2) / 2;
   const diamondCY = y + cardH / 2;
 
-  // Decorative diamond outline (rhombus) in gold
-  const dSize = 20; // half-size of the diamond
-  doc.setDrawColor(...GOLD);
-  doc.setLineWidth(0.8);
-  // Draw rhombus manually using lines (top → right → bottom → left → top)
+  // Decorative diamond — correct rhombus: top → right → bottom → left
+  // Starting point is top vertex: (rightCenterX, diamondCY - dSize)
+  // Segments: [dx, dy] relative offsets
+  //   top → right:   [+dSize, +dSize]
+  //   right → bottom: [-dSize, +dSize]
+  //   bottom → left:  [-dSize, -dSize]
+  //   close back to top (implicit via close=true)
+  const dSize = 20;
+
+  // Step 1: Fill diamond with very dark gold background
+  doc.setFillColor(28, 22, 8);
   doc.lines(
     [
-      [dSize, dSize], // top-right
-      [dSize, dSize], // bottom-right
-      [-dSize, dSize], // bottom-left
-      [-dSize, -dSize], // top-left
+      [dSize, dSize], // top → right
+      [-dSize, dSize], // right → bottom
+      [-dSize, -dSize], // bottom → left (closes back to top)
+    ],
+    rightCenterX,
+    diamondCY - dSize,
+    [1, 1],
+    "F",
+    true
+  );
+
+  // Step 2: Stroke diamond outline in gold
+  doc.setDrawColor(...GOLD);
+  doc.setLineWidth(0.8);
+  doc.lines(
+    [
+      [dSize, dSize], // top → right
+      [-dSize, dSize], // right → bottom
+      [-dSize, -dSize], // bottom → left (closes back to top)
     ],
     rightCenterX,
     diamondCY - dSize,
@@ -402,15 +471,19 @@ export function addKV(
 
 // ─── Large Progress Bar ───────────────────────────────────────────────────────
 
-/** Color-coded large progress bar for category scores — 13mm tall */
+/**
+ * Color-coded large progress bar for category scores.
+ * When description is provided the bar height expands to 16mm to fit a subtitle line.
+ */
 export function addLargeBar(
   doc: jsPDF,
   label: string,
   score: number,
   max: number,
-  y: number
+  y: number,
+  description?: string
 ): number {
-  const barH = 13;
+  const barH = description ? 16 : 13;
   const labelW = 60;
   const barX = MARGIN + labelW + 5;
   const barW = CONTENT_W - labelW - 5;
@@ -430,18 +503,28 @@ export function addLargeBar(
   const labelLines = doc.splitTextToSize(safe(label), labelW);
   doc.text(labelLines[0] ?? safe(label), MARGIN, y + barH / 2 + 1.5);
 
-  // Score number (right of label area)
-  doc.setTextColor(...ZINC600);
-  doc.setFontSize(7.5);
-  doc.text(`${score}/${max}`, barX - 2, y + barH / 2 + 1.5, { align: "right" });
+  // Optional description subtitle below the label
+  if (description) {
+    doc.setTextColor(...ZINC600);
+    doc.setFontSize(6.5);
+    doc.setFont("helvetica", "normal");
+    const descLines = doc.splitTextToSize(safe(description), labelW);
+    doc.text(descLines[0] ?? safe(description), MARGIN, y + barH / 2 + 5.5);
+  }
 
-  // Bar track
+  // ── Improvement 5: score pill replaces the old score/max text ─────────────
+  // The pill is positioned at the far right end of the bar track area.
+  // barW is narrowed by 10mm to leave room for the pill.
+  const pillW = 10;
+  const barWAdj = barW - pillW - 2; // adjusted bar track width
+
+  // Bar track (narrowed to leave room for pill)
   doc.setFillColor(30, 30, 30);
-  doc.roundedRect(barX, y, barW, barH, 2, 2, "F");
+  doc.roundedRect(barX, y, barWAdj, barH, 2, 2, "F");
 
   // Subtle glow layer (15% opacity) — slightly wider and taller
   if (pct > 0.01) {
-    const fillW = Math.max(barW * pct, 5);
+    const fillW = Math.max(barWAdj * pct, 5);
     doc.setFillColor(
       Math.round(color[0] * 0.15 + 30 * 0.85),
       Math.round(color[1] * 0.15 + 30 * 0.85),
@@ -460,9 +543,24 @@ export function addLargeBar(
     doc.setFontSize(8.5);
     doc.setFont("helvetica", "bold");
     const pctLabel = `${Math.round(pct * 100)}%`;
-    const textX = barX + barW * pct - 2;
+    const textX = barX + barWAdj * pct - 2;
     doc.text(pctLabel, textX, y + barH / 2 + 1.5, { align: "right" });
   }
+
+  // Score pill at the end of the bar (right side)
+  const pillX = barX + barWAdj + 2;
+  const pillY = y;
+  // Pill background — CARD_BG2 with color border
+  doc.setFillColor(...CARD_BG2);
+  doc.roundedRect(pillX, pillY, pillW, barH, 2, 2, "F");
+  doc.setDrawColor(...color);
+  doc.setLineWidth(0.5);
+  doc.roundedRect(pillX, pillY, pillW, barH, 2, 2, "S");
+  // Score text centered in pill
+  doc.setTextColor(...color);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  doc.text(String(score), pillX + pillW / 2, y + barH / 2 + 1.5, { align: "center" });
 
   return y + barH + 4;
 }
@@ -480,8 +578,17 @@ const BULLET_CONFIG: Record<
   recomendacao: { bg: [35, 28, 8], prefix: ">", prefixColor: GOLD },
 };
 
-/** Pill-styled bullet item — height adapts to text length */
-export function addBulletItem(doc: jsPDF, text: string, type: BulletType, y: number): number {
+/**
+ * Pill-styled bullet item — height adapts to text length.
+ * Optional badge param shows a value-increase pill on the right side of the pill.
+ */
+export function addBulletItem(
+  doc: jsPDF,
+  text: string,
+  type: BulletType,
+  y: number,
+  badge?: string
+): number {
   const cfg = BULLET_CONFIG[type];
   const maxTextW = CONTENT_W - 16;
   const lines = doc.splitTextToSize(safe(text), maxTextW);
@@ -506,6 +613,19 @@ export function addBulletItem(doc: jsPDF, text: string, type: BulletType, y: num
   (lines as string[]).forEach((line, i) => {
     doc.text(line, MARGIN + 11, y + padY + lineH + i * lineH);
   });
+
+  // Optional badge pill on the right side
+  if (badge) {
+    doc.setFontSize(6.5);
+    doc.setFont("helvetica", "bold");
+    const bW = doc.getTextWidth(safe(badge)) + 5;
+    doc.setFillColor(40, 32, 10);
+    doc.roundedRect(MARGIN + CONTENT_W - bW - 3, y + padY, bW, 5, 1.5, 1.5, "F");
+    doc.setTextColor(...GOLD);
+    doc.text(safe(badge), MARGIN + CONTENT_W - bW / 2 - 3, y + padY + 3.5, {
+      align: "center",
+    });
+  }
 
   return y + pillH + 2.5;
 }
@@ -617,6 +737,23 @@ export function addRadarChart(doc: jsPDF, categories: RadarCategory[], y: number
     doc.circle(px, py, 1.2, "F");
   });
 
+  // ── Improvement 6: Score value labels at each data point ──────────────────
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(6.5);
+  doc.setFont("helvetica", "bold");
+  categories.slice(0, n).forEach((cat, i) => {
+    if (cat.score <= 0) return;
+    const angle = (2 * Math.PI * i) / n - Math.PI / 2;
+    const pct = Math.min(Math.max(cat.score / 10, 0), 1);
+    const dotX = centerX + radius * pct * Math.cos(angle);
+    const dotY = centerY + radius * pct * Math.sin(angle);
+    // Position label 3mm beyond the dot in the outward direction from center
+    const labelX = dotX + 3 * Math.cos(angle);
+    const labelY = dotY + 3 * Math.sin(angle);
+    const scoreLabel = Number.isInteger(cat.score) ? String(cat.score) : cat.score.toFixed(1);
+    doc.text(scoreLabel, labelX, labelY, { align: "center", baseline: "middle" });
+  });
+
   // ── Axis labels ──
   doc.setTextColor(...ZINC400);
   doc.setFontSize(6);
@@ -630,11 +767,18 @@ export function addRadarChart(doc: jsPDF, categories: RadarCategory[], y: number
     doc.text(label, lx, ly, { align: "center", baseline: "middle" });
   });
 
-  // ── Center label ──
+  // ── Ring labels at 0° (right / east side of chart) — replaces old "0" center ──
+  const labelAngle = 0; // pointing right (east)
+  const ring50X = centerX + radius * 0.5 * Math.cos(labelAngle) + 2;
+  const ring50Y = centerY + radius * 0.5 * Math.sin(labelAngle);
+  const ring100X = centerX + radius * Math.cos(labelAngle) + 2;
+  const ring100Y = centerY + radius * Math.sin(labelAngle);
+
   doc.setTextColor(...ZINC600);
-  doc.setFontSize(6);
+  doc.setFontSize(5);
   doc.setFont("helvetica", "normal");
-  doc.text("0", centerX, centerY, { align: "center", baseline: "middle" });
+  doc.text("50%", ring50X, ring50Y, { baseline: "middle" });
+  doc.text("100%", ring100X, ring100Y, { baseline: "middle" });
 
   return centerY + radius + 14;
 }
@@ -796,9 +940,11 @@ export function addPremiumFooter(doc: jsPDF): void {
     doc.setFont("helvetica", "bold");
     doc.text(`${i} / ${pageCount}`, pillX + 7, 290, { align: "center" });
 
-    // Gold centre dot
-    doc.setFillColor(...GOLD);
-    doc.circle(PAGE_W / 2, 290.5, 0.7, "F");
+    // ── Improvement 10: URL text mark replacing the gold centre dot ──────────
+    doc.setTextColor(...ZINC600);
+    doc.setFontSize(5);
+    doc.setFont("helvetica", "normal");
+    doc.text("portal-lusitano.pt", PAGE_W / 2, 290.5, { align: "center" });
   }
 }
 
@@ -878,8 +1024,11 @@ export function addValueBarChart(
 /**
  * Circular arc gauge showing a score from 0–100.
  * Uses a 270° sweep starting at the 7 o'clock position.
- * Draws a dark track ring, then a gold arc for the filled portion,
- * the numeric score centered, and a small "SCORE" label below.
+ * Draws:
+ *   1. Outer ring track blended at ZINC600 ~20% opacity
+ *   2. Glow arc (gold-blended, 0.5mm wider radius)
+ *   3. Gold fill arc (2.5mm lineWidth)
+ *   4. Numeric score centered, "%" label below in ZINC400
  */
 export function addScoreArc(
   doc: jsPDF,
@@ -888,17 +1037,45 @@ export function addScoreArc(
   cy: number,
   r: number
 ): void {
-  // Background circle track
-  doc.setDrawColor(30, 30, 30);
-  doc.setLineWidth(2.5);
-  doc.circle(cx, cy, r, "S");
-
-  // Score arc — approximate with many short line segments
   const startAngle = -Math.PI * 0.75; // 7 o'clock position
   const sweep = Math.PI * 1.5 * (score / 100); // max sweep is 270°
   const endAngle = startAngle + sweep;
-  const steps = 36;
+  const steps = 48;
 
+  // ── 1. Outer ring track — ZINC600 at ~20% opacity blended onto DARK_BG ──
+  // Blend: ZINC600=[82,82,91] * 0.20 + DARK_BG=[10,10,10] * 0.80
+  doc.setDrawColor(
+    Math.round(82 * 0.2 + 10 * 0.8),
+    Math.round(82 * 0.2 + 10 * 0.8),
+    Math.round(91 * 0.2 + 10 * 0.8)
+  );
+  doc.setLineWidth(3.2);
+  doc.circle(cx, cy, r, "S");
+
+  // ── 2. Glow arc — gold blended at ~35% onto dark background, radius r+0.5 ──
+  if (score > 0) {
+    const glowR = r + 0.5;
+    // Blend: GOLD=[197,160,89] * 0.35 + DARK_BG=[10,10,10] * 0.65
+    doc.setDrawColor(
+      Math.round(197 * 0.35 + 10 * 0.65),
+      Math.round(160 * 0.35 + 10 * 0.65),
+      Math.round(89 * 0.35 + 10 * 0.65)
+    );
+    doc.setLineWidth(3.8);
+    for (let i = 0; i < steps; i++) {
+      const a1 = startAngle + (sweep * i) / steps;
+      const a2 = startAngle + (sweep * (i + 1)) / steps;
+      if (a2 > endAngle) break;
+      doc.line(
+        cx + glowR * Math.cos(a1),
+        cy + glowR * Math.sin(a1),
+        cx + glowR * Math.cos(a2),
+        cy + glowR * Math.sin(a2)
+      );
+    }
+  }
+
+  // ── 3. Gold fill arc — solid GOLD, 2.5mm lineWidth ──
   doc.setDrawColor(...GOLD);
   doc.setLineWidth(2.5);
   for (let i = 0; i < steps; i++) {
@@ -913,11 +1090,17 @@ export function addScoreArc(
     );
   }
 
-  // Score number centered in arc
+  // ── 4. Score number centered in arc ──
   doc.setTextColor(...WHITE);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
-  doc.text(`${score}%`, cx, cy + 1, { align: "center", baseline: "middle" });
+  doc.text(`${score}`, cx, cy + 1, { align: "center", baseline: "middle" });
+
+  // Small "%" label below score in ZINC400
+  doc.setTextColor(...ZINC400);
+  doc.setFontSize(5.5);
+  doc.setFont("helvetica", "normal");
+  doc.text("%", cx, cy + 4.5, { align: "center" });
 
   // Small "SCORE" label below the arc
   doc.setTextColor(...ZINC400);

@@ -101,8 +101,8 @@ export default function CartRecoveryEmail({
           {/* Cart Items */}
           <Section style={cartSection}>
             <Heading style={h3}>O Seu Carrinho</Heading>
-            {cartItems.map((item, index) => (
-              <Row key={index} style={cartItem}>
+            {cartItems.map((item) => (
+              <Row key={item.product_id} style={cartItem}>
                 <Column style={cartImageCol}>
                   <Img src={item.image} width="80" height="80" alt={item.name} style={cartImage} />
                 </Column>

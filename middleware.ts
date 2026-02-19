@@ -4,7 +4,9 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
 // --- Rate Limiting (Upstash Redis — serverless-safe sliding window) ---
-// HIGH-01 fix: replaces in-memory Map that reset on every cold start
+// Instances are inline here (not imported from lib/) because middleware runs in Edge Runtime
+// with separate module scope. lib/rate-limit.ts provides complementary in-memory LRU limiting
+// for API routes running in Node.js runtime.
 const redis = Redis.fromEnv();
 
 const authLimiter = new Ratelimit({
@@ -31,33 +33,28 @@ function getClientIp(request: NextRequest): string {
 const IS_DEV = process.env.NODE_ENV === "development";
 
 /**
- * TODO [MEDIUM Security]: Remove 'unsafe-inline' from script-src
- *
- * Current CSP allows inline scripts which weakens XSS protection.
- * To fix properly:
- * 1. Generate a nonce per request: crypto.randomUUID()
- * 2. Add nonce to CSP: script-src 'self' 'nonce-{NONCE}'
- * 3. Pass nonce via headers (x-nonce) to layouts/pages
- * 4. Add nonce to <script> tags in Next.js components
- *
- * Next.js 14 App Router with nonces: https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
- *
- * Alternative: Move all inline scripts to external .js files
+ * Nonce-based CSP: generates a fresh nonce per request and embeds it in
+ * script-src. The nonce is passed to server components via the x-nonce
+ * request header so <script nonce> tags can match. unsafe-inline is kept
+ * as a fallback for browsers that don't support nonces, but nonce-aware
+ * browsers ignore unsafe-inline when a nonce is present.
  */
-const CSP_DIRECTIVES = [
-  "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com",
-  "font-src 'self' https://fonts.gstatic.com",
-  "connect-src 'self' https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google",
-  "frame-src 'self' https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
-  "object-src 'none'",
-  "base-uri 'self'",
-].join("; ");
+function buildCsp(nonce: string): string {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline' 'nonce-${nonce}'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
+    "font-src 'self' https://fonts.gstatic.com",
+    "connect-src 'self' https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google",
+    "frame-src 'self' blob: https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+  ].join("; ");
+}
 
-function applySecurityHeaders(response: NextResponse, contentLanguage = "pt") {
-  response.headers.set("Content-Security-Policy", CSP_DIRECTIVES);
+function applySecurityHeaders(response: NextResponse, nonce: string, contentLanguage = "pt") {
+  response.headers.set("Content-Security-Policy", buildCsp(nonce));
   response.headers.set("X-DNS-Prefetch-Control", "on");
   response.headers.set("X-Download-Options", "noopen");
   response.headers.set("X-Permitted-Cross-Domain-Policies", "none");
@@ -66,10 +63,17 @@ function applySecurityHeaders(response: NextResponse, contentLanguage = "pt") {
 }
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+  // Generate a fresh nonce for each request (base64-encoded UUID)
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+
+  // Forward nonce to server components via request header
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
   const pathname = request.nextUrl.pathname;
 
-  applySecurityHeaders(response);
+  applySecurityHeaders(response, nonce);
 
   // API routes: Rate Limiting + CORS
   if (pathname.startsWith("/api/")) {
@@ -128,9 +132,9 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = strippedPath;
 
-    const rewriteResponse = NextResponse.rewrite(url);
+    const rewriteResponse = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
     rewriteResponse.cookies.set("locale", locale, { path: "/", sameSite: "lax" });
-    applySecurityHeaders(rewriteResponse, locale);
+    applySecurityHeaders(rewriteResponse, nonce, locale);
     return rewriteResponse;
   }
 

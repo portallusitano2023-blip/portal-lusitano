@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Pedigree from "@/components/Pedigree";
 import { HorseSchema, BreadcrumbSchema } from "@/components/JsonLd";
+import { MapPin, Calendar, ArrowLeft, Phone, Mail, ChevronRight } from "lucide-react";
 
 import { CavaloVenda } from "@/types/cavalo";
 
@@ -75,13 +78,26 @@ export async function generateMetadata({
   };
 }
 
+// Extended CavaloVenda with optional extra fields returned from SELECT *
+interface CavaloDetalhe extends CavaloVenda {
+  sexo?: string;
+  altura?: number;
+  pelagem?: string;
+  disciplinas?: string[] | string | null;
+  nivel?: string;
+  contacto_nome?: string;
+  contacto_email?: string;
+  contacto_telefone?: string;
+  destaque?: boolean;
+}
+
 export default async function DetalheCavaloPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params; // Next.js 15+ requer await
+  const resolvedParams = await params;
   const { id } = resolvedParams;
 
-  let cavalo: CavaloVenda | null = null;
+  let cavalo: CavaloDetalhe | null = null;
 
-  // --- MODO DEMO (Para visualizares sem base de dados) ---
+  // --- MODO DEMO ---
   if (id === "demo") {
     cavalo = {
       id: "demo-123",
@@ -96,6 +112,11 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
       pai: "Sultão (MV)",
       mae: "Duquesa (MV)",
       pontuacao_apsl: 76,
+      sexo: "Macho",
+      altura: 164,
+      pelagem: "Ruça",
+      nivel: "Alta-escola",
+      disciplinas: ["Dressage", "Alta-escola"],
     };
   }
   // --- MODO REAL (Supabase) ---
@@ -104,11 +125,24 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
     cavalo = data;
   }
 
-  // Se não houver cavalo (nem demo nem real), não mostra nada
-  if (!cavalo)
-    return (
-      <div className="text-[var(--foreground)] pt-40 text-center">Exemplar não encontrado.</div>
-    );
+  if (!cavalo) {
+    notFound();
+  }
+
+  // Normalise disciplines to array
+  const disciplines: string[] = (() => {
+    if (!cavalo.disciplinas) return [];
+    if (Array.isArray(cavalo.disciplinas)) return cavalo.disciplinas as string[];
+    if (typeof cavalo.disciplinas === "string") {
+      return (cavalo.disciplinas as string)
+        .split(",")
+        .map((d: string) => d.trim())
+        .filter(Boolean);
+    }
+    return [];
+  })();
+
+  const hasImage = Boolean(cavalo.image_url);
 
   return (
     <>
@@ -128,165 +162,320 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
           { name: cavalo.nome_cavalo, url: `${siteUrl}/comprar/${id}` },
         ]}
       />
-      <div className="flex flex-col lg:flex-row min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-        {/* LADO ESQUERDO: A IMAGEM FIXA (Visual Hero) */}
-        <div className="lg:w-1/2 h-[50vh] lg:h-screen lg:fixed lg:top-0 lg:left-0 relative border-r border-[var(--background-secondary)] z-0">
-          <Image
-            src={cavalo.image_url}
-            alt={cavalo.nome_cavalo}
-            fill
-            className="object-cover grayscale brightness-75"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90 lg:hidden"></div>
 
-          {/* Marca d'água de luxo */}
-          <div className="absolute top-10 left-10 hidden lg:block">
-            <span className="text-white/20 font-serif text-9xl italic leading-none opacity-10 select-none">
-              PL
-            </span>
+      <div className="flex flex-col lg:flex-row min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+        {/* LEFT PANEL — fixed hero image (desktop) / top image (mobile) */}
+        <div className="lg:w-1/2 h-[55vw] max-h-[70vh] lg:h-screen lg:max-h-none lg:fixed lg:top-0 lg:left-0 relative border-r border-[var(--background-secondary)] z-0">
+          {hasImage ? (
+            <>
+              <Image
+                src={cavalo.image_url}
+                alt={`${cavalo.nome_cavalo} — Cavalo Lusitano`}
+                fill
+                className="object-cover grayscale brightness-75"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
+              {/* Bottom fade for mobile legibility */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent lg:hidden" />
+              {/* Subtle top vignette */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent opacity-60" />
+            </>
+          ) : (
+            /* Fallback when no image is available */
+            <div
+              className="w-full h-full flex items-center justify-center bg-[var(--background-secondary)]"
+              role="img"
+              aria-label={`${cavalo.nome_cavalo} — sem fotografia`}
+            >
+              <span className="text-[var(--foreground-muted)] text-[10px] uppercase tracking-widest">
+                Sem Fotografia
+              </span>
+            </div>
+          )}
+
+          {/* Watermark */}
+          <div
+            className="absolute top-8 left-8 hidden lg:block pointer-events-none select-none"
+            aria-hidden="true"
+          >
+            <span className="text-white/10 font-serif text-9xl italic leading-none">PL</span>
           </div>
+
+          {/* Back link */}
+          <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10">
+            <Link
+              href="/comprar"
+              className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/70 hover:text-white transition-colors bg-black/30 backdrop-blur-sm px-3 py-2 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+              aria-label="Voltar ao marketplace"
+            >
+              <ArrowLeft size={12} aria-hidden="true" />
+              Marketplace
+            </Link>
+          </div>
+
+          {/* Destaque badge on hero */}
+          {cavalo.destaque && (
+            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
+              <span className="bg-[var(--gold)] text-black text-[9px] uppercase tracking-[0.2em] font-bold px-3 py-1">
+                Destaque
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* LADO DIREITO: O DOSSIER TÉCNICO (Scrollable) */}
+        {/* RIGHT PANEL — scrollable dossier */}
         <div className="lg:w-1/2 lg:ml-[50%] bg-[var(--background)] relative z-10">
-          <div className="px-8 py-20 lg:p-24 max-w-3xl mx-auto space-y-20">
-            {/* CABEÇALHO */}
-            <header className="space-y-6 border-b border-[var(--background-secondary)] pb-12">
-              <div className="flex items-center gap-4">
-                <span className="px-3 py-1 border border-[var(--gold)] text-[var(--gold)] text-[9px] uppercase tracking-widest font-bold">
-                  {cavalo.linhagem || "Linhagem Pura"}
-                </span>
-                <span className="text-[var(--foreground-muted)] text-[9px] uppercase tracking-widest">
-                  REG: {cavalo.id.slice(0, 4).toUpperCase()}
+          <div className="px-4 sm:px-8 py-12 sm:py-16 lg:p-20 xl:p-24 max-w-2xl mx-auto space-y-12 sm:space-y-16">
+            {/* HEADER */}
+            <header className="space-y-4 border-b border-[var(--background-secondary)] pb-8">
+              {/* Breadcrumb chips */}
+              <nav
+                aria-label="Localização no site"
+                className="flex flex-wrap items-center gap-2 text-[9px] uppercase tracking-widest text-[var(--foreground-muted)]"
+              >
+                <Link href="/comprar" className="hover:text-[var(--gold)] transition-colors">
+                  Comprar
+                </Link>
+                <ChevronRight size={10} aria-hidden="true" />
+                <span className="text-[var(--foreground-secondary)]">{cavalo.nome_cavalo}</span>
+              </nav>
+
+              {/* Linhagem + ID chips */}
+              <div className="flex flex-wrap items-center gap-3">
+                {cavalo.linhagem && (
+                  <span className="px-3 py-1 border border-[var(--gold)] text-[var(--gold)] text-[9px] uppercase tracking-widest font-bold">
+                    {cavalo.linhagem}
+                  </span>
+                )}
+                <span className="text-[var(--foreground-muted)] text-[9px] uppercase tracking-widest font-mono">
+                  REG: {cavalo.id.slice(0, 8).toUpperCase()}
                 </span>
               </div>
-              <h1 className="text-6xl md:text-7xl font-serif italic text-[var(--foreground)]">
+
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic text-[var(--foreground)] leading-tight">
                 {cavalo.nome_cavalo}
               </h1>
-              <p className="text-3xl text-[var(--gold)] font-serif">
+
+              <p className="text-2xl sm:text-3xl text-[var(--gold)] font-serif">
                 {Number(cavalo.preco).toLocaleString("pt-PT")} €
               </p>
+
+              {/* Quick meta pills */}
+              <div className="flex flex-wrap gap-2 pt-1">
+                {cavalo.idade && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-[var(--foreground-secondary)] border border-[var(--border)] px-2.5 py-1">
+                    <Calendar size={11} aria-hidden="true" />
+                    {cavalo.idade} anos
+                  </span>
+                )}
+                {cavalo.localizacao && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-[var(--foreground-secondary)] border border-[var(--border)] px-2.5 py-1">
+                    <MapPin size={11} aria-hidden="true" />
+                    {cavalo.localizacao}
+                  </span>
+                )}
+                {cavalo.sexo && (
+                  <span className="text-[10px] text-[var(--foreground-secondary)] border border-[var(--border)] px-2.5 py-1 uppercase tracking-wide">
+                    {cavalo.sexo}
+                  </span>
+                )}
+                {disciplines.map((d) => (
+                  <span
+                    key={d}
+                    className="text-[10px] text-[var(--gold)] border border-[var(--gold)]/30 px-2.5 py-1 uppercase tracking-wide"
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
             </header>
 
-            {/* ESPECIFICAÇÕES BIOMÉTRICAS */}
-            <section className="grid grid-cols-2 gap-8 text-[var(--foreground-secondary)]">
-              <div>
-                <span className="text-[10px] uppercase tracking-widest block mb-2 text-[var(--foreground-muted)]">
-                  Idade
-                </span>
-                <p className="text-2xl text-[var(--foreground)] font-serif">{cavalo.idade} Anos</p>
-              </div>
-              <div>
-                <span className="text-[10px] uppercase tracking-widest block mb-2 text-[var(--foreground-muted)]">
-                  Localização
-                </span>
-                <p className="text-2xl text-[var(--foreground)] font-serif">{cavalo.localizacao}</p>
-              </div>
-              <div>
-                <span className="text-[10px] uppercase tracking-widest block mb-2 text-[var(--foreground-muted)]">
-                  Pontuação APSL
-                </span>
-                <p className="text-2xl text-[var(--foreground)] font-serif">
-                  {cavalo.pontuacao_apsl || "N/A"} pts
-                </p>
-              </div>
-              <div className="col-span-2 mt-8">
-                <span className="text-[10px] uppercase tracking-widest block mb-4 text-[var(--gold)] font-bold">
-                  Parecer Técnico
-                </span>
-                <p className="font-light leading-relaxed text-lg italic text-[var(--foreground-secondary)]">
-                  &ldquo;{cavalo.descricao}&rdquo;
-                </p>
-              </div>
-            </section>
-
-            {/* A ÁRVORE GENEALÓGICA VISUAL */}
-            <section className="py-10 border-t border-[var(--background-secondary)]">
-              <h3 className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold mb-12">
-                Certificado de Sangue
-              </h3>
-              <Pedigree cavalo={cavalo} />
-              <p className="text-center text-[9px] text-[var(--foreground-muted)] mt-6 uppercase tracking-widest">
-                Dados verificados via Stud-Book Digital
-              </p>
-            </section>
-
-            {/* SECÇÃO BLOCKCHAIN / INOVAÇÃO (NOVA) */}
-            <section className="py-12 border-t border-[var(--background-secondary)]">
-              <div className="flex items-center gap-4 mb-8">
-                <h3 className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold">
-                  Digital Asset
-                </h3>
-                <div className="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 text-[8px] uppercase tracking-widest rounded-full animate-pulse">
-                  Blockchain Verified
-                </div>
-              </div>
-
-              <div className="bg-[var(--background-secondary)] border border-[var(--border)] p-8 relative overflow-hidden group hover:border-blue-500/30 transition-all duration-500">
-                {/* Efeito de Código de Fundo */}
-                <div className="absolute top-0 right-0 p-4 opacity-10 font-mono text-[10px] text-blue-400 pointer-events-none select-none">
-                  0x71C...9A21
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+            {/* BIOMETRIC SPECS */}
+            <section aria-labelledby="specs-heading">
+              <h2
+                id="specs-heading"
+                className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold mb-8"
+              >
+                Especificações
+              </h2>
+              <dl className="grid grid-cols-2 gap-x-6 gap-y-8">
+                {cavalo.idade && (
                   <div>
-                    <h4 className="text-[var(--foreground)] font-serif italic text-2xl mb-2">
-                      Certificado NFT #8829
-                    </h4>
-                    <p className="text-[var(--foreground-muted)] text-xs font-light leading-relaxed mb-6">
-                      Este exemplar possui um Gémeo Digital registado na rede Polygon. A propriedade
-                      é transferida via Smart Contract no momento da venda, garantindo autenticidade
-                      e histórico imutável.
-                    </p>
-                    <div className="flex gap-4 font-mono text-[9px] text-[var(--foreground-secondary)]">
-                      <div>
-                        <span className="block text-[var(--foreground-muted)] uppercase">
-                          Token ID
-                        </span>
-                        <span className="text-[var(--foreground)]">8829304...</span>
-                      </div>
-                      <div>
-                        <span className="block text-[var(--foreground-muted)] uppercase">
-                          Contract
-                        </span>
-                        <span className="text-[var(--gold)]">0xPort...Lusi</span>
-                      </div>
-                      <div>
-                        <span className="block text-[var(--foreground-muted)] uppercase">
-                          Standard
-                        </span>
-                        <span className="text-[var(--foreground)]">ERC-721</span>
-                      </div>
-                    </div>
+                    <dt className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
+                      Idade
+                    </dt>
+                    <dd className="text-xl sm:text-2xl text-[var(--foreground)] font-serif">
+                      {cavalo.idade} Anos
+                    </dd>
                   </div>
+                )}
+                {cavalo.localizacao && (
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
+                      Localização
+                    </dt>
+                    <dd className="text-xl sm:text-2xl text-[var(--foreground)] font-serif">
+                      {cavalo.localizacao}
+                    </dd>
+                  </div>
+                )}
+                {cavalo.altura && (
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
+                      Altura ao Garrote
+                    </dt>
+                    <dd className="text-xl sm:text-2xl text-[var(--foreground)] font-serif">
+                      {cavalo.altura} cm
+                    </dd>
+                  </div>
+                )}
+                {cavalo.pelagem && (
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
+                      Pelagem
+                    </dt>
+                    <dd className="text-xl sm:text-2xl text-[var(--foreground)] font-serif">
+                      {cavalo.pelagem}
+                    </dd>
+                  </div>
+                )}
+                {cavalo.nivel && (
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
+                      Nível de Treino
+                    </dt>
+                    <dd className="text-xl sm:text-2xl text-[var(--foreground)] font-serif">
+                      {cavalo.nivel}
+                    </dd>
+                  </div>
+                )}
+                {cavalo.pontuacao_apsl && (
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] mb-1">
+                      Pontuação APSL
+                    </dt>
+                    <dd className="text-xl sm:text-2xl text-[var(--foreground)] font-serif">
+                      {cavalo.pontuacao_apsl} pts
+                    </dd>
+                  </div>
+                )}
+              </dl>
 
-                  {/* Visualização do Smart Contract (Simulada) */}
-                  <div className="bg-[var(--background)] border border-[var(--background-secondary)] p-4 font-mono text-[8px] text-[var(--foreground-muted)] leading-loose rounded overflow-hidden">
-                    <p>
-                      <span className="text-blue-400">function</span>{" "}
-                      <span className="text-yellow-400">transferOwnership</span>(address _newOwner){" "}
-                      <span className="text-blue-400">public</span> &#123;
-                    </p>
-                    <p className="pl-4">require(msg.sender == owner);</p>
-                    <p className="pl-4">owner = _newOwner;</p>
-                    <p className="pl-4 text-green-500">{/* Royalties automáticos de 5% */}</p>
-                    <p className="pl-4">payable(creator).transfer(msg.value * 0.05);</p>
-                    <p>&#125;</p>
+              {/* Description */}
+              {cavalo.descricao && (
+                <div className="mt-10 pt-8 border-t border-[var(--background-secondary)]">
+                  <h3 className="text-[10px] uppercase tracking-widest text-[var(--gold)] font-bold mb-4">
+                    Parecer Técnico
+                  </h3>
+                  <p className="font-light leading-relaxed text-base sm:text-lg italic text-[var(--foreground-secondary)]">
+                    &ldquo;{cavalo.descricao}&rdquo;
+                  </p>
+                </div>
+              )}
+            </section>
+
+            {/* PEDIGREE */}
+            {(cavalo.pai || cavalo.mae) && (
+              <section
+                aria-labelledby="pedigree-heading"
+                className="border-t border-[var(--background-secondary)] pt-10"
+              >
+                <h2
+                  id="pedigree-heading"
+                  className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold mb-10"
+                >
+                  Certificado de Sangue
+                </h2>
+                <Pedigree cavalo={cavalo} />
+                <p className="text-center text-[9px] text-[var(--foreground-muted)] mt-6 uppercase tracking-widest">
+                  Dados verificados via Stud-Book Digital
+                </p>
+              </section>
+            )}
+
+            {/* CONTACT / CTA */}
+            <section
+              aria-labelledby="contact-heading"
+              className="border-t border-[var(--background-secondary)] pt-10"
+            >
+              <h2
+                id="contact-heading"
+                className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold mb-8"
+              >
+                Solicitar Informação
+              </h2>
+
+              <div className="bg-[var(--background-secondary)] border border-[var(--border)] p-6 sm:p-8 space-y-6">
+                <div>
+                  <p className="text-[var(--foreground)] font-serif italic text-xl sm:text-2xl mb-2">
+                    Interessado neste exemplar?
+                  </p>
+                  <p className="text-[var(--foreground-secondary)] text-sm font-light leading-relaxed">
+                    Entre em contacto com o vendedor para agendar uma visita, solicitar o dossier
+                    veterinário completo ou obter mais informações sobre este cavalo.
+                  </p>
+                </div>
+
+                {/* Contact details if available */}
+                {(cavalo.contacto_nome || cavalo.contacto_telefone || cavalo.contacto_email) && (
+                  <div className="space-y-3 border-t border-[var(--border)] pt-6">
+                    {cavalo.contacto_nome && (
+                      <p className="text-sm text-[var(--foreground)]">
+                        <span className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)] block mb-0.5">
+                          Contacto
+                        </span>
+                        {cavalo.contacto_nome}
+                      </p>
+                    )}
+                    {cavalo.contacto_telefone && (
+                      <a
+                        href={`tel:${cavalo.contacto_telefone.replace(/\s/g, "")}`}
+                        className="inline-flex items-center gap-2 text-[var(--gold)] hover:text-[var(--gold-hover)] transition-colors text-sm"
+                        aria-label={`Ligar para ${cavalo.contacto_telefone}`}
+                      >
+                        <Phone size={14} aria-hidden="true" />
+                        {cavalo.contacto_telefone}
+                      </a>
+                    )}
+                    {cavalo.contacto_email && (
+                      <a
+                        href={`mailto:${cavalo.contacto_email}?subject=Pedido de informação: ${encodeURIComponent(cavalo.nome_cavalo)}`}
+                        className="inline-flex items-center gap-2 text-[var(--gold)] hover:text-[var(--gold-hover)] transition-colors text-sm"
+                        aria-label={`Enviar email para ${cavalo.contacto_email}`}
+                      >
+                        <Mail size={14} aria-hidden="true" />
+                        {cavalo.contacto_email}
+                      </a>
+                    )}
                   </div>
+                )}
+
+                {/* Primary CTA — email portal or contact link */}
+                <div className="space-y-3 pt-2">
+                  <a
+                    href={`mailto:geral@portal-lusitano.pt?subject=Interesse: ${encodeURIComponent(cavalo.nome_cavalo)} (REG: ${cavalo.id.slice(0, 8).toUpperCase()})`}
+                    className="flex w-full items-center justify-center gap-3 bg-[var(--gold)] text-black py-4 sm:py-5 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[var(--gold-hover)] transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2"
+                  >
+                    <Mail size={15} aria-hidden="true" />
+                    Pedir Informação
+                  </a>
+                  <p className="text-center text-[9px] text-[var(--foreground-muted)] uppercase tracking-widest">
+                    Resposta em menos de 24 horas
+                  </p>
                 </div>
               </div>
             </section>
 
-            {/* CALL TO ACTION */}
-            <div className="pt-10 sticky bottom-0 bg-[var(--background)]/95 backdrop-blur-md py-6 border-t border-[var(--background-secondary)]">
-              <button className="w-full bg-[var(--gold)] text-black py-6 text-[11px] uppercase font-bold tracking-[0.4em] hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(197,160,89,0.3)]">
-                Solicitar Dossier & Visita
-              </button>
-              <p className="text-center text-[8px] text-[var(--foreground-muted)] mt-4 uppercase tracking-widest">
-                Exclusivo para membros Portal Lusitano
-              </p>
+            {/* Back to marketplace */}
+            <div className="border-t border-[var(--background-secondary)] pt-8">
+              <Link
+                href="/comprar"
+                className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
+              >
+                <ArrowLeft size={12} aria-hidden="true" />
+                Ver todos os anúncios
+              </Link>
             </div>
           </div>
         </div>

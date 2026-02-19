@@ -55,13 +55,13 @@ const ICONS = {
 type CategoryKey = keyof typeof ICONS;
 
 const CATEGORY_LABELS: Record<CategoryKey, string> = {
-  conformacao: "Conformacao",
+  conformacao: "Conformação",
   andamentos: "Andamentos",
   temperamento: "Temperamento",
-  saude: "Saude",
+  saude: "Saúde",
   blup: "BLUP",
   treino: "Treino",
-  preco: "Preco",
+  preco: "Preço",
 };
 
 // ============================================

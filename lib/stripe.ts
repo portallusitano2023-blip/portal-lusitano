@@ -11,6 +11,7 @@ function getStripe(): Stripe {
 }
 
 let _stripe: Stripe | null = null;
+// Lazy-init proxy: delays instantiation until first use, avoiding errors when env vars are missing at import time
 export const stripe = new Proxy({} as Stripe, {
   get(_, prop) {
     if (!_stripe) _stripe = getStripe();

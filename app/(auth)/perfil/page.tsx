@@ -1,20 +1,79 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
+import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
-import { Mail, Crown, LogOut, Loader2, Check, Pencil, Clock } from "lucide-react";
+import Link from "next/link";
+import { Mail, Crown, LogOut, Loader2, Check, Pencil, Star, BarChart2 } from "lucide-react";
+
+const TOOL_LABELS: Record<string, string> = {
+  calculadora: "Calculadora de Valor",
+  comparador: "Comparador de Cavalos",
+  compatibilidade: "Verificador de Compatibilidade",
+  perfil: "Análise de Perfil",
+};
 
 function PerfilContent() {
   const { user, signOut } = useAuth();
   const { t } = useLanguage();
   const router = useRouter();
+  const { favoritesCount } = useHorseFavorites();
+
   const [editingName, setEditingName] = useState(false);
   const [name, setName] = useState<string>((user?.user_metadata?.full_name as string) || "");
   const [saving, setSaving] = useState(false);
+
+  const [subscriptionStatus, setSubscriptionStatus] = useState<"active" | "free">("free");
+  const [toolUsage, setToolUsage] = useState<{ tool_name: string; count: number }[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+
+    async function fetchProfileData() {
+      try {
+        const supabase = createSupabaseBrowserClient();
+
+        // Subscrição
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("tools_subscription_status")
+          .eq("id", user!.id)
+          .single();
+
+        if (profile?.tools_subscription_status === "active") {
+          setSubscriptionStatus("active");
+        }
+
+        // Histórico de uso por ferramenta
+        const { data: usage } = await supabase
+          .from("tool_usage")
+          .select("tool_name")
+          .eq("user_id", user!.id);
+
+        if (usage && usage.length > 0) {
+          const counts: Record<string, number> = {};
+          for (const row of usage) {
+            counts[row.tool_name] = (counts[row.tool_name] || 0) + 1;
+          }
+          const sorted = Object.entries(counts)
+            .map(([tool_name, count]) => ({ tool_name, count }))
+            .sort((a, b) => b.count - a.count);
+          setToolUsage(sorted);
+        }
+      } catch {
+        // silenced
+      } finally {
+        setLoadingData(false);
+      }
+    }
+
+    fetchProfileData();
+  }, [user]);
 
   const handleSaveName = async () => {
     setSaving(true);
@@ -35,6 +94,8 @@ function PerfilContent() {
     await signOut();
     router.push("/");
   };
+
+  const isPro = subscriptionStatus === "active";
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 pb-16 px-4">
@@ -91,31 +152,94 @@ function PerfilContent() {
           </div>
 
           <div className="bg-[var(--background-card)]/50 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-sm text-[var(--foreground-secondary)]">
-                  {t.profile.current_plan}
-                </span>
-                <p className="text-[var(--foreground)] font-medium">{t.profile.free}</p>
+            {loadingData ? (
+              <div className="flex items-center gap-2 text-sm text-[var(--foreground-muted)]">
+                <Loader2 size={14} className="animate-spin" />
+                <span>A carregar...</span>
               </div>
-              <a
-                href="/ferramentas"
-                className="px-4 py-2 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black text-sm font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all"
-              >
-                {t.profile.upgrade_pro}
-              </a>
-            </div>
-            <p className="text-xs text-[var(--foreground-muted)] mt-2">{t.profile.pro_desc}</p>
+            ) : (
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm text-[var(--foreground-secondary)]">
+                    {t.profile.current_plan}
+                  </span>
+                  <p className="text-[var(--foreground)] font-medium flex items-center gap-2">
+                    {isPro ? (
+                      <>
+                        <Star size={14} className="text-[var(--gold)] fill-[var(--gold)]" />
+                        Pro
+                      </>
+                    ) : (
+                      t.profile.free
+                    )}
+                  </p>
+                </div>
+                {!isPro && (
+                  <a
+                    href="/precos"
+                    className="px-4 py-2 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black text-sm font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all"
+                  >
+                    {t.profile.upgrade_pro}
+                  </a>
+                )}
+              </div>
+            )}
+            {!loadingData && (
+              <p className="text-xs text-[var(--foreground-muted)] mt-2">{t.profile.pro_desc}</p>
+            )}
           </div>
         </div>
 
-        {/* Historico de Uso */}
+        {/* Favoritos */}
+        <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Star className="text-[var(--gold)]" size={20} />
+              <h2 className="text-lg font-medium">Favoritos</h2>
+            </div>
+            <span className="text-2xl font-serif text-[var(--gold)]">{favoritesCount}</span>
+          </div>
+          {favoritesCount > 0 && (
+            <Link
+              href="/comprar"
+              className="mt-3 text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors inline-block"
+            >
+              Ver cavalos guardados →
+            </Link>
+          )}
+        </div>
+
+        {/* Histórico de Uso */}
         <div className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-6">
           <div className="flex items-center gap-3 mb-4">
-            <Clock className="text-[var(--foreground-secondary)]" size={20} />
+            <BarChart2 className="text-[var(--foreground-secondary)]" size={20} />
             <h2 className="text-lg font-medium">{t.profile.usage_history}</h2>
           </div>
-          <p className="text-sm text-[var(--foreground-muted)]">{t.profile.usage_history_desc}</p>
+
+          {loadingData ? (
+            <div className="flex items-center gap-2 text-sm text-[var(--foreground-muted)]">
+              <Loader2 size={14} className="animate-spin" />
+              <span>A carregar...</span>
+            </div>
+          ) : toolUsage.length > 0 ? (
+            <div className="space-y-2">
+              {toolUsage.map(({ tool_name, count }) => (
+                <div
+                  key={tool_name}
+                  className="flex items-center justify-between py-2 border-b border-[var(--border)] last:border-0"
+                >
+                  <span className="text-sm text-[var(--foreground-secondary)]">
+                    {TOOL_LABELS[tool_name] || tool_name}
+                  </span>
+                  <span className="text-sm font-medium text-[var(--gold)]">
+                    {count}× {count === 1 ? "uso" : "usos"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-[var(--foreground-muted)]">{t.profile.usage_history_desc}</p>
+          )}
         </div>
 
         {/* Sign Out */}

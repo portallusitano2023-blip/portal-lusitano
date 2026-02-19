@@ -37,7 +37,7 @@ export default function AnalysisTab({
           <Tooltip
             text={
               (t.analise_perfil as Record<string, string>).tooltip_confidence ??
-              "Indica quao completas e consistentes sao as suas respostas. Valores altos indicam um perfil bem definido."
+              "Indica quão completas e consistentes são as suas respostas. Valores altos indicam um perfil bem definido."
             }
           />
         </h3>

@@ -53,7 +53,13 @@ export default memo(function Navbar() {
     <nav
       id="main-navigation"
       role="navigation"
-      aria-label="Navegação principal"
+      aria-label={
+        language === "pt"
+          ? "Navegação principal"
+          : language === "es"
+            ? "Navegación principal"
+            : "Main navigation"
+      }
       className={`fixed w-full z-50 border-b transition-all duration-300 ${scrolled ? "bg-[var(--nav-bg-scrolled)] border-[var(--border)] shadow-lg" : "bg-[var(--nav-bg)] border-[var(--border)]"}`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 md:h-24 flex items-center justify-between gap-4">

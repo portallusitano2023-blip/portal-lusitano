@@ -21,44 +21,109 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
-      <div className="max-w-md w-full text-center">
-        <div className="text-[var(--gold)] text-6xl mb-6">!</div>
+    <main
+      className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6 relative overflow-hidden"
+      aria-labelledby="error-title"
+    >
+      {/* Background decorativo — idêntico à 404 para consistência de marca */}
+      <div className="absolute inset-0 opacity-5" aria-hidden="true">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--gold)] rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[var(--gold)] rounded-full blur-[100px]" />
+      </div>
 
-        <h1 className="text-2xl font-serif text-[var(--foreground)] mb-4">
+      <div className="relative z-10 text-center max-w-md w-full">
+        {/* Ícone de exclamação estilizado */}
+        <div
+          className="relative mb-8 opacity-0 animate-[scaleIn_0.8s_ease-out_forwards]"
+          aria-hidden="true"
+        >
+          {/* Grande exclamação decorativa em segundo plano */}
+          <span className="text-[180px] md:text-[220px] font-serif text-transparent bg-clip-text bg-gradient-to-b from-[var(--background-elevated)] to-transparent leading-none select-none">
+            !
+          </span>
+          {/* Exclamação dourada sobreposta */}
+          <div
+            className="absolute inset-0 flex items-center justify-center opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
+            style={{ animationDelay: "0.3s" }}
+          >
+            <span className="text-6xl md:text-8xl font-serif text-[var(--gold)]">!</span>
+          </div>
+        </div>
+
+        {/* Título */}
+        <h1
+          id="error-title"
+          className="text-2xl md:text-3xl font-serif text-[var(--foreground)] mb-4 opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
+          style={{ animationDelay: "0.4s" }}
+        >
           {t.error_page.something_wrong}
         </h1>
 
-        <p className="text-[var(--foreground-secondary)] mb-8">{t.error_page.apology}</p>
+        {/* Descrição */}
+        <p
+          className="text-[var(--foreground-muted)] mb-8 font-serif italic opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
+          style={{ animationDelay: "0.5s" }}
+        >
+          {t.error_page.apology}
+        </p>
 
+        {/* Referência técnica (digest) — útil para suporte sem expor detalhes */}
         {error.digest && (
-          <p className="text-[var(--foreground-secondary)] text-xs mb-6">
-            {t.error_page.reference} {error.digest}
+          <p
+            className="text-[var(--foreground-muted)] text-xs mb-6 font-mono opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+            style={{ animationDelay: "0.55s" }}
+          >
+            {t.error_page.reference} <span className="text-[var(--gold)]/70">{error.digest}</span>
           </p>
         )}
 
-        <div className="flex flex-col gap-4">
+        {/* Botões de ação */}
+        <div
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
+          style={{ animationDelay: "0.6s" }}
+        >
           <button
             onClick={reset}
-            className="bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] py-4 px-8 hover:bg-white transition-all"
+            className="flex items-center gap-3 bg-[var(--gold)] text-black px-8 py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+            aria-label={t.error_page.try_again}
           >
             {t.error_page.try_again}
           </button>
 
           <Link
             href="/"
-            className="text-[var(--foreground-muted)] text-sm hover:text-[var(--gold)] transition-colors"
+            className="flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-xs uppercase tracking-[0.2em] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
           >
             {t.error_page.back_home}
           </Link>
         </div>
 
-        <p className="text-[var(--foreground-secondary)] text-xs mt-12">
+        {/* Contacto de suporte */}
+        <p
+          className="text-[var(--foreground-muted)] text-xs mt-10 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+          style={{ animationDelay: "0.8s" }}
+        >
           {t.error_page.persist_contact}{" "}
-          <a href={`mailto:${SUPPORT_EMAIL}`} className="text-[var(--gold)] hover:underline">
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            className="text-[var(--gold)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+          >
             {SUPPORT_EMAIL}
           </a>
         </p>
+
+        {/* Ornamento inferior — igual à 404 */}
+        <div
+          className="mt-12 flex items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
+          style={{ animationDelay: "1s" }}
+          aria-hidden="true"
+        >
+          <div className="w-12 h-[1px] bg-[var(--gold)]" />
+          <span className="text-[8px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]">
+            Portal Lusitano
+          </span>
+          <div className="w-12 h-[1px] bg-[var(--gold)]" />
+        </div>
       </div>
     </main>
   );

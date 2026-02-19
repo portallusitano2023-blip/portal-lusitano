@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     logger.error("Profissional checkout creation error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao criar checkout" },
+      { error: "Erro ao criar checkout. Tente novamente." },
       { status: 500 }
     );
   }

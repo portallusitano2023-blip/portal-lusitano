@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 // ============================================
@@ -10,6 +10,7 @@ import { useLanguage } from "@/context/LanguageContext";
 interface SuitabilityProfileCavalo {
   id: string;
   nome: string;
+  treino: string;
   conformacao: number;
   andamentos: number;
   temperamento: number;
@@ -66,9 +67,7 @@ function calcSuitability(c: SuitabilityProfileCavalo) {
   const ageFactor = c.idade >= 4 && c.idade <= 12 ? 8 : c.idade < 4 ? 5 : 4;
   const blupNorm = c.blup / 15;
 
-  // treino level is not on the interface; we will assume a default of 4
-  // The parent page only passes the fields in the interface, so we use a fallback
-  const treinoLevel = 4;
+  const treinoLevel = _TREINO_MAP[c.treino] ?? 4;
 
   const competition = clamp(
     (c.andamentos * 0.3 + c.conformacao * 0.2 + treinoLevel * 0.3 + compBonus * 0.2) * 10,
@@ -110,6 +109,28 @@ export default function SuitabilityProfile({
 }: SuitabilityProfileProps) {
   const { t } = useLanguage();
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const hasAnimated = useRef(false);
+  const [animated, setAnimated] = useState(false);
+
+  useEffect(() => {
+    if (hasAnimated.current) return;
+    const el = wrapperRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          setAnimated(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const profiles = useMemo(
     () =>
       cavalos.map((c, i) => ({
@@ -120,21 +141,24 @@ export default function SuitabilityProfile({
     [cavalos, cores]
   );
 
-  const title = (t.comparador as Record<string, string>).suitability_title ?? "Perfil de Aptidao";
+  const title = (t.comparador as Record<string, string>).suitability_title ?? "Perfil de Aptidão";
 
   const barLabels: {
     key: keyof ReturnType<typeof calcSuitability>;
     label: string;
     color: string;
   }[] = [
-    { key: "competition", label: "Competicao", color: BAR_COLORS.competition },
+    { key: "competition", label: "Competição", color: BAR_COLORS.competition },
     { key: "leisure", label: "Lazer", color: BAR_COLORS.leisure },
-    { key: "breeding", label: "Criacao", color: BAR_COLORS.breeding },
+    { key: "breeding", label: "Criação", color: BAR_COLORS.breeding },
     { key: "investment", label: "Investimento", color: BAR_COLORS.investment },
   ];
 
   return (
-    <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)]">
+    <div
+      ref={wrapperRef}
+      className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)]"
+    >
       <h3 className="text-lg font-serif mb-6 text-[var(--foreground)]">{title}</h3>
 
       <div className="space-y-6">
@@ -163,7 +187,7 @@ export default function SuitabilityProfile({
                       <div
                         className="h-full rounded-full transition-all duration-700 ease-out"
                         style={{
-                          width: `${value}%`,
+                          width: animated ? `${value}%` : "0%",
                           backgroundColor: barColor,
                           boxShadow: `0 0 8px ${barColor}40`,
                         }}

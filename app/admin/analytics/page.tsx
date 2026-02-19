@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { TrendingUp, Users, DollarSign, Target, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import MetricsGrid from "@/components/admin-app/analytics/MetricsGrid";
+import TrafficChart from "@/components/admin-app/analytics/TrafficChart";
 
 interface TrafficData {
   overview: {
@@ -156,56 +158,7 @@ export default function AdminAnalyticsPage() {
           <>
             <h2 className="text-2xl font-bold text-white mb-6">🎯 Funil de Conversão</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-              {/* Cards Overview */}
-              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium text-gray-400">Visitantes</h3>
-                  <Users className="text-blue-500" size={20} />
-                </div>
-                <p className="text-3xl font-bold text-white">
-                  {formatNumber(conversions.overview.totalViews)}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">Total visualizações</p>
-              </div>
-
-              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium text-gray-400">Leads</h3>
-                  <Target className="text-green-500" size={20} />
-                </div>
-                <p className="text-3xl font-bold text-white">
-                  {formatNumber(conversions.overview.totalLeads)}
-                </p>
-                <p className="text-xs text-green-500 mt-1">
-                  {conversions.overview.visitorToLeadRate.toFixed(2)}% conversão
-                </p>
-              </div>
-
-              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium text-gray-400">Clientes</h3>
-                  <DollarSign className="text-[#C5A059]" size={20} />
-                </div>
-                <p className="text-3xl font-bold text-white">
-                  {formatNumber(conversions.overview.uniqueCustomers)}
-                </p>
-                <p className="text-xs text-[#C5A059] mt-1">
-                  {conversions.overview.leadToCustomerRate.toFixed(2)}% conversão
-                </p>
-              </div>
-
-              <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium text-gray-400">LTV por Lead</h3>
-                  <TrendingUp className="text-purple-500" size={20} />
-                </div>
-                <p className="text-3xl font-bold text-white">
-                  €{conversions.overview.revenuePerLead.toFixed(2)}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">Lifetime Value</p>
-              </div>
-            </div>
+            <MetricsGrid overview={conversions.overview} formatNumber={formatNumber} />
 
             {/* Funil Visual */}
             <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-8 mb-12">
@@ -422,56 +375,7 @@ export default function AdminAnalyticsPage() {
         {conversions && (
           <>
             <h2 className="text-2xl font-bold text-white mb-6">📈 Evolução de Conversões</h2>
-
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-lg p-6">
-              <div className="h-80 flex items-end justify-between gap-2">
-                {conversions.monthlyConversions.map((month, index) => {
-                  const maxLeads = Math.max(...conversions.monthlyConversions.map((m) => m.leads));
-                  const leadsHeight = maxLeads > 0 ? (month.leads / maxLeads) * 100 : 0;
-                  const customersHeight =
-                    month.leads > 0 ? (month.customers / month.leads) * leadsHeight : 0;
-
-                  return (
-                    <div
-                      key={index}
-                      className="group relative flex-1 h-full flex flex-col justify-end"
-                    >
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black/90 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
-                        <div className="font-bold mb-1">{month.month}</div>
-                        <div className="text-green-400">Leads: {month.leads}</div>
-                        <div className="text-[#C5A059]">Clientes: {month.customers}</div>
-                        <div className="text-purple-400">Taxa: {month.conversionRate}%</div>
-                      </div>
-
-                      {/* Barra Leads */}
-                      <div
-                        className="w-full bg-green-500/30 rounded-t transition-all hover:bg-green-500/50 cursor-pointer relative"
-                        style={{ height: `${leadsHeight}%` }}
-                      >
-                        {/* Barra Clientes dentro */}
-                        <div
-                          className="absolute bottom-0 w-full bg-[#C5A059] rounded-t"
-                          style={{ height: `${customersHeight}%` }}
-                        />
-                      </div>
-
-                      <p className="text-center text-xs text-gray-500 mt-2">{month.month}</p>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="flex items-center justify-center gap-6 mt-6 pt-6 border-t border-white/10">
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-green-500/30 rounded"></div>
-                  <span className="text-sm text-gray-400">Leads</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-[#C5A059] rounded"></div>
-                  <span className="text-sm text-gray-400">Clientes</span>
-                </div>
-              </div>
-            </div>
+            <TrafficChart monthlyConversions={conversions.monthlyConversions} />
           </>
         )}
       </div>

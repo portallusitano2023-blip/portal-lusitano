@@ -52,6 +52,7 @@ interface CompatibilityResultsProps {
   onShare: () => Promise<void>;
   isExporting: boolean;
   isSubscribed: boolean;
+  objetivo?: string;
 }
 
 export default function CompatibilityResults({
@@ -64,6 +65,7 @@ export default function CompatibilityResults({
   onShare,
   isExporting,
   isSubscribed,
+  objetivo,
 }: CompatibilityResultsProps) {
   const { t } = useLanguage();
 
@@ -119,7 +121,7 @@ export default function CompatibilityResults({
             <Tooltip
               text={
                 (t.verificador as Record<string, string>).tooltip_score ??
-                "Score de compatibilidade genetica (0-100) baseado em COI, BLUP, conformacao, andamentos e historial de ambos os progenitores."
+                "Score de compatibilidade genética (0-100) baseado em COI, BLUP, conformação, andamentos e historial de ambos os progenitores."
               }
             />
           </div>
@@ -128,6 +130,86 @@ export default function CompatibilityResults({
             {garanhaoNome || t.verificador.tab_stallion} × {eguaNome || t.verificador.tab_mare}
           </p>
         </div>
+      </div>
+
+      {/* Score Ajustado por Objetivo */}
+      {objetivo &&
+        (() => {
+          const s = resultado.score;
+          const adjustedScore = (() => {
+            const g = garanhao;
+            const e = egua;
+            if (objetivo === "competicao") {
+              return Math.round(
+                s * 0.4 +
+                  ((g.andamentos + e.andamentos) / 2) * 3.5 +
+                  ((g.conformacao + e.conformacao) / 2) * 3 +
+                  Math.min(((g.blup + e.blup) / 2 / 130) * 100, 100) * 0.15
+              );
+            } else if (objetivo === "reproducao") {
+              const coiPenalty = resultado.coi > 6.25 ? -15 : resultado.coi > 3 ? -5 : 5;
+              return Math.round(
+                s * 0.5 +
+                  Math.min(((g.blup + e.blup) / 2 / 130) * 100, 100) * 0.3 +
+                  coiPenalty +
+                  (g.aprovado && e.aprovado ? 10 : 0)
+              );
+            } else if (objetivo === "lazer") {
+              const tempMedia = 7; // temperamento é string no tipo Cavalo — valor neutro 7
+              return Math.round(s * 0.3 + tempMedia * 5 + ((g.saude + e.saude) / 2) * 4);
+            } else {
+              // show: prioriza conformação
+              return Math.round(s * 0.3 + ((g.conformacao + e.conformacao) / 2) * 7);
+            }
+          })();
+          const capped = Math.min(100, Math.max(0, adjustedScore));
+          const OBJETIVO_LABELS: Record<string, string> = {
+            competicao: "Alta Competição",
+            reproducao: "Programa de Cria",
+            lazer: "Lazer & Turismo",
+            show: "Exposição/Show",
+          };
+          const diff = capped - s;
+          return (
+            <div
+              className={`rounded-xl p-4 border mb-4 flex items-center gap-4 ${
+                capped >= s
+                  ? "bg-emerald-500/5 border-emerald-500/20"
+                  : "bg-amber-500/5 border-amber-500/20"
+              }`}
+            >
+              <div className="text-center shrink-0">
+                <p
+                  className="text-3xl font-serif font-bold"
+                  style={{ color: capped >= 70 ? "#10b981" : capped >= 50 ? "#f59e0b" : "#ef4444" }}
+                >
+                  {capped}
+                </p>
+                <p className="text-[10px] text-[var(--foreground-muted)]">/ 100</p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-[var(--foreground)]">
+                  Score para {OBJETIVO_LABELS[objetivo] ?? objetivo}
+                </p>
+                <p className="text-xs text-[var(--foreground-muted)]">
+                  {diff >= 0 ? `+${diff}` : diff} pontos vs. score global ({s}/100) — pesos
+                  ajustados para este objectivo
+                </p>
+              </div>
+            </div>
+          );
+        })()}
+
+      {/* Época Ideal — versão free */}
+      <div className="bg-[var(--background-secondary)]/30 rounded-lg p-3 border border-[var(--border)]/60 mb-4 flex items-center gap-3">
+        <Calendar size={16} className="text-emerald-400 shrink-0" />
+        <p className="text-xs text-[var(--foreground-secondary)]">
+          <strong className="text-emerald-400">Época ideal:</strong> Março–Maio (fotoperíodo longo
+          estimula ovulação natural).
+          {resultado.score >= 70
+            ? " Esta combinação está pronta para cobrição primaveril."
+            : " Consulte veterinário antes de avançar."}
+        </p>
       </div>
 
       {/* O que significa este score? */}
@@ -182,6 +264,55 @@ export default function CompatibilityResults({
         );
       })()}
 
+      {/* Resumo Executivo do Par */}
+      {(() => {
+        const alturaMedia = Math.round((garanhao.altura + egua.altura) / 2);
+        const blupMedio = Math.round((garanhao.blup + egua.blup) / 2);
+        const saudeMed = Math.round((garanhao.saude + egua.saude) / 2);
+        const conformMed = Math.round((garanhao.conformacao + egua.conformacao) / 2);
+
+        return (
+          <div className="bg-[var(--background-secondary)]/30 rounded-xl p-4 border border-[var(--border)]/60 mb-6">
+            <h3 className="text-xs font-semibold text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
+              Resumo do Par
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                {
+                  label: "Altura estimada",
+                  value: `${alturaMedia - 2}–${alturaMedia + 2}cm`,
+                  sub: "do potro adulto",
+                },
+                {
+                  label: "BLUP médio",
+                  value: blupMedio,
+                  sub: blupMedio >= 110 ? "acima da média" : "dentro da média",
+                },
+                {
+                  label: "Saúde combinada",
+                  value: `${saudeMed}/10`,
+                  sub: saudeMed >= 8 ? "excelente" : saudeMed >= 6 ? "boa" : "a melhorar",
+                },
+                {
+                  label: "Conformação",
+                  value: `${conformMed}/10`,
+                  sub: conformMed >= 8 ? "excepcional" : "adequada",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="bg-[var(--background-card)]/50 rounded-lg p-3 text-center"
+                >
+                  <p className="text-lg font-bold text-[#C5A059]">{item.value}</p>
+                  <p className="text-[10px] text-[var(--foreground-muted)] mt-0.5">{item.label}</p>
+                  <p className="text-[9px] text-[var(--foreground-muted)]/60">{item.sub}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Genetic Summary */}
       <div className="mb-6">
         <GeneticSummary garanhao={garanhao} egua={egua} resultado={resultado} />
@@ -197,7 +328,7 @@ export default function CompatibilityResults({
         />
       </div>
 
-      {/* Metricas Geneticas */}
+      {/* Métricas Genéticas */}
       <div className="grid sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)]">
           <div className="flex items-center gap-2 text-[var(--foreground-muted)] text-sm mb-2">
@@ -206,7 +337,7 @@ export default function CompatibilityResults({
             <Tooltip
               text={
                 (t.verificador as Record<string, string>).tooltip_coi ??
-                "Coeficiente de Consanguinidade — mede o grau de parentesco genetico. Abaixo de 3% e excelente; acima de 6.25% aumenta o risco de problemas hereditarios."
+                "Coeficiente de Consanguinidade — mede o grau de parentesco genético. Abaixo de 3% é excelente; acima de 6.25% aumenta o risco de problemas hereditários."
               }
             />
             <SourceBadge
@@ -235,6 +366,17 @@ export default function CompatibilityResults({
               style={{ width: `${Math.min((resultado.coi / 12.5) * 100, 100)}%` }}
             />
           </div>
+          <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-2 leading-snug">
+            {resultado.coi <= 1.5
+              ? "≈ Antepassados comuns muito distantes (6.ª geração+)"
+              : resultado.coi <= 3
+                ? "≈ Primos de 4.º-5.º grau"
+                : resultado.coi <= 6.25
+                  ? "≈ Primos de 2.º-3.º grau"
+                  : resultado.coi <= 12.5
+                    ? "≈ Primo-irmãos — monitorizar"
+                    : "≈ Meio-irmãos — risco hereditário elevado"}
+          </p>
         </div>
 
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)]">
@@ -244,7 +386,7 @@ export default function CompatibilityResults({
             <Tooltip
               text={
                 (t.verificador as Record<string, string>).tooltip_blup ??
-                "Estimativa do merito genetico do potro, baseada na media dos progenitores. BLUP simplificado — nao oficial."
+                "Estimativa do mérito genético do potro, baseada na média dos progenitores. BLUP simplificado — não oficial."
               }
             />
             <SourceBadge
@@ -274,7 +416,7 @@ export default function CompatibilityResults({
             <Tooltip
               text={
                 (t.verificador as Record<string, string>).tooltip_altura ??
-                "Estimativa baseada na media dos progenitores ±2cm. Factores ambientais podem causar variacoes significativas."
+                "Estimativa baseada na média dos progenitores ±2cm. Factores ambientais podem causar variações significativas."
               }
             />
           </div>
@@ -339,7 +481,7 @@ export default function CompatibilityResults({
         </div>
       )}
 
-      {/* Previsao de Pelagem */}
+      {/* Previsão de Pelagem */}
       <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
         <h3 className="font-medium mb-4 flex items-center gap-2">
           <Palette className="text-purple-400" size={18} />
@@ -347,14 +489,14 @@ export default function CompatibilityResults({
           <Tooltip
             text={
               (t.verificador as Record<string, string>).tooltip_pelagem ??
-              "Probabilidades baseadas em genetica mendeliana simplificada. Resultados reais dependem de alelos nao testados."
+              "Probabilidades baseadas em genética mendeliana simplificada. Resultados reais dependem de alelos não testados."
             }
           />
           <SourceBadge
             source="modelo"
             tooltip={
               (t.verificador as Record<string, string>).source_pelagem ??
-              "Genetica mendeliana basica — nao substitui teste genetico"
+              "Genética mendeliana básica — não substitui teste genético"
             }
           />
         </h3>
@@ -383,6 +525,63 @@ export default function CompatibilityResults({
       <div className="mb-6">
         <PhysicalMatch garanhao={garanhao} egua={egua} resultado={resultado} />
       </div>
+
+      {/* Probabilidade de Sucesso Reprodutivo */}
+      {(() => {
+        const score = resultado.score;
+        const coi = resultado.coi;
+
+        // Base: 65% (égua jovem saudável, primeira cobrição de primavera)
+        let prob = 65;
+        if (score >= 70) prob += 10;
+        else if (score < 50) prob -= 15;
+        if (coi <= 3) prob += 5;
+        else if (coi > 6.25) prob -= 10;
+        if (egua.saude >= 8) prob += 5;
+        if (egua.idade > 15) prob -= 10;
+        else if (egua.idade < 5) prob -= 5;
+        if (garanhao.aprovado && egua.aprovado) prob += 3;
+        prob = Math.min(85, Math.max(30, prob));
+
+        const progColor =
+          prob >= 70 ? "bg-emerald-500" : prob >= 55 ? "bg-amber-500" : "bg-red-500";
+        const textColor =
+          prob >= 70 ? "text-emerald-400" : prob >= 55 ? "text-amber-400" : "text-red-400";
+
+        return (
+          <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)] mb-6">
+            <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-3 flex items-center gap-2">
+              <Baby size={15} className="text-pink-400" />
+              Probabilidade de Sucesso Reprodutivo
+            </h3>
+            <div className="flex items-center gap-4 mb-3">
+              <div className="text-center">
+                <p className={`text-3xl font-serif font-bold ${textColor}`}>{prob}%</p>
+                <p className="text-[10px] text-[var(--foreground-muted)]">probabilidade</p>
+              </div>
+              <div className="flex-1">
+                <div className="h-3 bg-[var(--background-card)] rounded-full overflow-hidden mb-1">
+                  <div
+                    className={`h-full rounded-full transition-all duration-700 ${progColor}`}
+                    style={{ width: `${prob}%` }}
+                  />
+                </div>
+                <p className="text-xs text-[var(--foreground-muted)]">
+                  {prob >= 70
+                    ? "Probabilidade elevada de gestação na primeira tentativa"
+                    : prob >= 55
+                      ? "Probabilidade moderada — 1-2 coberturas podem ser necessárias"
+                      : "Probabilidade reduzida — consulte veterinário especializado"}
+                </p>
+              </div>
+            </div>
+            <p className="text-[10px] text-[var(--foreground-muted)]/60">
+              Estimativa baseada em score de compatibilidade, COI, saúde e idade da égua. Não
+              substitui avaliação veterinária.
+            </p>
+          </div>
+        );
+      })()}
 
       {/* Riscos */}
       {resultado.riscos.length > 0 && (
@@ -418,7 +617,7 @@ export default function CompatibilityResults({
         </div>
       )}
 
-      {/* Proximos Passos Recomendados */}
+      {/* Próximos Passos Recomendados */}
       {(() => {
         const s = resultado.score;
         const passos =
@@ -460,7 +659,65 @@ export default function CompatibilityResults({
         );
       })()}
 
-      {/* Factores Detalhados - PRO only */}
+      {/* Perfil do Garanhão Ideal — quando score < 60 */}
+      {resultado.score < 60 &&
+        (() => {
+          // Factores com menor score relativo (score/max)
+          const weakFactors = [...resultado.factores]
+            .sort((a, b) => a.score / a.max - b.score / b.max)
+            .slice(0, 3);
+
+          // Sugestão de linhagem diferente para diversidade genética
+          const DIVERSITY_MAP: Record<string, string[]> = {
+            veiga: ["Andrade", "Alter Real", "Interagro"],
+            andrade: ["Veiga", "Interagro", "Infante da Câmara"],
+            alter: ["Veiga", "Andrade", "Coudelaria Nacional"],
+            coudelaria_nacional: ["Veiga", "Andrade", "Interagro"],
+            infante_camara: ["Andrade", "Veiga", "Interagro"],
+            interagro: ["Veiga", "Andrade", "Alter Real"],
+            outra: ["Veiga", "Andrade", "Alter Real"],
+          };
+          const altLinhagens = DIVERSITY_MAP[garanhao.linhagemFamosa] ?? ["Veiga", "Andrade"];
+
+          return (
+            <div className="bg-amber-900/15 border border-amber-500/30 rounded-xl p-5 mb-6">
+              <h3 className="text-sm font-semibold text-amber-400 mb-4 flex items-center gap-2">
+                <Sparkles size={15} className="shrink-0" />
+                Perfil do Garanhão Ideal para {egua.nome || "esta Égua"}
+              </h3>
+              <p className="text-xs text-[var(--foreground-muted)] mb-4">
+                Com base nos pontos mais fracos desta combinação, um garanhão ideal para{" "}
+                {egua.nome || "esta égua"} teria as seguintes características:
+              </p>
+              <div className="space-y-2 mb-4">
+                {weakFactors.map((f) => (
+                  <div
+                    key={f.nome}
+                    className="flex items-start gap-2 text-xs text-[var(--foreground-secondary)]"
+                  >
+                    <ChevronRight size={13} className="text-amber-400 shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-[var(--foreground)]">{f.nome}:</strong> score actual{" "}
+                      {Math.round((f.score / f.max) * 100)}% — procurar garanhão com{" "}
+                      {f.nome.toLowerCase()} superior (≥ {Math.ceil(f.max * 0.75)}pts)
+                    </span>
+                  </div>
+                ))}
+              </div>
+              {resultado.coi > 6 && (
+                <div className="text-xs text-[var(--foreground-secondary)] mt-3 p-3 bg-[var(--background-secondary)]/50 rounded-lg">
+                  <strong className="text-amber-300">Diversidade genética:</strong> COI elevado (
+                  {resultado.coi.toFixed(1)}
+                  %). Para {egua.nome || "esta égua"} de linhagem{" "}
+                  <strong>{garanhao.linhagemFamosa}</strong>, considere garanhões de:{" "}
+                  <span className="text-[var(--gold)]">{altLinhagens.join(", ")}</span>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+      {/* Factores Detalhados — PRO only */}
       <BlurredProSection isSubscribed={isSubscribed} title={t.verificador.detailed_analysis}>
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
           <h3 className="text-sm font-medium text-[var(--foreground-muted)] uppercase tracking-wider mb-4">
@@ -514,7 +771,7 @@ export default function CompatibilityResults({
         </div>
       </BlurredProSection>
 
-      {/* Recomendacoes - PRO only */}
+      {/* Recomendações — PRO only */}
       {resultado.recomendacoes.length > 0 && (
         <BlurredProSection isSubscribed={isSubscribed} title={t.verificador.recommendations}>
           <div className="bg-pink-500/5 rounded-xl p-6 border border-pink-500/20 mb-6">
@@ -577,7 +834,7 @@ export default function CompatibilityResults({
       <BlurredProSection
         isSubscribed={isSubscribed}
         title={
-          (t.verificador as Record<string, string>).scenarios_title ?? "Cenarios de Acasalamento"
+          (t.verificador as Record<string, string>).scenarios_title ?? "Cenários de Acasalamento"
         }
       >
         <div className="mb-6">
@@ -589,7 +846,7 @@ export default function CompatibilityResults({
       <BlurredProSection
         isSubscribed={isSubscribed}
         title={
-          (t.verificador as Record<string, string>).breeding_costs_title ?? "Custos de Criacao"
+          (t.verificador as Record<string, string>).breeding_costs_title ?? "Custos de Criação"
         }
       >
         <div className="mb-6">
@@ -937,15 +1194,15 @@ export default function CompatibilityResults({
               weight: "20%",
               description:
                 (t.verificador as Record<string, string>).method_blup ??
-                "Media ponderada do merito genetico dos progenitores",
+                "Média ponderada do mérito genético dos progenitores",
               standard: "modelo",
             },
             {
-              name: "Conformacao",
+              name: "Conformação",
               weight: "15%",
               description:
                 (t.verificador as Record<string, string>).method_conformacao ??
-                "Complementaridade morfologica do par",
+                "Complementaridade morfológica do par",
               standard: "APSL",
             },
             {
@@ -967,7 +1224,7 @@ export default function CompatibilityResults({
               weight: "10%",
               description:
                 (t.verificador as Record<string, string>).method_apsl ??
-                "Bonus para ambos com registo oficial",
+                "Bónus para ambos com registo oficial",
               standard: "APSL",
             },
             {
@@ -980,19 +1237,109 @@ export default function CompatibilityResults({
           ]}
           limitations={[
             (t.verificador as Record<string, string>).limitation_1 ??
-              "Nao considera doencas geneticas especificas",
+              "Não considera doenças genéticas específicas",
             (t.verificador as Record<string, string>).limitation_2 ??
-              "COI baseado em pedigree declarado, nao em analise DNA",
+              "COI baseado em pedigree declarado, não em análise DNA",
             (t.verificador as Record<string, string>).limitation_3 ??
-              "BLUP estimado, nao oficial APSL",
+              "BLUP estimado, não oficial APSL",
             (t.verificador as Record<string, string>).limitation_4 ??
-              "Nao substitui consulta veterinaria reprodutiva",
+              "Não substitui consulta veterinária reprodutiva",
           ]}
           version={
             (t.verificador as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"
           }
-          references={["Genetica quantitativa equina", "Padroes APSL", "Wright (1922) — COI"]}
+          references={["Genética quantitativa equina", "Padrões APSL", "Wright (1922) — COI"]}
         />
+      </div>
+
+      {/* D3: Tool chain CTA — Comparador + Calculadora */}
+      <div className="grid sm:grid-cols-2 gap-4 mb-6">
+        <button
+          onClick={() => {
+            try {
+              sessionStorage.setItem(
+                "tool_chain_horse",
+                JSON.stringify({
+                  source: "verificador_pair",
+                  horses: [
+                    {
+                      nome: garanhao.nome,
+                      sexo: "Garanhão",
+                      idade: garanhao.idade,
+                      altura: garanhao.altura,
+                      pelagem: garanhao.pelagem,
+                      linhagem: garanhao.linhagem,
+                      linhagemFamosa: garanhao.linhagemFamosa,
+                      conformacao: garanhao.conformacao,
+                      andamentos: garanhao.andamentos,
+                      temperamento:
+                        typeof garanhao.temperamento === "string" ? 7 : garanhao.temperamento,
+                      saude: garanhao.saude,
+                      blup: garanhao.blup,
+                      registoAPSL: garanhao.aprovado,
+                    },
+                    {
+                      nome: egua.nome,
+                      sexo: "Égua",
+                      idade: egua.idade,
+                      altura: egua.altura,
+                      pelagem: egua.pelagem,
+                      linhagem: egua.linhagem,
+                      linhagemFamosa: egua.linhagemFamosa,
+                      conformacao: egua.conformacao,
+                      andamentos: egua.andamentos,
+                      temperamento: typeof egua.temperamento === "string" ? 7 : egua.temperamento,
+                      saude: egua.saude,
+                      blup: egua.blup,
+                      registoAPSL: egua.aprovado,
+                    },
+                  ],
+                })
+              );
+            } catch {}
+            window.location.href = "/comparador-cavalos";
+          }}
+          className="group flex items-center gap-3 p-4 bg-blue-900/15 border border-blue-500/30 rounded-xl hover:border-blue-500/60 transition-all text-left"
+        >
+          <BarChart3
+            size={18}
+            className="text-blue-400 shrink-0 group-hover:scale-110 transition-transform"
+          />
+          <div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">
+              Abrir ambos no Comparador
+            </p>
+            <p className="text-xs text-[var(--foreground-muted)]">
+              {garanhao.nome || "Garanhão"} × {egua.nome || "Égua"} lado a lado
+            </p>
+          </div>
+          <ChevronRight
+            size={16}
+            className="text-[var(--foreground-muted)] ml-auto group-hover:text-blue-400 transition-colors"
+          />
+        </button>
+
+        <button
+          onClick={() => {
+            window.location.href = "/calculadora-valor";
+          }}
+          className="group flex items-center gap-3 p-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl hover:border-[var(--gold)]/60 transition-all text-left"
+        >
+          <TrendingUp
+            size={18}
+            className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
+          />
+          <div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">Estimar Valor do Potro</p>
+            <p className="text-xs text-[var(--foreground-muted)]">
+              Calculadora de Valor para o descendente
+            </p>
+          </div>
+          <ChevronRight
+            size={16}
+            className="text-[var(--foreground-muted)] ml-auto group-hover:text-[var(--gold)] transition-colors"
+          />
+        </button>
       </div>
 
       {/* Disclaimer */}

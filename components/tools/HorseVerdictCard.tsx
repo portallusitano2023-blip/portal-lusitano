@@ -9,7 +9,7 @@ interface HorseVerdictCardProps {
   strengths: string[]; // top 3 strength descriptions
   weaknesses: string[]; // top 3 weakness descriptions
   bestUse: string; // "Competicao" | "Criacao" | "Lazer" | "Investimento"
-  riskLevel: "Baixo" | "Medio" | "Alto";
+  riskLevel: "Baixo" | "Médio" | "Alto";
   recommendation: string; // 1-paragraph recommendation text
 }
 
@@ -60,7 +60,7 @@ function ScoreRing({ value, animated }: { value: number; animated: boolean }) {
       <span
         className="absolute inset-0 flex items-center justify-center font-serif font-bold"
         style={{ color: "var(--gold, #C5A059)", fontSize: size * 0.3 }}
-        aria-label={`Pontuacao ${value} de 100`}
+        aria-label={`Pontuação ${value} de 100`}
       >
         {animated ? value : 0}
       </span>
@@ -83,7 +83,7 @@ function riskStyles(level: HorseVerdictCardProps["riskLevel"]): {
         text: "#22c55e",
         border: "rgba(34,197,94,0.3)",
       };
-    case "Medio":
+    case "Médio":
       return {
         bg: "rgba(245,158,11,0.1)",
         text: "#f59e0b",

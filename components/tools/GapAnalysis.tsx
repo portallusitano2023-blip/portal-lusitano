@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 // ============================================
@@ -20,8 +20,7 @@ interface GapAnalysisCavalo {
 interface GapAnalysisProps {
   cavalos: GapAnalysisCavalo[];
   cores?: string[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  calcularScore: (c: any) => number;
+  calcularScore: (c: GapAnalysisCavalo) => number;
 }
 
 // ============================================
@@ -31,10 +30,10 @@ interface GapAnalysisProps {
 type AttrKey = "conformacao" | "andamentos" | "temperamento" | "saude" | "blup";
 
 const ATTRIBUTES: { key: AttrKey; label: string; max: number }[] = [
-  { key: "conformacao", label: "Conformacao", max: 10 },
+  { key: "conformacao", label: "Conformação", max: 10 },
   { key: "andamentos", label: "Andamentos", max: 10 },
   { key: "temperamento", label: "Temperamento", max: 10 },
-  { key: "saude", label: "Saude", max: 10 },
+  { key: "saude", label: "Saúde", max: 10 },
   { key: "blup", label: "BLUP", max: 150 },
 ];
 
@@ -48,6 +47,28 @@ export default function GapAnalysis({
   calcularScore,
 }: GapAnalysisProps) {
   const { t } = useLanguage();
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const hasAnimated = useRef(false);
+  const [animated, setAnimated] = useState(false);
+
+  useEffect(() => {
+    if (hasAnimated.current) return;
+    const el = wrapperRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          setAnimated(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const analysis = useMemo(() => {
     // Find group best for each attribute
@@ -96,7 +117,7 @@ export default function GapAnalysis({
       // Improvement potential: calculate score with gaps filled
       const improved = { ...c } as GapAnalysisCavalo;
       for (const gap of gaps) {
-        (improved as unknown as Record<string, number>)[gap.key] = gap.best;
+        (improved as Record<AttrKey, number>)[gap.key] = gap.best;
       }
       const improvedScore = calcularScore(improved);
       const potential = improvedScore - currentScore;
@@ -111,10 +132,13 @@ export default function GapAnalysis({
     });
   }, [cavalos, cores, calcularScore]);
 
-  const title = (t.comparador as Record<string, string>).gap_title ?? "Analise de Lacunas";
+  const title = (t.comparador as Record<string, string>).gap_title ?? "Análise de Lacunas";
 
   return (
-    <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)]">
+    <div
+      ref={wrapperRef}
+      className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)]"
+    >
       <h3 className="text-lg font-serif mb-6 text-[var(--foreground)]">{title}</h3>
 
       <div className="space-y-8">
@@ -131,7 +155,7 @@ export default function GapAnalysis({
             </div>
 
             {gaps.length === 0 ? (
-              <p className="text-xs text-emerald-400 ml-5">Lider em todas as categorias</p>
+              <p className="text-xs text-emerald-400 ml-5">Líder em todas as categorias</p>
             ) : (
               <div className="space-y-3 ml-5">
                 {gaps.map(({ key, label, current, best, gap, max }) => {
@@ -153,7 +177,7 @@ export default function GapAnalysis({
                         <div
                           className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
                           style={{
-                            width: `${bestPct}%`,
+                            width: animated ? `${bestPct}%` : "0%",
                             backgroundColor: `${color}30`,
                           }}
                         />
@@ -161,7 +185,7 @@ export default function GapAnalysis({
                         <div
                           className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
                           style={{
-                            width: `${currentPct}%`,
+                            width: animated ? `${currentPct}%` : "0%",
                             backgroundColor: color,
                           }}
                         />

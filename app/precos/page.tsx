@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Check,
@@ -18,6 +18,8 @@ import {
   Zap,
   Store,
   Loader2,
+  CreditCard,
+  RefreshCcw,
 } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { faqItems } from "@/app/ferramentas/faq-data";
@@ -92,7 +94,7 @@ const tools = [
 
 // ─── BOTÃO DE CHECKOUT ───────────────────────────────────
 
-function CheckoutButton() {
+function CheckoutButton({ className }: { className?: string }) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -117,7 +119,10 @@ function CheckoutButton() {
     <button
       onClick={handleCheckout}
       disabled={loading}
-      className="w-full bg-[var(--gold)] text-black py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-white transition-all duration-300 disabled:opacity-60 flex items-center justify-center gap-2"
+      className={
+        className ??
+        "w-full bg-[var(--gold)] text-black py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-white transition-all duration-300 disabled:opacity-60 flex items-center justify-center gap-2"
+      }
     >
       {loading ? (
         <>
@@ -133,30 +138,67 @@ function CheckoutButton() {
   );
 }
 
-// ─── FAQ ─────────────────────────────────────────────────
+// ─── FAQ COM ANIMAÇÃO ─────────────────────────────────────
+
+function FAQItem({
+  item,
+  index,
+  isOpen,
+  onToggle,
+}: {
+  item: { question: string; answer: string };
+  index: number;
+  isOpen: boolean;
+  onToggle: (i: number) => void;
+}) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- DOM measurement requires effect
+      setHeight(isOpen ? contentRef.current.scrollHeight : 0);
+    }
+  }, [isOpen]);
+
+  return (
+    <div className="border-b border-[var(--border)] last:border-b-0">
+      <button
+        onClick={() => onToggle(index)}
+        aria-expanded={isOpen}
+        className="w-full text-left py-5 flex items-center justify-between gap-4 text-[var(--foreground)] hover:text-[var(--gold)] transition-colors group"
+      >
+        <span className="font-serif text-base">{item.question}</span>
+        <span
+          className={`text-[var(--gold)] text-xl leading-none shrink-0 transition-transform duration-300 ${
+            isOpen ? "rotate-45" : "rotate-0"
+          }`}
+        >
+          +
+        </span>
+      </button>
+      <div style={{ height, overflow: "hidden", transition: "height 280ms ease" }}>
+        <div ref={contentRef}>
+          <p className="pb-5 text-sm text-[var(--foreground-secondary)] leading-relaxed">
+            {item.answer}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function FAQ() {
   const [open, setOpen] = useState<number | null>(null);
 
+  const handleToggle = (i: number) => {
+    setOpen((prev) => (prev === i ? null : i));
+  };
+
   return (
-    <div className="divide-y divide-[var(--border)]">
+    <div>
       {faqItems.map((item, i) => (
-        <div key={i}>
-          <button
-            onClick={() => setOpen(open === i ? null : i)}
-            className="w-full text-left py-5 flex items-center justify-between gap-4 text-[var(--foreground)] hover:text-[var(--gold)] transition-colors"
-          >
-            <span className="font-serif text-base">{item.question}</span>
-            <span className="text-[var(--gold)] text-xl leading-none shrink-0">
-              {open === i ? "−" : "+"}
-            </span>
-          </button>
-          {open === i && (
-            <p className="pb-5 text-sm text-[var(--foreground-secondary)] leading-relaxed">
-              {item.answer}
-            </p>
-          )}
-        </div>
+        <FAQItem key={i} item={item} index={i} isOpen={open === i} onToggle={handleToggle} />
       ))}
     </div>
   );
@@ -192,17 +234,32 @@ export default function PrecosPage() {
           <br />
           <em className="text-[var(--gold)]">para o Mercado Lusitano</em>
         </h1>
-        <p className="text-[var(--foreground-secondary)] text-lg max-w-2xl mx-auto font-light">
+        <p className="text-[var(--foreground-secondary)] text-lg max-w-2xl mx-auto font-light mb-8">
           Comece gratuitamente. Actualize para Pro quando precisar de mais. Sem contratos, sem
           surpresas.
         </p>
+        {/* Trust micro-copy */}
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[var(--foreground-muted)]">
+          <span className="flex items-center gap-1.5">
+            <CreditCard size={11} className="text-[var(--gold)]" />
+            Sem cartão de crédito para o plano Grátis
+          </span>
+          <span className="flex items-center gap-1.5">
+            <RefreshCcw size={11} className="text-[var(--gold)]" />
+            Cancele a qualquer momento
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Shield size={11} className="text-[var(--gold)]" />
+            Pagamento seguro via Stripe
+          </span>
+        </div>
       </section>
 
       {/* PLANOS */}
       <section className="px-6 md:px-12 pb-24 max-w-5xl mx-auto">
         <div className="grid md:grid-cols-3 gap-0 border border-[var(--border)]">
           {/* FREE */}
-          <div className="p-8 border-r border-[var(--border)] flex flex-col">
+          <div className="p-8 border-r border-[var(--border)] flex flex-col group hover:bg-[var(--background-secondary)]/40 transition-colors duration-300">
             <div className="mb-8">
               <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-3">
                 Explorador
@@ -210,7 +267,9 @@ export default function PrecosPage() {
               <div className="flex items-end gap-2 mb-1">
                 <span className="text-4xl font-serif">Grátis</span>
               </div>
-              <p className="text-xs text-[var(--foreground-muted)]">Para sempre</p>
+              <p className="text-xs text-[var(--foreground-muted)]">
+                Para sempre · Sem cartão de crédito
+              </p>
             </div>
 
             <ul className="space-y-3 mb-10 flex-1">
@@ -236,7 +295,7 @@ export default function PrecosPage() {
 
             <Link
               href="/ferramentas"
-              className="w-full border border-[var(--border)] text-[var(--foreground-muted)] py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:border-[var(--foreground-muted)] transition-all text-center block"
+              className="w-full border border-[var(--border)] text-[var(--foreground-muted)] py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:border-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-all text-center block"
             >
               Experimentar Grátis
             </Link>
@@ -244,20 +303,24 @@ export default function PrecosPage() {
 
           {/* PRO — destacado */}
           <div className="p-8 border-r border-[var(--border)] flex flex-col relative bg-[var(--gold)]/5">
+            {/* Borda de destaque superior */}
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-[var(--gold)]" />
-            <div className="absolute top-4 right-4">
-              <span className="flex items-center gap-1 bg-[var(--gold)] text-black text-[9px] uppercase tracking-wider font-bold px-2.5 py-1">
+            {/* Badge "Mais popular" */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+              <span className="flex items-center gap-1 bg-[var(--gold)] text-black text-[9px] uppercase tracking-wider font-bold px-3 py-1.5 whitespace-nowrap">
                 <Crown size={10} /> Mais popular
               </span>
             </div>
 
-            <div className="mb-8">
+            <div className="mb-8 pt-3">
               <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3">Pro</p>
               <div className="flex items-end gap-2 mb-1">
                 <span className="text-4xl font-serif">4,99 €</span>
                 <span className="text-[var(--foreground-muted)] text-sm mb-1">/mês</span>
               </div>
-              <p className="text-xs text-[var(--foreground-muted)]">Cancele a qualquer momento</p>
+              <p className="text-xs text-[var(--foreground-muted)]">
+                Cancele a qualquer momento · Sem compromisso
+              </p>
             </div>
 
             <ul className="space-y-3 mb-10 flex-1">
@@ -273,7 +336,7 @@ export default function PrecosPage() {
           </div>
 
           {/* MARKETPLACE */}
-          <div className="p-8 flex flex-col">
+          <div className="p-8 flex flex-col group hover:bg-[var(--background-secondary)]/40 transition-colors duration-300">
             <div className="mb-8">
               <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-3">
                 Marketplace
@@ -304,19 +367,25 @@ export default function PrecosPage() {
 
             <Link
               href="/vender-cavalo"
-              className="w-full border border-[var(--gold)] text-[var(--gold)] py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[var(--gold)] hover:text-black transition-all text-center block"
+              className="w-full border border-[var(--gold)] text-[var(--gold)] py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[var(--gold)] hover:text-black transition-all text-center flex items-center justify-center gap-2"
             >
               Anunciar Cavalo
-              <ArrowRight size={12} className="inline ml-2" />
+              <ArrowRight size={12} />
             </Link>
           </div>
         </div>
 
-        {/* Garantia */}
-        <p className="text-center text-[11px] text-[var(--foreground-muted)] mt-6 flex items-center justify-center gap-2">
-          <Shield size={12} className="text-[var(--gold)]" />
-          Pagamento seguro via Stripe · Sem taxas ocultas · Cancele quando quiser
-        </p>
+        {/* Trust bar */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[11px] text-[var(--foreground-muted)]">
+          <span className="flex items-center gap-1.5">
+            <Shield size={12} className="text-[var(--gold)]" />
+            Pagamento seguro via Stripe
+          </span>
+          <span className="text-[var(--border)]">·</span>
+          <span>Sem taxas ocultas</span>
+          <span className="text-[var(--border)]">·</span>
+          <span>Cancele quando quiser</span>
+        </div>
       </section>
 
       {/* TABELA DE COMPARAÇÃO */}
@@ -339,7 +408,7 @@ export default function PrecosPage() {
           {comparisonRows.map((row, i) => (
             <div
               key={i}
-              className="grid grid-cols-3 border-b border-[var(--border)] last:border-b-0"
+              className="grid grid-cols-3 border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--background-secondary)]/30 transition-colors"
             >
               <div className="p-4 text-sm text-[var(--foreground-secondary)]">{row.feature}</div>
               <div className="p-4 text-center border-l border-[var(--border)] flex items-center justify-center">
@@ -491,7 +560,7 @@ export default function PrecosPage() {
             >
               Explorar ferramentas
             </Link>
-            <CheckoutButton />
+            <CheckoutButton className="bg-[var(--gold)] text-black px-10 py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-white transition-all duration-300 disabled:opacity-60 flex items-center justify-center gap-2" />
           </div>
         </div>
       </section>

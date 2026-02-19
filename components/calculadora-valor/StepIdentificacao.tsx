@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { Check, Crown, Heart, Shield } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import Tooltip from "@/components/tools/Tooltip";
 import type { StepProps } from "./types";
 
 export default function StepIdentificacao({ form, update }: StepProps) {
@@ -176,9 +177,15 @@ export default function StepIdentificacao({ form, update }: StepProps) {
         </div>
 
         <div className="pt-4 border-t border-[var(--background-secondary)]">
-          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
-            {t.calculadora.label_apsl_reg}
-          </label>
+          <div className="flex items-center gap-1.5 mb-3">
+            <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+              {t.calculadora.label_apsl_reg}
+            </label>
+            <Tooltip
+              text="Cavalo com registo oficial na Associação Portuguesa de Criadores do Cavalo Puro Sangue Lusitano. Aumenta o valor e a credibilidade do cavalo no mercado nacional e internacional."
+              position="top"
+            />
+          </div>
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => update("registoAPSL", true)}

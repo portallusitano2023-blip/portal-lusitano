@@ -30,9 +30,9 @@ interface CostProjectionTableProps {
 // ---------------------------------------------------------------------------
 
 const COST_LABELS: Record<keyof HorseCostEntry["annualCosts"], string> = {
-  pensao: "Pensao",
-  alimentacao: "Alimentacao",
-  veterinario: "Veterinario",
+  pensao: "Pensão",
+  alimentacao: "Alimentação",
+  veterinario: "Veterinário",
   ferrador: "Ferrador",
   treino: "Treino",
   seguro: "Seguro",
@@ -158,7 +158,7 @@ export default function CostProjectionTable({ horses }: CostProjectionTableProps
         </div>
         <div>
           <h3 className="text-base font-serif font-semibold text-[var(--foreground,#ededed)]">
-            Projecao de Custos a 5 Anos
+            Projeção de Custos a 5 Anos
           </h3>
           <p className="text-xs text-[var(--foreground-muted,#71717a)]">
             Custo total de propriedade e retorno estimado
@@ -193,7 +193,7 @@ export default function CostProjectionTable({ horses }: CostProjectionTableProps
                 transition: "opacity 0.6s ease-out, transform 0.6s ease-out, border-color 0.3s",
               }}
               role="region"
-              aria-label={`Projecao de custos para ${horse.nome}`}
+              aria-label={`Projeção de custos para ${horse.nome}`}
             >
               {/* ---- Card header ---- */}
               <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-[var(--border,rgba(255,255,255,0.1))]">
@@ -248,7 +248,7 @@ export default function CostProjectionTable({ horses }: CostProjectionTableProps
                       <div className="flex items-baseline gap-1.5">
                         {key !== "seguro" && (
                           <span className="text-[10px] text-[var(--foreground-muted,#71717a)]">
-                            {formatEUR(monthlyValue)}/mes
+                            {formatEUR(monthlyValue)}/mês
                           </span>
                         )}
                         <span className="text-xs font-semibold tabular-nums text-[var(--foreground,#ededed)]">
@@ -349,7 +349,7 @@ function PurchaseRow({
       }}
     >
       <span className="text-[11px] font-medium uppercase tracking-widest text-[var(--foreground-muted,#71717a)]">
-        Preco de Compra
+        Preço de Compra
       </span>
       <span
         className="text-lg font-serif font-bold tabular-nums"
@@ -457,7 +457,7 @@ function ROIFooter({
       }}
     >
       <span className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground-secondary,#a1a1aa)]">
-        ROI Liquido
+        ROI Líquido
       </span>
       <span
         className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold tabular-nums"

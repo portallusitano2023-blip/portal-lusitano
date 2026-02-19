@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Calculator, ArrowLeft, RefreshCw } from "lucide-react";
+import { Calculator, ArrowLeft, RefreshCw, Pencil } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface CalculadoraHeaderProps {
@@ -10,6 +10,7 @@ interface CalculadoraHeaderProps {
   progress: number;
   hasResultado: boolean;
   onReset: () => void;
+  onEdit?: () => void;
   estimativaParcial?: { min: number; max: number } | null;
 }
 
@@ -19,6 +20,7 @@ export default function CalculadoraHeader({
   progress,
   hasResultado,
   onReset,
+  onEdit,
   estimativaParcial,
 }: CalculadoraHeaderProps) {
   const { t } = useLanguage();
@@ -49,13 +51,24 @@ export default function CalculadoraHeader({
         </div>
 
         {hasResultado ? (
-          <button
-            onClick={onReset}
-            className="text-sm text-[var(--gold)] hover:text-[#D4AF6A] transition-colors flex items-center gap-2"
-          >
-            <RefreshCw size={14} />
-            <span className="hidden sm:inline">{t.calculadora.new_evaluation}</span>
-          </button>
+          <div className="flex items-center gap-3">
+            {onEdit && (
+              <button
+                onClick={onEdit}
+                className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5"
+              >
+                <Pencil size={13} />
+                <span className="hidden sm:inline">Editar</span>
+              </button>
+            )}
+            <button
+              onClick={onReset}
+              className="text-sm text-[var(--gold)] hover:text-[#D4AF6A] transition-colors flex items-center gap-2"
+            >
+              <RefreshCw size={14} />
+              <span className="hidden sm:inline">{t.calculadora.new_evaluation}</span>
+            </button>
+          </div>
         ) : step > 1 && estimativaParcial ? (
           <div className="text-right">
             <p className="text-[10px] text-[var(--foreground-muted)] leading-tight">
@@ -79,9 +92,9 @@ export default function CalculadoraHeader({
 
       {/* Progress bar */}
       {step > 0 && !hasResultado && (
-        <div className="h-0.5 bg-[var(--background-secondary)]">
+        <div className="h-0.5 bg-[var(--background-secondary)]/60">
           <div
-            className="h-full bg-gradient-to-r from-[var(--gold)] to-[#D4AF6A] transition-all duration-500"
+            className="h-full bg-gradient-to-r from-[var(--gold)]/70 to-[var(--gold)] transition-all duration-500 ease-out shadow-sm shadow-[var(--gold)]/30"
             style={{ width: `${progress}%` }}
           />
         </div>

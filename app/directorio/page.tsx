@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect, useMemo, Suspense } from "react";
+import { useState, useEffect, useMemo, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MapPin, Search, Filter, Crown, ArrowRight, Plus, Users, Star } from "lucide-react";
+import { MapPin, Search, Crown, ArrowRight, Plus, Users, Star, X, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import Pagination from "@/components/ui/Pagination";
+import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
 
-// Tipo para coudelaria
+// ─── Types ───────────────────────────────────────────────────────────────────
+
 interface Coudelaria {
   id: string;
   nome: string;
@@ -31,7 +33,9 @@ interface Coudelaria {
   views_count: number;
 }
 
-const regioesValues = [
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const REGIAO_VALUES = [
   "Todas",
   "Ribatejo",
   "Alentejo",
@@ -40,10 +44,9 @@ const regioesValues = [
   "Minho",
   "Douro",
   "Centro",
-];
+] as const;
 
-// Placeholder images
-const placeholderImages = [
+const PLACEHOLDER_IMAGES = [
   "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=800",
   "https://images.unsplash.com/photo-1534307671554-9a6d81f4d629?w=800",
   "https://images.unsplash.com/photo-1598974357801-cbca100e65d3?w=800",
@@ -53,34 +56,89 @@ const placeholderImages = [
 
 const ITENS_POR_PAGINA = 15;
 
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
+function CardSkeleton() {
+  return (
+    <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] overflow-hidden animate-pulse">
+      <div className="h-48 bg-[var(--background-elevated)]" />
+      <div className="p-5 space-y-3">
+        <div className="h-5 w-3/4 bg-[var(--background-elevated)] rounded" />
+        <div className="h-4 w-1/2 bg-[var(--background-elevated)] rounded" />
+        <div className="h-3 w-full bg-[var(--background-elevated)] rounded" />
+        <div className="h-3 w-5/6 bg-[var(--background-elevated)] rounded" />
+        <div className="flex gap-2 pt-1">
+          <div className="h-6 w-20 bg-[var(--background-elevated)] rounded" />
+          <div className="h-6 w-16 bg-[var(--background-elevated)] rounded" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FeaturedSkeleton() {
+  return <div className="h-[400px] bg-[var(--background-elevated)] animate-pulse" />;
+}
+
+function SkeletonGrid() {
+  return (
+    <div className="space-y-16">
+      <section>
+        <div className="h-8 w-64 bg-[var(--background-elevated)] rounded animate-pulse mb-8" />
+        <div className="grid lg:grid-cols-2 gap-8">
+          <FeaturedSkeleton />
+          <FeaturedSkeleton />
+        </div>
+      </section>
+      <section>
+        <div className="h-8 w-48 bg-[var(--background-elevated)] rounded animate-pulse mb-8" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
 function DirectorioContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
-
   const { t } = useLanguage();
 
   const regioes = useMemo(() => {
-    const r = [...regioesValues];
+    const r = [...REGIAO_VALUES] as string[];
     r[0] = t.directorio.region_all;
     return r;
   }, [t]);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedRegiao, setSelectedRegiao] = useState("Todas");
   const [coudelarias, setCoudelarias] = useState<Coudelaria[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Debounce search
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   // Fetch coudelarias
   useEffect(() => {
+    let cancelled = false;
     async function fetchCoudelarias() {
+      setLoading(true);
       try {
         const params = new URLSearchParams();
         if (selectedRegiao !== "Todas") params.set("regiao", selectedRegiao);
-        if (searchTerm) params.set("search", searchTerm);
-
+        if (debouncedSearch) params.set("search", debouncedSearch);
         const res = await fetch(`/api/coudelarias?${params.toString()}`);
-        if (res.ok) {
+        if (res.ok && !cancelled) {
           const data = await res.json();
           setCoudelarias(data.coudelarias || []);
         }
@@ -88,200 +146,264 @@ function DirectorioContent() {
         if (process.env.NODE_ENV === "development")
           console.error("[Directorio] fetch failed:", error);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-
     fetchCoudelarias();
-  }, [selectedRegiao, searchTerm]);
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedRegiao, debouncedSearch]);
 
-  // Separar destaque e normais (removido sistema PRO)
+  const clearSearch = useCallback(() => setSearchTerm(""), []);
+  const clearAll = useCallback(() => {
+    setSearchTerm("");
+    setSelectedRegiao("Todas");
+  }, []);
+
+  // Split featured / normal
   const destaqueCoudelarias = coudelarias.filter((c) => c.destaque);
   const normalCoudelarias = coudelarias.filter((c) => !c.destaque);
 
-  // Paginação para "Outras Coudelarias"
+  // Pagination
   const totalPaginas = Math.ceil(normalCoudelarias.length / ITENS_POR_PAGINA);
   const inicio = (currentPage - 1) * ITENS_POR_PAGINA;
-  const normalCoudelariasPaginadas = normalCoudelarias.slice(inicio, inicio + ITENS_POR_PAGINA);
+  const normalPaginadas = normalCoudelarias.slice(inicio, inicio + ITENS_POR_PAGINA);
 
-  const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", page.toString());
-    router.push(`?${params.toString()}`, { scroll: true });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const handlePageChange = useCallback(
+    (page: number) => {
+      const p = new URLSearchParams(searchParams.toString());
+      p.set("page", page.toString());
+      router.push(`?${p.toString()}`, { scroll: true });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [router, searchParams]
+  );
+
+  const hasActiveFilters = searchTerm || selectedRegiao !== "Todas";
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--gold)]/5 to-transparent" />
-        <div className="max-w-7xl mx-auto px-6 relative">
-          <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-            <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
+      {/* ── Hero ── */}
+      <section
+        className="relative pt-32 pb-16 overflow-hidden"
+        aria-label="Cabeçalho do directório"
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--gold)]/5 to-transparent pointer-events-none" />
+        {/* Decorative line */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-[var(--gold)]/60 to-transparent" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
+          <AnimateOnScroll className="text-center">
+            <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-[var(--gold)] mb-5">
+              <span className="block w-8 h-px bg-[var(--gold)]/60" />
               {t.directorio.badge}
+              <span className="block w-8 h-px bg-[var(--gold)]/60" />
             </span>
-            <h1 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-6">
+            <h1 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-5">
               {t.directorio.title}
             </h1>
-            <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto text-lg">
+            <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto text-lg leading-relaxed">
               {t.directorio.subtitle}
             </p>
-          </div>
+          </AnimateOnScroll>
 
           {/* Stats */}
-          <div
-            className="grid grid-cols-3 gap-4 max-w-xl mx-auto mt-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.1s" }}
-          >
-            <div className="text-center p-4 bg-[var(--surface-hover)] border border-[var(--border)]">
-              <div className="text-3xl font-serif text-[var(--gold)]">{coudelarias.length}+</div>
-              <div className="text-sm text-[var(--foreground-muted)]">
-                {t.directorio.coudelarias}
+          <AnimateOnScroll delay={100} className="grid grid-cols-3 gap-4 max-w-xl mx-auto mt-12">
+            {[
+              {
+                value: loading ? "—" : `${coudelarias.length}+`,
+                label: t.directorio.coudelarias,
+              },
+              { value: String(REGIAO_VALUES.length - 1), label: t.directorio.regioes },
+              { value: "1000+", label: t.directorio.cavalos },
+            ].map(({ value, label }) => (
+              <div
+                key={label}
+                className="text-center p-4 bg-[var(--surface-hover)] border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors"
+              >
+                <div className="text-3xl font-serif text-[var(--gold)]">{value}</div>
+                <div className="text-sm text-[var(--foreground-muted)] mt-1">{label}</div>
               </div>
-            </div>
-            <div className="text-center p-4 bg-[var(--surface-hover)] border border-[var(--border)]">
-              <div className="text-3xl font-serif text-[var(--gold)]">
-                {regioesValues.length - 1}
-              </div>
-              <div className="text-sm text-[var(--foreground-muted)]">{t.directorio.regioes}</div>
-            </div>
-            <div className="text-center p-4 bg-[var(--surface-hover)] border border-[var(--border)]">
-              <div className="text-3xl font-serif text-[var(--gold)]">1000+</div>
-              <div className="text-sm text-[var(--foreground-muted)]">{t.directorio.cavalos}</div>
-            </div>
-          </div>
+            ))}
+          </AnimateOnScroll>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 pb-20">
-        {/* CTA para registar */}
-        <div
-          className="mb-12 p-8 bg-gradient-to-r from-[var(--gold)]/10 via-[var(--gold)]/5 to-transparent border border-[var(--gold)]/20 relative overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          style={{ animationDelay: "0.2s" }}
-        >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--gold)]/10 blur-3xl" />
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative">
-            <div className="flex items-center gap-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-[var(--gold)] to-[#E8D5A3] rounded-2xl flex items-center justify-center">
-                <Crown className="text-black" size={32} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+        {/* ── CTA Banner ── */}
+        <AnimateOnScroll delay={150}>
+          <div className="mb-12 p-6 sm:p-8 bg-gradient-to-r from-[var(--gold)]/10 via-[var(--gold)]/5 to-transparent border border-[var(--gold)]/20 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--gold)]/10 blur-3xl pointer-events-none" />
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 relative">
+              <div className="flex items-center gap-5">
+                <div
+                  className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-[var(--gold)] to-[#E8D5A3] flex items-center justify-center flex-shrink-0"
+                  aria-hidden="true"
+                >
+                  <Crown className="text-black" size={28} />
+                </div>
+                <div>
+                  <h2 className="text-lg sm:text-xl font-serif text-[var(--foreground)] mb-1">
+                    {t.directorio.has_stud}
+                  </h2>
+                  <p className="text-[var(--foreground-secondary)] text-sm sm:text-base">
+                    {t.directorio.register_cta}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-xl font-serif text-[var(--foreground)] mb-1">
-                  {t.directorio.has_stud}
-                </h3>
-                <p className="text-[var(--foreground-secondary)]">{t.directorio.register_cta}</p>
-              </div>
+              <Link
+                href="/directorio/registar"
+                className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-6 sm:px-8 py-3 sm:py-4 text-sm font-bold uppercase tracking-wider hover:bg-[var(--gold-hover)] active:scale-95 transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+              >
+                <Plus size={16} aria-hidden="true" />
+                {t.directorio.register_btn}
+              </Link>
             </div>
-            <Link
-              href="/directorio/registar"
-              className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-[var(--gold-hover)] transition-colors whitespace-nowrap"
+          </div>
+        </AnimateOnScroll>
+
+        {/* ── Filters ── */}
+        <AnimateOnScroll delay={200}>
+          <div
+            className="mb-10 space-y-4"
+            role="search"
+            aria-label={t.directorio.search_placeholder}
+          >
+            {/* Search bar */}
+            <div className="relative group">
+              <Search
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] group-focus-within:text-[var(--gold)] transition-colors pointer-events-none"
+                size={18}
+                aria-hidden="true"
+              />
+              <input
+                type="text"
+                placeholder={t.directorio.search_placeholder}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                aria-label={t.directorio.search_placeholder}
+                className="w-full bg-[var(--background-secondary)]/60 border border-[var(--border)] pl-11 pr-11 py-4 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none focus:bg-[var(--background-secondary)] transition-all"
+              />
+              {searchTerm && (
+                <button
+                  onClick={clearSearch}
+                  aria-label={t.directorio.search_clear}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors p-0.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+                >
+                  <X size={16} aria-hidden="true" />
+                </button>
+              )}
+            </div>
+
+            {/* Region pills */}
+            <div
+              className="flex flex-wrap gap-2"
+              role="group"
+              aria-label={t.directorio.filter_region}
             >
-              <Plus size={18} />
-              {t.directorio.register_btn}
-            </Link>
-          </div>
-        </div>
+              {regioes.map((regiao, i) => {
+                const value = i === 0 ? "Todas" : regiao;
+                const isActive = selectedRegiao === value;
+                return (
+                  <button
+                    key={regiao}
+                    onClick={() => setSelectedRegiao(value)}
+                    aria-pressed={isActive}
+                    className={`px-4 py-2 text-sm font-medium border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--background)] ${
+                      isActive
+                        ? "bg-[var(--gold)] border-[var(--gold)] text-black"
+                        : "bg-transparent border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--gold)]/50 hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)]"
+                    }`}
+                  >
+                    {regiao}
+                    {isActive && i !== 0 && (
+                      <CheckCircle size={12} className="inline ml-1.5 -mt-0.5" aria-hidden="true" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
 
-        {/* Filtros */}
-        <div
-          className="mb-12 flex flex-col md:flex-row gap-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          style={{ animationDelay: "0.3s" }}
-        >
-          {/* Pesquisa */}
-          <div className="flex-1 relative">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
-              size={20}
-            />
-            <input
-              type="text"
-              placeholder={t.directorio.search_placeholder}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              aria-label={t.directorio.search_placeholder}
-              className="w-full bg-[var(--background-secondary)]/50 border border-[var(--border)] pl-12 pr-4 py-4 text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:border-[var(--gold)] focus:outline-none transition-colors"
-            />
+            {/* Active filter summary + clear */}
+            {hasActiveFilters && (
+              <div className="flex items-center justify-between pt-1">
+                <p className="text-sm text-[var(--foreground-muted)]">
+                  {loading
+                    ? t.directorio.loading
+                    : `${coudelarias.length} ${
+                        coudelarias.length === 1
+                          ? t.directorio.coudelaria_single
+                          : t.directorio.coudelarias_plural
+                      }`}
+                </p>
+                <button
+                  onClick={clearAll}
+                  className="text-sm text-[var(--gold)] hover:text-[var(--gold-hover)] hover:underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+                >
+                  {t.directorio.clear_filters}
+                </button>
+              </div>
+            )}
           </div>
+        </AnimateOnScroll>
 
-          {/* Filtro por região */}
-          <div className="relative">
-            <Filter
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
-              size={20}
-            />
-            <select
-              value={selectedRegiao}
-              onChange={(e) => setSelectedRegiao(e.target.value)}
-              aria-label={t.directorio.regioes}
-              className="bg-[var(--background-secondary)]/50 border border-[var(--border)] pl-12 pr-8 py-4 text-[var(--foreground)] focus:border-[var(--gold)] focus:outline-none transition-colors appearance-none cursor-pointer min-w-[200px]"
-            >
-              {regioes.map((regiao) => (
-                <option key={regiao} value={regiao}>
-                  {regiao}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        {/* ── Loading skeleton ── */}
+        {loading && <SkeletonGrid />}
 
-        {/* Loading */}
-        {loading && (
-          <div className="text-center py-20">
-            <div className="animate-pulse text-[var(--gold)]">{t.directorio.loading}</div>
-          </div>
-        )}
-
-        {/* Resultados */}
+        {/* ── Results ── */}
         {!loading && (
           <div className="space-y-16">
-            {/* Coudelarias em Destaque */}
+            {/* Featured */}
             {destaqueCoudelarias.length > 0 && (
-              <section>
-                <div className="flex items-center gap-3 mb-8">
-                  <Star className="text-[var(--gold)]" size={24} />
-                  <h2 className="text-2xl font-serif text-[var(--foreground)]">
-                    {t.directorio.featured}
-                  </h2>
-                </div>
+              <section aria-label={t.directorio.featured}>
+                <AnimateOnScroll>
+                  <div className="flex items-center gap-3 mb-8">
+                    <span className="w-px h-6 bg-[var(--gold)]" aria-hidden="true" />
+                    <Star className="text-[var(--gold)]" size={20} aria-hidden="true" />
+                    <h2 className="text-2xl font-serif text-[var(--foreground)]">
+                      {t.directorio.featured}
+                    </h2>
+                  </div>
+                </AnimateOnScroll>
                 <div className="grid lg:grid-cols-2 gap-8">
-                  {destaqueCoudelarias.map((coudelaria, index) => (
-                    <FeaturedCard key={coudelaria.id} coudelaria={coudelaria} index={index} t={t} />
+                  {destaqueCoudelarias.map((c, i) => (
+                    <FeaturedCard key={c.id} coudelaria={c} index={i} t={t} />
                   ))}
                 </div>
               </section>
             )}
 
-            {/* Outras Coudelarias */}
+            {/* Normal */}
             {normalCoudelarias.length > 0 && (
-              <section>
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-3">
-                    <Users className="text-[var(--foreground-secondary)]" size={24} />
-                    <h2 className="text-2xl font-serif text-[var(--foreground-secondary)]">
-                      {t.directorio.others}
-                      <span className="text-[var(--foreground-secondary)] text-lg ml-3">
-                        ({normalCoudelarias.length}{" "}
-                        {normalCoudelarias.length === 1
-                          ? t.directorio.coudelaria_single
-                          : t.directorio.coudelarias_plural}
-                        )
-                      </span>
-                    </h2>
+              <section aria-label={t.directorio.others}>
+                <AnimateOnScroll>
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-3">
+                      <span className="w-px h-6 bg-[var(--border)]" aria-hidden="true" />
+                      <Users
+                        className="text-[var(--foreground-secondary)]"
+                        size={20}
+                        aria-hidden="true"
+                      />
+                      <h2 className="text-2xl font-serif text-[var(--foreground-secondary)]">
+                        {t.directorio.others}
+                        <span className="text-[var(--foreground-muted)] text-base font-normal ml-3">
+                          ({normalCoudelarias.length}{" "}
+                          {normalCoudelarias.length === 1
+                            ? t.directorio.coudelaria_single
+                            : t.directorio.coudelarias_plural}
+                          )
+                        </span>
+                      </h2>
+                    </div>
                   </div>
-                </div>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {normalCoudelariasPaginadas.map((coudelaria, index) => (
-                    <CoudelariaCard
-                      key={coudelaria.id}
-                      coudelaria={coudelaria}
-                      index={index}
-                      t={t}
-                    />
+                </AnimateOnScroll>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {normalPaginadas.map((c, i) => (
+                    <CoudelariaCard key={c.id} coudelaria={c} index={i} t={t} />
                   ))}
                 </div>
-
-                {/* Paginação */}
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPaginas}
@@ -291,28 +413,33 @@ function DirectorioContent() {
               </section>
             )}
 
-            {/* Sem resultados */}
+            {/* Empty state */}
             {coudelarias.length === 0 && (
-              <div className="text-center py-20">
-                <div className="w-20 h-20 bg-[var(--background-secondary)] rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Search className="text-[var(--foreground-secondary)]" size={32} />
-                </div>
-                <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
-                  {t.directorio.no_results}
-                </h3>
-                <p className="text-[var(--foreground-muted)]">{t.directorio.no_results_hint}</p>
-                {(searchTerm || selectedRegiao !== "Todas") && (
-                  <button
-                    onClick={() => {
-                      setSearchTerm("");
-                      setSelectedRegiao("Todas");
-                    }}
-                    className="mt-4 text-sm text-[var(--gold)] hover:underline"
+              <AnimateOnScroll>
+                <div className="text-center py-24">
+                  <div
+                    className="w-20 h-20 bg-[var(--background-secondary)] border border-[var(--border)] flex items-center justify-center mx-auto mb-6"
+                    aria-hidden="true"
                   >
-                    {t.directorio.clear_filters || "Limpar filtros"}
-                  </button>
-                )}
-              </div>
+                    <Search className="text-[var(--foreground-muted)]" size={32} />
+                  </div>
+                  <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
+                    {t.directorio.no_results}
+                  </h3>
+                  <p className="text-[var(--foreground-muted)] max-w-sm mx-auto">
+                    {t.directorio.no_results_hint}
+                  </p>
+                  {hasActiveFilters && (
+                    <button
+                      onClick={clearAll}
+                      className="mt-6 inline-flex items-center gap-2 text-sm text-[var(--gold)] border border-[var(--gold)]/30 px-5 py-2.5 hover:bg-[var(--gold)]/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+                    >
+                      <X size={14} aria-hidden="true" />
+                      {t.directorio.clear_filters}
+                    </button>
+                  )}
+                </div>
+              </AnimateOnScroll>
             )}
           </div>
         )}
@@ -321,7 +448,8 @@ function DirectorioContent() {
   );
 }
 
-// Featured Card (para coudelarias em destaque)
+// ─── Featured Card ─────────────────────────────────────────────────────────────
+
 function FeaturedCard({
   coudelaria,
   index,
@@ -331,68 +459,79 @@ function FeaturedCard({
   index: number;
   t: ReturnType<typeof useLanguage>["t"];
 }) {
-  const image = coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
+  const image = coudelaria.foto_capa || PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length];
 
   return (
-    <div
-      className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-      style={{ animationDelay: `${index * 0.1}s` }}
-    >
+    <AnimateOnScroll delay={index * 80}>
       <Link
         href={`/directorio/${coudelaria.slug}`}
-        className="group block relative h-[400px] overflow-hidden"
+        className="group block relative h-[400px] overflow-hidden border border-transparent hover:border-[var(--gold)]/40 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+        aria-label={`${coudelaria.nome}, ${coudelaria.localizacao}`}
       >
         <Image
           src={image}
           alt={coudelaria.nome}
           fill
           sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+        {/* Overlay shimmer on hover */}
+        <div className="absolute inset-0 bg-[var(--gold)]/0 group-hover:bg-[var(--gold)]/5 transition-colors duration-300" />
 
-        {/* Destaque Badge */}
-        <div className="absolute top-4 left-4 flex items-center gap-2 bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] text-black px-3 py-1.5 text-xs font-bold uppercase">
-          <Star size={14} />
+        {/* Badge */}
+        <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] text-black px-3 py-1.5 text-xs font-bold uppercase tracking-wide">
+          <Star size={12} aria-hidden="true" />
           {t.directorio.highlight}
         </div>
 
+        {/* Verified badge */}
+        <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white/90 px-2.5 py-1 text-xs font-medium border border-white/10">
+          <CheckCircle size={12} className="text-green-400" aria-hidden="true" />
+          {t.directorio.verified}
+        </div>
+
         {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-8">
+        <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
           {coudelaria.ano_fundacao && (
-            <span className="text-[var(--gold)] text-sm uppercase tracking-widest mb-2 block">
+            <span className="text-[var(--gold)] text-xs uppercase tracking-widest mb-2 block">
               {t.directorio.since} {coudelaria.ano_fundacao}
             </span>
           )}
-          <h3 className="text-3xl font-serif text-[var(--foreground)] mb-3 group-hover:text-[var(--gold)] transition-colors">
+          <h3 className="text-2xl sm:text-3xl font-serif text-white mb-3 group-hover:text-[var(--gold)] transition-colors duration-300">
             {coudelaria.nome}
           </h3>
-          <div className="flex items-center gap-4 text-[var(--foreground-secondary)] text-sm mb-4">
-            <span className="flex items-center gap-1">
-              <MapPin size={14} className="text-[var(--gold)]" />
+          <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm mb-4">
+            <span className="flex items-center gap-1.5">
+              <MapPin size={13} className="text-[var(--gold)]" aria-hidden="true" />
               {coudelaria.localizacao}, {coudelaria.regiao}
             </span>
             {coudelaria.num_cavalos && (
-              <span className="flex items-center gap-1">
-                <Users size={14} className="text-[var(--gold)]" />
+              <span className="flex items-center gap-1.5">
+                <Users size={13} className="text-[var(--gold)]" aria-hidden="true" />
                 {coudelaria.num_cavalos} {t.directorio.horses}
               </span>
             )}
           </div>
-          <p className="text-[var(--foreground-secondary)] line-clamp-2 mb-4">
+          <p className="text-white/60 line-clamp-2 mb-5 text-sm leading-relaxed">
             {coudelaria.descricao}
           </p>
           <div className="flex items-center gap-2 text-[var(--gold)] text-sm font-medium">
             {t.directorio.view_stud}
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight
+              size={15}
+              className="group-hover:translate-x-1.5 transition-transform duration-300"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </Link>
-    </div>
+    </AnimateOnScroll>
   );
 }
 
-// Card para coudelarias
+// ─── Normal Card ──────────────────────────────────────────────────────────────
+
 function CoudelariaCard({
   coudelaria,
   index,
@@ -402,16 +541,14 @@ function CoudelariaCard({
   index: number;
   t: ReturnType<typeof useLanguage>["t"];
 }) {
-  const image = coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
+  const image = coudelaria.foto_capa || PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length];
 
   return (
-    <div
-      className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-      style={{ animationDelay: `${index * 0.05}s` }}
-    >
+    <AnimateOnScroll delay={index * 50}>
       <Link
         href={`/directorio/${coudelaria.slug}`}
-        className="group block bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/50 overflow-hidden transition-colors"
+        className="group block bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/50 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_rgba(197,160,89,0.12)] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+        aria-label={`${coudelaria.nome}, ${coudelaria.localizacao}`}
       >
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
@@ -419,53 +556,88 @@ function CoudelariaCard({
             src={image}
             alt={coudelaria.nome}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
-          {coudelaria.ano_fundacao && (
-            <div className="absolute top-3 left-3 bg-black/60 text-white px-2 py-1 text-xs">
-              {t.directorio.since} {coudelaria.ano_fundacao}
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 to-transparent" />
+
+          {/* Top badges */}
+          <div className="absolute top-3 left-3 right-3 flex items-start justify-between">
+            {coudelaria.ano_fundacao ? (
+              <span className="bg-black/70 backdrop-blur-sm text-white/90 px-2.5 py-1 text-xs font-medium">
+                {t.directorio.since} {coudelaria.ano_fundacao}
+              </span>
+            ) : (
+              <span />
+            )}
+            <span className="flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white/80 px-2 py-1 text-xs border border-white/10">
+              <CheckCircle size={10} className="text-green-400" aria-hidden="true" />
+              {t.directorio.verified}
+            </span>
+          </div>
+
+          {/* Num cavalos badge bottom right */}
+          {coudelaria.num_cavalos && (
+            <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white/80 px-2.5 py-1 text-xs">
+              <Users size={10} aria-hidden="true" />
+              {coudelaria.num_cavalos} {t.directorio.horses}
             </div>
           )}
         </div>
 
         {/* Content */}
         <div className="p-5">
-          <h3 className="text-lg font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors mb-2">
+          <h3 className="text-lg font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors duration-200 mb-2">
             {coudelaria.nome}
           </h3>
-          <div className="flex items-center gap-1 text-[var(--foreground-muted)] text-sm mb-3">
-            <MapPin size={14} />
-            {coudelaria.localizacao}, {coudelaria.regiao}
+
+          <div className="flex items-center gap-1.5 text-[var(--foreground-muted)] text-sm mb-3">
+            <MapPin size={13} className="flex-shrink-0" aria-hidden="true" />
+            <span className="truncate">
+              {coudelaria.localizacao}, {coudelaria.regiao}
+            </span>
           </div>
-          <p className="text-[var(--foreground-secondary)] text-sm line-clamp-2 mb-4">
+
+          <p className="text-[var(--foreground-secondary)] text-sm line-clamp-2 mb-4 leading-relaxed">
             {coudelaria.descricao}
           </p>
 
           {/* Especialidades */}
           {coudelaria.especialidades?.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-4">
+            <div className="flex flex-wrap gap-1.5 mb-4">
               {coudelaria.especialidades.slice(0, 2).map((esp) => (
                 <span
                   key={esp}
-                  className="text-xs bg-[var(--gold)]/10 text-[var(--gold)] px-2 py-0.5"
+                  className="text-xs bg-[var(--gold)]/10 text-[var(--gold)] px-2.5 py-1 border border-[var(--gold)]/20"
                 >
                   {esp}
                 </span>
               ))}
+              {coudelaria.especialidades.length > 2 && (
+                <span className="text-xs text-[var(--foreground-muted)] px-2.5 py-1">
+                  +{coudelaria.especialidades.length - 2}
+                </span>
+              )}
             </div>
           )}
 
-          <div className="flex items-center gap-2 text-[var(--gold)] text-sm">
-            {t.directorio.view_details}
-            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+          <div className="flex items-center justify-between pt-3 border-t border-[var(--border)]">
+            <span className="flex items-center gap-1.5 text-[var(--gold)] text-sm font-medium">
+              {t.directorio.view_details}
+              <ArrowRight
+                size={13}
+                className="group-hover:translate-x-1 transition-transform duration-200"
+                aria-hidden="true"
+              />
+            </span>
           </div>
         </div>
       </Link>
-    </div>
+    </AnimateOnScroll>
   );
 }
+
+// ─── Export ───────────────────────────────────────────────────────────────────
 
 export default function DirectorioPage() {
   return (

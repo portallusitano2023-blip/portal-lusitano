@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { Dna } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import Tooltip from "@/components/tools/Tooltip";
 import { LINHAGENS_FAMOSAS } from "./data";
 import type { FormData, StepProps } from "./types";
 
@@ -77,9 +78,15 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
 
       <div className="space-y-6">
         <div>
-          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
-            {t.calculadora.label_lineage_quality}
-          </label>
+          <div className="flex items-center gap-1.5 mb-3">
+            <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+              {t.calculadora.label_lineage_quality}
+            </label>
+            <Tooltip
+              text="Família de criação do cavalo. As principais linhagens lusitanas são: Veiga, Andrade, Alter Real, Coudelaria Nacional e Interagro. Uma linhagem certificada ou premium aumenta significativamente o valor de mercado."
+              position="bottom"
+            />
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {lineageOptions.map((opt) => (
               <button

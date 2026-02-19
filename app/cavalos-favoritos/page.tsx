@@ -1,3 +1,11 @@
+/**
+ * Página de Cavalos Favoritos — Marketplace
+ *
+ * Lista os cavalos do marketplace (/comprar) que o utilizador guardou.
+ * Usa HorseFavoritesContext (cavalos à venda no marketplace).
+ *
+ * NÃO confundir com /favoritos que é a wishlist de produtos da loja Shopify.
+ */
 "use client";
 
 import { Heart, Trash2, MapPin, Calendar, ExternalLink, Share2, Filter } from "lucide-react";

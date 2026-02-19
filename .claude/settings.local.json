@@ -110,7 +110,21 @@
       "Bash(printf:*)",
       "Bash(cmd /c \"echo. >> C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.env.local && echo UPSTASH_REDIS_REST_URL=https://humane-kite-39161.upstash.io >> C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.env.local && echo UPSTASH_REDIS_REST_TOKEN=AZj5AAIncDJkNWUxOGY0YzRhZjk0OTE2OWZjOWExMWQ3NzEyMzIwOXAyMzkxNjE >> C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.env.local && echo OK\")",
       "Bash(Remove-Item -Recurse -Force \"c:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.next\" -ErrorAction SilentlyContinue)",
-      "Bash(Write-Host \"Cache limpo\")"
+      "Bash(Write-Host \"Cache limpo\")",
+      "Bash(SUPABASE_URL=\"https://yrfcepsagtzkxwnnrztd.supabase.co\":*)",
+      "Bash(SERVICE_KEY=\"sb_secret_Wz00ehTwag548_1kaYVF3g_Oj_d5CYl\")",
+      "Bash(__NEW_LINE_66c8e3dc9add9e1b__ curl -s -X GET \"$SUPABASE_URL/storage/v1/bucket\" -H \"Authorization: Bearer $SERVICE_KEY\" -H \"apikey: $SERVICE_KEY\")",
+      "Bash(__NEW_LINE_73b32d5dd44da91c__ curl -s -X POST \"$SUPABASE_URL/storage/v1/bucket\" -H \"Authorization: Bearer $SERVICE_KEY\" -H \"apikey: $SERVICE_KEY\" -H \"Content-Type: application/json\" -d '{\n    \"\"id\"\": \"\"cavalos-imagens\"\",\n    \"\"name\"\": \"\"cavalos-imagens\"\",\n    \"\"public\"\": true,\n    \"\"file_size_limit\"\": 5242880,\n    \"\"allowed_mime_types\"\": [\"\"image/jpeg\"\", \"\"image/jpg\"\", \"\"image/png\"\", \"\"image/webp\"\"]\n  }')",
+      "Bash(cmd /c \"rmdir /s /q C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.next\")",
+      "Bash(git -C \"c:/Users/USUARIO/portal-lusitano\" status --short)",
+      "Bash(git -C \"/c/Users/USUARIO/portal-lusitano\" status --short)",
+      "Bash(for f in /c/Users/USUARIO/portal-lusitano/components/tools/*.tsx)",
+      "Bash(do if ! grep -q \"export default\" \"$f\")",
+      "Bash(then echo \"MISSING DEFAULT: $f\")",
+      "Bash(fi)",
+      "Bash(for f in /c/Users/USUARIO/portal-lusitano/components/analise-perfil/tabs/*.tsx /c/Users/USUARIO/portal-lusitano/components/analise-perfil/*.tsx /c/Users/USUARIO/portal-lusitano/components/verificador-compatibilidade/*.tsx /c/Users/USUARIO/portal-lusitano/components/calculadora-valor/*.tsx)",
+      "Bash(git ls-tree:*)",
+      "Bash(cmd /c:*)"
     ]
   }
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ArrowLeft, Heart, RefreshCw } from "lucide-react";
+import { ArrowLeft, ArrowRight, Heart, RefreshCw, Trophy, Dna, Leaf, Star } from "lucide-react";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import { useToolAccess } from "@/hooks/useToolAccess";
@@ -18,6 +18,22 @@ import {
 import type { Cavalo, ResultadoCompatibilidade } from "@/components/verificador-compatibilidade";
 
 const DRAFT_KEY = "verificador_draft_v1";
+const BREEDING_CHAIN_KEY = "tool_chain_breeding";
+
+interface ChainHorse {
+  nome: string;
+  sexo: string;
+  idade: number;
+  altura: number;
+  pelagem: string;
+  linhagem: string;
+  linhagemFamosa: string;
+  conformacao: number;
+  andamentos: number;
+  temperamento: number;
+  saude: number;
+  blup: number;
+}
 
 export default function VerificadorCompatibilidadePage() {
   const { t } = useLanguage();
@@ -27,10 +43,15 @@ export default function VerificadorCompatibilidadePage() {
   const [step, setStep] = useState(0);
   const [isCalculating, setIsCalculating] = useState(false);
   const [resultado, setResultado] = useState<ResultadoCompatibilidade | null>(null);
+  const [objetivo, setObjetivo] = useState<"competicao" | "reproducao" | "lazer" | "show">(
+    "competicao"
+  );
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasDraft, setHasDraft] = useState(false);
   const [draftDate, setDraftDate] = useState<string>("");
+  const [chainBanner, setChainBanner] = useState<string | null>(null);
+  const [chainImported, setChainImported] = useState(false);
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
   const {
     canUse,
@@ -65,6 +86,59 @@ export default function VerificadorCompatibilidadePage() {
           localStorage.removeItem(DRAFT_KEY);
         }
       }
+    } catch {}
+  }, []);
+
+  // ============================================
+  // TOOL CHAIN: ler par do Comparador de Cavalos
+  // ============================================
+
+  useEffect(() => {
+    try {
+      const chain = sessionStorage.getItem(BREEDING_CHAIN_KEY);
+      if (!chain) return;
+      sessionStorage.removeItem(BREEDING_CHAIN_KEY);
+      const { garanhao: g, egua: e } = JSON.parse(chain) as {
+        garanhao: ChainHorse;
+        egua: ChainHorse;
+      };
+      const mapTemp = (t: number): string => {
+        if (t >= 8) return "Calmo";
+        if (t >= 6) return "Equilibrado";
+        if (t >= 4) return "Energético";
+        return "Difícil";
+      };
+      setGaranhao((prev) => ({
+        ...prev,
+        nome: g.nome || prev.nome,
+        idade: g.idade ?? prev.idade,
+        altura: g.altura ?? prev.altura,
+        pelagem: g.pelagem || prev.pelagem,
+        linhagem: g.linhagem || prev.linhagem,
+        linhagemFamosa: g.linhagemFamosa || prev.linhagemFamosa,
+        conformacao: g.conformacao ?? prev.conformacao,
+        andamentos: g.andamentos ?? prev.andamentos,
+        temperamento: mapTemp(g.temperamento),
+        saude: g.saude ?? prev.saude,
+        blup: g.blup ?? prev.blup,
+      }));
+      setEgua((prev) => ({
+        ...prev,
+        nome: e.nome || prev.nome,
+        idade: e.idade ?? prev.idade,
+        altura: e.altura ?? prev.altura,
+        pelagem: e.pelagem || prev.pelagem,
+        linhagem: e.linhagem || prev.linhagem,
+        linhagemFamosa: e.linhagemFamosa || prev.linhagemFamosa,
+        conformacao: e.conformacao ?? prev.conformacao,
+        andamentos: e.andamentos ?? prev.andamentos,
+        temperamento: mapTemp(e.temperamento),
+        saude: e.saude ?? prev.saude,
+        blup: e.blup ?? prev.blup,
+      }));
+      setStep(1);
+      setChainBanner(`${g.nome || "Garanhão"} × ${e.nome || "Égua"}`);
+      setChainImported(true);
     } catch {}
   }, []);
 
@@ -144,10 +218,23 @@ export default function VerificadorCompatibilidadePage() {
         setResultado(resultadoFinal);
         recordUsage(
           { garanhao: garanhao.nome, egua: egua.nome },
-          { score: resultadoFinal.score, nivel: resultadoFinal.nivel }
+          {
+            score: resultadoFinal.score,
+            nivel: resultadoFinal.nivel,
+            coi: resultadoFinal.coi,
+            riscosAltos: resultadoFinal.riscos.filter((r) => r.severidade === "alto").length,
+            pelagens: resultadoFinal.pelagens.slice(0, 2).map((p) => p.cor),
+          }
         );
-      } catch {
-        showError("Erro no cálculo. Tenta novamente.");
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Erro desconhecido";
+        if (msg.includes("network") || msg.includes("fetch")) {
+          showError("Erro de ligação. Verifica a tua ligação à internet e tenta novamente.");
+        } else if (msg.includes("timeout")) {
+          showError("O cálculo demorou demasiado. Tenta com menos variáveis.");
+        } else {
+          showError("Não foi possível calcular a compatibilidade. Verifica os dados introduzidos.");
+        }
       } finally {
         setIsCalculating(false);
       }
@@ -194,7 +281,13 @@ export default function VerificadorCompatibilidadePage() {
 
           {resultado && (
             <button
-              onClick={resetar}
+              onClick={() => {
+                if (
+                  !confirm("Tens a certeza? Os dados actuais do garanhão e da égua serão perdidos.")
+                )
+                  return;
+                resetar();
+              }}
               className="text-sm text-pink-400 hover:text-pink-300 transition-colors flex items-center gap-2"
             >
               <RefreshCw size={14} />
@@ -307,6 +400,37 @@ export default function VerificadorCompatibilidadePage() {
           </>
         )}
 
+        {/* Chain banner — par importado do Comparador (pink variant) */}
+        {step === 1 && !resultado && chainBanner && (
+          <div className="max-w-4xl mx-auto px-4 mb-2">
+            <div className="bg-pink-900/20 border border-pink-500/30 rounded-xl p-4 flex items-center gap-3">
+              <Heart size={15} className="text-pink-400 shrink-0" />
+              <p className="text-sm text-pink-300 flex-1">
+                Par importado do Comparador: <span className="font-semibold">{chainBanner}</span> —
+                revê os dados e clica em Calcular.
+              </p>
+              <button
+                onClick={() => setChainBanner(null)}
+                className="text-pink-400/60 hover:text-pink-400 text-lg leading-none"
+                aria-label="Fechar"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Chain imported banner — blue info variant */}
+        {chainImported && (
+          <div className="max-w-4xl mx-auto px-4 mb-4 mt-4">
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-blue-900/20 border border-blue-500/30 rounded-xl text-sm text-blue-300">
+              <ArrowRight size={15} className="shrink-0" />
+              Dados importados do Comparador — reveja os campos e clique em &quot;Verificar
+              Compatibilidade&quot;
+            </div>
+          </div>
+        )}
+
         {/* Form */}
         {step === 1 && !resultado && (
           <HorseForm
@@ -323,6 +447,92 @@ export default function VerificadorCompatibilidadePage() {
           />
         )}
 
+        {/* Selector de Objectivo */}
+        {resultado && (
+          <div className="max-w-4xl mx-auto px-4 mb-4">
+            <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-5 border border-[var(--border)]">
+              <p className="text-xs text-[var(--foreground-muted)] mb-4 uppercase tracking-[0.15em] font-semibold">
+                Objetivo do Cruzamento
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  {
+                    id: "competicao" as const,
+                    label: "Alta Competição",
+                    Icon: Trophy,
+                    desc: "FEI / CDI",
+                    color: "text-amber-400",
+                    bg: "bg-amber-500/10",
+                    border: "border-amber-500/40",
+                  },
+                  {
+                    id: "reproducao" as const,
+                    label: "Programa de Cria",
+                    Icon: Dna,
+                    desc: "Melhoramento genético",
+                    color: "text-purple-400",
+                    bg: "bg-purple-500/10",
+                    border: "border-purple-500/40",
+                  },
+                  {
+                    id: "lazer" as const,
+                    label: "Lazer & Turismo",
+                    Icon: Leaf,
+                    desc: "Temperamento & saúde",
+                    color: "text-emerald-400",
+                    bg: "bg-emerald-500/10",
+                    border: "border-emerald-500/40",
+                  },
+                  {
+                    id: "show" as const,
+                    label: "Exposição / Show",
+                    Icon: Star,
+                    desc: "Morfologia & pelagem",
+                    color: "text-pink-400",
+                    bg: "bg-pink-500/10",
+                    border: "border-pink-500/40",
+                  },
+                ].map((obj) => {
+                  const isActive = objetivo === obj.id;
+                  return (
+                    <button
+                      key={obj.id}
+                      onClick={() => setObjetivo(obj.id)}
+                      className={`group flex flex-col items-center gap-2 p-4 rounded-xl border transition-all duration-200 text-center ${
+                        isActive
+                          ? `${obj.border} ${obj.bg}`
+                          : "border-[var(--border)] hover:border-[var(--foreground-muted)]/40 hover:bg-[var(--background-card)]/40"
+                      }`}
+                      aria-pressed={isActive}
+                    >
+                      <div
+                        className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${isActive ? obj.bg : "bg-[var(--background-card)]"}`}
+                      >
+                        <obj.Icon
+                          size={18}
+                          className={
+                            isActive
+                              ? obj.color
+                              : "text-[var(--foreground-muted)] group-hover:text-[var(--foreground-secondary)]"
+                          }
+                        />
+                      </div>
+                      <span
+                        className={`text-xs font-semibold leading-tight transition-colors ${isActive ? "text-[var(--foreground)]" : "text-[var(--foreground-muted)]"}`}
+                      >
+                        {obj.label}
+                      </span>
+                      <span className="text-[10px] text-[var(--foreground-muted)] leading-tight">
+                        {obj.desc}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Results */}
         {resultado && (
           <CompatibilityResults
@@ -335,6 +545,7 @@ export default function VerificadorCompatibilidadePage() {
             onShare={handleShare}
             isExporting={isExporting}
             isSubscribed={isSubscribed}
+            objetivo={objetivo}
           />
         )}
       </div>

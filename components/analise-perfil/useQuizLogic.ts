@@ -6,6 +6,14 @@ import { useToolAccess } from "@/hooks/useToolAccess";
 import { useLanguage } from "@/context/LanguageContext";
 import { questions } from "@/components/analise-perfil/data/questions";
 import { results } from "@/components/analise-perfil/data/results";
+import {
+  getShareUrl as buildShareUrl,
+  shareWhatsApp as doShareWhatsApp,
+  shareFacebook as doShareFacebook,
+  shareInstagram as doShareInstagram,
+} from "./quiz-sharing";
+import { generateProfilePDF } from "./quiz-pdf";
+import { generateBadge, generateBadgeSVGFallback } from "./quiz-badge";
 import type {
   Result,
   AnswerDetail,
@@ -29,6 +37,7 @@ export function useQuizLogic() {
   });
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
+  const [subProfile, setSubProfile] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<ResultTab>("perfil");
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -57,6 +66,7 @@ export function useQuizLogic() {
       try {
         const decoded = JSON.parse(atob(sharedResult));
         if (decoded.profile && results[decoded.profile]) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- URL param initialization on mount
           setScores(decoded.scores || { competidor: 0, tradicional: 0, criador: 0, amador: 0 });
           setResult(results[decoded.profile]);
           setShowIntro(false);
@@ -98,6 +108,19 @@ export function useQuizLogic() {
       if (currentQuestion < questions.length - 1) setCurrentQuestion(currentQuestion + 1);
       else {
         if (!canUse) return;
+
+        // Q16 (treinador) — index 15 — bonus score adjustments (weight 1.2 already applied above)
+        const treinadorAnswer = newAnswers[15];
+        if (treinadorAnswer === "dedicado") {
+          newScores.competidor = (newScores.competidor || 0) + 8;
+        } else if (treinadorAnswer === "regular") {
+          newScores.competidor = (newScores.competidor || 0) + 4;
+        } else if (treinadorAnswer === "autonomo") {
+          newScores.amador = (newScores.amador || 0) + 3;
+        }
+        // Q17 (transporte) — index 16 — minimal impact (weight 0.5 already applied above)
+        // Used primarily for recommendations; no additional score boost needed
+
         let mp = "amador";
         let ms = 0;
         Object.entries(newScores).forEach(([p, s]) => {
@@ -106,9 +129,41 @@ export function useQuizLogic() {
             mp = p;
           }
         });
+        // Determinar sub-perfil (antes de recordUsage para incluir nos metadados)
+        const q1 = newAnswers[0]; // Objectivo (Q1)
+        const q6 = newAnswers[5]; // Nível de treino desejado (Q6)
+        const q7 = newAnswers[6]; // Orçamento (Q7)
+        let sp: string | null = null;
+        if (mp === "competidor") {
+          if (q1 === "trabalho") sp = "competidor_trabalho";
+          else if (q7 === "premium" || q7 === "alto") sp = "competidor_elite";
+          else sp = "competidor_nacional";
+        } else if (mp === "amador") {
+          if (q6 === "desbravado" || q6 === "basico") sp = "amador_projeto";
+        }
+        // Confidence inline: ratio of top score vs 2nd score
+        const sortedScores = Object.values(newScores).sort((a: number, b: number) => b - a);
+        const inlineConfidence =
+          sortedScores.length >= 2 && sortedScores[0] + sortedScores[1] > 0
+            ? Math.round((sortedScores[0] / (sortedScores[0] + sortedScores[1])) * 100)
+            : 100;
+        // Compute score percentages for rich metadata
+        const totalScoreForMeta =
+          Object.values(newScores).reduce((a: number, b: number) => a + b, 0) || 1;
+        const scorePercentagesMeta = Object.entries(newScores).map(([p, s]) => ({
+          profile: p,
+          percentage: Math.round((s / totalScoreForMeta) * 100),
+        }));
+
         setResult(results[mp]);
         setShowResult(true);
-        recordUsage(newScores);
+        recordUsage(newScores, {
+          profile: mp,
+          subProfile: sp ?? null,
+          confidence: inlineConfidence,
+          scorePercentages: scorePercentagesMeta,
+        });
+        setSubProfile(sp);
       }
     },
     [currentQuestion, answers, scores, answerDetails, canUse, recordUsage]
@@ -141,12 +196,7 @@ export function useQuizLogic() {
     }
   }, [result, scores]);
 
-  const getShareUrl = useCallback((): string => {
-    if (!result) return "";
-    const data = { profile: result.profile, scores };
-    const encoded = btoa(JSON.stringify(data));
-    return `${typeof window !== "undefined" ? window.location.origin : ""}/analise-perfil?r=${encoded}`;
-  }, [result, scores]);
+  const getShareUrl = useCallback((): string => buildShareUrl(result, scores), [result, scores]);
 
   const copyShareLink = useCallback(() => {
     navigator.clipboard
@@ -160,131 +210,22 @@ export function useQuizLogic() {
       });
   }, [getShareUrl, showError]);
 
-  const shareWhatsApp = useCallback(() => {
-    if (!result) return;
-    const totalS = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-    const p = Math.round((scores[result.profile] / totalS) * 100);
-    const text = encodeURIComponent(
-      `Fiz a Analise de Perfil do Cavaleiro!\n\nO meu perfil: ${result.title} (${p}%)\n"${result.subtitle}"\n\nDescobre o teu: ${getShareUrl()}`
-    );
-    window.open(`https://wa.me/?text=${text}`, "_blank");
-  }, [result, scores, getShareUrl]);
+  const shareWhatsApp = useCallback(
+    () => doShareWhatsApp(result, scores, subProfile),
+    [result, scores, subProfile]
+  );
 
-  const shareFacebook = useCallback(() => {
-    const url = encodeURIComponent(getShareUrl());
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
-  }, [getShareUrl]);
+  const shareFacebook = useCallback(() => doShareFacebook(getShareUrl()), [getShareUrl]);
 
-  const shareInstagram = useCallback(() => {
-    if (!result) return;
-    const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-    const p = Math.round((scores[result.profile] / totalScore) * 100);
-    const text = `Fiz a Analise de Perfil do Cavaleiro!\n\nO meu perfil: ${result.title} (${p}%)\n"${result.subtitle}"\n\nDescobre o teu perfil em:\nportallusitano.pt/analise-perfil\n\n#Lusitano #CavaloLusitano #Equitacao #PortalLusitano`;
-    navigator.clipboard.writeText(text);
-    alert(t.analise_perfil.instagram_copied);
-  }, [result, scores, t]);
+  const shareInstagram = useCallback(
+    () => doShareInstagram(result, scores, t.analise_perfil.instagram_copied),
+    [result, scores, t]
+  );
 
   const downloadPDF = useCallback(async () => {
     if (!result) return;
     try {
-      const jsPDF = (await import("jspdf")).default;
-      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-      const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-      const p = Math.round((scores[result.profile] / totalScore) * 100);
-
-      // Header
-      doc.setFillColor(5, 5, 5);
-      doc.rect(0, 0, 210, 297, "F");
-      doc.setTextColor(197, 160, 89);
-      doc.setFontSize(10);
-      doc.text("PORTAL LUSITANO", 105, 20, { align: "center" });
-      doc.setFontSize(8);
-      doc.text("ANALISE DE PERFIL DO CAVALEIRO", 105, 27, { align: "center" });
-
-      // Title
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(28);
-      doc.text(result.title, 105, 50, { align: "center" });
-      doc.setTextColor(197, 160, 89);
-      doc.setFontSize(14);
-      doc.text(result.subtitle, 105, 60, { align: "center" });
-
-      // Percentage
-      doc.setFontSize(36);
-      doc.text(`${p}%`, 105, 80, { align: "center" });
-
-      // Description
-      doc.setTextColor(200, 200, 200);
-      doc.setFontSize(10);
-      const descLines = doc.splitTextToSize(result.description, 170);
-      doc.text(descLines, 20, 95);
-
-      // Ideal Horse Section
-      let yPos = 95 + descLines.length * 5 + 10;
-      doc.setTextColor(197, 160, 89);
-      doc.setFontSize(12);
-      doc.text("CAVALO IDEAL", 20, yPos);
-      yPos += 8;
-      doc.setTextColor(200, 200, 200);
-      doc.setFontSize(9);
-      doc.text(`Idade: ${result.idealHorse.age}`, 20, yPos);
-      doc.text(`Altura: ${result.idealHorse.height}`, 105, yPos);
-      yPos += 6;
-      doc.text(`Treino: ${result.idealHorse.training}`, 20, yPos);
-      yPos += 6;
-      doc.text(`Temperamento: ${result.idealHorse.temperament}`, 20, yPos);
-      yPos += 6;
-      doc.text(`Preco: ${result.idealHorse.priceRange}`, 20, yPos);
-
-      // Costs Section
-      yPos += 15;
-      doc.setTextColor(197, 160, 89);
-      doc.setFontSize(12);
-      doc.text("CUSTOS ANUAIS ESTIMADOS", 20, yPos);
-      yPos += 8;
-      doc.setTextColor(200, 200, 200);
-      doc.setFontSize(10);
-      doc.text(
-        `${result.annualCosts.min.toLocaleString()} - ${result.annualCosts.max.toLocaleString()} euros/ano`,
-        20,
-        yPos
-      );
-
-      // Tips Section
-      yPos += 15;
-      doc.setTextColor(197, 160, 89);
-      doc.setFontSize(12);
-      doc.text("DICAS", 20, yPos);
-      yPos += 8;
-      doc.setTextColor(200, 200, 200);
-      doc.setFontSize(9);
-      result.tips.slice(0, 5).forEach((tip, i) => {
-        doc.text(`${i + 1}. ${tip}`, 20, yPos);
-        yPos += 5;
-      });
-
-      // Next Steps Section
-      yPos += 10;
-      doc.setTextColor(197, 160, 89);
-      doc.setFontSize(12);
-      doc.text("PROXIMOS PASSOS", 20, yPos);
-      yPos += 8;
-      doc.setTextColor(200, 200, 200);
-      doc.setFontSize(9);
-      result.nextSteps.slice(0, 4).forEach((step, i) => {
-        doc.text(`${i + 1}. ${step}`, 20, yPos);
-        yPos += 5;
-      });
-
-      // Footer
-      doc.setTextColor(100, 100, 100);
-      doc.setFontSize(8);
-      doc.text("portallusitano.pt/analise-perfil", 105, 285, { align: "center" });
-      doc.text(`Gerado em ${new Date().toLocaleDateString("pt-PT")}`, 105, 290, {
-        align: "center",
-      });
-
-      doc.save(`analise-perfil-${result.profile}.pdf`);
+      await generateProfilePDF(result, scores);
     } catch {
       showError("Erro ao gerar PDF. Tenta novamente.");
     }
@@ -293,41 +234,10 @@ export function useQuizLogic() {
   const downloadBadge = useCallback(async () => {
     if (!badgeRef.current || !result) return;
     try {
-      const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(badgeRef.current, {
-        backgroundColor: "#050505",
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        removeContainer: true,
-      });
-      const link = document.createElement("a");
-      link.download = `perfil-${result.profile}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+      await generateBadge(badgeRef.current, result, scores);
     } catch {
       showError("Erro ao gerar imagem. A tentar formato alternativo...");
-      // Fallback: generate SVG badge instead
-      const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-      const percentage = Math.round((scores[result.profile] / totalScore) * 100);
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="540" height="540" viewBox="0 0 540 540">
-        <rect width="540" height="540" fill="#050505"/>
-        <rect x="20" y="20" width="500" height="500" fill="none" stroke="#C5A059" stroke-width="4"/>
-        <text x="270" y="100" text-anchor="middle" fill="#C5A059" font-size="14" letter-spacing="3">PORTAL LUSITANO</text>
-        <text x="270" y="200" text-anchor="middle" fill="#888" font-size="12" letter-spacing="2">O MEU PERFIL EQUESTRE</text>
-        <text x="270" y="270" text-anchor="middle" fill="#fff" font-size="32" font-family="serif">${result.title}</text>
-        <text x="270" y="310" text-anchor="middle" fill="#C5A059" font-size="18" font-style="italic">${result.subtitle}</text>
-        <rect x="220" y="350" width="100" height="50" fill="#C5A059"/>
-        <text x="270" y="385" text-anchor="middle" fill="#000" font-size="28" font-weight="bold">${percentage}%</text>
-        <text x="270" y="480" text-anchor="middle" fill="#444" font-size="11">portallusitano.pt/analise-perfil</text>
-      </svg>`;
-      const blob = new Blob([svg], { type: "image/svg+xml" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.download = `perfil-${result.profile}.svg`;
-      link.href = url;
-      link.click();
-      URL.revokeObjectURL(url);
+      generateBadgeSVGFallback(result, scores);
     }
   }, [result, scores, showError]);
 
@@ -339,6 +249,7 @@ export function useQuizLogic() {
     setScores({ competidor: 0, tradicional: 0, criador: 0, amador: 0 });
     setShowResult(false);
     setResult(null);
+    setSubProfile(null);
     setSelectedTab("perfil");
     setSaved(false);
     setCopied(false);
@@ -362,6 +273,19 @@ export function useQuizLogic() {
     }))
     .sort((a, b) => b.percentage - a.percentage);
 
+  // Real-time dominant profile for quiz preview
+  const PROFILE_LABELS: Record<string, string> = {
+    competidor: "Competidor",
+    criador: "Criador",
+    amador: "Apreciador Amador",
+    tradicional: "Tradicionalista",
+  };
+  const currentDominant = Object.entries(scores).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  const dominantProfile = currentDominant;
+  const dominantProfileLabel = currentDominant
+    ? (PROFILE_LABELS[currentDominant] ?? "A calcular...")
+    : "A calcular...";
+
   const radarData: RadarChartData = {
     competicao: (scores.competidor / totalScore) * 100,
     tradicao: (scores.tradicional / totalScore) * 100,
@@ -381,6 +305,7 @@ export function useQuizLogic() {
     showResult,
     currentQuestion,
     result,
+    subProfile,
     selectedTab,
     saved,
     copied,
@@ -415,5 +340,7 @@ export function useQuizLogic() {
     questions,
     scorePercentages,
     radarData,
+    dominantProfile,
+    dominantProfileLabel,
   };
 }

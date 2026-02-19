@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { logger } from "@/lib/logger";
 import { SUPPORT_EMAIL } from "@/lib/constants";
+import { escapeHtml } from "@/lib/sanitize";
 
 function getResend(): Resend {
   if (!process.env.RESEND_API_KEY) {
@@ -10,6 +11,7 @@ function getResend(): Resend {
 }
 
 let _resend: Resend | null = null;
+// Lazy-init proxy: delays instantiation until first use, avoiding errors when env vars are missing at import time
 export const resend = new Proxy({} as Resend, {
   get(_, prop) {
     if (!_resend) _resend = getResend();
@@ -313,6 +315,169 @@ function getToolLimitEmail(name: string, email: string, toolSlug: string, baseUr
 
       <p style="font-size: 14px; color: #666666; font-family: Arial, sans-serif;">
         Qualquer duvida, responde a este email.<br>
+        <em>Equipa Portal Lusitano</em>
+      </p>
+    </div>`;
+
+  return baseEmailTemplate(content, email, baseUrl);
+}
+
+// ─── TEMPLATE: CAVALO ANUNCIO CONFIRMAÇÃO ─────────────────────────────────────
+
+export function getCavaloAnuncioConfirmEmail(
+  nomeCavalo: string,
+  preco: string,
+  destaque: boolean,
+  email: string
+): string {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
+  const safeName = escapeHtml(nomeCavalo);
+  const safePreco = escapeHtml(preco);
+
+  const content = `
+    <div class="body">
+      <p class="lead">Anúncio recebido com sucesso.</p>
+      <p>O seu anúncio do cavalo <strong>${safeName}</strong> foi recebido e está em análise. Estará visível no marketplace após verificação dos documentos (máximo 24 horas).</p>
+
+      <div class="highlight-box">
+        <p>Receberá um email assim que o anúncio for aprovado e publicado.</p>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.3em; color: #999999; font-family: Arial, sans-serif;">Detalhes do anúncio</p>
+      <div class="features">
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Cavalo:</strong> ${safeName}</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Preço:</strong> €${safePreco}</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Destaque:</strong> ${destaque ? "Sim — 7 dias no topo do marketplace" : "Não"}</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Validade:</strong> 30 dias</span>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <p>Enquanto espera pela aprovação, explore os outros cavalos disponíveis</p>
+        <a href="${baseUrl}/comprar" class="btn">Ver Marketplace</a>
+      </div>
+
+      <p style="font-size: 14px; color: #666666; font-family: Arial, sans-serif;">
+        Qualquer dúvida, responda a este email.<br>
+        <em>Equipa Portal Lusitano</em>
+      </p>
+    </div>`;
+
+  return baseEmailTemplate(content, email, baseUrl);
+}
+
+// ─── TEMPLATE: PROFISSIONAL CONFIRMAÇÃO ───────────────────────────────────────
+
+export function getProfissionalConfirmEmail(
+  nome: string,
+  categoria: string,
+  email: string
+): string {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
+  const safeName = escapeHtml(nome);
+  const safeCategoria = escapeHtml(categoria);
+
+  const content = `
+    <div class="body">
+      <p class="lead">Pagamento confirmado, ${safeName}.</p>
+      <p>O seu perfil profissional está agora <strong>em análise</strong> e será aprovado pela nossa equipa nas próximas 24 horas.</p>
+
+      <div class="highlight-box">
+        <p>Receberá um email assim que o seu perfil for aprovado e estiver visível no directório profissional.</p>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.3em; color: #999999; font-family: Arial, sans-serif;">Detalhes do registo</p>
+      <div class="features">
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Categoria:</strong> ${safeCategoria}</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Subscrição:</strong> €6/mês — cancela a qualquer momento</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Estado:</strong> Em análise</span>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <p>Explore o directório de profissionais equestres</p>
+        <a href="${baseUrl}/profissionais" class="btn">Ver Directório</a>
+      </div>
+
+      <p style="font-size: 14px; color: #666666; font-family: Arial, sans-serif;">
+        Qualquer dúvida, responda a este email.<br>
+        <em>Equipa Portal Lusitano</em>
+      </p>
+    </div>`;
+
+  return baseEmailTemplate(content, email, baseUrl);
+}
+
+// ─── TEMPLATE: FERRAMENTAS PRO ACTIVADAS ──────────────────────────────────────
+
+export function getToolsProActivadoEmail(email: string): string {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
+
+  const content = `
+    <div class="body">
+      <p class="lead">Ferramentas PRO activadas.</p>
+      <p>A sua subscrição Pro está agora activa. Tem acesso ilimitado a todas as ferramentas de análise.</p>
+
+      <hr class="divider">
+
+      <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.3em; color: #999999; font-family: Arial, sans-serif;">O que está incluído</p>
+      <div class="features">
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Calculadora de Valor</strong> — usos ilimitados</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Comparador de Cavalos</strong> — usos ilimitados</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Verificador de Compatibilidade</strong> — usos ilimitados</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Análise de Perfil</strong> — usos ilimitados</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-check">—</span>
+          <span class="feature-text"><strong>Exportar PDF</strong> — relatórios profissionais</span>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <p><strong>Plano:</strong> Pro Mensal — €4,99/mês. Cancela a qualquer momento, sem compromissos.</p>
+      </div>
+
+      <div class="cta-box">
+        <p>Começa a usar as ferramentas agora</p>
+        <a href="${baseUrl}/ferramentas" class="btn">Ir para as Ferramentas</a>
+      </div>
+
+      <p style="font-size: 14px; color: #666666; font-family: Arial, sans-serif;">
+        Qualquer dúvida, responda a este email.<br>
         <em>Equipa Portal Lusitano</em>
       </p>
     </div>`;

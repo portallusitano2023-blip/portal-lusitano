@@ -30,8 +30,8 @@ export default function PriorityMapTab({ result }: PriorityMapTabProps) {
   const items: PriorityItem[] = useMemo(
     () => [
       { label: "Encontrar cavalo adequado", urgency: 90, importance: 95 },
-      { label: "Preparar instalacoes", urgency: 70, importance: 85 },
-      { label: "Definir orcamento", urgency: 85, importance: 90 },
+      { label: "Preparar instalações", urgency: 70, importance: 85 },
+      { label: "Definir orçamento", urgency: 85, importance: 90 },
       {
         label: "Contactar treinador",
         urgency: result.profile === "competidor" ? 80 : 50,
@@ -57,7 +57,7 @@ export default function PriorityMapTab({ result }: PriorityMapTabProps) {
         importance: result.profile === "criador" ? 80 : 35,
       },
       {
-        label: "Plano de competicao",
+        label: "Plano de competição",
         urgency: result.profile === "competidor" ? 65 : 15,
         importance: result.profile === "competidor" ? 75 : 20,
       },

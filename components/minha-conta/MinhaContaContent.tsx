@@ -7,7 +7,7 @@ import { Crown, Loader2, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
-import { logout } from "./actions";
+import { logout } from "@/app/minha-conta/actions";
 
 interface Customer {
   firstName: string;

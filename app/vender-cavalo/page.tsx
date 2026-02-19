@@ -13,6 +13,7 @@ import {
 } from "@/components/vender-cavalo/data";
 import PageHeader from "@/components/vender-cavalo/PageHeader";
 import PricingBanner from "@/components/vender-cavalo/PricingBanner";
+import HowItWorks from "@/components/vender-cavalo/HowItWorks";
 import StepIndicator from "@/components/vender-cavalo/StepIndicator";
 import FormErrors from "@/components/vender-cavalo/FormErrors";
 import FormNavigation from "@/components/vender-cavalo/FormNavigation";
@@ -240,6 +241,7 @@ export default function VenderCavaloPage() {
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">
       <PageHeader />
+      <HowItWorks />
       <PricingBanner />
 
       <div className="max-w-3xl mx-auto">

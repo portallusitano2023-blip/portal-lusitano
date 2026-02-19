@@ -1,5 +1,5 @@
 // ============================================
-// TIPOS - Verificador de Compatibilidade
+// TIPOS — Verificador de Compatibilidade
 // ============================================
 
 export interface GeneticaPelagem {
@@ -29,6 +29,8 @@ export interface Cavalo {
   coi: number;
   defeitos: string[];
   aprovado: boolean;
+  matingsRealizados: number; // nº coberturas realizadas
+  potradasNascidos: number; // nº potros nascidos vivos
 }
 
 export interface ResultadoCompatibilidade {

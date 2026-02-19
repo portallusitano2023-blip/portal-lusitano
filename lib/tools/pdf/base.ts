@@ -15,7 +15,10 @@ const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
 let jsPDFCtor: typeof import("jspdf").default | null = null;
 async function loadJsPDF() {
   if (!jsPDFCtor) {
-    const [mod] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
+    // jspdf-autotable v5 requires explicit applyPlugin() — side-effect import no longer works
+    const mod = await import("jspdf");
+    const { applyPlugin } = await import("jspdf-autotable");
+    applyPlugin(mod.default);
     jsPDFCtor = mod.default;
   }
   return jsPDFCtor;

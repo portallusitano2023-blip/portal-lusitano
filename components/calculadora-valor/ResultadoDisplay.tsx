@@ -14,6 +14,7 @@ import {
   BookOpen,
   Scale,
   Lightbulb,
+  Zap,
 } from "lucide-react";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import AnimatedGauge from "@/components/tools/AnimatedGauge";
@@ -36,6 +37,7 @@ import ConfidenceRange from "@/components/tools/ConfidenceRange";
 import { useLanguage } from "@/context/LanguageContext";
 import { MERCADOS, VALORES_BASE, MULT_LINHAGEM, MULT_SAUDE, MULT_COMP } from "./data";
 import { calcularProjecaoValor, calcularTrainingROI } from "./projections";
+import { calcularValor } from "./utils";
 import type { FormData, Resultado } from "./types";
 
 interface ResultadoDisplayProps {
@@ -78,13 +80,25 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--background-secondary)] via-[var(--background-secondary)] to-[var(--background-card)] p-8 border border-[var(--border)]">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--gold)]/5 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-[var(--gold)]/5 rounded-full blur-3xl" />
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--gold)]/10 rounded-full border border-[var(--gold)]/30">
               <Crown size={12} className="text-[var(--gold)]" />
               <span className="text-xs text-[var(--gold)] font-medium">
                 {t.calculadora.premium_eval}
               </span>
             </div>
+            {resultado.confianca >= 80 && resultado.percentil >= 65 && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/15 rounded-full border border-emerald-500/30">
+                <Check size={11} className="text-emerald-400" />
+                <span className="text-xs text-emerald-400 font-semibold">Pronto para Venda</span>
+              </div>
+            )}
+            {resultado.confianca >= 80 && resultado.percentil < 40 && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/15 rounded-full border border-amber-500/30">
+                <Sparkles size={11} className="text-amber-400" />
+                <span className="text-xs text-amber-400 font-semibold">Potencial de Melhoria</span>
+              </div>
+            )}
           </div>
 
           <div className="relative z-10 text-center">
@@ -151,7 +165,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
                   <Tooltip
                     text={
                       (t.calculadora as Record<string, string>).tooltip_percentile ??
-                      "Posicao relativa no mercado PSL. O percentil 80 significa que o cavalo vale mais que 80% dos cavalos comparaveis."
+                      "Posição relativa no mercado PSL. O percentil 80 significa que o cavalo vale mais que 80% dos cavalos comparáveis."
                     }
                   />
                 </div>
@@ -168,14 +182,14 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               <Tooltip
                 text={
                   (t.calculadora as Record<string, string>).tooltip_multiplier ??
-                  "Factor aplicado ao valor base. Resulta da combinacao de treino, competicoes, linhagem e conformacao."
+                  "Factor aplicado ao valor base. Resulta da combinação de treino, competições, linhagem e conformação."
                 }
               />
             </div>
           </div>
         </div>
 
-        {/* Principais Conclusoes */}
+        {/* Principais Conclusões */}
         {(() => {
           const topForca =
             resultado.pontosForteseFracos.fortes.length > 0
@@ -200,7 +214,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             <div className="bg-[#111111] border border-[#C5A059]/20 rounded-xl p-5 mb-6">
               <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-4 flex items-center gap-2">
                 <Lightbulb size={15} className="text-[var(--gold)]" />
-                Principais Conclusoes
+                Principais Conclusões
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]">
@@ -220,7 +234,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
                 <li className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]">
                   <span className="mt-1.5 h-2 w-2 rounded-full bg-blue-400 shrink-0" />
                   <span>
-                    <span className="text-blue-400 font-medium">Posicao de mercado: </span>
+                    <span className="text-blue-400 font-medium">Posição de mercado: </span>
                     {posicaoMercado}
                   </span>
                 </li>
@@ -237,7 +251,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               source="APSL"
               tooltip={
                 (t.calculadora as Record<string, string>).source_conformacao ??
-                "Criterios de conformacao segundo o padrao da raca Lusitana"
+                "Critérios de conformação segundo o padrão da raça Lusitana"
               }
             />
           </h3>
@@ -262,14 +276,14 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               <Tooltip
                 text={
                   (t.calculadora as Record<string, string>).tooltip_blup ??
-                  "Best Linear Unbiased Prediction — indicador de merito genetico. O BLUP aqui e uma estimativa simplificada, NAO um BLUP oficial APSL."
+                  "Best Linear Unbiased Prediction — indicador de mérito genético. O BLUP aqui é uma estimativa simplificada, NÃO um BLUP oficial APSL."
                 }
               />
               <SourceBadge
                 source="modelo"
                 tooltip={
                   (t.calculadora as Record<string, string>).source_blup ??
-                  "Estimativa simplificada — nao substitui BLUP oficial APSL"
+                  "Estimativa simplificada — não substitui BLUP oficial APSL"
                 }
               />
             </div>
@@ -292,14 +306,14 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               <Tooltip
                 text={
                   (t.calculadora as Record<string, string>).tooltip_percentile_card ??
-                  "Baseado em faixas de valor do mercado equestre portugues para cavalos PSL."
+                  "Baseado em faixas de valor do mercado equestre português para cavalos PSL."
                 }
               />
               <SourceBadge
                 source="mercado"
                 tooltip={
                   (t.calculadora as Record<string, string>).source_mercado ??
-                  "Faixas baseadas em medias do sector equestre portugues"
+                  "Faixas baseadas em médias do sector equestre português"
                 }
               />
             </div>
@@ -320,6 +334,76 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
 
         {/* Liquidity Score */}
         <LiquidityScore form={form} percentil={resultado.percentil} />
+
+        {/* Simular Venda — CTA contextual para Comparador */}
+        {onComparar && (
+          <div
+            className={`rounded-xl border p-5 flex items-start gap-4 ${
+              resultado.percentil >= 65
+                ? "bg-emerald-500/5 border-emerald-500/25"
+                : resultado.percentil >= 40
+                  ? "bg-blue-500/5 border-blue-500/25"
+                  : "bg-amber-500/5 border-amber-500/25"
+            }`}
+          >
+            <div
+              className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                resultado.percentil >= 65
+                  ? "bg-emerald-500/15"
+                  : resultado.percentil >= 40
+                    ? "bg-blue-500/15"
+                    : "bg-amber-500/15"
+              }`}
+            >
+              <Scale
+                size={20}
+                className={
+                  resultado.percentil >= 65
+                    ? "text-emerald-400"
+                    : resultado.percentil >= 40
+                      ? "text-blue-400"
+                      : "text-amber-400"
+                }
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p
+                className={`text-sm font-semibold mb-1 ${
+                  resultado.percentil >= 65
+                    ? "text-emerald-400"
+                    : resultado.percentil >= 40
+                      ? "text-blue-400"
+                      : "text-amber-400"
+                }`}
+              >
+                {resultado.percentil >= 65
+                  ? "O teu cavalo está bem posicionado — confirma o valor"
+                  : resultado.percentil >= 40
+                    ? "Compara com cavalos semelhantes no mercado"
+                    : "O preço parece abaixo do mercado — verifica com cavalos similares"}
+              </p>
+              <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
+                {resultado.percentil >= 65
+                  ? "Compara lado a lado com outros candidatos para confirmar que o preço é competitivo antes de vender."
+                  : resultado.percentil >= 40
+                    ? "Usa o Comparador para posicionar o teu cavalo face a outros e tomar melhores decisões de preço."
+                    : "Benchmarks de mercado sugerem que podes valorizar mais. Compara com cavalos de perfil similar."}
+              </p>
+            </div>
+            <button
+              onClick={onComparar}
+              className={`shrink-0 text-xs font-semibold px-3 py-2 rounded-lg transition-colors ${
+                resultado.percentil >= 65
+                  ? "bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
+                  : resultado.percentil >= 40
+                    ? "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30"
+                    : "bg-amber-500/20 text-amber-400 hover:bg-amber-500/30"
+              }`}
+            >
+              Comparar →
+            </button>
+          </div>
+        )}
 
         {/* Pontos Fortes e Fracos */}
         {(resultado.pontosForteseFracos.fortes.length > 0 ||
@@ -365,6 +449,296 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             )}
           </div>
         )}
+
+        {/* Top 3 Ações de Valorização Melhoradas */}
+        {(() => {
+          interface Acao {
+            titulo: string;
+            descricao: string;
+            ganhoEstimado: number;
+            prazoMeses: number;
+            badge: string;
+            badgeColor: string;
+          }
+
+          const acoes: Acao[] = [];
+
+          const r = resultado;
+
+          if (!r.pontosForteseFracos.fortes.includes("Documentação veterinária completa")) {
+            acoes.push({
+              titulo: "Exame Veterinário + Raio-X",
+              descricao: "Documentação completa transmite segurança ao comprador",
+              ganhoEstimado: Math.round(r.valorFinal * 0.08),
+              prazoMeses: 1,
+              badge: "Rápido",
+              badgeColor: "text-emerald-400 bg-emerald-500/15",
+            });
+          }
+          if (!r.pontosForteseFracos.fortes.includes("Registo APSL Livro Definitivo")) {
+            acoes.push({
+              titulo: "Registo APSL Livro Definitivo",
+              descricao: "Valoriza automaticamente no mercado internacional",
+              ganhoEstimado: Math.round(r.valorFinal * 0.18),
+              prazoMeses: 3,
+              badge: "Alto impacto",
+              badgeColor: "text-[#C5A059] bg-[#C5A059]/15",
+            });
+          }
+          if (r.pontosForteseFracos.fracos.some((f) => f.includes("competição"))) {
+            acoes.push({
+              titulo: "Participar em Provas Regionais",
+              descricao: "Palmarés aumenta credibilidade e confiança do comprador",
+              ganhoEstimado: Math.round(r.valorFinal * 0.11),
+              prazoMeses: 6,
+              badge: "6 meses",
+              badgeColor: "text-blue-400 bg-blue-500/15",
+            });
+          }
+          if (r.percentil < 50) {
+            acoes.push({
+              titulo: "Progressão de Treino (1 nível)",
+              descricao: "Subir um nível de treino pode valorizar 40-60%",
+              ganhoEstimado: Math.round(r.valorFinal * 0.45),
+              prazoMeses: 18,
+              badge: "Longo prazo",
+              badgeColor: "text-purple-400 bg-purple-500/15",
+            });
+          }
+          if (r.liquidez.score < 65) {
+            acoes.push({
+              titulo: "Certificado de Exportação",
+              descricao: "Abre mercados internacionais com valorização automática",
+              ganhoEstimado: Math.round(r.valorFinal * 0.06),
+              prazoMeses: 2,
+              badge: "Mercado",
+              badgeColor: "text-amber-400 bg-amber-500/15",
+            });
+          }
+
+          const top3 = acoes.sort((a, b) => b.ganhoEstimado - a.ganhoEstimado).slice(0, 3);
+
+          if (top3.length === 0) return null;
+
+          return (
+            <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)] mb-6">
+              <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-4 flex items-center gap-2">
+                <Sparkles size={15} className="text-[#C5A059]" />
+                Top {top3.length} Ações de Valorização
+              </h3>
+              <div className="space-y-3">
+                {top3.map((acao, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 p-3 bg-[var(--background-card)]/50 rounded-lg border border-[var(--border)]/60"
+                  >
+                    <span className="w-5 h-5 rounded-full bg-[#C5A059]/20 border border-[#C5A059]/40 text-[10px] font-bold text-[#C5A059] flex items-center justify-center shrink-0 mt-0.5">
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                        <p className="text-sm font-semibold text-[var(--foreground)]">
+                          {acao.titulo}
+                        </p>
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${acao.badgeColor}`}
+                        >
+                          {acao.badge}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[var(--foreground-muted)] leading-snug">
+                        {acao.descricao}
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-sm font-bold text-emerald-400">
+                        +{acao.ganhoEstimado.toLocaleString("pt-PT")}€
+                      </p>
+                      <p className="text-[10px] text-[var(--foreground-muted)]">
+                        {acao.prazoMeses === 1 ? "1 mês" : `${acao.prazoMeses} meses`}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-[var(--foreground-muted)]/50 mt-3">
+                Estimativas baseadas no modelo de valorização — não constituem garantia de mercado.
+              </p>
+            </div>
+          );
+        })()}
+
+        {/* Simulador de Cenários */}
+        {(() => {
+          const TREINO_PROGRESSAO: Record<string, string> = {
+            potro: "desbravado",
+            desbravado: "iniciado",
+            iniciado: "elementar",
+            elementar: "medio",
+            medio: "avancado",
+            avancado: "alta_escola",
+            alta_escola: "grand_prix",
+          };
+          const TREINO_LABELS: Record<string, string> = {
+            potro: "Potro",
+            desbravado: "Desbravado",
+            iniciado: "Iniciado",
+            elementar: "Elementar",
+            medio: "Médio",
+            avancado: "Avançado",
+            alta_escola: "Alta Escola",
+            grand_prix: "Grand Prix",
+          };
+
+          type Cenario = {
+            titulo: string;
+            descricao: string;
+            valorNovo: number;
+            delta: number;
+            deltaPercent: number;
+            emoji: string;
+          };
+
+          const cenarios: Cenario[] = [];
+
+          // Cenário 1: Subir nível de treino (se não for já o máximo)
+          if (TREINO_PROGRESSAO[form.treino]) {
+            const novoTreino = TREINO_PROGRESSAO[form.treino];
+            const novoForm = { ...form, treino: novoTreino as FormData["treino"] };
+            const novoResultado = calcularValor(novoForm);
+            cenarios.push({
+              titulo: `Treino → ${TREINO_LABELS[novoTreino] ?? novoTreino}`,
+              descricao: "Progressão de nível de treino",
+              valorNovo: novoResultado.valorFinal,
+              delta: novoResultado.valorFinal - resultado.valorFinal,
+              deltaPercent: Math.round(
+                ((novoResultado.valorFinal - resultado.valorFinal) / resultado.valorFinal) * 100
+              ),
+              emoji: "📈",
+            });
+          }
+
+          // Cenário 2: Documentação Veterinária Completa
+          if (!form.raioX || !form.exameVeterinario) {
+            const novoForm = { ...form, raioX: true, exameVeterinario: true };
+            const novoResultado = calcularValor(novoForm);
+            cenarios.push({
+              titulo: "Documentação Veterinária Completa",
+              descricao: "Raio-X + Exame veterinário",
+              valorNovo: novoResultado.valorFinal,
+              delta: novoResultado.valorFinal - resultado.valorFinal,
+              deltaPercent: Math.round(
+                ((novoResultado.valorFinal - resultado.valorFinal) / resultado.valorFinal) * 100
+              ),
+              emoji: "🩺",
+            });
+          }
+
+          // Cenário 3: Mudar mercado para Alemanha (se estiver em PT)
+          if (form.mercado === "Portugal") {
+            const novoForm = { ...form, mercado: "Alemanha" };
+            const novoResultado = calcularValor(novoForm);
+            cenarios.push({
+              titulo: "Venda para Mercado Alemão",
+              descricao: "Reorientar para mercado internacional",
+              valorNovo: novoResultado.valorFinal,
+              delta: novoResultado.valorFinal - resultado.valorFinal,
+              deltaPercent: Math.round(
+                ((novoResultado.valorFinal - resultado.valorFinal) / resultado.valorFinal) * 100
+              ),
+              emoji: "🌍",
+            });
+          }
+
+          // Cenário 4: Subir competições
+          const COMP_UPGRADE: Record<string, string> = {
+            nenhuma: "regional",
+            regional: "nacional",
+            nacional: "cdi1",
+            cdi1: "cdi3",
+          };
+          const COMP_LABELS: Record<string, string> = {
+            regional: "Provas Regionais",
+            nacional: "Provas Nacionais",
+            cdi1: "CDI 1*",
+            cdi3: "CDI 3*",
+          };
+          if (COMP_UPGRADE[form.competicoes]) {
+            const novoComp = COMP_UPGRADE[form.competicoes];
+            const novoForm = { ...form, competicoes: novoComp as FormData["competicoes"] };
+            const novoResultado = calcularValor(novoForm);
+            cenarios.push({
+              titulo: `Competir em ${COMP_LABELS[novoComp] ?? novoComp}`,
+              descricao: "Progressão no palmarés desportivo",
+              valorNovo: novoResultado.valorFinal,
+              delta: novoResultado.valorFinal - resultado.valorFinal,
+              deltaPercent: Math.round(
+                ((novoResultado.valorFinal - resultado.valorFinal) / resultado.valorFinal) * 100
+              ),
+              emoji: "🏆",
+            });
+          }
+
+          // Cenário 5: Certificado de exportação
+          if (!(form.certificadoExportacao ?? false) && form.mercado !== "Portugal") {
+            const novoForm = { ...form, certificadoExportacao: true };
+            const novoResultado = calcularValor(novoForm);
+            cenarios.push({
+              titulo: "Certificado de Exportação",
+              descricao: "Documentação para venda internacional",
+              valorNovo: novoResultado.valorFinal,
+              delta: novoResultado.valorFinal - resultado.valorFinal,
+              deltaPercent: Math.round(
+                ((novoResultado.valorFinal - resultado.valorFinal) / resultado.valorFinal) * 100
+              ),
+              emoji: "📜",
+            });
+          }
+
+          if (cenarios.length === 0) return null;
+
+          // Ordena por delta (maior primeiro), mostra top 4
+          const top = cenarios.sort((a, b) => b.delta - a.delta).slice(0, 4);
+
+          return (
+            <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)] mb-6">
+              <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-1 flex items-center gap-2">
+                <Zap size={15} className="text-[#C5A059]" />
+                Simulador de Cenários
+              </h3>
+              <p className="text-xs text-[var(--foreground-muted)] mb-4">
+                Impacto estimado de cada melhoria no valor actual de{" "}
+                {resultado.valorFinal.toLocaleString("pt-PT")}€
+              </p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {top.map((c, i) => (
+                  <div
+                    key={i}
+                    className="bg-[var(--background-card)]/50 rounded-lg p-3 border border-[var(--border)]/60 flex items-center gap-3"
+                  >
+                    <span className="text-xl shrink-0">{c.emoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-[var(--foreground)] truncate">
+                        {c.titulo}
+                      </p>
+                      <p className="text-[10px] text-[var(--foreground-muted)]">{c.descricao}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-sm font-bold text-emerald-400">
+                        +{c.delta.toLocaleString("pt-PT")}€
+                      </p>
+                      <p className="text-[10px] text-emerald-500/70">+{c.deltaPercent}%</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-[var(--foreground-muted)]/40 mt-3">
+                Simulações baseadas no modelo interno — valores ilustrativos, não constituem
+                garantia.
+              </p>
+            </div>
+          );
+        })()}
 
         {/* Comparacao de Mercado - Visual Chart */}
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)]">
@@ -508,7 +882,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
           isSubscribed={isSubscribed}
           title={
             (t.calculadora as Record<string, string>).safety_title ??
-            "Analise de Seguranca do Investimento"
+            "Análise de Segurança do Investimento"
           }
         >
           <InvestmentSafety form={form} resultado={resultado} />
@@ -519,7 +893,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
           isSubscribed={isSubscribed}
           title={
             (t.calculadora as Record<string, string>).discipline_title ??
-            "Comparacao por Disciplina"
+            "Comparação por Disciplina"
           }
         >
           <DisciplineComparison form={form} valorBase={resultado.valorFinal} />
@@ -843,7 +1217,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
                   source="FEI"
                   tooltip={
                     (t.calculadora as Record<string, string>).source_treino ??
-                    "Niveis de treino referenciados as escalas da FEI"
+                    "Níveis de treino referenciados às escalas da FEI"
                   }
                 />
               </span>
@@ -884,15 +1258,15 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         <MethodologyPanel
           title={
             (t.calculadora as Record<string, string>).methodology_panel_title ??
-            "Metodologia de Avaliacao"
+            "Metodologia de Avaliação"
           }
           factors={[
             {
-              name: (t.calculadora as Record<string, string>).factor_conformacao ?? "Conformacao",
+              name: (t.calculadora as Record<string, string>).factor_conformacao ?? "Conformação",
               weight: "15%",
               description:
                 (t.calculadora as Record<string, string>).factor_conformacao_desc ??
-                "Avaliacao segundo padroes APSL",
+                "Avaliação segundo padrões APSL",
               standard: "APSL",
             },
             {
@@ -900,7 +1274,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               weight: "15%",
               description:
                 (t.calculadora as Record<string, string>).factor_andamentos_desc ??
-                "Elevacao, suspensao, regularidade",
+                "Elevação, suspensão, regularidade",
               standard: "FEI",
             },
             {
@@ -908,7 +1282,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               weight: "15%",
               description:
                 (t.calculadora as Record<string, string>).factor_treino_desc ??
-                "Nivel conforme escalas FEI",
+                "Nível conforme escalas FEI",
               standard: "FEI",
             },
             {
@@ -919,7 +1293,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
                 "Qualidade do pedigree e registo",
             },
             {
-              name: (t.calculadora as Record<string, string>).factor_competicoes ?? "Competicoes",
+              name: (t.calculadora as Record<string, string>).factor_competicoes ?? "Competições",
               weight: "10%",
               description:
                 (t.calculadora as Record<string, string>).factor_competicoes_desc ??
@@ -930,7 +1304,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               weight: "8%",
               description:
                 (t.calculadora as Record<string, string>).factor_blup_desc ??
-                "Estimativa de merito genetico",
+                "Estimativa de mérito genético",
               standard: "modelo",
             },
             {
@@ -938,14 +1312,14 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               weight: "8%",
               description:
                 (t.calculadora as Record<string, string>).factor_temperamento_desc ??
-                "Docilidade e predisposicao para trabalho",
+                "Docilidade e predisposição para trabalho",
             },
             {
-              name: (t.calculadora as Record<string, string>).factor_saude ?? "Saude",
+              name: (t.calculadora as Record<string, string>).factor_saude ?? "Saúde",
               weight: "7%",
               description:
                 (t.calculadora as Record<string, string>).factor_saude_desc ??
-                "Historial clinico e documentacao veterinaria",
+                "Historial clínico e documentação veterinária",
               standard: "veterinário",
             },
             {
@@ -953,35 +1327,35 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
               weight: "5%",
               description:
                 (t.calculadora as Record<string, string>).factor_idade_desc ??
-                "Faixa etaria ideal: 6-12 anos",
+                "Faixa etária ideal: 6-12 anos",
             },
             {
               name: (t.calculadora as Record<string, string>).factor_mercado ?? "Mercado",
               weight: "5%",
               description:
                 (t.calculadora as Record<string, string>).factor_mercado_desc ??
-                "Dinamicas regionais de oferta e procura",
+                "Dinâmicas regionais de oferta e procura",
               standard: "mercado",
             },
           ]}
           limitations={[
             (t.calculadora as Record<string, string>).limitation_1 ??
-              "Nao considera condicao fisica actual do cavalo",
+              "Não considera condição física actual do cavalo",
             (t.calculadora as Record<string, string>).limitation_2 ??
-              "BLUP e uma estimativa simplificada, nao oficial APSL",
+              "BLUP é uma estimativa simplificada, não oficial APSL",
             (t.calculadora as Record<string, string>).limitation_3 ??
-              "Valores de mercado baseados em medias sectoriais",
+              "Valores de mercado baseados em médias sectoriais",
             (t.calculadora as Record<string, string>).limitation_4 ??
-              "Nao substitui avaliacao presencial por profissional qualificado",
+              "Não substitui avaliação presencial por profissional qualificado",
           ]}
           version={
             (t.calculadora as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"
           }
           references={[
-            (t.calculadora as Record<string, string>).ref_apsl ?? "Padroes de conformacao APSL",
+            (t.calculadora as Record<string, string>).ref_apsl ?? "Padrões de conformação APSL",
             (t.calculadora as Record<string, string>).ref_fei ?? "Escalas de treino FEI",
             (t.calculadora as Record<string, string>).ref_mercado ??
-              "Medias mercado equestre PT (2024-2025)",
+              "Médias mercado equestre PT (2024-2025)",
           ]}
         />
 

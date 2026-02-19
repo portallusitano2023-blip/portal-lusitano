@@ -403,7 +403,11 @@ export default function PublicidadePage() {
                       : "bg-[var(--surface-hover)] text-[var(--foreground)] hover:bg-[var(--surface-hover)] border border-[var(--border)]"
                   }`}
                 >
-                  {language === "pt" ? "Começar Agora" : "Get Started"}
+                  {language === "pt"
+                    ? "Começar Agora"
+                    : language === "es"
+                      ? "Empezar Ahora"
+                      : "Get Started"}
                 </button>
               </div>
             ))}
@@ -461,13 +465,17 @@ export default function PublicidadePage() {
             </button>
 
             <h3 className="text-xl font-serif text-[var(--foreground)] mb-4">
-              {language === "pt" ? "Dados da Empresa" : "Company Details"}
+              {language === "pt"
+                ? "Dados da Empresa"
+                : language === "es"
+                  ? "Datos de la Empresa"
+                  : "Company Details"}
             </h3>
 
             <form onSubmit={handleCheckout} className="space-y-4">
               <div>
                 <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-                  {language === "pt" ? "Email" : "Email"} *
+                  Email *
                 </label>
                 <input
                   type="email"
@@ -480,7 +488,12 @@ export default function PublicidadePage() {
 
               <div>
                 <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-                  {language === "pt" ? "Nome da Empresa" : "Company Name"} *
+                  {language === "pt"
+                    ? "Nome da Empresa"
+                    : language === "es"
+                      ? "Nombre de la Empresa"
+                      : "Company Name"}{" "}
+                  *
                 </label>
                 <input
                   type="text"
@@ -493,7 +506,11 @@ export default function PublicidadePage() {
 
               <div>
                 <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-                  {language === "pt" ? "Telefone (Opcional)" : "Phone (Optional)"}
+                  {language === "pt"
+                    ? "Telefone (Opcional)"
+                    : language === "es"
+                      ? "Teléfono (Opcional)"
+                      : "Phone (Optional)"}
                 </label>
                 <input
                   type="tel"
@@ -511,10 +528,14 @@ export default function PublicidadePage() {
                 {loading
                   ? language === "pt"
                     ? "A processar..."
-                    : "Processing..."
+                    : language === "es"
+                      ? "Procesando..."
+                      : "Processing..."
                   : language === "pt"
                     ? "Continuar para Pagamento"
-                    : "Continue to Payment"}
+                    : language === "es"
+                      ? "Continuar al Pago"
+                      : "Continue to Payment"}
               </button>
             </form>
           </div>

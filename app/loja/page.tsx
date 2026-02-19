@@ -1,5 +1,5 @@
 import { getProducts } from "@/lib/shopify";
-import LojaContent from "./LojaContent";
+import LojaContent from "@/components/loja/LojaContent";
 
 // Revalidar a cada 30 minutos — produtos Shopify mudam com pouca frequência
 export const revalidate = 1800;

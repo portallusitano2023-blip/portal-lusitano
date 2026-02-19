@@ -39,19 +39,19 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
     () => [
       {
         months: [1],
-        title: "Adaptacao",
-        description: "Periodo de adaptacao ao novo ambiente",
+        title: "Adaptação",
+        description: "Período de adaptação ao novo ambiente",
         extra: 500,
       },
       {
         months: [2],
-        title: "Veterinario Inicial",
-        description: "Check-up completo, vacinacoes",
+        title: "Veterinário Inicial",
+        description: "Check-up completo, vacinações",
         extra: 800,
       },
       {
         months: [3],
-        title: "Inicio de Treino",
+        title: "Início de Treino",
         description: "Estabelecer rotina de trabalho",
         extra: 200,
       },
@@ -63,21 +63,21 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
       },
       {
         months: [7],
-        title: "Avaliacao",
-        description: "Revisao do progresso com treinador",
+        title: "Avaliação",
+        description: "Revisão do progresso com treinador",
         extra: 300,
       },
       {
         months: [8, 9],
-        title: "Consolidacao",
+        title: "Consolidação",
         description: "Solidificar o trabalho desenvolvido",
         extra: 0,
       },
-      { months: [10], title: "Ferrador", description: "Avaliacao semestral de cascos", extra: 150 },
+      { months: [10], title: "Ferrador", description: "Avaliação semestral de cascos", extra: 150 },
       {
         months: [11, 12],
-        title: "Maturacao",
-        description: "Preparacao para objectivos do ano seguinte",
+        title: "Maturação",
+        description: "Preparação para objectivos do ano seguinte",
         extra: 0,
       },
     ],
@@ -132,7 +132,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
   }, [cumulativeData, totalYear, usableW, usableH]);
 
   const monthLabel = (months: number[]): string =>
-    months.length > 1 ? `Mes ${months[0]}-${months[months.length - 1]}` : `Mes ${months[0]}`;
+    months.length > 1 ? `Mês ${months[0]}-${months[months.length - 1]}` : `Mês ${months[0]}`;
 
   return (
     <div className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
@@ -143,7 +143,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
           {t.analise_perfil.firstyear_title}
         </h3>
         <p className="text-sm text-[var(--foreground-muted)] mb-6">
-          Simulacao de custos para os primeiros 12 meses com o perfil {result.title}
+          Simulação de custos para os primeiros 12 meses com o perfil {result.title}
         </p>
 
         <div className="grid grid-cols-2 gap-4">
@@ -245,7 +245,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
             viewBox={`0 0 ${chartWidth} ${chartHeight}`}
             className="w-full min-w-[360px]"
             role="img"
-            aria-label="Grafico de custo acumulado do primeiro ano"
+            aria-label="Gráfico de custo acumulado do primeiro ano"
           >
             <defs>
               <linearGradient id="firstyear-bar-grad" x1="0" y1="0" x2="0" y2="1">
@@ -298,7 +298,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
       </div>
 
       <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed text-center">
-        Valores estimados. Os custos reais variam conforme a regiao, prestador de servicos e
+        Valores estimados. Os custos reais variam conforme a região, prestador de serviços e
         necessidades do cavalo.
       </p>
     </div>

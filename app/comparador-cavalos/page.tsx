@@ -16,6 +16,11 @@ import {
   ChevronRight,
   RefreshCw,
   Check,
+  Sparkles,
+  Dna,
+  Target,
+  Award,
+  History,
 } from "lucide-react";
 import ResultActions from "@/components/tools/ResultActions";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
@@ -231,6 +236,63 @@ const RadarChart = ({
 };
 
 // ============================================
+// MATRIZ DE APTIDÃO POR DISCIPLINA
+// ============================================
+
+const DISCIPLINE_MATRIX = [
+  {
+    label: "Alta Escola",
+    weights: {
+      elevacao: 0.3,
+      andamentos: 0.25,
+      treino: 0.25,
+      conformacao: 0.15,
+      temperamento: 0.05,
+    },
+  },
+  {
+    label: "Dressage Clássica",
+    weights: { andamentos: 0.3, elevacao: 0.2, regularidade: 0.2, conformacao: 0.15, treino: 0.15 },
+  },
+  {
+    label: "Equitação de Trabalho",
+    weights: { temperamento: 0.3, andamentos: 0.25, treino: 0.2, saude: 0.15, conformacao: 0.1 },
+  },
+  {
+    label: "Atrelagem",
+    weights: { temperamento: 0.3, saude: 0.25, conformacao: 0.2, andamentos: 0.15, treino: 0.1 },
+  },
+  {
+    label: "Lazer / Trail",
+    weights: { temperamento: 0.4, saude: 0.3, andamentos: 0.2, conformacao: 0.1 },
+  },
+  {
+    label: "Criação / Reprodução",
+    weights: { conformacao: 0.3, blup: 0.3, saude: 0.2, andamentos: 0.2 },
+  },
+] as const;
+
+function calcDisciplineScore(c: Cavalo, weights: Record<string, number>): number {
+  const treinoNorm = ((TREINOS.find((t) => t.value === c.treino)?.nivel ?? 4) / 7) * 10;
+  const blupNorm = Math.min(c.blup / 15, 10);
+  const fieldMap: Record<string, number> = {
+    elevacao: c.elevacao,
+    andamentos: c.andamentos,
+    regularidade: c.regularidade,
+    conformacao: c.conformacao,
+    temperamento: c.temperamento,
+    saude: c.saude,
+    treino: treinoNorm,
+    blup: blupNorm,
+  };
+  const total = Object.entries(weights).reduce(
+    (sum, [field, w]) => sum + (fieldMap[field] ?? 5) * w,
+    0
+  );
+  return Math.min(100, Math.round(total * 10));
+}
+
+// ============================================
 // COMPONENTE PRINCIPAL
 // ============================================
 
@@ -240,6 +302,29 @@ const RadarChart = ({
 
 const DRAFT_KEY = "comparador_draft_v1";
 const CHAIN_KEY = "tool_chain_horse";
+const BREEDING_CHAIN_KEY = "tool_chain_breeding";
+const PROFILE_CONTEXT_KEY = "tool_context_profile";
+const HISTORY_KEY = "comparador_history";
+
+interface HistoryEntry {
+  timestamp: number;
+  cavalos: { nome: string; score: number }[];
+  vencedor: string;
+}
+
+const PROFILE_LABELS: Record<string, string> = {
+  competidor: "Competidor",
+  criador: "Criador",
+  amador: "Apreciador Amador",
+  investidor: "Investidor",
+};
+
+const SUBPROFILE_LABELS: Record<string, string> = {
+  competidor_elite: "Alta Competição FEI",
+  competidor_nacional: "Competição Nacional",
+  competidor_trabalho: "Equitação de Trabalho",
+  amador_projeto: "Projeto em Desenvolvimento",
+};
 
 // ============================================
 // UTILITÁRIO CSV
@@ -333,6 +418,14 @@ export default function ComparadorCavalosPage() {
   const [isExporting, setIsExporting] = useState(false);
   const [hasDraft, setHasDraft] = useState(false);
   const [draftDate, setDraftDate] = useState<string>("");
+  const [profileContext, setProfileContext] = useState<{
+    profile: string;
+    subProfile: string | null;
+    priceRange: string;
+  } | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [filtroDisciplina, setFiltroDisciplina] = useState<string>("geral");
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
   const {
     canUse,
@@ -352,13 +445,37 @@ export default function ComparadorCavalosPage() {
       // Verificar tool chain (vindo de outra ferramenta)
       const chain = sessionStorage.getItem(CHAIN_KEY);
       if (chain) {
-        const { source, horse } = JSON.parse(chain) as { source: string; horse: Partial<Cavalo> };
-        if (source === "calculadora" && horse) {
-          const novo = { ...criarCavalo("1", horse.nome || "Cavalo A"), ...horse, id: "1" };
+        const parsed = JSON.parse(chain) as {
+          source: string;
+          horse?: Partial<Cavalo>;
+          horses?: Partial<Cavalo>[];
+        };
+        const { source } = parsed;
+
+        if (source === "calculadora" && parsed.horse) {
+          const novo = {
+            ...criarCavalo("1", parsed.horse.nome || "Cavalo A"),
+            ...parsed.horse,
+            id: "1",
+          };
           setCavalos([novo, criarCavalo("2", "Cavalo B"), criarCavalo("3", "Cavalo C")]);
           sessionStorage.removeItem(CHAIN_KEY);
           setStep(1);
-          return; // Não restaurar draft se há chain
+          return;
+        }
+
+        if (
+          source === "verificador_pair" &&
+          Array.isArray(parsed.horses) &&
+          parsed.horses.length >= 2
+        ) {
+          const [h1, h2] = parsed.horses;
+          const cavalo1 = { ...criarCavalo("1", h1.nome || "Garanhão"), ...h1, id: "1" };
+          const cavalo2 = { ...criarCavalo("2", h2.nome || "Égua"), ...h2, id: "2" };
+          setCavalos([cavalo1, cavalo2]);
+          sessionStorage.removeItem(CHAIN_KEY);
+          setStep(1);
+          return;
         }
       }
 
@@ -381,6 +498,23 @@ export default function ComparadorCavalosPage() {
           localStorage.removeItem(DRAFT_KEY);
         }
       }
+
+      // Contexto da Análise de Perfil
+      try {
+        const ctx = sessionStorage.getItem(PROFILE_CONTEXT_KEY);
+        if (ctx) {
+          const parsed = JSON.parse(ctx) as {
+            source: string;
+            profile: string;
+            subProfile: string | null;
+            priceRange: string;
+          };
+          if (parsed.source === "analise_perfil") {
+            setProfileContext(parsed);
+            sessionStorage.removeItem(PROFILE_CONTEXT_KEY);
+          }
+        }
+      } catch {}
     } catch {}
   }, []);
 
@@ -400,6 +534,41 @@ export default function ComparadorCavalosPage() {
       if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     };
   }, [cavalos, step, showAnalise]);
+
+  // Carrega histórico do localStorage ao montar
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(HISTORY_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved) as HistoryEntry[];
+        if (Array.isArray(parsed)) setHistory(parsed);
+      }
+    } catch {}
+  }, []);
+
+  // Guarda uma nova entrada no histórico quando showAnalise muda para true
+  useEffect(() => {
+    if (!showAnalise) return;
+    try {
+      const sorted = [...cavalos]
+        .map((c) => ({ c, score: calcularScore(c) }))
+        .sort((a, b) => b.score - a.score);
+      const entry: HistoryEntry = {
+        timestamp: Date.now(),
+        cavalos: sorted.map((s) => ({ nome: s.c.nome, score: s.score })),
+        vencedor: sorted[0].c.nome,
+      };
+      setHistory((prev) => {
+        const updated = [entry, ...prev].slice(0, 5);
+        try {
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+    } catch {}
+    // calcularScore is stable (defined inside component without deps), so it's safe here
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showAnalise]);
 
   const restaurarDraft = () => {
     try {
@@ -525,6 +694,70 @@ export default function ComparadorCavalosPage() {
     return score > 0 ? Math.round(c.preco / score) : 0;
   };
 
+  // Score de potencial: score máximo atingível dado idade e treino atual
+  const calcularPotencial = (c: Cavalo): number => {
+    const scoreAtual = calcularScore(c);
+    const treino = TREINOS.find((t) => t.value === c.treino);
+    const nivel = treino?.nivel ?? 4;
+    const nivelMax = 8; // Grand Prix
+
+    // Cavalos mais jovens têm mais margem de progressão
+    const ageFactor = c.idade <= 5 ? 1.0 : c.idade <= 8 ? 0.75 : c.idade <= 11 ? 0.45 : 0.15;
+
+    // Margem de treino: cada nível vale ~1.9 pts no scoring
+    const treinoHeadroom = (nivelMax - nivel) * 1.9;
+
+    // Margem de competição: máximo (Internacional) = ~15pts
+    const comp = COMPETICOES.find((co) => co.value === c.competicoes);
+    const compScore = comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
+    const compMax = 13;
+    const compHeadroom = Math.max(0, compMax - compScore);
+
+    const potencialBonus = Math.round((treinoHeadroom + compHeadroom) * ageFactor);
+    return Math.min(100, scoreAtual + potencialBonus);
+  };
+
+  // ROI estimado a 5 anos
+  const calcularROI = (c: Cavalo): { roi5yr: number; breakEven: number; horizonte: string } => {
+    const treino = TREINOS.find((t) => t.value === c.treino);
+    const nivel = treino?.nivel ?? 4;
+
+    // Apreciação anual estimada com base em idade e potencial de treino
+    let annualRate = 0.02; // estável por defeito
+    if (c.idade <= 5 && nivel <= 3)
+      annualRate = 0.16; // potro/jovem em desenvolvimento
+    else if (c.idade <= 7 && nivel <= 4)
+      annualRate = 0.1; // jovem promissor
+    else if (c.idade >= 8 && c.idade <= 12 && nivel >= 5)
+      annualRate = 0.05; // pico de carreira
+    else if (c.idade > 14) annualRate = -0.04; // depreciação lenta
+
+    const estimatedValue5yr = Math.round(c.preco * Math.pow(1 + annualRate, 5));
+    const roi5yr = Math.round(((estimatedValue5yr - c.preco) / c.preco) * 100);
+
+    // Custo anual total estimado
+    const baseTraining = 200 + nivel * 100;
+    const annualCost =
+      400 * 12 + 150 * 12 + 80 * 12 + 60 * 12 + baseTraining * 12 + Math.round(c.preco * 0.04);
+    const monthlyAppreciation = (c.preco * Math.max(annualRate, 0)) / 12;
+    const monthlyCost = annualCost / 12;
+    const breakEven =
+      monthlyAppreciation > monthlyCost
+        ? Math.round(c.preco / (monthlyAppreciation - monthlyCost))
+        : 120;
+
+    const horizonte =
+      c.idade <= 5
+        ? "5-10 anos"
+        : c.idade <= 8
+          ? "3-5 anos"
+          : c.idade <= 12
+            ? "2-3 anos"
+            : "Curto prazo";
+
+    return { roi5yr, breakEven: Math.min(breakEven, 120), horizonte };
+  };
+
   const getScoreFactors = (
     c: Cavalo
   ): { name: string; weight: string; score: number; max: number }[] => {
@@ -574,15 +807,15 @@ export default function ComparadorCavalosPage() {
     return [
       { name: "Linhagem", weight: "15%", score: linhagemScore, max: 15 },
       { name: "Treino", weight: "15%", score: treinoScore, max: 15 },
-      { name: "Conformacao", weight: "10%", score: c.conformacao, max: 10 },
+      { name: "Conformação", weight: "10%", score: c.conformacao, max: 10 },
       { name: "Andamentos", weight: "10%", score: c.andamentos, max: 10 },
       { name: "Idade", weight: "10%", score: idadeScore, max: 10 },
-      { name: "Competicoes", weight: "8%", score: compScore, max: 8 },
+      { name: "Competições", weight: "8%", score: compScore, max: 8 },
       { name: "Altura", weight: "8%", score: alturaScore, max: 8 },
       { name: "Temperamento", weight: "7%", score: temperamentoScore, max: 7 },
-      { name: "Saude", weight: "7%", score: saudeScore, max: 7 },
+      { name: "Saúde", weight: "7%", score: saudeScore, max: 7 },
       { name: "BLUP", weight: "5%", score: blupScore, max: 5 },
-      { name: "Elevacao", weight: "5%", score: elevacaoScore, max: 5 },
+      { name: "Elevação", weight: "5%", score: elevacaoScore, max: 5 },
       { name: "Regularidade", weight: "5%", score: regularidadeScore, max: 5 },
       { name: "Registo APSL", weight: "3%", score: apslScore, max: 3 },
     ];
@@ -647,8 +880,8 @@ export default function ComparadorCavalosPage() {
             ? "Investimento"
             : "Lazer";
 
-    const riskLevel: "Baixo" | "Medio" | "Alto" =
-      c.idade > 16 || c.saude <= 5 ? "Alto" : c.idade > 14 || c.saude <= 6 ? "Medio" : "Baixo";
+    const riskLevel: "Baixo" | "Médio" | "Alto" =
+      c.idade > 16 || c.saude <= 5 ? "Alto" : c.idade > 14 || c.saude <= 6 ? "Médio" : "Baixo";
 
     const recommendation =
       score >= 75
@@ -740,13 +973,79 @@ export default function ComparadorCavalosPage() {
               </button>
             )}
             {showAnalise && (
-              <button
-                onClick={resetar}
-                className="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2"
-              >
-                <RefreshCw size={14} />
-                <span className="hidden sm:inline">{t.comparador.new_comparison}</span>
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowAnalise(false)}
+                  className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5"
+                >
+                  <Scale size={13} />
+                  <span className="hidden sm:inline">Editar</span>
+                </button>
+                {history.length > 0 && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowHistory((v) => !v)}
+                      className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)]"
+                    >
+                      <History size={13} />
+                      <span className="hidden sm:inline">Histórico ({history.length})</span>
+                    </button>
+                    {showHistory && (
+                      <div className="absolute right-0 top-full mt-2 w-72 bg-[var(--background-card)] border border-[var(--border)] rounded-xl shadow-2xl z-50 overflow-hidden">
+                        <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
+                          <span className="text-xs font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider">
+                            Últimas Comparações
+                          </span>
+                          <button
+                            onClick={() => setShowHistory(false)}
+                            className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+                            aria-label="Fechar histórico"
+                          >
+                            <X size={13} />
+                          </button>
+                        </div>
+                        <div className="divide-y divide-[var(--border)]/50">
+                          {history.map((entry, i) => (
+                            <div key={i} className="px-4 py-3">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-xs text-[#C5A059] font-semibold truncate">
+                                  Vencedor: {entry.vencedor}
+                                </span>
+                                <span className="text-[10px] text-[var(--foreground-muted)] shrink-0 ml-2">
+                                  {new Date(entry.timestamp).toLocaleDateString("pt-PT", {
+                                    day: "numeric",
+                                    month: "short",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                {entry.cavalos.map((cv, j) => (
+                                  <span
+                                    key={j}
+                                    className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--background-secondary)] text-[var(--foreground-secondary)]"
+                                  >
+                                    {cv.nome}:{" "}
+                                    <strong className="text-[var(--foreground)]">{cv.score}</strong>
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <button
+                  onClick={resetar}
+                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2"
+                >
+                  <RefreshCw size={14} />
+                  <span className="hidden sm:inline">{t.comparador.new_comparison}</span>
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -837,6 +1136,35 @@ export default function ComparadorCavalosPage() {
                     </div>
                   </div>
                 )}
+                {/* Banner de boas-vindas — vindo da Análise de Perfil */}
+                {profileContext && (
+                  <div
+                    className="mt-4 flex items-start gap-3 px-5 py-4 bg-gradient-to-r from-[var(--gold)]/15 to-[var(--gold)]/5 border border-[var(--gold)]/40 rounded-xl max-w-sm mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                    style={{ animationDelay: "0.8s" }}
+                  >
+                    <Sparkles size={16} className="text-[var(--gold)] shrink-0 mt-0.5" />
+                    <p className="text-xs text-[var(--gold)] flex-1 leading-relaxed text-left">
+                      <strong>
+                        Bem-vindo,{" "}
+                        {PROFILE_LABELS[profileContext.profile] ?? profileContext.profile}
+                        {profileContext.subProfile
+                          ? ` — ${SUBPROFILE_LABELS[profileContext.subProfile] ?? profileContext.subProfile}`
+                          : ""}
+                      </strong>
+                      <span className="text-[var(--gold)]/70">
+                        {" "}
+                        · Orçamento sugerido: <strong>{profileContext.priceRange}</strong>
+                      </span>
+                    </p>
+                    <button
+                      onClick={() => setProfileContext(null)}
+                      className="text-[var(--gold)]/50 hover:text-[var(--gold)] transition-colors shrink-0"
+                      aria-label="Fechar"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                )}
               </div>
             </section>
 
@@ -891,6 +1219,23 @@ export default function ComparadorCavalosPage() {
         {/* ==================== COMPARAÇÃO ==================== */}
         {step === 1 && (
           <div className="max-w-7xl mx-auto px-4 py-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
+            {/* Hint inicial — desaparece quando os nomes são personalizados */}
+            {!showAnalise && cavalos.every((c) => c.nome.startsWith("Cavalo")) && (
+              <div className="flex items-start gap-3 p-4 bg-blue-500/8 border border-blue-500/20 rounded-xl mb-4">
+                <span className="text-blue-400 text-lg leading-none mt-0.5" aria-hidden="true">
+                  💡
+                </span>
+                <div>
+                  <p className="text-sm font-medium text-blue-300">Como usar o Comparador</p>
+                  <p className="text-xs text-[var(--foreground-muted)] mt-0.5">
+                    Preenche os dados de cada cavalo nos campos abaixo. Podes comparar até 4 cavalos
+                    simultaneamente. Todos os campos têm valores por defeito — edita apenas os que
+                    conheces.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Cards dos Cavalos */}
             <div
               className={`grid gap-4 mb-8 ${
@@ -948,17 +1293,80 @@ export default function ComparadorCavalosPage() {
                         </button>
                       )}
                     </div>
+                    {/* Preset rápido */}
+                    <select
+                      className="mt-2 w-full text-xs bg-[var(--background-card)]/40 border border-[var(--border)] text-[var(--foreground-muted)] rounded px-2 py-1 cursor-pointer hover:border-[var(--gold)]/40 transition-colors"
+                      value=""
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (!v) return;
+                        const presets: Record<string, Partial<Cavalo>> = {
+                          potro: {
+                            idade: 3,
+                            treino: "Desbravado",
+                            linhagem: "Certificada",
+                            conformacao: 7,
+                            andamentos: 6,
+                            elevacao: 5,
+                            regularidade: 6,
+                            temperamento: 7,
+                            saude: 8,
+                            blup: 95,
+                            competicoes: "Nenhuma",
+                          },
+                          competicao: {
+                            idade: 8,
+                            treino: "Avançado",
+                            linhagem: "Elite",
+                            conformacao: 9,
+                            andamentos: 9,
+                            elevacao: 8,
+                            regularidade: 8,
+                            temperamento: 8,
+                            saude: 9,
+                            blup: 115,
+                            competicoes: "Nacional",
+                          },
+                          lazer: {
+                            idade: 10,
+                            treino: "Elementar",
+                            linhagem: "Registada",
+                            conformacao: 7,
+                            andamentos: 7,
+                            elevacao: 6,
+                            regularidade: 7,
+                            temperamento: 9,
+                            saude: 8,
+                            blup: 100,
+                            competicoes: "Nenhuma",
+                          },
+                        };
+                        const preset = presets[v];
+                        if (preset) {
+                          setCavalos((prev) =>
+                            prev.map((horse) =>
+                              horse.id === c.id ? { ...horse, ...preset } : horse
+                            )
+                          );
+                        }
+                      }}
+                    >
+                      <option value="">— Modelo rápido —</option>
+                      <option value="potro">Potro em Desenvolvimento</option>
+                      <option value="competicao">Cavalo de Competição</option>
+                      <option value="lazer">Cavalo de Lazer</option>
+                    </select>
                     {showAnalise && (
-                      <div className="mt-2 flex gap-2">
+                      <div className="mt-2 flex gap-2 flex-wrap">
                         {c.id === vencedor.id && (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 rounded text-amber-400 text-xs">
-                            <Crown size={12} />
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 border border-amber-500/40 rounded-lg text-amber-400 text-xs font-semibold shadow-sm shadow-amber-500/10">
+                            <Crown size={11} />
                             {t.comparador.best_score}
                           </span>
                         )}
                         {c.id === melhorValor.id && (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-500/20 rounded text-emerald-400 text-xs">
-                            <Euro size={12} />
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/20 border border-emerald-500/40 rounded-lg text-emerald-400 text-xs font-semibold shadow-sm shadow-emerald-500/10">
+                            <Euro size={11} />
                             {t.comparador.best_value}
                           </span>
                         )}
@@ -1125,9 +1533,29 @@ export default function ComparadorCavalosPage() {
                     </div>
 
                     <div>
-                      <label className="text-xs text-[var(--foreground-muted)] block mb-1">
-                        {t.comparador.label_price}
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="text-xs text-[var(--foreground-muted)]">
+                          {t.comparador.label_price}
+                        </label>
+                        {c.preco > 0 &&
+                          (() => {
+                            const s = calcularScore(c);
+                            const vpp = s > 0 ? c.preco / s : 0;
+                            if (vpp > 700)
+                              return (
+                                <span className="text-xs px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 font-medium">
+                                  Preço Elevado
+                                </span>
+                              );
+                            if (vpp > 0 && vpp < 200)
+                              return (
+                                <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium">
+                                  Excelente Valor
+                                </span>
+                              );
+                            return null;
+                          })()}
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -1160,14 +1588,25 @@ export default function ComparadorCavalosPage() {
                           <Tooltip
                             text={
                               (t.comparador as Record<string, string>).tooltip_score ??
-                              "Score composto (0-100) que pondera: Linhagem (15%), Treino (15%), Conformacao (10%), Andamentos (10%), Idade (10%), Altura (8%), Temperamento (7%), Saude (7%), BLUP (5%), Competicoes (8%), APSL (3%), Elevacao+Regularidade (5%)."
+                              "Score composto (0-100) que pondera: Linhagem (15%), Treino (15%), Conformação (10%), Andamentos (10%), Idade (10%), Altura (8%), Temperamento (7%), Saúde (7%), BLUP (5%), Competições (8%), APSL (3%), Elevação+Regularidade (5%)."
                             }
                           />
                         </span>
-                        <span className="flex items-center gap-2">
+                        <span className="flex items-center gap-2 flex-wrap justify-end">
                           <span className="text-2xl font-bold" style={{ color: cores[i] }}>
                             {calcularScore(c)}
                           </span>
+                          <span className="text-xs text-[var(--foreground-muted)] flex items-center gap-0.5">
+                            <TrendingUp size={11} className="text-emerald-400" />
+                            <span className="text-emerald-400 font-medium">
+                              {calcularPotencial(c)} pts
+                            </span>
+                          </span>
+                          {calcularPotencial(c) > calcularScore(c) + 10 && (
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[10px] font-semibold rounded-full">
+                              Alto Potencial
+                            </span>
+                          )}
                           <SourceBadge source="modelo" />
                         </span>
                       </div>
@@ -1179,10 +1618,66 @@ export default function ComparadorCavalosPage() {
                         <Tooltip
                           text={
                             (t.comparador as Record<string, string>).tooltip_valor_ponto ??
-                            "Preco dividido pelo score total. Quanto menor, melhor a relacao custo-beneficio."
+                            "Preço dividido pelo score total. Quanto menor, melhor a relação custo-benefício."
                           }
                         />
                       </div>
+                      {filtroDisciplina !== "geral" &&
+                        (() => {
+                          const PESOS_DISC: Record<string, Record<string, number>> = {
+                            dressage: {
+                              conformacao: 0.2,
+                              andamentos: 0.3,
+                              elevacao: 0.25,
+                              temperamento: 0.15,
+                              saude: 0.1,
+                            },
+                            trabalho: {
+                              conformacao: 0.25,
+                              andamentos: 0.2,
+                              temperamento: 0.3,
+                              saude: 0.15,
+                              blupNorm: 0.1,
+                            },
+                            reproducao: {
+                              blupNorm: 0.35,
+                              conformacao: 0.25,
+                              saude: 0.25,
+                              andamentos: 0.15,
+                            },
+                            lazer: {
+                              temperamento: 0.4,
+                              saude: 0.35,
+                              conformacao: 0.15,
+                              andamentos: 0.1,
+                            },
+                          };
+                          const DISC_LABELS: Record<string, string> = {
+                            dressage: "Dressage FEI",
+                            trabalho: "Equit. Trabalho",
+                            reproducao: "Reprodução",
+                            lazer: "Lazer",
+                          };
+                          const pesos = PESOS_DISC[filtroDisciplina] ?? {};
+                          let discScore = 0;
+                          if (pesos.conformacao)
+                            discScore += (c.conformacao / 10) * 100 * pesos.conformacao;
+                          if (pesos.andamentos)
+                            discScore += (c.andamentos / 10) * 100 * pesos.andamentos;
+                          if (pesos.elevacao)
+                            discScore += (c.elevacao / 10) * 100 * (pesos.elevacao ?? 0);
+                          if (pesos.temperamento)
+                            discScore += (c.temperamento / 10) * 100 * pesos.temperamento;
+                          if (pesos.saude) discScore += (c.saude / 10) * 100 * pesos.saude;
+                          if (pesos.blupNorm)
+                            discScore += Math.min((c.blup / 130) * 100, 100) * pesos.blupNorm;
+                          return (
+                            <div className="mt-1.5 text-xs text-[var(--foreground-muted)]">
+                              <span className="text-[#C5A059]/70">{Math.round(discScore)} pts</span>{" "}
+                              para {DISC_LABELS[filtroDisciplina] ?? filtroDisciplina}
+                            </div>
+                          );
+                        })()}
                       <div className="mt-3">
                         <ScoreBreakdown factors={getScoreFactors(c)} total={calcularScore(c)} />
                       </div>
@@ -1239,21 +1734,73 @@ export default function ComparadorCavalosPage() {
             )}
             <ProUpgradeCard isSubscribed={isSubscribed} />
 
+            {/* Banner de boas-vindas — perfil vindo da Análise de Perfil (step > 0) */}
+            {profileContext && step > 0 && (
+              <div className="flex items-start gap-3 px-4 py-3 bg-gradient-to-r from-[var(--gold)]/15 to-[var(--gold)]/5 border border-[var(--gold)]/40 rounded-xl mb-4 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
+                <Sparkles size={14} className="text-[var(--gold)] shrink-0 mt-0.5" />
+                <p className="text-xs text-[var(--gold)] flex-1 leading-relaxed">
+                  <strong>
+                    {PROFILE_LABELS[profileContext.profile] ?? profileContext.profile}
+                    {profileContext.subProfile
+                      ? ` · ${SUBPROFILE_LABELS[profileContext.subProfile] ?? profileContext.subProfile}`
+                      : ""}
+                  </strong>
+                  <span className="text-[var(--gold)]/70">
+                    {" "}
+                    — orçamento recomendado: <strong>{profileContext.priceRange}</strong>
+                  </span>
+                </p>
+                <button
+                  onClick={() => setProfileContext(null)}
+                  className="text-[var(--gold)]/40 hover:text-[var(--gold)] transition-colors shrink-0"
+                  aria-label="Fechar"
+                >
+                  <X size={13} />
+                </button>
+              </div>
+            )}
+
             {/* Botão Analisar */}
             {!showAnalise && (
               <>
                 <button
                   onClick={() => {
                     if (!canUse) return;
+                    const cavalosValidos = cavalos.filter(
+                      (c) => c.nome.trim() && !c.nome.startsWith("Cavalo")
+                    );
+                    if (cavalosValidos.length < 2) {
+                      alert("Preenche o nome de pelo menos 2 cavalos para iniciar a comparação.");
+                      return;
+                    }
                     setCalculando(true);
                     setCalculandoStep(0);
-                    recordUsage({
-                      cavalos: cavalos.map((c) => ({
-                        nome: c.nome,
-                        idade: c.idade,
-                        pelagem: c.pelagem,
-                      })),
-                    });
+                    const vencedorNome =
+                      cavalos.length > 0
+                        ? cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b))
+                            .nome
+                        : "";
+                    const vencedorScore =
+                      cavalos.length > 0
+                        ? calcularScore(
+                            cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b))
+                          )
+                        : 0;
+                    recordUsage(
+                      { count: cavalos.length },
+                      {
+                        vencedor: vencedorNome,
+                        vencedorScore,
+                        count: cavalos.length,
+                        disciplinas: [
+                          ...new Set(
+                            cavalos.flatMap((c) =>
+                              c.competicoes !== "Nenhuma" ? [c.competicoes] : []
+                            )
+                          ),
+                        ],
+                      }
+                    );
                     setTimeout(() => setCalculandoStep(1), 600);
                     setTimeout(() => setCalculandoStep(2), 1200);
                     setTimeout(() => {
@@ -1268,7 +1815,17 @@ export default function ComparadorCavalosPage() {
                   {t.comparador.btn_analyse}
                 </button>
                 {!canUse && (
-                  <Paywall toolName={t.comparador.tool_name} requiresAuth={requiresAuth} />
+                  <Paywall
+                    toolName={t.comparador.tool_name}
+                    requiresAuth={requiresAuth}
+                    proFeatures={[
+                      "Comparação ilimitada de até 4 cavalos em simultâneo",
+                      "Score de potencial e ROI a 5 anos",
+                      "Radar comparativo com 8 dimensões",
+                      "Exportação PDF e CSV para Excel",
+                      "Análise de aptidão por disciplina desportiva",
+                    ]}
+                  />
                 )}
               </>
             )}
@@ -1343,6 +1900,15 @@ export default function ComparadorCavalosPage() {
             {/* Análise */}
             {showAnalise && (
               <div className="space-y-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+                {/* Botão de regresso à edição */}
+                <button
+                  onClick={() => setShowAnalise(false)}
+                  className="flex items-center gap-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors mb-4"
+                >
+                  <ArrowLeft size={16} />
+                  Editar dados dos cavalos
+                </button>
+
                 {/* Confetti celebration */}
                 <div className="relative">
                   <Confetti trigger={true} particleCount={50} duration={2800} />
@@ -1365,6 +1931,96 @@ export default function ComparadorCavalosPage() {
                   </button>
                 </div>
 
+                {/* Filtro por Disciplina */}
+                <div className="flex flex-wrap gap-2 mb-5">
+                  <span className="text-xs text-[var(--foreground-muted)] self-center mr-1">
+                    Contexto:
+                  </span>
+                  {[
+                    { id: "geral", label: "Geral" },
+                    { id: "dressage", label: "Dressage FEI" },
+                    { id: "trabalho", label: "Equit. Trabalho" },
+                    { id: "reproducao", label: "Reprodução" },
+                    { id: "lazer", label: "Lazer" },
+                  ].map((d) => (
+                    <button
+                      key={d.id}
+                      onClick={() => setFiltroDisciplina(d.id)}
+                      className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                        filtroDisciplina === d.id
+                          ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059] font-semibold"
+                          : "border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--border)]/70"
+                      }`}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Banner de aptidão para disciplina seleccionada */}
+                {filtroDisciplina !== "geral" &&
+                  (() => {
+                    const PESOS_DISC: Record<string, Record<string, number>> = {
+                      dressage: {
+                        conformacao: 0.2,
+                        andamentos: 0.3,
+                        elevacao: 0.25,
+                        temperamento: 0.15,
+                        saude: 0.1,
+                      },
+                      trabalho: {
+                        conformacao: 0.25,
+                        andamentos: 0.2,
+                        temperamento: 0.3,
+                        saude: 0.15,
+                        blupNorm: 0.1,
+                      },
+                      reproducao: {
+                        blupNorm: 0.35,
+                        conformacao: 0.25,
+                        saude: 0.25,
+                        andamentos: 0.15,
+                      },
+                      lazer: { temperamento: 0.4, saude: 0.35, conformacao: 0.15, andamentos: 0.1 },
+                    };
+                    const pesos = PESOS_DISC[filtroDisciplina] ?? {};
+                    const DISC_LABELS: Record<string, string> = {
+                      dressage: "Dressage FEI",
+                      trabalho: "Equit. Trabalho",
+                      reproducao: "Reprodução",
+                      lazer: "Lazer",
+                    };
+
+                    const aptidoes = cavalos.map((c) => {
+                      let score = 0;
+                      if (pesos.conformacao)
+                        score += (c.conformacao / 10) * 100 * pesos.conformacao;
+                      if (pesos.andamentos) score += (c.andamentos / 10) * 100 * pesos.andamentos;
+                      if (pesos.elevacao) score += (c.elevacao / 10) * 100 * (pesos.elevacao ?? 0);
+                      if (pesos.temperamento)
+                        score += (c.temperamento / 10) * 100 * pesos.temperamento;
+                      if (pesos.saude) score += (c.saude / 10) * 100 * pesos.saude;
+                      if (pesos.blupNorm)
+                        score += Math.min((c.blup / 130) * 100, 100) * pesos.blupNorm;
+                      return { nome: c.nome, score: Math.round(score) };
+                    });
+                    const melhor = [...aptidoes].sort((a, b) => b.score - a.score)[0];
+
+                    return (
+                      <div className="flex items-center gap-3 p-3 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl mb-4">
+                        <Target size={16} className="text-[#C5A059] shrink-0" />
+                        <p className="text-sm text-[var(--foreground-secondary)]">
+                          Para{" "}
+                          <strong className="text-[var(--foreground)]">
+                            {DISC_LABELS[filtroDisciplina]}
+                          </strong>
+                          : <strong className="text-[#C5A059]">{melhor?.nome || "Cavalo A"}</strong>{" "}
+                          tem melhor aptidão ({melhor?.score ?? 0} pts)
+                        </p>
+                      </div>
+                    );
+                  })()}
+
                 {/* Recomendação — card hero no topo dos resultados */}
                 {(() => {
                   const vencedorScore = calcularScore(vencedor);
@@ -1375,15 +2031,15 @@ export default function ComparadorCavalosPage() {
                   const melhorFatorLabel: Record<string, string> = {
                     Linhagem: "Linhagem",
                     Treino: "Treino",
-                    Conformacao: "Conformação",
+                    Conformação: "Conformação",
                     Andamentos: "Andamentos",
                     Idade: "Idade",
-                    Competicoes: "Competições",
+                    Competições: "Competições",
                     Altura: "Altura",
                     Temperamento: "Temperamento",
-                    Saude: "Saúde",
+                    Saúde: "Saúde",
                     BLUP: "BLUP",
-                    Elevacao: "Elevação",
+                    Elevação: "Elevação",
                     Regularidade: "Regularidade",
                     "Registo APSL": "Registo APSL",
                   };
@@ -1464,6 +2120,170 @@ export default function ComparadorCavalosPage() {
                   );
                 })()}
 
+                {/* Escolha Óbvia — banner quando a margem de score é > 20 pts */}
+                {(() => {
+                  const scores = cavalos.map((c) => calcularScore(c)).sort((a, b) => b - a);
+                  const gap = scores.length >= 2 ? scores[0] - scores[1] : 0;
+                  const vencedorIdx = cavalos.findIndex((c) => c.id === vencedor.id);
+                  const cor = cores[vencedorIdx] || "#C5A059";
+                  if (gap < 20) return null;
+                  return (
+                    <div className="rounded-xl border border-emerald-500/30 bg-emerald-900/10 p-4 flex items-center gap-3 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
+                      <div className="w-9 h-9 rounded-lg bg-emerald-500/15 flex items-center justify-center shrink-0">
+                        <Trophy size={18} className="text-emerald-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-emerald-400 mb-0.5">
+                          Escolha clara: <span style={{ color: cor }}>{vencedor.nome}</span>
+                        </p>
+                        <p className="text-xs text-[var(--foreground-muted)] leading-snug">
+                          Margem de {gap} pontos em relação ao segundo — diferença significativa e
+                          consistente entre os cavalos comparados.
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Veredicto Profissional */}
+                {cavalos.length >= 2 &&
+                  (() => {
+                    const sorted = [...cavalos]
+                      .map((c) => ({ c, score: calcularScore(c) }))
+                      .sort((a, b) => b.score - a.score);
+                    const best = sorted[0];
+                    const second = sorted[1];
+                    const gap = best.score - second.score;
+                    const bestC = best.c;
+                    const secondC = second.c;
+
+                    // Pontos fortes do vencedor
+                    const pontosFortesVencedor: string[] = [];
+                    if (bestC.conformacao >= 8)
+                      pontosFortesVencedor.push("conformação morfológica excepcional");
+                    if (bestC.andamentos >= 8)
+                      pontosFortesVencedor.push("andamentos de qualidade superior");
+                    if (bestC.blup >= 115)
+                      pontosFortesVencedor.push("elevado mérito genético (BLUP)");
+                    if (bestC.saude >= 8) pontosFortesVencedor.push("saúde excelente");
+                    if (bestC.competicoes !== "Nenhuma" && bestC.competicoes !== "nenhuma")
+                      pontosFortesVencedor.push("palmarés desportivo comprovado");
+                    if (bestC.idade >= 7 && bestC.idade <= 12)
+                      pontosFortesVencedor.push("idade ideal de performance");
+
+                    // Onde o segundo é superior
+                    const pontosFortesSeg: string[] = [];
+                    if (secondC.conformacao > bestC.conformacao)
+                      pontosFortesSeg.push("conformação");
+                    if (secondC.andamentos > bestC.andamentos) pontosFortesSeg.push("andamentos");
+                    if (secondC.blup > bestC.blup) pontosFortesSeg.push("mérito genético");
+                    if ((secondC.saude ?? 0) > (bestC.saude ?? 0)) pontosFortesSeg.push("saúde");
+
+                    // Texto de introdução baseado na margem
+                    const introText =
+                      gap >= 25
+                        ? `Com uma margem expressiva de ${gap} pontos, **${bestC.nome || "Cavalo A"}** é a escolha clara e inequívoca.`
+                        : gap >= 15
+                          ? `**${bestC.nome || "Cavalo A"}** destaca-se com ${gap} pontos de vantagem numa comparação competitiva.`
+                          : gap >= 5
+                            ? `**${bestC.nome || "Cavalo A"}** lidera com uma vantagem de ${gap} pontos num confronto equilibrado.`
+                            : `Numa comparação muito próxima (margem de ${gap} pontos), **${bestC.nome || "Cavalo A"}** obtém uma ligeira vantagem.`;
+
+                    const pontosStr =
+                      pontosFortesVencedor.length > 0
+                        ? `Os seus principais trunfos são: ${pontosFortesVencedor.slice(0, 3).join(", ")}.`
+                        : "";
+
+                    const segStr =
+                      pontosFortesSeg.length > 0
+                        ? `${secondC.nome || "Cavalo B"} mantém vantagem em ${pontosFortesSeg.join(" e ")}.`
+                        : "";
+
+                    const recomStr = (() => {
+                      const jovem = bestC.idade < 7;
+                      const garanhao = bestC.sexo === "Garanhão";
+                      if (jovem && best.score >= 65)
+                        return `Com ${bestC.idade} anos e este score, ${bestC.nome || "este cavalo"} tem elevado potencial de valorização nos próximos anos.`;
+                      if (garanhao && best.score >= 70)
+                        return `Como garanhão de qualidade, ${bestC.nome || "este cavalo"} combina valor desportivo com potencial reprodutivo.`;
+                      if (best.score >= 80)
+                        return `Um score acima de 80 pontos posiciona ${bestC.nome || "este cavalo"} no quartil superior da raça Lusitana.`;
+                      return `Recomendamos avaliação presencial antes de qualquer decisão de compra.`;
+                    })();
+
+                    const linhas = [introText, pontosStr, segStr, recomStr].filter(Boolean);
+
+                    return (
+                      <div className="bg-gradient-to-br from-[var(--background-secondary)] to-[var(--background-card)] rounded-xl p-5 border border-[var(--gold)]/20 mb-2">
+                        <h3 className="text-sm font-semibold text-[#C5A059] mb-3 flex items-center gap-2 uppercase tracking-wider">
+                          <Award size={15} />
+                          Veredicto Profissional
+                        </h3>
+                        <div className="space-y-2 text-sm text-[var(--foreground-secondary)] leading-relaxed">
+                          {linhas.map((linha, i) => (
+                            <p
+                              key={i}
+                              dangerouslySetInnerHTML={{
+                                __html: linha.replace(
+                                  /\*\*([^*]+)\*\*/g,
+                                  '<strong class="text-[var(--foreground)]">$1</strong>'
+                                ),
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-[var(--border)]/40 flex items-center gap-4 text-xs text-[var(--foreground-muted)]">
+                          <span>
+                            Score: <strong className="text-[#C5A059]">{best.score}</strong> / 100
+                          </span>
+                          <span>
+                            vs. {secondC.nome || "Cavalo B"}: <strong>{second.score}</strong>
+                          </span>
+                          {gap >= 15 && (
+                            <span className="ml-auto px-2 py-0.5 bg-emerald-500/15 text-emerald-400 rounded-full font-medium">
+                              Escolha Clara
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                {/* CTA → Verificador de Compatibilidade (garanhão + égua) */}
+                {cavalos.length === 2 &&
+                  cavalos.some((c) => c.sexo === "Garanhão") &&
+                  cavalos.some((c) => c.sexo === "Égua") && (
+                    <div className="bg-pink-900/15 border border-pink-500/30 rounded-xl p-4 flex items-center gap-3 mb-6">
+                      <Dna size={18} className="text-pink-400 shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-[var(--foreground)]">
+                          Verificar Compatibilidade Reprodutiva
+                        </p>
+                        <p className="text-xs text-[var(--foreground-muted)]">
+                          {cavalos.find((c) => c.sexo === "Garanhão")?.nome || "Garanhão"} ×{" "}
+                          {cavalos.find((c) => c.sexo === "Égua")?.nome || "Égua"} — analisar
+                          compatibilidade genética
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          try {
+                            const g = cavalos.find((c) => c.sexo === "Garanhão")!;
+                            const e = cavalos.find((c) => c.sexo === "Égua")!;
+                            sessionStorage.setItem(
+                              BREEDING_CHAIN_KEY,
+                              JSON.stringify({ garanhao: g, egua: e, source: "comparador" })
+                            );
+                          } catch {}
+                          window.location.href = "/verificador-compatibilidade";
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-2 bg-pink-500/20 border border-pink-500/40 text-pink-300 text-xs font-semibold rounded-lg hover:bg-pink-500/30 transition-all whitespace-nowrap"
+                      >
+                        Verificar <ChevronRight size={13} />
+                      </button>
+                    </div>
+                  )}
+
                 {/* Gráfico Radar */}
                 <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)]">
                   <h3 className="text-lg font-serif mb-6 flex items-center gap-3">
@@ -1472,7 +2292,7 @@ export default function ComparadorCavalosPage() {
                     <Tooltip
                       text={
                         (t.comparador as Record<string, string>).tooltip_radar ??
-                        "Cada eixo representa uma dimensao avaliada de 0 a 10. A area total reflecte o perfil global do cavalo."
+                        "Cada eixo representa uma dimensão avaliada de 0 a 10. A área total reflecte o perfil global do cavalo."
                       }
                     />
                   </h3>
@@ -1484,14 +2304,25 @@ export default function ComparadorCavalosPage() {
                           valores: [
                             c.conformacao,
                             c.andamentos,
+                            c.elevacao,
+                            c.regularidade,
                             c.temperamento,
                             c.saude,
-                            Math.min(c.blup / 12, 10),
+                            Math.min(c.blup / 13, 10),
                             TREINOS.find((t) => t.value === c.treino)?.nivel || 4,
                           ],
                           cor: cores[i],
                         }))}
-                        labels={["Conform.", "Andam.", "Temper.", "Saúde", "BLUP", "Treino"]}
+                        labels={[
+                          "Conform.",
+                          "Andam.",
+                          "Elevação",
+                          "Regular.",
+                          "Temper.",
+                          "Saúde",
+                          "Pedigree",
+                          "Treino",
+                        ]}
                       />
                     </div>
                     <div className="flex flex-wrap justify-center gap-4 mt-6">
@@ -1513,8 +2344,266 @@ export default function ComparadorCavalosPage() {
                 {/* Category Ranking */}
                 <CategoryRanking cavalos={cavalos} cores={cores} />
 
+                {/* Categorias Vencidas — mini scorecard */}
+                {cavalos.length >= 2 &&
+                  (() => {
+                    const CAMPOS: (keyof Cavalo)[] = [
+                      "conformacao",
+                      "andamentos",
+                      "elevacao",
+                      "regularidade",
+                      "temperamento",
+                      "saude",
+                      "blup",
+                    ];
+                    const vitórias = cavalos.map((c) => {
+                      let v = 0;
+                      CAMPOS.forEach((campo) => {
+                        const melhor = Math.max(...cavalos.map((x) => x[campo] as number));
+                        if ((c[campo] as number) === melhor) v++;
+                      });
+                      // Score global
+                      const maxScore = Math.max(...cavalos.map(calcularScore));
+                      if (calcularScore(c) === maxScore) v++;
+                      return { id: c.id, nome: c.nome, vitórias: v };
+                    });
+                    const total = CAMPOS.length + 1;
+                    return (
+                      <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-5 border border-[var(--border)]">
+                        <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider mb-4">
+                          Categorias Vencidas ({total} categorias)
+                        </h3>
+                        <div
+                          className="grid gap-3"
+                          style={{ gridTemplateColumns: `repeat(${cavalos.length}, 1fr)` }}
+                        >
+                          {vitórias.map((v, i) => (
+                            <div
+                              key={v.id}
+                              className="text-center p-4 rounded-xl bg-[var(--background-card)]/40 border border-[var(--border)]"
+                            >
+                              <p className="text-3xl font-bold mb-1" style={{ color: cores[i] }}>
+                                {v.vitórias}
+                              </p>
+                              <p className="text-[10px] text-[var(--foreground-muted)] uppercase tracking-wider mb-1">
+                                de {total}
+                              </p>
+                              <p className="text-xs font-medium text-[var(--foreground-secondary)] truncate">
+                                {v.nome}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                 {/* Suitability Profile */}
                 <SuitabilityProfile cavalos={cavalos} cores={cores} />
+
+                {/* Matriz de Aptidão por Disciplina — Free (simplificada) */}
+                {(() => {
+                  const disciplinasAptidao: { nome: string; pesos: Record<string, number> }[] = [
+                    {
+                      nome: "Alta Escola",
+                      pesos: {
+                        conformacao: 0.2,
+                        andamentos: 0.25,
+                        elevacao: 0.25,
+                        temperamento: 0.15,
+                        saude: 0.15,
+                      },
+                    },
+                    {
+                      nome: "Dressage FEI",
+                      pesos: {
+                        conformacao: 0.15,
+                        andamentos: 0.25,
+                        elevacao: 0.2,
+                        regularidade: 0.2,
+                        temperamento: 0.1,
+                        saude: 0.1,
+                      },
+                    },
+                    {
+                      nome: "Equit. Trabalho",
+                      pesos: {
+                        conformacao: 0.25,
+                        andamentos: 0.2,
+                        temperamento: 0.25,
+                        saude: 0.2,
+                        blupNorm: 0.1,
+                      },
+                    },
+                    {
+                      nome: "Lazer/Turismo",
+                      pesos: { temperamento: 0.35, saude: 0.3, conformacao: 0.2, andamentos: 0.15 },
+                    },
+                    {
+                      nome: "Reprodução",
+                      pesos: { blupNorm: 0.35, conformacao: 0.25, saude: 0.25, andamentos: 0.15 },
+                    },
+                  ];
+
+                  const calcAptidao = (c: Cavalo, pesos: Record<string, number>): number => {
+                    let total = 0;
+                    let totalPeso = 0;
+                    if (pesos.conformacao) {
+                      total += (c.conformacao / 10) * 100 * pesos.conformacao;
+                      totalPeso += pesos.conformacao;
+                    }
+                    if (pesos.andamentos) {
+                      total += (c.andamentos / 10) * 100 * pesos.andamentos;
+                      totalPeso += pesos.andamentos;
+                    }
+                    if (pesos.elevacao) {
+                      total += (c.elevacao / 10) * 100 * pesos.elevacao;
+                      totalPeso += pesos.elevacao;
+                    }
+                    if (pesos.regularidade) {
+                      total += (c.regularidade / 10) * 100 * pesos.regularidade;
+                      totalPeso += pesos.regularidade;
+                    }
+                    if (pesos.temperamento) {
+                      total += (c.temperamento / 10) * 100 * pesos.temperamento;
+                      totalPeso += pesos.temperamento;
+                    }
+                    if (pesos.saude) {
+                      total += (c.saude / 10) * 100 * pesos.saude;
+                      totalPeso += pesos.saude;
+                    }
+                    if (pesos.blupNorm) {
+                      total += Math.min((c.blup / 130) * 100, 100) * pesos.blupNorm;
+                      totalPeso += pesos.blupNorm;
+                    }
+                    return totalPeso > 0 ? Math.round(total / totalPeso) : 0;
+                  };
+
+                  const CAVALO_COLORS = ["#C5A059", "#60a5fa", "#34d399", "#f472b6"];
+
+                  return (
+                    <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
+                      <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider mb-5 flex items-center gap-2">
+                        <Target size={16} className="text-[#C5A059]" />
+                        Aptidão por Disciplina
+                      </h3>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b border-[var(--border)]">
+                              <th className="text-left text-xs text-[var(--foreground-muted)] pb-3 pr-4">
+                                Disciplina
+                              </th>
+                              {cavalos.map((c, i) => (
+                                <th
+                                  key={i}
+                                  className="text-center text-xs pb-3 px-2"
+                                  style={{ color: CAVALO_COLORS[i] }}
+                                >
+                                  {c.nome || `Cavalo ${i + 1}`}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-[var(--border)]/30">
+                            {disciplinasAptidao.map((disc) => {
+                              const scores = cavalos.map((c) => calcAptidao(c, disc.pesos));
+                              const maxScore = Math.max(...scores);
+                              return (
+                                <tr key={disc.nome}>
+                                  <td className="py-3 pr-4 text-xs text-[var(--foreground-secondary)] whitespace-nowrap">
+                                    {disc.nome}
+                                  </td>
+                                  {scores.map((score, i) => (
+                                    <td key={i} className="py-3 px-2 text-center">
+                                      <span
+                                        className={`text-sm font-bold ${score === maxScore && cavalos.length > 1 ? "" : "text-[var(--foreground-muted)]"}`}
+                                        style={
+                                          score === maxScore && cavalos.length > 1
+                                            ? { color: CAVALO_COLORS[i] }
+                                            : {}
+                                        }
+                                      >
+                                        {score}
+                                        {score === maxScore && cavalos.length > 1 && (
+                                          <span className="ml-1 text-[10px]">★</span>
+                                        )}
+                                      </span>
+                                    </td>
+                                  ))}
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-3">
+                        ★ Melhor cavalo por disciplina. Scores de 0-100 baseados em pesos
+                        específicos de cada disciplina.
+                      </p>
+                    </div>
+                  );
+                })()}
+
+                {/* Matriz de Aptidão por Disciplina — PRO (detalhada) */}
+                <BlurredProSection isSubscribed={isSubscribed} title="Aptidão por Disciplina">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr>
+                          <th className="text-left text-xs text-[var(--foreground-muted)] font-medium pb-3 pr-4 min-w-[160px]">
+                            Disciplina
+                          </th>
+                          {cavalos.map((c, i) => (
+                            <th
+                              key={c.id}
+                              className="text-center text-xs font-semibold pb-3 px-2 min-w-[80px]"
+                              style={{ color: cores[i] }}
+                            >
+                              {c.nome || `Cavalo ${String.fromCharCode(65 + i)}`}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[var(--border)]/40">
+                        {DISCIPLINE_MATRIX.map((disc) => {
+                          const scores = cavalos.map((c) =>
+                            calcDisciplineScore(c, disc.weights as Record<string, number>)
+                          );
+                          const maxScore = Math.max(...scores);
+                          return (
+                            <tr key={disc.label}>
+                              <td className="py-3 pr-4 text-[var(--foreground-secondary)] font-medium text-xs">
+                                {disc.label}
+                              </td>
+                              {scores.map((score, i) => {
+                                const isBest = score === maxScore && cavalos.length > 1;
+                                const bg =
+                                  score >= 70
+                                    ? "bg-emerald-500/15 text-emerald-400"
+                                    : score >= 50
+                                      ? "bg-amber-500/15 text-amber-400"
+                                      : "bg-red-500/10 text-red-400";
+                                return (
+                                  <td key={i} className="py-3 px-2 text-center">
+                                    <span
+                                      className={`inline-flex items-center justify-center px-2 py-1 rounded text-xs font-bold tabular-nums ${bg} ${isBest ? "ring-1 ring-current" : ""}`}
+                                    >
+                                      {score}
+                                    </span>
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                    <p className="text-xs text-[var(--foreground-muted)] mt-3 text-right">
+                      Verde ≥70 · Âmbar 50-69 · Vermelho &lt;50 · Destaque = melhor nessa disciplina
+                    </p>
+                  </div>
+                </BlurredProSection>
 
                 {/* Tabela Comparativa - PRO only */}
                 <BlurredProSection
@@ -1621,6 +2710,12 @@ export default function ComparadorCavalosPage() {
                                   {c.id === vencedor.id && (
                                     <Crown className="inline text-amber-400" size={16} />
                                   )}
+                                </div>
+                                <div className="flex items-center justify-center gap-1 mt-1">
+                                  <TrendingUp size={11} className="text-emerald-400" />
+                                  <span className="text-xs text-emerald-400 font-medium">
+                                    Potencial: {calcularPotencial(c)}
+                                  </span>
                                 </div>
                                 <div className="mt-2 text-left">
                                   <ScoreBreakdown
@@ -1755,6 +2850,44 @@ export default function ComparadorCavalosPage() {
                       {t.comparador.cost_projection_desc}
                     </p>
                     <CostProjectionTable horses={cavalos.map(gerarCustos)} />
+
+                    {/* ROI 5 anos por cavalo */}
+                    <div
+                      className="mt-4 grid gap-3"
+                      style={{ gridTemplateColumns: `repeat(${cavalos.length}, 1fr)` }}
+                    >
+                      {cavalos.map((c, i) => {
+                        const roi = calcularROI(c);
+                        return (
+                          <div
+                            key={c.id}
+                            className="p-3 rounded-lg bg-[var(--background-card)] border border-[var(--border)]"
+                          >
+                            <p
+                              className="text-xs text-[var(--foreground-muted)] mb-1"
+                              style={{ color: cores[i] }}
+                            >
+                              {c.nome}
+                            </p>
+                            <p
+                              className="text-lg font-bold"
+                              style={{ color: roi.roi5yr >= 0 ? "#22c55e" : "#ef4444" }}
+                            >
+                              {roi.roi5yr >= 0 ? "+" : ""}
+                              {roi.roi5yr}%
+                            </p>
+                            <p className="text-[10px] text-[var(--foreground-muted)]">ROI 5 anos</p>
+                            <p className="text-[10px] text-[var(--foreground-muted)] mt-1">
+                              Horizonte:{" "}
+                              <span className="text-[var(--foreground-secondary)]">
+                                {roi.horizonte}
+                              </span>
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+
                     <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed mt-3">
                       {t.comparador.cost_disclaimer}
                     </p>
@@ -1764,9 +2897,13 @@ export default function ComparadorCavalosPage() {
                 {/* PRO: Gap Analysis */}
                 <BlurredProSection
                   isSubscribed={isSubscribed}
-                  title={(t.comparador as Record<string, string>).gap_title ?? "Analise de Gap"}
+                  title={(t.comparador as Record<string, string>).gap_title ?? "Análise de Gap"}
                 >
-                  <GapAnalysis cavalos={cavalos} cores={cores} calcularScore={calcularScore} />
+                  <GapAnalysis
+                    cavalos={cavalos}
+                    cores={cores}
+                    calcularScore={(c) => calcularScore(c as Cavalo)}
+                  />
                 </BlurredProSection>
 
                 {/* PRO: Purchase Confidence */}
@@ -1774,13 +2911,13 @@ export default function ComparadorCavalosPage() {
                   isSubscribed={isSubscribed}
                   title={
                     (t.comparador as Record<string, string>).confidence_title ??
-                    "Indice de Confianca na Compra"
+                    "Índice de Confiança na Compra"
                   }
                 >
                   <PurchaseConfidence
                     cavalos={cavalos}
                     vencedorId={vencedor.id}
-                    calcularScore={calcularScore}
+                    calcularScore={(c) => calcularScore(c as Cavalo)}
                   />
                 </BlurredProSection>
 
@@ -1788,7 +2925,7 @@ export default function ComparadorCavalosPage() {
                 <MethodologyPanel
                   title={
                     (t.comparador as Record<string, string>).methodology_panel_title ??
-                    "Metodologia de Comparacao"
+                    "Metodologia de Comparação"
                   }
                   factors={[
                     {
@@ -1800,29 +2937,29 @@ export default function ComparadorCavalosPage() {
                     {
                       name: "Treino",
                       weight: "15pts",
-                      description: "Nivel de treino conforme escalas FEI",
+                      description: "Nível de treino conforme escalas FEI",
                       standard: "FEI",
                     },
                     {
-                      name: "Conformacao",
+                      name: "Conformação",
                       weight: "10pts",
-                      description: "Avaliacao morfologica segundo padroes APSL",
+                      description: "Avaliação morfológica segundo padrões APSL",
                       standard: "APSL",
                     },
                     {
                       name: "Andamentos",
                       weight: "10pts",
-                      description: "Qualidade dos tres andamentos basicos",
+                      description: "Qualidade dos três andamentos básicos",
                     },
                     {
                       name: "Idade",
                       weight: "10pts",
-                      description: "Faixa ideal: 6-12 anos (maximo); 4-15 (bom)",
+                      description: "Faixa ideal: 6-12 anos (máximo); 4-15 (bom)",
                     },
                     {
-                      name: "Competicoes",
+                      name: "Competições",
                       weight: "8pts",
-                      description: "Historial competitivo e classificacoes",
+                      description: "Historial competitivo e classificações",
                     },
                     { name: "Altura", weight: "8pts", description: "Faixa ideal: 158-168cm" },
                     {
@@ -1831,42 +2968,42 @@ export default function ComparadorCavalosPage() {
                       description: "Docilidade e capacidade de trabalho",
                     },
                     {
-                      name: "Saude",
+                      name: "Saúde",
                       weight: "7pts",
-                      description: "Historial clinico e condicao geral",
+                      description: "Historial clínico e condição geral",
                       standard: "veterinário",
                     },
                     {
                       name: "BLUP",
                       weight: "5pts",
-                      description: "Estimativa de merito genetico",
+                      description: "Estimativa de mérito genético",
                       standard: "modelo",
                     },
                     {
                       name: "Elev.+Reg.",
                       weight: "5pts",
-                      description: "Elevacao e regularidade dos andamentos",
+                      description: "Elevação e regularidade dos andamentos",
                     },
                     {
                       name: "Registo APSL",
                       weight: "3pts",
-                      description: "Bonus para cavalos com registo oficial",
+                      description: "Bónus para cavalos com registo oficial",
                       standard: "APSL",
                     },
                   ]}
                   limitations={[
                     (t.comparador as Record<string, string>).limitation_1 ??
-                      "Comparacao limitada aos dados declarados pelo utilizador",
+                      "Comparação limitada aos dados declarados pelo utilizador",
                     (t.comparador as Record<string, string>).limitation_2 ??
-                      "O score nao captura a quimica cavaleiro-cavalo",
+                      "O score não captura a química cavaleiro-cavalo",
                     (t.comparador as Record<string, string>).limitation_3 ??
-                      "Precos declarados pelo utilizador, nao verificados",
+                      "Preços declarados pelo utilizador, não verificados",
                   ]}
                   version={
                     (t.comparador as Record<string, string>).methodology_version ??
                     "v2.1 — Fev 2026"
                   }
-                  references={["Padroes APSL", "Escalas FEI"]}
+                  references={["Padrões APSL", "Escalas FEI"]}
                 />
 
                 {/* Disclaimer */}

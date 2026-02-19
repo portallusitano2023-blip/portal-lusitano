@@ -1,3 +1,11 @@
+/**
+ * Página de Favoritos — Loja / Shopify
+ *
+ * Lista os produtos da loja (/loja) que o utilizador guardou na wishlist.
+ * Usa WishlistContext (produtos Shopify da loja).
+ *
+ * NÃO confundir com /cavalos-favoritos que é para cavalos do marketplace.
+ */
 "use client";
 
 import { Heart, Trash2 } from "lucide-react";

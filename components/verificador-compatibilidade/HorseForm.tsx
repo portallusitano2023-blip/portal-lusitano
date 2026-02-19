@@ -2,6 +2,7 @@
 
 import { Crown, Heart, Dna, CheckCircle, Palette } from "lucide-react";
 import Paywall from "@/components/tools/Paywall";
+import Tooltip from "@/components/tools/Tooltip";
 import { useLanguage } from "@/context/LanguageContext";
 import type { Cavalo, GeneticaPelagem } from "@/components/verificador-compatibilidade/types";
 import {
@@ -43,6 +44,23 @@ export default function HorseForm({
   const cavalo = tab === "garanhao" ? garanhao : egua;
   const setCavalo = tab === "garanhao" ? setGaranhao : setEgua;
 
+  // Calcula completude do perfil do cavalo (0-100%)
+  const calcCompletude = (c: Cavalo): number => {
+    let filled = 0;
+    const total = 7;
+    if (c.nome.trim().length > 0) filled++;
+    if (c.pelagem && c.pelagem !== "Ruço") filled++;
+    if (c.linhagem && c.linhagem !== "Certificada") filled++;
+    if (c.linhagemFamosa && c.linhagemFamosa !== "veiga") filled++;
+    if (c.blup !== 100) filled++;
+    if (c.saude !== 7) filled++;
+    if (c.conformacao !== 7 || c.andamentos !== 7) filled++;
+    return Math.round((filled / total) * 100);
+  };
+
+  const completudeGaranhao = calcCompletude(garanhao);
+  const completudeEgua = calcCompletude(egua);
+
   const update = (field: keyof Cavalo, value: Cavalo[keyof Cavalo]) => {
     setCavalo((prev) => ({ ...prev, [field]: value }));
   };
@@ -71,12 +89,23 @@ export default function HorseForm({
           }`}
         >
           <Crown size={20} />
-          <div className="text-left">
+          <div className="text-left flex-1 min-w-0">
             <span className="block font-semibold">{t.verificador.tab_stallion}</span>
             <span className="text-xs opacity-70">
               {garanhao.nome || t.verificador.not_defined_m}
             </span>
           </div>
+          {completudeGaranhao >= 100 ? (
+            <CheckCircle size={16} className="text-emerald-300 shrink-0" />
+          ) : completudeGaranhao >= 70 ? (
+            <span className="text-[10px] font-bold text-amber-300 shrink-0">
+              {completudeGaranhao}%
+            </span>
+          ) : (
+            <span className="text-[10px] font-bold text-red-300/70 shrink-0">
+              {completudeGaranhao}%
+            </span>
+          )}
         </button>
         <button
           onClick={() => setTab("egua")}
@@ -87,14 +116,23 @@ export default function HorseForm({
           }`}
         >
           <Heart size={20} />
-          <div className="text-left">
+          <div className="text-left flex-1 min-w-0">
             <span className="block font-semibold">{t.verificador.tab_mare}</span>
             <span className="text-xs opacity-70">{egua.nome || t.verificador.not_defined_f}</span>
           </div>
+          {completudeEgua >= 100 ? (
+            <CheckCircle size={16} className="text-emerald-300 shrink-0" />
+          ) : completudeEgua >= 70 ? (
+            <span className="text-[10px] font-bold text-amber-300 shrink-0">{completudeEgua}%</span>
+          ) : (
+            <span className="text-[10px] font-bold text-red-300/70 shrink-0">
+              {completudeEgua}%
+            </span>
+          )}
         </button>
       </div>
 
-      {/* Formulario do Cavalo */}
+      {/* Formulário do Cavalo */}
       <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)] space-y-6">
         <div className="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
           {tab === "garanhao" ? (
@@ -110,7 +148,7 @@ export default function HorseForm({
           </div>
         </div>
 
-        {/* Identificacao */}
+        {/* Identificação */}
         <div className="grid sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
@@ -200,9 +238,15 @@ export default function HorseForm({
 
         {/* Linhagem Famosa */}
         <div>
-          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
-            {t.verificador.label_main_lineage}
-          </label>
+          <div className="flex items-center gap-1.5 mb-3">
+            <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+              {t.verificador.label_main_lineage}
+            </label>
+            <Tooltip
+              text="Família de criação — principais: Veiga, Andrade, Alter Real, Coudelaria Nacional, Interagro. Afecta o COI estimado e o score de compatibilidade."
+              position="top"
+            />
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {LINHAGENS_FAMOSAS.map((lin) => (
               <button
@@ -225,7 +269,7 @@ export default function HorseForm({
           </div>
         </div>
 
-        {/* Genetica de Pelagem */}
+        {/* Genética de Pelagem */}
         <div>
           <div className="flex items-center gap-2 mb-3">
             <Palette className="text-purple-400" size={18} />
@@ -262,7 +306,7 @@ export default function HorseForm({
           </p>
         </div>
 
-        {/* Avaliacoes */}
+        {/* Avaliações */}
         <div className="grid sm:grid-cols-2 gap-6">
           {[
             {
@@ -301,9 +345,15 @@ export default function HorseForm({
           ))}
 
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-              {t.verificador.label_blup}
-            </label>
+            <div className="flex items-center gap-1.5 mb-2">
+              <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                {t.verificador.label_blup}
+              </label>
+              <Tooltip
+                text="Índice de mérito genético oficial (APSL). Média da raça: 100. Acima de 120 é excelente para criação."
+                position="top"
+              />
+            </div>
             <input
               type="number"
               min="50"
@@ -335,9 +385,15 @@ export default function HorseForm({
             </select>
           </div>
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-              {t.verificador.label_fertility}
-            </label>
+            <div className="flex items-center gap-1.5 mb-2">
+              <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                {t.verificador.label_fertility}
+              </label>
+              <Tooltip
+                text="Historial reprodutivo — afecta a probabilidade de sucesso de cobrição. Valores mais altos aumentam o score de compatibilidade."
+                position="top"
+              />
+            </div>
             <select
               value={cavalo.fertilidade}
               onChange={(e) => update("fertilidade", e.target.value)}
@@ -351,9 +407,15 @@ export default function HorseForm({
             </select>
           </div>
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-              {t.verificador.label_coi}
-            </label>
+            <div className="flex items-center gap-1.5 mb-2">
+              <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                {t.verificador.label_coi}
+              </label>
+              <Tooltip
+                text="Coeficiente de Consanguinidade — mede o grau de parentesco genético. Valores abaixo de 3% são excelentes; acima de 6.25% aumentam risco hereditário."
+                position="top"
+              />
+            </div>
             <input
               type="number"
               min="0"
@@ -366,8 +428,45 @@ export default function HorseForm({
           </div>
         </div>
 
-        {/* Aprovacao */}
+        {/* Historial Reprodutivo */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+              Coberturas Realizadas
+            </label>
+            <input
+              type="number"
+              min={0}
+              value={cavalo.matingsRealizados ?? 0}
+              onChange={(e) => update("matingsRealizados", Math.max(0, Number(e.target.value)))}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+              Potros Nascidos Vivos
+            </label>
+            <input
+              type="number"
+              min={0}
+              value={cavalo.potradasNascidos ?? 0}
+              onChange={(e) => update("potradasNascidos", Math.max(0, Number(e.target.value)))}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
+            />
+          </div>
+        </div>
+
+        {/* Aprovação */}
         <div>
+          <div className="flex items-center gap-1.5 mb-2">
+            <span className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+              Aprovação APSL
+            </span>
+            <Tooltip
+              text="Cavalo com aprovação oficial da APSL — aumenta score de compatibilidade e valor de mercado."
+              position="top"
+            />
+          </div>
           <button
             onClick={() => update("aprovado", !cavalo.aprovado)}
             className={`w-full py-3 px-4 rounded-lg border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
@@ -381,7 +480,7 @@ export default function HorseForm({
           </button>
         </div>
 
-        {/* Defeitos Geneticos */}
+        {/* Defeitos Genéticos */}
         <div>
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.verificador.label_defects}
@@ -424,9 +523,110 @@ export default function HorseForm({
       {/* Paywall */}
       {!canUse && (
         <div className="mt-8">
-          <Paywall toolName={t.verificador.tool_name} requiresAuth={requiresAuth} />
+          <Paywall
+            toolName={t.verificador.tool_name}
+            requiresAuth={requiresAuth}
+            proFeatures={[
+              "Análise genética completa com 5 loci de pelagem",
+              "Cálculo de COI e risco de consanguinidade",
+              "Probabilidades reais de pelagens dos descendentes",
+              "10 factores de compatibilidade reprodutiva",
+              "Exportação PDF com relatório completo do par",
+            ]}
+          />
         </div>
       )}
+
+      {/* COI Estimado em Tempo Real */}
+      {garanhao.linhagemFamosa &&
+        egua.linhagemFamosa &&
+        (() => {
+          const COI_ESTIMADOS: Record<string, Record<string, number>> = {
+            veiga: {
+              veiga: 6.25,
+              andrade: 1.5,
+              alter: 1.5,
+              coudelaria_nacional: 2.0,
+              infante_camara: 1.5,
+              interagro: 1.0,
+              outra: 1.0,
+            },
+            andrade: {
+              veiga: 1.5,
+              andrade: 4.0,
+              alter: 1.5,
+              coudelaria_nacional: 2.0,
+              infante_camara: 1.5,
+              interagro: 1.0,
+              outra: 1.0,
+            },
+            alter: {
+              veiga: 1.5,
+              andrade: 1.5,
+              alter: 5.0,
+              coudelaria_nacional: 2.5,
+              infante_camara: 2.0,
+              interagro: 1.0,
+              outra: 1.0,
+            },
+            coudelaria_nacional: {
+              veiga: 2.0,
+              andrade: 2.0,
+              alter: 2.5,
+              coudelaria_nacional: 5.0,
+              infante_camara: 2.0,
+              interagro: 1.5,
+              outra: 1.0,
+            },
+            infante_camara: {
+              veiga: 1.5,
+              andrade: 1.5,
+              alter: 2.0,
+              coudelaria_nacional: 2.0,
+              infante_camara: 4.5,
+              interagro: 1.0,
+              outra: 1.0,
+            },
+            interagro: {
+              veiga: 1.0,
+              andrade: 1.0,
+              alter: 1.0,
+              coudelaria_nacional: 1.5,
+              infante_camara: 1.0,
+              interagro: 3.0,
+              outra: 0.8,
+            },
+            outra: {
+              veiga: 1.0,
+              andrade: 1.0,
+              alter: 1.0,
+              coudelaria_nacional: 1.0,
+              infante_camara: 1.0,
+              interagro: 0.8,
+              outra: 2.0,
+            },
+          };
+          const coi = COI_ESTIMADOS[garanhao.linhagemFamosa]?.[egua.linhagemFamosa] ?? 2.0;
+          const nivel = coi <= 3 ? "Baixo" : coi <= 6.25 ? "Moderado" : "Alto";
+          const color =
+            coi <= 3
+              ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/5"
+              : coi <= 6.25
+                ? "text-amber-400 border-amber-500/30 bg-amber-500/5"
+                : "text-red-400 border-red-500/30 bg-red-500/5";
+          return (
+            <div className="mt-6 mb-2">
+              <div className={`flex items-center gap-3 p-3 rounded-xl border ${color}`}>
+                <Dna size={16} className="shrink-0" />
+                <p className="text-xs">
+                  <strong>COI estimado:</strong> ~{coi.toFixed(1)}% — Consanguinidade {nivel}
+                  {coi > 6.25 &&
+                    " — Considere linhagens diferentes para maior diversidade genética"}
+                </p>
+              </div>
+            </div>
+          );
+        })()}
 
       {/* Botao Analisar */}
       {canUse && (

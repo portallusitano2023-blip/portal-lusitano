@@ -183,7 +183,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       try {
         let activeId = await ensureCart();
         if (!activeId) {
-          console.error("[Cart] Failed to create cart");
+          console.warn("[Cart] Failed to create cart");
           return;
         }
 
@@ -194,7 +194,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           localStorage.removeItem("shopify_cart_id");
           const newCart = await apiCreateCart();
           if (!newCart) {
-            console.error("[Cart] Failed to recreate cart");
+            console.warn("[Cart] Failed to recreate cart");
             return;
           }
 
@@ -205,7 +205,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
           result = await apiAddToCart(newId, variantId, quantity);
           if (!result) {
-            console.error("[Cart] Failed to add item after cart recreation");
+            console.warn("[Cart] Failed to add item after cart recreation");
             return;
           }
         }
@@ -216,7 +216,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
         setIsCartOpen(true);
       } catch (err) {
-        console.error("[Cart] addItemToCart error:", err);
+        console.warn("[Cart] addItemToCart error:", err);
       }
     },
     [ensureCart, applyCartData]

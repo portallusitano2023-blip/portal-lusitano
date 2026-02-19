@@ -121,6 +121,7 @@ export function NavIcons({
               : "Open menu"
         }
         aria-expanded={isMobileOpen}
+        aria-controls="mobile-menu"
       >
         {isMobileOpen ? <X size={26} /> : <Menu size={26} />}
       </button>

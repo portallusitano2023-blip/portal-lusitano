@@ -43,7 +43,7 @@ vi.mock("@/context/LanguageContext", () => ({
 // ---------------------------------------------------------------------------
 // Import component AFTER mocks
 // ---------------------------------------------------------------------------
-import LojaContent from "@/app/loja/LojaContent";
+import LojaContent from "@/components/loja/LojaContent";
 
 // ---------------------------------------------------------------------------
 // Test data

@@ -1,3 +1,13 @@
+/**
+ * NOTA: Este rate limiter usa LRUCache em memória e reseta em cada cold start
+ * (Vercel serverless). É um limite de melhor-esforço, NOT o primary limiter.
+ *
+ * A protecção principal é feita no middleware.ts via Upstash Redis
+ * (sliding window, persistente entre cold starts) e cobre todas as routes /api/*.
+ *
+ * Este limiter apenas adiciona limites mais estritos por route específica,
+ * como complemento — não como substituto — do middleware Upstash.
+ */
 import { LRUCache } from "lru-cache";
 
 type RateLimitOptions = {

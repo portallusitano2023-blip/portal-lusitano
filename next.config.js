@@ -23,6 +23,10 @@ const nextConfig = {
     ],
     // Prefer modern formats for smaller payloads
     formats: ["image/avif", "image/webp"],
+    // Explicit device breakpoints — avoids unnecessary intermediate sizes
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    // Explicit image sizes for fixed-width images (avatars, thumbnails, etc.)
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
 
   // Compress responses

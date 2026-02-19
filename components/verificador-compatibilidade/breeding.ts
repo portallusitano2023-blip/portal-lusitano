@@ -1,11 +1,11 @@
 // ============================================
-// CÁLCULOS DE CRIAÇÃO - Verificador de Compatibilidade
+// CÁLCULOS DE CRIAÇÃO — Verificador de Compatibilidade
 // ============================================
 
 import type { Cavalo, ResultadoCompatibilidade } from "./types";
 
 // ============================================
-// Calendário de Criação
+// Calendário de Criação — Milestones
 // ============================================
 
 export interface BreedingMilestone {

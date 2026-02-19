@@ -98,7 +98,13 @@ export default function CartDrawer() {
               <button
                 onClick={closeCart}
                 className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors p-2"
-                aria-label={language === "pt" ? "Fechar carrinho" : "Close cart"}
+                aria-label={
+                  language === "pt"
+                    ? "Fechar carrinho"
+                    : language === "es"
+                      ? "Cerrar carrito"
+                      : "Close cart"
+                }
               >
                 <X size={24} strokeWidth={1} />
               </button>
@@ -167,7 +173,9 @@ export default function CartDrawer() {
                             aria-label={
                               language === "pt"
                                 ? `Diminuir quantidade de ${item.title}`
-                                : `Decrease quantity of ${item.title}`
+                                : language === "es"
+                                  ? `Disminuir cantidad de ${item.title}`
+                                  : `Decrease quantity of ${item.title}`
                             }
                           >
                             <Minus size={14} />
@@ -181,7 +189,9 @@ export default function CartDrawer() {
                             aria-label={
                               language === "pt"
                                 ? `Aumentar quantidade de ${item.title}`
-                                : `Increase quantity of ${item.title}`
+                                : language === "es"
+                                  ? `Aumentar cantidad de ${item.title}`
+                                  : `Increase quantity of ${item.title}`
                             }
                           >
                             <Plus size={14} />

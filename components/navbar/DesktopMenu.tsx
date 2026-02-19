@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Gift } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { LusitanoDropdown } from "./LusitanoDropdown";
 
 interface DesktopMenuProps {
@@ -16,6 +17,8 @@ interface DesktopMenuProps {
 }
 
 export function DesktopMenu({ t }: DesktopMenuProps) {
+  const pathname = usePathname();
+
   const navItems = [
     { name: t.nav.home, href: "/" },
     { name: t.nav.shop, href: "/loja" },
@@ -24,18 +27,32 @@ export function DesktopMenu({ t }: DesktopMenuProps) {
     { name: t.nav.about, href: "/sobre" },
   ];
 
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+
   return (
     <div className="hidden lg:flex items-center gap-4 xl:gap-6 ml-8 lg:ml-12">
-      {navItems.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className="text-[11px] uppercase tracking-[0.2em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300 relative group py-2"
-        >
-          {item.name}
-          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--gold)] transition-all duration-500 ease-out group-hover:w-full"></span>
-        </Link>
-      ))}
+      {navItems.map((item) => {
+        const active = isActive(item.href);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-current={active ? "page" : undefined}
+            className={`text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 relative group py-2 ${
+              active
+                ? "text-[var(--gold)]"
+                : "text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
+            }`}
+          >
+            {item.name}
+            <span
+              className={`absolute -bottom-1 left-0 h-[1px] bg-[var(--gold)] transition-all duration-500 ease-out ${
+                active ? "w-full" : "w-0 group-hover:w-full"
+              }`}
+            />
+          </Link>
+        );
+      })}
 
       {/* Lusitano Dropdown */}
       <LusitanoDropdown />
@@ -43,10 +60,19 @@ export function DesktopMenu({ t }: DesktopMenuProps) {
       {/* Instagram Promo Link */}
       <Link
         href="/instagram"
-        className="text-[11px] uppercase tracking-[0.2em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300 relative group py-2"
+        aria-current={pathname === "/instagram" ? "page" : undefined}
+        className={`text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 relative group py-2 ${
+          pathname === "/instagram"
+            ? "text-[var(--gold)]"
+            : "text-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
+        }`}
       >
         {t.nav.advertising}
-        <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--gold)] transition-all duration-500 ease-out group-hover:w-full"></span>
+        <span
+          className={`absolute -bottom-1 left-0 h-[1px] bg-[var(--gold)] transition-all duration-500 ease-out ${
+            pathname === "/instagram" ? "w-full" : "w-0 group-hover:w-full"
+          }`}
+        />
       </Link>
 
       {/* Free Ebook Link */}

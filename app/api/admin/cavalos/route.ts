@@ -2,6 +2,35 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { z } from "zod";
+
+const CavaloSchema = z.object({
+  nome: z.string().min(1).max(200),
+  nome_cavalo: z.string().min(1).max(200),
+  descricao: z.string().max(5000).optional(),
+  preco: z.number().positive().optional(),
+  linhagem: z.string().max(200).optional(),
+  idade: z.number().int().min(0).max(50).optional(),
+  sexo: z.enum(["macho", "femea", "castrado"]).optional(),
+  pelagem: z.string().max(100).optional(),
+  altura: z.number().min(100).max(200).optional(),
+  peso: z.number().min(200).max(1000).optional(),
+  disciplinas: z.array(z.string()).optional(),
+  nivel: z.string().max(100).optional(),
+  localizacao: z.string().max(200).optional(),
+  coudelaria: z.string().max(200).optional(),
+  imagens: z.array(z.string().url()).optional(),
+  image_url: z.string().url().optional(),
+  slug: z
+    .string()
+    .regex(/^[a-z0-9-]+$/)
+    .max(200)
+    .optional(),
+  destaque: z.boolean().optional(),
+  contacto_nome: z.string().max(200).optional(),
+  contacto_email: z.string().email().optional(),
+  contacto_telefone: z.string().max(30).optional(),
+});
 
 // GET - Listar todos os cavalos (admin)
 export async function GET() {
@@ -14,7 +43,8 @@ export async function GET() {
     const { data, error } = await supabase
       .from("cavalos_venda")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(200);
 
     if (error) {
       logger.error("Erro ao buscar cavalos:", error);
@@ -36,7 +66,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const body = await request.json();
+    const raw = await request.json();
+    const parsed = CavaloSchema.safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Dados inválidos", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data;
 
     const { data, error } = await supabase
       .from("cavalos_venda")

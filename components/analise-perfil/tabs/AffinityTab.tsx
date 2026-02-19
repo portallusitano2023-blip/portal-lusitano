@@ -19,11 +19,11 @@ const PROFILE_COLORS: Record<string, string> = {
 };
 
 const PROFILE_DESCRIPTIONS: Record<string, string> = {
-  competidor: "Foco em competicao, alto desempenho e treino intensivo",
-  tradicional: "Preservacao das tradicoes equestres portuguesas",
-  criador: "Seleccao genetica, reproducao e melhoramento da raca",
+  competidor: "Foco em competição, alto desempenho e treino intensivo",
+  tradicional: "Preservação das tradições equestres portuguesas",
+  criador: "Selecção genética, reprodução e melhoramento da raça",
   amador: "Lazer, passeio e prazer de montar",
-  investidor: "Retorno financeiro, valorizacao e mercado equestre",
+  investidor: "Retorno financeiro, valorização e mercado equestre",
 };
 
 const PROFILE_LABELS: Record<string, string> = {
@@ -35,10 +35,10 @@ const PROFILE_LABELS: Record<string, string> = {
 };
 
 const HORSE_RECOMMENDATIONS: Record<string, string> = {
-  competidor: "Cavalo de 7-12 anos, nivel medio ou avancado, com experiencia em competicao",
-  tradicional: "Cavalo de linhagem certificada, com bons andamentos e temperamento docil",
-  criador: "Egua ou garanhao aprovado, com BLUP acima da media e COI controlado",
-  amador: "Cavalo calmo, entre 8-14 anos, com treino basico a elementar",
+  competidor: "Cavalo de 7-12 anos, nível médio ou avançado, com experiência em competição",
+  tradicional: "Cavalo de linhagem certificada, com bons andamentos e temperamento dócil",
+  criador: "Égua ou garanhão aprovado, com BLUP acima da média e COI controlado",
+  amador: "Cavalo calmo, entre 8-14 anos, com treino básico a elementar",
   investidor: "Cavalo jovem (3-6 anos) de linhagem premium ou elite",
 };
 
@@ -63,7 +63,7 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
           {t.analise_perfil.affinity_title}
         </h3>
         <p className="text-sm text-[var(--foreground-muted)] mb-8">
-          Distribuicao de afinidade com cada perfil equestre
+          Distribuição de afinidade com cada perfil equestre
         </p>
 
         <div className="space-y-6">
@@ -131,7 +131,7 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
           <span className="font-medium" style={{ color: PROFILE_COLORS[topProfile] }}>
             {PROFILE_LABELS[topProfile] || topProfile}
           </span>
-          ), a recomendacao geral e:
+          ), a recomendação geral é:
         </p>
         <div className="mt-4 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)]">
           <p className="text-sm text-[var(--foreground)] font-medium">
@@ -139,7 +139,7 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
           </p>
         </div>
         <p className="text-[11px] text-[var(--foreground-muted)]/60 mt-4">
-          Recomendacao generica baseada no perfil. Consulte sempre um profissional antes de
+          Recomendação genérica baseada no perfil. Consulte sempre um profissional antes de
           adquirir.
         </p>
       </div>

@@ -22,7 +22,7 @@ export default function CostsTab({ result }: CostsTabProps) {
           <Tooltip
             text={
               (t.analise_perfil as Record<string, string>).tooltip_costs ??
-              "Baseados em medias do mercado portugues para o seu perfil. Valores reais variam por regiao e nivel de servico."
+              "Baseados em médias do mercado português para o seu perfil. Valores reais variam por região e nível de serviço."
             }
           />
         </h3>

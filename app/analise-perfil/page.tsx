@@ -1,29 +1,84 @@
 "use client";
 
 import { Suspense } from "react";
-import { RotateCcw, Sparkles, Target, ArrowRight, CheckCircle2 } from "lucide-react";
+import dynamic from "next/dynamic";
+import { RotateCcw, Sparkles, Target, ArrowRight, CheckCircle2, ChevronRight } from "lucide-react";
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import { useLanguage } from "@/context/LanguageContext";
 import { useQuizLogic } from "@/components/analise-perfil/useQuizLogic";
+
+// Critical path: load immediately — these are visible before any tab is selected
 import IntroSection from "@/components/analise-perfil/IntroSection";
 import QuizSection from "@/components/analise-perfil/QuizSection";
 import ResultHeader from "@/components/analise-perfil/ResultHeader";
 import ScoreDistribution from "@/components/analise-perfil/ScoreDistribution";
 import ResultTabs from "@/components/analise-perfil/ResultTabs";
-import ProfileTab from "@/components/analise-perfil/tabs/ProfileTab";
-import HorseTab from "@/components/analise-perfil/tabs/HorseTab";
-import CostsTab from "@/components/analise-perfil/tabs/CostsTab";
-import TimelineTab from "@/components/analise-perfil/tabs/TimelineTab";
-import AnalysisTab from "@/components/analise-perfil/tabs/AnalysisTab";
-import NextStepsTab from "@/components/analise-perfil/tabs/NextStepsTab";
-import ShoppingChecklistTab from "@/components/analise-perfil/tabs/ShoppingChecklistTab";
-import BudgetPlannerTab from "@/components/analise-perfil/tabs/BudgetPlannerTab";
-import PriorityMapTab from "@/components/analise-perfil/tabs/PriorityMapTab";
-import AffinityTab from "@/components/analise-perfil/tabs/AffinityTab";
-import FirstYearSimTab from "@/components/analise-perfil/tabs/FirstYearSimTab";
-import ReadinessTab from "@/components/analise-perfil/tabs/ReadinessTab";
-import MethodologyPanel from "@/components/tools/MethodologyPanel";
+
+// Tab fallback — shared lightweight placeholder while tab content loads
+const TabFallback = () => (
+  <div className="py-12 flex items-center justify-center">
+    <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
+  </div>
+);
+
+// Result tabs — lazy loaded because only one is visible at a time
+// ProfileTab is the default tab, so load it slightly earlier than the rest
+const ProfileTab = dynamic(() => import("@/components/analise-perfil/tabs/ProfileTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const HorseTab = dynamic(() => import("@/components/analise-perfil/tabs/HorseTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const CostsTab = dynamic(() => import("@/components/analise-perfil/tabs/CostsTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const TimelineTab = dynamic(() => import("@/components/analise-perfil/tabs/TimelineTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const AnalysisTab = dynamic(() => import("@/components/analise-perfil/tabs/AnalysisTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const NextStepsTab = dynamic(() => import("@/components/analise-perfil/tabs/NextStepsTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const ShoppingChecklistTab = dynamic(
+  () => import("@/components/analise-perfil/tabs/ShoppingChecklistTab"),
+  { ssr: false, loading: TabFallback }
+);
+const BudgetPlannerTab = dynamic(
+  () => import("@/components/analise-perfil/tabs/BudgetPlannerTab"),
+  {
+    ssr: false,
+    loading: TabFallback,
+  }
+);
+const PriorityMapTab = dynamic(() => import("@/components/analise-perfil/tabs/PriorityMapTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const AffinityTab = dynamic(() => import("@/components/analise-perfil/tabs/AffinityTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const FirstYearSimTab = dynamic(() => import("@/components/analise-perfil/tabs/FirstYearSimTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const ReadinessTab = dynamic(() => import("@/components/analise-perfil/tabs/ReadinessTab"), {
+  ssr: false,
+  loading: TabFallback,
+});
+const MethodologyPanel = dynamic(() => import("@/components/tools/MethodologyPanel"), {
+  ssr: false,
+  loading: TabFallback,
+});
 
 function AnalisePerfilContent() {
   const { t } = useLanguage();
@@ -61,6 +116,9 @@ function AnalisePerfilContent() {
     setSelectedTab,
     answerDetails,
     calculateConfidence,
+    subProfile,
+    dominantProfile,
+    dominantProfileLabel,
   } = useQuizLogic();
 
   return (
@@ -141,6 +199,8 @@ function AnalisePerfilContent() {
             onAnswer={handleAnswer}
             onBack={goBack}
             onReset={resetQuiz}
+            dominantProfile={dominantProfile}
+            dominantProfileLabel={dominantProfileLabel}
           />
         </>
       ) : (
@@ -205,6 +265,8 @@ function AnalisePerfilContent() {
                 saved={saved}
                 copied={copied}
                 badgeRef={badgeRef}
+                subProfile={subProfile}
+                confidence={calculateConfidence()}
                 onSave={saveResult}
                 onDownloadPDF={downloadPDF}
                 onDownloadBadge={downloadBadge}
@@ -259,9 +321,14 @@ function AnalisePerfilContent() {
                         {insights.map((insight, idx) => (
                           <div
                             key={idx}
-                            className="bg-[var(--background-secondary)]/40 border border-[#C5A059]/15 rounded-xl p-5 flex flex-col gap-3"
+                            className="relative bg-[var(--background-secondary)]/40 border border-[#C5A059]/15 rounded-2xl p-5 flex flex-col gap-3 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards] hover:border-[#C5A059]/30 transition-colors"
+                            style={{ animationDelay: `${idx * 0.1}s` }}
                           >
-                            <div className="w-8 h-8 rounded-full bg-[var(--background)]/60 border border-[var(--border)] flex items-center justify-center shrink-0">
+                            {/* Number badge */}
+                            <span className="absolute top-3 right-3 w-5 h-5 rounded-full bg-[var(--background-card)] border border-[var(--border)] text-[10px] font-bold text-[var(--foreground-muted)] flex items-center justify-center">
+                              {idx + 1}
+                            </span>
+                            <div className="w-9 h-9 rounded-xl bg-[var(--background)]/60 border border-[var(--border)] flex items-center justify-center shrink-0">
                               {insight.icon}
                             </div>
                             <div>
@@ -283,7 +350,88 @@ function AnalisePerfilContent() {
               <ResultTabs selectedTab={selectedTab} onSelectTab={setSelectedTab} />
               <section className="py-12">
                 <div className="max-w-5xl mx-auto px-6">
-                  {selectedTab === "perfil" && <ProfileTab result={result} />}
+                  {selectedTab === "perfil" && (
+                    <>
+                      <ProfileTab result={result} />
+                      {/* Perfil Secundário Expandido */}
+                      {Array.isArray(scorePercentages) &&
+                        scorePercentages.length > 1 &&
+                        scorePercentages[1].percentage >= 25 && (
+                          <div className="bg-[var(--background-secondary)]/30 rounded-xl p-5 border border-[var(--border)]/60 mt-4">
+                            <div className="flex items-center gap-2 mb-3">
+                              <div className="w-2 h-2 rounded-full bg-[var(--foreground-muted)]" />
+                              <h3 className="text-sm font-semibold text-[var(--foreground-secondary)]">
+                                Traços do Perfil Secundário — {scorePercentages[1].label}
+                              </h3>
+                              <span className="ml-auto text-xs text-[var(--foreground-muted)] bg-[var(--background-card)] px-2 py-0.5 rounded-full">
+                                {scorePercentages[1].percentage}% afinidade
+                              </span>
+                            </div>
+                            <p className="text-xs text-[var(--foreground-muted)] leading-relaxed mb-3">
+                              Com {scorePercentages[1].percentage}% de afinidade, o seu perfil
+                              combina características de{" "}
+                              <strong className="text-[var(--foreground-secondary)]">
+                                {scorePercentages[0]?.label ?? ""}
+                              </strong>{" "}
+                              e{" "}
+                              <strong className="text-[var(--foreground-secondary)]">
+                                {scorePercentages[1].label}
+                              </strong>
+                              . Isto significa que pode beneficiar de abordagens de ambos os perfis.
+                            </p>
+                            {/* Dicas específicas para o perfil híbrido */}
+                            {(() => {
+                              const primary = scorePercentages[0]?.profile ?? "";
+                              const secondary = scorePercentages[1].profile;
+                              const combo = `${primary}_${secondary}`;
+                              const HYBRID_TIPS: Record<string, string[]> = {
+                                competidor_criador: [
+                                  "Considere garanhões com dupla aptidão — competição e reprodução",
+                                  "Procure cavalos com BLUP alto que também tenham palmarés desportivo",
+                                  "Uma égua de qualidade pode ser tanto atleta como reprodutora",
+                                ],
+                                competidor_amador: [
+                                  "Comece em provas locais para desenvolver experiência a custo controlado",
+                                  "Um cavalo com temperamento dócil facilita a progressão competitiva",
+                                  "Invista em treino regular com um técnico mesmo que não seja dedicado",
+                                ],
+                                criador_amador: [
+                                  "Escolha cavalos com linhagem documentada mas temperamento suave",
+                                  "O prazer de criar pode coexistir com custos controlados",
+                                  "Participe em exposições APSL para ganhar experiência no sector",
+                                ],
+                                competidor_investidor: [
+                                  "Foque em cavalos jovens com alto BLUP — melhor ROI a 3-5 anos",
+                                  "Competições CDI aumentam significativamente o valor de mercado",
+                                  "Documente todo o percurso desportivo para facilitar a venda futura",
+                                ],
+                              };
+                              const tips = HYBRID_TIPS[combo] ??
+                                HYBRID_TIPS[`${secondary}_${primary}`] ?? [
+                                  "Combine as melhores práticas de ambos os perfis",
+                                  "A sua versatilidade é um ponto forte no mundo equestre",
+                                ];
+                              return (
+                                <ul className="space-y-2">
+                                  {tips.map((tip, i) => (
+                                    <li
+                                      key={i}
+                                      className="flex items-start gap-2 text-xs text-[var(--foreground-secondary)]"
+                                    >
+                                      <ChevronRight
+                                        size={12}
+                                        className="text-[var(--foreground-muted)] mt-0.5 shrink-0"
+                                      />
+                                      {tip}
+                                    </li>
+                                  ))}
+                                </ul>
+                              );
+                            })()}
+                          </div>
+                        )}
+                    </>
+                  )}
                   {selectedTab === "cavalo" && <HorseTab result={result} />}
                   {selectedTab === "afinidade" && (
                     <AffinityTab
@@ -315,7 +463,9 @@ function AnalisePerfilContent() {
                       />
                     </BlurredProSection>
                   )}
-                  {selectedTab === "proximos" && <NextStepsTab result={result} />}
+                  {selectedTab === "proximos" && (
+                    <NextStepsTab result={result} subProfile={subProfile} />
+                  )}
                   {selectedTab === "prioridades" && (
                     <PriorityMapTab
                       result={result}
@@ -539,7 +689,7 @@ function AnalisePerfilContent() {
                       isSubscribed={isSubscribed}
                       title={
                         (t.analise_perfil as Record<string, string>).tab_readiness ??
-                        "Score de Preparacao"
+                        "Score de Preparação"
                       }
                     >
                       <ReadinessTab
@@ -557,25 +707,25 @@ function AnalisePerfilContent() {
                   <MethodologyPanel
                     title={
                       (t.analise_perfil as Record<string, string>).methodology_panel_title ??
-                      "Metodologia de Analise de Perfil"
+                      "Metodologia de Análise de Perfil"
                     }
                     factors={[
                       {
-                        name: "Experiencia",
+                        name: "Experiência",
                         weight: "25%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_experience ??
-                          "Nivel de experiencia equestre declarado",
+                          "Nível de experiência equestre declarado",
                       },
                       {
                         name: "Objectivos",
                         weight: "20%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_objectives ??
-                          "Objectivos primarios com o cavalo",
+                          "Objectivos primários com o cavalo",
                       },
                       {
-                        name: "Orcamento",
+                        name: "Orçamento",
                         weight: "15%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_budget ??
@@ -586,37 +736,37 @@ function AnalisePerfilContent() {
                         weight: "15%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_availability ??
-                          "Tempo disponivel para dedicar ao cavalo",
+                          "Tempo disponível para dedicar ao cavalo",
                       },
                       {
                         name: "Infraestrutura",
                         weight: "15%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_infrastructure ??
-                          "Condicoes de alojamento e instalacoes",
+                          "Condições de alojamento e instalações",
                       },
                       {
-                        name: "Preferencias",
+                        name: "Preferências",
                         weight: "10%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_preferences ??
-                          "Preferencias pessoais de raca e disciplina",
+                          "Preferências pessoais de raça e disciplina",
                       },
                     ]}
                     limitations={[
                       (t.analise_perfil as Record<string, string>).limitation_1 ??
                         "Perfil baseado apenas nas respostas do quiz",
                       (t.analise_perfil as Record<string, string>).limitation_2 ??
-                        "Custos sao medias nacionais e podem variar por regiao",
+                        "Custos são médias nacionais e podem variar por região",
                       (t.analise_perfil as Record<string, string>).limitation_3 ??
-                        "Nao considera circunstancias pessoais especificas",
+                        "Não considera circunstâncias pessoais específicas",
                     ]}
                     version={
                       (t.analise_perfil as Record<string, string>).methodology_version ??
                       "v2.1 — Fev 2026"
                     }
                     references={[
-                      "Medias mercado equestre PT",
+                      "Médias mercado equestre PT",
                       "Perfis de cavaleiro (tipologia APSL)",
                     ]}
                   />
@@ -626,7 +776,7 @@ function AnalisePerfilContent() {
                         {(t.analise_perfil as Record<string, string>).disclaimer_title ?? "Aviso:"}
                       </strong>{" "}
                       {(t.analise_perfil as Record<string, string>).disclaimer_text ??
-                        "Esta analise e uma ferramenta de orientacao baseada nas suas respostas ao questionario. Os resultados sao indicativos e nao substituem o aconselhamento de profissionais do sector equestre. Custos e recomendacoes podem variar significativamente conforme a regiao, o mercado local e as circunstancias individuais."}
+                        "Esta análise é uma ferramenta de orientação baseada nas suas respostas ao questionário. Os resultados são indicativos e não substituem o aconselhamento de profissionais do sector equestre. Custos e recomendações podem variar significativamente conforme a região, o mercado local e as circunstâncias individuais."}
                       <span className="block mt-1 text-[10px] text-[var(--foreground-muted)]/40 font-mono">
                         {(t.analise_perfil as Record<string, string>).methodology_version ??
                           "v2.1 — Fev 2026"}
@@ -639,7 +789,7 @@ function AnalisePerfilContent() {
                 <div className="max-w-5xl mx-auto px-6 text-center">
                   <button
                     onClick={resetQuiz}
-                    className="inline-flex items-center justify-center gap-2 border border-[var(--border)] text-[var(--foreground-secondary)] px-6 py-3 hover:text-[var(--foreground)] transition-colors"
+                    className="inline-flex items-center justify-center gap-2 border border-[var(--border)] text-[var(--foreground-secondary)] px-6 py-3 rounded-xl hover:border-[var(--foreground-muted)]/50 hover:text-[var(--foreground)] hover:bg-[var(--background-secondary)]/40 transition-all"
                   >
                     <RotateCcw size={18} />
                     {t.analise_perfil.repeat_analysis}

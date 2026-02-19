@@ -8,7 +8,6 @@ import {
   BarChart3,
   Heart,
   UserCheck,
-  ChevronDown,
   Crown,
   Check,
   X,
@@ -36,6 +35,9 @@ import ToolReviewForm from "@/components/ToolReviewForm";
 import { Review, ReviewStats } from "@/types/review";
 import { faqItems } from "./faq-data";
 import { useToolAccess } from "@/hooks/useToolAccess";
+import ToolsHero from "@/components/ferramentas/ToolsHero";
+import ToolsGrid from "@/components/ferramentas/ToolsGrid";
+import FAQSection from "@/components/ferramentas/FAQSection";
 
 // ============================================
 // DATA
@@ -131,11 +133,6 @@ const proTierFeatures = [
   { text: "Partilhar resultados com link", included: true },
   { text: "Suporte prioritário", included: true },
 ];
-
-interface FAQItem {
-  question: string;
-  answer: string;
-}
 
 // ============================================
 // STATS COUNTERS
@@ -242,127 +239,6 @@ const toolSlugs = Object.keys(toolSlugToName);
 // ============================================
 // COMPONENTS
 // ============================================
-
-function ToolCard({ tool, index }: { tool: (typeof tools)[number]; index: number }) {
-  const { t } = useLanguage();
-  const { user } = useAuth();
-  const [mounted, setMounted] = useState(false);
-  const Icon = tool.icon;
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
-
-  return (
-    <Link
-      href={tool.href}
-      className="group relative bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8 transition-all duration-300 hover:border-[var(--gold)]/60 hover:shadow-2xl hover:shadow-[var(--gold)]/10 hover:-translate-y-2 hover:scale-[1.02] ring-0 hover:ring-1 ring-[var(--gold)]/30 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-      style={{ animationDelay: `${0.2 + index * 0.1}s` }}
-    >
-      {/* Gradient background on hover */}
-      <div
-        className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-      />
-
-      <div className="relative z-10">
-        {/* Badges row */}
-        <div className="flex items-center gap-2 mb-5 min-h-[24px]">
-          {tool.badge && tool.badgeColor && (
-            <span
-              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${tool.badgeColor}`}
-            >
-              {tool.badge === "Mais popular" && <Star size={9} fill="currentColor" />}
-              {tool.badge}
-            </span>
-          )}
-          {(!mounted || !user) && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <Check size={9} />
-              {tool.freeUses} uso grátis
-            </span>
-          )}
-        </div>
-
-        {/* Icon */}
-        <div
-          className={`w-14 h-14 ${tool.iconBg} rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300`}
-        >
-          <Icon className={tool.iconColor} size={28} />
-        </div>
-
-        {/* Title */}
-        <h3 className="text-xl font-serif text-[var(--foreground)] mb-3 group-hover:text-[var(--gold)] transition-colors">
-          {tool.title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-6">
-          {tool.description}
-        </p>
-
-        {/* Features */}
-        <ul className="space-y-2 mb-6">
-          {tool.features.map((feature, i) => (
-            <li key={i} className="flex items-center gap-2 text-[var(--foreground-muted)] text-xs">
-              <Check size={14} className="text-[var(--gold)] flex-shrink-0" />
-              <span>{feature}</span>
-            </li>
-          ))}
-        </ul>
-
-        {/* CTA */}
-        <div className="flex items-center gap-2 text-sm font-medium text-[var(--gold)] group-hover:gap-3 transition-all">
-          <span>{t.ferramentas.try}</span>
-          <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-function FAQAccordion({
-  item,
-  isOpen,
-  onClick,
-}: {
-  item: FAQItem;
-  isOpen: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <div className="border-b border-[var(--border)]">
-      <button
-        onClick={onClick}
-        className="w-full py-6 flex items-center justify-between text-left group"
-        aria-expanded={isOpen}
-        aria-controls={`faq-answer-${item.question.slice(0, 20).replace(/\s/g, "-")}`}
-      >
-        <span className="text-lg font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors pr-8">
-          {item.question}
-        </span>
-        <div
-          className="flex-shrink-0 transition-transform duration-200"
-          style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-        >
-          <ChevronDown
-            className={`${isOpen ? "text-[var(--gold)]" : "text-[var(--foreground-muted)]"} transition-colors`}
-            size={20}
-          />
-        </div>
-      </button>
-
-      <div
-        className="grid transition-all duration-200"
-        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
-      >
-        <div className="overflow-hidden">
-          <p className="pb-6 text-[var(--foreground-secondary)] leading-relaxed">{item.answer}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function PricingFeature({ text, included }: { text: string; included: boolean }) {
   return (
@@ -759,7 +635,6 @@ function ProBannerSection() {
 
 export default function FerramentasPage() {
   const { t } = useLanguage();
-  const [openFAQ, setOpenFAQ] = useState<number | null>(0);
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
@@ -767,69 +642,12 @@ export default function FerramentasPage() {
         <CheckoutFeedback />
       </Suspense>
       <ProBannerSection />
+
       {/* ===== HERO SECTION ===== */}
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--gold)]/5 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[var(--gold)]/3 rounded-full blur-[100px]" />
-        </div>
-
-        <div className="relative max-w-5xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[var(--gold)]/10 border border-[var(--gold)]/20 rounded-full mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-            <Sparkles size={14} className="text-[var(--gold)]" />
-            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-medium">
-              {t.ferramentas.badge}
-            </span>
-          </div>
-
-          {/* Title */}
-          <h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-[var(--foreground)] mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.1s" }}
-          >
-            {t.ferramentas.title}{" "}
-            <span className="bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] bg-clip-text text-transparent">
-              {t.ferramentas.title_accent}
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p
-            className="text-lg md:text-xl text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.2s" }}
-          >
-            {t.ferramentas.subtitle}
-          </p>
-
-          <p
-            className="text-sm text-[var(--foreground-muted)] max-w-xl mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.3s" }}
-          >
-            {t.ferramentas.subtitle_detail}
-          </p>
-        </div>
-      </section>
+      <ToolsHero />
 
       {/* ===== TOOL CARDS SECTION ===== */}
-      <section className="px-6 pb-24">
-        <div className="max-w-6xl mx-auto">
-          {/* Section label */}
-          <div className="text-center mb-12">
-            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)]">
-              {t.ferramentas.available}
-            </span>
-          </div>
-
-          {/* Cards grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {tools.map((tool, index) => (
-              <ToolCard key={tool.href} tool={tool} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <ToolsGrid tools={tools} sectionLabel={t.ferramentas.available} />
 
       {/* ===== STATS COUNTERS ===== */}
       <StatsSection />
@@ -1174,48 +992,7 @@ export default function FerramentasPage() {
       </section>
 
       {/* ===== FAQ SECTION ===== */}
-      <section className="px-6 pb-32" id="faq">
-        <div className="max-w-3xl mx-auto">
-          {/* Section header */}
-          <AnimateOnScroll className="text-center mb-12">
-            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">
-              {t.ferramentas.faq_badge}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4">
-              {t.ferramentas.faq_title}
-            </h2>
-            <p className="text-[var(--foreground-secondary)] max-w-lg mx-auto">
-              {t.ferramentas.faq_subtitle}
-            </p>
-          </AnimateOnScroll>
-
-          {/* FAQ items */}
-          <div>
-            {faqItems.map((item, index) => (
-              <FAQAccordion
-                key={index}
-                item={item}
-                isOpen={openFAQ === index}
-                onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-              />
-            ))}
-          </div>
-
-          {/* Contact CTA */}
-          <div className="mt-12 text-center p-8 bg-[var(--surface-hover)] border border-[var(--border)] rounded-xl">
-            <p className="text-[var(--foreground-secondary)] mb-4 text-sm">
-              {t.ferramentas.faq_not_found}
-            </p>
-            <Link
-              href="/faq"
-              className="inline-flex items-center gap-2 text-[var(--gold)] text-sm font-medium hover:underline"
-            >
-              {t.ferramentas.faq_see_all}
-              <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FAQSection items={faqItems} />
 
       {/* ===== REVIEWS SECTION ===== */}
       <ToolReviewsSection />
