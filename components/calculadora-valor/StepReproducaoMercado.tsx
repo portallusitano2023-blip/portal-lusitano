@@ -104,7 +104,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
               <button
                 key={m.value}
                 onClick={() => update("mercado", m.value)}
-                className={`py-2 px-3 rounded-lg border text-sm transition-all ${
+                className={`py-2 px-2 rounded-lg border text-xs sm:text-sm transition-all min-h-[44px] leading-tight ${
                   form.mercado === m.value
                     ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
                     : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"

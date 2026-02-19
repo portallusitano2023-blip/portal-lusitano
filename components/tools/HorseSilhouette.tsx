@@ -179,7 +179,8 @@ export default function HorseSilhouette({ zones, size = 380, labels = {} }: Hors
         width={size}
         height={size * (totalH / totalW)}
         viewBox={`0 0 ${totalW} ${totalH}`}
-        className="select-none"
+        className="select-none w-full max-w-[380px]"
+        style={{ height: "auto" }}
       >
         {/* Overall score */}
         <text

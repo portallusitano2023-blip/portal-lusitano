@@ -86,6 +86,40 @@ export default function CompatibilityResults({
 
   return (
     <div className="max-w-4xl mx-auto px-3 sm:px-4 py-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+      {/* Banner: Modelo Educativo Simplificado */}
+      {!coiBannerDismissed && (
+        <div className="flex items-start gap-3 bg-blue-500/10 border border-blue-500/20 rounded-xl px-4 py-3 mb-5">
+          <Info size={15} className="text-blue-400 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-blue-300/90 mb-0.5">
+              Modelo Educativo Simplificado
+            </p>
+            <p className="text-xs text-blue-300/70 leading-relaxed">
+              O Coeficiente de Endogamia (COI) apresentado é uma estimativa baseada nas linhagens
+              declaradas. O COI real requer análise de pedigree completo (5+ gerações) por
+              geneticista equino certificado. Para decisões de cruzamento, consulte um especialista
+              ou a base de dados{}
+              <a
+                href="https://www.cavalo-lusitano.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-blue-200 transition-colors"
+              >
+                APSL
+              </a>
+              .
+            </p>
+          </div>
+          <button
+            onClick={() => setCoiBannerDismissed(true)}
+            aria-label="Fechar aviso"
+            className="text-blue-400/60 hover:text-blue-300 transition-colors shrink-0 mt-0.5"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
       {/* Confetti celebration */}
       <div className="relative">
         <Confetti trigger={true} particleCount={50} duration={2800} />
@@ -386,6 +420,15 @@ export default function CompatibilityResults({
                   : resultado.coi <= 12.5
                     ? "≈ Primo-irmãos — monitorizar"
                     : "≈ Meio-irmãos — risco hereditário elevado"}
+          </p>
+          {/* Explicação pedagógica do COI */}
+          <p className="text-[10px] text-[var(--foreground-muted)]/50 mt-2 pt-2 border-t border-[var(--border)]/30 leading-snug">
+            COI (Coef. Endogamia): probabilidade de genes idênticos por descendência.{" "}
+            <span className="text-emerald-400/70">&lt; 6.25% ideal</span>
+            {" | "}
+            <span className="text-amber-400/70">6.25–12.5% aceitável</span>
+            {" | "}
+            <span className="text-red-400/70">&gt; 12.5% preocupante</span>
           </p>
         </div>
 

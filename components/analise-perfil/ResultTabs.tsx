@@ -69,8 +69,8 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
 
   return (
     <section className="sticky top-0 z-20 bg-[var(--background)]/95 backdrop-blur-sm border-b border-[var(--border)]">
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="flex gap-1 overflow-x-auto scrollbar-hide">
+      <div className="max-w-5xl mx-auto px-0 sm:px-6">
+        <div className="flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => {
             const isPro = PRO_TABS.has(tab.id);
             const isActive = selectedTab === tab.id;
@@ -79,7 +79,7 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
                 key={tab.id}
                 onClick={() => onSelectTab(tab.id)}
                 title={isPro ? `${tab.label} — requer PRO` : tab.label}
-                className={`relative flex items-center gap-2 px-5 py-4 text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-3.5 min-h-[44px] text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
                   isActive
                     ? "text-[var(--gold)] border-b-2 border-[var(--gold)]"
                     : "text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)]"

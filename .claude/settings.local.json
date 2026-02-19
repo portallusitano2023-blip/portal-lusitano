@@ -127,7 +127,10 @@
       "Bash(cmd /c:*)",
       "Bash(git -C \"C:/Users/USUARIO/portal-lusitano\" status)",
       "Bash(git -C \"c:/Users/USUARIO/portal-lusitano\" diff --stat)",
-      "Bash(git --git-dir=\"C:/Users/USUARIO/portal-lusitano/.git\" --work-tree=\"C:/Users/USUARIO/portal-lusitano\" diff --stat)"
+      "Bash(git --git-dir=\"C:/Users/USUARIO/portal-lusitano/.git\" --work-tree=\"C:/Users/USUARIO/portal-lusitano\" diff --stat)",
+      "Bash(git -C \"C:/Users/USUARIO/portal-lusitano\" status --short)",
+      "Bash(git -C \"C:/Users/USUARIO/portal-lusitano\" add components/verificador-compatibilidade/CompatibilityResults.tsx app/comparador-cavalos/page.tsx app/ferramentas/page.tsx components/calculadora-valor/StepAndamentosTemperamento.tsx components/calculadora-valor/StepGeneticaMorfologia.tsx components/verificador-compatibilidade/HorseForm.tsx)",
+      "Bash(git -C:*)"
     ]
   }
 }

@@ -157,7 +157,7 @@ function AnalisePerfilContent() {
           {/* PRO Status Bar — quiz in progress */}
           {!accessLoading && isSubscribed && (
             <div className="max-w-2xl mx-auto px-4 pt-6">
-              <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-4 text-sm">
+              <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
                 <svg
                   width="14"
                   height="14"
@@ -169,13 +169,15 @@ function AnalisePerfilContent() {
                   <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
                 </svg>
                 <span className="text-[#C5A059] font-semibold">PRO Activo</span>
-                <span className="text-[#C5A059]/50">•</span>
-                <span className="text-[#C5A059]/80">Utilizações ilimitadas</span>
-                <span className="text-[#C5A059]/50">•</span>
-                <span className="text-[#C5A059]/80">Análise de Perfil desbloqueada</span>
+                <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+                <span className="text-[#C5A059]/80 hidden sm:inline">Utilizações ilimitadas</span>
+                <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+                <span className="text-[#C5A059]/80 hidden sm:inline">
+                  Análise de Perfil desbloqueada
+                </span>
                 <a
                   href="/ferramentas/historico"
-                  className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
+                  className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap text-xs sm:text-sm"
                 >
                   Ver histórico →
                 </a>
@@ -185,15 +187,15 @@ function AnalisePerfilContent() {
           {/* Free uses counter — quiz in progress */}
           {!accessLoading && !isSubscribed && freeUsesLeft > 0 && (
             <div className="max-w-2xl mx-auto px-4 pt-6">
-              <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-4 text-sm">
-                <span className="text-amber-400/90">
+              <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
+                <span className="text-amber-400/90 flex-1 min-w-0">
                   {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
                   {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
                   Subscreva PRO para utilizações ilimitadas
                 </span>
                 <a
                   href="/ferramentas"
-                  className="ml-auto text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
+                  className="text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
                 >
                   Subscrever
                 </a>
@@ -229,8 +231,8 @@ function AnalisePerfilContent() {
 
               {/* PRO Status Bar — results */}
               {isSubscribed && (
-                <div className="max-w-5xl mx-auto px-6 pt-6">
-                  <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-4 text-sm">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
+                  <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
                     <svg
                       width="14"
                       height="14"
@@ -242,13 +244,17 @@ function AnalisePerfilContent() {
                       <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
                     </svg>
                     <span className="text-[#C5A059] font-semibold">PRO Activo</span>
-                    <span className="text-[#C5A059]/50">•</span>
-                    <span className="text-[#C5A059]/80">Utilizações ilimitadas</span>
-                    <span className="text-[#C5A059]/50">•</span>
-                    <span className="text-[#C5A059]/80">Análise de Perfil desbloqueada</span>
+                    <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+                    <span className="text-[#C5A059]/80 hidden sm:inline">
+                      Utilizações ilimitadas
+                    </span>
+                    <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+                    <span className="text-[#C5A059]/80 hidden sm:inline">
+                      Análise de Perfil desbloqueada
+                    </span>
                     <a
                       href="/ferramentas/historico"
-                      className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
+                      className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap text-xs sm:text-sm"
                     >
                       Ver histórico →
                     </a>
@@ -257,16 +263,16 @@ function AnalisePerfilContent() {
               )}
               {/* Free uses counter — results */}
               {!isSubscribed && freeUsesLeft > 0 && (
-                <div className="max-w-5xl mx-auto px-6 pt-6">
-                  <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-4 text-sm">
-                    <span className="text-amber-400/90">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
+                  <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
+                    <span className="text-amber-400/90 flex-1 min-w-0">
                       {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
                       {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
                       Subscreva PRO para utilizações ilimitadas
                     </span>
                     <a
                       href="/ferramentas"
-                      className="ml-auto text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
+                      className="text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
                     >
                       Subscrever
                     </a>
@@ -327,7 +333,7 @@ function AnalisePerfilContent() {
 
                 return (
                   <section className="py-8 border-b border-[var(--border)]">
-                    <div className="max-w-5xl mx-auto px-6">
+                    <div className="max-w-5xl mx-auto px-4 sm:px-6">
                       <h2 className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--foreground-muted)] mb-5">
                         <Sparkles size={14} className="text-[#C5A059]" aria-hidden="true" />
                         As suas 3 principais conclusões
@@ -363,8 +369,8 @@ function AnalisePerfilContent() {
               })()}
 
               <ResultTabs selectedTab={selectedTab} onSelectTab={setSelectedTab} />
-              <section className="py-12">
-                <div className="max-w-5xl mx-auto px-6">
+              <section className="py-8 sm:py-12">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6">
                   {selectedTab === "perfil" && (
                     <>
                       <ProfileTab result={result} />
@@ -718,7 +724,7 @@ function AnalisePerfilContent() {
               </section>
               {/* Methodology Panel + Disclaimer */}
               <section className="py-8">
-                <div className="max-w-5xl mx-auto px-6 space-y-6">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-6">
                   <MethodologyPanel
                     title={
                       (t.analise_perfil as Record<string, string>).methodology_panel_title ??
@@ -802,7 +808,7 @@ function AnalisePerfilContent() {
               </section>
               {/* Cross-links — próximos passos */}
               <section className="py-8 border-t border-[var(--border)]">
-                <div className="max-w-5xl mx-auto px-6">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6">
                   <h2 className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--foreground-muted)] mb-5">
                     <ChevronRight size={14} className="text-[#C5A059]" aria-hidden="true" />
                     Continua a tua jornada
@@ -876,7 +882,7 @@ function AnalisePerfilContent() {
               </section>
 
               <section className="py-12 border-t border-[var(--border)]">
-                <div className="max-w-5xl mx-auto px-6 text-center">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
                   <button
                     onClick={resetQuiz}
                     className="inline-flex items-center justify-center gap-2 border border-[var(--border)] text-[var(--foreground-secondary)] px-6 py-3 rounded-xl hover:border-[var(--foreground-muted)]/50 hover:text-[var(--foreground)] hover:bg-[var(--background-secondary)]/40 transition-all"

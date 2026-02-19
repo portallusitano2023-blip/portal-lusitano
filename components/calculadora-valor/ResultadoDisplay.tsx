@@ -148,7 +148,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
                 &ldquo;{form.nome}&rdquo;
               </p>
             )}
-            <p className="text-[var(--gold)] text-xs font-medium uppercase tracking-[0.2em] mb-6">
+            <p className="text-[var(--gold)] text-xs font-medium uppercase tracking-[0.1em] sm:tracking-[0.2em] mb-6 px-2">
               {t.calculadora.market_value}
             </p>
 
@@ -788,7 +788,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         })()}
 
         {/* Comparacao de Mercado - Visual Chart */}
-        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)]">
+        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-4 sm:p-6 border border-[var(--border)] overflow-x-auto">
           <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-6 flex items-center gap-2">
             <BarChart3 size={16} className="text-[var(--gold)]" />
             {t.calculadora.market_comparison}

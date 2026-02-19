@@ -174,7 +174,7 @@ export default function ResultHeader({
             <div className="flex flex-wrap justify-center gap-2">
               <button
                 onClick={onSave}
-                className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg border transition-all ${
+                className={`inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-sm rounded-lg border transition-all ${
                   saved
                     ? "border-emerald-500/60 text-emerald-400 bg-emerald-500/10"
                     : "border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50"
@@ -185,21 +185,21 @@ export default function ResultHeader({
               </button>
               <button
                 onClick={onDownloadPDF}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg border border-[var(--gold)]/50 text-[var(--gold)] hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-sm rounded-lg border border-[var(--gold)]/50 text-[var(--gold)] hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all"
               >
                 <FileDown size={15} />
                 PDF
               </button>
               <button
                 onClick={onDownloadBadge}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-sm rounded-lg border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-all"
               >
                 <Download size={15} />
                 Badge
               </button>
               <button
                 onClick={onCopyLink}
-                className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg border transition-all ${
+                className={`inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-sm rounded-lg border transition-all ${
                   copied
                     ? "border-emerald-500/60 text-emerald-400 bg-emerald-500/10"
                     : "border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50"
@@ -213,21 +213,21 @@ export default function ResultHeader({
             <div className="flex flex-wrap justify-center gap-2">
               <button
                 onClick={onShareWhatsApp}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-green-600/40 text-green-500 hover:bg-green-600/10 hover:border-green-600/70 transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] text-xs rounded-lg border border-green-600/40 text-green-500 hover:bg-green-600/10 hover:border-green-600/70 transition-all"
               >
                 <MessageCircle size={13} />
                 WhatsApp
               </button>
               <button
                 onClick={onShareFacebook}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-blue-600/40 text-blue-400 hover:bg-blue-600/10 hover:border-blue-600/70 transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] text-xs rounded-lg border border-blue-600/40 text-blue-400 hover:bg-blue-600/10 hover:border-blue-600/70 transition-all"
               >
                 <Facebook size={13} />
                 Facebook
               </button>
               <button
                 onClick={onShareInstagram}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-pink-500/40 text-pink-400 hover:bg-pink-500/10 hover:border-pink-500/70 transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] text-xs rounded-lg border border-pink-500/40 text-pink-400 hover:bg-pink-500/10 hover:border-pink-500/70 transition-all"
               >
                 <Instagram size={13} />
                 Instagram
