@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import Stripe from "stripe";
+import { logger } from "@/lib/logger";
 
 export async function registerPayment(
   session: Stripe.Checkout.Session,
@@ -9,14 +9,28 @@ export async function registerPayment(
   productMetadata: Record<string, unknown>,
   description: string
 ) {
+  const customerEmail = session.customer_details?.email;
+  const amountTotal = session.amount_total;
+  const currency = session.currency;
+
+  if (!customerEmail || amountTotal === null || amountTotal === undefined || !currency) {
+    logger.error("Stripe session missing required fields", {
+      sessionId: session.id,
+      hasEmail: !!customerEmail,
+      amountTotal,
+      currency,
+    });
+    throw new Error("Stripe session is missing customer_details.email, amount_total, or currency");
+  }
+
   return supabase
     .from("payments")
     .insert({
       stripe_payment_intent_id: stripePaymentOrSubscriptionId,
       stripe_session_id: session.id,
-      email: session.customer_details?.email!,
-      amount: session.amount_total!,
-      currency: session.currency!,
+      email: customerEmail,
+      amount: amountTotal,
+      currency: currency,
       status: "succeeded",
       product_type: productType,
       product_metadata: productMetadata,

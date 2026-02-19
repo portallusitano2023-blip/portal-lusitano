@@ -28,6 +28,12 @@ export async function GET() {
         database: dbStatus,
       },
     },
-    { status: 200 }
+    {
+      status: 200,
+      headers: {
+        // Health endpoint must always reflect live state — never cache
+        "Cache-Control": "no-store",
+      },
+    }
   );
 }

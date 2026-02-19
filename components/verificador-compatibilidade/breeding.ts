@@ -82,22 +82,23 @@ export function calcularAptidoesPotro(garanhao: Cavalo, egua: Cavalo): Offspring
   const stallionAnd = garanhao.andamentos * 10;
   const mareAnd = egua.andamentos * 10;
 
+  // Temperament values match TEMPERAMENTOS in data.ts: "Calmo" | "Equilibrado" | "Energético" | "Nervoso"
   const stallionTemp =
-    garanhao.temperamento === "excelente"
+    garanhao.temperamento === "Calmo"
       ? 90
-      : garanhao.temperamento === "bom"
+      : garanhao.temperamento === "Equilibrado"
         ? 70
-        : garanhao.temperamento === "regular"
+        : garanhao.temperamento === "Energético"
           ? 50
-          : 30;
+          : 30; // "Nervoso" or unknown
   const mareTemp =
-    egua.temperamento === "excelente"
+    egua.temperamento === "Calmo"
       ? 90
-      : egua.temperamento === "bom"
+      : egua.temperamento === "Equilibrado"
         ? 70
-        : egua.temperamento === "regular"
+        : egua.temperamento === "Energético"
           ? 50
-          : 30;
+          : 30; // "Nervoso" or unknown
 
   const stallionSport = Math.min(
     100,

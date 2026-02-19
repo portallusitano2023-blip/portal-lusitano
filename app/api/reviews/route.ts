@@ -63,13 +63,22 @@ export async function GET(request: NextRequest) {
     const soma = data?.reduce((acc, r) => acc + r.avaliacao, 0) || 0;
     const media = total > 0 ? soma / total : 0;
 
-    return NextResponse.json({
-      reviews: data,
-      stats: {
-        total,
-        media: Math.round(media * 10) / 10,
+    return NextResponse.json(
+      {
+        reviews: data,
+        stats: {
+          total,
+          media: Math.round(media * 10) / 10,
+        },
       },
-    });
+      {
+        headers: {
+          // Public approved reviews — cache 5 min at CDN, stale up to 15 min
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
+          Vary: "Accept-Encoding",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

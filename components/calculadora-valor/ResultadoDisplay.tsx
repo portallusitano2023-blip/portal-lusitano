@@ -15,17 +15,13 @@ import {
   Scale,
   Lightbulb,
   Zap,
+  User,
 } from "lucide-react";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
-import AnimatedGauge from "@/components/tools/AnimatedGauge";
+import dynamic from "next/dynamic";
 import HorseSilhouette from "@/components/tools/HorseSilhouette";
-import MarketPositionChart from "@/components/tools/MarketPositionChart";
-import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import ResultActions from "@/components/tools/ResultActions";
-import RegionalMarketMap from "@/components/tools/RegionalMarketMap";
-import InvestmentTimeline from "@/components/tools/InvestmentTimeline";
-import TrainingROI from "@/components/tools/TrainingROI";
 import ValueWaterfall from "@/components/tools/ValueWaterfall";
 import LiquidityScore from "@/components/tools/LiquidityScore";
 import InvestmentSafety from "@/components/tools/InvestmentSafety";
@@ -39,6 +35,30 @@ import { MERCADOS, VALORES_BASE, MULT_LINHAGEM, MULT_SAUDE, MULT_COMP } from "./
 import { calcularProjecaoValor, calcularTrainingROI } from "./projections";
 import { calcularValor } from "./utils";
 import type { FormData, Resultado } from "./types";
+
+const AnimatedGauge = dynamic(() => import("@/components/tools/AnimatedGauge"), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-zinc-900/50 animate-pulse rounded-xl" />,
+});
+const MarketPositionChart = dynamic(() => import("@/components/tools/MarketPositionChart"), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-zinc-900/50 animate-pulse rounded-xl" />,
+});
+const Confetti = dynamic(() => import("@/components/tools/Confetti"), {
+  ssr: false,
+});
+const RegionalMarketMap = dynamic(() => import("@/components/tools/RegionalMarketMap"), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-zinc-900/50 animate-pulse rounded-xl" />,
+});
+const InvestmentTimeline = dynamic(() => import("@/components/tools/InvestmentTimeline"), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-zinc-900/50 animate-pulse rounded-xl" />,
+});
+const TrainingROI = dynamic(() => import("@/components/tools/TrainingROI"), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-zinc-900/50 animate-pulse rounded-xl" />,
+});
 
 interface ResultadoDisplayProps {
   resultado: Resultado;
@@ -1242,6 +1262,52 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
           isPremium={isSubscribed}
           isExporting={isExporting}
         />
+
+        {/* Cross-links — próximos passos */}
+        <div className="grid sm:grid-cols-2 gap-3 mt-6 mb-4">
+          <Link
+            href="/comparador-cavalos"
+            className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
+          >
+            <Scale
+              size={18}
+              className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
+            />
+            <div>
+              <p className="text-sm font-semibold text-[var(--foreground)]">
+                Comparar com outros cavalos
+              </p>
+              <p className="text-xs text-[var(--foreground-muted)]">
+                Compara até 4 candidatos lado a lado
+              </p>
+            </div>
+            <ChevronRight
+              size={16}
+              className="text-[var(--foreground-muted)] ml-auto group-hover:text-[var(--gold)] transition-colors"
+            />
+          </Link>
+          <Link
+            href="/analise-perfil"
+            className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
+          >
+            <User
+              size={18}
+              className="text-purple-400 shrink-0 group-hover:scale-110 transition-transform"
+            />
+            <div>
+              <p className="text-sm font-semibold text-[var(--foreground)]">
+                Analisar o teu perfil
+              </p>
+              <p className="text-xs text-[var(--foreground-muted)]">
+                Descobre que tipo de comprador és
+              </p>
+            </div>
+            <ChevronRight
+              size={16}
+              className="text-[var(--foreground-muted)] ml-auto group-hover:text-purple-400 transition-colors"
+            />
+          </Link>
+        </div>
 
         {/* Tool Chain: Comparar com outros cavalos */}
         {onComparar && (

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { resend, getCavaloAnuncioConfirmEmail } from "@/lib/resend";
 import { CONTACT_EMAIL } from "@/lib/constants";
@@ -11,6 +10,12 @@ export async function handleCavaloAnuncio(
   session: Stripe.Checkout.Session,
   metadata: Stripe.Metadata
 ): Promise<void> {
+  const customerEmail = session.customer_details?.email;
+  if (!customerEmail) {
+    logger.error("handleCavaloAnuncio: missing customer email", { sessionId: session.id });
+    throw new Error("Stripe session missing customer email");
+  }
+
   // Buscar dados da BD
   let formData: Record<string, string | boolean | number | string[]> | null = null;
   let submissionId: string | null = null;
@@ -108,13 +113,13 @@ export async function handleCavaloAnuncio(
   // Enviar email de confirmação ao vendedor
   await resend.emails.send({
     from: "Portal Lusitano <anuncios@portal-lusitano.pt>",
-    to: session.customer_details?.email!,
+    to: customerEmail,
     subject: "Anúncio recebido — Portal Lusitano",
     html: getCavaloAnuncioConfirmEmail(
       String(formData.nomeCavalo),
       String(formData.preco),
       metadata.destaque === "true",
-      session.customer_details?.email!
+      customerEmail
     ),
   });
 
@@ -127,12 +132,12 @@ export async function handleCavaloAnuncio(
       <h2>Novo anúncio aguarda aprovação</h2>
       <p><strong>Cavalo:</strong> ${escapeHtml(String(formData.nomeCavalo))}</p>
       <p><strong>Vendedor:</strong> ${escapeHtml(String(formData.proprietarioNome))}</p>
-      <p><strong>Email:</strong> ${escapeHtml(session.customer_details?.email || "")}</p>
+      <p><strong>Email:</strong> ${escapeHtml(customerEmail)}</p>
       <p><strong>Telefone:</strong> ${escapeHtml(String(formData.proprietarioTelefone))}</p>
       <p><strong>Preço:</strong> &euro;${escapeHtml(String(formData.preco))}</p>
       <p><strong>Destaque:</strong> ${metadata.destaque === "true" ? "Sim" : "Não"}</p>
-      <p><strong>Pagamento:</strong> €${(session.amount_total! / 100).toFixed(2)}</p>
-      <p><a href="https://portal-lusitano.pt/admin">Ir para Admin Panel</a></p>
+      <p><strong>Pagamento:</strong> €${((session.amount_total ?? 0) / 100).toFixed(2)}</p>
+      <p><a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://portal-lusitano.pt"}/admin">Ir para Admin Panel</a></p>
     `,
   });
 }

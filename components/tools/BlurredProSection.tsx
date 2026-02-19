@@ -63,12 +63,15 @@ export default function BlurredProSection({
     const el = containerRef.current;
     if (!el) return;
 
+    let t1: ReturnType<typeof setTimeout>;
+    let t2: ReturnType<typeof setTimeout>;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setTimeout(() => {
+          t1 = setTimeout(() => {
             setPhase("TRANSITIONING");
-            setTimeout(() => {
+            t2 = setTimeout(() => {
               setPhase("INTERACTIVE");
               try {
                 sessionStorage.setItem(storageKey, "1");
@@ -84,7 +87,11 @@ export default function BlurredProSection({
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [phase, storageKey, reducedMotion, isSubscribed]);
 
   // ── Spotlight: mouse/touch tracking via rAF ──
@@ -198,9 +205,7 @@ export default function BlurredProSection({
       onTouchEnd={handleTouchEnd}
     >
       {/* Layer 0: Content — rendered once, backdrop-filter on overlay handles blur */}
-      <div className="pointer-events-none select-none" aria-hidden="true">
-        {children}
-      </div>
+      <div className="pointer-events-none select-none">{children}</div>
 
       {/* Layer 1: Blur overlay (backdrop-filter + mask-image for spotlight) */}
       <div

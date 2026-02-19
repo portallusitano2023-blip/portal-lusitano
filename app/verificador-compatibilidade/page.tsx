@@ -20,6 +20,14 @@ import type { Cavalo, ResultadoCompatibilidade } from "@/components/verificador-
 const DRAFT_KEY = "verificador_draft_v1";
 const BREEDING_CHAIN_KEY = "tool_chain_breeding";
 
+// FIX A: extracted from inside the useEffect to module scope
+function mapTemperamentScore(t: number): string {
+  if (t >= 8) return "Calmo";
+  if (t >= 6) return "Equilibrado";
+  if (t >= 4) return "Energético";
+  return "Difícil";
+}
+
 interface ChainHorse {
   nome: string;
   sexo: string;
@@ -102,12 +110,6 @@ export default function VerificadorCompatibilidadePage() {
         garanhao: ChainHorse;
         egua: ChainHorse;
       };
-      const mapTemp = (t: number): string => {
-        if (t >= 8) return "Calmo";
-        if (t >= 6) return "Equilibrado";
-        if (t >= 4) return "Energético";
-        return "Difícil";
-      };
       setGaranhao((prev) => ({
         ...prev,
         nome: g.nome || prev.nome,
@@ -118,7 +120,7 @@ export default function VerificadorCompatibilidadePage() {
         linhagemFamosa: g.linhagemFamosa || prev.linhagemFamosa,
         conformacao: g.conformacao ?? prev.conformacao,
         andamentos: g.andamentos ?? prev.andamentos,
-        temperamento: mapTemp(g.temperamento),
+        temperamento: mapTemperamentScore(g.temperamento),
         saude: g.saude ?? prev.saude,
         blup: g.blup ?? prev.blup,
       }));
@@ -132,14 +134,19 @@ export default function VerificadorCompatibilidadePage() {
         linhagemFamosa: e.linhagemFamosa || prev.linhagemFamosa,
         conformacao: e.conformacao ?? prev.conformacao,
         andamentos: e.andamentos ?? prev.andamentos,
-        temperamento: mapTemp(e.temperamento),
+        temperamento: mapTemperamentScore(e.temperamento),
         saude: e.saude ?? prev.saude,
         blup: e.blup ?? prev.blup,
       }));
       setStep(1);
       setChainBanner(`${g.nome || "Garanhão"} × ${e.nome || "Égua"}`);
       setChainImported(true);
-    } catch {}
+    } catch (e) {
+      // FIX B: log error in non-production environments instead of silently swallowing it
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("[Tool Chain] Erro ao importar dados:", e);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -209,6 +216,8 @@ export default function VerificadorCompatibilidadePage() {
   };
 
   const calcular = () => {
+    // FIX C: guard against double-click while a calculation is already in progress
+    if (isCalculating) return;
     if (!canUse) return;
     setIsCalculating(true);
 

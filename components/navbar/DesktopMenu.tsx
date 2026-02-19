@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Gift } from "lucide-react";
+import { memo, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { LusitanoDropdown } from "./LusitanoDropdown";
 
@@ -12,20 +13,26 @@ interface DesktopMenuProps {
       about: string;
       advertising: string;
       free_ebook: string;
+      tools: string;
     };
   };
 }
 
-export function DesktopMenu({ t }: DesktopMenuProps) {
+export const DesktopMenu = memo(function DesktopMenu({ t }: DesktopMenuProps) {
   const pathname = usePathname();
 
-  const navItems = [
-    { name: t.nav.home, href: "/" },
-    { name: t.nav.shop, href: "/loja" },
-    { name: t.nav.journal, href: "/jornal" },
-    { name: "Ferramentas", href: "/ferramentas" },
-    { name: t.nav.about, href: "/sobre" },
-  ];
+  // Memoized so the array reference stays stable when t hasn't changed,
+  // preventing the map from producing new Link elements unnecessarily.
+  const navItems = useMemo(
+    () => [
+      { name: t.nav.home, href: "/" },
+      { name: t.nav.shop, href: "/loja" },
+      { name: t.nav.journal, href: "/jornal" },
+      { name: t.nav.tools, href: "/ferramentas" },
+      { name: t.nav.about, href: "/sobre" },
+    ],
+    [t.nav.home, t.nav.shop, t.nav.journal, t.nav.tools, t.nav.about]
+  );
 
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
@@ -85,4 +92,4 @@ export function DesktopMenu({ t }: DesktopMenuProps) {
       </Link>
     </div>
   );
-}
+});

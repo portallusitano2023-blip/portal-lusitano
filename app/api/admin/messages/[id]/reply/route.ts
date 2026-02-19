@@ -4,6 +4,7 @@ import { resend } from "@/lib/resend";
 import { verifySession } from "@/lib/auth";
 import { SUPPORT_EMAIL } from "@/lib/constants";
 import { logger } from "@/lib/logger";
+import { escapeHtml } from "@/lib/sanitize";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -53,10 +54,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
             <h1 style="color: #000; margin: 0;">Portal Lusitano</h1>
           </div>
           <div style="padding: 40px 30px; background: #fff;">
-            <p style="color: #666; margin-bottom: 20px;">Olá ${contact.name},</p>
+            <p style="color: #666; margin-bottom: 20px;">Olá ${escapeHtml(String(contact.name ?? ""))},</p>
 
             <div style="color: #333; line-height: 1.6; white-space: pre-wrap;">
-              ${message}
+              ${escapeHtml(message)}
             </div>
 
             ${

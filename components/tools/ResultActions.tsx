@@ -74,6 +74,7 @@ export default function ResultActions({
       {onPrint && (
         <button
           onClick={onPrint}
+          aria-label="Imprimir"
           className="py-3 px-4 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center"
         >
           <Printer size={16} />

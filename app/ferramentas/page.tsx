@@ -33,7 +33,8 @@ import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
 import ToolReviewForm from "@/components/ToolReviewForm";
 import { Review, ReviewStats } from "@/types/review";
-import { faqItems } from "./faq-data";
+import { getFaqItems } from "./faq-data";
+import { createTranslator } from "@/lib/tr";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import ToolsHero from "@/components/ferramentas/ToolsHero";
 import ToolsGrid from "@/components/ferramentas/ToolsGrid";
@@ -43,96 +44,206 @@ import FAQSection from "@/components/ferramentas/FAQSection";
 // DATA
 // ============================================
 
-const tools = [
-  {
-    title: "Calculadora de Valor",
-    href: "/calculadora-valor",
-    icon: Calculator,
-    description: "Estimativa profissional do valor do seu Lusitano",
-    features: [
-      "Algoritmo com 20+ variáveis",
-      "Análise de mercado em tempo real",
-      "Relatório detalhado por categoria",
-    ],
-    color: "from-amber-500/20 to-amber-600/5",
-    iconBg: "bg-amber-500/10",
-    iconColor: "text-amber-400",
-    badge: "Mais popular",
-    badgeColor: "bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black",
-    freeUses: 1,
-  },
-  {
-    title: "Comparador de Cavalos",
-    href: "/comparador-cavalos",
-    icon: BarChart3,
-    description: "Compare até 4 cavalos lado a lado",
-    features: [
-      "Comparação visual interactiva",
-      "Gráficos radar de aptidões",
-      "Análise de pontos fortes e fracos",
-    ],
-    color: "from-blue-500/20 to-blue-600/5",
-    iconBg: "bg-blue-500/10",
-    iconColor: "text-blue-400",
-    badge: null,
-    badgeColor: null,
-    freeUses: 1,
-  },
-  {
-    title: "Verificador de Compatibilidade",
-    href: "/verificador-compatibilidade",
-    icon: Heart,
-    description: "Análise genética de cruzamentos",
-    features: [
-      "Score de compatibilidade genética",
-      "Previsão de características",
-      "Alerta de consanguinidade",
-    ],
-    color: "from-rose-500/20 to-rose-600/5",
-    iconBg: "bg-rose-500/10",
-    iconColor: "text-rose-400",
-    badge: null,
-    badgeColor: null,
-    freeUses: 1,
-  },
-  {
-    title: "Análise de Perfil",
-    href: "/analise-perfil",
-    icon: UserCheck,
-    description: "Descubra o seu perfil de cavaleiro",
-    features: [
-      "Questionário personalizado",
-      "Recomendação de raças e disciplinas",
-      "Perfil partilhável nas redes",
-    ],
-    color: "from-emerald-500/20 to-emerald-600/5",
-    iconBg: "bg-emerald-500/10",
-    iconColor: "text-emerald-400",
-    badge: "Recomendado",
-    badgeColor: "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30",
-    freeUses: 1,
-  },
-];
+function getTools(tr: ReturnType<typeof createTranslator>) {
+  return [
+    {
+      title: tr("Calculadora de Valor", "Value Calculator", "Calculadora de Valor"),
+      href: "/calculadora-valor",
+      icon: Calculator,
+      description: tr(
+        "Estimativa profissional do valor do seu Lusitano",
+        "Professional estimate of your Lusitano's value",
+        "Estimación profesional del valor de su Lusitano"
+      ),
+      features: [
+        tr(
+          "Algoritmo com 20+ variáveis",
+          "Algorithm with 20+ variables",
+          "Algoritmo con 20+ variables"
+        ),
+        tr(
+          "Análise de mercado em tempo real",
+          "Real-time market analysis",
+          "Análisis de mercado en tiempo real"
+        ),
+        tr(
+          "Relatório detalhado por categoria",
+          "Detailed report by category",
+          "Informe detallado por categoría"
+        ),
+      ],
+      color: "from-amber-500/20 to-amber-600/5",
+      iconBg: "bg-amber-500/10",
+      iconColor: "text-amber-400",
+      badge: tr("Mais popular", "Most popular", "Más popular"),
+      badgeColor: "bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black",
+      freeUses: 1,
+    },
+    {
+      title: tr("Comparador de Cavalos", "Horse Comparator", "Comparador de Caballos"),
+      href: "/comparador-cavalos",
+      icon: BarChart3,
+      description: tr(
+        "Compare até 4 cavalos lado a lado",
+        "Compare up to 4 horses side by side",
+        "Compare hasta 4 caballos uno al lado del otro"
+      ),
+      features: [
+        tr(
+          "Comparação visual interactiva",
+          "Interactive visual comparison",
+          "Comparación visual interactiva"
+        ),
+        tr("Gráficos radar de aptidões", "Aptitude radar charts", "Gráficos radar de aptitudes"),
+        tr(
+          "Análise de pontos fortes e fracos",
+          "Analysis of strengths and weaknesses",
+          "Análisis de fortalezas y debilidades"
+        ),
+      ],
+      color: "from-blue-500/20 to-blue-600/5",
+      iconBg: "bg-blue-500/10",
+      iconColor: "text-blue-400",
+      badge: null,
+      badgeColor: null,
+      freeUses: 1,
+    },
+    {
+      title: tr(
+        "Verificador de Compatibilidade",
+        "Compatibility Checker",
+        "Verificador de Compatibilidad"
+      ),
+      href: "/verificador-compatibilidade",
+      icon: Heart,
+      description: tr(
+        "Análise genética de cruzamentos",
+        "Genetic analysis of crossings",
+        "Análisis genético de cruzamientos"
+      ),
+      features: [
+        tr(
+          "Score de compatibilidade genética",
+          "Genetic compatibility score",
+          "Puntuación de compatibilidad genética"
+        ),
+        tr("Previsão de características", "Trait prediction", "Previsión de características"),
+        tr("Alerta de consanguinidade", "Inbreeding alert", "Alerta de consanguinidad"),
+      ],
+      color: "from-rose-500/20 to-rose-600/5",
+      iconBg: "bg-rose-500/10",
+      iconColor: "text-rose-400",
+      badge: null,
+      badgeColor: null,
+      freeUses: 1,
+    },
+    {
+      title: tr("Análise de Perfil", "Profile Analysis", "Análisis de Perfil"),
+      href: "/analise-perfil",
+      icon: UserCheck,
+      description: tr(
+        "Descubra o seu perfil de cavaleiro",
+        "Discover your rider profile",
+        "Descubra su perfil de jinete"
+      ),
+      features: [
+        tr(
+          "Questionário personalizado",
+          "Personalised questionnaire",
+          "Cuestionario personalizado"
+        ),
+        tr(
+          "Recomendação de raças e disciplinas",
+          "Breed and discipline recommendations",
+          "Recomendación de razas y disciplinas"
+        ),
+        tr(
+          "Perfil partilhável nas redes",
+          "Shareable profile on networks",
+          "Perfil compartible en redes"
+        ),
+      ],
+      color: "from-emerald-500/20 to-emerald-600/5",
+      iconBg: "bg-emerald-500/10",
+      iconColor: "text-emerald-400",
+      badge: tr("Recomendado", "Recommended", "Recomendado"),
+      badgeColor: "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30",
+      freeUses: 1,
+    },
+  ];
+}
 
-const freeTierFeatures = [
-  { text: "1 uso gratuito por ferramenta", included: true },
-  { text: "Resultados básicos", included: true },
-  { text: "Acesso a todas as ferramentas", included: true },
-  { text: "Exportar PDF", included: false },
-  { text: "Guardar histórico", included: false },
-  { text: "Partilhar resultados", included: false },
-  { text: "Usos ilimitados", included: false },
-];
+function getFreeTierFeatures(tr: ReturnType<typeof createTranslator>) {
+  return [
+    {
+      text: tr(
+        "1 uso gratuito por ferramenta",
+        "1 free use per tool",
+        "1 uso gratuito por herramienta"
+      ),
+      included: true,
+    },
+    { text: tr("Resultados básicos", "Basic results", "Resultados básicos"), included: true },
+    {
+      text: tr(
+        "Acesso a todas as ferramentas",
+        "Access to all tools",
+        "Acceso a todas las herramientas"
+      ),
+      included: true,
+    },
+    { text: tr("Exportar PDF", "Export PDF", "Exportar PDF"), included: false },
+    { text: tr("Guardar histórico", "Save history", "Guardar historial"), included: false },
+    { text: tr("Partilhar resultados", "Share results", "Compartir resultados"), included: false },
+    { text: tr("Usos ilimitados", "Unlimited uses", "Usos ilimitados"), included: false },
+  ];
+}
 
-const proTierFeatures = [
-  { text: "Usos ilimitados em todas as ferramentas", included: true },
-  { text: "Resultados detalhados e avançados", included: true },
-  { text: "Acesso a todas as ferramentas", included: true },
-  { text: "Exportar relatórios em PDF", included: true },
-  { text: "Guardar histórico completo", included: true },
-  { text: "Partilhar resultados com link", included: true },
-  { text: "Suporte prioritário", included: true },
-];
+function getProTierFeatures(tr: ReturnType<typeof createTranslator>) {
+  return [
+    {
+      text: tr(
+        "Usos ilimitados em todas as ferramentas",
+        "Unlimited uses on all tools",
+        "Usos ilimitados en todas las herramientas"
+      ),
+      included: true,
+    },
+    {
+      text: tr(
+        "Resultados detalhados e avançados",
+        "Detailed and advanced results",
+        "Resultados detallados y avanzados"
+      ),
+      included: true,
+    },
+    {
+      text: tr(
+        "Acesso a todas as ferramentas",
+        "Access to all tools",
+        "Acceso a todas las herramientas"
+      ),
+      included: true,
+    },
+    {
+      text: tr("Exportar relatórios em PDF", "Export reports in PDF", "Exportar informes en PDF"),
+      included: true,
+    },
+    {
+      text: tr("Guardar histórico completo", "Save complete history", "Guardar historial completo"),
+      included: true,
+    },
+    {
+      text: tr(
+        "Partilhar resultados com link",
+        "Share results with link",
+        "Compartir resultados con enlace"
+      ),
+      included: true,
+    },
+    { text: tr("Suporte prioritário", "Priority support", "Soporte prioritario"), included: true },
+  ];
+}
 
 // ============================================
 // STATS COUNTERS
@@ -198,6 +309,8 @@ function StatCounter({
 
 function StatsSection() {
   const [stats, setStats] = useState<ToolStats | null>(null);
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
 
   useEffect(() => {
     fetch("/api/tools/stats")
@@ -214,11 +327,23 @@ function StatsSection() {
     <AnimateOnScroll>
       <div className="max-w-3xl mx-auto mb-16 px-6">
         <div className="bg-[var(--background-secondary)]/60 border border-[var(--gold)]/15 rounded-2xl grid grid-cols-3 divide-x divide-[var(--border)]">
-          <StatCounter value={stats.totalAnalyses} label="análises realizadas" icon={Activity} />
-          <StatCounter value={stats.totalUsers} label="utilizadores activos" icon={Users} />
+          <StatCounter
+            value={stats.totalAnalyses}
+            label={tr("análises realizadas", "analyses done", "análisis realizados")}
+            icon={Activity}
+          />
+          <StatCounter
+            value={stats.totalUsers}
+            label={tr("utilizadores activos", "active users", "usuarios activos")}
+            icon={Users}
+          />
           <StatCounter
             value={stats.reviewCount}
-            label={`avaliações (${stats.avgRating}★)`}
+            label={tr(
+              `avaliações (${stats.avgRating}★)`,
+              `reviews (${stats.avgRating}★)`,
+              `valoraciones (${stats.avgRating}★)`
+            )}
             icon={TrendingUp}
           />
         </div>
@@ -227,14 +352,12 @@ function StatsSection() {
   );
 }
 
-const toolSlugToName: Record<string, string> = {
-  "calculadora-valor": "Calculadora de Valor",
-  "comparador-cavalos": "Comparador de Cavalos",
-  "verificador-compatibilidade": "Verificador de Compatibilidade",
-  "analise-perfil": "Análise de Perfil",
-};
-
-const toolSlugs = Object.keys(toolSlugToName);
+const toolSlugs = [
+  "calculadora-valor",
+  "comparador-cavalos",
+  "verificador-compatibilidade",
+  "analise-perfil",
+];
 
 // ============================================
 // COMPONENTS
@@ -264,6 +387,8 @@ function PricingFeature({ text, included }: { text: string; included: boolean })
 function ProSubscribeButton({ className }: { className?: string }) {
   const { user } = useAuth();
   const router = useRouter();
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {
@@ -298,12 +423,13 @@ function ProSubscribeButton({ className }: { className?: string }) {
     >
       {loading ? (
         <span className="inline-flex items-center justify-center gap-2">
-          <Loader2 size={16} className="animate-spin" />A processar...
+          <Loader2 size={16} className="animate-spin" />
+          {tr("A processar...", "Processing...", "Procesando...")}
         </span>
       ) : (
         <span className="inline-flex items-center justify-center gap-2">
           <Crown size={16} />
-          Subscrever PRO
+          {tr("Subscrever PRO", "Subscribe PRO", "Suscribir PRO")}
           <ArrowRight size={16} />
         </span>
       )}
@@ -313,6 +439,8 @@ function ProSubscribeButton({ className }: { className?: string }) {
 
 function CheckoutFeedback() {
   const searchParams = useSearchParams();
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
   const isSuccess = searchParams.get("success") === "true";
   const isCancelled = searchParams.get("cancelled") === "true";
   const [dismissed, setDismissed] = useState(false);
@@ -334,7 +462,11 @@ function CheckoutFeedback() {
         <div className="flex items-center gap-3 px-6 py-4 bg-emerald-500/20 border border-emerald-500/40 rounded-xl backdrop-blur-sm shadow-lg">
           <CheckCircle size={20} className="text-emerald-400" />
           <span className="text-emerald-300 font-medium text-sm">
-            Subscricao PRO activada com sucesso!
+            {tr(
+              "Subscrição PRO activada com sucesso!",
+              "PRO subscription activated!",
+              "¡Suscripción PRO activada!"
+            )}
           </span>
           <button
             onClick={() => setDismissed(true)}
@@ -353,7 +485,11 @@ function CheckoutFeedback() {
         <div className="flex items-center gap-3 px-6 py-4 bg-[var(--background-card)]/90 border border-[var(--border)] rounded-xl backdrop-blur-sm shadow-lg">
           <X size={20} className="text-[var(--foreground-secondary)]" />
           <span className="text-[var(--foreground-secondary)] font-medium text-sm">
-            Pagamento cancelado. Pode subscrever a qualquer momento.
+            {tr(
+              "Pagamento cancelado. Pode subscrever a qualquer momento.",
+              "Payment cancelled. You can subscribe at any time.",
+              "Pago cancelado. Puede suscribirse en cualquier momento."
+            )}
           </span>
           <button
             onClick={() => setDismissed(true)}
@@ -370,7 +506,20 @@ function CheckoutFeedback() {
 }
 
 function ToolReviewsSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
+
+  const toolSlugToName: Record<string, string> = {
+    "calculadora-valor": tr("Calculadora de Valor", "Value Calculator", "Calculadora de Valor"),
+    "comparador-cavalos": tr("Comparador de Cavalos", "Horse Comparator", "Comparador de Caballos"),
+    "verificador-compatibilidade": tr(
+      "Verificador de Compatibilidade",
+      "Compatibility Checker",
+      "Verificador de Compatibilidad"
+    ),
+    "analise-perfil": tr("Análise de Perfil", "Profile Analysis", "Análisis de Perfil"),
+  };
+
   const [filterSlug, setFilterSlug] = useState<string>("all");
   const [formSlug, setFormSlug] = useState<string>(toolSlugs[0]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -399,7 +548,8 @@ function ToolReviewsSection() {
   }, [fetchReviews, refreshKey]);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("pt-PT", {
+    const locale = language === "pt" ? "pt-PT" : language === "es" ? "es-ES" : "en-GB";
+    return new Date(dateString).toLocaleDateString(locale, {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -603,6 +753,8 @@ function ToolReviewsSection() {
 
 function ProBannerSection() {
   const { isSubscribed, isLoading } = useToolAccess("calculadora");
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
 
   if (isLoading || !isSubscribed) return null;
 
@@ -614,9 +766,15 @@ function ProBannerSection() {
             <Crown size={16} className="text-[#C5A059]" />
           </div>
           <div>
-            <p className="text-[#C5A059] font-semibold text-sm">PRO Activo</p>
+            <p className="text-[#C5A059] font-semibold text-sm">
+              {tr("PRO Activo", "PRO Active", "PRO Activo")}
+            </p>
             <p className="text-[var(--foreground-muted)] text-xs">
-              Acesso ilimitado a todas as ferramentas
+              {tr(
+                "Acesso ilimitado a todas as ferramentas",
+                "Unlimited access to all tools",
+                "Acceso ilimitado a todas las herramientas"
+              )}
             </p>
           </div>
         </div>
@@ -625,8 +783,10 @@ function ProBannerSection() {
           className="flex-shrink-0 flex items-center gap-1.5 text-sm text-[#C5A059] hover:text-[#D4B068] transition-colors"
         >
           <History size={14} />
-          <span className="hidden sm:inline">Ver histórico</span>
-          <span className="sm:hidden">Histórico</span>
+          <span className="hidden sm:inline">
+            {tr("Ver histórico", "View history", "Ver historial")}
+          </span>
+          <span className="sm:hidden">{tr("Histórico", "History", "Historial")}</span>
         </Link>
       </div>
     </div>
@@ -634,7 +794,11 @@ function ProBannerSection() {
 }
 
 export default function FerramentasPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
+  const tools = getTools(tr);
+  const freeTierFeatures = getFreeTierFeatures(tr);
+  const proTierFeatures = getProTierFeatures(tr);
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
@@ -699,13 +863,17 @@ export default function FerramentasPage() {
         <div className="max-w-4xl mx-auto">
           <AnimateOnScroll className="text-center mb-12">
             <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">
-              Simples e rápido
+              {tr("Simples e rápido", "Simple and fast", "Simple y rápido")}
             </span>
             <h2 className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4">
-              Como funciona
+              {tr("Como funciona", "How it works", "Cómo funciona")}
             </h2>
             <p className="text-[var(--foreground-secondary)] max-w-lg mx-auto text-sm">
-              Resultados profissionais em menos de 2 minutos, sem necessidade de conta.
+              {tr(
+                "Resultados profissionais em menos de 2 minutos, sem necessidade de conta.",
+                "Professional results in under 2 minutes, no account needed.",
+                "Resultados profesionales en menos de 2 minutos, sin necesidad de cuenta."
+              )}
             </p>
           </AnimateOnScroll>
 
@@ -716,20 +884,40 @@ export default function FerramentasPage() {
             {[
               {
                 step: "01",
-                title: "Escolhe a ferramenta",
-                desc: "Selecciona a ferramenta adequada ao que precisas: avaliação de valor, comparação, compatibilidade ou perfil de cavaleiro.",
+                title: tr("Escolhe a ferramenta", "Choose the tool", "Elige la herramienta"),
+                desc: tr(
+                  "Selecciona a ferramenta adequada ao que precisas: avaliação de valor, comparação, compatibilidade ou perfil de cavaleiro.",
+                  "Select the tool that suits your needs: value assessment, comparison, compatibility or rider profile.",
+                  "Selecciona la herramienta adecuada a lo que necesitas: evaluación de valor, comparación, compatibilidad o perfil de jinete."
+                ),
                 icon: Sparkles,
               },
               {
                 step: "02",
-                title: "Preenches os dados do cavalo",
-                desc: "Introduz as características do teu Lusitano. O formulário é intuitivo e guia-te em cada passo.",
+                title: tr(
+                  "Preenches os dados do cavalo",
+                  "Enter the horse's data",
+                  "Introduce los datos del caballo"
+                ),
+                desc: tr(
+                  "Introduz as características do teu Lusitano. O formulário é intuitivo e guia-te em cada passo.",
+                  "Enter your Lusitano's characteristics. The form is intuitive and guides you at every step.",
+                  "Introduce las características de tu Lusitano. El formulario es intuitivo y te guía en cada paso."
+                ),
                 icon: UserCheck,
               },
               {
                 step: "03",
-                title: "Recebes a análise instantânea",
-                desc: "O resultado aparece de imediato. Com PRO, exportas em PDF e guardas o histórico completo.",
+                title: tr(
+                  "Recebes a análise instantânea",
+                  "Receive the instant analysis",
+                  "Recibes el análisis instantáneo"
+                ),
+                desc: tr(
+                  "O resultado aparece de imediato. Com PRO, exportas em PDF e guardas o histórico completo.",
+                  "The result appears immediately. With PRO, export as PDF and save your complete history.",
+                  "El resultado aparece de inmediato. Con PRO, exporta en PDF y guarda el historial completo."
+                ),
                 icon: Zap,
               },
             ].map((item, i) => (
@@ -763,7 +951,11 @@ export default function FerramentasPage() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-sm font-medium rounded-full hover:bg-[var(--gold)]/20 transition-colors"
             >
               <Sparkles size={15} />
-              Experimentar agora — é grátis
+              {tr(
+                "Experimentar agora — é grátis",
+                "Try it now — it's free",
+                "Probar ahora — es gratis"
+              )}
               <ArrowRight size={15} />
             </Link>
           </AnimateOnScroll>
@@ -802,7 +994,11 @@ export default function FerramentasPage() {
                   <span className="text-[var(--foreground-muted)] text-lg">EUR</span>
                 </div>
                 <p className="text-[var(--foreground-muted)] text-xs mt-1">
-                  1 uso gratuito por ferramenta
+                  {tr(
+                    "1 uso gratuito por ferramenta",
+                    "1 free use per tool",
+                    "1 uso gratuito por herramienta"
+                  )}
                 </p>
               </div>
 
@@ -847,16 +1043,25 @@ export default function FerramentasPage() {
                 </div>
                 <p className="text-emerald-400 text-sm font-semibold mt-1 flex items-center gap-1.5 justify-center">
                   <Check size={14} />
-                  {t.ferramentas.cancel_anytime} • Sem fidelização
+                  {t.ferramentas.cancel_anytime} •{" "}
+                  {tr("Sem fidelização", "No lock-in", "Sin fidelización")}
                 </p>
 
                 {/* Savings callout */}
                 <div className="mt-4 px-4 py-2.5 bg-[var(--gold)]/8 border border-[var(--gold)]/20 rounded-lg text-center">
                   <p className="text-xs text-[var(--gold)] font-semibold">
-                    Poupa €200+ vs. avaliação profissional
+                    {tr(
+                      "Poupa €200+ vs. avaliação profissional",
+                      "Save €200+ vs. professional assessment",
+                      "Ahorra €200+ vs. evaluación profesional"
+                    )}
                   </p>
                   <p className="text-[10px] text-[var(--foreground-muted)] mt-0.5">
-                    Uma avaliação presencial custa €150–200. Aqui tens análises ilimitadas.
+                    {tr(
+                      "Uma avaliação presencial custa €150–200. Aqui tens análises ilimitadas.",
+                      "An in-person assessment costs €150–200. Here you get unlimited analyses.",
+                      "Una evaluación presencial cuesta €150–200. Aquí tienes análisis ilimitados."
+                    )}
                   </p>
                 </div>
               </div>
@@ -880,7 +1085,7 @@ export default function FerramentasPage() {
                   ))}
                 </div>
                 <p className="text-[10px] text-[var(--foreground-muted)]">
-                  Juntaram-se esta semana
+                  {tr("Juntaram-se esta semana", "Joined this week", "Se unieron esta semana")}
                 </p>
               </div>
 
@@ -892,15 +1097,35 @@ export default function FerramentasPage() {
           <div className="mt-12 p-6 bg-[var(--background-secondary)]/50 border border-[var(--gold)]/20 rounded-xl max-w-2xl mx-auto">
             <h4 className="text-sm font-serif text-[var(--foreground)] mb-4 flex items-center gap-2">
               <Calculator size={16} className="text-[var(--gold)]" />
-              Compare: PRO vs. Serviços Tradicionais
+              {tr(
+                "Compare: PRO vs. Serviços Tradicionais",
+                "Compare: PRO vs. Traditional Services",
+                "Compare: PRO vs. Servicios Tradicionales"
+              )}
             </h4>
             <div className="grid grid-cols-2 gap-4 text-xs">
               <div className="space-y-2">
                 <p className="text-[var(--foreground-muted)]">
-                  Avaliação veterinária profissional:
+                  {tr(
+                    "Avaliação veterinária profissional:",
+                    "Professional veterinary assessment:",
+                    "Evaluación veterinaria profesional:"
+                  )}
                 </p>
-                <p className="text-[var(--foreground-muted)]">Relatório de pedigree (APSL):</p>
-                <p className="text-[var(--foreground-muted)]">Consultor de compra (1 cavalo):</p>
+                <p className="text-[var(--foreground-muted)]">
+                  {tr(
+                    "Relatório de pedigree (APSL):",
+                    "Pedigree report (APSL):",
+                    "Informe de pedigree (APSL):"
+                  )}
+                </p>
+                <p className="text-[var(--foreground-muted)]">
+                  {tr(
+                    "Consultor de compra (1 cavalo):",
+                    "Purchase consultant (1 horse):",
+                    "Consultor de compra (1 caballo):"
+                  )}
+                </p>
                 <p className="font-semibold text-[var(--foreground-secondary)] pt-2 border-t border-[var(--border)]">
                   Total:
                 </p>
@@ -916,10 +1141,19 @@ export default function FerramentasPage() {
             </div>
             <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
               <p className="text-xs text-emerald-400 font-semibold">
-                Portal Lusitano PRO: 4,99€/mês = <span className="text-lg">59,88€/ano</span>
+                {tr(
+                  "Portal Lusitano PRO: 4,99€/mês =",
+                  "Portal Lusitano PRO: €4.99/month =",
+                  "Portal Lusitano PRO: 4,99€/mes ="
+                )}{" "}
+                <span className="text-lg">{tr("59,88€/ano", "€59.88/year", "59,88€/año")}</span>
               </p>
               <p className="text-[10px] text-emerald-400/70 mt-1">
-                Economiza até 370€ vs. serviços tradicionais
+                {tr(
+                  "Economiza até 370€ vs. serviços tradicionais",
+                  "Save up to €370 vs. traditional services",
+                  "Ahorra hasta 370€ vs. servicios tradicionales"
+                )}
               </p>
             </div>
           </div>
@@ -992,7 +1226,7 @@ export default function FerramentasPage() {
       </section>
 
       {/* ===== FAQ SECTION ===== */}
-      <FAQSection items={faqItems} />
+      <FAQSection items={getFaqItems(language)} />
 
       {/* ===== REVIEWS SECTION ===== */}
       <ToolReviewsSection />

@@ -55,12 +55,10 @@ export default function AddToCartButton({
     }
 
     setLoading(true);
+    openCart(); // Abre o drawer imediatamente — não esperar resposta da API (UX optimista)
 
     try {
       await addItemToCart(variantId, 1);
-
-      // 3. SUCESSO
-      openCart();
     } catch {
       showToast("error", t.error);
     } finally {

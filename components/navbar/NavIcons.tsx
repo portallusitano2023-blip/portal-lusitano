@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Link from "next/link";
 import { Search, Heart, User, ShoppingBag, Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
@@ -14,7 +15,7 @@ interface NavIconsProps {
   onMobileToggle: () => void;
 }
 
-export function NavIcons({
+export const NavIcons = memo(function NavIcons({
   language,
   t,
   isMobileOpen,
@@ -65,16 +66,22 @@ export function NavIcons({
         <span className={language === "es" ? "text-[var(--gold)]" : ""}>ES</span>
       </button>
 
-      {/* Favoritos - Products + Horses */}
+      {/* Favoritos - only shows horse favorites count (links to /cavalos-favoritos) */}
       <Link
         href="/cavalos-favoritos"
         className="text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center relative active:scale-95 touch-manipulation"
-        aria-label={language === "pt" ? "Cavalos Favoritos" : "Favorite Horses"}
+        aria-label={
+          language === "pt"
+            ? "Cavalos Favoritos"
+            : language === "es"
+              ? "Caballos Favoritos"
+              : "Favorite Horses"
+        }
       >
         <Heart size={20} strokeWidth={1.5} />
-        {wishlistCount + favoritesCount > 0 && (
+        {favoritesCount > 0 && (
           <span className="absolute top-0.5 right-0.5 w-5 h-5 bg-[var(--gold)] rounded-full flex items-center justify-center text-[10px] text-black font-bold">
-            {wishlistCount + favoritesCount}
+            {favoritesCount}
           </span>
         )}
       </Link>
@@ -127,4 +134,4 @@ export function NavIcons({
       </button>
     </div>
   );
-}
+});

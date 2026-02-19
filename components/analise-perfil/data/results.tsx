@@ -201,7 +201,6 @@ export const results: Record<string, Result> = {
     ],
     famousHorses: [
       { name: "Novilheiro", achievement: "Lenda da versatilidade" },
-      { name: "Opus 72", achievement: "Reprodutor influente" },
       { name: "Hábil", achievement: "Campeão de Equitação de Trabalho" },
       { name: "Invasor", achievement: "Referência do Lusitano tradicional" },
     ],
@@ -348,7 +347,6 @@ export const results: Record<string, Result> = {
     ],
     famousHorses: [
       { name: "Novilheiro", achievement: "Pai de nação, influenciou gerações" },
-      { name: "Opus 72", achievement: "Reprodutor de mérito excepcional" },
       { name: "Ícaro", achievement: "Top reprodutor" },
       { name: "Quo Vadis", achievement: "Garanhão de elite" },
     ],

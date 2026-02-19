@@ -75,6 +75,7 @@ body {
 }
 
 .animate-slow-zoom {
+  will-change: transform;
   animation: slow-zoom 20s linear infinite alternate;
 }
 
@@ -88,27 +89,38 @@ body {
 }
 
 .animate-marquee {
+  will-change: transform;
   animation: marquee 40s linear infinite;
 }
 
 /* Preloader - CSS puro (sem framer-motion) */
 .preloader-line {
+  transform-origin: left center;
+  will-change: transform;
   animation: preloaderLine 0.5s ease-out forwards;
 }
 .preloader-bar {
+  transform-origin: left center;
+  will-change: transform;
   animation: preloaderBar 0.5s ease-out forwards;
 }
 .preloader-exit {
   animation: preloaderFade 0.3s ease-out 0.3s forwards;
 }
 @keyframes preloaderLine {
+  from {
+    transform: scaleX(0);
+  }
   to {
-    max-width: 100%;
+    transform: scaleX(1);
   }
 }
 @keyframes preloaderBar {
+  from {
+    transform: scaleX(0);
+  }
   to {
-    width: 100%;
+    transform: scaleX(1);
   }
 }
 @keyframes preloaderFade {
@@ -146,6 +158,7 @@ body {
 }
 
 .animate-auth-shake {
+  will-change: transform;
   animation: auth-shake 0.45s ease-in-out;
 }
 
@@ -621,6 +634,7 @@ body {
 }
 
 .animate-fade-in-up {
+  will-change: opacity, transform;
   animation: fade-in-up 0.5s ease-out forwards;
 }
 
@@ -747,6 +761,10 @@ body {
 .text-split-word {
   display: inline-block;
   opacity: 0;
+  /* backface-visibility prevents flickering on 3D rotateX; will-change promotes to GPU layer */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: opacity, transform;
   animation: wordReveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
@@ -769,9 +787,11 @@ body {
 }
 
 .clip-reveal-left {
+  will-change: clip-path;
   animation: clipRevealLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 .clip-reveal-up {
+  will-change: clip-path;
   animation: clipRevealUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
@@ -780,9 +800,14 @@ body {
   transform-style: preserve-3d;
   perspective: 800px;
   transition: transform 0.1s ease-out;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .tilt-card > * {
   transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* ===== ARTICLE BODY — DROP CAP + TYPOGRAPHY ===== */
@@ -810,6 +835,7 @@ body {
 /* Magnetic button effect */
 .magnetic-btn {
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform; /* promove para GPU layer — elimina jank em mousemove */
 }
 
 /* Ripple click effect */
@@ -852,10 +878,13 @@ body {
   content: "";
   position: absolute;
   top: 0;
-  left: -100%;
+  left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.08), transparent);
+  /* Start off-screen via transform — GPU composited, avoids layout reflow */
+  transform: translateX(-100%);
+  will-change: transform;
   transition: none;
 }
 .shimmer-gold:hover::before {
@@ -863,10 +892,10 @@ body {
 }
 @keyframes shimmerSlide {
   0% {
-    left: -100%;
+    transform: translateX(-100%);
   }
   100% {
-    left: 100%;
+    transform: translateX(100%);
   }
 }
 
@@ -935,6 +964,7 @@ body {
   mask-composite: exclude;
   pointer-events: none;
   opacity: 0;
+  will-change: background-position, opacity;
   transition: opacity 0.4s ease;
 }
 .animated-border:hover::before {
@@ -1017,6 +1047,8 @@ body {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  /* pan-x allows horizontal swipe without interfering with vertical page scroll */
+  touch-action: pan-x;
   scrollbar-width: none;
   padding: 2rem 0;
 }
@@ -1039,13 +1071,13 @@ body {
   z-index: 1;
 }
 
-/* Line draw animation */
+/* Line draw animation — uses scaleX instead of width to avoid layout reflow */
 @keyframes drawLine {
   from {
-    width: 0;
+    transform: scaleX(0);
   }
   to {
-    width: 100%;
+    transform: scaleX(1);
   }
 }
 .line-draw {
@@ -1058,7 +1090,10 @@ body {
   left: 0;
   height: 1px;
   background: var(--gold);
-  width: 0;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
 }
 .line-draw:hover::after {
   animation: drawLine 0.4s ease-out forwards;
@@ -1067,6 +1102,7 @@ body {
 /* Stagger children animation helper */
 .stagger-children > * {
   opacity: 0;
+  will-change: opacity, transform;
   animation: revealUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 .stagger-children > *:nth-child(1) {
@@ -1110,6 +1146,7 @@ body {
 
 /* Card lift on hover */
 .card-premium {
+  will-change: transform;
   transition:
     transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     box-shadow 0.4s ease;
@@ -1133,6 +1170,7 @@ body {
 .marquee-track {
   display: flex;
   width: max-content;
+  will-change: transform;
   animation: marqueeScroll 30s linear infinite;
 }
 .marquee-track:hover {
@@ -1196,5 +1234,6 @@ body {
   mask-composite: exclude;
   pointer-events: none;
   opacity: 0.4;
+  will-change: background-position;
   z-index: 30;
 }

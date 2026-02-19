@@ -58,7 +58,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Erro ao buscar cavalos" }, { status: 500 });
     }
 
-    return NextResponse.json({ cavalos: data });
+    return NextResponse.json(
+      { cavalos: data },
+      {
+        headers: {
+          // Marketplace listings — cache 60s at CDN, serve stale up to 5 min while revalidating
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

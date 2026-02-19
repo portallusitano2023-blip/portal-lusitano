@@ -16,6 +16,8 @@ export default function HorizontalScrollGallery({
   const isDragging = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
+  // RAF ref ensures scroll mutations are batched to the next frame — eliminates jank
+  const rafId = useRef(0);
 
   const handleMouseDown = useCallback((e: MouseEvent) => {
     if (!scrollRef.current) return;
@@ -30,11 +32,17 @@ export default function HorizontalScrollGallery({
     e.preventDefault();
     const x = e.pageX - scrollRef.current.offsetLeft;
     const walk = (x - startX.current) * 1.5;
-    scrollRef.current.scrollLeft = scrollLeft.current - walk;
+    const target = scrollLeft.current - walk;
+    // Throttle DOM write to animation frame — prevents layout thrash on high-frequency events
+    cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(() => {
+      if (scrollRef.current) scrollRef.current.scrollLeft = target;
+    });
   }, []);
 
   const handleEnd = useCallback(() => {
     isDragging.current = false;
+    cancelAnimationFrame(rafId.current);
     if (scrollRef.current) scrollRef.current.style.cursor = "grab";
   }, []);
 
@@ -48,7 +56,12 @@ export default function HorizontalScrollGallery({
     if (!scrollRef.current) return;
     const x = e.touches[0].pageX - scrollRef.current.offsetLeft;
     const walk = (x - startX.current) * 1.5;
-    scrollRef.current.scrollLeft = scrollLeft.current - walk;
+    const target = scrollLeft.current - walk;
+    // Same RAF throttling for touch events
+    cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(() => {
+      if (scrollRef.current) scrollRef.current.scrollLeft = target;
+    });
   }, []);
 
   return (

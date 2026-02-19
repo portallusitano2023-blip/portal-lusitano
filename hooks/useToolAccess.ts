@@ -65,8 +65,11 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
 
           setUsageCount(count || 0);
         }
-      } catch {
-        // On error, be permissive
+      } catch (err) {
+        // On error, be permissive — but log so production issues are diagnosable
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("[useToolAccess] Error loading tool access, defaulting to permissive:", err);
+        }
         setUsageCount(0);
       } finally {
         setIsLoading(false);

@@ -6,36 +6,26 @@ import { logger } from "@/lib/logger";
 // Retorna estatísticas públicas das ferramentas para prova social no Hub
 export async function GET() {
   try {
-    // Total de análises realizadas
-    const { count: totalAnalyses, error: countError } = await supabase
-      .from("tool_usage")
-      .select("*", { count: "exact", head: true });
+    // Buscar todas as estatísticas em paralelo — queries independentes
+    const [
+      { count: totalAnalyses, error: countError },
+      { data: usersData, error: usersError },
+      { data: reviewsData, error: reviewsError },
+    ] = await Promise.all([
+      supabase.from("tool_usage").select("*", { count: "exact", head: true }),
+      supabase.from("tool_usage").select("user_id"),
+      supabase
+        .from("reviews")
+        .select("avaliacao")
+        .not("ferramenta_slug", "is", null)
+        .eq("status", "approved"),
+    ]);
 
-    if (countError) {
-      logger.error("Erro ao contar tool_usage:", countError);
-    }
-
-    // Total de utilizadores únicos
-    const { data: usersData, error: usersError } = await supabase
-      .from("tool_usage")
-      .select("user_id");
-
-    if (usersError) {
-      logger.error("Erro ao contar utilizadores:", usersError);
-    }
+    if (countError) logger.error("Erro ao contar tool_usage:", countError);
+    if (usersError) logger.error("Erro ao contar utilizadores:", usersError);
+    if (reviewsError) logger.error("Erro ao buscar reviews:", reviewsError);
 
     const uniqueUsers = usersData ? new Set(usersData.map((r) => r.user_id)).size : 0;
-
-    // Média e total de reviews das ferramentas
-    const { data: reviewsData, error: reviewsError } = await supabase
-      .from("reviews")
-      .select("avaliacao")
-      .not("ferramenta_slug", "is", null)
-      .eq("status", "approved");
-
-    if (reviewsError) {
-      logger.error("Erro ao buscar reviews:", reviewsError);
-    }
 
     const reviewCount = reviewsData?.length || 0;
     const avgRating =
@@ -44,12 +34,20 @@ export async function GET() {
           10
         : 0;
 
-    return NextResponse.json({
-      totalAnalyses: totalAnalyses || 0,
-      totalUsers: uniqueUsers,
-      avgRating,
-      reviewCount,
-    });
+    return NextResponse.json(
+      {
+        totalAnalyses: totalAnalyses || 0,
+        totalUsers: uniqueUsers,
+        avgRating,
+        reviewCount,
+      },
+      {
+        headers: {
+          // Public social proof stats — cache 5 min, stale up to 15 min
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Erro em /api/tools/stats:", error);
     // Retornar valores neutros em caso de erro — nunca quebrar a página

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { resend, getProfissionalConfirmEmail } from "@/lib/resend";
 import { CONTACT_EMAIL } from "@/lib/constants";
@@ -11,6 +10,12 @@ export async function handleProfissional(
   session: Stripe.Checkout.Session,
   metadata: Stripe.Metadata
 ): Promise<void> {
+  const customerEmail = session.customer_details?.email;
+  if (!customerEmail) {
+    logger.error("handleProfissional: missing customer email", { sessionId: session.id });
+    throw new Error("Stripe session missing customer email");
+  }
+
   // Buscar dados completos do formulário
   let formData: Record<string, string | boolean | number | string[]> | null = null;
   let submissionId: string | null = null;
@@ -49,7 +54,7 @@ export async function handleProfissional(
       cidade: metadata.cidade || (formData?.cidade as string) || null,
       distrito: metadata.distrito || (formData?.distrito as string) || null,
       telemovel: metadata.telefone || (formData?.telefone as string) || "",
-      email: session.customer_details?.email!,
+      email: customerEmail,
       website: (formData?.website as string) || null,
       instagram: (formData?.instagram as string) || null,
       facebook: (formData?.facebook as string) || null,
@@ -111,13 +116,9 @@ export async function handleProfissional(
   // Email ao profissional - perfil em análise
   await resend.emails.send({
     from: "Portal Lusitano <profissionais@portal-lusitano.pt>",
-    to: session.customer_details?.email!,
+    to: customerEmail,
     subject: "Registo recebido — Perfil em análise",
-    html: getProfissionalConfirmEmail(
-      metadata.nome || "",
-      metadata.categoria || "",
-      session.customer_details?.email!
-    ),
+    html: getProfissionalConfirmEmail(metadata.nome || "", metadata.categoria || "", customerEmail),
   });
 
   // Notificar admin - aprovação pendente
@@ -137,7 +138,7 @@ export async function handleProfissional(
       <p><strong>Pagamento:</strong> €6/mês (subscrição activa)</p>
       <hr>
       <p><strong>ID:</strong> ${profissional?.id || "N/A"}</p>
-      <p><a href="https://portal-lusitano.pt/admin">Ir para Admin Panel para aprovar</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://portal-lusitano.pt"}/admin">Ir para Admin Panel para aprovar</a></p>
     `,
   });
 }

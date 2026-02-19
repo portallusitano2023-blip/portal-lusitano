@@ -12,48 +12,26 @@ export async function GET() {
 
     const now = new Date();
 
-    // Buscar leads (ebooks)
-    const { data: leads, error: leadsError } = await supabase.from("leads").select("*");
+    // Buscar todas as tabelas em paralelo — são queries independentes
+    const [
+      { data: leads, error: leadsError },
+      { data: cavalos, error: cavalosError },
+      { data: eventos, error: eventosError },
+      { data: coudelarias, error: coudError },
+      { data: reviews, error: reviewsError },
+    ] = await Promise.all([
+      supabase.from("leads").select("*"),
+      supabase.from("cavalos_venda").select("id, status, views_count, created_at"),
+      supabase.from("eventos").select("id, destaque, data_inicio, views_count"),
+      supabase.from("coudelarias").select("id, destaque"),
+      supabase.from("reviews").select("id, status, created_at"),
+    ]);
 
-    if (leadsError) {
-      logger.error("Erro ao buscar leads:", leadsError);
-    }
-
-    // Buscar cavalos
-    const { data: cavalos, error: cavalosError } = await supabase
-      .from("cavalos_venda")
-      .select("id, status, views_count, created_at");
-
-    if (cavalosError) {
-      logger.error("Erro ao buscar cavalos:", cavalosError);
-    }
-
-    // Buscar eventos
-    const { data: eventos, error: eventosError } = await supabase
-      .from("eventos")
-      .select("id, destaque, data_inicio, views_count");
-
-    if (eventosError) {
-      logger.error("Erro ao buscar eventos:", eventosError);
-    }
-
-    // Buscar coudelarias
-    const { data: coudelarias, error: coudError } = await supabase
-      .from("coudelarias")
-      .select("id, destaque");
-
-    if (coudError) {
-      logger.error("Erro ao buscar coudelarias:", coudError);
-    }
-
-    // Buscar reviews
-    const { data: reviews, error: reviewsError } = await supabase
-      .from("reviews")
-      .select("id, status, created_at");
-
-    if (reviewsError) {
-      logger.error("Erro ao buscar reviews:", reviewsError);
-    }
+    if (leadsError) logger.error("Erro ao buscar leads:", leadsError);
+    if (cavalosError) logger.error("Erro ao buscar cavalos:", cavalosError);
+    if (eventosError) logger.error("Erro ao buscar eventos:", eventosError);
+    if (coudError) logger.error("Erro ao buscar coudelarias:", coudError);
+    if (reviewsError) logger.error("Erro ao buscar reviews:", reviewsError);
 
     // Stats de leads/ebooks
     const totalLeads = leads?.length || 0;

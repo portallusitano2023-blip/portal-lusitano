@@ -190,7 +190,16 @@ export async function GET(request: NextRequest) {
     }
 
     // Limitar resultados
-    return NextResponse.json({ results: results.slice(0, limit) });
+    return NextResponse.json(
+      { results: results.slice(0, limit) },
+      {
+        headers: {
+          // Search results are query-specific — short CDN cache, Vary ensures per-query caching
+          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120",
+          Vary: "Accept-Encoding",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Erro na pesquisa:", error);
     return NextResponse.json({ error: "Erro na pesquisa" }, { status: 500 });

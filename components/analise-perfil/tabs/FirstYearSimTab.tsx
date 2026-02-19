@@ -113,7 +113,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
   const usableH = chartHeight - paddingTop - paddingBottom;
 
   const barPoints = useMemo(() => {
-    if (cumulativeData.length === 0) return [];
+    if (cumulativeData.length === 0 || totalYear === 0) return [];
     const max = totalYear * 1.1;
     const barW = usableW / cumulativeData.length;
 

@@ -24,7 +24,7 @@ const montserrat = Montserrat({
   weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
   display: "optional",
-  preload: true,
+  preload: false, // display:"optional" + preload:true é contraditório — optional não bloqueia render, preload desnecessário
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";

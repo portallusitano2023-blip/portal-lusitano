@@ -6,6 +6,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   ReactNode,
 } from "react";
 import pt from "@/locales/pt.json";
@@ -71,11 +72,16 @@ export function LanguageProvider({
     });
   }, []);
 
-  return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t: resolvedT }}>
-      {children}
-    </LanguageContext.Provider>
+  // Memoize the context value object so consumers only re-render when
+  // language or translations actually change — not on every provider render.
+  const contextValue = useMemo(
+    () => ({ language, toggleLanguage, t: resolvedT }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [language, resolvedT]
+    // toggleLanguage is stable (useCallback with no deps), excluded intentionally
   );
+
+  return <LanguageContext.Provider value={contextValue}>{children}</LanguageContext.Provider>;
 }
 
 export const useLanguage = () => {

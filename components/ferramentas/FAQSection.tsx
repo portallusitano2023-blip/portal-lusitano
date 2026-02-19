@@ -13,18 +13,20 @@ interface FAQItem {
 
 interface FAQAccordionProps {
   item: FAQItem;
+  index: number;
   isOpen: boolean;
   onClick: () => void;
 }
 
-function FAQAccordion({ item, isOpen, onClick }: FAQAccordionProps) {
+function FAQAccordion({ item, index, isOpen, onClick }: FAQAccordionProps) {
+  const answerId = `faq-answer-${index}`;
   return (
     <div className="border-b border-[var(--border)]">
       <button
         onClick={onClick}
         className="w-full py-6 flex items-center justify-between text-left group"
         aria-expanded={isOpen}
-        aria-controls={`faq-answer-${item.question.slice(0, 20).replace(/\s/g, "-")}`}
+        aria-controls={answerId}
       >
         <span className="text-lg font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors pr-8">
           {item.question}
@@ -41,6 +43,7 @@ function FAQAccordion({ item, isOpen, onClick }: FAQAccordionProps) {
       </button>
 
       <div
+        id={answerId}
         className="grid transition-all duration-200"
         style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
       >
@@ -82,6 +85,7 @@ export default function FAQSection({ items }: FAQSectionProps) {
             <FAQAccordion
               key={index}
               item={item}
+              index={index}
               isOpen={openFAQ === index}
               onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
             />

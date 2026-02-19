@@ -1,34 +1,48 @@
 "use client";
 
+import { memo, useMemo } from "react";
 import Link from "next/link";
 import { Instagram, Music2, Mail, MapPin, ArrowUpRight, Gift } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { CONTACT_EMAIL } from "@/lib/constants";
 
-export default function Footer() {
+// memo: Footer has no local state and only re-renders when the language/translations
+// object changes. Wrapping it prevents spurious re-renders from context siblings.
+export default memo(function Footer() {
   const { t } = useLanguage();
 
-  const navItems = [
-    { name: t.nav.home, href: "/" },
-    { name: t.nav.shop, href: "/loja" },
-    { name: t.nav.journal, href: "/jornal" },
-    { name: t.footer.about, href: "/sobre" },
-  ];
+  // Memoized so array references stay stable between renders when translations
+  // haven't changed, which avoids re-rendering the mapped list items.
+  const navItems = useMemo(
+    () => [
+      { name: t.nav.home, href: "/" },
+      { name: t.nav.shop, href: "/loja" },
+      { name: t.nav.journal, href: "/jornal" },
+      { name: t.footer.about, href: "/sobre" },
+    ],
+    [t.nav.home, t.nav.shop, t.nav.journal, t.footer.about]
+  );
 
-  const lusitanoItems = [
-    { name: t.footer.buy_horse, href: "/comprar" },
-    { name: t.footer.studs, href: "/directorio" },
-    { name: t.footer.events, href: "/eventos" },
-    { name: t.footer.lineages, href: "/linhagens" },
-    { name: t.footer.notable, href: "/cavalos-famosos" },
-  ];
+  const lusitanoItems = useMemo(
+    () => [
+      { name: t.footer.buy_horse, href: "/comprar" },
+      { name: t.footer.studs, href: "/directorio" },
+      { name: t.footer.events, href: "/eventos" },
+      { name: t.footer.lineages, href: "/linhagens" },
+      { name: t.footer.notable, href: "/cavalos-famosos" },
+    ],
+    [t.footer.buy_horse, t.footer.studs, t.footer.events, t.footer.lineages, t.footer.notable]
+  );
 
-  const toolItems = [
-    { name: t.footer.calculator, href: "/calculadora-valor" },
-    { name: t.footer.comparator, href: "/comparador-cavalos" },
-    { name: t.footer.compatibility, href: "/verificador-compatibilidade" },
-    { name: t.footer.profile_analysis, href: "/analise-perfil" },
-  ];
+  const toolItems = useMemo(
+    () => [
+      { name: t.footer.calculator, href: "/calculadora-valor" },
+      { name: t.footer.comparator, href: "/comparador-cavalos" },
+      { name: t.footer.compatibility, href: "/verificador-compatibilidade" },
+      { name: t.footer.profile_analysis, href: "/analise-perfil" },
+    ],
+    [t.footer.calculator, t.footer.comparator, t.footer.compatibility, t.footer.profile_analysis]
+  );
 
   return (
     <footer className="bg-[var(--background)] border-t border-[var(--border)] pt-24 sm:pt-32 pb-12 px-4 sm:px-6 mt-20 relative overflow-hidden">
@@ -173,4 +187,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+});

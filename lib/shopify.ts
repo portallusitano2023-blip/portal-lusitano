@@ -133,7 +133,8 @@ export async function getProducts(): Promise<
     variants?: Array<{ id: string; title: string; price: ShopifyPrice }>;
   }>
 > {
-  const query = `query { products(first: 20) { edges { node { id handle title description images(first: 3) { edges { node { url } } } priceRange { minVariantPrice { amount } } variants(first: 1) { edges { node { id title price { amount } } } } } } } }`;
+  // url(transform) pede ao CDN do Shopify imagens já redimensionadas — elimina download de imagens originais enormes
+  const query = `query { products(first: 20) { edges { node { id handle title description images(first: 3) { edges { node { url(transform: {maxWidth: 800, preferredContentType: WEBP}) } } } priceRange { minVariantPrice { amount } } variants(first: 1) { edges { node { id title price { amount } } } } } } } }`;
   const res = await shopifyFetch({ query });
   return (
     res.data?.products?.edges.map((edge) => ({
@@ -165,7 +166,7 @@ export async function getProduct(handle: string): Promise<{
         title
         handle
         descriptionHtml
-        images(first: 5) { edges { node { url } } }
+        images(first: 5) { edges { node { url(transform: {maxWidth: 1200, preferredContentType: WEBP}) } } }
         variants(first: 250) {
           edges {
             node {
@@ -230,7 +231,7 @@ const CART_LINES_FRAGMENT = `
             price { amount }
             product {
               title
-              images(first: 1) { edges { node { url } } }
+              images(first: 1) { edges { node { url(transform: {maxWidth: 120, preferredContentType: WEBP}) } } }
             }
           }
         }

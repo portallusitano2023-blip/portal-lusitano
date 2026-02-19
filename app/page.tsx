@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
@@ -31,201 +32,224 @@ import {
 
 export default function Home() {
   const { language, t } = useLanguage();
-  const tr = createTranslator(language);
+  // createTranslator returns a pure function of language — memoize it so
+  // the same reference is reused across renders when language is unchanged.
+  const tr = useMemo(() => createTranslator(language), [language]);
 
-  const features = [
-    {
-      icon: ShoppingCart,
-      title: tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo"),
-      desc: tr(
-        "Marketplace com cavalos Lusitanos verificados à venda",
-        "Marketplace with verified Lusitano horses for sale",
-        "Mercado con caballos Lusitanos verificados en venta"
-      ),
-      href: "/comprar",
-      accent: "from-amber-500/20 to-orange-500/20",
-    },
-    {
-      icon: Crown,
-      title: tr("Coudelarias", "Stud Farms", "Haras"),
-      desc: tr(
-        "Directório das melhores coudelarias de Portugal",
-        "Directory of the best stud farms in Portugal",
-        "Directorio de los mejores haras de Portugal"
-      ),
-      href: "/directorio",
-      accent: "from-yellow-500/20 to-amber-500/20",
-    },
-    {
-      icon: Calculator,
-      title: tr("Ferramentas", "Tools", "Herramientas"),
-      desc: tr(
-        "Calculadora de valor, comparador e análise de perfil",
-        "Value calculator, comparator and profile analysis",
-        "Calculadora de valor, comparador y análisis de perfil"
-      ),
-      href: "/ferramentas",
-      accent: "from-emerald-500/20 to-teal-500/20",
-    },
-    {
-      icon: Newspaper,
-      title: tr("Jornal", "Journal", "Revista"),
-      desc: tr(
-        "Artigos, investigação e crónicas sobre o Lusitano",
-        "Articles, research and chronicles about the Lusitano",
-        "Artículos, investigación y crónicas sobre el Lusitano"
-      ),
-      href: "/jornal",
-      accent: "from-blue-500/20 to-indigo-500/20",
-    },
-    {
-      icon: Trophy,
-      title: tr("Lusitanos Notáveis", "Notable Lusitanos", "Lusitanos Notables"),
-      desc: tr(
-        "Galeria de honra dos cavalos que fizeram história",
-        "Hall of fame of horses that made history",
-        "Galería de honor de los caballos que hicieron historia"
-      ),
-      href: "/cavalos-famosos",
-      accent: "from-purple-500/20 to-pink-500/20",
-    },
-    {
-      icon: MapPin,
-      title: tr("Mapa Interativo", "Interactive Map", "Mapa Interactivo"),
-      desc: tr(
-        "Encontre coudelarias, eventos e profissionais no mapa",
-        "Find stud farms, events and professionals on the map",
-        "Encuentre haras, eventos y profesionales en el mapa"
-      ),
-      href: "/mapa",
-      accent: "from-rose-500/20 to-red-500/20",
-    },
-  ];
+  // Memoize all static data arrays so they are not recreated on every render.
+  // These only need to change when `language` changes (tr/t depend on it).
+  const features = useMemo(
+    () => [
+      {
+        icon: ShoppingCart,
+        title: tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo"),
+        desc: tr(
+          "Marketplace com cavalos Lusitanos verificados à venda",
+          "Marketplace with verified Lusitano horses for sale",
+          "Mercado con caballos Lusitanos verificados en venta"
+        ),
+        href: "/comprar",
+        accent: "from-amber-500/20 to-orange-500/20",
+      },
+      {
+        icon: Crown,
+        title: tr("Coudelarias", "Stud Farms", "Haras"),
+        desc: tr(
+          "Directório das melhores coudelarias de Portugal",
+          "Directory of the best stud farms in Portugal",
+          "Directorio de los mejores haras de Portugal"
+        ),
+        href: "/directorio",
+        accent: "from-yellow-500/20 to-amber-500/20",
+      },
+      {
+        icon: Calculator,
+        title: tr("Ferramentas", "Tools", "Herramientas"),
+        desc: tr(
+          "Calculadora de valor, comparador e análise de perfil",
+          "Value calculator, comparator and profile analysis",
+          "Calculadora de valor, comparador y análisis de perfil"
+        ),
+        href: "/ferramentas",
+        accent: "from-emerald-500/20 to-teal-500/20",
+      },
+      {
+        icon: Newspaper,
+        title: tr("Jornal", "Journal", "Revista"),
+        desc: tr(
+          "Artigos, investigação e crónicas sobre o Lusitano",
+          "Articles, research and chronicles about the Lusitano",
+          "Artículos, investigación y crónicas sobre el Lusitano"
+        ),
+        href: "/jornal",
+        accent: "from-blue-500/20 to-indigo-500/20",
+      },
+      {
+        icon: Trophy,
+        title: tr("Lusitanos Notáveis", "Notable Lusitanos", "Lusitanos Notables"),
+        desc: tr(
+          "Galeria de honra dos cavalos que fizeram história",
+          "Hall of fame of horses that made history",
+          "Galería de honor de los caballos que hicieron historia"
+        ),
+        href: "/cavalos-famosos",
+        accent: "from-purple-500/20 to-pink-500/20",
+      },
+      {
+        icon: MapPin,
+        title: tr("Mapa Interativo", "Interactive Map", "Mapa Interactivo"),
+        desc: tr(
+          "Encontre coudelarias, eventos e profissionais no mapa",
+          "Find stud farms, events and professionals on the map",
+          "Encuentre haras, eventos y profesionales en el mapa"
+        ),
+        href: "/mapa",
+        accent: "from-rose-500/20 to-red-500/20",
+      },
+    ],
+    [tr]
+  );
 
-  const pillars = [
-    {
-      icon: BookOpen,
-      title: tr("Conhecimento", "Knowledge", "Conocimiento"),
-      desc: tr(
-        "Arquivo editorial com investigação sobre a raça",
-        "Editorial archive with research about the breed",
-        "Archivo editorial con investigación sobre la raza"
-      ),
-    },
-    {
-      icon: Shield,
-      title: tr("Verificação", "Verification", "Verificación"),
-      desc: tr(
-        "Dados verificados e fontes credíveis",
-        "Verified data and credible sources",
-        "Datos verificados y fuentes creíbles"
-      ),
-    },
-    {
-      icon: Crown,
-      title: tr("Tradição", "Tradition", "Tradición"),
-      desc: tr(
-        "500 anos de história equestre portuguesa",
-        "500 years of Portuguese equestrian history",
-        "500 años de historia ecuestre portuguesa"
-      ),
-    },
-    {
-      icon: Gift,
-      title: tr("Comunidade", "Community", "Comunidad"),
-      desc: tr(
-        "Uma rede de cavaleiros, criadores e entusiastas",
-        "A network of riders, breeders and enthusiasts",
-        "Una red de jinetes, criadores y entusiastas"
-      ),
-    },
-  ];
+  const pillars = useMemo(
+    () => [
+      {
+        icon: BookOpen,
+        title: tr("Conhecimento", "Knowledge", "Conocimiento"),
+        desc: tr(
+          "Arquivo editorial com investigação sobre a raça",
+          "Editorial archive with research about the breed",
+          "Archivo editorial con investigación sobre la raza"
+        ),
+      },
+      {
+        icon: Shield,
+        title: tr("Verificação", "Verification", "Verificación"),
+        desc: tr(
+          "Dados verificados e fontes credíveis",
+          "Verified data and credible sources",
+          "Datos verificados y fuentes creíbles"
+        ),
+      },
+      {
+        icon: Crown,
+        title: tr("Tradição", "Tradition", "Tradición"),
+        desc: tr(
+          "500 anos de história equestre portuguesa",
+          "500 years of Portuguese equestrian history",
+          "500 años de historia ecuestre portuguesa"
+        ),
+      },
+      {
+        icon: Gift,
+        title: tr("Comunidade", "Community", "Comunidad"),
+        desc: tr(
+          "Uma rede de cavaleiros, criadores e entusiastas",
+          "A network of riders, breeders and enthusiasts",
+          "Una red de jinetes, criadores y entusiastas"
+        ),
+      },
+    ],
+    [tr]
+  );
 
-  const galleryItems = [
-    {
-      icon: Trophy,
-      label: tr("Dressage", "Dressage", "Dressage"),
-      value: tr("Excelência", "Excellence", "Excelencia"),
-    },
-    {
-      icon: Shield,
-      label: tr("Linhagem", "Lineage", "Linaje"),
-      value: tr("500 Anos", "500 Years", "500 Años"),
-    },
-    {
-      icon: Star,
-      label: tr("Morfologia", "Morphology", "Morfología"),
-      value: tr("Perfeição", "Perfection", "Perfección"),
-    },
-    {
-      icon: Heart,
-      label: tr("Temperamento", "Temperament", "Temperamento"),
-      value: tr("Nobreza", "Nobility", "Nobleza"),
-    },
-    {
-      icon: Compass,
-      label: tr("Versatilidade", "Versatility", "Versatilidad"),
-      value: tr("Completo", "Complete", "Completo"),
-    },
-    {
-      icon: Feather,
-      label: tr("Elegância", "Elegance", "Elegancia"),
-      value: tr("Inata", "Innate", "Innata"),
-    },
-    {
-      icon: Sparkles,
-      label: tr("Presença", "Presence", "Presencia"),
-      value: tr("Majestosa", "Majestic", "Majestuosa"),
-    },
-  ];
+  const galleryItems = useMemo(
+    () => [
+      {
+        icon: Trophy,
+        label: tr("Dressage", "Dressage", "Dressage"),
+        value: tr("Excelência", "Excellence", "Excelencia"),
+      },
+      {
+        icon: Shield,
+        label: tr("Linhagem", "Lineage", "Linaje"),
+        value: tr("500 Anos", "500 Years", "500 Años"),
+      },
+      {
+        icon: Star,
+        label: tr("Morfologia", "Morphology", "Morfología"),
+        value: tr("Perfeição", "Perfection", "Perfección"),
+      },
+      {
+        icon: Heart,
+        label: tr("Temperamento", "Temperament", "Temperamento"),
+        value: tr("Nobreza", "Nobility", "Nobleza"),
+      },
+      {
+        icon: Compass,
+        label: tr("Versatilidade", "Versatility", "Versatilidad"),
+        value: tr("Completo", "Complete", "Completo"),
+      },
+      {
+        icon: Feather,
+        label: tr("Elegância", "Elegance", "Elegancia"),
+        value: tr("Inata", "Innate", "Innata"),
+      },
+      {
+        icon: Sparkles,
+        label: tr("Presença", "Presence", "Presencia"),
+        value: tr("Majestosa", "Majestic", "Majestuosa"),
+      },
+    ],
+    [tr]
+  );
 
-  const stats = [
-    {
-      value: 500,
-      suffix: "+",
-      label: tr("Anos de História", "Years of History", "Años de Historia"),
-    },
-    { value: 15, suffix: "", label: tr("Cavalos Notáveis", "Notable Horses", "Caballos Notables") },
-    {
-      value: 4,
-      suffix: "",
-      label: tr("Ferramentas Exclusivas", "Exclusive Tools", "Herramientas Exclusivas"),
-    },
-    { value: 3, suffix: "", label: tr("Idiomas", "Languages", "Idiomas") },
-  ];
+  const stats = useMemo(
+    () => [
+      {
+        value: 500,
+        suffix: "+",
+        label: tr("Anos de História", "Years of History", "Años de Historia"),
+      },
+      {
+        value: 15,
+        suffix: "",
+        label: tr("Cavalos Notáveis", "Notable Horses", "Caballos Notables"),
+      },
+      {
+        value: 4,
+        suffix: "",
+        label: tr("Ferramentas Exclusivas", "Exclusive Tools", "Herramientas Exclusivas"),
+      },
+      { value: 3, suffix: "", label: tr("Idiomas", "Languages", "Idiomas") },
+    ],
+    [tr]
+  );
 
-  const steps = [
-    {
-      number: "01",
-      icon: Compass,
-      title: tr("Pesquise", "Browse", "Explore"),
-      desc: tr(
-        "Filtre por disciplina, preço e localização no nosso marketplace verificado.",
-        "Filter by discipline, price and location on our verified marketplace.",
-        "Filtre por disciplina, precio y ubicación en nuestro marketplace verificado."
-      ),
-    },
-    {
-      number: "02",
-      icon: Heart,
-      title: tr("Contacte", "Connect", "Contacte"),
-      desc: tr(
-        "Entre em contacto directo com o criador ou proprietário e visite o cavalo.",
-        "Get in direct contact with the breeder or owner and visit the horse.",
-        "Entre en contacto directo con el criador o propietario y visite el caballo."
-      ),
-    },
-    {
-      number: "03",
-      icon: Trophy,
-      title: tr("Adquira", "Acquire", "Adquiera"),
-      desc: tr(
-        "Conclua a transacção com confiança e bem-vindo à família Lusitana.",
-        "Complete the transaction with confidence and welcome to the Lusitano family.",
-        "Complete la transacción con confianza y bienvenido a la familia Lusitana."
-      ),
-    },
-  ];
+  const steps = useMemo(
+    () => [
+      {
+        number: "01",
+        icon: Compass,
+        title: tr("Pesquise", "Browse", "Explore"),
+        desc: tr(
+          "Filtre por disciplina, preço e localização no nosso marketplace verificado.",
+          "Filter by discipline, price and location on our verified marketplace.",
+          "Filtre por disciplina, precio y ubicación en nuestro marketplace verificado."
+        ),
+      },
+      {
+        number: "02",
+        icon: Heart,
+        title: tr("Contacte", "Connect", "Contacte"),
+        desc: tr(
+          "Entre em contacto directo com o criador ou proprietário e visite o cavalo.",
+          "Get in direct contact with the breeder or owner and visit the horse.",
+          "Entre en contacto directo con el criador o propietario y visite el caballo."
+        ),
+      },
+      {
+        number: "03",
+        icon: Trophy,
+        title: tr("Adquira", "Acquire", "Adquiera"),
+        desc: tr(
+          "Conclua a transacção com confiança e bem-vindo à família Lusitana.",
+          "Complete the transaction with confidence and welcome to the Lusitano family.",
+          "Complete la transacción con confianza y bienvenido a la familia Lusitana."
+        ),
+      },
+    ],
+    [tr]
+  );
 
   return (
     <main

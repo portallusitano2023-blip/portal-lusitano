@@ -88,4 +88,46 @@ export const faqData: Record<string, FAQItem[]> = {
         "Yes, all Lusitano Journal articles are free to access. Our goal is to preserve and disseminate knowledge about the Lusitano Horse.",
     },
   ],
+  es: [
+    {
+      question: "¿Cuáles son los métodos de pago aceptados?",
+      answer:
+        "Aceptamos tarjetas de crédito/débito (Visa, Mastercard, American Express), PayPal, transferencia bancaria y MB Way. Todas las transacciones se procesan de forma segura a través de nuestra plataforma Shopify.",
+    },
+    {
+      question: "¿Cuál es el plazo de entrega?",
+      answer:
+        "Nuestros productos se fabrican bajo pedido (print-on-demand) con la máxima calidad. Para Portugal Continental, el plazo estimado es de 5-12 días hábiles. Para las islas (Azores y Madeira), 7-15 días hábiles. Los envíos internacionales varían entre 7-17 días hábiles según el destino. Los plazos incluyen producción (2-5 días) y envío.",
+    },
+    {
+      question: "¿Puedo devolver un producto?",
+      answer:
+        "Sí, aceptamos devoluciones hasta 14 días después de recibir el producto, siempre que esté en condiciones originales. Los costes de devolución son responsabilidad del cliente, excepto en caso de defecto.",
+    },
+    {
+      question: "¿Cómo funciona el Marketplace de caballos?",
+      answer:
+        "En nuestro Marketplace puede encontrar caballos Lusitanos de diversas ganaderías certificadas. Cada anuncio incluye fotos, vídeos, linaje y contacto directo con el vendedor.",
+    },
+    {
+      question: "¿Los caballos en venta tienen documentación?",
+      answer:
+        "Todos los caballos listados en Portal Lusitano cuentan con documentación completa: registro en la APSL (Asociación Portuguesa de Criadores del Caballo Pura Sangre Lusitano), pasaporte equino y certificado de salud veterinario.",
+    },
+    {
+      question: "¿Ofrecen servicio de transporte de caballos?",
+      answer:
+        "Trabajamos con empresas especializadas en transporte equino. Tras la compra, coordinamos todo el proceso de transporte, incluyendo la documentación y los seguros necesarios.",
+    },
+    {
+      question: "¿Cómo puedo registrar mi ganadería en el portal?",
+      answer:
+        "Contáctenos a través del correo electrónico o formulario de contacto. Nuestro equipo evaluará su ganadería y, si cumple nuestros criterios de calidad, será añadida al directorio.",
+    },
+    {
+      question: "¿El contenido de la Revista es gratuito?",
+      answer:
+        "Sí, todos los artículos de la Revista Lusitana son de acceso gratuito. Nuestro objetivo es preservar y difundir el conocimiento sobre el Caballo Lusitano.",
+    },
+  ],
 };

@@ -222,6 +222,18 @@ async function executeCreateTask(
   return { task_created: true, task_id: task.id };
 }
 
+// Allowlists to prevent arbitrary table/field injection via action_config
+const ALLOWED_UPDATE_TABLES = [
+  "cavalos_venda",
+  "eventos",
+  "coudelarias",
+  "reviews",
+  "profissionais",
+] as const;
+const ALLOWED_UPDATE_FIELDS = ["status", "destaque", "approved", "featured", "active"] as const;
+type AllowedTable = (typeof ALLOWED_UPDATE_TABLES)[number];
+type AllowedField = (typeof ALLOWED_UPDATE_FIELDS)[number];
+
 async function executeUpdateField(automation: AutomationData, _triggerData: TriggerData) {
   const config = automation.action_config;
 
@@ -229,8 +241,15 @@ async function executeUpdateField(automation: AutomationData, _triggerData: Trig
     throw new Error("Configuração incompleta: table, id, field, value são obrigatórios");
   }
 
+  if (!ALLOWED_UPDATE_TABLES.includes(config.table as AllowedTable)) {
+    throw new Error(`Tabela não permitida: ${config.table}`);
+  }
+  if (!ALLOWED_UPDATE_FIELDS.includes(config.field as AllowedField)) {
+    throw new Error(`Campo não permitido: ${config.field}`);
+  }
+
   const { data, error } = await supabase
-    .from(config.table)
+    .from(config.table as AllowedTable)
     .update({ [config.field]: config.value })
     .eq("id", config.id)
     .select()

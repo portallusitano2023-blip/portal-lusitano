@@ -36,7 +36,15 @@ export async function GET() {
       linkInscricao: e.link_inscricao,
     }));
 
-    return NextResponse.json({ eventos });
+    return NextResponse.json(
+      { eventos },
+      {
+        headers: {
+          // Public upcoming events listing — cache 10 min at CDN, stale up to 30 min
+          "Cache-Control": "public, s-maxage=600, stale-while-revalidate=1800",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Eventos API error:", error);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });

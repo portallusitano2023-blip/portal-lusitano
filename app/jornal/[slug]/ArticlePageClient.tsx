@@ -257,11 +257,11 @@ export default function ArticlePageClient({
               </span>
               {isPost ? (
                 <span className="inline-flex items-center gap-1.5 text-white/60 text-[9px] uppercase tracking-[0.3em] border border-white/20 px-3 py-2">
-                  <FileText size={12} /> {tr("Crónica", "Chronicle")}
+                  <FileText size={12} /> {tr("Crónica", "Chronicle", "Crónica")}
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1.5 text-white/60 text-[9px] uppercase tracking-[0.3em] border border-white/20 px-3 py-2">
-                  <Newspaper size={12} /> {tr("Artigo", "Article")}
+                  <Newspaper size={12} /> {tr("Artigo", "Article", "Artículo")}
                 </span>
               )}
             </div>
@@ -277,7 +277,7 @@ export default function ArticlePageClient({
               </span>
               {article.author?.name && (
                 <span className="text-white/40">
-                  {tr("por", "by")} {article.author.name}
+                  {tr("por", "by", "por")} {article.author.name}
                 </span>
               )}
             </div>
@@ -307,7 +307,11 @@ export default function ArticlePageClient({
               </div>
             ) : (
               <div className="mt-8 text-[var(--foreground-muted)] italic">
-                {tr("Conteúdo em preparação...", "Content in preparation...")}
+                {tr(
+                  "Conteúdo em preparação...",
+                  "Content in preparation...",
+                  "Contenido en preparación..."
+                )}
               </div>
             )}
 
@@ -340,7 +344,7 @@ export default function ArticlePageClient({
       <div className="max-w-4xl mx-auto px-8 mt-16 mb-8">
         <div className="border-t border-[var(--border)] pt-10">
           <p className="text-[var(--foreground-muted)] text-xs uppercase tracking-widest mb-6">
-            {tr("Explorar o Portal", "Explore the Portal")}
+            {tr("Explorar o Portal", "Explore the Portal", "Explorar el Portal")}
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Link
@@ -350,26 +354,28 @@ export default function ArticlePageClient({
               <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
                 Marketplace
               </span>
-              <span className="text-sm font-serif">{tr("Cavalos à Venda", "Horses for Sale")}</span>
+              <span className="text-sm font-serif">
+                {tr("Cavalos à Venda", "Horses for Sale", "Caballos en Venta")}
+              </span>
             </Link>
             <Link
               href="/directorio"
               className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
             >
               <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
-                Directório
+                {tr("Directório", "Directory", "Directorio")}
               </span>
-              <span className="text-sm font-serif">{tr("Coudelarias", "Stud Farms")}</span>
+              <span className="text-sm font-serif">{tr("Coudelarias", "Stud Farms", "Haras")}</span>
             </Link>
             <Link
               href="/cavalos-famosos"
               className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
             >
               <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
-                Arquivo
+                {tr("Arquivo", "Archive", "Archivo")}
               </span>
               <span className="text-sm font-serif">
-                {tr("Lusitanos Famosos", "Famous Lusitanos")}
+                {tr("Lusitanos Famosos", "Famous Lusitanos", "Lusitanos Famosos")}
               </span>
             </Link>
             <Link
@@ -377,9 +383,9 @@ export default function ArticlePageClient({
               className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
             >
               <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
-                Genealogia
+                {tr("Genealogia", "Genealogy", "Genealogía")}
               </span>
-              <span className="text-sm font-serif">{tr("Linhagens", "Bloodlines")}</span>
+              <span className="text-sm font-serif">{tr("Linhagens", "Bloodlines", "Linajes")}</span>
             </Link>
           </div>
         </div>

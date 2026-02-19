@@ -6,6 +6,31 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Catch performance/hydration bugs in development before they reach production
+  reactStrictMode: true,
+
+  // Prevent static page generation from hanging on slow data fetches
+  staticPageGenerationTimeout: 120,
+
+  experimental: {
+    // Tree-shake icon and component libraries — biggest single bundle win.
+    // Next.js 14.1+ rewrites these imports to per-file paths at compile time,
+    // eliminating the barrel-file cost without any call-site changes.
+    optimizePackageImports: [
+      "lucide-react",
+      "@sanity/icons",
+      "@dnd-kit/core",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
+      "@portabletext/react",
+      "@react-email/components",
+    ],
+
+    // Restore scroll position on browser back/forward navigation,
+    // giving instant perceived performance for return visits.
+    scrollRestoration: true,
+  },
+
   images: {
     remotePatterns: [
       {
@@ -138,6 +163,16 @@ const nextConfig = {
           // CSP é agora gerido no middleware.ts com nonces por request
         ],
       },
+      // API routes must never be cached — responses are dynamic and user-specific
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store",
+          },
+        ],
+      },
       // Cache static assets for 1 year
       {
         source: "/images/:path*",
@@ -211,13 +246,14 @@ const nextConfig = {
           },
         ],
       },
-      // Next.js static chunks - cache 30 dias (imutável por hash no nome)
+      // Next.js static chunks — content-hashed filenames make these truly
+      // immutable, so 1 year is safe and eliminates all repeat-visit overhead
       {
         source: "/_next/static/:path*",
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=2592000, immutable",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },

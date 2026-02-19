@@ -16,8 +16,6 @@ import {
   Loader2,
   Lock,
   X,
-  Activity,
-  TrendingUp,
   Filter,
 } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -88,16 +86,9 @@ const TOOL_CONFIG: Record<
     metricSuffix: "%",
     filterKey: "verificador",
   },
-  compatibilidade: {
-    label: "Verificador de Compatibilidade",
-    href: "/verificador-compatibilidade",
-    Icon: Heart,
-    iconBg: "bg-rose-500/10",
-    iconColor: "text-rose-400",
-    metricKey: "compatibilityScore",
-    metricLabel: "Score de compatibilidade",
-    metricSuffix: "%",
-    filterKey: "verificador",
+  // Alias for legacy records stored with tool_name="compatibilidade"
+  get compatibilidade() {
+    return this.verificador;
   },
   perfil: {
     label: "Análise de Perfil",
@@ -703,10 +694,14 @@ export default function HistoricoPage() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [records, setRecords] = useState<ToolUsageRecord[]>([]);
   const [isFetching, setIsFetching] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
   const [accessChecked, setAccessChecked] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
   const [detailRecord, setDetailRecord] = useState<ToolUsageRecord | null>(null);
+
+  const PAGE_SIZE = 50;
 
   // Check subscription and load history once auth resolves
   useEffect(() => {
@@ -742,12 +737,14 @@ export default function HistoricoPage() {
             .select("id, user_id, tool_name, form_data, result_data, created_at")
             .eq("user_id", user.id)
             .order("created_at", { ascending: false })
-            .limit(50);
+            .range(0, PAGE_SIZE - 1);
 
           if (error) {
             setFetchError("Não foi possível carregar o histórico. Tente novamente.");
           } else {
-            setRecords((data as ToolUsageRecord[]) ?? []);
+            const fetched = (data as ToolUsageRecord[]) ?? [];
+            setRecords(fetched);
+            setHasMore(fetched.length === PAGE_SIZE);
           }
         }
       } catch {
@@ -760,6 +757,32 @@ export default function HistoricoPage() {
 
     run();
   }, [user, authLoading]);
+
+  const loadMore = async () => {
+    if (!user || isLoadingMore) return;
+    setIsLoadingMore(true);
+    try {
+      const { createSupabaseBrowserClient } = await getSupabase();
+      const supabase = createSupabaseBrowserClient();
+      const from = records.length;
+      const { data, error } = await supabase
+        .from("tool_usage")
+        .select("id, user_id, tool_name, form_data, result_data, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .range(from, from + PAGE_SIZE - 1);
+
+      if (!error && data) {
+        const fetched = data as ToolUsageRecord[];
+        setRecords((prev) => [...prev, ...fetched]);
+        setHasMore(fetched.length === PAGE_SIZE);
+      }
+    } catch {
+      // Silent — user can retry
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
 
   // Filtered records
   const filteredRecords = useMemo(() => {
@@ -880,7 +903,6 @@ export default function HistoricoPage() {
                   : filteredRecords.length === 1
                     ? "1 resultado"
                     : `${filteredRecords.length} resultados`}
-                {records.length >= 50 && activeFilter === "all" && " (máximo 50)"}
               </p>
 
               {/* Records list */}
@@ -892,6 +914,24 @@ export default function HistoricoPage() {
                     </li>
                   ))}
                 </ul>
+              )}
+
+              {/* Load more */}
+              {hasMore && activeFilter === "all" && (
+                <div className="mt-6 flex justify-center">
+                  <button
+                    onClick={loadMore}
+                    disabled={isLoadingMore}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-sm text-white/60 hover:text-white hover:border-white/20 transition-colors disabled:opacity-50"
+                  >
+                    {isLoadingMore ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <RefreshCw className="h-4 w-4" />
+                    )}
+                    {isLoadingMore ? "A carregar…" : "Carregar mais"}
+                  </button>
+                </div>
               )}
 
               <p className="mt-8 text-center text-xs text-white/20">

@@ -17,8 +17,7 @@ import {
   ListChecks,
   Circle,
 } from "lucide-react";
-import AnimatedRing from "@/components/tools/AnimatedRing";
-import Confetti from "@/components/tools/Confetti";
+import dynamic from "next/dynamic";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import ResultActions from "@/components/tools/ResultActions";
 import BreedingCalendar from "@/components/tools/BreedingCalendar";
@@ -41,6 +40,14 @@ import {
   calcularValorPotro,
   calcularQualidadePais,
 } from "@/components/verificador-compatibilidade/breeding";
+
+const AnimatedRing = dynamic(() => import("@/components/tools/AnimatedRing"), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-zinc-900/50 animate-pulse rounded-xl" />,
+});
+const Confetti = dynamic(() => import("@/components/tools/Confetti"), {
+  ssr: false,
+});
 
 interface CompatibilityResultsProps {
   resultado: ResultadoCompatibilidade;

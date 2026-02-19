@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 import Link from "next/link";
 import { Heart, User, Gift } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -60,7 +60,13 @@ interface MobileMenuProps {
   onClose: () => void;
 }
 
-export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: MobileMenuProps) {
+export const MobileMenu = memo(function MobileMenu({
+  isOpen,
+  language,
+  t,
+  onLanguageToggle,
+  onClose,
+}: MobileMenuProps) {
   const { wishlist } = useWishlist();
   const { favoritesCount } = useHorseFavorites();
   const wishlistCount = wishlist.length;
@@ -70,16 +76,21 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
   const mobileToolsItems = useMemo(() => getMobileToolsItems(t.nav), [t]);
   const mobileCommunityItems = useMemo(() => getMobileCommunityItems(t.nav), [t]);
 
+  // Memoized to avoid rebuilding a new array reference on every render.
+  // Icons are stable module-level references so they are safe to include.
+  const mainNavItems = useMemo(
+    () => [
+      { name: t.nav.home, href: "/", icon: MOBILE_MAIN_NAV_ITEMS[0].icon },
+      { name: t.nav.shop, href: "/loja", icon: MOBILE_MAIN_NAV_ITEMS[1].icon },
+      { name: t.nav.journal, href: "/jornal", icon: MOBILE_MAIN_NAV_ITEMS[2].icon },
+      { name: t.nav.about, href: "/sobre", icon: MOBILE_MAIN_NAV_ITEMS[3].icon },
+    ],
+    [t.nav.home, t.nav.shop, t.nav.journal, t.nav.about]
+  );
+
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   if (!isOpen) return null;
-
-  const mainNavItems = [
-    { name: t.nav.home, href: "/", icon: MOBILE_MAIN_NAV_ITEMS[0].icon },
-    { name: t.nav.shop, href: "/loja", icon: MOBILE_MAIN_NAV_ITEMS[1].icon },
-    { name: t.nav.journal, href: "/jornal", icon: MOBILE_MAIN_NAV_ITEMS[2].icon },
-    { name: t.nav.about, href: "/sobre", icon: MOBILE_MAIN_NAV_ITEMS[3].icon },
-  ];
 
   return (
     <nav
@@ -245,4 +256,4 @@ export function MobileMenu({ isOpen, language, t, onLanguageToggle, onClose }: M
       </div>
     </nav>
   );
-}
+});

@@ -1,13 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
+import { strictLimiter } from "@/lib/rate-limit";
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 const BUCKET = "cavalos-imagens";
 
+// Derive extension from MIME type — never trust user-supplied filename extension
+const MIME_TO_EXT: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+};
+
 export async function POST(req: NextRequest) {
+  // Rate limit: 10 uploads per minute per IP
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  try {
+    await strictLimiter.check(10, ip);
+  } catch {
+    return NextResponse.json(
+      { error: "Demasiados pedidos. Tente novamente mais tarde." },
+      { status: 429 }
+    );
+  }
+
   try {
     const formData = await req.formData();
     const files = formData.getAll("images") as File[];
@@ -40,7 +60,7 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const ext = MIME_TO_EXT[file.type] || "jpg";
       const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
       const path = `pending/${uniqueName}`;
 

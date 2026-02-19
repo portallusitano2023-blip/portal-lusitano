@@ -2,7 +2,18 @@
 
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
-import { RotateCcw, Sparkles, Target, ArrowRight, CheckCircle2, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import {
+  RotateCcw,
+  Sparkles,
+  Target,
+  ArrowRight,
+  CheckCircle2,
+  ChevronRight,
+  Calculator,
+  Scale,
+  Dna,
+} from "lucide-react";
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import { useLanguage } from "@/context/LanguageContext";
@@ -785,6 +796,81 @@ function AnalisePerfilContent() {
                   </div>
                 </div>
               </section>
+              {/* Cross-links — próximos passos */}
+              <section className="py-8 border-t border-[var(--border)]">
+                <div className="max-w-5xl mx-auto px-6">
+                  <h2 className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--foreground-muted)] mb-5">
+                    <ChevronRight size={14} className="text-[#C5A059]" aria-hidden="true" />
+                    Continua a tua jornada
+                  </h2>
+                  <div className="grid sm:grid-cols-3 gap-3">
+                    <Link
+                      href="/calculadora-valor"
+                      className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
+                    >
+                      <Calculator
+                        size={18}
+                        className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-[var(--foreground)]">
+                          Calculadora de Valor
+                        </p>
+                        <p className="text-xs text-[var(--foreground-muted)] truncate">
+                          Estima o valor de um cavalo
+                        </p>
+                      </div>
+                      <ChevronRight
+                        size={16}
+                        className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-[var(--gold)] transition-colors"
+                      />
+                    </Link>
+                    <Link
+                      href="/comparador-cavalos"
+                      className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
+                    >
+                      <Scale
+                        size={18}
+                        className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-[var(--foreground)]">
+                          Comparador de Cavalos
+                        </p>
+                        <p className="text-xs text-[var(--foreground-muted)] truncate">
+                          Compara até 4 candidatos
+                        </p>
+                      </div>
+                      <ChevronRight
+                        size={16}
+                        className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-[var(--gold)] transition-colors"
+                      />
+                    </Link>
+                    <Link
+                      href="/verificador-compatibilidade"
+                      className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
+                    >
+                      <Dna
+                        size={18}
+                        className="text-pink-400 shrink-0 group-hover:scale-110 transition-transform"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-[var(--foreground)]">
+                          Verificador Genético
+                        </p>
+                        <p className="text-xs text-[var(--foreground-muted)] truncate">
+                          Compatibilidade de criação
+                        </p>
+                      </div>
+                      <ChevronRight
+                        size={16}
+                        className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-pink-400 transition-colors"
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </section>
+
               <section className="py-12 border-t border-[var(--border)]">
                 <div className="max-w-5xl mx-auto px-6 text-center">
                   <button

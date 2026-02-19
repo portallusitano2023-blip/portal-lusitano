@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
-import { useState, useEffect, useRef, memo } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { usePathname } from "next/navigation";
 import { DesktopMenu } from "./navbar/DesktopMenu";
 import { NavIcons } from "./navbar/NavIcons";
@@ -27,6 +27,13 @@ export default memo(function Navbar() {
   useEffect(() => {
     setIsMobileOpen(false); // eslint-disable-line react-hooks/set-state-in-effect
   }, [pathname]);
+
+  // Stable callbacks — prevent NavIcons and MobileMenu from re-rendering on every
+  // scroll event (which causes `scrolled` state to update and re-render Navbar)
+  const handleSearchClick = useCallback(() => setIsSearchOpen(true), []);
+  const handleSearchClose = useCallback(() => setIsSearchOpen(false), []);
+  const handleMobileToggle = useCallback(() => setIsMobileOpen((prev) => !prev), []);
+  const handleMobileClose = useCallback(() => setIsMobileOpen(false), []);
 
   // Detect scroll for better mobile UX (RAF-throttled, only updates on change)
   const scrolledRef = useRef(false);
@@ -92,9 +99,9 @@ export default memo(function Navbar() {
           language={language}
           t={t}
           isMobileOpen={isMobileOpen}
-          onSearchClick={() => setIsSearchOpen(true)}
+          onSearchClick={handleSearchClick}
           onLanguageToggle={toggleLanguage}
-          onMobileToggle={() => setIsMobileOpen(!isMobileOpen)}
+          onMobileToggle={handleMobileToggle}
         />
       </div>
 
@@ -104,11 +111,11 @@ export default memo(function Navbar() {
         language={language}
         t={t}
         onLanguageToggle={toggleLanguage}
-        onClose={() => setIsMobileOpen(false)}
+        onClose={handleMobileClose}
       />
 
       {/* Modal de Pesquisa */}
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <SearchModal isOpen={isSearchOpen} onClose={handleSearchClose} />
     </nav>
   );
 });

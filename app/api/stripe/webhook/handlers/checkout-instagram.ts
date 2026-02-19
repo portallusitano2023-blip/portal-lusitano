@@ -1,14 +1,19 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { resend } from "@/lib/resend";
 import { CONTACT_EMAIL } from "@/lib/constants";
 import { escapeHtml } from "@/lib/sanitize";
 import Stripe from "stripe";
 import { registerPayment, linkPaymentToSubmission } from "./utils";
+import { logger } from "@/lib/logger";
 
 export async function handleInstagramAd(
   session: Stripe.Checkout.Session,
   metadata: Stripe.Metadata
 ): Promise<void> {
+  const customerEmail = session.customer_details?.email;
+  if (!customerEmail) {
+    logger.error("handleInstagramAd: missing customer email", { sessionId: session.id });
+    throw new Error("Stripe session missing customer email");
+  }
   // Registar pagamento (com NOVOS campos)
   const { data: payment } = await registerPayment(
     session,
@@ -40,7 +45,7 @@ export async function handleInstagramAd(
       <p><strong>Email:</strong> ${escapeHtml(session.customer_details?.email || "")}</p>
       <p><strong>Instagram:</strong> ${escapeHtml(metadata.instagram || "N/A")}</p>
       <p><strong>Mensagem:</strong><br>${escapeHtml(metadata.mensagem || "")}</p>
-      <p><strong>Valor:</strong> €${(session.amount_total! / 100).toFixed(2)}</p>
+      <p><strong>Valor:</strong> €${((session.amount_total ?? 0) / 100).toFixed(2)}</p>
       <hr>
       <p><strong>PRÓXIMO PASSO:</strong> Cliente deve fazer upload dos materiais em:</p>
       <p><a href="${process.env.NEXT_PUBLIC_BASE_URL}/instagram/upload/${session.id}">${process.env.NEXT_PUBLIC_BASE_URL}/instagram/upload/${session.id}</a></p>
@@ -50,7 +55,7 @@ export async function handleInstagramAd(
   // Email de confirmação ao cliente
   await resend.emails.send({
     from: "Portal Lusitano <instagram@portal-lusitano.pt>",
-    to: session.customer_details?.email!,
+    to: customerEmail,
     subject: "Pagamento Confirmado - Instagram Portal Lusitano 📸",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -65,7 +70,7 @@ export async function handleInstagramAd(
           <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin: 0 0 10px 0; color: #333;">Detalhes:</h3>
             <p style="margin: 5px 0; color: #666;"><strong>Pacote:</strong> ${metadata.package}</p>
-            <p style="margin: 5px 0; color: #666;"><strong>Valor:</strong> €${(session.amount_total! / 100).toFixed(2)}</p>
+            <p style="margin: 5px 0; color: #666;"><strong>Valor:</strong> €${((session.amount_total ?? 0) / 100).toFixed(2)}</p>
           </div>
           <h3 style="color: #333;">Próximos Passos:</h3>
           <ol style="color: #666; line-height: 1.8;">

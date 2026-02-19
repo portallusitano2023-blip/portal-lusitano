@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -22,19 +22,24 @@ interface ProUpgradeCardProps {
 
 const STORAGE_KEY = "pro-upgrade-card-collapsed";
 
-function getInitialCollapsed(): boolean {
-  if (typeof window === "undefined") return false;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  // Default to EXPANDED (false) to increase visibility
-  return stored === null ? false : stored === "true";
-}
-
 export default function ProUpgradeCard({ isSubscribed }: ProUpgradeCardProps) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState(getInitialCollapsed);
+  // Always start expanded (false) to avoid SSR/CSR hydration mismatch.
+  // Sync from localStorage after mount in useEffect.
+  const [collapsed, setCollapsed] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (stored === "true") setCollapsed(true);
+    } catch {
+      // localStorage unavailable (private browsing, etc.)
+    }
+  }, []);
 
   const toggleCollapsed = () => {
     const next = !collapsed;

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
 
+// ISR: Revalidate stud farms page every 30 minutes (coudelarias change infrequently)
+export const revalidate = 1800;
+
 const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {

@@ -60,6 +60,8 @@ function applySecurityHeaders(response: NextResponse, nonce: string, contentLang
   response.headers.set("X-Permitted-Cross-Domain-Policies", "none");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Content-Language", contentLanguage);
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
 }
 
 export async function middleware(request: NextRequest) {

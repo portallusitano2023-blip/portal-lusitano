@@ -22,10 +22,10 @@ import {
   Award,
   History,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import ResultActions from "@/components/tools/ResultActions";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
-import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import HorseVerdictCard from "@/components/tools/HorseVerdictCard";
 import CostProjectionTable from "@/components/tools/CostProjectionTable";
@@ -41,6 +41,10 @@ import Tooltip from "@/components/tools/Tooltip";
 import SourceBadge from "@/components/tools/SourceBadge";
 import MethodologyPanel from "@/components/tools/MethodologyPanel";
 import ScoreBreakdown from "@/components/tools/ScoreBreakdown";
+
+const Confetti = dynamic(() => import("@/components/tools/Confetti"), {
+  ssr: false,
+});
 
 // ============================================
 // TIPOS
@@ -356,22 +360,22 @@ function exportarCSV(cavalos: Cavalo[], calcularScore: (c: Cavalo) => number) {
 
   const rows = cavalos.map((c) => {
     const score = calcularScore(c);
-    const valorPorPonto = score > 0 ? Math.round(c.preco / score) : 0;
+    const valorPorPonto = score > 0 ? Math.round(c.preco / score) : "N/A";
     return [
-      c.nome,
+      c.nome || "—",
       c.idade,
-      c.sexo,
+      c.sexo || "—",
       c.altura,
-      c.pelagem,
-      c.linhagem,
-      c.treino,
+      c.pelagem || "—",
+      c.linhagem || "—",
+      c.treino || "—",
       c.conformacao,
       c.andamentos,
       c.elevacao,
       c.regularidade,
       c.temperamento,
       c.saude,
-      c.competicoes,
+      c.competicoes || "—",
       c.premios,
       c.preco,
       c.blup,
@@ -3018,6 +3022,79 @@ export default function ComparadorCavalosPage() {
                         "v2.1 — Fev 2026"}
                     </span>
                   </p>
+                </div>
+
+                {/* Cross-links — próximos passos */}
+                <div className="pt-4">
+                  <p className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--foreground-muted)] mb-4">
+                    <ChevronRight size={13} className="text-[var(--gold)]" aria-hidden="true" />
+                    Continua a tua jornada
+                  </p>
+                  <div className="grid sm:grid-cols-3 gap-3">
+                    <Link
+                      href="/verificador-compatibilidade"
+                      className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-pink-500/40 transition-all"
+                    >
+                      <Dna
+                        size={18}
+                        className="text-pink-400 shrink-0 group-hover:scale-110 transition-transform"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-[var(--foreground)]">
+                          Verificador Genético
+                        </p>
+                        <p className="text-xs text-[var(--foreground-muted)] truncate">
+                          Testa o par mais promissor
+                        </p>
+                      </div>
+                      <ChevronRight
+                        size={16}
+                        className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-pink-400 transition-colors"
+                      />
+                    </Link>
+                    <Link
+                      href="/calculadora-valor"
+                      className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
+                    >
+                      <Euro
+                        size={18}
+                        className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-[var(--foreground)]">
+                          Calculadora de Valor
+                        </p>
+                        <p className="text-xs text-[var(--foreground-muted)] truncate">
+                          Estima o valor do vencedor
+                        </p>
+                      </div>
+                      <ChevronRight
+                        size={16}
+                        className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-[var(--gold)] transition-colors"
+                      />
+                    </Link>
+                    <Link
+                      href="/analise-perfil"
+                      className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
+                    >
+                      <Target
+                        size={18}
+                        className="text-purple-400 shrink-0 group-hover:scale-110 transition-transform"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-[var(--foreground)]">
+                          Análise de Perfil
+                        </p>
+                        <p className="text-xs text-[var(--foreground-muted)] truncate">
+                          Confirma o teu tipo de comprador
+                        </p>
+                      </div>
+                      <ChevronRight
+                        size={16}
+                        className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-purple-400 transition-colors"
+                      />
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}

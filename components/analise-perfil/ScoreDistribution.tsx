@@ -1,9 +1,14 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import RadarChart from "@/components/analise-perfil/RadarChart";
+import dynamic from "next/dynamic";
 import Tooltip from "@/components/tools/Tooltip";
 import type { RadarChartData, ScorePercentage } from "@/components/analise-perfil/types";
+
+const RadarChart = dynamic(() => import("@/components/analise-perfil/RadarChart"), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-zinc-900/50 animate-pulse rounded-xl" />,
+});
 
 interface ScoreDistributionProps {
   radarData: RadarChartData;

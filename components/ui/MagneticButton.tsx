@@ -39,7 +39,7 @@ export default function MagneticButton({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={`magnetic-btn ${className}`}
-      style={{ display: "inline-block" }}
+      style={{ display: "inline-block", willChange: "transform" }}
     >
       {children}
     </div>

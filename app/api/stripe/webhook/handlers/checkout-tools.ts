@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { resend, getToolsProActivadoEmail } from "@/lib/resend";
 import { CONTACT_EMAIL } from "@/lib/constants";
@@ -12,9 +11,15 @@ export async function handleToolsSubscription(
 ): Promise<void> {
   const userId = metadata.user_id;
   const subscriptionId = session.subscription as string;
+  const customerEmail = session.customer_details?.email;
 
   if (!userId) {
     logger.error("tools_subscription: missing user_id in metadata");
+    return;
+  }
+
+  if (!customerEmail) {
+    logger.error("tools_subscription: missing customer email", { sessionId: session.id });
     return;
   }
 
@@ -48,19 +53,19 @@ export async function handleToolsSubscription(
   // Confirmation email to user
   await resend.emails.send({
     from: "Portal Lusitano <ferramentas@portal-lusitano.pt>",
-    to: session.customer_details?.email!,
+    to: customerEmail,
     subject: "Ferramentas Pro activadas — Portal Lusitano",
-    html: getToolsProActivadoEmail(session.customer_details?.email!),
+    html: getToolsProActivadoEmail(customerEmail),
   });
 
   // Notify admin
   await resend.emails.send({
     from: "Portal Lusitano <admin@portal-lusitano.pt>",
     to: CONTACT_EMAIL,
-    subject: `Nova Subscrição PRO: ${session.customer_details?.email}`,
+    subject: `Nova Subscrição PRO: ${customerEmail}`,
     html: `
       <h2>Nova subscrição Ferramentas PRO</h2>
-      <p><strong>Email:</strong> ${session.customer_details?.email}</p>
+      <p><strong>Email:</strong> ${customerEmail}</p>
       <p><strong>User ID:</strong> ${userId}</p>
       <p><strong>Valor:</strong> €${((session.amount_total || 0) / 100).toFixed(2)}/mês</p>
       <p><strong>Subscription ID:</strong> ${subscriptionId}</p>

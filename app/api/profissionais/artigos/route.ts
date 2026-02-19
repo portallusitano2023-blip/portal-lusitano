@@ -28,7 +28,15 @@ export async function GET() {
       leituras: a.leituras || 0,
     }));
 
-    return NextResponse.json({ artigos });
+    return NextResponse.json(
+      { artigos },
+      {
+        headers: {
+          // Public articles listing — cache 5 min at CDN, stale up to 15 min
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Artigos API error:", error);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Check, Star, ArrowRight } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 export interface ToolDefinition {
   title: string;
@@ -26,15 +26,10 @@ interface ToolCardProps {
 }
 
 function ToolCard({ tool, index }: ToolCardProps) {
-  const { t } = useLanguage();
-  const { user } = useAuth();
-  const [mounted, setMounted] = useState(false);
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
+  const { user, isLoading } = useAuth();
   const Icon = tool.icon;
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
 
   return (
     <Link
@@ -57,14 +52,14 @@ function ToolCard({ tool, index }: ToolCardProps) {
             <span
               className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${tool.badgeColor}`}
             >
-              {tool.badge === "Mais popular" && <Star size={9} fill="currentColor" />}
+              {tool.badgeColor?.includes("gold") && <Star size={9} fill="currentColor" />}
               {tool.badge}
             </span>
           )}
-          {(!mounted || !user) && (
+          {!isLoading && !user && (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               <Check size={9} />
-              {tool.freeUses} uso grátis
+              {tool.freeUses} {tr("uso grátis", "free use", "uso gratis")}
             </span>
           )}
         </div>

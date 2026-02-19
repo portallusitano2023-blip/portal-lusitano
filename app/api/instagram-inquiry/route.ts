@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { strictLimiter } from "@/lib/rate-limit";
 import { CONTACT_EMAIL } from "@/lib/constants";
 import { logger } from "@/lib/logger";
+import { escapeHtml } from "@/lib/sanitize";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -21,6 +22,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { nome, empresa, email, instagram, pacote, preco, mensagem } = body;
 
+    // Sanitize all user input before inserting into HTML emails
+    const sNome = escapeHtml(String(nome ?? ""));
+    const sEmpresa = escapeHtml(String(empresa ?? ""));
+    const sEmail = escapeHtml(String(email ?? ""));
+    const sInstagram = escapeHtml(String(instagram ?? ""));
+    const sPacote = escapeHtml(String(pacote ?? ""));
+    const sPreco = escapeHtml(String(preco ?? ""));
+    const sMensagem = escapeHtml(String(mensagem ?? ""));
+
     // Validações básicas
     if (!nome || !email || !mensagem) {
       return NextResponse.json({ error: "Campos obrigatórios em falta" }, { status: 400 });
@@ -30,7 +40,7 @@ export async function POST(request: NextRequest) {
     await resend.emails.send({
       from: "Portal Lusitano <noreply@portal-lusitano.pt>",
       to: [CONTACT_EMAIL],
-      subject: `💰 Novo Pedido Instagram: ${pacote} - €${preco}`,
+      subject: `💰 Novo Pedido Instagram: ${sPacote} - €${sPreco}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #C5A059, #8B6914); padding: 20px; text-align: center;">
@@ -39,8 +49,8 @@ export async function POST(request: NextRequest) {
 
           <div style="padding: 30px; background: #f9f9f9;">
             <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-              <h2 style="color: #C5A059; margin-top: 0;">📦 Pacote: ${pacote}</h2>
-              <p style="font-size: 24px; font-weight: bold; color: #333;">€${preco}</p>
+              <h2 style="color: #C5A059; margin-top: 0;">📦 Pacote: ${sPacote}</h2>
+              <p style="font-size: 24px; font-weight: bold; color: #333;">€${sPreco}</p>
             </div>
 
             <div style="background: white; padding: 20px; border-radius: 8px;">
@@ -48,14 +58,14 @@ export async function POST(request: NextRequest) {
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
                   <td style="padding: 8px 0; color: #666;">Nome:</td>
-                  <td style="padding: 8px 0; font-weight: bold;">${nome}</td>
+                  <td style="padding: 8px 0; font-weight: bold;">${sNome}</td>
                 </tr>
                 ${
                   empresa
                     ? `
                 <tr>
                   <td style="padding: 8px 0; color: #666;">Empresa:</td>
-                  <td style="padding: 8px 0; font-weight: bold;">${empresa}</td>
+                  <td style="padding: 8px 0; font-weight: bold;">${sEmpresa}</td>
                 </tr>
                 `
                     : ""
@@ -63,7 +73,7 @@ export async function POST(request: NextRequest) {
                 <tr>
                   <td style="padding: 8px 0; color: #666;">Email:</td>
                   <td style="padding: 8px 0; font-weight: bold;">
-                    <a href="mailto:${email}">${email}</a>
+                    <a href="mailto:${sEmail}">${sEmail}</a>
                   </td>
                 </tr>
                 ${
@@ -72,7 +82,7 @@ export async function POST(request: NextRequest) {
                 <tr>
                   <td style="padding: 8px 0; color: #666;">Instagram:</td>
                   <td style="padding: 8px 0; font-weight: bold;">
-                    <a href="https://instagram.com/${instagram.replace("@", "")}">${instagram}</a>
+                    <a href="https://instagram.com/${sInstagram.replace("@", "")}">${sInstagram}</a>
                   </td>
                 </tr>
                 `
@@ -82,12 +92,12 @@ export async function POST(request: NextRequest) {
 
               <h3 style="color: #333; margin-top: 20px;">O que pretende promover:</h3>
               <p style="background: #f5f5f5; padding: 15px; border-radius: 4px; color: #333;">
-                ${mensagem}
+                ${sMensagem}
               </p>
             </div>
 
             <div style="margin-top: 20px; text-align: center;">
-              <a href="mailto:${email}?subject=Re: Pedido de Promoção no Instagram"
+              <a href="mailto:${sEmail}?subject=Re: Pedido de Promoção no Instagram"
                  style="display: inline-block; background: #C5A059; color: white; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold;">
                 Responder ao Cliente
               </a>
@@ -114,7 +124,7 @@ export async function POST(request: NextRequest) {
 
           <div style="padding: 30px; background: #f9f9f9;">
             <p style="color: #333; font-size: 16px;">
-              Olá ${nome},
+              Olá ${sNome},
             </p>
             <p style="color: #333; font-size: 16px;">
               Recebemos o seu pedido de promoção no Instagram do Portal Lusitano.
@@ -122,8 +132,8 @@ export async function POST(request: NextRequest) {
 
             <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="margin-top: 0; color: #C5A059;">Resumo do Pedido:</h3>
-              <p><strong>Pacote:</strong> ${pacote}</p>
-              <p><strong>Valor:</strong> €${preco}</p>
+              <p><strong>Pacote:</strong> ${sPacote}</p>
+              <p><strong>Valor:</strong> €${sPreco}</p>
             </div>
 
             <p style="color: #333; font-size: 16px;">

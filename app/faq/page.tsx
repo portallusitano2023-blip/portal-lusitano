@@ -53,7 +53,7 @@ export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const { language } = useLanguage();
   const tr = createTranslator(language);
-  const faqs = faqData[language];
+  const faqs = faqData[language] ?? faqData.pt;
 
   return (
     <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">

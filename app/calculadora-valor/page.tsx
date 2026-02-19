@@ -124,6 +124,13 @@ export default function CalculadoraValorPage() {
   } | null>(null);
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
 
+  const isMountedRef = useRef(true);
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   const {
     canUse,
     isSubscribed,
@@ -290,6 +297,7 @@ export default function CalculadoraValorPage() {
     setIsCalculating(true);
 
     setTimeout(() => {
+      if (!isMountedRef.current) return;
       const result = calcularValor(form);
       setResultado(result);
       setIsCalculating(false);
@@ -393,15 +401,19 @@ export default function CalculadoraValorPage() {
       "Nível de treino": form.treino,
       Mercado: form.mercado,
     };
-    const res = await fetch("/api/tools/send-results", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session.access_token}`,
-      },
-      body: JSON.stringify({ toolName: "calculadora", resultSummary: summary }),
-    });
-    if (!res.ok) throw new Error("Erro ao enviar email");
+    try {
+      const res = await fetch("/api/tools/send-results", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ toolName: "calculadora", resultSummary: summary }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    } catch {
+      // silent fail - user can retry
+    }
   };
 
   // Tool Chain → Comparador
