@@ -23,6 +23,71 @@ import type {
   ResultTab,
 } from "@/components/analise-perfil/types";
 
+// ---------------------------------------------------------------------------
+// Cross-validation: detecta combinações de respostas educativamente relevantes
+// answers[0] = Q1 Objectivo, answers[1] = Q2 Experiência, answers[7] = Q8 Dedicação
+// ---------------------------------------------------------------------------
+export interface CrossValidationWarning {
+  message: string;
+  severity: "info" | "warning";
+}
+
+function getCrossValidationWarning(answers: string[]): CrossValidationWarning | null {
+  const objectivo = answers[0];
+  const experiencia = answers[1];
+  const dedicacao = answers[7];
+
+  // Ambas as perguntas fundamentais têm de estar respondidas para validação cruzada
+  if (!objectivo || !experiencia) return null;
+
+  // Iniciante + Alta Competição de Dressage
+  if (objectivo === "dressage_comp" && experiencia === "iniciante") {
+    return {
+      message:
+        "Dressage de competição requer normalmente 5 ou mais anos de experiência equestre consolidada. Considera começar com Alta Escola Clássica e progredir gradualmente — o PSL responde excepcionalmente bem a cavaleiros que crescem com ele.",
+      severity: "warning",
+    };
+  }
+
+  // Pouca dedicação + Alta Competição de Dressage (só avalia quando Q8 foi respondida)
+  if (objectivo === "dressage_comp" && dedicacao === "weekend") {
+    return {
+      message:
+        "Cavalos de competição de dressage requerem treino regular de 5 a 7 dias por semana para manter a forma de prova. Com disponibilidade apenas ao fim de semana, um PSL de Alta Escola Clássica ou lazer será mais adequado e mais justo para o cavalo.",
+      severity: "warning",
+    };
+  }
+
+  // Equitação de Trabalho + Iniciante
+  if (objectivo === "trabalho" && experiencia === "iniciante") {
+    return {
+      message:
+        "A Equitação de Trabalho e o Toureio a cavalo exigem controlo preciso de ajudas e muito equilíbrio em situações imprevisíveis. Para iniciantes, recomenda-se uma base sólida em dressage clássico antes de iniciar esta disciplina.",
+      severity: "warning",
+    };
+  }
+
+  // Criação + Iniciante
+  if (objectivo === "criacao" && experiencia === "iniciante") {
+    return {
+      message:
+        "Criação equina envolve conhecimentos avançados de genética, reprodução, cuidados neonatais e selecção por índice BLUP. Recomenda-se experiência prévia com equinos ou apoio próximo de um criador ou veterinário especializado.",
+      severity: "info",
+    };
+  }
+
+  // Criação + pouca dedicação semanal (só avalia quando Q8 foi respondida)
+  if (objectivo === "criacao" && dedicacao === "weekend") {
+    return {
+      message:
+        "Um programa de criação activo requer presença diária ou quasi-diária, especialmente em períodos de cobrição, gestação e cuidados ao poldro recém-nascido. Confirma que tens disponibilidade suficiente ou uma equipa de apoio.",
+      severity: "info",
+    };
+  }
+
+  return null;
+}
+
 export function useQuizLogic() {
   const { t } = useLanguage();
   const [showIntro, setShowIntro] = useState(true);
@@ -42,6 +107,7 @@ export function useQuizLogic() {
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [crossWarningDismissed, setCrossWarningDismissed] = useState(false);
   const quizRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
@@ -105,6 +171,8 @@ export function useQuizLogic() {
       setAnswers(newAnswers);
       setAnswerDetails(newDetails);
       setScores(newScores);
+      // Reset dismissal so a newly-triggered warning becomes visible
+      setCrossWarningDismissed(false);
       if (currentQuestion < questions.length - 1) setCurrentQuestion(currentQuestion + 1);
       else {
         if (!canUse) return;
@@ -253,6 +321,7 @@ export function useQuizLogic() {
     setSelectedTab("perfil");
     setSaved(false);
     setCopied(false);
+    setCrossWarningDismissed(false);
   }, []);
 
   const goBack = useCallback(() => {
@@ -260,8 +329,13 @@ export function useQuizLogic() {
       setCurrentQuestion(currentQuestion - 1);
       setAnswers(answers.slice(0, -1));
       setAnswerDetails(answerDetails.slice(0, -1));
+      setCrossWarningDismissed(false);
     }
   }, [currentQuestion, answers, answerDetails]);
+
+  const dismissCrossWarning = useCallback(() => {
+    setCrossWarningDismissed(true);
+  }, []);
 
   // Derived data
   const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
@@ -299,6 +373,10 @@ export function useQuizLogic() {
     ),
   };
 
+  // Computed cross-validation warning (null when both key questions not yet answered or dismissed)
+  const rawCrossWarning = getCrossValidationWarning(answers);
+  const crossValidationWarning = crossWarningDismissed ? null : rawCrossWarning;
+
   return {
     // State
     showIntro,
@@ -313,6 +391,9 @@ export function useQuizLogic() {
     setError,
     answerDetails,
     answers,
+    // Cross-validation
+    crossValidationWarning,
+    dismissCrossWarning,
     // Refs
     quizRef,
     badgeRef,

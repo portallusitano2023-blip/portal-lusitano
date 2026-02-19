@@ -58,8 +58,10 @@ export default function ResultHeader({
   const { t } = useLanguage();
 
   return (
-    <section className={`relative pt-32 pb-16 bg-gradient-to-b ${result.color} to-transparent`}>
-      <div className="max-w-4xl mx-auto px-6 text-center">
+    <section
+      className={`relative pt-28 pb-12 sm:pt-32 sm:pb-16 bg-gradient-to-b ${result.color} to-transparent`}
+    >
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
         <div className="opacity-0 animate-[scaleIn_0.5s_ease-out_forwards]">
           <div className="w-24 h-24 mx-auto bg-[var(--background-secondary)]/50 border border-[var(--gold)]/30 rounded-full flex items-center justify-center mb-6">
             {result.icon}
@@ -67,7 +69,7 @@ export default function ResultHeader({
           <span className="text-[var(--gold)] text-xs uppercase tracking-[0.3em] block mb-3">
             {t.analise_perfil.your_profile_is}
           </span>
-          <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
             {result.title}
           </h1>
 
@@ -82,7 +84,7 @@ export default function ResultHeader({
           )}
 
           {/* Prominent percentage score */}
-          <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
             <span className="text-5xl font-serif text-[#C5A059] tabular-nums leading-none">
               {scorePercentages[0]?.percentage ?? 0}%
             </span>
@@ -162,8 +164,8 @@ export default function ResultHeader({
             </div>
           )}
 
-          <p className="text-lg text-[var(--gold)] italic mb-6">{result.subtitle}</p>
-          <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto leading-relaxed mb-8">
+          <p className="text-base sm:text-lg text-[var(--gold)] italic mb-6">{result.subtitle}</p>
+          <p className="text-sm sm:text-base text-[var(--foreground-secondary)] max-w-2xl mx-auto leading-relaxed mb-8">
             {result.description}
           </p>
           {/* Action buttons — grouped by category */}

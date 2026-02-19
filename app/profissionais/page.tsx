@@ -75,7 +75,7 @@ export default function ProfissionaisPage() {
       const res = await fetch("/api/profissionais");
       if (cancelled) return;
       if (!res.ok) {
-        setError("Erro ao carregar profissionais. Por favor tente novamente.");
+        setError("error");
         return;
       }
       const data = await res.json();
@@ -136,7 +136,7 @@ export default function ProfissionaisPage() {
     } catch (err) {
       if (!cancelled) {
         if (process.env.NODE_ENV === "development") console.error("[Profissionais]", err);
-        setError("Erro ao carregar profissionais. Por favor tente novamente.");
+        setError("error");
       }
     } finally {
       if (!cancelled) setIsLoading(false);
@@ -535,12 +535,12 @@ export default function ProfissionaisPage() {
                   </div>
                 ) : error ? (
                   <div className="text-center py-12">
-                    <p className="text-red-400 mb-4">{error}</p>
+                    <p className="text-red-400 mb-4">{t.errors.error_loading}</p>
                     <button
                       onClick={loadProfissionais}
                       className="px-6 py-2 text-sm font-medium text-[#C5A059] border border-[#C5A059]/30 rounded-lg hover:bg-[#C5A059]/10 transition-colors"
                     >
-                      Tentar novamente
+                      {t.errors.try_again}
                     </button>
                   </div>
                 ) : profissionaisFiltrados.length > 0 ? (

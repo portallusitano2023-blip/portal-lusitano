@@ -13,28 +13,28 @@ import {
   DISCIPLINA_PREMIUMS,
 } from "./data";
 
+// Helper: age multiplier — shared between calcularValor and estimarValorParcial
+function calcMultIdade(idade: number): number {
+  if (idade >= 7 && idade <= 12) return 1.15; // Ideal age window
+  if (idade >= 5 && idade <= 6) return 1.05; // Young adult, developing
+  if (idade > 15) return 0.75; // Senior
+  if (idade > 12) return 0.9; // Mature
+  return 1.0; // Under 5 — potro
+}
+
 export function calcularValor(form: FormData): Resultado {
   const base = VALORES_BASE[form.treino];
   const mercadoData = MERCADOS.find((m) => m.value === form.mercado);
   const multMercado = mercadoData?.mult || 1.0;
 
-  // Multiplicadores detalhados
-  const multLinhagem = MULT_LINHAGEM[form.linhagem];
-  const multSaude = MULT_SAUDE[form.saude];
-  const multComp = MULT_COMP[form.competicoes];
-  const multLivro = MULT_LIVRO[form.livroAPSL];
+  // Multiplicadores detalhados — fallback to 1.0 prevents NaN propagation on unknown keys
+  const multLinhagem = MULT_LINHAGEM[form.linhagem] ?? 1.0;
+  const multSaude = MULT_SAUDE[form.saude] ?? 1.0;
+  const multComp = MULT_COMP[form.competicoes] ?? 1.0;
+  const multLivro = MULT_LIVRO[form.livroAPSL] ?? 1.0;
 
   // Idade ideal: 7-12 anos
-  const multIdade =
-    form.idade >= 7 && form.idade <= 12
-      ? 1.15
-      : form.idade >= 5 && form.idade <= 6
-        ? 1.05
-        : form.idade > 15
-          ? 0.75
-          : form.idade > 12
-            ? 0.9
-            : 1.0;
+  const multIdade = calcMultIdade(form.idade);
 
   // Morfologia detalhada
   const morfMedia = (form.morfologia + form.garupa + form.espádua + form.cabeca + form.membros) / 5;
@@ -69,9 +69,9 @@ export function calcularValor(form: FormData): Resultado {
   // Bonus documentacao
   const multDoc = (form.raioX ? 1.05 : 1.0) * (form.exameVeterinario ? 1.05 : 1.0);
 
-  // Reproducao
+  // Reproducao — capped at 2.5x to prevent absurd values with high offspring counts
   const multRepro = form.reproducao
-    ? 1.15 + form.descendentes * 0.02 + form.descendentesAprovados * 0.05
+    ? Math.min(2.5, 1.15 + form.descendentes * 0.02 + form.descendentesAprovados * 0.05)
     : 1.0;
 
   // Tendencia mercado
@@ -115,7 +115,11 @@ export function calcularValor(form: FormData): Resultado {
     multExport *
     multPropAnter;
 
-  const valorFinal = Math.round(base * totalMult);
+  const rawValor = base * totalMult;
+  if (!isFinite(rawValor)) {
+    throw new Error("Cálculo resultou em valor inválido — verifique os dados de entrada");
+  }
+  const valorFinal = Math.round(rawValor);
   const variance = form.registoAPSL ? 0.12 : 0.2;
 
   const categorias = [
@@ -296,7 +300,10 @@ export function calcularValor(form: FormData): Resultado {
         Math.round(morfMedia) +
         Math.round(andMedia / 2)
     ),
-    blup: Math.round(100 + (multLinhagem - 1) * 60 + (morfMedia - 5) * 8 + (andMedia - 5) * 6),
+    blup: Math.max(
+      50,
+      Math.round(100 + (multLinhagem - 1) * 60 + (morfMedia - 5) * 8 + (andMedia - 5) * 6)
+    ),
     percentil: Math.min(99, Math.round(totalMult * 45)),
     multiplicador: Math.round(totalMult * 100) / 100,
     categorias,
@@ -323,17 +330,7 @@ export function estimarValorParcial(form: Partial<FormData>): { min: number; max
   const base = VALORES_BASE[form.treino];
 
   // Multiplicadores básicos com os dados disponíveis
-  const multIdade = !form.idade
-    ? 1.0
-    : form.idade >= 7 && form.idade <= 12
-      ? 1.15
-      : form.idade >= 5 && form.idade <= 6
-        ? 1.05
-        : form.idade > 15
-          ? 0.75
-          : form.idade > 12
-            ? 0.9
-            : 1.0;
+  const multIdade = form.idade ? calcMultIdade(form.idade) : 1.0;
 
   const multLinhagem = form.linhagem ? MULT_LINHAGEM[form.linhagem] || 1.0 : 1.0;
   const multSaude = form.saude ? MULT_SAUDE[form.saude] || 1.0 : 1.0;

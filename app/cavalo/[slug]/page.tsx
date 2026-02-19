@@ -8,6 +8,8 @@ import DynamicSEO from "@/components/DynamicSEO";
 import Breadcrumb from "@/components/Breadcrumb";
 import { analytics } from "@/lib/analytics-events";
 import { CONTACT_EMAIL } from "@/lib/constants";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface CavaloSanity {
   nome: string;
@@ -34,6 +36,8 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
   const [slug, setSlug] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
 
   useEffect(() => {
     params.then((p) => setSlug(p.slug));
@@ -47,7 +51,6 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
         setLoading(true);
         setError(null);
 
-        // Timeout de 10 segundos
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
 
@@ -78,7 +81,6 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
           setFotoAtiva(result.atual.imageUrl);
           setRelacionados(result.relacionados || []);
 
-          // Track view do cavalo
           analytics.viewCavalo({
             id: slug,
             nome: result.atual.nome,
@@ -87,13 +89,11 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
             idade: result.atual.idade,
           });
         } else {
-          // Cavalo nao encontrado (404)
           setError("not_found");
         }
       } catch (err) {
         if (process.env.NODE_ENV === "development") console.error("[CavaloSlug]", err);
 
-        // Tratamento de erro especifico
         if (err instanceof Error) {
           if (err.name === "AbortError") {
             setError("timeout");
@@ -111,82 +111,100 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
     fetchData();
   }, [slug]);
 
-  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)]">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--gold)] mb-4"></div>
           <p className="italic text-[var(--foreground-secondary)]">
-            Carregando exemplar de elite...
+            {tr(
+              "Carregando exemplar de elite...",
+              "Loading elite specimen...",
+              "Cargando ejemplar de élite..."
+            )}
           </p>
         </div>
       </div>
     );
   }
 
-  // Error 404 - Cavalo nao encontrado
   if (error === "not_found") {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)] px-6">
         <div className="text-center max-w-md">
           <h1 className="text-6xl font-serif mb-4 text-[var(--gold)]">404</h1>
-          <p className="text-xl mb-6 text-[var(--foreground-secondary)]">Exemplar nao encontrado</p>
+          <p className="text-xl mb-6 text-[var(--foreground-secondary)]">
+            {tr("Exemplar não encontrado", "Specimen not found", "Ejemplar no encontrado")}
+          </p>
           <p className="text-sm text-[var(--foreground-muted)] mb-8">
-            O cavalo que procura pode ter sido vendido ou o link esta incorreto.
+            {tr(
+              "O cavalo que procura pode ter sido vendido ou o link está incorreto.",
+              "The horse you are looking for may have been sold or the link is incorrect.",
+              "El caballo que busca puede haber sido vendido o el enlace es incorrecto."
+            )}
           </p>
           <Link
-            href="/marketplace"
+            href="/comprar"
             className="inline-block px-8 py-3 bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
           >
-            Ver Marketplace
+            {tr("Ver Marketplace", "View Marketplace", "Ver Marketplace")}
           </Link>
         </div>
       </div>
     );
   }
 
-  // Error timeout
   if (error === "timeout") {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)] px-6">
         <div className="text-center max-w-md">
-          <h1 className="text-4xl font-serif mb-4 text-[var(--gold)]">Tempo esgotado</h1>
+          <h1 className="text-4xl font-serif mb-4 text-[var(--gold)]">
+            {tr("Tempo esgotado", "Timed out", "Tiempo agotado")}
+          </h1>
           <p className="text-sm text-[var(--foreground-secondary)] mb-8">
-            A conexao demorou muito tempo. Verifique sua internet e tente novamente.
+            {tr(
+              "A conexão demorou muito. Verifique a sua internet e tente novamente.",
+              "The connection took too long. Check your internet and try again.",
+              "La conexión tardó demasiado. Verifique su internet e inténtelo de nuevo."
+            )}
           </p>
           <button
             onClick={() => window.location.reload()}
             className="inline-block px-8 py-3 bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
           >
-            Tentar Novamente
+            {tr("Tentar Novamente", "Try Again", "Intentar de Nuevo")}
           </button>
         </div>
       </div>
     );
   }
 
-  // Error network/unknown
   if (error) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)] px-6">
         <div className="text-center max-w-md">
-          <h1 className="text-4xl font-serif mb-4 text-[var(--gold)]">Erro ao carregar</h1>
+          <h1 className="text-4xl font-serif mb-4 text-[var(--gold)]">
+            {tr("Erro ao carregar", "Loading error", "Error al cargar")}
+          </h1>
           <p className="text-sm text-[var(--foreground-secondary)] mb-8">
-            Ocorreu um erro ao carregar o cavalo. Por favor, tente novamente.
+            {tr(
+              "Ocorreu um erro ao carregar o cavalo. Por favor, tente novamente.",
+              "An error occurred loading the horse. Please try again.",
+              "Se produjo un error al cargar el caballo. Por favor, inténtelo de nuevo."
+            )}
           </p>
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => window.location.reload()}
               className="px-8 py-3 bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#d4b670] transition-all"
             >
-              Tentar Novamente
+              {tr("Tentar Novamente", "Try Again", "Intentar de Nuevo")}
             </button>
             <Link
-              href="/marketplace"
+              href="/comprar"
               className="px-8 py-3 bg-[var(--background-secondary)] border border-[var(--gold)]/30 text-[var(--gold)] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[var(--gold)] hover:text-black transition-all"
             >
-              Voltar
+              {tr("Voltar", "Back", "Volver")}
             </Link>
           </div>
         </div>
@@ -194,17 +212,24 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
     );
   }
 
-  // Safety check (nunca deve acontecer, mas por precaucao)
   if (!data) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-[var(--foreground)] italic">
-        Carregando exemplar de elite...
+        {tr(
+          "Carregando exemplar de elite...",
+          "Loading elite specimen...",
+          "Cargando ejemplar de élite..."
+        )}
       </div>
     );
   }
 
   const numeroTelemovel = "351939513151";
-  const mensagem = `Ola! Estou interessado no cavalo *${data.nome}* que vi no Portal Lusitano.`;
+  const mensagem = tr(
+    `Olá! Estou interessado no cavalo *${data.nome}* que vi no Portal Lusitano.`,
+    `Hello! I am interested in the horse *${data.nome}* I saw on Portal Lusitano.`,
+    `¡Hola! Estoy interesado en el caballo *${data.nome}* que vi en Portal Lusitano.`
+  );
   const linkWhatsApp = `https://wa.me/${numeroTelemovel}?text=${encodeURIComponent(mensagem)}`;
 
   const todasAsFotos = [data.imageUrl, ...(data.galeriaUrls || [])];
@@ -212,10 +237,18 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 pb-20">
       <DynamicSEO
-        title={`${data.nome} - Cavalo Lusitano a Venda - Portal Lusitano`}
+        title={tr(
+          `${data.nome} - Cavalo Lusitano à Venda - Portal Lusitano`,
+          `${data.nome} - Lusitano Horse for Sale - Portal Lusitano`,
+          `${data.nome} - Caballo Lusitano en Venta - Portal Lusitano`
+        )}
         description={
           data.descricao ||
-          `${data.nome}, ${data.idade} anos, ${data.ferro}. Cavalo Lusitano de elite disponivel para venda.`
+          tr(
+            `${data.nome}, ${data.idade} anos, ${data.ferro}. Cavalo Lusitano de elite disponível para venda.`,
+            `${data.nome}, ${data.idade} years old, ${data.ferro}. Elite Lusitano horse available for sale.`,
+            `${data.nome}, ${data.idade} años, ${data.ferro}. Caballo Lusitano de élite disponible para venta.`
+          )
         }
         image={data.imageUrl}
         url={`https://portal-lusitano.pt/cavalo/${slug}`}
@@ -224,7 +257,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
         <Breadcrumb
           items={[
             { label: "Home", href: "/" },
-            { label: "Comprar", href: "/marketplace" },
+            { label: tr("Comprar", "Buy", "Comprar"), href: "/comprar" },
             { label: data.nome },
           ]}
         />
@@ -249,7 +282,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   onClick={() => setFotoAtiva(url)}
                   className={`relative aspect-square border-2 transition-all ${fotoAtiva === url ? "border-[var(--gold)]" : "border-transparent opacity-50 hover:opacity-100"}`}
                 >
-                  <Image src={url} fill className="object-cover" alt={`Miniatura ${idx}`} />
+                  <Image src={url} fill className="object-cover" alt={`${data.nome} ${idx + 1}`} />
                 </button>
               ))}
             </div>
@@ -258,17 +291,19 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
           {/* DETALHES */}
           <div className="flex flex-col">
             <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-sm mb-2 font-bold">
-              Puro Sangue Lusitano
+              {tr("Puro Sangue Lusitano", "Purebred Lusitano", "Pura Sangre Lusitano")}
             </span>
             <h1 className="text-6xl font-serif mb-6">{data.nome}</h1>
 
             <div className="bg-[var(--background-secondary)]/50 border border-[var(--gold)]/30 p-8 mb-10 shadow-2xl backdrop-blur-sm">
               <div className="mb-8">
                 <p className="text-[var(--foreground-muted)] text-[10px] uppercase tracking-widest mb-1">
-                  Preco
+                  {tr("Preço", "Price", "Precio")}
                 </p>
                 <p className="text-3xl font-serif text-[var(--gold)]">
-                  {data.preco ? `${data.preco.toLocaleString("pt-PT")} €` : "Sob Consulta"}
+                  {data.preco
+                    ? `${data.preco.toLocaleString(language === "pt" ? "pt-PT" : language === "es" ? "es-ES" : "en-GB")} €`
+                    : tr("Sob Consulta", "On Request", "Bajo Consulta")}
                 </p>
               </div>
 
@@ -278,7 +313,6 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => {
-                    // Track contacto WhatsApp
                     analytics.contactCavalo({
                       id: slug!,
                       nome: data.nome,
@@ -288,12 +322,11 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   }}
                   className="w-full py-4 bg-[#25D366] text-black font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#20bd5a] transition-all text-center"
                 >
-                  Contactar por WhatsApp
+                  {tr("Contactar por WhatsApp", "Contact via WhatsApp", "Contactar por WhatsApp")}
                 </a>
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
                   onClick={() => {
-                    // Track contacto Email
                     analytics.contactCavalo({
                       id: slug!,
                       nome: data.nome,
@@ -303,7 +336,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   }}
                   className="w-full py-4 bg-[var(--background-secondary)] border border-[var(--gold)]/30 text-[var(--gold)] font-bold uppercase text-xs tracking-[0.2em] hover:bg-[var(--gold)] hover:text-black transition-all text-center"
                 >
-                  Enviar Email
+                  {tr("Enviar Email", "Send Email", "Enviar Email")}
                 </a>
               </div>
             </div>
@@ -313,13 +346,13 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
               <div className="grid grid-cols-2 gap-y-4 border-t border-[var(--border)] pt-6">
                 <p>
                   <span className="text-[var(--foreground-muted)] uppercase tracking-tighter block mb-1">
-                    Idade
+                    {tr("Idade", "Age", "Edad")}
                   </span>{" "}
-                  {data.idade} anos
+                  {data.idade} {tr("anos", "years", "años")}
                 </p>
                 <p>
                   <span className="text-[var(--foreground-muted)] uppercase tracking-tighter block mb-1">
-                    Ferro
+                    {tr("Ferro", "Brand", "Hierro")}
                   </span>{" "}
                   {data.ferro}
                 </p>
@@ -327,14 +360,14 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
               {data.genealogia && (
                 <div className="border-t border-[var(--border)] pt-6">
                   <span className="text-[var(--foreground-muted)] uppercase tracking-tighter block mb-2">
-                    Genealogia
+                    {tr("Genealogia", "Genealogy", "Genealogía")}
                   </span>
                   <p className="text-[var(--foreground-secondary)]">{data.genealogia}</p>
                 </div>
               )}
               <div className="border-t border-[var(--border)] pt-6">
                 <span className="text-[var(--foreground-muted)] uppercase tracking-tighter block mb-2">
-                  Descricao
+                  {tr("Descrição", "Description", "Descripción")}
                 </span>
                 <p className="text-[var(--foreground-secondary)] leading-relaxed text-base italic font-serif">
                   {data.descricao}
@@ -348,7 +381,10 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
         {relacionados.length > 0 && (
           <div className="mt-32 pt-20 border-t border-[var(--background-secondary)]">
             <h3 className="font-serif text-3xl mb-12 text-center text-[var(--foreground)]">
-              Outros <span className="text-[var(--gold)]">Exemplares de Elite</span>
+              {tr("Outros ", "Other ", "Otros ")}
+              <span className="text-[var(--gold)]">
+                {tr("Exemplares de Elite", "Elite Specimens", "Ejemplares de Élite")}
+              </span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relacionados.map((rel) => (
@@ -362,12 +398,14 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                     />
                   </div>
                   <p className="text-[var(--gold)] uppercase tracking-widest text-[10px] mb-1 font-bold">
-                    Puro Sangue Lusitano
+                    {tr("Puro Sangue Lusitano", "Purebred Lusitano", "Pura Sangre Lusitano")}
                   </p>
                   <h4 className="text-xl font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors">
                     {rel.nome}
                   </h4>
-                  <p className="text-[var(--foreground-muted)] text-xs mt-1">{rel.idade} anos</p>
+                  <p className="text-[var(--foreground-muted)] text-xs mt-1">
+                    {rel.idade} {tr("anos", "years", "años")}
+                  </p>
                 </Link>
               ))}
             </div>

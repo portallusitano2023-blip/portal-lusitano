@@ -1,11 +1,12 @@
 "use client";
 
 import { forwardRef } from "react";
-import { ChevronRight, ChevronLeft, Sparkles } from "lucide-react";
+import { ChevronRight, ChevronLeft, Sparkles, AlertTriangle, Info, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Paywall from "@/components/tools/Paywall";
+import type { CrossValidationWarning } from "@/components/analise-perfil/useQuizLogic";
 import type { Question, QuestionOption } from "@/components/analise-perfil/types";
 
 interface QuizSectionProps {
@@ -21,6 +22,8 @@ interface QuizSectionProps {
   onReset: () => void;
   dominantProfile: string | null;
   dominantProfileLabel: string;
+  crossValidationWarning: CrossValidationWarning | null;
+  onDismissCrossWarning: () => void;
 }
 
 const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSection(
@@ -37,6 +40,8 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
     onReset,
     dominantProfile,
     dominantProfileLabel,
+    crossValidationWarning,
+    onDismissCrossWarning,
   },
   ref
 ) {
@@ -50,7 +55,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
       ref={ref}
       className="min-h-screen pt-24 pb-20 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
     >
-      <div className="max-w-3xl mx-auto px-6">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
         {accessLoading ? (
           <div className="flex items-center justify-center py-4">
             <div className="w-5 h-5 border-2 border-[var(--gold)]/30 border-t-[var(--gold)] rounded-full animate-spin" />
@@ -81,11 +86,11 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             />
           </div>
           <div className="flex items-center justify-between mt-2">
-            <div className="flex gap-1.5">
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide max-w-[60%]">
               {questions.map((_, i) => (
                 <div
                   key={i}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                  className={`w-1.5 h-1.5 shrink-0 rounded-full transition-all duration-300 ${
                     i < currentQuestion
                       ? "bg-[var(--gold)]"
                       : i === currentQuestion
@@ -119,16 +124,59 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
           </div>
         )}
 
+        {/* Aviso de validação cruzada educativo */}
+        {crossValidationWarning && (
+          <div
+            role="alert"
+            className={`flex items-start gap-3 mb-4 px-4 py-3 rounded-xl border animate-[fadeSlideIn_0.3s_ease-out_forwards] ${
+              crossValidationWarning.severity === "warning"
+                ? "bg-amber-500/10 border-amber-500/20"
+                : "bg-blue-500/10 border-blue-500/20"
+            }`}
+          >
+            <div className="shrink-0 mt-0.5">
+              {crossValidationWarning.severity === "warning" ? (
+                <AlertTriangle size={16} className="text-amber-400" aria-hidden="true" />
+              ) : (
+                <Info size={16} className="text-blue-400" aria-hidden="true" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p
+                className={`text-xs leading-relaxed ${
+                  crossValidationWarning.severity === "warning"
+                    ? "text-amber-300"
+                    : "text-blue-300"
+                }`}
+              >
+                <span className="font-semibold">Dica Educativa: </span>
+                {crossValidationWarning.message}
+              </p>
+            </div>
+            <button
+              onClick={onDismissCrossWarning}
+              aria-label="Dispensar aviso"
+              className={`shrink-0 p-0.5 rounded transition-colors ${
+                crossValidationWarning.severity === "warning"
+                  ? "text-amber-400/60 hover:text-amber-300"
+                  : "text-blue-400/60 hover:text-blue-300"
+              }`}
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
+
         <div
           key={currentQuestion}
           className="opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
         >
-          <div className="bg-gradient-to-b from-[var(--background-secondary)]/80 to-[var(--background-secondary)]/40 border border-[var(--border)] rounded-2xl p-8 md:p-10 mb-6">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-2xl flex items-center justify-center flex-shrink-0 border border-[var(--gold)]/20">
+          <div className="bg-gradient-to-b from-[var(--background-secondary)]/80 to-[var(--background-secondary)]/40 border border-[var(--border)] rounded-2xl p-5 sm:p-8 md:p-10 mb-6">
+            <div className="flex items-start gap-3 sm:gap-4 mb-6">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--gold)]/10 rounded-2xl flex items-center justify-center flex-shrink-0 border border-[var(--gold)]/20">
                 {question.icon}
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 {/* Badge "Questão-Chave" para perguntas de alto peso */}
                 {question.weight >= 1.5 && (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#C5A059]/15 border border-[#C5A059]/40 rounded-full text-[10px] font-semibold text-[#C5A059] mb-3">
@@ -136,7 +184,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
                     Questão-Chave
                   </span>
                 )}
-                <h3 className="text-xl md:text-2xl font-serif text-[var(--foreground)] leading-tight">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-[var(--foreground)] leading-tight">
                   {question.question}
                 </h3>
                 {question.description && (
@@ -191,7 +239,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             {currentQuestion > 0 ? (
               <button
                 onClick={onBack}
-                className="flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors px-3 py-1.5 rounded-lg hover:bg-[var(--background-secondary)]/50"
+                className="flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors px-3 py-2.5 min-h-[44px] rounded-lg hover:bg-[var(--background-secondary)]/50"
               >
                 <ChevronLeft size={18} />
                 {t.analise_perfil.previous}
@@ -201,7 +249,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             )}
             <button
               onClick={onReset}
-              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-sm px-3 py-1.5 rounded-lg hover:bg-[var(--background-secondary)]/50 transition-all"
+              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-sm px-3 py-2.5 min-h-[44px] rounded-lg hover:bg-[var(--background-secondary)]/50 transition-all"
             >
               {t.analise_perfil.restart}
             </button>

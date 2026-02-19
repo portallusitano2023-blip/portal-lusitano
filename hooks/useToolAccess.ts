@@ -101,11 +101,16 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
 
         // Quando o utilizador esgota o uso gratuito, enviar email de upgrade (non-blocking)
         if (!isSubscribed && newCount >= FREE_USES_PER_TOOL) {
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 5000);
           fetch("/api/tools/limit-reached", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ toolSlug: toolName }),
-          }).catch(() => {});
+            signal: ctrl.signal,
+          })
+            .catch(() => {})
+            .finally(() => clearTimeout(timer));
         }
       } catch {
         // Silently fail - don't block user

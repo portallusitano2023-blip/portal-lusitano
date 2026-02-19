@@ -295,11 +295,11 @@ function StatCounter({
 }) {
   const animated = useAnimatedCounter(value);
   return (
-    <div className="flex flex-col items-center gap-2 p-6">
-      <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center mb-1">
-        <Icon size={22} className="text-[var(--gold)]" />
+    <div className="flex flex-col items-center gap-2 p-4 sm:p-6">
+      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center mb-1">
+        <Icon size={20} className="text-[var(--gold)]" />
       </div>
-      <p className="text-3xl font-serif text-[var(--foreground)]">
+      <p className="text-2xl sm:text-3xl font-serif text-[var(--foreground)]">
         {animated.toLocaleString("pt-PT")}
       </p>
       <p className="text-xs text-[var(--foreground-muted)] text-center">{label}</p>
@@ -326,7 +326,7 @@ function StatsSection() {
   return (
     <AnimateOnScroll>
       <div className="max-w-3xl mx-auto mb-16 px-6">
-        <div className="bg-[var(--background-secondary)]/60 border border-[var(--gold)]/15 rounded-2xl grid grid-cols-3 divide-x divide-[var(--border)]">
+        <div className="bg-[var(--background-secondary)]/60 border border-[var(--gold)]/15 rounded-2xl grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[var(--border)]">
           <StatCounter
             value={stats.totalAnalyses}
             label={tr("análises realizadas", "analyses done", "análisis realizados")}
@@ -458,10 +458,10 @@ function CheckoutFeedback() {
 
   if (isSuccess) {
     return (
-      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
-        <div className="flex items-center gap-3 px-6 py-4 bg-emerald-500/20 border border-emerald-500/40 rounded-xl backdrop-blur-sm shadow-lg">
-          <CheckCircle size={20} className="text-emerald-400" />
-          <span className="text-emerald-300 font-medium text-sm">
+      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm sm:w-auto animate-[fadeSlideIn_0.3s_ease-out_forwards]">
+        <div className="flex items-center gap-3 px-4 py-4 bg-emerald-500/20 border border-emerald-500/40 rounded-xl backdrop-blur-sm shadow-lg">
+          <CheckCircle size={20} className="text-emerald-400 flex-shrink-0" />
+          <span className="text-emerald-300 font-medium text-sm flex-1">
             {tr(
               "Subscrição PRO activada com sucesso!",
               "PRO subscription activated!",
@@ -470,7 +470,8 @@ function CheckoutFeedback() {
           </span>
           <button
             onClick={() => setDismissed(true)}
-            className="text-emerald-400 hover:text-emerald-300 ml-2"
+            className="text-emerald-400 hover:text-emerald-300 ml-2 flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
+            aria-label="Fechar"
           >
             <X size={16} />
           </button>
@@ -481,10 +482,10 @@ function CheckoutFeedback() {
 
   if (isCancelled) {
     return (
-      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
-        <div className="flex items-center gap-3 px-6 py-4 bg-[var(--background-card)]/90 border border-[var(--border)] rounded-xl backdrop-blur-sm shadow-lg">
-          <X size={20} className="text-[var(--foreground-secondary)]" />
-          <span className="text-[var(--foreground-secondary)] font-medium text-sm">
+      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm sm:w-auto animate-[fadeSlideIn_0.3s_ease-out_forwards]">
+        <div className="flex items-center gap-3 px-4 py-4 bg-[var(--background-card)]/90 border border-[var(--border)] rounded-xl backdrop-blur-sm shadow-lg">
+          <X size={20} className="text-[var(--foreground-secondary)] flex-shrink-0" />
+          <span className="text-[var(--foreground-secondary)] font-medium text-sm flex-1">
             {tr(
               "Pagamento cancelado. Pode subscrever a qualquer momento.",
               "Payment cancelled. You can subscribe at any time.",
@@ -493,7 +494,8 @@ function CheckoutFeedback() {
           </span>
           <button
             onClick={() => setDismissed(true)}
-            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground-secondary)] ml-2"
+            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground-secondary)] ml-2 flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
+            aria-label="Fechar"
           >
             <X size={16} />
           </button>
@@ -527,24 +529,30 @@ function ToolReviewsSection() {
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const fetchReviews = useCallback(async () => {
-    setLoading(true);
-    try {
-      const slug = filterSlug || "all";
-      const res = await fetch(`/api/reviews?ferramenta_slug=${slug}`);
-      if (res.ok) {
-        const data = await res.json();
-        setReviews(data.reviews || []);
-        setStats(data.stats || { total: 0, media: 0 });
+  const fetchReviews = useCallback(
+    async (signal?: AbortSignal) => {
+      setLoading(true);
+      try {
+        const slug = filterSlug || "all";
+        const res = await fetch(`/api/reviews?ferramenta_slug=${slug}`, { signal });
+        if (res.ok) {
+          const data = await res.json();
+          setReviews(data.reviews || []);
+          setStats(data.stats || { total: 0, media: 0 });
+        }
+      } catch (e) {
+        if (e instanceof Error && e.name === "AbortError") return;
+      } finally {
+        setLoading(false);
       }
-    } catch {
-    } finally {
-      setLoading(false);
-    }
-  }, [filterSlug]);
+    },
+    [filterSlug]
+  );
 
   useEffect(() => {
-    fetchReviews();
+    const controller = new AbortController();
+    fetchReviews(controller.signal);
+    return () => controller.abort();
   }, [fetchReviews, refreshKey]);
 
   const formatDate = (dateString: string) => {
@@ -576,7 +584,7 @@ function ToolReviewsSection() {
         <div className="flex flex-wrap gap-2 justify-center mb-10">
           <button
             onClick={() => setFilterSlug("all")}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+            className={`px-4 py-2 min-h-[44px] rounded-full text-sm font-medium transition ${
               filterSlug === "all"
                 ? "bg-[var(--gold)] text-black"
                 : "bg-[var(--background-card)] text-[var(--foreground-secondary)] hover:bg-zinc-700 hover:text-[var(--foreground)]"
@@ -589,7 +597,7 @@ function ToolReviewsSection() {
             <button
               key={slug}
               onClick={() => setFilterSlug(slug)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+              className={`px-4 py-2 min-h-[44px] rounded-full text-sm font-medium transition ${
                 filterSlug === slug
                   ? "bg-[var(--gold)] text-black"
                   : "bg-[var(--background-card)] text-[var(--foreground-secondary)] hover:bg-zinc-700 hover:text-[var(--foreground)]"
@@ -660,9 +668,9 @@ function ToolReviewsSection() {
                 key={review.id}
                 className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6 hover:border-[var(--border)] transition"
               >
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex flex-col gap-2 mb-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <div className="flex items-center gap-3 mb-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
                       <div className="flex gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
@@ -688,7 +696,7 @@ function ToolReviewsSection() {
                       <span>{review.autor_nome}</span>
                     </div>
                   </div>
-                  <span className="text-xs text-[var(--foreground-muted)]">
+                  <span className="text-xs text-[var(--foreground-muted)] sm:flex-shrink-0">
                     {formatDate(review.created_at)}
                   </span>
                 </div>
@@ -709,7 +717,7 @@ function ToolReviewsSection() {
         )}
 
         {/* Review form */}
-        <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8">
+        <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-5 sm:p-8">
           <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
             {t.ferramentas.reviews_leave}
           </h3>
@@ -948,7 +956,7 @@ export default function FerramentasPage() {
           <AnimateOnScroll className="text-center mt-10">
             <Link
               href="/calculadora-valor"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-sm font-medium rounded-full hover:bg-[var(--gold)]/20 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-sm font-medium rounded-full hover:bg-[var(--gold)]/20 transition-colors"
             >
               <Sparkles size={15} />
               {tr(
@@ -981,7 +989,7 @@ export default function FerramentasPage() {
           {/* Pricing cards */}
           <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
             {/* Free Tier */}
-            <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8">
+            <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-5 sm:p-8">
               <div className="mb-8">
                 <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
                   {t.ferramentas.free}
@@ -1010,14 +1018,14 @@ export default function FerramentasPage() {
 
               <Link
                 href="/registar"
-                className="block w-full py-3 text-center border border-[var(--border)] text-[var(--foreground)] text-sm font-medium rounded-lg hover:bg-[var(--surface-hover)] transition-colors"
+                className="block w-full py-3 min-h-[44px] text-center border border-[var(--border)] text-[var(--foreground)] text-sm font-medium rounded-lg hover:bg-[var(--surface-hover)] transition-colors flex items-center justify-center"
               >
                 {t.ferramentas.create_free}
               </Link>
             </div>
 
             {/* PRO Tier */}
-            <div className="relative bg-[var(--background-secondary)]/80 border-2 border-[var(--gold)]/60 rounded-2xl p-8 shadow-lg shadow-[var(--gold)]/5">
+            <div className="relative bg-[var(--background-secondary)]/80 border-2 border-[var(--gold)]/60 rounded-2xl p-5 sm:p-8 shadow-lg shadow-[var(--gold)]/5">
               {/* Badge */}
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                 <span className="inline-flex items-center gap-1.5 px-4 py-1 bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] text-black text-xs font-bold uppercase tracking-[0.15em] rounded-full">
@@ -1094,7 +1102,7 @@ export default function FerramentasPage() {
           </div>
 
           {/* ROI Comparison */}
-          <div className="mt-12 p-6 bg-[var(--background-secondary)]/50 border border-[var(--gold)]/20 rounded-xl max-w-2xl mx-auto">
+          <div className="mt-12 p-4 sm:p-6 bg-[var(--background-secondary)]/50 border border-[var(--gold)]/20 rounded-xl max-w-2xl mx-auto">
             <h4 className="text-sm font-serif text-[var(--foreground)] mb-4 flex items-center gap-2">
               <Calculator size={16} className="text-[var(--gold)]" />
               {tr(
@@ -1103,7 +1111,7 @@ export default function FerramentasPage() {
                 "Compare: PRO vs. Servicios Tradicionales"
               )}
             </h4>
-            <div className="grid grid-cols-2 gap-4 text-xs">
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 text-xs">
               <div className="space-y-2">
                 <p className="text-[var(--foreground-muted)]">
                   {tr(
@@ -1168,8 +1176,8 @@ export default function FerramentasPage() {
       {/* ===== PRO FEATURES DETAIL ===== */}
       <section className="px-6 pb-24">
         <div className="max-w-5xl mx-auto">
-          <div className="bg-gradient-to-br from-[var(--gold)]/5 to-transparent border border-[var(--gold)]/10 rounded-2xl p-8 md:p-12">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="bg-gradient-to-br from-[var(--gold)]/5 to-transparent border border-[var(--gold)]/10 rounded-2xl p-5 sm:p-8 md:p-12">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Left: Text */}
               <div>
                 <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">
@@ -1185,7 +1193,7 @@ export default function FerramentasPage() {
               </div>
 
               {/* Right: Feature grid */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {[
                   {
                     icon: Zap,

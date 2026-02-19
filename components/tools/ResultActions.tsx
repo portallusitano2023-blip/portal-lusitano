@@ -28,6 +28,7 @@ export default function ResultActions({
   const handleSendEmail = async () => {
     if (!onSendEmail || isSendingEmail) return;
     setIsSendingEmail(true);
+    setEmailSent(false); // Reset before new attempt
     try {
       await onSendEmail();
       setEmailSent(true);
@@ -43,7 +44,7 @@ export default function ResultActions({
       <button
         onClick={onExportPDF}
         disabled={isExporting}
-        className="flex-1 min-w-[140px] py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+        className="flex-1 min-w-[140px] min-h-[44px] py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
       >
         {isExporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
         {isExporting ? "A gerar..." : "Exportar PDF"}
@@ -51,7 +52,7 @@ export default function ResultActions({
 
       <button
         onClick={onShare}
-        className="flex-1 min-w-[140px] py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2"
+        className="flex-1 min-w-[140px] min-h-[44px] py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2"
       >
         <Share2 size={16} />
         Partilhar
@@ -60,7 +61,7 @@ export default function ResultActions({
       {onSave && (
         <button
           onClick={onSave}
-          className={`flex-1 min-w-[140px] py-3 rounded-xl border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 min-w-[140px] min-h-[44px] py-3 rounded-xl border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
             isPremium
               ? "bg-[var(--gold)]/10 border-[var(--gold)]/30 text-[var(--gold)] hover:bg-[var(--gold)]/20"
               : "bg-[var(--background-secondary)] border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]"
@@ -75,7 +76,7 @@ export default function ResultActions({
         <button
           onClick={onPrint}
           aria-label="Imprimir"
-          className="py-3 px-4 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center"
+          className="min-h-[44px] min-w-[44px] py-3 px-4 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center"
         >
           <Printer size={16} />
         </button>
@@ -85,7 +86,7 @@ export default function ResultActions({
         <button
           onClick={handleSendEmail}
           disabled={isSendingEmail || emailSent}
-          className={`flex-1 min-w-[140px] py-3 rounded-xl border text-sm font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-60 ${
+          className={`flex-1 min-w-[140px] min-h-[44px] py-3 rounded-xl border text-sm font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-60 ${
             emailSent
               ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
               : "bg-[var(--background-secondary)] border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]"

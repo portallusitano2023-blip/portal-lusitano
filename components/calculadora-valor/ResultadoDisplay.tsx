@@ -97,10 +97,31 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         </div>
 
         {/* Hero do Valor */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--background-secondary)] via-[var(--background-secondary)] to-[var(--background-card)] p-8 border border-[var(--border)]">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--background-secondary)] via-[var(--background-secondary)] to-[var(--background-card)] p-5 sm:p-8 border border-[var(--border)]">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--gold)]/5 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-[var(--gold)]/5 rounded-full blur-3xl" />
-          <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
+          {/* Badges — in-flow on mobile, absolute on sm+ */}
+          <div className="relative z-10 flex flex-wrap justify-center gap-2 mb-4 sm:hidden">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--gold)]/10 rounded-full border border-[var(--gold)]/30">
+              <Crown size={12} className="text-[var(--gold)]" />
+              <span className="text-xs text-[var(--gold)] font-medium">
+                {t.calculadora.premium_eval}
+              </span>
+            </div>
+            {resultado.confianca >= 80 && resultado.percentil >= 65 && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/15 rounded-full border border-emerald-500/30">
+                <Check size={11} className="text-emerald-400" />
+                <span className="text-xs text-emerald-400 font-semibold">Pronto para Venda</span>
+              </div>
+            )}
+            {resultado.confianca >= 80 && resultado.percentil < 40 && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/15 rounded-full border border-amber-500/30">
+                <Sparkles size={11} className="text-amber-400" />
+                <span className="text-xs text-amber-400 font-semibold">Potencial de Melhoria</span>
+              </div>
+            )}
+          </div>
+          <div className="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--gold)]/10 rounded-full border border-[var(--gold)]/30">
               <Crown size={12} className="text-[var(--gold)]" />
               <span className="text-xs text-[var(--gold)] font-medium">
@@ -264,7 +285,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         })()}
 
         {/* Horse Silhouette - Morphology Map */}
-        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)]">
+        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-4 sm:p-6 border border-[var(--border)]">
           <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-4 flex items-center gap-2">
             {t.calculadora.morph_title || "Mapa Morfológico"}
             <SourceBadge
@@ -288,26 +309,30 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         </div>
 
         {/* Indicadores Geneticos */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)]">
-            <div className="flex items-center gap-2 text-[var(--foreground-secondary)] text-sm mb-3">
-              <Dna size={16} className="text-purple-400" />
-              <span>{t.calculadora.blup_estimated}</span>
-              <Tooltip
-                text={
-                  (t.calculadora as Record<string, string>).tooltip_blup ??
-                  "Best Linear Unbiased Prediction — indicador de mérito genético. O BLUP aqui é uma estimativa simplificada, NÃO um BLUP oficial APSL."
-                }
-              />
-              <SourceBadge
-                source="modelo"
-                tooltip={
-                  (t.calculadora as Record<string, string>).source_blup ??
-                  "Estimativa simplificada — não substitui BLUP oficial APSL"
-                }
-              />
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-[var(--background-secondary)]/50 rounded-xl p-3 sm:p-5 border border-[var(--border)]">
+            <div className="flex items-center gap-1.5 text-[var(--foreground-secondary)] text-xs sm:text-sm mb-3 flex-wrap">
+              <Dna size={14} className="text-purple-400 shrink-0" />
+              <span className="truncate">{t.calculadora.blup_estimated}</span>
+              <span className="hidden sm:contents">
+                <Tooltip
+                  text={
+                    (t.calculadora as Record<string, string>).tooltip_blup ??
+                    "Best Linear Unbiased Prediction — indicador de mérito genético. O BLUP aqui é uma estimativa simplificada, NÃO um BLUP oficial APSL."
+                  }
+                />
+                <SourceBadge
+                  source="modelo"
+                  tooltip={
+                    (t.calculadora as Record<string, string>).source_blup ??
+                    "Estimativa simplificada — não substitui BLUP oficial APSL"
+                  }
+                />
+              </span>
             </div>
-            <div className="text-3xl font-light text-[var(--foreground)]">{resultado.blup}</div>
+            <div className="text-2xl sm:text-3xl font-light text-[var(--foreground)]">
+              {resultado.blup}
+            </div>
             <div className="text-xs text-[var(--foreground-muted)] mt-1">
               {t.calculadora.blup_avg}
             </div>
@@ -319,25 +344,27 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             </div>
           </div>
 
-          <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)]">
-            <div className="flex items-center gap-2 text-[var(--foreground-secondary)] text-sm mb-3">
-              <BarChart3 size={16} className="text-amber-400" />
-              <span>{t.calculadora.market_percentile}</span>
-              <Tooltip
-                text={
-                  (t.calculadora as Record<string, string>).tooltip_percentile_card ??
-                  "Baseado em faixas de valor do mercado equestre português para cavalos PSL."
-                }
-              />
-              <SourceBadge
-                source="mercado"
-                tooltip={
-                  (t.calculadora as Record<string, string>).source_mercado ??
-                  "Faixas baseadas em médias do sector equestre português"
-                }
-              />
+          <div className="bg-[var(--background-secondary)]/50 rounded-xl p-3 sm:p-5 border border-[var(--border)]">
+            <div className="flex items-center gap-1.5 text-[var(--foreground-secondary)] text-xs sm:text-sm mb-3 flex-wrap">
+              <BarChart3 size={14} className="text-amber-400 shrink-0" />
+              <span className="truncate">{t.calculadora.market_percentile}</span>
+              <span className="hidden sm:contents">
+                <Tooltip
+                  text={
+                    (t.calculadora as Record<string, string>).tooltip_percentile_card ??
+                    "Baseado em faixas de valor do mercado equestre português para cavalos PSL."
+                  }
+                />
+                <SourceBadge
+                  source="mercado"
+                  tooltip={
+                    (t.calculadora as Record<string, string>).source_mercado ??
+                    "Faixas baseadas em médias do sector equestre português"
+                  }
+                />
+              </span>
             </div>
-            <div className="text-3xl font-light text-[var(--foreground)]">
+            <div className="text-2xl sm:text-3xl font-light text-[var(--foreground)]">
               {resultado.percentil}%
             </div>
             <div className="text-xs text-[var(--foreground-muted)] mt-1">
@@ -358,7 +385,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         {/* Simular Venda — CTA contextual para Comparador */}
         {onComparar && (
           <div
-            className={`rounded-xl border p-5 flex items-start gap-4 ${
+            className={`rounded-xl border p-4 sm:p-5 flex items-start gap-3 sm:gap-4 ${
               resultado.percentil >= 65
                 ? "bg-emerald-500/5 border-emerald-500/25"
                 : resultado.percentil >= 40

@@ -137,7 +137,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               <button
                 key={opt.value}
                 onClick={() => update("sexo", opt.value as typeof form.sexo)}
-                className={`py-3 px-4 rounded-lg border text-sm font-medium transition-all flex flex-col items-center gap-1 ${
+                className={`py-3 px-2 sm:px-4 rounded-lg border text-xs sm:text-sm font-medium transition-all flex flex-col items-center gap-1 min-h-[44px] ${
                   form.sexo === opt.value
                     ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
                     : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
@@ -220,7 +220,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                   <button
                     key={opt.value}
                     onClick={() => update("livroAPSL", opt.value as typeof form.livroAPSL)}
-                    className={`py-2 px-3 rounded-lg border text-xs font-medium transition-all ${
+                    className={`py-2 px-2 rounded-lg border text-xs font-medium transition-all min-h-[44px] ${
                       form.livroAPSL === opt.value
                         ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
                         : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"

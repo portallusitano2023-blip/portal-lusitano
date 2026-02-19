@@ -30,8 +30,9 @@ export async function GET() {
     const reviewCount = reviewsData?.length || 0;
     const avgRating =
       reviewCount > 0
-        ? Math.round((reviewsData!.reduce((acc, r) => acc + r.avaliacao, 0) / reviewCount) * 10) /
-          10
+        ? Math.round(
+            ((reviewsData ?? []).reduce((acc, r) => acc + r.avaliacao, 0) / reviewCount) * 10
+          ) / 10
         : 0;
 
     return NextResponse.json(

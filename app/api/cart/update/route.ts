@@ -5,9 +5,9 @@ export async function POST(request: NextRequest) {
   try {
     const { cartId, lineId, quantity } = await request.json();
 
-    if (!cartId || !lineId || typeof quantity !== "number") {
+    if (!cartId || !lineId || typeof quantity !== "number" || quantity < 1) {
       return NextResponse.json(
-        { error: "cartId, lineId e quantity são obrigatórios" },
+        { error: "cartId, lineId e quantity (≥1) são obrigatórios" },
         { status: 400 }
       );
     }

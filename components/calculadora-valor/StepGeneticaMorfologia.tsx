@@ -5,7 +5,7 @@ import { Dna } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import Tooltip from "@/components/tools/Tooltip";
 import { LINHAGENS_FAMOSAS } from "./data";
-import type { FormData, StepProps } from "./types";
+import type { FormData, NumericFormKey, StepProps } from "./types";
 
 export default function StepGeneticaMorfologia({ form, update }: StepProps) {
   const { t } = useLanguage();
@@ -46,7 +46,7 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
     [t]
   );
 
-  const morphologyItems = useMemo(
+  const morphologyItems = useMemo<Array<{ key: NumericFormKey; label: string; desc: string }>>(
     () => [
       {
         key: "morfologia",
@@ -149,25 +149,30 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
 
           {morphologyItems.map((item) => (
             <div key={item.key} className="mb-5">
-              <div className="flex justify-between items-center mb-2">
-                <div>
-                  <label className="text-sm text-[var(--foreground-secondary)]">{item.label}</label>
-                  <span className="text-xs text-[var(--foreground-muted)] ml-2">{item.desc}</span>
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex-1 min-w-0 pr-3">
+                  <label className="text-sm text-[var(--foreground-secondary)] block">
+                    {item.label}
+                  </label>
+                  <span className="text-xs text-[var(--foreground-muted)] block mt-0.5">
+                    {item.desc}
+                  </span>
                 </div>
-                <span className="text-[var(--gold)] font-medium text-lg">
-                  {form[item.key as keyof FormData] as number}/10
+                <span className="text-[var(--gold)] font-medium text-lg shrink-0">
+                  {form[item.key]}/10
                 </span>
               </div>
-              <input
-                type="range"
-                min={1}
-                max={10}
-                value={form[item.key as keyof FormData] as number}
-                onChange={(e) =>
-                  update(item.key as keyof FormData, Number(e.target.value) as never)
-                }
-                className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-[var(--gold)]"
-              />
+              <div className="py-2">
+                <input
+                  type="range"
+                  min={1}
+                  max={10}
+                  value={form[item.key]}
+                  onChange={(e) => update(item.key, Number(e.target.value))}
+                  className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-[var(--gold)]"
+                  style={{ touchAction: "manipulation" }}
+                />
+              </div>
             </div>
           ))}
         </div>

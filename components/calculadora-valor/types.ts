@@ -66,3 +66,9 @@ export interface StepProps {
   form: FormData;
   update: <K extends keyof FormData>(key: K, value: FormData[K]) => void;
 }
+
+// Derived type: only the keys of FormData whose value type is `number`
+// Used by slider steps to avoid `as never` casts when calling update()
+export type NumericFormKey = {
+  [K in keyof FormData]: FormData[K] extends number ? K : never;
+}[keyof FormData];

@@ -133,7 +133,7 @@ export default function HorseForm({
       </div>
 
       {/* Formulário do Cavalo */}
-      <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)] space-y-6">
+      <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-4 sm:p-6 border border-[var(--border)] space-y-6">
         <div className="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
           {tab === "garanhao" ? (
             <Crown className="text-blue-400" size={24} />
@@ -252,7 +252,7 @@ export default function HorseForm({
               <button
                 key={lin.value}
                 onClick={() => update("linhagemFamosa", lin.value)}
-                className={`py-2 px-3 rounded-lg border text-left transition-all ${
+                className={`py-2 px-3 min-h-[44px] rounded-lg border text-left transition-all ${
                   cavalo.linhagemFamosa === lin.value
                     ? "border-pink-500 bg-pink-500/10"
                     : "border-[var(--border)] hover:border-[var(--foreground-muted)]"
@@ -277,7 +277,7 @@ export default function HorseForm({
               {t.verificador.label_coat_genetics}
             </label>
           </div>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
             {[
               { gene: "extension" as const, label: "Extension", options: ["EE", "Ee", "ee"] },
               { gene: "agouti" as const, label: "Agouti", options: ["AA", "Aa", "aa"] },
@@ -290,7 +290,7 @@ export default function HorseForm({
                 <select
                   value={cavalo.genetica[gene]}
                   onChange={(e) => updateGen(gene, e.target.value)}
-                  className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded px-2 py-2 text-sm focus:border-purple-500 outline-none"
+                  className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded px-2 py-2.5 min-h-[44px] text-sm focus:border-purple-500 outline-none"
                 >
                   {options.map((o) => (
                     <option key={o} value={o}>
@@ -339,7 +339,7 @@ export default function HorseForm({
                 max="10"
                 value={cavalo[field]}
                 onChange={(e) => update(field, +e.target.value)}
-                className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-pink-500"
+                className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-pink-500 touch-pan-y py-3"
               />
             </div>
           ))}
@@ -375,7 +375,7 @@ export default function HorseForm({
             <select
               value={cavalo.temperamento}
               onChange={(e) => update("temperamento", e.target.value)}
-              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 min-h-[44px] focus:border-pink-500 outline-none"
             >
               {TEMPERAMENTOS.map((temp) => (
                 <option key={temp.value} value={temp.value}>
@@ -397,7 +397,7 @@ export default function HorseForm({
             <select
               value={cavalo.fertilidade}
               onChange={(e) => update("fertilidade", e.target.value)}
-              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 min-h-[44px] focus:border-pink-500 outline-none"
             >
               {FERTILIDADES.map((f) => (
                 <option key={f.value} value={f.value}>
@@ -490,7 +490,7 @@ export default function HorseForm({
               <button
                 key={d.value}
                 onClick={() => toggleDefeito(d.value)}
-                className={`p-3 rounded-lg border text-left transition-all ${
+                className={`p-3 min-h-[44px] rounded-lg border text-left transition-all ${
                   cavalo.defeitos.includes(d.value)
                     ? d.risco === "alto"
                       ? "border-red-500 bg-red-500/10"

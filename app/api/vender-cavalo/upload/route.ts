@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       }
 
       const ext = MIME_TO_EXT[file.type] || "jpg";
-      const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const uniqueName = `${Date.now()}-${crypto.randomUUID().replace(/-/g, "").substring(0, 8)}.${ext}`;
       const path = `pending/${uniqueName}`;
 
       const buffer = await file.arrayBuffer();

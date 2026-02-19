@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     };
     const timestamp = Date.now();
     const extension = MIME_TO_EXT[file.type] || "jpg";
-    const fileName = `${folder}/${timestamp}-${Math.random().toString(36).substring(7)}.${extension}`;
+    const fileName = `${folder}/${timestamp}-${crypto.randomUUID().replace(/-/g, "").substring(0, 8)}.${extension}`;
 
     // Converter File para ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();

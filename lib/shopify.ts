@@ -174,7 +174,7 @@ export async function getProduct(handle: string): Promise<{
               title
               availableForSale
               price { amount }
-              image { url }
+              image { url(transform: {maxWidth: 1200, preferredContentType: WEBP}) }
             }
           }
         }

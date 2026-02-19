@@ -4,6 +4,40 @@ import { useMemo, useRef, useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 // ============================================
+// PESOS REAIS DO ALGORITMO (extraídos de calcSuitability)
+// Actualizar aqui sempre que os pesos do cálculo mudarem
+// ============================================
+
+const BREAKDOWN_COMPETICAO = [
+  { fator: "Andamentos", peso: "30%" },
+  { fator: "Nível de treino", peso: "30%" },
+  { fator: "Conformação", peso: "20%" },
+  { fator: "Historial de competição", peso: "20%" },
+];
+
+const BREAKDOWN_LAZER = [
+  { fator: "Temperamento", peso: "40%" },
+  { fator: "Saúde", peso: "30%" },
+  { fator: "Andamentos", peso: "15%" },
+  { fator: "Conformação", peso: "15%" },
+];
+
+const BREAKDOWN_CRIACAO = [
+  { fator: "Conformação", peso: "30%" },
+  { fator: "BLUP genético", peso: "30%" },
+  { fator: "Saúde", peso: "20%" },
+  { fator: "Andamentos", peso: "20%" },
+];
+
+const BREAKDOWN_INVESTIMENTO = [
+  { fator: "BLUP genético", peso: "20%" },
+  { fator: "Nível de treino", peso: "20%" },
+  { fator: "Conformação", peso: "20%" },
+  { fator: "Faixa etária", peso: "20%" },
+  { fator: "Historial de competição", peso: "20%" },
+];
+
+// ============================================
 // TIPOS
 // ============================================
 
@@ -100,7 +134,20 @@ function calcSuitability(c: SuitabilityProfileCavalo) {
 }
 
 // ============================================
-// COMPONENTE
+// SUB-COMPONENTE: linha de breakdown
+// ============================================
+
+function BreakdownRow({ fator, peso }: { fator: string; peso: string }) {
+  return (
+    <div className="flex items-center justify-between py-0.5">
+      <span className="text-xs text-[var(--foreground-muted)]">{fator}</span>
+      <span className="text-xs font-medium text-[#C5A059] tabular-nums">{peso}</span>
+    </div>
+  );
+}
+
+// ============================================
+// COMPONENTE PRINCIPAL
 // ============================================
 
 export default function SuitabilityProfile({
@@ -112,6 +159,7 @@ export default function SuitabilityProfile({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const hasAnimated = useRef(false);
   const [animated, setAnimated] = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   useEffect(() => {
     if (hasAnimated.current) return;
@@ -159,7 +207,90 @@ export default function SuitabilityProfile({
       ref={wrapperRef}
       className="bg-[var(--background-secondary)]/50 rounded-2xl p-6 border border-[var(--border)]"
     >
-      <h3 className="text-lg font-serif mb-6 text-[var(--foreground)]">{title}</h3>
+      {/* Header row: título + botão "Como é calculado?" */}
+      <div className="flex items-start justify-between gap-3 mb-6">
+        <h3 className="text-lg font-serif text-[var(--foreground)]">{title}</h3>
+        <button
+          type="button"
+          onClick={() => setShowBreakdown((prev) => !prev)}
+          aria-expanded={showBreakdown}
+          aria-controls="suitability-breakdown"
+          className="flex-shrink-0 text-[11px] text-[var(--foreground-muted)] underline underline-offset-2 decoration-dotted hover:text-[#C5A059] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C5A059] rounded"
+        >
+          {showBreakdown ? "Fechar explicação" : "Como é calculado?"}
+        </button>
+      </div>
+
+      {/* Secção expandível com os pesos reais do algoritmo */}
+      {showBreakdown && (
+        <div
+          id="suitability-breakdown"
+          role="region"
+          aria-label="Explicação dos scores de aptidão"
+          className="mb-6 rounded-xl border border-[var(--border)] bg-[var(--background-card)] p-4 space-y-4"
+        >
+          <p className="text-xs font-semibold text-[var(--foreground-secondary)] uppercase tracking-wide">
+            Como calculamos os scores de aptidão
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+            {/* Competição */}
+            <div>
+              <p className="text-xs font-semibold mb-1.5" style={{ color: BAR_COLORS.competition }}>
+                Competição
+              </p>
+              <div className="divide-y divide-white/5">
+                {BREAKDOWN_COMPETICAO.map((r) => (
+                  <BreakdownRow key={r.fator} fator={r.fator} peso={r.peso} />
+                ))}
+              </div>
+            </div>
+
+            {/* Lazer */}
+            <div>
+              <p className="text-xs font-semibold mb-1.5" style={{ color: BAR_COLORS.leisure }}>
+                Lazer
+              </p>
+              <div className="divide-y divide-white/5">
+                {BREAKDOWN_LAZER.map((r) => (
+                  <BreakdownRow key={r.fator} fator={r.fator} peso={r.peso} />
+                ))}
+              </div>
+            </div>
+
+            {/* Criação */}
+            <div>
+              <p className="text-xs font-semibold mb-1.5" style={{ color: BAR_COLORS.breeding }}>
+                Criação
+              </p>
+              <div className="divide-y divide-white/5">
+                {BREAKDOWN_CRIACAO.map((r) => (
+                  <BreakdownRow key={r.fator} fator={r.fator} peso={r.peso} />
+                ))}
+              </div>
+            </div>
+
+            {/* Investimento */}
+            <div>
+              <p className="text-xs font-semibold mb-1.5" style={{ color: BAR_COLORS.investment }}>
+                Investimento
+              </p>
+              <div className="divide-y divide-white/5">
+                {BREAKDOWN_INVESTIMENTO.map((r) => (
+                  <BreakdownRow key={r.fator} fator={r.fator} peso={r.peso} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Aviso educativo */}
+          <p className="text-[11px] italic text-[var(--foreground-muted)] border-t border-white/5 pt-3 leading-relaxed">
+            Nota: estes scores são estimativas educativas baseadas em critérios gerais do mercado
+            equestre. Não substituem a avaliação presencial por perito qualificado nem o exame
+            veterinário.
+          </p>
+        </div>
+      )}
 
       <div className="space-y-6">
         {profiles.map(({ cavalo, color, scores }) => (

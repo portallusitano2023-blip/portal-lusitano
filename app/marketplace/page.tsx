@@ -411,7 +411,7 @@ function MarketplaceContent() {
               onClick={fetchCavalos}
               className="px-6 py-2 text-sm font-medium text-[var(--gold)] border border-[var(--gold)]/30 rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
             >
-              Tentar novamente
+              {t.errors.try_again}
             </button>
           </div>
         ) : cavalos.length === 0 ? (

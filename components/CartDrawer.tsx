@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState, useCallback } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { X, Minus, Plus, ShoppingBag } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
@@ -43,6 +43,21 @@ export default function CartDrawer() {
   const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart, checkoutUrl } = useCart();
   const { language } = useLanguage();
   const drawerRef = useRef<HTMLDivElement>(null);
+  // Track which line IDs are currently being mutated to prevent double-clicks
+  const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
+
+  const withPending = useCallback(async (id: string, fn: () => Promise<void>) => {
+    setPendingIds((prev) => new Set(prev).add(id));
+    try {
+      await fn();
+    } finally {
+      setPendingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }
+  }, []);
 
   useFocusTrap(drawerRef, isCartOpen, closeCart);
 
@@ -151,14 +166,26 @@ export default function CartDrawer() {
                       <div className="flex-grow flex flex-col justify-between py-1">
                         <div>
                           <div className="flex justify-between items-start">
-                            <h3 className="text-lg font-serif text-[var(--foreground)] leading-tight pr-4">
-                              {item.title}
-                            </h3>
+                            <div className="pr-4">
+                              <h3 className="text-lg font-serif text-[var(--foreground)] leading-tight">
+                                {item.title}
+                              </h3>
+                              {item.variantTitle && (
+                                <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--foreground-muted)] mt-1">
+                                  {item.variantTitle}
+                                </p>
+                              )}
+                            </div>
                             <button
-                              onClick={() => removeFromCart(item.id)}
-                              className="text-[var(--foreground-secondary)] hover:text-red-400 text-xs uppercase p-2 min-h-[44px] flex items-center touch-manipulation"
+                              onClick={() => withPending(item.id, () => removeFromCart(item.id))}
+                              disabled={pendingIds.has(item.id)}
+                              className="text-[var(--foreground-secondary)] hover:text-red-400 text-xs uppercase p-2 min-h-[44px] flex items-center touch-manipulation disabled:opacity-40"
                             >
-                              {ct.remove}
+                              {pendingIds.has(item.id) ? (
+                                <Loader2 size={12} className="animate-spin" />
+                              ) : (
+                                ct.remove
+                              )}
                             </button>
                           </div>
                           <p className="text-[var(--gold)] font-serif text-md mt-2">
@@ -167,8 +194,10 @@ export default function CartDrawer() {
                         </div>
                         <div className="flex items-center gap-2 border border-[var(--border)] bg-[var(--surface-hover)] w-fit mt-4">
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            disabled={item.quantity <= 1}
+                            onClick={() =>
+                              withPending(item.id, () => updateQuantity(item.id, item.quantity - 1))
+                            }
+                            disabled={item.quantity <= 1 || pendingIds.has(item.id)}
                             className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation disabled:opacity-30"
                             aria-label={
                               language === "pt"
@@ -180,12 +209,19 @@ export default function CartDrawer() {
                           >
                             <Minus size={14} />
                           </button>
-                          <span className="text-[var(--foreground)] font-serif w-8 text-center text-sm">
-                            {item.quantity}
+                          <span className="text-[var(--foreground)] font-serif w-8 text-center text-sm flex items-center justify-center">
+                            {pendingIds.has(item.id) ? (
+                              <Loader2 size={12} className="animate-spin text-[var(--gold)]" />
+                            ) : (
+                              item.quantity
+                            )}
                           </span>
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
+                            onClick={() =>
+                              withPending(item.id, () => updateQuantity(item.id, item.quantity + 1))
+                            }
+                            disabled={pendingIds.has(item.id)}
+                            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation disabled:opacity-30"
                             aria-label={
                               language === "pt"
                                 ? `Aumentar quantidade de ${item.title}`
@@ -219,12 +255,23 @@ export default function CartDrawer() {
                     {subtotal} <span className="text-sm text-[var(--foreground-muted)]">EUR</span>
                   </p>
                 </div>
-                <a
-                  href={checkoutUrl || "#"}
-                  className="block w-full bg-[var(--gold)] text-black text-center text-xs uppercase tracking-[0.3em] py-5 font-bold hover:bg-white transition-colors"
-                >
-                  {ct.checkout}
-                </a>
+                {checkoutUrl ? (
+                  <a
+                    href={checkoutUrl}
+                    className="block w-full bg-[var(--gold)] text-black text-center text-xs uppercase tracking-[0.3em] py-5 font-bold hover:bg-white transition-colors"
+                  >
+                    {ct.checkout}
+                  </a>
+                ) : (
+                  <div className="flex items-center justify-center gap-2 w-full bg-[var(--background-secondary)] text-[var(--foreground-muted)] text-center text-xs uppercase tracking-[0.3em] py-5 border border-[var(--border)]">
+                    <Loader2 size={14} className="animate-spin" />
+                    {language === "pt"
+                      ? "A preparar..."
+                      : language === "es"
+                        ? "Preparando..."
+                        : "Preparing..."}
+                  </div>
+                )}
               </div>
             )}
           </div>

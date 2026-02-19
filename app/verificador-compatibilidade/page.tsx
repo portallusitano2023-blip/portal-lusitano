@@ -337,7 +337,7 @@ export default function VerificadorCompatibilidadePage() {
           <ProUpgradeCard isSubscribed={isSubscribed} />
           {/* PRO Status Bar */}
           {!accessLoading && (step > 0 || !!resultado) && isSubscribed && (
-            <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm mt-2">
+            <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-6 text-sm mt-2">
               <svg
                 width="14"
                 height="14"
@@ -349,13 +349,13 @@ export default function VerificadorCompatibilidadePage() {
                 <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
               </svg>
               <span className="text-[#C5A059] font-semibold">PRO Activo</span>
-              <span className="text-[#C5A059]/50">•</span>
-              <span className="text-[#C5A059]/80">Utilizações ilimitadas</span>
-              <span className="text-[#C5A059]/50">•</span>
-              <span className="text-[#C5A059]/80">Verificador desbloqueado</span>
+              <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+              <span className="text-[#C5A059]/80 hidden sm:inline">Utilizações ilimitadas</span>
+              <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+              <span className="text-[#C5A059]/80 hidden sm:inline">Verificador desbloqueado</span>
               <a
                 href="/ferramentas/historico"
-                className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
+                className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap text-xs sm:text-sm"
               >
                 Ver histórico →
               </a>
@@ -363,15 +363,15 @@ export default function VerificadorCompatibilidadePage() {
           )}
           {/* Free uses counter */}
           {!accessLoading && (step > 0 || !!resultado) && !isSubscribed && freeUsesLeft > 0 && (
-            <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm mt-2">
-              <span className="text-amber-400/90">
+            <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-6 text-sm mt-2">
+              <span className="text-amber-400/90 flex-1 min-w-0">
                 {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
                 {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
                 Subscreva PRO para utilizações ilimitadas
               </span>
               <a
                 href="/ferramentas"
-                className="ml-auto text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
+                className="text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
               >
                 Subscrever
               </a>

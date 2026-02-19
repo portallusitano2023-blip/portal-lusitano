@@ -152,13 +152,13 @@ export default function Paywall({ toolName, requiresAuth = false, proFeatures }:
           </div>
 
           {/* Price */}
-          <div className="flex items-baseline justify-center gap-1 mb-5">
+          <div className="flex flex-wrap items-baseline justify-center gap-x-1.5 gap-y-1 mb-5">
             <span className="text-4xl font-serif bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] bg-clip-text text-transparent">
               4,99
             </span>
             <span className="text-[var(--foreground-muted)] text-base">EUR</span>
             <span className="text-[var(--foreground-muted)] text-sm">/mês</span>
-            <span className="ml-2 text-xs text-[var(--foreground-muted)] line-through">9,99€</span>
+            <span className="text-xs text-[var(--foreground-muted)] line-through">9,99€</span>
           </div>
 
           {/* Features */}
@@ -180,7 +180,7 @@ export default function Paywall({ toolName, requiresAuth = false, proFeatures }:
           <button
             onClick={handleSubscribe}
             disabled={loading}
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black font-bold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all shadow-lg shadow-[var(--gold)]/25 hover:shadow-[var(--gold)]/40 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[44px] bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black font-bold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all shadow-lg shadow-[var(--gold)]/25 hover:shadow-[var(--gold)]/40 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
           >
             {loading ? (
               <>

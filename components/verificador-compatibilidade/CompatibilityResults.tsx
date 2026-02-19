@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Dna,
   AlertTriangle,
@@ -16,6 +17,7 @@ import {
   ShieldAlert,
   ListChecks,
   Circle,
+  X,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import BlurredProSection from "@/components/tools/BlurredProSection";
@@ -75,6 +77,7 @@ export default function CompatibilityResults({
   objetivo,
 }: CompatibilityResultsProps) {
   const { t } = useLanguage();
+  const [coiBannerDismissed, setCoiBannerDismissed] = useState(false);
 
   // PRO breeding projections
   const offspringAxes = calcularAptidoesPotro(garanhao, egua);
@@ -82,14 +85,14 @@ export default function CompatibilityResults({
   const parentQuality = calcularQualidadePais(garanhao, egua);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+    <div className="max-w-4xl mx-auto px-3 sm:px-4 py-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
       {/* Confetti celebration */}
       <div className="relative">
         <Confetti trigger={true} particleCount={50} duration={2800} />
       </div>
 
       {/* Score Principal */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--background-secondary)] via-[var(--background-secondary)] to-[var(--background-card)] p-8 border border-[var(--border)] mb-6">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--background-secondary)] via-[var(--background-secondary)] to-[var(--background-card)] p-5 sm:p-8 border border-[var(--border)] mb-6">
         <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/5 rounded-full blur-3xl" />
 
@@ -179,13 +182,13 @@ export default function CompatibilityResults({
           const diff = capped - s;
           return (
             <div
-              className={`rounded-xl p-4 border mb-4 flex items-center gap-4 ${
+              className={`rounded-xl p-4 border mb-4 flex items-start gap-3 sm:gap-4 ${
                 capped >= s
                   ? "bg-emerald-500/5 border-emerald-500/20"
                   : "bg-amber-500/5 border-amber-500/20"
               }`}
             >
-              <div className="text-center shrink-0">
+              <div className="text-center shrink-0 min-w-[52px]">
                 <p
                   className="text-3xl font-serif font-bold"
                   style={{ color: capped >= 70 ? "#10b981" : capped >= 50 ? "#f59e0b" : "#ef4444" }}
@@ -194,11 +197,11 @@ export default function CompatibilityResults({
                 </p>
                 <p className="text-[10px] text-[var(--foreground-muted)]">/ 100</p>
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-semibold text-[var(--foreground)]">
                   Score para {OBJETIVO_LABELS[objetivo] ?? objetivo}
                 </p>
-                <p className="text-xs text-[var(--foreground-muted)]">
+                <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
                   {diff >= 0 ? `+${diff}` : diff} pontos vs. score global ({s}/100) — pesos
                   ajustados para este objectivo
                 </p>
@@ -489,7 +492,7 @@ export default function CompatibilityResults({
       )}
 
       {/* Previsão de Pelagem */}
-      <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
+      <div className="bg-[var(--background-secondary)]/50 rounded-xl p-4 sm:p-6 border border-[var(--border)] mb-6">
         <h3 className="font-medium mb-4 flex items-center gap-2">
           <Palette className="text-purple-400" size={18} />
           {t.verificador.coat_prediction}
@@ -726,7 +729,7 @@ export default function CompatibilityResults({
 
       {/* Factores Detalhados — PRO only */}
       <BlurredProSection isSubscribed={isSubscribed} title={t.verificador.detailed_analysis}>
-        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
+        <div className="bg-[var(--background-secondary)]/50 rounded-xl p-4 sm:p-6 border border-[var(--border)] mb-6">
           <h3 className="text-sm font-medium text-[var(--foreground-muted)] uppercase tracking-wider mb-4">
             {t.verificador.detailed_analysis}
           </h3>
@@ -993,17 +996,19 @@ export default function CompatibilityResults({
             };
             return (
               <>
-                <div className="grid grid-cols-6 sm:grid-cols-12 gap-2 mb-5">
+                <div className="grid grid-cols-6 sm:grid-cols-12 gap-1 sm:gap-2 mb-5">
                   {months.map((m) => {
                     const c = colorMap[m.status];
                     return (
                       <div
                         key={m.abbr}
-                        className={`flex flex-col items-center gap-1.5 rounded-lg p-2 border ${c.bg} ${c.border}`}
+                        className={`flex flex-col items-center gap-1 rounded-lg p-1.5 sm:p-2 border ${c.bg} ${c.border}`}
                         title={m.full}
                       >
-                        <span className={`text-[10px] font-semibold ${c.text}`}>{m.abbr}</span>
-                        <div className={`w-2 h-2 rounded-full ${c.dot}`} />
+                        <span className={`text-[9px] sm:text-[10px] font-semibold ${c.text}`}>
+                          {m.abbr}
+                        </span>
+                        <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${c.dot}`} />
                       </div>
                     );
                   })}

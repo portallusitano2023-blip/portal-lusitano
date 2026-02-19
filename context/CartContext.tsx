@@ -14,6 +14,7 @@ interface CartItem {
   id: string;
   variantId: string;
   title: string;
+  variantTitle?: string; // e.g. "Tamanho M / Preto" — absent when single-variant ("Default Title")
   price: string;
   image: string;
   quantity: number;
@@ -94,6 +95,7 @@ interface CartEdge {
     quantity: number;
     merchandise: {
       id?: string;
+      title?: string; // variant title e.g. "Tamanho M / Preto"
       price: { amount: string };
       product: {
         title: string;
@@ -109,14 +111,21 @@ function parseCartData(cartData: { checkoutUrl?: string; lines?: { edges: CartEd
 } {
   const checkoutUrl = cartData.checkoutUrl ?? null;
   const items =
-    cartData.lines?.edges.map((edge: CartEdge) => ({
-      id: edge.node.id,
-      variantId: edge.node.merchandise.id || "",
-      title: edge.node.merchandise.product.title,
-      price: edge.node.merchandise.price.amount,
-      image: edge.node.merchandise.product.images.edges[0]?.node.url || "",
-      quantity: edge.node.quantity,
-    })) || [];
+    cartData.lines?.edges.map((edge: CartEdge) => {
+      const variantTitle = edge.node.merchandise.title;
+      // Shopify uses "Default Title" for single-variant products — don't show that
+      const normalizedVariantTitle =
+        variantTitle && variantTitle !== "Default Title" ? variantTitle : undefined;
+      return {
+        id: edge.node.id,
+        variantId: edge.node.merchandise.id || "",
+        title: edge.node.merchandise.product.title,
+        variantTitle: normalizedVariantTitle,
+        price: edge.node.merchandise.price.amount,
+        image: edge.node.merchandise.product.images.edges[0]?.node.url || "",
+        quantity: edge.node.quantity,
+      };
+    }) || [];
   return { checkoutUrl, items };
 }
 
@@ -152,10 +161,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
             setCartId(null);
           }
         } catch {
-          if (!cancelled) {
-            localStorage.removeItem("shopify_cart_id");
-            setCartId(null);
-          }
+          // Network error (timeout, DNS, etc.) — keep localStorage ID so the next
+          // cart operation can still use it. Only clear when Shopify confirms it's gone.
+          if (!cancelled) setCartId(null);
         }
       })();
     }

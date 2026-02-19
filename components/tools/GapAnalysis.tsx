@@ -37,6 +37,21 @@ const ATTRIBUTES: { key: AttrKey; label: string; max: number }[] = [
   { key: "blup", label: "BLUP", max: 150 },
 ];
 
+// Dicas de melhoria genéricas e seguras por atributo.
+// Apresentadas apenas quando o cavalo tem score inferior ao melhor do grupo.
+// Nota: são orientações educativas gerais; não substituem avaliação por perito qualificado.
+const DICAS_MELHORIA: Record<AttrKey, string> = {
+  conformacao:
+    "Ginástica funcional e trabalho em equilíbrio podem valorizar a apresentação; avaliação de ferragem recomendada.",
+  andamentos:
+    "Os andamentos são maioritariamente hereditários; o treino sistemático pode melhorar a expressão em 10–20%.",
+  temperamento:
+    "Trabalho de desensibilização progressiva e exposição gradual a estímulos variados favorece a estabilidade comportamental.",
+  saude:
+    "Consulte um médico veterinário para definir um plano de saúde preventivo e actualização de profilaxias.",
+  blup: "O índice BLUP melhora com o registo consistente de resultados em competições reconhecidas pela APSL ou FEI.",
+};
+
 // ============================================
 // COMPONENTE
 // ============================================
@@ -201,6 +216,11 @@ export default function GapAnalysis({
                           {key === "blup" ? "" : "/10"}
                         </span>
                       </div>
+
+                      {/* Dica contextual de melhoria — mostrada apenas quando há gap negativo */}
+                      <p className="mt-1 text-xs italic text-[var(--foreground-muted)] leading-relaxed">
+                        {DICAS_MELHORIA[key]}
+                      </p>
                     </div>
                   );
                 })}

@@ -12,16 +12,31 @@ export default function ProductDisplay({ product }: { product: Product }) {
   const firstImage = product.images[0]?.url || PLACEHOLDER_IMAGE;
   const firstVariant = product.variants[0];
 
-  const [selectedImage, setSelectedImage] = useState(firstImage);
   const [selectedVariantId, setSelectedVariantId] = useState(firstVariant?.id || "");
+  // Tracks manual thumbnail clicks — null means "follow active variant"
+  const [manualImage, setManualImage] = useState<string | null>(null);
+
+  // Preload all variant images on mount so switching is instant
+  useEffect(() => {
+    product.variants.forEach((v) => {
+      if (v.image?.url) {
+        const img = new window.Image();
+        img.src = v.image.url;
+      }
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const activeVariant = product.variants.find((v) => v.id === selectedVariantId) || firstVariant;
 
-  useEffect(() => {
-    if (activeVariant?.image?.url) {
-      setSelectedImage(activeVariant.image.url); // eslint-disable-line react-hooks/set-state-in-effect
-    }
-  }, [selectedVariantId]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Derive display image synchronously — no extra render needed
+  // Priority: manual thumbnail click > variant-specific image > first product image
+  const displayImage = manualImage || activeVariant?.image?.url || firstImage;
+
+  // When user picks a different variant, clear manual override so variant image takes over
+  const handleVariantChange = (newId: string) => {
+    setSelectedVariantId(newId);
+    setManualImage(null);
+  };
 
   const isAvailable = activeVariant?.availableForSale || false;
   const price = Number(activeVariant?.price?.amount || 0).toFixed(2);
@@ -32,11 +47,12 @@ export default function ProductDisplay({ product }: { product: Product }) {
       <div className="space-y-6">
         <div className="aspect-[4/5] w-full bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative group">
           <Image
-            src={selectedImage}
+            key={displayImage}
+            src={displayImage}
             alt={product.title}
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            className="object-cover transition-transform duration-700 group-hover:scale-105 animate-[fadeIn_0.3s_ease-out]"
             priority
           />
         </div>
@@ -47,9 +63,9 @@ export default function ProductDisplay({ product }: { product: Product }) {
             {product.images.map((img, index) => (
               <button
                 key={index}
-                onClick={() => setSelectedImage(img.url)}
+                onClick={() => setManualImage(img.url)}
                 aria-label={`Ver imagem ${index + 1} de ${product.title}`}
-                className={`w-20 h-24 flex-shrink-0 border transition-all relative ${selectedImage === img.url ? "border-[var(--gold)] opacity-100" : "border-transparent opacity-50 hover:opacity-100"}`}
+                className={`w-20 h-24 flex-shrink-0 border transition-all relative ${displayImage === img.url ? "border-[var(--gold)] opacity-100" : "border-transparent opacity-50 hover:opacity-100"}`}
               >
                 <Image
                   src={img.url}
@@ -92,7 +108,7 @@ export default function ProductDisplay({ product }: { product: Product }) {
               <select
                 id="variant-select"
                 value={selectedVariantId}
-                onChange={(e) => setSelectedVariantId(e.target.value)}
+                onChange={(e) => handleVariantChange(e.target.value)}
                 className="w-full appearance-none bg-transparent border border-[var(--border)] text-[var(--foreground)] py-4 pl-4 pr-12 font-serif text-sm focus:border-[var(--gold)] focus:outline-none transition-colors cursor-pointer uppercase tracking-wider rounded-none"
               >
                 {product.variants.map((variant) => (

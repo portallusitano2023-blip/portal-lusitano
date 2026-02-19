@@ -128,21 +128,25 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
               <button
                 key={opt.value}
                 onClick={() => update("treino", opt.value as FormData["treino"])}
-                className={`py-3 px-4 rounded-lg border text-left transition-all ${
+                className={`py-3 px-3 rounded-lg border text-left transition-all min-h-[44px] ${
                   form.treino === opt.value
                     ? "border-[var(--gold)] bg-[var(--gold)]/10"
                     : "border-[var(--border)] hover:border-[var(--border)]"
                 }`}
               >
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start gap-1">
                   <span
-                    className={`text-sm font-medium ${form.treino === opt.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
+                    className={`text-xs sm:text-sm font-medium leading-tight ${form.treino === opt.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
                   >
                     {opt.label}
                   </span>
-                  <span className="text-xs text-[var(--foreground-muted)]">{opt.price}</span>
+                  <span className="text-[10px] text-[var(--foreground-muted)] shrink-0 mt-0.5">
+                    {opt.price}
+                  </span>
                 </div>
-                <span className="text-xs text-[var(--foreground-muted)]">{opt.desc}</span>
+                <span className="text-[10px] sm:text-xs text-[var(--foreground-muted)] mt-0.5 block">
+                  {opt.desc}
+                </span>
               </button>
             ))}
           </div>
@@ -174,14 +178,14 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
               <button
                 key={opt.value}
                 onClick={() => update("competicoes", opt.value as FormData["competicoes"])}
-                className={`py-3 px-4 rounded-lg border text-sm font-medium transition-all flex items-center gap-2 ${
+                className={`py-3 px-3 rounded-lg border text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 min-h-[44px] ${
                   form.competicoes === opt.value
                     ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
                     : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
                 } ${opt.value === "campeonato_mundo" ? "col-span-2" : ""}`}
               >
-                {opt.icon && <opt.icon size={16} />}
-                {opt.label}
+                {opt.icon && <opt.icon size={14} className="shrink-0" />}
+                <span className="leading-tight">{opt.label}</span>
               </button>
             ))}
           </div>
@@ -215,24 +219,24 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
           <div className="grid grid-cols-2 gap-2 mt-4">
             <button
               onClick={() => update("raioX", !form.raioX)}
-              className={`py-3 px-4 rounded-lg border text-sm transition-all flex items-center justify-center gap-2 ${
+              className={`py-3 px-3 rounded-lg border text-xs sm:text-sm transition-all flex items-center justify-center gap-2 min-h-[44px] ${
                 form.raioX
                   ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
                   : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
               }`}
             >
-              {form.raioX && <Check size={16} />}
+              {form.raioX && <Check size={16} className="shrink-0" />}
               {t.calculadora.btn_xray}
             </button>
             <button
               onClick={() => update("exameVeterinario", !form.exameVeterinario)}
-              className={`py-3 px-4 rounded-lg border text-sm transition-all flex items-center justify-center gap-2 ${
+              className={`py-3 px-3 rounded-lg border text-xs sm:text-sm transition-all flex items-center justify-center gap-2 min-h-[44px] ${
                 form.exameVeterinario
                   ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
                   : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
               }`}
             >
-              {form.exameVeterinario && <Check size={16} />}
+              {form.exameVeterinario && <Check size={16} className="shrink-0" />}
               {t.calculadora.btn_vet_exam}
             </button>
           </div>

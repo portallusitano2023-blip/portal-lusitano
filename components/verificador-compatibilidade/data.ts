@@ -70,7 +70,12 @@ export const FERTILIDADES = [
 
 export const DEFEITOS_GENETICOS = [
   { value: "WFFS", label: "WFFS Portador", desc: "Síndrome do Potro Frágil", risco: "alto" },
-  { value: "HYPP", label: "HYPP", desc: "Paralisia Periódica Hipercalémica", risco: "alto" },
+  {
+    value: "HYPP",
+    label: "HYPP (raro em PSL)",
+    desc: "Paralisia Periódica Hipercalémica — comum em Quarter Horse/Paint, raro em Lusitano",
+    risco: "alto",
+  },
   { value: "Lordose", label: "Lordose", desc: "Curvatura anormal da coluna", risco: "medio" },
   { value: "OCD", label: "OCD", desc: "Osteocondrite Dissecante", risco: "medio" },
   { value: "Navicular", label: "Síndrome Navicular", desc: "Problema podal", risco: "medio" },

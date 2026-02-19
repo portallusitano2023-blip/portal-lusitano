@@ -130,6 +130,8 @@ function AnalisePerfilContent() {
     subProfile,
     dominantProfile,
     dominantProfileLabel,
+    crossValidationWarning,
+    dismissCrossWarning,
   } = useQuizLogic();
 
   return (
@@ -212,6 +214,8 @@ function AnalisePerfilContent() {
             onReset={resetQuiz}
             dominantProfile={dominantProfile}
             dominantProfileLabel={dominantProfileLabel}
+            crossValidationWarning={crossValidationWarning}
+            onDismissCrossWarning={dismissCrossWarning}
           />
         </>
       ) : (

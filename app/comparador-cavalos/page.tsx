@@ -37,6 +37,8 @@ import PurchaseConfidence from "@/components/tools/PurchaseConfidence";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
+import { useToast } from "@/context/ToastContext";
 import Tooltip from "@/components/tools/Tooltip";
 import SourceBadge from "@/components/tools/SourceBadge";
 import MethodologyPanel from "@/components/tools/MethodologyPanel";
@@ -167,10 +169,9 @@ const RadarChart = ({
   return (
     <svg
       viewBox={`0 0 ${size} ${size}`}
-      width={size}
-      height={size}
-      className="mx-auto w-full max-w-[280px]"
-      style={{ height: "auto" }}
+      width="100%"
+      className="mx-auto w-full"
+      style={{ height: "auto", maxWidth: `${size}px` }}
     >
       {/* Grid circles */}
       {[2, 4, 6, 8, 10].map((level) => (
@@ -410,7 +411,9 @@ function exportarCSV(cavalos: Cavalo[], calcularScore: (c: Cavalo) => number) {
 }
 
 export default function ComparadorCavalosPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
+  const { showToast } = useToast();
   const [cavalos, setCavalos] = useState<Cavalo[]>([
     criarCavalo("1", "Cavalo A"),
     criarCavalo("2", "Cavalo B"),
@@ -611,7 +614,7 @@ export default function ComparadorCavalosPage() {
       generateComparadorPDF(cavalos, scores, vencedorNome, melhorValorNome);
     } catch (error) {
       if (process.env.NODE_ENV === "development") console.error("[Comparador]", error);
-      alert("Erro ao exportar PDF. Tente novamente.");
+      showToast("error", t.errors.error_export_pdf);
     } finally {
       setIsExporting(false);
     }
@@ -970,7 +973,7 @@ export default function ComparadorCavalosPage() {
               <button
                 onClick={adicionar}
                 disabled={cavalos.length >= 4}
-                className="px-4 py-2 bg-blue-600 rounded-lg flex items-center gap-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500 transition-colors"
+                className="px-4 py-2 min-h-[44px] bg-blue-600 rounded-lg flex items-center gap-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500 transition-colors"
               >
                 <Plus size={16} />
                 <span className="hidden sm:inline">{t.comparador.btn_add}</span>
@@ -1244,10 +1247,10 @@ export default function ComparadorCavalosPage() {
             <div
               className={`grid gap-4 mb-8 ${
                 cavalos.length === 2
-                  ? "md:grid-cols-2"
+                  ? "grid-cols-1 md:grid-cols-2"
                   : cavalos.length === 3
-                    ? "md:grid-cols-3"
-                    : "md:grid-cols-4"
+                    ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+                    : "grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
               }`}
             >
               {cavalos.map((c, i) => (
@@ -1498,7 +1501,7 @@ export default function ComparadorCavalosPage() {
                           max="10"
                           value={c[field]}
                           onChange={(e) => update(c.id, field, +e.target.value)}
-                          className="w-full h-1.5 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer"
+                          className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer touch-pan-x"
                           style={{ accentColor: cores[i] }}
                         />
                       </div>
@@ -1774,7 +1777,14 @@ export default function ComparadorCavalosPage() {
                       (c) => c.nome.trim() && !c.nome.startsWith("Cavalo")
                     );
                     if (cavalosValidos.length < 2) {
-                      alert("Preenche o nome de pelo menos 2 cavalos para iniciar a comparação.");
+                      showToast(
+                        "error",
+                        tr(
+                          "Preenche o nome de pelo menos 2 cavalos para iniciar a comparação.",
+                          "Fill in the name of at least 2 horses to start the comparison.",
+                          "Rellena el nombre de al menos 2 caballos para iniciar la comparación."
+                        )
+                      );
                       return;
                     }
                     setCalculando(true);
@@ -1813,7 +1823,7 @@ export default function ComparadorCavalosPage() {
                     }, 2000);
                   }}
                   disabled={!canUse || calculando}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 min-h-[52px] bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <BarChart3 size={22} />
                   {t.comparador.btn_analyse}
@@ -1950,7 +1960,7 @@ export default function ComparadorCavalosPage() {
                     <button
                       key={d.id}
                       onClick={() => setFiltroDisciplina(d.id)}
-                      className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                      className={`text-xs px-3 py-2 min-h-[36px] rounded-full border transition-all ${
                         filtroDisciplina === d.id
                           ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059] font-semibold"
                           : "border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--border)]/70"
@@ -2068,7 +2078,7 @@ export default function ComparadorCavalosPage() {
                       </div>
 
                       {/* Três estatísticas rápidas do vencedor */}
-                      <div className="grid grid-cols-3 gap-3 mb-4">
+                      <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
                         <div className="bg-[var(--background-secondary)]/60 rounded-xl p-3 text-center">
                           <p className="text-2xl font-bold" style={{ color: corVencedor }}>
                             {vencedorScore}
@@ -2103,15 +2113,17 @@ export default function ComparadorCavalosPage() {
                             className="text-emerald-400 shrink-0"
                             aria-hidden="true"
                           />
-                          <p className="text-xs text-[var(--foreground-secondary)]">
+                          <p className="text-xs text-[var(--foreground-secondary)] leading-relaxed">
                             <span className="text-emerald-400 font-medium">
                               Melhor custo-benefício:
                             </span>{" "}
                             <span className="font-medium text-[var(--foreground)]">
                               {melhorValor.nome}
                             </span>{" "}
-                            ({calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")} €/ponto
-                            vs. {calcularValorPorPonto(vencedor).toLocaleString("pt-PT")} €/ponto)
+                            <span className="text-[var(--foreground-muted)]">
+                              ({calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")} €/pt vs.{" "}
+                              {calcularValorPorPonto(vencedor).toLocaleString("pt-PT")} €/pt)
+                            </span>
                           </p>
                         </div>
                       )}
@@ -2236,7 +2248,7 @@ export default function ComparadorCavalosPage() {
                             />
                           ))}
                         </div>
-                        <div className="mt-4 pt-3 border-t border-[var(--border)]/40 flex items-center gap-4 text-xs text-[var(--foreground-muted)]">
+                        <div className="mt-4 pt-3 border-t border-[var(--border)]/40 flex flex-wrap items-center gap-3 text-xs text-[var(--foreground-muted)]">
                           <span>
                             Score: <strong className="text-[#C5A059]">{best.score}</strong> / 100
                           </span>
@@ -2257,17 +2269,19 @@ export default function ComparadorCavalosPage() {
                 {cavalos.length === 2 &&
                   cavalos.some((c) => c.sexo === "Garanhão") &&
                   cavalos.some((c) => c.sexo === "Égua") && (
-                    <div className="bg-pink-900/15 border border-pink-500/30 rounded-xl p-4 flex items-center gap-3 mb-6">
-                      <Dna size={18} className="text-pink-400 shrink-0" />
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-[var(--foreground)]">
-                          Verificar Compatibilidade Reprodutiva
-                        </p>
-                        <p className="text-xs text-[var(--foreground-muted)]">
-                          {cavalos.find((c) => c.sexo === "Garanhão")?.nome || "Garanhão"} ×{" "}
-                          {cavalos.find((c) => c.sexo === "Égua")?.nome || "Égua"} — analisar
-                          compatibilidade genética
-                        </p>
+                    <div className="bg-pink-900/15 border border-pink-500/30 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
+                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                        <Dna size={18} className="text-pink-400 shrink-0 mt-0.5" />
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-[var(--foreground)]">
+                            Verificar Compatibilidade Reprodutiva
+                          </p>
+                          <p className="text-xs text-[var(--foreground-muted)]">
+                            {cavalos.find((c) => c.sexo === "Garanhão")?.nome || "Garanhão"} ×{" "}
+                            {cavalos.find((c) => c.sexo === "Égua")?.nome || "Égua"} — analisar
+                            compatibilidade genética
+                          </p>
+                        </div>
                       </div>
                       <button
                         onClick={() => {
@@ -2281,7 +2295,7 @@ export default function ComparadorCavalosPage() {
                           } catch {}
                           window.location.href = "/verificador-compatibilidade";
                         }}
-                        className="flex items-center gap-1.5 px-3 py-2 bg-pink-500/20 border border-pink-500/40 text-pink-300 text-xs font-semibold rounded-lg hover:bg-pink-500/30 transition-all whitespace-nowrap"
+                        className="flex items-center justify-center gap-1.5 px-4 py-3 min-h-[44px] bg-pink-500/20 border border-pink-500/40 text-pink-300 text-xs font-semibold rounded-lg hover:bg-pink-500/30 transition-all whitespace-nowrap w-full sm:w-auto"
                       >
                         Verificar <ChevronRight size={13} />
                       </button>
@@ -2301,7 +2315,7 @@ export default function ComparadorCavalosPage() {
                     />
                   </h3>
                   <div className="flex flex-col items-center">
-                    <div className="w-full max-w-[280px] overflow-hidden">
+                    <div className="w-full max-w-[320px] sm:max-w-[280px] overflow-hidden">
                       <RadarChart
                         cavalos={cavalos.map((c, i) => ({
                           nome: c.nome,
@@ -2378,8 +2392,13 @@ export default function ComparadorCavalosPage() {
                           Categorias Vencidas ({total} categorias)
                         </h3>
                         <div
-                          className="grid gap-3"
-                          style={{ gridTemplateColumns: `repeat(${cavalos.length}, 1fr)` }}
+                          className={`grid gap-3 ${
+                            cavalos.length === 2
+                              ? "grid-cols-2"
+                              : cavalos.length === 3
+                                ? "grid-cols-2 sm:grid-cols-3"
+                                : "grid-cols-2 sm:grid-cols-4"
+                          }`}
                         >
                           {vitórias.map((v, i) => (
                             <div
@@ -2486,22 +2505,22 @@ export default function ComparadorCavalosPage() {
                   const CAVALO_COLORS = ["#C5A059", "#60a5fa", "#34d399", "#f472b6"];
 
                   return (
-                    <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
+                    <div className="bg-[var(--background-secondary)]/50 rounded-xl p-4 sm:p-6 border border-[var(--border)] mb-6">
                       <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider mb-5 flex items-center gap-2">
                         <Target size={16} className="text-[#C5A059]" />
                         Aptidão por Disciplina
                       </h3>
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
+                      <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+                        <table className="w-full text-sm" style={{ minWidth: "320px" }}>
                           <thead>
                             <tr className="border-b border-[var(--border)]">
-                              <th className="text-left text-xs text-[var(--foreground-muted)] pb-3 pr-4">
+                              <th className="text-left text-xs text-[var(--foreground-muted)] pb-3 pr-4 min-w-[100px]">
                                 Disciplina
                               </th>
                               {cavalos.map((c, i) => (
                                 <th
                                   key={i}
-                                  className="text-center text-xs pb-3 px-2"
+                                  className="text-center text-xs pb-3 px-2 min-w-[60px]"
                                   style={{ color: CAVALO_COLORS[i] }}
                                 >
                                   {c.nome || `Cavalo ${i + 1}`}
@@ -2551,8 +2570,8 @@ export default function ComparadorCavalosPage() {
 
                 {/* Matriz de Aptidão por Disciplina — PRO (detalhada) */}
                 <BlurredProSection isSubscribed={isSubscribed} title="Aptidão por Disciplina">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
+                  <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+                    <table className="w-full text-sm" style={{ minWidth: "360px" }}>
                       <thead>
                         <tr>
                           <th className="text-left text-xs text-[var(--foreground-muted)] font-medium pb-3 pr-4 min-w-[160px]">
@@ -2857,8 +2876,13 @@ export default function ComparadorCavalosPage() {
 
                     {/* ROI 5 anos por cavalo */}
                     <div
-                      className="mt-4 grid gap-3"
-                      style={{ gridTemplateColumns: `repeat(${cavalos.length}, 1fr)` }}
+                      className={`mt-4 grid gap-3 ${
+                        cavalos.length === 2
+                          ? "grid-cols-2"
+                          : cavalos.length === 3
+                            ? "grid-cols-2 sm:grid-cols-3"
+                            : "grid-cols-2 sm:grid-cols-4"
+                      }`}
                     >
                       {cavalos.map((c, i) => {
                         const roi = calcularROI(c);

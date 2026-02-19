@@ -8,9 +8,8 @@ const bodySchema = z.object({
   toolSlug: z.enum(["calculadora", "comparador", "compatibilidade", "perfil"]),
 });
 
-// Mapa simples para evitar envios duplicados (1 email por tool por user por dia)
-const sentMap = new Map<string, number>();
-const COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 horas
+// How many free uses each tool allows — must match hooks/useToolAccess.ts
+const FREE_USES_PER_TOOL = 1;
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,18 +29,21 @@ export async function POST(request: NextRequest) {
     }
 
     const { toolSlug } = parsed.data;
-    const key = `${user.email}:${toolSlug}`;
-    const lastSent = sentMap.get(key);
-    if (lastSent && Date.now() - lastSent < COOLDOWN_MS) {
+
+    // DB-based deduplication: only send when the user hits the limit for the first time.
+    // In-memory Maps reset on serverless cold starts; this approach is durable.
+    const { count } = await supabase
+      .from("tool_usage")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("tool_name", toolSlug);
+
+    if ((count ?? 0) !== FREE_USES_PER_TOOL) {
       return NextResponse.json({ ok: true, skipped: true });
     }
 
     const name = user.user_metadata?.full_name || user.email.split("@")[0];
     const result = await EmailWorkflows.sendToolLimitReached(user.email, name, toolSlug);
-
-    if (result.success) {
-      sentMap.set(key, Date.now());
-    }
 
     return NextResponse.json({ ok: result.success });
   } catch (error) {

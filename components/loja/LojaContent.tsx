@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { ProductListing } from "@/types/product";
 
@@ -59,7 +60,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                 className="flex flex-col items-center opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
                 style={{ animationDelay: `${Math.min(index * 0.1, 0.6) + 0.3}s` }}
               >
-                <a href={`/loja/${product.handle}`} className="group block w-full max-w-[380px]">
+                <Link href={`/loja/${product.handle}`} className="group block w-full max-w-[380px]">
                   {/* MOLDURA DA IMAGEM */}
                   <div className="aspect-[4/5] w-full bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative mb-6">
                     <div className="absolute inset-0 z-10 shadow-[inset_0_0_40px_rgba(0,0,0,0.2)] pointer-events-none transition-opacity duration-700 group-hover:opacity-40"></div>
@@ -95,7 +96,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                       {t.shop.discover}
                     </span>
                   </div>
-                </a>
+                </Link>
               </div>
             ))}
           </div>

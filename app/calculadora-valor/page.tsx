@@ -10,6 +10,7 @@ import { useToolAccess } from "@/hooks/useToolAccess";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { useToast } from "@/context/ToastContext";
 import {
   CalculadoraHeader,
   IntroSection,
@@ -107,6 +108,7 @@ const TOTAL_STEPS = 5;
 
 export default function CalculadoraValorPage() {
   const { t } = useLanguage();
+  const { showToast } = useToast();
   const { session } = useAuth();
   const [step, setStep] = useState(0);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -351,7 +353,7 @@ export default function CalculadoraValorPage() {
       setPdfPreviewUrl(blobUrl);
     } catch (error) {
       if (process.env.NODE_ENV === "development") console.error("[Calculadora PDF erro]", error);
-      alert(`Erro ao exportar PDF: ${error instanceof Error ? error.message : String(error)}`);
+      showToast("error", t.errors.error_export_pdf);
     } finally {
       setIsExporting(false);
     }
@@ -556,7 +558,7 @@ export default function CalculadoraValorPage() {
             <div className="max-w-2xl mx-auto">
               {/* PRO Status Bar */}
               {!accessLoading && (step > 0 || !!resultado) && isSubscribed && (
-                <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm">
+                <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm flex-wrap">
                   <svg
                     width="14"
                     height="14"
@@ -568,13 +570,15 @@ export default function CalculadoraValorPage() {
                     <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
                   </svg>
                   <span className="text-[#C5A059] font-semibold">PRO Activo</span>
-                  <span className="text-[#C5A059]/50">•</span>
-                  <span className="text-[#C5A059]/80">Utilizações ilimitadas</span>
-                  <span className="text-[#C5A059]/50">•</span>
-                  <span className="text-[#C5A059]/80">Calculadora desbloqueada</span>
+                  <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+                  <span className="text-[#C5A059]/80 hidden sm:inline">Utilizações ilimitadas</span>
+                  <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+                  <span className="text-[#C5A059]/80 hidden sm:inline">
+                    Calculadora desbloqueada
+                  </span>
                   <a
                     href="/ferramentas/historico"
-                    className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
+                    className="ml-auto text-xs sm:text-sm text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
                   >
                     Ver histórico →
                   </a>
@@ -582,17 +586,17 @@ export default function CalculadoraValorPage() {
               )}
               {/* Free uses counter */}
               {!accessLoading && (step > 0 || !!resultado) && !isSubscribed && freeUsesLeft > 0 && (
-                <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm">
-                  <span className="text-amber-400/90">
+                <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-xs sm:text-sm flex-wrap">
+                  <span className="text-amber-400/90 flex-1">
                     {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
                     {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
-                    Subscreva PRO para utilizações ilimitadas
+                    Subscreva PRO
                   </span>
                   <a
                     href="/ferramentas"
                     className="ml-auto text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
                   >
-                    Subscrever
+                    Subscrever →
                   </a>
                 </div>
               )}
@@ -693,22 +697,20 @@ export default function CalculadoraValorPage() {
                     const estimativa = estimarValorParcial(form);
                     if (!estimativa) return null;
                     return (
-                      <div className="flex items-center justify-between px-4 py-2.5 bg-[var(--background-secondary)]/60 border border-[var(--gold)]/20 rounded-xl mb-4 backdrop-blur-sm">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between gap-2 px-4 py-2.5 bg-[var(--background-secondary)]/60 border border-[var(--gold)]/20 rounded-xl mb-4 backdrop-blur-sm">
+                        <div className="flex items-center gap-2 shrink-0">
                           <TrendingUp size={14} className="text-[#C5A059]" />
-                          <span className="text-xs text-[var(--foreground-muted)]">
-                            Estimativa parcial
-                          </span>
+                          <span className="text-xs text-[var(--foreground-muted)]">Estimativa</span>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-sm font-bold text-[#C5A059]">
+                        <div className="flex items-center gap-1 flex-wrap justify-end">
+                          <span className="text-xs sm:text-sm font-bold text-[#C5A059] whitespace-nowrap">
                             {estimativa.min.toLocaleString("pt-PT")}€
                           </span>
                           <span className="text-xs text-[var(--foreground-muted)]">–</span>
-                          <span className="text-sm font-bold text-[#C5A059]">
+                          <span className="text-xs sm:text-sm font-bold text-[#C5A059] whitespace-nowrap">
                             {estimativa.max.toLocaleString("pt-PT")}€
                           </span>
-                          <span className="text-[10px] text-[var(--foreground-muted)] ml-1">
+                          <span className="text-[10px] text-[var(--foreground-muted)]">
                             (parcial)
                           </span>
                         </div>

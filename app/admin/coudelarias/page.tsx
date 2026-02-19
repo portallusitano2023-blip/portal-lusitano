@@ -327,7 +327,7 @@ export default function CoudelariasPage() {
 
                       {/* Editar */}
                       <button
-                        onClick={() => alert("Modal de edição em desenvolvimento")}
+                        onClick={() => {}}
                         className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                         title="Editar"
                       >

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
@@ -19,7 +20,8 @@ const TOOL_LABELS: Record<string, string> = {
 
 function PerfilContent() {
   const { user, signOut } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
   const router = useRouter();
   const { favoritesCount } = useHorseFavorites();
 
@@ -155,7 +157,7 @@ function PerfilContent() {
             {loadingData ? (
               <div className="flex items-center gap-2 text-sm text-[var(--foreground-muted)]">
                 <Loader2 size={14} className="animate-spin" />
-                <span>A carregar...</span>
+                <span>{tr("A carregar...", "Loading...", "Cargando...")}</span>
               </div>
             ) : (
               <div className="flex items-center justify-between">
@@ -195,7 +197,7 @@ function PerfilContent() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Star className="text-[var(--gold)]" size={20} />
-              <h2 className="text-lg font-medium">Favoritos</h2>
+              <h2 className="text-lg font-medium">{tr("Favoritos", "Favourites", "Favoritos")}</h2>
             </div>
             <span className="text-2xl font-serif text-[var(--gold)]">{favoritesCount}</span>
           </div>
@@ -204,7 +206,7 @@ function PerfilContent() {
               href="/comprar"
               className="mt-3 text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors inline-block"
             >
-              Ver cavalos guardados →
+              {tr("Ver cavalos guardados →", "View saved horses →", "Ver caballos guardados →")}
             </Link>
           )}
         </div>
@@ -219,7 +221,7 @@ function PerfilContent() {
           {loadingData ? (
             <div className="flex items-center gap-2 text-sm text-[var(--foreground-muted)]">
               <Loader2 size={14} className="animate-spin" />
-              <span>A carregar...</span>
+              <span>{tr("A carregar...", "Loading...", "Cargando...")}</span>
             </div>
           ) : toolUsage.length > 0 ? (
             <div className="space-y-2">
@@ -232,7 +234,7 @@ function PerfilContent() {
                     {TOOL_LABELS[tool_name] || tool_name}
                   </span>
                   <span className="text-sm font-medium text-[var(--gold)]">
-                    {count}× {count === 1 ? "uso" : "usos"}
+                    {count}× {count === 1 ? tr("uso", "use", "uso") : tr("usos", "uses", "usos")}
                   </span>
                 </div>
               ))}
