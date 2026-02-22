@@ -38,24 +38,19 @@ export async function POST(req: NextRequest) {
     }
 
     // Criar sessão de checkout Stripe em modo subscription
+    // Usa produto pré-criado no Stripe (gerido via Dashboard) em vez de price_data inline
+    const priceId = process.env.STRIPE_PROFISSIONAL_PRICE_ID;
+    if (!priceId) {
+      logger.error("STRIPE_PROFISSIONAL_PRICE_ID não configurado");
+      return NextResponse.json(
+        { error: "Configuração de pagamento em falta. Contacte o suporte." },
+        { status: 500 }
+      );
+    }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "eur",
-            product_data: {
-              name: "Registo Profissional - Portal Lusitano",
-              description: "Perfil verificado no directório de profissionais equestres",
-            },
-            unit_amount: 600, // €6.00
-            recurring: {
-              interval: "month",
-            },
-          },
-          quantity: 1,
-        },
-      ],
+      line_items: [{ price: priceId, quantity: 1 }],
       mode: "subscription",
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/profissionais/registar/sucesso?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/profissionais/registar`,

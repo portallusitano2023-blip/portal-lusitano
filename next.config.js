@@ -163,16 +163,10 @@ const nextConfig = {
           // CSP é agora gerido no middleware.ts com nonces por request
         ],
       },
-      // API routes must never be cached — responses are dynamic and user-specific
-      {
-        source: "/api/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "no-store",
-          },
-        ],
-      },
+      // API routes: individual routes set their own Cache-Control headers
+      // (e.g. /api/cavalos → 60s, /api/search → 30s, /api/coudelarias → 30min).
+      // Mutation/auth routes explicitly set no-store in their handlers.
+      // A blanket no-store here would OVERRIDE all per-route caching.
       // Cache static assets for 1 year
       {
         source: "/images/:path*",

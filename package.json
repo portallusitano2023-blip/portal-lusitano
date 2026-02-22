@@ -18,7 +18,8 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "generate-pdf": "node scripts/generate-ebook-pdf.js",
-    "generate-pdf:premium": "node scripts/generate-ebook-pdf-premium.js"
+    "generate-pdf:premium": "node scripts/generate-ebook-pdf-premium.js",
+    "sync-images": "node scripts/sync-coudelaria-images.js"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

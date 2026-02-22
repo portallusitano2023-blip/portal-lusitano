@@ -845,6 +845,65 @@ A coudelaria mantém um efetivo criteriosamente selecionado, privilegiando sempr
   0,
   'active',
   'gratuito'
+),
+
+-- =============================================
+-- 16. COUDELARIA ORTIGÃO COSTA
+-- FONTE: https://coudelariaortigaocosta.com/en/history
+-- FONTE: https://www.equisport.pt/noticias/faleceu-dr-luis-jorge-ortigao-costa/
+-- FONTE: https://www.eurodressage.com/2023/04/03/ilegivel-oc-exciting-lusitano-grand-prix-prospect-dawn-white-o-connor
+-- FONTE: https://www.cavalo-lusitano.com/en/lusitano-horse/sport-successes/dressage (Ripado OC)
+-- VERIFICADO: 2026-02-22
+-- =============================================
+(
+  'Coudelaria Ortigão Costa',
+  'ortigao-costa',
+  'Fundada em 1963, a Coudelaria Ortigão Costa é uma das maiores coudelarias privadas de Lusitanos em Portugal. Especializada na criação de cavalos pretos de elite, tem produzido cavalos de topo para Dressage, Toureio e exportação internacional.',
+  'A Coudelaria Ortigão Costa foi fundada em 1963 pelo Dr. Luís Jorge Roldan Ortigão Blanck da Costa, médico veterinário natural de Alcantarilha, Silves. O fundador iniciou a coudelaria com um grupo de éguas pretas adquiridas das melhores coudelarias portuguesas e um garanhão fundador chamado Fúria, proveniente da Coudelaria Ferro Coimbra.
+
+O Dr. Luís Ortigão Costa foi uma figura multifacetada — além de criador de Lusitanos, foi também ganadeiro de toiros bravos na Herdade de Alcobaça em Elvas e gestor da Praça de Toiros do Campo Pequeno em Lisboa. Recebeu a primeira Medalha de Ouro da Câmara Municipal de Azambuja e foi Comendador da Ordem do Mérito Agrícola. Faleceu a 1 de Dezembro de 2010, aos 83 anos.
+
+Ao longo das décadas, a coudelaria produziu cavalos que marcaram a história do Lusitano. Ripado (OC), montado por Carlos Pinto, foi um dos primeiros Lusitanos a competir ao nível de Grand Prix de Dressage internacional, participando no Campeonato Europeu de 1990. Mais recentemente, Xelim OC alcançou o 1.º lugar entre os Lusitanos no ranking WBFSH em 2015, e Ilusionista OC foi eleito Melhor Cavalo Lusitano de Toureio em 2019 (Debutantes) e 2020 (Consagrados).
+
+A égua Ordenança OC, matriarca da coudelaria, produziu 18 descendentes Lusitanos incluindo Xelim OC, Cartaxo OC e Ilusionista OC, antes de falecer em Abril de 2023 aos 28 anos.
+
+Hoje, a coudelaria é gerida por Jorge Ortigão Costa e mantém um efetivo de cerca de 50 éguas Lusitanas pretas, além de um programa de criação de cavalos Portugueses de Desporto.',
+  'Azambuja',
+  'Ribatejo',
+  '+351 917 232 410',
+  'jorgeoc@sogepoc.pt',
+  'https://coudelariaortigaocosta.com',
+  '@ortigaocostastud',
+  'https://facebook.com/coudelariaortigaocosta',
+  NULL,
+  50,
+  1963,
+  ARRAY['Dressage', 'Toureio', 'Reprodução', 'Exportação Internacional', 'Lusitanos Pretos'],
+  ARRAY['Fúria (fundador)', 'Elmo MV'],
+  ARRAY[
+    'Ripado OC — Campeonato Europeu de Dressage 1990 (Carlos Pinto)',
+    'Babel OC — Campeão Ibérico 1972',
+    'Xelim OC — 1.º Lusitano no ranking WBFSH 2015',
+    'Ilusionista OC — Melhor Lusitano de Toureio 2019 e 2020',
+    'Ilegível OC — Grand Prix prospect, vendido para os EUA 2022'
+  ],
+  ARRAY['Venda de cavalos', 'Cobrições', 'Exportação'],
+  39.0636,
+  -8.8869,
+  'Por marcação',
+  '/images/coudelarias/ortigao-costa/capa.jpg',
+  ARRAY[
+    '/images/coudelarias/ortigao-costa/galeria-1.jpg'
+  ],
+  NULL,
+  '[]'::jsonb,
+  '[]'::jsonb,
+  ARRAY['ribatejo', 'azambuja', 'pretos', 'dressage', 'toureio', 'exportação', 'ortigão costa'],
+  false,
+  false,
+  0,
+  'active',
+  'gratuito'
 );
 
 -- =============================================

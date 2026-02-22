@@ -94,6 +94,12 @@ export function getToolsItems(nav: NavTranslations): NavDropdownItem[] {
       label: nav.compatibility,
       desc: nav.compatibility_desc,
     },
+    {
+      href: "/analise-perfil",
+      icon: HelpCircle,
+      label: nav.profile_analysis,
+      desc: nav.profile_analysis_desc,
+    },
   ];
 }
 
@@ -110,12 +116,6 @@ export function getCommunityItems(nav: NavTranslations): NavDropdownItem[] {
       icon: Trophy,
       label: nav.notable_lusitanos,
       desc: nav.notable_lusitanos_desc,
-    },
-    {
-      href: "/analise-perfil",
-      icon: HelpCircle,
-      label: nav.profile_analysis,
-      desc: nav.profile_analysis_desc,
     },
   ];
 }
@@ -137,6 +137,7 @@ export function getMobileToolsItems(nav: NavTranslations): MobileNavItem[] {
     { href: "/calculadora-valor", icon: Calculator, label: nav.calculator },
     { href: "/comparador-cavalos", icon: Scale, label: nav.comparator },
     { href: "/verificador-compatibilidade", icon: Dna, label: nav.compatibility },
+    { href: "/analise-perfil", icon: HelpCircle, label: nav.profile_analysis },
   ];
 }
 
@@ -144,8 +145,6 @@ export function getMobileCommunityItems(nav: NavTranslations): MobileNavItem[] {
   return [
     { href: "/profissionais", icon: Users, label: nav.professionals },
     { href: "/cavalos-famosos", icon: Trophy, label: nav.notable_lusitanos },
-    // Consistent with desktop nav: analise-perfil is under Community, not Tools
-    { href: "/analise-perfil", icon: HelpCircle, label: nav.profile_analysis },
   ];
 }
 

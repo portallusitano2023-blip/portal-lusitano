@@ -48,6 +48,19 @@ export function LanguageProvider({
 
   const [t, setT] = useState<Translations>(translationsCache[language] ?? pt);
 
+  // Read locale from cookie on mount — allows root layout to be static (no cookies() call)
+  // while still picking up the locale set by middleware for /en/* and /es/* routes.
+  useEffect(() => {
+    const match = document.cookie.match(/(?:^|;\s*)locale=(\w+)/);
+    const cookieLocale = match?.[1] as Language | undefined;
+    if (cookieLocale && cookieLocale !== language && ["pt", "en", "es"].includes(cookieLocale)) {
+      setLanguage(cookieLocale);
+      if (!translationsCache[cookieLocale]) {
+        loadTranslations(cookieLocale).then(setT);
+      }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Sync browser state when language changes
   useEffect(() => {
     document.documentElement.lang = language;

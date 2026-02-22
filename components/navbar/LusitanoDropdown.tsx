@@ -27,44 +27,41 @@ export function LusitanoDropdown() {
         className="absolute top-full left-1/2 -translate-x-1/2 pt-3 hidden group-hover/dd:block"
         style={{ zIndex: 9999 }}
       >
-        <div className="w-[520px] grid grid-cols-2 gap-4 bg-[var(--background-secondary)] border border-[var(--border)] rounded-lg p-4 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
-          {/* Coluna 1 — Base de Dados (primeiros 5) */}
-          <div>
-            <span className="text-[9px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2 block font-medium">
-              {t.nav.database}
-            </span>
-            {dbItems.slice(0, 5).map((item) => (
+        <div className="w-[560px] bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
+          {/* Secção: Base de Dados */}
+          <span className="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] font-semibold block mb-3 px-3">
+            {t.nav.database}
+          </span>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+            {dbItems.map((item) => (
               <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
-                <item.icon size={16} className={item.iconClass || "text-[var(--gold)]"} />
-                <div>
+                <item.icon size={16} className={item.iconClass || "text-[var(--gold)] shrink-0"} />
+                <div className="min-w-0">
                   <div className="text-sm font-medium text-[var(--foreground)]">{item.label}</div>
-                  <div className="text-[10px] text-[var(--foreground-muted)]">{item.desc}</div>
+                  <div className="text-[10px] text-[var(--foreground-muted)] leading-tight">
+                    {item.desc}
+                  </div>
                 </div>
               </Link>
             ))}
           </div>
 
-          {/* Coluna 2 — Base de Dados (restantes) + Comunidade */}
-          <div>
-            {dbItems.slice(5).map((item) => (
-              <Link key={item.href} href={item.href} prefetch={false} className="dd-item mt-7">
-                <item.icon size={16} className={item.iconClass || "text-[var(--gold)]"} />
-                <div>
-                  <div className="text-sm font-medium text-[var(--foreground)]">{item.label}</div>
-                  <div className="text-[10px] text-[var(--foreground-muted)]">{item.desc}</div>
-                </div>
-              </Link>
-            ))}
+          {/* Separador */}
+          <div className="border-t border-[var(--border)] my-4 mx-3 opacity-50" />
 
-            <span className="text-[9px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2 mt-4 block font-medium">
-              {t.nav.community}
-            </span>
+          {/* Secção: Comunidade */}
+          <span className="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] font-semibold block mb-3 px-3">
+            {t.nav.community}
+          </span>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
             {communityItems.map((item) => (
               <Link key={item.href} href={item.href} prefetch={false} className="dd-item">
-                <item.icon size={16} className="text-[var(--gold)]" />
-                <div>
+                <item.icon size={16} className="text-[var(--gold)] shrink-0" />
+                <div className="min-w-0">
                   <div className="text-sm font-medium text-[var(--foreground)]">{item.label}</div>
-                  <div className="text-[10px] text-[var(--foreground-muted)]">{item.desc}</div>
+                  <div className="text-[10px] text-[var(--foreground-muted)] leading-tight">
+                    {item.desc}
+                  </div>
                 </div>
               </Link>
             ))}

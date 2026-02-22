@@ -131,7 +131,8 @@
       "Bash(git -C \"C:/Users/USUARIO/portal-lusitano\" status --short)",
       "Bash(git -C \"C:/Users/USUARIO/portal-lusitano\" add components/verificador-compatibilidade/CompatibilityResults.tsx app/comparador-cavalos/page.tsx app/ferramentas/page.tsx components/calculadora-valor/StepAndamentosTemperamento.tsx components/calculadora-valor/StepGeneticaMorfologia.tsx components/verificador-compatibilidade/HorseForm.tsx)",
       "Bash(git -C:*)",
-      "Bash(git.exe log --oneline components/analise-perfil/ResultTabs.tsx)"
+      "Bash(git.exe log --oneline components/analise-perfil/ResultTabs.tsx)",
+      "Bash(NEXT_PUBLIC_SENTRY_DSN=\"\" npx next build:*)"
     ]
   }
 }

@@ -75,30 +75,36 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
     );
   }
 
+  // Preload da imagem principal — browser começa download antes de React renderizar o <Image>
+  const heroImage = product.images[0]?.url;
+
   return (
-    <main className="bg-[var(--background)] min-h-screen pt-40 pb-20 selection:bg-[var(--gold)] selection:text-black">
-      <div className="max-w-7xl mx-auto px-6">
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Loja", href: "/loja" },
-            { label: product.title },
-          ]}
-        />
-
-        {/* Componente Principal */}
-        <ProductDisplay product={product} />
-
-        {/* Secção de Texto Puro (O Manifesto) */}
-        <div className="mt-32 max-w-2xl border-t border-[var(--background-secondary)] pt-12">
-          <div
-            className="prose prose-invert prose-p:text-[var(--foreground-secondary)] prose-p:leading-relaxed prose-p:font-light prose-strong:text-[var(--foreground)]"
-            dangerouslySetInnerHTML={{
-              __html: sanitizeHtml(product.descriptionHtml || ""),
-            }}
+    <>
+      {heroImage && <link rel="preload" as="image" href={heroImage} fetchPriority="high" />}
+      <main className="bg-[var(--background)] min-h-screen pt-40 pb-20 selection:bg-[var(--gold)] selection:text-black">
+        <div className="max-w-7xl mx-auto px-6">
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Loja", href: "/loja" },
+              { label: product.title },
+            ]}
           />
+
+          {/* Componente Principal */}
+          <ProductDisplay product={product} />
+
+          {/* Secção de Texto Puro (O Manifesto) */}
+          <div className="mt-32 max-w-2xl border-t border-[var(--background-secondary)] pt-12">
+            <div
+              className="prose prose-invert prose-p:text-[var(--foreground-secondary)] prose-p:leading-relaxed prose-p:font-light prose-strong:text-[var(--foreground)]"
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(product.descriptionHtml || ""),
+              }}
+            />
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

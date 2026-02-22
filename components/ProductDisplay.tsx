@@ -8,6 +8,10 @@ import { Product } from "@/types/product";
 
 const PLACEHOLDER_IMAGE = "/placeholder-product.svg";
 
+// Tiny 4x5 dark blur placeholder — instant visual feedback while real image loads
+const BLUR_DATA_URL =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNCIgaGVpZ2h0PSI1IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjUiIGZpbGw9IiMxMTExMTEiLz48L3N2Zz4=";
+
 export default function ProductDisplay({ product }: { product: Product }) {
   const firstImage = product.images[0]?.url || PLACEHOLDER_IMAGE;
   const firstVariant = product.variants[0];
@@ -51,9 +55,12 @@ export default function ProductDisplay({ product }: { product: Product }) {
             src={displayImage}
             alt={product.title}
             fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
+            sizes="(max-width: 768px) 100vw, 600px"
             className="object-cover transition-transform duration-700 group-hover:scale-105 animate-[fadeIn_0.3s_ease-out]"
             priority
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
+            unoptimized
           />
         </div>
 
@@ -73,6 +80,8 @@ export default function ProductDisplay({ product }: { product: Product }) {
                   fill
                   sizes="80px"
                   className="object-cover"
+                  loading="lazy"
+                  unoptimized
                 />
               </button>
             ))}

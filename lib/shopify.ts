@@ -166,7 +166,7 @@ export async function getProduct(handle: string): Promise<{
         title
         handle
         descriptionHtml
-        images(first: 5) { edges { node { url(transform: {maxWidth: 1200, preferredContentType: WEBP}) } } }
+        images(first: 5) { edges { node { url(transform: {maxWidth: 800, preferredContentType: WEBP}) } } }
         variants(first: 250) {
           edges {
             node {
@@ -174,7 +174,7 @@ export async function getProduct(handle: string): Promise<{
               title
               availableForSale
               price { amount }
-              image { url(transform: {maxWidth: 1200, preferredContentType: WEBP}) }
+              image { url(transform: {maxWidth: 800, preferredContentType: WEBP}) }
             }
           }
         }
