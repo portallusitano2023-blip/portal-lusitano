@@ -140,6 +140,18 @@ UPDATE coudelarias SET
   galeria = ARRAY['/images/coudelarias/joao-pedro-rodrigues/galeria-1.jpg', '/images/coudelarias/joao-pedro-rodrigues/galeria-2.jpg', '/images/coudelarias/joao-pedro-rodrigues/galeria-3.jpg']
 WHERE slug = 'joao-pedro-rodrigues';
 
+-- 23. Cavalos na Areia
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/cavalos-na-areia/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/cavalos-na-areia/galeria-1.jpg', '/images/coudelarias/cavalos-na-areia/galeria-2.jpg', '/images/coudelarias/cavalos-na-areia/galeria-3.jpg']
+WHERE slug = 'cavalos-na-areia';
+
+-- 19. Lusitanos d'Atela
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/lusitanos-datela/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/lusitanos-datela/capa.jpg']
+WHERE slug = 'lusitanos-datela';
+
 -- =============================================
 -- NOTA: Ajusta o número de imagens na galeria
 -- conforme as fotos que tiveres disponíveis.
