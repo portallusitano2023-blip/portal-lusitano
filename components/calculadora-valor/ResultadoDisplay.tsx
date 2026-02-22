@@ -949,10 +949,10 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         {/* PRO: Metodologia de Valorização */}
         <BlurredProSection isSubscribed={isSubscribed} title="Metodologia de Valorização">
           {(() => {
-            const base = VALORES_BASE[form.treino] ?? resultado.valorFinal;
-            const morfMedia =
+            const _base = VALORES_BASE[form.treino] ?? resultado.valorFinal;
+            const _morfMedia =
               (form.morfologia + form.garupa + form.espádua + form.cabeca + form.membros) / 5;
-            const andMedia =
+            const _andMedia =
               (form.andamentos + form.elevacao + form.suspensao + form.regularidade) / 4;
             const saudeScore = MULT_SAUDE[form.saude] ?? 1.0;
             const saudeNorm = Math.round(saudeScore * 8);

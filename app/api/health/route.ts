@@ -6,7 +6,7 @@ export async function GET() {
 
   try {
     const { count, error } = await supabase
-      .from("cavalos")
+      .from("cavalos_venda")
       .select("id", { count: "exact", head: true });
 
     if (!error && count !== null) {

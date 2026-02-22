@@ -134,6 +134,12 @@ UPDATE coudelarias SET
   galeria = ARRAY['/images/coudelarias/ortigao-costa/galeria-1.jpg', '/images/coudelarias/ortigao-costa/galeria-2.jpg', '/images/coudelarias/ortigao-costa/galeria-3.jpg', '/images/coudelarias/ortigao-costa/galeria-4.jpg', '/images/coudelarias/ortigao-costa/galeria-5.jpg', '/images/coudelarias/ortigao-costa/galeria-6.jpg', '/images/coudelarias/ortigao-costa/galeria-7.jpg', '/images/coudelarias/ortigao-costa/galeria-8.jpg', '/images/coudelarias/ortigao-costa/galeria-9.jpg', '/images/coudelarias/ortigao-costa/galeria-10.jpg', '/images/coudelarias/ortigao-costa/galeria-11.jpg', '/images/coudelarias/ortigao-costa/galeria-12.jpg', '/images/coudelarias/ortigao-costa/galeria-13.jpg']
 WHERE slug = 'ortigao-costa';
 
+-- 22. João Pedro Rodrigues
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/joao-pedro-rodrigues/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/joao-pedro-rodrigues/galeria-1.jpg', '/images/coudelarias/joao-pedro-rodrigues/galeria-2.jpg', '/images/coudelarias/joao-pedro-rodrigues/galeria-3.jpg']
+WHERE slug = 'joao-pedro-rodrigues';
+
 -- =============================================
 -- NOTA: Ajusta o número de imagens na galeria
 -- conforme as fotos que tiveres disponíveis.

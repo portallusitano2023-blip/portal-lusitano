@@ -364,7 +364,7 @@ export default function SobrePage() {
                     {tr("Os Nossos Compromissos", "Our Commitments", "Nuestros Compromisos")}
                   </p>
                   <ul className="space-y-3">
-                    {principles.map((p, i) => (
+                    {principles.map((p) => (
                       <li key={p} className="flex items-center gap-3 group/item">
                         <div className="w-5 h-5 rounded-full bg-[var(--gold)]/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-[var(--gold)]/20 transition-colors duration-300">
                           <Check size={11} className="text-[var(--gold)]" />

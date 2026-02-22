@@ -27,7 +27,7 @@ export function LusitanoDropdown() {
         className="absolute top-full left-1/2 -translate-x-1/2 pt-3 hidden group-hover/dd:block"
         style={{ zIndex: 9999 }}
       >
-        <div className="w-[560px] bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
+        <div className="w-[90vw] sm:w-[480px] md:w-[560px] bg-[var(--background-secondary)] border border-[var(--border)] rounded-xl p-5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
           {/* Secção: Base de Dados */}
           <span className="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] font-semibold block mb-3 px-3">
             {t.nav.database}

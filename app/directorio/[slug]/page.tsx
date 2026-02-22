@@ -536,14 +536,14 @@ export default function CoudelariaPage() {
                       )}
                     </div>
                     {/* Thumbnails */}
-                    <div className="flex gap-2 mt-3 overflow-x-auto pb-1" role="list">
+                    <div className="flex gap-2 mt-3 overflow-x-auto pb-1" role="tablist">
                       {images.map((img, i) => (
                         <button
                           key={i}
                           onClick={() => setActiveImage(i)}
-                          role="listitem"
+                          role="tab"
                           aria-label={`Ver imagem ${i + 1}`}
-                          aria-pressed={activeImage === i}
+                          aria-selected={activeImage === i}
                           className={`flex-shrink-0 w-20 h-14 overflow-hidden border-2 transition-all relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] ${
                             activeImage === i
                               ? "border-[var(--gold)] opacity-100"

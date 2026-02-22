@@ -28,7 +28,7 @@ export default function AnalyticsScripts() {
       {/* O CookieConsent component actualiza os estados após aceitação */}
       {/* ============================================================ */}
       {GA4_ID && (
-        <Script id="google-consent-mode" strategy="beforeInteractive">
+        <Script id="google-consent-mode" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

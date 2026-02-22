@@ -7,7 +7,7 @@ import { createSupabaseServerClient } from "@/lib/supabase-server";
 const recentlySent = new Map<string, number>();
 const COOLDOWN_MS = 60 * 60 * 1000; // 1 hora por email
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
     const supabase = await createSupabaseServerClient();
     const {

@@ -3,7 +3,7 @@ import type { Result } from "./types";
 export async function generateBadge(
   badgeElement: HTMLDivElement,
   result: Result,
-  scores: Record<string, number>
+  _scores: Record<string, number>
 ): Promise<void> {
   const html2canvas = (await import("html2canvas")).default;
   const canvas = await html2canvas(badgeElement, {
@@ -31,7 +31,7 @@ export function generateBadgeSVGFallback(result: Result, scores: Record<string, 
         <text x="270" y="310" text-anchor="middle" fill="#C5A059" font-size="18" font-style="italic">${result.subtitle}</text>
         <rect x="220" y="350" width="100" height="50" fill="#C5A059"/>
         <text x="270" y="385" text-anchor="middle" fill="#000" font-size="28" font-weight="bold">${percentage}%</text>
-        <text x="270" y="480" text-anchor="middle" fill="#444" font-size="11">portallusitano.pt/analise-perfil</text>
+        <text x="270" y="480" text-anchor="middle" fill="#444" font-size="11">portal-lusitano.pt/analise-perfil</text>
       </svg>`;
   const blob = new Blob([svg], { type: "image/svg+xml" });
   const url = URL.createObjectURL(blob);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
   X,
   Star,
@@ -60,9 +61,11 @@ export function ModalProfissional({
           </button>
           <div className="flex items-start gap-4">
             {profissional.fotoUrl ? (
-              <img
+              <Image
                 src={profissional.fotoUrl}
                 alt={profissional.nome}
+                width={80}
+                height={80}
                 className="w-20 h-20 rounded-xl object-cover"
               />
             ) : (

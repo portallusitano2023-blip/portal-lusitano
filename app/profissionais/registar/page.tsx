@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
+import NextImage from "next/image";
 import {
   Check,
   MapPin,
@@ -540,9 +541,12 @@ export default function RegistarProfissionalPage() {
                 <div className="flex items-center gap-4">
                   {fotoPreview ? (
                     <div className="relative">
-                      <img
+                      <NextImage
                         src={fotoPreview}
                         alt="Preview"
+                        width={80}
+                        height={80}
+                        unoptimized
                         className="w-20 h-20 rounded-xl object-cover border border-[var(--gold)]/30"
                       />
                       <button
@@ -1374,9 +1378,12 @@ export default function RegistarProfissionalPage() {
                       <span className="text-[var(--foreground-muted)]">{tp.summary_name}</span>
                       <div className="flex items-center gap-3">
                         {fotoPreview && (
-                          <img
+                          <NextImage
                             src={fotoPreview}
                             alt={formData.nome}
+                            width={32}
+                            height={32}
+                            unoptimized
                             className="w-8 h-8 rounded-lg object-cover"
                           />
                         )}

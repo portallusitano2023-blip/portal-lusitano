@@ -1,8 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { sendEmail, EMAIL_CONFIG } from "@/lib/resend";
+import { sendEmail } from "@/lib/resend";
 import { logger } from "@/lib/logger";
 import { apiLimiter } from "@/lib/rate-limit";
+
+const TOOL_NAMES: Record<string, string> = {
+  calculadora: "Calculadora de Valor",
+  comparador: "Comparador de Cavalos",
+  compatibilidade: "Verificador de Compatibilidade",
+  perfil: "Análise de Perfil",
+};
+
+const TOOL_LINKS: Record<string, string> = {
+  calculadora: "/calculadora-valor",
+  comparador: "/comparador-cavalos",
+  compatibilidade: "/verificador-compatibilidade",
+  perfil: "/analise-perfil",
+};
 
 // POST /api/tools/send-results
 // Envia resultados por email — exclusivo para utilizadores com subscrição PRO activa
@@ -60,16 +74,9 @@ export async function POST(request: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
     const html = buildResultEmail(toolName, resultSummary, baseUrl);
 
-    const toolNames: Record<string, string> = {
-      calculadora: "Calculadora de Valor",
-      comparador: "Comparador de Cavalos",
-      compatibilidade: "Verificador de Compatibilidade",
-      perfil: "Análise de Perfil",
-    };
-
     const result = await sendEmail({
       to: user.email,
-      subject: `Resultados: ${toolNames[toolName] || toolName} — Portal Lusitano`,
+      subject: `Resultados: ${TOOL_NAMES[toolName] || toolName} — Portal Lusitano`,
       html,
       template: "tool-results",
     });
@@ -91,21 +98,9 @@ function buildResultEmail(
   summary: Record<string, unknown>,
   baseUrl: string
 ): string {
-  const toolNames: Record<string, string> = {
-    calculadora: "Calculadora de Valor",
-    comparador: "Comparador de Cavalos",
-    compatibilidade: "Verificador de Compatibilidade",
-    perfil: "Análise de Perfil",
-  };
-  const toolLinks: Record<string, string> = {
-    calculadora: `${baseUrl}/calculadora-valor`,
-    comparador: `${baseUrl}/comparador-cavalos`,
-    compatibilidade: `${baseUrl}/verificador-compatibilidade`,
-    perfil: `${baseUrl}/analise-perfil`,
-  };
-
-  const displayName = toolNames[toolName] || toolName;
-  const toolUrl = toolLinks[toolName] || `${baseUrl}/ferramentas`;
+  const displayName = TOOL_NAMES[toolName] || toolName;
+  const toolPath = TOOL_LINKS[toolName] || "/ferramentas";
+  const toolUrl = `${baseUrl}${toolPath}`;
 
   // Gerar linhas de resumo a partir do objecto de resultado
   const summaryLines = Object.entries(summary)

@@ -27,7 +27,7 @@ export const NavIcons = memo(function NavIcons({
   const { totalQuantity, openCart } = useCart();
   const { wishlist } = useWishlist();
   const { favoritesCount } = useHorseFavorites();
-  const wishlistCount = wishlist.length;
+  const _wishlistCount = wishlist.length;
 
   return (
     <div className="flex items-center gap-2 md:gap-4">

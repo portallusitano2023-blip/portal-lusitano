@@ -375,40 +375,47 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== HORIZONTAL SCROLL — Lusitano Qualities ===== */}
-      <section className="py-20 sm:py-24 overflow-hidden content-auto">
-        <RevealOnScroll className="text-center mb-10 px-4">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3 block">
-            {tr("A Essência", "The Essence", "La Esencia")}
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-serif text-[var(--foreground)]">
-            {tr(
-              "O Que Define o Lusitano",
-              "What Defines the Lusitano",
-              "Lo Que Define al Lusitano"
-            )}
-          </h2>
-        </RevealOnScroll>
+      {/* ===== QUALITIES GRID — Lusitano Essence ===== */}
+      <section className="py-20 sm:py-28 px-4 sm:px-6 content-auto">
+        <div className="max-w-5xl mx-auto">
+          <RevealOnScroll className="text-center mb-14">
+            <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3 block">
+              {tr("A Essência", "The Essence", "La Esencia")}
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif text-[var(--foreground)] mb-4">
+              {tr(
+                "O Que Define o Lusitano",
+                "What Defines the Lusitano",
+                "Lo Que Define al Lusitano"
+              )}
+            </h2>
+            <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent mx-auto" />
+          </RevealOnScroll>
 
-        <HorizontalScrollGallery>
-          {galleryItems.map((item) => (
-            <div
-              key={item.label}
-              className="w-[280px] sm:w-[320px] h-[180px] bg-[var(--background-card)] border border-[var(--border)] p-8 flex flex-col justify-between group hover:border-[var(--gold)]/30 transition-all duration-500 card-premium shimmer-gold"
-            >
-              <item.icon
-                size={28}
-                className="text-[var(--gold)] group-hover:scale-110 transition-transform duration-300"
-              />
-              <div>
-                <p className="text-[var(--foreground)] font-serif text-lg">{item.value}</p>
-                <p className="text-[var(--foreground-muted)] text-[10px] uppercase tracking-[0.25em]">
-                  {item.label}
-                </p>
-              </div>
-            </div>
-          ))}
-        </HorizontalScrollGallery>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+            {galleryItems.map((item, index) => (
+              <RevealOnScroll
+                key={item.label}
+                className={`group relative bg-[var(--background-card)] border border-[var(--border)] rounded-lg p-6 sm:p-8 flex flex-col items-center text-center gap-4 hover:border-[var(--gold)]/30 transition-all duration-500 ${index === galleryItems.length - 1 && galleryItems.length % 2 !== 0 ? "col-span-2 sm:col-span-1" : ""}`}
+              >
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-[var(--gold)]/20 flex items-center justify-center group-hover:border-[var(--gold)]/50 group-hover:bg-[var(--gold)]/5 transition-all duration-500">
+                  <item.icon
+                    size={22}
+                    className="text-[var(--gold)] group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <div>
+                  <p className="text-[var(--foreground)] font-serif text-lg sm:text-xl mb-1">
+                    {item.value}
+                  </p>
+                  <p className="text-[var(--foreground-muted)] text-[9px] sm:text-[10px] uppercase tracking-[0.25em]">
+                    {item.label}
+                  </p>
+                </div>
+              </RevealOnScroll>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ===== DISCOVER SECTION ===== */}

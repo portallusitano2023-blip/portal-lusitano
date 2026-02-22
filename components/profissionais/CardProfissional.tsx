@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { MapPin, Star, Phone, Sparkles, Siren, ArrowRight, Globe, Plane } from "lucide-react";
 import { BadgeVerificacao } from "./BadgeVerificacao";
 import { categorias } from "./constants";
@@ -27,9 +28,11 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
           {/* Avatar */}
           <div className="relative flex-shrink-0">
             {prof.fotoUrl ? (
-              <img
+              <Image
                 src={prof.fotoUrl}
                 alt={prof.nome}
+                width={56}
+                height={56}
                 className="w-14 h-14 rounded-xl object-cover"
               />
             ) : (

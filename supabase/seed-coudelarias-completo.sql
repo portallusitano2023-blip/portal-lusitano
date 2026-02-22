@@ -907,6 +907,67 @@ Hoje, a coudelaria é gerida por Jorge Ortigão Costa e mantém um efetivo de ce
 );
 
 -- =============================================
+-- 17. COUDELARIA JOÃO PEDRO RODRIGUES
+-- FONTE: Conteúdo fornecido pelo proprietário / equitador.pt
+-- NOTA: João Pedro Rodrigues é Mestre Picador Chefe da EPAE,
+--       ex-juiz da raça PSL, Melhor Criador FIPSL 2004,
+--       criador com mais títulos de Campeão dos Campeões
+--       dos últimos 40 anos na Feira da Golegã.
+-- VERIFICADO: 2026-02-22
+-- =============================================
+(
+  'Coudelaria João Pedro Rodrigues',
+  'joao-pedro-rodrigues',
+  'Fundada em 1992, a Coudelaria João Pedro Rodrigues é criadora do OXIDADO, o cavalo mais premiado do mundo em Equitação de Trabalho. Especialista em cavalos castanhos de linha Veiga, com dezenas de prémios nas principais feiras da especialidade.',
+  'A Coudelaria João Pedro Rodrigues foi fundada em 1992 com éguas de pelagem castanha, oriundas da Casa Cadaval e filhas de cavalos de linha Veiga. Serviu-se principalmente dos garanhões XAQUIRO (Quina), HOSTIL (Borba), ROUXINOL (Ferro da Casa) e mais recentemente RUBI (Alter Real).
+
+João Pedro Rodrigues iniciou-se na equitação aos 10 anos. Foi cavaleiro federado em três modalidades: obstáculos, ensino desportivo (dressage) e concurso completo. Foi aluno de João Trigueiros de Aragão, D. Diogo de Lafões, Mestre Nuno de Oliveira e do Dr. Guilherme Borba. Em 1980, estagiou na Escola Espanhola de Equitação de Viena.
+
+Entrou para a Escola Portuguesa de Arte Equestre em 1980, um ano após a sua fundação, onde hoje é Mestre Picador Chefe. Foi também Membro da Direção da APSL e Juiz da Raça durante 10 anos, tendo viajado por todo o mundo.
+
+Em 2004, conquistou a distinção de Melhor Criador da Raça no FIPSL e é atualmente o criador com mais títulos de Campeão dos Campeões dos últimos 40 anos na Feira da Golegã.
+
+A Coudelaria tem vindo a distinguir-se com inúmeros cavalos lusitanos premiados, sendo um deles o OXIDADO, oficialmente reconhecido como o cavalo mais premiado do Mundo em Equitação de Trabalho. A eguada conta com 15 éguas de ventre, predominantemente de pelagem castanha, de linhagem Veiga/Alter com sangue Andrade.
+
+Todos os anos, a Coudelaria tem novas piaras de poldros a nascerem entre Janeiro e Maio. O Monte dos Apupos proporciona condições ideais para a criação desde o nascimento até ao momento em que são recolhidos para serem montados ou selecionados como reprodutores.',
+  'Samora Correia',
+  'Ribatejo',
+  '+351 917 568 819',
+  'jprlusitanos@sapo.pt',
+  'https://equitador.pt',
+  '@jprlusitanos',
+  NULL,
+  NULL,
+  50,
+  1992,
+  ARRAY['Equitação de Trabalho', 'Dressage', 'Ensino Clássico', 'Modelo e Andamentos', 'Reprodução'],
+  ARRAY['Veiga', 'Alter Real', 'Casa Cadaval', 'Quina'],
+  ARRAY[
+    'OXIDADO jpr — Cavalo mais premiado do mundo em Equitação de Trabalho',
+    'Melhor Criador da Raça — FIPSL 2004',
+    'Criador com mais títulos de Campeão dos Campeões (40 anos Feira da Golegã)',
+    'Múltiplos campeões em feiras nacionais'
+  ],
+  ARRAY['Venda de cavalos', 'Cobrições', 'Aulas de equitação', 'Estágios internacionais'],
+  38.9341,
+  -8.8828,
+  'Por marcação',
+  '/images/coudelarias/joao-pedro-rodrigues/capa.jpg',
+  ARRAY[
+    '/images/coudelarias/joao-pedro-rodrigues/galeria-1.jpg'
+  ],
+  NULL,
+  '[]'::jsonb,
+  '[]'::jsonb,
+  ARRAY['equitação de trabalho', 'oxidado', 'veiga', 'samora correia', 'golegã', 'campeões', 'dressage clássico', 'epae'],
+  false,
+  true,
+  6,
+  'active',
+  'gratuito'
+);
+
+-- =============================================
 -- VERIFICAR INSERÇÕES
 -- =============================================
 SELECT
