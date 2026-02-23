@@ -29,6 +29,7 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
             src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1920&auto=format&fit=crop"
             alt="Cavalo Lusitano"
             fill
+            sizes="100vw"
             className="object-cover opacity-40"
             priority
           />

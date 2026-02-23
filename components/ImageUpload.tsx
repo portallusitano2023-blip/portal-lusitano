@@ -127,6 +127,7 @@ export default function ImageUpload({
               src={preview}
               alt="Preview da imagem"
               fill
+              sizes="(max-width: 768px) 100vw, 400px"
               className="object-cover"
               unoptimized
             />
