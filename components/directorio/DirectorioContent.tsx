@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, Suspense } from "react";
+import { useState, useMemo, useCallback, useRef, useDeferredValue, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { MapPin, Search, Crown, ArrowRight, Plus, Users, Star, X, CheckCircle } from "lucide-react";
 import Link from "next/link";
@@ -120,23 +120,13 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedRegiao, setSelectedRegiao] = useState("Todas");
 
-  // Debounce search
-  useState(() => {
-    // Initial setup — no-op
-  });
-  // We use a manual debounce via useEffect equivalent
-  // but since we removed the fetch useEffect, we use a simpler approach
-  const [debounceTimer, setDebounceTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchTerm(value);
-      if (debounceTimer) clearTimeout(debounceTimer);
-      const timer = setTimeout(() => setDebouncedSearch(value), 300);
-      setDebounceTimer(timer);
-    },
-    [debounceTimer]
-  );
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchTerm(value);
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => setDebouncedSearch(value), 300);
+  }, []);
 
   const clearSearch = useCallback(() => {
     setSearchTerm("");
@@ -149,7 +139,7 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
   }, []);
 
   // Client-side filtering + split in a single memo pass
-  const { filtered, destaqueCoudelarias, normalCoudelarias } = useMemo(() => {
+  const filterResult = useMemo(() => {
     let result = coudelarias;
     if (selectedRegiao !== "Todas") {
       result = result.filter((c) => c.regiao === selectedRegiao);
@@ -169,6 +159,9 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
       normalCoudelarias: result.filter((c) => !c.destaque),
     };
   }, [coudelarias, selectedRegiao, debouncedSearch]);
+
+  // Defer grid re-render so filter inputs stay responsive during heavy lists
+  const { filtered, destaqueCoudelarias, normalCoudelarias } = useDeferredValue(filterResult);
 
   // Pagination
   const totalPaginas = Math.ceil(normalCoudelarias.length / ITENS_POR_PAGINA);

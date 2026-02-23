@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useDeferredValue } from "react";
 import { X, SlidersHorizontal } from "lucide-react";
 import HorseCard from "@/components/HorseCard";
 
@@ -95,7 +95,7 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
   const hasActiveFilters =
     sexFilter !== "all" || priceRange !== "all" || disciplineFilter !== "all";
 
-  const filteredAndSorted = useMemo(() => {
+  const filteredAndSortedRaw = useMemo(() => {
     let result = horses.filter((h) => {
       // Sex filter
       if (sexFilter !== "all") {
@@ -130,6 +130,9 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
 
     return result;
   }, [horses, sexFilter, priceRange, disciplineFilter, sortOption]);
+
+  // Defer grid re-render so filter dropdowns stay responsive
+  const filteredAndSorted = useDeferredValue(filteredAndSortedRaw);
 
   const clearFilters = () => {
     setSexFilter("all");

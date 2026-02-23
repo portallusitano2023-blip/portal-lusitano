@@ -22,7 +22,7 @@ export default function ReadingProgressBar() {
         Math.max((scrolled / (articleHeight - window.innerHeight)) * 100, 0),
         100
       );
-      bar.style.width = `${pct}%`;
+      bar.style.transform = `scaleX(${pct / 100})`;
       bar.setAttribute("aria-valuenow", String(Math.round(pct)));
     };
 
@@ -50,7 +50,7 @@ export default function ReadingProgressBar() {
       <div
         ref={barRef}
         className="h-full bg-[var(--gold)]"
-        style={{ width: "0%", willChange: "width" }}
+        style={{ transformOrigin: "left", transform: "scaleX(0)", willChange: "transform" }}
       />
     </div>
   );

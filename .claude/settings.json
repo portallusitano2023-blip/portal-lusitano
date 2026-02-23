@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sort:*)",
+      "Bash(npm run sync-images:*)",
+      "Bash(cat:*)",
+      "Bash(npx vercel env add:*)",
+      "Bash(npx supabase:*)",
+      "WebFetch(domain:portal-lusitano.pt)",
+      "WebFetch(domain:www.cavalosnaareia.com)",
+      "WebFetch(domain:lusitanohorsefinder.com)",
+      "WebFetch(domain:www.lusitano-breeder.com)",
+      "WebFetch(domain:quintadabroa.com)",
+      "WebFetch(domain:coudelariasa.com)",
+      "WebFetch(domain:www.coudelariahenriqueabecasis.com)",
+      "WebFetch(domain:joaolynce.com)",
+      "WebFetch(domain:www.barreiramatosstud.com)",
+      "WebFetch(domain:mgcoudelaria.pt)",
+      "Read(//c/Users/USUARIO/portal-lusitano/**)"
+    ]
+  }
+}

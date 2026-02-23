@@ -77,46 +77,61 @@ As instalações históricas, incluindo as cavalariças reais e o palácio, est�
 
 -- =============================================
 -- 2. COMPANHIA DAS LEZÍRIAS
+-- FONTE: Site oficial da Companhia das Lezírias — secção Coudelaria
+-- FONTE: Contactos da coudelaria fornecidos pelo utilizador (2026-02-23)
+-- NOTA: Morada sede: Largo 25 de Abril, 17, 2135-318 Samora Correia
+--       Coudelaria: Monte de Braço de Prata, E.N.118, km 29.3, Porto Alto
+--       Tel. coudelaria: 263 654 593 / 263 654 989 (Machos)
+--       Sócia nº 46 da APSL, 16 éguas de ventre
+-- VERIFICADO: 2026-02-23
 -- =============================================
 (
-  'Companhia das Lezírias',
+  'Coudelaria CL — Companhia das Lezírias',
   'companhia-das-lezirias',
-  'A maior exploração agro-pecuária de Portugal, com mais de 18.000 hectares no coração do Ribatejo. Referência na criação de cavalos Lusitanos de excelência.',
-  'A Companhia das Lezírias é a maior exploração agro-pecuária de Portugal, estendendo-se por mais de 18.000 hectares entre o Tejo e o Sorraia. Fundada em 1836, tem uma história intimamente ligada à terra e aos cavalos.
+  'Sócia nº 46 da APSL, a Coudelaria CL pertence à Companhia das Lezírias, a maior exploração agro-pecuária de Portugal com cerca de 19.000 hectares. Dedica-se em exclusivo à criação do Puro Sangue Lusitano desde 1836.',
+  'A Companhia das Lezírias do Tejo e Sado foi fundada em 1836 por um conjunto de capitalistas que adquiriram à Coroa Portuguesa uma enorme extensão de património fundiário — quarenta e oito mil hectares de lezírias dos rios Tejo e Sado — pelo preço de dois mil contos. Dada a sua vastidão, foram criadas administrações em Vila Franca de Xira, Samora Correia, Valada, Golegã e Comporta.
 
-A coudelaria da Companhia das Lezírias é reconhecida pela qualidade excepcional dos seus cavalos Lusitanos. Com um programa de criação rigoroso, baseado nas melhores linhagens portuguesas, produz cavalos que se destacam tanto na morfologia como na funcionalidade.
+O testemunho de actividade coudélica data da fundação: os Relatórios da Direção até 1841 referem a cavalar como única espécie pecuária existente. Em 1896 o efetivo cavalar contava 331 animais, com registo genealógico detalhado no arquivo da Coudelaria no Monte de Braço de Prata.
 
-Os cavalos nascem e crescem em regime extensivo, em contacto com a natureza e os elementos, o que lhes confere rusticidade e um temperamento equilibrado. Esta forma de criação tradicional, combinada com técnicas modernas de seleção genética, resulta em cavalos de qualidade superior.
+Em 1905, a CL participou na exposição da Associação Central de Agricultura Portuguesa com exemplares das raças Hackney, Luso-Árabe, Bético-Lusitana e Peninsular, arrecadando vários prémios. Em 1929, foram inscritas 72 éguas pela Comissão Técnica de Remonta do Exército no Registo de Éguas Produtoras.
 
-A Companhia oferece também experiências únicas de ecoturismo e turismo equestre, permitindo aos visitantes conhecer de perto o trabalho diário de uma coudelaria profissional e a beleza natural da lezíria ribatejana.',
+Após o 25 de Abril, a empresa foi nacionalizada e a propriedade reduziu-se para cerca de 19.000 hectares. Em 1976, numa clara opção pela Raça Lusitana, adquiriram-se éguas Ervideira, Duarte de Oliveira e Sociedade Agrícola Couto de Fornilhos, padreadas pelos garanhões do Depósito de Garanhões na Estação Zootécnica Nacional, Fonte Boa.
+
+Na década de 80, evoluiu de Empresa Pública para Sociedade Anónima de capitais maioritariamente públicos. Por volta de 1983, aproveitando a excelente base genética feminina, introduziram-se padreadores de outras linhagens para melhorar formas — buscando maior finura — e funcionalidade.
+
+Hoje, com 16 éguas de ventre, dedica-se em exclusivo à criação de Puro Sangue Lusitano, cujos produtos comercializa entre os 3 e 4 anos já desbastados, no mercado interno e externo. É também notória a quantidade de produtos CL que servem nos Esquadrões da GNR.
+
+As instalações da Coudelaria situam-se na Charneca do Infantado, no Monte de Braço de Prata — E.N.118, km 29.3 — Porto Alto, Samora Correia. As recrias são efetuadas nas férteis terras da Lezíria de Vila Franca de Xira.',
   'Samora Correia',
   'Ribatejo',
-  '+351 263 509 200',
-  'geral@cl.pt',
+  '+351 263 654 593',
+  'lezirias.coudelaria@cl.pt',
   'https://www.cl.pt',
   '@companhiadaslezirias',
   'https://facebook.com/companhiadaslezirias',
   'https://youtube.com/@companhiadaslezirias',
-  150,
+  16,
   1836,
-  ARRAY['Dressage', 'Equitação de Trabalho', 'Toureio', 'Reprodução', 'Ecoturismo'],
-  ARRAY['Veiga', 'Andrade', 'Coudelaria Nacional'],
+  ARRAY['Dressage', 'Equitação de Trabalho', 'Modelo e Andamentos', 'Reprodução'],
+  ARRAY['Ervideira', 'Duarte de Oliveira', 'Couto de Fornilhos'],
   ARRAY[
-    'Medalha de Ouro Feira Nacional do Cavalo 2023',
-    'Campeão Nacional Morfologia 2022',
-    'Melhor Criador Nacional 2021',
-    'Prémio Sustentabilidade Agrícola 2020'
+    'LAFÕES — Campeão de Campeões, Feira Nacional do Cavalo, Golegã 1996',
+    'NUFAR — Campeão de Campeões, Feira Nacional do Cavalo, Golegã 1997',
+    'LOFE — Taça de Portugal 1999; Campeão Ibérico Avignon 2003; solista APASSIONATA 2004-07; Campeão de Itália Ensino 2002-03',
+    'PERFEITA — Égua de Ouro, Expoégua, Golegã 2005',
+    'QUEFINA das Lezírias — Campeã Fêmea e Campeã de Campeões, International Lusitano Keuring, Holanda 2010',
+    'HASA das Lezírias — Campeã Fêmea e Campeã de Campeões, Festival Internacional do Cavalo PSL 2014',
+    'QUELINDO — Campeão da Holanda Ensino 2016, Nível Z/ZZ',
+    'ZINQUE das Lezírias — Campeão do Mundo Individual Equitação de Trabalho 2018, com Gilberto Filipe',
+    'NUELO das Lezírias — Campeão Macho e Campeão de Campeões, Feira do Cavalo de Ponte de Lima 2018',
+    'BISO das Lezírias — Apurado Equipa Brasileira Ensino, Jogos Pan-Americanos 2019, com João Vítor Oliva'
   ],
-  ARRAY['Venda de cavalos', 'Cobrições', 'Passeios a cavalo', 'Safari fotográfico', 'Birdwatching', 'Provas de vinhos', 'Restaurante', 'Eventos empresariais'],
-  38.9167,
-  -8.8833,
+  ARRAY['Venda de cavalos', 'Cobrições', 'Passeios a cavalo', 'Ecoturismo', 'Birdwatching'],
+  38.8794,
+  -8.8628,
   'Segunda a Sexta: 09:00-17:00 | Sábados: 10:00-14:00',
-  '/images/coudelarias/lezirias/capa.jpg',
-  ARRAY[
-    '/images/coudelarias/lezirias/galeria-1.jpg',
-    '/images/coudelarias/lezirias/galeria-2.jpg',
-    '/images/coudelarias/lezirias/galeria-3.jpg'
-  ],
+  '/images/coudelarias/companhia-das-lezirias/capa.jpg',
+  ARRAY[]::text[],
   'https://youtube.com/watch?v=lezirias',
   '[
     {"nome": "Universo CL", "ano": 2019, "pelagem": "Ruço", "aptidao": "Dressage", "preco": 45000, "vendido": false},
@@ -125,7 +140,7 @@ A Companhia oferece também experiências únicas de ecoturismo e turismo equest
   '[
     {"autor": "António Costa", "texto": "Os melhores cavalos de trabalho que já montei. Rusticidade e nobreza combinadas.", "data": "2024-02"}
   ]'::jsonb,
-  ARRAY['ribatejo', 'lezíria', 'ecoturismo', 'trabalho', 'tradição'],
+  ARRAY['ribatejo', 'lezíria', 'braco de prata', 'gnr', 'zinque', 'lofe', 'apsl', 'modelo e andamentos', 'equitação de trabalho', 'ensino'],
   true,
   true,
   2,
@@ -909,11 +924,13 @@ Hoje, a coudelaria é gerida por Jorge Ortigão Costa e mantém um efetivo de ce
 -- =============================================
 -- 17. COUDELARIA JOÃO PEDRO RODRIGUES
 -- FONTE: Conteúdo fornecido pelo proprietário / equitador.pt
+-- FONTE: Screenshot do site oficial com serviços (fornecido pelo utilizador 2026-02-23)
 -- NOTA: João Pedro Rodrigues é Mestre Picador Chefe da EPAE,
 --       ex-juiz da raça PSL, Melhor Criador FIPSL 2004,
 --       criador com mais títulos de Campeão dos Campeões
 --       dos últimos 40 anos na Feira da Golegã.
--- VERIFICADO: 2026-02-22
+--       Em 2015 associou-se a Alexandra Häusler formando a R&H Lusitanos.
+-- VERIFICADO: 2026-02-23
 -- =============================================
 (
   'Coudelaria João Pedro Rodrigues',
@@ -929,7 +946,15 @@ Em 2004, conquistou a distinção de Melhor Criador da Raça no FIPSL e é atual
 
 A Coudelaria tem vindo a distinguir-se com inúmeros cavalos lusitanos premiados, sendo um deles o OXIDADO, oficialmente reconhecido como o cavalo mais premiado do Mundo em Equitação de Trabalho. A eguada conta com 15 éguas de ventre, predominantemente de pelagem castanha, de linhagem Veiga/Alter com sangue Andrade.
 
-Todos os anos, a Coudelaria tem novas piaras de poldros a nascerem entre Janeiro e Maio. O Monte dos Apupos proporciona condições ideais para a criação desde o nascimento até ao momento em que são recolhidos para serem montados ou selecionados como reprodutores.',
+Em 2015, o criador associou-se a Alexandra Häusler, também ela apaixonada por cavalos lusitanos, tendo formado a sociedade R&H Lusitanos. Em 2017, a coudelaria instalou-se no Monte dos Apupos, na Lezíria Ribatejana, local onde se encontra toda a criação.
+
+A propriedade está dividida em vários parques, com 40 hectares de pivot, uma área de montado e pinhal e ainda um vale com cerca de 20 hectares com excelentes condições para culturas destinadas à alimentação dos cavalos. O Monte dos Apupos foi totalmente remodelado e adaptado para a criação de cavalos em 2020, dispondo de instalações modernas: picadeiro coberto, pista de dressage, campo de guia e cavalariças de elevada qualidade.
+
+O Monte dos Apupos localiza-se em plena Reserva Natural do Estuário do Tejo, localização ideal para passeios a cavalo e observação de aves migratórias, como flamingos. Dispõe de duas casas independentes com 2 quartos e cozinha equipada para hospedar clientes, alunos e convidados, com um projeto de expansão em curso para alojamento local.
+
+Todos os anos, a Coudelaria tem novas piaras de poldros a nascerem entre Janeiro e Maio. O Monte dos Apupos proporciona condições ideais para a criação desde o nascimento até ao momento em que são recolhidos para serem montados ou selecionados como reprodutores.
+
+Serviços disponíveis: venda de cavalos lusitanos (garanhões, éguas, poldros e poldras), sémen fresco e congelado de Puro Sangue Lusitano, centro hípico com estágios e aulas de equitação, cavalos a penso e alojamento no Monte dos Apupos.',
   'Samora Correia',
   'Ribatejo',
   '+351 917 568 819',
@@ -948,7 +973,7 @@ Todos os anos, a Coudelaria tem novas piaras de poldros a nascerem entre Janeiro
     'Criador com mais títulos de Campeão dos Campeões (40 anos Feira da Golegã)',
     'Múltiplos campeões em feiras nacionais'
   ],
-  ARRAY['Venda de cavalos', 'Cobrições', 'Aulas de equitação', 'Estágios internacionais'],
+  ARRAY['Venda de cavalos', 'Sémen fresco e congelado', 'Aulas de equitação', 'Estágios', 'Cavalos a penso', 'Passeios a cavalo', 'Alojamento'],
   38.9341,
   -8.8828,
   'Por marcação',
@@ -959,7 +984,7 @@ Todos os anos, a Coudelaria tem novas piaras de poldros a nascerem entre Janeiro
   NULL,
   '[]'::jsonb,
   '[]'::jsonb,
-  ARRAY['equitação de trabalho', 'oxidado', 'veiga', 'samora correia', 'golegã', 'campeões', 'dressage clássico', 'epae'],
+  ARRAY['equitação de trabalho', 'oxidado', 'veiga', 'samora correia', 'golegã', 'campeões', 'dressage clássico', 'epae', 'r&h lusitanos', 'monte dos apupos', 'cavalos a penso', 'sémen', 'passeios a cavalo', 'alojamento', 'reserva natural', 'lezíria'],
   false,
   true,
   6,

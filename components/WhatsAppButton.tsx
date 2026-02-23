@@ -49,7 +49,7 @@ export default function WhatsAppButton({ phoneNumber = "351939513151" }: WhatsAp
 
         {/* Pulse animation */}
         {!isOpen && (
-          <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30" />
+          <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30 [animation-duration:1s] [animation-iteration-count:4]" />
         )}
       </button>
 

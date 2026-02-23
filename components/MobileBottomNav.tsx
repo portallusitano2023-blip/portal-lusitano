@@ -51,7 +51,7 @@ export default function MobileBottomNav() {
       <div className="h-[72px] lg:hidden" />
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-[var(--background-secondary)]/98 backdrop-blur-xl border-t border-[var(--border)] safe-area-bottom">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-[var(--background-secondary)] border-t border-[var(--border)] safe-area-bottom [transform:translateZ(0)]">
         <div className="flex items-center justify-around h-[72px] px-2">
           {navItems.map((item) => (
             <Link

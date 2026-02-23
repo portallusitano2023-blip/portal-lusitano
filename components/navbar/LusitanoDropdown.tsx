@@ -73,7 +73,6 @@ export function LusitanoDropdown() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  prefetch={false}
                   className="dd-item"
                   role="menuitem"
                   onClick={() => setOpen(false)}
@@ -104,7 +103,6 @@ export function LusitanoDropdown() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  prefetch={false}
                   className="dd-item"
                   role="menuitem"
                   onClick={() => setOpen(false)}
