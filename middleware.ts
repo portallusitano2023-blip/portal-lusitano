@@ -62,6 +62,11 @@ function applySecurityHeaders(response: NextResponse, nonce: string, contentLang
   response.headers.set("Content-Language", contentLanguage);
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), payment=(self), usb=()"
+  );
 }
 
 export async function middleware(request: NextRequest) {
@@ -151,14 +156,18 @@ export async function middleware(request: NextRequest) {
     // Verify JWT token using jose (same as lib/auth.ts)
     try {
       if (!process.env.ADMIN_SECRET) {
-        // ADMIN_SECRET not set - rejecting admin access
         return NextResponse.redirect(new URL("/admin/login", request.url));
       }
       const secret = new TextEncoder().encode(process.env.ADMIN_SECRET);
       const { payload } = await (await import("jose")).jwtVerify(token, secret);
 
-      // Check if token has expired
-      if (!payload.email) {
+      if (!payload.email || !payload.jti) {
+        return NextResponse.redirect(new URL("/admin/login", request.url));
+      }
+
+      // Check Redis: session may have been revoked even if JWT is still valid
+      const session = await redis.get(`session:${payload.jti}`);
+      if (!session) {
         return NextResponse.redirect(new URL("/admin/login", request.url));
       }
     } catch {

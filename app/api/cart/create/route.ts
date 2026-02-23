@@ -9,9 +9,6 @@ export async function POST() {
     }
     return NextResponse.json({ cart });
   } catch (error: unknown) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao criar carrinho" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao criar carrinho" }, { status: 500 });
   }
 }

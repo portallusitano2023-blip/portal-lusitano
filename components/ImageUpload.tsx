@@ -267,6 +267,7 @@ export function MultiImageUpload({
               src={url}
               alt={`Imagem ${index + 1}`}
               fill
+              sizes="(max-width: 768px) 50vw, 25vw"
               className="object-cover"
               unoptimized
             />

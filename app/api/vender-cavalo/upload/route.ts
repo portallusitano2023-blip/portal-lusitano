@@ -17,6 +17,19 @@ const MIME_TO_EXT: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
+  // Verificar origin — bloquear pedidos de domínios externos
+  const origin = req.headers.get("origin");
+  const allowedOrigins = [
+    process.env.NEXT_PUBLIC_APP_URL,
+    process.env.NEXT_PUBLIC_BASE_URL,
+    "https://portal-lusitano.pt",
+    "http://localhost:3000",
+  ].filter(Boolean);
+
+  if (!origin || !allowedOrigins.some((o) => origin.startsWith(o!))) {
+    return NextResponse.json({ error: "Origem não autorizada." }, { status: 403 });
+  }
+
   // Rate limit: 10 uploads per minute per IP
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   try {

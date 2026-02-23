@@ -3,18 +3,20 @@ import { getProduct } from "@/lib/shopify";
 import ProductDisplay from "@/components/ProductDisplay";
 import Breadcrumb from "@/components/Breadcrumb";
 import Link from "next/link";
+import sanitize from "sanitize-html";
 
 const siteUrl = "https://portal-lusitano.pt";
 
-/** Strip script tags, event handlers, and dangerous elements from HTML */
+/** Sanitize Shopify product HTML — allow only safe formatting tags */
 function sanitizeHtml(html: string): string {
-  return html
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-    .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/gi, "")
-    .replace(/<object\b[^>]*>[\s\S]*?<\/object>/gi, "")
-    .replace(/<embed\b[^>]*\/?>/gi, "")
-    .replace(/\bon\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-    .replace(/javascript\s*:/gi, "");
+  return sanitize(html, {
+    allowedTags: sanitize.defaults.allowedTags.concat(["img"]),
+    allowedAttributes: {
+      ...sanitize.defaults.allowedAttributes,
+      img: ["src", "alt", "width", "height", "loading"],
+    },
+    allowedSchemes: ["https", "http"],
+  });
 }
 
 export async function generateMetadata({

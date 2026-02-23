@@ -271,6 +271,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   src={fotoAtiva}
                   alt={data.nome}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover transition-all duration-500"
                 />
               )}
@@ -282,7 +283,13 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   onClick={() => setFotoAtiva(url)}
                   className={`relative aspect-square border-2 transition-all ${fotoAtiva === url ? "border-[var(--gold)]" : "border-transparent opacity-50 hover:opacity-100"}`}
                 >
-                  <Image src={url} fill className="object-cover" alt={`${data.nome} ${idx + 1}`} />
+                  <Image
+                    src={url}
+                    fill
+                    sizes="(max-width: 1024px) 25vw, 12vw"
+                    className="object-cover"
+                    alt={`${data.nome} ${idx + 1}`}
+                  />
                 </button>
               ))}
             </div>
@@ -394,6 +401,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                       src={rel.imageUrl}
                       alt={rel.nome}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
                     />
                   </div>

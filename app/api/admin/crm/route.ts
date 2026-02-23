@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 // GET - Listar leads com filtros
 export async function GET(req: NextRequest) {
@@ -26,11 +27,14 @@ export async function GET(req: NextRequest) {
       query = query.eq("stage", stage);
     }
 
-    // Pesquisa
+    // Pesquisa (sanitizada contra PostgREST injection)
     if (search) {
-      query = query.or(
-        `name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%,interests.ilike.%${search}%`
-      );
+      const safe = sanitizeSearchInput(search);
+      if (safe) {
+        query = query.or(
+          `name.ilike.%${safe}%,email.ilike.%${safe}%,company.ilike.%${safe}%,interests.ilike.%${safe}%`
+        );
+      }
     }
 
     const { data: leads, error, count } = await query;

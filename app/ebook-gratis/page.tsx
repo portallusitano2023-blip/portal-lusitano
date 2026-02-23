@@ -197,7 +197,11 @@ export default function EbookGratisPage() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-3 max-w-lg">
+                <label htmlFor="ebook-nome" className="sr-only">
+                  {t.ebook_page.your_name}
+                </label>
                 <input
+                  id="ebook-nome"
                   type="text"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
@@ -207,7 +211,11 @@ export default function EbookGratisPage() {
                   autoComplete="name"
                   className="w-full bg-[var(--surface-hover)] border border-[var(--border)] text-[var(--foreground)] px-5 py-4 text-[15px] focus:outline-none focus:border-[var(--gold)]/50 focus:bg-[var(--surface-hover)] transition-all placeholder:text-[var(--foreground-muted)]"
                 />
+                <label htmlFor="ebook-email" className="sr-only">
+                  {t.ebook_page.your_email}
+                </label>
                 <input
+                  id="ebook-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -463,7 +471,11 @@ export default function EbookGratisPage() {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-3 max-w-lg mx-auto">
+            <label htmlFor="ebook-nome-2" className="sr-only">
+              {t.ebook_page.your_name}
+            </label>
             <input
+              id="ebook-nome-2"
               type="text"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
@@ -473,7 +485,11 @@ export default function EbookGratisPage() {
               autoComplete="name"
               className="w-full bg-black/40 border border-[var(--border)] text-white px-5 py-4 text-[15px] focus:outline-none focus:border-[var(--gold)]/50 focus:bg-black/60 transition-all placeholder:text-[var(--foreground-muted)]"
             />
+            <label htmlFor="ebook-email-2" className="sr-only">
+              {t.ebook_page.your_email}
+            </label>
             <input
+              id="ebook-email-2"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

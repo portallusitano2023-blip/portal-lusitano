@@ -507,6 +507,7 @@ export default function CoudelariaPage() {
                         src={images[activeImage]}
                         alt={`${coudelaria.nome} - ${t.directorio.gallery} ${activeImage + 1}`}
                         fill
+                        sizes="100vw"
                         className="object-cover"
                       />
                       {/* Navigation arrows */}
@@ -554,6 +555,7 @@ export default function CoudelariaPage() {
                             src={img}
                             alt={`Miniatura ${i + 1}`}
                             fill
+                            sizes="(max-width: 640px) 80px, 120px"
                             className="object-cover"
                           />
                         </button>
@@ -981,7 +983,7 @@ export default function CoudelariaPage() {
                       <div className="flex gap-2 pt-4 border-t border-[var(--border)]">
                         {coudelaria.instagram && (
                           <a
-                            href={`https://instagram.com/${coudelaria.instagram.replace("@", "")}`}
+                            href={`https://instagram.com/${(coudelaria.instagram || "").replace("@", "")}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Instagram"

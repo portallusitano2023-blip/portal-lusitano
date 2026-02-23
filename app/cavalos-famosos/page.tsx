@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { ArrowLeft, Trophy, Crown, Medal, Sparkles, History } from "lucide-react";
+import { ArrowLeft, Trophy, Sparkles, History } from "lucide-react";
 import { CavaloFamoso } from "./types";
 import { cavalosFamosos } from "./data";
 import { CavaloCard } from "@/components/cavalos-famosos/CavaloCard";
@@ -49,13 +49,6 @@ export default function CavalosFamososPage() {
     [cavalosFiltrados]
   );
 
-  // Top influenciadores (memoizado)
-  const topInfluenciadores = useMemo(() => {
-    return [...cavalosFiltrados]
-      .sort((a, b) => (b.influenciaGenetica || 0) - (a.influenciaGenetica || 0))
-      .slice(0, 3);
-  }, [cavalosFiltrados]);
-
   const handleOpenCavalo = (cavalo: CavaloFamoso) => {
     setCavaloSelecionado(cavalo);
     setAbaAtiva("info");
@@ -99,39 +92,6 @@ export default function CavalosFamososPage() {
               — {t.cavalos_famosos.quote_author}
             </footer>
           </blockquote>
-        </div>
-      </div>
-
-      {/* Top Influenciadores */}
-      <div className="max-w-6xl mx-auto mb-8">
-        <div className="bg-gradient-to-r from-[var(--gold)]/20 via-[var(--background-secondary)] to-[var(--gold)]/20 rounded-xl p-6 border border-[var(--gold)]/20">
-          <h2 className="text-center text-sm font-semibold text-[var(--gold)] mb-4 flex items-center justify-center gap-2">
-            <Crown size={16} className="fill-[var(--gold)]" />
-            {t.cavalos_famosos.top_influencers}
-          </h2>
-          <div className="grid sm:grid-cols-3 gap-4">
-            {topInfluenciadores.map((cavalo, i) => (
-              <button
-                key={cavalo.id}
-                onClick={() => handleOpenCavalo(cavalo)}
-                className="bg-[var(--background-secondary)]/80 border border-[var(--border)] hover:border-[var(--gold)]/50 rounded-lg p-4 text-center transition-all"
-                aria-label={`${t.cavalos_famosos.top_influencers}: ${cavalo.nome}`}
-              >
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  {i === 0 && <Medal className="text-yellow-400" size={20} />}
-                  {i === 1 && <Medal className="text-[var(--foreground-secondary)]" size={20} />}
-                  {i === 2 && <Medal className="text-amber-700" size={20} />}
-                  <span className="font-serif text-lg text-[var(--foreground)]">{cavalo.nome}</span>
-                </div>
-                <div className="text-2xl font-bold text-[var(--gold)]">
-                  {cavalo.influenciaGenetica}%
-                </div>
-                <div className="text-xs text-[var(--foreground-muted)]">
-                  {t.cavalos_famosos.of_current}
-                </div>
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 

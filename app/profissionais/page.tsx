@@ -220,7 +220,7 @@ export default function ProfissionaisPage() {
         <ParallaxSection speed={0.4} className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=1920&q=80"
-            alt=""
+            alt="Cavalo lusitano em liberdade — directório de profissionais equestres"
             fill
             sizes="100vw"
             className="object-cover opacity-50"

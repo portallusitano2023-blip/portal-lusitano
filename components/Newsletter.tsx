@@ -54,6 +54,11 @@ const nl = {
     en: "Subscribe to newsletter",
     es: "Suscribirse al boletín",
   },
+  error: {
+    pt: "Ocorreu um erro. Tente novamente.",
+    en: "An error occurred. Please try again.",
+    es: "Ocurrió un error. Inténtelo de nuevo.",
+  },
 };
 
 type Lang = "pt" | "en" | "es";
@@ -90,6 +95,12 @@ export default function Newsletter() {
         <p className="text-[var(--foreground-muted)] mb-8 uppercase tracking-widest text-xs">
           {tx(nl.subtitle, language)}
         </p>
+
+        {status === "error" && (
+          <p className="text-red-400 text-sm mb-4" role="alert" aria-live="assertive">
+            {tx(nl.error, language)}
+          </p>
+        )}
 
         {status === "success" ? (
           <p className="text-[var(--gold)] font-bold" role="status" aria-live="polite">

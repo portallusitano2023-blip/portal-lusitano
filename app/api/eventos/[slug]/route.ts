@@ -17,11 +17,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: "Evento não encontrado" }, { status: 404 });
     }
 
-    // Incrementar views
-    await supabase
+    // Incrementar views (fire-and-forget — não bloqueia a resposta)
+    supabase
       .from("eventos")
       .update({ views_count: (evento.views_count || 0) + 1 })
-      .eq("id", evento.id);
+      .eq("id", evento.id)
+      .then(() => {});
 
     // Buscar eventos relacionados (mesmo tipo, excluindo o atual)
     const { data: relacionados } = await supabase
@@ -34,10 +35,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .order("data_inicio", { ascending: true })
       .limit(3);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       evento,
       relacionados: relacionados || [],
     });
+    response.headers.set(
+      "Cache-Control",
+      "public, max-age=900, s-maxage=900, stale-while-revalidate=3600"
+    );
+    return response;
   } catch (error) {
     logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

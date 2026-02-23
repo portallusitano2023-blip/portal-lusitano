@@ -57,7 +57,7 @@ export default memo(function Footer() {
                 PORTAL <span className="italic font-light">LUSITANO</span>
               </span>
               <span className="text-[9px] text-[var(--foreground-secondary)] uppercase tracking-[0.5em] block mt-2 font-bold group-hover:text-[var(--foreground-secondary)] transition-colors">
-                The Noble Legacy · Est. 2023
+                O Legado Nobre · Est. 2023
               </span>
             </Link>
             <p className="text-[var(--foreground-muted)] text-sm font-light leading-relaxed max-w-sm">

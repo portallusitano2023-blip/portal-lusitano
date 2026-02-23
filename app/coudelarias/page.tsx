@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -55,8 +54,6 @@ export default function CoudelariasPage() {
 
   return (
     <>
-      <Navbar />
-
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-32 pb-20 px-6 selection:bg-[var(--gold)] selection:text-black">
         {/* Cabecalho */}
         <div className="max-w-4xl mx-auto text-center mb-20">

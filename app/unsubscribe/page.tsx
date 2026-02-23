@@ -8,6 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 function UnsubscribeContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  const token = searchParams.get("token") || "";
   const { t } = useLanguage();
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -26,7 +27,7 @@ function UnsubscribeContent() {
       const response = await fetch("/api/unsubscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, token }),
       });
 
       const data = await response.json();

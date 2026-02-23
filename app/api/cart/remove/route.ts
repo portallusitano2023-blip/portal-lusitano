@@ -15,9 +15,6 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json({ cart });
   } catch (error: unknown) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao remover" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao remover" }, { status: 500 });
   }
 }

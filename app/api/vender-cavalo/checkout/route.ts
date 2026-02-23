@@ -3,8 +3,20 @@ import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { logger } from "@/lib/logger";
+import { strictLimiter } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  try {
+    // Rate limit: max 3 checkout sessions per minute per IP
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    await strictLimiter.check(3, `checkout-vender:${ip}`);
+  } catch {
+    return NextResponse.json(
+      { error: "Demasiados pedidos. Tente novamente mais tarde." },
+      { status: 429 }
+    );
+  }
+
   try {
     const { anuncio, destaque, formData } = await req.json();
 
@@ -96,9 +108,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: session.url });
   } catch (error) {
     logger.error("Checkout creation error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao criar checkout" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao criar checkout" }, { status: 500 });
   }
 }

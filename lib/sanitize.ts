@@ -19,3 +19,25 @@ export function escapeHtml(text: string): string {
   };
   return text.replace(/[&<>"']/g, (char) => map[char]);
 }
+
+import crypto from "crypto";
+
+/**
+ * Generate HMAC-SHA256 token for secure unsubscribe links.
+ * Uses UNSUBSCRIBE_SECRET env var (falls back to ADMIN_SECRET).
+ */
+export function generateUnsubscribeToken(email: string): string {
+  const secret = process.env.UNSUBSCRIBE_SECRET || process.env.ADMIN_SECRET;
+  if (!secret) {
+    throw new Error("UNSUBSCRIBE_SECRET or ADMIN_SECRET environment variable is required");
+  }
+  return crypto.createHmac("sha256", secret).update(email.toLowerCase().trim()).digest("hex");
+}
+
+/**
+ * Verify HMAC token for unsubscribe requests.
+ */
+export function verifyUnsubscribeToken(email: string, token: string): boolean {
+  const expected = generateUnsubscribeToken(email);
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(token));
+}

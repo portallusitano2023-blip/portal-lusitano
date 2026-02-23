@@ -64,6 +64,5 @@ export interface CavaloFamoso {
   estatisticasDescendentes?: EstatisticasDescendentes;
   historicoPerformance?: PerformanceAnual[];
   indiceReproducao?: IndiceReproducao;
-  influenciaGenetica?: number; // % de cavalos atuais que descendem
   linhagem: string;
 }

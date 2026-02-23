@@ -15,6 +15,10 @@ interface NavIconsProps {
   onMobileToggle: () => void;
 }
 
+function tr3(lang: string, pt: string, en: string, es: string) {
+  return lang === "pt" ? pt : lang === "es" ? es : en;
+}
+
 export const NavIcons = memo(function NavIcons({
   language,
   t,
@@ -35,7 +39,16 @@ export const NavIcons = memo(function NavIcons({
       <button
         onClick={toggleTheme}
         className="text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
-        aria-label={theme === "dark" ? "Mudar para modo claro" : "Mudar para modo escuro"}
+        aria-label={
+          theme === "dark"
+            ? tr3(language, "Mudar para modo claro", "Switch to light mode", "Cambiar a modo claro")
+            : tr3(
+                language,
+                "Mudar para modo escuro",
+                "Switch to dark mode",
+                "Cambiar a modo oscuro"
+              )
+        }
       >
         {theme === "dark" ? (
           <Sun size={20} strokeWidth={1.5} />
@@ -48,7 +61,7 @@ export const NavIcons = memo(function NavIcons({
       <button
         onClick={onSearchClick}
         className="text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
-        aria-label={language === "pt" ? "Pesquisar" : "Search"}
+        aria-label={tr3(language, "Pesquisar", "Search", "Buscar")}
       >
         <Search size={20} strokeWidth={1.5} />
       </button>
@@ -57,7 +70,7 @@ export const NavIcons = memo(function NavIcons({
       <button
         onClick={onLanguageToggle}
         className="hidden lg:flex text-xs font-bold tracking-widest text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors border border-transparent hover:border-[var(--border)] px-2 py-1 rounded-sm"
-        aria-label={language === "pt" ? "Mudar idioma" : "Change language"}
+        aria-label={tr3(language, "Mudar idioma", "Change language", "Cambiar idioma")}
       >
         <span className={language === "pt" ? "text-[var(--gold)]" : ""}>PT</span>
         <span className="mx-1 opacity-30 text-[var(--foreground-muted)]">|</span>
@@ -90,7 +103,7 @@ export const NavIcons = memo(function NavIcons({
       <Link
         href="/minha-conta"
         className="hidden md:flex text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] items-center justify-center active:scale-95 touch-manipulation"
-        aria-label={language === "pt" ? "Minha conta" : "My account"}
+        aria-label={tr3(language, "Minha conta", "My account", "Mi cuenta")}
       >
         <User size={20} strokeWidth={1.5} />
       </Link>
@@ -99,7 +112,7 @@ export const NavIcons = memo(function NavIcons({
       <button
         onClick={openCart}
         className="flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group active:scale-95 touch-manipulation"
-        aria-label={`${language === "pt" ? "Carrinho" : "Cart"} (${totalQuantity} ${language === "pt" ? "itens" : "items"})`}
+        aria-label={`${tr3(language, "Carrinho", "Cart", "Carrito")} (${totalQuantity} ${tr3(language, "itens", "items", "artículos")})`}
       >
         <div className="relative p-2 min-w-[44px] min-h-[44px] flex items-center justify-center">
           <ShoppingBag size={20} strokeWidth={1.5} />
@@ -120,12 +133,8 @@ export const NavIcons = memo(function NavIcons({
         onClick={onMobileToggle}
         aria-label={
           isMobileOpen
-            ? language === "pt"
-              ? "Fechar menu"
-              : "Close menu"
-            : language === "pt"
-              ? "Abrir menu"
-              : "Open menu"
+            ? tr3(language, "Fechar menu", "Close menu", "Cerrar menú")
+            : tr3(language, "Abrir menu", "Open menu", "Abrir menú")
         }
         aria-expanded={isMobileOpen}
         aria-controls="mobile-menu"

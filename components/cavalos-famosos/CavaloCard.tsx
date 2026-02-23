@@ -36,11 +36,6 @@ export const CavaloCard = memo(function CavaloCard({
               {cavalo.linhagem}
             </span>
           </div>
-          {cavalo.influenciaGenetica && cavalo.influenciaGenetica > 5 && (
-            <div className="absolute top-3 right-3 bg-green-500/20 border border-green-500/50 rounded-full px-2 py-1">
-              <span className="text-xs text-green-400 font-mono">{cavalo.influenciaGenetica}%</span>
-            </div>
-          )}
         </div>
 
         <div className="p-5">
@@ -109,12 +104,6 @@ export const CavaloCard = memo(function CavaloCard({
         </div>
       </div>
       <p className="text-sm text-[var(--foreground-muted)] mt-3 line-clamp-2">{cavalo.legado}</p>
-      {cavalo.influenciaGenetica && (
-        <div className="mt-2 text-xs text-[var(--foreground-secondary)]">
-          Influência genética:{" "}
-          <span className="text-[var(--gold)]">{cavalo.influenciaGenetica}%</span>
-        </div>
-      )}
     </button>
   );
 });

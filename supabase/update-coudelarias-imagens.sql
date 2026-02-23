@@ -152,6 +152,78 @@ UPDATE coudelarias SET
   galeria = ARRAY['/images/coudelarias/lusitanos-datela/capa.jpg']
 WHERE slug = 'lusitanos-datela';
 
+-- 20. Veiga Teixeira
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/veiga-teixeira/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/veiga-teixeira/galeria-1.jpg', '/images/coudelarias/veiga-teixeira/galeria-2.jpg', '/images/coudelarias/veiga-teixeira/galeria-3.jpg']
+WHERE slug = 'veiga-teixeira';
+
+-- 21. Casa Cadaval
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/casa-cadaval/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/casa-cadaval/galeria-1.jpg', '/images/coudelarias/casa-cadaval/galeria-2.jpg', '/images/coudelarias/casa-cadaval/galeria-3.jpg']
+WHERE slug = 'casa-cadaval';
+
+-- 22. Herdade do Pinheiro
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/herdade-do-pinheiro/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/herdade-do-pinheiro/galeria-1.jpg', '/images/coudelarias/herdade-do-pinheiro/galeria-2.jpg', '/images/coudelarias/herdade-do-pinheiro/galeria-3.jpg']
+WHERE slug = 'herdade-do-pinheiro';
+
+-- 23. Pedro Passanha
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/pedro-passanha/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/pedro-passanha/galeria-1.jpg', '/images/coudelarias/pedro-passanha/galeria-2.jpg', '/images/coudelarias/pedro-passanha/galeria-3.jpg']
+WHERE slug = 'pedro-passanha';
+
+-- 24. Henrique Abecasis
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/henrique-abecasis/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/henrique-abecasis/galeria-1.jpg', '/images/coudelarias/henrique-abecasis/galeria-2.jpg', '/images/coudelarias/henrique-abecasis/galeria-3.jpg']
+WHERE slug = 'henrique-abecasis';
+
+-- 25. João Lynce
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/joao-lynce/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/joao-lynce/galeria-1.jpg', '/images/coudelarias/joao-lynce/galeria-2.jpg', '/images/coudelarias/joao-lynce/galeria-3.jpg']
+WHERE slug = 'joao-lynce';
+
+-- 26. Fundação Eugénio de Almeida
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/fundacao-eugenio-almeida/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/fundacao-eugenio-almeida/galeria-1.jpg', '/images/coudelarias/fundacao-eugenio-almeida/galeria-2.jpg', '/images/coudelarias/fundacao-eugenio-almeida/galeria-3.jpg']
+WHERE slug = 'fundacao-eugenio-almeida';
+
+-- 27. Ferraz da Costa
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/ferraz-da-costa/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/ferraz-da-costa/galeria-1.jpg', '/images/coudelarias/ferraz-da-costa/galeria-2.jpg', '/images/coudelarias/ferraz-da-costa/galeria-3.jpg']
+WHERE slug = 'ferraz-da-costa';
+
+-- 28. Santa Margarida
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/santa-margarida/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/santa-margarida/galeria-1.jpg', '/images/coudelarias/santa-margarida/galeria-2.jpg', '/images/coudelarias/santa-margarida/galeria-3.jpg']
+WHERE slug = 'santa-margarida';
+
+-- 29. Jupiter Classical Dressage
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/jupiter-classical-dressage/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/jupiter-classical-dressage/galeria-1.jpg', '/images/coudelarias/jupiter-classical-dressage/galeria-2.jpg', '/images/coudelarias/jupiter-classical-dressage/galeria-3.jpg']
+WHERE slug = 'jupiter-classical-dressage';
+
+-- 30. Quinta Madre de Água
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/quinta-madre-de-agua/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/quinta-madre-de-agua/galeria-1.jpg', '/images/coudelarias/quinta-madre-de-agua/galeria-2.jpg', '/images/coudelarias/quinta-madre-de-agua/galeria-3.jpg']
+WHERE slug = 'quinta-madre-de-agua';
+
+-- 31. Mascarenhas Cardoso
+UPDATE coudelarias SET
+  foto_capa = '/images/coudelarias/mascarenhas-cardoso/capa.jpg',
+  galeria = ARRAY['/images/coudelarias/mascarenhas-cardoso/galeria-1.jpg', '/images/coudelarias/mascarenhas-cardoso/galeria-2.jpg', '/images/coudelarias/mascarenhas-cardoso/galeria-3.jpg']
+WHERE slug = 'mascarenhas-cardoso';
+
 -- =============================================
 -- NOTA: Ajusta o número de imagens na galeria
 -- conforme as fotos que tiveres disponíveis.

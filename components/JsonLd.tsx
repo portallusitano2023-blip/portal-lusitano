@@ -40,7 +40,7 @@ export function WebsiteSchema() {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${siteUrl}/pesquisa?q={search_term_string}`,
+        urlTemplate: `${siteUrl}/directorio?pesquisa={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },

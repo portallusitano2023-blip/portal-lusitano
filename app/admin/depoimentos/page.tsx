@@ -1,5 +1,4 @@
 import { supabaseAdmin as supabase } from "@/lib/supabase";
-import Navbar from "@/components/Navbar";
 
 export default async function AdminDepoimentosPage({
   searchParams,
@@ -16,7 +15,6 @@ export default async function AdminDepoimentosPage({
 
   return (
     <>
-      <Navbar />
       <main className="min-h-screen bg-black text-white pt-48 px-10">
         <header className="mb-16 border-b border-zinc-900 pb-8">
           <h1 className="text-4xl font-serif italic">

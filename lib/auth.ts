@@ -11,10 +11,10 @@ const redis = new Redis({
 const SESSION_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
 
 function getSecret() {
-  if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === "production") {
-    throw new Error("ADMIN_SECRET environment variable is required in production");
+  if (!process.env.ADMIN_SECRET) {
+    throw new Error("ADMIN_SECRET environment variable is required");
   }
-  return new TextEncoder().encode(process.env.ADMIN_SECRET || "dev-only-secret-not-for-production");
+  return new TextEncoder().encode(process.env.ADMIN_SECRET);
 }
 
 export async function createSession(email: string) {

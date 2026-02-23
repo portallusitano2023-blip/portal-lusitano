@@ -1,9 +1,20 @@
 import { stripe } from "@/lib/stripe";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
+import { strictLimiter } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    await strictLimiter.check(3, `checkout-prof:${ip}`);
+  } catch {
+    return NextResponse.json(
+      { error: "Demasiados pedidos. Tente novamente mais tarde." },
+      { status: 429 }
+    );
+  }
+
   try {
     const { formData } = await req.json();
 

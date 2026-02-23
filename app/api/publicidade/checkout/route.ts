@@ -2,8 +2,19 @@ import { stripe } from "@/lib/stripe";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
+import { strictLimiter } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    await strictLimiter.check(3, `checkout-pub:${ip}`);
+  } catch {
+    return NextResponse.json(
+      { error: "Demasiados pedidos. Tente novamente mais tarde." },
+      { status: 429 }
+    );
+  }
+
   try {
     const { package: pkg, email, company, telefone } = await req.json();
 
@@ -113,9 +124,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: session.url });
   } catch (error) {
     logger.error("Checkout creation error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao criar checkout" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao criar checkout" }, { status: 500 });
   }
 }

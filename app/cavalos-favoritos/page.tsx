@@ -14,8 +14,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
-import Navbar from "@/components/Navbar";
-
 export default function CavalosFavoritosPage() {
   const { language } = useLanguage();
   const { favorites, removeFromFavorites, clearFavorites, favoritesCount } = useHorseFavorites();
@@ -106,7 +104,6 @@ export default function CavalosFavoritosPage() {
 
   return (
     <>
-      <Navbar />
       <main className="min-h-screen bg-[var(--background)] pt-24 sm:pt-32 pb-24 sm:pb-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}

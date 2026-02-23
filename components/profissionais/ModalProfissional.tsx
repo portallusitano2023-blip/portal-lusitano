@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import {
   X,
@@ -30,6 +30,7 @@ import { BadgeVerificacao, BarraExpertise } from "./BadgeVerificacao";
 import { MetricasPanel } from "./MetricasPanel";
 import { EXPERTISE_CONFIG } from "./constants";
 import type { Profissional } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function ModalProfissional({
   profissional,
@@ -38,16 +39,60 @@ export function ModalProfissional({
   profissional: Profissional;
   onClose: () => void;
 }) {
+  const { t } = useLanguage();
   const [aba, setAba] = useState<
     "info" | "especializacoes" | "testemunhos" | "disponibilidade" | "formacao"
   >("info");
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Close on Escape key
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+
+      // Focus trap: Tab/Shift+Tab stay inside dialog
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    },
+    [onClose]
+  );
+
+  // Lock body scroll and set up focus trap
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    const prev = document.activeElement as HTMLElement | null;
+    // Focus the close button on mount
+    const closeBtn = dialogRef.current?.querySelector<HTMLElement>("button");
+    closeBtn?.focus();
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      prev?.focus();
+    };
+  }, [handleKeyDown]);
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm overflow-y-auto"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={profissional.nome}
     >
       <div
+        ref={dialogRef}
         className="bg-[var(--background-secondary)] border border-[var(--border)] rounded-2xl max-w-3xl w-full max-h-[95vh] overflow-y-auto my-4"
         onClick={(e) => e.stopPropagation()}
       >
@@ -55,6 +100,7 @@ export function ModalProfissional({
         <div className="relative bg-gradient-to-r from-[var(--gold)]/20 to-[var(--background-secondary)] p-6 border-b border-[var(--border)]">
           <button
             onClick={onClose}
+            aria-label={t.profissionais.close}
             className="absolute top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
           >
             <X size={20} />
@@ -89,7 +135,7 @@ export function ModalProfissional({
                   <Star size={14} className="text-[var(--gold)] fill-[var(--gold)]" />
                   <span className="text-sm font-medium">{profissional.avaliacao}</span>
                   <span className="text-xs text-[var(--foreground-muted)]">
-                    ({profissional.numAvaliacoes} avaliações)
+                    ({profissional.numAvaliacoes} {t.profissionais.reviews_count})
                   </span>
                 </div>
                 <div className="flex items-center gap-1 text-xs text-[var(--foreground-secondary)]">
@@ -97,7 +143,7 @@ export function ModalProfissional({
                   {profissional.localizacao}
                 </div>
                 <div className="text-xs text-[var(--foreground-muted)]">
-                  {profissional.experienciaAnos} anos exp.
+                  {profissional.experienciaAnos} {t.profissionais.years_exp}
                 </div>
               </div>
             </div>
@@ -108,18 +154,18 @@ export function ModalProfissional({
         <div className="border-b border-[var(--border)] px-6 overflow-x-auto">
           <div className="flex gap-1 -mb-px">
             {[
-              { id: "info", label: "Informação" },
-              { id: "especializacoes", label: "Especializações" },
-              { id: "testemunhos", label: "Testemunhos" },
-              { id: "disponibilidade", label: "Disponibilidade" },
-              { id: "formacao", label: "Formação" },
-            ].map((t) => (
+              { id: "info", label: t.profissionais.tab_info },
+              { id: "especializacoes", label: t.profissionais.tab_specializations },
+              { id: "testemunhos", label: t.profissionais.tab_testimonials },
+              { id: "disponibilidade", label: t.profissionais.tab_availability },
+              { id: "formacao", label: t.profissionais.tab_education },
+            ].map((tab) => (
               <button
-                key={t.id}
-                onClick={() => setAba(t.id as typeof aba)}
-                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${aba === t.id ? "border-[var(--gold)] text-[var(--gold)]" : "border-transparent text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)]"}`}
+                key={tab.id}
+                onClick={() => setAba(tab.id as typeof aba)}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${aba === tab.id ? "border-[var(--gold)] text-[var(--gold)]" : "border-transparent text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)]"}`}
               >
-                {t.label}
+                {tab.label}
               </button>
             ))}
           </div>
@@ -147,15 +193,20 @@ export function ModalProfissional({
 // ---------------------------------------------------------------------------
 
 function TabInfo({ profissional }: { profissional: Profissional }) {
+  const { t } = useLanguage();
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-2">Sobre</h3>
+        <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-2">
+          {t.profissionais.about}
+        </h3>
         <p className="text-[var(--foreground-secondary)] text-sm">{profissional.descricao}</p>
       </div>
       <MetricasPanel metricas={profissional.metricas} />
       <div>
-        <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-2">Serviços</h3>
+        <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-2">
+          {t.profissionais.services}
+        </h3>
         <div className="flex flex-wrap gap-2">
           {profissional.servicos.map((s, i) => (
             <span
@@ -169,7 +220,7 @@ function TabInfo({ profissional }: { profissional: Profissional }) {
       </div>
       <div>
         <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-2">
-          Credenciais
+          {t.profissionais.credentials}
         </h3>
         <ul className="space-y-2">
           {profissional.credenciais.map((c, i) => (
@@ -186,7 +237,9 @@ function TabInfo({ profissional }: { profissional: Profissional }) {
       <div className="flex flex-wrap gap-3">
         {profissional.idiomas && (
           <div className="bg-[var(--background-card)]/50 rounded-lg px-3 py-2">
-            <span className="text-xs text-[var(--foreground-muted)] block">Idiomas</span>
+            <span className="text-xs text-[var(--foreground-muted)] block">
+              {t.profissionais.languages_label}
+            </span>
             <span className="text-sm text-[var(--foreground)]">
               {profissional.idiomas.join(", ")}
             </span>
@@ -194,7 +247,9 @@ function TabInfo({ profissional }: { profissional: Profissional }) {
         )}
         {profissional.precoMedio && (
           <div className="bg-[var(--background-card)]/50 rounded-lg px-3 py-2">
-            <span className="text-xs text-[var(--foreground-muted)] block">Preço Médio</span>
+            <span className="text-xs text-[var(--foreground-muted)] block">
+              {t.profissionais.avg_price}
+            </span>
             <span className="text-sm text-[var(--gold)]">{profissional.precoMedio}</span>
           </div>
         )}
@@ -252,6 +307,7 @@ function TabInfo({ profissional }: { profissional: Profissional }) {
 }
 
 function TabEspecializacoes({ profissional }: { profissional: Profissional }) {
+  const { t } = useLanguage();
   return (
     <div className="space-y-4">
       {profissional.especializacoes.map((esp, i) => (
@@ -278,7 +334,7 @@ function TabEspecializacoes({ profissional }: { profissional: Profissional }) {
         <div className="mt-6">
           <h3 className="text-sm font-semibold text-[var(--gold)] mb-3 flex items-center gap-2">
             <Trophy size={16} />
-            Prémios
+            {t.profissionais.awards}
           </h3>
           {profissional.premios.map((p, i) => (
             <div
@@ -298,11 +354,12 @@ function TabEspecializacoes({ profissional }: { profissional: Profissional }) {
 }
 
 function TabTestemunhos({ profissional }: { profissional: Profissional }) {
+  const { t } = useLanguage();
   return (
     <div className="space-y-4">
       {profissional.testemunhos && profissional.testemunhos.length > 0 ? (
         <>
-          {profissional.testemunhos.map((t, i) => (
+          {profissional.testemunhos.map((testemunho, i) => (
             <div key={i} className="bg-[var(--background-card)]/30 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <div className="flex">
@@ -311,22 +368,28 @@ function TabTestemunhos({ profissional }: { profissional: Profissional }) {
                       key={j}
                       size={12}
                       className={
-                        j < t.avaliacao
+                        j < testemunho.avaliacao
                           ? "text-[var(--gold)] fill-[var(--gold)]"
                           : "text-[var(--foreground-muted)]"
                       }
                     />
                   ))}
                 </div>
-                <span className="text-sm font-medium text-[var(--foreground)]">{t.cliente}</span>
-                {t.verificado && <BadgeCheck size={12} className="text-blue-400" />}
-                <span className="text-xs text-[var(--foreground-muted)] ml-auto">{t.data}</span>
+                <span className="text-sm font-medium text-[var(--foreground)]">
+                  {testemunho.cliente}
+                </span>
+                {testemunho.verificado && <BadgeCheck size={12} className="text-blue-400" />}
+                <span className="text-xs text-[var(--foreground-muted)] ml-auto">
+                  {testemunho.data}
+                </span>
               </div>
               <p className="text-sm text-[var(--foreground-secondary)] italic">
-                &ldquo;{t.texto}&rdquo;
+                &ldquo;{testemunho.texto}&rdquo;
               </p>
-              {t.cavalo && (
-                <div className="text-xs text-[var(--gold)] mt-1">Cavalo: {t.cavalo}</div>
+              {testemunho.cavalo && (
+                <div className="text-xs text-[var(--gold)] mt-1">
+                  {t.profissionais.horse_label}: {testemunho.cavalo}
+                </div>
               )}
             </div>
           ))}
@@ -334,7 +397,7 @@ function TabTestemunhos({ profissional }: { profissional: Profissional }) {
             <div className="mt-6">
               <h3 className="text-sm font-semibold text-[var(--gold)] mb-3 flex items-center gap-2">
                 <TrendingUp size={16} />
-                Casos de Sucesso
+                {t.profissionais.success_cases}
               </h3>
               {profissional.casosSucesso.map((c, i) => (
                 <div
@@ -358,7 +421,7 @@ function TabTestemunhos({ profissional }: { profissional: Profissional }) {
       ) : (
         <div className="text-center py-8 text-[var(--foreground-muted)]">
           <MessageCircle size={32} className="mx-auto mb-2 opacity-50" />
-          <p>Ainda sem testemunhos públicos</p>
+          <p>{t.profissionais.no_testimonials}</p>
         </div>
       )}
     </div>
@@ -366,11 +429,12 @@ function TabTestemunhos({ profissional }: { profissional: Profissional }) {
 }
 
 function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
+  const { t } = useLanguage();
   return (
     <div className="space-y-6">
       <div>
         <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-3">
-          Horário de Funcionamento
+          {t.profissionais.working_hours}
         </h3>
         <div className="bg-[var(--background-card)]/30 rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
@@ -380,7 +444,7 @@ function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
             {profissional.disponibilidade.emergencias24h && (
               <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs flex items-center gap-1">
                 <Siren size={10} />
-                Emergências 24h
+                {t.profissionais.emergencies_24h}
               </span>
             )}
           </div>
@@ -398,7 +462,7 @@ function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
       </div>
       <div>
         <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-3">
-          Área de Cobertura
+          {t.profissionais.coverage_area}
         </h3>
         <div className="bg-[var(--background-card)]/30 rounded-lg p-4 flex items-center gap-4">
           <Globe size={24} className="text-[var(--gold)]" />
@@ -407,7 +471,7 @@ function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
               {profissional.disponibilidade.raioServico} km
             </div>
             <div className="text-xs text-[var(--foreground-muted)]">
-              a partir de {profissional.localizacao}
+              {t.profissionais.from_location} {profissional.localizacao}
             </div>
           </div>
         </div>
@@ -416,32 +480,34 @@ function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
         {profissional.disponibilidade.deslocacaoIncluida && (
           <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 flex items-center gap-2">
             <Truck size={16} className="text-green-400" />
-            <span className="text-xs text-green-400">Deslocação incluída</span>
+            <span className="text-xs text-green-400">{t.profissionais.travel_included}</span>
           </div>
         )}
         {profissional.disponibilidade.consultaOnline && (
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 flex items-center gap-2">
             <Video size={16} className="text-blue-400" />
-            <span className="text-xs text-blue-400">Consulta online</span>
+            <span className="text-xs text-blue-400">{t.profissionais.online_consultation}</span>
           </div>
         )}
       </div>
       <div className="bg-[var(--gold)]/10 border border-[var(--gold)]/20 rounded-lg p-4">
-        <h3 className="text-sm font-semibold text-[var(--gold)] mb-2">Contactar</h3>
+        <h3 className="text-sm font-semibold text-[var(--gold)] mb-2">
+          {t.profissionais.contact_section}
+        </h3>
         <div className="flex gap-2">
           <a
             href={`tel:${profissional.telefone}`}
             className="flex-1 flex items-center justify-center gap-2 py-2 bg-[var(--gold)] rounded-lg text-black font-medium hover:bg-[#D4AF6A] transition-colors"
           >
             <Phone size={16} />
-            Ligar
+            {t.profissionais.call}
           </a>
           <a
             href={`mailto:${profissional.email}`}
             className="flex-1 flex items-center justify-center gap-2 py-2 bg-[var(--background-card)] rounded-lg text-[var(--foreground-secondary)] hover:bg-[var(--surface-hover)] transition-colors"
           >
             <Mail size={16} />
-            Email
+            {t.profissionais.email_action}
           </a>
         </div>
       </div>
@@ -450,12 +516,13 @@ function TabDisponibilidade({ profissional }: { profissional: Profissional }) {
 }
 
 function TabFormacao({ profissional }: { profissional: Profissional }) {
+  const { t } = useLanguage();
   return (
     <div className="space-y-4">
       {profissional.formacao && profissional.formacao.length > 0 ? (
         <>
           <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-3">
-            Formação Académica
+            {t.profissionais.academic_education}
           </h3>
           {profissional.formacao.map((f, i) => (
             <div
@@ -475,13 +542,13 @@ function TabFormacao({ profissional }: { profissional: Profissional }) {
         </>
       ) : (
         <p className="text-[var(--foreground-muted)] text-sm">
-          Informação de formação não disponível
+          {t.profissionais.education_not_available}
         </p>
       )}
       {profissional.publicacoes && profissional.publicacoes.length > 0 && (
         <div className="mt-6">
           <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-3">
-            Publicações
+            {t.profissionais.publications}
           </h3>
           {profissional.publicacoes.map((p, i) => (
             <div
@@ -508,7 +575,7 @@ function TabFormacao({ profissional }: { profissional: Profissional }) {
         <div className="mt-6">
           <h3 className="text-sm font-semibold text-[var(--gold)] mb-3 flex items-center gap-2">
             <BookOpen size={16} />
-            Cursos Oferecidos
+            {t.profissionais.courses_offered}
           </h3>
           {profissional.cursosOferecidos.map((c, i) => (
             <div
@@ -519,8 +586,16 @@ function TabFormacao({ profissional }: { profissional: Profissional }) {
               <div className="flex items-center gap-3 mt-2 text-xs text-[var(--foreground-secondary)]">
                 <span>{c.duracao}</span>
                 <span className="text-[var(--gold)] font-medium">{c.preco}</span>
-                {c.proximaData && <span>Próxima: {c.proximaData}</span>}
-                {c.vagas && <span>{c.vagas} vagas</span>}
+                {c.proximaData && (
+                  <span>
+                    {t.profissionais.next_date}: {c.proximaData}
+                  </span>
+                )}
+                {c.vagas && (
+                  <span>
+                    {c.vagas} {t.profissionais.spots}
+                  </span>
+                )}
               </div>
             </div>
           ))}

@@ -28,10 +28,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ user });
   } catch (error) {
     logger.error("User fetch error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar utilizador" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao buscar utilizador" }, { status: 500 });
   }
 }
 
@@ -100,10 +97,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ user, message: "Utilizador atualizado" });
   } catch (error) {
     logger.error("User update error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao atualizar utilizador" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao atualizar utilizador" }, { status: 500 });
   }
 }
 
@@ -146,9 +140,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     return NextResponse.json({ message: "Utilizador eliminado" });
   } catch (error) {
     logger.error("User deletion error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao eliminar utilizador" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao eliminar utilizador" }, { status: 500 });
   }
 }

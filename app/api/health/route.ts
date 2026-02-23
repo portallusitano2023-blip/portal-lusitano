@@ -22,8 +22,6 @@ export async function GET() {
     {
       status,
       timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      environment: process.env.NODE_ENV,
       services: {
         database: dbStatus,
       },

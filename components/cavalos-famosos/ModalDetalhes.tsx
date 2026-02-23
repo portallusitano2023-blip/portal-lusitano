@@ -54,11 +54,6 @@ export function ModalDetalhes({ cavalo, onClose, abaAtiva, setAbaAtiva }: ModalD
             <span className="px-3 py-1 bg-[var(--background-card)]/90 rounded-full text-sm text-[var(--foreground-secondary)]">
               Linhagem {cavalo.linhagem}
             </span>
-            {cavalo.influenciaGenetica && cavalo.influenciaGenetica > 5 && (
-              <span className="px-3 py-1 bg-green-500/20 border border-green-500/50 rounded-full text-sm text-green-400">
-                Top Influenciador
-              </span>
-            )}
           </div>
         </div>
 
@@ -171,12 +166,7 @@ export function ModalDetalhes({ cavalo, onClose, abaAtiva, setAbaAtiva }: ModalD
               )}
 
               {/* Índice de Reprodução */}
-              {cavalo.indiceReproducao && (
-                <IndiceReproducao
-                  indice={cavalo.indiceReproducao}
-                  influencia={cavalo.influenciaGenetica}
-                />
-              )}
+              {cavalo.indiceReproducao && <IndiceReproducao indice={cavalo.indiceReproducao} />}
             </div>
           )}
 

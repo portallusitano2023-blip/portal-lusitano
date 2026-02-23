@@ -1,5 +1,4 @@
 import { supabaseAdmin as supabase } from "@/lib/supabase";
-import Navbar from "@/components/Navbar";
 import { revalidatePath } from "next/cache";
 
 export default async function AdminVendasPage({
@@ -27,7 +26,6 @@ export default async function AdminVendasPage({
 
   return (
     <>
-      <Navbar />
       <main className="min-h-screen bg-black text-white pt-48 px-10 pb-20">
         <header className="mb-16 border-b border-[#C5A059]/30 pb-8 flex justify-between items-end">
           <div>

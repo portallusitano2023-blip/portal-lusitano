@@ -43,12 +43,17 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Erro ao carregar profissionais" }, { status: 500 });
     }
 
-    return NextResponse.json({ profissionais: data || [] });
+    return NextResponse.json(
+      { profissionais: data || [] },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
+          Vary: "Accept-Encoding",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Profissionais API error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro interno" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

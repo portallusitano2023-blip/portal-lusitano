@@ -1,8 +1,35 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
 import { LocalBusinessSchema, BreadcrumbSchema } from "@/components/JsonLd";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
+
+type CoudelariaData = {
+  nome?: string;
+  descricao?: string;
+  localizacao?: string;
+  telefone?: string;
+  email?: string;
+  website?: string;
+  foto_capa?: string;
+  especialidades?: string[];
+} | null;
+
+// React.cache() deduplicates within a single request —
+// generateMetadata and CoudelariaLayout share one Supabase query instead of two.
+const getCoudelaria = cache(async (slug: string): Promise<CoudelariaData> => {
+  try {
+    const { data } = await supabase
+      .from("coudelarias")
+      .select("nome, descricao, localizacao, telefone, email, website, foto_capa, especialidades")
+      .eq("slug", slug)
+      .single();
+    return data;
+  } catch {
+    return null;
+  }
+});
 
 export async function generateStaticParams() {
   try {
@@ -22,53 +49,38 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const coudelaria = await getCoudelaria(slug);
 
-  try {
-    const { data: coudelaria } = await supabase
-      .from("coudelarias")
-      .select("nome, descricao, localizacao, foto_capa, especialidades")
-      .eq("slug", slug)
-      .single();
-
-    if (!coudelaria) {
-      return {
-        title: "Coudelaria | Portal Lusitano",
-        description: "Descubra coudelarias de cavalos Lusitanos em Portugal.",
-        alternates: { canonical: `${siteUrl}/directorio/${slug}` },
-      };
-    }
-
-    const title = `${coudelaria.nome} - Coudelaria | Portal Lusitano`;
-    const description =
-      coudelaria.descricao?.slice(0, 160) ||
-      `${coudelaria.nome}${coudelaria.localizacao ? ` em ${coudelaria.localizacao}` : ""}. Coudelaria de cavalos Lusitanos.`;
-
-    return {
-      title,
-      description,
-      alternates: { canonical: `${siteUrl}/directorio/${slug}` },
-      openGraph: {
-        title,
-        description,
-        images: coudelaria.foto_capa
-          ? [{ url: coudelaria.foto_capa, width: 1200, height: 630 }]
-          : [],
-        type: "website",
-      },
-      twitter: {
-        card: "summary_large_image",
-        title,
-        description,
-        images: coudelaria.foto_capa ? [coudelaria.foto_capa] : [],
-      },
-    };
-  } catch {
+  if (!coudelaria?.nome) {
     return {
       title: "Coudelaria | Portal Lusitano",
       description: "Descubra coudelarias de cavalos Lusitanos em Portugal.",
       alternates: { canonical: `${siteUrl}/directorio/${slug}` },
     };
   }
+
+  const title = `${coudelaria.nome} - Coudelaria | Portal Lusitano`;
+  const description =
+    coudelaria.descricao?.slice(0, 160) ||
+    `${coudelaria.nome}${coudelaria.localizacao ? ` em ${coudelaria.localizacao}` : ""}. Coudelaria de cavalos Lusitanos.`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${siteUrl}/directorio/${slug}` },
+    openGraph: {
+      title,
+      description,
+      images: coudelaria.foto_capa ? [{ url: coudelaria.foto_capa, width: 1200, height: 630 }] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: coudelaria.foto_capa ? [coudelaria.foto_capa] : [],
+    },
+  };
 }
 
 export default async function CoudelariaLayout({
@@ -79,27 +91,7 @@ export default async function CoudelariaLayout({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-
-  let coudelaria: {
-    nome?: string;
-    descricao?: string;
-    localizacao?: string;
-    telefone?: string;
-    email?: string;
-    website?: string;
-    foto_capa?: string;
-  } | null = null;
-
-  try {
-    const { data } = await supabase
-      .from("coudelarias")
-      .select("nome, descricao, localizacao, telefone, email, website, foto_capa")
-      .eq("slug", slug)
-      .single();
-    coudelaria = data;
-  } catch {
-    // Schema não é crítico - continuar sem ele
-  }
+  const coudelaria = await getCoudelaria(slug);
 
   return (
     <>

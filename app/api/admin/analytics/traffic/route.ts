@@ -5,178 +5,104 @@ import { logger } from "@/lib/logger";
 
 export async function GET(_req: NextRequest) {
   try {
-    // Verificar autenticação
     const email = await verifySession();
     if (!email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 1. TOTAL DE VISUALIZAÇÕES DE CAVALOS
-    let totalCavalosViews = 0;
-    let cavalos: { views_count: number }[] = [];
-
-    try {
-      const { data, error } = await supabase.from("cavalos_venda").select("views_count");
-
-      if (!error && data) {
-        cavalos = data;
-        totalCavalosViews = data.reduce((sum, cavalo) => sum + (cavalo.views_count || 0), 0);
-      }
-    } catch (e) {
-      logger.warn("views_count column might not exist on cavalos_venda:", e);
-    }
-
-    // 2. TOTAL DE VISUALIZAÇÕES DE EVENTOS
-    let totalEventosViews = 0;
-    let eventos: { views_count: number }[] = [];
-
-    try {
-      const { data, error } = await supabase.from("eventos").select("views_count");
-
-      if (!error && data) {
-        eventos = data;
-        totalEventosViews = data.reduce((sum, evento) => sum + (evento.views_count || 0), 0);
-      }
-    } catch (e) {
-      logger.warn("views_count column might not exist on eventos:", e);
-    }
-
-    // 3. TOTAL GERAL DE VISUALIZAÇÕES
-    const totalViews = totalCavalosViews + totalEventosViews;
-
-    // 4. CAVALOS MAIS VISTOS (Top 10)
-    let topCavalos: { id: string; nome_cavalo: string; views_count: number }[] = [];
-
-    try {
-      const { data, error } = await supabase
-        .from("cavalos_venda")
-        .select("id, nome_cavalo, views_count")
-        .order("views_count", { ascending: false })
-        .limit(10);
-
-      if (!error && data) {
-        topCavalos = data;
-      }
-    } catch (e) {
-      logger.warn("Error fetching top cavalos:", e);
-    }
-
-    // 5. EVENTOS MAIS VISTOS (Top 10)
-    let topEventos: { id: string; titulo: string; views_count: number }[] = [];
-
-    try {
-      const { data, error } = await supabase
-        .from("eventos")
-        .select("id, titulo, views_count")
-        .order("views_count", { ascending: false })
-        .limit(10);
-
-      if (!error && data) {
-        topEventos = data;
-      }
-    } catch (e) {
-      logger.warn("Error fetching top eventos:", e);
-    }
-
-    // 6. FONTES DE TRÁFEGO (UTM Source da tabela leads)
-    let leads: {
-      utm_source: string | null;
-      utm_medium: string | null;
-      utm_campaign: string | null;
-    }[] = [];
-
-    try {
-      const { data, error } = await supabase
-        .from("leads")
-        .select("utm_source, utm_medium, utm_campaign");
-
-      if (!error && data) {
-        leads = data;
-      }
-    } catch (e) {
-      logger.warn("Error fetching leads:", e);
-    }
-
-    // Agregar por fonte
-    const trafficSources: Record<string, number> = {};
-    leads?.forEach((lead) => {
-      const source = lead.utm_source || "Direto";
-      trafficSources[source] = (trafficSources[source] || 0) + 1;
-    });
-
-    const trafficSourcesArray = Object.entries(trafficSources)
-      .map(([source, count]) => ({ source, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
-
-    // 7. BREAKDOWN POR TIPO DE CONTEÚDO
-    const contentTypeBreakdown = [
-      {
-        type: "Cavalos à Venda",
-        views: totalCavalosViews,
-        count: cavalos?.length || 0,
-      },
-      {
-        type: "Eventos",
-        views: totalEventosViews,
-        count: eventos?.length || 0,
-      },
-    ];
-
-    // 8. TAXA MÉDIA DE VISUALIZAÇÕES
-    const totalContent = (cavalos?.length || 0) + (eventos?.length || 0);
-    const averageViewsPerContent = totalContent > 0 ? totalViews / totalContent : 0;
-
-    // 9. LEADS GERADOS (total)
-    let totalLeads = 0;
-
-    try {
-      const { count, error } = await supabase
-        .from("leads")
-        .select("*", { count: "exact", head: true });
-
-      if (!error) {
-        totalLeads = count || 0;
-      }
-    } catch (e) {
-      logger.warn("Error counting leads:", e);
-    }
-
-    // 10. CRESCIMENTO DE LEADS (últimos 30 dias vs 30 dias anteriores)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const sixtyDaysAgo = new Date();
     sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
 
-    let recentLeads = 0;
-    let previousLeads = 0;
+    // Run all 8 independent queries in parallel instead of sequentially
+    const [
+      cavalosViewsResult,
+      eventosViewsResult,
+      topCavalosResult,
+      topEventosResult,
+      leadsResult,
+      totalLeadsResult,
+      recentLeadsResult,
+      previousLeadsResult,
+    ] = await Promise.all([
+      Promise.resolve(supabase.from("cavalos_venda").select("views_count")).catch(() => ({
+        data: null,
+        error: null,
+      })),
+      Promise.resolve(supabase.from("eventos").select("views_count")).catch(() => ({
+        data: null,
+        error: null,
+      })),
+      Promise.resolve(
+        supabase
+          .from("cavalos_venda")
+          .select("id, nome_cavalo, views_count")
+          .order("views_count", { ascending: false })
+          .limit(10)
+      ).catch(() => ({ data: null, error: null })),
+      Promise.resolve(
+        supabase
+          .from("eventos")
+          .select("id, titulo, views_count")
+          .order("views_count", { ascending: false })
+          .limit(10)
+      ).catch(() => ({ data: null, error: null })),
+      Promise.resolve(supabase.from("leads").select("utm_source, utm_medium, utm_campaign")).catch(
+        () => ({ data: null, error: null })
+      ),
+      Promise.resolve(supabase.from("leads").select("*", { count: "exact", head: true })).catch(
+        () => ({ count: null, error: null })
+      ),
+      Promise.resolve(
+        supabase
+          .from("leads")
+          .select("*", { count: "exact", head: true })
+          .gte("created_at", thirtyDaysAgo.toISOString())
+      ).catch(() => ({ count: null, error: null })),
+      Promise.resolve(
+        supabase
+          .from("leads")
+          .select("*", { count: "exact", head: true })
+          .gte("created_at", sixtyDaysAgo.toISOString())
+          .lt("created_at", thirtyDaysAgo.toISOString())
+      ).catch(() => ({ count: null, error: null })),
+    ]);
 
-    try {
-      const { count, error } = await supabase
-        .from("leads")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", thirtyDaysAgo.toISOString());
+    const cavalos = (cavalosViewsResult.data as { views_count: number }[] | null) || [];
+    const eventos = (eventosViewsResult.data as { views_count: number }[] | null) || [];
+    const topCavalos =
+      (topCavalosResult.data as
+        | { id: string; nome_cavalo: string; views_count: number }[]
+        | null) || [];
+    const topEventos =
+      (topEventosResult.data as { id: string; titulo: string; views_count: number }[] | null) || [];
+    const leads =
+      (leadsResult.data as
+        | { utm_source: string | null; utm_medium: string | null; utm_campaign: string | null }[]
+        | null) || [];
 
-      if (!error) {
-        recentLeads = count || 0;
-      }
-    } catch (e) {
-      logger.warn("Error counting recent leads:", e);
-    }
+    const totalCavalosViews = cavalos.reduce((sum, c) => sum + (c.views_count || 0), 0);
+    const totalEventosViews = eventos.reduce((sum, e) => sum + (e.views_count || 0), 0);
+    const totalViews = totalCavalosViews + totalEventosViews;
 
-    try {
-      const { count, error } = await supabase
-        .from("leads")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", sixtyDaysAgo.toISOString())
-        .lt("created_at", thirtyDaysAgo.toISOString());
+    const totalContent = cavalos.length + eventos.length;
+    const averageViewsPerContent = totalContent > 0 ? totalViews / totalContent : 0;
 
-      if (!error) {
-        previousLeads = count || 0;
-      }
-    } catch (e) {
-      logger.warn("Error counting previous leads:", e);
-    }
+    // Aggregate traffic sources
+    const trafficSources: Record<string, number> = {};
+    leads.forEach((lead) => {
+      const source = lead.utm_source || "Direto";
+      trafficSources[source] = (trafficSources[source] || 0) + 1;
+    });
+    const trafficSourcesArray = Object.entries(trafficSources)
+      .map(([source, count]) => ({ source, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+
+    const totalLeads = (totalLeadsResult as { count: number | null }).count || 0;
+    const recentLeads = (recentLeadsResult as { count: number | null }).count || 0;
+    const previousLeads = (previousLeadsResult as { count: number | null }).count || 0;
 
     const leadsGrowth =
       previousLeads > 0
@@ -191,22 +117,25 @@ export async function GET(_req: NextRequest) {
         totalCavalosViews,
         totalEventosViews,
         averageViewsPerContent: parseFloat(averageViewsPerContent.toFixed(2)),
-        totalLeads: totalLeads,
-        recentLeads: recentLeads,
+        totalLeads,
+        recentLeads,
         leadsGrowth: parseFloat(leadsGrowth.toFixed(2)),
       },
-      topCavalos: (topCavalos || []).map((c) => ({
+      topCavalos: topCavalos.map((c) => ({
         id: c.id,
         name: c.nome_cavalo,
         views: c.views_count || 0,
       })),
-      topEventos: (topEventos || []).map((e) => ({
+      topEventos: topEventos.map((e) => ({
         id: e.id,
         name: e.titulo,
         views: e.views_count || 0,
       })),
       trafficSources: trafficSourcesArray,
-      contentTypeBreakdown,
+      contentTypeBreakdown: [
+        { type: "Cavalos à Venda", views: totalCavalosViews, count: cavalos.length },
+        { type: "Eventos", views: totalEventosViews, count: eventos.length },
+      ],
     });
   } catch (error) {
     logger.error("Traffic analytics error:", error);

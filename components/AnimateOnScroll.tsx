@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useInViewOnce } from "@/hooks/useInViewOnce";
 
 interface AnimateOnScrollProps {
@@ -12,6 +12,14 @@ interface AnimateOnScrollProps {
 export function AnimateOnScroll({ children, className = "", delay = 0 }: AnimateOnScrollProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInViewOnce(ref, "-80px");
+  const [prefersReducedMotion] = useState(
+    () =>
+      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <div

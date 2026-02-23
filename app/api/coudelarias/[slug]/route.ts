@@ -31,7 +31,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .eq("id", coudelaria.id)
       .then(() => {});
 
-    return NextResponse.json({ coudelaria });
+    const response = NextResponse.json({ coudelaria });
+    response.headers.set(
+      "Cache-Control",
+      "public, max-age=1800, s-maxage=1800, stale-while-revalidate=3600"
+    );
+    return response;
   } catch (error) {
     logger.error("Erro:", error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

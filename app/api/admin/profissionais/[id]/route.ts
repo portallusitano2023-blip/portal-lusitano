@@ -39,13 +39,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     });
   } catch (error) {
     logger.error("Error fetching profissional:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao carregar profissional",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao carregar profissional" }, { status: 500 });
   }
 }
 
@@ -60,8 +54,44 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const { id } = await params;
     const body = await req.json();
 
-    // Construir objeto de atualização
-    const updates: Record<string, unknown> = { ...body, updated_by: email };
+    // Whitelist de campos permitidos — impede que o body injete colunas arbitrárias
+    const allowedFields = [
+      "nome",
+      "titulo",
+      "especialidade",
+      "categoria",
+      "localizacao",
+      "distrito",
+      "telefone",
+      "email",
+      "descricao",
+      "servicos",
+      "experiencia_anos",
+      "especializacoes",
+      "credenciais",
+      "idiomas",
+      "associacoes",
+      "foto_url",
+      "disponivel",
+      "destaque",
+      "modalidade",
+      "pais",
+      "status",
+      "plano",
+      "plano_ativo",
+      "plano_inicio",
+      "plano_fim",
+      "plano_valor",
+      "nivel_verificacao",
+      "notas_admin",
+    ];
+
+    const updates: Record<string, unknown> = { updated_by: email };
+    for (const field of allowedFields) {
+      if (field in body) {
+        updates[field] = body[field];
+      }
+    }
 
     // Converter datas
     if (body.plano_inicio) {
@@ -102,13 +132,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ profissional });
   } catch (error) {
     logger.error("Error updating profissional:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao atualizar profissional",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao atualizar profissional" }, { status: 500 });
   }
 }
 
@@ -137,12 +161,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     return NextResponse.json({ message: "Profissional eliminado com sucesso" });
   } catch (error) {
     logger.error("Error deleting profissional:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao eliminar profissional",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao eliminar profissional" }, { status: 500 });
   }
 }

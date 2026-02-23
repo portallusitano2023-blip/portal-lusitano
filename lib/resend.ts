@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { logger } from "@/lib/logger";
 import { SUPPORT_EMAIL } from "@/lib/constants";
-import { escapeHtml } from "@/lib/sanitize";
+import { escapeHtml, generateUnsubscribeToken } from "@/lib/sanitize";
 
 function getResend(): Resend {
   if (!process.env.RESEND_API_KEY) {
@@ -116,7 +116,7 @@ function baseEmailTemplate(content: string, footerEmail: string, baseUrl: string
       <p><a href="${baseUrl}">portal-lusitano.pt</a></p>
       <p style="margin-top: 20px; color: #444444;">
         Recebeste este email porque tens uma conta ou subscreveste no Portal Lusitano.<br>
-        Podes <a href="${baseUrl}/unsubscribe?email=${encodeURIComponent(footerEmail)}">cancelar a subscrição</a> a qualquer momento.
+        Podes <a href="${baseUrl}/unsubscribe?email=${encodeURIComponent(footerEmail)}&token=${footerEmail ? generateUnsubscribeToken(footerEmail) : ""}">cancelar a subscrição</a> a qualquer momento.
       </p>
     </div>
   </div>

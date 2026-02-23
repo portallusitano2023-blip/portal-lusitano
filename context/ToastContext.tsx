@@ -77,7 +77,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
 
       {/* Toast Container */}
-      <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3">
+      <div
+        className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3"
+        aria-live="polite"
+        role="status"
+      >
         {toasts.map((toast) => (
           <div
             key={toast.id}
@@ -87,6 +91,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <p className="text-sm text-[var(--foreground)] flex-1">{toast.message}</p>
             <button
               onClick={() => hideToast(toast.id)}
+              aria-label="Fechar notificação"
               className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
             >
               <X size={16} />

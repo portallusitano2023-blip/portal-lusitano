@@ -5,55 +5,59 @@ import { logger } from "@/lib/logger";
 
 export async function GET(_req: NextRequest) {
   try {
-    // Verificar autenticação
     const email = await verifySession();
     if (!email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Obter data atual e início do mês
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const _endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
 
-    // 1. RECEITA TOTAL (all time) - apenas succeeded
-    const { data: totalRevenueData, error: totalError } = await supabase
-      .from("payments")
-      .select("amount")
-      .eq("status", "succeeded");
+    // Run all 4 independent queries in parallel instead of 7 sequential
+    const [allPaymentsResult, thisMonthResult, lastMonthResult, subsResult] = await Promise.all([
+      // Single query replaces 3 old ones (totalRevenue, avgTicket, count, breakdown)
+      supabase
+        .from("payments")
+        .select("amount, product_type, product_metadata")
+        .eq("status", "succeeded"),
+      supabase
+        .from("payments")
+        .select("amount")
+        .eq("status", "succeeded")
+        .gte("created_at", startOfMonth.toISOString()),
+      supabase
+        .from("payments")
+        .select("amount")
+        .eq("status", "succeeded")
+        .gte("created_at", startOfLastMonth.toISOString())
+        .lt("created_at", startOfMonth.toISOString()),
+      // MRR - needs product_metadata filter
+      supabase
+        .from("payments")
+        .select("amount, product_metadata")
+        .eq("status", "succeeded")
+        .not("product_metadata", "is", null),
+    ]);
 
-    if (totalError) throw totalError;
+    if (allPaymentsResult.error) throw allPaymentsResult.error;
+    if (thisMonthResult.error) throw thisMonthResult.error;
+    if (lastMonthResult.error) throw lastMonthResult.error;
+    if (subsResult.error) throw subsResult.error;
 
-    const totalRevenue =
-      totalRevenueData?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
+    const allPayments = allPaymentsResult.data || [];
+    const thisMonthData = thisMonthResult.data || [];
+    const lastMonthData = lastMonthResult.data || [];
+    const subsData = subsResult.data || [];
 
-    // 2. RECEITA ESTE MÊS
-    const { data: thisMonthData, error: monthError } = await supabase
-      .from("payments")
-      .select("amount")
-      .eq("status", "succeeded")
-      .gte("created_at", startOfMonth.toISOString());
+    // Derive all metrics from the parallel results
+    const totalRevenue = allPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+    const totalTransactions = allPayments.length;
+    const averageTicket = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
 
-    if (monthError) throw monthError;
+    const thisMonthRevenue = thisMonthData.reduce((sum, p) => sum + (p.amount || 0), 0);
+    const lastMonthRevenue = lastMonthData.reduce((sum, p) => sum + (p.amount || 0), 0);
 
-    const thisMonthRevenue =
-      thisMonthData?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
-
-    // 3. RECEITA MÊS PASSADO (para calcular crescimento)
-    const { data: lastMonthData, error: lastMonthError } = await supabase
-      .from("payments")
-      .select("amount")
-      .eq("status", "succeeded")
-      .gte("created_at", startOfLastMonth.toISOString())
-      .lt("created_at", startOfMonth.toISOString());
-
-    if (lastMonthError) throw lastMonthError;
-
-    const lastMonthRevenue =
-      lastMonthData?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
-
-    // Calcular crescimento percentual
     const growthPercentage =
       lastMonthRevenue > 0
         ? ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
@@ -61,69 +65,30 @@ export async function GET(_req: NextRequest) {
           ? 100
           : 0;
 
-    // 4. MRR (Monthly Recurring Revenue) - subscrições ativas
-    // Publicidade lateral (€25) e premium (€75) são recorrentes
-    const { data: subscriptionsData, error: subsError } = await supabase
-      .from("payments")
-      .select("amount, product_metadata")
-      .eq("status", "succeeded")
-      .not("product_metadata", "is", null);
-
-    if (subsError) throw subsError;
-
-    // Calcular MRR baseado em subscrições (simplificado - assume 1 mês)
     const mrr =
-      subscriptionsData
-        ?.filter((payment) => {
-          const metadata = payment.product_metadata as Record<string, unknown> | null;
+      subsData
+        .filter((p) => {
+          const metadata = p.product_metadata as Record<string, unknown> | null;
           const pkg = metadata?.package;
-          return pkg === "lateral" || pkg === "premium"; // Pacotes recorrentes
+          return pkg === "lateral" || pkg === "premium";
         })
-        .reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
+        .reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
 
-    // 5. TICKET MÉDIO (valor médio por transação)
-    const { data: allPayments, error: avgError } = await supabase
-      .from("payments")
-      .select("amount")
-      .eq("status", "succeeded");
-
-    if (avgError) throw avgError;
-
-    const totalTransactions = allPayments?.length || 0;
-    const averageTicket = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
-
-    // 6. TOTAL DE TRANSAÇÕES
-    const { count: transactionCount, error: countError } = await supabase
-      .from("payments")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "succeeded");
-
-    if (countError) throw countError;
-
-    // 7. BREAKDOWN POR TIPO DE PRODUTO
-    const { data: productBreakdown, error: breakdownError } = await supabase
-      .from("payments")
-      .select("amount, product_type")
-      .eq("status", "succeeded");
-
-    if (breakdownError) throw breakdownError;
-
-    const revenueByProduct =
-      productBreakdown?.reduce((acc: Record<string, number>, payment) => {
-        const type = payment.product_type || "outros";
-        acc[type] = (acc[type] || 0) + (payment.amount || 0);
-        return acc;
-      }, {}) || {};
+    const revenueByProduct = allPayments.reduce((acc: Record<string, number>, p) => {
+      const type = p.product_type || "outros";
+      acc[type] = (acc[type] || 0) + (p.amount || 0);
+      return acc;
+    }, {});
 
     return NextResponse.json({
       overview: {
-        totalRevenue: totalRevenue / 100, // Converter de centavos para euros
+        totalRevenue: totalRevenue / 100,
         thisMonthRevenue: thisMonthRevenue / 100,
         lastMonthRevenue: lastMonthRevenue / 100,
         growthPercentage: parseFloat(growthPercentage.toFixed(2)),
         mrr: mrr / 100,
         averageTicket: averageTicket / 100,
-        totalTransactions: transactionCount || 0,
+        totalTransactions,
       },
       revenueByProduct: Object.entries(revenueByProduct).map(([type, amount]) => ({
         type,

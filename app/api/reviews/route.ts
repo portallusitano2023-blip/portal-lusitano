@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { apiLimiter } from "@/lib/rate-limit";
 import { reviewSchema, toolReviewSchema, parseWithZod } from "@/lib/schemas";
 import { logger } from "@/lib/logger";
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
           avaliacao,
           comentario,
           recomenda: recomenda ?? true,
-          status: "approved",
+          status: "pending",
         })
         .select()
         .single();

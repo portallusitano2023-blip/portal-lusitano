@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
     return apiSuccess({ checkoutUrl });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Erro ao criar checkout";
+    const message = "Erro ao criar checkout";
     return apiError("Erro ao criar checkout", 500, `checkout: ${message}`);
   }
 }

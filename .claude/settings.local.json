@@ -132,7 +132,25 @@
       "Bash(git -C \"C:/Users/USUARIO/portal-lusitano\" add components/verificador-compatibilidade/CompatibilityResults.tsx app/comparador-cavalos/page.tsx app/ferramentas/page.tsx components/calculadora-valor/StepAndamentosTemperamento.tsx components/calculadora-valor/StepGeneticaMorfologia.tsx components/verificador-compatibilidade/HorseForm.tsx)",
       "Bash(git -C:*)",
       "Bash(git.exe log --oneline components/analise-perfil/ResultTabs.tsx)",
-      "Bash(NEXT_PUBLIC_SENTRY_DSN=\"\" npx next build:*)"
+      "Bash(NEXT_PUBLIC_SENTRY_DSN=\"\" npx next build:*)",
+      "Bash(npx vercel env ls:*)",
+      "Bash(npx vercel login)",
+      "Bash(bash scripts/push-env-to-vercel.sh:*)",
+      "Bash(npx vercel domains ls:*)",
+      "Bash(npx vercel:*)",
+      "WebFetch(domain:coudelariaortigaocosta.com)",
+      "Bash(bash scripts/fix-vercel-env-newlines.sh)",
+      "Bash(set -x)",
+      "WebFetch(domain:lusitanosdatela.com)",
+      "WebFetch(domain:www.visitportugal.com)",
+      "WebFetch(domain:www.racius.com)",
+      "WebFetch(domain:www.superiorequinesires.com)",
+      "WebFetch(domain:www.visitribatejo.pt)",
+      "WebFetch(domain:dressagetoday.com)",
+      "WebFetch(domain:www.mediotejo.net)",
+      "WebFetch(domain:app.springcast.fm)",
+      "WebFetch(domain:www.pole-equestre-carlos-pinto.com)",
+      "Bash(del \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\supabase\\\\update-lusitanos-datela.json\")"
     ]
   }
 }

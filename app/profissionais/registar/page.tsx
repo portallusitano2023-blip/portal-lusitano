@@ -518,7 +518,7 @@ export default function RegistarProfissionalPage() {
 
         {/* Error display */}
         {error && (
-          <div className="max-w-2xl mx-auto mb-6">
+          <div className="max-w-2xl mx-auto mb-6" role="alert" aria-live="assertive">
             <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 text-sm rounded">
               {error}
             </div>
@@ -582,8 +582,11 @@ export default function RegistarProfissionalPage() {
 
               {/* Nome Completo */}
               <div>
-                <label className={labelClass}>{tp.field_name}</label>
+                <label htmlFor="nome" className={labelClass}>
+                  {tp.field_name}
+                </label>
                 <input
+                  id="nome"
                   type="text"
                   name="nome"
                   value={formData.nome}
@@ -596,13 +599,16 @@ export default function RegistarProfissionalPage() {
               {/* Email + Telefone */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>{tp.field_email}</label>
+                  <label htmlFor="email" className={labelClass}>
+                    {tp.field_email}
+                  </label>
                   <div className="relative">
                     <Mail
                       className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
                       size={18}
                     />
                     <input
+                      id="email"
                       type="email"
                       name="email"
                       value={formData.email}
@@ -613,13 +619,16 @@ export default function RegistarProfissionalPage() {
                   </div>
                 </div>
                 <div>
-                  <label className={labelClass}>{tp.field_phone}</label>
+                  <label htmlFor="telefone" className={labelClass}>
+                    {tp.field_phone}
+                  </label>
                   <div className="relative">
                     <Phone
                       className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
                       size={18}
                     />
                     <input
+                      id="telefone"
                       type="tel"
                       name="telefone"
                       value={formData.telefone}
@@ -633,8 +642,11 @@ export default function RegistarProfissionalPage() {
 
               {/* Categoria */}
               <div>
-                <label className={labelClass}>{tp.field_category}</label>
+                <label htmlFor="categoria" className={labelClass}>
+                  {tp.field_category}
+                </label>
                 <select
+                  id="categoria"
                   name="categoria"
                   value={formData.categoria}
                   onChange={handleInputChange}
@@ -674,8 +686,11 @@ export default function RegistarProfissionalPage() {
               {/* Especialidade + Anos Experiência */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>{tp.field_specialty}</label>
+                  <label htmlFor="especialidade" className={labelClass}>
+                    {tp.field_specialty}
+                  </label>
                   <input
+                    id="especialidade"
                     type="text"
                     name="especialidade"
                     value={formData.especialidade}
@@ -685,8 +700,11 @@ export default function RegistarProfissionalPage() {
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>{tp.field_experience}</label>
+                  <label htmlFor="anosExperiencia" className={labelClass}>
+                    {tp.field_experience}
+                  </label>
                   <input
+                    id="anosExperiencia"
                     type="number"
                     name="anosExperiencia"
                     value={formData.anosExperiencia || ""}

@@ -3,6 +3,7 @@ import { MapPin, Star, Phone, Sparkles, Siren, ArrowRight, Globe, Plane } from "
 import { BadgeVerificacao } from "./BadgeVerificacao";
 import { categorias } from "./constants";
 import type { Profissional } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Iniciais a partir do nome completo (máx 2 letras)
 function getInitials(nome: string): string {
@@ -12,6 +13,7 @@ function getInitials(nome: string): string {
 }
 
 export function CardProfissional({ prof, onClick }: { prof: Profissional; onClick: () => void }) {
+  const { t } = useLanguage();
   // Encontrar o ícone da categoria a partir das constantes
   const categoriaConfig = categorias.find((c) => c.id === prof.categoria);
   const CategoriaIcon = categoriaConfig?.icon;
@@ -76,7 +78,7 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
             ) : prof.modalidade === "clinicas_internacionais" ? (
               <div className="flex items-center gap-1">
                 <Plane size={10} className="text-purple-400 flex-shrink-0" />
-                <span className="text-[11px] text-purple-400">Internacional</span>
+                <span className="text-[11px] text-purple-400">{t.profissionais.international}</span>
               </div>
             ) : prof.localizacao ? (
               <div className="flex items-center gap-1">
@@ -126,15 +128,15 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
               {prof.metricas.taxaSatisfacao > 0 ? `${prof.metricas.taxaSatisfacao}%` : "—"}
             </div>
             <div className="text-[9px] text-[var(--foreground-muted)] uppercase tracking-wide mt-0.5">
-              Satisfação
+              {t.profissionais.stat_satisfaction}
             </div>
           </div>
           <div className="bg-[var(--background-secondary)]/60 rounded-lg px-3 py-2 text-center">
             <div className="text-xs font-semibold text-[var(--foreground-secondary)]">
-              {prof.experienciaAnos > 0 ? `${prof.experienciaAnos} anos` : "—"}
+              {prof.experienciaAnos > 0 ? `${prof.experienciaAnos} ${t.profissionais.years}` : "—"}
             </div>
             <div className="text-[9px] text-[var(--foreground-muted)] uppercase tracking-wide mt-0.5">
-              Experiência
+              {t.profissionais.experience}
             </div>
           </div>
         </div>
@@ -163,7 +165,7 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
         {prof.disponibilidade.emergencias24h && (
           <div className="flex items-center gap-1 text-[11px] text-red-400 mb-1">
             <Siren size={10} />
-            <span>Emergências 24h</span>
+            <span>{t.profissionais.emergencies_24h}</span>
           </div>
         )}
       </div>
@@ -175,7 +177,7 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
           className="flex-1 py-2.5 bg-[var(--gold)] rounded-lg text-xs text-black font-semibold hover:bg-[var(--gold-hover)] transition-colors flex items-center justify-center gap-1.5 group-hover:shadow-[0_2px_16px_rgba(197,160,89,0.25)]"
           aria-label={`Ver perfil de ${prof.nome}`}
         >
-          Ver Perfil
+          {t.profissionais.view_profile}
           <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
         </button>
         {prof.telefone && (

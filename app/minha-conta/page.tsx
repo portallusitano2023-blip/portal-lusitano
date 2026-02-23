@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import { getCustomer } from "@/lib/shopify";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -18,7 +17,6 @@ export default async function MinhaContaPage() {
 
   return (
     <>
-      <Navbar />
       {/* getCustomer returns Shopify API data, cast to local Customer interface */}
       <MinhaContaContent
         customer={customer as unknown as Parameters<typeof MinhaContaContent>[0]["customer"]}

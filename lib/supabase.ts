@@ -26,5 +26,5 @@ export const supabaseAdmin = createClient(supabaseUrl ?? "", supabaseServiceKey 
 // Cliente padrão (anon key) — respeita RLS policies
 export const supabasePublic = createClient(supabaseUrl ?? "", supabaseAnonKey ?? "");
 
-// Alias para compatibilidade — usa service role (migrar gradualmente para supabasePublic)
-export const supabase = supabaseAdmin;
+// Alias para compatibilidade — usa anon key (respeita RLS)
+export const supabase = supabasePublic;

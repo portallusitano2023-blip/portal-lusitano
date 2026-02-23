@@ -84,7 +84,8 @@ export async function POST(req: NextRequest) {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const fileName = `${sessionId}/${Date.now()}_${file.name}`;
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 100);
+      const fileName = `${sessionId}/${Date.now()}_${safeName}`;
 
       const { error } = await supabase.storage.from("instagram_uploads").upload(fileName, file, {
         contentType: file.type,
@@ -234,9 +235,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Instagram upload error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao processar upload" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao processar upload" }, { status: 500 });
   }
 }

@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { sendEmail } from "@/lib/resend";
 import { logger } from "@/lib/logger";
 import { apiLimiter } from "@/lib/rate-limit";
+import { escapeHtml } from "@/lib/sanitize";
 
 const TOOL_NAMES: Record<string, string> = {
   calculadora: "Calculadora de Valor",
@@ -109,8 +110,8 @@ function buildResultEmail(
     .map(
       ([k, v]) =>
         `<tr>
-          <td style="padding:6px 12px;color:#999;font-size:13px;border-bottom:1px solid #222;">${k}</td>
-          <td style="padding:6px 12px;color:#fff;font-size:13px;font-weight:600;border-bottom:1px solid #222;">${String(v)}</td>
+          <td style="padding:6px 12px;color:#999;font-size:13px;border-bottom:1px solid #222;">${escapeHtml(k)}</td>
+          <td style="padding:6px 12px;color:#fff;font-size:13px;font-weight:600;border-bottom:1px solid #222;">${escapeHtml(String(v))}</td>
         </tr>`
     )
     .join("");

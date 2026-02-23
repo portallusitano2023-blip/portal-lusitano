@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v3'; // Incrementar ao fazer mudanças significativas
+const CACHE_VERSION = 'v4'; // Incrementar ao fazer mudanças significativas
 const CACHE_NAME = `portal-lusitano-${CACHE_VERSION}`;
 const IMAGE_CACHE = `portal-lusitano-images-${CACHE_VERSION}`;
 const STATIC_CACHE = `portal-lusitano-static-${CACHE_VERSION}`;
@@ -152,10 +152,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // ✅ STRATEGY 2: Network-First para JS chunks (_next/static/) — garante código actualizado
-  // Cache-First para assets verdadeiramente estáticos (fonts, CSS sem hash)
+  // ✅ STRATEGY 2: Cache-First para _next/static/ — ficheiros têm hash no nome,
+  // são imutáveis e já servidos com Cache-Control: immutable pelo Next.js.
+  // networkFirst aqui desperdiçava uma ida à rede em cada page load.
   if (url.pathname.startsWith('/_next/static/')) {
-    event.respondWith(networkFirstStrategy(request, STATIC_CACHE));
+    event.respondWith(cacheFirstStrategy(request, STATIC_CACHE));
     return;
   }
   if (/\.(css|woff|woff2|ttf|eot)$/i.test(url.pathname)) {
