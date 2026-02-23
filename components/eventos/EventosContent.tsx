@@ -97,22 +97,17 @@ export default function EventosContent({ eventos }: { eventos: Evento[] }) {
     [t]
   );
 
-  // Client-side filter by type (replaces server-side fetch on tipo change)
-  const filteredEventos = useMemo(() => {
-    if (selectedTipo === "todos") return eventos;
-    return eventos.filter((e) => e.tipo === selectedTipo);
+  // Client-side filter, split, and sort in a single memo pass
+  const { filteredEventos, eventosDestaque, eventosOrdenados } = useMemo(() => {
+    const filtered =
+      selectedTipo === "todos" ? eventos : eventos.filter((e) => e.tipo === selectedTipo);
+    const destaque = filtered.filter((e) => e.destaque);
+    const normais = filtered.filter((e) => !e.destaque);
+    const ordenados = [...normais].sort(
+      (a, b) => new Date(b.data_inicio).getTime() - new Date(a.data_inicio).getTime()
+    );
+    return { filteredEventos: filtered, eventosDestaque: destaque, eventosOrdenados: ordenados };
   }, [eventos, selectedTipo]);
-
-  // Eventos em destaque
-  const eventosDestaque = filteredEventos.filter((e) => e.destaque);
-
-  // Eventos não destaque (para paginação)
-  const eventosNormais = filteredEventos.filter((e) => !e.destaque);
-
-  // Ordenar por data descendente (mais recentes primeiro)
-  const eventosOrdenados = [...eventosNormais].sort(
-    (a, b) => new Date(b.data_inicio).getTime() - new Date(a.data_inicio).getTime()
-  );
 
   // Paginação
   const totalPaginas = Math.ceil(eventosOrdenados.length / ITENS_POR_PAGINA);

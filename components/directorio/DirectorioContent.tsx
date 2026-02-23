@@ -148,8 +148,8 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
     setSelectedRegiao("Todas");
   }, []);
 
-  // Client-side filtering (replaces server-side fetch)
-  const filtered = useMemo(() => {
+  // Client-side filtering + split in a single memo pass
+  const { filtered, destaqueCoudelarias, normalCoudelarias } = useMemo(() => {
     let result = coudelarias;
     if (selectedRegiao !== "Todas") {
       result = result.filter((c) => c.regiao === selectedRegiao);
@@ -163,12 +163,12 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
           c.descricao?.toLowerCase().includes(term)
       );
     }
-    return result;
+    return {
+      filtered: result,
+      destaqueCoudelarias: result.filter((c) => c.destaque),
+      normalCoudelarias: result.filter((c) => !c.destaque),
+    };
   }, [coudelarias, selectedRegiao, debouncedSearch]);
-
-  // Split featured / normal
-  const destaqueCoudelarias = filtered.filter((c) => c.destaque);
-  const normalCoudelarias = filtered.filter((c) => !c.destaque);
 
   // Pagination
   const totalPaginas = Math.ceil(normalCoudelarias.length / ITENS_POR_PAGINA);

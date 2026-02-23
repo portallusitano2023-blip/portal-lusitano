@@ -131,6 +131,16 @@ export async function middleware(request: NextRequest) {
       );
     }
 
+    // Prevent caching of auth-dependent and admin API responses
+    if (
+      pathname.startsWith("/api/admin/") ||
+      pathname.startsWith("/api/auth/") ||
+      pathname === "/api/favoritos" ||
+      pathname === "/api/cart/get"
+    ) {
+      response.headers.set("Cache-Control", "private, no-store");
+    }
+
     // Handle preflight requests
     if (request.method === "OPTIONS") {
       return new NextResponse(null, { status: 200, headers: response.headers });
