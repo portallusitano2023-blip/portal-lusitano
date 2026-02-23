@@ -2,18 +2,26 @@
 
 import { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+
+function tr3(lang: string, pt: string, en: string, es: string) {
+  return lang === "pt" ? pt : lang === "es" ? es : en;
+}
 
 interface WhatsAppButtonProps {
   phoneNumber?: string;
-  message?: string;
 }
 
-export default function WhatsAppButton({
-  phoneNumber = "351939513151",
-  message = "Ola! Gostava de saber mais sobre o Portal Lusitano.",
-}: WhatsAppButtonProps) {
+export default function WhatsAppButton({ phoneNumber = "351939513151" }: WhatsAppButtonProps) {
+  const { language } = useLanguage();
+  const defaultMsg = tr3(
+    language,
+    "Ola! Gostava de saber mais sobre o Portal Lusitano.",
+    "Hello! I would like to know more about Portal Lusitano.",
+    "Hola! Me gustaría saber más sobre Portal Lusitano."
+  );
   const [isOpen, setIsOpen] = useState(false);
-  const [customMessage, setCustomMessage] = useState(message);
+  const [customMessage, setCustomMessage] = useState(defaultMsg);
 
   const handleSend = () => {
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(customMessage)}`;
@@ -27,7 +35,11 @@ export default function WhatsAppButton({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full shadow-lg flex items-center justify-center hover:bg-[#20bd5a] hover:scale-110 active:scale-95 transition-all duration-300 group opacity-0 animate-[fadeSlideIn_0.5s_ease-out_1s_forwards]"
-        aria-label={isOpen ? "Fechar WhatsApp" : "Abrir WhatsApp"}
+        aria-label={
+          isOpen
+            ? tr3(language, "Fechar WhatsApp", "Close WhatsApp", "Cerrar WhatsApp")
+            : tr3(language, "Abrir WhatsApp", "Open WhatsApp", "Abrir WhatsApp")
+        }
       >
         {isOpen ? (
           <X className="w-6 h-6 text-white" />
@@ -52,7 +64,14 @@ export default function WhatsAppButton({
               </div>
               <div>
                 <h3 className="text-white font-semibold">Portal Lusitano</h3>
-                <p className="text-white/80 text-sm">Normalmente responde em minutos</p>
+                <p className="text-white/80 text-sm">
+                  {tr3(
+                    language,
+                    "Normalmente responde em minutos",
+                    "Usually replies within minutes",
+                    "Normalmente responde en minutos"
+                  )}
+                </p>
               </div>
             </div>
           </div>
@@ -62,11 +81,20 @@ export default function WhatsAppButton({
             {/* Message bubble */}
             <div className="bg-[var(--background-card)] rounded-lg p-3 shadow-sm mb-4 border border-[var(--border)]">
               <p className="text-[var(--foreground-secondary)] text-sm">
-                Ola! Como podemos ajuda-lo? Envie-nos uma mensagem e responderemos o mais breve
-                possivel.
+                {tr3(
+                  language,
+                  "Ola! Como podemos ajuda-lo? Envie-nos uma mensagem e responderemos o mais breve possivel.",
+                  "Hello! How can we help you? Send us a message and we'll reply as soon as possible.",
+                  "Hola! Como podemos ayudarle? Envíenos un mensaje y responderemos lo antes posible."
+                )}
               </p>
               <span className="text-[var(--foreground-muted)] text-xs mt-1 block">
-                Equipa Portal Lusitano
+                {tr3(
+                  language,
+                  "Equipa Portal Lusitano",
+                  "Portal Lusitano Team",
+                  "Equipo Portal Lusitano"
+                )}
               </span>
             </div>
 
@@ -75,18 +103,33 @@ export default function WhatsAppButton({
               <textarea
                 value={customMessage}
                 onChange={(e) => setCustomMessage(e.target.value)}
-                placeholder="Escreva a sua mensagem..."
-                aria-label="Mensagem para WhatsApp"
+                placeholder={tr3(
+                  language,
+                  "Escreva a sua mensagem...",
+                  "Write your message...",
+                  "Escriba su mensaje..."
+                )}
+                aria-label={tr3(
+                  language,
+                  "Mensagem para WhatsApp",
+                  "WhatsApp message",
+                  "Mensaje para WhatsApp"
+                )}
                 className="w-full px-3 py-2 border border-[var(--border)] rounded-lg text-sm resize-none bg-[var(--background-secondary)] text-[var(--foreground)] placeholder-[var(--foreground-muted)] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
                 rows={3}
               />
               <button
                 onClick={handleSend}
-                aria-label="Enviar mensagem via WhatsApp"
+                aria-label={tr3(
+                  language,
+                  "Enviar mensagem via WhatsApp",
+                  "Send message via WhatsApp",
+                  "Enviar mensaje por WhatsApp"
+                )}
                 className="w-full bg-[#25D366] text-white py-3 rounded-lg font-medium hover:bg-[#20bd5a] transition-colors flex items-center justify-center gap-2"
               >
                 <MessageCircle className="w-5 h-5" />
-                Iniciar Conversa
+                {tr3(language, "Iniciar Conversa", "Start Conversation", "Iniciar Conversación")}
               </button>
             </div>
           </div>
