@@ -24,12 +24,25 @@ const nextConfig = {
       "@dnd-kit/utilities",
       "@portabletext/react",
       "@react-email/components",
+      "@supabase/supabase-js",
     ],
 
     // Restore scroll position on browser back/forward navigation,
     // giving instant perceived performance for return visits.
     scrollRestoration: true,
+
+    // Client-side Router Cache: keep visited pages cached so back/forward
+    // and re-navigations feel instant (0ms). Default is 0s for dynamic
+    // and 300s for static — we extend dynamic to 30s for a snappier UX.
+    staleTimes: {
+      dynamic: 30,
+      static: 300,
+    },
   },
+
+  // Keep heavy server-only packages out of the client bundle.
+  // These are only used in API routes / server components.
+  serverExternalPackages: ["@react-pdf/renderer", "resend", "sanitize-html", "sharp"],
 
   images: {
     remotePatterns: [

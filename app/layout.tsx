@@ -169,12 +169,12 @@ export default function RootLayout({
             <Footer />
           </ErrorBoundary>
         </Providers>
-        {/* Google AdSense - afterInteractive carrega após hidratação */}
+        {/* Google AdSense - lazyOnload: não bloqueia hidratação nem interatividade */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7254357453133228"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </body>
     </html>

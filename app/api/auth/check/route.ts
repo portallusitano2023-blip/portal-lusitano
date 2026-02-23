@@ -10,10 +10,10 @@ export async function GET() {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
-    return NextResponse.json({
-      authenticated: true,
-      email,
-    });
+    return NextResponse.json(
+      { authenticated: true, email },
+      { headers: { "Cache-Control": "private, no-store" } }
+    );
   } catch (error) {
     logger.error("Auth check error:", error);
     return NextResponse.json({ authenticated: false }, { status: 500 });

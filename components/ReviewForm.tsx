@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 import { Star, Send, Loader2 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+
+function tr3(lang: string, pt: string, en: string, es: string) {
+  return lang === "pt" ? pt : lang === "es" ? es : en;
+}
 
 interface ReviewFormProps {
   coudelariaId: string;
@@ -10,6 +15,7 @@ interface ReviewFormProps {
 }
 
 export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: ReviewFormProps) {
+  const { language } = useLanguage();
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,12 +38,26 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
     setError(null);
 
     if (rating === 0) {
-      setError("Por favor selecione uma avaliacao");
+      setError(
+        tr3(
+          language,
+          "Por favor selecione uma avaliação",
+          "Please select a rating",
+          "Por favor seleccione una valoración"
+        )
+      );
       return;
     }
 
     if (!formData.autor_nome || !formData.comentario) {
-      setError("Nome e comentario sao obrigatorios");
+      setError(
+        tr3(
+          language,
+          "Nome e comentário são obrigatórios",
+          "Name and comment are required",
+          "Nombre y comentario son obligatorios"
+        )
+      );
       return;
     }
 
@@ -57,17 +77,37 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Erro ao submeter avaliacao");
+        throw new Error(
+          data.error ||
+            tr3(
+              language,
+              "Erro ao submeter avaliação",
+              "Error submitting review",
+              "Error al enviar la valoración"
+            )
+        );
       }
 
       setIsSubmitted(true);
       onSuccess?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao submeter");
+      setError(
+        err instanceof Error
+          ? err.message
+          : tr3(language, "Erro ao submeter", "Error submitting", "Error al enviar")
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const ratingLabels = {
+    1: tr3(language, "Fraco", "Poor", "Malo"),
+    2: tr3(language, "Razoável", "Fair", "Regular"),
+    3: tr3(language, "Bom", "Good", "Bueno"),
+    4: tr3(language, "Muito Bom", "Very Good", "Muy Bueno"),
+    5: tr3(language, "Excelente", "Excellent", "Excelente"),
+  } as Record<number, string>;
 
   if (isSubmitted) {
     return (
@@ -76,22 +116,50 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
           <Star className="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" />
         </div>
         <h3 className="text-lg font-semibold text-green-800 dark:text-green-300 mb-2">
-          Obrigado pela sua avaliacao!
+          {tr3(
+            language,
+            "Obrigado pela sua avaliação!",
+            "Thank you for your review!",
+            "¡Gracias por su valoración!"
+          )}
         </h3>
         <p className="text-green-600 dark:text-green-400 text-sm">
-          A sua review foi submetida e sera publicada apos aprovacao.
+          {tr3(
+            language,
+            "A sua review foi submetida e será publicada após aprovação.",
+            "Your review has been submitted and will be published after approval.",
+            "Su valoración ha sido enviada y será publicada tras su aprobación."
+          )}
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6" aria-label={`Avaliar ${coudelariaNome}`}>
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6"
+      aria-label={tr3(
+        language,
+        `Avaliar ${coudelariaNome}`,
+        `Review ${coudelariaNome}`,
+        `Valorar ${coudelariaNome}`
+      )}
+    >
       <div>
         <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
-          A sua avaliacao de {coudelariaNome}
+          {tr3(
+            language,
+            `A sua avaliação de ${coudelariaNome}`,
+            `Your review of ${coudelariaNome}`,
+            `Su valoración de ${coudelariaNome}`
+          )}
         </label>
-        <div className="flex gap-1" role="radiogroup" aria-label="Avaliacao">
+        <div
+          className="flex gap-1"
+          role="radiogroup"
+          aria-label={tr3(language, "Avaliação", "Rating", "Valoración")}
+        >
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
@@ -99,7 +167,7 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
               onClick={() => setRating(star)}
               onMouseEnter={() => setHoverRating(star)}
               onMouseLeave={() => setHoverRating(0)}
-              aria-label={`${star} estrela${star > 1 ? "s" : ""}`}
+              aria-label={`${star} ${tr3(language, star > 1 ? "estrelas" : "estrela", star > 1 ? "stars" : "star", star > 1 ? "estrellas" : "estrella")}`}
               aria-pressed={rating === star}
               className="p-1 transition-transform hover:scale-110"
             >
@@ -115,32 +183,28 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
           ))}
         </div>
         {rating > 0 && (
-          <p className="text-sm text-[var(--foreground-muted)] mt-1">
-            {rating === 1 && "Fraco"}
-            {rating === 2 && "Razoavel"}
-            {rating === 3 && "Bom"}
-            {rating === 4 && "Muito Bom"}
-            {rating === 5 && "Excelente"}
-          </p>
+          <p className="text-sm text-[var(--foreground-muted)] mt-1">{ratingLabels[rating]}</p>
         )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Nome *</label>
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+            {tr3(language, "Nome *", "Name *", "Nombre *")}
+          </label>
           <input
             type="text"
             value={formData.autor_nome}
             onChange={(e) => setFormData({ ...formData, autor_nome: e.target.value })}
             className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-            placeholder="O seu nome"
+            placeholder={tr3(language, "O seu nome", "Your name", "Su nombre")}
             required
             aria-required="true"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-            Email (opcional)
+            {tr3(language, "Email (opcional)", "Email (optional)", "Email (opcional)")}
           </label>
           <input
             type="email"
@@ -155,19 +219,29 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-            Localizacao (opcional)
+            {tr3(language, "Localização (opcional)", "Location (optional)", "Ubicación (opcional)")}
           </label>
           <input
             type="text"
             value={formData.autor_localizacao}
             onChange={(e) => setFormData({ ...formData, autor_localizacao: e.target.value })}
             className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-            placeholder="Ex: Lisboa, Portugal"
+            placeholder={tr3(
+              language,
+              "Ex: Lisboa, Portugal",
+              "e.g. Lisbon, Portugal",
+              "Ej: Lisboa, Portugal"
+            )}
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-            Data da visita (opcional)
+            {tr3(
+              language,
+              "Data da visita (opcional)",
+              "Visit date (optional)",
+              "Fecha de visita (opcional)"
+            )}
           </label>
           <input
             type="date"
@@ -180,44 +254,65 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
 
       <div>
         <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-          Tipo de interacao
+          {tr3(language, "Tipo de interação", "Type of interaction", "Tipo de interacción")}
         </label>
         <select
           value={formData.tipo_visita}
           onChange={(e) => setFormData({ ...formData, tipo_visita: e.target.value })}
           className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
         >
-          <option value="visita">Visita presencial</option>
-          <option value="compra">Compra de cavalo</option>
-          <option value="servico">Servico/Treino</option>
-          <option value="evento">Evento</option>
-          <option value="outro">Outro</option>
+          <option value="visita">
+            {tr3(language, "Visita presencial", "In-person visit", "Visita presencial")}
+          </option>
+          <option value="compra">
+            {tr3(language, "Compra de cavalo", "Horse purchase", "Compra de caballo")}
+          </option>
+          <option value="servico">
+            {tr3(language, "Serviço/Treino", "Service/Training", "Servicio/Entrenamiento")}
+          </option>
+          <option value="evento">{tr3(language, "Evento", "Event", "Evento")}</option>
+          <option value="outro">{tr3(language, "Outro", "Other", "Otro")}</option>
         </select>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-          Titulo da avaliacao (opcional)
+          {tr3(
+            language,
+            "Título da avaliação (opcional)",
+            "Review title (optional)",
+            "Título de la valoración (opcional)"
+          )}
         </label>
         <input
           type="text"
           value={formData.titulo}
           onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
           className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-          placeholder="Resuma a sua experiencia"
+          placeholder={tr3(
+            language,
+            "Resuma a sua experiência",
+            "Summarize your experience",
+            "Resuma su experiencia"
+          )}
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-          A sua experiencia *
+          {tr3(language, "A sua experiência *", "Your experience *", "Su experiencia *")}
         </label>
         <textarea
           value={formData.comentario}
           onChange={(e) => setFormData({ ...formData, comentario: e.target.value })}
           rows={4}
           className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
-          placeholder="Conte-nos sobre a sua experiencia com esta coudelaria..."
+          placeholder={tr3(
+            language,
+            "Conte-nos sobre a sua experiência com esta coudelaria...",
+            "Tell us about your experience with this stud farm...",
+            "Cuéntenos sobre su experiencia con esta ganadería..."
+          )}
           required
           aria-required="true"
         />
@@ -232,7 +327,12 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
           className="w-4 h-4 text-amber-600 border-[var(--border)] rounded focus:ring-amber-500"
         />
         <label htmlFor="recomenda" className="text-sm text-[var(--foreground)]">
-          Recomendo esta coudelaria
+          {tr3(
+            language,
+            "Recomendo esta coudelaria",
+            "I recommend this stud farm",
+            "Recomiendo esta ganadería"
+          )}
         </label>
       </div>
 
@@ -252,12 +352,13 @@ export default function ReviewForm({ coudelariaId, coudelariaNome, onSuccess }: 
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="w-5 h-5 animate-spin" />A submeter...
+            <Loader2 className="w-5 h-5 animate-spin" />
+            {tr3(language, "A submeter...", "Submitting...", "Enviando...")}
           </>
         ) : (
           <>
             <Send className="w-5 h-5" />
-            Submeter Avaliacao
+            {tr3(language, "Submeter Avaliação", "Submit Review", "Enviar Valoración")}
           </>
         )}
       </button>
