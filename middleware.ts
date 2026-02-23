@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { jwtVerify } from "jose";
 
 // --- Rate Limiting (Upstash Redis — serverless-safe sliding window) ---
 // Instances are inline here (not imported from lib/) because middleware runs in Edge Runtime
@@ -84,10 +85,23 @@ export async function middleware(request: NextRequest) {
 
   // API routes: Rate Limiting + CORS
   if (pathname.startsWith("/api/")) {
-    // Skip rate limiting for webhooks (Stripe needs unrestricted access)
-    const isWebhook = pathname.startsWith("/api/stripe/webhook");
+    // Skip rate limiting for webhooks and read-only public endpoints (saves Redis round-trip)
+    const skipRateLimit =
+      pathname.startsWith("/api/stripe/webhook") ||
+      (request.method === "GET" &&
+        (pathname === "/api/cavalos" ||
+          pathname === "/api/coudelarias" ||
+          pathname === "/api/eventos" ||
+          pathname === "/api/linhagens" ||
+          pathname === "/api/profissionais" ||
+          pathname === "/api/search" ||
+          pathname === "/api/reviews" ||
+          pathname === "/api/health" ||
+          pathname.startsWith("/api/coudelarias/") ||
+          pathname.startsWith("/api/eventos/") ||
+          pathname.startsWith("/api/profissionais/")));
 
-    if (!isWebhook) {
+    if (!skipRateLimit) {
       const ip = getClientIp(request);
       const isAuth = pathname.startsWith("/api/auth/login");
 
@@ -159,7 +173,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/admin/login", request.url));
       }
       const secret = new TextEncoder().encode(process.env.ADMIN_SECRET);
-      const { payload } = await (await import("jose")).jwtVerify(token, secret);
+      const { payload } = await jwtVerify(token, secret);
 
       if (!payload.email || !payload.jti) {
         return NextResponse.redirect(new URL("/admin/login", request.url));
