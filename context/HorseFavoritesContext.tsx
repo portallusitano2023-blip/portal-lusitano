@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  ReactNode,
+} from "react";
 import { useToast } from "./ToastContext";
 import { useLanguage } from "./LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -167,20 +175,19 @@ export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
     }
   }, [showToast, language, user]);
 
-  return (
-    <HorseFavoritesContext.Provider
-      value={{
-        favorites,
-        addToFavorites,
-        removeFromFavorites,
-        isFavorite,
-        clearFavorites,
-        favoritesCount: favorites.length,
-      }}
-    >
-      {children}
-    </HorseFavoritesContext.Provider>
+  const value = useMemo(
+    () => ({
+      favorites,
+      addToFavorites,
+      removeFromFavorites,
+      isFavorite,
+      clearFavorites,
+      favoritesCount: favorites.length,
+    }),
+    [favorites, addToFavorites, removeFromFavorites, isFavorite, clearFavorites]
   );
+
+  return <HorseFavoritesContext.Provider value={value}>{children}</HorseFavoritesContext.Provider>;
 }
 
 export function useHorseFavorites() {

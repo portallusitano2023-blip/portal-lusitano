@@ -253,12 +253,15 @@ export default function CoudelariaDetail({
       {/* ── Hero ── */}
       <section className="relative h-[70vh] min-h-[500px]" aria-label={coudelaria.nome}>
         {/* Background image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-          role="img"
-          aria-label={coudelaria.nome}
-        >
+        <div className="absolute inset-0">
+          <Image
+            src={heroImage}
+            alt={coudelaria.nome}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/60 to-transparent" />
           {/* Subtle vignette sides */}
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--background)]/30 via-transparent to-[var(--background)]/30" />

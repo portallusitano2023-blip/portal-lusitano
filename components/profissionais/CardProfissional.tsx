@@ -1,3 +1,4 @@
+import React from "react";
 import Image from "next/image";
 import { MapPin, Star, Phone, Sparkles, Siren, ArrowRight, Globe, Plane } from "lucide-react";
 import { BadgeVerificacao } from "./BadgeVerificacao";
@@ -12,7 +13,13 @@ function getInitials(nome: string): string {
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 }
 
-export function CardProfissional({ prof, onClick }: { prof: Profissional; onClick: () => void }) {
+export const CardProfissional = React.memo(function CardProfissional({
+  prof,
+  onClick,
+}: {
+  prof: Profissional;
+  onClick: () => void;
+}) {
   const { t } = useLanguage();
   // Encontrar o ícone da categoria a partir das constantes
   const categoriaConfig = categorias.find((c) => c.id === prof.categoria);
@@ -194,4 +201,4 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
       </div>
     </div>
   );
-}
+});

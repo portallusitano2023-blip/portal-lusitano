@@ -12,6 +12,7 @@ export default async function DirectorioPage() {
     .eq("status", "active")
     .order("destaque", { ascending: false })
     .order("ordem_destaque", { ascending: true })
+    .order("views_count", { ascending: false })
     .order("nome", { ascending: true });
 
   if (error) {

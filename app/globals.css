@@ -96,12 +96,10 @@ body {
 /* Preloader - CSS puro (sem framer-motion) */
 .preloader-line {
   transform-origin: left center;
-  will-change: transform;
   animation: preloaderLine 0.5s ease-out forwards;
 }
 .preloader-bar {
   transform-origin: left center;
-  will-change: transform;
   animation: preloaderBar 0.5s ease-out forwards;
 }
 .preloader-exit {
@@ -158,7 +156,6 @@ body {
 }
 
 .animate-auth-shake {
-  will-change: transform;
   animation: auth-shake 0.45s ease-in-out;
 }
 
@@ -589,7 +586,6 @@ body {
 }
 
 .animate-fade-in-up {
-  will-change: opacity, transform;
   animation: fade-in-up 0.5s ease-out forwards;
 }
 
@@ -734,10 +730,9 @@ body {
 .text-split-word {
   display: inline-block;
   opacity: 0;
-  /* backface-visibility prevents flickering on 3D rotateX; will-change promotes to GPU layer */
+  /* backface-visibility prevents flickering on 3D rotateX */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  will-change: opacity, transform;
   animation: wordReveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
@@ -760,11 +755,9 @@ body {
 }
 
 .clip-reveal-left {
-  will-change: clip-path;
   animation: clipRevealLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 .clip-reveal-up {
-  will-change: clip-path;
   animation: clipRevealUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
@@ -937,7 +930,6 @@ body {
   mask-composite: exclude;
   pointer-events: none;
   opacity: 0;
-  will-change: background-position, opacity;
   transition: opacity 0.4s ease;
 }
 .animated-border:hover::before {
@@ -1066,7 +1058,6 @@ body {
   width: 100%;
   transform: scaleX(0);
   transform-origin: left center;
-  will-change: transform;
 }
 .line-draw:hover::after {
   animation: drawLine 0.4s ease-out forwards;
@@ -1088,7 +1079,6 @@ body {
 
 /* Card lift on hover */
 .card-premium {
-  will-change: transform;
   transition:
     transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     box-shadow 0.4s ease;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Check,
@@ -153,289 +153,310 @@ function FAQ() {
 
 export default function PrecosContent() {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
-  const freeFeatures = [
-    {
-      text: tr(
-        "1 uso gratuito por ferramenta",
-        "1 free use per tool",
-        "1 uso gratuito por herramienta"
-      ),
-      included: true,
-    },
-    { text: tr("Resultados básicos", "Basic results", "Resultados básicos"), included: true },
-    {
-      text: tr(
-        "Acesso a todas as 4 ferramentas",
-        "Access to all 4 tools",
-        "Acceso a las 4 herramientas"
-      ),
-      included: true,
-    },
-    {
-      text: tr("Sem registo obrigatório", "No registration required", "Sin registro obligatorio"),
-      included: true,
-    },
-    {
-      text: tr("Exportar relatório PDF", "Export PDF report", "Exportar informe PDF"),
-      included: false,
-    },
-    {
-      text: tr(
-        "Guardar histórico de análises",
-        "Save analysis history",
-        "Guardar historial de análisis"
-      ),
-      included: false,
-    },
-    {
-      text: tr(
-        "Partilhar resultados com link",
-        "Share results with link",
-        "Compartir resultados con enlace"
-      ),
-      included: false,
-    },
-    { text: tr("Usos ilimitados", "Unlimited uses", "Usos ilimitados"), included: false },
-    { text: tr("Suporte prioritário", "Priority support", "Soporte prioritario"), included: false },
-  ];
+  const freeFeatures = useMemo(
+    () => [
+      {
+        text: tr(
+          "1 uso gratuito por ferramenta",
+          "1 free use per tool",
+          "1 uso gratuito por herramienta"
+        ),
+        included: true,
+      },
+      { text: tr("Resultados básicos", "Basic results", "Resultados básicos"), included: true },
+      {
+        text: tr(
+          "Acesso a todas as 4 ferramentas",
+          "Access to all 4 tools",
+          "Acceso a las 4 herramientas"
+        ),
+        included: true,
+      },
+      {
+        text: tr("Sem registo obrigatório", "No registration required", "Sin registro obligatorio"),
+        included: true,
+      },
+      {
+        text: tr("Exportar relatório PDF", "Export PDF report", "Exportar informe PDF"),
+        included: false,
+      },
+      {
+        text: tr(
+          "Guardar histórico de análises",
+          "Save analysis history",
+          "Guardar historial de análisis"
+        ),
+        included: false,
+      },
+      {
+        text: tr(
+          "Partilhar resultados com link",
+          "Share results with link",
+          "Compartir resultados con enlace"
+        ),
+        included: false,
+      },
+      { text: tr("Usos ilimitados", "Unlimited uses", "Usos ilimitados"), included: false },
+      {
+        text: tr("Suporte prioritário", "Priority support", "Soporte prioritario"),
+        included: false,
+      },
+    ],
+    [tr]
+  );
 
-  const proFeatures = [
-    {
-      text: tr(
-        "Usos ilimitados em todas as ferramentas",
-        "Unlimited uses on all tools",
-        "Usos ilimitados en todas las herramientas"
-      ),
-      included: true,
-    },
-    {
-      text: tr(
-        "Resultados detalhados e avançados",
-        "Detailed and advanced results",
-        "Resultados detallados y avanzados"
-      ),
-      included: true,
-    },
-    {
-      text: tr(
-        "Acesso a todas as 4 ferramentas",
-        "Access to all 4 tools",
-        "Acceso a las 4 herramientas"
-      ),
-      included: true,
-    },
-    {
-      text: tr(
-        "Registo com conta segura",
-        "Registration with secure account",
-        "Registro con cuenta segura"
-      ),
-      included: true,
-    },
-    {
-      text: tr("Exportar relatórios em PDF", "Export reports in PDF", "Exportar informes en PDF"),
-      included: true,
-    },
-    {
-      text: tr(
-        "Histórico completo de análises",
-        "Complete analysis history",
-        "Historial completo de análisis"
-      ),
-      included: true,
-    },
-    {
-      text: tr(
-        "Partilhar resultados com link",
-        "Share results with link",
-        "Compartir resultados con enlace"
-      ),
-      included: true,
-    },
-    {
-      text: tr(
-        "Suporte prioritário por email",
-        "Priority support by email",
-        "Soporte prioritario por email"
-      ),
-      included: true,
-    },
-  ];
+  const proFeatures = useMemo(
+    () => [
+      {
+        text: tr(
+          "Usos ilimitados em todas as ferramentas",
+          "Unlimited uses on all tools",
+          "Usos ilimitados en todas las herramientas"
+        ),
+        included: true,
+      },
+      {
+        text: tr(
+          "Resultados detalhados e avançados",
+          "Detailed and advanced results",
+          "Resultados detallados y avanzados"
+        ),
+        included: true,
+      },
+      {
+        text: tr(
+          "Acesso a todas as 4 ferramentas",
+          "Access to all 4 tools",
+          "Acceso a las 4 herramientas"
+        ),
+        included: true,
+      },
+      {
+        text: tr(
+          "Registo com conta segura",
+          "Registration with secure account",
+          "Registro con cuenta segura"
+        ),
+        included: true,
+      },
+      {
+        text: tr("Exportar relatórios em PDF", "Export reports in PDF", "Exportar informes en PDF"),
+        included: true,
+      },
+      {
+        text: tr(
+          "Histórico completo de análises",
+          "Complete analysis history",
+          "Historial completo de análisis"
+        ),
+        included: true,
+      },
+      {
+        text: tr(
+          "Partilhar resultados com link",
+          "Share results with link",
+          "Compartir resultados con enlace"
+        ),
+        included: true,
+      },
+      {
+        text: tr(
+          "Suporte prioritário por email",
+          "Priority support by email",
+          "Soporte prioritario por email"
+        ),
+        included: true,
+      },
+    ],
+    [tr]
+  );
 
-  const comparisonRows = [
-    {
-      feature: tr("Usos por ferramenta", "Uses per tool", "Usos por herramienta"),
-      free: tr("1 gratuito", "1 free", "1 gratuito"),
-      pro: tr("Ilimitado", "Unlimited", "Ilimitado"),
-    },
-    {
-      feature: tr("Calculadora de Valor", "Value Calculator", "Calculadora de Valor"),
-      free: tr("Básica", "Basic", "Básica"),
-      pro: tr("Avançada", "Advanced", "Avanzada"),
-    },
-    {
-      feature: tr("Comparador de Cavalos", "Horse Comparator", "Comparador de Caballos"),
-      free: tr("Básico", "Basic", "Básico"),
-      pro: tr("Avançado", "Advanced", "Avanzado"),
-    },
-    {
-      feature: tr(
-        "Verificador de Compatibilidade",
-        "Compatibility Checker",
-        "Verificador de Compatibilidad"
-      ),
-      free: tr("Básico", "Basic", "Básico"),
-      pro: tr("Avançado", "Advanced", "Avanzado"),
-    },
-    {
-      feature: tr("Análise de Perfil", "Profile Analysis", "Análisis de Perfil"),
-      free: tr("Básica", "Basic", "Básica"),
-      pro: tr("Avançada", "Advanced", "Avanzada"),
-    },
-    { feature: tr("Exportar PDF", "Export PDF", "Exportar PDF"), free: false, pro: true },
-    {
-      feature: tr("Histórico de análises", "Analysis history", "Historial de análisis"),
-      free: false,
-      pro: true,
-    },
-    {
-      feature: tr("Partilhar resultados", "Share results", "Compartir resultados"),
-      free: false,
-      pro: true,
-    },
-    {
-      feature: tr("Suporte prioritário", "Priority support", "Soporte prioritario"),
-      free: false,
-      pro: true,
-    },
-  ];
+  const comparisonRows = useMemo(
+    () => [
+      {
+        feature: tr("Usos por ferramenta", "Uses per tool", "Usos por herramienta"),
+        free: tr("1 gratuito", "1 free", "1 gratuito"),
+        pro: tr("Ilimitado", "Unlimited", "Ilimitado"),
+      },
+      {
+        feature: tr("Calculadora de Valor", "Value Calculator", "Calculadora de Valor"),
+        free: tr("Básica", "Basic", "Básica"),
+        pro: tr("Avançada", "Advanced", "Avanzada"),
+      },
+      {
+        feature: tr("Comparador de Cavalos", "Horse Comparator", "Comparador de Caballos"),
+        free: tr("Básico", "Basic", "Básico"),
+        pro: tr("Avançado", "Advanced", "Avanzado"),
+      },
+      {
+        feature: tr(
+          "Verificador de Compatibilidade",
+          "Compatibility Checker",
+          "Verificador de Compatibilidad"
+        ),
+        free: tr("Básico", "Basic", "Básico"),
+        pro: tr("Avançado", "Advanced", "Avanzado"),
+      },
+      {
+        feature: tr("Análise de Perfil", "Profile Analysis", "Análisis de Perfil"),
+        free: tr("Básica", "Basic", "Básica"),
+        pro: tr("Avançada", "Advanced", "Avanzada"),
+      },
+      { feature: tr("Exportar PDF", "Export PDF", "Exportar PDF"), free: false, pro: true },
+      {
+        feature: tr("Histórico de análises", "Analysis history", "Historial de análisis"),
+        free: false,
+        pro: true,
+      },
+      {
+        feature: tr("Partilhar resultados", "Share results", "Compartir resultados"),
+        free: false,
+        pro: true,
+      },
+      {
+        feature: tr("Suporte prioritário", "Priority support", "Soporte prioritario"),
+        free: false,
+        pro: true,
+      },
+    ],
+    [tr]
+  );
 
-  const tools = [
-    {
-      title: tr("Calculadora de Valor", "Value Calculator", "Calculadora de Valor"),
-      href: "/calculadora-valor",
-      icon: Calculator,
-      description: tr(
-        "Estimativa fundamentada com 20+ variáveis de mercado",
-        "Reasoned estimate with 20+ market variables",
-        "Estimación razonada con 20+ variables de mercado"
-      ),
-    },
-    {
-      title: tr("Comparador de Cavalos", "Horse Comparator", "Comparador de Caballos"),
-      href: "/comparador-cavalos",
-      icon: BarChart3,
-      description: tr(
-        "Compare até 4 cavalos lado a lado com gráficos radar",
-        "Compare up to 4 horses side by side with radar charts",
-        "Compare hasta 4 caballos con gráficos radar"
-      ),
-    },
-    {
-      title: tr(
-        "Verificador de Compatibilidade",
-        "Compatibility Checker",
-        "Verificador de Compatibilidad"
-      ),
-      href: "/verificador-compatibilidade",
-      icon: Heart,
-      description: tr(
-        "Score genético e alerta de consanguinidade",
-        "Genetic score and inbreeding alert",
-        "Puntuación genética y alerta de consanguinidad"
-      ),
-    },
-    {
-      title: tr("Análise de Perfil", "Profile Analysis", "Análisis de Perfil"),
-      href: "/analise-perfil",
-      icon: UserCheck,
-      description: tr(
-        "Descubra o seu perfil de cavaleiro ideal",
-        "Discover your ideal rider profile",
-        "Descubra su perfil de jinete ideal"
-      ),
-    },
-  ];
+  const tools = useMemo(
+    () => [
+      {
+        title: tr("Calculadora de Valor", "Value Calculator", "Calculadora de Valor"),
+        href: "/calculadora-valor",
+        icon: Calculator,
+        description: tr(
+          "Estimativa fundamentada com 20+ variáveis de mercado",
+          "Reasoned estimate with 20+ market variables",
+          "Estimación razonada con 20+ variables de mercado"
+        ),
+      },
+      {
+        title: tr("Comparador de Cavalos", "Horse Comparator", "Comparador de Caballos"),
+        href: "/comparador-cavalos",
+        icon: BarChart3,
+        description: tr(
+          "Compare até 4 cavalos lado a lado com gráficos radar",
+          "Compare up to 4 horses side by side with radar charts",
+          "Compare hasta 4 caballos con gráficos radar"
+        ),
+      },
+      {
+        title: tr(
+          "Verificador de Compatibilidade",
+          "Compatibility Checker",
+          "Verificador de Compatibilidad"
+        ),
+        href: "/verificador-compatibilidade",
+        icon: Heart,
+        description: tr(
+          "Score genético e alerta de consanguinidade",
+          "Genetic score and inbreeding alert",
+          "Puntuación genética y alerta de consanguinidad"
+        ),
+      },
+      {
+        title: tr("Análise de Perfil", "Profile Analysis", "Análisis de Perfil"),
+        href: "/analise-perfil",
+        icon: UserCheck,
+        description: tr(
+          "Descubra o seu perfil de cavaleiro ideal",
+          "Discover your ideal rider profile",
+          "Descubra su perfil de jinete ideal"
+        ),
+      },
+    ],
+    [tr]
+  );
 
-  const marketplaceFeatures = [
-    tr(
-      "Anúncio activo durante 30 dias",
-      "Active listing for 30 days",
-      "Anuncio activo durante 30 días"
-    ),
-    tr("Verificação APSL incluída", "APSL verification included", "Verificación APSL incluida"),
-    tr("Fotos ilimitadas + vídeo", "Unlimited photos + video", "Fotos ilimitadas + vídeo"),
-    tr(
-      "Contacto directo com compradores",
-      "Direct contact with buyers",
-      "Contacto directo con compradores"
-    ),
-    tr(
-      "Destaque no topo por 7 dias (+29€)",
-      "Featured at top for 7 days (+€29)",
-      "Destacado en el top 7 días (+29€)"
-    ),
-    tr("Aprovação em até 24 horas", "Approval within 24 hours", "Aprobación en hasta 24 horas"),
-  ];
+  const marketplaceFeatures = useMemo(
+    () => [
+      tr(
+        "Anúncio activo durante 30 dias",
+        "Active listing for 30 days",
+        "Anuncio activo durante 30 días"
+      ),
+      tr("Verificação APSL incluída", "APSL verification included", "Verificación APSL incluida"),
+      tr("Fotos ilimitadas + vídeo", "Unlimited photos + video", "Fotos ilimitadas + vídeo"),
+      tr(
+        "Contacto directo com compradores",
+        "Direct contact with buyers",
+        "Contacto directo con compradores"
+      ),
+      tr(
+        "Destaque no topo por 7 dias (+29€)",
+        "Featured at top for 7 days (+€29)",
+        "Destacado en el top 7 días (+29€)"
+      ),
+      tr("Aprovação em até 24 horas", "Approval within 24 hours", "Aprobación en hasta 24 horas"),
+    ],
+    [tr]
+  );
 
-  const proBenefits = [
-    {
-      icon: Zap,
-      title: tr("Usos Ilimitados", "Unlimited Uses", "Usos Ilimitados"),
-      desc: tr(
-        "Analise quantos cavalos precisar, sem restrições.",
-        "Analyse as many horses as you need, without restrictions.",
-        "Analice cuántos caballos necesite, sin restricciones."
-      ),
-    },
-    {
-      icon: Download,
-      title: tr("Relatórios PDF", "PDF Reports", "Informes PDF"),
-      desc: tr(
-        "Exporte análises profissionais para partilhar com clientes.",
-        "Export professional analyses to share with clients.",
-        "Exporte análisis profesionales para compartir con clientes."
-      ),
-    },
-    {
-      icon: History,
-      title: tr("Histórico Completo", "Complete History", "Historial Completo"),
-      desc: tr(
-        "Aceda a todas as suas análises anteriores a qualquer momento.",
-        "Access all your previous analyses at any time.",
-        "Acceda a todos sus análisis anteriores en cualquier momento."
-      ),
-    },
-    {
-      icon: Share2,
-      title: tr("Partilhar Resultados", "Share Results", "Compartir Resultados"),
-      desc: tr(
-        "Partilhe análises com link directo para compradores ou veterinários.",
-        "Share analyses with a direct link for buyers or vets.",
-        "Comparta análisis con enlace directo para compradores o veterinarios."
-      ),
-    },
-    {
-      icon: Shield,
-      title: tr("Suporte Prioritário", "Priority Support", "Soporte Prioritario"),
-      desc: tr(
-        "Resposta em menos de 24h por email.",
-        "Response within 24h by email.",
-        "Respuesta en menos de 24h por email."
-      ),
-    },
-    {
-      icon: Store,
-      title: tr("Acesso Antecipado", "Early Access", "Acceso Anticipado"),
-      desc: tr(
-        "Seja o primeiro a experimentar novas ferramentas.",
-        "Be the first to try new tools.",
-        "Sea el primero en probar nuevas herramientas."
-      ),
-    },
-  ];
+  const proBenefits = useMemo(
+    () => [
+      {
+        icon: Zap,
+        title: tr("Usos Ilimitados", "Unlimited Uses", "Usos Ilimitados"),
+        desc: tr(
+          "Analise quantos cavalos precisar, sem restrições.",
+          "Analyse as many horses as you need, without restrictions.",
+          "Analice cuántos caballos necesite, sin restricciones."
+        ),
+      },
+      {
+        icon: Download,
+        title: tr("Relatórios PDF", "PDF Reports", "Informes PDF"),
+        desc: tr(
+          "Exporte análises profissionais para partilhar com clientes.",
+          "Export professional analyses to share with clients.",
+          "Exporte análisis profesionales para compartir con clientes."
+        ),
+      },
+      {
+        icon: History,
+        title: tr("Histórico Completo", "Complete History", "Historial Completo"),
+        desc: tr(
+          "Aceda a todas as suas análises anteriores a qualquer momento.",
+          "Access all your previous analyses at any time.",
+          "Acceda a todos sus análisis anteriores en cualquier momento."
+        ),
+      },
+      {
+        icon: Share2,
+        title: tr("Partilhar Resultados", "Share Results", "Compartir Resultados"),
+        desc: tr(
+          "Partilhe análises com link directo para compradores ou veterinários.",
+          "Share analyses with a direct link for buyers or vets.",
+          "Comparta análisis con enlace directo para compradores o veterinarios."
+        ),
+      },
+      {
+        icon: Shield,
+        title: tr("Suporte Prioritário", "Priority Support", "Soporte Prioritario"),
+        desc: tr(
+          "Resposta em menos de 24h por email.",
+          "Response within 24h by email.",
+          "Respuesta en menos de 24h por email."
+        ),
+      },
+      {
+        icon: Store,
+        title: tr("Acesso Antecipado", "Early Access", "Acceso Anticipado"),
+        desc: tr(
+          "Seja o primeiro a experimentar novas ferramentas.",
+          "Be the first to try new tools.",
+          "Sea el primero en probar nuevas herramientas."
+        ),
+      },
+    ],
+    [tr]
+  );
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">

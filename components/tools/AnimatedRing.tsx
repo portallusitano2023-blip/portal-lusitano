@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 interface AnimatedRingProps {
   value: number; // 0-100
@@ -19,13 +19,28 @@ export default function AnimatedRing({
   strokeWidth = 10,
   color,
 }: AnimatedRingProps) {
-  const [animatedValue, setAnimatedValue] = useState(0);
-  const ref = useRef<SVGSVGElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const ringRef = useRef<SVGCircleElement>(null);
+  const glowRef = useRef<SVGCircleElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
   const hasAnimated = useRef(false);
+
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = (size - strokeWidth) / 2 - 4;
+  const circumference = 2 * Math.PI * radius;
+
+  const getColor = (v: number) => {
+    if (color) return color;
+    if (v >= 70) return "#22c55e";
+    if (v >= 50) return "#C5A059";
+    if (v >= 30) return "#f59e0b";
+    return "#ef4444";
+  };
 
   useEffect(() => {
     if (hasAnimated.current) return;
-    const el = ref.current;
+    const el = svgRef.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
@@ -39,7 +54,31 @@ export default function AnimatedRing({
             const elapsed = now - start;
             const progress = Math.min(elapsed / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3);
-            setAnimatedValue(eased * value);
+            const current = eased * value;
+            const currentColor = getColor(current);
+
+            // Direct DOM updates — no React re-renders
+            if (ringRef.current) {
+              ringRef.current.setAttribute(
+                "stroke-dashoffset",
+                String(circumference * (1 - current / 100))
+              );
+              ringRef.current.setAttribute("stroke", currentColor);
+              ringRef.current.style.filter = `drop-shadow(0 0 8px ${currentColor}30)`;
+            }
+
+            if (glowRef.current && current > 2) {
+              const angle = ((current / 100) * 360 - 90) * (Math.PI / 180);
+              glowRef.current.setAttribute("cx", String(cx + radius * Math.cos(angle)));
+              glowRef.current.setAttribute("cy", String(cy + radius * Math.sin(angle)));
+              glowRef.current.setAttribute("fill", currentColor);
+              glowRef.current.setAttribute("opacity", "0.4");
+            }
+
+            if (textRef.current) {
+              textRef.current.textContent = String(Math.round(current));
+            }
+
             if (progress < 1) requestAnimationFrame(animate);
           };
           requestAnimationFrame(animate);
@@ -51,29 +90,13 @@ export default function AnimatedRing({
 
     observer.observe(el);
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
-
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = (size - strokeWidth) / 2 - 4;
-  const circumference = 2 * Math.PI * radius;
-  const dashOffset = circumference * (1 - animatedValue / 100);
-
-  const getColor = (v: number) => {
-    if (color) return color;
-    if (v >= 70) return "#22c55e";
-    if (v >= 50) return "#C5A059";
-    if (v >= 30) return "#f59e0b";
-    return "#ef4444";
-  };
-
-  const ringColor = getColor(animatedValue);
-  const displayValue = Math.round(animatedValue);
 
   return (
     <div className="flex flex-col items-center">
       <div className="relative" style={{ width: size, height: size }}>
-        <svg ref={ref} width={size} height={size}>
+        <svg ref={svgRef} width={size} height={size}>
           {/* Background ring */}
           <circle
             cx={cx}
@@ -86,45 +109,40 @@ export default function AnimatedRing({
 
           {/* Animated ring */}
           <circle
+            ref={ringRef}
             cx={cx}
             cy={cy}
             r={radius}
             fill="none"
-            stroke={ringColor}
+            stroke={getColor(0)}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={circumference}
-            strokeDashoffset={dashOffset}
+            strokeDashoffset={circumference}
             transform={`rotate(-90 ${cx} ${cy})`}
-            style={{
-              filter: `drop-shadow(0 0 8px ${ringColor}30)`,
-              transition: "stroke 0.3s ease",
-            }}
+            style={{ transition: "stroke 0.3s ease" }}
           />
 
           {/* Subtle glow at the tip */}
-          {animatedValue > 2 &&
-            (() => {
-              const angle = ((animatedValue / 100) * 360 - 90) * (Math.PI / 180);
-              const tipX = cx + radius * Math.cos(angle);
-              const tipY = cy + radius * Math.sin(angle);
-              return (
-                <circle
-                  cx={tipX}
-                  cy={tipY}
-                  r={strokeWidth * 0.6}
-                  fill={ringColor}
-                  opacity={0.4}
-                  style={{ filter: `blur(${strokeWidth * 0.4}px)` }}
-                />
-              );
-            })()}
+          <circle
+            ref={glowRef}
+            cx={cx}
+            cy={cy - radius}
+            r={strokeWidth * 0.6}
+            fill="transparent"
+            opacity={0}
+            style={{ filter: `blur(${strokeWidth * 0.4}px)` }}
+          />
         </svg>
 
         {/* Center content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-serif font-bold text-white" style={{ fontSize: size * 0.22 }}>
-            {displayValue}
+          <span
+            ref={textRef}
+            className="font-serif font-bold text-white"
+            style={{ fontSize: size * 0.22 }}
+          >
+            0
           </span>
           {label && (
             <span

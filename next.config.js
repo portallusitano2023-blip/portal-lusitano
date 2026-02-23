@@ -151,6 +151,11 @@ const nextConfig = {
         destination: "/comprar",
         permanent: true,
       },
+      {
+        source: "/coudelarias",
+        destination: "/directorio",
+        permanent: true,
+      },
     ];
   },
 

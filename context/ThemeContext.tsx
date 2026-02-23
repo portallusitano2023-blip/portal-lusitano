@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  type ReactNode,
+} from "react";
 
 type Theme = "dark" | "light";
 
@@ -33,7 +41,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     document.documentElement.classList.toggle("light", theme === "light");
   }, [theme]);
 
-  function toggleTheme() {
+  const toggleTheme = useCallback(() => {
     setTheme((prev) => {
       const next = prev === "dark" ? "light" : "dark";
       localStorage.setItem("portal-lusitano-theme", next);
@@ -41,9 +49,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       document.documentElement.classList.toggle("light", next === "light");
       return next;
     });
-  }
+  }, []);
 
-  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
+  const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme]);
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -39,183 +40,198 @@ function OrnamentalSeparator() {
 
 export default function SobreContent() {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
-  const values = [
-    {
-      icon: Shield,
-      title: tr("Rigor", "Rigour", "Rigor"),
-      desc: tr(
-        "Cada facto publicado é verificado em fontes credíveis. Preferimos ter menos informação do que informação errada.",
-        "Every fact published is verified from credible sources. We prefer less information over wrong information.",
-        "Cada hecho publicado es verificado en fuentes creíbles. Preferimos menos información que información errónea."
-      ),
-    },
-    {
-      icon: BookOpen,
-      title: tr("Conhecimento", "Knowledge", "Conocimiento"),
-      desc: tr(
-        "Arquivo editorial com investigação profunda sobre a história, genética e arte equestre do Lusitano.",
-        "Editorial archive with deep research on the history, genetics and equestrian art of the Lusitano.",
-        "Archivo editorial con investigación profunda sobre la historia, genética y arte ecuestre del Lusitano."
-      ),
-    },
-    {
-      icon: Crown,
-      title: tr("Tradição", "Tradition", "Tradición"),
-      desc: tr(
-        "Honramos 500 anos de criação equestre portuguesa, preservando o legado das grandes coudelarias.",
-        "We honour 500 years of Portuguese horse breeding, preserving the legacy of the great stud farms.",
-        "Honramos 500 años de cría ecuestre portuguesa, preservando el legado de los grandes establos."
-      ),
-    },
-    {
-      icon: Globe,
-      title: tr("Acessibilidade", "Accessibility", "Accesibilidad"),
-      desc: tr(
-        "Ferramentas gratuitas e conteúdo trilingue para que o conhecimento sobre o Lusitano chegue a todos.",
-        "Free tools and trilingual content so that knowledge about the Lusitano reaches everyone.",
-        "Herramientas gratuitas y contenido trilingüe para que el conocimiento sobre el Lusitano llegue a todos."
-      ),
-    },
-  ];
+  const values = useMemo(
+    () => [
+      {
+        icon: Shield,
+        title: tr("Rigor", "Rigour", "Rigor"),
+        desc: tr(
+          "Cada facto publicado é verificado em fontes credíveis. Preferimos ter menos informação do que informação errada.",
+          "Every fact published is verified from credible sources. We prefer less information over wrong information.",
+          "Cada hecho publicado es verificado en fuentes creíbles. Preferimos menos información que información errónea."
+        ),
+      },
+      {
+        icon: BookOpen,
+        title: tr("Conhecimento", "Knowledge", "Conocimiento"),
+        desc: tr(
+          "Arquivo editorial com investigação profunda sobre a história, genética e arte equestre do Lusitano.",
+          "Editorial archive with deep research on the history, genetics and equestrian art of the Lusitano.",
+          "Archivo editorial con investigación profunda sobre la historia, genética y arte ecuestre del Lusitano."
+        ),
+      },
+      {
+        icon: Crown,
+        title: tr("Tradição", "Tradition", "Tradición"),
+        desc: tr(
+          "Honramos 500 anos de criação equestre portuguesa, preservando o legado das grandes coudelarias.",
+          "We honour 500 years of Portuguese horse breeding, preserving the legacy of the great stud farms.",
+          "Honramos 500 años de cría ecuestre portuguesa, preservando el legado de los grandes establos."
+        ),
+      },
+      {
+        icon: Globe,
+        title: tr("Acessibilidade", "Accessibility", "Accesibilidad"),
+        desc: tr(
+          "Ferramentas gratuitas e conteúdo trilingue para que o conhecimento sobre o Lusitano chegue a todos.",
+          "Free tools and trilingual content so that knowledge about the Lusitano reaches everyone.",
+          "Herramientas gratuitas y contenido trilingüe para que el conocimiento sobre el Lusitano llegue a todos."
+        ),
+      },
+    ],
+    [tr]
+  );
 
-  const features: {
-    icon: LucideIcon;
-    title: string;
-    desc: string;
-    href: string;
-  }[] = [
-    {
-      icon: Store,
-      title: tr("Marketplace de Cavalos", "Horse Marketplace", "Mercado de Caballos"),
-      desc: tr(
-        "Compra e venda de cavalos Lusitanos com fichas técnicas detalhadas.",
-        "Buy and sell Lusitano horses with detailed technical sheets.",
-        "Compra y venta de caballos Lusitanos con fichas técnicas detalladas."
-      ),
-      href: "/comprar",
-    },
-    {
-      icon: Building2,
-      title: tr("Directório de Coudelarias", "Stud Farm Directory", "Directorio de Caballerizas"),
-      desc: tr(
-        "As melhores coudelarias de Portugal, com perfis completos e avaliações.",
-        "The best stud farms in Portugal, with complete profiles and reviews.",
-        "Las mejores caballerizas de Portugal, con perfiles completos y valoraciones."
-      ),
-      href: "/directorio",
-    },
-    {
-      icon: Wrench,
-      title: tr("Ferramentas Equestres", "Equestrian Tools", "Herramientas Ecuestres"),
-      desc: tr(
-        "Calculadora de valor, comparador, verificador de compatibilidade e análise de perfil.",
-        "Value calculator, comparator, compatibility checker and profile analysis.",
-        "Calculadora de valor, comparador, verificador de compatibilidad y análisis de perfil."
-      ),
-      href: "/ferramentas",
-    },
-    {
-      icon: BookOpen,
-      title: tr("Jornal & Arquivo", "Journal & Archive", "Diario & Archivo"),
-      desc: tr(
-        "Artigos de investigação, crónicas e o maior arquivo digital sobre o cavalo Lusitano.",
-        "Research articles, chronicles and the largest digital archive about the Lusitano horse.",
-        "Artículos de investigación, crónicas y el mayor archivo digital sobre el caballo Lusitano."
-      ),
-      href: "/jornal",
-    },
-    {
-      icon: ShoppingCart,
-      title: tr("Loja Equestre", "Equestrian Shop", "Tienda Ecuestre"),
-      desc: tr(
-        "Vestuário e acessórios que celebram a herança equestre portuguesa.",
-        "Clothing and accessories that celebrate Portuguese equestrian heritage.",
-        "Ropa y accesorios que celebran el patrimonio ecuestre portugués."
-      ),
-      href: "/loja",
-    },
-    {
-      icon: Users,
-      title: tr("Comunidade", "Community", "Comunidad"),
-      desc: tr(
-        "Rede de cavaleiros, criadores, veterinários e profissionais do sector.",
-        "Network of riders, breeders, veterinarians and industry professionals.",
-        "Red de jinetes, criadores, veterinarios y profesionales del sector."
-      ),
-      href: "/registar",
-    },
-  ];
+  const features = useMemo(
+    (): {
+      icon: LucideIcon;
+      title: string;
+      desc: string;
+      href: string;
+    }[] => [
+      {
+        icon: Store,
+        title: tr("Marketplace de Cavalos", "Horse Marketplace", "Mercado de Caballos"),
+        desc: tr(
+          "Compra e venda de cavalos Lusitanos com fichas técnicas detalhadas.",
+          "Buy and sell Lusitano horses with detailed technical sheets.",
+          "Compra y venta de caballos Lusitanos con fichas técnicas detalladas."
+        ),
+        href: "/comprar",
+      },
+      {
+        icon: Building2,
+        title: tr("Directório de Coudelarias", "Stud Farm Directory", "Directorio de Caballerizas"),
+        desc: tr(
+          "As melhores coudelarias de Portugal, com perfis completos e avaliações.",
+          "The best stud farms in Portugal, with complete profiles and reviews.",
+          "Las mejores caballerizas de Portugal, con perfiles completos y valoraciones."
+        ),
+        href: "/directorio",
+      },
+      {
+        icon: Wrench,
+        title: tr("Ferramentas Equestres", "Equestrian Tools", "Herramientas Ecuestres"),
+        desc: tr(
+          "Calculadora de valor, comparador, verificador de compatibilidade e análise de perfil.",
+          "Value calculator, comparator, compatibility checker and profile analysis.",
+          "Calculadora de valor, comparador, verificador de compatibilidad y análisis de perfil."
+        ),
+        href: "/ferramentas",
+      },
+      {
+        icon: BookOpen,
+        title: tr("Jornal & Arquivo", "Journal & Archive", "Diario & Archivo"),
+        desc: tr(
+          "Artigos de investigação, crónicas e o maior arquivo digital sobre o cavalo Lusitano.",
+          "Research articles, chronicles and the largest digital archive about the Lusitano horse.",
+          "Artículos de investigación, crónicas y el mayor archivo digital sobre el caballo Lusitano."
+        ),
+        href: "/jornal",
+      },
+      {
+        icon: ShoppingCart,
+        title: tr("Loja Equestre", "Equestrian Shop", "Tienda Ecuestre"),
+        desc: tr(
+          "Vestuário e acessórios que celebram a herança equestre portuguesa.",
+          "Clothing and accessories that celebrate Portuguese equestrian heritage.",
+          "Ropa y accesorios que celebran el patrimonio ecuestre portugués."
+        ),
+        href: "/loja",
+      },
+      {
+        icon: Users,
+        title: tr("Comunidade", "Community", "Comunidad"),
+        desc: tr(
+          "Rede de cavaleiros, criadores, veterinários e profissionais do sector.",
+          "Network of riders, breeders, veterinarians and industry professionals.",
+          "Red de jinetes, criadores, veterinarios y profesionales del sector."
+        ),
+        href: "/registar",
+      },
+    ],
+    [tr]
+  );
 
-  const stats = [
-    {
-      value: "15",
-      label: tr("Cavalos documentados", "Documented horses", "Caballos documentados"),
-    },
-    {
-      value: "4",
-      label: tr("Ferramentas especializadas", "Specialist tools", "Herramientas especializadas"),
-    },
-    { value: "3", label: tr("Línguas", "Languages", "Idiomas") },
-    { value: "2023", label: tr("Ano de fundação", "Founded", "Año de fundación") },
-  ];
+  const stats = useMemo(
+    () => [
+      {
+        value: "15",
+        label: tr("Cavalos documentados", "Documented horses", "Caballos documentados"),
+      },
+      {
+        value: "4",
+        label: tr("Ferramentas especializadas", "Specialist tools", "Herramientas especializadas"),
+      },
+      { value: "3", label: tr("Línguas", "Languages", "Idiomas") },
+      { value: "2023", label: tr("Ano de fundação", "Founded", "Año de fundación") },
+    ],
+    [tr]
+  );
 
-  const principles = [
-    tr("Informação verificada", "Verified information", "Información verificada"),
-    tr("Trilingue PT / EN / ES", "Trilingual PT / EN / ES", "Trilingüe PT / EN / ES"),
-    tr("Ferramentas gratuitas", "Free tools", "Herramientas gratuitas"),
-    tr("Comunidade aberta", "Open community", "Comunidad abierta"),
-    tr("Sem anúncios invasivos", "No invasive ads", "Sin anuncios invasivos"),
-  ];
+  const principles = useMemo(
+    () => [
+      tr("Informação verificada", "Verified information", "Información verificada"),
+      tr("Trilingue PT / EN / ES", "Trilingual PT / EN / ES", "Trilingüe PT / EN / ES"),
+      tr("Ferramentas gratuitas", "Free tools", "Herramientas gratuitas"),
+      tr("Comunidade aberta", "Open community", "Comunidad abierta"),
+      tr("Sem anúncios invasivos", "No invasive ads", "Sin anuncios invasivos"),
+    ],
+    [tr]
+  );
 
-  const audience: { icon: LucideIcon; title: string; desc: string }[] = [
-    {
-      icon: Search,
-      title: tr("Compradores", "Buyers", "Compradores"),
-      desc: tr(
-        "Ferramentas precisas para encontrar e avaliar o cavalo ideal.",
-        "Precise tools to find and evaluate the ideal horse.",
-        "Herramientas precisas para encontrar y evaluar el caballo ideal."
-      ),
-    },
-    {
-      icon: Building2,
-      title: tr("Criadores", "Breeders", "Criadores"),
-      desc: tr(
-        "Promove a tua coudelaria para compradores nacionais e internacionais.",
-        "Promote your stud farm to national and international buyers.",
-        "Promociona tu caballeriza para compradores nacionales e internacionales."
-      ),
-    },
-    {
-      icon: Trophy,
-      title: tr("Cavaleiros", "Riders", "Jinetes"),
-      desc: tr(
-        "Mantém-te a par da actualidade equestre lusitana.",
-        "Stay up to date with Lusitano equestrian news.",
-        "Mantente al tanto de la actualidad ecuestre lusitana."
-      ),
-    },
-    {
-      icon: Briefcase,
-      title: tr("Profissionais", "Professionals", "Profesionales"),
-      desc: tr(
-        "Ganha visibilidade no directório de profissionais equestres.",
-        "Gain visibility in the equestrian professionals directory.",
-        "Gana visibilidad en el directorio de profesionales ecuestres."
-      ),
-    },
-    {
-      icon: Globe,
-      title: tr("Internacional", "International", "Internacional"),
-      desc: tr(
-        "Descobre o património equestre português em três línguas.",
-        "Discover Portuguese equestrian heritage in three languages.",
-        "Descubre el patrimonio ecuestre portugués en español."
-      ),
-    },
-  ];
+  const audience = useMemo(
+    (): { icon: LucideIcon; title: string; desc: string }[] => [
+      {
+        icon: Search,
+        title: tr("Compradores", "Buyers", "Compradores"),
+        desc: tr(
+          "Ferramentas precisas para encontrar e avaliar o cavalo ideal.",
+          "Precise tools to find and evaluate the ideal horse.",
+          "Herramientas precisas para encontrar y evaluar el caballo ideal."
+        ),
+      },
+      {
+        icon: Building2,
+        title: tr("Criadores", "Breeders", "Criadores"),
+        desc: tr(
+          "Promove a tua coudelaria para compradores nacionais e internacionais.",
+          "Promote your stud farm to national and international buyers.",
+          "Promociona tu caballeriza para compradores nacionales e internacionales."
+        ),
+      },
+      {
+        icon: Trophy,
+        title: tr("Cavaleiros", "Riders", "Jinetes"),
+        desc: tr(
+          "Mantém-te a par da actualidade equestre lusitana.",
+          "Stay up to date with Lusitano equestrian news.",
+          "Mantente al tanto de la actualidad ecuestre lusitana."
+        ),
+      },
+      {
+        icon: Briefcase,
+        title: tr("Profissionais", "Professionals", "Profesionales"),
+        desc: tr(
+          "Ganha visibilidade no directório de profissionais equestres.",
+          "Gain visibility in the equestrian professionals directory.",
+          "Gana visibilidad en el directorio de profesionales ecuestres."
+        ),
+      },
+      {
+        icon: Globe,
+        title: tr("Internacional", "International", "Internacional"),
+        desc: tr(
+          "Descobre o património equestre português em três línguas.",
+          "Discover Portuguese equestrian heritage in three languages.",
+          "Descubre el patrimonio ecuestre portugués en español."
+        ),
+      },
+    ],
+    [tr]
+  );
 
   return (
     <main className="min-h-screen bg-[var(--background)] pt-32 pb-20">

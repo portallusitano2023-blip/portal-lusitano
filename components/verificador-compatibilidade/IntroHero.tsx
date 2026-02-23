@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Dna, AlertTriangle, Palette, ChevronRight, Info } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -15,13 +16,14 @@ export default function IntroHero({ onStart }: IntroHeroProps) {
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-30"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1598974357801-cbca100e65d3?q=80&w=1920')",
-              backgroundPosition: "center 40%",
-            }}
+          <Image
+            src="https://images.unsplash.com/photo-1598974357801-cbca100e65d3?q=80&w=1920"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover opacity-30"
+            style={{ objectPosition: "center 40%" }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/80 to-black/60" />
         </div>

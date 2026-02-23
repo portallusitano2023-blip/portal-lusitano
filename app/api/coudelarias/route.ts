@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
       .eq("status", "active")
       .order("destaque", { ascending: false })
       .order("ordem_destaque", { ascending: true })
+      .order("views_count", { ascending: false })
       .order("nome", { ascending: true });
 
     if (regiao && regiao !== "Todas") {

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Calculator, Dna, ChevronRight, Info, BarChart3, Globe } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -16,13 +17,14 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-40"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1920&auto=format&fit=crop')",
-              backgroundPosition: "center 30%",
-            }}
+          <Image
+            src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1920&auto=format&fit=crop"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover opacity-40"
+            style={{ objectPosition: "center 30%" }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/70 to-black/50" />
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--background)]/50 via-transparent to-[var(--background)]/50" />

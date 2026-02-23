@@ -31,7 +31,7 @@ const STATIC_PAGES: Array<{ title_pt: string; title_en: string; url: string; key
     {
       title_pt: "Coudelarias",
       title_en: "Stud Farms",
-      url: "/coudelarias",
+      url: "/directorio",
       keywords: ["coudelarias", "studs", "criadores"],
     },
     {

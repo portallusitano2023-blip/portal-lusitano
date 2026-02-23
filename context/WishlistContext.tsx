@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  ReactNode,
+} from "react";
 import { useToast } from "./ToastContext";
 import { useLanguage } from "./LanguageContext";
 
@@ -44,8 +52,14 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
-  const addToWishlist = (item: WishlistItem) => {
-    if (!isInWishlist(item.id)) {
+  const isInWishlist = useCallback(
+    (id: string) => wishlist.some((item) => item.id === id),
+    [wishlist]
+  );
+
+  const addToWishlist = useCallback(
+    (item: WishlistItem) => {
+      if (wishlist.some((i) => i.id === item.id)) return;
       setWishlist((prev) => [...prev, item]);
       showToast(
         "success",
@@ -53,37 +67,36 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
           ? `${item.title} adicionado aos favoritos`
           : `${item.title} added to wishlist`
       );
-    }
-  };
-
-  const removeFromWishlist = (id: string) => {
-    const item = wishlist.find((i) => i.id === id);
-    setWishlist((prev) => prev.filter((i) => i.id !== id));
-    if (item) {
-      showToast(
-        "info",
-        language === "pt"
-          ? `${item.title} removido dos favoritos`
-          : `${item.title} removed from wishlist`
-      );
-    }
-  };
-
-  const isInWishlist = (id: string) => {
-    return wishlist.some((item) => item.id === id);
-  };
-
-  const clearWishlist = () => {
-    setWishlist([]);
-  };
-
-  return (
-    <WishlistContext.Provider
-      value={{ wishlist, addToWishlist, removeFromWishlist, isInWishlist, clearWishlist }}
-    >
-      {children}
-    </WishlistContext.Provider>
+    },
+    [wishlist, showToast, language]
   );
+
+  const removeFromWishlist = useCallback(
+    (id: string) => {
+      const item = wishlist.find((i) => i.id === id);
+      setWishlist((prev) => prev.filter((i) => i.id !== id));
+      if (item) {
+        showToast(
+          "info",
+          language === "pt"
+            ? `${item.title} removido dos favoritos`
+            : `${item.title} removed from wishlist`
+        );
+      }
+    },
+    [wishlist, showToast, language]
+  );
+
+  const clearWishlist = useCallback(() => {
+    setWishlist([]);
+  }, []);
+
+  const value = useMemo(
+    () => ({ wishlist, addToWishlist, removeFromWishlist, isInWishlist, clearWishlist }),
+    [wishlist, addToWishlist, removeFromWishlist, isInWishlist, clearWishlist]
+  );
+
+  return <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>;
 }
 
 export function useWishlist() {

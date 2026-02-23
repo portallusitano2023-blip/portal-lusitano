@@ -138,8 +138,8 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
     setSelectedRegiao("Todas");
   }, []);
 
-  // Client-side filtering + split in a single memo pass
-  const filterResult = useMemo(() => {
+  // Client-side filtering
+  const filtered = useMemo(() => {
     let result = coudelarias;
     if (selectedRegiao !== "Todas") {
       result = result.filter((c) => c.regiao === selectedRegiao);
@@ -153,20 +153,16 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
           c.descricao?.toLowerCase().includes(term)
       );
     }
-    return {
-      filtered: result,
-      destaqueCoudelarias: result.filter((c) => c.destaque),
-      normalCoudelarias: result.filter((c) => !c.destaque),
-    };
+    return result;
   }, [coudelarias, selectedRegiao, debouncedSearch]);
 
   // Defer grid re-render so filter inputs stay responsive during heavy lists
-  const { filtered, destaqueCoudelarias, normalCoudelarias } = useDeferredValue(filterResult);
+  const deferredFiltered = useDeferredValue(filtered);
 
   // Pagination
-  const totalPaginas = Math.ceil(normalCoudelarias.length / ITENS_POR_PAGINA);
+  const totalPaginas = Math.ceil(deferredFiltered.length / ITENS_POR_PAGINA);
   const inicio = (currentPage - 1) * ITENS_POR_PAGINA;
-  const normalPaginadas = normalCoudelarias.slice(inicio, inicio + ITENS_POR_PAGINA);
+  const paginadas = deferredFiltered.slice(inicio, inicio + ITENS_POR_PAGINA);
 
   const handlePageChange = useCallback(
     (page: number) => {
@@ -327,8 +323,8 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
             {hasActiveFilters && (
               <div className="flex items-center justify-between pt-1">
                 <p className="text-sm text-[var(--foreground-muted)]">
-                  {`${filtered.length} ${
-                    filtered.length === 1
+                  {`${deferredFiltered.length} ${
+                    deferredFiltered.length === 1
                       ? t.directorio.coudelaria_single
                       : t.directorio.coudelarias_plural
                   }`}
@@ -345,54 +341,25 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
         </AnimateOnScroll>
 
         {/* ── Results ── */}
-        <div className="space-y-16">
-          {/* Featured */}
-          {destaqueCoudelarias.length > 0 && (
-            <section aria-label={t.directorio.featured}>
-              <AnimateOnScroll>
-                <div className="flex items-center gap-3 mb-8">
-                  <span className="w-px h-6 bg-[var(--gold)]" aria-hidden="true" />
-                  <Star className="text-[var(--gold)]" size={20} aria-hidden="true" />
-                  <h2 className="text-2xl font-serif text-[var(--foreground)]">
-                    {t.directorio.featured}
-                  </h2>
-                </div>
-              </AnimateOnScroll>
-              <div className="grid lg:grid-cols-2 gap-8">
-                {destaqueCoudelarias.map((c, i) => (
-                  <FeaturedCard key={c.id} coudelaria={c} index={i} t={t} />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Normal */}
-          {normalCoudelarias.length > 0 && (
-            <section aria-label={t.directorio.others}>
+        <div className="space-y-12">
+          {paginadas.length > 0 && (
+            <section aria-label={t.directorio.coudelarias}>
               <AnimateOnScroll>
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-3">
-                    <span className="w-px h-6 bg-[var(--border)]" aria-hidden="true" />
-                    <Users
-                      className="text-[var(--foreground-secondary)]"
-                      size={20}
-                      aria-hidden="true"
-                    />
-                    <h2 className="text-2xl font-serif text-[var(--foreground-secondary)]">
-                      {t.directorio.others}
+                    <span className="w-px h-6 bg-[var(--gold)]" aria-hidden="true" />
+                    <Crown className="text-[var(--gold)]" size={20} aria-hidden="true" />
+                    <h2 className="text-2xl font-serif text-[var(--foreground)]">
+                      {t.directorio.coudelarias}
                       <span className="text-[var(--foreground-muted)] text-base font-normal ml-3">
-                        ({normalCoudelarias.length}{" "}
-                        {normalCoudelarias.length === 1
-                          ? t.directorio.coudelaria_single
-                          : t.directorio.coudelarias_plural}
-                        )
+                        ({deferredFiltered.length})
                       </span>
                     </h2>
                   </div>
                 </div>
               </AnimateOnScroll>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {normalPaginadas.map((c, i) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {paginadas.map((c, i) => (
                   <CoudelariaCard key={c.id} coudelaria={c} index={i} t={t} />
                 ))}
               </div>
@@ -406,7 +373,7 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
           )}
 
           {/* Empty state */}
-          {filtered.length === 0 && (
+          {deferredFiltered.length === 0 && (
             <AnimateOnScroll>
               <div className="text-center py-24">
                 <div

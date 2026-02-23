@@ -77,15 +77,16 @@ const linhagens: Linhagem[] = [
     // FONTE: https://www.equilife.world/ (Equilife World)
     // FONTE: https://interagro.com.br (Interagro Lusitanos)
     // FONTE: http://www.lusitanocollection.com/novi.htm (Novilheiro)
+    // FONTE: Texto histórico oficial da Coudelaria Veiga (partilhado pelo proprietário)
     id: "veiga",
     nome: "Veiga",
     descricao:
-      "A linhagem Veiga é a mais emblemática e reconhecível do Lusitano, com cavalos compactos, ágeis e de bravura notável. Fundada no início do século XIX, produziu alguns dos cavalos mais célebres da raça.",
+      "A linhagem Veiga é a mais emblemática e reconhecível do Lusitano, com cavalos compactos, ágeis e de bravura notável. Fundada há mais de 220 anos na Quinta da Broa, produziu alguns dos cavalos mais célebres da raça.",
     historiaCompleta: [
-      "A linhagem Veiga tem origem na Quinta da Broa, em Azinhaga (Ribatejo), fundada por Rafael José da Cunha há mais de 180 anos. O programa de criação foi desenvolvido com base em dois garanhões Alter Real doados pelo Rei D. Fernando II.",
-      "Manuel Veiga Tavares, bisneto do fundador, continuou o programa, dando origem à famosa marca 'MV'. A linhagem consolidou-se com o garanhão Agareno (nascido em 1931), filho de Lidador e Bagocha, que se tornou um dos seis Chefes de Linhagem oficiais do Puro Sangue Lusitano.",
+      "A Coudelaria Veiga, com sede na Quinta da Broa, Azinhaga do Ribatejo, foi fundada há mais de 220 anos por Rafael José da Cunha, o denominado Príncipe dos Lavradores Portugueses. De entre os reprodutores contam-se dois garanhões de sangue Alter, oferecidos por D. Fernando II e pelo seu filho D. Pedro V quando visitaram a Quinta da Broa.",
+      "Por herança familiar, a coudelaria foi herdada pelo Eng.º Manuel Tavares Veiga, sobrinho-bisneto de Rafael José da Cunha. O trabalho que desenvolveu foi notável, sendo justamente considerado o iniciador do novo ciclo do ginete lusitano em Portugal. Seleccionou animais cujas características melhor correspondiam à funcionalidade guerreira exigida aos cavalos de toureio, usando cruzamentos consanguíneos para fixar as características da raça. A linhagem consolidou-se com os garanhões Lidador, Agareno (nascido em 1931), Berber e Sultão. Agareno tornou-se um dos seis Chefes de Linhagem oficiais do Puro Sangue Lusitano.",
       "O cruzamento histórico do garanhão Firme (da coudelaria Andrade) com éguas Veiga produziu quatro dos cavalos mais famosos do século XX: Novilheiro, Nilo, Neptuno e Opus II — criando a chamada 'fórmula de ouro' do Lusitano moderno.",
-      "Hoje, a influência Veiga está presente em praticamente todas as coudelarias de referência do mundo.",
+      "Após a morte do Eng.º Manuel Tavares Veiga, os seus netos Manuel e Carlos Tavares Veiga e o bisneto Manuel de Castro Tavares Veiga mantiveram a coudelaria com a qualidade inicial. Hoje, a influência Veiga está presente em praticamente todas as coudelarias de referência do mundo.",
     ],
     origem: "Quinta da Broa, Azinhaga, Ribatejo",
     fundador: "Rafael José da Cunha",

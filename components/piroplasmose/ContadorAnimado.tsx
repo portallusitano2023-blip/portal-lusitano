@@ -1,11 +1,10 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
-// Contador animado - requestAnimationFrame nativo (sem dependencia framer-motion)
+// Contador animado - requestAnimationFrame nativo com DOM directo (sem re-renders React)
 export function ContadorAnimado({ valor, cor }: { valor: string; cor: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [displayVal, setDisplayVal] = useState("0");
   const hasAnimated = useRef(false);
   const match = valor.match(/(\d+\.?\d*)/);
   const num = match ? parseFloat(match[1]) : 0;
@@ -16,6 +15,9 @@ export function ContadorAnimado({ valor, cor }: { valor: string; cor: string }) 
   useEffect(() => {
     const el = ref.current;
     if (!el || hasAnimated.current || !num) return;
+    const span = el.querySelector("[data-counter]") as HTMLSpanElement | null;
+    if (!span) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated.current) {
@@ -27,7 +29,7 @@ export function ContadorAnimado({ valor, cor }: { valor: string; cor: string }) 
             const progress = Math.min(elapsed / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3);
             const current = num * eased;
-            setDisplayVal(hasDecimal ? current.toFixed(1) : Math.round(current).toString());
+            span.textContent = hasDecimal ? current.toFixed(1) : Math.round(current).toString();
             if (progress < 1) requestAnimationFrame(tick);
           };
           requestAnimationFrame(tick);
@@ -50,7 +52,7 @@ export function ContadorAnimado({ valor, cor }: { valor: string; cor: string }) 
   return (
     <div ref={ref} className={`text-xl sm:text-2xl font-bold ${cor} tabular-nums`}>
       {prefix}
-      {displayVal}
+      <span data-counter>0</span>
       {suffix}
     </div>
   );
