@@ -113,6 +113,7 @@ export function ModalProfissional({
                 width={80}
                 height={80}
                 className="w-20 h-20 rounded-xl object-cover"
+                loading="lazy"
               />
             ) : (
               <div className="w-20 h-20 bg-gradient-to-br from-[var(--gold)]/40 to-[var(--background-card)] rounded-xl flex items-center justify-center text-3xl font-serif text-[var(--gold)]">

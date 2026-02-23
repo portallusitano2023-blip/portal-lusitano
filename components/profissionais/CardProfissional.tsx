@@ -36,6 +36,7 @@ export function CardProfissional({ prof, onClick }: { prof: Profissional; onClic
                 width={56}
                 height={56}
                 className="w-14 h-14 rounded-xl object-cover"
+                loading="lazy"
               />
             ) : (
               <div className="w-14 h-14 bg-gradient-to-br from-[var(--gold)]/20 to-[var(--background-elevated)] rounded-xl flex items-center justify-center text-lg font-serif font-medium text-[var(--gold)] select-none">

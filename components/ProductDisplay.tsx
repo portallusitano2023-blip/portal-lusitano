@@ -60,7 +60,6 @@ export default function ProductDisplay({ product }: { product: Product }) {
             priority
             placeholder="blur"
             blurDataURL={BLUR_DATA_URL}
-            unoptimized
           />
         </div>
 
@@ -81,7 +80,6 @@ export default function ProductDisplay({ product }: { product: Product }) {
                   sizes="80px"
                   className="object-cover"
                   loading="lazy"
-                  unoptimized
                 />
               </button>
             ))}

@@ -346,11 +346,12 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
       {/* Grid or empty state */}
       {filteredAndSorted.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
-          {filteredAndSorted.map((horse) => (
+          {filteredAndSorted.map((horse, index) => (
             <HorseCard
               key={horse.id}
               horse={horse}
               href={`/comprar/${horse.id}${isDev ? "?dev=true" : ""}`}
+              priority={index < 4}
             />
           ))}
         </div>

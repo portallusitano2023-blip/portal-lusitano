@@ -42,7 +42,18 @@ const nextConfig = {
 
   // Keep heavy server-only packages out of the client bundle.
   // These are only used in API routes / server components.
-  serverExternalPackages: ["@react-pdf/renderer", "resend", "sanitize-html", "sharp"],
+  serverExternalPackages: [
+    "@react-pdf/renderer",
+    "resend",
+    "sanitize-html",
+    "sharp",
+    "jspdf",
+    "jspdf-autotable",
+    "html2canvas",
+    "sanity",
+    "next-sanity",
+    "@sanity/vision",
+  ],
 
   images: {
     remotePatterns: [

@@ -72,7 +72,6 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                     sizes="(max-width: 768px) 100vw, 520px"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     priority
-                    unoptimized
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-xs uppercase tracking-widest">
@@ -126,7 +125,6 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 380px"
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                         priority={index < 2}
-                        unoptimized
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-xs uppercase tracking-widest">

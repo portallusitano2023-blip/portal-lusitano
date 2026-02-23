@@ -273,6 +273,7 @@ export default function CavaloPage({ params }: { params: Promise<{ slug: string 
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover transition-all duration-500"
+                  priority
                 />
               )}
             </div>
