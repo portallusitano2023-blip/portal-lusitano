@@ -47,6 +47,7 @@ export interface SanityArticle {
   bodyEn?: SanityBlock[];
   author?: {
     name: string;
+    bio?: string;
     image?: { asset: { url: string } };
   };
   categories?: Array<{
@@ -116,6 +117,7 @@ const ARTICLE_DETAIL_QUERY = `*[_type == "artigo" && slug.current == $slug][0] {
   bodyEn,
   "author": author-> {
     name,
+    bio,
     "image": image { asset-> { url } }
   },
   "categories": categories[]-> {
