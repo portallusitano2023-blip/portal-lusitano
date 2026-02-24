@@ -46,6 +46,8 @@ export const metadata: Metadata = {
 export default function LojaLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      {/* Shopify preconnect — only needed for loja pages */}
+      <link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="anonymous" />
       <BreadcrumbSchema
         items={[
           { name: "Portal Lusitano", url: siteUrl },

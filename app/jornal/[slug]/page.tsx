@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchArticleBySlug, fetchRelatedArticles, fetchArticleSlugs } from "@/lib/sanity-queries";
@@ -6,6 +8,19 @@ import ArticlePageClient from "./ArticlePageClient";
 
 // Fallback: dados locais para quando Sanity está vazio
 import { articlesDataPT } from "@/data/articlesData";
+
+// Detecta imagem de capa local em public/images/jornal/{slug}/capa.*
+const imageExts = [".jpg", ".jpeg", ".png", ".webp"];
+function findLocalCover(slug: string): string | null {
+  const dir = path.join(process.cwd(), "public", "images", "jornal", slug);
+  for (const ext of imageExts) {
+    const filePath = path.join(dir, `capa${ext}`);
+    if (fs.existsSync(filePath)) {
+      return `/images/jornal/${slug}/capa${ext}`;
+    }
+  }
+  return null;
+}
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
@@ -58,7 +73,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         const local = articlesDataPT[legacyId];
         title = local.title;
         description = local.description || local.subtitle;
-        imageUrl = local.image;
+        imageUrl = findLocalCover(slug) || local.image;
       }
     }
   } catch {
@@ -67,6 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       const local = articlesDataPT[legacyId];
       title = local.title;
       description = local.description || local.subtitle;
+      imageUrl = findLocalCover(slug) || local.image;
     }
   }
 

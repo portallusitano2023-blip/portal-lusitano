@@ -73,11 +73,10 @@ export default memo(function Navbar() {
         {/* LOGÓTIPO COM IMAGEM */}
         <Link href="/" className="flex items-center gap-2 md:gap-3 group flex-shrink-0">
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt="Portal Lusitano"
             width={44}
             height={44}
-            quality={90}
             priority
             className="w-9 h-9 md:w-11 md:h-11 object-contain group-hover:scale-105 transition-transform"
           />

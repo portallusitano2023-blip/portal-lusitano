@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema } from "@/components/JsonLd";
 
+// Static content — revalidate once per day
+export const revalidate = 86400;
+
 const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {

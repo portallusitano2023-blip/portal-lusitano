@@ -2,12 +2,33 @@
 
 import { useState, useMemo, useCallback, useRef, useDeferredValue, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MapPin, Search, Crown, ArrowRight, Plus, Users, Star, X, CheckCircle } from "lucide-react";
+import {
+  MapPin,
+  Search,
+  Crown,
+  ArrowRight,
+  Plus,
+  Users,
+  Star,
+  X,
+  CheckCircle,
+  Map,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import Pagination from "@/components/ui/Pagination";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
+
+const LeafletMap = dynamic(() => import("@/components/LeafletMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-[var(--background-secondary)]/80">
+      <Map className="text-[var(--gold)] animate-pulse" size={28} />
+    </div>
+  ),
+});
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -31,6 +52,8 @@ interface Coudelaria {
   is_pro: boolean;
   destaque: boolean;
   views_count: number;
+  coordenadas_lat?: number;
+  coordenadas_lng?: number;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -144,6 +167,29 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
   );
 
   const hasActiveFilters = searchTerm || selectedRegiao !== "Todas";
+
+  const [showMap, setShowMap] = useState(false);
+  const [flyTo, setFlyTo] = useState<[number, number] | null>(null);
+
+  const mapCoudelarias = useMemo(
+    () =>
+      deferredFiltered
+        .filter((c) => c.coordenadas_lat && c.coordenadas_lng)
+        .map((c) => ({
+          id: c.id,
+          nome: c.nome,
+          slug: c.slug,
+          descricao: c.descricao,
+          localizacao: c.localizacao,
+          regiao: c.regiao,
+          foto_capa: c.foto_capa,
+          is_pro: c.is_pro,
+          destaque: c.destaque,
+          coordenadas_lat: c.coordenadas_lat,
+          coordenadas_lng: c.coordenadas_lng,
+        })),
+    [deferredFiltered]
+  );
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
@@ -304,6 +350,36 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
                 >
                   {t.directorio.clear_filters}
                 </button>
+              </div>
+            )}
+          </div>
+        </AnimateOnScroll>
+
+        {/* ── Map toggle ── */}
+        <AnimateOnScroll delay={250}>
+          <div className="mb-10">
+            <button
+              onClick={() => setShowMap((v) => !v)}
+              className="inline-flex items-center gap-2 text-sm font-medium text-[var(--foreground-secondary)] hover:text-[var(--gold)] border border-[var(--border)] hover:border-[var(--gold)]/50 px-4 py-2.5 transition-all"
+            >
+              <Map size={16} />
+              {showMap ? "Ocultar Mapa" : "Ver no Mapa"}
+              <span className="text-[var(--foreground-muted)] text-xs">
+                ({mapCoudelarias.length})
+              </span>
+            </button>
+            {showMap && (
+              <div
+                className="mt-4 border border-[var(--border)] overflow-hidden"
+                style={{ height: 450 }}
+              >
+                <LeafletMap
+                  coudelarias={mapCoudelarias}
+                  flyTo={flyTo}
+                  onMarkerClick={(c) => {
+                    router.push(`/directorio/${c.slug}`);
+                  }}
+                />
               </div>
             )}
           </div>

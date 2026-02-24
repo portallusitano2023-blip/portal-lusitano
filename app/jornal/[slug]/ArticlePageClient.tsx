@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Clock, Calendar, Newspaper, FileText } from "lucide-react";
+import { ArrowLeft, ArrowUp, Clock, Calendar, Newspaper, FileText } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -57,6 +58,13 @@ export default function ArticlePageClient({
 }: ArticlePageClientProps) {
   const { t, language } = useLanguage();
   const tr = createTranslator(language);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowBackToTop(window.scrollY > 500);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Fallback para dados locais se artigo Sanity não existe
   if (!article && legacyId) {
@@ -111,7 +119,7 @@ export default function ArticlePageClient({
             </li>
           </ol>
         </nav>
-        <header className="relative h-[85vh] w-full overflow-hidden">
+        <header className="relative h-[65vh] w-full overflow-hidden">
           <div className="absolute inset-0">
             <Image
               src={localArticle.image}
@@ -121,9 +129,9 @@ export default function ArticlePageClient({
               sizes="100vw"
               priority
             />
-            <div className="absolute inset-0 bg-black/70" aria-hidden />
+            <div className="absolute inset-0 bg-black/60" aria-hidden />
             <div
-              className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent"
+              className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-[#050505]/10"
               aria-hidden
             />
           </div>
@@ -223,7 +231,7 @@ export default function ArticlePageClient({
       </nav>
 
       {/* HERO */}
-      <header className="relative h-[85vh] w-full overflow-hidden">
+      <header className="relative h-[65vh] w-full overflow-hidden">
         <div className="absolute inset-0">
           {imageUrl && (
             <Image
@@ -235,22 +243,15 @@ export default function ArticlePageClient({
               priority
             />
           )}
-          <div className="absolute inset-0 bg-black/70" aria-hidden />
+          <div className="absolute inset-0 bg-black/60" aria-hidden />
           <div
-            className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent"
+            className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-[#050505]/10"
             aria-hidden
           />
         </div>
 
-        <div className="absolute bottom-0 left-0 w-full p-8 md:p-24 z-10">
-          <div className="max-w-7xl mx-auto space-y-6">
-            <Link
-              href="/jornal"
-              className="inline-flex items-center text-white/60 hover:text-[var(--gold)] transition-colors text-xs uppercase tracking-[0.2em] gap-2"
-            >
-              <ArrowLeft size={16} /> {t.journal.back_archive}
-            </Link>
-
+        <div className="absolute bottom-0 left-0 w-full p-8 md:p-20 z-10">
+          <div className="max-w-7xl mx-auto space-y-5">
             <div className="flex items-center gap-3">
               <span className="inline-block text-[var(--gold)] text-[9px] uppercase tracking-[0.4em] font-bold border border-[var(--gold)]/30 px-4 py-2">
                 {category}
@@ -282,12 +283,15 @@ export default function ArticlePageClient({
               )}
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-serif text-white max-w-5xl leading-none tracking-tight">
+            {/* Linha decorativa dourada */}
+            <div className="w-16 h-px bg-[var(--gold)]/60" />
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white max-w-5xl leading-[0.95] tracking-tight">
               {title}
             </h1>
 
             {subtitle && (
-              <p className="text-lg md:text-xl text-[var(--foreground-secondary)] max-w-3xl font-light italic">
+              <p className="text-lg md:text-xl text-[var(--foreground-secondary)] max-w-3xl font-light italic leading-relaxed">
                 {subtitle}
               </p>
             )}
@@ -296,7 +300,7 @@ export default function ArticlePageClient({
       </header>
 
       {/* CORPO DO ARTIGO */}
-      <div className="max-w-7xl mx-auto px-8 py-24 relative">
+      <div className="max-w-7xl mx-auto px-8 pt-20 pb-24 relative">
         <div className="xl:grid xl:grid-cols-[1fr_250px] xl:gap-12">
           <div className="max-w-4xl">
             <ShareButtons title={title} />
@@ -334,6 +338,35 @@ export default function ArticlePageClient({
           )}
         </div>
       </div>
+
+      {/* SECÇÃO DE AUTOR */}
+      {article.author?.name && (
+        <div className="max-w-4xl mx-auto px-8 mb-16">
+          <div className="border-t border-b border-[var(--border)] py-10 flex items-center gap-6">
+            {/* Avatar com iniciais */}
+            <div className="w-16 h-16 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/30 flex items-center justify-center flex-shrink-0">
+              <span className="text-[var(--gold)] font-serif text-xl font-bold">
+                {article.author.name
+                  .split(" ")
+                  .map((n: string) => n[0])
+                  .join("")
+                  .slice(0, 2)}
+              </span>
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-1">
+                {tr("Escrito por", "Written by", "Escrito por")}
+              </p>
+              <p className="text-lg font-serif text-[var(--foreground)]">{article.author.name}</p>
+              {(article.author as { bio?: string }).bio && (
+                <p className="text-sm text-[var(--foreground-muted)] mt-1 leading-relaxed">
+                  {(article.author as { bio?: string }).bio}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ARTIGOS RELACIONADOS */}
       {relatedArticles.length > 0 && (
@@ -395,6 +428,19 @@ export default function ArticlePageClient({
       <div className="max-w-4xl mx-auto px-8 mt-8">
         <Newsletter />
       </div>
+
+      {/* BOTÃO VOLTAR AO TOPO */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={`fixed bottom-8 right-8 z-40 w-11 h-11 flex items-center justify-center border border-[var(--gold)]/40 bg-[var(--background)]/90 backdrop-blur-sm text-[var(--gold)] hover:bg-[var(--gold)]/10 transition-all duration-300 ${
+          showBackToTop
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+        aria-label={tr("Voltar ao topo", "Back to top", "Volver arriba")}
+      >
+        <ArrowUp size={16} />
+      </button>
     </article>
   );
 }

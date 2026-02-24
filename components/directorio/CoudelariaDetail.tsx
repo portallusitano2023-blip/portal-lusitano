@@ -34,6 +34,7 @@ import {
   ThumbsUp,
   Send,
   Loader2,
+  Navigation,
 } from "lucide-react";
 
 // ─── Dynamic Map ───────────────────────────────────────────────────────────────
@@ -855,6 +856,22 @@ export default function CoudelariaDetail({
                         </span>
                         <span className="text-sm flex items-center gap-1">
                           Website
+                          <ExternalLink size={12} aria-hidden="true" />
+                        </span>
+                      </a>
+                    )}
+                    {coudelaria.coordenadas_lat && coudelaria.coordenadas_lng && (
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${coudelaria.coordenadas_lat},${coudelaria.coordenadas_lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group"
+                      >
+                        <span className="w-9 h-9 bg-[var(--gold)]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--gold)]/20 transition-colors">
+                          <Navigation size={16} className="text-[var(--gold)]" aria-hidden="true" />
+                        </span>
+                        <span className="text-sm flex items-center gap-1">
+                          Como chegar
                           <ExternalLink size={12} aria-hidden="true" />
                         </span>
                       </a>

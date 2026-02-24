@@ -28,11 +28,14 @@ import {
   Users,
   Activity,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
-import ToolReviewForm from "@/components/ToolReviewForm";
 import { Review, ReviewStats } from "@/types/review";
+
+// Lazy-load review form — only shown when user opens a review modal
+const ToolReviewForm = dynamic(() => import("@/components/ToolReviewForm"));
 import { getFaqItems } from "./faq-data";
 import { createTranslator } from "@/lib/tr";
 import { useToolAccess } from "@/hooks/useToolAccess";

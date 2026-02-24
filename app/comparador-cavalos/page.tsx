@@ -24,17 +24,8 @@ import {
   History,
 } from "lucide-react";
 import dynamic from "next/dynamic";
-import ResultActions from "@/components/tools/ResultActions";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
-import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
-import BlurredProSection from "@/components/tools/BlurredProSection";
-import HorseVerdictCard from "@/components/tools/HorseVerdictCard";
-import CostProjectionTable from "@/components/tools/CostProjectionTable";
 import Paywall from "@/components/tools/Paywall";
-import CategoryRanking from "@/components/tools/CategoryRanking";
-import SuitabilityProfile from "@/components/tools/SuitabilityProfile";
-import GapAnalysis from "@/components/tools/GapAnalysis";
-import PurchaseConfidence from "@/components/tools/PurchaseConfidence";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
@@ -42,12 +33,20 @@ import { createTranslator } from "@/lib/tr";
 import { useToast } from "@/context/ToastContext";
 import Tooltip from "@/components/tools/Tooltip";
 import SourceBadge from "@/components/tools/SourceBadge";
-import MethodologyPanel from "@/components/tools/MethodologyPanel";
-import ScoreBreakdown from "@/components/tools/ScoreBreakdown";
 
-const Confetti = dynamic(() => import("@/components/tools/Confetti"), {
-  ssr: false,
-});
+// Lazy-load result components — only shown after comparison is complete
+const ResultActions = dynamic(() => import("@/components/tools/ResultActions"));
+const ProUpgradeCard = dynamic(() => import("@/components/tools/ProUpgradeCard"));
+const BlurredProSection = dynamic(() => import("@/components/tools/BlurredProSection"));
+const HorseVerdictCard = dynamic(() => import("@/components/tools/HorseVerdictCard"));
+const CostProjectionTable = dynamic(() => import("@/components/tools/CostProjectionTable"));
+const CategoryRanking = dynamic(() => import("@/components/tools/CategoryRanking"));
+const SuitabilityProfile = dynamic(() => import("@/components/tools/SuitabilityProfile"));
+const GapAnalysis = dynamic(() => import("@/components/tools/GapAnalysis"));
+const PurchaseConfidence = dynamic(() => import("@/components/tools/PurchaseConfidence"));
+const MethodologyPanel = dynamic(() => import("@/components/tools/MethodologyPanel"));
+const ScoreBreakdown = dynamic(() => import("@/components/tools/ScoreBreakdown"));
+const Confetti = dynamic(() => import("@/components/tools/Confetti"), { ssr: false });
 
 // ============================================
 // TIPOS

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import { useInViewOnce } from "@/hooks/useInViewOnce";
 import TextSplit from "@/components/TextSplit";
 import { urlFor } from "@/lib/sanity-image";
 import type { SanityArticle } from "@/lib/sanity-queries";
@@ -142,9 +141,6 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
   const featuredArticle = displayArticles.find((a) => a.featured) || displayArticles[0];
   const gridArticles = filteredArticles.filter((a) => a._id !== featuredArticle?._id);
 
-  const gridRef = useRef<HTMLDivElement>(null);
-  const gridInView = useInViewOnce(gridRef);
-
   // Texto traduzido para min de leitura
   const minReadLabel = tr("min de leitura", "min read", "min de lectura");
   const allLabel = tr("Todos", "All", "Todos");
@@ -230,67 +226,113 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
           style={{ animationDelay: "0.4s" }}
         >
           <Link href={`/jornal/${featuredArticle.slug.current}`}>
-            <div className="group relative w-full h-[350px] sm:h-[450px] md:h-[600px] overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/40 transition-colors duration-500 cursor-pointer">
+            {/* Mobile: overlay layout */}
+            <div className="group md:hidden relative w-full h-[400px] overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/40 transition-colors duration-500 cursor-pointer">
               {getImageUrl(featuredArticle) && (
                 <Image
                   src={getImageUrl(featuredArticle)}
                   alt={featuredArticle.image?.alt || featuredArticle.title}
                   fill
-                  className="object-cover opacity-80 group-hover:opacity-100 grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                  className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
                   sizes="100vw"
                   priority
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-
-              {/* Badge "Em Destaque" */}
-              <div className="absolute top-6 left-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              <div className="absolute top-5 left-5">
                 <span className="inline-block bg-[var(--gold)] text-black px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.25em]">
                   {tr("Em Destaque", "Featured", "Destacado")}
                 </span>
               </div>
+              <div className="absolute bottom-0 left-0 p-6 w-full">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="border border-[var(--gold)]/50 text-[var(--gold)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.2em]">
+                    {featuredArticle.category}
+                  </span>
+                </div>
+                <h2 className="text-2xl font-serif text-white mb-3 leading-tight">
+                  {featuredArticle.title}
+                </h2>
+                <div className="flex items-center gap-4 text-[10px] text-[var(--foreground-secondary)] uppercase tracking-wider">
+                  <span className="flex items-center gap-1.5">
+                    <Clock size={11} className="text-[var(--gold)]" />
+                    {featuredArticle.estimatedReadTime}&nbsp;{minReadLabel}
+                  </span>
+                  {featuredArticle.publishedAt && (
+                    <span>{formatDate(featuredArticle.publishedAt, language)}</span>
+                  )}
+                </div>
+              </div>
+            </div>
 
-              <div className="absolute bottom-0 left-0 p-8 md:p-16 w-full md:w-2/3">
-                <div className="flex items-center gap-3 mb-4">
-                  {/* Badge de categoria */}
-                  <span className="inline-block border border-[var(--gold)]/50 text-[var(--gold)] px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em]">
+            {/* Desktop: editorial split layout */}
+            <div className="group hidden md:grid md:grid-cols-5 overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/40 transition-colors duration-500 cursor-pointer">
+              {/* Imagem — 3/5 */}
+              <div className="col-span-3 relative aspect-[3/2] overflow-hidden">
+                {getImageUrl(featuredArticle) && (
+                  <Image
+                    src={getImageUrl(featuredArticle)}
+                    alt={featuredArticle.image?.alt || featuredArticle.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="60vw"
+                    priority
+                  />
+                )}
+              </div>
+
+              {/* Texto — 2/5 */}
+              <div className="col-span-2 flex flex-col justify-center p-10 lg:p-14 bg-[var(--surface-hover)]">
+                <span className="inline-block bg-[var(--gold)] text-black px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.25em] self-start mb-6">
+                  {tr("Em Destaque", "Featured", "Destacado")}
+                </span>
+
+                <div className="flex items-center gap-2 mb-5">
+                  <span className="border border-[var(--gold)]/50 text-[var(--gold)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.2em]">
                     {featuredArticle.category}
                   </span>
                   {featuredArticle.contentType === "post" && (
-                    <span className="inline-flex items-center gap-1.5 bg-white/10 text-white px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em]">
+                    <span className="inline-flex items-center gap-1.5 border border-[var(--foreground-muted)]/30 text-[var(--foreground-muted)] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.2em]">
                       <FileText size={10} />
                       {chronicleLabel}
                     </span>
                   )}
                 </div>
-                <h2 className="text-2xl sm:text-4xl md:text-6xl font-serif text-white mb-4 leading-tight">
+
+                <div className="w-12 h-px bg-[var(--gold)]/50 mb-5" />
+
+                <h2 className="text-3xl lg:text-4xl xl:text-5xl font-serif text-[var(--foreground)] mb-4 leading-tight group-hover:text-[var(--gold)] transition-colors duration-300">
                   {featuredArticle.title}
                 </h2>
-                <p className="text-[var(--foreground-secondary)] text-base md:text-lg mb-6 font-serif italic line-clamp-2">
+
+                <p className="text-[var(--foreground-secondary)] text-base mb-6 font-serif italic line-clamp-3">
                   {featuredArticle.subtitle}
                 </p>
-                <div className="flex items-center gap-6 text-xs text-[var(--foreground-secondary)] uppercase tracking-wider">
-                  <div className="flex items-center gap-2">
-                    <BookOpen size={13} className="text-[var(--gold)]" />
+
+                <div className="flex items-center gap-5 text-[10px] text-[var(--foreground-muted)] uppercase tracking-wider mb-6">
+                  <span className="flex items-center gap-1.5">
+                    <BookOpen size={12} className="text-[var(--gold)]" />
                     {t.journal.technical_read}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock size={13} className="text-[var(--gold)]" />
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Clock size={12} className="text-[var(--gold)]" />
                     {featuredArticle.estimatedReadTime}&nbsp;{minReadLabel}
-                  </div>
-                  {featuredArticle.publishedAt && (
-                    <span className="hidden sm:block">
-                      {formatDate(featuredArticle.publishedAt, language)}
-                    </span>
-                  )}
+                  </span>
                 </div>
-                {/* CTA animado */}
-                <div className="mt-6 flex items-center gap-2 text-[var(--gold)] text-xs uppercase tracking-[0.2em] group-hover:gap-3 transition-all duration-300">
+
+                {featuredArticle.publishedAt && (
+                  <span className="text-[10px] text-[var(--foreground-muted)] uppercase tracking-wider mb-6 block">
+                    {formatDate(featuredArticle.publishedAt, language)}
+                  </span>
+                )}
+
+                <div className="inline-flex items-center gap-2 text-[var(--gold)] text-xs uppercase tracking-[0.2em] group-hover:gap-3 transition-all duration-300 relative">
                   {t.journal.read_study}
                   <ArrowRight
                     size={14}
                     className="group-hover:translate-x-1 transition-transform"
                   />
+                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-all duration-500" />
                 </div>
               </div>
             </div>
@@ -315,7 +357,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={searchPlaceholder}
-                className="w-full bg-[var(--surface-hover)] border border-[var(--border)] pl-9 pr-4 py-2 text-sm text-[var(--foreground)] placeholder-[var(--foreground-muted)] outline-none focus:border-[var(--gold)]/50 transition-colors rounded-sm"
+                className="w-full bg-[var(--surface-hover)] border border-[var(--border)] pl-9 pr-4 py-2 text-sm text-[var(--foreground)] placeholder-[var(--foreground-muted)] outline-none focus:border-[var(--gold)]/50 transition-colors"
               />
               {searchQuery && (
                 <button
@@ -365,7 +407,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                 setSelectedCategory(null);
                 setSelectedType(null);
               }}
-              className={`whitespace-nowrap px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all rounded-full border ${
+              className={`whitespace-nowrap px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all border ${
                 !selectedCategory && !selectedType
                   ? "bg-[var(--gold)] text-black font-bold border-[var(--gold)]"
                   : "bg-transparent text-[var(--foreground-secondary)] hover:text-[var(--foreground)] border-[var(--border)] hover:border-[var(--gold)]/40"
@@ -382,7 +424,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat === selectedCategory ? null : cat)}
-                className={`whitespace-nowrap px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all rounded-full border ${
+                className={`whitespace-nowrap px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all border ${
                   selectedCategory === cat
                     ? "bg-[var(--gold)] text-black font-bold border-[var(--gold)]"
                     : "bg-transparent text-[var(--foreground-secondary)] hover:text-[var(--foreground)] border-[var(--border)] hover:border-[var(--gold)]/40"
@@ -398,7 +440,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
             {/* Chip Artigo */}
             <button
               onClick={() => setSelectedType(selectedType === "article" ? null : "article")}
-              className={`flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all rounded-full border ${
+              className={`flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all border ${
                 selectedType === "article"
                   ? "bg-[var(--gold)] text-black font-bold border-[var(--gold)]"
                   : "bg-transparent text-[var(--foreground-secondary)] hover:text-[var(--foreground)] border-[var(--border)] hover:border-[var(--gold)]/40"
@@ -411,7 +453,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
             {/* Chip Crónica */}
             <button
               onClick={() => setSelectedType(selectedType === "post" ? null : "post")}
-              className={`flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all rounded-full border ${
+              className={`flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all border ${
                 selectedType === "post"
                   ? "bg-[var(--gold)] text-black font-bold border-[var(--gold)]"
                   : "bg-transparent text-[var(--foreground-secondary)] hover:text-[var(--foreground)] border-[var(--border)] hover:border-[var(--gold)]/40"
@@ -489,143 +531,287 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
       {/* GRELHA DE ARTIGOS */}
       {/* ================================================================= */}
       {isClient && filteredArticles.length > 0 && (
-        <div
-          ref={gridRef}
-          className={`max-w-7xl mx-auto px-6 ${
-            viewMode === "grid"
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              : "flex flex-col gap-4"
-          }`}
-        >
-          {(hasFilters ? filteredArticles : gridArticles).map((article, index) => (
-            <div
-              key={article._id}
-              className={`transition-all duration-500 ${
-                gridInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-              style={{ transitionDelay: `${index * 0.08 + 0.15}s` }}
-            >
-              {viewMode === "grid" ? (
-                <Link href={`/jornal/${article.slug.current}`}>
-                  <article
-                    className="group cursor-pointer h-full flex flex-col border border-[var(--border)] hover:border-[var(--gold)]/40 transition-all duration-300 bg-[var(--surface-hover)] hover:shadow-[0_0_30px_rgba(197,160,89,0.06)]"
-                    aria-label={article.title}
-                  >
-                    {/* Imagem com zoom no hover */}
-                    <div className="w-full h-64 overflow-hidden relative">
-                      {getImageUrl(article) ? (
+        <div className="max-w-7xl mx-auto px-6">
+          {/* MAGAZINE ROW — primeira fila assimétrica (só grid view sem filtros, 3+ artigos) */}
+          {viewMode === "grid" && !hasFilters && gridArticles.length >= 3 && (
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+              {/* Card grande — esquerda */}
+              <div
+                className="md:col-span-3 md:row-span-2 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                style={{ animationDelay: "0.15s" }}
+              >
+                <Link href={`/jornal/${gridArticles[0].slug.current}`}>
+                  <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/40 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
+                    <div className="w-full aspect-[4/3] md:flex-1 overflow-hidden relative">
+                      {getImageUrl(gridArticles[0]) ? (
                         <Image
-                          src={getImageUrl(article)}
-                          alt={article.image?.alt || article.title}
+                          src={getImageUrl(gridArticles[0])}
+                          alt={gridArticles[0].image?.alt || gridArticles[0].title}
                           fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+                          sizes="(max-width: 768px) 100vw, 60vw"
+                          className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105"
                         />
                       ) : (
                         <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
-                          <BookOpen size={32} className="text-[var(--foreground-muted)]" />
+                          <BookOpen size={40} className="text-[var(--foreground-muted)]" />
                         </div>
                       )}
-                      {/* Badges sobrepostos à imagem */}
                       <div className="absolute top-4 right-4 flex items-center gap-2">
-                        {article.contentType === "post" && (
+                        {gridArticles[0].contentType === "post" && (
                           <span className="bg-white/15 backdrop-blur-sm px-2 py-0.5 text-[9px] uppercase text-white tracking-widest">
                             {chronicleLabel}
                           </span>
                         )}
-                        {article.category && (
-                          <span className="bg-black/60 backdrop-blur-sm px-3 py-1 text-[9px] uppercase text-white tracking-widest border border-white/15">
-                            {article.category}
-                          </span>
-                        )}
                       </div>
                     </div>
-
-                    <div className="p-8 flex flex-col flex-grow">
-                      {/* Meta: data + tempo de leitura */}
-                      <div className="mb-4 flex items-center justify-between text-[var(--gold)] text-[10px] uppercase tracking-widest">
-                        <span>{formatDate(article.publishedAt, language)}</span>
+                    <div className="px-7 pt-5 pb-0 flex items-center justify-between text-[10px] uppercase tracking-widest">
+                      <span className="flex items-center gap-2 text-[var(--gold)]">
+                        {gridArticles[0].category && (
+                          <>
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
+                            {gridArticles[0].category}
+                          </>
+                        )}
+                      </span>
+                      <span className="flex items-center gap-3 text-[var(--foreground-muted)]">
+                        <span>{formatDate(gridArticles[0].publishedAt, language)}</span>
                         <span className="flex items-center gap-1">
-                          <Clock size={11} />
-                          {article.estimatedReadTime}&nbsp;{minReadLabel}
-                        </span>
-                      </div>
-
-                      {/* Título */}
-                      <h3 className="text-xl font-serif text-[var(--foreground)] mb-3 group-hover:text-[var(--gold)] transition-colors leading-snug">
-                        {article.title}
-                      </h3>
-
-                      {/* Excerpt com line-clamp-3 */}
-                      <p className="text-[var(--foreground-muted)] text-sm leading-relaxed mb-6 flex-grow font-serif line-clamp-3">
-                        {article.subtitle}
-                      </p>
-
-                      {/* CTA */}
-                      <div className="border-t border-[var(--border)] pt-4 mt-auto">
-                        <span className="flex items-center gap-2 text-[var(--foreground)] text-xs uppercase tracking-widest group-hover:gap-4 transition-all">
-                          {readLabel}&nbsp;
-                          <ArrowRight size={13} className="text-[var(--gold)]" />
-                        </span>
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              ) : (
-                /* VISTA LISTA */
-                <Link href={`/jornal/${article.slug.current}`}>
-                  <article
-                    className="group cursor-pointer flex gap-5 border border-[var(--border)] hover:border-[var(--gold)]/40 transition-all duration-300 bg-[var(--surface-hover)] p-4 hover:shadow-[0_0_20px_rgba(197,160,89,0.05)]"
-                    aria-label={article.title}
-                  >
-                    {/* Thumbnail */}
-                    <div className="w-28 h-28 flex-shrink-0 overflow-hidden relative">
-                      {getImageUrl(article) ? (
-                        <Image
-                          src={getImageUrl(article)}
-                          alt={article.image?.alt || article.title}
-                          fill
-                          sizes="112px"
-                          className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
-                          <BookOpen size={20} className="text-[var(--foreground-muted)]" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        {article.category && (
-                          <span className="text-[var(--gold)] text-[10px] uppercase tracking-widest">
-                            {article.category}
-                          </span>
-                        )}
-                        <span className="text-[var(--foreground-muted)] text-[10px]">
-                          {formatDate(article.publishedAt, language)}
-                        </span>
-                        <span className="flex items-center gap-1 text-[var(--foreground-muted)] text-[10px]">
                           <Clock size={10} />
-                          {article.estimatedReadTime}&nbsp;{minReadLabel}
+                          {gridArticles[0].estimatedReadTime}&nbsp;{minReadLabel}
                         </span>
-                      </div>
-                      <h3 className="text-lg font-serif text-[var(--foreground)] mb-1 group-hover:text-[var(--gold)] transition-colors truncate">
-                        {article.title}
-                      </h3>
-                      <p className="text-[var(--foreground-muted)] text-sm line-clamp-2 font-serif">
-                        {article.subtitle}
-                      </p>
+                      </span>
                     </div>
-                    <ArrowRight
-                      size={15}
-                      className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] self-center flex-shrink-0 transition-colors group-hover:translate-x-1 transition-transform"
-                    />
+                    <div className="px-7 pt-4 pb-7">
+                      <h3 className="text-2xl font-serif text-[var(--foreground)] mb-3 group-hover:text-[var(--gold)] transition-colors duration-300 leading-snug">
+                        {gridArticles[0].title}
+                      </h3>
+                      <p className="text-[var(--foreground-muted)] text-sm leading-relaxed font-serif line-clamp-3 mb-4">
+                        {gridArticles[0].subtitle}
+                      </p>
+                      <span className="inline-flex items-center gap-2 text-[var(--foreground)] text-xs uppercase tracking-widest relative">
+                        {readLabel}
+                        <ArrowRight
+                          size={13}
+                          className="text-[var(--gold)] group-hover:translate-x-1 transition-transform duration-300"
+                        />
+                        <span className="absolute -bottom-1 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-all duration-500" />
+                      </span>
+                    </div>
                   </article>
                 </Link>
-              )}
+              </div>
+
+              {/* Cards pequenos — direita, empilhados */}
+              {gridArticles.slice(1, 3).map((article, i) => (
+                <div
+                  key={article._id}
+                  className="md:col-span-2 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  style={{ animationDelay: `${(i + 1) * 0.08 + 0.15}s` }}
+                >
+                  <Link href={`/jornal/${article.slug.current}`}>
+                    <article className="group cursor-pointer h-full flex flex-row md:flex-row border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/40 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
+                      <div className="w-36 md:w-40 flex-shrink-0 overflow-hidden relative">
+                        {getImageUrl(article) ? (
+                          <Image
+                            src={getImageUrl(article)}
+                            alt={article.image?.alt || article.title}
+                            fill
+                            sizes="160px"
+                            className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
+                            <BookOpen size={20} className="text-[var(--foreground-muted)]" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-5 flex flex-col justify-center flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-widest">
+                          <span className="flex items-center gap-1.5 text-[var(--gold)]">
+                            {article.category && (
+                              <>
+                                <span className="inline-block w-1 h-1 rounded-full bg-[var(--gold)]" />
+                                {article.category}
+                              </>
+                            )}
+                          </span>
+                          <span className="text-[var(--foreground-muted)] flex items-center gap-1">
+                            <Clock size={9} />
+                            {article.estimatedReadTime}&nbsp;{minReadLabel}
+                          </span>
+                        </div>
+                        <h3 className="text-base font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--gold)] transition-colors duration-300 leading-snug line-clamp-2">
+                          {article.title}
+                        </h3>
+                        <p className="text-[var(--foreground-muted)] text-xs leading-relaxed font-serif line-clamp-2 hidden sm:block">
+                          {article.subtitle}
+                        </p>
+                      </div>
+                    </article>
+                  </Link>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
+          {/* GRID REGULAR — restantes artigos */}
+          <div
+            className={
+              viewMode === "grid"
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                : "flex flex-col"
+            }
+          >
+            {(() => {
+              const articlesToRender = hasFilters
+                ? filteredArticles
+                : viewMode === "grid" && gridArticles.length >= 3
+                  ? gridArticles.slice(3)
+                  : gridArticles;
+              return articlesToRender.map((article, index) => (
+                <div
+                  key={article._id}
+                  className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                  style={{ animationDelay: `${index * 0.08 + 0.15}s` }}
+                >
+                  {viewMode === "grid" ? (
+                    <Link href={`/jornal/${article.slug.current}`}>
+                      <article
+                        className="group cursor-pointer h-full flex flex-col border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/40 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]"
+                        aria-label={article.title}
+                      >
+                        {/* Imagem com zoom no hover */}
+                        <div className="w-full aspect-[16/10] overflow-hidden relative">
+                          {getImageUrl(article) ? (
+                            <Image
+                              src={getImageUrl(article)}
+                              alt={article.image?.alt || article.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
+                              <BookOpen size={32} className="text-[var(--foreground-muted)]" />
+                            </div>
+                          )}
+                          {/* Badges sobrepostos à imagem */}
+                          <div className="absolute top-4 right-4 flex items-center gap-2">
+                            {article.contentType === "post" && (
+                              <span className="bg-white/15 backdrop-blur-sm px-2 py-0.5 text-[9px] uppercase text-white tracking-widest">
+                                {chronicleLabel}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Meta bar entre imagem e conteúdo */}
+                        <div className="px-7 pt-5 pb-0 flex items-center justify-between text-[10px] uppercase tracking-widest">
+                          <span className="flex items-center gap-2 text-[var(--gold)]">
+                            {article.category && (
+                              <>
+                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
+                                {article.category}
+                              </>
+                            )}
+                          </span>
+                          <span className="flex items-center gap-3 text-[var(--foreground-muted)]">
+                            <span>{formatDate(article.publishedAt, language)}</span>
+                            <span className="flex items-center gap-1">
+                              <Clock size={10} />
+                              {article.estimatedReadTime}&nbsp;{minReadLabel}
+                            </span>
+                          </span>
+                        </div>
+
+                        <div className="px-7 pt-4 pb-7 flex flex-col flex-grow">
+                          {/* Título */}
+                          <h3 className="text-xl font-serif text-[var(--foreground)] mb-3 group-hover:text-[var(--gold)] transition-colors duration-300 leading-snug">
+                            {article.title}
+                          </h3>
+
+                          {/* Excerpt com line-clamp-3 */}
+                          <p className="text-[var(--foreground-muted)] text-sm leading-relaxed mb-6 flex-grow font-serif line-clamp-3">
+                            {article.subtitle}
+                          </p>
+
+                          {/* CTA com underline animado */}
+                          <div className="mt-auto">
+                            <span className="inline-flex items-center gap-2 text-[var(--foreground)] text-xs uppercase tracking-widest relative">
+                              {readLabel}
+                              <ArrowRight
+                                size={13}
+                                className="text-[var(--gold)] group-hover:translate-x-1 transition-transform duration-300"
+                              />
+                              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-all duration-500" />
+                            </span>
+                          </div>
+                        </div>
+                      </article>
+                    </Link>
+                  ) : (
+                    /* VISTA LISTA */
+                    <Link href={`/jornal/${article.slug.current}`}>
+                      <article
+                        className="group cursor-pointer flex gap-5 border-b border-[var(--border)] hover:bg-[var(--surface-hover)] transition-all duration-300 py-5 px-4"
+                        aria-label={article.title}
+                      >
+                        {/* Número editorial */}
+                        <span className="hidden sm:flex items-center justify-center w-8 text-[var(--foreground-muted)]/30 text-xs font-mono tabular-nums flex-shrink-0 pt-1">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+
+                        {/* Thumbnail */}
+                        <div className="w-40 h-28 flex-shrink-0 overflow-hidden relative">
+                          {getImageUrl(article) ? (
+                            <Image
+                              src={getImageUrl(article)}
+                              alt={article.image?.alt || article.title}
+                              fill
+                              sizes="160px"
+                              className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
+                              <BookOpen size={20} className="text-[var(--foreground-muted)]" />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-col justify-center flex-1 min-w-0">
+                          <div className="flex items-center gap-3 mb-2 flex-wrap">
+                            {article.category && (
+                              <span className="flex items-center gap-1.5 text-[var(--gold)] text-[10px] uppercase tracking-widest">
+                                <span className="inline-block w-1 h-1 rounded-full bg-[var(--gold)]" />
+                                {article.category}
+                              </span>
+                            )}
+                            <span className="text-[var(--foreground-muted)] text-[10px]">
+                              {formatDate(article.publishedAt, language)}
+                            </span>
+                            <span className="flex items-center gap-1 text-[var(--foreground-muted)] text-[10px]">
+                              <Clock size={10} />
+                              {article.estimatedReadTime}&nbsp;{minReadLabel}
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-serif text-[var(--foreground)] mb-1.5 group-hover:text-[var(--gold)] transition-colors duration-300 truncate">
+                            {article.title}
+                          </h3>
+                          <p className="text-[var(--foreground-muted)] text-sm line-clamp-2 font-serif leading-relaxed">
+                            {article.subtitle}
+                          </p>
+                        </div>
+                        <ArrowRight
+                          size={15}
+                          className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] self-center flex-shrink-0 transition-all duration-300 group-hover:translate-x-1"
+                        />
+                      </article>
+                    </Link>
+                  )}
+                </div>
+              ));
+            })()}
+          </div>
         </div>
       )}
     </main>

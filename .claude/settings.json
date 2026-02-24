@@ -32,10 +32,18 @@
       "WebFetch(domain:www.openstreetmap.org)",
       "WebFetch(domain:nominatim.openstreetmap.org)",
       "WebFetch(domain:www.localgymsandfitness.com)",
-      "WebFetch(domain:nossatelha.pt)"
+      "WebFetch(domain:nossatelha.pt)",
+      "WebFetch(domain:www.google.com)",
+      "WebFetch(domain:www.codigo-postal.pt)",
+      "WebFetch(domain:xn--cdigos-postales-vrb.cybo.com)",
+      "WebFetch(domain:pt.gpspostcode.com)",
+      "WebFetch(domain:jm.maptons.com)",
+      "WebFetch(domain:www.equitacao.com)",
+      "WebFetch(domain:pt.wikipedia.org)",
+      "WebFetch(domain:coudelariaflor-dolis.webnode.pt)",
+      "WebFetch(domain:www.winetourism.com)",
+      "WebFetch(domain:www.tripadvisor.com)"
     ],
-    "additionalDirectories": [
-      "\\tmp"
-    ]
+    "additionalDirectories": ["\\tmp"]
   }
 }

@@ -92,19 +92,12 @@ function buildCsp(nonce: string): string {
 }
 
 function applySecurityHeaders(response: NextResponse, nonce: string, contentLanguage = "pt") {
+  // CSP must be set here (needs per-request nonce). Other security headers
+  // (HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.)
+  // are already set in next.config.js headers() — no need to duplicate them.
   response.headers.set("Content-Security-Policy", buildCsp(nonce));
-  response.headers.set("X-DNS-Prefetch-Control", "on");
-  response.headers.set("X-Download-Options", "noopen");
-  response.headers.set("X-Permitted-Cross-Domain-Policies", "none");
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Content-Language", contentLanguage);
-  response.headers.set("X-Frame-Options", "DENY");
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
-  response.headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(), payment=(self), usb=()"
-  );
+  response.headers.set("X-Download-Options", "noopen");
 }
 
 export async function middleware(request: NextRequest) {
