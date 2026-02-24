@@ -24,7 +24,9 @@
       "Bash(then)",
       "Bash(while read file)",
       "Read(//c/Users/USUARIO/AppData/Local/Temp/claude/c--Users-USUARIO-portal-lusitano/tasks/**)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "Bash(git rev-list:*)",
+      "Bash(git check-ignore:*)"
     ],
     "additionalDirectories": ["\\tmp"]
   }
