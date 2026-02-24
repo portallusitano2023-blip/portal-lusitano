@@ -20,14 +20,22 @@ interface CartItem {
   quantity: number;
 }
 
+interface OptimisticMeta {
+  title: string;
+  image: string;
+  price: string;
+  variantTitle?: string;
+}
+
 interface CartContextType {
   cart: CartItem[];
   cartId: string | null;
   checkoutUrl: string | null;
   isCartOpen: boolean;
+  isAdding: boolean;
   openCart: () => void;
   closeCart: () => void;
-  addItemToCart: (variantId: string, quantity: number) => Promise<void>;
+  addItemToCart: (variantId: string, quantity: number, meta?: OptimisticMeta) => Promise<void>;
   removeFromCart: (lineId: string) => Promise<void>;
   updateQuantity: (lineId: string, quantity: number) => Promise<void>;
   totalQuantity: number;
@@ -136,6 +144,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cartId, setCartId] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
 
   // Apply cart data from any API response that includes lines
   const applyCartData = useCallback((cartData: Parameters<typeof parseCartData>[0]) => {
@@ -144,7 +153,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart(items);
   }, []);
 
-  // Ao iniciar, tenta recuperar o carrinho antigo
+  // Ao iniciar, tenta recuperar o carrinho antigo OU pré-criar um novo
   useEffect(() => {
     let cancelled = false;
     const localCartId = localStorage.getItem("shopify_cart_id");
@@ -157,13 +166,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
             setCartId(localCartId);
             applyCartData(cartData);
           } else {
+            // Cart expirado — pré-criar um novo em background
             localStorage.removeItem("shopify_cart_id");
             setCartId(null);
+            const newCart = await apiCreateCart();
+            if (cancelled || !newCart) return;
+            setCartId(newCart.id);
+            localStorage.setItem("shopify_cart_id", newCart.id);
           }
         } catch {
-          // Network error (timeout, DNS, etc.) — keep localStorage ID so the next
-          // cart operation can still use it. Only clear when Shopify confirms it's gone.
           if (!cancelled) setCartId(null);
+        }
+      })();
+    } else {
+      // Sem carrinho — pré-criar em background para que o primeiro "add" seja instantâneo
+      (async () => {
+        try {
+          const newCart = await apiCreateCart();
+          if (cancelled || !newCart) return;
+          setCartId(newCart.id);
+          localStorage.setItem("shopify_cart_id", newCart.id);
+        } catch {
+          // Silencioso — será criado no primeiro addItemToCart
         }
       })();
     }
@@ -172,7 +196,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
   }, [applyCartData]);
 
-  // Criar carrinho novo
+  // Criar carrinho novo (fallback se pré-criação falhou)
   const ensureCart = useCallback(async (): Promise<string | null> => {
     const activeId = cartId || localStorage.getItem("shopify_cart_id");
     if (activeId) return activeId;
@@ -185,13 +209,35 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return newCart.id;
   }, [cartId, applyCartData]);
 
-  // Adicionar item — mutations now return full cart data, no need for refreshCart
+  // Adicionar item — com UI optimista
   const addItemToCart = useCallback(
-    async (variantId: string, quantity: number) => {
+    async (variantId: string, quantity: number, meta?: OptimisticMeta) => {
+      setIsAdding(true);
+
+      // UI optimista: adicionar item placeholder imediatamente
+      const optimisticId = `optimistic-${Date.now()}`;
+      if (meta) {
+        setCart((prev) => [
+          ...prev,
+          {
+            id: optimisticId,
+            variantId,
+            title: meta.title,
+            variantTitle: meta.variantTitle,
+            price: meta.price,
+            image: meta.image,
+            quantity,
+          },
+        ]);
+      }
+      setIsCartOpen(true);
+
       try {
-        let activeId = await ensureCart();
+        const activeId = await ensureCart();
         if (!activeId) {
           console.warn("[Cart] Failed to create cart");
+          // Reverter optimistic
+          if (meta) setCart((prev) => prev.filter((i) => i.id !== optimisticId));
           return;
         }
 
@@ -203,28 +249,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
           const newCart = await apiCreateCart();
           if (!newCart) {
             console.warn("[Cart] Failed to recreate cart");
+            if (meta) setCart((prev) => prev.filter((i) => i.id !== optimisticId));
             return;
           }
 
           const newId = newCart.id;
-          activeId = newId;
           setCartId(newId);
           localStorage.setItem("shopify_cart_id", newId);
 
           result = await apiAddToCart(newId, variantId, quantity);
           if (!result) {
             console.warn("[Cart] Failed to add item after cart recreation");
+            if (meta) setCart((prev) => prev.filter((i) => i.id !== optimisticId));
             return;
           }
         }
 
-        // Apply cart data directly from mutation response — no second API call needed
+        // Substituir dados optimistas pelos reais da API
         if (result.lines) {
           applyCartData(result);
         }
-        setIsCartOpen(true);
       } catch (err) {
         console.warn("[Cart] addItemToCart error:", err);
+        // Reverter optimistic
+        if (meta) setCart((prev) => prev.filter((i) => i.id !== optimisticId));
+      } finally {
+        setIsAdding(false);
       }
     },
     [ensureCart, applyCartData]
@@ -263,6 +313,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       cartId,
       checkoutUrl,
       isCartOpen,
+      isAdding,
       openCart,
       closeCart,
       addItemToCart,
@@ -275,6 +326,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       cartId,
       checkoutUrl,
       isCartOpen,
+      isAdding,
       openCart,
       closeCart,
       addItemToCart,

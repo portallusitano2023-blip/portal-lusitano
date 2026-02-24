@@ -26,8 +26,16 @@
       "Read(//c/Users/USUARIO/AppData/Local/Temp/claude/c--Users-USUARIO-portal-lusitano/tasks/**)",
       "Bash(git fetch:*)",
       "Bash(git rev-list:*)",
-      "Bash(git check-ignore:*)"
+      "Bash(git check-ignore:*)",
+      "WebFetch(domain:mapcarta.com)",
+      "WebFetch(domain:coudelarialuisfolgado.com)",
+      "WebFetch(domain:www.openstreetmap.org)",
+      "WebFetch(domain:nominatim.openstreetmap.org)",
+      "WebFetch(domain:www.localgymsandfitness.com)",
+      "WebFetch(domain:nossatelha.pt)"
     ],
-    "additionalDirectories": ["\\tmp"]
+    "additionalDirectories": [
+      "\\tmp"
+    ]
   }
 }

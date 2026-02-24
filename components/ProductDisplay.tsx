@@ -145,7 +145,16 @@ export default function ProductDisplay({ product }: { product: Product }) {
         {/* Botão de Compra */}
         <div className="mb-8">
           {activeVariant ? (
-            <AddToCartButton variantId={activeVariant.id} available={isAvailable} />
+            <AddToCartButton
+              variantId={activeVariant.id}
+              available={isAvailable}
+              productTitle={product.title}
+              productImage={firstImage}
+              productPrice={activeVariant.price?.amount || "0"}
+              variantTitle={
+                activeVariant.title !== "Default Title" ? activeVariant.title : undefined
+              }
+            />
           ) : (
             <div className="w-full py-6 text-center text-xs uppercase tracking-[0.3em] bg-[var(--background-secondary)] text-[var(--foreground-secondary)] border border-[var(--border)]">
               Indisponível

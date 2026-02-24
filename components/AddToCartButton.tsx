@@ -28,14 +28,24 @@ const buttonText = {
   },
 };
 
+interface AddToCartProps {
+  variantId: string;
+  available: boolean;
+  productTitle?: string;
+  productImage?: string;
+  productPrice?: string;
+  variantTitle?: string;
+}
+
 export default function AddToCartButton({
   variantId,
   available,
-}: {
-  variantId: string;
-  available: boolean;
-}) {
-  const { addItemToCart, openCart } = useCart();
+  productTitle,
+  productImage,
+  productPrice,
+  variantTitle,
+}: AddToCartProps) {
+  const { addItemToCart } = useCart();
   const { language } = useLanguage();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -43,7 +53,6 @@ export default function AddToCartButton({
   const t = buttonText[language];
 
   async function handleAddToCart() {
-    // 1. VERIFICAÇÃO DE DIAGNÓSTICO
     if (!variantId) {
       showToast("error", "ERRO: O botão não recebeu o ID do produto. Verifica o ProductDisplay.");
       return;
@@ -55,10 +64,18 @@ export default function AddToCartButton({
     }
 
     setLoading(true);
-    openCart(); // Abre o drawer imediatamente — não esperar resposta da API (UX optimista)
 
     try {
-      await addItemToCart(variantId, 1);
+      // Passa metadata para UI optimista — item aparece no drawer imediatamente
+      const meta = productTitle
+        ? {
+            title: productTitle,
+            image: productImage || "",
+            price: productPrice || "0",
+            variantTitle,
+          }
+        : undefined;
+      await addItemToCart(variantId, 1, meta);
     } catch {
       showToast("error", t.error);
     } finally {
