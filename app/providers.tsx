@@ -12,9 +12,6 @@ import { type ReactNode, type FC } from "react";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
 
-// Preloader is session-dependent and purely visual — lazy load it
-const Preloader = dynamic(() => import("@/components/Preloader"), { ssr: false });
-
 // Lazy load - carregam apenas quando necessários (reduz bundle inicial)
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
 const CookieConsent = dynamic(() => import("@/components/CookieConsent"), { ssr: false });
@@ -30,6 +27,10 @@ const ServiceWorkerRegistration = dynamic(() => import("@/components/ServiceWork
   ssr: false,
 });
 const MobileBottomNav = dynamic(() => import("@/components/MobileBottomNav"), { ssr: false });
+const AdSenseScript = dynamic(
+  () => import("@/components/AdSenseScript").then((m) => ({ default: m.AdSenseScript })),
+  { ssr: false }
+);
 // Compose multiple providers to avoid deeply nested JSX
 // Each provider only re-renders its own consumers, not siblings
 function composeProviders(...providers: FC<{ children: ReactNode }>[]) {
@@ -61,7 +62,6 @@ export function Providers({
   return (
     <LanguageProvider initialLanguage={initialLanguage}>
       <ComposedProviders>
-        <Preloader />
         {children}
         <ScrollToTop />
         <CookieConsent />
@@ -73,6 +73,7 @@ export function Providers({
         <Analytics />
         <MobileBottomNav />
         <AnalyticsScripts />
+        <AdSenseScript />
       </ComposedProviders>
     </LanguageProvider>
   );

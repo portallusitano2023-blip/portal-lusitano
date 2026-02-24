@@ -153,7 +153,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart(items);
   }, []);
 
-  // Ao iniciar, tenta recuperar o carrinho antigo OU pré-criar um novo
+  // Ao iniciar, recupera carrinho existente do localStorage (se houver).
+  // NÃO cria carrinho novo eagerly — só será criado no primeiro addItemToCart.
+  // Evita 1-2 API calls (Shopify) em TODAS as páginas para visitantes sem carrinho.
   useEffect(() => {
     let cancelled = false;
     const localCartId = localStorage.getItem("shopify_cart_id");
@@ -166,28 +168,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
             setCartId(localCartId);
             applyCartData(cartData);
           } else {
-            // Cart expirado — pré-criar um novo em background
+            // Cart expirado — limpar. Será recriado no primeiro addItemToCart.
             localStorage.removeItem("shopify_cart_id");
             setCartId(null);
-            const newCart = await apiCreateCart();
-            if (cancelled || !newCart) return;
-            setCartId(newCart.id);
-            localStorage.setItem("shopify_cart_id", newCart.id);
           }
         } catch {
           if (!cancelled) setCartId(null);
-        }
-      })();
-    } else {
-      // Sem carrinho — pré-criar em background para que o primeiro "add" seja instantâneo
-      (async () => {
-        try {
-          const newCart = await apiCreateCart();
-          if (cancelled || !newCart) return;
-          setCartId(newCart.id);
-          localStorage.setItem("shopify_cart_id", newCart.id);
-        } catch {
-          // Silencioso — será criado no primeiro addItemToCart
         }
       })();
     }

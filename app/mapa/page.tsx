@@ -361,7 +361,7 @@ export default function MapaPage() {
           <div className="grid lg:grid-cols-12 gap-6">
             {/* Mapa Leaflet */}
             <div className="lg:col-span-8">
-              <div className="relative border border-[var(--border)] rounded-2xl overflow-hidden h-[400px] sm:h-[500px] lg:h-[600px]">
+              <div className="relative z-0 border border-[var(--border)] rounded-2xl overflow-hidden h-[400px] sm:h-[500px] lg:h-[600px]">
                 <LeafletMap
                   coudelarias={searchQuery ? filteredCoudelarias : coudelarias}
                   flyTo={flyTo}

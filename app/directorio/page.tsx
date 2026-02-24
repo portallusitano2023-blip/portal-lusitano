@@ -8,7 +8,9 @@ export const revalidate = 3600;
 export default async function DirectorioPage() {
   const { data, error } = await supabase
     .from("coudelarias")
-    .select("*")
+    .select(
+      "id, slug, nome, localizacao, regiao, foto_capa, destaque, ordem_destaque, ano_fundacao, num_cavalos, descricao, especialidades, views_count, is_pro, coordenadas_lat, coordenadas_lng"
+    )
     .eq("status", "active")
     .order("destaque", { ascending: false })
     .order("ordem_destaque", { ascending: true })

@@ -8,7 +8,9 @@ export const revalidate = 3600;
 export default async function ComprarPage() {
   const { data: cavalos, error } = await supabase
     .from("cavalos_venda")
-    .select("*")
+    .select(
+      "id, nome_cavalo, preco, image_url, slug, localizacao, idade, raca, sexo, disciplinas, nivel, destaque, created_at, status"
+    )
     .eq("status", "aprovado")
     .order("created_at", { ascending: false });
 

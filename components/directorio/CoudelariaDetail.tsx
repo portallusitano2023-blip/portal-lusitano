@@ -986,7 +986,7 @@ export default function CoudelariaDetail({
 
               {/* Map */}
               <AnimateOnScroll delay={250}>
-                <div className="bg-[var(--background-secondary)]/60 border border-[var(--border)] overflow-hidden">
+                <div className="relative z-0 bg-[var(--background-secondary)]/60 border border-[var(--border)] overflow-hidden">
                   <div style={{ height: 280 }}>
                     <LeafletMap
                       coudelarias={[

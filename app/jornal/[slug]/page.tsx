@@ -1,4 +1,4 @@
-import fs from "fs";
+import { existsSync, readdirSync } from "fs";
 import path from "path";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -9,17 +9,16 @@ import ArticlePageClient from "./ArticlePageClient";
 // Fallback: dados locais para quando Sanity está vazio
 import { articlesDataPT } from "@/data/articlesData";
 
-// Detecta imagem de capa local em public/images/jornal/{slug}/capa.*
-const imageExts = [".jpg", ".jpeg", ".png", ".webp"];
+// Extensões de imagem aceites (qualquer ficheiro de imagem)
+const imageExts = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".bmp", ".tiff"]);
+
+// Detecta qualquer imagem na pasta public/images/jornal/{slug}/
 function findLocalCover(slug: string): string | null {
   const dir = path.join(process.cwd(), "public", "images", "jornal", slug);
-  for (const ext of imageExts) {
-    const filePath = path.join(dir, `capa${ext}`);
-    if (fs.existsSync(filePath)) {
-      return `/images/jornal/${slug}/capa${ext}`;
-    }
-  }
-  return null;
+  if (!existsSync(dir)) return null;
+  const files = readdirSync(dir);
+  const img = files.find((f) => imageExts.has(path.extname(f).toLowerCase()));
+  return img ? `/images/jornal/${slug}/${img}` : null;
 }
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";

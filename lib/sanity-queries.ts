@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { client } from "./client";
 
 // Portable Text block type (Sanity rich content)
@@ -151,22 +152,25 @@ const RELATED_ARTICLES_QUERY = `*[_type == "artigo" && slug.current != $slug && 
 // Query para slugs (sitemap / generateStaticParams)
 const ARTICLE_SLUGS_QUERY = `*[_type == "artigo"] { "slug": slug.current }`;
 
-// Funções helper
-export async function fetchArticlesList(): Promise<SanityArticle[]> {
-  return client.fetch(ARTICLES_LIST_QUERY);
-}
+// Funções helper — cache() deduplicates calls with the same args within a
+// single server request (e.g. generateMetadata + page component both calling
+// fetchArticleBySlug with the same slug). This avoids duplicate Sanity HTTP
+// requests and shaves ~100-300ms off SSR for article pages.
 
-export async function fetchArticleBySlug(slug: string): Promise<SanityArticle | null> {
-  return client.fetch(ARTICLE_DETAIL_QUERY, { slug });
-}
+export const fetchArticlesList = cache(
+  async (): Promise<SanityArticle[]> => client.fetch(ARTICLES_LIST_QUERY)
+);
 
-export async function fetchRelatedArticles(
-  slug: string,
-  category: string
-): Promise<SanityArticle[]> {
-  return client.fetch(RELATED_ARTICLES_QUERY, { slug, category });
-}
+export const fetchArticleBySlug = cache(
+  async (slug: string): Promise<SanityArticle | null> =>
+    client.fetch(ARTICLE_DETAIL_QUERY, { slug })
+);
 
-export async function fetchArticleSlugs(): Promise<Array<{ slug: string }>> {
-  return client.fetch(ARTICLE_SLUGS_QUERY);
-}
+export const fetchRelatedArticles = cache(
+  async (slug: string, category: string): Promise<SanityArticle[]> =>
+    client.fetch(RELATED_ARTICLES_QUERY, { slug, category })
+);
+
+export const fetchArticleSlugs = cache(
+  async (): Promise<Array<{ slug: string }>> => client.fetch(ARTICLE_SLUGS_QUERY)
+);

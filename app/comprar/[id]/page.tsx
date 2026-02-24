@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +9,13 @@ import { HorseSchema, BreadcrumbSchema } from "@/components/JsonLd";
 import { MapPin, Calendar, ArrowLeft, Phone, Mail, ChevronRight } from "lucide-react";
 
 import { CavaloVenda } from "@/types/cavalo";
+
+// cache() deduplicates this call between generateMetadata and the page component
+// within a single server request — saves 1 Supabase round-trip per page load
+const getCavalo = cache(async (id: string) => {
+  const { data } = await supabase.from("cavalos_venda").select("*").eq("id", id).single();
+  return data;
+});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
@@ -42,11 +50,8 @@ export async function generateMetadata({
   }
 
   try {
-    const { data: cavalo } = await supabase
-      .from("cavalos_venda")
-      .select("nome_cavalo, descricao, image_url, preco")
-      .eq("id", id)
-      .single();
+    // Reuses cached result from getCavalo() — no extra Supabase call
+    const cavalo = await getCavalo(id);
 
     if (cavalo) {
       const description = cavalo.descricao || `Cavalo Lusitano - ${cavalo.nome_cavalo}`;
@@ -121,8 +126,7 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
   }
   // --- MODO REAL (Supabase) ---
   else {
-    const { data } = await supabase.from("cavalos_venda").select("*").eq("id", id).single();
-    cavalo = data;
+    cavalo = await getCavalo(id);
   }
 
   if (!cavalo) {

@@ -14,10 +14,12 @@ export default async function CoudelariaPage({ params }: { params: Promise<{ slu
 
   if (!coudelaria) notFound();
 
-  // Approved reviews
+  // Approved reviews — only select columns used by CoudelariaDetail
   const { data: reviewsData } = await supabase
     .from("reviews")
-    .select("*")
+    .select(
+      "id, autor_nome, autor_localizacao, avaliacao, titulo, comentario, data_visita, tipo_visita, recomenda, created_at"
+    )
     .eq("status", "approved")
     .eq("coudelaria_id", coudelaria.id)
     .order("created_at", { ascending: false });

@@ -1,12 +1,13 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, ShoppingCart, Heart, User } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import { useLanguage } from "@/context/LanguageContext";
-export default function MobileBottomNav() {
+export default memo(function MobileBottomNav() {
   const pathname = usePathname();
   const { openCart, totalQuantity } = useCart();
   const { favoritesCount } = useHorseFavorites();
@@ -100,4 +101,4 @@ export default function MobileBottomNav() {
       </nav>
     </>
   );
-}
+});

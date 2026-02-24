@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Montserrat } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -12,7 +11,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["400", "700"],
   variable: "--font-serif",
   display: "swap",
   preload: true,
@@ -20,7 +19,7 @@ const playfair = Playfair_Display({
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "700"],
   variable: "--font-sans",
   display: "swap",
   preload: true,
@@ -168,13 +167,6 @@ export default function RootLayout({
             <Footer />
           </ErrorBoundary>
         </Providers>
-        {/* Google AdSense - lazyOnload: não bloqueia hidratação nem interatividade */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7254357453133228"
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-        />
       </body>
     </html>
   );

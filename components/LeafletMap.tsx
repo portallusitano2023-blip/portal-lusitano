@@ -1,6 +1,6 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -345,62 +345,16 @@ export default function LeafletMap({
               click: () => onMarkerClick?.(c),
             }}
           >
-            <Popup>
-              <div style={{ minWidth: 200, fontFamily: "inherit" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                  {c.destaque && (
-                    <span
-                      style={{
-                        background: "#C5A059",
-                        color: "#000",
-                        padding: "1px 6px",
-                        fontSize: 10,
-                        fontWeight: "bold",
-                        borderRadius: 4,
-                      }}
-                    >
-                      Destaque
-                    </span>
-                  )}
-                </div>
-                <h3 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 4px 0", color: "#111" }}>
-                  {c.nome}
-                </h3>
-                <p
-                  style={{
-                    fontSize: 12,
-                    color: "#666",
-                    margin: "0 0 8px 0",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 4,
-                  }}
-                >
-                  <span style={{ color: "#C5A059" }}>&#9679;</span> {c.localizacao}, {c.regiao}
-                </p>
-                <p style={{ fontSize: 12, color: "#888", margin: "0 0 10px 0", lineHeight: 1.4 }}>
-                  {c.descricao?.slice(0, 100)}
-                  {c.descricao?.length > 100 ? "..." : ""}
-                </p>
-                <a
-                  href={`/directorio/${c.slug}`}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    background: "#C5A059",
-                    color: "#000",
-                    padding: "6px 14px",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    borderRadius: 6,
-                    textDecoration: "none",
-                  }}
-                >
-                  Ver Página &rarr;
-                </a>
-              </div>
-            </Popup>
+            <Tooltip
+              direction="top"
+              offset={[0, -28]}
+              opacity={1}
+              className="leaflet-tooltip-portal"
+            >
+              <strong style={{ fontSize: 13 }}>{c.nome}</strong>
+              <br />
+              <span style={{ fontSize: 11, opacity: 0.7 }}>{c.localizacao}</span>
+            </Tooltip>
           </Marker>
         );
       })}

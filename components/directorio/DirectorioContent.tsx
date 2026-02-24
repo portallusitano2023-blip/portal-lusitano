@@ -370,7 +370,7 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
             </button>
             {showMap && (
               <div
-                className="mt-4 border border-[var(--border)] overflow-hidden"
+                className="mt-4 relative z-0 border border-[var(--border)] overflow-hidden"
                 style={{ height: 450 }}
               >
                 <LeafletMap

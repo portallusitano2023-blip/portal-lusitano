@@ -16,19 +16,16 @@ const slugMap: Record<string, string> = {
   "6": "novilheiro-rubi-revolucao-olimpica",
 };
 
-// Extensões de imagem suportadas (por ordem de prioridade)
-const imageExts = [".jpg", ".jpeg", ".png", ".webp"];
+// Extensões de imagem aceites (qualquer ficheiro de imagem)
+const imageExts = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".bmp", ".tiff"]);
 
-// Detecta imagem local em public/images/jornal/{slug}/capa.*
+// Detecta qualquer imagem na pasta public/images/jornal/{slug}/
 function findLocalCover(slug: string): string | null {
   const dir = path.join(process.cwd(), "public", "images", "jornal", slug);
-  for (const ext of imageExts) {
-    const filePath = path.join(dir, `capa${ext}`);
-    if (fs.existsSync(filePath)) {
-      return `/images/jornal/${slug}/capa${ext}`;
-    }
-  }
-  return null;
+  if (!fs.existsSync(dir)) return null;
+  const files = fs.readdirSync(dir);
+  const img = files.find((f) => imageExts.has(path.extname(f).toLowerCase()));
+  return img ? `/images/jornal/${slug}/${img}` : null;
 }
 
 // Fallback: converter dados locais para formato compatível com Sanity
