@@ -82,10 +82,21 @@ export async function POST(req: NextRequest) {
     // Upload ficheiros para Supabase Storage
     const uploadedUrls: string[] = [];
 
+    // Derive extension from MIME — never trust user-supplied filename
+    const mimeToExt: Record<string, string> = {
+      "image/jpeg": "jpg",
+      "image/png": "png",
+      "image/webp": "webp",
+      "image/gif": "gif",
+      "video/mp4": "mp4",
+      "video/quicktime": "mov",
+      "video/webm": "webm",
+    };
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 100);
-      const fileName = `${sessionId}/${Date.now()}_${safeName}`;
+      const ext = mimeToExt[file.type] || "bin";
+      const fileName = `${sessionId}/${Date.now()}_${crypto.randomUUID().slice(0, 8)}.${ext}`;
 
       const { error } = await supabase.storage.from("instagram_uploads").upload(fileName, file, {
         contentType: file.type,

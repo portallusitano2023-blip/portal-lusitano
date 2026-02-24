@@ -2239,15 +2239,17 @@ export default function ComparadorCavalosPage() {
                         </h3>
                         <div className="space-y-2 text-sm text-[var(--foreground-secondary)] leading-relaxed">
                           {linhas.map((linha, i) => (
-                            <p
-                              key={i}
-                              dangerouslySetInnerHTML={{
-                                __html: linha.replace(
-                                  /\*\*([^*]+)\*\*/g,
-                                  '<strong class="text-[var(--foreground)]">$1</strong>'
-                                ),
-                              }}
-                            />
+                            <p key={i}>
+                              {linha.split(/\*\*([^*]+)\*\*/).map((part, j) =>
+                                j % 2 === 1 ? (
+                                  <strong key={j} className="text-[var(--foreground)]">
+                                    {part}
+                                  </strong>
+                                ) : (
+                                  part
+                                )
+                              )}
+                            </p>
                           ))}
                         </div>
                         <div className="mt-4 pt-3 border-t border-[var(--border)]/40 flex flex-wrap items-center gap-3 text-xs text-[var(--foreground-muted)]">

@@ -32,18 +32,55 @@ function getClientIp(request: NextRequest): string {
 
 // Pre-computed at module load — avoids string concatenation on every request
 const IS_DEV = process.env.NODE_ENV === "development";
+const ALLOWED_ORIGIN = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
+
+/**
+ * CSRF protection: validate Origin header on state-changing requests.
+ * Rejects cross-origin POST/PUT/PATCH/DELETE unless from our own domain.
+ * Skips webhooks (Stripe sends from its own servers) and preflight OPTIONS.
+ */
+function isValidOrigin(request: NextRequest): boolean {
+  const method = request.method;
+  // Only check state-changing methods
+  if (method === "GET" || method === "HEAD" || method === "OPTIONS") return true;
+
+  const origin = request.headers.get("origin");
+  const referer = request.headers.get("referer");
+
+  // Webhooks (Stripe, cron) don't send Origin — allow server-to-server calls
+  if (!origin && !referer) return true;
+
+  const allowedHosts = [new URL(ALLOWED_ORIGIN).host, "localhost:3000", "localhost:3001"];
+
+  if (origin) {
+    try {
+      return allowedHosts.includes(new URL(origin).host);
+    } catch {
+      return false;
+    }
+  }
+
+  if (referer) {
+    try {
+      return allowedHosts.includes(new URL(referer).host);
+    } catch {
+      return false;
+    }
+  }
+
+  return false;
+}
 
 /**
  * Nonce-based CSP: generates a fresh nonce per request and embeds it in
- * script-src. The nonce is passed to server components via the x-nonce
- * request header so <script nonce> tags can match. unsafe-inline is kept
- * as a fallback for browsers that don't support nonces, but nonce-aware
- * browsers ignore unsafe-inline when a nonce is present.
+ * script-src. 'strict-dynamic' allows nonce-trusted scripts to load their
+ * own dependencies. No 'unsafe-inline' — nonce-aware browsers ignore it
+ * anyway, and removing it hardens CSP for all browsers.
  */
 function buildCsp(nonce: string): string {
   return [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-inline' 'nonce-${nonce}'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
     "font-src 'self' https://fonts.gstatic.com",
@@ -83,8 +120,37 @@ export async function middleware(request: NextRequest) {
 
   applySecurityHeaders(response, nonce);
 
-  // API routes: Rate Limiting + CORS
+  // API routes: CSRF + Rate Limiting + CORS + Admin guard
   if (pathname.startsWith("/api/")) {
+    // CSRF protection: reject cross-origin state-changing requests
+    if (!isValidOrigin(request)) {
+      return NextResponse.json({ error: "Forbidden: invalid origin" }, { status: 403 });
+    }
+
+    // Admin API guard (defense-in-depth — routes also check verifySession())
+    if (pathname.startsWith("/api/admin/") && !pathname.startsWith("/api/admin/login")) {
+      const token = request.cookies.get("admin_session")?.value;
+      if (!token) {
+        return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+      }
+      try {
+        if (!process.env.ADMIN_SECRET) {
+          return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+        }
+        const secret = new TextEncoder().encode(process.env.ADMIN_SECRET);
+        const { payload } = await jwtVerify(token, secret);
+        if (!payload.email || !payload.jti) {
+          return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+        }
+        const session = await redis.get(`session:${payload.jti}`);
+        if (!session) {
+          return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
+        }
+      } catch {
+        return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+      }
+    }
+
     // Skip rate limiting for webhooks and read-only public endpoints (saves Redis round-trip)
     const skipRateLimit =
       pathname.startsWith("/api/stripe/webhook") ||

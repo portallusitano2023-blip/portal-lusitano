@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase";
+import { supabasePublic, supabaseAdmin } from "@/lib/supabase";
 import { apiLimiter } from "@/lib/rate-limit";
 import { reviewSchema, toolReviewSchema, parseWithZod } from "@/lib/schemas";
 import { logger } from "@/lib/logger";
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let query = supabase
+    let query = supabasePublic
       .from("reviews")
       .select("*")
       .eq("status", "approved")
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
 
       const { ferramenta_slug, autor_nome, avaliacao, comentario, recomenda } = parsed.data;
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from("reviews")
         .insert({
           ferramenta_slug,
@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
         recomenda,
       } = parsed.data;
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from("reviews")
         .insert({
           coudelaria_id,
