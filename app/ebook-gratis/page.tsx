@@ -297,15 +297,15 @@ export default function EbookGratisPage() {
                 </div>
 
                 <div
-                  className="absolute -top-4 -right-4 sm:-top-5 sm:-right-5 bg-[var(--gold)] text-black px-5 py-2.5 text-xs font-bold shadow-lg opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                  style={{ animationDelay: "0.9s" }}
+                  className="absolute -top-4 -right-4 sm:-top-5 sm:-right-5 bg-[var(--gold)] text-black px-5 py-2.5 text-xs font-bold shadow-lg opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+                  style={{ animationDelay: "0.4s" }}
                 >
                   GRÁTIS
                 </div>
 
                 <div
-                  className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 bg-[var(--background-secondary)] border border-[var(--border)] px-4 py-2.5 shadow-xl flex items-center gap-2.5 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                  style={{ animationDelay: "1.1s" }}
+                  className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 bg-[var(--background-secondary)] border border-[var(--border)] px-4 py-2.5 shadow-xl flex items-center gap-2.5 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+                  style={{ animationDelay: "0.5s" }}
                 >
                   <div className="flex gap-0.5">
                     {[...Array(5)].map((_, i) => (

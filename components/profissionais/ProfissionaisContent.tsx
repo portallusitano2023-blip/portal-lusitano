@@ -252,7 +252,7 @@ export default function ProfissionaisContent({
         {/* Content */}
         <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
           {/* Label */}
-          <RevealOnScroll variant="fade-up" delay={400}>
+          <RevealOnScroll variant="fade-up" delay={100}>
             <span className="inline-block text-[var(--gold)] uppercase tracking-[0.3em] text-[10px] font-bold mb-6">
               {t.profissionais.badge}
             </span>
@@ -260,16 +260,16 @@ export default function ProfissionaisContent({
 
           {/* Title */}
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic mb-6">
-            <TextSplit text={t.profissionais.title} baseDelay={0.5} />
+            <TextSplit text={t.profissionais.title} baseDelay={0.15} />
           </h1>
 
           {/* Decorative line */}
-          <RevealOnScroll variant="fade-scale" delay={900}>
+          <RevealOnScroll variant="fade-scale" delay={200}>
             <div className="w-24 h-px mx-auto mb-6 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
           </RevealOnScroll>
 
           {/* Subtitle */}
-          <RevealOnScroll variant="blur-up" delay={1000}>
+          <RevealOnScroll variant="blur-up" delay={300}>
             <p className="text-lg sm:text-xl font-serif italic text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-10">
               {t.profissionais.subtitle}
             </p>

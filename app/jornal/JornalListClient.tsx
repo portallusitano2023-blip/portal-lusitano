@@ -193,14 +193,14 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
               />
 
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-[var(--foreground)] leading-[0.9] tracking-tight">
-                <TextSplit text={t.journal.title} baseDelay={0.3} wordDelay={0.1} />
+                <TextSplit text={t.journal.title} baseDelay={0.1} wordDelay={0.06} />
               </h1>
             </div>
 
             {/* Subtítulo editorial à direita */}
             <p
-              className="text-[var(--foreground-secondary)] font-serif italic text-base md:text-lg max-w-xs opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards] md:text-right"
-              style={{ animationDelay: "0.6s" }}
+              className="text-[var(--foreground-secondary)] font-serif italic text-base md:text-lg max-w-xs opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards] md:text-right"
+              style={{ animationDelay: "0.25s" }}
             >
               &ldquo;{t.journal.subtitle}&rdquo;
             </p>
@@ -208,8 +208,8 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
 
           {/* Linha separadora decorativa */}
           <div
-            className="mt-10 flex items-center gap-4 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.7s" }}
+            className="mt-10 flex items-center gap-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.3s" }}
           >
             <div className="flex-1 h-px bg-[var(--border)]" />
             <span className="text-[var(--gold)] text-[10px] uppercase tracking-[0.3em]">

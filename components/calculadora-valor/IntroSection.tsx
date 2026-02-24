@@ -33,37 +33,37 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <span
             className="inline-block px-4 py-1.5 bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.2s" }}
+            style={{ animationDelay: "0.1s" }}
           >
             {t.calculadora.badge}
           </span>
 
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.3s" }}
+            className="text-4xl sm:text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6 leading-tight opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.15s" }}
           >
             {t.calculadora.title}
             <span className="block text-[var(--gold)] mt-2">{t.calculadora.title_accent}</span>
           </h1>
 
           <p
-            className="text-lg text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.4s" }}
+            className="text-lg text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.2s" }}
           >
             &ldquo;{t.calculadora.intro_quote}&rdquo;
           </p>
 
           <p
-            className="text-sm text-[var(--foreground-muted)] max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.5s" }}
+            className="text-sm text-[var(--foreground-muted)] max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.25s" }}
           >
             {t.calculadora.intro_desc}
           </p>
 
           <button
             onClick={onStart}
-            className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[var(--gold)] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[var(--gold)] transition-all shadow-lg shadow-[var(--gold)]/20 hover:shadow-[var(--gold)]/30 hover:scale-[1.02] active:scale-[0.98] transition-transform opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.6s" }}
+            className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[var(--gold)] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[var(--gold)] transition-all shadow-lg shadow-[var(--gold)]/20 hover:shadow-[var(--gold)]/30 hover:scale-[1.02] active:scale-[0.98] transition-transform opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.3s" }}
           >
             <Calculator size={20} />
             {t.calculadora.start_btn}
@@ -76,8 +76,8 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
       <section className="py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <div
-            className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.7s" }}
+            className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.35s" }}
           >
             <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
               <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center mb-4">
@@ -118,8 +118,8 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
 
           {/* Info Box */}
           <div
-            className="mt-12 p-6 bg-[var(--gold)]/5 border border-[var(--gold)]/20 rounded-xl opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.8s" }}
+            className="mt-12 p-6 bg-[var(--gold)]/5 border border-[var(--gold)]/20 rounded-xl opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.4s" }}
           >
             <div className="flex items-start gap-4">
               <Info className="text-[var(--gold)] flex-shrink-0 mt-1" size={20} />

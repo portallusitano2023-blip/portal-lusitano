@@ -1098,22 +1098,22 @@ export default function ComparadorCavalosPage() {
 
                 <p
                   className="text-lg text-[var(--foreground-secondary)] max-w-2xl mx-auto mb-4 font-serif italic opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                  style={{ animationDelay: "0.4s" }}
+                  style={{ animationDelay: "0.2s" }}
                 >
                   &ldquo;{t.comparador.intro_quote}&rdquo;
                 </p>
 
                 <p
-                  className="text-sm text-[var(--foreground-muted)] max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                  style={{ animationDelay: "0.5s" }}
+                  className="text-sm text-[var(--foreground-muted)] max-w-xl mx-auto mb-10 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+                  style={{ animationDelay: "0.25s" }}
                 >
                   {t.comparador.intro_desc}
                 </p>
 
                 <button
                   onClick={() => setStep(1)}
-                  className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-400 hover:to-blue-500 transition-all shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                  style={{ animationDelay: "0.6s" }}
+                  className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-400 hover:to-blue-500 transition-all shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+                  style={{ animationDelay: "0.3s" }}
                 >
                   <Scale size={20} />
                   {t.comparador.start_btn}
@@ -1123,8 +1123,8 @@ export default function ComparadorCavalosPage() {
                 {/* Banner draft guardado */}
                 {hasDraft && (
                   <div
-                    className="mt-6 flex flex-col sm:flex-row items-center gap-3 px-5 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl max-w-sm mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                    style={{ animationDelay: "0.7s" }}
+                    className="mt-6 flex flex-col sm:flex-row items-center gap-3 px-5 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl max-w-sm mx-auto opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+                    style={{ animationDelay: "0.35s" }}
                   >
                     <p className="text-xs text-[var(--gold)] flex-1 text-center sm:text-left">
                       Tem uma comparação guardada de {draftDate}
@@ -1148,8 +1148,8 @@ export default function ComparadorCavalosPage() {
                 {/* Banner de boas-vindas — vindo da Análise de Perfil */}
                 {profileContext && (
                   <div
-                    className="mt-4 flex items-start gap-3 px-5 py-4 bg-gradient-to-r from-[var(--gold)]/15 to-[var(--gold)]/5 border border-[var(--gold)]/40 rounded-xl max-w-sm mx-auto opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                    style={{ animationDelay: "0.8s" }}
+                    className="mt-4 flex items-start gap-3 px-5 py-4 bg-gradient-to-r from-[var(--gold)]/15 to-[var(--gold)]/5 border border-[var(--gold)]/40 rounded-xl max-w-sm mx-auto opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+                    style={{ animationDelay: "0.4s" }}
                   >
                     <Sparkles size={16} className="text-[var(--gold)] shrink-0 mt-0.5" />
                     <p className="text-xs text-[var(--gold)] flex-1 leading-relaxed text-left">
@@ -1181,8 +1181,8 @@ export default function ComparadorCavalosPage() {
             <section className="py-16 px-6">
               <div className="max-w-6xl mx-auto">
                 <div
-                  className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                  style={{ animationDelay: "0.7s" }}
+                  className="grid md:grid-cols-3 gap-6 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+                  style={{ animationDelay: "0.35s" }}
                 >
                   <div className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl">
                     <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">

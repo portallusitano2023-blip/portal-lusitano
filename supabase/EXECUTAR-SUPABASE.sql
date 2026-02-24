@@ -289,12 +289,12 @@ INSERT INTO coudelarias (
 Localizada na região de Sintra, oferece serviços completos desde a criação até ao treino de alta competição. O Imperador dos Cedros tornou-se Campeão Nacional na categoria de cavalos jovens de 7 anos, montado por Vasco Mira Godinho.
 
 A coudelaria tem exportado cavalos para diversos países, com presença regular nos rankings internacionais de Dressage.',
-  'Sintra',
+  'Almargem do Bispo, Sintra',
   'Lisboa',
-  '+351 219 622 127',
-  'bcarrilho@sapo.pt',
+  '+351 964 431 437',
+  'coudelariaquintadoscedros@gmail.com',
   'https://www.coudelariaquintadoscedros.com',
-  45,
+  57,
   1995,
   ARRAY['Dressage', 'Cavalos Jovens', 'Alta Performance', 'Reprodução Equina'],
   ARRAY['Veiga', 'Andrade'],

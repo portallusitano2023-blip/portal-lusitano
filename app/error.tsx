@@ -34,7 +34,7 @@ export default function Error({
       <div className="relative z-10 text-center max-w-md w-full">
         {/* Ícone de exclamação estilizado */}
         <div
-          className="relative mb-8 opacity-0 animate-[scaleIn_0.8s_ease-out_forwards]"
+          className="relative mb-8 opacity-0 animate-[scaleIn_0.4s_ease-out_forwards]"
           aria-hidden="true"
         >
           {/* Grande exclamação decorativa em segundo plano */}
@@ -43,8 +43,8 @@ export default function Error({
           </span>
           {/* Exclamação dourada sobreposta */}
           <div
-            className="absolute inset-0 flex items-center justify-center opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-            style={{ animationDelay: "0.3s" }}
+            className="absolute inset-0 flex items-center justify-center opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.1s" }}
           >
             <span className="text-6xl md:text-8xl font-serif text-[var(--gold)]">!</span>
           </div>
@@ -53,16 +53,16 @@ export default function Error({
         {/* Título */}
         <h1
           id="error-title"
-          className="text-2xl md:text-3xl font-serif text-[var(--foreground)] mb-4 opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-          style={{ animationDelay: "0.4s" }}
+          className="text-2xl md:text-3xl font-serif text-[var(--foreground)] mb-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.15s" }}
         >
           {t.error_page.something_wrong}
         </h1>
 
         {/* Descrição */}
         <p
-          className="text-[var(--foreground-muted)] mb-8 font-serif italic opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-          style={{ animationDelay: "0.5s" }}
+          className="text-[var(--foreground-muted)] mb-8 font-serif italic opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.2s" }}
         >
           {t.error_page.apology}
         </p>
@@ -70,8 +70,8 @@ export default function Error({
         {/* Referência técnica (digest) — útil para suporte sem expor detalhes */}
         {error.digest && (
           <p
-            className="text-[var(--foreground-muted)] text-xs mb-6 font-mono opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-            style={{ animationDelay: "0.55s" }}
+            className="text-[var(--foreground-muted)] text-xs mb-6 font-mono opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.25s" }}
           >
             {t.error_page.reference} <span className="text-[var(--gold)]/70">{error.digest}</span>
           </p>
@@ -79,8 +79,8 @@ export default function Error({
 
         {/* Botões de ação */}
         <div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-          style={{ animationDelay: "0.6s" }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.3s" }}
         >
           <button
             onClick={reset}
@@ -100,8 +100,8 @@ export default function Error({
 
         {/* Contacto de suporte */}
         <p
-          className="text-[var(--foreground-muted)] text-xs mt-10 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-          style={{ animationDelay: "0.8s" }}
+          className="text-[var(--foreground-muted)] text-xs mt-10 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.4s" }}
         >
           {t.error_page.persist_contact}{" "}
           <a
@@ -114,8 +114,8 @@ export default function Error({
 
         {/* Ornamento inferior — igual à 404 */}
         <div
-          className="mt-12 flex items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-          style={{ animationDelay: "1s" }}
+          className="mt-12 flex items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.5s" }}
           aria-hidden="true"
         >
           <div className="w-12 h-[1px] bg-[var(--gold)]" />

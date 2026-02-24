@@ -43,12 +43,12 @@ export default function RevealOnScroll({
   children,
   className = "",
   delay = 0,
-  duration = 800,
+  duration = 500,
   variant = "fade-up",
-  distance = 40,
+  distance = 24,
 }: RevealOnScrollProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInViewOnce(ref, "-80px");
+  const inView = useInViewOnce(ref, "0px");
 
   const styles = getStyles(variant, inView, distance);
 

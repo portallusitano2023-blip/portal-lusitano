@@ -91,14 +91,30 @@ export default function ToolReviewForm({
         <label className="block text-sm font-medium text-[var(--foreground-secondary)] mb-2">
           A sua avaliação de {ferramentaNome}
         </label>
-        <div className="flex gap-1">
+        <div className="flex gap-1" role="radiogroup" aria-label="Avaliação por estrelas">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               type="button"
+              role="radio"
+              aria-checked={rating === star}
+              tabIndex={rating === star || (rating === 0 && star === 1) ? 0 : -1}
               onClick={() => setRating(star)}
               onMouseEnter={() => setHoverRating(star)}
               onMouseLeave={() => setHoverRating(0)}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+                  e.preventDefault();
+                  const next = Math.min(star + 1, 5);
+                  setRating(next);
+                  (e.currentTarget.nextElementSibling as HTMLElement)?.focus();
+                } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+                  e.preventDefault();
+                  const prev = Math.max(star - 1, 1);
+                  setRating(prev);
+                  (e.currentTarget.previousElementSibling as HTMLElement)?.focus();
+                }
+              }}
               className="p-1 transition-transform hover:scale-110"
               aria-label={`${star} ${star === 1 ? "estrela" : "estrelas"}`}
             >

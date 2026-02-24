@@ -16,13 +16,13 @@ export default function NotFound() {
 
       <div className="relative z-10 text-center max-w-2xl">
         {/* Numero 404 */}
-        <div className="relative mb-8 opacity-0 animate-[scaleIn_0.8s_ease-out_forwards]">
+        <div className="relative mb-8 opacity-0 animate-[scaleIn_0.4s_ease-out_forwards]">
           <span className="text-[180px] md:text-[250px] font-serif text-transparent bg-clip-text bg-gradient-to-b from-[var(--background-elevated)] to-transparent leading-none select-none">
             404
           </span>
           <div
-            className="absolute inset-0 flex items-center justify-center opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-            style={{ animationDelay: "0.3s" }}
+            className="absolute inset-0 flex items-center justify-center opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.1s" }}
           >
             <span className="text-6xl md:text-8xl font-serif text-[var(--gold)]">404</span>
           </div>
@@ -30,16 +30,16 @@ export default function NotFound() {
 
         {/* Titulo */}
         <h1
-          className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4 opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-          style={{ animationDelay: "0.4s" }}
+          className="text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.15s" }}
         >
           {t.not_found.title}
         </h1>
 
         {/* Descricao */}
         <p
-          className="text-[var(--foreground-muted)] mb-12 font-serif italic opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-          style={{ animationDelay: "0.5s" }}
+          className="text-[var(--foreground-muted)] mb-12 font-serif italic opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.2s" }}
         >
           {t.not_found.description}
           <br />
@@ -48,8 +48,8 @@ export default function NotFound() {
 
         {/* Botoes */}
         <div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-          style={{ animationDelay: "0.6s" }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.25s" }}
         >
           <Link
             href="/"
@@ -71,8 +71,8 @@ export default function NotFound() {
         {/* Link de voltar */}
         <button
           onClick={() => window.history.back()}
-          className="mt-12 inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors text-sm opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-          style={{ animationDelay: "0.8s" }}
+          className="mt-12 inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors text-sm opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.35s" }}
         >
           <ArrowLeft size={14} />
           {t.not_found.go_back}
@@ -80,8 +80,8 @@ export default function NotFound() {
 
         {/* Decoracao inferior */}
         <div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-          style={{ animationDelay: "1s" }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.45s" }}
         >
           <div className="w-12 h-[1px] bg-[var(--gold)]" />
           <span className="text-[8px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]">

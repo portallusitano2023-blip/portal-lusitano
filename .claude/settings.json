@@ -16,7 +16,15 @@
       "WebFetch(domain:joaolynce.com)",
       "WebFetch(domain:www.barreiramatosstud.com)",
       "WebFetch(domain:mgcoudelaria.pt)",
-      "Read(//c/Users/USUARIO/portal-lusitano/**)"
-    ]
+      "Read(//c/Users/USUARIO/portal-lusitano/**)",
+      "Bash(md5sum:*)",
+      "Bash(for file in /c/Users/USUARIO/portal-lusitano/app/*/layout.tsx)",
+      "Bash(do)",
+      "Bash(if ! grep -q \"export const metadata\" \"$file\")",
+      "Bash(then)",
+      "Bash(while read file)",
+      "Read(//c/Users/USUARIO/AppData/Local/Temp/claude/c--Users-USUARIO-portal-lusitano/tasks/**)"
+    ],
+    "additionalDirectories": ["\\tmp"]
   }
 }

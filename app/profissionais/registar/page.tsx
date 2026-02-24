@@ -277,8 +277,10 @@ export default function RegistarProfissionalPage() {
         setFotoPreview(base64);
         setFormData((prev) => ({ ...prev, fotoBase64: base64 }));
       };
+      img.onerror = () => setError(tp.error_photo_type);
       img.src = ev.target?.result as string;
     };
+    reader.onerror = () => setError(tp.error_photo_type);
     reader.readAsDataURL(file);
   };
 
@@ -375,6 +377,8 @@ export default function RegistarProfissionalPage() {
           documentos: [...prev.documentos, base64],
         }));
       };
+      reader.onerror = () =>
+        setError(`${tp.error_file_type_prefix}${file.name}${tp.error_file_type_suffix}`);
       reader.readAsDataURL(file);
     });
 

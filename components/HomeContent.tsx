@@ -262,7 +262,7 @@ export default function HomeContent() {
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
         {/* Parallax Background Image */}
         <ParallaxSection speed={0.4} className="absolute inset-0 z-0">
-          <div className="clip-reveal-left" style={{ animationDuration: "1.2s" }}>
+          <div className="clip-reveal-left" style={{ animationDuration: "0.6s" }}>
             <Image
               src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1920&auto=format&fit=crop"
               alt="Nobreza Lusitana"
@@ -292,32 +292,32 @@ export default function HomeContent() {
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto space-y-8">
           <p
-            className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[var(--gold)] opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-            style={{ animationDelay: "0.4s" }}
+            className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[var(--gold)] opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.1s" }}
           >
             {t.home.est}
           </p>
 
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] leading-[0.9] drop-shadow-lg">
-            <TextSplit text={t.home.title_main} baseDelay={0.5} wordDelay={0.12} />
+            <TextSplit text={t.home.title_main} baseDelay={0.15} wordDelay={0.06} />
           </h1>
 
           {/* Decorative line */}
           <div
-            className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent mx-auto opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-            style={{ animationDelay: "0.85s" }}
+            className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent mx-auto opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.3s" }}
           />
 
           <p
-            className="text-sm md:text-base font-serif italic text-[var(--foreground)]/80 max-w-lg mx-auto leading-relaxed drop-shadow-md opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-            style={{ animationDelay: "0.9s" }}
+            className="text-sm md:text-base font-serif italic text-[var(--foreground)]/80 max-w-lg mx-auto leading-relaxed drop-shadow-md opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.35s" }}
           >
             &ldquo;{t.home.hero_text}&rdquo;
           </p>
 
           <div
-            className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-            style={{ animationDelay: "1.1s" }}
+            className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.45s" }}
           >
             <MagneticButton strength={0.2}>
               <Link
@@ -340,8 +340,8 @@ export default function HomeContent() {
 
         {/* Scroll Indicator */}
         <div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
-          style={{ animationDelay: "1.5s" }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          style={{ animationDelay: "0.6s" }}
         >
           <span className="text-[9px] tracking-[0.3em] uppercase text-[var(--foreground-muted)]">
             {t.home.scroll}

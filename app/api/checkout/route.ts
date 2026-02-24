@@ -2,7 +2,13 @@ import { createCart, addToCart } from "@/lib/shopify";
 import { apiSuccess, apiError } from "@/lib/api-response";
 
 export async function POST(request: Request) {
-  const body = await request.json();
+  let body: { variantId?: string };
+  try {
+    body = await request.json();
+  } catch {
+    return apiError("Corpo do pedido inválido", 400);
+  }
+
   const { variantId } = body;
 
   if (!variantId) {

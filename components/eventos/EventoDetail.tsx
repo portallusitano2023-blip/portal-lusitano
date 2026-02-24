@@ -485,8 +485,8 @@ END:VCALENDAR`;
         {/* Eventos Relacionados */}
         {relacionados.length > 0 && (
           <section
-            className="mt-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.6s" }}
+            className="mt-16 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.3s" }}
           >
             <h2 className="text-2xl font-serif text-[var(--foreground)] mb-6">
               Eventos Relacionados

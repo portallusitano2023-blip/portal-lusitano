@@ -11,5 +11,5 @@ export { SeccaoOlimpiadas } from "./SeccaoOlimpiadas";
 export { SeccaoPortugal } from "./SeccaoPortugal";
 export { SeccaoRegulamentacao } from "./SeccaoRegulamentacao";
 export { SeccaoTratamento } from "./SeccaoTratamento";
-export { useInViewOnce } from "./useInViewOnce";
+export { useInViewOnce } from "@/hooks/useInViewOnce";
 export type { SeccaoExpandivel } from "./types";

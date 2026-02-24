@@ -2,7 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
-import { useInViewOnce } from "./useInViewOnce";
+import { useInViewOnce } from "@/hooks/useInViewOnce";
 import type { SeccaoExpandivel } from "./types";
 
 export function SeccaoCard({
