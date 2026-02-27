@@ -21,6 +21,15 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
+    // next/dynamic com ssr:false lança este erro no servidor — é comportamento
+    // esperado do Next.js, NÃO um erro real. Se o apanharmos aqui, impedimos
+    // a hidratação e os event handlers deixam de funcionar no cliente.
+    if (
+      error.message?.includes("Bail out to client-side rendering") ||
+      error.message?.includes("BAILOUT_TO_CLIENT_SIDE_RENDERING")
+    ) {
+      throw error; // re-throw para o Next.js tratar normalmente
+    }
     return { hasError: true, error };
   }
 

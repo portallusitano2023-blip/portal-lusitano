@@ -48,6 +48,7 @@ export interface CavaloFamoso {
   id: string;
   nome: string;
   apelido?: string;
+  imagem?: string;
   anoNascimento: number;
   anoFalecimento?: number;
   coudelaria: string;

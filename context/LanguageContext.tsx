@@ -9,18 +9,28 @@ import React, {
   useMemo,
   ReactNode,
 } from "react";
-import pt from "@/locales/pt.json";
+// Type-only import — erased at compile time, does NOT bundle the 100KB JSON
+import type ptType from "@/locales/pt.json";
 
-type Translations = typeof pt;
+type Translations = typeof ptType;
 type Language = "pt" | "en" | "es";
 
-// Cache loaded translations — pt always available, en/es loaded on demand
-const translationsCache: Record<Language, Translations | null> = { pt, en: null, es: null };
+// All translations loaded on demand. PT starts loading immediately at module
+// evaluation so it's typically ready before React mounts.
+const translationsCache: Record<Language, Translations | null> = { pt: null, en: null, es: null };
 
-const loaders: Record<string, () => Promise<{ default: Translations }>> = {
+const loaders: Record<Language, () => Promise<{ default: Translations }>> = {
+  pt: () => import("@/locales/pt.json") as Promise<{ default: Translations }>,
   en: () => import("@/locales/en.json") as Promise<{ default: Translations }>,
   es: () => import("@/locales/es.json") as Promise<{ default: Translations }>,
 };
+
+// Kick off PT load immediately — resolves before first paint in most cases
+let ptReady: Translations | null = null;
+loaders.pt().then((mod) => {
+  ptReady = mod.default;
+  translationsCache.pt = mod.default;
+});
 
 async function loadTranslations(lang: Language): Promise<Translations> {
   if (translationsCache[lang]) return translationsCache[lang]!;
@@ -46,7 +56,19 @@ export function LanguageProvider({
 }) {
   const [language, setLanguage] = useState<Language>(initialLanguage);
 
-  const [t, setT] = useState<Translations>(translationsCache[language] ?? pt);
+  // ptReady is non-null if the module-level dynamic import resolved before this
+  // component mounts (the common case). Otherwise we load on effect.
+  const [t, setT] = useState<Translations | null>(translationsCache[language] ?? ptReady);
+
+  // Ensure translations are loaded (handles edge case where PT import hasn't
+  // resolved yet when the component first mounts)
+  useEffect(() => {
+    if (!translationsCache[language]) {
+      loadTranslations(language).then((data) => setT(data));
+    } else if (!t) {
+      setT(translationsCache[language]);
+    }
+  }, [language]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Read locale from cookie on mount — allows root layout to be static (no cookies() call)
   // while still picking up the locale set by middleware for /en/* and /es/* routes.
@@ -72,7 +94,9 @@ export function LanguageProvider({
     }
   }, [language]);
 
-  // Derive final translations: use cache if available (instant), else fall back to state
+  // Derive final translations: use cache if available (instant), else fall back to state.
+  // During the brief window before PT loads, resolvedT may be null — children
+  // won't render (see guard below).
   const resolvedT = translationsCache[language] ?? t;
 
   const toggleLanguage = useCallback(() => {
@@ -88,11 +112,15 @@ export function LanguageProvider({
   // Memoize the context value object so consumers only re-render when
   // language or translations actually change — not on every provider render.
   const contextValue = useMemo(
-    () => ({ language, toggleLanguage, t: resolvedT }),
+    () => (resolvedT ? { language, toggleLanguage, t: resolvedT } : null),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [language, resolvedT]
     // toggleLanguage is stable (useCallback with no deps), excluded intentionally
   );
+
+  // While translations are loading (typically <50ms), render nothing to avoid
+  // hydration mismatches. The module-level preload means this almost never triggers.
+  if (!contextValue) return null;
 
   return <LanguageContext.Provider value={contextValue}>{children}</LanguageContext.Provider>;
 }

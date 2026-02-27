@@ -100,7 +100,10 @@ export default function ShareButtons({
     }
   };
 
-  const hasNativeShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
+  const hasNativeShare =
+    typeof window !== "undefined" &&
+    typeof navigator !== "undefined" &&
+    typeof navigator.share === "function";
 
   // Close dialog when clicking outside
   useEffect(() => {

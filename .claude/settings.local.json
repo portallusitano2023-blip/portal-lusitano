@@ -150,7 +150,9 @@
       "WebFetch(domain:www.mediotejo.net)",
       "WebFetch(domain:app.springcast.fm)",
       "WebFetch(domain:www.pole-equestre-carlos-pinto.com)",
-      "Bash(del \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\supabase\\\\update-lusitanos-datela.json\")"
+      "Bash(del \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\supabase\\\\update-lusitanos-datela.json\")",
+      "WebFetch(domain:camplinehorses.net)",
+      "Read(//c/Users/USUARIO/.claude/plans/**)"
     ]
   }
 }

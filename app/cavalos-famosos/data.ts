@@ -2,7 +2,7 @@
 // BASE DE DADOS VERIFICADA - Cavalos Famosos Lusitanos
 // =============================================================================
 //
-// ✅ VERIFICAÇÃO COMPLETA: 2026-02-10
+// ✅ VERIFICAÇÃO COMPLETA: 2026-02-10 (15 cavalos) + 2026-02-25 (8 novos cavalos)
 //
 // RIGOR ABSOLUTO: Todos os dados foram verificados em fontes credíveis escritas
 // Fontes incluídas como comentários // FONTE: acima de cada cavalo
@@ -18,7 +18,7 @@
 // CAVALO REMOVIDO:
 // - Opus 72 (dados olímpicos INCORRETOS - Londres 2012 foi Gonçalo Carvalho + Rubi AR)
 //
-// TOTAL: 15 cavalos, 100% com fontes verificadas
+// TOTAL: 23 cavalos, 100% com fontes verificadas
 //
 import { CavaloFamoso } from "./types";
 
@@ -26,14 +26,17 @@ export const cavalosFamosos: CavaloFamoso[] = [
   {
     // FONTE: https://www.horsetelex.com/horses/pedigree/1710500/novilheiro
     // FONTE: http://www.lusitanocollection.com/novi.htm
+    // FONTE: https://interagro.com.br (pedigree verificado)
+    // FONTE: SporthorseData (altura 165cm, pelagem Grey, pedigree 5 gerações confirmado)
     id: "1",
     nome: "Novilheiro",
+    imagem: "/images/cavalos-famosos/novilheiro/capa.webp",
     apelido: "O Lendário",
     anoNascimento: 1971,
     anoFalecimento: 2000,
     coudelaria: "Coudelaria Manuel Veiga",
-    pelagem: "Ruço",
-    altura: 162,
+    pelagem: "Tordilho",
+    altura: 165,
     disciplina: "Saltos / Dressage / Toureio",
     cavaleiro: "John Whitaker",
     linhagem: "Veiga/Andrade",
@@ -45,9 +48,9 @@ export const cavalosFamosos: CavaloFamoso[] = [
       "Revolucionou a imagem do Lusitano no mundo",
     ],
     descricao:
-      "Novilheiro é o Lusitano mais célebre da história dos desportos equestres. Nascido a 17 de Abril de 1971, começou no toureio em Portugal, evoluiu para dressage Grand Prix com Jean Philip Geacomini, competiu em Concurso Completo, e tornou-se lenda nos saltos com John Whitaker, sendo o cavalo com maior prémio acumulado na Europa em 1983.",
+      "Novilheiro é o Lusitano mais célebre da história dos desportos equestres. Nascido a 27 de Abril de 1971, começou no toureio em Portugal, evoluiu para dressage Grand Prix em França, competiu em Concurso Completo, e tornou-se lenda nos saltos com John Whitaker, sendo o cavalo com maior prémio acumulado na Europa em 1983. Nível de competição: Grand Prix Nacional de Saltos (1.40m).",
     curiosidades: [
-      "Nasceu a 17 de Abril de 1971",
+      "Nasceu a 27 de Abril de 1971",
       "Filho de Firme (SA) com Guerrita (MV), criado por Manuel Veiga",
       "Foi descoberto por John Whitaker em França",
       "Regressou a Portugal em 1987, adquirido por Arsénio Raposo Cordeiro",
@@ -57,8 +60,13 @@ export const cavalosFamosos: CavaloFamoso[] = [
     legado:
       "O Lusitano mais versátil e célebre da história - provou que a raça pode brilhar em qualquer disciplina",
     pedigree: {
+      // VERIFICADO: Interagro Lusitanos (pedigree completo)
       pai: { nome: "Firme (SA)", coudelaria: "Fernando Sommer d'Andrade", destaque: true },
       mae: { nome: "Guerrita (MV)", coudelaria: "Coudelaria Manuel Veiga" },
+      avoPaterno: { nome: "Príncipe VIII (FCN)", coudelaria: "Fundação Casa de Noronha" },
+      avoaPaterna: { nome: "Segura (SA)", coudelaria: "Fernando Sommer d'Andrade" },
+      avoMaterno: { nome: "Bailador (MV)", coudelaria: "Coudelaria Manuel Veiga" },
+      avoaMaterna: { nome: "Toleirona (MV)", coudelaria: "Coudelaria Manuel Veiga" },
     },
     // REMOVIDO: estatisticasDescendentes (números específicos SEM FONTE)
     historicoPerformance: [
@@ -73,7 +81,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
       { ano: 1983, evento: "Líder Prémios Europa Saltos", resultado: "Campeão", destaque: true },
       { ano: 1985, evento: "Campeão Britânico Saltos", resultado: "Ouro", destaque: true },
       { ano: 1987, evento: "Regresso a Portugal", resultado: "Reprodutor", destaque: true },
-      { ano: 2000, evento: "Falecimento aos 27 anos", resultado: "Lenda Eterna", destaque: true },
+      { ano: 2000, evento: "Falecimento aos 29 anos", resultado: "Lenda Eterna", destaque: true },
     ],
     // REMOVIDO: indiceReproducao (scorePrepotencia, blupEstimado SEM FONTE)
     // REMOVIDO: influenciaGenetica (SEM FONTE - cálculo não verificável)
@@ -90,6 +98,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // FONTE: https://www.horsemagazine.com/thm/2018/11/pedro-torres-new-face-at-equitana/
     id: "4",
     nome: "Oxidado",
+    imagem: "/images/cavalos-famosos/oxidado/capa.webp",
     apelido: "O Rei da Working Equitation",
     anoNascimento: 1994,
     anoFalecimento: 2020,
@@ -136,8 +145,10 @@ export const cavalosFamosos: CavaloFamoso[] = [
   {
     // FONTE: https://www.eurodressage.com/2010/10/12/rubi-king-lusitanos-takes-his-throne
     // FONTE: https://www.superiorequinesires.com/rubi-alter-real/
+    // FONTE: https://www.teamrubi.com/horses/rubi-ar/
     id: "5",
     nome: "Rubi AR",
+    imagem: "/images/cavalos-famosos/rubi-ar/capa.webp",
     anoNascimento: 1998,
     coudelaria: "Coudelaria de Alter Real",
     pelagem: "Castanho",
@@ -146,22 +157,28 @@ export const cavalosFamosos: CavaloFamoso[] = [
     cavaleiro: "Gonçalo Carvalho",
     linhagem: "Alter Real",
     conquistas: [
-      "16º lugar nos Jogos Olímpicos de Londres 2012",
-      "19 vitórias internacionais",
-      "77.8% Grand Prix em Vilamoura (recorde)",
+      "16º lugar nos Jogos Olímpicos de Londres 2012 (77% Freestyle, 74% GPS)",
+      "19 vitórias internacionais em Grand Prix",
+      "Garanhão reprodutor 5 estrelas APSL para Dressage",
+      "77.8% Grand Prix em Vilamoura (recorde Lusitano)",
       "Recordista Lusitano em Kür durante 6 anos",
       "19º no Ranking Mundial FEI Dressage",
-      "41º no WBFSH Sire Rankings 2017 (Ibérico mais alto)",
+      "1º Ibérico no WBFSH Top 50 Sire Rankings (41º em 2017)",
+      "4 Campeonatos Seniores consecutivos (WEG 2010, Europeu 2011, Olímpicos 2012, Europeu 2013)",
     ],
     descricao:
-      "Rubi AR foi o Rei dos Lusitanos na dressage internacional. Com Gonçalo Carvalho, representou Portugal nos Jogos Olímpicos de Londres 2012, ficando em 16º lugar individual e qualificando-se para a final do Kür. Alcançou 77.8% em Grand Prix, sendo o Lusitano mais pontuado durante 6 anos.",
+      "Rubi AR é o Lusitano com a melhor carreira internacional de sempre na dressage. Com Gonçalo Carvalho, representou Portugal em 4 campeonatos seniores consecutivos, incluindo os Jogos Olímpicos de Londres 2012, onde ficou em 16º lugar individual com 77% no Freestyle e 74% no Grand Prix Special. É também um dos garanhões reprodutores mais bem-sucedidos, com filhos a pontuar até 86% em provas FEI.",
     curiosidades: [
       "Parceria icónica com Gonçalo Carvalho desde 2006",
       "Proprietária: Christine Jacoberger",
-      "Retirado da reprodução em 2020",
+      "Filho de Batial AR x He-Xila (por Xaquiro) — criado na Coudelaria de Alter Real",
+      "Primeiro Ibérico a entrar no Top 50 do WBFSH; o pai Batial chegou a 51º em 2012 baseado nos resultados de Rubi",
+      "Transmite tamanho, beleza, funcionalidade e carácter aos descendentes",
+      "Progenia com scores até 86% em provas FEI de Dressage",
     ],
     destaque: true,
-    legado: "O Lusitano que provou ser possível competir ao mais alto nível mundial",
+    legado:
+      "O Lusitano com a melhor carreira de sempre — e o garanhão reprodutor que está a criar a próxima geração de campeões",
     pedigree: {
       pai: { nome: "Batial", coudelaria: "Coudelaria de Alter Real", destaque: true },
       mae: { nome: "He-Xila", coudelaria: "Coudelaria de Alter Real" },
@@ -171,16 +188,27 @@ export const cavalosFamosos: CavaloFamoso[] = [
       {
         ano: 2006,
         evento: "Início parceria Gonçalo Carvalho",
-        resultado: "Início",
+        resultado: "Início carreira internacional",
         destaque: true,
       },
       {
         ano: 2010,
         evento: "World Equestrian Games Kentucky",
-        resultado: "Representante",
+        resultado: "Representante de Portugal",
         destaque: true,
       },
-      { ano: 2012, evento: "Jogos Olímpicos Londres", resultado: "16º Individual", destaque: true },
+      {
+        ano: 2011,
+        evento: "Campeonato Europeu Roterdão",
+        resultado: "Representante de Portugal",
+        destaque: true,
+      },
+      {
+        ano: 2012,
+        evento: "Jogos Olímpicos Londres",
+        resultado: "16º Individual (77% Freestyle)",
+        destaque: true,
+      },
       { ano: 2013, evento: "Europeu Herning", resultado: "11º Equipa", destaque: true },
     ],
     // REMOVIDO: indiceReproducao (SEM FONTE)
@@ -192,6 +220,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // FONTE: https://eurodressage.com/2019/08/12/joao-torrao-and-equador-mvl-shooting-stars-portuguese-dressage
     id: "6",
     nome: "Quo Vadis",
+    imagem: "/images/cavalos-famosos/quo-vadis/capa.webp",
     apelido: "Campeão Mundial de Atrelagem",
     anoNascimento: 1992,
     coudelaria: "Coudelaria Monte Velho",
@@ -235,6 +264,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // VERIFICADO: 2026-02-10 - Cavalo demonstrado por Nuno Oliveira em Genebra 1967
     id: "7",
     nome: "Euclides",
+    imagem: "/images/cavalos-famosos/euclides/capa.webp",
     apelido: "Cavalo do Mestre",
     anoNascimento: 1958,
     coudelaria: "Portugal",
@@ -266,6 +296,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // VERIFICADO: 2026-02-10 - Pai de Novilheiro/Nilo/Neptuno/Opus II confirmado
     id: "9",
     nome: "Firme",
+    imagem: "/images/cavalos-famosos/firme/capa.webp",
     apelido: "O Patriarca Moderno",
     anoNascimento: 1956,
     anoFalecimento: 1978,
@@ -308,6 +339,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // VERIFICADO: 2026-02-10 - Campeão dos Campeões 1974, "true head of the Lusitano breed"
     id: "10",
     nome: "Nilo",
+    imagem: "/images/cavalos-famosos/nilo/capa.webp",
     apelido: "Chefe de Raça",
     anoNascimento: 1971,
     anoFalecimento: 1995,
@@ -351,6 +383,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // VERIFICADO: 2026-02-10 - FIPSL 1988/2004, +100 medalhas descendentes, pai de Oxidado
     id: "11",
     nome: "Xaquiro",
+    imagem: "/images/cavalos-famosos/xaquiro/capa.webp",
     apelido: "O Pai de Campeões",
     anoNascimento: 1980,
     anoFalecimento: 2005,
@@ -409,9 +442,11 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
     // FONTE: https://lusitano-interagro.com/three-main-lines/
     // FONTE: https://uslusitano.org/index.php/lusitano-info-news/lusitano-info/history-j
-    // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" (Chefes de Linhagem) oficiais
+    // FONTE: The Lusitano Collection — "a 1931 Veiga stallion, out of Bagocha, by Lidador"
+    // VERIFICADO: 2026-02-10 + 2026-02-25 - Um dos 6 "Line Chiefs" (Chefes de Linhagem) oficiais
     id: "12",
     nome: "Agareno",
+    imagem: "/images/cavalos-famosos/agareno/capa.webp",
     apelido: "O Fundador Veiga",
     anoNascimento: 1931,
     coudelaria: "Coudelaria Manuel Veiga (MV)",
@@ -450,6 +485,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" oficiais
     id: "13",
     nome: "Primoroso",
+    imagem: "/images/cavalos-famosos/primoroso/capa.webp",
     apelido: "Chefe de Linha",
     anoNascimento: 1927,
     coudelaria: "Dominguez Hermanos (DH)",
@@ -485,6 +521,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" oficiais
     id: "14",
     nome: "Destinado",
+    imagem: "/images/cavalos-famosos/destinado/capa.webp",
     apelido: "Chefe de Linha",
     anoNascimento: 1930,
     coudelaria: "Dominguez Hermanos (DH)",
@@ -517,6 +554,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" oficiais
     id: "17",
     nome: "Marialva II",
+    imagem: "/images/cavalos-famosos/marialva-ii/capa.webp",
     apelido: "Chefe de Linha",
     anoNascimento: 1930,
     coudelaria: "Antonio Fontes Pereira de Melo (APM)",
@@ -549,6 +587,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // VERIFICADO: 2026-02-10 - Única ÉGUA entre os 6 "Line Chiefs" oficiais
     id: "18",
     nome: "Hucharia",
+    imagem: "/images/cavalos-famosos/hucharia/capa.webp",
     apelido: "A Única Égua Fundadora",
     anoNascimento: 1943,
     coudelaria: "Coudelaria Nacional (CN)",
@@ -579,9 +618,11 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // FONTE: Livro Genealógico Português de Equinos (31/Dez/1989)
     // FONTE: https://lusitano-interagro.com/three-main-lines/
     // FONTE: https://uslusitano.org/index.php/lusitano-info-news/lusitano-info/history-j
-    // VERIFICADO: 2026-02-10 - Um dos 6 "Line Chiefs" oficiais, único Alter Real
+    // FONTE: The Lusitano Collection — "a 1923 Alter Real stallion, out of Gavina, by Gavioto"
+    // VERIFICADO: 2026-02-10 + 2026-02-25 - Um dos 6 "Line Chiefs" oficiais, único Alter Real
     id: "15",
     nome: "Regedor",
+    imagem: "/images/cavalos-famosos/regedor/capa.webp",
     apelido: "O Alter Real",
     anoNascimento: 1923,
     coudelaria: "Coudelaria de Alter Real (AR)",
@@ -618,6 +659,7 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // FONTE: https://www.horseandhound.co.uk/news/joao-torrao-equador-dies-786026
     id: "16",
     nome: "Equador MVL",
+    imagem: "/images/cavalos-famosos/equador-mvl/capa.webp",
     apelido: "A Estrela de Monte Velho",
     anoNascimento: 2009,
     anoFalecimento: 2022,
@@ -671,5 +713,450 @@ export const cavalosFamosos: CavaloFamoso[] = [
     // REMOVIDO: indiceReproducao (SEM FONTE)
     // REMOVIDO: estatisticasDescendentes (SEM FONTE - Equador MVL faleceu em 2022)
     // REMOVIDO: influenciaGenetica (SEM FONTE)
+  },
+  // =========================================================================
+  // ADICIONADOS 2026-02-25 — Pesquisa verificada em múltiplas fontes credíveis
+  // =========================================================================
+  {
+    // FONTE: https://www.eurodressage.com/2006/11/26/guizo-passed-away
+    // FONTE: https://www.cavalo-lusitano.com/en/lusitano-horse/sport-successes/dressage
+    // FONTE: https://horsesdaily.com/article/a-few-thoughts-on-the-passing-of-guizo/
+    // VERIFICADO: 2026-02-25 — Primeiro Lusitano medalhista olímpico (Atenas 2004, prata equipas)
+    id: "19",
+    nome: "Guizo",
+    imagem: "/images/cavalos-famosos/guizo/capa.webp",
+    apelido: "O Primeiro Medalhista Olímpico",
+    anoNascimento: 1988,
+    anoFalecimento: 2006,
+    coudelaria: "Fundação Eugénio de Almeida",
+    pelagem: "Castanho",
+    disciplina: "Dressage",
+    cavaleiro: "Juan Antonio Jimenez Cobo (ESP)",
+    linhagem: "Lusitano",
+    conquistas: [
+      "Medalha de PRATA por equipas nos Jogos Olímpicos Atenas 2004",
+      "Primeiro Lusitano a conquistar uma medalha olímpica",
+      "Bronze por equipas nos Jogos Equestres Mundiais 2002 (Jerez)",
+      "Prata por equipas no Campeonato Europeu 2003 (Hickstead)",
+      "5º lugar individual no Campeonato Europeu 2005",
+      "Campeão Nacional de Espanha 2005",
+    ],
+    descricao:
+      "Guizo é o Lusitano mais laureado da história olímpica. Garanhão castanho criado pela Fundação Eugénio de Almeida, conquistou com Juan Antonio Jimenez Cobo a medalha de prata por equipas nos Jogos Olímpicos de Atenas 2004, tornando-se o primeiro Lusitano a subir ao pódio olímpico. Acumulou medalhas em quatro campeonatos consecutivos entre 2002 e 2005.",
+    curiosidades: [
+      "Medalhas em 4 campeonatos consecutivos: WEG 2002, Europeu 2003, JO 2004, Europeu 2005",
+      "Faleceu em Novembro de 2006 aos 18 anos, vítima de cólica aguda",
+      "Jimenez continuou a competir em Lusitanos até Paris 2024 (24 anos de carreira olímpica)",
+    ],
+    destaque: true,
+    legado:
+      "O primeiro Lusitano medalhista olímpico — abriu as portas da excelência para toda a raça",
+    pedigree: {
+      pai: { nome: "Zasebande", destaque: true },
+      mae: { nome: "Cataria", coudelaria: "Fundação Eugénio de Almeida" },
+      avoMaterno: { nome: "Tivoli" },
+    },
+    historicoPerformance: [
+      { ano: 2002, evento: "WEG Jerez", resultado: "Bronze Equipas", destaque: true },
+      { ano: 2003, evento: "Europeu Hickstead", resultado: "Prata Equipas", destaque: true },
+      { ano: 2004, evento: "Jogos Olímpicos Atenas", resultado: "PRATA Equipas", destaque: true },
+      { ano: 2005, evento: "Europeu", resultado: "5º Individual", destaque: true },
+      { ano: 2005, evento: "Nacional Espanha", resultado: "Campeão", destaque: true },
+      { ano: 2006, evento: "Falecimento", resultado: "Novembro 2006", destaque: true },
+    ],
+  },
+  {
+    // FONTE: https://eurodressage.com/2010/06/15/orphee-rbo-iberian-trail-blazer
+    // FONTE: https://www.cavalo-lusitano.com/en/lusitano-horse/sport-successes/dressage
+    // VERIFICADO: 2026-02-25 — Primeiro cavalo ibérico nos JO em dressage (Barcelona 1992)
+    id: "20",
+    nome: "Orphée RBO",
+    imagem: "/images/cavalos-famosos/orphee-rbo/capa.webp",
+    apelido: "O Pioneiro Olímpico",
+    anoNascimento: 1980,
+    anoFalecimento: 1998,
+    coudelaria: "Roger Bouzin (França)",
+    pelagem: "Ruço",
+    disciplina: "Dressage",
+    cavaleiro: "Catherine Henriquet (FRA)",
+    linhagem: "Lusitano",
+    conquistas: [
+      "Primeiro cavalo ibérico a competir em dressage nos Jogos Olímpicos (Barcelona 1992)",
+      "25º lugar de ~50 cavalos nos JO Barcelona 1992",
+      "2º melhor cavalo da equipa francesa nos JO 1992 (França 9ª por equipas)",
+      "Múltiplas qualificações para o Grand Prix Special em CDIs internacionais",
+    ],
+    descricao:
+      "Orphée RBO fez história ao tornar-se o primeiro cavalo ibérico a competir em dressage nos Jogos Olímpicos. Em Barcelona 1992, com a cavaleira francesa Catherine Henriquet, terminou em 25º lugar de cerca de 50 cavalos, demonstrando harmonia e estilo que impressionaram o mundo. Criado em França por Roger Bouzin, era filho de Emir, um garanhão português importado.",
+    curiosidades: [
+      "Criado em França a partir de um garanhão português importado (Emir)",
+      "Catherine Henriquet começou a competir com ele em 1988, quando tinha 8 anos",
+      "Depois de se reformar aos 16 anos, foi para Portugal para reprodução",
+      "Faleceu em 1998 em Portugal, vítima de cólica, aos 18 anos",
+    ],
+    destaque: true,
+    legado:
+      "O pioneiro — primeiro cavalo ibérico nos Jogos Olímpicos em dressage, abrindo caminho para todos os que vieram depois",
+    pedigree: {
+      pai: { nome: "Emir", destaque: true },
+    },
+    historicoPerformance: [
+      { ano: 1988, evento: "Início competição com Henriquet", resultado: "CDIs", destaque: true },
+      {
+        ano: 1992,
+        evento: "Jogos Olímpicos Barcelona",
+        resultado: "25º Individual",
+        destaque: true,
+      },
+      { ano: 1996, evento: "Reforma / Reprodução Portugal", resultado: "Reprodutor" },
+      { ano: 1998, evento: "Falecimento", resultado: "Portugal, aos 18 anos", destaque: true },
+    ],
+  },
+  {
+    // FONTE: https://www.horseandhound.co.uk/features/tokyo-olympic-dressage-horse-of-the-day-stallion-fogoso-755416
+    // FONTE: https://eurodressage.com/2021/08/02/phenomenal-success-campline-horses-first-year-operation-brazilian-and-portuguese-olympic
+    // FONTE: https://eurodressage.com/2020/12/20/horse-campline-invests-portuguese-team-horse-fogoso
+    // FONTE: https://www.rimondo.com/en/horse-details/1278019/fogoso-campline
+    // VERIFICADO: 2026-02-25 — Recorde olímpico Lusitano (78.943% freestyle Tóquio 2020)
+    id: "21",
+    nome: "Fogoso Campline",
+    imagem: "/images/cavalos-famosos/fogoso/capa.webp",
+    apelido: "O Fogo Olímpico",
+    anoNascimento: 2010,
+    coudelaria: "Coudelaria Torres Vaz Freire",
+    pelagem: "Ruço",
+    disciplina: "Dressage",
+    cavaleiro: "Rodrigo Moura Torres (POR)",
+    linhagem: "Lusitano",
+    conquistas: [
+      "78.943% Freestyle nos JO Tóquio 2020 — recorde olímpico para um Lusitano",
+      "16º lugar individual na final do Kür nos JO Tóquio 2020",
+      "Parte da equipa portuguesa nos JO Tóquio (8º por equipas)",
+      "Primeira equipa toda Lusitana de Portugal nos Jogos Olímpicos",
+      "Garanhão reprodutor aprovado APSL 4 estrelas",
+    ],
+    descricao:
+      "Fogoso Campline detém o recorde de sempre da maior pontuação de um Lusitano nos Jogos Olímpicos: 78.943% no Freestyle de Tóquio 2020, superando o recorde de Rubi AR (77.607% em Londres 2012). Garanhão ruço criado na coudelaria da família do cavaleiro, Rodrigo Moura Torres, 'Fogoso' significa 'cheio de força'. Destacou-se pela piaffe, passage e piruetas excepcionais.",
+    curiosidades: [
+      "O nome 'Fogoso' significa 'cheio de força' em português",
+      "Criado na coudelaria da família do cavaleiro Rodrigo Torres",
+      "No Kür olímpico, Torres montou com música dos Pink Floyd",
+      "Torres descreveu-o como 'poderoso' no ambiente olímpico porque 'ele olha para as flores'",
+    ],
+    destaque: true,
+    legado: "Recordista olímpico — a maior pontuação de sempre de um Lusitano nos Jogos Olímpicos",
+    pedigree: {
+      pai: { nome: "Rico", destaque: true },
+      mae: { nome: "Amelia", coudelaria: "Coudelaria Torres Vaz Freire" },
+      avoMaterno: { nome: "Raja" },
+    },
+    historicoPerformance: [
+      {
+        ano: 2019,
+        evento: "Europeu Roterdão",
+        resultado: "Qualificação equipa Portugal JO",
+        destaque: true,
+      },
+      { ano: 2019, evento: "Campeão GP Portugal", resultado: "77.4% Freestyle" },
+      {
+        ano: 2021,
+        evento: "Jogos Olímpicos Tóquio — Freestyle",
+        resultado: "16º, 78.943% (Recorde Lusitano)",
+        destaque: true,
+      },
+    ],
+  },
+  {
+    // FONTE: https://www.eurodressage.com/2019/01/05/caetano-and-coroado-write-history-lusitano-breed-cracking-80-barrier
+    // FONTE: https://www.cavalo-lusitano.com/en/lusitano-horse/sport-successes/dressage
+    // FONTE: https://www.rimondo.com/en/horse-details/1132270/coroado
+    // VERIFICADO: 2026-02-25 — Primeiro Lusitano a ultrapassar 80% no Kür (Mechelen 2018)
+    id: "22",
+    nome: "Coroado",
+    imagem: "/images/cavalos-famosos/coroado/capa.webp",
+    apelido: "O Primeiro dos 80%",
+    anoNascimento: 2007,
+    coudelaria: "Coudelaria de Alter",
+    pelagem: "Ruço",
+    disciplina: "Dressage",
+    cavaleiro: "Maria Caetano (POR)",
+    linhagem: "Alter Real",
+    conquistas: [
+      "80.160% Kür to Music em Mechelen (28 Dez 2018) — primeiro Lusitano a ultrapassar os 80%",
+      "71.543% Grand Prix no CDI-W Mechelen 2018 (4º lugar)",
+      "WEG 2018 Tryon — equipa portuguesa",
+      "Campeonato Europeu 2017 Gothenburg — equipa portuguesa",
+      "World Cup Finals 2019 Gothenburg (13º)",
+      "Campeonato Europeu 2019 Roterdão — equipa portuguesa",
+    ],
+    descricao:
+      "Coroado fez história ao tornar-se o primeiro Lusitano a ultrapassar a barreira mágica dos 80% num Kür to Music, com 80.160% em Mechelen a 28 de Dezembro de 2018. Filho de Rubi AR e neto materno de Xaquiro, representa o melhor do programa de reprodução de Alter. Com Maria Caetano, provou que um Lusitano pode competir artisticamente ao mais alto nível mundial.",
+    curiosidades: [
+      "Filho de Rubi AR (já na base de dados) — continuidade de excelência",
+      "Avô materno é Xaquiro (já na base de dados) — mãe Luxelia por Xaquiro",
+      "Superou o recorde do próprio pai Rubi AR (78.150% Kür em 2012)",
+      "Proprietário: Juan Manuel Cordeiro / Yeguada Finca Tineo",
+    ],
+    destaque: true,
+    legado: "O primeiro Lusitano a ultrapassar os 80% no Kür — um marco histórico para toda a raça",
+    pedigree: {
+      pai: { nome: "Rubi AR", coudelaria: "Coudelaria de Alter Real", destaque: true },
+      mae: { nome: "Luxelia", coudelaria: "Coudelaria de Alter" },
+      avoMaterno: { nome: "Xaquiro", destaque: true },
+    },
+    historicoPerformance: [
+      { ano: 2017, evento: "Europeu Gothenburg", resultado: "Equipa Portugal", destaque: true },
+      { ano: 2018, evento: "WEG Tryon", resultado: "Equipa Portugal", destaque: true },
+      {
+        ano: 2018,
+        evento: "CDI-W Mechelen — Kür",
+        resultado: "80.160% (1º Lusitano 80%+)",
+        destaque: true,
+      },
+      { ano: 2019, evento: "World Cup Finals Gothenburg", resultado: "13º", destaque: true },
+      { ano: 2019, evento: "Europeu Roterdão", resultado: "Equipa Portugal", destaque: true },
+    ],
+  },
+  {
+    // FONTE: https://www.eurodressage.com/2022/03/19/claudio-castillas-alcaide-retired-sport
+    // FONTE: https://www.cavalo-lusitano.com/en/lusitano-horse/sport-successes/dressage
+    // FONTE: https://dressage-news.com/2016/07/20/olympic-dressage-horses-riders-youngestoldest-malefemale-breedssexes-2/
+    // VERIFICADO: 2026-02-25 — Neto de Novilheiro na elite mundial, JO Rio 2016 + WEG 2018
+    id: "23",
+    nome: "Alcaide",
+    imagem: "/images/cavalos-famosos/alcaide/capa.webp",
+    apelido: "O Herdeiro de Novilheiro",
+    anoNascimento: 2004,
+    coudelaria: "Oliveira Martins",
+    pelagem: "Alazão",
+    disciplina: "Dressage",
+    cavaleiro: "Claudio Castilla Ruiz (ESP)",
+    linhagem: "Veiga/Andrade",
+    conquistas: [
+      "38º nos Jogos Olímpicos Rio 2016 (69.814% GP)",
+      "13º no Grand Prix Special WEG 2018 Tryon (74.103%)",
+      "12º no Freestyle Europeu 2019 Roterdão (77.846%)",
+      "28º no Europeu 2017 Gothenburg (69.229%)",
+      "Neto de Novilheiro pela linha materna",
+      "Selecionado para JO Tóquio 2020 (retirado por lesão)",
+    ],
+    descricao:
+      "Alcaide é neto de Novilheiro pela linha materna (mãe Paloma, por Novilheiro), continuando o legado do Lusitano mais célebre na dressage de elite. Com o cavaleiro espanhol Claudio Castilla Ruiz, competiu nos Jogos Olímpicos do Rio 2016, Jogos Equestres Mundiais 2018 e três Campeonatos Europeus, sendo uma presença consistente no top mundial durante uma década.",
+    curiosidades: [
+      "Mãe Paloma é filha de Novilheiro — continuidade genética directa",
+      "Parceria de mais de uma década com Claudio Castilla Ruiz (desde 2011)",
+      "Reformado em 2022 após carreira internacional brilhante",
+      "Proprietário: Claudio Castilla em parceria com Yeguada la Perla",
+    ],
+    destaque: false,
+    legado:
+      "Neto de Novilheiro que provou a continuidade da excelência genética Lusitana na elite mundial",
+    pedigree: {
+      pai: { nome: "Lobito", destaque: true },
+      mae: { nome: "Paloma" },
+      avoMaterno: { nome: "Novilheiro", destaque: true },
+    },
+    historicoPerformance: [
+      { ano: 2011, evento: "Início parceria Castilla Ruiz", resultado: "Nacional", destaque: true },
+      { ano: 2016, evento: "Jogos Olímpicos Rio", resultado: "38º, 69.814%", destaque: true },
+      { ano: 2017, evento: "Europeu Gothenburg", resultado: "28º, 69.229%" },
+      {
+        ano: 2018,
+        evento: "WEG Tryon — GP Special",
+        resultado: "13º, 74.103%",
+        destaque: true,
+      },
+      {
+        ano: 2019,
+        evento: "Europeu Roterdão — Freestyle",
+        resultado: "12º, 77.846%",
+        destaque: true,
+      },
+      { ano: 2022, evento: "Reforma", resultado: "Reformado", destaque: true },
+    ],
+  },
+  {
+    // FONTE: https://lusitano-interagro.com/haras/ofensor-mv/
+    // FONTE: https://lusitano-interagro.com/brazilian-stud-farm/
+    // FONTE: Interagro Lusitanos (pedigree completo, biografia detalhada)
+    // VERIFICADO: 2026-02-25 — Grande Campeão Golegã 1999, Ouro descendentes Lisboa 2003
+    id: "24",
+    nome: "Ofensor",
+    imagem: "/images/cavalos-famosos/ofensor/capa.webp",
+    apelido: "O Melhor Garanhão Moderno",
+    anoNascimento: 1995,
+    anoFalecimento: 2011,
+    coudelaria: "Manuel Tavares Veiga (MV)",
+    pelagem: "Tordilho",
+    altura: 160,
+    disciplina: "Reprodução",
+    linhagem: "Veiga",
+    conquistas: [
+      "Grande Campeão da Golegã 1999",
+      "Grande Campeonato Pai-Progenia em Lisboa 2003",
+      "Considerado 'sem contestação, o melhor garanhão do Lusitano moderno' (Interagro)",
+      "Filha Única (SS) — Campeã dos Campeões no 18º Salão Internacional do Lusitano 2006",
+      "Filho Violino (SS) — Campeão dos Campeões 2004",
+      "50+ descendentes registados em gerações X, Z e A na Interagro",
+      "Aprovado no Stud Book com 73.50 pontos (Reg. 00197-MI)",
+    ],
+    descricao:
+      "Ofensor é considerado 'sem contestação, o melhor garanhão do Lusitano moderno' pela Interagro. Grande Campeão da Golegã em 1999, conquistou o Grande Campeonato Pai-Progenia em Lisboa 2003 — o título mais importante para um garanhão reprodutor. Serviu nas coudelarias mais prestigiadas de Portugal (Manuel Veiga, Sousa Cardoso, Sociedade das Silveiras) antes de ser importado pela Interagro em 2001. Nilo (MV), bisavô do seu pai, é o elo directo à linhagem Firme/Nilo/Novilheiro.",
+    curiosidades: [
+      "Nasceu a 17 de Abril de 1995, criado por Manuel Tavares Veiga",
+      "Nilo (MV) é o seu trisavô — linhagem directa Firme/Nilo/Novilheiro",
+      "Pai Danúbio III (MV) também foi Grande Campeão na Golegã e Campeão dos Campeões em Lisboa 1987",
+      "Serviu em coudelarias MV, Sousa Cardoso e Soc. das Silveiras antes de ir para o Brasil (2001)",
+      "Na Interagro, pai de Quixote e Quantum Interagro — triade de garanhões oficiais",
+      "Faleceu a 4 de Abril de 2011 aos 16 anos",
+    ],
+    destaque: true,
+    legado:
+      "O melhor garanhão do Lusitano moderno — continuação directa da linhagem Firme/Nilo/Danúbio",
+    pedigree: {
+      // VERIFICADO: Interagro Lusitanos (pedigree completo)
+      pai: {
+        nome: "Danúbio III (MV)",
+        coudelaria: "Coudelaria Manuel Veiga",
+        destaque: true,
+      },
+      mae: { nome: "Tricana II (MV)", coudelaria: "Coudelaria Manuel Veiga" },
+      avoPaterno: { nome: "Zimbro II (MV)", coudelaria: "Coudelaria Manuel Veiga" },
+      avoaPaterna: { nome: "Oferta (MV)", coudelaria: "Coudelaria Manuel Veiga" },
+      avoMaterno: { nome: "Lidador II (MV)", coudelaria: "Coudelaria Manuel Veiga" },
+      avoaMaterna: { nome: "Medronha III (MV)", coudelaria: "Coudelaria Manuel Veiga" },
+    },
+    historicoPerformance: [
+      {
+        ano: 1999,
+        evento: "Golegã — Campeonato Morfologia",
+        resultado: "Grande Campeão (4 anos)",
+        destaque: true,
+      },
+      {
+        ano: 2001,
+        evento: "Importado pela Interagro Lusitanos (Brasil)",
+        resultado: "Garanhão Oficial",
+        destaque: true,
+      },
+      {
+        ano: 2003,
+        evento: "Festival Lisboa — Pai-Progenia",
+        resultado: "Grande Campeonato",
+        destaque: true,
+      },
+      {
+        ano: 2006,
+        evento: "18º Salão Internacional Lusitano Cascais",
+        resultado: "Filha Única — Campeã dos Campeões",
+        destaque: true,
+      },
+      { ano: 2011, evento: "Falecimento", resultado: "4 Abril 2011", destaque: true },
+    ],
+  },
+  {
+    // FONTE: https://eurodressage.com/2024/07/21/final-ride-juan-antonio-jimenez-and-euclides-mor-2024-paris-olympics
+    // FONTE: https://www.rimondo.com/en/horse-details/1278018/euclides-mor
+    // FONTE: https://www.cavalo-lusitano.com/en/news/lusitano-at-paris-olympic-games-2024
+    // VERIFICADO: 2026-02-25 — Paris 2024 para Espanha, criado em Portugal
+    id: "25",
+    nome: "Euclides MOR",
+    imagem: "/images/cavalos-famosos/euclides-mor/capa.webp",
+    apelido: "O Embaixador em Paris",
+    anoNascimento: 2009,
+    coudelaria: "Manuel Calheiros Braga",
+    pelagem: "Ruço",
+    disciplina: "Dressage",
+    cavaleiro: "Juan Antonio Jimenez Cobo (ESP)",
+    linhagem: "Lusitano",
+    conquistas: [
+      "Jogos Olímpicos Paris 2024 — representante de Espanha",
+      "Campeão Espanhol de Jovens Cavalos (Masters)",
+      "Vencedor da Taça do Rei, Madrid",
+      "Vencedor do Critérium no Campeonato Nacional de Espanha",
+      "Levou Jimenez (65 anos) aos JO — atleta mais velho de Espanha em Paris",
+    ],
+    descricao:
+      "Euclides MOR representou Espanha nos Jogos Olímpicos de Paris 2024, conduzido por Juan Antonio Jimenez Cobo aos 65 anos — o atleta mais velho de Espanha na competição. Garanhão ruço criado em Portugal por Manuel Calheiros Braga, continua a tradição de Lusitanos na equipa espanhola que começou com Guizo em 2000. O nome é uma homenagem à matemática — Jimenez disse que Euclides MOR 'é mais do que matemática'.",
+    curiosidades: [
+      "Jimenez competiu 24 anos em Lusitanos nos JO: Sydney 2000, Atenas 2004 (Guizo) → Paris 2024",
+      "Criado em Portugal, compete por Espanha — embaixador da raça",
+      "Nome inspirado no matemático grego Euclides",
+      "Proprietário: Las Morerias (México)",
+    ],
+    destaque: false,
+    legado:
+      "Continuação da tradição de Lusitanos na elite espanhola — de Guizo a Euclides MOR, 24 anos de excelência",
+    pedigree: {
+      pai: { nome: "Riopele", destaque: true },
+      mae: { nome: "Onda" },
+      avoMaterno: { nome: "Gingão" },
+    },
+    historicoPerformance: [
+      {
+        ano: 2018,
+        evento: "Campeonato Nacional Espanha",
+        resultado: "Vencedor Taça do Rei",
+        destaque: true,
+      },
+      {
+        ano: 2024,
+        evento: "Jogos Olímpicos Paris",
+        resultado: "60.031% GP (Espanha)",
+        destaque: true,
+      },
+    ],
+  },
+  {
+    // FONTE: https://www.horseandhound.co.uk/features/maria-caetano-felix-de-tineo-754384
+    // FONTE: https://www.eurodressage.com/2021/05/07/caetano-pursue-portuguese-olympic-team-selection-fenix-de-tineo-coroado-break
+    // FONTE: https://www.rimondo.com/en/horse-details/1214159/fenix-de-tineo
+    // VERIFICADO: 2026-02-25 — JO Tóquio 2020 para Portugal, filho de Rubi AR
+    id: "26",
+    nome: "Fenix de Tineo",
+    imagem: "/images/cavalos-famosos/fenix-de-tineo/capa.webp",
+    apelido: "A Fénix Olímpica",
+    anoNascimento: 2010,
+    coudelaria: "Yeguada Finca Tineo",
+    pelagem: "Castanho",
+    disciplina: "Dressage",
+    cavaleiro: "Maria Caetano (POR)",
+    linhagem: "Alter Real",
+    conquistas: [
+      "Jogos Olímpicos Tóquio 2020 — equipa portuguesa (70.311% GP)",
+      "Parte da primeira equipa toda Lusitana de Portugal nos JO",
+      "Portugal 7º/8º por equipas nos JO Tóquio 2020",
+      "Substituiu Coroado após lesão para seleção olímpica",
+      "Filho de Rubi AR — continuidade da linha Alter Real",
+    ],
+    descricao:
+      "Fenix de Tineo representou Portugal nos Jogos Olímpicos de Tóquio 2020 com Maria Caetano, como parte da histórica primeira equipa toda Lusitana de Portugal nos JO (com Fogoso e Equador MVL). Filho de Rubi AR, substituiu Coroado após a sua lesão e correspondeu à altura do desafio olímpico. O nome 'Fénix' simbolizou a sua capacidade de renascer para a ocasião.",
+    curiosidades: [
+      "Filho de Rubi AR (já na base de dados) e mãe Aolga",
+      "Substituiu Coroado (lesionado) na seleção olímpica de 2021",
+      "Parte do trio olímpico com Fogoso (Rodrigo Torres) e Equador MVL (João Torrão)",
+      "Proprietário: Yeguada Finca Tineo",
+    ],
+    destaque: false,
+    legado:
+      "Parte da equipa olímpica histórica que provou ao mundo a força do Lusitano em Tóquio 2020",
+    pedigree: {
+      pai: { nome: "Rubi AR", coudelaria: "Coudelaria de Alter Real", destaque: true },
+      mae: { nome: "Aolga" },
+    },
+    historicoPerformance: [
+      {
+        ano: 2021,
+        evento: "Seleção Olímpica (substituindo Coroado)",
+        resultado: "Selecionado",
+        destaque: true,
+      },
+      {
+        ano: 2021,
+        evento: "Jogos Olímpicos Tóquio — Grand Prix",
+        resultado: "70.311% GP",
+        destaque: true,
+      },
+    ],
   },
 ];

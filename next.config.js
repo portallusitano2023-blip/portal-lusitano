@@ -41,9 +41,9 @@ const nextConfig = {
 
     // Client-side Router Cache: keep visited pages cached so back/forward
     // and re-navigations feel instant (0ms). Default is 0s for dynamic
-    // and 300s for static — we extend dynamic to 30s for a snappier UX.
+    // and 300s for static — we extend dynamic to 180s for snappier UX.
     staleTimes: {
-      dynamic: 30,
+      dynamic: 180,
       static: 300,
     },
   },
@@ -204,13 +204,16 @@ const nextConfig = {
       // (e.g. /api/cavalos → 60s, /api/search → 30s, /api/coudelarias → 30min).
       // Mutation/auth routes explicitly set no-store in their handlers.
       // A blanket no-store here would OVERRIDE all per-route caching.
-      // Cache static assets for 1 year
+      // Cache static assets — immutable em prod, revalidável em dev
       {
         source: "/images/:path*",
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value:
+              process.env.NODE_ENV === "production"
+                ? "public, max-age=31536000, immutable"
+                : "public, max-age=0, must-revalidate",
           },
         ],
       },

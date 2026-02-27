@@ -7,14 +7,15 @@ export default async function CoudelariaPage({ params }: { params: Promise<{ slu
 
   const { data: coudelaria } = await supabase
     .from("coudelarias")
-    .select("*")
+    .select(
+      "id, nome, slug, descricao, historia, localizacao, regiao, telefone, email, website, instagram, facebook, youtube, num_cavalos, ano_fundacao, especialidades, linhagens, premios, servicos, horario, coordenadas_lat, coordenadas_lng, foto_capa, galeria, video_url, cavalos_destaque, testemunhos, is_pro, destaque, views_count"
+    )
     .eq("slug", slug)
     .eq("status", "active")
     .single();
 
   if (!coudelaria) notFound();
 
-  // Approved reviews — only select columns used by CoudelariaDetail
   const { data: reviewsData } = await supabase
     .from("reviews")
     .select(

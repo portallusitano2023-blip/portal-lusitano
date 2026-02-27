@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v4'; // Incrementar ao fazer mudanças significativas
+const CACHE_VERSION = 'v7'; // Incrementar ao fazer mudanças significativas
 const CACHE_NAME = `portal-lusitano-${CACHE_VERSION}`;
 const IMAGE_CACHE = `portal-lusitano-images-${CACHE_VERSION}`;
 const STATIC_CACHE = `portal-lusitano-static-${CACHE_VERSION}`;
@@ -143,12 +143,21 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   const request = event.request;
 
-  // ✅ STRATEGY 1: Cache-First para IMAGENS
+  // ✅ STRATEGY 1: Imagens
+  // Imagens locais (/images/, /_next/image) → Stale-While-Revalidate
+  //   (serve cache mas atualiza em background — imagens mudam quando substituídas)
+  // Imagens externas (CDN) → Cache-First (nunca mudam)
   if (
     request.destination === 'image' ||
     /\.(jpg|jpeg|png|gif|webp|svg|ico)$/i.test(url.pathname)
   ) {
-    event.respondWith(cacheFirstStrategy(request, IMAGE_CACHE));
+    const isLocal = url.origin === self.location.origin;
+    if (isLocal) {
+      // Network-First: sempre busca a versão mais recente do servidor
+      event.respondWith(networkFirstStrategy(request, IMAGE_CACHE));
+    } else {
+      event.respondWith(cacheFirstStrategy(request, IMAGE_CACHE));
+    }
     return;
   }
 

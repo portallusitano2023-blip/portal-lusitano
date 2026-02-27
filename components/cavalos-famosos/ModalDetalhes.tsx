@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import { X, Award, GitBranch, Users, TrendingUp, Trophy } from "lucide-react";
 import { CavaloFamoso } from "@/app/cavalos-famosos/types";
 import { ArvoreGenealogica } from "./ArvoreGenealogica";
@@ -15,6 +17,9 @@ interface ModalDetalhesProps {
 }
 
 export function ModalDetalhes({ cavalo, onClose, abaAtiva, setAbaAtiva }: ModalDetalhesProps) {
+  const [imgError, setImgError] = useState(false);
+  const hasImage = cavalo.imagem && !imgError;
+
   const abas = [
     { id: "info" as const, label: "Informação", icon: Award },
     { id: "genealogia" as const, label: "Genealogia", icon: GitBranch },
@@ -32,12 +37,27 @@ export function ModalDetalhes({ cavalo, onClose, abaAtiva, setAbaAtiva }: ModalD
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Image */}
-        <div className="aspect-[21/9] bg-gradient-to-br from-[var(--gold)]/30 via-[var(--background-secondary)] to-[var(--background-secondary)] relative">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-[120px] font-serif text-[var(--gold)]/15">
-              {cavalo.nome.charAt(0)}
-            </span>
-          </div>
+        <div className="aspect-[21/9] bg-gradient-to-br from-[var(--gold)]/30 via-[var(--background-secondary)] to-[var(--background-secondary)] relative overflow-hidden">
+          {hasImage ? (
+            <>
+              <Image
+                src={cavalo.imagem!}
+                alt={cavalo.nome}
+                fill
+                sizes="(max-width: 896px) 100vw, 896px"
+                className="object-cover"
+                onError={() => setImgError(true)}
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
+            </>
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-[120px] font-serif text-[var(--gold)]/15">
+                {cavalo.nome.charAt(0)}
+              </span>
+            </div>
+          )}
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors touch-manipulation"

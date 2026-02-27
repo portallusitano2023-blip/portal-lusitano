@@ -12,7 +12,9 @@ import type { SanityArticle } from "@/lib/sanity-queries";
 import PortableTextRenderer from "@/components/journal/PortableTextComponents";
 import ReadingProgressBar from "@/components/journal/ReadingProgressBar";
 import FloatingTOC from "@/components/journal/FloatingTOC";
+import LocalFloatingTOC from "@/components/journal/LocalFloatingTOC";
 import RelatedArticles from "@/components/journal/RelatedArticles";
+import LocalRelatedArticles from "@/components/journal/LocalRelatedArticles";
 import SourcesList from "@/components/journal/SourcesList";
 import Newsletter from "@/components/Newsletter";
 
@@ -163,12 +165,107 @@ export default function ArticlePageClient({
             </div>
           </div>
         </header>
-        <div className="max-w-4xl mx-auto px-8 py-24 relative">
-          <ShareButtons title={localArticle.title} />
-          <div className="prose prose-invert prose-lg max-w-none article-body">
-            {localArticle.content}
+        {/* CORPO DO ARTIGO */}
+        <div className="max-w-7xl mx-auto px-8 pt-20 pb-24 relative">
+          <div className="xl:grid xl:grid-cols-[1fr_250px] xl:gap-12">
+            <div className="max-w-4xl">
+              <ShareButtons title={localArticle.title} />
+              <div className="prose prose-invert prose-lg max-w-none article-body">
+                {localArticle.content}
+              </div>
+              {localArticle.sources && localArticle.sources.length > 0 && (
+                <SourcesList sources={localArticle.sources} language={language} />
+              )}
+              {/* SHARE (bottom) */}
+              <div className="mt-16 pt-8 border-t border-[var(--border)]">
+                <ShareButtons title={localArticle.title} />
+              </div>
+            </div>
+
+            {/* FLOATING TOC - sidebar */}
+            <aside className="hidden xl:block">
+              <LocalFloatingTOC language={language} />
+            </aside>
           </div>
         </div>
+
+        {/* ARTIGOS RELACIONADOS */}
+        {localArticle.relatedSlugs && localArticle.relatedSlugs.length > 0 && (
+          <LocalRelatedArticles slugs={localArticle.relatedSlugs} language={language} />
+        )}
+
+        {/* INTERNAL LINKING — explorar o portal */}
+        <div className="max-w-4xl mx-auto px-8 mt-16 mb-8">
+          <div className="border-t border-[var(--border)] pt-10">
+            <p className="text-[var(--foreground-muted)] text-xs uppercase tracking-widest mb-6">
+              {tr("Explorar o Portal", "Explore the Portal", "Explorar el Portal")}
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <Link
+                href="/comprar"
+                className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
+              >
+                <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
+                  Marketplace
+                </span>
+                <span className="text-sm font-serif">
+                  {tr("Cavalos à Venda", "Horses for Sale", "Caballos en Venta")}
+                </span>
+              </Link>
+              <Link
+                href="/directorio"
+                className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
+              >
+                <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
+                  {tr("Directório", "Directory", "Directorio")}
+                </span>
+                <span className="text-sm font-serif">
+                  {tr("Coudelarias", "Stud Farms", "Haras")}
+                </span>
+              </Link>
+              <Link
+                href="/cavalos-famosos"
+                className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
+              >
+                <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
+                  {tr("Arquivo", "Archive", "Archivo")}
+                </span>
+                <span className="text-sm font-serif">
+                  {tr("Lusitanos Famosos", "Famous Lusitanos", "Lusitanos Famosos")}
+                </span>
+              </Link>
+              <Link
+                href="/linhagens"
+                className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
+              >
+                <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/60">
+                  {tr("Genealogia", "Genealogy", "Genealogía")}
+                </span>
+                <span className="text-sm font-serif">
+                  {tr("Linhagens", "Bloodlines", "Linajes")}
+                </span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* NEWSLETTER */}
+        <div className="max-w-4xl mx-auto px-8 mt-8">
+          <Newsletter />
+        </div>
+
+        {/* BOTÃO VOLTAR AO TOPO */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className={`fixed bottom-8 right-8 z-40 w-11 h-11 flex items-center justify-center border border-[var(--gold)]/40 bg-[var(--background)]/90 backdrop-blur-sm text-[var(--gold)] hover:bg-[var(--gold)]/10 transition-all duration-300 ${
+            showBackToTop
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-4 pointer-events-none"
+          }`}
+          aria-label={tr("Voltar ao topo", "Back to top", "Volver arriba")}
+        >
+          <ArrowUp size={16} />
+        </button>
       </article>
     );
   }

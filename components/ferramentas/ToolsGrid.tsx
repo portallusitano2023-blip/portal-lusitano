@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Check, Star, ArrowRight } from "lucide-react";
+import { Check, Star, ArrowRight, Clock } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -18,6 +18,7 @@ export interface ToolDefinition {
   badge: string | null;
   badgeColor: string | null;
   freeUses: number;
+  estimatedTime?: string;
 }
 
 interface ToolCardProps {
@@ -60,6 +61,12 @@ function ToolCard({ tool, index }: ToolCardProps) {
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               <Check size={9} />
               {tool.freeUses} {tr("uso grátis", "free use", "uso gratis")}
+            </span>
+          )}
+          {tool.estimatedTime && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium text-[var(--foreground-muted)] bg-[var(--background-card)]">
+              <Clock size={9} />
+              {tool.estimatedTime}
             </span>
           )}
         </div>

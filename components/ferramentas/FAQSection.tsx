@@ -5,10 +5,12 @@ import Link from "next/link";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
+import { getFaqCategories } from "@/app/ferramentas/faq-data";
 
 interface FAQItem {
   question: string;
   answer: string;
+  category?: string;
 }
 
 interface FAQAccordionProps {
@@ -60,8 +62,15 @@ interface FAQSectionProps {
 }
 
 export default function FAQSection({ items }: FAQSectionProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
+  const [activeCategory, setActiveCategory] = useState<string>("todos");
+
+  const categories = getFaqCategories(language);
+  const hasCategories = items.some((item) => item.category);
+
+  const filteredItems =
+    activeCategory === "todos" ? items : items.filter((item) => item.category === activeCategory);
 
   return (
     <section className="px-6 pb-32" id="faq">
@@ -79,11 +88,33 @@ export default function FAQSection({ items }: FAQSectionProps) {
           </p>
         </AnimateOnScroll>
 
+        {/* Category filters */}
+        {hasCategories && (
+          <div className="flex flex-wrap gap-2 justify-center mb-8">
+            {Object.entries(categories).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => {
+                  setActiveCategory(key);
+                  setOpenFAQ(0);
+                }}
+                className={`px-4 py-2 min-h-[40px] rounded-full text-sm font-medium transition ${
+                  activeCategory === key
+                    ? "bg-[var(--gold)]/15 text-[var(--gold)] border border-[var(--gold)]/30"
+                    : "text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] hover:bg-[var(--surface-hover)]"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* FAQ items */}
         <div>
-          {items.map((item, index) => (
+          {filteredItems.map((item, index) => (
             <FAQAccordion
-              key={index}
+              key={`${activeCategory}-${index}`}
               item={item}
               index={index}
               isOpen={openFAQ === index}

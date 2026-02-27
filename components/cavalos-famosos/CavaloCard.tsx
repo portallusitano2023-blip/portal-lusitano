@@ -1,6 +1,7 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState } from "react";
+import Image from "next/image";
 import { Trophy, Users } from "lucide-react";
 import { CavaloFamoso } from "@/app/cavalos-famosos/types";
 
@@ -15,27 +16,44 @@ export const CavaloCard = memo(function CavaloCard({
   onClick,
   variant = "destaque",
 }: CavaloCardProps) {
+  const [imgError, setImgError] = useState(false);
+  const hasImage = cavalo.imagem && !imgError;
+
   if (variant === "destaque") {
     return (
       <button
         onClick={onClick}
-        className="group bg-gradient-to-b from-[var(--background-secondary)]/80 to-[var(--background-secondary)]/40 border border-[var(--gold)]/20 rounded-2xl overflow-hidden text-left hover:border-[var(--gold)]/50 transition-all touch-manipulation w-full"
+        className="group bg-gradient-to-b from-[var(--background-secondary)]/80 to-[var(--background-secondary)]/40 border border-[var(--gold)]/20 rounded-2xl overflow-hidden text-left hover:border-[var(--gold)]/50 transition-all touch-manipulation w-full cursor-pointer"
       >
-        {/* Image Placeholder */}
-        <div className="aspect-[4/3] bg-gradient-to-br from-[var(--gold)]/20 to-transparent relative">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-7xl font-serif text-[var(--gold)]/30">
-              {cavalo.nome.charAt(0)}
-            </span>
-          </div>
-          <div className="absolute top-3 left-3 flex gap-2">
+        {/* Cover Image */}
+        <div className="aspect-[4/3] bg-gradient-to-br from-[var(--gold)]/20 to-transparent relative overflow-hidden">
+          {hasImage ? (
+            <Image
+              src={cavalo.imagem!}
+              alt={cavalo.nome}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-7xl font-serif text-[var(--gold)]/30">
+                {cavalo.nome.charAt(0)}
+              </span>
+            </div>
+          )}
+          <div className="absolute top-3 left-3 flex gap-2 z-10">
             <span className="px-2 py-1 bg-[var(--gold)] rounded text-xs font-medium text-black">
               {cavalo.disciplina}
             </span>
-            <span className="px-2 py-1 bg-[var(--background-secondary)]/80 rounded text-xs text-[var(--foreground-secondary)]">
+            <span className="px-2 py-1 bg-[var(--background-secondary)]/80 backdrop-blur-sm rounded text-xs text-[var(--foreground-secondary)]">
               {cavalo.linhagem}
             </span>
           </div>
+          {hasImage && (
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+          )}
         </div>
 
         <div className="p-5">
@@ -78,13 +96,24 @@ export const CavaloCard = memo(function CavaloCard({
   return (
     <button
       onClick={onClick}
-      className="group bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-4 text-left hover:border-[var(--gold)]/30 transition-all touch-manipulation w-full"
+      className="group bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-4 text-left hover:border-[var(--gold)]/30 transition-all touch-manipulation w-full cursor-pointer"
     >
       <div className="flex items-start gap-4">
-        <div className="w-16 h-16 bg-[var(--background-card)] rounded-lg flex items-center justify-center flex-shrink-0">
-          <span className="text-2xl font-serif text-[var(--foreground-secondary)]">
-            {cavalo.nome.charAt(0)}
-          </span>
+        <div className="w-16 h-16 bg-[var(--background-card)] rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative">
+          {hasImage ? (
+            <Image
+              src={cavalo.imagem!}
+              alt={cavalo.nome}
+              fill
+              sizes="64px"
+              className="object-cover"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <span className="text-2xl font-serif text-[var(--foreground-secondary)]">
+              {cavalo.nome.charAt(0)}
+            </span>
+          )}
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors truncate">

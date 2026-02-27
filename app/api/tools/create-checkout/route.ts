@@ -3,7 +3,7 @@ import { stripe } from "@/lib/stripe";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { logger } from "@/lib/logger";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const supabase = await createSupabaseServerClient();
     const {
@@ -36,7 +36,15 @@ export async function POST() {
         .eq("id", user.id);
     }
 
-    const priceId = process.env.STRIPE_TOOLS_PRICE_ID || process.env.STRIPE_PRICE_FERRAMENTAS_PRO;
+    // Support monthly vs annual billing
+    const body = await request.json().catch(() => ({}));
+    const billing = body.billing === "annual" ? "annual" : "monthly";
+
+    const monthlyPriceId =
+      process.env.STRIPE_TOOLS_PRICE_ID || process.env.STRIPE_PRICE_FERRAMENTAS_PRO;
+    const annualPriceId = process.env.STRIPE_TOOLS_ANNUAL_PRICE_ID;
+
+    const priceId = billing === "annual" && annualPriceId ? annualPriceId : monthlyPriceId;
     if (!priceId) {
       return NextResponse.json({ error: "Preco nao configurado" }, { status: 500 });
     }
@@ -52,6 +60,7 @@ export async function POST() {
       metadata: {
         type: "tools_subscription",
         user_id: user.id,
+        billing,
       },
     });
 
