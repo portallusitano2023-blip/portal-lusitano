@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { AboutPageSchema, BreadcrumbSchema, FAQSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Sobre Nós",
@@ -15,12 +14,12 @@ export const metadata: Metadata = {
     "equipa portal lusitano",
   ],
   alternates: {
-    canonical: `${siteUrl}/sobre`,
+    canonical: `${SITE_URL}/sobre`,
   },
   openGraph: {
     title: "Sobre Nós | Portal Lusitano",
     description: "O Portal Lusitano é a plataforma mais completa dedicada ao Cavalo Lusitano.",
-    url: `${siteUrl}/sobre`,
+    url: `${SITE_URL}/sobre`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -46,8 +45,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Sobre Nós", url: `${siteUrl}/sobre` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Sobre Nós", url: `${SITE_URL}/sobre` },
         ]}
       />
       <AboutPageSchema />

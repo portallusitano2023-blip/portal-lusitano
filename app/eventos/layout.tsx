@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/constants";
 
 // ISR: Revalidate events every hour
 export const revalidate = 3600;
-
-const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
   title: "Eventos Equestres",
@@ -18,13 +17,13 @@ export const metadata: Metadata = {
     "agenda equestre",
   ],
   alternates: {
-    canonical: `${siteUrl}/eventos`,
+    canonical: `${SITE_URL}/eventos`,
   },
   openGraph: {
     title: "Eventos Equestres | Portal Lusitano",
     description:
       "Calendário de eventos equestres em Portugal: feiras, concursos, leilões, exposições e workshops. Agenda completa e actualizada.",
-    url: `${siteUrl}/eventos`,
+    url: `${SITE_URL}/eventos`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -51,14 +50,14 @@ export default function EventosLayout({ children }: { children: React.ReactNode 
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Eventos Equestres", url: `${siteUrl}/eventos` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Eventos Equestres", url: `${SITE_URL}/eventos` },
         ]}
       />
       <CollectionPageSchema
         name="Eventos Equestres"
         description="Calendário de eventos equestres em Portugal: feiras, concursos, leilões, exposições e workshops. Agenda completa e actualizada."
-        url={`${siteUrl}/eventos`}
+        url={`${SITE_URL}/eventos`}
       />
       {children}
     </>

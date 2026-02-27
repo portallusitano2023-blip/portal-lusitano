@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Vender Cavalo",
@@ -14,13 +13,13 @@ export const metadata: Metadata = {
     "marketplace cavalos",
   ],
   alternates: {
-    canonical: `${siteUrl}/vender-cavalo`,
+    canonical: `${SITE_URL}/vender-cavalo`,
   },
   openGraph: {
     title: "Vender Cavalo | Portal Lusitano",
     description:
       "Venda o seu cavalo Lusitano no Portal Lusitano. Alcance milhares de compradores qualificados com anúncio premium e fotografia profissional.",
-    url: `${siteUrl}/vender-cavalo`,
+    url: `${SITE_URL}/vender-cavalo`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -47,8 +46,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Vender Cavalo", url: `${siteUrl}/vender-cavalo` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Vender Cavalo", url: `${SITE_URL}/vender-cavalo` },
         ]}
       />
       {children}

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Heart, RefreshCw, Trophy, Dna, Leaf, Star } from "lucide-react";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import { useToolAccess } from "@/hooks/useToolAccess";
@@ -51,6 +52,7 @@ export default function VerificadorCompatibilidadePage() {
   const [step, setStep] = useState(0);
   const [isCalculating, setIsCalculating] = useState(false);
   const [resultado, setResultado] = useState<ResultadoCompatibilidade | null>(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [objetivo, setObjetivo] = useState<"competicao" | "reproducao" | "lazer" | "show">(
     "competicao"
   );
@@ -290,13 +292,7 @@ export default function VerificadorCompatibilidadePage() {
 
           {resultado && (
             <button
-              onClick={() => {
-                if (
-                  !confirm("Tens a certeza? Os dados actuais do garanhão e da égua serão perdidos.")
-                )
-                  return;
-                resetar();
-              }}
+              onClick={() => setShowResetConfirm(true)}
               className="text-sm text-pink-400 hover:text-pink-300 transition-colors flex items-center gap-2"
             >
               <RefreshCw size={14} />
@@ -558,6 +554,20 @@ export default function VerificadorCompatibilidadePage() {
           />
         )}
       </div>
+
+      <ConfirmDialog
+        open={showResetConfirm}
+        title="Nova análise?"
+        message="Os dados actuais do garanhão e da égua serão perdidos. Tens a certeza?"
+        confirmLabel="Recomeçar"
+        cancelLabel="Cancelar"
+        variant="warning"
+        onConfirm={() => {
+          setShowResetConfirm(false);
+          resetar();
+        }}
+        onCancel={() => setShowResetConfirm(false)}
+      />
     </main>
   );
 }

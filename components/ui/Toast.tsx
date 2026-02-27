@@ -99,7 +99,11 @@ function ToastContainer({
   removeToast: (id: string) => void;
 }) {
   return (
-    <div className="fixed bottom-4 right-4 z-50 space-y-2 max-w-md">
+    <div
+      className="fixed bottom-4 right-4 z-50 space-y-2 max-w-md"
+      role="status"
+      aria-live="polite"
+    >
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onClose={() => removeToast(toast.id)} />
       ))}

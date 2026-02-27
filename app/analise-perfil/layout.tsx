@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, WebApplicationSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Análise de Perfil Equestre",
@@ -15,13 +14,13 @@ export const metadata: Metadata = {
     "perfil equitação",
   ],
   alternates: {
-    canonical: `${siteUrl}/analise-perfil`,
+    canonical: `${SITE_URL}/analise-perfil`,
   },
   openGraph: {
     title: "Análise de Perfil Equestre | Portal Lusitano",
     description:
       "Descubra o seu perfil como cavaleiro. Análise completa do seu estilo, experiência e objectivos com cavalos Lusitanos.",
-    url: `${siteUrl}/analise-perfil`,
+    url: `${SITE_URL}/analise-perfil`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -48,14 +47,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Análise de Perfil Equestre", url: `${siteUrl}/analise-perfil` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Análise de Perfil Equestre", url: `${SITE_URL}/analise-perfil` },
         ]}
       />
       <WebApplicationSchema
         name="Análise de Perfil Equestre"
         description="Descubra o seu perfil como cavaleiro. Análise completa do seu estilo, experiência e objectivos com cavalos Lusitanos."
-        url={`${siteUrl}/analise-perfil`}
+        url={`${SITE_URL}/analise-perfil`}
       />
       {children}
     </>

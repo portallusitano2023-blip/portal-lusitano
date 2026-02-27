@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, FAQSchema } from "@/components/JsonLd";
 import { faqData } from "@/data/faqData";
+import { SITE_URL } from "@/lib/constants";
 
 // Static content — revalidate once per day
 export const revalidate = 86400;
-
-const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
   title: "Perguntas Frequentes",
@@ -20,13 +19,13 @@ export const metadata: Metadata = {
     "comprar cavalo lusitano FAQ",
   ],
   alternates: {
-    canonical: `${siteUrl}/faq`,
+    canonical: `${SITE_URL}/faq`,
   },
   openGraph: {
     title: "Perguntas Frequentes | Portal Lusitano",
     description:
       "Respostas às perguntas mais frequentes sobre cavalos Lusitanos: compra, venda, criação, saúde e documentação.",
-    url: `${siteUrl}/faq`,
+    url: `${SITE_URL}/faq`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -52,8 +51,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Perguntas Frequentes", url: `${siteUrl}/faq` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Perguntas Frequentes", url: `${SITE_URL}/faq` },
         ]}
       />
       <FAQSchema items={faqData.pt} />

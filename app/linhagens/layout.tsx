@@ -4,8 +4,7 @@ import {
   CollectionPageSchema,
   EducationalArticleSchema,
 } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Linhagens do Lusitano",
@@ -22,13 +21,13 @@ export const metadata: Metadata = {
     "coudelaria nacional",
   ],
   alternates: {
-    canonical: `${siteUrl}/linhagens`,
+    canonical: `${SITE_URL}/linhagens`,
   },
   openGraph: {
     title: "Linhagens do Lusitano | Portal Lusitano",
     description:
       "Explore as principais linhagens do cavalo Lusitano. Genealogia, características e legado dos grandes garanhões que definiram a raça PSL.",
-    url: `${siteUrl}/linhagens`,
+    url: `${SITE_URL}/linhagens`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "article",
@@ -55,19 +54,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Linhagens do Lusitano", url: `${siteUrl}/linhagens` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Linhagens do Lusitano", url: `${SITE_URL}/linhagens` },
         ]}
       />
       <CollectionPageSchema
         name="Linhagens do Lusitano"
         description="Explore as principais linhagens do cavalo Lusitano. Genealogia, características e legado dos grandes garanhões que definiram a raça PSL."
-        url={`${siteUrl}/linhagens`}
+        url={`${SITE_URL}/linhagens`}
       />
       <EducationalArticleSchema
         name="Linhagens do Cavalo Lusitano"
         description="Guia especializado sobre genealogia e linhagens do cavalo Puro Sangue Lusitano (PSL). Andrade, Veiga, Alter Real e Coudelaria Nacional."
-        url={`${siteUrl}/linhagens`}
+        url={`${SITE_URL}/linhagens`}
         keywords={[
           "linhagens lusitano",
           "genealogia PSL",

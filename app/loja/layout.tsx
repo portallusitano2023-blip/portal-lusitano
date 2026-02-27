@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Loja Equestre",
@@ -15,13 +14,13 @@ export const metadata: Metadata = {
     "acessórios cavaleiro",
   ],
   alternates: {
-    canonical: `${siteUrl}/loja`,
+    canonical: `${SITE_URL}/loja`,
   },
   openGraph: {
     title: "Loja Equestre | Portal Lusitano",
     description:
       "Loja online do Portal Lusitano. Produtos equestres premium, artigos de equitação, merchandising e acessórios para cavaleiros.",
-    url: `${siteUrl}/loja`,
+    url: `${SITE_URL}/loja`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -50,14 +49,14 @@ export default function LojaLayout({ children }: { children: React.ReactNode }) 
       <link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="anonymous" />
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Loja Equestre", url: `${siteUrl}/loja` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Loja Equestre", url: `${SITE_URL}/loja` },
         ]}
       />
       <CollectionPageSchema
         name="Loja Equestre"
         description="Loja online do Portal Lusitano. Produtos equestres premium, artigos de equitação, merchandising e acessórios para cavaleiros."
-        url={`${siteUrl}/loja`}
+        url={`${SITE_URL}/loja`}
       />
       {children}
     </>

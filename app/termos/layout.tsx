@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema } from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/constants";
 
 // Static content — revalidate once per day
 export const revalidate = 86400;
-
-const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
   title: "Termos e Condições",
@@ -12,13 +11,13 @@ export const metadata: Metadata = {
     "Termos e condições de utilização do Portal Lusitano. Regras do marketplace, política de privacidade e direitos do utilizador.",
   keywords: ["termos condições portal lusitano", "regras marketplace cavalos"],
   alternates: {
-    canonical: `${siteUrl}/termos`,
+    canonical: `${SITE_URL}/termos`,
   },
   openGraph: {
     title: "Termos e Condições | Portal Lusitano",
     description:
       "Termos e condições de utilização do Portal Lusitano. Regras do marketplace, política de privacidade e direitos do utilizador.",
-    url: `${siteUrl}/termos`,
+    url: `${SITE_URL}/termos`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -45,8 +44,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Termos e Condições", url: `${siteUrl}/termos` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Termos e Condições", url: `${SITE_URL}/termos` },
         ]}
       />
       {children}

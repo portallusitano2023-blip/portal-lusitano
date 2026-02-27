@@ -27,10 +27,11 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
       <div className="space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label htmlFor="nome" className="block text-sm text-[var(--foreground-secondary)] mb-1">
               {t.vender_cavalo.horse_name} *
             </label>
             <input
+              id="nome"
               type="text"
               required
               minLength={2}
@@ -41,10 +42,14 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="nome_registo"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.registration_name} *
             </label>
             <input
+              id="nome_registo"
               type="text"
               required
               minLength={2}
@@ -58,10 +63,14 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="numero_registo"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.registration_number} *
             </label>
             <input
+              id="numero_registo"
               type="text"
               required
               value={formData.numero_registo}
@@ -71,10 +80,14 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="microchip"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.microchip_number} *
             </label>
             <input
+              id="microchip"
               type="text"
               required
               minLength={15}
@@ -89,10 +102,14 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
         </div>
 
         <div>
-          <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+          <label
+            htmlFor="passaporte_equino"
+            className="block text-sm text-[var(--foreground-secondary)] mb-1"
+          >
             {t.vender_cavalo.passport_number}
           </label>
           <input
+            id="passaporte_equino"
             type="text"
             value={formData.passaporte_equino}
             onChange={(e) => updateField("passaporte_equino", e.target.value)}
@@ -103,10 +120,14 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
 
         <div className="grid sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="data_nascimento"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.birth_date} *
             </label>
             <input
+              id="data_nascimento"
               type="date"
               required
               value={formData.data_nascimento}
@@ -115,10 +136,11 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label htmlFor="sexo" className="block text-sm text-[var(--foreground-secondary)] mb-1">
               {t.vender_cavalo.sex} *
             </label>
             <select
+              id="sexo"
               required
               value={formData.sexo}
               onChange={(e) => updateField("sexo", e.target.value)}
@@ -131,10 +153,14 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
             </select>
           </div>
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="pelagem"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.coat} *
             </label>
             <select
+              id="pelagem"
               value={formData.pelagem}
               onChange={(e) => updateField("pelagem", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
@@ -150,10 +176,11 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
         </div>
 
         <div>
-          <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+          <label htmlFor="altura" className="block text-sm text-[var(--foreground-secondary)] mb-1">
             {t.vender_cavalo.height}
           </label>
           <input
+            id="altura"
             type="number"
             value={formData.altura}
             onChange={(e) => updateField("altura", e.target.value)}

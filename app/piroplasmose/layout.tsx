@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, FAQSchema, MedicalWebPageSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Piroplasmose Equina — Guia Completo",
@@ -18,13 +17,13 @@ export const metadata: Metadata = {
     "tratamento piroplasmose",
   ],
   alternates: {
-    canonical: `${siteUrl}/piroplasmose`,
+    canonical: `${SITE_URL}/piroplasmose`,
   },
   openGraph: {
     title: "Piroplasmose Equina — Guia Completo | Portal Lusitano",
     description:
       "Guia completo sobre piroplasmose equina: prevalência em Portugal, impacto na exportação de cavalos, diagnóstico, tratamento e prevenção. Informação veterinária actualizada.",
-    url: `${siteUrl}/piroplasmose`,
+    url: `${SITE_URL}/piroplasmose`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "article",
@@ -51,8 +50,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Piroplasmose Equina", url: `${siteUrl}/piroplasmose` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Piroplasmose Equina", url: `${SITE_URL}/piroplasmose` },
         ]}
       />
       <MedicalWebPageSchema />

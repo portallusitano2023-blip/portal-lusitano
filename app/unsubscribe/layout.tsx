@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Cancelar Subscrição",
@@ -12,12 +11,12 @@ export const metadata: Metadata = {
     follow: false,
   },
   alternates: {
-    canonical: `${siteUrl}/unsubscribe`,
+    canonical: `${SITE_URL}/unsubscribe`,
   },
   openGraph: {
     title: "Cancelar Subscrição | Portal Lusitano",
     description: "Cancele a sua subscrição da newsletter do Portal Lusitano.",
-    url: `${siteUrl}/unsubscribe`,
+    url: `${SITE_URL}/unsubscribe`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -43,8 +42,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Cancelar Subscrição", url: `${siteUrl}/unsubscribe` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Cancelar Subscrição", url: `${SITE_URL}/unsubscribe` },
         ]}
       />
       {children}

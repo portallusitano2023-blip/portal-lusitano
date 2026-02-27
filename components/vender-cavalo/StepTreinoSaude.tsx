@@ -32,10 +32,14 @@ export default function StepTreinoSaude({
       <div className="space-y-6">
         {/* Treino */}
         <div>
-          <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+          <label
+            htmlFor="nivel_treino"
+            className="block text-sm text-[var(--foreground-secondary)] mb-2"
+          >
             {t.vender_cavalo.training_level} *
           </label>
           <select
+            id="nivel_treino"
             required
             value={formData.nivel_treino}
             onChange={(e) => updateField("nivel_treino", e.target.value)}
@@ -76,10 +80,14 @@ export default function StepTreinoSaude({
         {/* Competições */}
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="competicoes"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.competitions}
             </label>
             <input
+              id="competicoes"
               type="text"
               value={formData.competicoes}
               onChange={(e) => updateField("competicoes", e.target.value)}
@@ -88,10 +96,14 @@ export default function StepTreinoSaude({
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="premios"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.awards}
             </label>
             <input
+              id="premios"
               type="text"
               value={formData.premios}
               onChange={(e) => updateField("premios", e.target.value)}
@@ -109,10 +121,14 @@ export default function StepTreinoSaude({
           </h3>
 
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+            <label
+              htmlFor="estado_saude"
+              className="block text-sm text-[var(--foreground-secondary)] mb-2"
+            >
               {t.vender_cavalo.general_status} *
             </label>
             <select
+              id="estado_saude"
               required
               value={formData.estado_saude}
               onChange={(e) => updateField("estado_saude", e.target.value)}
@@ -126,8 +142,12 @@ export default function StepTreinoSaude({
           </div>
 
           <div className="mt-4 space-y-3">
-            <label className="flex items-center gap-3 cursor-pointer touch-manipulation">
+            <label
+              htmlFor="vacinacao_atualizada"
+              className="flex items-center gap-3 cursor-pointer touch-manipulation"
+            >
               <input
+                id="vacinacao_atualizada"
                 type="checkbox"
                 checked={formData.vacinacao_atualizada}
                 onChange={(e) => updateField("vacinacao_atualizada", e.target.checked)}
@@ -135,8 +155,12 @@ export default function StepTreinoSaude({
               />
               <span className="text-sm">{t.vender_cavalo.vaccination_updated} *</span>
             </label>
-            <label className="flex items-center gap-3 cursor-pointer touch-manipulation">
+            <label
+              htmlFor="desparasitacao_atualizada"
+              className="flex items-center gap-3 cursor-pointer touch-manipulation"
+            >
               <input
+                id="desparasitacao_atualizada"
                 type="checkbox"
                 checked={formData.desparasitacao_atualizada}
                 onChange={(e) => updateField("desparasitacao_atualizada", e.target.checked)}
@@ -144,8 +168,12 @@ export default function StepTreinoSaude({
               />
               <span className="text-sm">{t.vender_cavalo.deworming_updated}</span>
             </label>
-            <label className="flex items-center gap-3 cursor-pointer touch-manipulation">
+            <label
+              htmlFor="exame_veterinario"
+              className="flex items-center gap-3 cursor-pointer touch-manipulation"
+            >
               <input
+                id="exame_veterinario"
                 type="checkbox"
                 checked={formData.exame_veterinario}
                 onChange={(e) => updateField("exame_veterinario", e.target.checked)}
@@ -156,10 +184,14 @@ export default function StepTreinoSaude({
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="observacoes_saude"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.health_notes}
             </label>
             <textarea
+              id="observacoes_saude"
               value={formData.observacoes_saude}
               onChange={(e) => updateField("observacoes_saude", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] h-24 resize-none"

@@ -2,6 +2,8 @@
  * Constantes do Portal Lusitano
  */
 
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
+
 export const COLORS = {
   gold: "#C5A059",
   dark: "#1a1410",

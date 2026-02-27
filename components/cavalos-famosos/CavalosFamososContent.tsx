@@ -8,6 +8,7 @@ import { cavalosFamosos } from "@/app/cavalos-famosos/data";
 import { CavaloCard } from "@/components/cavalos-famosos/CavaloCard";
 import { ModalDetalhes } from "@/components/cavalos-famosos/ModalDetalhes";
 import { useLanguage } from "@/context/LanguageContext";
+import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 
 export default function CavalosFamososContent() {
   const { t } = useLanguage();
@@ -142,13 +143,14 @@ export default function CavalosFamososContent() {
             {t.cavalos_famosos.featured}
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cavalosDestaque.map((cavalo) => (
-              <CavaloCard
-                key={cavalo.id}
-                cavalo={cavalo}
-                onClick={() => handleOpenCavalo(cavalo)}
-                variant="destaque"
-              />
+            {cavalosDestaque.map((cavalo, index) => (
+              <AnimateOnScroll key={cavalo.id} delay={index * 80}>
+                <CavaloCard
+                  cavalo={cavalo}
+                  onClick={() => handleOpenCavalo(cavalo)}
+                  variant="destaque"
+                />
+              </AnimateOnScroll>
             ))}
           </div>
         </section>
@@ -162,13 +164,14 @@ export default function CavalosFamososContent() {
             {t.cavalos_famosos.others}
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {outrosCavalos.map((cavalo) => (
-              <CavaloCard
-                key={cavalo.id}
-                cavalo={cavalo}
-                onClick={() => handleOpenCavalo(cavalo)}
-                variant="normal"
-              />
+            {outrosCavalos.map((cavalo, index) => (
+              <AnimateOnScroll key={cavalo.id} delay={index * 80}>
+                <CavaloCard
+                  cavalo={cavalo}
+                  onClick={() => handleOpenCavalo(cavalo)}
+                  variant="normal"
+                />
+              </AnimateOnScroll>
             ))}
           </div>
         </section>

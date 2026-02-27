@@ -13,7 +13,11 @@ export default function FormErrors({ errors }: FormErrorsProps) {
   if (errors.length === 0) return null;
 
   return (
-    <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
+    <div
+      className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6"
+      role="alert"
+      aria-live="assertive"
+    >
       <div className="flex items-start gap-3">
         <AlertCircle size={20} className="text-red-400 flex-shrink-0 mt-0.5" />
         <div>

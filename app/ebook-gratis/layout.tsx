@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, BookSchema, EbookOfferSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Ebook Grátis",
@@ -16,12 +15,12 @@ export const metadata: Metadata = {
     "livro PSL grátis",
   ],
   alternates: {
-    canonical: `${siteUrl}/ebook-gratis`,
+    canonical: `${SITE_URL}/ebook-gratis`,
   },
   openGraph: {
     title: "Ebook Grátis | Portal Lusitano",
     description: "Descarregue gratuitamente o nosso guia completo sobre o cavalo Lusitano.",
-    url: `${siteUrl}/ebook-gratis`,
+    url: `${SITE_URL}/ebook-gratis`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -47,8 +46,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Ebook Grátis", url: `${siteUrl}/ebook-gratis` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Ebook Grátis", url: `${SITE_URL}/ebook-gratis` },
         ]}
       />
       <BookSchema />

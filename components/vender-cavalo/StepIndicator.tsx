@@ -21,15 +21,30 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
   ];
 
   const progressPercent = Math.round(((currentStep - 1) / (TOTAL_STEPS - 1)) * 100);
+  const stepText = t.vender_cavalo.step_counter
+    .replace("{current}", String(currentStep))
+    .replace("{total}", String(TOTAL_STEPS));
 
   return (
     <div className="mb-10">
       {/* Progress bar */}
-      <div className="relative h-0.5 bg-[var(--background-card)] mb-6 mx-4">
+      <div
+        className="relative h-0.5 bg-[var(--background-card)] mb-6 mx-4"
+        role="progressbar"
+        aria-valuenow={progressPercent}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={stepText}
+      >
         <div
           className="absolute inset-y-0 left-0 bg-[var(--gold)] transition-all duration-500"
           style={{ width: `${progressPercent}%` }}
         />
+      </div>
+
+      {/* Step announcement for screen readers */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {stepText}
       </div>
 
       {/* Steps */}
@@ -49,6 +64,7 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
                       ? "bg-[var(--gold)]/20 text-[var(--gold)] border border-[var(--gold)]/40"
                       : "bg-[var(--background-card)] text-[var(--foreground-muted)] border border-[var(--border)]"
                 }`}
+                aria-current={isCurrent ? "step" : undefined}
               >
                 {isCompleted ? <Check size={13} strokeWidth={2.5} /> : s}
               </div>
@@ -70,9 +86,7 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
 
       {/* Step counter (mobile) */}
       <p className="sm:hidden text-center text-xs text-[var(--foreground-muted)] mt-3">
-        {t.vender_cavalo.step_counter
-          .replace("{current}", String(currentStep))
-          .replace("{total}", String(TOTAL_STEPS))}
+        {stepText}
       </p>
     </div>
   );

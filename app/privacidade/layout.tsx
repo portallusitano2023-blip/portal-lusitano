@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema } from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/constants";
 
 // Static content — revalidate once per day
 export const revalidate = 86400;
-
-const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
   title: "Política de Privacidade",
@@ -12,13 +11,13 @@ export const metadata: Metadata = {
     "Política de privacidade do Portal Lusitano. Como protegemos os seus dados pessoais e informação de navegação.",
   keywords: ["privacidade portal lusitano", "protecção dados", "RGPD cavalos"],
   alternates: {
-    canonical: `${siteUrl}/privacidade`,
+    canonical: `${SITE_URL}/privacidade`,
   },
   openGraph: {
     title: "Política de Privacidade | Portal Lusitano",
     description:
       "Política de privacidade do Portal Lusitano. Como protegemos os seus dados pessoais e informação de navegação.",
-    url: `${siteUrl}/privacidade`,
+    url: `${SITE_URL}/privacidade`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -45,8 +44,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Política de Privacidade", url: `${siteUrl}/privacidade` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Política de Privacidade", url: `${SITE_URL}/privacidade` },
         ]}
       />
       {children}

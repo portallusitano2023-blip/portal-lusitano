@@ -34,6 +34,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { MERCADOS, VALORES_BASE, MULT_LINHAGEM, MULT_SAUDE, MULT_COMP } from "./data";
 import { calcularProjecaoValor, calcularTrainingROI } from "./projections";
 import { calcularValor } from "./utils";
+import SensitivityPanel from "./SensitivityPanel";
 import type { FormData, Resultado } from "./types";
 
 const AnimatedGauge = dynamic(() => import("@/components/tools/AnimatedGauge"), {
@@ -614,6 +615,9 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             </div>
           );
         })()}
+
+        {/* What-If Sensitivity Analysis */}
+        <SensitivityPanel form={form} resultado={resultado} />
 
         {/* Simulador de Cenários */}
         {(() => {

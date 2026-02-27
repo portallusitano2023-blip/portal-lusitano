@@ -12,6 +12,7 @@ interface CalculadoraHeaderProps {
   onReset: () => void;
   onEdit?: () => void;
   estimativaParcial?: { min: number; max: number } | null;
+  children?: React.ReactNode;
 }
 
 export default function CalculadoraHeader({
@@ -22,6 +23,7 @@ export default function CalculadoraHeader({
   onReset,
   onEdit,
   estimativaParcial,
+  children,
 }: CalculadoraHeaderProps) {
   const { t } = useLanguage();
 
@@ -52,6 +54,7 @@ export default function CalculadoraHeader({
 
         {hasResultado ? (
           <div className="flex items-center gap-3">
+            {children}
             {onEdit && (
               <button
                 onClick={onEdit}

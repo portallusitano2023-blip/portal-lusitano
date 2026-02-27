@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, WebApplicationSchema, FAQSchema } from "@/components/JsonLd";
 import { faqItems } from "./faq-data";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Ferramentas Equestres",
@@ -17,13 +16,13 @@ export const metadata: Metadata = {
     "ferramentas equestres gratuitas",
   ],
   alternates: {
-    canonical: `${siteUrl}/ferramentas`,
+    canonical: `${SITE_URL}/ferramentas`,
   },
   openGraph: {
     title: "Ferramentas Equestres | Portal Lusitano",
     description:
       "Ferramentas gratuitas para cavaleiros: calculadora de valor, comparador, compatibilidade e análise de perfil.",
-    url: `${siteUrl}/ferramentas`,
+    url: `${SITE_URL}/ferramentas`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -50,14 +49,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Ferramentas Equestres", url: `${siteUrl}/ferramentas` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Ferramentas Equestres", url: `${SITE_URL}/ferramentas` },
         ]}
       />
       <WebApplicationSchema
         name="Ferramentas Equestres — Portal Lusitano"
         description="Suite de ferramentas gratuitas para proprietários, criadores e apaixonados pelo Cavalo Lusitano: calculadora de valor, comparador, compatibilidade genética e análise de perfil."
-        url={`${siteUrl}/ferramentas`}
+        url={`${SITE_URL}/ferramentas`}
       />
       <FAQSchema items={faqItems} />
       {children}

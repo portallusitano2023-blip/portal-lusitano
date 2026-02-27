@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, WebApplicationSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Calculadora de Valor",
@@ -15,13 +14,13 @@ export const metadata: Metadata = {
     "valor PSL",
   ],
   alternates: {
-    canonical: `${siteUrl}/calculadora-valor`,
+    canonical: `${SITE_URL}/calculadora-valor`,
   },
   openGraph: {
     title: "Calculadora de Valor | Portal Lusitano",
     description:
       "Calcule o valor estimado de um cavalo Lusitano com base em idade, linhagem, nível de treino, palmarés e conformação. Ferramenta gratuita.",
-    url: `${siteUrl}/calculadora-valor`,
+    url: `${SITE_URL}/calculadora-valor`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -48,14 +47,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Calculadora de Valor", url: `${siteUrl}/calculadora-valor` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Calculadora de Valor", url: `${SITE_URL}/calculadora-valor` },
         ]}
       />
       <WebApplicationSchema
         name="Calculadora de Valor"
         description="Calcule o valor estimado de um cavalo Lusitano com base em idade, linhagem, nível de treino, palmarés e conformação. Ferramenta gratuita."
-        url={`${siteUrl}/calculadora-valor`}
+        url={`${SITE_URL}/calculadora-valor`}
       />
       {children}
     </>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Profissionais Equestres",
@@ -15,13 +14,13 @@ export const metadata: Metadata = {
     "dentista equino",
   ],
   alternates: {
-    canonical: `${siteUrl}/profissionais`,
+    canonical: `${SITE_URL}/profissionais`,
   },
   openGraph: {
     title: "Profissionais Equestres | Portal Lusitano",
     description:
       "Directório de profissionais equestres em Portugal: veterinários, ferradores, treinadores, nutricionistas e dentistas equinos. Contactos verificados.",
-    url: `${siteUrl}/profissionais`,
+    url: `${SITE_URL}/profissionais`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -48,17 +47,17 @@ export default function ProfissionaisLayout({ children }: { children: React.Reac
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
+          { name: "Portal Lusitano", url: SITE_URL },
           {
             name: "Profissionais Equestres",
-            url: `${siteUrl}/profissionais`,
+            url: `${SITE_URL}/profissionais`,
           },
         ]}
       />
       <CollectionPageSchema
         name="Profissionais Equestres"
         description="Directório de profissionais equestres em Portugal: veterinários, ferradores, treinadores, nutricionistas e dentistas equinos. Contactos verificados."
-        url={`${siteUrl}/profissionais`}
+        url={`${SITE_URL}/profissionais`}
       />
       {children}
     </>

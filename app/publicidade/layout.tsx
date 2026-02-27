@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Publicidade",
@@ -15,12 +14,12 @@ export const metadata: Metadata = {
     "anúncios cavalos lusitanos",
   ],
   alternates: {
-    canonical: `${siteUrl}/publicidade`,
+    canonical: `${SITE_URL}/publicidade`,
   },
   openGraph: {
     title: "Publicidade | Portal Lusitano",
     description: "Anuncie no Portal Lusitano e alcance milhares de entusiastas do cavalo Lusitano.",
-    url: `${siteUrl}/publicidade`,
+    url: `${SITE_URL}/publicidade`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -46,8 +45,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Publicidade", url: `${siteUrl}/publicidade` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Publicidade", url: `${SITE_URL}/publicidade` },
         ]}
       />
       {children}

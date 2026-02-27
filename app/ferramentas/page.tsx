@@ -17,11 +17,14 @@ import { getFaqItems } from "./faq-data";
 const StatsSection = dynamic(() => import("@/components/ferramentas/StatsSection"), {
   ssr: false,
 });
+const ToolJourneySection = dynamic(() => import("@/components/ferramentas/ToolJourneySection"));
 const HowItWorksSection = dynamic(() => import("@/components/ferramentas/HowItWorksSection"));
 const PricingSection = dynamic(() => import("@/components/ferramentas/PricingSection"));
 const ReviewsSection = dynamic(() => import("@/components/ferramentas/ReviewsSection"), {
   ssr: false,
 });
+const ToolRecommender = dynamic(() => import("@/components/ferramentas/ToolRecommender"));
+const ToolComparisonTable = dynamic(() => import("@/components/ferramentas/ToolComparisonTable"));
 
 function SectionSkeleton({ height = "h-64" }: { height?: string }) {
   return (
@@ -52,9 +55,24 @@ export default function FerramentasPage() {
       {/* ===== TOOL CARDS SECTION ===== */}
       <ToolsGrid tools={tools} sectionLabel={t.ferramentas.available} />
 
+      {/* ===== TOOL RECOMMENDER ===== */}
+      <Suspense fallback={null}>
+        <ToolRecommender />
+      </Suspense>
+
+      {/* ===== TOOL COMPARISON TABLE ===== */}
+      <Suspense fallback={null}>
+        <ToolComparisonTable />
+      </Suspense>
+
       {/* ===== STATS COUNTERS ===== */}
       <Suspense fallback={null}>
         <StatsSection />
+      </Suspense>
+
+      {/* ===== TOOL JOURNEY (TOOL CHAIN DIAGRAM) ===== */}
+      <Suspense fallback={<SectionSkeleton />}>
+        <ToolJourneySection />
       </Suspense>
 
       {/* ===== KEY BENEFITS STRIP ===== */}
@@ -84,7 +102,7 @@ export default function FerramentasPage() {
               },
             ].map((benefit, i) => (
               <AnimateOnScroll key={benefit.label} delay={i * 80}>
-                <div className="flex items-center gap-4 p-4 bg-[var(--surface-hover)] border border-[var(--border)] rounded-xl">
+                <div className="flex items-center gap-4 p-4 bg-[var(--surface-hover)] border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/20 transition-colors">
                   <div className="w-10 h-10 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center flex-shrink-0">
                     <benefit.icon size={20} className="text-[var(--gold)]" />
                   </div>

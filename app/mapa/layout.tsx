@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Mapa Equestre de Portugal",
@@ -17,13 +16,13 @@ export const metadata: Metadata = {
     "centros equestres mapa",
   ],
   alternates: {
-    canonical: `${siteUrl}/mapa`,
+    canonical: `${SITE_URL}/mapa`,
   },
   openGraph: {
     title: "Mapa Equestre de Portugal | Portal Lusitano",
     description:
       "Mapa interactivo com coudelarias, centros hípicos, veterinários e eventos equestres em Portugal.",
-    url: `${siteUrl}/mapa`,
+    url: `${SITE_URL}/mapa`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -50,8 +49,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Mapa Equestre", url: `${siteUrl}/mapa` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Mapa Equestre", url: `${SITE_URL}/mapa` },
         ]}
       />
       {children}

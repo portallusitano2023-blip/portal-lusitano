@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema, DefinedTermSetSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Glossario Equestre",
@@ -17,13 +16,13 @@ export const metadata: Metadata = {
     "glossary equestrian portuguese",
   ],
   alternates: {
-    canonical: `${siteUrl}/glossario`,
+    canonical: `${SITE_URL}/glossario`,
   },
   openGraph: {
     title: "Glossario Equestre | Portal Lusitano",
     description:
       "Glossario completo de termos equestres em portugues e ingles. Terminologia oficial de dressage, alta escola, anatomia e maneio.",
-    url: `${siteUrl}/glossario`,
+    url: `${SITE_URL}/glossario`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -49,19 +48,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Glossario Equestre", url: `${siteUrl}/glossario` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Glossario Equestre", url: `${SITE_URL}/glossario` },
         ]}
       />
       <CollectionPageSchema
         name="Glossario Equestre — Portal Lusitano"
         description="Glossario completo de termos equestres em portugues e ingles. Terminologia oficial de dressage, alta escola, anatomia e maneio do cavalo Lusitano."
-        url={`${siteUrl}/glossario`}
+        url={`${SITE_URL}/glossario`}
       />
       <DefinedTermSetSchema
         name="Glossário Equestre — Portal Lusitano"
         description="Terminologia oficial de equitação, dressage e maneio do cavalo Lusitano em português e inglês."
-        url={`${siteUrl}/glossario`}
+        url={`${SITE_URL}/glossario`}
         terms={[
           {
             name: "Adestramento",

@@ -18,10 +18,14 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
       <div className="space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="proprietario_nome"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.full_name} *
             </label>
             <input
+              id="proprietario_nome"
               type="text"
               required
               minLength={3}
@@ -32,10 +36,14 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="proprietario_nif"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.nif} *
             </label>
             <input
+              id="proprietario_nif"
               type="text"
               required
               minLength={9}
@@ -51,10 +59,14 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="proprietario_email"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.email} *
             </label>
             <input
+              id="proprietario_email"
               type="email"
               required
               value={formData.proprietario_email}
@@ -64,10 +76,14 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="proprietario_telefone"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.phone} *
             </label>
             <input
+              id="proprietario_telefone"
               type="tel"
               required
               value={formData.proprietario_telefone}
@@ -79,10 +95,14 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
         </div>
 
         <div>
-          <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+          <label
+            htmlFor="proprietario_morada"
+            className="block text-sm text-[var(--foreground-secondary)] mb-1"
+          >
             {t.vender_cavalo.address}
           </label>
           <input
+            id="proprietario_morada"
             type="text"
             value={formData.proprietario_morada}
             onChange={(e) => updateField("proprietario_morada", e.target.value)}

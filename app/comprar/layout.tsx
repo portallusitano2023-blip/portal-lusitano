@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema, FAQSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Comprar Cavalo Lusitano",
@@ -16,13 +15,13 @@ export const metadata: Metadata = {
     "compra cavalos",
   ],
   alternates: {
-    canonical: `${siteUrl}/comprar`,
+    canonical: `${SITE_URL}/comprar`,
   },
   openGraph: {
     title: "Comprar Cavalo Lusitano | Portal Lusitano",
     description:
       "Cavalos Lusitanos à venda em Portugal. Exemplares seleccionados com linhagem certificada APSL, veterinário verificado e entrega segura.",
-    url: `${siteUrl}/comprar`,
+    url: `${SITE_URL}/comprar`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -49,14 +48,14 @@ export default function ComprarLayout({ children }: { children: React.ReactNode 
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Comprar Cavalo Lusitano", url: `${siteUrl}/comprar` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Comprar Cavalo Lusitano", url: `${SITE_URL}/comprar` },
         ]}
       />
       <CollectionPageSchema
         name="Comprar Cavalo Lusitano"
         description="Cavalos Lusitanos à venda em Portugal. Exemplares seleccionados com linhagem certificada APSL, veterinário verificado e entrega segura."
-        url={`${siteUrl}/comprar`}
+        url={`${SITE_URL}/comprar`}
       />
       <FAQSchema
         items={[

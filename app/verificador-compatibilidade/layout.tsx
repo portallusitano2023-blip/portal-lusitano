@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, WebApplicationSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Verificador de Compatibilidade",
@@ -14,13 +13,13 @@ export const metadata: Metadata = {
     "perfil cavaleiro lusitano",
   ],
   alternates: {
-    canonical: `${siteUrl}/verificador-compatibilidade`,
+    canonical: `${SITE_URL}/verificador-compatibilidade`,
   },
   openGraph: {
     title: "Verificador de Compatibilidade | Portal Lusitano",
     description:
       "Verifique a compatibilidade entre cavaleiro e cavalo Lusitano. Análise personalizada de nível, objectivos e perfil equestre.",
-    url: `${siteUrl}/verificador-compatibilidade`,
+    url: `${SITE_URL}/verificador-compatibilidade`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -47,17 +46,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
+          { name: "Portal Lusitano", url: SITE_URL },
           {
             name: "Verificador de Compatibilidade",
-            url: `${siteUrl}/verificador-compatibilidade`,
+            url: `${SITE_URL}/verificador-compatibilidade`,
           },
         ]}
       />
       <WebApplicationSchema
         name="Verificador de Compatibilidade"
         description="Verifique a compatibilidade entre cavaleiro e cavalo Lusitano. Análise personalizada de nível, objectivos e perfil equestre."
-        url={`${siteUrl}/verificador-compatibilidade`}
+        url={`${SITE_URL}/verificador-compatibilidade`}
       />
       {children}
     </>

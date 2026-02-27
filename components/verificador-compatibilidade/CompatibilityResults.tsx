@@ -32,6 +32,8 @@ import BreedingCosts from "@/components/tools/BreedingCosts";
 import Tooltip from "@/components/tools/Tooltip";
 import SourceBadge from "@/components/tools/SourceBadge";
 import MethodologyPanel from "@/components/tools/MethodologyPanel";
+import COIGauge from "./COIGauge";
+import CoatColorSwatches from "./CoatColorSwatches";
 import { useLanguage } from "@/context/LanguageContext";
 import type {
   Cavalo,
@@ -375,7 +377,7 @@ export default function CompatibilityResults({
       {/* Métricas Genéticas */}
       <div className="grid sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)]">
-          <div className="flex items-center gap-2 text-[var(--foreground-muted)] text-sm mb-2">
+          <div className="flex items-center gap-2 text-[var(--foreground-muted)] text-sm mb-3">
             <Dna size={16} className="text-purple-400" />
             {t.verificador.coi_predicted}
             <Tooltip
@@ -392,25 +394,8 @@ export default function CompatibilityResults({
               }
             />
           </div>
-          <div
-            className={`text-3xl font-light ${resultado.coi > 6.25 ? "text-amber-400" : "text-emerald-400"}`}
-          >
-            {resultado.coi.toFixed(1)}%
-          </div>
-          <div className="text-xs text-[var(--foreground-muted)] mt-1">
-            {resultado.coi <= 3
-              ? t.verificador.coi_excellent
-              : resultado.coi <= 6.25
-                ? t.verificador.coi_acceptable
-                : t.verificador.coi_high}
-          </div>
-          <div className="mt-3 h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-purple-500 to-purple-400"
-              style={{ width: `${Math.min((resultado.coi / 12.5) * 100, 100)}%` }}
-            />
-          </div>
-          <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-2 leading-snug">
+          <COIGauge coi={resultado.coi} />
+          <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-2 text-center leading-snug">
             {resultado.coi <= 1.5
               ? "≈ Antepassados comuns muito distantes (6.ª geração+)"
               : resultado.coi <= 3
@@ -420,15 +405,6 @@ export default function CompatibilityResults({
                   : resultado.coi <= 12.5
                     ? "≈ Primo-irmãos — monitorizar"
                     : "≈ Meio-irmãos — risco hereditário elevado"}
-          </p>
-          {/* Explicação pedagógica do COI */}
-          <p className="text-[10px] text-[var(--foreground-muted)]/50 mt-2 pt-2 border-t border-[var(--border)]/30 leading-snug">
-            COI (Coef. Endogamia): probabilidade de genes idênticos por descendência.{" "}
-            <span className="text-emerald-400/70">&lt; 6.25% ideal</span>
-            {" | "}
-            <span className="text-amber-400/70">6.25–12.5% aceitável</span>
-            {" | "}
-            <span className="text-red-400/70">&gt; 12.5% preocupante</span>
           </p>
         </div>
 
@@ -553,25 +529,7 @@ export default function CompatibilityResults({
             }
           />
         </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {resultado.pelagens.map((p, i) => (
-            <div key={i} className="bg-[var(--background-card)]/50 rounded-lg p-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-[var(--foreground-secondary)] font-medium">{p.cor}</span>
-                <span className="text-purple-400 font-bold">{p.prob}%</span>
-              </div>
-              <div className="h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
-                  style={{ width: `${p.prob}%` }}
-                />
-              </div>
-              <span className="text-xs text-[var(--foreground-muted)] mt-1 block">
-                {p.genetica}
-              </span>
-            </div>
-          ))}
-        </div>
+        <CoatColorSwatches pelagens={resultado.pelagens} />
       </div>
 
       {/* Physical Match */}

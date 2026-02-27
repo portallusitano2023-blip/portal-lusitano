@@ -67,7 +67,10 @@ export default function StepPrecoApresentacao({
         {/* Preço + Localização */}
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="preco"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.price_eur} *
             </label>
             <div className="relative">
@@ -76,6 +79,7 @@ export default function StepPrecoApresentacao({
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
               />
               <input
+                id="preco"
                 type="number"
                 required
                 min={0}
@@ -87,10 +91,14 @@ export default function StepPrecoApresentacao({
             </div>
           </div>
           <div>
-            <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+            <label
+              htmlFor="localizacao"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
               {t.vender_cavalo.location} *
             </label>
             <input
+              id="localizacao"
               type="text"
               required
               minLength={3}
@@ -103,8 +111,12 @@ export default function StepPrecoApresentacao({
         </div>
 
         <div className="flex flex-wrap gap-4">
-          <label className="flex items-center gap-3 cursor-pointer touch-manipulation">
+          <label
+            htmlFor="negociavel"
+            className="flex items-center gap-3 cursor-pointer touch-manipulation"
+          >
             <input
+              id="negociavel"
               type="checkbox"
               checked={formData.negociavel}
               onChange={(e) => updateField("negociavel", e.target.checked)}
@@ -112,8 +124,12 @@ export default function StepPrecoApresentacao({
             />
             <span className="text-sm">{t.vender_cavalo.price_negotiable}</span>
           </label>
-          <label className="flex items-center gap-3 cursor-pointer touch-manipulation">
+          <label
+            htmlFor="aceita_troca"
+            className="flex items-center gap-3 cursor-pointer touch-manipulation"
+          >
             <input
+              id="aceita_troca"
               type="checkbox"
               checked={formData.aceita_troca}
               onChange={(e) => updateField("aceita_troca", e.target.checked)}
@@ -124,10 +140,14 @@ export default function StepPrecoApresentacao({
         </div>
 
         <div>
-          <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+          <label
+            htmlFor="disponibilidade_visita"
+            className="block text-sm text-[var(--foreground-secondary)] mb-1"
+          >
             {t.vender_cavalo.visit_availability}
           </label>
           <select
+            id="disponibilidade_visita"
             value={formData.disponibilidade_visita}
             onChange={(e) => updateField("disponibilidade_visita", e.target.value)}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
@@ -240,7 +260,7 @@ export default function StepPrecoApresentacao({
         {/* Descrição com contador de progresso */}
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm text-[var(--foreground-secondary)]">
+            <label htmlFor="descricao" className="block text-sm text-[var(--foreground-secondary)]">
               {t.vender_cavalo.description} *
             </label>
             <span
@@ -252,6 +272,7 @@ export default function StepPrecoApresentacao({
             </span>
           </div>
           <textarea
+            id="descricao"
             required
             minLength={100}
             value={formData.descricao}
@@ -272,10 +293,14 @@ export default function StepPrecoApresentacao({
 
         {/* Vídeos */}
         <div>
-          <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+          <label
+            htmlFor="videos_url"
+            className="block text-sm text-[var(--foreground-secondary)] mb-1"
+          >
             {t.vender_cavalo.video_link}
           </label>
           <input
+            id="videos_url"
             type="url"
             value={formData.videos_url}
             onChange={(e) => updateField("videos_url", e.target.value)}

@@ -65,8 +65,12 @@ export default function StepPagamento({
 
       {/* Opção Destaque */}
       <div className="border border-[var(--gold)]/30 rounded-lg p-4 mb-6">
-        <label className="flex items-start gap-4 cursor-pointer touch-manipulation">
+        <label
+          htmlFor="opcao_destaque"
+          className="flex items-start gap-4 cursor-pointer touch-manipulation"
+        >
           <input
+            id="opcao_destaque"
             type="checkbox"
             checked={opcaoDestaque}
             onChange={(e) => onOpcaoDestaqueChange(e.target.checked)}
@@ -105,8 +109,12 @@ export default function StepPagamento({
 
       {/* Termos */}
       <div className="mb-6">
-        <label className="flex items-start gap-3 cursor-pointer touch-manipulation">
+        <label
+          htmlFor="termos_aceites"
+          className="flex items-start gap-3 cursor-pointer touch-manipulation"
+        >
           <input
+            id="termos_aceites"
             type="checkbox"
             checked={termsAccepted}
             onChange={(e) => onTermsChange(e.target.checked)}

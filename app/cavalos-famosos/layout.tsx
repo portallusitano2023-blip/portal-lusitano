@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema, ItemListSchema } from "@/components/JsonLd";
 import { cavalosFamosos } from "./data";
+import { SITE_URL } from "@/lib/constants";
 
 // ISR: Revalidate daily (historical data changes rarely)
 export const revalidate = 86400;
-
-const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
   title: "Lusitanos Notáveis",
@@ -20,13 +19,13 @@ export const metadata: Metadata = {
     "dressage lusitano",
   ],
   alternates: {
-    canonical: `${siteUrl}/cavalos-famosos`,
+    canonical: `${SITE_URL}/cavalos-famosos`,
   },
   openGraph: {
     title: "Lusitanos Notáveis | Portal Lusitano",
     description:
       "Galeria dos cavalos Lusitanos mais famosos da história. Conheça os exemplares que levaram o PSL ao mais alto nível em Dressage, Atrelagem e Working Equitation.",
-    url: `${siteUrl}/cavalos-famosos`,
+    url: `${SITE_URL}/cavalos-famosos`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "article",
@@ -53,14 +52,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Lusitanos Notáveis", url: `${siteUrl}/cavalos-famosos` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Lusitanos Notáveis", url: `${SITE_URL}/cavalos-famosos` },
         ]}
       />
       <CollectionPageSchema
         name="Lusitanos Notáveis"
         description="Galeria dos cavalos Lusitanos mais famosos da história. Conheça os exemplares que levaram o PSL ao mais alto nível em Dressage, Atrelagem e Working Equitation."
-        url={`${siteUrl}/cavalos-famosos`}
+        url={`${SITE_URL}/cavalos-famosos`}
       />
       <ItemListSchema
         name="Cavalos Lusitanos Famosos"
@@ -68,7 +67,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         items={cavalosFamosos.map((c) => ({
           name: c.nome,
           description: c.descricao,
-          url: `${siteUrl}/cavalos-famosos#${c.id}`,
+          url: `${SITE_URL}/cavalos-famosos#${c.id}`,
         }))}
       />
       {children}

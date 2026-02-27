@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { X, Sparkles, TrendingUp } from "lucide-react";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Paywall from "@/components/tools/Paywall";
@@ -24,6 +25,9 @@ import {
   estimarValorParcial,
 } from "@/components/calculadora-valor";
 import type { FormData, Resultado } from "@/components/calculadora-valor";
+import { PROFILE_LABELS, SUBPROFILE_LABELS, PROFILE_CONTEXT_KEY } from "@/lib/tools/shared-data";
+import HistoryPanel from "@/components/calculadora-valor/HistoryPanel";
+import type { CalcHistoryEntry } from "@/components/calculadora-valor/HistoryPanel";
 
 // ResultadoDisplay contains all the heavy charting components (InvestmentTimeline,
 // MarketPositionChart, etc.) and is only shown after calculation completes.
@@ -43,21 +47,7 @@ const ResultadoDisplay = dynamic(() => import("@/components/calculadora-valor/Re
 
 const DRAFT_KEY = "calculadora_draft_v1";
 const CHAIN_KEY = "tool_chain_horse";
-const PROFILE_CONTEXT_KEY = "tool_context_profile";
-
-const PROFILE_LABELS: Record<string, string> = {
-  competidor: "Competidor",
-  criador: "Criador",
-  amador: "Apreciador Amador",
-  investidor: "Investidor",
-};
-
-const SUBPROFILE_LABELS: Record<string, string> = {
-  competidor_elite: "Alta Competição FEI",
-  competidor_nacional: "Competição Nacional",
-  competidor_trabalho: "Equitação de Trabalho",
-  amador_projeto: "Projeto em Desenvolvimento",
-};
+const CALC_HISTORY_KEY = "calculadora_history";
 
 // ============================================
 // DEFAULT FORM STATE
@@ -113,6 +103,7 @@ export default function CalculadoraValorPage() {
   const [step, setStep] = useState(0);
   const [isCalculating, setIsCalculating] = useState(false);
   const [resultado, setResultado] = useState<Resultado | null>(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
@@ -125,6 +116,8 @@ export default function CalculadoraValorPage() {
     training: string;
   } | null>(null);
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
+  const [calcHistory, setCalcHistory] = useState<CalcHistoryEntry[]>([]);
+  const [showCalcHistory, setShowCalcHistory] = useState(false);
 
   const isMountedRef = useRef(true);
   useEffect(() => {
@@ -254,6 +247,39 @@ export default function CalculadoraValorPage() {
     };
   }, [form, step, resultado]);
 
+  // Load history on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CALC_HISTORY_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved) as CalcHistoryEntry[];
+        if (Array.isArray(parsed)) setCalcHistory(parsed);
+      }
+    } catch {}
+  }, []);
+
+  // Save history entry when resultado changes
+  useEffect(() => {
+    if (!resultado) return;
+    try {
+      const entry: CalcHistoryEntry = {
+        timestamp: Date.now(),
+        nome: form.nome || "Sem nome",
+        valorFinal: resultado.valorFinal,
+        confianca: resultado.confianca,
+        treino: form.treino,
+      };
+      setCalcHistory((prev) => {
+        const updated = [entry, ...prev].slice(0, 5);
+        try {
+          localStorage.setItem(CALC_HISTORY_KEY, JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultado]);
+
   const restaurarDraft = () => {
     try {
       const saved = localStorage.getItem(DRAFT_KEY);
@@ -325,8 +351,8 @@ export default function CalculadoraValorPage() {
     }, 2000);
   };
 
-  const resetar = () => {
-    if (!confirm("Tens a certeza que queres recomeçar? Os dados actuais serão perdidos.")) return;
+  const resetar = useCallback(() => {
+    setShowResetConfirm(false);
     setResultado(null);
     setStep(0);
     setForm(INITIAL_FORM);
@@ -334,7 +360,7 @@ export default function CalculadoraValorPage() {
       localStorage.removeItem(DRAFT_KEY);
     } catch {}
     setHasDraft(false);
-  };
+  }, []);
 
   // Editar sem perder os dados preenchidos — volta ao último passo
   const editarResultado = () => {
@@ -487,10 +513,19 @@ export default function CalculadoraValorPage() {
           totalSteps={TOTAL_STEPS}
           progress={progress}
           hasResultado={!!resultado}
-          onReset={resetar}
+          onReset={() => setShowResetConfirm(true)}
           onEdit={editarResultado}
           estimativaParcial={estimativaParcial}
-        />
+        >
+          {resultado && (
+            <HistoryPanel
+              history={calcHistory}
+              show={showCalcHistory}
+              onToggle={() => setShowCalcHistory((v) => !v)}
+              onClose={() => setShowCalcHistory(false)}
+            />
+          )}
+        </CalculadoraHeader>
 
         <div className="pt-16">
           {/* Intro */}
@@ -922,6 +957,17 @@ export default function CalculadoraValorPage() {
           <iframe src={pdfPreviewUrl} className="flex-1 w-full border-0" title="Avaliação PDF" />
         </div>
       )}
+      {/* ── Reset Confirm Dialog ─────────────────────────────────── */}
+      <ConfirmDialog
+        open={showResetConfirm}
+        title="Recomeçar análise?"
+        message="Os dados actuais serão perdidos. Tens a certeza que queres recomeçar?"
+        confirmLabel="Recomeçar"
+        cancelLabel="Cancelar"
+        variant="warning"
+        onConfirm={resetar}
+        onCancel={() => setShowResetConfirm(false)}
+      />
     </>
   );
 }

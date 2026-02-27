@@ -32,10 +32,14 @@ export default function StepLinhagem({
           <h3 className="text-sm font-medium text-[var(--gold)] mb-3">{t.vender_cavalo.sire}</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              <label
+                htmlFor="pai_nome"
+                className="block text-sm text-[var(--foreground-secondary)] mb-1"
+              >
                 {t.vender_cavalo.sire_name} *
               </label>
               <input
+                id="pai_nome"
                 type="text"
                 required
                 minLength={2}
@@ -45,10 +49,14 @@ export default function StepLinhagem({
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              <label
+                htmlFor="pai_registo"
+                className="block text-sm text-[var(--foreground-secondary)] mb-1"
+              >
                 {t.vender_cavalo.sire_registration} *
               </label>
               <input
+                id="pai_registo"
                 type="text"
                 required
                 value={formData.pai_registo}
@@ -64,10 +72,14 @@ export default function StepLinhagem({
           <h3 className="text-sm font-medium text-[var(--gold)] mb-3">{t.vender_cavalo.dam}</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              <label
+                htmlFor="mae_nome"
+                className="block text-sm text-[var(--foreground-secondary)] mb-1"
+              >
                 {t.vender_cavalo.dam_name} *
               </label>
               <input
+                id="mae_nome"
                 type="text"
                 required
                 minLength={2}
@@ -77,10 +89,14 @@ export default function StepLinhagem({
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              <label
+                htmlFor="mae_registo"
+                className="block text-sm text-[var(--foreground-secondary)] mb-1"
+              >
                 {t.vender_cavalo.dam_registration} *
               </label>
               <input
+                id="mae_registo"
                 type="text"
                 required
                 value={formData.mae_registo}
@@ -93,10 +109,14 @@ export default function StepLinhagem({
 
         {/* Coudelaria */}
         <div>
-          <label className="block text-sm text-[var(--foreground-secondary)] mb-1">
+          <label
+            htmlFor="coudelaria_origem"
+            className="block text-sm text-[var(--foreground-secondary)] mb-1"
+          >
             {t.vender_cavalo.stud_origin}
           </label>
           <input
+            id="coudelaria_origem"
             type="text"
             value={formData.coudelaria_origem}
             onChange={(e) => updateField("coudelaria_origem", e.target.value)}

@@ -4,8 +4,7 @@ import ProductDisplay from "@/components/ProductDisplay";
 import Breadcrumb from "@/components/Breadcrumb";
 import Link from "next/link";
 import sanitize from "sanitize-html";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 /** Sanitize Shopify product HTML — allow only safe formatting tags */
 function sanitizeHtml(html: string): string {
@@ -38,11 +37,11 @@ export async function generateMetadata({
   return {
     title: product.title,
     description,
-    alternates: { canonical: `${siteUrl}/loja/${handle}` },
+    alternates: { canonical: `${SITE_URL}/loja/${handle}` },
     openGraph: {
       title: `${product.title} | Loja Portal Lusitano`,
       description,
-      url: `${siteUrl}/loja/${handle}`,
+      url: `${SITE_URL}/loja/${handle}`,
       siteName: "Portal Lusitano",
       locale: "pt_PT",
       type: "website",

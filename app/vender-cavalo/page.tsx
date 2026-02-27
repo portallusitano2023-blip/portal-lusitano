@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useToast } from "@/context/ToastContext";
 import type { FormData, Documentos, DocumentType } from "@/components/vender-cavalo/types";
 import {
   initialFormData,
@@ -43,6 +44,7 @@ function calcularIdade(dataNascimento: string): number {
 
 export default function VenderCavaloPage() {
   const { t } = useLanguage();
+  const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [imagens, setImagens] = useState<File[]>([]);
@@ -231,7 +233,7 @@ export default function VenderCavaloPage() {
     } catch (error: unknown) {
       if (process.env.NODE_ENV === "development") console.error("[VenderCavalo]", error);
       const message = error instanceof Error ? error.message : "Unknown error";
-      alert(t.vender_cavalo.error_payment.replace("{message}", message));
+      showToast("error", t.vender_cavalo.error_payment.replace("{message}", message));
       setLoading(false);
     }
   };

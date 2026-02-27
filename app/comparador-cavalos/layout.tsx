@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, WebApplicationSchema } from "@/components/JsonLd";
-
-const siteUrl = "https://portal-lusitano.pt";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Comparador de Cavalos",
@@ -14,13 +13,13 @@ export const metadata: Metadata = {
     "escolher cavalo lusitano",
   ],
   alternates: {
-    canonical: `${siteUrl}/comparador-cavalos`,
+    canonical: `${SITE_URL}/comparador-cavalos`,
   },
   openGraph: {
     title: "Comparador de Cavalos | Portal Lusitano",
     description:
       "Compare cavalos Lusitanos lado a lado. Analise linhagem, morfologia, aptidões e preço para encontrar o exemplar ideal.",
-    url: `${siteUrl}/comparador-cavalos`,
+    url: `${SITE_URL}/comparador-cavalos`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -47,14 +46,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Comparador de Cavalos", url: `${siteUrl}/comparador-cavalos` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Comparador de Cavalos", url: `${SITE_URL}/comparador-cavalos` },
         ]}
       />
       <WebApplicationSchema
         name="Comparador de Cavalos"
         description="Compare cavalos Lusitanos lado a lado. Analise linhagem, morfologia, aptidões e preço para encontrar o exemplar ideal."
-        url={`${siteUrl}/comparador-cavalos`}
+        url={`${SITE_URL}/comparador-cavalos`}
       />
       {children}
     </>

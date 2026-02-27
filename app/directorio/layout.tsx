@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema, CollectionPageSchema } from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/constants";
 
 // ISR: Revalidate directory every hour
 export const revalidate = 3600;
-
-const siteUrl = "https://portal-lusitano.pt";
 
 export const metadata: Metadata = {
   title: "Directório de Coudelarias",
@@ -18,13 +17,13 @@ export const metadata: Metadata = {
     "criadores cavalos portugal",
   ],
   alternates: {
-    canonical: `${siteUrl}/directorio`,
+    canonical: `${SITE_URL}/directorio`,
   },
   openGraph: {
     title: "Directório de Coudelarias | Portal Lusitano",
     description:
       "Directório completo de coudelarias de cavalos Lusitanos em Portugal. Encontre criadores certificados, veja exemplares e contacte directamente.",
-    url: `${siteUrl}/directorio`,
+    url: `${SITE_URL}/directorio`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
@@ -51,14 +50,14 @@ export default function DirectorioLayout({ children }: { children: React.ReactNo
     <>
       <BreadcrumbSchema
         items={[
-          { name: "Portal Lusitano", url: siteUrl },
-          { name: "Directório de Coudelarias", url: `${siteUrl}/directorio` },
+          { name: "Portal Lusitano", url: SITE_URL },
+          { name: "Directório de Coudelarias", url: `${SITE_URL}/directorio` },
         ]}
       />
       <CollectionPageSchema
         name="Directório de Coudelarias"
         description="Directório completo de coudelarias de cavalos Lusitanos em Portugal. Encontre criadores certificados, veja exemplares e contacte directamente."
-        url={`${siteUrl}/directorio`}
+        url={`${SITE_URL}/directorio`}
       />
       {children}
     </>
