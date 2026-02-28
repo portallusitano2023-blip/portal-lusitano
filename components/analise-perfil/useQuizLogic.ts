@@ -108,6 +108,7 @@ export function useQuizLogic() {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [crossWarningDismissed, setCrossWarningDismissed] = useState(false);
+  const [chainContext, setChainContext] = useState<string | null>(null);
   const quizRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
@@ -123,6 +124,20 @@ export function useQuizLogic() {
   const showError = useCallback((msg: string) => {
     setError(msg);
     setTimeout(() => setError(null), 5000);
+  }, []);
+
+  // Check for chain context from Verificador de Compatibilidade
+  useEffect(() => {
+    try {
+      const ctx = sessionStorage.getItem("tool_context_profile");
+      if (!ctx) return;
+      const parsed = JSON.parse(ctx) as { source?: string; context?: string };
+      if (parsed.source === "verificador") {
+        sessionStorage.removeItem("tool_context_profile");
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- sessionStorage initialization on mount
+        setChainContext(parsed.context || "Verificador de Compatibilidade");
+      }
+    } catch {}
   }, []);
 
   // Check for shared result in URL
@@ -423,5 +438,8 @@ export function useQuizLogic() {
     radarData,
     dominantProfile,
     dominantProfileLabel,
+    // Chain context
+    chainContext,
+    setChainContext,
   };
 }

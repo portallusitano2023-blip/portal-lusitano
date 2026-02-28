@@ -1,17 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { X, Sparkles, TrendingUp } from "lucide-react";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Paywall from "@/components/tools/Paywall";
-import { useToolAccess } from "@/hooks/useToolAccess";
-import { useAuth } from "@/components/auth/AuthProvider";
-import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
-import { useLanguage } from "@/context/LanguageContext";
-import { useToast } from "@/context/ToastContext";
 import {
   CalculadoraHeader,
   IntroSection,
@@ -21,17 +15,11 @@ import {
   StepTreinoSaude,
   StepReproducaoMercado,
   StepNavigation,
-  calcularValor,
   estimarValorParcial,
 } from "@/components/calculadora-valor";
-import type { FormData, Resultado } from "@/components/calculadora-valor";
-import { PROFILE_LABELS, SUBPROFILE_LABELS, PROFILE_CONTEXT_KEY } from "@/lib/tools/shared-data";
 import HistoryPanel from "@/components/calculadora-valor/HistoryPanel";
-import type { CalcHistoryEntry } from "@/components/calculadora-valor/HistoryPanel";
+import { useCalculadoraState } from "@/components/calculadora-valor/useCalculadoraState";
 
-// ResultadoDisplay contains all the heavy charting components (InvestmentTimeline,
-// MarketPositionChart, etc.) and is only shown after calculation completes.
-// Lazy loading it avoids adding ~40kB of chart code to the initial bundle.
 const ResultadoDisplay = dynamic(() => import("@/components/calculadora-valor/ResultadoDisplay"), {
   ssr: false,
   loading: () => (
@@ -41,469 +29,50 @@ const ResultadoDisplay = dynamic(() => import("@/components/calculadora-valor/Re
   ),
 });
 
-// ============================================
-// CONSTANTES AUTO-SAVE + TOOL CHAIN
-// ============================================
-
-const DRAFT_KEY = "calculadora_draft_v1";
-const CHAIN_KEY = "tool_chain_horse";
-const CALC_HISTORY_KEY = "calculadora_history";
-
-// ============================================
-// DEFAULT FORM STATE
-// ============================================
-
-const INITIAL_FORM: FormData = {
-  nome: "",
-  idade: 6,
-  sexo: "garanhao",
-  pelagem: "Ruço",
-  altura: 162,
-  registoAPSL: true,
-  livroAPSL: "definitivo",
-  linhagem: "certificada",
-  linhagemPrincipal: "veiga",
-  morfologia: 7,
-  garupa: 7,
-  espádua: 7,
-  cabeca: 7,
-  membros: 7,
-  andamentos: 7,
-  elevacao: 7,
-  suspensao: 7,
-  regularidade: 7,
-  treino: "elementar",
-  competicoes: "nenhuma",
-  disciplina: "Dressage Clássica",
-  saude: "muito_bom",
-  raioX: true,
-  exameVeterinario: true,
-  temperamento: 8,
-  sensibilidade: 7,
-  vontadeTrabalho: 8,
-  reproducao: false,
-  descendentes: 0,
-  descendentesAprovados: 0,
-  mercado: "Portugal",
-  tendencia: "estavel",
-  certificadoExportacao: false,
-  proprietariosAnteriores: 0,
-};
-
-const TOTAL_STEPS = 5;
-
-// ============================================
-// MAIN PAGE COMPONENT
-// ============================================
-
 export default function CalculadoraValorPage() {
-  const { t } = useLanguage();
-  const { showToast } = useToast();
-  const { session } = useAuth();
-  const [step, setStep] = useState(0);
-  const [isCalculating, setIsCalculating] = useState(false);
-  const [resultado, setResultado] = useState<Resultado | null>(null);
-  const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const resultRef = useRef<HTMLDivElement>(null);
-  const [isExporting, setIsExporting] = useState(false);
-  const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
-  const [hasDraft, setHasDraft] = useState(false);
-  const [draftDate, setDraftDate] = useState<string>("");
-  const [profileContext, setProfileContext] = useState<{
-    profile: string;
-    subProfile: string | null;
-    priceRange: string;
-    training: string;
-  } | null>(null);
-  const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
-  const [calcHistory, setCalcHistory] = useState<CalcHistoryEntry[]>([]);
-  const [showCalcHistory, setShowCalcHistory] = useState(false);
-
-  const isMountedRef = useRef(true);
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
   const {
+    t,
+    form,
+    update,
+    step,
+    setStep,
+    isCalculating,
+    resultado,
+    estimativaParcial,
+    calcular,
+    resetar,
+    editarResultado,
+    showResetConfirm,
+    setShowResetConfirm,
     canUse,
     isSubscribed,
     freeUsesLeft,
     requiresAuth,
-    recordUsage,
-    isLoading: accessLoading,
-  } = useToolAccess("calculadora");
-
-  const [form, setForm] = useState<FormData>(INITIAL_FORM);
-
-  // ============================================
-  // AUTO-SAVE + DRAFT RESTORE
-  // ============================================
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(DRAFT_KEY);
-      if (saved) {
-        const { savedAt } = JSON.parse(saved) as { savedAt: string };
-        const age = Date.now() - new Date(savedAt).getTime();
-        if (age < 7 * 24 * 60 * 60 * 1000) {
-          setHasDraft(true);
-          setDraftDate(
-            new Date(savedAt).toLocaleDateString("pt-PT", {
-              day: "numeric",
-              month: "long",
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          );
-        } else {
-          localStorage.removeItem(DRAFT_KEY);
-        }
-      }
-    } catch {}
-
-    // Contexto da Análise de Perfil — sessionStorage ou URL param ?perfil=
-    try {
-      const ctx = sessionStorage.getItem(PROFILE_CONTEXT_KEY);
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlPerfil = urlParams.get("perfil");
-
-      let parsed: {
-        source: string;
-        profile: string;
-        subProfile: string | null;
-        priceRange: string;
-        training: string;
-      } | null = null;
-
-      if (ctx) {
-        const p = JSON.parse(ctx) as {
-          source?: string;
-          profile?: string;
-          subProfile?: string | null;
-          priceRange?: string;
-          training?: string;
-        } | null;
-        if (p?.source === "analise_perfil" && p.profile) {
-          parsed = {
-            source: p.source,
-            profile: p.profile,
-            subProfile: p.subProfile ?? null,
-            priceRange: p.priceRange ?? "",
-            training: p.training ?? "",
-          };
-          sessionStorage.removeItem(PROFILE_CONTEXT_KEY);
-        }
-      } else if (
-        urlPerfil &&
-        ["competidor", "criador", "amador", "investidor"].includes(urlPerfil)
-      ) {
-        // Fallback: URL param sem sessionStorage (e.g. link partilhado ou histórico do browser)
-        parsed = {
-          source: "analise_perfil",
-          profile: urlPerfil,
-          subProfile: urlParams.get("sub"),
-          priceRange: "",
-          training: "",
-        };
-      }
-
-      if (parsed) {
-        setProfileContext(parsed);
-
-        // Pré-preencher disciplina e competições com base no perfil
-        const profilePresets: Record<string, Partial<FormData>> = {
-          competidor_elite: { disciplina: "Alta Escola", competicoes: "cdi3" },
-          competidor_nacional: { disciplina: "Dressage Clássica", competicoes: "nacional" },
-          competidor_trabalho: { disciplina: "Equitação de Trabalho", competicoes: "regional" },
-          amador_projeto: { disciplina: "Lazer", competicoes: "nenhuma" },
-          criador: { reproducao: true },
-          amador: { disciplina: "Lazer", competicoes: "nenhuma" },
-          investidor: { disciplina: "Dressage Clássica" },
-        };
-        const key = parsed.subProfile ?? parsed.profile;
-        const preset = profilePresets[key];
-        if (preset) {
-          setForm((prev) => ({ ...prev, ...preset }));
-        }
-      }
-    } catch {}
-  }, []);
-
-  useEffect(() => {
-    if (step === 0 || resultado) return;
-    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
-    autoSaveTimer.current = setTimeout(() => {
-      try {
-        localStorage.setItem(
-          DRAFT_KEY,
-          JSON.stringify({ form, step, savedAt: new Date().toISOString() })
-        );
-      } catch {}
-    }, 800);
-    return () => {
-      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
-    };
-  }, [form, step, resultado]);
-
-  // Load history on mount
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(CALC_HISTORY_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved) as CalcHistoryEntry[];
-        if (Array.isArray(parsed)) setCalcHistory(parsed);
-      }
-    } catch {}
-  }, []);
-
-  // Save history entry when resultado changes
-  useEffect(() => {
-    if (!resultado) return;
-    try {
-      const entry: CalcHistoryEntry = {
-        timestamp: Date.now(),
-        nome: form.nome || "Sem nome",
-        valorFinal: resultado.valorFinal,
-        confianca: resultado.confianca,
-        treino: form.treino,
-      };
-      setCalcHistory((prev) => {
-        const updated = [entry, ...prev].slice(0, 5);
-        try {
-          localStorage.setItem(CALC_HISTORY_KEY, JSON.stringify(updated));
-        } catch {}
-        return updated;
-      });
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resultado]);
-
-  const restaurarDraft = () => {
-    try {
-      const saved = localStorage.getItem(DRAFT_KEY);
-      if (saved) {
-        const { form: savedForm, step: savedStep } = JSON.parse(saved) as {
-          form: FormData;
-          step: number;
-        };
-        setForm(savedForm);
-        setStep(savedStep || 1);
-        setHasDraft(false);
-        // Scroll to top so the restored form step is visible
-        setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
-      }
-    } catch {
-      // If restore fails, just dismiss the banner
-      setHasDraft(false);
-    }
-  };
-
-  const descartarDraft = () => {
-    try {
-      localStorage.removeItem(DRAFT_KEY);
-    } catch {}
-    setHasDraft(false);
-  };
-
-  // ============================================
-  // ESTIMATIVA PARCIAL (tempo real)
-  // ============================================
-
-  const estimativaParcial = useMemo(() => {
-    if (step < 2 || resultado) return null;
-    return estimarValorParcial(form);
-  }, [form, step, resultado]);
-
-  const update = <K extends keyof FormData>(key: K, value: FormData[K]) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const calcular = () => {
-    if (!canUse) return;
-    setIsCalculating(true);
-
-    setTimeout(() => {
-      if (!isMountedRef.current) return;
-      const result = calcularValor(form);
-      setResultado(result);
-      setIsCalculating(false);
-      recordUsage(
-        {
-          treino: form.treino,
-          mercado: form.mercado,
-          disciplina: form.disciplina,
-          sexo: form.sexo,
-        },
-        {
-          valorFinal: result.valorFinal,
-          confianca: result.confianca,
-          percentil: result.percentil,
-          disciplina: form.disciplina ?? null,
-          liquidezScore: result.liquidez?.score ?? null,
-        }
-      );
-
-      setTimeout(() => {
-        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100);
-    }, 2000);
-  };
-
-  const resetar = useCallback(() => {
-    setShowResetConfirm(false);
-    setResultado(null);
-    setStep(0);
-    setForm(INITIAL_FORM);
-    try {
-      localStorage.removeItem(DRAFT_KEY);
-    } catch {}
-    setHasDraft(false);
-  }, []);
-
-  // Editar sem perder os dados preenchidos — volta ao último passo
-  const editarResultado = () => {
-    setResultado(null);
-    // step permanece no último passo (5) para o utilizador ajustar e recalcular
-  };
-
-  const handleExportPDF = async () => {
-    if (!resultado) return;
-    setIsExporting(true);
-    try {
-      const { generateCalculadoraPDF } = await import("@/lib/tools/pdf/calculadora-pdf");
-      const blobUrl = await generateCalculadoraPDF(form, resultado);
-      // Limpar URL anterior se existir
-      if (pdfPreviewUrl) URL.revokeObjectURL(pdfPreviewUrl);
-      setPdfPreviewUrl(blobUrl);
-    } catch (error) {
-      if (process.env.NODE_ENV === "development") console.error("[Calculadora PDF erro]", error);
-      showToast("error", t.errors.error_export_pdf);
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
-  const handleClosePdfPreview = () => {
-    if (pdfPreviewUrl) URL.revokeObjectURL(pdfPreviewUrl);
-    setPdfPreviewUrl(null);
-  };
-
-  useEffect(() => {
-    if (!pdfPreviewUrl) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (pdfPreviewUrl) URL.revokeObjectURL(pdfPreviewUrl);
-        setPdfPreviewUrl(null);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [pdfPreviewUrl]);
-
-  const handleDownloadPdf = () => {
-    if (!pdfPreviewUrl) return;
-    const a = document.createElement("a");
-    a.href = pdfPreviewUrl;
-    a.download = `avaliacao-lusitano-${Date.now()}.pdf`;
-    a.click();
-  };
-
-  const handleShare = async () => {
-    const url = window.location.href;
-    const text = `${t.calculadora.tool_name} - Portal Lusitano`;
-    const shared = await shareNative(t.calculadora.tool_name, text, url);
-    if (!shared) await copyToClipboard(url);
-  };
-
-  // Enviar resultados por email (PRO)
-  const handleSendEmail = async () => {
-    if (!resultado || !session?.access_token) return;
-    const summary: Record<string, string> = {
-      Cavalo: form.nome || "—",
-      "Valor estimado": `€${resultado.valorFinal.toLocaleString("pt-PT")}`,
-      Intervalo: `€${resultado.valorMin.toLocaleString("pt-PT")} – €${resultado.valorMax.toLocaleString("pt-PT")}`,
-      Confiança: `${resultado.confianca}%`,
-      "Percentil de mercado": `Top ${100 - resultado.percentil}%`,
-      "Nível de treino": form.treino,
-      Mercado: form.mercado,
-    };
-    try {
-      const res = await fetch("/api/tools/send-results", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({ toolName: "calculadora", resultSummary: summary }),
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    } catch {
-      // silent fail - user can retry
-    }
-  };
-
-  // Tool Chain → Comparador
-  const handleComparar = () => {
-    if (!resultado) return;
-    const treinoMap: Record<string, string> = {
-      potro: "Potro",
-      desbravado: "Desbravado",
-      iniciado: "Iniciado",
-      elementar: "Elementar",
-      medio: "Médio",
-      avancado: "Avançado",
-      alta_escola: "Alta Escola",
-      grand_prix: "Grand Prix",
-    };
-    const saudeMap: Record<string, number> = {
-      muito_bom: 8,
-      excelente: 10,
-      bom: 6,
-      razoavel: 4,
-    };
-    const compMap: Record<string, string> = {
-      nenhuma: "Nenhuma",
-      regional: "Regional",
-      nacional: "Nacional",
-      internacional: "Internacional",
-    };
-    const linhagemMap: Record<string, string> = {
-      sem_registo: "Desconhecida",
-      registada: "Registada",
-      certificada: "Certificada",
-      premium: "Premium",
-      elite: "Elite",
-    };
-    const horse = {
-      nome: form.nome || "Cavalo A",
-      idade: form.idade,
-      sexo: form.sexo === "garanhao" ? "Garanhão" : form.sexo === "egua" ? "Égua" : "Castrado",
-      altura: form.altura,
-      pelagem: form.pelagem,
-      linhagem: linhagemMap[form.linhagem] || "Certificada",
-      linhagemFamosa: form.linhagemPrincipal || "veiga",
-      treino: treinoMap[form.treino] || "Elementar",
-      temperamento: form.temperamento,
-      saude: saudeMap[form.saude] || 7,
-      conformacao: form.morfologia,
-      andamentos: form.andamentos,
-      elevacao: form.elevacao,
-      regularidade: form.regularidade,
-      competicoes: compMap[form.competicoes] || "Nenhuma",
-      premios: 0,
-      preco: resultado.valorFinal,
-      blup: resultado.blup,
-      registoAPSL: form.registoAPSL,
-    };
-    try {
-      sessionStorage.setItem(CHAIN_KEY, JSON.stringify({ source: "calculadora", horse }));
-    } catch {}
-    window.location.href = "/comparador-cavalos";
-  };
-
-  const progress = step === 0 ? 0 : (step / TOTAL_STEPS) * 100;
+    accessLoading,
+    isExporting,
+    pdfPreviewUrl,
+    handleExportPDF,
+    handleClosePdfPreview,
+    handleDownloadPdf,
+    handleShare,
+    handleSendEmail,
+    handleComparar,
+    handleVerificarCompat,
+    hasDraft,
+    draftDate,
+    restaurarDraft,
+    descartarDraft,
+    profileContext,
+    setProfileContext,
+    calcHistory,
+    showCalcHistory,
+    setShowCalcHistory,
+    progress,
+    resultRef,
+    PROFILE_LABELS,
+    SUBPROFILE_LABELS,
+    TOTAL_STEPS,
+  } = useCalculadoraState();
 
   return (
     <>
@@ -674,21 +243,18 @@ export default function CalculadoraValorPage() {
                 </div>
               )}
 
-              {/* Loading overlay — shown during the 2-second calculation delay */}
+              {/* Loading overlay */}
               {isCalculating && (
                 <div
                   role="status"
                   aria-label="A calcular o valor do seu cavalo"
                   className="flex flex-col items-center justify-center py-24 gap-8"
                 >
-                  {/* Spinner ring */}
                   <div className="relative w-20 h-20">
                     <div className="absolute inset-0 rounded-full border-4 border-[#C5A059]/15" />
                     <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#C5A059] animate-spin" />
                     <div className="absolute inset-2 rounded-full border-4 border-transparent border-t-[#C5A059]/40 animate-spin [animation-duration:1.5s]" />
                   </div>
-
-                  {/* Title */}
                   <div className="text-center space-y-2">
                     <p className="text-[#C5A059] font-semibold text-lg tracking-wide">
                       A avaliar {form.nome ? `"${form.nome}"` : "o seu cavalo"}...
@@ -698,8 +264,6 @@ export default function CalculadoraValorPage() {
                       {form.mercado || "Portugal"}
                     </p>
                   </div>
-
-                  {/* Animated steps */}
                   <div className="flex flex-col gap-3 w-full max-w-xs">
                     <div className="flex items-center gap-3 animate-[fadeSlideIn_0.3s_ease-out_0.1s_both]">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-pulse" />
@@ -727,7 +291,7 @@ export default function CalculadoraValorPage() {
                   key={`step-${step}`}
                   className="space-y-8 pt-8 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
                 >
-                  {/* MELHORIA 1: Live Estimate Banner — visível do step 1 em diante */}
+                  {/* Live Estimate Banner */}
                   {(() => {
                     const estimativa = estimarValorParcial(form);
                     if (!estimativa) return null;
@@ -753,7 +317,7 @@ export default function CalculadoraValorPage() {
                     );
                   })()}
 
-                  {/* MELHORIA 2: Indicador de Completude do Formulário */}
+                  {/* Form Completeness Indicator */}
                   {(() => {
                     const camposImportantes = [
                       (form.nome?.trim().length ?? 0) > 0,
@@ -786,7 +350,7 @@ export default function CalculadoraValorPage() {
                     );
                   })()}
 
-                  {/* MELHORIA 3: Indicador de Confiança — visível no último step */}
+                  {/* Confidence Indicator — last step */}
                   {step === TOTAL_STEPS &&
                     (() => {
                       const hasRegistoAPSL = form.registoAPSL;
@@ -916,6 +480,7 @@ export default function CalculadoraValorPage() {
                     isExporting={isExporting}
                     isSubscribed={isSubscribed}
                     onComparar={handleComparar}
+                    onVerificarCompat={handleVerificarCompat}
                     onSendEmail={isSubscribed ? handleSendEmail : undefined}
                   />
                 )}
@@ -925,15 +490,13 @@ export default function CalculadoraValorPage() {
         </div>
       </main>
 
-      {/* ── PDF Preview Modal ─────────────────────────────────────────────── */}
+      {/* PDF Preview Modal */}
       {pdfPreviewUrl && (
         <div className="fixed inset-0 z-[200] flex flex-col bg-black/90">
-          {/* ESC hint */}
           <p className="text-xs text-white/50 text-center py-1">
             Pressione <kbd className="bg-white/10 px-1.5 py-0.5 rounded text-xs">ESC</kbd> para
             fechar
           </p>
-          {/* Toolbar */}
           <div className="flex items-center justify-between px-4 py-3 bg-[#0A0A0A] border-b border-[#C5A059]/30 shrink-0">
             <span className="text-[#C5A059] font-semibold text-sm">
               Avaliação PDF — Portal Lusitano
@@ -953,11 +516,11 @@ export default function CalculadoraValorPage() {
               </button>
             </div>
           </div>
-          {/* PDF iframe — Chrome renderiza directamente com fundos escuros */}
           <iframe src={pdfPreviewUrl} className="flex-1 w-full border-0" title="Avaliação PDF" />
         </div>
       )}
-      {/* ── Reset Confirm Dialog ─────────────────────────────────── */}
+
+      {/* Reset Confirm Dialog */}
       <ConfirmDialog
         open={showResetConfirm}
         title="Recomeçar análise?"

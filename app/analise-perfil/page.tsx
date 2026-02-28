@@ -132,6 +132,8 @@ function AnalisePerfilContent() {
     dominantProfileLabel,
     crossValidationWarning,
     dismissCrossWarning,
+    chainContext,
+    setChainContext,
   } = useQuizLogic();
 
   return (
@@ -147,6 +149,30 @@ function AnalisePerfilContent() {
           >
             &#10005;
           </button>
+        </div>
+      )}
+
+      {/* Chain welcome banner — from Verificador */}
+      {chainContext && showIntro && (
+        <div className="max-w-2xl mx-auto px-4 pt-20 -mb-12">
+          <div className="flex items-start gap-3 px-5 py-4 bg-gradient-to-r from-emerald-500/15 to-emerald-500/5 border border-emerald-500/40 rounded-xl animate-[fadeSlideIn_0.4s_ease-out_forwards]">
+            <Dna size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+            <p className="text-xs text-emerald-300 flex-1 leading-relaxed">
+              <strong>Vindo do Verificador de Compatibilidade</strong>
+              <span className="text-emerald-300/70">
+                {" "}
+                · Análise de {chainContext} — descobre o perfil ideal de comprador para este
+                cruzamento
+              </span>
+            </p>
+            <button
+              onClick={() => setChainContext(null)}
+              className="text-emerald-400/50 hover:text-emerald-400 transition-colors shrink-0"
+              aria-label="Fechar"
+            >
+              &#10005;
+            </button>
+          </div>
         </div>
       )}
 

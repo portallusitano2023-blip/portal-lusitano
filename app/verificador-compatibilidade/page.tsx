@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Heart, RefreshCw, Trophy, Dna, Leaf, Star } from "lucide-react";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -108,45 +108,65 @@ export default function VerificadorCompatibilidadePage() {
       const chain = sessionStorage.getItem(BREEDING_CHAIN_KEY);
       if (!chain) return;
       sessionStorage.removeItem(BREEDING_CHAIN_KEY);
-      const { garanhao: g, egua: e } = JSON.parse(chain) as {
-        garanhao: ChainHorse;
-        egua: ChainHorse;
+      const parsed = JSON.parse(chain) as {
+        source?: string;
+        garanhao: ChainHorse | Record<string, never>;
+        egua: ChainHorse | Record<string, never>;
       };
-      setGaranhao((prev) => ({
-        ...prev,
-        nome: g.nome || prev.nome,
-        idade: g.idade ?? prev.idade,
-        altura: g.altura ?? prev.altura,
-        pelagem: g.pelagem || prev.pelagem,
-        linhagem: g.linhagem || prev.linhagem,
-        linhagemFamosa: g.linhagemFamosa || prev.linhagemFamosa,
-        conformacao: g.conformacao ?? prev.conformacao,
-        andamentos: g.andamentos ?? prev.andamentos,
-        temperamento: mapTemperamentScore(g.temperamento),
-        saude: g.saude ?? prev.saude,
-        blup: g.blup ?? prev.blup,
-      }));
-      setEgua((prev) => ({
-        ...prev,
-        nome: e.nome || prev.nome,
-        idade: e.idade ?? prev.idade,
-        altura: e.altura ?? prev.altura,
-        pelagem: e.pelagem || prev.pelagem,
-        linhagem: e.linhagem || prev.linhagem,
-        linhagemFamosa: e.linhagemFamosa || prev.linhagemFamosa,
-        conformacao: e.conformacao ?? prev.conformacao,
-        andamentos: e.andamentos ?? prev.andamentos,
-        temperamento: mapTemperamentScore(e.temperamento),
-        saude: e.saude ?? prev.saude,
-        blup: e.blup ?? prev.blup,
-      }));
+      const g = parsed.garanhao as ChainHorse;
+      const e = parsed.egua as ChainHorse;
+
+      // From Calculadora: only one horse is populated
+      const hasGaranhao = g && g.nome;
+      const hasEgua = e && e.nome;
+
+      if (hasGaranhao) {
+        setGaranhao((prev) => ({
+          ...prev,
+          nome: g.nome || prev.nome,
+          idade: g.idade ?? prev.idade,
+          altura: g.altura ?? prev.altura,
+          pelagem: g.pelagem || prev.pelagem,
+          linhagem: g.linhagem || prev.linhagem,
+          linhagemFamosa: g.linhagemFamosa || prev.linhagemFamosa,
+          conformacao: g.conformacao ?? prev.conformacao,
+          andamentos: g.andamentos ?? prev.andamentos,
+          temperamento: g.temperamento ? mapTemperamentScore(g.temperamento) : prev.temperamento,
+          saude: g.saude ?? prev.saude,
+          blup: g.blup ?? prev.blup,
+        }));
+      }
+      if (hasEgua) {
+        setEgua((prev) => ({
+          ...prev,
+          nome: e.nome || prev.nome,
+          idade: e.idade ?? prev.idade,
+          altura: e.altura ?? prev.altura,
+          pelagem: e.pelagem || prev.pelagem,
+          linhagem: e.linhagem || prev.linhagem,
+          linhagemFamosa: e.linhagemFamosa || prev.linhagemFamosa,
+          conformacao: e.conformacao ?? prev.conformacao,
+          andamentos: e.andamentos ?? prev.andamentos,
+          temperamento: e.temperamento ? mapTemperamentScore(e.temperamento) : prev.temperamento,
+          saude: e.saude ?? prev.saude,
+          blup: e.blup ?? prev.blup,
+        }));
+      }
       setStep(1);
-      setChainBanner(`${g.nome || "Garanhão"} × ${e.nome || "Égua"}`);
+      // Set the correct tab to the side that needs filling
+      if (hasGaranhao && !hasEgua) setTab("egua");
+      if (hasEgua && !hasGaranhao) setTab("garanhao");
+      const bannerText =
+        hasGaranhao && hasEgua
+          ? `${g.nome || "Garanhão"} × ${e.nome || "Égua"}`
+          : hasGaranhao
+            ? `${g.nome} — preencha a égua`
+            : `${e.nome} — preencha o garanhão`;
+      setChainBanner(bannerText);
       setChainImported(true);
-    } catch (e) {
-      // FIX B: log error in non-production environments instead of silently swallowing it
+    } catch (err) {
       if (process.env.NODE_ENV !== "production") {
-        console.warn("[Tool Chain] Erro ao importar dados:", e);
+        console.warn("[Tool Chain] Erro ao importar dados:", err);
       }
     }
   }, []);

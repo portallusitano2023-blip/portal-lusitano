@@ -24,7 +24,7 @@ interface CavaloVenda {
 }
 
 function ComprarContentInner({ cavalos }: { cavalos: CavaloVenda[] }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const searchParams = useSearchParams();
   const isDev = searchParams.get("dev") === "true";
 
@@ -96,10 +96,40 @@ function ComprarContentInner({ cavalos }: { cavalos: CavaloVenda[] }) {
       {cavalos.length > 0 ? (
         <MarketplaceGrid horses={cavalos} isDev={isDev} t={filterTranslations} />
       ) : (
-        <div className="text-center py-20 sm:py-32 md:py-40 px-4">
-          <p className="text-[var(--foreground-muted)] font-serif italic text-base sm:text-lg md:text-xl font-light">
+        <div className="text-center py-20 sm:py-32 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+          <div className="w-16 h-16 border border-[var(--gold)]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="text-[var(--foreground-muted)]"
+            >
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-serif text-[var(--foreground)] mb-3">
             {t.comprar_page.no_specimens}
+          </h2>
+          <p className="text-sm text-[var(--foreground-muted)] mb-8 max-w-md mx-auto leading-relaxed">
+            {language === "en"
+              ? "The finest Lusitanos are about to arrive. Explore our journal while you wait."
+              : language === "es"
+                ? "Los mejores Lusitanos están a punto de llegar. Explora nuestro diario mientras tanto."
+                : "Os melhores Lusitanos estão prestes a chegar. Explore o nosso jornal enquanto espera."}
           </p>
+          <Link
+            href="/jornal"
+            className="inline-flex items-center gap-2 border border-[var(--gold)]/30 text-[var(--gold)] px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-[var(--gold)]/5 transition-all duration-300"
+          >
+            {language === "en"
+              ? "Explore the Journal"
+              : language === "es"
+                ? "Explorar la Revista"
+                : "Explorar o Jornal"}
+          </Link>
         </div>
       )}
     </main>

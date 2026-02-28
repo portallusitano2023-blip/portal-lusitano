@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Users,
   Feather,
@@ -14,6 +15,7 @@ import {
   Play,
   Gauge,
   Crown,
+  ChevronDown,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import type { ResultTab } from "@/components/analise-perfil/types";
@@ -33,10 +35,21 @@ const PRO_TABS = new Set<ResultTab>([
   "preparacao",
 ]);
 
+interface TabDef {
+  id: ResultTab;
+  label: string;
+  icon: typeof Users;
+}
+
+interface TabGroup {
+  label: string;
+  tabs: TabDef[];
+}
+
 export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps) {
   const { t } = useLanguage();
 
-  const tabs: { id: ResultTab; label: string; icon: typeof Users }[] = [
+  const tabs: TabDef[] = [
     { id: "perfil", label: t.analise_perfil.tab_profile, icon: Users },
     { id: "cavalo", label: t.analise_perfil.tab_ideal_horse, icon: Feather },
     {
@@ -67,10 +80,46 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
     },
   ];
 
+  // Mobile groups
+  const groups: TabGroup[] = [
+    {
+      label: "Perfil",
+      tabs: tabs.filter((t) => ["perfil", "cavalo", "afinidade"].includes(t.id)),
+    },
+    {
+      label: "Planeamento",
+      tabs: tabs.filter((t) => ["custos", "cronograma", "analise"].includes(t.id)),
+    },
+    {
+      label: "Acção",
+      tabs: tabs.filter((t) =>
+        ["proximos", "prioridades", "checklist", "budget", "simulador", "preparacao"].includes(t.id)
+      ),
+    },
+  ];
+
+  // Find which group the selected tab belongs to
+  const activeGroupIdx = groups.findIndex((g) => g.tabs.some((t) => t.id === selectedTab));
+  const [expandedGroup, setExpandedGroup] = useState<number>(
+    activeGroupIdx >= 0 ? activeGroupIdx : 0
+  );
+
+  const toggleGroup = (idx: number) => {
+    setExpandedGroup((prev) => (prev === idx ? -1 : idx));
+  };
+
+  // When a tab is selected, auto-expand its group on mobile
+  const handleTabSelect = (tab: ResultTab) => {
+    onSelectTab(tab);
+    const groupIdx = groups.findIndex((g) => g.tabs.some((t) => t.id === tab));
+    if (groupIdx >= 0) setExpandedGroup(groupIdx);
+  };
+
   return (
     <section className="sticky top-0 z-20 bg-[var(--background)]/95 backdrop-blur-sm border-b border-[var(--border)]">
       <div className="max-w-5xl mx-auto px-0 sm:px-6">
-        <div className="flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide">
+        {/* Desktop: horizontal scroll (unchanged) */}
+        <div className="hidden sm:flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => {
             const isPro = PRO_TABS.has(tab.id);
             const isActive = selectedTab === tab.id;
@@ -95,6 +144,59 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
                   />
                 )}
               </button>
+            );
+          })}
+        </div>
+
+        {/* Mobile: accordion groups */}
+        <div className="flex flex-col sm:hidden">
+          {groups.map((group, gi) => {
+            const isExpanded = expandedGroup === gi;
+            const hasActiveTab = group.tabs.some((t) => t.id === selectedTab);
+            return (
+              <div key={gi}>
+                <button
+                  onClick={() => toggleGroup(gi)}
+                  className={`flex items-center justify-between w-full px-4 py-3 text-xs uppercase tracking-wider transition-colors ${
+                    hasActiveTab ? "text-[var(--gold)]" : "text-[var(--foreground-muted)]"
+                  }`}
+                >
+                  <span className="font-semibold">{group.label}</span>
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {isExpanded && (
+                  <div className="flex flex-col pb-1">
+                    {group.tabs.map((tab) => {
+                      const isPro = PRO_TABS.has(tab.id);
+                      const isActive = selectedTab === tab.id;
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => handleTabSelect(tab.id)}
+                          className={`flex items-center gap-2 px-6 py-2.5 text-sm font-medium transition-colors ${
+                            isActive
+                              ? "text-[var(--gold)] bg-[var(--gold)]/5"
+                              : "text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)]"
+                          }`}
+                        >
+                          <tab.icon size={15} aria-hidden="true" />
+                          {tab.label}
+                          {isPro && (
+                            <Crown
+                              size={11}
+                              aria-label="PRO"
+                              className={`shrink-0 ${isActive ? "text-[#C5A059]" : "text-[#C5A059]/50"}`}
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>

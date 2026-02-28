@@ -1,0 +1,88 @@
+@media print {
+  /* Reset backgrounds for printing */
+  html,
+  body {
+    background: white !important;
+    color: #1a1a1a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide non-printable elements */
+  nav,
+  footer,
+  [role="dialog"],
+  [data-no-print],
+  .fixed,
+  .sticky,
+  button:not([data-print-keep]) {
+    display: none !important;
+  }
+
+  /* Skip modals, toasts, overlays */
+  [class*="fixed inset-0"],
+  [class*="z-50"],
+  [class*="z-[200]"] {
+    display: none !important;
+  }
+
+  /* Override dark theme */
+  * {
+    color: #1a1a1a !important;
+    border-color: #e5e5e5 !important;
+  }
+
+  /* Gold accents → darker for print */
+  [class*="text-\\[\\#C5A059\\]"],
+  [class*="text-\\[var\\(--gold\\)\\]"] {
+    color: #8b7330 !important;
+  }
+
+  /* Background cards → white */
+  [class*="bg-\\[var\\(--background"] {
+    background: white !important;
+  }
+
+  /* Ensure gauges and bars print with color */
+  svg,
+  [class*="bg-emerald"],
+  [class*="bg-amber"],
+  [class*="bg-blue"],
+  [class*="bg-purple"],
+  [class*="bg-pink"],
+  [class*="bg-red"],
+  [class*="bg-gradient"] {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Page break control */
+  .space-y-6 > div,
+  .space-y-8 > div {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Page margins for A4 */
+  @page {
+    size: A4;
+    margin: 15mm 12mm;
+  }
+
+  /* Ensure readable text sizes */
+  [class*="text-\\[10px\\]"] {
+    font-size: 8pt !important;
+  }
+
+  /* Links: show URL */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 8pt;
+    color: #666 !important;
+  }
+
+  /* Don't show URL for internal links */
+  a[href^="/"]::after {
+    content: none;
+  }
+}

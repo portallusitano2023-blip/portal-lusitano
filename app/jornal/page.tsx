@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { fetchArticlesList } from "@/lib/sanity-queries";
 import { articlesListPT, articlesListEN } from "@/data/articlesList";
+import { ItemListSchema } from "@/components/JsonLd";
 import JornalListClient from "./JornalListClient";
 
 // ISR: Revalidar jornal diariamente (novos artigos via Sanity)
@@ -70,5 +71,21 @@ export default async function JornalPage() {
   // Dados EN para fallback
   const articlesEN = localToSanityFormat(articlesListEN);
 
-  return <JornalListClient articles={articles} articlesEN={articlesEN} />;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
+
+  return (
+    <>
+      <ItemListSchema
+        name="Jornal Lusitano"
+        description="Artigos e crónicas sobre o cavalo Lusitano — história, genética, biomecânica e desporto."
+        items={articles.map((a) => ({
+          name: a.title,
+          description: a.subtitle,
+          url: `${siteUrl}/jornal/${a.slug.current}`,
+          image: a.image?.asset?.url,
+        }))}
+      />
+      <JornalListClient articles={articles} articlesEN={articlesEN} />
+    </>
+  );
 }
