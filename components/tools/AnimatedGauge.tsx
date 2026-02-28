@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePrefersReducedMotion } from "@/hooks/useMediaQuery";
 
 interface AnimatedGaugeProps {
   value: number; // 0-100
@@ -22,6 +23,7 @@ export default function AnimatedGauge({
   const dotRef = useRef<SVGCircleElement>(null);
   const textRef = useRef<SVGTextElement>(null);
   const hasAnimated = useRef(false);
+  const reducedMotion = usePrefersReducedMotion();
 
   const cx = size / 2;
   const cy = size / 2;
@@ -59,6 +61,26 @@ export default function AnimatedGauge({
 
   useEffect(() => {
     if (hasAnimated.current) return;
+
+    // Reduced motion: set final state immediately
+    if (reducedMotion) {
+      hasAnimated.current = true;
+      const finalColor = getColor(value);
+      const valueAngle = startAngle - (value / 100) * totalSweep;
+      if (arcRef.current) {
+        arcRef.current.setAttribute("d", describeArc(startAngle, valueAngle));
+        arcRef.current.setAttribute("stroke", finalColor);
+      }
+      if (dotRef.current && value > 0) {
+        const pos = polarToCartesian(valueAngle);
+        dotRef.current.setAttribute("cx", String(pos.x));
+        dotRef.current.setAttribute("cy", String(pos.y));
+        dotRef.current.setAttribute("fill", finalColor);
+      }
+      if (textRef.current) textRef.current.textContent = String(value);
+      return;
+    }
+
     const el = svgRef.current;
     if (!el) return;
 
@@ -108,11 +130,18 @@ export default function AnimatedGauge({
     observer.observe(el);
     return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, reducedMotion]);
 
   return (
     <div className="flex flex-col items-center">
-      <svg ref={svgRef} width={size} height={size * 0.72} viewBox={`0 0 ${size} ${size * 0.72}`}>
+      <svg
+        ref={svgRef}
+        width={size}
+        height={size * 0.72}
+        viewBox={`0 0 ${size} ${size * 0.72}`}
+        role="img"
+        aria-label={`${label || "Score"}: ${value}`}
+      >
         {/* Background track */}
         <path
           d={describeArc(startAngle, endAngle)}

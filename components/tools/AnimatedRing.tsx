@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePrefersReducedMotion } from "@/hooks/useMediaQuery";
 
 interface AnimatedRingProps {
   value: number; // 0-100
@@ -24,6 +25,7 @@ export default function AnimatedRing({
   const glowRef = useRef<SVGCircleElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const hasAnimated = useRef(false);
+  const reducedMotion = usePrefersReducedMotion();
 
   const cx = size / 2;
   const cy = size / 2;
@@ -40,6 +42,29 @@ export default function AnimatedRing({
 
   useEffect(() => {
     if (hasAnimated.current) return;
+
+    // Reduced motion: set final state immediately
+    if (reducedMotion) {
+      hasAnimated.current = true;
+      const finalColor = getColor(value);
+      if (ringRef.current) {
+        ringRef.current.setAttribute(
+          "stroke-dashoffset",
+          String(circumference * (1 - value / 100))
+        );
+        ringRef.current.setAttribute("stroke", finalColor);
+      }
+      if (glowRef.current && value > 2) {
+        const angle = ((value / 100) * 360 - 90) * (Math.PI / 180);
+        glowRef.current.setAttribute("cx", String(cx + radius * Math.cos(angle)));
+        glowRef.current.setAttribute("cy", String(cy + radius * Math.sin(angle)));
+        glowRef.current.setAttribute("fill", finalColor);
+        glowRef.current.setAttribute("opacity", "0.4");
+      }
+      if (textRef.current) textRef.current.textContent = String(value);
+      return;
+    }
+
     const el = svgRef.current;
     if (!el) return;
 
@@ -91,12 +116,18 @@ export default function AnimatedRing({
     observer.observe(el);
     return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, reducedMotion]);
 
   return (
     <div className="flex flex-col items-center">
       <div className="relative" style={{ width: size, height: size }}>
-        <svg ref={svgRef} width={size} height={size}>
+        <svg
+          ref={svgRef}
+          width={size}
+          height={size}
+          role="img"
+          aria-label={`${label || "Score"}: ${value}`}
+        >
           {/* Background ring */}
           <circle
             cx={cx}

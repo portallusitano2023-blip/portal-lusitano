@@ -75,7 +75,7 @@ export default function ToolJourneySection() {
   const steps = journeySteps(tr);
 
   return (
-    <section className="px-6 pb-24">
+    <section id="jornada" className="px-6 pb-24">
       <div className="max-w-5xl mx-auto">
         <AnimateOnScroll className="text-center mb-14">
           <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">

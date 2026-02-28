@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
-import { Shield, Download, Zap, Crown } from "lucide-react";
+import { Shield, Download, Zap, Crown, ChevronUp } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -25,6 +26,25 @@ const ReviewsSection = dynamic(() => import("@/components/ferramentas/ReviewsSec
 });
 const ToolRecommender = dynamic(() => import("@/components/ferramentas/ToolRecommender"));
 const ToolComparisonTable = dynamic(() => import("@/components/ferramentas/ToolComparisonTable"));
+
+function ScrollToTop() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 800);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  if (!visible) return null;
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      aria-label="Scroll to top"
+      className="fixed bottom-6 right-6 z-40 w-10 h-10 rounded-full bg-[var(--gold)]/80 text-black flex items-center justify-center shadow-lg hover:bg-[var(--gold)] transition-all opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+    >
+      <ChevronUp size={18} />
+    </button>
+  );
+}
 
 function SectionSkeleton({ height = "h-64" }: { height?: string }) {
   return (
@@ -76,7 +96,7 @@ export default function FerramentasPage() {
       </Suspense>
 
       {/* ===== KEY BENEFITS STRIP ===== */}
-      <section className="px-6 pb-24">
+      <section id="beneficios" className="px-6 pb-24">
         <div className="max-w-5xl mx-auto">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -134,6 +154,8 @@ export default function FerramentasPage() {
       <Suspense fallback={<SectionSkeleton />}>
         <ReviewsSection />
       </Suspense>
+
+      <ScrollToTop />
     </main>
   );
 }

@@ -66,6 +66,8 @@ function BillingToggle({
       </span>
       <button
         onClick={() => onChange(billing === "monthly" ? "annual" : "monthly")}
+        role="switch"
+        aria-checked={billing === "annual"}
         className="relative w-14 h-7 rounded-full bg-[var(--background-card)] border border-[var(--border)] transition-colors hover:border-[var(--gold)]/40"
         aria-label={tr("Alternar período", "Toggle period", "Alternar período")}
       >

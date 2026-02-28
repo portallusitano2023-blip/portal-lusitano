@@ -55,7 +55,7 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section className="px-6 pb-24">
+    <section id="como-funciona" className="px-6 pb-24">
       <div className="max-w-4xl mx-auto">
         <AnimateOnScroll className="text-center mb-12">
           <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] block mb-4">

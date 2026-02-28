@@ -104,8 +104,9 @@ export function useCalculadoraState() {
 
   // ── Effects ────────────────────────────────────────
 
-  // Cleanup mounted ref
+  // Mounted ref — must set true on mount for React Strict Mode (double mount/unmount)
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
@@ -283,28 +284,36 @@ export function useCalculadoraState() {
 
     setTimeout(() => {
       if (!isMountedRef.current) return;
-      const result = calcularValor(form);
-      setResultado(result);
-      setIsCalculating(false);
-      recordUsage(
-        {
-          treino: form.treino,
-          mercado: form.mercado,
-          disciplina: form.disciplina,
-          sexo: form.sexo,
-        },
-        {
-          valorFinal: result.valorFinal,
-          confianca: result.confianca,
-          percentil: result.percentil,
-          disciplina: form.disciplina ?? null,
-          liquidezScore: result.liquidez?.score ?? null,
-        }
-      );
+      try {
+        const result = calcularValor(form);
+        setResultado(result);
+        setIsCalculating(false);
+        recordUsage(
+          {
+            treino: form.treino,
+            mercado: form.mercado,
+            disciplina: form.disciplina,
+            sexo: form.sexo,
+          },
+          {
+            valorFinal: result.valorFinal,
+            confianca: result.confianca,
+            percentil: result.percentil,
+            disciplina: form.disciplina ?? null,
+            liquidezScore: result.liquidez?.score ?? null,
+          }
+        );
 
-      setTimeout(() => {
-        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100);
+        setTimeout(() => {
+          resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
+      } catch (err) {
+        setIsCalculating(false);
+        if (process.env.NODE_ENV === "development") {
+          console.error("[Calculadora] Erro no cálculo:", err);
+        }
+        showToast("error", "Erro ao calcular o valor. Verifique os dados e tente novamente.");
+      }
     }, 2000);
   };
 
@@ -331,7 +340,8 @@ export function useCalculadoraState() {
           form: FormData;
           step: number;
         };
-        setForm(savedForm);
+        // Merge with INITIAL_FORM to fill any missing fields from older drafts
+        setForm({ ...INITIAL_FORM, ...savedForm });
         setStep(savedStep || 1);
         setHasDraft(false);
         setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);

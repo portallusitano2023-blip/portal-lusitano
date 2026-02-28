@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Download, Share2, Save, Printer, Loader2, Mail, CheckCircle } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface ResultActionsProps {
   onExportPDF: () => void;
@@ -22,13 +24,15 @@ export default function ResultActions({
   isPremium = false,
   isExporting = false,
 }: ResultActionsProps) {
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
   const handleSendEmail = async () => {
     if (!onSendEmail || isSendingEmail) return;
     setIsSendingEmail(true);
-    setEmailSent(false); // Reset before new attempt
+    setEmailSent(false);
     try {
       await onSendEmail();
       setEmailSent(true);
@@ -47,7 +51,9 @@ export default function ResultActions({
         className="flex-1 min-w-[140px] min-h-[44px] py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
       >
         {isExporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-        {isExporting ? "A gerar..." : "Exportar PDF"}
+        {isExporting
+          ? tr("A gerar...", "Generating...", "Generando...")
+          : tr("Exportar PDF", "Export PDF", "Exportar PDF")}
       </button>
 
       <button
@@ -55,7 +61,7 @@ export default function ResultActions({
         className="flex-1 min-w-[140px] min-h-[44px] py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2"
       >
         <Share2 size={16} />
-        Partilhar
+        {tr("Partilhar", "Share", "Compartir")}
       </button>
 
       {onSave && (
@@ -68,14 +74,14 @@ export default function ResultActions({
           }`}
         >
           <Save size={16} />
-          Guardar
+          {tr("Guardar", "Save", "Guardar")}
         </button>
       )}
 
       {onPrint && (
         <button
           onClick={onPrint}
-          aria-label="Imprimir"
+          aria-label={tr("Imprimir", "Print", "Imprimir")}
           className="min-h-[44px] min-w-[44px] py-3 px-4 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center"
         >
           <Printer size={16} />
@@ -88,23 +94,24 @@ export default function ResultActions({
           disabled={isSendingEmail || emailSent}
           className={`flex-1 min-w-[140px] min-h-[44px] py-3 rounded-xl border text-sm font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-60 ${
             emailSent
-              ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+              ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
               : "bg-[var(--background-secondary)] border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]"
           }`}
         >
           {isSendingEmail ? (
             <>
-              <Loader2 size={16} className="animate-spin" />A enviar...
+              <Loader2 size={16} className="animate-spin" />
+              {tr("A enviar...", "Sending...", "Enviando...")}
             </>
           ) : emailSent ? (
             <>
               <CheckCircle size={16} />
-              Email enviado
+              {tr("Email enviado", "Email sent", "Email enviado")}
             </>
           ) : (
             <>
               <Mail size={16} />
-              Enviar por email
+              {tr("Enviar por email", "Send by email", "Enviar por email")}
             </>
           )}
         </button>

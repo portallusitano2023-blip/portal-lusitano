@@ -121,7 +121,7 @@ interface ToolsGridProps {
 
 export default function ToolsGrid({ tools, sectionLabel }: ToolsGridProps) {
   return (
-    <section className="px-6 pb-24">
+    <section id="ferramentas" className="px-6 pb-24">
       <div className="max-w-6xl mx-auto">
         {/* Section label */}
         <div className="text-center mb-12">

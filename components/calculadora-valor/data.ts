@@ -35,6 +35,74 @@ export const DISCIPLINAS = [
   "Lazer / Passeio",
 ];
 
+export interface DisciplinaOption {
+  value: string;
+  labelPt: string;
+  labelEn: string;
+  labelEs: string;
+  impact: string;
+  impactValue: number;
+}
+
+export const DISCIPLINAS_DETAILED: DisciplinaOption[] = [
+  {
+    value: "Alta Escola",
+    labelPt: "Alta Escola",
+    labelEn: "Haute Ecole",
+    labelEs: "Alta Escuela",
+    impact: "+15%",
+    impactValue: 1.15,
+  },
+  {
+    value: "Equitação de Trabalho",
+    labelPt: "Equitação de Trabalho",
+    labelEn: "Working Equitation",
+    labelEs: "Equitación de Trabajo",
+    impact: "+8%",
+    impactValue: 1.08,
+  },
+  {
+    value: "Dressage Clássica",
+    labelPt: "Dressage Clássica",
+    labelEn: "Classical Dressage",
+    labelEs: "Doma Clásica",
+    impact: "+5%",
+    impactValue: 1.05,
+  },
+  {
+    value: "Toureio a Cavalo",
+    labelPt: "Toureio a Cavalo",
+    labelEn: "Mounted Bullfighting",
+    labelEs: "Rejoneo",
+    impact: "+3%",
+    impactValue: 1.03,
+  },
+  {
+    value: "Atrelagem",
+    labelPt: "Atrelagem",
+    labelEn: "Carriage Driving",
+    labelEs: "Enganche",
+    impact: "0%",
+    impactValue: 1.0,
+  },
+  {
+    value: "Ensino / Equitação",
+    labelPt: "Ensino / Equitação",
+    labelEn: "General Riding",
+    labelEs: "Equitación General",
+    impact: "−5%",
+    impactValue: 0.95,
+  },
+  {
+    value: "Lazer / Passeio",
+    labelPt: "Lazer / Passeio",
+    labelEn: "Leisure / Hacking",
+    labelEs: "Ocio / Paseo",
+    impact: "−15%",
+    impactValue: 0.85,
+  },
+];
+
 export const MERCADOS = [
   { value: "Portugal", label: "Portugal", mult: 1.0 },
   { value: "Espanha", label: "Espanha", mult: 1.05 },

@@ -51,10 +51,12 @@ function StatCounter({
   value,
   label,
   icon: Icon,
+  locale,
 }: {
   value: number;
   label: string;
   icon: React.ElementType;
+  locale: string;
 }) {
   const animated = useAnimatedCounter(value);
   return (
@@ -63,7 +65,7 @@ function StatCounter({
         <Icon size={20} className="text-[var(--gold)]" />
       </div>
       <p className="text-2xl sm:text-3xl font-serif text-[var(--foreground)]">
-        {animated.toLocaleString("pt-PT")}
+        {animated.toLocaleString(locale)}
       </p>
       <p className="text-xs text-[var(--foreground-muted)] text-center">{label}</p>
     </div>
@@ -104,8 +106,26 @@ export default function StatsSection() {
       .finally(() => setLoading(false));
   }, []);
 
+  const locale = language === "pt" ? "pt-PT" : language === "es" ? "es-ES" : "en-GB";
+
   if (loading) return <StatsSkeleton />;
-  if (!stats || stats.totalAnalyses === 0) return null;
+
+  if (!stats || stats.totalAnalyses === 0) {
+    return (
+      <div className="max-w-3xl mx-auto mb-16 px-6">
+        <div className="bg-[var(--background-secondary)]/60 border border-[var(--gold)]/15 rounded-2xl p-6 text-center">
+          <Activity size={24} className="text-[var(--gold)]/40 mx-auto mb-3" />
+          <p className="text-sm text-[var(--foreground-muted)]">
+            {tr(
+              "As estatísticas aparecerão aqui quando as primeiras análises forem realizadas.",
+              "Stats will appear here once the first analyses are completed.",
+              "Las estadísticas aparecerán aquí cuando se realicen los primeros análisis."
+            )}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AnimateOnScroll>
@@ -115,11 +135,13 @@ export default function StatsSection() {
             value={stats.totalAnalyses}
             label={tr("análises realizadas", "analyses done", "análisis realizados")}
             icon={Activity}
+            locale={locale}
           />
           <StatCounter
             value={stats.totalUsers}
             label={tr("utilizadores activos", "active users", "usuarios activos")}
             icon={Users}
+            locale={locale}
           />
           <StatCounter
             value={stats.reviewCount}
@@ -129,6 +151,7 @@ export default function StatsSection() {
               `valoraciones (${stats.avgRating}★)`
             )}
             icon={TrendingUp}
+            locale={locale}
           />
         </div>
       </div>

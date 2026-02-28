@@ -3,12 +3,23 @@
 import { useMemo } from "react";
 import { Dna } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import Tooltip from "@/components/tools/Tooltip";
 import { LINHAGENS_FAMOSAS } from "./data";
 import type { FormData, NumericFormKey, StepProps } from "./types";
 
+const LINEAGE_IMPACT: Record<string, { label: string; type: "pos" | "neg" | "base" }> = {
+  desconhecida: { label: "−30%", type: "neg" },
+  comum: { label: "−15%", type: "neg" },
+  registada: { label: "base", type: "base" },
+  certificada: { label: "+25%", type: "pos" },
+  premium: { label: "+60%", type: "pos" },
+  elite: { label: "+120%", type: "pos" },
+};
+
 export default function StepGeneticaMorfologia({ form, update }: StepProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   const lineageOptions = useMemo(
     () => [
@@ -83,7 +94,11 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
               {t.calculadora.label_lineage_quality}
             </label>
             <Tooltip
-              text="Família de criação do cavalo. As principais linhagens lusitanas são: Veiga, Andrade, Alter Real, Coudelaria Nacional e Interagro. Uma linhagem certificada ou premium aumenta significativamente o valor de mercado."
+              text={tr(
+                "Família de criação do cavalo. Linhagens certificadas ou premium aumentam significativamente o valor.",
+                "The horse's breeding line. Certified or premium lineages significantly increase market value.",
+                "Línea de cría del caballo. Linajes certificados o premium aumentan significativamente el valor."
+              )}
               position="bottom"
             />
           </div>
@@ -98,11 +113,26 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
                     : "border-[var(--border)] hover:border-[var(--border)]"
                 }`}
               >
-                <span
-                  className={`block text-sm font-medium ${form.linhagem === opt.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
-                >
-                  {opt.label}
-                </span>
+                <div className="flex items-center justify-between gap-1">
+                  <span
+                    className={`text-sm font-medium ${form.linhagem === opt.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
+                  >
+                    {opt.label}
+                  </span>
+                  {LINEAGE_IMPACT[opt.value] && (
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
+                        LINEAGE_IMPACT[opt.value].type === "pos"
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : LINEAGE_IMPACT[opt.value].type === "neg"
+                            ? "bg-red-500/15 text-red-400"
+                            : "bg-white/10 text-white/50"
+                      }`}
+                    >
+                      {LINEAGE_IMPACT[opt.value].label}
+                    </span>
+                  )}
+                </div>
                 <span className="text-xs text-[var(--foreground-muted)]">{opt.desc}</span>
               </button>
             ))}
