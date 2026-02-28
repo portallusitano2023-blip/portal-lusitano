@@ -22,12 +22,6 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ pendentes: pendentes || [] });
   } catch (error) {
     logger.error("Error fetching depoimentos:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao carregar depoimentos",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao carregar depoimentos" }, { status: 500 });
   }
 }

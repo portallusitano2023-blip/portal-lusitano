@@ -157,7 +157,12 @@
       "Bash(while read f)",
       "Bash(do wc -l \"$f\")",
       "Bash(for f in components/tools/*.tsx)",
-      "Read(//c/Users/USUARIO/portal-lusitano/**)"
-    ]
+      "Read(//c/Users/USUARIO/portal-lusitano/**)",
+      "Bash(git restore --staged .claude/worktrees/agent-a58f9e26 .claude/worktrees/agent-af3e8f11)",
+      "Bash(for f in /c/Users/USUARIO/portal-lusitano/app/*/layout.tsx)",
+      "Bash(do grep -l 'generateMetadata\\\\|export const metadata' \"$f\")",
+      "Bash(sed 's/route.ts//')"
+    ],
+    "additionalDirectories": ["C:\\Users\\USUARIO\\portal-lusitano\\locales"]
   }
 }

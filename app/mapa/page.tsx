@@ -420,7 +420,7 @@ export default function MapaPage() {
                       </h2>
                     </div>
                     <p className="text-[var(--foreground-muted)] text-xs">
-                      Selecione uma região ou clique num pin no mapa
+                      {t.mapa.select_region_hint}
                     </p>
                   </div>
                   <div className="space-y-2">

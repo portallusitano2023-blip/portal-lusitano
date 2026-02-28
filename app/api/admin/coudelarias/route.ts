@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 // GET - Listar coudelarias com filtros
 export async function GET(req: NextRequest) {
@@ -32,11 +33,14 @@ export async function GET(req: NextRequest) {
       query = query.eq("distrito", distrito);
     }
 
-    // Pesquisa
+    // Pesquisa (sanitized to prevent PostgREST query injection)
     if (search) {
-      query = query.or(
-        `nome.ilike.%${search}%,cidade.ilike.%${search}%,distrito.ilike.%${search}%,proprietario_nome.ilike.%${search}%`
-      );
+      const safe = sanitizeSearchInput(search);
+      if (safe) {
+        query = query.or(
+          `nome.ilike.%${safe}%,cidade.ilike.%${safe}%,distrito.ilike.%${safe}%,proprietario_nome.ilike.%${safe}%`
+        );
+      }
     }
 
     const { data: coudelarias, error, count } = await query;
@@ -60,13 +64,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Error fetching coudelarias:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao carregar coudelarias",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao carregar coudelarias" }, { status: 500 });
   }
 }
 
@@ -154,12 +152,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ coudelaria }, { status: 201 });
   } catch (error) {
     logger.error("Error creating coudelaria:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao criar coudelaria",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao criar coudelaria" }, { status: 500 });
   }
 }

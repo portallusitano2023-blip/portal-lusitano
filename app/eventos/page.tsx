@@ -21,7 +21,23 @@ export default async function EventosPage() {
   }
 
   return (
-    <Suspense>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
+          <div className="max-w-6xl mx-auto animate-pulse">
+            <div className="h-8 w-48 bg-[var(--background-card)] rounded mx-auto mb-8" />
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-64 bg-[var(--background-secondary)] border border-[var(--border)] rounded-2xl"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      }
+    >
       <EventosContent eventos={data || []} />
     </Suspense>
   );

@@ -1286,7 +1286,35 @@
     "website": "Sitio Web",
     "view_page": "Ver Página",
     "no_results": "Ninguna yeguada encontrada",
-    "all_regions": "Todas"
+    "all_regions": "Todas",
+    "select_region_hint": "Seleccione una región o haga clic en un pin del mapa"
+  },
+  "cavalos_favoritos": {
+    "title": "Caballos Favoritos",
+    "subtitle": "Los ejemplares que ha guardado",
+    "empty": "Aún no ha guardado ningún caballo",
+    "empty_subtitle": "Explore el marketplace y guarde los caballos que le interesen",
+    "explore": "Ver Caballos en Venta",
+    "clear_all": "Limpiar Todo",
+    "remove": "Eliminar",
+    "view": "Ver Detalles",
+    "share": "Compartir",
+    "years": "años",
+    "sort_recent": "Más Recientes",
+    "sort_price_asc": "Precio: Menor",
+    "sort_price_desc": "Precio: Mayor",
+    "total": "caballos guardados",
+    "continue_exploring": "Continuar explorando"
+  },
+  "shop_favoritos": {
+    "title": "Sus Favoritos",
+    "subtitle": "Piezas que captaron su atención",
+    "empty": "Su lista de favoritos está vacía",
+    "empty_subtitle": "Explore nuestra colección y guarde las piezas que más le gusten",
+    "explore": "Explorar Colección",
+    "clear_all": "Limpiar Todo",
+    "remove": "Eliminar",
+    "view": "Ver Producto"
   },
   "profissionais": {
     "badge": "Comunidad Lusitana",

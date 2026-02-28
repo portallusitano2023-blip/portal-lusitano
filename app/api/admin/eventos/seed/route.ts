@@ -3,6 +3,9 @@ import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 
+// Block seed endpoint in production unless explicitly allowed
+const SEED_BLOCKED = process.env.NODE_ENV === "production" && !process.env.ALLOW_SEED;
+
 // Eventos reais do Cavalo Lusitano pesquisados em fontes oficiais (APSL, etc.)
 const eventosReais = [
   // 2025 Events
@@ -246,6 +249,9 @@ const eventosReais = [
 ];
 
 export async function POST() {
+  if (SEED_BLOCKED) {
+    return NextResponse.json({ error: "Seed endpoint disabled in production" }, { status: 403 });
+  }
   try {
     const email = await verifySession();
     if (!email) {
@@ -283,7 +289,7 @@ export async function POST() {
     if (error) {
       logger.error("Erro ao inserir eventos:", error);
       return NextResponse.json(
-        { error: "Erro ao inserir eventos", details: error.message },
+        { error: "Erro ao inserir eventos" },
         { status: 500 }
       );
     }
@@ -302,6 +308,9 @@ export async function POST() {
 
 // GET - Listar eventos que serão adicionados (preview)
 export async function GET() {
+  if (SEED_BLOCKED) {
+    return NextResponse.json({ error: "Seed endpoint disabled in production" }, { status: 403 });
+  }
   const email = await verifySession();
   if (!email) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });

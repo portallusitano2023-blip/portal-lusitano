@@ -16,7 +16,13 @@ export default function Error({
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
-      void error;
+      console.error("[Error Boundary]", error);
+    } else {
+      import("@sentry/nextjs")
+        .then((Sentry) => {
+          Sentry.captureException(error);
+        })
+        .catch(() => {});
     }
   }, [error]);
 

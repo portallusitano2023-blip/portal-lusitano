@@ -13,14 +13,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Result, ScorePercentage } from "@/components/analise-perfil/types";
-
-const SUB_PROFILE_LABELS: Record<string, string> = {
-  competidor_elite: "Alta Competição FEI",
-  competidor_nacional: "Competição Nacional",
-  competidor_trabalho: "Equitação de Trabalho",
-  amador_projeto: "Projecto Jovem",
-};
 
 interface ResultHeaderProps {
   result: Result;
@@ -55,7 +49,15 @@ export default function ResultHeader({
   onShareInstagram,
   onCopyLink,
 }: ResultHeaderProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
+
+  const SUB_PROFILE_LABELS: Record<string, string> = {
+    competidor_elite: tr("Alta Competição FEI", "FEI High Competition", "Alta Competición FEI"),
+    competidor_nacional: tr("Competição Nacional", "National Competition", "Competición Nacional"),
+    competidor_trabalho: tr("Equitação de Trabalho", "Working Equitation", "Equitación de Trabajo"),
+    amador_projeto: tr("Projecto Jovem", "Young Horse Project", "Proyecto Joven"),
+  };
 
   return (
     <section
@@ -78,7 +80,8 @@ export default function ResultHeader({
             <div className="flex items-center justify-center gap-2 mb-4">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--gold)]/15 border border-[var(--gold)]/40 rounded-full text-xs font-medium text-[var(--gold)]">
                 <Sparkles size={11} />
-                Especialização: {SUB_PROFILE_LABELS[subProfile]}
+                {tr("Especialização:", "Specialisation:", "Especialización:")}{" "}
+                {SUB_PROFILE_LABELS[subProfile]}
               </span>
             </div>
           )}
@@ -89,9 +92,9 @@ export default function ResultHeader({
               {scorePercentages[0]?.percentage ?? 0}%
             </span>
             <span className="text-sm text-[var(--foreground-muted)] leading-tight text-left">
-              de
+              {tr("de", "of", "de")}
               <br />
-              afinidade
+              {tr("afinidade", "affinity", "afinidad")}
             </span>
             {confidence !== undefined && confidence > 0 && (
               <span
@@ -103,7 +106,7 @@ export default function ResultHeader({
                       : "bg-orange-500/15 text-orange-400"
                 }`}
               >
-                {confidence}% confiança
+                {confidence}% {tr("confiança", "confidence", "confianza")}
               </span>
             )}
           </div>
@@ -124,11 +127,15 @@ export default function ResultHeader({
           {/* Low confidence note */}
           {confidence !== undefined && confidence < 65 && scorePercentages[1] && (
             <p className="text-xs text-[var(--foreground-muted)] mb-3 italic">
-              O seu perfil tem também características de{" "}
+              {tr(
+                "O seu perfil tem também características de",
+                "Your profile also has traits of",
+                "Su perfil también tiene características de"
+              )}{" "}
               <span className="text-[var(--foreground-secondary)]">
                 {scorePercentages[1].label}
               </span>{" "}
-              — leia ambas as análises.
+              — {tr("leia ambas as análises.", "read both analyses.", "lea ambos análisis.")}
             </p>
           )}
 

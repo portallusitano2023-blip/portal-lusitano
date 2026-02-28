@@ -32,12 +32,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ logs: logs || [] });
   } catch (error) {
     logger.error("Error fetching automation logs:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao carregar logs",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao carregar logs" }, { status: 500 });
   }
 }

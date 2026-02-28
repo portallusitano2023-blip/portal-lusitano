@@ -12,7 +12,7 @@ import {
   AlertCircle,
   CheckCircle2,
 } from "lucide-react";
-import { useToast } from "./Toast";
+import { useToast } from "@/context/ToastContext";
 
 export interface BulkAction {
   id: string;

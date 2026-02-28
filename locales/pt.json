@@ -1286,7 +1286,35 @@
     "website": "Website",
     "view_page": "Ver Página",
     "no_results": "Nenhuma coudelaria encontrada",
-    "all_regions": "Todas"
+    "all_regions": "Todas",
+    "select_region_hint": "Selecione uma região ou clique num pin no mapa"
+  },
+  "cavalos_favoritos": {
+    "title": "Cavalos Favoritos",
+    "subtitle": "Os exemplares que guardaste",
+    "empty": "Ainda não guardaste nenhum cavalo",
+    "empty_subtitle": "Explora o marketplace e guarda os cavalos que te interessam",
+    "explore": "Ver Cavalos à Venda",
+    "clear_all": "Limpar Tudo",
+    "remove": "Remover",
+    "view": "Ver Detalhes",
+    "share": "Partilhar",
+    "years": "anos",
+    "sort_recent": "Mais Recentes",
+    "sort_price_asc": "Preço: Menor",
+    "sort_price_desc": "Preço: Maior",
+    "total": "cavalos guardados",
+    "continue_exploring": "Continuar a explorar"
+  },
+  "shop_favoritos": {
+    "title": "Os Seus Favoritos",
+    "subtitle": "Peças que capturaram a sua atenção",
+    "empty": "A sua lista de favoritos está vazia",
+    "empty_subtitle": "Explore a nossa coleção e guarde as peças que mais gosta",
+    "explore": "Explorar Coleção",
+    "clear_all": "Limpar Tudo",
+    "remove": "Remover",
+    "view": "Ver Produto"
   },
   "profissionais": {
     "badge": "Comunidade Lusitana",

@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { BarChart3, Feather } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Result } from "@/components/analise-perfil/types";
 
 interface AffinityTabProps {
@@ -18,32 +19,73 @@ const PROFILE_COLORS: Record<string, string> = {
   investidor: "#f59e0b",
 };
 
-const PROFILE_DESCRIPTIONS: Record<string, string> = {
-  competidor: "Foco em competição, alto desempenho e treino intensivo",
-  tradicional: "Preservação das tradições equestres portuguesas",
-  criador: "Selecção genética, reprodução e melhoramento da raça",
-  amador: "Lazer, passeio e prazer de montar",
-  investidor: "Retorno financeiro, valorização e mercado equestre",
-};
-
-const PROFILE_LABELS: Record<string, string> = {
-  competidor: "Competidor",
-  tradicional: "Tradicional",
-  criador: "Criador",
-  amador: "Amador",
-  investidor: "Investidor",
-};
-
-const HORSE_RECOMMENDATIONS: Record<string, string> = {
-  competidor: "Cavalo de 7-12 anos, nível médio ou avançado, com experiência em competição",
-  tradicional: "Cavalo de linhagem certificada, com bons andamentos e temperamento dócil",
-  criador: "Égua ou garanhão aprovado, com BLUP acima da média e COI controlado",
-  amador: "Cavalo calmo, entre 8-14 anos, com treino básico a elementar",
-  investidor: "Cavalo jovem (3-6 anos) de linhagem premium ou elite",
-};
-
 export default function AffinityTab({ result, scorePercentages }: AffinityTabProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
+
+  const PROFILE_DESCRIPTIONS: Record<string, string> = {
+    competidor: tr(
+      "Foco em competição, alto desempenho e treino intensivo",
+      "Focus on competition, high performance and intensive training",
+      "Enfoque en competición, alto rendimiento y entrenamiento intensivo"
+    ),
+    tradicional: tr(
+      "Preservação das tradições equestres portuguesas",
+      "Preservation of Portuguese equestrian traditions",
+      "Preservación de las tradiciones ecuestres portuguesas"
+    ),
+    criador: tr(
+      "Selecção genética, reprodução e melhoramento da raça",
+      "Genetic selection, breeding and breed improvement",
+      "Selección genética, reproducción y mejora de la raza"
+    ),
+    amador: tr(
+      "Lazer, passeio e prazer de montar",
+      "Leisure, trail riding and pleasure of riding",
+      "Ocio, paseo y placer de montar"
+    ),
+    investidor: tr(
+      "Retorno financeiro, valorização e mercado equestre",
+      "Financial return, appreciation and equestrian market",
+      "Retorno financiero, valorización y mercado ecuestre"
+    ),
+  };
+
+  const PROFILE_LABELS: Record<string, string> = {
+    competidor: tr("Competidor", "Competitor", "Competidor"),
+    tradicional: tr("Tradicional", "Traditional", "Tradicional"),
+    criador: tr("Criador", "Breeder", "Criador"),
+    amador: tr("Amador", "Amateur", "Aficionado"),
+    investidor: tr("Investidor", "Investor", "Inversor"),
+  };
+
+  const HORSE_RECOMMENDATIONS: Record<string, string> = {
+    competidor: tr(
+      "Cavalo de 7-12 anos, nível médio ou avançado, com experiência em competição",
+      "Horse aged 7-12, medium or advanced level, with competition experience",
+      "Caballo de 7-12 años, nivel medio o avanzado, con experiencia en competición"
+    ),
+    tradicional: tr(
+      "Cavalo de linhagem certificada, com bons andamentos e temperamento dócil",
+      "Horse with certified lineage, good gaits and docile temperament",
+      "Caballo de linaje certificado, con buenos aires y temperamento dócil"
+    ),
+    criador: tr(
+      "Égua ou garanhão aprovado, com BLUP acima da média e COI controlado",
+      "Approved mare or stallion, with above-average BLUP and controlled COI",
+      "Yegua o semental aprobado, con BLUP por encima de la media y COI controlado"
+    ),
+    amador: tr(
+      "Cavalo calmo, entre 8-14 anos, com treino básico a elementar",
+      "Calm horse, aged 8-14, with basic to elementary training",
+      "Caballo tranquilo, entre 8-14 años, con entrenamiento básico a elemental"
+    ),
+    investidor: tr(
+      "Cavalo jovem (3-6 anos) de linhagem premium ou elite",
+      "Young horse (3-6 years) of premium or elite lineage",
+      "Caballo joven (3-6 años) de linaje premium o élite"
+    ),
+  };
 
   const ranked = useMemo(() => {
     const entries = Object.entries(scorePercentages)
@@ -63,7 +105,11 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
           {t.analise_perfil.affinity_title}
         </h3>
         <p className="text-sm text-[var(--foreground-muted)] mb-8">
-          Distribuição de afinidade com cada perfil equestre
+          {tr(
+            "Distribuição de afinidade com cada perfil equestre",
+            "Affinity distribution across equestrian profiles",
+            "Distribución de afinidad con cada perfil ecuestre"
+          )}
         </p>
 
         <div className="space-y-6">
@@ -124,14 +170,24 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
       <div className="bg-gradient-to-b from-[var(--gold)]/10 to-transparent border border-[var(--gold)]/20 p-8">
         <h3 className="flex items-center gap-2 text-lg font-medium text-[var(--foreground)] mb-4">
           <Feather className="text-[var(--gold)]" size={20} />
-          Cavalos recomendados
+          {tr("Cavalos recomendados", "Recommended horses", "Caballos recomendados")}
         </h3>
         <p className="text-sm text-[var(--foreground-secondary)] leading-relaxed">
-          Com base no perfil dominante (
+          {tr(
+            "Com base no perfil dominante",
+            "Based on the dominant profile",
+            "Según el perfil dominante"
+          )}{" "}
+          (
           <span className="font-medium" style={{ color: PROFILE_COLORS[topProfile] }}>
             {PROFILE_LABELS[topProfile] || topProfile}
           </span>
-          ), a recomendação geral é:
+          ),{" "}
+          {tr(
+            "a recomendação geral é:",
+            "the general recommendation is:",
+            "la recomendación general es:"
+          )}
         </p>
         <div className="mt-4 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)]">
           <p className="text-sm text-[var(--foreground)] font-medium">
@@ -139,8 +195,11 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
           </p>
         </div>
         <p className="text-[11px] text-[var(--foreground-muted)]/60 mt-4">
-          Recomendação genérica baseada no perfil. Consulte sempre um profissional antes de
-          adquirir.
+          {tr(
+            "Recomendação genérica baseada no perfil. Consulte sempre um profissional antes de adquirir.",
+            "Generic recommendation based on profile. Always consult a professional before purchasing.",
+            "Recomendación genérica basada en el perfil. Consulte siempre a un profesional antes de adquirir."
+          )}
         </p>
       </div>
     </div>

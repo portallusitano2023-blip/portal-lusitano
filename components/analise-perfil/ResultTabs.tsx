@@ -18,6 +18,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { ResultTab } from "@/components/analise-perfil/types";
 
 interface ResultTabsProps {
@@ -47,14 +48,17 @@ interface TabGroup {
 }
 
 export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   const tabs: TabDef[] = [
     { id: "perfil", label: t.analise_perfil.tab_profile, icon: Users },
     { id: "cavalo", label: t.analise_perfil.tab_ideal_horse, icon: Feather },
     {
       id: "afinidade",
-      label: (t.analise_perfil as Record<string, string>).tab_affinity ?? "Afinidade",
+      label:
+        (t.analise_perfil as Record<string, string>).tab_affinity ??
+        tr("Afinidade", "Affinity", "Afinidad"),
       icon: Heart,
     },
     { id: "custos", label: t.analise_perfil.tab_costs, icon: DollarSign },
@@ -63,19 +67,25 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
     { id: "proximos", label: t.analise_perfil.tab_next_steps, icon: Compass },
     {
       id: "prioridades",
-      label: (t.analise_perfil as Record<string, string>).tab_priorities ?? "Prioridades",
+      label:
+        (t.analise_perfil as Record<string, string>).tab_priorities ??
+        tr("Prioridades", "Priorities", "Prioridades"),
       icon: LayoutGrid,
     },
     { id: "checklist", label: t.analise_perfil.tab_checklist, icon: ClipboardCheck },
     { id: "budget", label: t.analise_perfil.tab_budget, icon: PiggyBank },
     {
       id: "simulador",
-      label: (t.analise_perfil as Record<string, string>).tab_simulator ?? "Simulador",
+      label:
+        (t.analise_perfil as Record<string, string>).tab_simulator ??
+        tr("Simulador", "Simulator", "Simulador"),
       icon: Play,
     },
     {
       id: "preparacao",
-      label: (t.analise_perfil as Record<string, string>).tab_readiness ?? "Preparação",
+      label:
+        (t.analise_perfil as Record<string, string>).tab_readiness ??
+        tr("Preparação", "Readiness", "Preparación"),
       icon: Gauge,
     },
   ];
@@ -83,15 +93,15 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
   // Mobile groups
   const groups: TabGroup[] = [
     {
-      label: "Perfil",
+      label: tr("Perfil", "Profile", "Perfil"),
       tabs: tabs.filter((t) => ["perfil", "cavalo", "afinidade"].includes(t.id)),
     },
     {
-      label: "Planeamento",
+      label: tr("Planeamento", "Planning", "Planificación"),
       tabs: tabs.filter((t) => ["custos", "cronograma", "analise"].includes(t.id)),
     },
     {
-      label: "Acção",
+      label: tr("Acção", "Action", "Acción"),
       tabs: tabs.filter((t) =>
         ["proximos", "prioridades", "checklist", "budget", "simulador", "preparacao"].includes(t.id)
       ),
@@ -127,7 +137,11 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
               <button
                 key={tab.id}
                 onClick={() => onSelectTab(tab.id)}
-                title={isPro ? `${tab.label} — requer PRO` : tab.label}
+                title={
+                  isPro
+                    ? `${tab.label} — ${tr("requer PRO", "requires PRO", "requiere PRO")}`
+                    : tab.label
+                }
                 className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-3.5 min-h-[44px] text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
                   isActive
                     ? "text-[var(--gold)] border-b-2 border-[var(--gold)]"

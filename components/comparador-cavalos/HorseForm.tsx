@@ -4,6 +4,8 @@ import { X, Check, Crown, Euro, TrendingUp } from "lucide-react";
 import dynamic from "next/dynamic";
 import Tooltip from "@/components/tools/Tooltip";
 import SourceBadge from "@/components/tools/SourceBadge";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Cavalo } from "./types";
 import { CORES, PELAGENS, LINHAGENS, TREINOS, SEXOS, COMPETICOES, PRESETS } from "./data";
 import {
@@ -44,6 +46,8 @@ export default function HorseForm({
   onApplyPreset,
 }: HorseFormProps) {
   const comp = t.comparador as Record<string, string>;
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
 
   const PESOS_DISC: Record<string, Record<string, number>> = {
     dressage: { conformacao: 0.2, andamentos: 0.3, elevacao: 0.25, temperamento: 0.15, saude: 0.1 },
@@ -109,10 +113,16 @@ export default function HorseForm({
               onApplyPreset(c.id, PRESETS[e.target.value]);
           }}
         >
-          <option value="">— Modelo rápido —</option>
-          <option value="potro">Potro em Desenvolvimento</option>
-          <option value="competicao">Cavalo de Competição</option>
-          <option value="lazer">Cavalo de Lazer</option>
+          <option value="">
+            {tr("— Modelo rápido —", "— Quick preset —", "— Modelo rápido —")}
+          </option>
+          <option value="potro">
+            {tr("Potro em Desenvolvimento", "Developing Foal", "Potro en Desarrollo")}
+          </option>
+          <option value="competicao">
+            {tr("Cavalo de Competição", "Competition Horse", "Caballo de Competición")}
+          </option>
+          <option value="lazer">{tr("Cavalo de Lazer", "Leisure Horse", "Caballo de Ocio")}</option>
         </select>
         {showAnalise && (
           <div className="mt-2 flex gap-2 flex-wrap">
@@ -296,13 +306,13 @@ export default function HorseForm({
                 if (vpp > 700)
                   return (
                     <span className="text-xs px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 font-medium">
-                      Preço Elevado
+                      {tr("Preço Elevado", "High Price", "Precio Elevado")}
                     </span>
                   );
                 if (vpp > 0 && vpp < 200)
                   return (
                     <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium">
-                      Excelente Valor
+                      {tr("Excelente Valor", "Excellent Value", "Excelente Valor")}
                     </span>
                   );
                 return null;
@@ -340,7 +350,11 @@ export default function HorseForm({
               <Tooltip
                 text={
                   comp.tooltip_score ??
-                  "Score composto (0-100) que pondera: Linhagem (15%), Treino (15%), Conformação (10%), Andamentos (10%), Idade (10%), Altura (8%), Temperamento (7%), Saúde (7%), BLUP (5%), Competições (8%), APSL (3%), Elevação+Regularidade (5%)."
+                  tr(
+                    "Score composto (0-100) que pondera: Linhagem (15%), Treino (15%), Conformação (10%), Andamentos (10%), Idade (10%), Altura (8%), Temperamento (7%), Saúde (7%), BLUP (5%), Competições (8%), APSL (3%), Elevação+Regularidade (5%).",
+                    "Composite score (0-100) weighing: Lineage (15%), Training (15%), Conformation (10%), Gaits (10%), Age (10%), Height (8%), Temperament (7%), Health (7%), BLUP (5%), Competitions (8%), APSL (3%), Elevation+Regularity (5%).",
+                    "Puntuación compuesta (0-100) que pondera: Linaje (15%), Entrenamiento (15%), Conformación (10%), Aires (10%), Edad (10%), Altura (8%), Temperamento (7%), Salud (7%), BLUP (5%), Competiciones (8%), APSL (3%), Elevación+Regularidad (5%)."
+                  )
                 }
               />
             </span>
@@ -354,7 +368,7 @@ export default function HorseForm({
               </span>
               {calcularPotencial(c) > calcularScore(c) + 10 && (
                 <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[10px] font-semibold rounded-full">
-                  Alto Potencial
+                  {tr("Alto Potencial", "High Potential", "Alto Potencial")}
                 </span>
               )}
               <SourceBadge source="modelo" />
@@ -368,7 +382,11 @@ export default function HorseForm({
             <Tooltip
               text={
                 comp.tooltip_valor_ponto ??
-                "Preço dividido pelo score total. Quanto menor, melhor a relação custo-benefício."
+                tr(
+                  "Preço dividido pelo score total. Quanto menor, melhor a relação custo-benefício.",
+                  "Price divided by total score. The lower, the better the cost-benefit ratio.",
+                  "Precio dividido por la puntuación total. Cuanto menor, mejor la relación costo-beneficio."
+                )
               }
             />
           </div>

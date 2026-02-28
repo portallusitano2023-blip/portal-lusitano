@@ -10,6 +10,8 @@ import {
   ChevronDown,
   ShoppingCart,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -42,10 +44,11 @@ const ICON_MAP: Record<string, typeof Search> = {
   calendar: Calendar,
 };
 
-const PRIORITY_CONFIG: Record<ChecklistItem["priority"], { color: string; label: string }> = {
-  essential: { color: "#ef4444", label: "Essencial" },
-  important: { color: "#f59e0b", label: "Importante" },
-  optional: { color: "#71717a", label: "Opcional" },
+// Priority colors (labels are translated inside the component)
+const PRIORITY_COLORS: Record<ChecklistItem["priority"], string> = {
+  essential: "#ef4444",
+  important: "#f59e0b",
+  optional: "#71717a",
 };
 
 /* ------------------------------------------------------------------ */
@@ -53,6 +56,21 @@ const PRIORITY_CONFIG: Record<ChecklistItem["priority"], { color: string; label:
 /* ------------------------------------------------------------------ */
 
 export default function ShoppingChecklistTab({ phases }: ShoppingChecklistTabProps) {
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
+
+  const PRIORITY_CONFIG: Record<ChecklistItem["priority"], { color: string; label: string }> = {
+    essential: {
+      color: PRIORITY_COLORS.essential,
+      label: tr("Essencial", "Essential", "Esencial"),
+    },
+    important: {
+      color: PRIORITY_COLORS.important,
+      label: tr("Importante", "Important", "Importante"),
+    },
+    optional: { color: PRIORITY_COLORS.optional, label: tr("Opcional", "Optional", "Opcional") },
+  };
+
   /* ---------- state ---------- */
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [expandedPhases, setExpandedPhases] = useState<Record<number, boolean>>(() => {
@@ -131,7 +149,7 @@ export default function ShoppingChecklistTab({ phases }: ShoppingChecklistTabPro
         <div className="flex items-center justify-between mb-4">
           <h3 className="flex items-center gap-2 text-lg font-medium text-[var(--foreground)]">
             <ShoppingCart className="text-[var(--gold)]" size={20} />
-            Checklist de Compra
+            {tr("Checklist de Compra", "Shopping Checklist", "Checklist de Compra")}
           </h3>
           <span
             className="text-sm font-medium tabular-nums"
@@ -163,7 +181,11 @@ export default function ShoppingChecklistTab({ phases }: ShoppingChecklistTabPro
               animation: "fadeSlideIn 0.4s ease-out forwards",
             }}
           >
-            Checklist completa! Pronto para comprar.
+            {tr(
+              "Checklist completa! Pronto para comprar.",
+              "Checklist complete! Ready to buy.",
+              "¡Checklist completa! Listo para comprar."
+            )}
           </p>
         )}
       </div>
@@ -214,7 +236,8 @@ export default function ShoppingChecklistTab({ phases }: ShoppingChecklistTabPro
                 <div>
                   <h4 className="text-[var(--foreground)] font-medium">{phase.title}</h4>
                   <p className="text-xs text-[var(--foreground-muted)] mt-0.5">
-                    {phaseCount}/{phase.items.length} concluido{phase.items.length !== 1 ? "s" : ""}
+                    {phaseCount}/{phase.items.length} {tr("concluído", "completed", "completado")}
+                    {phase.items.length !== 1 ? "s" : ""}
                   </p>
                 </div>
               </div>
@@ -354,7 +377,7 @@ export default function ShoppingChecklistTab({ phases }: ShoppingChecklistTabPro
                       }}
                     />
                     <span className="text-sm font-medium" style={{ color: "#22c55e" }}>
-                      Fase concluida!
+                      {tr("Fase concluída!", "Phase complete!", "¡Fase completada!")}
                     </span>
                   </div>
                 )}

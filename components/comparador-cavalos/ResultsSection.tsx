@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import Tooltip from "@/components/tools/Tooltip";
 import SourceBadge from "@/components/tools/SourceBadge";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import RadarChart from "./RadarChart";
 import type { Cavalo } from "./types";
 import { CORES, TREINOS, COMPETICOES, DISCIPLINE_MATRIX, BREEDING_CHAIN_KEY } from "./data";
@@ -72,6 +74,8 @@ export default function ResultsSection({
   onGoBack,
 }: ResultsSectionProps) {
   const comp = t.comparador as Record<string, string>;
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
   const vencedor = cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b));
   const melhorValor = cavalos.reduce((a, b) =>
     calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b
@@ -124,9 +128,9 @@ export default function ResultsSection({
 
   const DISC_LABELS: Record<string, string> = {
     dressage: "Dressage FEI",
-    trabalho: "Equit. Trabalho",
-    reproducao: "Reprodução",
-    lazer: "Lazer",
+    trabalho: tr("Equit. Trabalho", "Working Equit.", "Equit. Trabajo"),
+    reproducao: tr("Reprodução", "Breeding", "Reproducción"),
+    lazer: tr("Lazer", "Leisure", "Ocio"),
   };
 
   const disciplinasAptidao: { nome: string; pesos: Record<string, number> }[] = [
@@ -176,7 +180,7 @@ export default function ResultsSection({
         className="flex items-center gap-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors mb-4"
       >
         <ArrowLeft size={16} />
-        Editar dados dos cavalos
+        {tr("Editar dados dos cavalos", "Edit horse data", "Editar datos de los caballos")}
       </button>
 
       <div className="relative">
@@ -196,19 +200,21 @@ export default function ResultsSection({
           className="w-full py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2"
         >
           <TrendingUp size={16} />
-          Exportar CSV (Excel)
+          {tr("Exportar CSV (Excel)", "Export CSV (Excel)", "Exportar CSV (Excel)")}
         </button>
       </div>
 
       {/* Filtro por Disciplina */}
       <div className="flex flex-wrap gap-2 mb-5">
-        <span className="text-xs text-[var(--foreground-muted)] self-center mr-1">Contexto:</span>
+        <span className="text-xs text-[var(--foreground-muted)] self-center mr-1">
+          {tr("Contexto", "Context", "Contexto")}:
+        </span>
         {[
-          { id: "geral", label: "Geral" },
+          { id: "geral", label: tr("Geral", "General", "General") },
           { id: "dressage", label: "Dressage FEI" },
-          { id: "trabalho", label: "Equit. Trabalho" },
-          { id: "reproducao", label: "Reprodução" },
-          { id: "lazer", label: "Lazer" },
+          { id: "trabalho", label: tr("Equit. Trabalho", "Working Equit.", "Equit. Trabajo") },
+          { id: "reproducao", label: tr("Reprodução", "Breeding", "Reproducción") },
+          { id: "lazer", label: tr("Lazer", "Leisure", "Ocio") },
         ].map((d) => (
           <button
             key={d.id}
@@ -473,7 +479,11 @@ export default function ResultsSection({
           <Tooltip
             text={
               comp.tooltip_radar ??
-              "Cada eixo representa uma dimensão avaliada de 0 a 10. A área total reflecte o perfil global do cavalo."
+              tr(
+                "Cada eixo representa uma dimensão avaliada de 0 a 10. A área total reflecte o perfil global do cavalo.",
+                "Each axis represents a dimension scored from 0 to 10. The total area reflects the horse's overall profile.",
+                "Cada eje representa una dimensión evaluada de 0 a 10. El área total refleja el perfil global del caballo."
+              )
             }
           />
         </h3>
@@ -635,7 +645,10 @@ export default function ResultsSection({
       </div>
 
       {/* Discipline Matrix PRO */}
-      <BlurredProSection isSubscribed={isSubscribed} title="Aptidão por Disciplina">
+      <BlurredProSection
+        isSubscribed={isSubscribed}
+        title={tr("Aptidão por Disciplina", "Discipline Suitability", "Aptitud por Disciplina")}
+      >
         <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
           <table className="w-full text-sm" style={{ minWidth: "360px" }}>
             <thead>
@@ -938,7 +951,10 @@ export default function ResultsSection({
       </BlurredProSection>
 
       {/* PRO: Gap Analysis */}
-      <BlurredProSection isSubscribed={isSubscribed} title={comp.gap_title ?? "Análise de Gap"}>
+      <BlurredProSection
+        isSubscribed={isSubscribed}
+        title={comp.gap_title ?? tr("Análise de Gap", "Gap Analysis", "Análisis de Gap")}
+      >
         <GapAnalysis
           cavalos={cavalos}
           cores={CORES}
@@ -949,7 +965,14 @@ export default function ResultsSection({
       {/* PRO: Purchase Confidence */}
       <BlurredProSection
         isSubscribed={isSubscribed}
-        title={comp.confidence_title ?? "Índice de Confiança na Compra"}
+        title={
+          comp.confidence_title ??
+          tr(
+            "Índice de Confiança na Compra",
+            "Purchase Confidence Index",
+            "Índice de Confianza en la Compra"
+          )
+        }
       >
         <PurchaseConfidence
           cavalos={cavalos}
@@ -960,78 +983,151 @@ export default function ResultsSection({
 
       {/* Methodology */}
       <MethodologyPanel
-        title={comp.methodology_panel_title ?? "Metodologia de Comparação"}
+        title={
+          comp.methodology_panel_title ??
+          tr("Metodologia de Comparação", "Comparison Methodology", "Metodología de Comparación")
+        }
         factors={[
           {
-            name: "Linhagem",
+            name: tr("Linhagem", "Lineage", "Linaje"),
             weight: "15pts",
-            description: "Qualidade do pedigree: Desconhecida a Elite",
+            description: tr(
+              "Qualidade do pedigree: Desconhecida a Elite",
+              "Pedigree quality: Unknown to Elite",
+              "Calidad del pedigrí: Desconocido a Élite"
+            ),
             standard: "APSL",
           },
           {
-            name: "Treino",
+            name: tr("Treino", "Training", "Entrenamiento"),
             weight: "15pts",
-            description: "Nível de treino conforme escalas FEI",
+            description: tr(
+              "Nível de treino conforme escalas FEI",
+              "Training level according to FEI scales",
+              "Nivel de entrenamiento según escalas FEI"
+            ),
             standard: "FEI",
           },
           {
-            name: "Conformação",
+            name: tr("Conformação", "Conformation", "Conformación"),
             weight: "10pts",
-            description: "Avaliação morfológica segundo padrões APSL",
+            description: tr(
+              "Avaliação morfológica segundo padrões APSL",
+              "Morphological assessment according to APSL standards",
+              "Evaluación morfológica según estándares APSL"
+            ),
             standard: "APSL",
           },
           {
-            name: "Andamentos",
+            name: tr("Andamentos", "Gaits", "Aires"),
             weight: "10pts",
-            description: "Qualidade dos três andamentos básicos",
+            description: tr(
+              "Qualidade dos três andamentos básicos",
+              "Quality of the three basic gaits",
+              "Calidad de los tres aires básicos"
+            ),
           },
           {
-            name: "Idade",
+            name: tr("Idade", "Age", "Edad"),
             weight: "10pts",
-            description: "Faixa ideal: 6-12 anos (máximo); 4-15 (bom)",
+            description: tr(
+              "Faixa ideal: 6-12 anos (máximo); 4-15 (bom)",
+              "Ideal range: 6-12 years (maximum); 4-15 (good)",
+              "Rango ideal: 6-12 años (máximo); 4-15 (bueno)"
+            ),
           },
           {
-            name: "Competições",
+            name: tr("Competições", "Competitions", "Competiciones"),
             weight: "8pts",
-            description: "Historial competitivo e classificações",
-          },
-          { name: "Altura", weight: "8pts", description: "Faixa ideal: 158-168cm" },
-          {
-            name: "Temperamento",
-            weight: "7pts",
-            description: "Docilidade e capacidade de trabalho",
+            description: tr(
+              "Historial competitivo e classificações",
+              "Competition history and classifications",
+              "Historial competitivo y clasificaciones"
+            ),
           },
           {
-            name: "Saúde",
+            name: tr("Altura", "Height", "Altura"),
+            weight: "8pts",
+            description: tr(
+              "Faixa ideal: 158-168cm",
+              "Ideal range: 158-168cm",
+              "Rango ideal: 158-168cm"
+            ),
+          },
+          {
+            name: tr("Temperamento", "Temperament", "Temperamento"),
             weight: "7pts",
-            description: "Historial clínico e condição geral",
-            standard: "veterinário",
+            description: tr(
+              "Docilidade e capacidade de trabalho",
+              "Docility and work capacity",
+              "Docilidad y capacidad de trabajo"
+            ),
+          },
+          {
+            name: tr("Saúde", "Health", "Salud"),
+            weight: "7pts",
+            description: tr(
+              "Historial clínico e condição geral",
+              "Clinical history and general condition",
+              "Historial clínico y condición general"
+            ),
+            standard: tr("veterinário", "veterinary", "veterinario"),
           },
           {
             name: "BLUP",
             weight: "5pts",
-            description: "Estimativa de mérito genético",
-            standard: "modelo",
+            description: tr(
+              "Estimativa de mérito genético",
+              "Genetic merit estimate",
+              "Estimación de mérito genético"
+            ),
+            standard: tr("modelo", "model", "modelo"),
           },
           {
-            name: "Elev.+Reg.",
+            name: tr("Elev.+Reg.", "Elev.+Reg.", "Elev.+Reg."),
             weight: "5pts",
-            description: "Elevação e regularidade dos andamentos",
+            description: tr(
+              "Elevação e regularidade dos andamentos",
+              "Gait elevation and regularity",
+              "Elevación y regularidad de los aires"
+            ),
           },
           {
-            name: "Registo APSL",
+            name: tr("Registo APSL", "APSL Registration", "Registro APSL"),
             weight: "3pts",
-            description: "Bónus para cavalos com registo oficial",
+            description: tr(
+              "Bónus para cavalos com registo oficial",
+              "Bonus for horses with official registration",
+              "Bonificación para caballos con registro oficial"
+            ),
             standard: "APSL",
           },
         ]}
         limitations={[
-          comp.limitation_1 ?? "Comparação limitada aos dados declarados pelo utilizador",
-          comp.limitation_2 ?? "O score não captura a química cavaleiro-cavalo",
-          comp.limitation_3 ?? "Preços declarados pelo utilizador, não verificados",
+          comp.limitation_1 ??
+            tr(
+              "Comparação limitada aos dados declarados pelo utilizador",
+              "Comparison limited to user-declared data",
+              "Comparación limitada a los datos declarados por el usuario"
+            ),
+          comp.limitation_2 ??
+            tr(
+              "O score não captura a química cavaleiro-cavalo",
+              "The score doesn't capture rider-horse chemistry",
+              "La puntuación no captura la química jinete-caballo"
+            ),
+          comp.limitation_3 ??
+            tr(
+              "Preços declarados pelo utilizador, não verificados",
+              "User-declared prices, not verified",
+              "Precios declarados por el usuario, no verificados"
+            ),
         ]}
         version={comp.methodology_version ?? "v2.1 — Fev 2026"}
-        references={["Padrões APSL", "Escalas FEI"]}
+        references={[
+          tr("Padrões APSL", "APSL Standards", "Estándares APSL"),
+          tr("Escalas FEI", "FEI Scales", "Escalas FEI"),
+        ]}
       />
 
       {/* Disclaimer */}
@@ -1048,8 +1144,8 @@ export default function ResultsSection({
       {/* Cross-links */}
       <div className="pt-4">
         <p className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--foreground-muted)] mb-4">
-          <ChevronRight size={13} className="text-[var(--gold)]" aria-hidden="true" /> Continua a
-          tua jornada
+          <ChevronRight size={13} className="text-[var(--gold)]" aria-hidden="true" />{" "}
+          {tr("Continua a tua jornada", "Continue your journey", "Continúa tu camino")}
         </p>
         <div className="grid sm:grid-cols-3 gap-3">
           <Link
@@ -1061,9 +1157,15 @@ export default function ResultsSection({
               className="text-pink-400 shrink-0 group-hover:scale-110 transition-transform"
             />
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-[var(--foreground)]">Verificador Genético</p>
+              <p className="text-sm font-semibold text-[var(--foreground)]">
+                {tr("Verificador Genético", "Genetic Checker", "Verificador Genético")}
+              </p>
               <p className="text-xs text-[var(--foreground-muted)] truncate">
-                Testa o par mais promissor
+                {tr(
+                  "Testa o par mais promissor",
+                  "Test the most promising pair",
+                  "Prueba el par más prometedor"
+                )}
               </p>
             </div>
             <ChevronRight
@@ -1080,9 +1182,15 @@ export default function ResultsSection({
               className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
             />
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-[var(--foreground)]">Calculadora de Valor</p>
+              <p className="text-sm font-semibold text-[var(--foreground)]">
+                {tr("Calculadora de Valor", "Value Calculator", "Calculadora de Valor")}
+              </p>
               <p className="text-xs text-[var(--foreground-muted)] truncate">
-                Estima o valor do vencedor
+                {tr(
+                  "Estima o valor do vencedor",
+                  "Estimate the winner's value",
+                  "Estima el valor del ganador"
+                )}
               </p>
             </div>
             <ChevronRight
@@ -1099,9 +1207,15 @@ export default function ResultsSection({
               className="text-purple-400 shrink-0 group-hover:scale-110 transition-transform"
             />
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-[var(--foreground)]">Análise de Perfil</p>
+              <p className="text-sm font-semibold text-[var(--foreground)]">
+                {tr("Análise de Perfil", "Profile Analysis", "Análisis de Perfil")}
+              </p>
               <p className="text-xs text-[var(--foreground-muted)] truncate">
-                Confirma o teu tipo de comprador
+                {tr(
+                  "Confirma o teu tipo de comprador",
+                  "Confirm your buyer type",
+                  "Confirma tu tipo de comprador"
+                )}
               </p>
             </div>
             <ChevronRight

@@ -3,11 +3,23 @@
 import { useMemo } from "react";
 import { Check, Crown, Heart, Shield } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import Tooltip from "@/components/tools/Tooltip";
 import type { StepProps } from "./types";
 
+const COAT_IMPACT: Record<string, { label: string; type: "pos" | "neg" | "base" }> = {
+  Ruço: { label: "+8%", type: "pos" },
+  Castanho: { label: "base", type: "base" },
+  Preto: { label: "+6%", type: "pos" },
+  Baio: { label: "base", type: "base" },
+  Tordilho: { label: "base", type: "base" },
+  Isabela: { label: "+4%", type: "pos" },
+  Palomino: { label: "+5%", type: "pos" },
+};
+
 export default function StepIdentificacao({ form, update }: StepProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   const pelagens = useMemo(
     () => [
@@ -77,7 +89,11 @@ export default function StepIdentificacao({ form, update }: StepProps) {
             type="text"
             value={form.nome}
             onChange={(e) => update("nome", e.target.value)}
-            placeholder="Ex: Ícaro III, Novilheiro, Opus"
+            placeholder={tr(
+              "Ex: Ícaro III, Novilheiro, Opus",
+              "E.g.: Ícaro III, Novilheiro, Opus",
+              "Ej: Ícaro III, Novilheiro, Opus"
+            )}
             className="w-full bg-transparent border-b border-[var(--border)] py-3 text-lg focus:border-[var(--gold)] outline-none transition-colors placeholder:text-[var(--foreground-muted)]"
           />
         </div>
@@ -122,8 +138,32 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                 {t.calculadora.label_cm}
               </span>
             </div>
-            <span className="text-xs text-[var(--foreground-muted)] mt-1 block">
-              {t.calculadora.label_standard_height}
+            <span
+              className={`text-xs mt-1 block font-medium ${
+                form.altura >= 155 && form.altura <= 170
+                  ? "text-emerald-400"
+                  : form.altura >= 150 && form.altura <= 175
+                    ? "text-amber-400"
+                    : "text-red-400"
+              }`}
+            >
+              {form.altura >= 155 && form.altura <= 170
+                ? tr(
+                    "Dentro do padrão APSL (155–170cm)",
+                    "Within APSL standard (155–170cm)",
+                    "Dentro del estándar APSL (155–170cm)"
+                  )
+                : form.altura >= 150 && form.altura <= 175
+                  ? tr(
+                      "Ligeiramente fora do padrão ideal",
+                      "Slightly outside ideal standard",
+                      "Ligeramente fuera del estándar ideal"
+                    )
+                  : tr(
+                      "Fora do padrão ideal APSL",
+                      "Outside APSL ideal standard",
+                      "Fuera del estándar ideal APSL"
+                    )}
             </span>
           </div>
         </div>
@@ -165,11 +205,24 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                     : "border-[var(--border)] hover:border-[var(--border)]"
                 }`}
               >
-                <span
-                  className={`block text-sm font-medium ${form.pelagem === p.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
-                >
-                  {p.label}
-                </span>
+                <div className="flex items-center justify-between gap-1">
+                  <span
+                    className={`text-sm font-medium ${form.pelagem === p.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
+                  >
+                    {p.label}
+                  </span>
+                  {COAT_IMPACT[p.value] && (
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
+                        COAT_IMPACT[p.value].type === "pos"
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : "bg-white/10 text-white/50"
+                      }`}
+                    >
+                      {COAT_IMPACT[p.value].label}
+                    </span>
+                  )}
+                </div>
                 <span className="text-xs text-[var(--foreground-muted)]">{p.desc}</span>
               </button>
             ))}
@@ -182,9 +235,16 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               {t.calculadora.label_apsl_reg}
             </label>
             <Tooltip
-              text="Cavalo com registo oficial na Associação Portuguesa de Criadores do Cavalo Puro Sangue Lusitano. Aumenta o valor e a credibilidade do cavalo no mercado nacional e internacional."
+              text={tr(
+                "Cavalo com registo oficial na Associação Portuguesa de Criadores do Cavalo Puro Sangue Lusitano. Aumenta o valor e a credibilidade do cavalo no mercado nacional e internacional.",
+                "Horse with official registration at APSL (Portuguese Lusitano Breeders Association). Increases value and credibility in national and international markets.",
+                "Caballo con registro oficial en la Asociación Portuguesa de Criadores del Caballo Puro Sangre Lusitano. Aumenta el valor y la credibilidad en el mercado nacional e internacional."
+              )}
               position="top"
             />
+            <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium bg-emerald-500/15 text-emerald-400">
+              +20%
+            </span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <button

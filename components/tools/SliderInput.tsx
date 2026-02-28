@@ -41,7 +41,7 @@ export default function SliderInput({
           {value}/{max}
         </span>
       </div>
-      <div className="relative h-2 bg-[var(--background-card)] rounded-full">
+      <div className="relative h-2 bg-[var(--background-card)] rounded-full my-5">
         <div
           className="absolute h-full rounded-full transition-all duration-150"
           style={{ width: `${percentage}%`, backgroundColor: color }}
@@ -52,7 +52,7 @@ export default function SliderInput({
           max={max}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          className="absolute -top-5 -bottom-5 left-0 w-full opacity-0 cursor-pointer"
         />
         <div
           className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 shadow-lg transition-all duration-150 pointer-events-none"

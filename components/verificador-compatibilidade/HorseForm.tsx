@@ -4,6 +4,7 @@ import { Crown, Heart, Dna, CheckCircle, Palette } from "lucide-react";
 import Paywall from "@/components/tools/Paywall";
 import Tooltip from "@/components/tools/Tooltip";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Cavalo, GeneticaPelagem } from "@/components/verificador-compatibilidade/types";
 import {
   COUDELARIAS,
@@ -39,7 +40,8 @@ export default function HorseForm({
   isCalculating,
   onCalcular,
 }: HorseFormProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   const cavalo = tab === "garanhao" ? garanhao : egua;
   const setCavalo = tab === "garanhao" ? setGaranhao : setEgua;
@@ -243,7 +245,11 @@ export default function HorseForm({
               {t.verificador.label_main_lineage}
             </label>
             <Tooltip
-              text="Família de criação — principais: Veiga, Andrade, Alter Real, Coudelaria Nacional, Interagro. Afecta o COI estimado e o score de compatibilidade."
+              text={tr(
+                "Família de criação — principais: Veiga, Andrade, Alter Real, Coudelaria Nacional, Interagro. Afecta o COI estimado e o score de compatibilidade.",
+                "Breeding line — main: Veiga, Andrade, Alter Real, National Stud, Interagro. Affects estimated COI and compatibility score.",
+                "Línea de cría — principales: Veiga, Andrade, Alter Real, Yeguada Nacional, Interagro. Afecta el COI estimado y la puntuación de compatibilidad."
+              )}
               position="top"
             />
           </div>
@@ -350,7 +356,11 @@ export default function HorseForm({
                 {t.verificador.label_blup}
               </label>
               <Tooltip
-                text="Índice de mérito genético oficial (APSL). Média da raça: 100. Acima de 120 é excelente para criação."
+                text={tr(
+                  "Índice de mérito genético oficial (APSL). Média da raça: 100. Acima de 120 é excelente para criação.",
+                  "Official genetic merit index (APSL). Breed average: 100. Above 120 is excellent for breeding.",
+                  "Índice de mérito genético oficial (APSL). Media de la raza: 100. Por encima de 120 es excelente para cría."
+                )}
                 position="top"
               />
             </div>
@@ -390,7 +400,11 @@ export default function HorseForm({
                 {t.verificador.label_fertility}
               </label>
               <Tooltip
-                text="Historial reprodutivo — afecta a probabilidade de sucesso de cobrição. Valores mais altos aumentam o score de compatibilidade."
+                text={tr(
+                  "Historial reprodutivo — afecta a probabilidade de sucesso de cobrição. Valores mais altos aumentam o score de compatibilidade.",
+                  "Reproductive history — affects breeding success probability. Higher values increase the compatibility score.",
+                  "Historial reproductivo — afecta la probabilidad de éxito de cubrición. Valores más altos aumentan la puntuación de compatibilidad."
+                )}
                 position="top"
               />
             </div>
@@ -412,7 +426,11 @@ export default function HorseForm({
                 {t.verificador.label_coi}
               </label>
               <Tooltip
-                text="Coeficiente de Consanguinidade — mede o grau de parentesco genético. Valores abaixo de 3% são excelentes; acima de 6.25% aumentam risco hereditário."
+                text={tr(
+                  "Coeficiente de Consanguinidade — mede o grau de parentesco genético. Valores abaixo de 3% são excelentes; acima de 6.25% aumentam risco hereditário.",
+                  "Inbreeding Coefficient — measures genetic relatedness. Values below 3% are excellent; above 6.25% increase hereditary risk.",
+                  "Coeficiente de Consanguinidad — mide el grado de parentesco genético. Valores por debajo de 3% son excelentes; por encima de 6.25% aumentan el riesgo hereditario."
+                )}
                 position="top"
               />
             </div>
@@ -432,7 +450,7 @@ export default function HorseForm({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-              Coberturas Realizadas
+              {tr("Coberturas Realizadas", "Breedings Performed", "Cubriciones Realizadas")}
             </label>
             <input
               type="number"
@@ -444,7 +462,7 @@ export default function HorseForm({
           </div>
           <div>
             <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
-              Potros Nascidos Vivos
+              {tr("Potros Nascidos Vivos", "Live Foals Born", "Potros Nacidos Vivos")}
             </label>
             <input
               type="number"
@@ -460,10 +478,14 @@ export default function HorseForm({
         <div>
           <div className="flex items-center gap-1.5 mb-2">
             <span className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
-              Aprovação APSL
+              {tr("Aprovação APSL", "APSL Approval", "Aprobación APSL")}
             </span>
             <Tooltip
-              text="Cavalo com aprovação oficial da APSL — aumenta score de compatibilidade e valor de mercado."
+              text={tr(
+                "Cavalo com aprovação oficial da APSL — aumenta score de compatibilidade e valor de mercado.",
+                "Horse with official APSL approval — increases compatibility score and market value.",
+                "Caballo con aprobación oficial de la APSL — aumenta la puntuación de compatibilidad y el valor de mercado."
+              )}
               position="top"
             />
           </div>
@@ -527,11 +549,31 @@ export default function HorseForm({
             toolName={t.verificador.tool_name}
             requiresAuth={requiresAuth}
             proFeatures={[
-              "Análise genética completa com 5 loci de pelagem",
-              "Cálculo de COI e risco de consanguinidade",
-              "Probabilidades reais de pelagens dos descendentes",
-              "10 factores de compatibilidade reprodutiva",
-              "Exportação PDF com relatório completo do par",
+              tr(
+                "Análise genética completa com 5 loci de pelagem",
+                "Complete genetic analysis with 5 coat loci",
+                "Análisis genético completo con 5 loci de pelaje"
+              ),
+              tr(
+                "Cálculo de COI e risco de consanguinidade",
+                "COI calculation and inbreeding risk",
+                "Cálculo de COI y riesgo de consanguinidad"
+              ),
+              tr(
+                "Probabilidades reais de pelagens dos descendentes",
+                "Real coat colour probabilities for offspring",
+                "Probabilidades reales de pelajes de los descendientes"
+              ),
+              tr(
+                "10 factores de compatibilidade reprodutiva",
+                "10 reproductive compatibility factors",
+                "10 factores de compatibilidad reproductiva"
+              ),
+              tr(
+                "Exportação PDF com relatório completo do par",
+                "PDF export with complete pair report",
+                "Exportación PDF con informe completo del par"
+              ),
             ]}
           />
         </div>
@@ -607,7 +649,12 @@ export default function HorseForm({
             },
           };
           const coi = COI_ESTIMADOS[garanhao.linhagemFamosa]?.[egua.linhagemFamosa] ?? 2.0;
-          const nivel = coi <= 3 ? "Baixo" : coi <= 6.25 ? "Moderado" : "Alto";
+          const nivel =
+            coi <= 3
+              ? tr("Baixo", "Low", "Bajo")
+              : coi <= 6.25
+                ? tr("Moderado", "Moderate", "Moderado")
+                : tr("Alto", "High", "Alto");
           const color =
             coi <= 3
               ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/5"
@@ -619,9 +666,11 @@ export default function HorseForm({
               <div className={`flex items-center gap-3 p-3 rounded-xl border ${color}`}>
                 <Dna size={16} className="shrink-0" />
                 <p className="text-xs">
-                  <strong>COI estimado:</strong> ~{coi.toFixed(1)}% — Consanguinidade {nivel}
+                  <strong>{tr("COI estimado", "Estimated COI", "COI estimado")}:</strong> ~
+                  {coi.toFixed(1)}% — {tr("Consanguinidade", "Inbreeding", "Consanguinidad")}{" "}
+                  {nivel}
                   {coi > 6.25 &&
-                    " — Considere linhagens diferentes para maior diversidade genética"}
+                    ` — ${tr("Considere linhagens diferentes para maior diversidade genética", "Consider different lineages for greater genetic diversity", "Considere linajes diferentes para mayor diversidad genética")}`}
                 </p>
               </div>
             </div>

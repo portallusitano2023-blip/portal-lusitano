@@ -14,63 +14,13 @@ import Image from "next/image";
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
+
 export default function CavalosFavoritosPage() {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
   const { favorites, removeFromFavorites, clearFavorites, favoritesCount } = useHorseFavorites();
   const [sortBy, setSortBy] = useState<"recent" | "price-asc" | "price-desc">("recent");
 
-  const text = {
-    pt: {
-      title: "Cavalos Favoritos",
-      subtitle: "Os exemplares que guardaste",
-      empty: "Ainda não guardaste nenhum cavalo",
-      emptySubtitle: "Explora o marketplace e guarda os cavalos que te interessam",
-      explore: "Ver Cavalos à Venda",
-      clearAll: "Limpar Tudo",
-      remove: "Remover",
-      view: "Ver Detalhes",
-      share: "Partilhar",
-      years: "anos",
-      sortRecent: "Mais Recentes",
-      sortPriceAsc: "Preço: Menor",
-      sortPriceDesc: "Preço: Maior",
-      total: "cavalos guardados",
-    },
-    en: {
-      title: "Favorite Horses",
-      subtitle: "The horses you've saved",
-      empty: "You haven't saved any horses yet",
-      emptySubtitle: "Explore the marketplace and save the horses that interest you",
-      explore: "View Horses for Sale",
-      clearAll: "Clear All",
-      remove: "Remove",
-      view: "View Details",
-      share: "Share",
-      years: "years",
-      sortRecent: "Most Recent",
-      sortPriceAsc: "Price: Low",
-      sortPriceDesc: "Price: High",
-      total: "horses saved",
-    },
-    es: {
-      title: "Caballos Favoritos",
-      subtitle: "Los ejemplares que ha guardado",
-      empty: "Aun no ha guardado ningun caballo",
-      emptySubtitle: "Explore el marketplace y guarde los caballos que le interesen",
-      explore: "Ver Caballos en Venta",
-      clearAll: "Limpiar Todo",
-      remove: "Eliminar",
-      view: "Ver Detalles",
-      share: "Compartir",
-      years: "anos",
-      sortRecent: "Mas Recientes",
-      sortPriceAsc: "Precio: Menor",
-      sortPriceDesc: "Precio: Mayor",
-      total: "caballos guardados",
-    },
-  };
-
-  const t = text[language];
+  const txt = t.cavalos_favoritos;
 
   // Sort favorites
   const sortedFavorites = [...favorites].sort((a, b) => {
@@ -90,14 +40,13 @@ export default function CavalosFavoritosPage() {
       try {
         await navigator.share({
           title: horse.name,
-          text: `Vê este cavalo: ${horse.name}`,
+          text: `${horse.name}`,
           url,
         });
       } catch {
         // User cancelled or error
       }
     } else {
-      // Fallback: copy to clipboard
       navigator.clipboard.writeText(url);
     }
   };
@@ -112,22 +61,22 @@ export default function CavalosFavoritosPage() {
               <Heart className="text-[var(--gold)]" size={28} />
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-2 sm:mb-4">
-              {t.title}
+              {txt.title}
             </h1>
             <p className="text-[var(--foreground-secondary)] font-serif italic text-sm sm:text-base">
-              {t.subtitle}
+              {txt.subtitle}
             </p>
 
             {favoritesCount > 0 && (
               <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
                 <span className="text-[var(--foreground-muted)] text-sm">
-                  {favoritesCount} {t.total}
+                  {favoritesCount} {txt.total}
                 </span>
                 <button
                   onClick={clearFavorites}
                   className="text-xs uppercase tracking-widest text-[var(--foreground-muted)] hover:text-red-500 transition-colors active:scale-95"
                 >
-                  {t.clearAll}
+                  {txt.clear_all}
                 </button>
               </div>
             )}
@@ -140,16 +89,16 @@ export default function CavalosFavoritosPage() {
             >
               <Heart className="text-[var(--foreground-muted)] mx-auto mb-6" size={56} />
               <h2 className="text-xl sm:text-2xl font-serif text-[var(--foreground)] mb-3">
-                {t.empty}
+                {txt.empty}
               </h2>
               <p className="text-[var(--foreground-muted)] mb-8 text-sm sm:text-base max-w-md mx-auto">
-                {t.emptySubtitle}
+                {txt.empty_subtitle}
               </p>
               <Link
                 href="/comprar"
                 className="inline-block bg-[var(--gold)] text-black px-6 sm:px-8 py-3 sm:py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-[var(--gold-hover)] transition-colors active:scale-95"
               >
-                {t.explore}
+                {txt.explore}
               </Link>
             </div>
           ) : (
@@ -161,15 +110,12 @@ export default function CavalosFavoritosPage() {
               >
                 <div className="flex items-center gap-2">
                   <Filter size={14} className="text-[var(--foreground-muted)]" />
-                  <span className="text-[var(--foreground-muted)] text-xs uppercase tracking-wider hidden sm:inline">
-                    Ordenar:
-                  </span>
                 </div>
                 <div className="flex gap-1 sm:gap-2">
                   {[
-                    { key: "recent", label: t.sortRecent },
-                    { key: "price-asc", label: t.sortPriceAsc },
-                    { key: "price-desc", label: t.sortPriceDesc },
+                    { key: "recent", label: txt.sort_recent },
+                    { key: "price-asc", label: txt.sort_price_asc },
+                    { key: "price-desc", label: txt.sort_price_desc },
                   ].map((option) => (
                     <button
                       key={option.key}
@@ -237,7 +183,7 @@ export default function CavalosFavoritosPage() {
                         {horse.age && (
                           <span className="flex items-center gap-1">
                             <Calendar size={12} />
-                            {horse.age} {t.years}
+                            {horse.age} {txt.years}
                           </span>
                         )}
                         {horse.location && (
@@ -257,19 +203,19 @@ export default function CavalosFavoritosPage() {
                           href={`/comprar/${horse.id}`}
                           className="flex-1 bg-[var(--gold)] text-black py-3 text-xs uppercase tracking-widest font-bold hover:bg-[var(--gold-hover)] transition-colors text-center active:scale-[0.98] touch-manipulation"
                         >
-                          {t.view}
+                          {txt.view}
                         </Link>
                         <button
                           onClick={() => handleShare(horse)}
                           className="w-12 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:border-[var(--gold)]/50 transition-colors flex items-center justify-center active:scale-95 touch-manipulation"
-                          aria-label={t.share}
+                          aria-label={txt.share}
                         >
                           <Share2 size={16} />
                         </button>
                         <button
                           onClick={() => removeFromFavorites(horse.id)}
                           className="w-12 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-red-500 hover:border-red-500/50 transition-colors flex items-center justify-center active:scale-95 touch-manipulation"
-                          aria-label={t.remove}
+                          aria-label={txt.remove}
                         >
                           <Trash2 size={16} />
                         </button>
@@ -288,7 +234,7 @@ export default function CavalosFavoritosPage() {
                   href="/comprar"
                   className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors text-sm"
                 >
-                  <span>Continuar a explorar</span>
+                  <span>{txt.continue_exploring}</span>
                   <ExternalLink size={14} />
                 </Link>
               </div>

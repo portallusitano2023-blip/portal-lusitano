@@ -7,6 +7,8 @@ import BlurredProSection from "@/components/tools/BlurredProSection";
 import ValueWaterfall from "@/components/tools/ValueWaterfall";
 import InvestmentSafety from "@/components/tools/InvestmentSafety";
 import DisciplineComparison from "@/components/tools/DisciplineComparison";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { MERCADOS, VALORES_BASE, MULT_LINHAGEM, MULT_SAUDE, MULT_COMP } from "../data";
 import { calcularProjecaoValor, calcularTrainingROI } from "../projections";
 import type { FormData, Resultado } from "../types";
@@ -41,6 +43,9 @@ export default function BreakdownAnalysis({
   isSubscribed,
   t,
 }: BreakdownAnalysisProps) {
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
+
   // PRO projections
   const investmentProjections = calcularProjecaoValor(resultado.valorFinal, form.idade);
   const trainingROILevels = calcularTrainingROI(
@@ -193,7 +198,11 @@ export default function BreakdownAnalysis({
         isSubscribed={isSubscribed}
         title={
           (t.calculadora as Record<string, string>).safety_title ??
-          "Análise de Segurança do Investimento"
+          tr(
+            "Análise de Segurança do Investimento",
+            "Investment Safety Analysis",
+            "Análisis de Seguridad de la Inversión"
+          )
         }
       >
         <InvestmentSafety form={form} resultado={resultado} />
@@ -203,14 +212,22 @@ export default function BreakdownAnalysis({
       <BlurredProSection
         isSubscribed={isSubscribed}
         title={
-          (t.calculadora as Record<string, string>).discipline_title ?? "Comparação por Disciplina"
+          (t.calculadora as Record<string, string>).discipline_title ??
+          tr("Comparação por Disciplina", "Discipline Comparison", "Comparación por Disciplina")
         }
       >
         <DisciplineComparison form={form} valorBase={resultado.valorFinal} />
       </BlurredProSection>
 
       {/* PRO: Metodologia de Valorização */}
-      <BlurredProSection isSubscribed={isSubscribed} title="Metodologia de Valorização">
+      <BlurredProSection
+        isSubscribed={isSubscribed}
+        title={tr(
+          "Metodologia de Valorização",
+          "Valuation Methodology",
+          "Metodología de Valorización"
+        )}
+      >
         {(() => {
           const _base = VALORES_BASE[form.treino] ?? resultado.valorFinal;
           const _morfMedia =
@@ -242,34 +259,58 @@ export default function BreakdownAnalysis({
             label: string;
           }[] = [
             {
-              nome: "Genealogia e Sangue",
+              nome: tr("Genealogia e Sangue", "Genealogy & Bloodline", "Genealogía y Sangre"),
               peso: 30,
               score: linhagemNorm,
-              label: "Linhagem e pedigree certificado",
+              label: tr(
+                "Linhagem e pedigree certificado",
+                "Certified lineage and pedigree",
+                "Linaje y pedigrí certificado"
+              ),
             },
             {
-              nome: "Formação e Disciplina",
+              nome: tr("Formação e Disciplina", "Training & Discipline", "Formación y Disciplina"),
               peso: 25,
               score: treinoScore,
-              label: "Nível de treino e disciplina",
+              label: tr(
+                "Nível de treino e disciplina",
+                "Training level and discipline",
+                "Nivel de entrenamiento y disciplina"
+              ),
             },
             {
-              nome: "Resultados Desportivos",
+              nome: tr("Resultados Desportivos", "Competition Results", "Resultados Deportivos"),
               peso: 20,
               score: Math.min(10, compScore),
-              label: "Historial em competição",
+              label: tr(
+                "Historial em competição",
+                "Competition history",
+                "Historial en competición"
+              ),
             },
             {
-              nome: "Saúde e Condição",
+              nome: tr("Saúde e Condição", "Health & Condition", "Salud y Condición"),
               peso: 15,
               score: Math.min(10, saudeNorm),
-              label: "Estado clínico e documentação",
+              label: tr(
+                "Estado clínico e documentação",
+                "Clinical status and documentation",
+                "Estado clínico y documentación"
+              ),
             },
             {
-              nome: "Mercado e Procura Actual",
+              nome: tr(
+                "Mercado e Procura Actual",
+                "Market & Current Demand",
+                "Mercado y Demanda Actual"
+              ),
               peso: 10,
               score: form.tendencia === "alta" ? 9 : form.tendencia === "estavel" ? 7 : 4,
-              label: "Dinâmica do mercado-alvo",
+              label: tr(
+                "Dinâmica do mercado-alvo",
+                "Target market dynamics",
+                "Dinámica del mercado objetivo"
+              ),
             },
           ];
 
@@ -280,10 +321,18 @@ export default function BreakdownAnalysis({
               <div className="px-6 pt-6 pb-4 border-b border-[var(--border)]">
                 <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider flex items-center gap-2">
                   <Scale size={16} className="text-[var(--gold)]" />
-                  Metodologia de Valorização
+                  {tr(
+                    "Metodologia de Valorização",
+                    "Valuation Methodology",
+                    "Metodología de Valorización"
+                  )}
                 </h3>
                 <p className="text-xs text-[var(--foreground-muted)] mt-1">
-                  Como calculámos o valor estimado do seu cavalo
+                  {tr(
+                    "Como calculámos o valor estimado do seu cavalo",
+                    "How we calculated your horse's estimated value",
+                    "Cómo calculamos el valor estimado de su caballo"
+                  )}
                 </p>
               </div>
 
@@ -345,15 +394,18 @@ export default function BreakdownAnalysis({
               <div className="px-6 py-4 bg-[var(--gold)]/5 border-t border-[var(--gold)]/20">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
-                    Valor total calculado
+                    {tr("Valor total calculado", "Total calculated value", "Valor total calculado")}
                   </span>
                   <span className="text-base font-semibold text-[var(--gold)]">
                     {resultado.valorFinal.toLocaleString("pt-PT")} €
                   </span>
                 </div>
                 <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-1 leading-relaxed">
-                  Estimativa baseada em pesos sectoriais do mercado equestre lusitano. Não substitui
-                  avaliação presencial.
+                  {tr(
+                    "Estimativa baseada em pesos sectoriais do mercado equestre lusitano. Não substitui avaliação presencial.",
+                    "Estimate based on sector weights of the Lusitano equestrian market. Does not replace in-person evaluation.",
+                    "Estimación basada en pesos sectoriales del mercado ecuestre lusitano. No sustituye la evaluación presencial."
+                  )}
                 </p>
               </div>
             </div>
@@ -362,7 +414,14 @@ export default function BreakdownAnalysis({
       </BlurredProSection>
 
       {/* PRO: Como Aumentar o Valor */}
-      <BlurredProSection isSubscribed={isSubscribed} title="Como Aumentar o Valor do Seu Cavalo">
+      <BlurredProSection
+        isSubscribed={isSubscribed}
+        title={tr(
+          "Como Aumentar o Valor do Seu Cavalo",
+          "How to Increase Your Horse's Value",
+          "Cómo Aumentar el Valor de Su Caballo"
+        )}
+      >
         {(() => {
           const morfMedia =
             (form.morfologia + form.garupa + form.espádua + form.cabeca + form.membros) / 5;
@@ -389,56 +448,94 @@ export default function BreakdownAnalysis({
             mostrar: boolean;
           }[] = [
             {
-              titulo: "Formação Profissional",
+              titulo: tr("Formação Profissional", "Professional Training", "Formación Profesional"),
               ganhoMin: 500,
               ganhoMax: 2000,
-              descricao:
+              descricao: tr(
                 "Certificação por treinador FEI pode aumentar o valor de mercado significativamente ao validar o nível técnico do cavalo.",
+                "FEI trainer certification can significantly increase market value by validating the horse's technical level.",
+                "La certificación por entrenador FEI puede aumentar significativamente el valor de mercado al validar el nivel técnico del caballo."
+              ),
               cor: "bg-blue-500/10 border-blue-500/20 text-blue-400",
               mostrar: treinoIdx < 4,
             },
             {
-              titulo: "Participação em Provas",
+              titulo: tr(
+                "Participação em Provas",
+                "Competition Participation",
+                "Participación en Pruebas"
+              ),
               ganhoMin: 1000,
               ganhoMax: 3000,
-              descricao:
+              descricao: tr(
                 "Resultados em provas regionais e nacionais valorizam o perfil do cavalo e aumentam a confiança dos compradores.",
+                "Results in regional and national competitions enhance the horse's profile and increase buyer confidence.",
+                "Resultados en pruebas regionales y nacionales valorizan el perfil del caballo y aumentan la confianza de los compradores."
+              ),
               cor: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
               mostrar: form.competicoes === "nenhuma" && treinoIdx >= 2,
             },
             {
-              titulo: "Documentação Genética",
+              titulo: tr(
+                "Documentação Genética",
+                "Genetic Documentation",
+                "Documentación Genética"
+              ),
               ganhoMin: 300,
               ganhoMax: 800,
-              descricao:
+              descricao: tr(
                 "Resultados de testes genéticos e rastreios de saúde aumentam a confiança do comprador e reduzem o tempo de negociação.",
+                "Genetic test results and health screenings increase buyer confidence and reduce negotiation time.",
+                "Resultados de pruebas genéticas y exámenes de salud aumentan la confianza del comprador y reducen el tiempo de negociación."
+              ),
               cor: "bg-purple-500/10 border-purple-500/20 text-purple-400",
               mostrar: !form.raioX || !form.exameVeterinario,
             },
             {
-              titulo: "Fotografia Profissional",
+              titulo: tr(
+                "Fotografia Profissional",
+                "Professional Photography",
+                "Fotografía Profesional"
+              ),
               ganhoMin: 200,
               ganhoMax: 500,
-              descricao:
+              descricao: tr(
                 "Fotos e vídeo profissional reduzem o tempo de venda em 40% e permitem atingir compradores internacionais.",
+                "Professional photos and video reduce sale time by 40% and reach international buyers.",
+                "Fotos y vídeo profesional reducen el tiempo de venta en un 40% y permiten alcanzar compradores internacionales."
+              ),
               cor: "bg-amber-500/10 border-amber-500/20 text-amber-400",
               mostrar: true,
             },
             {
-              titulo: "Exposição Internacional",
+              titulo: tr(
+                "Exposição Internacional",
+                "International Exposure",
+                "Exposición Internacional"
+              ),
               ganhoMin: 2000,
               ganhoMax: 5000,
-              descricao:
+              descricao: tr(
                 "Participação em Lusitano World Championship ou similares aumenta a visibilidade e eleva significativamente o teto de valor.",
+                "Participation in Lusitano World Championship or similar events increases visibility and significantly raises the value ceiling.",
+                "Participación en el Campeonato Mundial Lusitano o similares aumenta la visibilidad y eleva significativamente el techo de valor."
+              ),
               cor: "bg-rose-500/10 border-rose-500/20 text-rose-400",
               mostrar: form.competicoes === "regional" || form.competicoes === "nacional",
             },
             {
-              titulo: "Trabalho de Ginástica Funcional",
+              titulo: tr(
+                "Trabalho de Ginástica Funcional",
+                "Functional Gymnastic Work",
+                "Trabajo de Gimnasia Funcional"
+              ),
               ganhoMin: 300,
               ganhoMax: 1200,
-              descricao:
+              descricao: tr(
                 "Melhoria da conformação funcional e postura pode valorizar a apresentação e aumentar a nota em avaliações morfológicas.",
+                "Improving functional conformation and posture can enhance presentation and increase morphological evaluation scores.",
+                "La mejora de la conformación funcional y postura puede valorizar la presentación y aumentar la nota en evaluaciones morfológicas."
+              ),
               cor: "bg-teal-500/10 border-teal-500/20 text-teal-400",
               mostrar: morfMedia < 7.5 || andMedia < 7,
             },
@@ -451,10 +548,18 @@ export default function BreakdownAnalysis({
               <div className="px-6 pt-6 pb-4 border-b border-[var(--border)]">
                 <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider flex items-center gap-2">
                   <Lightbulb size={16} className="text-[var(--gold)]" />
-                  Como Aumentar o Valor do Seu Cavalo
+                  {tr(
+                    "Como Aumentar o Valor do Seu Cavalo",
+                    "How to Increase Your Horse's Value",
+                    "Cómo Aumentar el Valor de Su Caballo"
+                  )}
                 </h3>
                 <p className="text-xs text-[var(--foreground-muted)] mt-1">
-                  Recomendações personalizadas baseadas na sua análise
+                  {tr(
+                    "Recomendações personalizadas baseadas na sua análise",
+                    "Personalised recommendations based on your analysis",
+                    "Recomendaciones personalizadas basadas en su análisis"
+                  )}
                 </p>
               </div>
 
@@ -485,8 +590,11 @@ export default function BreakdownAnalysis({
 
               <div className="px-6 py-3 bg-[var(--background-card)] border-t border-[var(--border)]">
                 <p className="text-[10px] text-[var(--foreground-muted)]/60 leading-relaxed">
-                  Estimativas de valorização baseadas em médias do sector equestre. Os resultados
-                  podem variar conforme o perfil do comprador e o contexto de mercado.
+                  {tr(
+                    "Estimativas de valorização baseadas em médias do sector equestre. Os resultados podem variar conforme o perfil do comprador e o contexto de mercado.",
+                    "Value estimates based on equestrian sector averages. Results may vary depending on buyer profile and market context.",
+                    "Estimaciones de valorización basadas en promedios del sector ecuestre. Los resultados pueden variar según el perfil del comprador y el contexto del mercado."
+                  )}
                 </p>
               </div>
             </div>

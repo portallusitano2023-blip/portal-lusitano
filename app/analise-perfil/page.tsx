@@ -17,6 +17,7 @@ import {
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { useQuizLogic } from "@/components/analise-perfil/useQuizLogic";
 
 // Critical path: load immediately — these are visible before any tab is selected
@@ -92,7 +93,8 @@ const MethodologyPanel = dynamic(() => import("@/components/tools/MethodologyPan
 });
 
 function AnalisePerfilContent() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
   const {
     showIntro,
     showResult,
@@ -158,17 +160,27 @@ function AnalisePerfilContent() {
           <div className="flex items-start gap-3 px-5 py-4 bg-gradient-to-r from-emerald-500/15 to-emerald-500/5 border border-emerald-500/40 rounded-xl animate-[fadeSlideIn_0.4s_ease-out_forwards]">
             <Dna size={16} className="text-emerald-400 shrink-0 mt-0.5" />
             <p className="text-xs text-emerald-300 flex-1 leading-relaxed">
-              <strong>Vindo do Verificador de Compatibilidade</strong>
+              <strong>
+                {tr(
+                  "Vindo do Verificador de Compatibilidade",
+                  "From the Compatibility Checker",
+                  "Desde el Verificador de Compatibilidad"
+                )}
+              </strong>
               <span className="text-emerald-300/70">
                 {" "}
-                · Análise de {chainContext} — descobre o perfil ideal de comprador para este
-                cruzamento
+                ·{" "}
+                {tr(
+                  `Análise de ${chainContext} — descobre o perfil ideal de comprador para este cruzamento`,
+                  `Analysis of ${chainContext} — discover the ideal buyer profile for this cross`,
+                  `Análisis de ${chainContext} — descubre el perfil ideal de comprador para este cruce`
+                )}
               </span>
             </p>
             <button
               onClick={() => setChainContext(null)}
               className="text-emerald-400/50 hover:text-emerald-400 transition-colors shrink-0"
-              aria-label="Fechar"
+              aria-label={tr("Fechar", "Close", "Cerrar")}
             >
               &#10005;
             </button>
@@ -194,18 +206,26 @@ function AnalisePerfilContent() {
                 >
                   <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
                 </svg>
-                <span className="text-[#C5A059] font-semibold">PRO Activo</span>
-                <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
-                <span className="text-[#C5A059]/80 hidden sm:inline">Utilizações ilimitadas</span>
+                <span className="text-[#C5A059] font-semibold">
+                  {tr("PRO Activo", "PRO Active", "PRO Activo")}
+                </span>
                 <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
                 <span className="text-[#C5A059]/80 hidden sm:inline">
-                  Análise de Perfil desbloqueada
+                  {tr("Utilizações ilimitadas", "Unlimited uses", "Usos ilimitados")}
+                </span>
+                <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+                <span className="text-[#C5A059]/80 hidden sm:inline">
+                  {tr(
+                    "Análise de Perfil desbloqueada",
+                    "Profile Analysis unlocked",
+                    "Análisis de Perfil desbloqueado"
+                  )}
                 </span>
                 <a
                   href="/ferramentas/historico"
                   className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap text-xs sm:text-sm"
                 >
-                  Ver histórico →
+                  {tr("Ver histórico →", "View history →", "Ver historial →")}
                 </a>
               </div>
             </div>
@@ -215,15 +235,17 @@ function AnalisePerfilContent() {
             <div className="max-w-2xl mx-auto px-4 pt-6">
               <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
                 <span className="text-amber-400/90 flex-1 min-w-0">
-                  {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
-                  {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
-                  Subscreva PRO para utilizações ilimitadas
+                  {tr(
+                    `${freeUsesLeft} uso${freeUsesLeft !== 1 ? "s" : ""} gratuito${freeUsesLeft !== 1 ? "s" : ""} disponível${freeUsesLeft !== 1 ? "is" : ""} — Subscreva PRO para utilizações ilimitadas`,
+                    `${freeUsesLeft} free use${freeUsesLeft !== 1 ? "s" : ""} remaining — Subscribe to PRO for unlimited uses`,
+                    `${freeUsesLeft} uso${freeUsesLeft !== 1 ? "s" : ""} gratuito${freeUsesLeft !== 1 ? "s" : ""} disponible${freeUsesLeft !== 1 ? "s" : ""} — Suscríbase a PRO para usos ilimitados`
+                  )}
                 </span>
                 <a
                   href="/ferramentas"
                   className="text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
                 >
-                  Subscrever
+                  {tr("Subscrever", "Subscribe", "Suscribirse")}
                 </a>
               </div>
             </div>
@@ -269,20 +291,26 @@ function AnalisePerfilContent() {
                     >
                       <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
                     </svg>
-                    <span className="text-[#C5A059] font-semibold">PRO Activo</span>
-                    <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
-                    <span className="text-[#C5A059]/80 hidden sm:inline">
-                      Utilizações ilimitadas
+                    <span className="text-[#C5A059] font-semibold">
+                      {tr("PRO Activo", "PRO Active", "PRO Activo")}
                     </span>
                     <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
                     <span className="text-[#C5A059]/80 hidden sm:inline">
-                      Análise de Perfil desbloqueada
+                      {tr("Utilizações ilimitadas", "Unlimited uses", "Usos ilimitados")}
+                    </span>
+                    <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
+                    <span className="text-[#C5A059]/80 hidden sm:inline">
+                      {tr(
+                        "Análise de Perfil desbloqueada",
+                        "Profile Analysis unlocked",
+                        "Análisis de Perfil desbloqueado"
+                      )}
                     </span>
                     <a
                       href="/ferramentas/historico"
                       className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap text-xs sm:text-sm"
                     >
-                      Ver histórico →
+                      {tr("Ver histórico →", "View history →", "Ver historial →")}
                     </a>
                   </div>
                 </div>
@@ -292,15 +320,17 @@ function AnalisePerfilContent() {
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
                   <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
                     <span className="text-amber-400/90 flex-1 min-w-0">
-                      {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
-                      {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
-                      Subscreva PRO para utilizações ilimitadas
+                      {tr(
+                        `${freeUsesLeft} uso${freeUsesLeft !== 1 ? "s" : ""} gratuito${freeUsesLeft !== 1 ? "s" : ""} disponível${freeUsesLeft !== 1 ? "is" : ""} — Subscreva PRO para utilizações ilimitadas`,
+                        `${freeUsesLeft} free use${freeUsesLeft !== 1 ? "s" : ""} remaining — Subscribe to PRO for unlimited uses`,
+                        `${freeUsesLeft} uso${freeUsesLeft !== 1 ? "s" : ""} gratuito${freeUsesLeft !== 1 ? "s" : ""} disponible${freeUsesLeft !== 1 ? "s" : ""} — Suscríbase a PRO para usos ilimitados`
+                      )}
                     </span>
                     <a
                       href="/ferramentas"
                       className="text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
                     >
-                      Subscrever
+                      {tr("Subscrever", "Subscribe", "Suscribirse")}
                     </a>
                   </div>
                 </div>
@@ -327,33 +357,65 @@ function AnalisePerfilContent() {
               {/* Top 3 Insights */}
               {(() => {
                 const profileActions: Record<string, string> = {
-                  competidor: "Foque em formação profissional com treinador certificado",
-                  criador: "Explore linhas genéticas de alta qualidade",
-                  amador: "Priorize um cavalo de temperamento calmo e versátil",
-                  aprendiz: "Comece com aulas de equitação antes da compra",
-                  tradicional: "Lusitano de trabalho com boa formação clássica",
+                  competidor: tr(
+                    "Foque em formação profissional com treinador certificado",
+                    "Focus on professional training with a certified trainer",
+                    "Enfóquese en formación profesional con entrenador certificado"
+                  ),
+                  criador: tr(
+                    "Explore linhas genéticas de alta qualidade",
+                    "Explore high-quality genetic lines",
+                    "Explore líneas genéticas de alta calidad"
+                  ),
+                  amador: tr(
+                    "Priorize um cavalo de temperamento calmo e versátil",
+                    "Prioritise a horse with a calm and versatile temperament",
+                    "Priorice un caballo de temperamento tranquilo y versátil"
+                  ),
+                  aprendiz: tr(
+                    "Comece com aulas de equitação antes da compra",
+                    "Start with riding lessons before purchasing",
+                    "Comience con clases de equitación antes de la compra"
+                  ),
+                  tradicional: tr(
+                    "Lusitano de trabalho com boa formação clássica",
+                    "Working Lusitano with good classical training",
+                    "Lusitano de trabajo con buena formación clásica"
+                  ),
                 };
                 const dominantPct = scorePercentages[0]?.percentage ?? 0;
                 const profileName = result.title;
                 const nextAction =
                   profileActions[result.profile] ??
-                  "Consulte os detalhes do seu perfil para orientação personalizada";
+                  tr(
+                    "Consulte os detalhes do seu perfil para orientação personalizada",
+                    "Check your profile details for personalised guidance",
+                    "Consulte los detalles de su perfil para orientación personalizada"
+                  );
 
                 const insights = [
                   {
                     icon: <Target size={18} className="text-[#C5A059]" aria-hidden="true" />,
-                    title: "Perfil dominante",
-                    description: `O seu perfil principal é ${profileName} com ${dominantPct}% de afinidade`,
+                    title: tr("Perfil dominante", "Dominant profile", "Perfil dominante"),
+                    description: tr(
+                      `O seu perfil principal é ${profileName} com ${dominantPct}% de afinidade`,
+                      `Your main profile is ${profileName} with ${dominantPct}% affinity`,
+                      `Su perfil principal es ${profileName} con ${dominantPct}% de afinidad`
+                    ),
                   },
                   {
                     icon: <ArrowRight size={18} className="text-emerald-400" aria-hidden="true" />,
-                    title: "Próxima acção",
+                    title: tr("Próxima acção", "Next action", "Próxima acción"),
                     description: nextAction,
                   },
                   {
                     icon: <CheckCircle2 size={18} className="text-sky-400" aria-hidden="true" />,
-                    title: "Nível de preparação",
-                    description: "Consulte os detalhes PRO para o seu plano completo de preparação",
+                    title: tr("Nível de preparação", "Readiness level", "Nivel de preparación"),
+                    description: tr(
+                      "Consulte os detalhes PRO para o seu plano completo de preparação",
+                      "Check PRO details for your complete readiness plan",
+                      "Consulte los detalles PRO para su plan completo de preparación"
+                    ),
                   },
                 ];
 
@@ -362,7 +424,11 @@ function AnalisePerfilContent() {
                     <div className="max-w-5xl mx-auto px-4 sm:px-6">
                       <h2 className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--foreground-muted)] mb-5">
                         <Sparkles size={14} className="text-[#C5A059]" aria-hidden="true" />
-                        As suas 3 principais conclusões
+                        {tr(
+                          "As suas 3 principais conclusões",
+                          "Your 3 key insights",
+                          "Sus 3 principales conclusiones"
+                        )}
                       </h2>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {insights.map((insight, idx) => (
@@ -408,23 +474,37 @@ function AnalisePerfilContent() {
                             <div className="flex items-center gap-2 mb-3">
                               <div className="w-2 h-2 rounded-full bg-[var(--foreground-muted)]" />
                               <h3 className="text-sm font-semibold text-[var(--foreground-secondary)]">
-                                Traços do Perfil Secundário — {scorePercentages[1].label}
+                                {tr(
+                                  "Traços do Perfil Secundário",
+                                  "Secondary Profile Traits",
+                                  "Rasgos del Perfil Secundario"
+                                )}{" "}
+                                — {scorePercentages[1].label}
                               </h3>
                               <span className="ml-auto text-xs text-[var(--foreground-muted)] bg-[var(--background-card)] px-2 py-0.5 rounded-full">
-                                {scorePercentages[1].percentage}% afinidade
+                                {scorePercentages[1].percentage}%{" "}
+                                {tr("afinidade", "affinity", "afinidad")}
                               </span>
                             </div>
                             <p className="text-xs text-[var(--foreground-muted)] leading-relaxed mb-3">
-                              Com {scorePercentages[1].percentage}% de afinidade, o seu perfil
-                              combina características de{" "}
+                              {tr(
+                                `Com ${scorePercentages[1].percentage}% de afinidade, o seu perfil combina características de`,
+                                `With ${scorePercentages[1].percentage}% affinity, your profile combines traits of`,
+                                `Con ${scorePercentages[1].percentage}% de afinidad, su perfil combina características de`
+                              )}{" "}
                               <strong className="text-[var(--foreground-secondary)]">
                                 {scorePercentages[0]?.label ?? ""}
                               </strong>{" "}
-                              e{" "}
+                              {tr("e", "and", "y")}{" "}
                               <strong className="text-[var(--foreground-secondary)]">
                                 {scorePercentages[1].label}
                               </strong>
-                              . Isto significa que pode beneficiar de abordagens de ambos os perfis.
+                              .{" "}
+                              {tr(
+                                "Isto significa que pode beneficiar de abordagens de ambos os perfis.",
+                                "This means you can benefit from approaches of both profiles.",
+                                "Esto significa que puede beneficiarse de enfoques de ambos perfiles."
+                              )}
                             </p>
                             {/* Dicas específicas para o perfil híbrido */}
                             {(() => {
@@ -433,30 +513,86 @@ function AnalisePerfilContent() {
                               const combo = `${primary}_${secondary}`;
                               const HYBRID_TIPS: Record<string, string[]> = {
                                 competidor_criador: [
-                                  "Considere garanhões com dupla aptidão — competição e reprodução",
-                                  "Procure cavalos com BLUP alto que também tenham palmarés desportivo",
-                                  "Uma égua de qualidade pode ser tanto atleta como reprodutora",
+                                  tr(
+                                    "Considere garanhões com dupla aptidão — competição e reprodução",
+                                    "Consider stallions with dual aptitude — competition and breeding",
+                                    "Considere sementales con doble aptitud — competición y reproducción"
+                                  ),
+                                  tr(
+                                    "Procure cavalos com BLUP alto que também tenham palmarés desportivo",
+                                    "Look for horses with high BLUP that also have a sport record",
+                                    "Busque caballos con BLUP alto que también tengan palmarés deportivo"
+                                  ),
+                                  tr(
+                                    "Uma égua de qualidade pode ser tanto atleta como reprodutora",
+                                    "A quality mare can be both an athlete and a broodmare",
+                                    "Una yegua de calidad puede ser tanto atleta como reproductora"
+                                  ),
                                 ],
                                 competidor_amador: [
-                                  "Comece em provas locais para desenvolver experiência a custo controlado",
-                                  "Um cavalo com temperamento dócil facilita a progressão competitiva",
-                                  "Invista em treino regular com um técnico mesmo que não seja dedicado",
+                                  tr(
+                                    "Comece em provas locais para desenvolver experiência a custo controlado",
+                                    "Start with local shows to build experience at a controlled cost",
+                                    "Comience en pruebas locales para desarrollar experiencia a coste controlado"
+                                  ),
+                                  tr(
+                                    "Um cavalo com temperamento dócil facilita a progressão competitiva",
+                                    "A horse with a docile temperament eases competitive progression",
+                                    "Un caballo con temperamento dócil facilita la progresión competitiva"
+                                  ),
+                                  tr(
+                                    "Invista em treino regular com um técnico mesmo que não seja dedicado",
+                                    "Invest in regular training with a coach even if not full-time",
+                                    "Invierta en entrenamiento regular con un técnico aunque no sea dedicado"
+                                  ),
                                 ],
                                 criador_amador: [
-                                  "Escolha cavalos com linhagem documentada mas temperamento suave",
-                                  "O prazer de criar pode coexistir com custos controlados",
-                                  "Participe em exposições APSL para ganhar experiência no sector",
+                                  tr(
+                                    "Escolha cavalos com linhagem documentada mas temperamento suave",
+                                    "Choose horses with documented lineage but gentle temperament",
+                                    "Elija caballos con linaje documentado pero temperamento suave"
+                                  ),
+                                  tr(
+                                    "O prazer de criar pode coexistir com custos controlados",
+                                    "The joy of breeding can coexist with controlled costs",
+                                    "El placer de criar puede coexistir con costes controlados"
+                                  ),
+                                  tr(
+                                    "Participe em exposições APSL para ganhar experiência no sector",
+                                    "Participate in APSL shows to gain industry experience",
+                                    "Participe en exposiciones APSL para ganar experiencia en el sector"
+                                  ),
                                 ],
                                 competidor_investidor: [
-                                  "Foque em cavalos jovens com alto BLUP — melhor ROI a 3-5 anos",
-                                  "Competições CDI aumentam significativamente o valor de mercado",
-                                  "Documente todo o percurso desportivo para facilitar a venda futura",
+                                  tr(
+                                    "Foque em cavalos jovens com alto BLUP — melhor ROI a 3-5 anos",
+                                    "Focus on young horses with high BLUP — best ROI at 3-5 years",
+                                    "Enfóquese en caballos jóvenes con alto BLUP — mejor ROI a 3-5 años"
+                                  ),
+                                  tr(
+                                    "Competições CDI aumentam significativamente o valor de mercado",
+                                    "CDI competitions significantly increase market value",
+                                    "Competiciones CDI aumentan significativamente el valor de mercado"
+                                  ),
+                                  tr(
+                                    "Documente todo o percurso desportivo para facilitar a venda futura",
+                                    "Document the entire sport career to facilitate future sale",
+                                    "Documente todo el recorrido deportivo para facilitar la venta futura"
+                                  ),
                                 ],
                               };
                               const tips = HYBRID_TIPS[combo] ??
                                 HYBRID_TIPS[`${secondary}_${primary}`] ?? [
-                                  "Combine as melhores práticas de ambos os perfis",
-                                  "A sua versatilidade é um ponto forte no mundo equestre",
+                                  tr(
+                                    "Combine as melhores práticas de ambos os perfis",
+                                    "Combine the best practices of both profiles",
+                                    "Combine las mejores prácticas de ambos perfiles"
+                                  ),
+                                  tr(
+                                    "A sua versatilidade é um ponto forte no mundo equestre",
+                                    "Your versatility is a strength in the equestrian world",
+                                    "Su versatilidad es un punto fuerte en el mundo ecuestre"
+                                  ),
                                 ];
                               return (
                                 <ul className="space-y-2">
@@ -534,35 +670,72 @@ function AnalisePerfilContent() {
                             items: [
                               {
                                 id: "budget",
-                                label: "Definir orçamento total",
-                                description:
+                                label: tr(
+                                  "Definir orçamento total",
+                                  "Set total budget",
+                                  "Definir presupuesto total"
+                                ),
+                                description: tr(
                                   "Inclui compra, transporte, primeiros meses de estábulo",
+                                  "Includes purchase, transport, first months of stabling",
+                                  "Incluye compra, transporte, primeros meses de establo"
+                                ),
                                 priority: "essential" as const,
                               },
                               {
                                 id: "stable",
-                                label: "Garantir lugar em estábulo",
-                                description: "Confirmar vaga, condições e custos mensais",
+                                label: tr(
+                                  "Garantir lugar em estábulo",
+                                  "Secure stable place",
+                                  "Asegurar plaza en establo"
+                                ),
+                                description: tr(
+                                  "Confirmar vaga, condições e custos mensais",
+                                  "Confirm vacancy, conditions and monthly costs",
+                                  "Confirmar vacante, condiciones y costes mensuales"
+                                ),
                                 priority: "essential" as const,
                               },
                               {
                                 id: "insurance",
-                                label: "Pesquisar seguros equinos",
-                                description:
+                                label: tr(
+                                  "Pesquisar seguros equinos",
+                                  "Research equine insurance",
+                                  "Investigar seguros equinos"
+                                ),
+                                description: tr(
                                   "Comparar apólices de saúde, vida e responsabilidade civil",
+                                  "Compare health, life and liability policies",
+                                  "Comparar pólizas de salud, vida y responsabilidad civil"
+                                ),
                                 priority: "important" as const,
                               },
                               {
                                 id: "trainer",
-                                label: "Contactar treinador",
-                                description:
+                                label: tr(
+                                  "Contactar treinador",
+                                  "Contact trainer",
+                                  "Contactar entrenador"
+                                ),
+                                description: tr(
                                   "Identificar profissional para acompanhamento pós-compra",
+                                  "Identify a professional for post-purchase support",
+                                  "Identificar profesional para acompañamiento post-compra"
+                                ),
                                 priority: "important" as const,
                               },
                               {
                                 id: "transport",
-                                label: "Organizar transporte",
-                                description: "Reservar transporte especializado para equinos",
+                                label: tr(
+                                  "Organizar transporte",
+                                  "Organise transport",
+                                  "Organizar transporte"
+                                ),
+                                description: tr(
+                                  "Reservar transporte especializado para equinos",
+                                  "Book specialised equine transport",
+                                  "Reservar transporte especializado para equinos"
+                                ),
                                 priority: "optional" as const,
                               },
                             ],
@@ -573,33 +746,68 @@ function AnalisePerfilContent() {
                             items: [
                               {
                                 id: "vet-exam",
-                                label: "Exame veterinário completo",
-                                description:
+                                label: tr(
+                                  "Exame veterinário completo",
+                                  "Full veterinary exam",
+                                  "Examen veterinario completo"
+                                ),
+                                description: tr(
                                   "Incluir radiografias, análises sanguíneas e exame de fertilidade se aplicável",
+                                  "Include X-rays, blood tests and fertility exam if applicable",
+                                  "Incluir radiografías, análisis sanguíneos y examen de fertilidad si aplica"
+                                ),
                                 priority: "essential" as const,
                               },
                               {
                                 id: "conformation",
-                                label: "Avaliar conformação",
-                                description: "Verificar aprumos, dorso, garupa, pescoço e cabeça",
+                                label: tr(
+                                  "Avaliar conformação",
+                                  "Assess conformation",
+                                  "Evaluar conformación"
+                                ),
+                                description: tr(
+                                  "Verificar aprumos, dorso, garupa, pescoço e cabeça",
+                                  "Check limbs, back, croup, neck and head",
+                                  "Verificar aplomos, dorso, grupa, cuello y cabeza"
+                                ),
                                 priority: "essential" as const,
                               },
                               {
                                 id: "test-ride",
-                                label: "Ensaio montado",
-                                description: "Testar nos 3 andamentos, transições e temperamento",
+                                label: tr("Ensaio montado", "Test ride", "Prueba montada"),
+                                description: tr(
+                                  "Testar nos 3 andamentos, transições e temperamento",
+                                  "Test in all 3 gaits, transitions and temperament",
+                                  "Probar en los 3 aires, transiciones y temperamento"
+                                ),
                                 priority: "essential" as const,
                               },
                               {
                                 id: "papers",
-                                label: "Verificar documentação",
-                                description: "Registo APSL, passaporte equino, vacinações em dia",
+                                label: tr(
+                                  "Verificar documentação",
+                                  "Verify documentation",
+                                  "Verificar documentación"
+                                ),
+                                description: tr(
+                                  "Registo APSL, passaporte equino, vacinações em dia",
+                                  "APSL registration, equine passport, up-to-date vaccinations",
+                                  "Registro APSL, pasaporte equino, vacunas al día"
+                                ),
                                 priority: "important" as const,
                               },
                               {
                                 id: "history",
-                                label: "Histórico de saúde",
-                                description: "Pedir relatórios veterinários anteriores",
+                                label: tr(
+                                  "Histórico de saúde",
+                                  "Health history",
+                                  "Historial de salud"
+                                ),
+                                description: tr(
+                                  "Pedir relatórios veterinários anteriores",
+                                  "Request previous veterinary reports",
+                                  "Solicitar informes veterinarios anteriores"
+                                ),
                                 priority: "important" as const,
                               },
                             ],
@@ -610,33 +818,68 @@ function AnalisePerfilContent() {
                             items: [
                               {
                                 id: "adaptation",
-                                label: "Período de adaptação",
-                                description:
+                                label: tr(
+                                  "Período de adaptação",
+                                  "Adaptation period",
+                                  "Período de adaptación"
+                                ),
+                                description: tr(
                                   "Dar 7-14 dias para o cavalo se habituar ao novo ambiente",
+                                  "Allow 7-14 days for the horse to adjust to the new environment",
+                                  "Dar 7-14 días para que el caballo se adapte al nuevo entorno"
+                                ),
                                 priority: "essential" as const,
                               },
                               {
                                 id: "vet-visit",
-                                label: "Visita veterinária inicial",
-                                description: "Check-up completo no novo local",
+                                label: tr(
+                                  "Visita veterinária inicial",
+                                  "Initial vet visit",
+                                  "Visita veterinaria inicial"
+                                ),
+                                description: tr(
+                                  "Check-up completo no novo local",
+                                  "Full check-up at the new location",
+                                  "Chequeo completo en el nuevo lugar"
+                                ),
                                 priority: "essential" as const,
                               },
                               {
                                 id: "training-plan",
-                                label: "Plano de treino",
-                                description: "Definir objectivos e rotina com o treinador",
+                                label: tr(
+                                  "Plano de treino",
+                                  "Training plan",
+                                  "Plan de entrenamiento"
+                                ),
+                                description: tr(
+                                  "Definir objectivos e rotina com o treinador",
+                                  "Define goals and routine with the trainer",
+                                  "Definir objetivos y rutina con el entrenador"
+                                ),
                                 priority: "important" as const,
                               },
                               {
                                 id: "farrier",
-                                label: "Visita do ferrador",
-                                description: "Avaliar cascos e ferrar se necessário",
+                                label: tr(
+                                  "Visita do ferrador",
+                                  "Farrier visit",
+                                  "Visita del herrador"
+                                ),
+                                description: tr(
+                                  "Avaliar cascos e ferrar se necessário",
+                                  "Assess hooves and shoe if necessary",
+                                  "Evaluar cascos y herrar si es necesario"
+                                ),
                                 priority: "important" as const,
                               },
                               {
                                 id: "socialisation",
-                                label: "Socialização",
-                                description: "Introduzir gradualmente a outros cavalos do estábulo",
+                                label: tr("Socialização", "Socialisation", "Socialización"),
+                                description: tr(
+                                  "Introduzir gradualmente a outros cavalos do estábulo",
+                                  "Gradually introduce to other horses in the stable",
+                                  "Introducir gradualmente a otros caballos del establo"
+                                ),
                                 priority: "optional" as const,
                               },
                             ],
@@ -654,7 +897,7 @@ function AnalisePerfilContent() {
                         profileName={result.profile}
                         categories={[
                           {
-                            label: "Pensão",
+                            label: tr("Pensão", "Board", "Pensión"),
                             monthly:
                               result.profile === "competidor"
                                 ? 500
@@ -665,7 +908,7 @@ function AnalisePerfilContent() {
                             icon: "Home",
                           },
                           {
-                            label: "Alimentação",
+                            label: tr("Alimentação", "Feed", "Alimentación"),
                             monthly: result.profile === "competidor" ? 180 : 140,
                             color: "#60A5FA",
                             icon: "Apple",

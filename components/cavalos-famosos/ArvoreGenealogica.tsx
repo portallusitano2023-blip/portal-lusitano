@@ -64,50 +64,57 @@ export function ArvoreGenealogica({ pedigree, nomeBase }: ArvoreGenealogicaProps
       </button>
 
       {expandido && (
-        <div className="overflow-x-auto pb-4">
-          <div className="flex flex-col items-center min-w-[480px]">
-            {/* Nível 0: Cavalo Principal */}
-            <div className="bg-gradient-to-r from-[var(--gold)] to-[#8B7355] text-black px-6 py-3 rounded-xl font-bold text-lg shadow-lg mb-4">
-              {nomeBase}
-            </div>
-
-            {/* Linha de conexão */}
-            <div className="w-px h-6 bg-[var(--border)]"></div>
-            <div className="w-64 h-px bg-[var(--border)]"></div>
-
-            {/* Nível 1: Pais */}
-            <div className="flex gap-8 mt-2">
-              <div className="flex flex-col items-center">
-                {renderAncestral(pedigree.pai, 0, "Pai")}
-
-                {(pedigree.avoPaterno || pedigree.avoaPaterna) && (
-                  <>
-                    <div className="w-px h-4 bg-[var(--border)]"></div>
-                    <div className="w-32 h-px bg-[var(--border)]"></div>
-                    <div className="flex gap-4 mt-2">
-                      {renderAncestral(pedigree.avoPaterno, 1, "Avô Paterno")}
-                      {renderAncestral(pedigree.avoaPaterna, 1, "Avó Paterna")}
-                    </div>
-                  </>
-                )}
+        <div className="relative">
+          <div className="overflow-x-auto pb-4">
+            <div className="flex flex-col items-center min-w-[480px]">
+              {/* Nível 0: Cavalo Principal */}
+              <div className="bg-gradient-to-r from-[var(--gold)] to-[#8B7355] text-black px-6 py-3 rounded-xl font-bold text-lg shadow-lg mb-4">
+                {nomeBase}
               </div>
 
-              <div className="flex flex-col items-center">
-                {renderAncestral(pedigree.mae, 0, "Mãe")}
+              {/* Linha de conexão */}
+              <div className="w-px h-6 bg-[var(--border)]"></div>
+              <div className="w-64 h-px bg-[var(--border)]"></div>
 
-                {(pedigree.avoMaterno || pedigree.avoaMaterna) && (
-                  <>
-                    <div className="w-px h-4 bg-[var(--border)]"></div>
-                    <div className="w-32 h-px bg-[var(--border)]"></div>
-                    <div className="flex gap-4 mt-2">
-                      {renderAncestral(pedigree.avoMaterno, 1, "Avô Materno")}
-                      {renderAncestral(pedigree.avoaMaterna, 1, "Avó Materna")}
-                    </div>
-                  </>
-                )}
+              {/* Nível 1: Pais */}
+              <div className="flex gap-8 mt-2">
+                <div className="flex flex-col items-center">
+                  {renderAncestral(pedigree.pai, 0, "Pai")}
+
+                  {(pedigree.avoPaterno || pedigree.avoaPaterna) && (
+                    <>
+                      <div className="w-px h-4 bg-[var(--border)]"></div>
+                      <div className="w-32 h-px bg-[var(--border)]"></div>
+                      <div className="flex gap-4 mt-2">
+                        {renderAncestral(pedigree.avoPaterno, 1, "Avô Paterno")}
+                        {renderAncestral(pedigree.avoaPaterna, 1, "Avó Paterna")}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex flex-col items-center">
+                  {renderAncestral(pedigree.mae, 0, "Mãe")}
+
+                  {(pedigree.avoMaterno || pedigree.avoaMaterna) && (
+                    <>
+                      <div className="w-px h-4 bg-[var(--border)]"></div>
+                      <div className="w-32 h-px bg-[var(--border)]"></div>
+                      <div className="flex gap-4 mt-2">
+                        {renderAncestral(pedigree.avoMaterno, 1, "Avô Materno")}
+                        {renderAncestral(pedigree.avoaMaterna, 1, "Avó Materna")}
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
+          {/* Scroll affordance — visible only on small screens */}
+          <div className="absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-[var(--background-secondary)]/80 to-transparent pointer-events-none sm:hidden" />
+          <p className="text-center text-[10px] text-[var(--foreground-muted)] mt-1 sm:hidden">
+            ← Deslize para ver a árvore completa →
+          </p>
         </div>
       )}
     </div>

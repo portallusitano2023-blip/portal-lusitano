@@ -6,6 +6,8 @@ import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import dynamic from "next/dynamic";
 import ConfidenceRange from "@/components/tools/ConfidenceRange";
 import Tooltip from "@/components/tools/Tooltip";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { FormData, Resultado } from "../types";
 
 const AnimatedGauge = dynamic(() => import("@/components/tools/AnimatedGauge"), {
@@ -20,6 +22,9 @@ interface ValorHeroProps {
 }
 
 export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
+
   return (
     <>
       {/* Hero do Valor */}
@@ -37,13 +42,17 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
           {resultado.confianca >= 80 && resultado.percentil >= 65 && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/15 rounded-full border border-emerald-500/30">
               <Check size={11} className="text-emerald-400" />
-              <span className="text-xs text-emerald-400 font-semibold">Pronto para Venda</span>
+              <span className="text-xs text-emerald-400 font-semibold">
+                {tr("Pronto para Venda", "Ready to Sell", "Listo para Venta")}
+              </span>
             </div>
           )}
           {resultado.confianca >= 80 && resultado.percentil < 40 && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/15 rounded-full border border-amber-500/30">
               <Sparkles size={11} className="text-amber-400" />
-              <span className="text-xs text-amber-400 font-semibold">Potencial de Melhoria</span>
+              <span className="text-xs text-amber-400 font-semibold">
+                {tr("Potencial de Melhoria", "Improvement Potential", "Potencial de Mejora")}
+              </span>
             </div>
           )}
         </div>
@@ -57,13 +66,17 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
           {resultado.confianca >= 80 && resultado.percentil >= 65 && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/15 rounded-full border border-emerald-500/30">
               <Check size={11} className="text-emerald-400" />
-              <span className="text-xs text-emerald-400 font-semibold">Pronto para Venda</span>
+              <span className="text-xs text-emerald-400 font-semibold">
+                {tr("Pronto para Venda", "Ready to Sell", "Listo para Venta")}
+              </span>
             </div>
           )}
           {resultado.confianca >= 80 && resultado.percentil < 40 && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/15 rounded-full border border-amber-500/30">
               <Sparkles size={11} className="text-amber-400" />
-              <span className="text-xs text-amber-400 font-semibold">Potencial de Melhoria</span>
+              <span className="text-xs text-amber-400 font-semibold">
+                {tr("Potencial de Melhoria", "Improvement Potential", "Potencial de Mejora")}
+              </span>
             </div>
           )}
         </div>
@@ -94,7 +107,11 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
               unit="€"
               explanation={
                 (t.calculadora as Record<string, string>).confidence_range_explanation ??
-                "Baseado na completude dos dados fornecidos"
+                tr(
+                  "Baseado na completude dos dados fornecidos",
+                  "Based on the completeness of provided data",
+                  "Basado en la completitud de los datos proporcionados"
+                )
               }
             />
           </div>
@@ -114,7 +131,11 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
                 <Tooltip
                   text={
                     (t.calculadora as Record<string, string>).tooltip_confidence ??
-                    "Indica o grau de fiabilidade da estimativa. Valores acima de 70% indicam dados completos e coerentes."
+                    tr(
+                      "Indica o grau de fiabilidade da estimativa. Valores acima de 70% indicam dados completos e coerentes.",
+                      "Indicates the reliability of the estimate. Values above 70% indicate complete and consistent data.",
+                      "Indica el grado de fiabilidad de la estimación. Valores superiores al 70% indican datos completos y coherentes."
+                    )
                   }
                 />
               </div>
@@ -132,7 +153,11 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
                 <Tooltip
                   text={
                     (t.calculadora as Record<string, string>).tooltip_percentile ??
-                    "Posição relativa no mercado PSL. O percentil 80 significa que o cavalo vale mais que 80% dos cavalos comparáveis."
+                    tr(
+                      "Posição relativa no mercado PSL. O percentil 80 significa que o cavalo vale mais que 80% dos cavalos comparáveis.",
+                      "Relative position in the PSL market. The 80th percentile means the horse is worth more than 80% of comparable horses.",
+                      "Posición relativa en el mercado PSL. El percentil 80 significa que el caballo vale más que el 80% de los caballos comparables."
+                    )
                   }
                 />
               </div>
@@ -149,7 +174,11 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
             <Tooltip
               text={
                 (t.calculadora as Record<string, string>).tooltip_multiplier ??
-                "Factor aplicado ao valor base. Resulta da combinação de treino, competições, linhagem e conformação."
+                tr(
+                  "Factor aplicado ao valor base. Resulta da combinação de treino, competições, linhagem e conformação.",
+                  "Factor applied to the base value. Results from the combination of training, competitions, lineage and conformation.",
+                  "Factor aplicado al valor base. Resulta de la combinación de entrenamiento, competiciones, linaje y conformación."
+                )
               }
             />
           </div>
@@ -161,47 +190,73 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
         const topForca =
           resultado.pontosForteseFracos.fortes.length > 0
             ? resultado.pontosForteseFracos.fortes[0]
-            : "Genealogia de elite";
+            : tr("Genealogia de elite", "Elite genealogy", "Genealogía de élite");
 
         const topFraqueza =
           resultado.pontosForteseFracos.fracos.length > 0
             ? resultado.pontosForteseFracos.fracos[0]
-            : "Aumentar participações desportivas";
+            : tr(
+                "Aumentar participações desportivas",
+                "Increase competition participation",
+                "Aumentar participaciones deportivas"
+              );
 
         const posicaoMercado =
           resultado.percentil >= 75
-            ? "Top 25% do mercado lusitano"
+            ? tr(
+                "Top 25% do mercado lusitano",
+                "Top 25% of the Lusitano market",
+                "Top 25% del mercado lusitano"
+              )
             : resultado.percentil >= 50
-              ? "Acima da mediana do mercado"
+              ? tr(
+                  "Acima da mediana do mercado",
+                  "Above market median",
+                  "Por encima de la mediana del mercado"
+                )
               : resultado.percentil >= 25
-                ? "Abaixo da mediana, com potencial"
-                : "Valor de entrada no mercado";
+                ? tr(
+                    "Abaixo da mediana, com potencial",
+                    "Below median, with potential",
+                    "Por debajo de la mediana, con potencial"
+                  )
+                : tr(
+                    "Valor de entrada no mercado",
+                    "Entry-level market value",
+                    "Valor de entrada en el mercado"
+                  );
 
         return (
           <div className="bg-[#111111] border border-[#C5A059]/20 rounded-xl p-5 mb-6">
             <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-4 flex items-center gap-2">
               <Lightbulb size={15} className="text-[var(--gold)]" />
-              Principais Conclusões
+              {tr("Principais Conclusões", "Key Findings", "Conclusiones Principales")}
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]">
                 <span className="mt-1.5 h-2 w-2 rounded-full bg-emerald-400 shrink-0" />
                 <span>
-                  <span className="text-emerald-400 font-medium">Ponto forte: </span>
+                  <span className="text-emerald-400 font-medium">
+                    {tr("Ponto forte: ", "Strength: ", "Punto fuerte: ")}
+                  </span>
                   {topForca}
                 </span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]">
                 <span className="mt-1.5 h-2 w-2 rounded-full bg-amber-400 shrink-0" />
                 <span>
-                  <span className="text-amber-400 font-medium">Oportunidade: </span>
+                  <span className="text-amber-400 font-medium">
+                    {tr("Oportunidade: ", "Opportunity: ", "Oportunidad: ")}
+                  </span>
                   {topFraqueza}
                 </span>
               </li>
               <li className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]">
                 <span className="mt-1.5 h-2 w-2 rounded-full bg-blue-400 shrink-0" />
                 <span>
-                  <span className="text-blue-400 font-medium">Posição de mercado: </span>
+                  <span className="text-blue-400 font-medium">
+                    {tr("Posição de mercado: ", "Market position: ", "Posición de mercado: ")}
+                  </span>
                   {posicaoMercado}
                 </span>
               </li>

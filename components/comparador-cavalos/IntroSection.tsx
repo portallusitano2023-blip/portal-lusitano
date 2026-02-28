@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { Scale, BarChart3, Euro, ChevronRight, Sparkles, X } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { PROFILE_LABELS, SUBPROFILE_LABELS } from "./data";
 
 interface IntroSectionProps {
@@ -25,6 +27,8 @@ export default function IntroSection({
   onDismissProfile,
 }: IntroSectionProps) {
   const comp = t.comparador as Record<string, string>;
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
 
   return (
     <div className="animate-[fadeSlideIn_0.4s_ease-out_forwards]">
@@ -92,20 +96,24 @@ export default function IntroSection({
               style={{ animationDelay: "0.35s" }}
             >
               <p className="text-xs text-[var(--gold)] flex-1 text-center sm:text-left">
-                Tem uma comparação guardada de {draftDate}
+                {tr(
+                  `Tem uma comparação guardada de ${draftDate}`,
+                  `You have a saved comparison from ${draftDate}`,
+                  `Tiene una comparación guardada del ${draftDate}`
+                )}
               </p>
               <div className="flex gap-2">
                 <button
                   onClick={onRestoreDraft}
                   className="px-3 py-1.5 bg-[var(--gold)] text-black text-xs font-bold rounded-lg hover:bg-[#D4B068] transition-colors"
                 >
-                  Continuar
+                  {tr("Continuar", "Continue", "Continuar")}
                 </button>
                 <button
                   onClick={onDiscardDraft}
                   className="px-3 py-1.5 bg-transparent border border-[var(--gold)]/40 text-[var(--gold)] text-xs rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
                 >
-                  Descartar
+                  {tr("Descartar", "Discard", "Descartar")}
                 </button>
               </div>
             </div>
@@ -120,14 +128,16 @@ export default function IntroSection({
               <Sparkles size={16} className="text-[var(--gold)] shrink-0 mt-0.5" />
               <p className="text-xs text-[var(--gold)] flex-1 leading-relaxed text-left">
                 <strong>
-                  Bem-vindo, {PROFILE_LABELS[profileContext.profile] ?? profileContext.profile}
+                  {tr("Bem-vindo", "Welcome", "Bienvenido")},{" "}
+                  {PROFILE_LABELS[profileContext.profile] ?? profileContext.profile}
                   {profileContext.subProfile
                     ? ` — ${SUBPROFILE_LABELS[profileContext.subProfile] ?? profileContext.subProfile}`
                     : ""}
                 </strong>
                 <span className="text-[var(--gold)]/70">
                   {" "}
-                  · Orçamento sugerido: <strong>{profileContext.priceRange}</strong>
+                  · {tr("Orçamento sugerido", "Suggested budget", "Presupuesto sugerido")}:{" "}
+                  <strong>{profileContext.priceRange}</strong>
                 </span>
               </p>
               <button

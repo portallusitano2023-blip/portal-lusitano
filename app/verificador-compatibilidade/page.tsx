@@ -9,6 +9,7 @@ import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import {
   IntroHero,
   HorseForm,
@@ -45,7 +46,8 @@ interface ChainHorse {
 }
 
 export default function VerificadorCompatibilidadePage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
   const [garanhao, setGaranhao] = useState<Cavalo>(criarCavalo("Garanhão"));
   const [egua, setEgua] = useState<Cavalo>(criarCavalo("Égua"));
   const [tab, setTab] = useState<"garanhao" | "egua">("garanhao");
@@ -219,7 +221,13 @@ export default function VerificadorCompatibilidadePage() {
       const { generateCompatibilidadePDF } = await import("@/lib/tools/pdf/compatibilidade-pdf");
       await generateCompatibilidadePDF(garanhao, egua, resultado);
     } catch {
-      showError("Erro ao gerar PDF. Tenta novamente.");
+      showError(
+        tr(
+          "Erro ao gerar PDF. Tenta novamente.",
+          "Error generating PDF. Please try again.",
+          "Error al generar PDF. Inténtalo de nuevo."
+        )
+      );
     } finally {
       setIsExporting(false);
     }
@@ -233,7 +241,13 @@ export default function VerificadorCompatibilidadePage() {
       const shared = await shareNative(title, text, url);
       if (!shared) await copyToClipboard(url);
     } catch {
-      showError("Erro ao partilhar. Copia o link manualmente.");
+      showError(
+        tr(
+          "Erro ao partilhar. Copia o link manualmente.",
+          "Error sharing. Please copy the link manually.",
+          "Error al compartir. Copia el enlace manualmente."
+        )
+      );
     }
   };
 
@@ -258,13 +272,34 @@ export default function VerificadorCompatibilidadePage() {
           }
         );
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Erro desconhecido";
+        const msg =
+          err instanceof Error
+            ? err.message
+            : tr("Erro desconhecido", "Unknown error", "Error desconocido");
         if (msg.includes("network") || msg.includes("fetch")) {
-          showError("Erro de ligação. Verifica a tua ligação à internet e tenta novamente.");
+          showError(
+            tr(
+              "Erro de ligação. Verifica a tua ligação à internet e tenta novamente.",
+              "Connection error. Check your internet connection and try again.",
+              "Error de conexión. Verifica tu conexión a internet e inténtalo de nuevo."
+            )
+          );
         } else if (msg.includes("timeout")) {
-          showError("O cálculo demorou demasiado. Tenta com menos variáveis.");
+          showError(
+            tr(
+              "O cálculo demorou demasiado. Tenta com menos variáveis.",
+              "The calculation took too long. Try with fewer variables.",
+              "El cálculo tardó demasiado. Intenta con menos variables."
+            )
+          );
         } else {
-          showError("Não foi possível calcular a compatibilidade. Verifica os dados introduzidos.");
+          showError(
+            tr(
+              "Não foi possível calcular a compatibilidade. Verifica os dados introduzidos.",
+              "Could not calculate compatibility. Check the entered data.",
+              "No fue posible calcular la compatibilidad. Verifica los datos introducidos."
+            )
+          );
         }
       } finally {
         setIsCalculating(false);
@@ -477,13 +512,13 @@ export default function VerificadorCompatibilidadePage() {
           <div className="max-w-4xl mx-auto px-4 mb-4">
             <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-5 border border-[var(--border)]">
               <p className="text-xs text-[var(--foreground-muted)] mb-4 uppercase tracking-[0.15em] font-semibold">
-                Objetivo do Cruzamento
+                {tr("Objetivo do Cruzamento", "Breeding Objective", "Objetivo del Cruzamiento")}
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
                   {
                     id: "competicao" as const,
-                    label: "Alta Competição",
+                    label: tr("Alta Competição", "High Competition", "Alta Competición"),
                     Icon: Trophy,
                     desc: "FEI / CDI",
                     color: "text-amber-400",
@@ -492,27 +527,35 @@ export default function VerificadorCompatibilidadePage() {
                   },
                   {
                     id: "reproducao" as const,
-                    label: "Programa de Cria",
+                    label: tr("Programa de Cria", "Breeding Programme", "Programa de Cría"),
                     Icon: Dna,
-                    desc: "Melhoramento genético",
+                    desc: tr(
+                      "Melhoramento genético",
+                      "Genetic improvement",
+                      "Mejoramiento genético"
+                    ),
                     color: "text-purple-400",
                     bg: "bg-purple-500/10",
                     border: "border-purple-500/40",
                   },
                   {
                     id: "lazer" as const,
-                    label: "Lazer & Turismo",
+                    label: tr("Lazer & Turismo", "Leisure & Tourism", "Ocio & Turismo"),
                     Icon: Leaf,
-                    desc: "Temperamento & saúde",
+                    desc: tr(
+                      "Temperamento & saúde",
+                      "Temperament & health",
+                      "Temperamento & salud"
+                    ),
                     color: "text-emerald-400",
                     bg: "bg-emerald-500/10",
                     border: "border-emerald-500/40",
                   },
                   {
                     id: "show" as const,
-                    label: "Exposição / Show",
+                    label: tr("Exposição / Show", "Exhibition / Show", "Exposición / Show"),
                     Icon: Star,
-                    desc: "Morfologia & pelagem",
+                    desc: tr("Morfologia & pelagem", "Morphology & coat", "Morfología & pelaje"),
                     color: "text-pink-400",
                     bg: "bg-pink-500/10",
                     border: "border-pink-500/40",
@@ -577,10 +620,14 @@ export default function VerificadorCompatibilidadePage() {
 
       <ConfirmDialog
         open={showResetConfirm}
-        title="Nova análise?"
-        message="Os dados actuais do garanhão e da égua serão perdidos. Tens a certeza?"
-        confirmLabel="Recomeçar"
-        cancelLabel="Cancelar"
+        title={tr("Nova análise?", "New analysis?", "¿Nuevo análisis?")}
+        message={tr(
+          "Os dados actuais do garanhão e da égua serão perdidos. Tens a certeza?",
+          "Current stallion and mare data will be lost. Are you sure?",
+          "Los datos actuales del semental y la yegua se perderán. ¿Estás seguro?"
+        )}
+        confirmLabel={tr("Recomeçar", "Start over", "Reiniciar")}
+        cancelLabel={tr("Cancelar", "Cancel", "Cancelar")}
         variant="warning"
         onConfirm={() => {
           setShowResetConfirm(false);

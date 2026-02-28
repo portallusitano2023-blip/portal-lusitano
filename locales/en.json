@@ -1286,7 +1286,35 @@
     "website": "Website",
     "view_page": "View Page",
     "no_results": "No stud farms found",
-    "all_regions": "All"
+    "all_regions": "All",
+    "select_region_hint": "Select a region or click a pin on the map"
+  },
+  "cavalos_favoritos": {
+    "title": "Favorite Horses",
+    "subtitle": "The horses you've saved",
+    "empty": "You haven't saved any horses yet",
+    "empty_subtitle": "Explore the marketplace and save the horses that interest you",
+    "explore": "View Horses for Sale",
+    "clear_all": "Clear All",
+    "remove": "Remove",
+    "view": "View Details",
+    "share": "Share",
+    "years": "years",
+    "sort_recent": "Most Recent",
+    "sort_price_asc": "Price: Low",
+    "sort_price_desc": "Price: High",
+    "total": "horses saved",
+    "continue_exploring": "Continue exploring"
+  },
+  "shop_favoritos": {
+    "title": "Your Favorites",
+    "subtitle": "Pieces that caught your attention",
+    "empty": "Your wishlist is empty",
+    "empty_subtitle": "Explore our collection and save the pieces you like",
+    "explore": "Explore Collection",
+    "clear_all": "Clear All",
+    "remove": "Remove",
+    "view": "View Product"
   },
   "profissionais": {
     "badge": "Lusitano Community",

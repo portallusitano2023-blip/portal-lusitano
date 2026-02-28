@@ -39,13 +39,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     });
   } catch (error) {
     logger.error("Error fetching coudelaria:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao carregar coudelaria",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao carregar coudelaria" }, { status: 500 });
   }
 }
 
@@ -180,13 +174,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ coudelaria });
   } catch (error) {
     logger.error("Error updating coudelaria:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao atualizar coudelaria",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao atualizar coudelaria" }, { status: 500 });
   }
 }
 
@@ -214,12 +202,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     return NextResponse.json({ message: "Coudelaria eliminada com sucesso" });
   } catch (error) {
     logger.error("Error deleting coudelaria:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao eliminar coudelaria",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao eliminar coudelaria" }, { status: 500 });
   }
 }

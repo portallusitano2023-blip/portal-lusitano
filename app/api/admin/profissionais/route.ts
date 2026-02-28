@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 // GET - Listar profissionais com filtros
 export async function GET(req: NextRequest) {
@@ -37,11 +38,14 @@ export async function GET(req: NextRequest) {
       query = query.eq("plano", plano);
     }
 
-    // Pesquisa
+    // Pesquisa (sanitized to prevent PostgREST query injection)
     if (search) {
-      query = query.or(
-        `nome.ilike.%${search}%,cidade.ilike.%${search}%,especialidade.ilike.%${search}%,email.ilike.%${search}%`
-      );
+      const safe = sanitizeSearchInput(search);
+      if (safe) {
+        query = query.or(
+          `nome.ilike.%${safe}%,cidade.ilike.%${safe}%,especialidade.ilike.%${safe}%,email.ilike.%${safe}%`
+        );
+      }
     }
 
     const { data: profissionais, error, count } = await query;
@@ -78,13 +82,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Error fetching profissionais:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao carregar profissionais",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao carregar profissionais" }, { status: 500 });
   }
 }
 
@@ -132,12 +130,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ profissional }, { status: 201 });
   } catch (error) {
     logger.error("Error creating profissional:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao criar profissional",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao criar profissional" }, { status: 500 });
   }
 }

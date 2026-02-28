@@ -3,6 +3,7 @@
 import { forwardRef } from "react";
 import { ChevronRight, ChevronLeft, Sparkles, AlertTriangle, Info, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Paywall from "@/components/tools/Paywall";
@@ -45,7 +46,8 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
   },
   ref
 ) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
   const progressCompleted = Math.round((currentQuestion / questions.length) * 100);
   const question = questions[currentQuestion];
 
@@ -73,10 +75,14 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-[var(--foreground-muted)]">
-              Pergunta {currentQuestion + 1} de {questions.length}
+              {tr(
+                `Pergunta ${currentQuestion + 1} de ${questions.length}`,
+                `Question ${currentQuestion + 1} of ${questions.length}`,
+                `Pregunta ${currentQuestion + 1} de ${questions.length}`
+              )}
             </span>
             <span className="text-xs font-medium text-[#C5A059]">
-              {progressCompleted}% concluído
+              {progressCompleted}% {tr("concluído", "completed", "completado")}
             </span>
           </div>
           <div className="h-1.5 bg-[var(--background-card)]/50 rounded-full overflow-hidden">
@@ -102,13 +108,15 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             </div>
             {questions.length - currentQuestion - 1 > 0 && (
               <span className="text-[10px] text-[var(--foreground-muted)]">
-                ~{Math.ceil(((questions.length - currentQuestion - 1) * 20) / 60)} min restantes
+                ~{Math.ceil(((questions.length - currentQuestion - 1) * 20) / 60)} min{" "}
+                {tr("restantes", "remaining", "restantes")}
               </span>
             )}
           </div>
           {question?.category && (
             <p className="text-[10px] text-[var(--foreground-muted)] mt-1.5 text-center">
-              Categoria: <span className="text-[#C5A059]/80">{question.category}</span>
+              {tr("Categoria:", "Category:", "Categoría:")}{" "}
+              <span className="text-[#C5A059]/80">{question.category}</span>
             </p>
           )}
         </div>
@@ -118,7 +126,11 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
           <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-[var(--background-secondary)]/40 rounded-lg border border-[var(--border)]/50">
             <Sparkles size={12} className="text-[#C5A059] shrink-0" />
             <p className="text-xs text-[var(--foreground-muted)]">
-              Com base nas suas respostas, o seu perfil indica:{" "}
+              {tr(
+                "Com base nas suas respostas, o seu perfil indica:",
+                "Based on your answers, your profile indicates:",
+                "Según sus respuestas, su perfil indica:"
+              )}{" "}
               <span className="text-[var(--foreground)] font-semibold">{dominantProfileLabel}</span>
             </p>
           </div>
@@ -144,18 +156,18 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             <div className="flex-1 min-w-0">
               <p
                 className={`text-xs leading-relaxed ${
-                  crossValidationWarning.severity === "warning"
-                    ? "text-amber-300"
-                    : "text-blue-300"
+                  crossValidationWarning.severity === "warning" ? "text-amber-300" : "text-blue-300"
                 }`}
               >
-                <span className="font-semibold">Dica Educativa: </span>
+                <span className="font-semibold">
+                  {tr("Dica Educativa:", "Educational Tip:", "Consejo Educativo:")}{" "}
+                </span>
                 {crossValidationWarning.message}
               </p>
             </div>
             <button
               onClick={onDismissCrossWarning}
-              aria-label="Dispensar aviso"
+              aria-label={tr("Dispensar aviso", "Dismiss warning", "Descartar aviso")}
               className={`shrink-0 p-0.5 rounded transition-colors ${
                 crossValidationWarning.severity === "warning"
                   ? "text-amber-400/60 hover:text-amber-300"
@@ -181,7 +193,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
                 {question.weight >= 1.5 && (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#C5A059]/15 border border-[#C5A059]/40 rounded-full text-[10px] font-semibold text-[#C5A059] mb-3">
                     <Sparkles size={9} />
-                    Questão-Chave
+                    {tr("Questão-Chave", "Key Question", "Pregunta Clave")}
                   </span>
                 )}
                 <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-[var(--foreground)] leading-tight">
@@ -200,11 +212,31 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
                   toolName={t.analise_perfil.title_line1}
                   requiresAuth={requiresAuth}
                   proFeatures={[
-                    "Análise completa com 14 perguntas e 4 perfis",
-                    "Sub-perfil especializado (Elite FEI, Trabalho, etc.)",
-                    "Percentagem de confiança no resultado",
-                    "Guia de cavalos recomendados por perfil",
-                    "Plano de custos e timeline personalizada",
+                    tr(
+                      "Análise completa com 14 perguntas e 4 perfis",
+                      "Full analysis with 14 questions and 4 profiles",
+                      "Análisis completo con 14 preguntas y 4 perfiles"
+                    ),
+                    tr(
+                      "Sub-perfil especializado (Elite FEI, Trabalho, etc.)",
+                      "Specialised sub-profile (FEI Elite, Working Eq., etc.)",
+                      "Sub-perfil especializado (Elite FEI, Trabajo, etc.)"
+                    ),
+                    tr(
+                      "Percentagem de confiança no resultado",
+                      "Confidence percentage in results",
+                      "Porcentaje de confianza en el resultado"
+                    ),
+                    tr(
+                      "Guia de cavalos recomendados por perfil",
+                      "Recommended horses guide by profile",
+                      "Guía de caballos recomendados por perfil"
+                    ),
+                    tr(
+                      "Plano de custos e timeline personalizada",
+                      "Personalised cost plan and timeline",
+                      "Plan de costes y cronograma personalizado"
+                    ),
                   ]}
                 />
               </div>

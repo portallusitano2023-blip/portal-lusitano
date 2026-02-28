@@ -121,13 +121,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Error executing automation:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao executar automação",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao executar automação" }, { status: 500 });
   }
 }
 

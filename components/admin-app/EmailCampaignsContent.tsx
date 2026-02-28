@@ -15,7 +15,7 @@ import {
   Clock,
   XCircle,
 } from "lucide-react";
-import { useToast } from "@/components/ui/Toast";
+import { useToast } from "@/context/ToastContext";
 
 interface EmailCampaign {
   id: string;

@@ -15,43 +15,9 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useWishlist } from "@/context/WishlistContext";
 
 export default function FavoritosPage() {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
   const { wishlist, removeFromWishlist, clearWishlist } = useWishlist();
-
-  const text = {
-    pt: {
-      title: "Os Seus Favoritos",
-      subtitle: "Pecas que capturaram a sua atencao",
-      empty: "A sua lista de favoritos esta vazia",
-      emptySubtitle: "Explore a nossa colecao e guarde as pecas que mais gosta",
-      explore: "Explorar Colecao",
-      clearAll: "Limpar Tudo",
-      remove: "Remover",
-      view: "Ver Produto",
-    },
-    en: {
-      title: "Your Favorites",
-      subtitle: "Pieces that caught your attention",
-      empty: "Your wishlist is empty",
-      emptySubtitle: "Explore our collection and save the pieces you like",
-      explore: "Explore Collection",
-      clearAll: "Clear All",
-      remove: "Remove",
-      view: "View Product",
-    },
-    es: {
-      title: "Sus Favoritos",
-      subtitle: "Piezas que captaron su atencion",
-      empty: "Su lista de favoritos esta vacia",
-      emptySubtitle: "Explore nuestra coleccion y guarde las piezas que mas le gusten",
-      explore: "Explorar Coleccion",
-      clearAll: "Limpiar Todo",
-      remove: "Eliminar",
-      view: "Ver Producto",
-    },
-  };
-
-  const t = text[language];
+  const txt = t.shop_favoritos;
 
   return (
     <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
@@ -62,16 +28,16 @@ export default function FavoritosPage() {
             <Heart className="text-[var(--gold)]" size={32} />
           </div>
           <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
-            {t.title}
+            {txt.title}
           </h1>
-          <p className="text-[var(--foreground-secondary)] font-serif italic">{t.subtitle}</p>
+          <p className="text-[var(--foreground-secondary)] font-serif italic">{txt.subtitle}</p>
 
           {wishlist.length > 0 && (
             <button
               onClick={clearWishlist}
               className="mt-6 text-xs uppercase tracking-widest text-[var(--foreground-muted)] hover:text-red-500 transition-colors"
             >
-              {t.clearAll}
+              {txt.clear_all}
             </button>
           )}
         </div>
@@ -82,13 +48,13 @@ export default function FavoritosPage() {
             style={{ animationDelay: "0.2s" }}
           >
             <Heart className="text-[var(--foreground-muted)] mx-auto mb-6" size={64} />
-            <h2 className="text-2xl font-serif text-[var(--foreground)] mb-3">{t.empty}</h2>
-            <p className="text-[var(--foreground-muted)] mb-8">{t.emptySubtitle}</p>
+            <h2 className="text-2xl font-serif text-[var(--foreground)] mb-3">{txt.empty}</h2>
+            <p className="text-[var(--foreground-muted)] mb-8">{txt.empty_subtitle}</p>
             <Link
               href="/loja"
               className="inline-block bg-[var(--gold)] text-black px-8 py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-[var(--gold-hover)] transition-colors"
             >
-              {t.explore}
+              {txt.explore}
             </Link>
           </div>
         ) : (
@@ -131,7 +97,7 @@ export default function FavoritosPage() {
                       href={`/loja/${item.handle}`}
                       className="flex-1 bg-[var(--gold)] text-black py-3 text-xs uppercase tracking-widest font-bold hover:bg-[var(--gold-hover)] transition-colors text-center"
                     >
-                      {t.view}
+                      {txt.view}
                     </Link>
                     <button
                       onClick={() => removeFromWishlist(item.id)}
