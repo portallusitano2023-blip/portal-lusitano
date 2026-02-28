@@ -141,9 +141,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Bulk operation error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao executar ação em massa" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao executar ação em massa" }, { status: 500 });
   }
 }

@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
 ```
 
 **Automações que podem ser disparadas:**
+
 - Email de boas-vindas
 - Criar tarefa de follow-up
 - Notificar admin de novo lead
@@ -97,6 +98,7 @@ export async function POST(req: NextRequest) {
 ```
 
 **Automações que podem ser disparadas:**
+
 - Email de confirmação de pagamento
 - Criar tarefa de follow-up 24h depois
 - Desbloquear acesso premium
@@ -146,6 +148,7 @@ export async function POST(req: NextRequest) {
 ```
 
 **Automações que podem ser disparadas:**
+
 - Notificar admin de nova review pendente
 - Auto-aprovar reviews de 5 estrelas
 - Email de agradecimento ao reviewer
@@ -199,6 +202,7 @@ export async function POST(req: NextRequest) {
 ```
 
 **Automações que podem ser disparadas:**
+
 - Notificar admin de novo cavalo
 - Publicar automaticamente em redes sociais
 - Enviar email para leads interessados
@@ -256,6 +260,7 @@ export async function POST(req: NextRequest) {
 ### 1. Workflow de Novos Leads
 
 **Automação 1: Email Imediato**
+
 ```json
 {
   "name": "Boas-vindas Imediatas",
@@ -270,6 +275,7 @@ export async function POST(req: NextRequest) {
 ```
 
 **Automação 2: Follow-up 24h**
+
 ```json
 {
   "name": "Follow-up 24h",
@@ -286,6 +292,7 @@ export async function POST(req: NextRequest) {
 ### 2. Workflow de Pagamentos
 
 **Automação 1: Confirmação**
+
 ```json
 {
   "name": "Confirmação de Pagamento",
@@ -300,6 +307,7 @@ export async function POST(req: NextRequest) {
 ```
 
 **Automação 2: Follow-up Qualidade**
+
 ```json
 {
   "name": "Pedir Feedback",
@@ -319,6 +327,7 @@ export async function POST(req: NextRequest) {
 ### 3. Workflow de Reviews
 
 **Automação 1: Notificar Admin**
+
 ```json
 {
   "name": "Alerta de Nova Review",
@@ -333,6 +342,7 @@ export async function POST(req: NextRequest) {
 ```
 
 **Automação 2: Auto-Aprovar 5 Estrelas**
+
 ```json
 {
   "name": "Auto-Aprovar Excelentes",
@@ -351,6 +361,7 @@ export async function POST(req: NextRequest) {
 ## Boas Práticas
 
 ### 1. Always Await
+
 ```typescript
 // ✅ CORRETO
 await triggerAutomations("lead_created", data);
@@ -360,6 +371,7 @@ triggerAutomations("lead_created", data);
 ```
 
 ### 2. Dados Completos
+
 ```typescript
 // ✅ CORRETO - Dados completos
 await triggerAutomations("payment_succeeded", {
@@ -377,6 +389,7 @@ await triggerAutomations("payment_succeeded", {
 ```
 
 ### 3. Error Handling
+
 ```typescript
 try {
   await triggerAutomations("lead_created", data);
@@ -387,6 +400,7 @@ try {
 ```
 
 ### 4. Logging
+
 ```typescript
 console.log("Triggering automations:", {
   type: "lead_created",
@@ -401,6 +415,7 @@ await triggerAutomations("lead_created", data);
 ## Testing
 
 ### 1. Criar Lead de Teste
+
 ```bash
 curl -X POST http://localhost:3000/api/admin/crm \
   -H "Content-Type: application/json" \
@@ -413,6 +428,7 @@ curl -X POST http://localhost:3000/api/admin/crm \
 ```
 
 ### 2. Verificar Logs
+
 ```sql
 SELECT * FROM admin_automation_logs
 ORDER BY executed_at DESC
@@ -420,6 +436,7 @@ LIMIT 10;
 ```
 
 ### 3. Verificar Estatísticas
+
 ```sql
 SELECT
   name,
@@ -436,17 +453,20 @@ WHERE enabled = true;
 ## Troubleshooting
 
 ### Automação não dispara
+
 1. Verificar se `triggerAutomations()` é chamado
 2. Verificar se automação está `enabled: true`
 3. Verificar se `trigger_conditions` correspondem
 4. Ver logs: `admin_automation_logs`
 
 ### Email não envia
+
 1. Verificar `RESEND_API_KEY`
 2. Verificar formato de email
 3. Ver logs no dashboard da Resend
 
 ### Performance Issues
+
 1. Usar `delay_minutes` para ações não-urgentes
 2. Implementar job queue para alto volume
 3. Adicionar rate limiting

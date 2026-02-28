@@ -17,7 +17,7 @@ const config: Config = {
       },
       colors: {
         gold: {
-          500: "#D9A520", // Ouro Clássico
+          500: "#C5A059", // Alinhado com CSS var(--gold)
           600: "#B8860B", // Ouro Escuro
         },
       },

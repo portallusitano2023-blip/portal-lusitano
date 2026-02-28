@@ -40,10 +40,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ message: data });
   } catch (error) {
     logger.error("Message get error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar mensagem" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao buscar mensagem" }, { status: 500 });
   }
 }
 
@@ -102,10 +99,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ message: data });
   } catch (error) {
     logger.error("Message update error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao atualizar mensagem" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao atualizar mensagem" }, { status: 500 });
   }
 }
 
@@ -136,9 +130,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     return NextResponse.json({ success: true });
   } catch (error) {
     logger.error("Message delete error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao eliminar mensagem" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao eliminar mensagem" }, { status: 500 });
   }
 }

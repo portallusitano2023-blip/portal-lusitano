@@ -110,9 +110,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Transactions fetch error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar transações" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao buscar transações" }, { status: 500 });
   }
 }

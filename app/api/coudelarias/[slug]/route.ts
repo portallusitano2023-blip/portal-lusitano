@@ -29,7 +29,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .from("coudelarias")
       .update({ views_count: (coudelaria.views_count || 0) + 1 })
       .eq("id", coudelaria.id)
-      .then(() => {});
+      .then(({ error: updateErr }) => {
+        if (updateErr) logger.error("Failed to increment coudelaria views:", updateErr);
+      });
 
     const response = NextResponse.json({ coudelaria });
     response.headers.set(

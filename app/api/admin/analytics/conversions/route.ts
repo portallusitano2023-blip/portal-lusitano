@@ -187,9 +187,6 @@ export async function GET(_req: NextRequest) {
     });
   } catch (error) {
     logger.error("Conversions analytics error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar analytics de conversões" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao buscar analytics de conversões" }, { status: 500 });
   }
 }

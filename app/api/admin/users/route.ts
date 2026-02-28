@@ -37,10 +37,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ users: users || [], total: count || 0 });
   } catch (error) {
     logger.error("Users list error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao listar utilizadores" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao listar utilizadores" }, { status: 500 });
   }
 }
 
@@ -96,9 +93,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ user, message: "Utilizador criado com sucesso" });
   } catch (error) {
     logger.error("User creation error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao criar utilizador" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao criar utilizador" }, { status: 500 });
   }
 }

@@ -70,10 +70,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     logger.error("AI API error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao processar pedido de IA" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao processar pedido de IA" }, { status: 500 });
   }
 }
 

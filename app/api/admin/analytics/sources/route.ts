@@ -174,9 +174,6 @@ export async function GET(_req: NextRequest) {
     });
   } catch (error) {
     logger.error("Sources analytics error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar analytics de fontes" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao buscar analytics de fontes" }, { status: 500 });
   }
 }

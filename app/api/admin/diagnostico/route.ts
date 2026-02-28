@@ -40,13 +40,12 @@ export async function GET(_req: NextRequest) {
 
     diagnostico.checks.supabase_conexao = {
       status: error ? "❌ ERRO" : "✅ OK",
-      message: error ? error.message : "Conexão com Supabase OK",
-      error: error || null,
+      message: error ? "Falha na conexão com Supabase" : "Conexão com Supabase OK",
     };
-  } catch (error) {
+  } catch {
     diagnostico.checks.supabase_conexao = {
       status: "❌ ERRO",
-      message: error instanceof Error ? error.message : "Erro desconhecido",
+      message: "Falha na conexão com Supabase",
     };
   }
 
@@ -59,12 +58,11 @@ export async function GET(_req: NextRequest) {
     diagnostico.checks.tabela_payments = {
       status: error ? "❌ NÃO EXISTE ou SEM PERMISSÃO" : "✅ EXISTE",
       total_registos: count || 0,
-      error: error || null,
     };
-  } catch (error) {
+  } catch {
     diagnostico.checks.tabela_payments = {
       status: "❌ ERRO",
-      message: error instanceof Error ? error.message : "Erro desconhecido",
+      message: "Falha ao verificar tabela payments",
     };
   }
 
@@ -77,12 +75,11 @@ export async function GET(_req: NextRequest) {
     diagnostico.checks.tabela_contact_submissions = {
       status: error ? "❌ NÃO EXISTE ou SEM PERMISSÃO" : "✅ EXISTE",
       total_registos: count || 0,
-      error: error || null,
     };
-  } catch (error) {
+  } catch {
     diagnostico.checks.tabela_contact_submissions = {
       status: "❌ ERRO",
-      message: error instanceof Error ? error.message : "Erro desconhecido",
+      message: "Falha ao verificar tabela contact_submissions",
     };
   }
 
@@ -95,12 +92,11 @@ export async function GET(_req: NextRequest) {
     diagnostico.checks.tabela_leads = {
       status: error ? "❌ NÃO EXISTE ou SEM PERMISSÃO" : "✅ EXISTE",
       total_registos: count || 0,
-      error: error || null,
     };
-  } catch (error) {
+  } catch {
     diagnostico.checks.tabela_leads = {
       status: "❌ ERRO",
-      message: error instanceof Error ? error.message : "Erro desconhecido",
+      message: "Falha ao verificar tabela leads",
     };
   }
 

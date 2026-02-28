@@ -5,6 +5,7 @@
 ### Ebooks PAGOS (Planos PRO)
 
 **OBRIGATÓRIO:**
+
 - Todo o conteúdo deve ser **100% ORIGINAL**
 - Escrito do zero com palavras próprias
 - **NUNCA copiar** texto de outros sites
@@ -12,6 +13,7 @@
 - Mesmo com fontes citadas - citar não dá direito a copiar para vender
 
 **PERMITIDO:**
+
 - Usar **factos públicos** (datas, estatísticas, características)
 - **Pesquisar** informação em várias fontes
 - **Reescrever tudo** nas próprias palavras
@@ -19,6 +21,7 @@
 - Adicionar valor único (guias práticos, experiências, entrevistas)
 
 **PROCESSO CORRETO:**
+
 1. Pesquisar a informação em várias fontes
 2. Aprender e compreender o conteúdo
 3. Fechar as fontes
@@ -38,6 +41,7 @@
 ## RAZÃO
 
 Copiar conteúdo de outros sites e vender é:
+
 - Plágio
 - Violação de direitos de autor
 - Ilegal quando há lucro envolvido
@@ -51,5 +55,5 @@ Copiar conteúdo de outros sites e vender é:
 
 ---
 
-*Documento criado em: Fevereiro 2026*
-*Última atualização: Fevereiro 2026*
+_Documento criado em: Fevereiro 2026_
+_Última atualização: Fevereiro 2026_

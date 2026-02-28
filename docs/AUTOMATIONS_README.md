@@ -7,6 +7,7 @@ Sistema completo de automações com triggers e ações configuráveis.
 ### Database Tables
 
 #### `admin_automations`
+
 Tabela principal que armazena as automações configuradas.
 
 ```sql
@@ -30,6 +31,7 @@ Tabela principal que armazena as automações configuradas.
 ```
 
 #### `admin_automation_logs`
+
 Tabela de logs de execução das automações.
 
 ```sql
@@ -46,14 +48,17 @@ Tabela de logs de execução das automações.
 ### API Routes
 
 #### `GET /api/admin/automations`
+
 Lista todas as automações com filtros opcionais.
 
 **Query Parameters:**
+
 - `enabled`: 'true' | 'false' | null (default: todas)
 - `trigger_type`: string (default: 'all')
 - `action_type`: string (default: 'all')
 
 **Response:**
+
 ```json
 {
   "automations": [...],
@@ -70,15 +75,17 @@ Lista todas as automações com filtros opcionais.
 ```
 
 #### `POST /api/admin/automations`
+
 Criar nova automação.
 
 **Body:**
+
 ```json
 {
   "name": "Boas-vindas a novos leads",
   "description": "Enviar email automático",
   "trigger_type": "lead_created",
-  "trigger_conditions": {"email_contains": "@gmail.com"},
+  "trigger_conditions": { "email_contains": "@gmail.com" },
   "action_type": "send_email",
   "action_config": {
     "template": "welcome",
@@ -90,9 +97,11 @@ Criar nova automação.
 ```
 
 #### `PUT /api/admin/automations`
+
 Atualizar automação existente.
 
 **Body:**
+
 ```json
 {
   "id": "uuid",
@@ -101,12 +110,15 @@ Atualizar automação existente.
 ```
 
 #### `DELETE /api/admin/automations?id=UUID`
+
 Apagar automação.
 
 #### `POST /api/admin/automations/execute`
+
 Executar automação manualmente ou via trigger.
 
 **Body:**
+
 ```json
 {
   "automation_id": "uuid",
@@ -118,6 +130,7 @@ Executar automação manualmente ou via trigger.
 ```
 
 #### `GET /api/admin/automations/logs?automation_id=UUID&limit=10`
+
 Listar logs de uma automação específica.
 
 ---
@@ -125,9 +138,11 @@ Listar logs de uma automação específica.
 ## Trigger Types
 
 ### 1. `lead_created`
+
 Disparado quando um novo lead se regista.
 
 **Trigger Data:**
+
 ```json
 {
   "email": "user@example.com",
@@ -137,6 +152,7 @@ Disparado quando um novo lead se regista.
 ```
 
 **Exemplo de Condições:**
+
 ```json
 {
   "email_contains": "@gmail.com"
@@ -144,9 +160,11 @@ Disparado quando um novo lead se regista.
 ```
 
 ### 2. `payment_succeeded`
+
 Disparado após pagamento bem-sucedido.
 
 **Trigger Data:**
+
 ```json
 {
   "email": "user@example.com",
@@ -157,6 +175,7 @@ Disparado após pagamento bem-sucedido.
 ```
 
 **Exemplo de Condições:**
+
 ```json
 {
   "amount_min": 5000,
@@ -165,9 +184,11 @@ Disparado após pagamento bem-sucedido.
 ```
 
 ### 3. `review_submitted`
+
 Disparado quando uma nova review é submetida.
 
 **Trigger Data:**
+
 ```json
 {
   "review_id": "uuid",
@@ -177,9 +198,11 @@ Disparado quando uma nova review é submetida.
 ```
 
 ### 4. `cavalo_created`
+
 Disparado quando um novo cavalo é adicionado.
 
 **Trigger Data:**
+
 ```json
 {
   "cavalo_id": "uuid",
@@ -189,6 +212,7 @@ Disparado quando um novo cavalo é adicionado.
 ```
 
 ### 5. `time_based`
+
 Execução agendada (diária, semanal, etc.)
 
 **Nota:** Requer implementação de cron job ou job queue.
@@ -198,9 +222,11 @@ Execução agendada (diária, semanal, etc.)
 ## Action Types
 
 ### 1. `send_email`
+
 Envia email via Resend.
 
 **Action Config:**
+
 ```json
 {
   "to": "user@example.com",
@@ -210,13 +236,16 @@ Envia email via Resend.
 ```
 
 **Templates Disponíveis:**
+
 - `welcome`: Email de boas-vindas
 - `default`: Email genérico
 
 ### 2. `create_task`
+
 Cria tarefa na tabela `admin_tasks`.
 
 **Action Config:**
+
 ```json
 {
   "title": "Follow-up com cliente",
@@ -227,9 +256,11 @@ Cria tarefa na tabela `admin_tasks`.
 ```
 
 ### 3. `update_field`
+
 Atualiza um campo numa tabela.
 
 **Action Config:**
+
 ```json
 {
   "table": "reviews",
@@ -240,9 +271,11 @@ Atualiza um campo numa tabela.
 ```
 
 ### 4. `approve_review`
+
 Aprova review automaticamente.
 
 **Action Config:**
+
 ```json
 {
   "review_id": "uuid"
@@ -250,9 +283,11 @@ Aprova review automaticamente.
 ```
 
 ### 5. `send_notification`
+
 Cria notificação/tarefa para o admin.
 
 **Action Config:**
+
 ```json
 {
   "title": "Nova Review Pendente",
@@ -276,6 +311,7 @@ import { triggerAutomations } from "@/lib/automations";
 ### 2. Chamar após eventos relevantes
 
 #### Exemplo: Nova Lead Criada
+
 ```typescript
 // Em /api/crm/route.ts
 const { data: lead, error } = await supabase
@@ -294,6 +330,7 @@ if (lead) {
 ```
 
 #### Exemplo: Pagamento Bem-Sucedido
+
 ```typescript
 // Em /api/webhooks/stripe/route.ts
 if (event.type === "payment_intent.succeeded") {
@@ -306,6 +343,7 @@ if (event.type === "payment_intent.succeeded") {
 ```
 
 #### Exemplo: Review Submetida
+
 ```typescript
 // Em /api/reviews/route.ts
 const { data: review, error } = await supabase
@@ -324,6 +362,7 @@ if (review) {
 ```
 
 #### Exemplo: Cavalo Criado
+
 ```typescript
 // Em /api/admin/cavalos/route.ts
 const { data: cavalo, error } = await supabase
@@ -346,6 +385,7 @@ if (cavalo) {
 ## Exemplos de Automações Úteis
 
 ### 1. Email de Boas-Vindas
+
 ```json
 {
   "name": "Email de Boas-Vindas",
@@ -360,6 +400,7 @@ if (cavalo) {
 ```
 
 ### 2. Follow-up 24h Após Pagamento
+
 ```json
 {
   "name": "Follow-up Pós-Pagamento",
@@ -375,6 +416,7 @@ if (cavalo) {
 ```
 
 ### 3. Notificação de Nova Review
+
 ```json
 {
   "name": "Alerta de Nova Review",
@@ -390,6 +432,7 @@ if (cavalo) {
 ```
 
 ### 4. Auto-Aprovar Reviews 5 Estrelas
+
 ```json
 {
   "name": "Auto-Aprovar Reviews Excelentes",
@@ -410,6 +453,7 @@ if (cavalo) {
 Interface completa para gestão de automações no admin:
 
 ### Features:
+
 - Lista de automações com filtros (status, trigger, action)
 - Pesquisa por nome/descrição
 - Cards com estatísticas (total, ativas, execuções, taxa de sucesso)
@@ -424,6 +468,7 @@ Interface completa para gestão de automações no admin:
 - Visual feedback com toast notifications
 
 ### Atalhos de Teclado:
+
 - **Criar Nova:** Botão "Nova Automação"
 - **Filtros:** Dropdowns de Status, Trigger e Action
 - **Pesquisa:** Campo de texto com ícone de lupa
@@ -433,11 +478,13 @@ Interface completa para gestão de automações no admin:
 ## Migração SQL
 
 Executar o ficheiro:
+
 ```bash
 supabase/migrations/20260207000001_automations.sql
 ```
 
 Este ficheiro cria:
+
 - Tabela `admin_automations`
 - Tabela `admin_automation_logs`
 - Índices para performance
@@ -465,17 +512,20 @@ Este ficheiro cria:
 ## Troubleshooting
 
 ### Automação não executa
+
 1. Verificar se está `enabled: true`
 2. Verificar se as `trigger_conditions` correspondem aos dados
 3. Verificar logs na tabela `admin_automation_logs`
 4. Verificar `last_error` na tabela `admin_automations`
 
 ### Email não envia
+
 1. Verificar se `RESEND_API_KEY` está configurada
 2. Verificar formato do email no `action_config.to`
 3. Verificar logs de erro no Resend dashboard
 
 ### Tarefa não é criada
+
 1. Verificar se tabela `admin_tasks` existe
 2. Verificar permissões RLS
 3. Verificar formato do `action_config`

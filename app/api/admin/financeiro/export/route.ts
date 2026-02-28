@@ -112,9 +112,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("CSV export error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao exportar CSV" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao exportar CSV" }, { status: 500 });
   }
 }

@@ -3,6 +3,7 @@
 ## Conteúdo que Podes Criar Remotamente (SEM Vídeos)
 
 ### 🎯 Objetivo
+
 Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente digital, que podes produzir à distância sem necessidade de acesso físico a cavalos ou filmagens.
 
 ---
@@ -10,6 +11,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 📖 1. EBOOKS (50+ Títulos Sugeridos)
 
 ### Categoria: Criação e Linhagens
+
 1. **Guia Completo do Cavalo Lusitano** (150 páginas)
    - História e origem
    - Características da raça
@@ -36,6 +38,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
    - Cuidados com potros
 
 ### Categoria: Treino e Doma
+
 6. **Fundamentos do Treino do Lusitano**
 7. **Doma Clássica: Teoria e Princípios**
 8. **Exercícios de Base para Cavalos Jovens**
@@ -43,6 +46,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 10. **Alta Escola: História e Movimentos**
 
 ### Categoria: Saúde e Bem-Estar
+
 11. **Manual de Primeiros Socorros Equinos**
 12. **Nutrição do Cavalo Lusitano**
 13. **Plano Anual de Desparasitações e Vacinas**
@@ -50,6 +54,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 15. **Dentisteria Equina Explicada**
 
 ### Categoria: Gestão de Coudelaria
+
 16. **Como Montar uma Coudelaria do Zero**
 17. **Gestão Financeira de Coudelarias**
 18. **Marketing Digital para Criadores**
@@ -57,6 +62,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 20. **Contratos e Documentação Legal**
 
 ### Categoria: Competição
+
 21. **Guia de Morfologia e Concursos**
 22. **Preparação para Leilões**
 23. **Working Equitation: Regras e Preparação**
@@ -68,6 +74,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 📄 2. TEMPLATES E DOCUMENTOS (30+ Templates)
 
 ### Gestão de Coudelaria
+
 - **Planner Anual de Coudelaria** (Excel/PDF)
 - **Ficha Individual de Cavalo** (editável)
 - **Registo de Treinos Semanal**
@@ -77,6 +84,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 - **Budget Mensal de Coudelaria**
 
 ### Documentação Legal
+
 - **Contrato de Compra e Venda** (Portugal)
 - **Contrato de Comodato**
 - **Acordo de Monta**
@@ -84,6 +92,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 - **Contrato de Pensão**
 
 ### Marketing e Vendas
+
 - **Template de Anúncio de Venda**
 - **Catálogo de Cavalos (InDesign/Canva)**
 - **Flyer de Coudelaria**
@@ -91,6 +100,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 - **Kit de Imprensa Digital**
 
 ### Clínico e Saúde
+
 - **Ficha Clínica Completa**
 - **Registo de Medicações**
 - **Protocolo de Desparasitação**
@@ -101,6 +111,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 📊 3. INFOGRÁFICOS (20+ Designs)
 
 ### Visuais Educativos
+
 1. **Anatomia do Cavalo Lusitano** (poster A3)
 2. **Pelagens e Cores** (guia visual)
 3. **Pontos de Morfologia** (avaliação)
@@ -132,6 +143,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 📅 5. PLANNERS E ORGANIZADORES
 
 ### Planner Anual Completo (365 dias)
+
 - Calendário de reprodução
 - Datas de vacinas e desparasitações
 - Agenda de ferrador
@@ -142,12 +154,14 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 - Notas e observações
 
 ### Planner Semanal de Treino
+
 - Segunda a Domingo
 - Exercícios por cavalo
 - Objetivos da semana
 - Reflexões e progressos
 
 ### Planner de Gestação e Parto
+
 - Semana a semana (11 meses)
 - Checklist de preparação
 - Registo de sinais
@@ -158,6 +172,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 🎓 6. GUIAS TÉCNICOS ESPECIALIZADOS
 
 ### Séries de Mini-Guias (20-30 páginas cada)
+
 1. **Fotografia de Cavalos para Venda**
 2. **Redes Sociais para Coudelarias**
 3. **Como Escrever Anúncios Atrativos**
@@ -174,6 +189,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 📧 7. CONSULTORIA POR EMAIL/CHAT
 
 ### Serviços de Consultoria Remota
+
 - **Análise de Linhagens** (enviam pedigree, tu analisas)
 - **Revisão de Contratos** (documentos legais)
 - **Plano de Acasalamento** (sugestões de cruzamentos)
@@ -187,6 +203,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 🏆 8. CERTIFICADOS DIGITAIS
 
 ### Certificações de Conclusão
+
 - Design profissional em PDF
 - Numeração única
 - Verificável online
@@ -194,6 +211,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 - Data de conclusão
 
 ### Cursos para Certificar
+
 1. **Especialista em Linhagens Lusitanas**
 2. **Gestor de Coudelaria Certificado**
 3. **Criador Responsável**
@@ -205,6 +223,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 💬 9. COMUNIDADE ONLINE
 
 ### Fórum Privado (Plataforma)
+
 - Discord ou Slack
 - Canais por tópico
 - Sessions de Q&A semanais (por chat)
@@ -212,6 +231,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 - Partilha de experiências
 
 ### Newsletter Semanal Premium
+
 - Notícias do sector
 - Dica da semana
 - Spotlight em linhagem
@@ -223,6 +243,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 📚 10. BIBLIOTECA DE RECURSOS
 
 ### Base de Conhecimento
+
 - **Glossário Lusitano** (500+ termos)
 - **Diretório de Coudelarias** (Portugal e mundo)
 - **Calendário de Eventos** (atualizado)
@@ -235,6 +256,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 🎨 FORMATO DOS CONTEÚDOS
 
 ### Ebooks
+
 - **PDF profissional** (A4, design clean)
 - **ePub** (para eReaders)
 - **Índice clicável**
@@ -242,12 +264,14 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 - **Bibliografia e fontes**
 
 ### Templates
+
 - **PDF editável** (formulários)
 - **Excel/Google Sheets** (calculadoras)
 - **Word/Google Docs** (contratos)
 - **Canva** (designs visuais)
 
 ### Infográficos
+
 - **PNG alta resolução** (imprimível)
 - **PDF** (partilhável)
 - **Versão mobile** (otimizada)
@@ -257,21 +281,25 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 📈 PLANO DE PRODUÇÃO
 
 ### Mês 1-2: Fundação (10 Ebooks + 10 Templates)
+
 - Ebooks essenciais (Guia Completo, Linhagens, Saúde)
 - Templates mais pedidos (Contratos, Fichas, Planners)
 - Infográficos básicos (Anatomia, Pelagens)
 
 ### Mês 3-4: Expansão (15 Ebooks + 10 Templates)
+
 - Tópicos especializados (Genética, Nutrição, Treino)
 - Templates avançados (Marketing, Gestão Financeira)
 - Checklists completas
 
 ### Mês 5-6: Especialização (25 Ebooks + 10 Templates)
+
 - Mini-guias temáticos
 - Consultoria estruturada
 - Certificações lançadas
 
 ### Mês 7+: Manutenção e Atualizações
+
 - 2-3 novos ebooks por mês
 - Atualizações de legislação
 - Novos templates conforme pedidos
@@ -282,12 +310,14 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ## 💰 VALOR PERCEBIDO
 
 ### Comparação com Mercado
+
 - **1 Ebook profissional**: €15-30
 - **Pack de Templates**: €50-100
 - **Consultoria 1h**: €80-150
 - **Certificação online**: €200-500
 
 ### Teu Valor PRO
+
 - **Aficionado (€9.99)**: 5 ebooks/mês = €75-150 valor
 - **Criador (€49.99)**: Biblioteca completa + templates = €500+ valor
 - **Elite (€199)**: Tudo + consultoria ilimitada = €1000+ valor
@@ -322,6 +352,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 ---
 
 **IMPORTANTE**: Todo este conteúdo pode ser criado **100% remotamente** usando:
+
 - Pesquisa online
 - Tua expertise e conhecimento
 - Canva/Adobe para designs
@@ -330,6 +361,7 @@ Criar uma biblioteca completa de conhecimento sobre Cavalos Lusitanos totalmente
 - Fotos de stock (ou banco de imagens de cavalos lusitanos)
 
 **Não precisas de**:
+
 - Filmar vídeos
 - Ter acesso físico a cavalos
 - Fazer demonstrações ao vivo

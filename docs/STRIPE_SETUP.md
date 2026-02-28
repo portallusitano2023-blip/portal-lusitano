@@ -50,7 +50,7 @@ Descrição: Para quem ama o Lusitano e quer aprender mais
    - Frequência: Monthly
    - Clicar "Add price"
    - **Copiar o Price ID** (começa com `price_...`)
-v
+     v
 2. **Preço Anual**:
    - Clicar "Add another price"
    - Preço: €99.90
@@ -65,6 +65,7 @@ Descrição: Para criadores e profissionais do sector
 ```
 
 **Preços:**
+
 - Mensal: €49.99
 - Anual: €499.90
 
@@ -76,6 +77,7 @@ Descrição: Acesso total + suporte personalizado
 ```
 
 **Preços:**
+
 - Mensal: €199.00
 - Anual: €1990.00
 
@@ -103,6 +105,7 @@ Para **desenvolvimento local**, vais usar o Stripe CLI.
 #### Instalar Stripe CLI:
 
 **Windows:**
+
 ```bash
 # Baixar de: https://github.com/stripe/stripe-cli/releases
 # Ou usar scoop:
@@ -110,21 +113,25 @@ scoop install stripe
 ```
 
 **Mac/Linux:**
+
 ```bash
 brew install stripe/stripe-cli/stripe
 ```
 
 #### Fazer Login:
+
 ```bash
 stripe login
 ```
 
 #### Forward webhooks para localhost:
+
 ```bash
 stripe listen --forward-to localhost:3000/api/stripe/webhook
 ```
 
 Este comando vai mostrar:
+
 ```
 > Ready! Your webhook signing secret is whsec_XXXXXXXXXXXX
 ```
@@ -200,19 +207,23 @@ Número: 4000 0027 6000 3184
 ## 🔍 TROUBLESHOOTING
 
 ### Erro: "Plano inválido"
+
 - ✅ Verificar se os Price IDs no `.env.local` estão corretos
 - ✅ Verificar se não há espaços extra nas variáveis
 
 ### Erro: "Stripe not configured"
+
 - ✅ Verificar se `STRIPE_SECRET_KEY` está no `.env.local`
 - ✅ Reiniciar o servidor (`npm run dev`)
 
 ### Checkout não redireciona
+
 - ✅ Abrir console do browser (F12)
 - ✅ Ver se há erros na aba "Console"
 - ✅ Ver se a chamada a `/api/stripe/checkout` retorna erro
 
 ### Email não chega após pagamento
+
 - ✅ Verificar se `RESEND_API_KEY` está configurado
 - ✅ Verificar se Stripe CLI está a correr (`stripe listen`)
 - ✅ Ver logs do webhook no terminal do Stripe CLI
@@ -233,22 +244,27 @@ Número: 4000 0027 6000 3184
 Quando estiveres pronto para aceitar pagamentos reais:
 
 ### 1. Ativar Conta Stripe
+
 - Preencher informações da empresa
 - Adicionar conta bancária
 - Verificar identidade
 
 ### 2. Mudar para Modo Live
+
 - Toggle no Dashboard: "Test mode" → "Live mode"
 
 ### 3. Obter Chaves de Produção
+
 - Copiar as chaves **LIVE** (começam com `pk_live_` e `sk_live_`)
 - Atualizar `.env.local` (ou `.env.production`)
 
 ### 4. Criar Produtos em Live Mode
+
 - Recriar os 3 produtos em modo live
 - Copiar os novos Price IDs (live)
 
 ### 5. Configurar Webhook de Produção
+
 - Dashboard > Developers > Webhooks
 - "Add endpoint"
 - URL: `https://portal-lusitano.pt/api/stripe/webhook`
@@ -261,6 +277,7 @@ Quando estiveres pronto para aceitar pagamentos reais:
 - Copiar **Webhook signing secret**
 
 ### 6. Atualizar .env.production
+
 ```env
 NEXT_PUBLIC_SITE_URL=https://portal-lusitano.pt
 STRIPE_SECRET_KEY=sk_live_XXXXX
@@ -276,11 +293,13 @@ STRIPE_PRICE_AFICIONADO_YEARLY=price_XXXXX (live)
 ## 💰 CUSTOS
 
 ### Modo de Teste: **GRÁTIS** ✅
+
 - Pagamentos falsos
 - Sem custos
 - Usar para desenvolvimento
 
 ### Modo Live:
+
 - **2.9% + €0.25** por transação bem-sucedida
 - Sem mensalidade
 - Exemplo:

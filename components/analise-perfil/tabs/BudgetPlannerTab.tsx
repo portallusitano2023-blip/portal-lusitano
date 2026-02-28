@@ -13,6 +13,8 @@ import {
   TrendingUp,
   Calendar,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 // ============================================
 // TYPES
@@ -76,6 +78,8 @@ interface DonutChartProps {
 }
 
 function DonutChart({ categories, total, visible, idPrefix }: DonutChartProps) {
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
   const size = 220;
   const strokeWidth = 32;
   const radius = (size - strokeWidth) / 2;
@@ -96,7 +100,11 @@ function DonutChart({ categories, total, visible, idPrefix }: DonutChartProps) {
     <div
       className="relative flex items-center justify-center"
       role="img"
-      aria-label="Distribuicao de custos mensais"
+      aria-label={tr(
+        "Distribuição de custos mensais",
+        "Monthly cost distribution",
+        "Distribución de costes mensuales"
+      )}
     >
       <svg
         width={size}
@@ -148,7 +156,7 @@ function DonutChart({ categories, total, visible, idPrefix }: DonutChartProps) {
       {/* Center text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <span className="text-xs uppercase tracking-wider text-[var(--foreground-muted)]">
-          Mensal
+          {tr("Mensal", "Monthly", "Mensual")}
         </span>
         <span
           className="text-2xl font-serif font-bold text-[var(--foreground)] mt-1"
@@ -177,20 +185,13 @@ interface AnnualProjectionProps {
 }
 
 function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionProps) {
-  const months = [
-    "Jan",
-    "Fev",
-    "Mar",
-    "Abr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Set",
-    "Out",
-    "Nov",
-    "Dez",
-  ];
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
+  const months = tr(
+    ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+    ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+  );
 
   const annualTotal = totalMonthly * 12;
   const chartWidth = 600;
@@ -230,7 +231,11 @@ function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionP
         viewBox={`0 0 ${chartWidth} ${chartHeight}`}
         className="w-full min-w-[400px]"
         role="img"
-        aria-label="Projecao anual de custos"
+        aria-label={tr(
+          "Projeção anual de custos",
+          "Annual cost projection",
+          "Proyección anual de costes"
+        )}
       >
         <defs>
           <linearGradient id={`${idPrefix}-bar-grad`} x1="0" y1="0" x2="0" y2="1">

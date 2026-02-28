@@ -22,7 +22,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .from("eventos")
       .update({ views_count: (evento.views_count || 0) + 1 })
       .eq("id", evento.id)
-      .then(() => {});
+      .then(({ error: updateErr }) => {
+        if (updateErr) logger.error("Failed to increment evento views:", updateErr);
+      });
 
     // Buscar eventos relacionados (mesmo tipo, excluindo o atual)
     const { data: relacionados } = await supabase

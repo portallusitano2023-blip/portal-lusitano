@@ -33,10 +33,7 @@ export async function POST(request: Request) {
     const parsed = pushSubscriptionSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Dados de subscricao invalidos.", details: parsed.error.flatten() },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Dados de subscricao invalidos." }, { status: 400 });
     }
 
     const subscription = parsed.data;

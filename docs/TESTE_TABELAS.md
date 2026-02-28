@@ -67,6 +67,7 @@ Depois **recarrega o admin** (Ctrl+F5).
 Se os erros continuam, preciso ver o erro **completo**.
 
 No navegador:
+
 1. Abre **DevTools** (F12)
 2. Vai à tab **Console**
 3. Clica no erro vermelho

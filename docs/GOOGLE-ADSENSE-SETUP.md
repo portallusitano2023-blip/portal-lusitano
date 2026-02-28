@@ -15,7 +15,11 @@ O Google vai dar-te um código para verificar que és dono do site.
 Será algo como:
 
 ```html
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+<script
+  async
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+  crossorigin="anonymous"
+></script>
 ```
 
 ## Passo 3: Adicionar o Código ao Site
@@ -43,6 +47,7 @@ Abre o ficheiro `app/layout.tsx` e adiciona o código no `<head>`:
 ## Passo 5: Criar Blocos de Anúncios
 
 Depois de aprovado:
+
 1. Vai ao painel do AdSense
 2. Clica em "Anúncios" > "Por bloco de anúncios"
 3. Escolhe o tipo (Display, In-feed, In-article)
@@ -92,7 +97,7 @@ export default function AdBanner({ slot, format = "auto" }: AdBannerProps) {
 import AdBanner from "@/components/AdBanner";
 
 // Na página onde queres o anúncio:
-<AdBanner slot="1234567890" />
+<AdBanner slot="1234567890" />;
 ```
 
 ---
@@ -113,13 +118,13 @@ Para ser aprovado, o site precisa de:
 ## Ganhos Esperados
 
 | Tráfego Mensal | Ganho Estimado |
-|----------------|----------------|
-| 1.000 visitas | €1-5 |
-| 5.000 visitas | €10-30 |
-| 10.000 visitas | €25-75 |
-| 50.000 visitas | €150-400 |
+| -------------- | -------------- |
+| 1.000 visitas  | €1-5           |
+| 5.000 visitas  | €10-30         |
+| 10.000 visitas | €25-75         |
+| 50.000 visitas | €150-400       |
 
-*Valores aproximados. Depende do nicho (equestre paga bem) e localização dos visitantes.*
+_Valores aproximados. Depende do nicho (equestre paga bem) e localização dos visitantes._
 
 ---
 

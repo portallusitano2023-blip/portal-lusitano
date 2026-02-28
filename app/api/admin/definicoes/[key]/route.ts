@@ -26,10 +26,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ key:
     return NextResponse.json({ setting });
   } catch (error) {
     logger.error("Setting get error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar definição" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao buscar definição" }, { status: 500 });
   }
 }
 
@@ -80,10 +77,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ke
     return NextResponse.json({ setting });
   } catch (error) {
     logger.error("Setting update error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao atualizar definição" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao atualizar definição" }, { status: 500 });
   }
 }
 
@@ -124,9 +118,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ k
     return NextResponse.json({ success: true });
   } catch (error) {
     logger.error("Setting delete error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao eliminar definição" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao eliminar definição" }, { status: 500 });
   }
 }

@@ -69,10 +69,7 @@ export async function POST(request: NextRequest) {
     const raw = await request.json();
     const parsed = CavaloSchema.safeParse(raw);
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Dados inválidos", details: parsed.error.flatten() },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
     }
     const body = parsed.data;
 

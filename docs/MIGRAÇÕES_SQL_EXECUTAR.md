@@ -9,6 +9,7 @@ Tens **6 migrações** para executar. Executa pela **ORDEM** indicada!
 ## ✅ **ORDEM DE EXECUÇÃO:**
 
 ### **1. Views Count** (Analytics)
+
 **Ficheiro:** `supabase/migrations/20260206_add_views_count.sql`
 **O que faz:** Adiciona contadores de visualizações a cavalos e eventos
 
@@ -22,6 +23,7 @@ Tens **6 migrações** para executar. Executa pela **ORDEM** indicada!
 ---
 
 ### **2. Coudelarias** (Diretório GRÁTIS)
+
 **Ficheiro:** `supabase/migrations/20260206_coudelarias_simple.sql`
 **O que faz:** Cria tabela de coudelarias (só informação, SEM pagamentos)
 
@@ -35,8 +37,10 @@ Tens **6 migrações** para executar. Executa pela **ORDEM** indicada!
 ---
 
 ### **3. Profissionais PREMIUM** (Sistema PAGO)
+
 **Ficheiro:** `supabase/migrations/20260206_profissionais_premium.sql`
 **O que faz:** Sistema completo de profissionais com:
+
 - Planos: Bronze (€10/mês), Prata (€20/mês), Ouro (€40/mês)
 - Reviews de clientes
 - Lead generation
@@ -53,6 +57,7 @@ Tens **6 migrações** para executar. Executa pela **ORDEM** indicada!
 ---
 
 ### **4. Admin Tasks** (Calendário)
+
 **Ficheiro:** `supabase/migrations/20260206_admin_tasks.sql`
 **O que faz:** Sistema de tarefas e follow-ups para o calendário
 
@@ -66,6 +71,7 @@ Tens **6 migrações** para executar. Executa pela **ORDEM** indicada!
 ---
 
 ### **5. CRM Leads** (Pipeline de Vendas)
+
 **Ficheiro:** `supabase/migrations/20260206_crm_leads.sql`
 **O que faz:** Sistema CRM com pipeline drag-and-drop
 
@@ -79,6 +85,7 @@ Tens **6 migrações** para executar. Executa pela **ORDEM** indicada!
 ---
 
 ### **6. Admin Logs** (Auditoria)
+
 **Ficheiro:** `supabase/migrations/20260206_admin_logs.sql`
 **O que faz:** Sistema de logs para ver TUDO o que acontece no admin
 
@@ -92,6 +99,7 @@ Tens **6 migrações** para executar. Executa pela **ORDEM** indicada!
 ---
 
 ### **7. Cupões de Desconto**
+
 **Ficheiro:** `supabase/migrations/20260206_cupoes_desconto.sql`
 **O que faz:** Sistema de cupões promocionais (ex: BLACK10 = 10% desconto)
 
@@ -107,11 +115,13 @@ Tens **6 migrações** para executar. Executa pela **ORDEM** indicada!
 ## 🎯 **Depois de Executar TODAS:**
 
 Reinicia o servidor dev:
+
 ```bash
 npm run dev
 ```
 
 E acede a:
+
 - `/admin` - Dashboard principal
 - `/admin/coudelarias` - Gestão coudelarias (grátis)
 - `/admin/profissionais` - Gestão profissionais (PAGO)

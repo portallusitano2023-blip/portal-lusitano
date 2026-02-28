@@ -72,9 +72,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Messages list error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao listar mensagens" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao listar mensagens" }, { status: 500 });
   }
 }

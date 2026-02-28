@@ -7,23 +7,28 @@ This guide will help you set up and run the complete Task Management System for 
 ## Files Created
 
 ### 1. Main Component
+
 - **Path**: `components/admin-app/TasksContent.tsx`
 - **Size**: ~700 lines
 - **Features**: Full Kanban board with drag-and-drop, filtering, sorting, CRUD operations
 
 ### 2. API Routes (Updated)
+
 - `app/api/admin/tasks/route.ts` - GET, POST for tasks
 - `app/api/admin/tasks/[id]/route.ts` - GET, PATCH, DELETE for individual tasks
 
 ### 3. Database Migration
+
 - **Path**: `supabase/migrations/20260207000001_add_assigned_to_tasks.sql`
 - **Purpose**: Adds `assigned_to` field to existing `admin_tasks` table
 
 ### 4. Documentation
+
 - `components/admin-app/TasksContent.README.md` - Complete API and component documentation
 - `TASKS_SETUP_GUIDE.md` (this file)
 
 ### 5. Admin Integration
+
 - Updated `app/admin-app/page.tsx` to include Tasks menu item
 
 ## Setup Steps
@@ -106,11 +111,13 @@ ORDER BY due_date;
 Test the endpoints using your browser or Postman:
 
 #### 1. Get All Tasks
+
 ```
 GET http://localhost:3000/api/admin/tasks
 ```
 
 Expected response:
+
 ```json
 {
   "tasks": [...],
@@ -126,6 +133,7 @@ Expected response:
 ```
 
 #### 2. Create Task
+
 ```
 POST http://localhost:3000/api/admin/tasks
 Content-Type: application/json
@@ -139,6 +147,7 @@ Content-Type: application/json
 ```
 
 #### 3. Update Task
+
 ```
 PATCH http://localhost:3000/api/admin/tasks/[task-id]
 Content-Type: application/json
@@ -149,6 +158,7 @@ Content-Type: application/json
 ```
 
 #### 4. Delete Task
+
 ```
 DELETE http://localhost:3000/api/admin/tasks/[task-id]
 ```
@@ -176,6 +186,7 @@ Test these features in the browser:
 **Symptoms**: Empty Kanban board, console errors
 
 **Solutions**:
+
 1. Check browser console for errors
 2. Verify API endpoint is accessible
 3. Check authentication (verifySession)
@@ -196,6 +207,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
 **Symptoms**: Cannot drag tasks between columns
 
 **Solutions**:
+
 1. Check @dnd-kit packages are installed
 2. Clear browser cache
 3. Check console for DnD errors
@@ -211,6 +223,7 @@ npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
 **Symptoms**: Error when creating/updating tasks with assigned_to
 
 **Solutions**:
+
 1. Run the migration again
 2. Check if column exists in database
 3. Restart development server
@@ -229,6 +242,7 @@ WHERE table_name = 'admin_tasks';
 **Symptoms**: 401 errors when accessing API
 
 **Solutions**:
+
 1. Verify you're logged in as admin
 2. Check `verifySession()` in API routes
 3. Check authentication cookies
@@ -238,6 +252,7 @@ WHERE table_name = 'admin_tasks';
 **Symptoms**: Type errors in IDE
 
 **Solutions**:
+
 ```bash
 # Regenerate TypeScript types from Supabase
 npm run supabase:types
@@ -251,6 +266,7 @@ npx supabase gen types typescript --local > types/supabase.ts
 ### For Large Task Lists (>100 tasks)
 
 1. **Add Pagination**:
+
 ```typescript
 // In TasksContent.tsx
 const [page, setPage] = useState(1);
@@ -262,19 +278,22 @@ const end = start + pageSize;
 ```
 
 2. **Add Virtual Scrolling** (for very large lists):
+
 ```bash
 npm install @tanstack/react-virtual
 ```
 
 3. **Debounce Search**:
+
 ```typescript
-import { useMemo } from 'react';
-import debounce from 'lodash/debounce';
+import { useMemo } from "react";
+import debounce from "lodash/debounce";
 
 const debouncedSearch = useMemo(
-  () => debounce((term: string) => {
-    setSearchTerm(term);
-  }, 300),
+  () =>
+    debounce((term: string) => {
+      setSearchTerm(term);
+    }, 300),
   []
 );
 ```
@@ -302,6 +321,7 @@ const getPriorityColor = (priority: string) => {
 ### Add New Priority Level
 
 1. Update database migration:
+
 ```sql
 ALTER TABLE admin_tasks
 DROP CONSTRAINT IF EXISTS admin_tasks_priority_check;
@@ -312,6 +332,7 @@ CHECK (priority IN ('baixa', 'normal', 'alta', 'urgente', 'critica'));
 ```
 
 2. Update TypeScript types:
+
 ```typescript
 interface Task {
   priority: "baixa" | "normal" | "alta" | "urgente" | "critica";
@@ -319,6 +340,7 @@ interface Task {
 ```
 
 3. Update UI:
+
 ```typescript
 const getPriorityColor = (priority: string) => {
   const colors: Record<string, string> = {
@@ -331,6 +353,7 @@ const getPriorityColor = (priority: string) => {
 ### Add New Status Column
 
 1. Update types:
+
 ```typescript
 interface Task {
   status: "pendente" | "em_andamento" | "concluida" | "revisao";
@@ -349,6 +372,7 @@ const KANBAN_COLUMNS: KanbanColumn[] = [
 ```
 
 2. Update database:
+
 ```sql
 ALTER TABLE admin_tasks
 DROP CONSTRAINT IF EXISTS admin_tasks_status_check;
@@ -369,7 +393,7 @@ Add email notifications for overdue tasks:
 export async function sendOverdueTaskEmail(task: Task) {
   // Use Resend (already in package.json)
   const { data, error } = await resend.emails.send({
-    from: 'Portal Lusitano <noreply@portallusitano.com>',
+    from: "Portal Lusitano <noreply@portallusitano.com>",
     to: task.assigned_to || task.admin_email,
     subject: `Tarefa Vencida: ${task.title}`,
     html: `
@@ -388,11 +412,11 @@ Sync tasks with Calendar view:
 ```typescript
 // In CalendarioContent.tsx
 const loadTasks = async () => {
-  const res = await fetch('/api/admin/tasks');
+  const res = await fetch("/api/admin/tasks");
   const data = await res.json();
 
   // Convert tasks to calendar events
-  const events = data.tasks.map(task => ({
+  const events = data.tasks.map((task) => ({
     id: task.id,
     title: task.title,
     start: task.due_date,
@@ -409,11 +433,13 @@ const loadTasks = async () => {
 ### Before Deploying
 
 1. **Remove Demo Tasks**:
+
 ```sql
 DELETE FROM admin_tasks WHERE title LIKE 'Test%';
 ```
 
 2. **Set Up Indexes**:
+
 ```sql
 -- Already created by migration, but verify:
 CREATE INDEX IF NOT EXISTS idx_admin_tasks_status ON admin_tasks(status);
@@ -422,6 +448,7 @@ CREATE INDEX IF NOT EXISTS idx_admin_tasks_assigned_to ON admin_tasks(assigned_t
 ```
 
 3. **Configure RLS (Row Level Security)**:
+
 ```sql
 -- Verify RLS is enabled
 ALTER TABLE admin_tasks ENABLE ROW LEVEL SECURITY;
@@ -435,6 +462,7 @@ CREATE POLICY "Admin can do everything on tasks"
 ```
 
 4. **Environment Variables**:
+
 ```bash
 # .env.production
 NEXT_PUBLIC_SUPABASE_URL=your_production_url
@@ -454,8 +482,8 @@ const handleCreateTask = async (taskData: Partial<Task>) => {
     // ... existing code
 
     // Track event
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'task_created', {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "task_created", {
         priority: taskData.priority,
         has_assigned: !!taskData.assigned_to,
       });
@@ -472,16 +500,16 @@ Add Sentry error tracking (already in package.json):
 
 ```typescript
 // In TasksContent.tsx
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from "@sentry/nextjs";
 
 try {
   // ... code
 } catch (error) {
   Sentry.captureException(error, {
-    tags: { component: 'TasksContent' },
+    tags: { component: "TasksContent" },
     extra: { task: taskData },
   });
-  showToast('Erro ao criar tarefa', 'error');
+  showToast("Erro ao criar tarefa", "error");
 }
 ```
 

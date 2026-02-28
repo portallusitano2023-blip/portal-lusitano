@@ -184,12 +184,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Erro ao gerar relatório PDF:", error);
-    return NextResponse.json(
-      {
-        error: "Erro ao gerar relatório",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao gerar relatório" }, { status: 500 });
   }
 }

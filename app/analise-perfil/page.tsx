@@ -914,7 +914,7 @@ function AnalisePerfilContent() {
                             icon: "Apple",
                           },
                           {
-                            label: "Veterinário",
+                            label: tr("Veterinário", "Veterinary", "Veterinario"),
                             monthly:
                               result.profile === "competidor"
                                 ? 120
@@ -925,13 +925,13 @@ function AnalisePerfilContent() {
                             icon: "Stethoscope",
                           },
                           {
-                            label: "Ferrador",
+                            label: tr("Ferrador", "Farrier", "Herrador"),
                             monthly: result.profile === "competidor" ? 75 : 55,
                             color: "#A78BFA",
                             icon: "Hammer",
                           },
                           {
-                            label: "Treino",
+                            label: tr("Treino", "Training", "Entrenamiento"),
                             monthly:
                               result.profile === "competidor"
                                 ? 800
@@ -942,19 +942,19 @@ function AnalisePerfilContent() {
                             icon: "GraduationCap",
                           },
                           {
-                            label: "Seguro",
+                            label: tr("Seguro", "Insurance", "Seguro"),
                             monthly: result.profile === "competidor" ? 150 : 80,
                             color: "#FBBF24",
                             icon: "Shield",
                           },
                           {
-                            label: "Competições",
+                            label: tr("Competições", "Competitions", "Competiciones"),
                             monthly: result.profile === "competidor" ? 200 : 0,
                             color: "#FB923C",
                             icon: "Trophy",
                           },
                           {
-                            label: "Equipamento",
+                            label: tr("Equipamento", "Equipment", "Equipamiento"),
                             monthly: result.profile === "competidor" ? 100 : 50,
                             color: "#94A3B8",
                             icon: "Wrench",
@@ -968,7 +968,7 @@ function AnalisePerfilContent() {
                       isSubscribed={isSubscribed}
                       title={
                         (t.analise_perfil as Record<string, string>).tab_simulator ??
-                        "Simulador do 1o Ano"
+                        tr("Simulador do 1º Ano", "1st Year Simulator", "Simulador del 1er Año")
                       }
                     >
                       <FirstYearSimTab result={result} />
@@ -979,7 +979,7 @@ function AnalisePerfilContent() {
                       isSubscribed={isSubscribed}
                       title={
                         (t.analise_perfil as Record<string, string>).tab_readiness ??
-                        "Score de Preparação"
+                        tr("Score de Preparação", "Readiness Score", "Score de Preparación")
                       }
                     >
                       <ReadinessTab
@@ -997,76 +997,129 @@ function AnalisePerfilContent() {
                   <MethodologyPanel
                     title={
                       (t.analise_perfil as Record<string, string>).methodology_panel_title ??
-                      "Metodologia de Análise de Perfil"
+                      tr(
+                        "Metodologia de Análise de Perfil",
+                        "Profile Analysis Methodology",
+                        "Metodología de Análisis de Perfil"
+                      )
                     }
                     factors={[
                       {
-                        name: "Experiência",
+                        name: tr("Experiência", "Experience", "Experiencia"),
                         weight: "25%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_experience ??
-                          "Nível de experiência equestre declarado",
+                          tr(
+                            "Nível de experiência equestre declarado",
+                            "Declared equestrian experience level",
+                            "Nivel de experiencia ecuestre declarado"
+                          ),
                       },
                       {
-                        name: "Objectivos",
+                        name: tr("Objectivos", "Objectives", "Objetivos"),
                         weight: "20%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_objectives ??
-                          "Objectivos primários com o cavalo",
+                          tr(
+                            "Objectivos primários com o cavalo",
+                            "Primary objectives with the horse",
+                            "Objetivos primarios con el caballo"
+                          ),
                       },
                       {
-                        name: "Orçamento",
+                        name: tr("Orçamento", "Budget", "Presupuesto"),
                         weight: "15%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_budget ??
-                          "Capacidade financeira declarada",
+                          tr(
+                            "Capacidade financeira declarada",
+                            "Declared financial capacity",
+                            "Capacidad financiera declarada"
+                          ),
                       },
                       {
-                        name: "Disponibilidade",
+                        name: tr("Disponibilidade", "Availability", "Disponibilidad"),
                         weight: "15%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_availability ??
-                          "Tempo disponível para dedicar ao cavalo",
+                          tr(
+                            "Tempo disponível para dedicar ao cavalo",
+                            "Available time to dedicate to the horse",
+                            "Tiempo disponible para dedicar al caballo"
+                          ),
                       },
                       {
-                        name: "Infraestrutura",
+                        name: tr("Infraestrutura", "Infrastructure", "Infraestructura"),
                         weight: "15%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_infrastructure ??
-                          "Condições de alojamento e instalações",
+                          tr(
+                            "Condições de alojamento e instalações",
+                            "Housing conditions and facilities",
+                            "Condiciones de alojamiento e instalaciones"
+                          ),
                       },
                       {
-                        name: "Preferências",
+                        name: tr("Preferências", "Preferences", "Preferencias"),
                         weight: "10%",
                         description:
                           (t.analise_perfil as Record<string, string>).method_preferences ??
-                          "Preferências pessoais de raça e disciplina",
+                          tr(
+                            "Preferências pessoais de raça e disciplina",
+                            "Personal breed and discipline preferences",
+                            "Preferencias personales de raza y disciplina"
+                          ),
                       },
                     ]}
                     limitations={[
                       (t.analise_perfil as Record<string, string>).limitation_1 ??
-                        "Perfil baseado apenas nas respostas do quiz",
+                        tr(
+                          "Perfil baseado apenas nas respostas do quiz",
+                          "Profile based only on quiz answers",
+                          "Perfil basado solo en las respuestas del quiz"
+                        ),
                       (t.analise_perfil as Record<string, string>).limitation_2 ??
-                        "Custos são médias nacionais e podem variar por região",
+                        tr(
+                          "Custos são médias nacionais e podem variar por região",
+                          "Costs are national averages and may vary by region",
+                          "Costes son promedios nacionales y pueden variar por región"
+                        ),
                       (t.analise_perfil as Record<string, string>).limitation_3 ??
-                        "Não considera circunstâncias pessoais específicas",
+                        tr(
+                          "Não considera circunstâncias pessoais específicas",
+                          "Does not consider specific personal circumstances",
+                          "No considera circunstancias personales específicas"
+                        ),
                     ]}
                     version={
                       (t.analise_perfil as Record<string, string>).methodology_version ??
                       "v2.1 — Fev 2026"
                     }
                     references={[
-                      "Médias mercado equestre PT",
-                      "Perfis de cavaleiro (tipologia APSL)",
+                      tr(
+                        "Médias mercado equestre PT",
+                        "PT equestrian market averages",
+                        "Promedios mercado ecuestre PT"
+                      ),
+                      tr(
+                        "Perfis de cavaleiro (tipologia APSL)",
+                        "Rider profiles (APSL typology)",
+                        "Perfiles de jinete (tipología APSL)"
+                      ),
                     ]}
                   />
                   <div className="p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--border)] mt-6">
                     <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
                       <strong className="text-[var(--foreground-secondary)]">
-                        {(t.analise_perfil as Record<string, string>).disclaimer_title ?? "Aviso:"}
+                        {(t.analise_perfil as Record<string, string>).disclaimer_title ??
+                          tr("Aviso:", "Notice:", "Aviso:")}
                       </strong>{" "}
                       {(t.analise_perfil as Record<string, string>).disclaimer_text ??
-                        "Esta análise é uma ferramenta de orientação baseada nas suas respostas ao questionário. Os resultados são indicativos e não substituem o aconselhamento de profissionais do sector equestre. Custos e recomendações podem variar significativamente conforme a região, o mercado local e as circunstâncias individuais."}
+                        tr(
+                          "Esta análise é uma ferramenta de orientação baseada nas suas respostas ao questionário. Os resultados são indicativos e não substituem o aconselhamento de profissionais do sector equestre. Custos e recomendações podem variar significativamente conforme a região, o mercado local e as circunstâncias individuais.",
+                          "This analysis is a guidance tool based on your quiz answers. Results are indicative and do not replace advice from equestrian industry professionals. Costs and recommendations may vary significantly by region, local market and individual circumstances.",
+                          "Este análisis es una herramienta de orientación basada en sus respuestas al cuestionario. Los resultados son indicativos y no sustituyen el asesoramiento de profesionales del sector ecuestre. Costes y recomendaciones pueden variar significativamente según la región, el mercado local y las circunstancias individuales."
+                        )}
                       <span className="block mt-1 text-[10px] text-[var(--foreground-muted)]/40 font-mono">
                         {(t.analise_perfil as Record<string, string>).methodology_version ??
                           "v2.1 — Fev 2026"}
@@ -1080,7 +1133,7 @@ function AnalisePerfilContent() {
                 <div className="max-w-5xl mx-auto px-4 sm:px-6">
                   <h2 className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--foreground-muted)] mb-5">
                     <ChevronRight size={14} className="text-[#C5A059]" aria-hidden="true" />
-                    Continua a tua jornada
+                    {tr("Continua a tua jornada", "Continue your journey", "Continúa tu viaje")}
                   </h2>
                   <div className="grid sm:grid-cols-3 gap-3">
                     <Link
@@ -1093,10 +1146,14 @@ function AnalisePerfilContent() {
                       />
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-[var(--foreground)]">
-                          Calculadora de Valor
+                          {tr("Calculadora de Valor", "Value Calculator", "Calculadora de Valor")}
                         </p>
                         <p className="text-xs text-[var(--foreground-muted)] truncate">
-                          Estima o valor de um cavalo
+                          {tr(
+                            "Estima o valor de um cavalo",
+                            "Estimate a horse's value",
+                            "Estima el valor de un caballo"
+                          )}
                         </p>
                       </div>
                       <ChevronRight
@@ -1114,10 +1171,18 @@ function AnalisePerfilContent() {
                       />
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-[var(--foreground)]">
-                          Comparador de Cavalos
+                          {tr(
+                            "Comparador de Cavalos",
+                            "Horse Comparator",
+                            "Comparador de Caballos"
+                          )}
                         </p>
                         <p className="text-xs text-[var(--foreground-muted)] truncate">
-                          Compara até 4 candidatos
+                          {tr(
+                            "Compara até 4 candidatos",
+                            "Compare up to 4 candidates",
+                            "Compara hasta 4 candidatos"
+                          )}
                         </p>
                       </div>
                       <ChevronRight
@@ -1135,10 +1200,14 @@ function AnalisePerfilContent() {
                       />
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-[var(--foreground)]">
-                          Verificador Genético
+                          {tr("Verificador Genético", "Genetic Checker", "Verificador Genético")}
                         </p>
                         <p className="text-xs text-[var(--foreground-muted)] truncate">
-                          Compatibilidade de criação
+                          {tr(
+                            "Compatibilidade de criação",
+                            "Breeding compatibility",
+                            "Compatibilidad de cría"
+                          )}
                         </p>
                       </div>
                       <ChevronRight

@@ -183,9 +183,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Search error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao pesquisar" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erro ao pesquisar" }, { status: 500 });
   }
 }

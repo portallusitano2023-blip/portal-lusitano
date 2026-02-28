@@ -62,12 +62,15 @@ Cria as tabelas necessárias:
 ## ❓ Problemas?
 
 ### Erro: "relation already exists"
+
 - **Solução**: Está tudo bem! Significa que a tabela já existe. Continua.
 
 ### Erro: "permission denied"
+
 - **Solução**: Tens de estar logado como owner do projeto Supabase.
 
 ### Dashboard ainda mostra erros?
+
 1. Verifica se o SQL foi executado com sucesso
 2. Faz refresh do navegador (Ctrl+F5)
 3. Verifica se o servidor dev está a correr (`npm run dev`)

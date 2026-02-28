@@ -3,6 +3,7 @@
 ## Passo 1: Executar a Migração SQL
 
 Copie todo o conteúdo do ficheiro:
+
 ```
 supabase/migrations/20260207000001_automations.sql
 ```
@@ -64,6 +65,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 A página já foi adicionada ao menu do admin em `app/admin-app/page.tsx`.
 
 Procure por:
+
 ```typescript
 {
   id: "automations",
@@ -84,6 +86,7 @@ Procure por:
 2. Clicar em "Automações" (⚡) na sidebar
 
 Deverá ver:
+
 - 3 automações de exemplo criadas pela migração
 - Estatísticas: Total, Ativas, Execuções, Taxa de Sucesso
 - Filtros e pesquisa
@@ -199,6 +202,7 @@ Ver mais exemplos em: `AUTOMATION_INTEGRATION_EXAMPLES.md`
 ### Testar Email
 
 Criar automação:
+
 ```json
 {
   "name": "Teste Email",

@@ -9,14 +9,18 @@
 ## ✅ JÁ IMPLEMENTADO (4 features)
 
 ### 1. Skeleton Loaders ✅
+
 **Ficheiro:** `components/ui/Skeleton.tsx`
+
 ```typescript
 import { SkeletonList } from "@/components/ui/Skeleton";
 {loading ? <SkeletonList items={5} /> : <Content />}
 ```
 
 ### 2. Toast Notifications ✅
+
 **Ficheiro:** `components/ui/Toast.tsx`
+
 ```typescript
 const toast = useToast();
 toast.success("Título", "Mensagem");
@@ -24,18 +28,22 @@ toast.error("Erro", "Detalhes");
 ```
 
 ### 3. Keyboard Shortcuts ✅
+
 **Ficheiro:** `lib/useKeyboardShortcuts.ts`
+
 ```typescript
 useKeyboardShortcut({
   key: "n",
   ctrl: true,
   description: "Novo item",
-  action: () => setShowModal(true)
+  action: () => setShowModal(true),
 });
 ```
 
 ### 4. Email Campaigns UI ✅
+
 **Ficheiro:** `components/admin-app/EmailCampaignsContent.tsx`
+
 - Lista de campanhas com analytics
 - Criar/agendar campanhas
 - Preview de emails
@@ -48,12 +56,14 @@ useKeyboardShortcut({
 ### 5. Dashboard Widgets Drag-and-Drop
 
 **Dependência:**
+
 ```bash
 npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
 ```
 
 **Hook para gestão:**
 `lib/useDashboardLayout.ts`
+
 ```typescript
 import { useState, useEffect } from "react";
 
@@ -87,9 +97,7 @@ export function useDashboardLayout(defaultWidgets: Widget[]) {
 
   const toggleWidget = (id: string) => {
     setWidgets((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, enabled: !item.enabled } : item
-      )
+      items.map((item) => (item.id === id ? { ...item, enabled: !item.enabled } : item))
     );
   };
 
@@ -99,6 +107,7 @@ export function useDashboardLayout(defaultWidgets: Widget[]) {
 
 **Componente:**
 `components/admin-app/DashboardDragDrop.tsx`
+
 ```typescript
 "use client";
 
@@ -163,12 +172,14 @@ export default function DashboardDragDrop({ widgets: defaultWidgets }: { widgets
 ### 6. Filtros Avançados Universais
 
 **Dependência:**
+
 ```bash
 npm install date-fns react-day-picker
 ```
 
 **Componente:**
 `components/ui/AdvancedFilters.tsx`
+
 ```typescript
 "use client";
 
@@ -274,6 +285,7 @@ export default function AdvancedFilters({ filters, onFiltersChange }: AdvancedFi
 **Melhorar:** `components/admin-app/BulkActions.tsx`
 
 Adicionar:
+
 ```typescript
 interface BulkAction {
   id: string;
@@ -297,19 +309,18 @@ export function useBulkActionsWithUndo() {
   const executeAction = async (action: BulkAction, ids: string[], data: any) => {
     // Guardar estado para undo
     if (action.undoable) {
-      setUndoStack((prev) => [
-        ...prev,
-        { action: action.id, data, timestamp: Date.now() },
-      ]);
+      setUndoStack((prev) => [...prev, { action: action.id, data, timestamp: Date.now() }]);
     }
 
     try {
       await action.action(ids);
       toast.success("Ação executada", `${ids.length} itens afetados`, {
-        action: action.undoable ? {
-          label: "Desfazer",
-          onClick: () => undo(action.id),
-        } : undefined,
+        action: action.undoable
+          ? {
+              label: "Desfazer",
+              onClick: () => undo(action.id),
+            }
+          : undefined,
       });
     } catch (error) {
       toast.error("Erro na ação em massa");
@@ -334,6 +345,7 @@ export function useBulkActionsWithUndo() {
 ### 8. Sistema de Automações
 
 **Migration:** `supabase/migrations/automations.sql`
+
 ```sql
 CREATE TABLE IF NOT EXISTS public.automations (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -359,6 +371,7 @@ CREATE TABLE IF NOT EXISTS public.automation_logs (
 ```
 
 **API:** `app/api/admin/automations/route.ts`
+
 ```typescript
 // GET - Listar automações
 // POST - Criar automação
@@ -367,6 +380,7 @@ CREATE TABLE IF NOT EXISTS public.automation_logs (
 ```
 
 **UI:** `components/admin-app/AutomationsContent.tsx`
+
 - Lista de automações
 - Builder visual (Trigger → Delay → Action)
 - Toggle enable/disable
@@ -377,11 +391,13 @@ CREATE TABLE IF NOT EXISTS public.automation_logs (
 ### 9. Relatórios PDF
 
 **Dependência:**
+
 ```bash
 npm install jspdf jspdf-autotable
 ```
 
 **Lib:** `lib/generatePDF.ts`
+
 ```typescript
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -399,11 +415,7 @@ export async function generateRevenueReport(data: any) {
   autoTable(doc, {
     startY: 40,
     head: [["Data", "Transações", "Receita"]],
-    body: data.map((row: any) => [
-      row.date,
-      row.count,
-      `€${row.total.toFixed(2)}`,
-    ]),
+    body: data.map((row: any) => [row.date, row.count, `€${row.total.toFixed(2)}`]),
   });
 
   // Download
@@ -412,6 +424,7 @@ export async function generateRevenueReport(data: any) {
 ```
 
 **Uso:**
+
 ```typescript
 <button onClick={() => generateRevenueReport(data)}>
   Exportar PDF
@@ -423,11 +436,13 @@ export async function generateRevenueReport(data: any) {
 ### 10. IA Content Assistant
 
 **Dependência:**
+
 ```bash
 npm install openai
 ```
 
 **API:** `app/api/admin/ai/route.ts`
+
 ```typescript
 import { OpenAI } from "openai";
 
@@ -442,7 +457,8 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: "És um especialista em cavalos Lusitanos. Gera descrições elegantes e profissionais.",
+          content:
+            "És um especialista em cavalos Lusitanos. Gera descrições elegantes e profissionais.",
         },
         {
           role: "user",
@@ -467,6 +483,7 @@ export async function POST(req: Request) {
 ```
 
 **UI:** Componente flutuante
+
 ```typescript
 <AIAssistant
   context={{ type: "horse", data: horseData }}
@@ -481,6 +498,7 @@ export async function POST(req: Request) {
 **Nota:** Tabela `admin_tasks` já existe!
 
 **UI:** `components/admin-app/TasksContent.tsx`
+
 - Kanban board (To Do, In Progress, Done)
 - Criar tarefas com título, descrição, prazo, prioridade
 - Atribuir a utilizadores
@@ -492,6 +510,7 @@ export async function POST(req: Request) {
 ### 12. Comparação de Performance
 
 **UI:** `components/admin-app/CompareContent.tsx`
+
 ```typescript
 // Selecionar 2+ cavalos/eventos
 // Ver métricas lado a lado:
@@ -506,6 +525,7 @@ export async function POST(req: Request) {
 ### 13. Chat Interno
 
 **Migration:** `supabase/migrations/admin_chat.sql`
+
 ```sql
 CREATE TABLE admin_chat_messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -518,13 +538,18 @@ CREATE TABLE admin_chat_messages (
 ```
 
 **Real-time:** Supabase Realtime
+
 ```typescript
 useEffect(() => {
   const channel = supabase
     .channel("admin_chat")
-    .on("postgres_changes", { event: "INSERT", schema: "public", table: "admin_chat_messages" }, (payload) => {
-      setMessages((prev) => [...prev, payload.new]);
-    })
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "admin_chat_messages" },
+      (payload) => {
+        setMessages((prev) => [...prev, payload.new]);
+      }
+    )
     .subscribe();
 
   return () => supabase.removeChannel(channel);
@@ -536,6 +561,7 @@ useEffect(() => {
 ### 14. CRM Pipeline
 
 **UI:** `components/admin-app/CRMPipelineContent.tsx`
+
 - Kanban com 4 colunas: Lead → Contactado → Negociação → Cliente
 - Drag-and-drop de cards
 - Lead scoring (1-5 estrelas)
@@ -547,11 +573,13 @@ useEffect(() => {
 ### 15. ML Analytics
 
 **Dependência:**
+
 ```bash
 npm install ml.js
 ```
 
 **Lib:** `lib/mlForecasting.ts`
+
 ```typescript
 import { SimpleLinearRegression } from "ml-regression-simple-linear";
 

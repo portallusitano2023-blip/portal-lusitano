@@ -9,18 +9,21 @@
 ### ✅ Fase de Setup (2-4 semanas, depois NUNCA MAIS)
 
 #### Semana 1-2: Criar Conteúdo Base
+
 - [ ] 10 Ebooks essenciais (150 páginas cada)
 - [ ] 20 Templates básicos (contratos, fichas, planners)
 - [ ] 10 Infográficos principais
 - [ ] 10 Checklists práticas
 
 #### Semana 3: Upload e Organização
+
 - [ ] Carregar tudo no Sanity CMS
 - [ ] Organizar por categorias
 - [ ] Definir permissões por plano
 - [ ] Testar download
 
 #### Semana 4: Automações
+
 - [ ] Configurar Resend/SendGrid para emails
 - [ ] Criar 10 emails automáticos (série de boas-vindas)
 - [ ] Configurar Stripe webhooks
@@ -35,6 +38,7 @@
 ### 1. Sistema de Pagamentos (Stripe)
 
 #### Quando alguém subscreve:
+
 ```
 Cliente paga no Stripe
     ↓
@@ -52,6 +56,7 @@ DONE! (Tu não fizeste nada)
 ```
 
 #### Quando a subscrição renova:
+
 ```
 Stripe cobra automaticamente
     ↓
@@ -65,6 +70,7 @@ DONE! (Tu não fizeste nada)
 ```
 
 #### Quando alguém cancela:
+
 ```
 Cliente cancela no portal Stripe
     ↓
@@ -84,6 +90,7 @@ DONE! (Tu não fizeste nada)
 ### 2. Entrega de Conteúdo (Sanity CMS + Next.js)
 
 #### Sistema de Permissões Automático:
+
 ```javascript
 // AFICIONADO vê:
 - 5 Ebooks do mês
@@ -111,6 +118,7 @@ DONE! (Tu não fizeste nada)
 ### 3. Email Marketing (Resend/Mailchimp)
 
 #### Série de Boas-Vindas (Automática)
+
 ```
 Dia 0 (Imediato):
 📧 "Bem-vindo ao Portal Lusitano PRO!"
@@ -156,19 +164,24 @@ Dia 30:
 # Newsletter Template
 
 ## 📰 Novidade da Semana
+
 - Novo ebook lançado: [título]
 - Novo template: [nome]
 
 ## 🎓 Dica da Semana
+
 - Mini-tutorial sobre [tópico]
 
 ## ⭐ Spotlight: Linhagem do Mês
+
 - História de uma linhagem lusitana
 
 ## 📅 Evento Próximo
+
 - Leilão/Concurso importante
 
 ## 💬 Pergunta de Membro (FAQ)
+
 - Resposta a pergunta comum
 ```
 
@@ -195,6 +208,7 @@ Dia 30:
 6. Sistema envia resposta automaticamente ao cliente
 
 **VANTAGENS:**
+
 - Não recebes 50 emails por dia
 - Organizas melhor teu tempo
 - Respondes em batch (1x por dia)
@@ -213,6 +227,7 @@ Dia 30:
 **MÊS 7-12:** Apenas atualizações de conteúdo existente
 
 **DEPOIS DE 1 ANO:**
+
 - Tens 56+ ebooks
 - 30+ templates
 - 20+ infográficos
@@ -221,6 +236,7 @@ Dia 30:
 **E AGORA?**
 
 Entras em "Modo Manutenção":
+
 - 1 ebook novo a cada 2-3 meses (4-6 por ano)
 - Atualizações pontuais (legislação, novidades)
 - Resto funciona sozinho!
@@ -264,6 +280,7 @@ Hoje (30 Jan 2026):
 ```
 
 **5 MINUTOS POR DIA:**
+
 1. Vês números (está tudo a correr bem?)
 2. Verificas tickets de consultoria (há algum urgente?)
 3. Done!
@@ -274,13 +291,13 @@ Hoje (30 Jan 2026):
 
 ### Stack de Automação:
 
-| Ferramenta | Função | Custo |
-|------------|--------|-------|
-| **Stripe** | Pagamentos automáticos | 1.4% + €0.25 |
-| **Resend** | Emails automáticos | €20/mês (até 50k emails) |
-| **Sanity CMS** | Armazenar conteúdo | Grátis (até 3 users) |
-| **Vercel** | Hosting automático | Grátis (ou €20/mês Pro) |
-| **Canny/Linear** | Sistema de tickets | €19/mês |
+| Ferramenta       | Função                 | Custo                    |
+| ---------------- | ---------------------- | ------------------------ |
+| **Stripe**       | Pagamentos automáticos | 1.4% + €0.25             |
+| **Resend**       | Emails automáticos     | €20/mês (até 50k emails) |
+| **Sanity CMS**   | Armazenar conteúdo     | Grátis (até 3 users)     |
+| **Vercel**       | Hosting automático     | Grátis (ou €20/mês Pro)  |
+| **Canny/Linear** | Sistema de tickets     | €19/mês                  |
 
 **TOTAL: ~€60-80/mês para funcionar sozinho!**
 
@@ -289,16 +306,19 @@ Hoje (30 Jan 2026):
 ## 📅 ROTINA SEMANAL (2 HORAS!)
 
 ### Segunda-feira (1h):
+
 - ☕ Abrir dashboard
 - 📊 Ver stats da semana
 - 🎫 Responder tickets de consultoria (batch)
 - ✅ Agendar newsletter da semana
 
 ### Quarta-feira (30min):
+
 - 🎫 Responder novos tickets
 - 📧 Verificar emails automáticos (estão a funcionar?)
 
 ### Sexta-feira (30min):
+
 - 📊 Review semanal
 - 💰 Verificar pagamentos
 - 🎉 Celebrar novos membros!
@@ -306,6 +326,7 @@ Hoje (30 Jan 2026):
 **TOTAL: 2 HORAS POR SEMANA!**
 
 **RESTO DO TEMPO:**
+
 - 🏖️ Relaxar
 - 💰 Contar dinheiro
 - 🐴 Estudar mais sobre Lusitanos (para criar conteúdo eventual)
@@ -317,27 +338,32 @@ Hoje (30 Jan 2026):
 ### Fase 1: Conteúdo (2 semanas)
 
 **Dia 1-5: Ebooks**
+
 - Escrever 2 ebooks por dia (usa ChatGPT para ajudar!)
 - 150 páginas cada
 - Total: 10 ebooks
 
 **Dia 6-10: Templates**
+
 - Criar 4 templates por dia
 - Word + Excel + Canva
 - Total: 20 templates
 
 **Dia 11-14: Infográficos & Checklists**
+
 - 3 por dia no Canva
 - Total: 12 infográficos
 
 ### Fase 2: Upload (2 dias)
 
 **Dia 1: Sanity**
+
 - Carregar todos os PDFs
 - Organizar por categorias
 - Definir permissões
 
 **Dia 2: Teste**
+
 - Criar conta teste
 - Verificar acessos
 - Testar downloads
@@ -345,14 +371,17 @@ Hoje (30 Jan 2026):
 ### Fase 3: Emails (3 dias)
 
 **Dia 1: Série de Boas-Vindas**
+
 - Escrever 10 emails
 - Configurar sequência no Resend
 
 **Dia 2: Newsletters**
+
 - Escrever 12 newsletters (1 por mês)
 - Agendar envio automático
 
 **Dia 3: Templates de Email**
+
 - Confirmação de pagamento
 - Renovação
 - Cancelamento
@@ -361,11 +390,13 @@ Hoje (30 Jan 2026):
 ### Fase 4: Automações (2 dias)
 
 **Dia 1: Stripe**
+
 - Configurar webhooks
 - Testar pagamentos
 - Verificar criação automática de contas
 
 **Dia 2: Sistema de Tickets**
+
 - Setup Canny/Linear
 - Criar formulários
 - Testar fluxo
@@ -375,6 +406,7 @@ Hoje (30 Jan 2026):
 ## ✅ CHECKLIST FINAL: ESTÁ TUDO AUTOMATIZADO?
 
 ### Pagamentos
+
 - [x] Stripe configurado
 - [x] Webhooks a funcionar
 - [x] Emails automáticos de confirmação
@@ -382,22 +414,26 @@ Hoje (30 Jan 2026):
 - [x] Cancelamento automático
 
 ### Conteúdo
+
 - [x] 50+ Ebooks no Sanity
 - [x] 20+ Templates disponíveis
 - [x] 10+ Infográficos
 - [x] Permissões por plano configuradas
 
 ### Emails
+
 - [x] Série de boas-vindas (10 emails)
 - [x] Newsletter agendada (52 semanas)
 - [x] Templates de sistema (confirmações, etc)
 
 ### Consultoria
+
 - [x] Sistema de tickets funcionando
 - [x] Formulário de pedido
 - [x] Notificações automáticas
 
 ### Dashboard
+
 - [x] Ver stats em tempo real
 - [x] Acompanhar tickets
 - [x] Verificar receita
@@ -469,16 +505,19 @@ LUCRO ANUAL: €126,804
 ## 🎓 EXEMPLO: DIA TÍPICO DEPOIS DO SETUP
 
 ### 09:00 - Abrir laptop
+
 - ☕ Café na mão
 - 💻 Abrir dashboard
 - 👀 "Hmm, 3 novos membros hoje, nice!"
 
 ### 09:05 - Verificar Tickets
+
 - 🎫 2 tickets novos de consultoria
 - 📧 Ler pedidos
 - 🤔 "Ok, preciso de 30min para responder"
 
 ### 09:35 - Responder Tickets
+
 - ✍️ Analiso pedigree do ticket 1
 - 📄 Escrevo resposta em PDF
 - 📤 Enviar resposta (sistema notifica cliente automaticamente)
@@ -486,6 +525,7 @@ LUCRO ANUAL: €126,804
 - ✅ Done!
 
 ### 10:00 - Done para o dia!
+
 - 🏖️ Resto do dia é teu
 - 💰 Sistema continua a vender sozinho
 - 📧 Emails enviam automaticamente
@@ -498,11 +538,13 @@ LUCRO ANUAL: €126,804
 ## 🚀 CONCLUSÃO: O SISTEMA PERFEITO
 
 ### O Que Tu Fazes:
+
 1. **Setup inicial (3 semanas)** - Criar conteúdo e configurar
 2. **Gestão mínima (2h/semana)** - Tickets e verificação
 3. **Conteúdo novo (1x/mês)** - 1 ebook ou template novo
 
 ### O Que o Sistema Faz Sozinho:
+
 1. ✅ Aceita pagamentos
 2. ✅ Cria contas
 3. ✅ Dá acessos
