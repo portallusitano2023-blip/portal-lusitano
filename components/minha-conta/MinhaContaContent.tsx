@@ -113,7 +113,7 @@ function ToolsSubscriptionCard() {
             <span className="text-sm text-emerald-400">Subscricao activa</span>
           </div>
           <p className="text-xs text-[var(--foreground-muted)] mb-4">
-            4,99 EUR/mes — Acesso ilimitado a todas as ferramentas.
+            9,99 EUR/mes — Acesso ilimitado a todas as ferramentas.
           </p>
           <button
             onClick={handleManagePortal}
@@ -131,7 +131,7 @@ function ToolsSubscriptionCard() {
       ) : (
         <>
           <p className="text-sm text-[var(--foreground-secondary)] mb-4">
-            Subscreva por <span className="text-[var(--gold)] font-semibold">4,99 EUR/mes</span>{" "}
+            Subscreva por <span className="text-[var(--gold)] font-semibold">9,99 EUR/mes</span>{" "}
             para acesso ilimitado a todas as ferramentas.
           </p>
           <button

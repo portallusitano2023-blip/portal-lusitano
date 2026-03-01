@@ -327,7 +327,7 @@ function getStep1Content(name: string, email: string, baseUrl: string): string {
       </div>
 
       <div class="highlight-box">
-        <p>Tudo isto por <strong>4,99 EUR/mes</strong>. Sem compromisso — cancela a qualquer momento com um clique.</p>
+        <p>Tudo isto por <strong>9,99 EUR/mes</strong>. Sem compromisso — cancela a qualquer momento com um clique.</p>
       </div>
 
       <div class="cta-box">
@@ -413,8 +413,8 @@ function getStep3Content(name: string, email: string, baseUrl: string): string {
         <p style="font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase; color: #C5A059; font-family: Arial, sans-serif; margin: 0 0 16px;">Oferta exclusiva para leitores do ebook</p>
         <p style="font-size: 36px; color: #ffffff; font-family: Georgia, serif; margin: 0 0 8px;">20% Desconto</p>
         <p style="font-size: 16px; color: #999999; font-family: Arial, sans-serif; margin: 0 0 24px;">no primeiro mes do Plano Pro</p>
-        <p style="font-size: 24px; color: #C5A059; font-family: Georgia, serif; margin: 0 0 8px;"><s style="color: #666666; font-size: 18px;">4,99 EUR</s> &nbsp; 3,99 EUR</p>
-        <p style="font-size: 13px; color: #666666; font-family: Arial, sans-serif; margin: 0 0 28px;">primeiro mes — depois 4,99 EUR/mes (cancela quando quiseres)</p>
+        <p style="font-size: 24px; color: #C5A059; font-family: Georgia, serif; margin: 0 0 8px;"><s style="color: #666666; font-size: 18px;">9,99 EUR</s> &nbsp; 7,99 EUR</p>
+        <p style="font-size: 13px; color: #666666; font-family: Arial, sans-serif; margin: 0 0 28px;">primeiro mes — depois 9,99 EUR/mes (cancela quando quiseres)</p>
         <a href="${baseUrl}/precos?promo=ebook20" class="btn" style="background: #C5A059; color: #000000 !important; text-decoration: none; padding: 14px 36px; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; font-family: Arial, sans-serif; font-weight: bold; display: inline-block;">Activar Desconto</a>
       </div>
 
@@ -439,7 +439,7 @@ function getStep3Content(name: string, email: string, baseUrl: string): string {
       </div>
 
       <div class="highlight-box">
-        <p>Esta oferta e valida apenas para os proximos 7 dias. Depois disso, o preco regressa ao valor normal de 4,99 EUR/mes.</p>
+        <p>Esta oferta e valida apenas para os proximos 7 dias. Depois disso, o preco regressa ao valor normal de 9,99 EUR/mes.</p>
       </div>
 
       <p style="font-size: 14px; color: #666666; font-family: Arial, sans-serif;">

@@ -60,9 +60,9 @@ describe("Paywall - PRO subscription mode", () => {
     expect(screen.getByText("Subscrever PRO")).toBeInTheDocument();
   });
 
-  it("displays the pricing (4,99 EUR/mes)", () => {
+  it("displays the pricing (9,99 EUR/mes)", () => {
     render(<Paywall toolName="Calculadora" />);
-    expect(screen.getByText(/4,99 EUR\/mes/)).toBeInTheDocument();
+    expect(screen.getByText(/9,99/)).toBeInTheDocument();
   });
 
   it("shows the tool name in the description", () => {
