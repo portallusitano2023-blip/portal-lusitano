@@ -86,7 +86,7 @@ function BillingToggle({
       </span>
       {billing === "annual" && (
         <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded-full">
-          {tr("-17%", "-17%", "-17%")}
+          {tr("-34%", "-34%", "-34%")}
         </span>
       )}
     </div>
@@ -283,8 +283,8 @@ export default function PricingSection() {
   const proTierFeatures = getProTierFeatures(tr);
   const [billing, setBilling] = useState<BillingPeriod>("monthly");
 
-  const price = billing === "annual" ? "4,16" : "4,99";
-  const priceLabel = billing === "annual" ? tr("49,90€/ano", "€49.90/year", "49,90€/año") : null;
+  const price = billing === "annual" ? "6,58" : "9,99";
+  const priceLabel = billing === "annual" ? tr("79€/ano", "€79/year", "79€/año") : null;
 
   return (
     <>
@@ -385,9 +385,9 @@ export default function PricingSection() {
                   <p className="text-xs text-[var(--gold)] font-semibold">
                     {billing === "annual"
                       ? tr(
-                          "Poupa 10€ por ano + €200 vs. avaliação profissional",
-                          "Save €10 per year + €200 vs. professional assessment",
-                          "Ahorra 10€ al año + €200 vs. evaluación profesional"
+                          "Poupa 41€ por ano + €200 vs. avaliação profissional",
+                          "Save €41 per year + €200 vs. professional assessment",
+                          "Ahorra 41€ al año + €200 vs. evaluación profesional"
                         )
                       : tr(
                           "Poupa €200+ vs. avaliação profissional",
@@ -485,14 +485,14 @@ export default function PricingSection() {
               <p className="text-xs text-emerald-400 font-semibold">
                 {billing === "annual"
                   ? tr(
-                      "Portal Lusitano PRO: 49,90€/ano",
-                      "Portal Lusitano PRO: €49.90/year",
-                      "Portal Lusitano PRO: 49,90€/año"
+                      "Portal Lusitano PRO: 79€/ano",
+                      "Portal Lusitano PRO: €79/year",
+                      "Portal Lusitano PRO: 79€/año"
                     )
                   : tr(
-                      "Portal Lusitano PRO: 4,99€/mês = 59,88€/ano",
-                      "Portal Lusitano PRO: €4.99/month = €59.88/year",
-                      "Portal Lusitano PRO: 4,99€/mes = 59,88€/año"
+                      "Portal Lusitano PRO: 9,99€/mês = 119,88€/ano",
+                      "Portal Lusitano PRO: €9.99/month = €119.88/year",
+                      "Portal Lusitano PRO: 9,99€/mes = 119,88€/año"
                     )}
               </p>
               <p className="text-[10px] text-emerald-400/70 mt-1">

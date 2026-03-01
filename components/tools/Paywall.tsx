@@ -136,7 +136,7 @@ export default function Paywall({ toolName, requiresAuth = false, proFeatures }:
             {/* Badge */}
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-full mb-4">
               <span className="text-[var(--gold)] text-[10px] font-bold uppercase tracking-widest">
-                Oferta de lançamento · 50% OFF
+                PRO
               </span>
             </div>
 
@@ -154,11 +154,10 @@ export default function Paywall({ toolName, requiresAuth = false, proFeatures }:
           {/* Price */}
           <div className="flex flex-wrap items-baseline justify-center gap-x-1.5 gap-y-1 mb-5">
             <span className="text-4xl font-serif bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] bg-clip-text text-transparent">
-              4,99
+              9,99
             </span>
             <span className="text-[var(--foreground-muted)] text-base">EUR</span>
             <span className="text-[var(--foreground-muted)] text-sm">/mês</span>
-            <span className="text-xs text-[var(--foreground-muted)] line-through">9,99€</span>
           </div>
 
           {/* Features */}

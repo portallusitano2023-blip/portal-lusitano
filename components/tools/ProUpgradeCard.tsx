@@ -85,7 +85,7 @@ export default function ProUpgradeCard({ isSubscribed }: ProUpgradeCardProps) {
           <Crown size={16} className="text-[#C5A059]" />
           <span className="text-sm font-semibold text-[#C5A059]">{txt.title}</span>
           <span className="text-xs text-[var(--foreground-muted)] font-normal">
-            4,99 {txt.price_suffix}
+            9,99 {txt.price_suffix}
           </span>
         </div>
         {collapsed ? (

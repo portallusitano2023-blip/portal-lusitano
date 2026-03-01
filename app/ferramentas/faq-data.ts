@@ -10,7 +10,7 @@ const faqItemsByLang: Record<string, FAQItem[]> = {
     {
       question: "As ferramentas são gratuitas?",
       answer:
-        "Sim, cada ferramenta oferece 1 utilização gratuita para que possa experimentar sem compromisso. Para utilizações ilimitadas, exportação de PDF e funcionalidades avançadas, pode subscrever o plano PRO por apenas 4,99€/mês ou 49,90€/ano.",
+        "Sim, cada ferramenta oferece 1 utilização gratuita para que possa experimentar sem compromisso. Para utilizações ilimitadas, exportação de PDF e funcionalidades avançadas, pode subscrever o plano PRO por apenas 9,99€/mês ou 79€/ano.",
       category: "geral",
     },
     {
@@ -47,7 +47,7 @@ const faqItemsByLang: Record<string, FAQItem[]> = {
     {
       question: "Existe um plano anual com desconto?",
       answer:
-        "Sim. O plano anual custa 49,90€/ano (equivalente a 4,16€/mês), o que representa uma poupança de 17% face ao plano mensal de 4,99€. Ambos os planos incluem exactamente as mesmas funcionalidades.",
+        "Sim. O plano anual custa 79€/ano (equivalente a 6,58€/mês), o que representa uma poupança de 34% face ao plano mensal de 9,99€. Ambos os planos incluem exactamente as mesmas funcionalidades.",
       category: "precos",
     },
     // === TÉCNICO ===
@@ -87,7 +87,7 @@ const faqItemsByLang: Record<string, FAQItem[]> = {
     {
       question: "Are the tools free?",
       answer:
-        "Yes, each tool offers 1 free use so you can try without commitment. For unlimited uses, PDF export and advanced features, you can subscribe to the PRO plan for just €4.99/month or €49.90/year.",
+        "Yes, each tool offers 1 free use so you can try without commitment. For unlimited uses, PDF export and advanced features, you can subscribe to the PRO plan for just €9.99/month or €79/year.",
       category: "geral",
     },
     {
@@ -124,7 +124,7 @@ const faqItemsByLang: Record<string, FAQItem[]> = {
     {
       question: "Is there an annual plan with a discount?",
       answer:
-        "Yes. The annual plan costs €49.90/year (equivalent to €4.16/month), which represents a 17% saving compared to the monthly plan at €4.99. Both plans include exactly the same features.",
+        "Yes. The annual plan costs €79/year (equivalent to €6.58/month), which represents a 34% saving compared to the monthly plan at €9.99. Both plans include exactly the same features.",
       category: "precos",
     },
     // === TECHNICAL ===
@@ -164,7 +164,7 @@ const faqItemsByLang: Record<string, FAQItem[]> = {
     {
       question: "¿Las herramientas son gratuitas?",
       answer:
-        "Sí, cada herramienta ofrece 1 uso gratuito para que pueda probar sin compromiso. Para usos ilimitados, exportación de PDF y funciones avanzadas, puede suscribirse al plan PRO por solo 4,99€/mes o 49,90€/año.",
+        "Sí, cada herramienta ofrece 1 uso gratuito para que pueda probar sin compromiso. Para usos ilimitados, exportación de PDF y funciones avanzadas, puede suscribirse al plan PRO por solo 9,99€/mes o 79€/año.",
       category: "geral",
     },
     {
@@ -201,7 +201,7 @@ const faqItemsByLang: Record<string, FAQItem[]> = {
     {
       question: "¿Existe un plan anual con descuento?",
       answer:
-        "Sí. El plan anual cuesta 49,90€/año (equivalente a 4,16€/mes), lo que representa un ahorro del 17% frente al plan mensual de 4,99€. Ambos planes incluyen exactamente las mismas funcionalidades.",
+        "Sí. El plan anual cuesta 79€/año (equivalente a 6,58€/mes), lo que representa un ahorro del 34% frente al plan mensual de 9,99€. Ambos planes incluyen exactamente las mismas funcionalidades.",
       category: "precos",
     },
     // === TÉCNICO ===
