@@ -214,13 +214,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     logger.error("Erro ao buscar eventos para sitemap:", error);
   }
 
-  // Buscar cavalos à venda — usa "aprovado" (consistente com comprar/page.tsx) e id (param da rota)
+  // Buscar cavalos à venda — status "active" na tabela cavalos_venda
   let cavalosPages: MetadataRoute.Sitemap = [];
   try {
     const { data: cavalos } = await supabase
       .from("cavalos_venda")
       .select("id, updated_at")
-      .eq("status", "aprovado");
+      .eq("status", "active");
 
     if (cavalos) {
       cavalosPages = cavalos.map((c) => ({

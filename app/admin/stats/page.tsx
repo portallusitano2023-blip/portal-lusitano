@@ -12,7 +12,7 @@ export default async function AdminStatsPage({
   const { data: todosCavalos } = await supabase.from("cavalos_venda").select("*");
 
   // Lógica de Negócio
-  const aprovados = todosCavalos?.filter((c) => c.status === "aprovado") || [];
+  const aprovados = todosCavalos?.filter((c) => c.status === "active") || [];
   const pendentes = todosCavalos?.filter((c) => c.status === "pendente") || [];
 
   // Cálculo do valor total do mercado aprovado usando LaTeX para formalismo

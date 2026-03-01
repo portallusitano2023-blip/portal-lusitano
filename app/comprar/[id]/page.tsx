@@ -28,7 +28,7 @@ export async function generateStaticParams() {
     const { data: cavalos } = await supabase
       .from("cavalos_venda")
       .select("id")
-      .eq("status", "aprovado");
+      .eq("status", "active");
     return (cavalos || []).map((c) => ({ id: c.id }));
   } catch {
     return [{ id: "demo" }];

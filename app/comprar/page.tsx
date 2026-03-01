@@ -11,7 +11,7 @@ export default async function ComprarPage() {
     .select(
       "id, nome_cavalo, preco, image_url, slug, localizacao, idade, raca, sexo, disciplinas, nivel, destaque, created_at, status"
     )
-    .eq("status", "aprovado")
+    .eq("status", "active")
     .order("created_at", { ascending: false });
 
   if (error) {
