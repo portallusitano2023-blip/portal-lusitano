@@ -79,11 +79,9 @@ export async function POST(req: Request) {
       }
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice;
-        if (invoice.payment_intent) {
-          const paymentIntentId =
-            typeof invoice.payment_intent === "string"
-              ? invoice.payment_intent
-              : invoice.payment_intent.id;
+        const piRaw = (invoice as Record<string, unknown>).payment_intent;
+        if (piRaw) {
+          const paymentIntentId = typeof piRaw === "string" ? piRaw : (piRaw as { id: string }).id;
 
           const { data: existingPayment } = await supabaseAdmin
             .from("payments")
