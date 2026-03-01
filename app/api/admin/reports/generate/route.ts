@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { MonthlyReportPDF } from "@/components/admin/MonthlyReportPDF";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 
@@ -184,6 +184,11 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Erro ao gerar relatório PDF:", error);
-    return NextResponse.json({ error: "Erro ao gerar relatório" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao gerar relatório",
+      },
+      { status: 500 }
+    );
   }
 }

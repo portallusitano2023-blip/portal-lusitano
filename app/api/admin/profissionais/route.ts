@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { sanitizeSearchInput } from "@/lib/sanitize";
@@ -38,12 +38,12 @@ export async function GET(req: NextRequest) {
       query = query.eq("plano", plano);
     }
 
-    // Pesquisa (sanitized to prevent PostgREST query injection)
+    // Pesquisa (sanitizada contra PostgREST filter injection)
     if (search) {
-      const safe = sanitizeSearchInput(search);
-      if (safe) {
+      const safeSearch = sanitizeSearchInput(search);
+      if (safeSearch) {
         query = query.or(
-          `nome.ilike.%${safe}%,cidade.ilike.%${safe}%,especialidade.ilike.%${safe}%,email.ilike.%${safe}%`
+          `nome.ilike.%${safeSearch}%,cidade.ilike.%${safeSearch}%,especialidade.ilike.%${safeSearch}%,email.ilike.%${safeSearch}%`
         );
       }
     }
@@ -82,7 +82,12 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Error fetching profissionais:", error);
-    return NextResponse.json({ error: "Erro ao carregar profissionais" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao carregar profissionais",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -130,6 +135,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ profissional }, { status: 201 });
   } catch (error) {
     logger.error("Error creating profissional:", error);
-    return NextResponse.json({ error: "Erro ao criar profissional" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao criar profissional",
+      },
+      { status: 500 }
+    );
   }
 }

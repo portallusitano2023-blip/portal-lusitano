@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { invalidate, CacheTags } from "@/lib/revalidate";
 
 // PUT - Atualizar cavalo
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -55,6 +56,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: "Erro ao atualizar cavalo" }, { status: 500 });
     }
 
+    invalidate(CacheTags.CAVALOS);
     return NextResponse.json({ cavalo: data });
   } catch (error) {
     logger.error("Erro:", error);
@@ -62,7 +64,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-// PATCH - Atualizar status do cavalo
+// PATCH - Atualizar status ou verificação do cavalo
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const email = await verifySession();
@@ -73,21 +75,35 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const { id } = await params;
     const body = await request.json();
 
+    const updateData: Record<string, unknown> = {
+      updated_at: new Date().toISOString(),
+    };
+
+    // Support status update
+    if (body.status !== undefined) {
+      updateData.status = body.status;
+    }
+
+    // Support verificado toggle
+    if (body.verificado !== undefined) {
+      updateData.verificado = body.verificado;
+      updateData.verificado_at = body.verificado ? new Date().toISOString() : null;
+      updateData.verificado_por = body.verificado ? email : null;
+    }
+
     const { data, error } = await supabase
       .from("cavalos_venda")
-      .update({
-        status: body.status,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      logger.error("Erro ao atualizar status:", error);
-      return NextResponse.json({ error: "Erro ao atualizar status" }, { status: 500 });
+      logger.error("Erro ao atualizar cavalo:", error);
+      return NextResponse.json({ error: "Erro ao atualizar cavalo" }, { status: 500 });
     }
 
+    invalidate(CacheTags.CAVALOS);
     return NextResponse.json({ cavalo: data });
   } catch (error) {
     logger.error("Erro:", error);
@@ -115,6 +131,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Erro ao eliminar cavalo" }, { status: 500 });
     }
 
+    invalidate(CacheTags.CAVALOS);
     return NextResponse.json({ success: true });
   } catch (error) {
     logger.error("Erro:", error);

@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Scale } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import MarketplaceGrid from "@/components/MarketplaceGrid";
 
@@ -90,6 +91,17 @@ function ComprarContentInner({ cavalos }: { cavalos: CavaloVenda[] }) {
             {t.comprar_page.sell_horse}
           </Link>
         </div>
+      </div>
+
+      {/* Comparator CTA */}
+      <div className="mb-8 sm:mb-12 flex justify-center">
+        <Link
+          href="/comparador-cavalos"
+          className="inline-flex items-center gap-2 px-5 py-2.5 border border-[var(--gold)]/40 text-[var(--gold)] rounded-lg hover:bg-[var(--gold)]/10 transition-colors text-sm font-medium"
+        >
+          <Scale className="w-4 h-4" />
+          {t.comprar_page.compare_horses || "Comparar Cavalos"}
+        </Link>
       </div>
 
       {/* Client component handles filters + sorting + grid */}

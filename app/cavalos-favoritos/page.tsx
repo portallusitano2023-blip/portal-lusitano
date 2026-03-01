@@ -43,8 +43,8 @@ export default function CavalosFavoritosPage() {
           text: `${horse.name}`,
           url,
         });
-      } catch {
-        // User cancelled or error
+      } catch (error) {
+        console.warn("[CavalosFavoritos] Share failed or was cancelled:", error);
       }
     } else {
       navigator.clipboard.writeText(url);

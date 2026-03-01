@@ -73,7 +73,7 @@ export async function POST() {
       .like("slug", "%-2025");
 
     if (error2025) {
-      results.errors.push(`Erro eventos 2025: ${error2025.message}`);
+      results.errors.push(`Erro eventos 2025`);
     }
 
     return NextResponse.json({

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 
@@ -22,6 +22,11 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ pendentes: pendentes || [] });
   } catch (error) {
     logger.error("Error fetching depoimentos:", error);
-    return NextResponse.json({ error: "Erro ao carregar depoimentos" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao carregar depoimentos",
+      },
+      { status: 500 }
+    );
   }
 }

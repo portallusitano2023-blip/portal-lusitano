@@ -42,6 +42,10 @@ yarn-error.log*
 nul
 tmp_*
 *.tmp
+*.exe
+
+# windows path artifacts
+CUsers*
 
 # typescript
 *.tsbuildinfo

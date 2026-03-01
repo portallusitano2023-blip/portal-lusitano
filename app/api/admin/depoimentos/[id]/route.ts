@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 
@@ -34,6 +34,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ depoimento });
   } catch (error) {
     logger.error("Error updating depoimento:", error);
-    return NextResponse.json({ error: "Erro ao atualizar depoimento" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao atualizar depoimento",
+      },
+      { status: 500 }
+    );
   }
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { sanitizeSearchInput } from "@/lib/sanitize";
@@ -52,12 +52,12 @@ export async function GET(req: NextRequest) {
       query = query.gte("due_date", startDate.toISOString()).lte("due_date", endDate.toISOString());
     }
 
-    // Pesquisa (sanitized to prevent PostgREST query injection)
+    // Pesquisa (sanitizada contra PostgREST filter injection)
     if (search) {
-      const safe = sanitizeSearchInput(search);
-      if (safe) {
+      const safeSearch = sanitizeSearchInput(search);
+      if (safeSearch) {
         query = query.or(
-          `title.ilike.%${safe}%,description.ilike.%${safe}%,assigned_to.ilike.%${safe}%,related_email.ilike.%${safe}%`
+          `title.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%,assigned_to.ilike.%${safeSearch}%,related_email.ilike.%${safeSearch}%`
         );
       }
     }
@@ -88,7 +88,12 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Error fetching tasks:", error);
-    return NextResponse.json({ error: "Erro ao carregar tarefas" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao carregar tarefas",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -140,6 +145,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ task }, { status: 201 });
   } catch (error) {
     logger.error("Error creating task:", error);
-    return NextResponse.json({ error: "Erro ao criar tarefa" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao criar tarefa",
+      },
+      { status: 500 }
+    );
   }
 }

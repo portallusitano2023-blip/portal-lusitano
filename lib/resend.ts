@@ -241,7 +241,7 @@ function getRegistrationWelcomeEmail(name: string, email: string, baseUrl: strin
 
       <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.3em; color: #999999; font-family: Arial, sans-serif;">Plano Pro — para uso profissional</p>
       <p style="font-size: 14px; color: #555555; font-family: Arial, sans-serif; line-height: 1.7;">
-        Se precisares de usos ilimitados, exportacao de relatorios PDF e historico completo de analises, o plano Pro esta disponivel por <strong style="color: #1a1a1a;">4,99 EUR/mes</strong>. Cancela a qualquer momento.
+        Se precisares de usos ilimitados, exportacao de relatorios PDF e historico completo de analises, o plano Pro esta disponivel por <strong style="color: #1a1a1a;">9,99 EUR/mes</strong>. Cancela a qualquer momento.
       </p>
       <p style="margin-top: 8px;">
         <a href="${baseUrl}/precos" style="color: #C5A059; font-family: Arial, sans-serif; font-size: 14px; text-decoration: none;">Ver planos e precos &rarr;</a>
@@ -274,11 +274,11 @@ function getToolLimitEmail(name: string, email: string, toolSlug: string, baseUr
   const content = `
     <div class="body">
       <p class="lead">${safeName}, esgotaste o uso gratuito da ${toolName}.</p>
-      <p>Cada ferramenta inclui 1 analise gratuita para experimentares sem compromisso. Para continuar a usar sem limites, o plano Pro esta disponivel por 4,99 EUR/mes.</p>
+      <p>Cada ferramenta inclui 1 analise gratuita para experimentares sem compromisso. Para continuar a usar sem limites, o plano Pro esta disponivel por 9,99 EUR/mes.</p>
 
       <div class="cta-box">
         <p>Usos ilimitados em todas as ferramentas, relatorios PDF e historico completo</p>
-        <a href="${baseUrl}/precos" class="btn">Ver Plano Pro — 4,99 EUR/mes</a>
+        <a href="${baseUrl}/precos" class="btn">Ver Plano Pro — 9,99 EUR/mes</a>
       </div>
 
       <hr class="divider">
@@ -468,7 +468,7 @@ export function getToolsProActivadoEmail(email: string): string {
       </div>
 
       <div class="highlight-box">
-        <p><strong>Plano:</strong> Pro Mensal — €4,99/mês. Cancela a qualquer momento, sem compromissos.</p>
+        <p><strong>Plano:</strong> Pro Mensal — €9,99/mês. Cancela a qualquer momento, sem compromissos.</p>
       </div>
 
       <div class="cta-box">
@@ -526,7 +526,7 @@ export const EmailWorkflows = {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
     return sendEmail({
       to: email,
-      subject: "Actualize para Pro — usos ilimitados por 4,99 EUR/mes",
+      subject: "Actualize para Pro — usos ilimitados por 9,99 EUR/mes",
       html: getToolLimitEmail(name, email, toolSlug, baseUrl),
       template: EMAIL_TEMPLATES.TOOL_LIMIT_REACHED,
     });

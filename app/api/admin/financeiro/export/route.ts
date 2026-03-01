@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { sanitizeSearchInput } from "@/lib/sanitize";
@@ -41,12 +41,11 @@ export async function GET(req: NextRequest) {
       query = query.lte("created_at", `${endDate}T23:59:59`);
     }
 
-    // Sanitize search to prevent PostgREST query injection
     if (search) {
-      const safe = sanitizeSearchInput(search);
-      if (safe) {
+      const safeSearch = sanitizeSearchInput(search);
+      if (safeSearch) {
         query = query.or(
-          `email.ilike.%${safe}%,description.ilike.%${safe}%,stripe_payment_intent_id.ilike.%${safe}%`
+          `email.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%,stripe_payment_intent_id.ilike.%${safeSearch}%`
         );
       }
     }
@@ -54,6 +53,15 @@ export async function GET(req: NextRequest) {
     const { data: transactions, error } = await query;
 
     if (error) throw error;
+
+    // Sanitizar células CSV contra formula injection (CWE-1236)
+    function csvSafeCell(val: string): string {
+      const escaped = val.replace(/"/g, '""');
+      if (/^[=+\-@\t\r]/.test(escaped)) {
+        return `"'${escaped}"`;
+      }
+      return `"${escaped}"`;
+    }
 
     // Gerar CSV
     const csvRows: string[] = [];
@@ -87,15 +95,15 @@ export async function GET(req: NextRequest) {
       };
 
       const row = [
-        new Date(transaction.created_at).toLocaleString("pt-PT"),
-        transaction.email || "",
-        productLabels[transaction.product_type || ""] || "Outros",
+        csvSafeCell(new Date(transaction.created_at).toLocaleString("pt-PT")),
+        csvSafeCell(transaction.email || ""),
+        csvSafeCell(productLabels[transaction.product_type || ""] || "Outros"),
         (transaction.amount / 100).toFixed(2),
         transaction.currency?.toUpperCase() || "EUR",
-        statusLabels[transaction.status] || transaction.status,
-        `"${(transaction.description || "").replace(/"/g, '""')}"`, // Escapar aspas
-        transaction.stripe_payment_intent_id || "",
-        transaction.stripe_session_id || "",
+        csvSafeCell(statusLabels[transaction.status] || transaction.status),
+        csvSafeCell(transaction.description || ""),
+        csvSafeCell(transaction.stripe_payment_intent_id || ""),
+        csvSafeCell(transaction.stripe_session_id || ""),
       ];
       csvRows.push(row.join(","));
     });

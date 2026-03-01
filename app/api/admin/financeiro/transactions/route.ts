@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { sanitizeSearchInput } from "@/lib/sanitize";
@@ -50,12 +50,11 @@ export async function GET(req: NextRequest) {
       query = query.lte("created_at", `${endDate}T23:59:59`);
     }
 
-    // Sanitize search to prevent PostgREST query injection
     if (search) {
-      const safe = sanitizeSearchInput(search);
-      if (safe) {
+      const safeSearch = sanitizeSearchInput(search);
+      if (safeSearch) {
         query = query.or(
-          `email.ilike.%${safe}%,description.ilike.%${safe}%,stripe_payment_intent_id.ilike.%${safe}%`
+          `email.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%,stripe_payment_intent_id.ilike.%${safeSearch}%`
         );
       }
     }

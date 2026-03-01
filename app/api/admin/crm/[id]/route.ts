@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 
@@ -28,7 +28,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ lead });
   } catch (error) {
     logger.error("Error fetching lead:", error);
-    return NextResponse.json({ error: "Erro ao carregar lead" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao carregar lead",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -110,7 +115,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ lead });
   } catch (error) {
     logger.error("Error updating lead:", error);
-    return NextResponse.json({ error: "Erro ao atualizar lead" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao atualizar lead",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -131,6 +141,11 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     return NextResponse.json({ message: "Lead eliminado com sucesso" });
   } catch (error) {
     logger.error("Error deleting lead:", error);
-    return NextResponse.json({ error: "Erro ao eliminar lead" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao eliminar lead",
+      },
+      { status: 500 }
+    );
   }
 }

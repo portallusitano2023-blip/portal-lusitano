@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 
 interface DiagnosticoCheck {
@@ -40,12 +40,13 @@ export async function GET(_req: NextRequest) {
 
     diagnostico.checks.supabase_conexao = {
       status: error ? "❌ ERRO" : "✅ OK",
-      message: error ? "Falha na conexão com Supabase" : "Conexão com Supabase OK",
+      message: error ? "Erro na conexão com Supabase" : "Conexão com Supabase OK",
+      error: error || null,
     };
-  } catch {
+  } catch (error) {
     diagnostico.checks.supabase_conexao = {
       status: "❌ ERRO",
-      message: "Falha na conexão com Supabase",
+      message: "Erro na conexão com Supabase",
     };
   }
 
@@ -58,11 +59,12 @@ export async function GET(_req: NextRequest) {
     diagnostico.checks.tabela_payments = {
       status: error ? "❌ NÃO EXISTE ou SEM PERMISSÃO" : "✅ EXISTE",
       total_registos: count || 0,
+      error: error || null,
     };
-  } catch {
+  } catch (error) {
     diagnostico.checks.tabela_payments = {
       status: "❌ ERRO",
-      message: "Falha ao verificar tabela payments",
+      message: "Erro ao verificar tabela payments",
     };
   }
 
@@ -75,11 +77,12 @@ export async function GET(_req: NextRequest) {
     diagnostico.checks.tabela_contact_submissions = {
       status: error ? "❌ NÃO EXISTE ou SEM PERMISSÃO" : "✅ EXISTE",
       total_registos: count || 0,
+      error: error || null,
     };
-  } catch {
+  } catch (error) {
     diagnostico.checks.tabela_contact_submissions = {
       status: "❌ ERRO",
-      message: "Falha ao verificar tabela contact_submissions",
+      message: "Erro ao verificar tabela contact_submissions",
     };
   }
 
@@ -92,11 +95,12 @@ export async function GET(_req: NextRequest) {
     diagnostico.checks.tabela_leads = {
       status: error ? "❌ NÃO EXISTE ou SEM PERMISSÃO" : "✅ EXISTE",
       total_registos: count || 0,
+      error: error || null,
     };
-  } catch {
+  } catch (error) {
     diagnostico.checks.tabela_leads = {
       status: "❌ ERRO",
-      message: "Falha ao verificar tabela leads",
+      message: "Erro ao verificar tabela leads",
     };
   }
 

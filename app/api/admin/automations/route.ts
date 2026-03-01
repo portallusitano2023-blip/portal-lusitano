@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 
@@ -60,7 +60,12 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Error fetching automations:", error);
-    return NextResponse.json({ error: "Erro ao carregar automações" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao carregar automações",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -144,7 +149,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ automation }, { status: 201 });
   } catch (error) {
     logger.error("Error creating automation:", error);
-    return NextResponse.json({ error: "Erro ao criar automação" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao criar automação",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -176,7 +186,12 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ automation });
   } catch (error) {
     logger.error("Error updating automation:", error);
-    return NextResponse.json({ error: "Erro ao atualizar automação" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao atualizar automação",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -203,6 +218,11 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     logger.error("Error deleting automation:", error);
-    return NextResponse.json({ error: "Erro ao apagar automação" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao apagar automação",
+      },
+      { status: 500 }
+    );
   }
 }

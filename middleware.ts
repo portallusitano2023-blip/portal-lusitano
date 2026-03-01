@@ -229,6 +229,19 @@ export async function middleware(request: NextRequest) {
     return rewriteResponse;
   }
 
+  // i18n: Auto-detect language from Accept-Language for first-time visitors (no locale cookie)
+  if (
+    !request.cookies.get("locale")?.value &&
+    !pathname.startsWith("/api/") &&
+    !pathname.startsWith("/admin")
+  ) {
+    const acceptLang = request.headers.get("accept-language") || "";
+    const detected = acceptLang.match(/\b(en|es)\b/);
+    if (detected) {
+      response.cookies.set("locale", detected[1], { path: "/", sameSite: "lax" });
+    }
+  }
+
   // Protect admin routes (except login page)
   if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
     const token = request.cookies.get("admin_session")?.value;

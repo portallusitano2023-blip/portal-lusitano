@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 
@@ -32,6 +32,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ logs: logs || [] });
   } catch (error) {
     logger.error("Error fetching automation logs:", error);
-    return NextResponse.json({ error: "Erro ao carregar logs" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao carregar logs",
+      },
+      { status: 500 }
+    );
   }
 }

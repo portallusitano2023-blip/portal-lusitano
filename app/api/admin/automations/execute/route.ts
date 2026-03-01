@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { Resend } from "resend";
 import { logger } from "@/lib/logger";
@@ -121,7 +121,12 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     logger.error("Error executing automation:", error);
-    return NextResponse.json({ error: "Erro ao executar automação" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao executar automação",
+      },
+      { status: 500 }
+    );
   }
 }
 

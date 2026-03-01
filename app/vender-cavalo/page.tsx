@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/context/ToastContext";
 import type { FormData, Documentos, DocumentType } from "@/components/vender-cavalo/types";
 import {
@@ -25,6 +25,8 @@ import StepTreinoSaude from "@/components/vender-cavalo/StepTreinoSaude";
 import StepPrecoApresentacao from "@/components/vender-cavalo/StepPrecoApresentacao";
 import StepPagamento from "@/components/vender-cavalo/StepPagamento";
 import { useLanguage } from "@/context/LanguageContext";
+
+const AUTOSAVE_KEY = "vender-cavalo-draft";
 
 function calcularIdade(dataNascimento: string): number {
   if (!dataNascimento) return 0;
@@ -53,6 +55,44 @@ export default function VenderCavaloPage() {
   const [opcaoDestaque, setOpcaoDestaque] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [restored, setRestored] = useState(false);
+
+  // Auto-restore draft from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(AUTOSAVE_KEY);
+      if (saved) {
+        const draft = JSON.parse(saved);
+        if (draft.formData) setFormData(draft.formData);
+        if (draft.step) setStep(draft.step);
+        if (draft.opcaoDestaque) setOpcaoDestaque(draft.opcaoDestaque);
+        setRestored(true);
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  }, []);
+
+  // Auto-save draft to localStorage on changes
+  const saveDraft = useCallback(() => {
+    try {
+      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({ formData, step, opcaoDestaque }));
+    } catch {
+      // Ignore storage errors (quota exceeded, etc.)
+    }
+  }, [formData, step, opcaoDestaque]);
+
+  useEffect(() => {
+    saveDraft();
+  }, [saveDraft]);
+
+  const clearDraft = () => {
+    try {
+      localStorage.removeItem(AUTOSAVE_KEY);
+    } catch {
+      // Ignore
+    }
+  };
 
   const updateField = (field: keyof FormData, value: FormData[keyof FormData]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -67,17 +107,17 @@ export default function VenderCavaloPage() {
     }));
   };
 
+  // Merged step validation: Step 1 = Owner+ID, Step 2 = Lineage+Health, Step 3 = Price, Step 4 = Payment
   const validateStep = (currentStep: number): boolean => {
     const newErrors: string[] = [];
 
     if (currentStep === 1) {
+      // Owner info
       if (!formData.proprietario_nome) newErrors.push(t.form_validation.required_owner_name);
       if (!formData.proprietario_email) newErrors.push(t.form_validation.required_email);
       if (!formData.proprietario_telefone) newErrors.push(t.form_validation.required_phone);
       if (!formData.proprietario_nif) newErrors.push(t.form_validation.required_nif);
-    }
-
-    if (currentStep === 2) {
+      // Horse ID
       if (!formData.nome) newErrors.push(t.form_validation.required_horse_name);
       if (!formData.nome_registo) newErrors.push(t.form_validation.required_registration_name);
       if (!formData.numero_registo) newErrors.push(t.form_validation.required_registration_number);
@@ -87,21 +127,20 @@ export default function VenderCavaloPage() {
       if (!formData.pelagem) newErrors.push(t.form_validation.required_coat);
     }
 
-    if (currentStep === 3) {
+    if (currentStep === 2) {
+      // Lineage
       if (!formData.pai_nome || !formData.pai_registo)
         newErrors.push(t.form_validation.required_sire);
       if (!formData.mae_nome || !formData.mae_registo)
         newErrors.push(t.form_validation.required_dam);
       if (!documentos.livroAzul) newErrors.push(t.form_validation.required_blue_book);
-    }
-
-    if (currentStep === 4) {
+      // Training & Health
       if (!formData.nivel_treino) newErrors.push(t.form_validation.required_training_level);
       if (!formData.estado_saude) newErrors.push(t.form_validation.required_health_status);
       if (!formData.vacinacao_atualizada) newErrors.push(t.form_validation.required_vaccination);
     }
 
-    if (currentStep === 5) {
+    if (currentStep === 3) {
       if (!formData.preco) newErrors.push(t.form_validation.required_price);
       if (!formData.localizacao) newErrors.push(t.vender_cavalo.error_location_required);
       if (!formData.descricao || formData.descricao.length < MIN_DESCRIPTION_LENGTH)
@@ -109,7 +148,7 @@ export default function VenderCavaloPage() {
       if (imagens.length < MIN_IMAGES) newErrors.push(t.vender_cavalo.error_photos_min);
     }
 
-    if (currentStep === 6) {
+    if (currentStep === 4) {
       if (!termsAccepted) newErrors.push(t.vender_cavalo.error_terms_required);
     }
 
@@ -145,7 +184,7 @@ export default function VenderCavaloPage() {
   };
 
   const handleSubmit = async () => {
-    if (!validateStep(6)) return;
+    if (!validateStep(4)) return;
 
     setLoading(true);
 
@@ -229,6 +268,8 @@ export default function VenderCavaloPage() {
         throw new Error(t.vender_cavalo.error_no_checkout_url);
       }
 
+      // Clear draft on successful checkout redirect
+      clearDraft();
       window.location.href = data.url;
     } catch (error: unknown) {
       if (process.env.NODE_ENV === "development") console.error("[VenderCavalo]", error);
@@ -250,33 +291,65 @@ export default function VenderCavaloPage() {
         <StepIndicator currentStep={step} />
       </div>
 
+      {/* Auto-save indicator */}
+      {restored && step === 1 && (
+        <div className="max-w-3xl mx-auto mb-4">
+          <div className="flex items-center justify-between bg-[var(--gold)]/10 border border-[var(--gold)]/20 px-4 py-2 text-sm">
+            <span className="text-[var(--foreground-secondary)]">
+              {t.vender_cavalo?.draft_restored || "Rascunho restaurado automaticamente"}
+            </span>
+            <button
+              onClick={() => {
+                clearDraft();
+                setFormData(initialFormData);
+                setStep(1);
+                setOpcaoDestaque(false);
+                setRestored(false);
+              }}
+              className="text-[var(--gold)] text-xs uppercase tracking-wider hover:underline"
+            >
+              {t.vender_cavalo?.clear_draft || "Limpar"}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-3xl mx-auto">
         <FormErrors errors={errors} />
 
-        {step === 1 && <StepProprietario formData={formData} updateField={updateField} />}
+        {/* Step 1: Owner + Horse Identification (merged old steps 1+2) */}
+        {step === 1 && (
+          <>
+            <StepProprietario formData={formData} updateField={updateField} />
+            <div className="mt-8 pt-8 border-t border-[var(--border)]">
+              <StepIdentificacao formData={formData} updateField={updateField} />
+            </div>
+          </>
+        )}
 
-        {step === 2 && <StepIdentificacao formData={formData} updateField={updateField} />}
+        {/* Step 2: Lineage + Training/Health (merged old steps 3+4) */}
+        {step === 2 && (
+          <>
+            <StepLinhagem
+              formData={formData}
+              updateField={updateField}
+              documentos={documentos}
+              onDocUpload={handleDocUpload}
+            />
+            <div className="mt-8 pt-8 border-t border-[var(--border)]">
+              <StepTreinoSaude
+                formData={formData}
+                updateField={updateField}
+                documentos={documentos}
+                onDocUpload={handleDocUpload}
+                onToggleDisciplina={toggleDisciplina}
+              />
+            </div>
+          </>
+        )}
 
+        {/* Step 3: Price & Presentation (old step 5) */}
         {step === 3 && (
-          <StepLinhagem
-            formData={formData}
-            updateField={updateField}
-            documentos={documentos}
-            onDocUpload={handleDocUpload}
-          />
-        )}
-
-        {step === 4 && (
-          <StepTreinoSaude
-            formData={formData}
-            updateField={updateField}
-            documentos={documentos}
-            onDocUpload={handleDocUpload}
-            onToggleDisciplina={toggleDisciplina}
-          />
-        )}
-
-        {step === 5 && (
           <StepPrecoApresentacao
             formData={formData}
             updateField={updateField}
@@ -286,7 +359,8 @@ export default function VenderCavaloPage() {
           />
         )}
 
-        {step === 6 && (
+        {/* Step 4: Payment (old step 6) */}
+        {step === 4 && (
           <StepPagamento
             formData={formData}
             imagens={imagens}

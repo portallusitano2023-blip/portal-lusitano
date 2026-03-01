@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
+import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { invalidate, CacheTags } from "@/lib/revalidate";
 
 // GET - Obter uma coudelaria específica
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -39,7 +40,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     });
   } catch (error) {
     logger.error("Error fetching coudelaria:", error);
-    return NextResponse.json({ error: "Erro ao carregar coudelaria" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao carregar coudelaria",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -171,10 +177,16 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       });
     }
 
+    invalidate(CacheTags.COUDELARIAS);
     return NextResponse.json({ coudelaria });
   } catch (error) {
     logger.error("Error updating coudelaria:", error);
-    return NextResponse.json({ error: "Erro ao atualizar coudelaria" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao atualizar coudelaria",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -199,9 +211,15 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
     if (error) throw error;
 
+    invalidate(CacheTags.COUDELARIAS);
     return NextResponse.json({ message: "Coudelaria eliminada com sucesso" });
   } catch (error) {
     logger.error("Error deleting coudelaria:", error);
-    return NextResponse.json({ error: "Erro ao eliminar coudelaria" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Erro ao eliminar coudelaria",
+      },
+      { status: 500 }
+    );
   }
 }
