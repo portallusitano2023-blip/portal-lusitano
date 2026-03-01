@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 
@@ -288,10 +288,7 @@ export async function POST() {
 
     if (error) {
       logger.error("Erro ao inserir eventos:", error);
-      return NextResponse.json(
-        { error: "Erro ao inserir eventos" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Erro ao inserir eventos" }, { status: 500 });
     }
 
     return NextResponse.json({

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import EventosContent from "@/components/eventos/EventosContent";
 

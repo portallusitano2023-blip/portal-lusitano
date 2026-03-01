@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // Mock supabase before importing the module under test
-vi.mock("@/lib/supabase", () => ({
+vi.mock("@/lib/supabase-admin", () => ({
   supabase: {
     from: vi.fn().mockReturnThis(),
     select: vi.fn().mockReturnThis(),
@@ -14,7 +14,7 @@ const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 import { triggerAutomations, getPendingAutomationsCount } from "@/lib/automations";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase-admin";
 
 describe("automations", () => {
   beforeEach(() => {

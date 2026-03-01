@@ -13,7 +13,7 @@ vi.mock("next/headers", () => ({
 }));
 
 const mockFrom = vi.fn();
-vi.mock("@/lib/supabase", () => ({
+vi.mock("@/lib/supabase-admin", () => ({
   supabase: {
     from: (...args: unknown[]) => mockFrom(...args),
   },
@@ -104,7 +104,7 @@ describe("GET /api/favoritos", () => {
       }),
     }));
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: (...args: unknown[]) => mockFrom(...args),
       },
@@ -175,7 +175,7 @@ describe("POST /api/favoritos", () => {
       }),
     }));
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: (...args: unknown[]) => mockFrom(...args),
       },
@@ -295,7 +295,7 @@ describe("DELETE /api/favoritos", () => {
       }),
     }));
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: (...args: unknown[]) => mockFrom(...args),
       },

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
+import ToolNavBar from "@/components/tools/ToolNavBar";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { useQuizLogic } from "@/components/analise-perfil/useQuizLogic";

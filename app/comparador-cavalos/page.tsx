@@ -1,19 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import {
-  ArrowLeft,
-  Plus,
-  Scale,
-  Crown,
-  BarChart3,
-  RefreshCw,
-  History,
-  X,
-  Sparkles,
-} from "lucide-react";
+import { Plus, Scale, Crown, BarChart3, RefreshCw, History, X, Sparkles } from "lucide-react";
 import dynamic from "next/dynamic";
+import ToolNavBar from "@/components/tools/ToolNavBar";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
@@ -29,7 +19,6 @@ import {
   CHAIN_KEY,
   PROFILE_CONTEXT_KEY,
   HISTORY_KEY,
-  PRESETS,
   PROFILE_LABELS,
   SUBPROFILE_LABELS,
 } from "@/components/comparador-cavalos/data";
@@ -350,31 +339,11 @@ export default function ComparadorCavalosPage() {
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/90 backdrop-blur-xl border-b border-[var(--border)]">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
-          >
-            <ArrowLeft size={18} />
-            <span className="text-sm font-medium hidden sm:block">Portal Lusitano</span>
-          </Link>
-
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-              <Scale size={18} className="text-white" />
-            </div>
-            <div className="hidden sm:block">
-              <span className="text-sm font-medium text-[var(--foreground)] block leading-tight">
-                {t.comparador.tool_name}
-              </span>
-              <span className="text-xs text-[var(--foreground-muted)]">
-                {t.comparador.tool_subtitle}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
+      <ToolNavBar
+        currentTool="comparador-cavalos"
+        hasResult={!!showAnalise}
+        rightSlot={
+          <>
             {step > 0 && (
               <button
                 onClick={adicionar}
@@ -460,11 +429,11 @@ export default function ComparadorCavalosPage() {
                 </button>
               </div>
             )}
-          </div>
-        </div>
-      </header>
+          </>
+        }
+      />
 
-      <div className="pt-16">
+      <div id="main-content" className="pt-16">
         {/* Intro */}
         {step === 0 && (
           <IntroSection

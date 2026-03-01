@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase-admin";
 import CoudelariaDetail from "@/components/directorio/CoudelariaDetail";
 
 export default async function CoudelariaPage({ params }: { params: Promise<{ slug: string }> }) {

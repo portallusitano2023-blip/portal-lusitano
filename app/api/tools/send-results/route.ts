@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase-admin";
 import { sendEmail } from "@/lib/resend";
 import { logger } from "@/lib/logger";
 import { apiLimiter } from "@/lib/rate-limit";

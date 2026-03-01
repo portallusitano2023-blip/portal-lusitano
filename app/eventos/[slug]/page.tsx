@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase-admin";
 import EventoDetail from "@/components/eventos/EventoDetail";
 
 export default async function EventoPage({ params }: { params: Promise<{ slug: string }> }) {

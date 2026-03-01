@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { apiLimiter } from "@/lib/rate-limit";
-import { supabaseAdmin as supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import { z } from "zod";
 

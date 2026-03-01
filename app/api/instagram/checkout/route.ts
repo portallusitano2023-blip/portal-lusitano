@@ -1,5 +1,5 @@
 import { stripe } from "@/lib/stripe";
-import { supabaseAdmin as supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { strictLimiter } from "@/lib/rate-limit";

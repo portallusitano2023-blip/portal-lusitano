@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 // ---------------------------------------------------------------------------
 const mockFrom = vi.fn();
 
-vi.mock("@/lib/supabase", () => ({
+vi.mock("@/lib/supabase-admin", () => ({
   supabase: {
     from: (...args: unknown[]) => mockFrom(...args),
   },
@@ -81,7 +81,7 @@ describe("GET /api/reviews", () => {
   beforeEach(async () => {
     vi.resetModules();
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: (...args: unknown[]) => mockFrom(...args),
       },
@@ -194,7 +194,7 @@ describe("POST /api/reviews - coudelaria", () => {
   beforeEach(async () => {
     vi.resetModules();
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: (...args: unknown[]) => mockFrom(...args),
       },
@@ -283,7 +283,7 @@ describe("POST /api/reviews - coudelaria", () => {
       },
     }));
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: (...args: unknown[]) => mockFrom(...args),
       },
@@ -329,7 +329,7 @@ describe("POST /api/reviews - ferramenta", () => {
   beforeEach(async () => {
     vi.resetModules();
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: (...args: unknown[]) => mockFrom(...args),
       },
@@ -420,7 +420,7 @@ describe("POST /api/reviews - ferramenta", () => {
     for (const slug of validSlugs) {
       vi.resetModules();
 
-      vi.doMock("@/lib/supabase", () => ({
+      vi.doMock("@/lib/supabase-admin", () => ({
         supabase: {
           from: vi.fn().mockReturnValue(createInsertChain({ data: { id: "r-ok" }, error: null })),
         },

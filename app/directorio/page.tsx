@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import DirectorioContent from "@/components/directorio/DirectorioContent";
 

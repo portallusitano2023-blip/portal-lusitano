@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { CalendarRange, TrendingUp } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Result } from "@/components/analise-perfil/types";
 
 interface FirstYearSimTabProps {
@@ -26,7 +27,8 @@ function formatEUR(value: number): string {
 }
 
 export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   const baseMonthlyCost = useMemo(() => {
     if (result.profile === "competidor") return 1800;
@@ -35,57 +37,91 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
     return 800;
   }, [result.profile]);
 
-  const milestones: Milestone[] = useMemo(
-    () => [
+  // Build cumulative costs per milestone
+  const cumulativeData = useMemo(() => {
+    const milestones: Milestone[] = [
       {
         months: [1],
-        title: "Adaptação",
-        description: "Período de adaptação ao novo ambiente",
+        title: tr("Adaptação", "Adaptation", "Adaptación"),
+        description: tr(
+          "Período de adaptação ao novo ambiente",
+          "Adaptation period to the new environment",
+          "Período de adaptación al nuevo entorno"
+        ),
         extra: 500,
       },
       {
         months: [2],
-        title: "Veterinário Inicial",
-        description: "Check-up completo, vacinações",
+        title: tr("Veterinário Inicial", "Initial Veterinary", "Veterinario Inicial"),
+        description: tr(
+          "Check-up completo, vacinações",
+          "Full check-up, vaccinations",
+          "Revisión completa, vacunaciones"
+        ),
         extra: 800,
       },
       {
         months: [3],
-        title: "Início de Treino",
-        description: "Estabelecer rotina de trabalho",
+        title: tr("Início de Treino", "Training Start", "Inicio de Entrenamiento"),
+        description: tr(
+          "Estabelecer rotina de trabalho",
+          "Establish a work routine",
+          "Establecer rutina de trabajo"
+        ),
         extra: 200,
       },
       {
         months: [4, 5, 6],
-        title: "Desenvolvimento",
-        description: "Treino regular, progresso constante",
+        title: tr("Desenvolvimento", "Development", "Desarrollo"),
+        description: tr(
+          "Treino regular, progresso constante",
+          "Regular training, steady progress",
+          "Entrenamiento regular, progreso constante"
+        ),
         extra: 0,
       },
       {
         months: [7],
-        title: "Avaliação",
-        description: "Revisão do progresso com treinador",
+        title: tr("Avaliação", "Evaluation", "Evaluación"),
+        description: tr(
+          "Revisão do progresso com treinador",
+          "Progress review with trainer",
+          "Revisión del progreso con entrenador"
+        ),
         extra: 300,
       },
       {
         months: [8, 9],
-        title: "Consolidação",
-        description: "Solidificar o trabalho desenvolvido",
+        title: tr("Consolidação", "Consolidation", "Consolidación"),
+        description: tr(
+          "Solidificar o trabalho desenvolvido",
+          "Consolidate the work developed",
+          "Solidificar el trabajo desarrollado"
+        ),
         extra: 0,
       },
-      { months: [10], title: "Ferrador", description: "Avaliação semestral de cascos", extra: 150 },
+      {
+        months: [10],
+        title: tr("Ferrador", "Farrier", "Herrador"),
+        description: tr(
+          "Avaliação semestral de cascos",
+          "Semi-annual hoof assessment",
+          "Evaluación semestral de cascos"
+        ),
+        extra: 150,
+      },
       {
         months: [11, 12],
-        title: "Maturação",
-        description: "Preparação para objectivos do ano seguinte",
+        title: tr("Maturação", "Maturation", "Maduración"),
+        description: tr(
+          "Preparação para objectivos do ano seguinte",
+          "Preparation for next year's goals",
+          "Preparación para los objetivos del año siguiente"
+        ),
         extra: 0,
       },
-    ],
-    []
-  );
+    ];
 
-  // Build cumulative costs per milestone
-  const cumulativeData = useMemo(() => {
     let running = 0;
     return milestones.map((m) => {
       const monthCount = m.months.length;
@@ -97,7 +133,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
         cumulative: running,
       };
     });
-  }, [milestones, baseMonthlyCost]);
+  }, [baseMonthlyCost, tr]);
 
   const totalYear =
     cumulativeData.length > 0 ? cumulativeData[cumulativeData.length - 1].cumulative : 0;
@@ -131,8 +167,12 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
     }));
   }, [cumulativeData, totalYear, usableW, usableH]);
 
-  const monthLabel = (months: number[]): string =>
-    months.length > 1 ? `Mês ${months[0]}-${months[months.length - 1]}` : `Mês ${months[0]}`;
+  const monthLabel = (months: number[]): string => {
+    const m = tr("Mês", "Month", "Mes");
+    return months.length > 1
+      ? `${m} ${months[0]}-${months[months.length - 1]}`
+      : `${m} ${months[0]}`;
+  };
 
   return (
     <div className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
@@ -143,13 +183,17 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
           {t.analise_perfil.firstyear_title}
         </h3>
         <p className="text-sm text-[var(--foreground-muted)] mb-6">
-          Simulação de custos para os primeiros 12 meses com o perfil {result.title}
+          {tr(
+            `Simulação de custos para os primeiros 12 meses com o perfil ${result.title}`,
+            `Cost simulation for the first 12 months with the ${result.title} profile`,
+            `Simulación de costes para los primeros 12 meses con el perfil ${result.title}`
+          )}
         </p>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)]">
             <p className="text-xs uppercase tracking-wider text-[var(--foreground-muted)] mb-1">
-              Custo Base Mensal
+              {tr("Custo Base Mensal", "Base Monthly Cost", "Coste Base Mensual")}
             </p>
             <p className="text-2xl font-serif font-bold text-[var(--foreground)]">
               {formatEUR(baseMonthlyCost)}
@@ -157,7 +201,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
           </div>
           <div className="text-center p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)]">
             <p className="text-xs uppercase tracking-wider text-[var(--foreground-muted)] mb-1">
-              Total 1.o Ano
+              {tr("Total 1.º Ano", "1st Year Total", "Total 1.er Año")}
             </p>
             <p className="text-2xl font-serif font-bold text-[var(--gold)]">
               {formatEUR(totalYear)}
@@ -221,7 +265,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
                   </p>
                   <div className="mt-2 pt-2 border-t border-[var(--border)]">
                     <p className="text-xs text-[var(--foreground-muted)]">
-                      Acumulado:{" "}
+                      {tr("Acumulado:", "Cumulative:", "Acumulado:")}{" "}
                       <span className="font-medium text-[var(--gold)]">
                         {formatEUR(milestone.cumulative)}
                       </span>
@@ -238,14 +282,22 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
       <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] p-8">
         <h3 className="flex items-center gap-2 text-sm font-medium text-[var(--foreground)] mb-4">
           <TrendingUp className="text-[var(--gold)]" size={16} />
-          Custo Acumulado ao Longo do Ano
+          {tr(
+            "Custo Acumulado ao Longo do Ano",
+            "Cumulative Cost Throughout the Year",
+            "Coste Acumulado a lo Largo del Año"
+          )}
         </h3>
         <div className="w-full overflow-x-auto">
           <svg
             viewBox={`0 0 ${chartWidth} ${chartHeight}`}
             className="w-full min-w-[360px]"
             role="img"
-            aria-label="Gráfico de custo acumulado do primeiro ano"
+            aria-label={tr(
+              "Gráfico de custo acumulado do primeiro ano",
+              "First year cumulative cost chart",
+              "Gráfico de coste acumulado del primer año"
+            )}
           >
             <defs>
               <linearGradient id="firstyear-bar-grad" x1="0" y1="0" x2="0" y2="1">
@@ -298,8 +350,11 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
       </div>
 
       <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed text-center">
-        Valores estimados. Os custos reais variam conforme a região, prestador de serviços e
-        necessidades do cavalo.
+        {tr(
+          "Valores estimados. Os custos reais variam conforme a região, prestador de serviços e necessidades do cavalo.",
+          "Estimated values. Actual costs vary depending on region, service provider and horse needs.",
+          "Valores estimados. Los costes reales varían según la región, proveedor de servicios y necesidades del caballo."
+        )}
       </p>
     </div>
   );

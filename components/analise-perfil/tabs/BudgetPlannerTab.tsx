@@ -187,11 +187,49 @@ interface AnnualProjectionProps {
 function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionProps) {
   const { language } = useLanguage();
   const tr = createTranslator(language);
-  const months = tr(
-    ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-    ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
-  );
+  const MONTHS_PT = [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ];
+  const MONTHS_EN = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const MONTHS_ES = [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ];
+  const months = language === "es" ? MONTHS_ES : language === "en" ? MONTHS_EN : MONTHS_PT;
 
   const annualTotal = totalMonthly * 12;
   const chartWidth = 600;
@@ -361,6 +399,8 @@ function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionP
 // ============================================
 
 export default function BudgetPlannerTab({ categories, profileName }: BudgetPlannerTabProps) {
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [barsAnimated, setBarsAnimated] = useState(false);
@@ -409,7 +449,8 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
       <div className="bg-gradient-to-b from-[var(--gold)]/10 to-transparent border border-[var(--gold)]/20 p-8">
         <div className="text-center mb-2">
           <span className="text-xs uppercase tracking-widest text-[var(--foreground-muted)]">
-            Planeamento de Custos &mdash; Perfil {profileName}
+            {tr("Planeamento de Custos", "Cost Planning", "Planificación de Costes")} &mdash;{" "}
+            {tr("Perfil", "Profile", "Perfil")} {profileName}
           </span>
         </div>
 
@@ -425,7 +466,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
           >
             <Calendar className="mx-auto text-[var(--gold)] mb-3" size={24} />
             <p className="text-xs uppercase tracking-wider text-[var(--foreground-muted)] mb-2">
-              Total Mensal
+              {tr("Total Mensal", "Monthly Total", "Total Mensual")}
             </p>
             <p className="text-4xl font-serif font-bold text-[var(--foreground)]">
               {formatEUR(totalMonthly)}
@@ -443,7 +484,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
           >
             <TrendingUp className="mx-auto text-[var(--gold)] mb-3" size={24} />
             <p className="text-xs uppercase tracking-wider text-[var(--foreground-muted)] mb-2">
-              Total Anual
+              {tr("Total Anual", "Annual Total", "Total Anual")}
             </p>
             <p className="text-4xl font-serif font-bold text-[var(--gold)]">
               {formatEUR(totalAnnual)}
@@ -456,7 +497,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
       <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] p-8">
         <h3 className="flex items-center gap-2 text-lg font-medium text-[var(--foreground)] mb-8">
           <span className="w-2 h-2 rounded-full bg-[var(--gold)]" aria-hidden="true" />
-          Distribuicao de Custos
+          {tr("Distribuição de Custos", "Cost Distribution", "Distribución de Costes")}
         </h3>
 
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-10">
@@ -545,10 +586,14 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
       <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] p-8">
         <h3 className="flex items-center gap-2 text-lg font-medium text-[var(--foreground)] mb-2">
           <TrendingUp className="text-[var(--gold)]" size={20} />
-          Projecao Anual
+          {tr("Projeção Anual", "Annual Projection", "Proyección Anual")}
         </h3>
         <p className="text-xs text-[var(--foreground-muted)] mb-6">
-          Custo mensal fixo de {formatEUR(totalMonthly)} com linha cumulativa ao longo do ano
+          {tr(
+            `Custo mensal fixo de ${formatEUR(totalMonthly)} com linha cumulativa ao longo do ano`,
+            `Fixed monthly cost of ${formatEUR(totalMonthly)} with cumulative line throughout the year`,
+            `Coste mensual fijo de ${formatEUR(totalMonthly)} con línea acumulativa a lo largo del año`
+          )}
         </p>
 
         <AnnualProjection
@@ -562,7 +607,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
         <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-[var(--border)]">
           <div className="text-center">
             <p className="text-xs uppercase tracking-wider text-[var(--foreground-muted)] mb-1">
-              Custo/Dia
+              {tr("Custo/Dia", "Cost/Day", "Coste/Día")}
             </p>
             <p className="text-lg font-serif font-bold text-[var(--foreground)]">
               {formatEUR(Math.round(totalAnnual / 365))}
@@ -570,7 +615,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
           </div>
           <div className="text-center">
             <p className="text-xs uppercase tracking-wider text-[var(--foreground-muted)] mb-1">
-              Custo/Semana
+              {tr("Custo/Semana", "Cost/Week", "Coste/Semana")}
             </p>
             <p className="text-lg font-serif font-bold text-[var(--foreground)]">
               {formatEUR(Math.round(totalAnnual / 52))}
@@ -578,7 +623,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
           </div>
           <div className="text-center">
             <p className="text-xs uppercase tracking-wider text-[var(--foreground-muted)] mb-1">
-              Custo/Trimestre
+              {tr("Custo/Trimestre", "Cost/Quarter", "Coste/Trimestre")}
             </p>
             <p className="text-lg font-serif font-bold text-[var(--foreground)]">
               {formatEUR(Math.round(totalAnnual / 4))}
@@ -589,8 +634,11 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
 
       {/* ---- FOOTER NOTE ---- */}
       <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed text-center">
-        Valores estimados para o perfil {profileName}. Os custos reais podem variar conforme a
-        regiao, prestador de servicos e necessidades especificas do cavalo.
+        {tr(
+          `Valores estimados para o perfil ${profileName}. Os custos reais podem variar conforme a região, prestador de serviços e necessidades específicas do cavalo.`,
+          `Estimated values for the ${profileName} profile. Actual costs may vary depending on region, service provider and specific horse needs.`,
+          `Valores estimados para el perfil ${profileName}. Los costes reales pueden variar según la región, proveedor de servicios y necesidades específicas del caballo.`
+        )}
       </p>
     </div>
   );

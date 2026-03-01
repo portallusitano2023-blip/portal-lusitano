@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabase } from "./supabase-admin";
 import { sendEmail } from "./resend";
 import { logger } from "@/lib/logger";
 

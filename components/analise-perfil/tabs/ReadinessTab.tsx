@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { Gauge, CheckCircle, XCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Result, AnswerDetail } from "@/components/analise-perfil/types";
 
 interface ReadinessTabProps {
@@ -22,7 +23,8 @@ export default function ReadinessTab({
   answerDetails: _answerDetails,
   confidence,
 }: ReadinessTabProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   // Sub-scores
   const experienceScore = confidence;
@@ -49,61 +51,101 @@ export default function ReadinessTab({
   );
 
   const subScores: SubScore[] = [
-    { label: "Experiência", value: experienceScore, color: "#3b82f6" },
-    { label: "Orçamento", value: budgetScore, color: "#22c55e" },
-    { label: "Disponibilidade", value: timeScore, color: "#f59e0b" },
-    { label: "Infraestrutura", value: infraScore, color: "#8b5cf6" },
+    {
+      label: tr("Experiência", "Experience", "Experiencia"),
+      value: experienceScore,
+      color: "#3b82f6",
+    },
+    { label: tr("Orçamento", "Budget", "Presupuesto"), value: budgetScore, color: "#22c55e" },
+    {
+      label: tr("Disponibilidade", "Availability", "Disponibilidad"),
+      value: timeScore,
+      color: "#f59e0b",
+    },
+    {
+      label: tr("Infraestrutura", "Infrastructure", "Infraestructura"),
+      value: infraScore,
+      color: "#8b5cf6",
+    },
   ];
 
   // Prerequisites
-  const prerequisites = useMemo(() => {
+  const prerequisites = (() => {
     const items: { text: string; met: boolean }[] = [];
 
     if (experienceScore < 50) {
       items.push({
-        text: "Considere aulas de equitação antes de adquirir um cavalo",
+        text: tr(
+          "Considere aulas de equitação antes de adquirir um cavalo",
+          "Consider riding lessons before acquiring a horse",
+          "Considere clases de equitación antes de adquirir un caballo"
+        ),
         met: false,
       });
     } else {
       items.push({
-        text: "Nível de experiência adequado ao perfil",
+        text: tr(
+          "Nível de experiência adequado ao perfil",
+          "Experience level suitable for the profile",
+          "Nivel de experiencia adecuado al perfil"
+        ),
         met: true,
       });
     }
 
     if (budgetScore < 50) {
       items.push({
-        text: "Reveja o orçamento para garantir sustentabilidade",
+        text: tr(
+          "Reveja o orçamento para garantir sustentabilidade",
+          "Review the budget to ensure sustainability",
+          "Revise el presupuesto para garantizar sostenibilidad"
+        ),
         met: false,
       });
     } else {
       items.push({
-        text: "Orçamento dentro do intervalo recomendado",
+        text: tr(
+          "Orçamento dentro do intervalo recomendado",
+          "Budget within the recommended range",
+          "Presupuesto dentro del rango recomendado"
+        ),
         met: true,
       });
     }
 
     if (result.profile === "competidor" && confidence < 60) {
       items.push({
-        text: "Ganhe experiência em competição antes de investir num cavalo de topo",
+        text: tr(
+          "Ganhe experiência em competição antes de investir num cavalo de topo",
+          "Gain competition experience before investing in a top horse",
+          "Gane experiencia en competición antes de invertir en un caballo de élite"
+        ),
         met: false,
       });
     }
 
     if (result.profile === "criador") {
       items.push({
-        text: "Estude genética equina e visite coudelarias de referência",
+        text: tr(
+          "Estude genética equina e visite coudelarias de referência",
+          "Study equine genetics and visit reference stud farms",
+          "Estudie genética equina y visite ganaderías de referencia"
+        ),
         met: false,
       });
     }
 
     items.push({
-      text: "Visite pelo menos 3 cavalos antes de decidir",
+      text: tr(
+        "Visite pelo menos 3 cavalos antes de decidir",
+        "Visit at least 3 horses before deciding",
+        "Visite al menos 3 caballos antes de decidir"
+      ),
       met: false,
     });
 
     return items;
-  }, [experienceScore, budgetScore, result.profile, confidence]);
+  })();
 
   // Gauge arc calculations
   const gaugeSize = 200;
@@ -147,7 +189,11 @@ export default function ReadinessTab({
             height={gaugeSize / 2 + 30}
             viewBox={`0 0 ${gaugeSize} ${gaugeSize / 2 + 30}`}
             role="img"
-            aria-label={`Índice de prontidão: ${globalScore} por cento`}
+            aria-label={tr(
+              `Índice de prontidão: ${globalScore} por cento`,
+              `Readiness index: ${globalScore} percent`,
+              `Índice de preparación: ${globalScore} por ciento`
+            )}
           >
             {/* Background arc */}
             <path
@@ -187,7 +233,7 @@ export default function ReadinessTab({
               className="text-[11px]"
               fill="var(--foreground-muted)"
             >
-              prontidão
+              {tr("prontidão", "readiness", "preparación")}
             </text>
 
             {/* Scale labels */}
@@ -215,17 +261,29 @@ export default function ReadinessTab({
         {/* Score interpretation */}
         <p className="text-sm text-center text-[var(--foreground-secondary)] max-w-md mx-auto">
           {globalScore >= 70
-            ? "Bom nível de prontidão para adquirir um Lusitano. Avance com confiança."
+            ? tr(
+                "Bom nível de prontidão para adquirir um Lusitano. Avance com confiança.",
+                "Good readiness level to acquire a Lusitano. Proceed with confidence.",
+                "Buen nivel de preparación para adquirir un Lusitano. Avance con confianza."
+              )
             : globalScore >= 45
-              ? "Nível moderado. Considere reforçar as áreas com pontuação mais baixa."
-              : "Recomenda-se preparação adicional antes de avançar com a aquisição."}
+              ? tr(
+                  "Nível moderado. Considere reforçar as áreas com pontuação mais baixa.",
+                  "Moderate level. Consider strengthening areas with lower scores.",
+                  "Nivel moderado. Considere reforzar las áreas con puntuación más baja."
+                )
+              : tr(
+                  "Recomenda-se preparação adicional antes de avançar com a aquisição.",
+                  "Additional preparation is recommended before proceeding with the purchase.",
+                  "Se recomienda preparación adicional antes de proceder con la adquisición."
+                )}
         </p>
       </div>
 
       {/* Sub-score bars */}
       <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] p-8">
         <h3 className="text-sm font-medium text-[var(--foreground)] mb-6">
-          Pontuação por Dimensão
+          {tr("Pontuação por Dimensão", "Score by Dimension", "Puntuación por Dimensión")}
         </h3>
 
         <div className="space-y-5">
@@ -260,7 +318,9 @@ export default function ReadinessTab({
 
       {/* Prerequisites */}
       <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] p-8">
-        <h3 className="text-sm font-medium text-[var(--foreground)] mb-6">Pré-requisitos</h3>
+        <h3 className="text-sm font-medium text-[var(--foreground)] mb-6">
+          {tr("Pré-requisitos", "Prerequisites", "Prerrequisitos")}
+        </h3>
 
         <div className="space-y-3">
           {prerequisites.map((prereq, i) => (
@@ -296,8 +356,11 @@ export default function ReadinessTab({
       </div>
 
       <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed text-center">
-        A pontuação de prontidão é baseada nas respostas ao questionário e nas características do
-        perfil. Serve como indicador geral e não substitui aconselhamento profissional.
+        {tr(
+          "A pontuação de prontidão é baseada nas respostas ao questionário e nas características do perfil. Serve como indicador geral e não substitui aconselhamento profissional.",
+          "The readiness score is based on questionnaire responses and profile characteristics. It serves as a general indicator and does not replace professional advice.",
+          "La puntuación de preparación se basa en las respuestas al cuestionario y las características del perfil. Sirve como indicador general y no sustituye el asesoramiento profesional."
+        )}
       </p>
     </div>
   );

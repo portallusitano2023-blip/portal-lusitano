@@ -9,7 +9,7 @@ const _mockEq = vi.fn();
 const _mockOr = vi.fn();
 const _mockLimit = vi.fn();
 
-vi.mock("@/lib/supabase", () => ({
+vi.mock("@/lib/supabase-admin", () => ({
   supabase: {
     from: vi.fn().mockReturnValue({
       select: vi.fn().mockReturnValue({
@@ -44,7 +44,7 @@ describe("GET /api/search", () => {
     vi.resetModules();
 
     // Re-setup supabase mock with controllable responses
-    const { supabase } = await import("@/lib/supabase");
+    const { supabase } = await import("@/lib/supabase-admin");
 
     const createChain = (data: unknown[] = []) => ({
       select: vi.fn().mockReturnValue({
@@ -112,7 +112,7 @@ describe("GET /api/search", () => {
   it("should return horse results from supabase", async () => {
     vi.resetModules();
 
-    vi.doMock("@/lib/supabase", () => {
+    vi.doMock("@/lib/supabase-admin", () => {
       const createChainWithData = (data: unknown[]) => ({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
@@ -160,7 +160,7 @@ describe("GET /api/search", () => {
   it("should return event and stud results from supabase", async () => {
     vi.resetModules();
 
-    vi.doMock("@/lib/supabase", () => {
+    vi.doMock("@/lib/supabase-admin", () => {
       const createChainWithData = (data: unknown[]) => ({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
@@ -246,7 +246,7 @@ describe("GET /api/search", () => {
   it("should handle supabase errors gracefully via Promise.allSettled", async () => {
     vi.resetModules();
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: vi.fn().mockReturnValue({
           select: vi.fn().mockReturnValue({

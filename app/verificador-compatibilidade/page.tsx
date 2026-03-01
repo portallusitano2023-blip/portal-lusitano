@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { ArrowLeft, ArrowRight, Heart, RefreshCw, Trophy, Dna, Leaf, Star } from "lucide-react";
+import { ArrowRight, Heart, RefreshCw, Trophy, Dna, Leaf, Star } from "lucide-react";
+import ToolNavBar from "@/components/tools/ToolNavBar";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
@@ -321,31 +321,11 @@ export default function VerificadorCompatibilidadePage() {
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)] border-b border-[var(--border)] [transform:translateZ(0)]">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
-          >
-            <ArrowLeft size={18} />
-            <span className="text-sm font-medium hidden sm:block">Portal Lusitano</span>
-          </Link>
-
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
-              <Heart size={18} className="text-white" />
-            </div>
-            <div className="hidden sm:block">
-              <span className="text-sm font-medium text-[var(--foreground)] block leading-tight">
-                {t.verificador.tool_name}
-              </span>
-              <span className="text-xs text-[var(--foreground-muted)]">
-                {t.verificador.tool_subtitle}
-              </span>
-            </div>
-          </div>
-
-          {resultado && (
+      <ToolNavBar
+        currentTool="verificador-compatibilidade"
+        hasResult={!!resultado}
+        rightSlot={
+          resultado ? (
             <button
               onClick={() => setShowResetConfirm(true)}
               className="text-sm text-pink-400 hover:text-pink-300 transition-colors flex items-center gap-2"
@@ -353,11 +333,11 @@ export default function VerificadorCompatibilidadePage() {
               <RefreshCw size={14} />
               <span className="hidden sm:inline">{t.verificador.new_analysis}</span>
             </button>
-          )}
-        </div>
-      </header>
+          ) : undefined
+        }
+      />
 
-      <div className="pt-16">
+      <div id="main-content" className="pt-16">
         {/* Error Toast */}
         {error && (
           <div className="fixed bottom-4 right-4 z-50 bg-red-900/90 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg flex items-center gap-3 max-w-sm">

@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthenticatedProfissional } from "@/lib/profissional-auth";
 import { logger } from "@/lib/logger";

@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 // ---------------------------------------------------------------------------
 // Mocks
 // ---------------------------------------------------------------------------
-vi.mock("@/lib/supabase", () => ({
+vi.mock("@/lib/supabase-admin", () => ({
   supabase: {
     from: vi.fn(),
   },
@@ -69,7 +69,7 @@ describe("GET /api/cavalos", () => {
       },
     ];
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: vi.fn().mockReturnValue(createSupabaseChain({ data: mockCavalos, error: null })),
       },
@@ -99,7 +99,7 @@ describe("GET /api/cavalos", () => {
 
     expect(response.status).toBe(200);
 
-    const { supabase } = await import("@/lib/supabase");
+    const { supabase } = await import("@/lib/supabase-admin");
     const chain = vi.mocked(supabase.from).mock.results[0]?.value;
     expect(chain.eq).toHaveBeenCalledWith("sexo", "macho");
   });
@@ -110,7 +110,7 @@ describe("GET /api/cavalos", () => {
 
     expect(response.status).toBe(200);
 
-    const { supabase } = await import("@/lib/supabase");
+    const { supabase } = await import("@/lib/supabase-admin");
     const chain = vi.mocked(supabase.from).mock.results[0]?.value;
     // eq should be called for status but NOT for sexo="todos"
     const eqCalls = chain.eq.mock.calls;
@@ -124,7 +124,7 @@ describe("GET /api/cavalos", () => {
 
     expect(response.status).toBe(200);
 
-    const { supabase } = await import("@/lib/supabase");
+    const { supabase } = await import("@/lib/supabase-admin");
     const chain = vi.mocked(supabase.from).mock.results[0]?.value;
     expect(chain.eq).toHaveBeenCalledWith("regiao", "Alentejo");
   });
@@ -135,7 +135,7 @@ describe("GET /api/cavalos", () => {
 
     expect(response.status).toBe(200);
 
-    const { supabase } = await import("@/lib/supabase");
+    const { supabase } = await import("@/lib/supabase-admin");
     const chain = vi.mocked(supabase.from).mock.results[0]?.value;
     expect(chain.gte).toHaveBeenCalledWith("preco", 10000);
     expect(chain.lte).toHaveBeenCalledWith("preco", 25000);
@@ -147,7 +147,7 @@ describe("GET /api/cavalos", () => {
 
     expect(response.status).toBe(200);
 
-    const { supabase } = await import("@/lib/supabase");
+    const { supabase } = await import("@/lib/supabase-admin");
     const chain = vi.mocked(supabase.from).mock.results[0]?.value;
     expect(chain.or).toHaveBeenCalledWith("nome.ilike.%Fenomeno%,descricao.ilike.%Fenomeno%");
   });
@@ -155,7 +155,7 @@ describe("GET /api/cavalos", () => {
   it("deve retornar 500 quando Supabase retorna erro", async () => {
     vi.resetModules();
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: vi.fn().mockReturnValue(
           createSupabaseChain({
@@ -181,7 +181,7 @@ describe("GET /api/cavalos", () => {
 
     expect(response.status).toBe(200);
 
-    const { supabase } = await import("@/lib/supabase");
+    const { supabase } = await import("@/lib/supabase-admin");
     const chain = vi.mocked(supabase.from).mock.results[0]?.value;
     expect(chain.contains).toHaveBeenCalledWith("disciplinas", ["dressage"]);
   });
@@ -192,7 +192,7 @@ describe("GET /api/cavalos", () => {
 
     expect(response.status).toBe(200);
 
-    const { supabase } = await import("@/lib/supabase");
+    const { supabase } = await import("@/lib/supabase-admin");
     const chain = vi.mocked(supabase.from).mock.results[0]?.value;
     expect(chain.contains).not.toHaveBeenCalled();
   });

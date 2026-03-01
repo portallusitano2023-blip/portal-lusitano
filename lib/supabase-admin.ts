@@ -1,7 +1,7 @@
 // Ensure this module is only imported server-side (service role key must never reach the browser)
 if (typeof window !== "undefined") {
   throw new Error(
-    "[Security] lib/supabase.ts contains the Supabase service role key and must only be used server-side. " +
+    "[Security] lib/supabase-admin.ts contains the Supabase service role key and must only be used server-side. " +
       "Use NEXT_PUBLIC_SUPABASE_ANON_KEY directly in client components instead."
   );
 }

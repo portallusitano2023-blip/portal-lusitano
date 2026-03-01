@@ -1,4 +1,4 @@
-import { supabase, supabaseAdmin } from "@/lib/supabase";
+import { supabase, supabaseAdmin } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import ProfissionaisContent from "@/components/profissionais/ProfissionaisContent";
 

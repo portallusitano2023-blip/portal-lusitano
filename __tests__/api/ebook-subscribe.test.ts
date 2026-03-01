@@ -6,7 +6,7 @@ vi.mock("@/lib/resend", () => ({
   sendEmail: vi.fn().mockResolvedValue({ success: true, id: "test-id" }),
 }));
 
-vi.mock("@/lib/supabase", () => ({
+vi.mock("@/lib/supabase-admin", () => ({
   supabase: {
     from: vi.fn().mockReturnValue({
       upsert: vi.fn().mockResolvedValue({ error: null }),

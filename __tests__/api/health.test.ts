@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 // ---------------------------------------------------------------------------
 // Mocks
 // ---------------------------------------------------------------------------
-vi.mock("@/lib/supabase", () => ({
+vi.mock("@/lib/supabase-admin", () => ({
   supabase: {
     from: vi.fn(),
   },
@@ -24,7 +24,7 @@ describe("GET /api/health", () => {
   });
 
   it("deve retornar status healthy quando base de dados conectada", async () => {
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: vi.fn().mockReturnValue({
           select: vi.fn().mockResolvedValue({ count: 10, error: null }),
@@ -47,7 +47,7 @@ describe("GET /api/health", () => {
   });
 
   it("deve retornar status degraded quando base de dados com erro", async () => {
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: vi.fn().mockReturnValue({
           select: vi.fn().mockResolvedValue({
@@ -70,7 +70,7 @@ describe("GET /api/health", () => {
   });
 
   it("deve retornar status degraded quando base de dados lanca excepcao", async () => {
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: vi.fn().mockReturnValue({
           select: vi.fn().mockRejectedValue(new Error("Network failure")),
@@ -90,7 +90,7 @@ describe("GET /api/health", () => {
   });
 
   it("deve retornar status degraded quando count e null sem erro", async () => {
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: vi.fn().mockReturnValue({
           select: vi.fn().mockResolvedValue({ count: null, error: null }),
@@ -110,7 +110,7 @@ describe("GET /api/health", () => {
   });
 
   it("deve incluir timestamp em formato ISO", async () => {
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: vi.fn().mockReturnValue({
           select: vi.fn().mockResolvedValue({ count: 5, error: null }),
@@ -130,7 +130,7 @@ describe("GET /api/health", () => {
   });
 
   it("deve retornar uptime como numero positivo", async () => {
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: vi.fn().mockReturnValue({
           select: vi.fn().mockResolvedValue({ count: 5, error: null }),

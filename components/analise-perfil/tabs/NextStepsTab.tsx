@@ -13,6 +13,7 @@ import {
   Info,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Result } from "@/components/analise-perfil/types";
 
 const PROFILE_CONTEXT_KEY = "tool_context_profile";
@@ -23,7 +24,8 @@ interface NextStepsTabProps {
 }
 
 export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
   const ap = t.analise_perfil as Record<string, string>;
 
   const pushProfileContext = () => {
@@ -68,12 +70,13 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
       <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] rounded-2xl p-8">
         <h3 className="flex items-center gap-2 text-lg font-medium text-[var(--foreground)] mb-2">
           <Briefcase className="text-[var(--gold)]" size={20} />
-          {ap.next_tools_title ?? "Ferramentas Recomendadas"}
+          {ap.next_tools_title ??
+            tr("Ferramentas Recomendadas", "Recommended Tools", "Herramientas Recomendadas")}
         </h3>
         <p className="text-sm text-[var(--foreground-muted)] mb-6">
           {subProfile
-            ? `${ap.next_tools_subtitle_with_profile ?? "Usa as ferramentas certas para o teu perfil de"} ${subProfile.replace(/_/g, " ")}.`
-            : `${ap.next_tools_subtitle ?? "Usa as ferramentas certas para o teu perfil"}.`}
+            ? `${ap.next_tools_subtitle_with_profile ?? tr("Usa as ferramentas certas para o teu perfil de", "Use the right tools for your profile of", "Usa las herramientas correctas para tu perfil de")} ${subProfile.replace(/_/g, " ")}.`
+            : `${ap.next_tools_subtitle ?? tr("Usa as ferramentas certas para o teu perfil", "Use the right tools for your profile", "Usa las herramientas correctas para tu perfil")}.`}
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Calculadora de Valor */}
@@ -87,11 +90,20 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-[var(--foreground)] mb-0.5">
-                {ap.next_calc_title ?? "Calcular Valor de um Cavalo"}
+                {ap.next_calc_title ??
+                  tr(
+                    "Calcular Valor de um Cavalo",
+                    "Calculate Horse Value",
+                    "Calcular Valor de un Caballo"
+                  )}
               </p>
               <p className="text-xs text-[var(--foreground-muted)] leading-snug">
                 {ap.next_calc_desc ??
-                  "Avalia se o preço de um cavalo corresponde ao seu perfil ideal — orçamento"}{" "}
+                  tr(
+                    "Avalia se o preço de um cavalo corresponde ao seu perfil ideal — orçamento",
+                    "Evaluates whether a horse's price matches your ideal profile — budget",
+                    "Evalúa si el precio de un caballo corresponde a tu perfil ideal — presupuesto"
+                  )}{" "}
                 {result.idealHorse.priceRange}.
               </p>
             </div>
@@ -114,11 +126,20 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-[var(--foreground)] mb-0.5">
-                {ap.next_compare_title ?? "Comparar Cavalos Candidatos"}
+                {ap.next_compare_title ??
+                  tr(
+                    "Comparar Cavalos Candidatos",
+                    "Compare Candidate Horses",
+                    "Comparar Caballos Candidatos"
+                  )}
               </p>
               <p className="text-xs text-[var(--foreground-muted)] leading-snug">
                 {ap.next_compare_desc ??
-                  "Compara lado a lado os cavalos que estás a considerar para o teu perfil."}
+                  tr(
+                    "Compara lado a lado os cavalos que estás a considerar para o teu perfil.",
+                    "Compare side by side the horses you're considering for your profile.",
+                    "Compara lado a lado los caballos que estás considerando para tu perfil."
+                  )}
               </p>
             </div>
             <ChevronRight
@@ -139,11 +160,20 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-[var(--foreground)] mb-0.5">
-                  {ap.next_verify_title ?? "Verificar Compatibilidade para Reprodução"}
+                  {ap.next_verify_title ??
+                    tr(
+                      "Verificar Compatibilidade para Reprodução",
+                      "Check Breeding Compatibility",
+                      "Verificar Compatibilidad para Reproducción"
+                    )}
                 </p>
                 <p className="text-xs text-[var(--foreground-muted)] leading-snug">
                   {ap.next_verify_desc ??
-                    "O teu perfil de Criador beneficia da análise genética e compatibilidade de reprodução entre garanhão e égua."}
+                    tr(
+                      "O teu perfil de Criador beneficia da análise genética e compatibilidade de reprodução entre garanhão e égua.",
+                      "Your Breeder profile benefits from genetic analysis and breeding compatibility between stallion and mare.",
+                      "Tu perfil de Criador se beneficia del análisis genético y compatibilidad de reproducción entre semental y yegua."
+                    )}
                 </p>
               </div>
               <ChevronRight
@@ -185,7 +215,12 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
       <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)] mt-4">
         <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-4 flex items-center gap-2">
           <Sparkles size={15} className="text-[#C5A059]" />
-          {ap.next_tools2_title ?? "Ferramentas Recomendadas Para Si"}
+          {ap.next_tools2_title ??
+            tr(
+              "Ferramentas Recomendadas Para Si",
+              "Recommended Tools For You",
+              "Herramientas Recomendadas Para Usted"
+            )}
         </h3>
         <div className="grid sm:grid-cols-2 gap-3">
           <button
@@ -206,10 +241,20 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
             />
             <div>
               <p className="text-sm font-semibold text-[var(--foreground)]">
-                {ap.next_calc2_title ?? "Calcular Valor do Cavalo"}
+                {ap.next_calc2_title ??
+                  tr(
+                    "Calcular Valor do Cavalo",
+                    "Calculate Horse Value",
+                    "Calcular Valor del Caballo"
+                  )}
               </p>
               <p className="text-xs text-[var(--foreground-muted)]">
-                {ap.next_calc2_desc ?? "Estimativa personalizada para o seu perfil"}
+                {ap.next_calc2_desc ??
+                  tr(
+                    "Estimativa personalizada para o seu perfil",
+                    "Personalised estimate for your profile",
+                    "Estimación personalizada para su perfil"
+                  )}
               </p>
             </div>
             <ChevronRight
@@ -235,10 +280,20 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
             />
             <div>
               <p className="text-sm font-semibold text-[var(--foreground)]">
-                {ap.next_compare2_title ?? "Comparar Cavalos Candidatos"}
+                {ap.next_compare2_title ??
+                  tr(
+                    "Comparar Cavalos Candidatos",
+                    "Compare Candidate Horses",
+                    "Comparar Caballos Candidatos"
+                  )}
               </p>
               <p className="text-xs text-[var(--foreground-muted)]">
-                {ap.next_compare2_desc ?? "Compare lado a lado para o seu perfil"}
+                {ap.next_compare2_desc ??
+                  tr(
+                    "Compare lado a lado para o seu perfil",
+                    "Compare side by side for your profile",
+                    "Compare lado a lado para su perfil"
+                  )}
               </p>
             </div>
             <ChevronRight
@@ -254,10 +309,15 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
         <Info size={13} className="text-[var(--foreground-muted)] mt-0.5 shrink-0" />
         <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
           <strong className="text-[var(--foreground-secondary)]">
-            {ap.next_review_label ?? "Revisão recomendada:"}
+            {ap.next_review_label ??
+              tr("Revisão recomendada:", "Recommended review:", "Revisión recomendada:")}
           </strong>{" "}
           {ap.next_review_text ??
-            "Os perfis equestres evoluem com a experiência. Refaça esta análise em 6-12 meses para acompanhar o seu desenvolvimento."}
+            tr(
+              "Os perfis equestres evoluem com a experiência. Refaça esta análise em 6-12 meses para acompanhar o seu desenvolvimento.",
+              "Equestrian profiles evolve with experience. Redo this analysis in 6-12 months to track your development.",
+              "Los perfiles ecuestres evolucionan con la experiencia. Rehaga este análisis en 6-12 meses para seguir su desarrollo."
+            )}
         </p>
       </div>
     </div>

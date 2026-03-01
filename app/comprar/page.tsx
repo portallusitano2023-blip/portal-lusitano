@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import ComprarContent from "@/components/ComprarContent";
 

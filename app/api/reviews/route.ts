@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabasePublic, supabaseAdmin } from "@/lib/supabase";
+import { supabasePublic, supabaseAdmin } from "@/lib/supabase-admin";
 import { apiLimiter } from "@/lib/rate-limit";
 import { reviewSchema, toolReviewSchema, parseWithZod } from "@/lib/schemas";
 import { logger } from "@/lib/logger";

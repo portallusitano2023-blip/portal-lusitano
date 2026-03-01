@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { resend } from "@/lib/resend";
-import { supabaseAdmin as supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { stripe } from "@/lib/stripe";
 import { CONTACT_EMAIL } from "@/lib/constants";
 import { logger } from "@/lib/logger";

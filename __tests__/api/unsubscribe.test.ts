@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 // ---------------------------------------------------------------------------
 const mockFrom = vi.fn();
 
-vi.mock("@/lib/supabase", () => ({
+vi.mock("@/lib/supabase-admin", () => ({
   supabase: {
     from: (...args: unknown[]) => mockFrom(...args),
   },
@@ -43,7 +43,7 @@ describe("POST /api/unsubscribe", () => {
   beforeEach(async () => {
     vi.resetModules();
 
-    vi.doMock("@/lib/supabase", () => ({
+    vi.doMock("@/lib/supabase-admin", () => ({
       supabase: {
         from: (...args: unknown[]) => mockFrom(...args),
       },

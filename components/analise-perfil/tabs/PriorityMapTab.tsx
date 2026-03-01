@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { Grid3X3 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Result } from "@/components/analise-perfil/types";
 
 interface PriorityMapTabProps {
@@ -25,47 +26,77 @@ interface Quadrant {
 }
 
 export default function PriorityMapTab({ result }: PriorityMapTabProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
-  const items: PriorityItem[] = useMemo(
-    () => [
-      { label: "Encontrar cavalo adequado", urgency: 90, importance: 95 },
-      { label: "Preparar instalações", urgency: 70, importance: 85 },
-      { label: "Definir orçamento", urgency: 85, importance: 90 },
+  const quadrants: Quadrant[] = useMemo(() => {
+    const items: PriorityItem[] = [
       {
-        label: "Contactar treinador",
+        label: tr(
+          "Encontrar cavalo adequado",
+          "Find a suitable horse",
+          "Encontrar caballo adecuado"
+        ),
+        urgency: 90,
+        importance: 95,
+      },
+      {
+        label: tr("Preparar instalações", "Prepare facilities", "Preparar instalaciones"),
+        urgency: 70,
+        importance: 85,
+      },
+      {
+        label: tr("Definir orçamento", "Set budget", "Definir presupuesto"),
+        urgency: 85,
+        importance: 90,
+      },
+      {
+        label: tr("Contactar treinador", "Contact trainer", "Contactar entrenador"),
         urgency: result.profile === "competidor" ? 80 : 50,
         importance: result.profile === "competidor" ? 85 : 60,
       },
       {
-        label: "Pesquisar linhagens",
+        label: tr("Pesquisar linhagens", "Research bloodlines", "Investigar linajes"),
         urgency: 40,
         importance: result.profile === "criador" ? 90 : 55,
       },
-      { label: "Visitar coudelarias", urgency: 60, importance: 75 },
-      { label: "Seguro equino", urgency: 30, importance: 65 },
-      { label: "Equipamento base", urgency: 45, importance: 70 },
       {
-        label: "Formacao equestre",
+        label: tr("Visitar coudelarias", "Visit stud farms", "Visitar ganaderías"),
+        urgency: 60,
+        importance: 75,
+      },
+      {
+        label: tr("Seguro equino", "Horse insurance", "Seguro equino"),
+        urgency: 30,
+        importance: 65,
+      },
+      {
+        label: tr("Equipamento base", "Basic equipment", "Equipamiento base"),
+        urgency: 45,
+        importance: 70,
+      },
+      {
+        label: tr("Formação equestre", "Equestrian training", "Formación ecuestre"),
         urgency: result.profile === "amador" ? 70 : 30,
         importance: result.profile === "amador" ? 80 : 40,
       },
-      { label: "Rede de contactos", urgency: 20, importance: 50 },
       {
-        label: "Registo APSL",
+        label: tr("Rede de contactos", "Network of contacts", "Red de contactos"),
+        urgency: 20,
+        importance: 50,
+      },
+      {
+        label: tr("Registo APSL", "APSL registration", "Registro APSL"),
         urgency: result.profile === "criador" ? 60 : 25,
         importance: result.profile === "criador" ? 80 : 35,
       },
       {
-        label: "Plano de competição",
+        label: tr("Plano de competição", "Competition plan", "Plan de competición"),
         urgency: result.profile === "competidor" ? 65 : 15,
         importance: result.profile === "competidor" ? 75 : 20,
       },
-    ],
-    [result.profile]
-  );
+    ];
 
-  const quadrants: Quadrant[] = useMemo(() => {
     const q1: PriorityItem[] = [];
     const q2: PriorityItem[] = [];
     const q3: PriorityItem[] = [];
@@ -80,35 +111,35 @@ export default function PriorityMapTab({ result }: PriorityMapTabProps) {
 
     return [
       {
-        title: "Fazer Primeiro",
+        title: tr("Fazer Primeiro", "Do First", "Hacer Primero"),
         color: "#ef4444",
         borderColor: "rgba(239, 68, 68, 0.3)",
         bgColor: "rgba(239, 68, 68, 0.06)",
         items: q1,
       },
       {
-        title: "Planear",
+        title: tr("Planear", "Plan", "Planificar"),
         color: "#3b82f6",
         borderColor: "rgba(59, 130, 246, 0.3)",
         bgColor: "rgba(59, 130, 246, 0.06)",
         items: q2,
       },
       {
-        title: "Delegar/Agendar",
+        title: tr("Delegar/Agendar", "Delegate/Schedule", "Delegar/Agendar"),
         color: "#f59e0b",
         borderColor: "rgba(245, 158, 11, 0.3)",
         bgColor: "rgba(245, 158, 11, 0.06)",
         items: q3,
       },
       {
-        title: "Considerar",
+        title: tr("Considerar", "Consider", "Considerar"),
         color: "#71717a",
         borderColor: "rgba(113, 113, 122, 0.3)",
         bgColor: "rgba(113, 113, 122, 0.06)",
         items: q4,
       },
     ];
-  }, [items]);
+  }, [result.profile, tr]);
 
   return (
     <div className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
@@ -118,13 +149,17 @@ export default function PriorityMapTab({ result }: PriorityMapTabProps) {
           {t.analise_perfil.priority_title}
         </h3>
         <p className="text-sm text-[var(--foreground-muted)] mb-8">
-          Matriz de prioridades adaptada ao perfil {result.title}
+          {tr(
+            `Matriz de prioridades adaptada ao perfil ${result.title}`,
+            `Priority matrix adapted to the ${result.title} profile`,
+            `Matriz de prioridades adaptada al perfil ${result.title}`
+          )}
         </p>
 
         {/* Axis labels */}
         <div className="mb-2 flex justify-between text-[10px] uppercase tracking-wider text-[var(--foreground-muted)]">
-          <span>Urgente</span>
-          <span>Menos urgente</span>
+          <span>{tr("Urgente", "Urgent", "Urgente")}</span>
+          <span>{tr("Menos urgente", "Less urgent", "Menos urgente")}</span>
         </div>
 
         {/* 2x2 grid */}
@@ -166,7 +201,11 @@ export default function PriorityMapTab({ result }: PriorityMapTabProps) {
                 ))}
                 {quadrant.items.length === 0 && (
                   <li className="text-xs text-[var(--foreground-muted)] italic">
-                    Nenhum item nesta categoria
+                    {tr(
+                      "Nenhum item nesta categoria",
+                      "No items in this category",
+                      "Ningún elemento en esta categoría"
+                    )}
                   </li>
                 )}
               </ul>
@@ -176,8 +215,8 @@ export default function PriorityMapTab({ result }: PriorityMapTabProps) {
 
         {/* Legend row */}
         <div className="mt-4 flex justify-between text-[10px] uppercase tracking-wider text-[var(--foreground-muted)]">
-          <span>Importante</span>
-          <span>Menos importante</span>
+          <span>{tr("Importante", "Important", "Importante")}</span>
+          <span>{tr("Menos importante", "Less important", "Menos importante")}</span>
         </div>
       </div>
     </div>

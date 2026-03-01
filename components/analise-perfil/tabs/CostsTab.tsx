@@ -2,6 +2,7 @@
 
 import { DollarSign, Check, Activity } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { results } from "@/components/analise-perfil/data/results";
 import Tooltip from "@/components/tools/Tooltip";
 import type { Result } from "@/components/analise-perfil/types";
@@ -11,7 +12,8 @@ interface CostsTabProps {
 }
 
 export default function CostsTab({ result }: CostsTabProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   return (
     <div key="custos" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
@@ -22,7 +24,11 @@ export default function CostsTab({ result }: CostsTabProps) {
           <Tooltip
             text={
               (t.analise_perfil as Record<string, string>).tooltip_costs ??
-              "Baseados em médias do mercado português para o seu perfil. Valores reais variam por região e nível de serviço."
+              tr(
+                "Baseados em médias do mercado português para o seu perfil. Valores reais variam por região e nível de serviço.",
+                "Based on Portuguese market averages for your profile. Actual values vary by region and service level.",
+                "Basados en promedios del mercado portugués para su perfil. Los valores reales varían por región y nivel de servicio."
+              )
             }
           />
         </h3>

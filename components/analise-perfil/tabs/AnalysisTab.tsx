@@ -2,6 +2,7 @@
 
 import { Percent, BarChart3, Activity } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { results } from "@/components/analise-perfil/data/results";
 import Tooltip from "@/components/tools/Tooltip";
 import type { Result, AnswerDetail, ScorePercentage } from "@/components/analise-perfil/types";
@@ -26,7 +27,8 @@ export default function AnalysisTab({
   scorePercentages,
   confidence,
 }: AnalysisTabProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   return (
     <div key="analise" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
@@ -37,7 +39,11 @@ export default function AnalysisTab({
           <Tooltip
             text={
               (t.analise_perfil as Record<string, string>).tooltip_confidence ??
-              "Indica quão completas e consistentes são as suas respostas. Valores altos indicam um perfil bem definido."
+              tr(
+                "Indica quão completas e consistentes são as suas respostas. Valores altos indicam um perfil bem definido.",
+                "Indicates how complete and consistent your answers are. High values indicate a well-defined profile.",
+                "Indica cuán completas y consistentes son sus respuestas. Valores altos indican un perfil bien definido."
+              )
             }
           />
         </h3>
@@ -150,7 +156,8 @@ export default function AnalysisTab({
                       {t.analise_perfil.costs_label}
                     </span>{" "}
                     <span className="text-[var(--foreground-secondary)]">
-                      {r.annualCosts.min.toLocaleString()}-{r.annualCosts.max.toLocaleString()}/ano
+                      {r.annualCosts.min.toLocaleString()}-{r.annualCosts.max.toLocaleString()}/
+                      {tr("ano", "year", "año")}
                     </span>
                   </div>
                   <div>

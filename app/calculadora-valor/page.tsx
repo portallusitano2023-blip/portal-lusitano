@@ -1,13 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { X, Sparkles, TrendingUp } from "lucide-react";
+import { X, Sparkles, TrendingUp, RefreshCw, Pencil } from "lucide-react";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Paywall from "@/components/tools/Paywall";
+import ToolNavBar from "@/components/tools/ToolNavBar";
 import {
-  CalculadoraHeader,
   IntroSection,
   StepIdentificacao,
   StepGeneticaMorfologia,
@@ -77,26 +77,56 @@ export default function CalculadoraValorPage() {
   return (
     <>
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-        <CalculadoraHeader
-          step={step}
-          totalSteps={TOTAL_STEPS}
-          progress={progress}
-          hasResultado={!!resultado}
-          onReset={() => setShowResetConfirm(true)}
-          onEdit={editarResultado}
-          estimativaParcial={estimativaParcial}
-        >
-          {resultado && (
-            <HistoryPanel
-              history={calcHistory}
-              show={showCalcHistory}
-              onToggle={() => setShowCalcHistory((v) => !v)}
-              onClose={() => setShowCalcHistory(false)}
-            />
-          )}
-        </CalculadoraHeader>
+        <ToolNavBar
+          currentTool="calculadora-valor"
+          internalProgress={step > 0 && !resultado ? progress : undefined}
+          internalStepLabel={step > 0 && !resultado ? `${step} / ${TOTAL_STEPS}` : undefined}
+          hasResult={!!resultado}
+          rightSlot={
+            resultado ? (
+              <>
+                <HistoryPanel
+                  history={calcHistory}
+                  show={showCalcHistory}
+                  onToggle={() => setShowCalcHistory((v) => !v)}
+                  onClose={() => setShowCalcHistory(false)}
+                />
+                <button
+                  onClick={editarResultado}
+                  className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5"
+                >
+                  <Pencil size={13} />
+                  <span className="hidden sm:inline">Editar</span>
+                </button>
+                <button
+                  onClick={() => setShowResetConfirm(true)}
+                  className="text-sm text-[var(--gold)] hover:text-[#D4AF6A] transition-colors flex items-center gap-2"
+                >
+                  <RefreshCw size={14} />
+                  <span className="hidden sm:inline">{t.calculadora.new_evaluation}</span>
+                </button>
+              </>
+            ) : step > 1 && estimativaParcial ? (
+              <div className="text-right">
+                <p className="text-[10px] text-[var(--foreground-muted)] leading-tight">
+                  Estimativa parcial
+                </p>
+                <p className="text-xs font-semibold text-[var(--gold)] leading-tight">
+                  €{estimativaParcial.min.toLocaleString("pt-PT")} – €
+                  {estimativaParcial.max.toLocaleString("pt-PT")}
+                </p>
+              </div>
+            ) : step > 0 ? (
+              <div className="text-xs text-[var(--foreground-muted)] flex items-center gap-2">
+                <span className="text-[var(--gold)]">{step}</span>
+                <span>/</span>
+                <span>{TOTAL_STEPS}</span>
+              </div>
+            ) : undefined
+          }
+        />
 
-        <div className="pt-16">
+        <div id="main-content" className="pt-16">
           {/* Intro */}
           {step === 0 && !resultado && (
             <>

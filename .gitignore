@@ -32,7 +32,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
 
 # vercel
@@ -40,12 +40,13 @@ yarn-error.log*
 
 # temporary files
 nul
-tmp_*.html
+tmp_*
+*.tmp
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
-
-.vercel
+# claude worktrees
+.claude/worktrees/
+.claude/plans/

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import dynamic from "next/dynamic";
 import Tooltip from "@/components/tools/Tooltip";
 import type { RadarChartData, ScorePercentage } from "@/components/analise-perfil/types";
@@ -16,7 +17,8 @@ interface ScoreDistributionProps {
 }
 
 export default function ScoreDistribution({ radarData, scorePercentages }: ScoreDistributionProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   return (
     <section className="py-12 border-b border-[var(--border)]">
@@ -34,7 +36,11 @@ export default function ScoreDistribution({ radarData, scorePercentages }: Score
               <Tooltip
                 text={
                   (t.analise_perfil as Record<string, string>).tooltip_distribution ??
-                  "Mostra a afinidade relativa com cada arquetipo. A maioria dos cavaleiros combina elementos de varios perfis."
+                  tr(
+                    "Mostra a afinidade relativa com cada arquétipo. A maioria dos cavaleiros combina elementos de vários perfis.",
+                    "Shows the relative affinity with each archetype. Most riders combine elements from multiple profiles.",
+                    "Muestra la afinidad relativa con cada arquetipo. La mayoría de los jinetes combinan elementos de varios perfiles."
+                  )
                 }
               />
             </h3>
