@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import Link from "next/link";
-import { BarChart3, ChevronRight, BookOpen, Scale, User, Dna } from "lucide-react";
+import { ChevronRight, BookOpen } from "lucide-react";
 import ResultActions from "@/components/tools/ResultActions";
 import SourceBadge from "@/components/tools/SourceBadge";
 import MethodologyPanel from "@/components/tools/MethodologyPanel";
+import ToolCrossCTA from "@/components/tools/ToolCrossCTA";
 import type { FormData, Resultado } from "../types";
 
 interface MethodologyFooterProps {
@@ -90,84 +91,9 @@ export default function MethodologyFooter({
         isExporting={isExporting}
       />
 
-      {/* Cross-links — próximos passos */}
-      <div className="grid sm:grid-cols-3 gap-3 mt-6 mb-4">
-        <Link
-          href="/comparador-cavalos"
-          className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
-        >
-          <Scale
-            size={18}
-            className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
-          />
-          <div>
-            <p className="text-sm font-semibold text-[var(--foreground)]">
-              Comparar com outros cavalos
-            </p>
-            <p className="text-xs text-[var(--foreground-muted)]">
-              Compara até 4 candidatos lado a lado
-            </p>
-          </div>
-          <ChevronRight
-            size={16}
-            className="text-[var(--foreground-muted)] ml-auto group-hover:text-[var(--gold)] transition-colors"
-          />
-        </Link>
-        <Link
-          href="/analise-perfil"
-          className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
-        >
-          <User
-            size={18}
-            className="text-purple-400 shrink-0 group-hover:scale-110 transition-transform"
-          />
-          <div>
-            <p className="text-sm font-semibold text-[var(--foreground)]">Analisar o teu perfil</p>
-            <p className="text-xs text-[var(--foreground-muted)]">
-              Descobre que tipo de comprador és
-            </p>
-          </div>
-          <ChevronRight
-            size={16}
-            className="text-[var(--foreground-muted)] ml-auto group-hover:text-purple-400 transition-colors"
-          />
-        </Link>
-        {onVerificarCompat && (
-          <button
-            onClick={onVerificarCompat}
-            className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-purple-500/40 transition-all text-left"
-          >
-            <Dna
-              size={18}
-              className="text-purple-500 shrink-0 group-hover:scale-110 transition-transform"
-            />
-            <div>
-              <p className="text-sm font-semibold text-[var(--foreground)]">
-                Verificar Compatibilidade
-              </p>
-              <p className="text-xs text-[var(--foreground-muted)]">
-                Avaliar cruzamento deste cavalo
-              </p>
-            </div>
-            <ChevronRight
-              size={16}
-              className="text-[var(--foreground-muted)] ml-auto group-hover:text-purple-500 transition-colors"
-            />
-          </button>
-        )}
+      <div className="mt-6 mb-4">
+        <ToolCrossCTA currentTool="calculadora-valor" />
       </div>
-
-      {/* Tool Chain: Comparar com outros cavalos */}
-      {onComparar && (
-        <button
-          onClick={onComparar}
-          className="w-full py-3 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-medium hover:bg-blue-500/20 hover:border-blue-500/50 transition-all flex items-center justify-center gap-2"
-        >
-          <BarChart3 size={16} />
-          Comparar com outros cavalos
-          <ChevronRight size={16} />
-        </button>
-      )}
 
       <MethodologyPanel
         title={

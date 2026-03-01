@@ -211,11 +211,16 @@ export default function ReviewsSection() {
           <div className="flex items-center justify-center gap-6 mb-10 p-4 bg-[var(--gold)]/5 border border-[var(--gold)]/10 rounded-xl">
             <div className="text-center">
               <p className="text-3xl font-serif text-[var(--gold)]">{stats.media}</p>
-              <div className="flex gap-0.5 justify-center mt-1">
+              <div
+                className="flex gap-0.5 justify-center mt-1"
+                role="img"
+                aria-label={`${stats.media} / 5`}
+              >
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
                     size={14}
+                    aria-hidden="true"
                     className={
                       star <= Math.round(stats.media)
                         ? "text-[var(--gold)]"
@@ -300,11 +305,16 @@ export default function ReviewsSection() {
                         {formatRelativeDate(review.created_at)}
                       </span>
                     </div>
-                    <div className="flex gap-0.5 mt-1">
+                    <div
+                      className="flex gap-0.5 mt-1"
+                      role="img"
+                      aria-label={`${review.avaliacao} / 5`}
+                    >
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
                           size={14}
+                          aria-hidden="true"
                           className={
                             star <= review.avaliacao
                               ? "text-[var(--gold)]"

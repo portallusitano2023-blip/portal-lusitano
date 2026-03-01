@@ -198,14 +198,25 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* Prevent elements starting at opacity-0 from staying invisible
+     when animations are disabled (e.g. fadeSlideIn stagger cards) */
+  [class*="opacity-0"][class*="animate-"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* ===== PERFORMANCE ===== */
 
-/* Off-screen content pode ser diferido pelo browser */
-.content-auto {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 500px;
+/* Off-screen content pode ser diferido pelo browser.
+   Apenas em desktop — no mobile, content-visibility: auto
+   impede o IntersectionObserver de disparar (RevealOnScroll). */
+@media (min-width: 1024px) {
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
 }
 
 /* ===== SCROLLBAR PERSONALIZADA ===== */

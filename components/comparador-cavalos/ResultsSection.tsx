@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import {
   ArrowLeft,
@@ -16,6 +15,7 @@ import {
 } from "lucide-react";
 import Tooltip from "@/components/tools/Tooltip";
 import SourceBadge from "@/components/tools/SourceBadge";
+import ToolCrossCTA from "@/components/tools/ToolCrossCTA";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import RadarChart from "./RadarChart";
@@ -1141,90 +1141,7 @@ export default function ResultsSection({
         </p>
       </div>
 
-      {/* Cross-links */}
-      <div className="pt-4">
-        <p className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--foreground-muted)] mb-4">
-          <ChevronRight size={13} className="text-[var(--gold)]" aria-hidden="true" />{" "}
-          {tr("Continua a tua jornada", "Continue your journey", "Continúa tu camino")}
-        </p>
-        <div className="grid sm:grid-cols-3 gap-3">
-          <Link
-            href="/verificador-compatibilidade"
-            className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-pink-500/40 transition-all"
-          >
-            <Dna
-              size={18}
-              className="text-pink-400 shrink-0 group-hover:scale-110 transition-transform"
-            />
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-[var(--foreground)]">
-                {tr("Verificador Genético", "Genetic Checker", "Verificador Genético")}
-              </p>
-              <p className="text-xs text-[var(--foreground-muted)] truncate">
-                {tr(
-                  "Testa o par mais promissor",
-                  "Test the most promising pair",
-                  "Prueba el par más prometedor"
-                )}
-              </p>
-            </div>
-            <ChevronRight
-              size={16}
-              className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-pink-400 transition-colors"
-            />
-          </Link>
-          <Link
-            href="/calculadora-valor"
-            className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
-          >
-            <Euro
-              size={18}
-              className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
-            />
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-[var(--foreground)]">
-                {tr("Calculadora de Valor", "Value Calculator", "Calculadora de Valor")}
-              </p>
-              <p className="text-xs text-[var(--foreground-muted)] truncate">
-                {tr(
-                  "Estima o valor do vencedor",
-                  "Estimate the winner's value",
-                  "Estima el valor del ganador"
-                )}
-              </p>
-            </div>
-            <ChevronRight
-              size={16}
-              className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-[var(--gold)] transition-colors"
-            />
-          </Link>
-          <Link
-            href="/analise-perfil"
-            className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
-          >
-            <Target
-              size={18}
-              className="text-purple-400 shrink-0 group-hover:scale-110 transition-transform"
-            />
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-[var(--foreground)]">
-                {tr("Análise de Perfil", "Profile Analysis", "Análisis de Perfil")}
-              </p>
-              <p className="text-xs text-[var(--foreground-muted)] truncate">
-                {tr(
-                  "Confirma o teu tipo de comprador",
-                  "Confirm your buyer type",
-                  "Confirma tu tipo de comprador"
-                )}
-              </p>
-            </div>
-            <ChevronRight
-              size={16}
-              className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-purple-400 transition-colors"
-            />
-          </Link>
-        </div>
-      </div>
+      <ToolCrossCTA currentTool="comparador-cavalos" />
     </div>
   );
 }

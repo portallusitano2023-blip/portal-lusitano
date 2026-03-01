@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { ChevronRight, Calculator, BarChart3, Heart, UserCheck } from "lucide-react";
-import { useLanguage, createTranslator } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 type ToolSlug =
   | "calculadora-valor"

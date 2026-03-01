@@ -65,7 +65,7 @@ export default function FerramentasPage() {
   const tools = getTools(tr);
 
   return (
-    <main className="min-h-screen bg-[var(--background)]">
+    <main id="main-content" className="min-h-screen bg-[var(--background)]">
       <CheckoutFeedback />
       <ProBannerSection />
 

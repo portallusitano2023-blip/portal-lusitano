@@ -113,15 +113,44 @@ export default function StatsSection() {
   if (!stats || stats.totalAnalyses === 0) {
     return (
       <div className="max-w-3xl mx-auto mb-16 px-6">
-        <div className="bg-[var(--background-secondary)]/60 border border-[var(--gold)]/15 rounded-2xl p-6 text-center">
-          <Activity size={24} className="text-[var(--gold)]/40 mx-auto mb-3" />
-          <p className="text-sm text-[var(--foreground-muted)]">
-            {tr(
-              "As estatísticas aparecerão aqui quando as primeiras análises forem realizadas.",
-              "Stats will appear here once the first analyses are completed.",
-              "Las estadísticas aparecerán aquí cuando se realicen los primeros análisis."
-            )}
-          </p>
+        <div className="bg-[var(--background-secondary)]/60 border border-[var(--gold)]/15 rounded-2xl grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[var(--border)]">
+          <div className="flex flex-col items-center gap-2 p-4 sm:p-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center mb-1">
+              <Activity size={20} className="text-[var(--gold)]" />
+            </div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">
+              {tr("4 Ferramentas", "4 Tools", "4 Herramientas")}
+            </p>
+            <p className="text-xs text-[var(--foreground-muted)] text-center">
+              {tr(
+                "profissionais integradas",
+                "professional & integrated",
+                "profesionales integradas"
+              )}
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-2 p-4 sm:p-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center mb-1">
+              <Users size={20} className="text-[var(--gold)]" />
+            </div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">
+              {tr("100% Gratuito", "100% Free", "100% Gratis")}
+            </p>
+            <p className="text-xs text-[var(--foreground-muted)] text-center">
+              {tr("1 uso por ferramenta", "1 free use per tool", "1 uso por herramienta")}
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-2 p-4 sm:p-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center mb-1">
+              <TrendingUp size={20} className="text-[var(--gold)]" />
+            </div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">
+              {tr("Trilingue", "Trilingual", "Trilingüe")}
+            </p>
+            <p className="text-xs text-[var(--foreground-muted)] text-center">
+              {tr("PT · EN · ES", "PT · EN · ES", "PT · EN · ES")}
+            </p>
+          </div>
         </div>
       </div>
     );

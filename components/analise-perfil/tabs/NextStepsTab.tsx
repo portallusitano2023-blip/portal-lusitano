@@ -1,19 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Compass,
-  Briefcase,
-  ChevronRight,
-  BarChart3,
-  Heart,
-  Calculator,
-  Sparkles,
-  TrendingUp,
-  Info,
-} from "lucide-react";
+import { Compass, Briefcase, ChevronRight, BarChart3, Heart, Calculator, Info } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
+import ToolCrossCTA from "@/components/tools/ToolCrossCTA";
 import type { Result } from "@/components/analise-perfil/types";
 
 const PROFILE_CONTEXT_KEY = "tool_context_profile";
@@ -211,98 +202,17 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
         </div>
       </div>
 
-      {/* Ferramentas Recomendadas Para Si — acesso rapido personalizado */}
-      <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)] mt-4">
-        <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-4 flex items-center gap-2">
-          <Sparkles size={15} className="text-[#C5A059]" />
-          {ap.next_tools2_title ??
-            tr(
-              "Ferramentas Recomendadas Para Si",
-              "Recommended Tools For You",
-              "Herramientas Recomendadas Para Usted"
-            )}
-        </h3>
-        <div className="grid sm:grid-cols-2 gap-3">
-          <button
-            onClick={() => {
-              try {
-                sessionStorage.setItem(
-                  "tool_context_profile",
-                  JSON.stringify({ source: "analise_perfil", profile: result.profile, subProfile })
-                );
-              } catch {}
-              window.location.href = "/calculadora-valor";
-            }}
-            className="group flex items-center gap-3 p-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl hover:border-[var(--gold)]/60 transition-all text-left"
-          >
-            <TrendingUp
-              size={18}
-              className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
-            />
-            <div>
-              <p className="text-sm font-semibold text-[var(--foreground)]">
-                {ap.next_calc2_title ??
-                  tr(
-                    "Calcular Valor do Cavalo",
-                    "Calculate Horse Value",
-                    "Calcular Valor del Caballo"
-                  )}
-              </p>
-              <p className="text-xs text-[var(--foreground-muted)]">
-                {ap.next_calc2_desc ??
-                  tr(
-                    "Estimativa personalizada para o seu perfil",
-                    "Personalised estimate for your profile",
-                    "Estimación personalizada para su perfil"
-                  )}
-              </p>
-            </div>
-            <ChevronRight
-              size={15}
-              className="ml-auto text-[var(--foreground-muted)] group-hover:text-[var(--gold)] transition-colors"
-            />
-          </button>
-          <button
-            onClick={() => {
-              try {
-                sessionStorage.setItem(
-                  "tool_context_profile",
-                  JSON.stringify({ source: "analise_perfil", profile: result.profile, subProfile })
-                );
-              } catch {}
-              window.location.href = "/comparador-cavalos";
-            }}
-            className="group flex items-center gap-3 p-4 bg-blue-900/15 border border-blue-500/30 rounded-xl hover:border-blue-500/60 transition-all text-left"
-          >
-            <BarChart3
-              size={18}
-              className="text-blue-400 shrink-0 group-hover:scale-110 transition-transform"
-            />
-            <div>
-              <p className="text-sm font-semibold text-[var(--foreground)]">
-                {ap.next_compare2_title ??
-                  tr(
-                    "Comparar Cavalos Candidatos",
-                    "Compare Candidate Horses",
-                    "Comparar Caballos Candidatos"
-                  )}
-              </p>
-              <p className="text-xs text-[var(--foreground-muted)]">
-                {ap.next_compare2_desc ??
-                  tr(
-                    "Compare lado a lado para o seu perfil",
-                    "Compare side by side for your profile",
-                    "Compare lado a lado para su perfil"
-                  )}
-              </p>
-            </div>
-            <ChevronRight
-              size={15}
-              className="ml-auto text-[var(--foreground-muted)] group-hover:text-blue-400 transition-colors"
-            />
-          </button>
-        </div>
-      </div>
+      <ToolCrossCTA
+        currentTool="analise-perfil"
+        chainPayload={{
+          key: PROFILE_CONTEXT_KEY,
+          data: {
+            source: "analise_perfil",
+            profile: result.profile,
+            subProfile: subProfile ?? null,
+          },
+        }}
+      />
 
       {/* Revisão Recomendada */}
       <div className="mt-4 p-3 bg-[var(--background-card)]/40 rounded-lg border border-[var(--border)]/40 flex items-start gap-2">
