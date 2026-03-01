@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
 import { Shield, Download, Zap, Crown, ChevronUp } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
@@ -14,18 +13,30 @@ import FAQSection from "@/components/ferramentas/FAQSection";
 import { getTools } from "./tools-data";
 import { getFaqItems } from "./faq-data";
 
-// Lazy-loaded below-the-fold sections
+// Lazy-loaded below-the-fold sections — all have loading skeletons to prevent blank gaps
 const StatsSection = dynamic(() => import("@/components/ferramentas/StatsSection"), {
   ssr: false,
+  loading: () => <SectionSkeleton height="h-24" />,
 });
-const ToolJourneySection = dynamic(() => import("@/components/ferramentas/ToolJourneySection"));
-const HowItWorksSection = dynamic(() => import("@/components/ferramentas/HowItWorksSection"));
-const PricingSection = dynamic(() => import("@/components/ferramentas/PricingSection"));
+const ToolJourneySection = dynamic(() => import("@/components/ferramentas/ToolJourneySection"), {
+  loading: () => <SectionSkeleton />,
+});
+const HowItWorksSection = dynamic(() => import("@/components/ferramentas/HowItWorksSection"), {
+  loading: () => <SectionSkeleton />,
+});
+const PricingSection = dynamic(() => import("@/components/ferramentas/PricingSection"), {
+  loading: () => <SectionSkeleton height="h-96" />,
+});
 const ReviewsSection = dynamic(() => import("@/components/ferramentas/ReviewsSection"), {
   ssr: false,
+  loading: () => <SectionSkeleton height="h-96" />,
 });
-const ToolRecommender = dynamic(() => import("@/components/ferramentas/ToolRecommender"));
-const ToolComparisonTable = dynamic(() => import("@/components/ferramentas/ToolComparisonTable"));
+const ToolRecommender = dynamic(() => import("@/components/ferramentas/ToolRecommender"), {
+  loading: () => <SectionSkeleton height="h-32" />,
+});
+const ToolComparisonTable = dynamic(() => import("@/components/ferramentas/ToolComparisonTable"), {
+  loading: () => <SectionSkeleton />,
+});
 
 function ScrollToTop() {
   const [visible, setVisible] = useState(false);
@@ -76,24 +87,16 @@ export default function FerramentasPage() {
       <ToolsGrid tools={tools} sectionLabel={t.ferramentas.available} />
 
       {/* ===== TOOL RECOMMENDER ===== */}
-      <Suspense fallback={null}>
-        <ToolRecommender />
-      </Suspense>
+      <ToolRecommender />
 
       {/* ===== TOOL COMPARISON TABLE ===== */}
-      <Suspense fallback={null}>
-        <ToolComparisonTable />
-      </Suspense>
+      <ToolComparisonTable />
 
       {/* ===== STATS COUNTERS ===== */}
-      <Suspense fallback={null}>
-        <StatsSection />
-      </Suspense>
+      <StatsSection />
 
       {/* ===== TOOL JOURNEY (TOOL CHAIN DIAGRAM) ===== */}
-      <Suspense fallback={<SectionSkeleton />}>
-        <ToolJourneySection />
-      </Suspense>
+      <ToolJourneySection />
 
       {/* ===== KEY BENEFITS STRIP ===== */}
       <section id="beneficios" className="px-6 pb-24">
@@ -138,22 +141,16 @@ export default function FerramentasPage() {
       </section>
 
       {/* ===== COMO FUNCIONA SECTION ===== */}
-      <Suspense fallback={<SectionSkeleton />}>
-        <HowItWorksSection />
-      </Suspense>
+      <HowItWorksSection />
 
       {/* ===== PRICING + PRO FEATURES ===== */}
-      <Suspense fallback={<SectionSkeleton height="h-96" />}>
-        <PricingSection />
-      </Suspense>
+      <PricingSection />
 
       {/* ===== FAQ SECTION ===== */}
       <FAQSection items={getFaqItems(language)} />
 
       {/* ===== REVIEWS SECTION ===== */}
-      <Suspense fallback={<SectionSkeleton />}>
-        <ReviewsSection />
-      </Suspense>
+      <ReviewsSection />
 
       <ScrollToTop />
     </main>

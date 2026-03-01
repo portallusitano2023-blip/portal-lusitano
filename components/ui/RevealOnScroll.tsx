@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useInViewOnce } from "@/hooks/useInViewOnce";
 
 type AnimationVariant = "fade-up" | "fade-left" | "fade-right" | "fade-scale" | "blur-up";
@@ -49,6 +49,14 @@ export default function RevealOnScroll({
 }: RevealOnScrollProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInViewOnce(ref, "0px");
+  const [prefersReducedMotion] = useState(
+    () =>
+      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   const styles = getStyles(variant, inView, distance);
 

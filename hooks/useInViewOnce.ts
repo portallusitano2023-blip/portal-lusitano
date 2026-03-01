@@ -45,14 +45,25 @@ export function useInViewOnce(ref: RefObject<HTMLElement | null>, margin = "-50p
     const el = ref.current;
     if (!el || inView) return;
 
+    // Safety timeout: if IntersectionObserver never fires (browser quirk,
+    // layout shift, element already visible), force content visible after 4s.
+    const timer = setTimeout(() => {
+      setInView(true);
+      if (el) unobserve(el, margin);
+    }, 4000);
+
     observe(el, margin, (entry) => {
       if (entry.isIntersecting) {
+        clearTimeout(timer);
         setInView(true);
         unobserve(el, margin);
       }
     });
 
-    return () => unobserve(el, margin);
+    return () => {
+      clearTimeout(timer);
+      unobserve(el, margin);
+    };
   }, [ref, margin, inView]);
 
   return inView;

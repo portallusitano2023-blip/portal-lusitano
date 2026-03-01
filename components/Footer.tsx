@@ -56,7 +56,7 @@ export default memo(function Footer() {
               <span className="font-serif text-3xl sm:text-4xl text-[var(--foreground)] tracking-tighter group-hover:text-[var(--gold)] transition-all duration-500">
                 PORTAL <span className="italic font-light">LUSITANO</span>
               </span>
-              <span className="text-[9px] text-[var(--foreground-secondary)] uppercase tracking-[0.5em] block mt-2 font-bold group-hover:text-[var(--foreground-secondary)] transition-colors">
+              <span className="text-[10px] sm:text-[9px] text-[var(--foreground-secondary)] uppercase tracking-[0.5em] block mt-2 font-bold group-hover:text-[var(--foreground-secondary)] transition-colors">
                 O Legado Nobre · Est. 2023
               </span>
             </Link>
@@ -164,21 +164,45 @@ export default memo(function Footer() {
           </div>
         </div>
 
+        {/* LEGAL — Obrigatório por DL 199/2015 e Regulamento UE 524/2013 */}
+        <div className="pt-8 border-t border-[var(--border)] mb-8">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[var(--foreground-muted)]">
+            <a
+              href="https://www.livroreclamacoes.pt"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[var(--foreground-secondary)] transition-colors flex items-center gap-1.5"
+            >
+              {t.footer.complaints_book}
+              <ArrowUpRight size={10} />
+            </a>
+            <a
+              href="https://ec.europa.eu/consumers/odr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[var(--foreground-secondary)] transition-colors flex items-center gap-1.5"
+            >
+              {t.footer.dispute_resolution}
+              <ArrowUpRight size={10} />
+            </a>
+          </div>
+        </div>
+
         {/* COPYRIGHT */}
-        <div className="pt-10 border-t border-[var(--border)] flex flex-col sm:flex-row justify-between items-center gap-6">
-          <p className="text-[var(--foreground-muted)] text-[11px] sm:text-[9px] uppercase tracking-[0.2em]">
+        <div className="pt-6 border-t border-[var(--border)] flex flex-col sm:flex-row justify-between items-center gap-6">
+          <p className="text-[var(--foreground-muted)] text-xs sm:text-[9px] uppercase tracking-[0.2em]">
             © 2026 Portal Lusitano. {t.footer.rights}.
           </p>
           <div className="flex gap-8">
             <Link
               href="/privacidade"
-              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-[11px] sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
+              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-xs sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
             >
               {t.footer.privacy}
             </Link>
             <Link
               href="/termos"
-              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-[11px] sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
+              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-xs sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
             >
               {t.footer.terms}
             </Link>
