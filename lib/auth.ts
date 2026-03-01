@@ -4,10 +4,10 @@ import { Redis } from "@upstash/redis";
 import crypto from "crypto";
 
 // HIGH-03 fix: Redis session store enables instant JWT revocation
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+// Falls back gracefully if Redis is unavailable (JWT still works, just no revocation)
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+const redis = redisUrl && redisToken ? new Redis({ url: redisUrl, token: redisToken }) : null;
 
 const SESSION_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
 
@@ -28,7 +28,13 @@ export async function createSession(email: string) {
     .sign(getSecret());
 
   // Register session in Redis — the source of truth for session validity
-  await redis.setex(`session:${jti}`, SESSION_TTL, email);
+  if (redis) {
+    try {
+      await redis.setex(`session:${jti}`, SESSION_TTL, email);
+    } catch (err) {
+      console.error("[auth] Redis setex failed, session will rely on JWT only:", err);
+    }
+  }
 
   (await cookies()).set("admin_session", token, {
     httpOnly: true,
@@ -54,8 +60,15 @@ export async function verifySession() {
 
     // Check Redis: session may have been revoked even if JWT signature is valid
     if (!jti) return null;
-    const session = await redis.get(`session:${jti}`);
-    if (!session) return null; // Revoked or expired in Redis
+    if (redis) {
+      try {
+        const session = await redis.get(`session:${jti}`);
+        if (!session) return null; // Revoked or expired in Redis
+      } catch (err) {
+        console.error("[auth] Redis get failed, accepting JWT as valid:", err);
+        // Fall through — if Redis is down, trust the JWT signature
+      }
+    }
 
     return verified.payload.email as string;
   } catch {
@@ -71,7 +84,13 @@ export async function deleteSession() {
     try {
       const verified = await jwtVerify(cookie.value, getSecret());
       const jti = verified.payload.jti as string | undefined;
-      if (jti) await redis.del(`session:${jti}`);
+      if (jti && redis) {
+        try {
+          await redis.del(`session:${jti}`);
+        } catch {
+          // Redis down — token will expire naturally via JWT TTL
+        }
+      }
     } catch {
       // Token already invalid, proceed to clear cookie
     }

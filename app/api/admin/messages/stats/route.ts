@@ -129,7 +129,12 @@ export async function GET(_req: NextRequest) {
       last24h: last24h || 0,
       lastWeek: lastWeekCount || 0,
       responseRate: Math.round(responseRate * 10) / 10, // 1 casa decimal
-      stats: statusStats, // Mudado de byStatus para stats para compatibilidade
+      stats: {
+        total: totalMessages || 0,
+        novo: statusStats?.novo || 0,
+        lido: statusStats?.lido || 0,
+        respondido: statusStats?.respondido || 0,
+      },
       byStatus: statusStats,
       byFormType: formTypeStats,
       byPriority: priorityStats,

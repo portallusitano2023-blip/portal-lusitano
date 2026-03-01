@@ -20,7 +20,12 @@ export async function adminLogin(prevState: unknown, formData: FormData) {
   }
 
   // Criar sessão JWT unificada
-  await createSession(email);
+  try {
+    await createSession(email);
+  } catch (err) {
+    console.error("[adminLogin] Session creation failed:", err);
+    return { error: "Erro ao criar sessão. Verifique a conexão ao servidor." };
+  }
 
   redirect("/admin");
 }

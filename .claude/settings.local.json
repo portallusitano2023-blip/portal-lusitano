@@ -164,7 +164,8 @@
       "Bash(sed 's/route.ts//')",
       "Bash(do sed -i 's|from \"\"@/lib/supabase\"\"|from \"\"@/lib/supabase-admin\"\"|g' \"$f\")",
       "Bash(while IFS= read -r file)",
-      "Bash(do perl -pi -e 's|from \"\"\\\\@/lib/supabase\"\"|from \"\"\\\\@/lib/supabase-admin\"\"|g' \"$file\")"
+      "Bash(do perl -pi -e 's|from \"\"\\\\@/lib/supabase\"\"|from \"\"\\\\@/lib/supabase-admin\"\"|g' \"$file\")",
+      "WebFetch(domain:www.portal-lusitano.pt)"
     ],
     "additionalDirectories": ["C:\\Users\\USUARIO\\portal-lusitano\\locales"]
   }
