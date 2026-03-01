@@ -8,19 +8,32 @@ import { jwtVerify } from "jose";
 // Instances are inline here (not imported from lib/) because middleware runs in Edge Runtime
 // with separate module scope. lib/rate-limit.ts provides complementary in-memory LRU limiting
 // for API routes running in Node.js runtime.
-const redis = Redis.fromEnv();
+// Graceful fallback: if Redis env vars are missing or invalid, rate limiting and session
+// revocation are disabled but the app still works (JWT signature is still verified).
+let redis: Redis | null = null;
+try {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    redis = Redis.fromEnv();
+  }
+} catch {
+  // Redis unavailable — rate limiting and session revocation disabled
+}
 
-const authLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(10, "15 m"),
-  prefix: "rl:auth",
-});
+const authLimiter = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(10, "15 m"),
+      prefix: "rl:auth",
+    })
+  : null;
 
-const apiLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(60, "1 m"),
-  prefix: "rl:api",
-});
+const apiLimiter = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(60, "1 m"),
+      prefix: "rl:api",
+    })
+  : null;
 
 function getClientIp(request: NextRequest): string {
   return (
@@ -72,15 +85,17 @@ function isValidOrigin(request: NextRequest): boolean {
 }
 
 /**
- * Nonce-based CSP: generates a fresh nonce per request and embeds it in
- * script-src. 'strict-dynamic' allows nonce-trusted scripts to load their
- * own dependencies. No 'unsafe-inline' — nonce-aware browsers ignore it
- * anyway, and removing it hardens CSP for all browsers.
+ * CSP: Content Security Policy.
+ *
+ * Next.js 16 with middleware no longer auto-applies nonces to script tags,
+ * so 'strict-dynamic' + nonce blocks ALL scripts (hydration breaks).
+ * Use 'self' + 'unsafe-inline' instead — still blocks XSS from external
+ * domains while allowing Next.js inline scripts to execute.
  */
-function buildCsp(nonce: string): string {
+function buildCsp(): string {
   return [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
+    `script-src 'self' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
     "font-src 'self' https://fonts.gstatic.com",
@@ -91,27 +106,20 @@ function buildCsp(nonce: string): string {
   ].join("; ");
 }
 
-function applySecurityHeaders(response: NextResponse, nonce: string, contentLanguage = "pt") {
-  // CSP must be set here (needs per-request nonce). Other security headers
+function applySecurityHeaders(response: NextResponse, contentLanguage = "pt") {
+  // CSP is static (no per-request nonce needed). Other security headers
   // (HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.)
   // are already set in next.config.js headers() — no need to duplicate them.
-  response.headers.set("Content-Security-Policy", buildCsp(nonce));
+  response.headers.set("Content-Security-Policy", buildCsp());
   response.headers.set("Content-Language", contentLanguage);
   response.headers.set("X-Download-Options", "noopen");
 }
 
 export async function middleware(request: NextRequest) {
-  // Generate a fresh nonce for each request (base64-encoded UUID)
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-
-  // Forward nonce to server components via request header
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-nonce", nonce);
-
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  const response = NextResponse.next();
   const pathname = request.nextUrl.pathname;
 
-  applySecurityHeaders(response, nonce);
+  applySecurityHeaders(response);
 
   // API routes: CSRF + Rate Limiting + CORS + Admin guard
   if (pathname.startsWith("/api/")) {
@@ -135,9 +143,15 @@ export async function middleware(request: NextRequest) {
         if (!payload.email || !payload.jti) {
           return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
         }
-        const session = await redis.get(`session:${payload.jti}`);
-        if (!session) {
-          return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
+        if (redis) {
+          try {
+            const session = await redis.get(`session:${payload.jti}`);
+            if (!session) {
+              return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
+            }
+          } catch {
+            // Redis down — trust JWT signature
+          }
         }
       } catch {
         return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
@@ -167,14 +181,19 @@ export async function middleware(request: NextRequest) {
 
       // Auth routes: 10 req/15min, other API: 60 req/min (Upstash sliding window)
       const limiter = isAuth ? authLimiter : apiLimiter;
-      const identifier = isAuth ? `auth:${ip}` : `api:${ip}`;
-      const { success } = await limiter.limit(identifier);
-
-      if (!success) {
-        return NextResponse.json(
-          { error: "Too many requests. Please try again later." },
-          { status: 429 }
-        );
+      if (limiter) {
+        const identifier = isAuth ? `auth:${ip}` : `api:${ip}`;
+        try {
+          const { success } = await limiter.limit(identifier);
+          if (!success) {
+            return NextResponse.json(
+              { error: "Too many requests. Please try again later." },
+              { status: 429 }
+            );
+          }
+        } catch {
+          // Redis unavailable — skip rate limiting
+        }
       }
     }
 
@@ -223,9 +242,9 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = strippedPath;
 
-    const rewriteResponse = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
+    const rewriteResponse = NextResponse.rewrite(url);
     rewriteResponse.cookies.set("locale", locale, { path: "/", sameSite: "lax" });
-    applySecurityHeaders(rewriteResponse, nonce, locale);
+    applySecurityHeaders(rewriteResponse, locale);
     return rewriteResponse;
   }
 
@@ -263,9 +282,15 @@ export async function middleware(request: NextRequest) {
       }
 
       // Check Redis: session may have been revoked even if JWT is still valid
-      const session = await redis.get(`session:${payload.jti}`);
-      if (!session) {
-        return NextResponse.redirect(new URL("/admin/login", request.url));
+      if (redis) {
+        try {
+          const session = await redis.get(`session:${payload.jti}`);
+          if (!session) {
+            return NextResponse.redirect(new URL("/admin/login", request.url));
+          }
+        } catch {
+          // Redis down — trust JWT signature
+        }
       }
     } catch {
       // Invalid or expired token
