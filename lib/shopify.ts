@@ -1,3 +1,5 @@
+import { logger } from "@/lib/logger";
+
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN;
 const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_TOKEN;
 
@@ -100,26 +102,41 @@ interface ShopifyFetchParams {
   variables?: Record<string, unknown>;
 }
 
-async function shopifyFetch({
-  query,
-  variables = {},
-}: ShopifyFetchParams): Promise<ShopifyResponse> {
-  const endpoint = `https://${domain}/api/2025-01/graphql.json`;
-  if (!domain || !storefrontAccessToken) return { data: null };
+const SHOPIFY_ENDPOINT = `https://${domain}/api/2025-01/graphql.json`;
+
+/** Shared base for all Shopify Storefront API calls */
+async function shopifyRequest(
+  { query, variables = {} }: ShopifyFetchParams,
+  cacheOptions: RequestInit,
+  label: string,
+): Promise<ShopifyResponse> {
+  if (!domain || !storefrontAccessToken) {
+    logger.warn(`[Shopify] Missing domain or access token — skipping ${label}`);
+    return { data: null };
+  }
   try {
-    const response = await fetch(endpoint, {
+    const response = await fetch(SHOPIFY_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
       },
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: 120 },
+      ...cacheOptions,
     });
+    if (!response.ok) {
+      logger.error(`[Shopify] ${label} HTTP ${response.status}: ${response.statusText}`);
+      return { data: null };
+    }
     return await response.json();
-  } catch {
+  } catch (error) {
+    logger.error(`[Shopify] ${label} error:`, error);
     return { data: null };
   }
+}
+
+async function shopifyFetch(params: ShopifyFetchParams): Promise<ShopifyResponse> {
+  return shopifyRequest(params, { next: { revalidate: 120 } }, "fetch");
 }
 
 export async function getProducts(): Promise<
@@ -192,26 +209,8 @@ export async function getProduct(handle: string): Promise<{
 }
 
 // Uncached fetch for mutations (cart operations)
-async function shopifyMutate({
-  query,
-  variables = {},
-}: ShopifyFetchParams): Promise<ShopifyResponse> {
-  const endpoint = `https://${domain}/api/2025-01/graphql.json`;
-  if (!domain || !storefrontAccessToken) return { data: null };
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
-      },
-      body: JSON.stringify({ query, variables }),
-      cache: "no-store",
-    });
-    return await response.json();
-  } catch {
-    return { data: null };
-  }
+async function shopifyMutate(params: ShopifyFetchParams): Promise<ShopifyResponse> {
+  return shopifyRequest(params, { cache: "no-store" }, "mutate");
 }
 
 // Cart lines fragment for mutation responses

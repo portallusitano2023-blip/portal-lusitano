@@ -188,7 +188,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     logger.error("Financial charts error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao gerar gráficos" },
+      { error: "Erro ao gerar gráficos" },
       { status: 500 }
     );
   }

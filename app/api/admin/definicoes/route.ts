@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     logger.error("Settings list error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao listar definições" },
+      { error: "Erro ao listar definições" },
       { status: 500 }
     );
   }
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     logger.error("Setting creation error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao criar definição" },
+      { error: "Erro ao criar definição" },
       { status: 500 }
     );
   }

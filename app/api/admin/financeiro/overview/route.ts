@@ -98,7 +98,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     logger.error("Financial overview error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar dados financeiros" },
+      { error: "Erro ao buscar dados financeiros" },
       { status: 500 }
     );
   }

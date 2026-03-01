@@ -93,8 +93,8 @@ export default function CavalosFavoritosPage() {
           text: `Vê este cavalo: ${horse.name}`,
           url,
         });
-      } catch {
-        // User cancelled or error
+      } catch (error) {
+        console.warn("[CavalosFavoritos] Share failed or was cancelled:", error);
       }
     } else {
       // Fallback: copy to clipboard

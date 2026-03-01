@@ -41,7 +41,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   } catch (error) {
     logger.error("Message get error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar mensagem" },
+      { error: "Erro ao buscar mensagem" },
       { status: 500 }
     );
   }
@@ -103,7 +103,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   } catch (error) {
     logger.error("Message update error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao atualizar mensagem" },
+      { error: "Erro ao atualizar mensagem" },
       { status: 500 }
     );
   }
@@ -137,7 +137,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   } catch (error) {
     logger.error("Message delete error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao eliminar mensagem" },
+      { error: "Erro ao eliminar mensagem" },
       { status: 500 }
     );
   }

@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     logger.error("List error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao listar uploads" },
+      { error: "Erro ao listar uploads" },
       { status: 500 }
     );
   }

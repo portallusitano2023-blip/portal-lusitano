@@ -46,7 +46,7 @@ export async function POST() {
       const { error } = await supabase.from("eventos").delete().eq("slug", slug);
 
       if (error) {
-        results.errors.push(`Erro ao eliminar ${slug}: ${error.message}`);
+        results.errors.push(`Erro ao eliminar ${slug}`);
       } else {
         results.eliminados++;
       }
@@ -60,7 +60,7 @@ export async function POST() {
         .eq("slug", slug);
 
       if (error) {
-        results.errors.push(`Erro em ${slug}: ${error.message}`);
+        results.errors.push(`Erro em ${slug}`);
       } else {
         results.confirmados++;
       }
@@ -73,7 +73,7 @@ export async function POST() {
       .like("slug", "%-2025");
 
     if (error2025) {
-      results.errors.push(`Erro eventos 2025: ${error2025.message}`);
+      results.errors.push(`Erro eventos 2025`);
     }
 
     return NextResponse.json({
@@ -100,7 +100,7 @@ export async function GET() {
     .order("data_inicio", { ascending: true });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Erro ao buscar eventos" }, { status: 500 });
   }
 
   return NextResponse.json({

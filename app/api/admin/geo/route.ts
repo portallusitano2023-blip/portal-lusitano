@@ -198,7 +198,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     logger.error("Geo data error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar dados geográficos" },
+      { error: "Erro ao buscar dados geográficos" },
       { status: 500 }
     );
   }

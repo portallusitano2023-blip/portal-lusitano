@@ -25,7 +25,6 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao carregar depoimentos",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );

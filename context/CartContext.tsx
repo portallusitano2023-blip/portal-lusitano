@@ -172,7 +172,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
             localStorage.removeItem("shopify_cart_id");
             setCartId(null);
           }
-        } catch {
+        } catch (error) {
+          console.error("[Cart] Failed to restore cart from localStorage:", error);
           if (!cancelled) setCartId(null);
         }
       })();

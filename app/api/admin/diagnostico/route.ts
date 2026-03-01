@@ -40,13 +40,13 @@ export async function GET(_req: NextRequest) {
 
     diagnostico.checks.supabase_conexao = {
       status: error ? "❌ ERRO" : "✅ OK",
-      message: error ? error.message : "Conexão com Supabase OK",
+      message: error ? "Erro na conexão com Supabase" : "Conexão com Supabase OK",
       error: error || null,
     };
   } catch (error) {
     diagnostico.checks.supabase_conexao = {
       status: "❌ ERRO",
-      message: error instanceof Error ? error.message : "Erro desconhecido",
+      message: "Erro na conexão com Supabase",
     };
   }
 
@@ -64,7 +64,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     diagnostico.checks.tabela_payments = {
       status: "❌ ERRO",
-      message: error instanceof Error ? error.message : "Erro desconhecido",
+      message: "Erro ao verificar tabela payments",
     };
   }
 
@@ -82,7 +82,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     diagnostico.checks.tabela_contact_submissions = {
       status: "❌ ERRO",
-      message: error instanceof Error ? error.message : "Erro desconhecido",
+      message: "Erro ao verificar tabela contact_submissions",
     };
   }
 
@@ -100,7 +100,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     diagnostico.checks.tabela_leads = {
       status: "❌ ERRO",
-      message: error instanceof Error ? error.message : "Erro desconhecido",
+      message: "Erro ao verificar tabela leads",
     };
   }
 

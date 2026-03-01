@@ -23,7 +23,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     logger.error("Campaigns list error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao listar campanhas" },
+      { error: "Erro ao listar campanhas" },
       { status: 500 }
     );
   }
@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     logger.error("Campaign creation error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao criar campanha" },
+      { error: "Erro ao criar campanha" },
       { status: 500 }
     );
   }
@@ -167,7 +167,7 @@ export async function DELETE(req: NextRequest) {
   } catch (error) {
     logger.error("Campaign deletion error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao eliminar campanha" },
+      { error: "Erro ao eliminar campanha" },
       { status: 500 }
     );
   }

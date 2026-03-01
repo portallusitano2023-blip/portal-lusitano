@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     logger.error("Update status error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao atualizar status" },
+      { error: "Erro ao atualizar status" },
       { status: 500 }
     );
   }

@@ -114,7 +114,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   } catch (error) {
     logger.error("Reply error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao enviar email" },
+      { error: "Erro ao enviar email" },
       { status: 500 }
     );
   }

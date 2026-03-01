@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     logger.error("Users list error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao listar utilizadores" },
+      { error: "Erro ao listar utilizadores" },
       { status: 500 }
     );
   }
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     logger.error("User creation error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao criar utilizador" },
+      { error: "Erro ao criar utilizador" },
       { status: 500 }
     );
   }

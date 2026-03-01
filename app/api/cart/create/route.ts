@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createCart } from "@/lib/shopify";
+import { logger } from "@/lib/logger";
 
 export async function POST() {
   try {
@@ -9,6 +10,7 @@ export async function POST() {
     }
     return NextResponse.json({ cart });
   } catch (error: unknown) {
+    logger.error("[API cart/create] Erro ao criar carrinho:", error);
     return NextResponse.json({ error: "Erro ao criar carrinho" }, { status: 500 });
   }
 }

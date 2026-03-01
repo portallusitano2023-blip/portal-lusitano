@@ -31,7 +31,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json(
       {
         error: "Erro ao carregar tarefa",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );
@@ -99,7 +98,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json(
       {
         error: "Erro ao atualizar tarefa",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );
@@ -126,7 +124,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     return NextResponse.json(
       {
         error: "Erro ao eliminar tarefa",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );

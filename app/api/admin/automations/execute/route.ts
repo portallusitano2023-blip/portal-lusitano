@@ -124,7 +124,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao executar automação",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );

@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     logger.error("Logs error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar logs" },
+      { error: "Erro ao buscar logs" },
       { status: 500 }
     );
   }
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     logger.error("Log creation error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao criar log" },
+      { error: "Erro ao criar log" },
       { status: 500 }
     );
   }

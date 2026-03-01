@@ -35,7 +35,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao carregar logs",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );

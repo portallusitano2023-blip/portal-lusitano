@@ -283,7 +283,7 @@ export async function POST() {
     if (error) {
       logger.error("Erro ao inserir eventos:", error);
       return NextResponse.json(
-        { error: "Erro ao inserir eventos", details: error.message },
+        { error: "Erro ao inserir eventos" },
         { status: 500 }
       );
     }

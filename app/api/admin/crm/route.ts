@@ -74,7 +74,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao carregar leads",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );
@@ -141,7 +140,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao criar lead",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );

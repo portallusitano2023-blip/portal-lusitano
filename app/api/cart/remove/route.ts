@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { removeFromCart } from "@/lib/shopify";
+import { logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,6 +16,7 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json({ cart });
   } catch (error: unknown) {
+    logger.error("[API cart/remove] Erro ao remover do carrinho:", error);
     return NextResponse.json({ error: "Erro ao remover" }, { status: 500 });
   }
 }

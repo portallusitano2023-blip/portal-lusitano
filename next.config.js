@@ -35,6 +35,10 @@ const nextConfig = {
       "web-vitals",
     ],
 
+    // Partial Prerendering: static shell served instantly from CDN,
+    // dynamic slots (filters, user-specific data) stream in afterwards.
+    ppr: "incremental",
+
     // Restore scroll position on browser back/forward navigation,
     // giving instant perceived performance for return visits.
     scrollRestoration: true,

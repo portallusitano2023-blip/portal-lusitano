@@ -205,7 +205,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     logger.error("Forecasting error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao calcular previsões" },
+      { error: "Erro ao calcular previsões" },
       { status: 500 }
     );
   }

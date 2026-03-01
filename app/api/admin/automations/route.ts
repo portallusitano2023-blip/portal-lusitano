@@ -63,7 +63,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao carregar automações",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );
@@ -153,7 +152,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao criar automação",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );
@@ -191,7 +189,6 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao atualizar automação",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );
@@ -224,7 +221,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao apagar automação",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );
