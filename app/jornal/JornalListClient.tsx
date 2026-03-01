@@ -17,37 +17,13 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import TextSplit from "@/components/TextSplit";
-import { urlFor } from "@/lib/sanity-image";
 import type { SanityArticle } from "@/lib/sanity-queries";
+import { getArticleImageUrl, formatArticleDate } from "@/lib/journal-utils";
 
 interface JornalListClientProps {
   articles: SanityArticle[];
   articlesEN?: SanityArticle[];
-}
-
-function getImageUrl(article: SanityArticle): string {
-  if (article.image?.asset?.url) return article.image.asset.url;
-  if (article.image?.asset?._ref) {
-    try {
-      return urlFor(article.image).width(800).quality(80).url();
-    } catch {
-      return "";
-    }
-  }
-  return "";
-}
-
-function formatDate(dateStr: string, lang: string): string {
-  try {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(lang === "pt" ? "pt-PT" : lang === "es" ? "es-ES" : "en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return dateStr;
-  }
+  articlesES?: SanityArticle[];
 }
 
 // Skeleton card para o estado de loading
@@ -72,11 +48,15 @@ function ArticleCardSkeleton() {
   );
 }
 
-export default function JornalListClient({ articles, articlesEN }: JornalListClientProps) {
+export default function JornalListClient({
+  articles,
+  articlesEN,
+  articlesES,
+}: JornalListClientProps) {
   const { t, language } = useLanguage();
   const tr = createTranslator(language);
 
-  // Usar artigos EN quando disponíveis e idioma é inglês
+  // Usar artigos traduzidos quando disponíveis
   const displayArticles = useMemo(() => {
     if (language === "en" && articlesEN && articlesEN.length > 0) {
       // Se os artigos vêm do Sanity (têm titleEn), usar campos EN dos mesmos artigos
@@ -91,8 +71,11 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
       // Senão usar o array EN separado (fallback local)
       return articlesEN;
     }
+    if (language === "es" && articlesES && articlesES.length > 0) {
+      return articlesES;
+    }
     return articles;
-  }, [articles, articlesEN, language]);
+  }, [articles, articlesEN, articlesES, language]);
 
   // Estado de filtros
   const [searchQuery, setSearchQuery] = useState("");
@@ -188,7 +171,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                 style={{ animationDelay: "0.25s" }}
               />
 
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-[var(--foreground)] leading-[0.9] tracking-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif text-[var(--foreground)] leading-[0.9] tracking-tight">
                 <TextSplit text={t.journal.title} baseDelay={0.1} wordDelay={0.06} />
               </h1>
             </div>
@@ -228,9 +211,9 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
           <Link href={`/jornal/${featuredArticle.slug.current}`}>
             {/* Mobile: overlay layout */}
             <div className="group md:hidden relative w-full h-[400px] overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/40 transition-colors duration-500 cursor-pointer">
-              {getImageUrl(featuredArticle) && (
+              {getArticleImageUrl(featuredArticle) && (
                 <Image
-                  src={getImageUrl(featuredArticle)}
+                  src={getArticleImageUrl(featuredArticle)}
                   alt={featuredArticle.image?.alt || featuredArticle.title}
                   fill
                   className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
@@ -259,7 +242,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                     {featuredArticle.estimatedReadTime}&nbsp;{minReadLabel}
                   </span>
                   {featuredArticle.publishedAt && (
-                    <span>{formatDate(featuredArticle.publishedAt, language)}</span>
+                    <span>{formatArticleDate(featuredArticle.publishedAt, language)}</span>
                   )}
                 </div>
               </div>
@@ -269,9 +252,9 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
             <div className="group hidden md:grid md:grid-cols-5 overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/40 transition-colors duration-500 cursor-pointer">
               {/* Imagem — 3/5 */}
               <div className="col-span-3 relative aspect-[3/2] overflow-hidden">
-                {getImageUrl(featuredArticle) && (
+                {getArticleImageUrl(featuredArticle) && (
                   <Image
-                    src={getImageUrl(featuredArticle)}
+                    src={getArticleImageUrl(featuredArticle)}
                     alt={featuredArticle.image?.alt || featuredArticle.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -322,7 +305,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
 
                 {featuredArticle.publishedAt && (
                   <span className="text-[10px] text-[var(--foreground-muted)] uppercase tracking-wider mb-6 block">
-                    {formatDate(featuredArticle.publishedAt, language)}
+                    {formatArticleDate(featuredArticle.publishedAt, language)}
                   </span>
                 )}
 
@@ -543,9 +526,9 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                 <Link href={`/jornal/${gridArticles[0].slug.current}`}>
                   <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/40 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
                     <div className="w-full aspect-[4/3] md:flex-1 overflow-hidden relative">
-                      {getImageUrl(gridArticles[0]) ? (
+                      {getArticleImageUrl(gridArticles[0]) ? (
                         <Image
-                          src={getImageUrl(gridArticles[0])}
+                          src={getArticleImageUrl(gridArticles[0])}
                           alt={gridArticles[0].image?.alt || gridArticles[0].title}
                           fill
                           sizes="(max-width: 768px) 100vw, 60vw"
@@ -574,7 +557,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                         )}
                       </span>
                       <span className="flex items-center gap-3 text-[var(--foreground-muted)]">
-                        <span>{formatDate(gridArticles[0].publishedAt, language)}</span>
+                        <span>{formatArticleDate(gridArticles[0].publishedAt, language)}</span>
                         <span className="flex items-center gap-1">
                           <Clock size={10} />
                           {gridArticles[0].estimatedReadTime}&nbsp;{minReadLabel}
@@ -611,9 +594,9 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                   <Link href={`/jornal/${article.slug.current}`}>
                     <article className="group cursor-pointer h-full flex flex-row md:flex-row border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/40 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
                       <div className="w-36 md:w-40 flex-shrink-0 overflow-hidden relative">
-                        {getImageUrl(article) ? (
+                        {getArticleImageUrl(article) ? (
                           <Image
-                            src={getImageUrl(article)}
+                            src={getArticleImageUrl(article)}
                             alt={article.image?.alt || article.title}
                             fill
                             sizes="160px"
@@ -682,9 +665,9 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                       >
                         {/* Imagem com zoom no hover */}
                         <div className="w-full aspect-[16/10] overflow-hidden relative">
-                          {getImageUrl(article) ? (
+                          {getArticleImageUrl(article) ? (
                             <Image
-                              src={getImageUrl(article)}
+                              src={getArticleImageUrl(article)}
                               alt={article.image?.alt || article.title}
                               fill
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -716,7 +699,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                             )}
                           </span>
                           <span className="flex items-center gap-3 text-[var(--foreground-muted)]">
-                            <span>{formatDate(article.publishedAt, language)}</span>
+                            <span>{formatArticleDate(article.publishedAt, language)}</span>
                             <span className="flex items-center gap-1">
                               <Clock size={10} />
                               {article.estimatedReadTime}&nbsp;{minReadLabel}
@@ -763,9 +746,9 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
 
                         {/* Thumbnail */}
                         <div className="w-40 h-28 flex-shrink-0 overflow-hidden relative">
-                          {getImageUrl(article) ? (
+                          {getArticleImageUrl(article) ? (
                             <Image
-                              src={getImageUrl(article)}
+                              src={getArticleImageUrl(article)}
                               alt={article.image?.alt || article.title}
                               fill
                               sizes="160px"
@@ -787,7 +770,7 @@ export default function JornalListClient({ articles, articlesEN }: JornalListCli
                               </span>
                             )}
                             <span className="text-[var(--foreground-muted)] text-[10px]">
-                              {formatDate(article.publishedAt, language)}
+                              {formatArticleDate(article.publishedAt, language)}
                             </span>
                             <span className="flex items-center gap-1 text-[var(--foreground-muted)] text-[10px]">
                               <Clock size={10} />

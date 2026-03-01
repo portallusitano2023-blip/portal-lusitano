@@ -97,6 +97,70 @@ export const articlesListPT: ArticleMeta[] = [
   },
 ];
 
+export const articlesListES: ArticleMeta[] = [
+  {
+    id: "1",
+    title: "Tratado Histórico: La Génesis del Caballo Ibérico",
+    subtitle: "5000 años de selección continua: Del Refugio Glaciar a la Gineta de Guerra.",
+    date: "25 ENE 2026",
+    readTime: "25 min",
+    category: "Historia y Arqueología",
+    image:
+      "https://images.unsplash.com/photo-1551884831-bbf3ddd77501?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: "2",
+    title: "Biomecánica Avanzada: La Física de la Reunión",
+    subtitle:
+      "Análisis vectorial del movimiento: Del ángulo lumbosacro a la elasticidad tendinosa.",
+    date: "18 ENE 2026",
+    readTime: "20 min",
+    category: "Zootecnia y Física",
+    image:
+      "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: "3",
+    title: "El Estándar Oficial (APSL): Manual de Juzgamiento",
+    subtitle: "Disección punto por punto del estándar racial aprobado por la APSL.",
+    date: "15 ENE 2026",
+    readTime: "20 min",
+    category: "Morfología y Estándar",
+    image:
+      "https://images.unsplash.com/photo-1447993661623-28b9c8a994a5?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: "4",
+    title: "La Ciencia de los Colores: Genética de Pelajes en el PSL",
+    subtitle: "Locus Extension, Agouti, Dilución Crema, el gen Grey y pelajes raros del PSL.",
+    date: "12 ENE 2026",
+    readTime: "20 min",
+    category: "Genética y Pelajes",
+    image:
+      "https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: "5",
+    title: "Toricidad: La Selección por el Combate",
+    subtitle: "Cómo la Tauromaquia moldeó la psique del Lusitano.",
+    date: "08 ENE 2026",
+    readTime: "15 min",
+    category: "Funcionalidad y Temperamento",
+    image:
+      "https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: "6",
+    title: "De Novilheiro a Rubi: La Revolución Internacional",
+    subtitle: "Cómo el Lusitano demostró su valor al más alto nivel del deporte ecuestre.",
+    date: "02 ENE 2026",
+    readTime: "25 min",
+    category: "Deporte y Competición",
+    image:
+      "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
+  },
+];
+
 export const articlesListEN: ArticleMeta[] = [
   {
     id: "1",

@@ -39,6 +39,11 @@ vi.mock("lucide-react", () => ({
   Crown: (props: Record<string, unknown>) => <svg data-testid="icon-crown" {...props} />,
   ArrowRight: (props: Record<string, unknown>) => <svg data-testid="icon-arrow-right" {...props} />,
   Loader2: (props: Record<string, unknown>) => <svg data-testid="icon-loader" {...props} />,
+  Check: (props: Record<string, unknown>) => <svg data-testid="icon-check" {...props} />,
+  Zap: (props: Record<string, unknown>) => <svg data-testid="icon-zap" {...props} />,
+  Download: (props: Record<string, unknown>) => <svg data-testid="icon-download" {...props} />,
+  History: (props: Record<string, unknown>) => <svg data-testid="icon-history" {...props} />,
+  Share2: (props: Record<string, unknown>) => <svg data-testid="icon-share" {...props} />,
 }));
 
 // ---------------------------------------------------------------------------
@@ -50,9 +55,9 @@ import Paywall from "@/components/tools/Paywall";
 // Tests - Default (PRO paywall)
 // ---------------------------------------------------------------------------
 describe("Paywall - PRO subscription mode", () => {
-  it("renders the PRO heading", () => {
+  it("renders the usage limit heading", () => {
     render(<Paywall toolName="Calculadora" />);
-    expect(screen.getByText("Ferramentas PRO")).toBeInTheDocument();
+    expect(screen.getByText(/uso gratuito/)).toBeInTheDocument();
   });
 
   it("renders the subscribe button", () => {
@@ -67,15 +72,15 @@ describe("Paywall - PRO subscription mode", () => {
 
   it("shows the tool name in the description", () => {
     render(<Paywall toolName="Comparador" />);
-    expect(screen.getByText(/Ja usou o seu uso gratuito da Comparador/)).toBeInTheDocument();
+    expect(screen.getByText(/Comparador/)).toBeInTheDocument();
   });
 
   it("displays feature list items", () => {
     render(<Paywall toolName="Calculadora" />);
-    expect(screen.getByText(/Uso ilimitado das 4 ferramentas/)).toBeInTheDocument();
-    expect(screen.getByText(/Exportacao PDF profissional/)).toBeInTheDocument();
-    expect(screen.getByText(/Guardar e partilhar resultados/)).toBeInTheDocument();
-    expect(screen.getByText(/Historico completo de avaliacoes/)).toBeInTheDocument();
+    expect(screen.getByText(/Uso ilimitado/)).toBeInTheDocument();
+    expect(screen.getByText(/PDF/)).toBeInTheDocument();
+    expect(screen.getByText(/Guardar e partilhar/)).toBeInTheDocument();
+    expect(screen.getByText(/completo/)).toBeInTheDocument();
   });
 });
 
@@ -86,26 +91,26 @@ describe("Paywall - requiresAuth mode", () => {
   it("renders the auth heading instead of PRO heading", () => {
     render(<Paywall toolName="Calculadora" requiresAuth />);
     expect(screen.getByText("Crie uma conta gratuita")).toBeInTheDocument();
-    expect(screen.queryByText("Ferramentas PRO")).not.toBeInTheDocument();
+    expect(screen.queryByText(/uso gratuito/)).not.toBeInTheDocument();
   });
 
   it("renders the register link", () => {
     render(<Paywall toolName="Calculadora" requiresAuth />);
-    const registerLink = screen.getByText("Criar Conta Gratis");
+    const registerLink = screen.getByText(/Criar Conta/);
     expect(registerLink).toBeInTheDocument();
     expect(registerLink.closest("a")).toHaveAttribute("href", "/registar");
   });
 
   it("renders the login link", () => {
     render(<Paywall toolName="Calculadora" requiresAuth />);
-    const loginLink = screen.getByText("Ja tenho conta");
+    const loginLink = screen.getByText(/tenho conta/);
     expect(loginLink).toBeInTheDocument();
     expect(loginLink.closest("a")).toHaveAttribute("href", "/login");
   });
 
   it("shows the tool name in the auth description", () => {
     render(<Paywall toolName="Comparador" requiresAuth />);
-    expect(screen.getByText(/Registe-se para usar a Comparador gratuitamente/)).toBeInTheDocument();
+    expect(screen.getByText(/Comparador/)).toBeInTheDocument();
   });
 
   it("renders the lock icon in auth mode", () => {

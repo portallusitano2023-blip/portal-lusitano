@@ -3,13 +3,11 @@
 import { memo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingCart, Heart, User } from "lucide-react";
-import { useCart } from "@/context/CartContext";
+import { Home, ShoppingCart, Heart, User, Wrench } from "lucide-react";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import { useLanguage } from "@/context/LanguageContext";
 export default memo(function MobileBottomNav() {
   const pathname = usePathname();
-  const { openCart, totalQuantity } = useCart();
   const { favoritesCount } = useHorseFavorites();
   const { t } = useLanguage();
   // Don't show on certain pages
@@ -24,6 +22,17 @@ export default memo(function MobileBottomNav() {
       icon: Home,
       label: t.mobile_nav.home,
       isActive: pathname === "/",
+    },
+    {
+      href: "/ferramentas",
+      icon: Wrench,
+      label: t.mobile_nav.tools,
+      isActive:
+        pathname === "/ferramentas" ||
+        pathname.startsWith("/calculadora-valor") ||
+        pathname.startsWith("/comparador-cavalos") ||
+        pathname.startsWith("/verificador-compatibilidade") ||
+        pathname.startsWith("/analise-perfil"),
     },
     {
       href: "/comprar",
@@ -80,23 +89,6 @@ export default memo(function MobileBottomNav() {
               </span>
             </Link>
           ))}
-
-          {/* Cart Button */}
-          <button
-            onClick={openCart}
-            aria-label={t.mobile_nav.shop}
-            className="flex flex-col items-center justify-center gap-1 min-w-[64px] min-h-[56px] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-all active:scale-90 touch-manipulation focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
-          >
-            <div className="relative">
-              <ShoppingCart size={24} strokeWidth={1.5} />
-              {totalQuantity > 0 && (
-                <span className="absolute -top-1 -right-2 w-5 h-5 bg-[var(--gold)] rounded-full flex items-center justify-center text-[10px] text-black font-bold">
-                  {totalQuantity > 9 ? "9+" : totalQuantity}
-                </span>
-              )}
-            </div>
-            <span className="text-[10px] font-medium">{t.mobile_nav.shop}</span>
-          </button>
         </div>
       </nav>
     </>

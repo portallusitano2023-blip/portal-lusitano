@@ -85,4 +85,64 @@
   a[href^="/"]::after {
     content: none;
   }
+
+  /* === ARTICLE-SPECIFIC PRINT STYLES === */
+
+  /* Hide reading progress bar */
+  [role="progressbar"] {
+    display: none !important;
+  }
+
+  /* Article hero: reduce height, keep as banner */
+  article header {
+    height: auto !important;
+    max-height: 300px;
+    position: relative !important;
+    overflow: hidden;
+    break-after: avoid;
+  }
+
+  /* Article body: optimise typography for print */
+  .article-body {
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    max-width: 100% !important;
+  }
+
+  .article-body h2 {
+    break-after: avoid;
+    page-break-after: avoid;
+    font-size: 16pt !important;
+    margin-top: 24pt !important;
+    border-bottom: 1pt solid #ccc !important;
+  }
+
+  .article-body h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+    font-size: 13pt !important;
+  }
+
+  .article-body figure,
+  .article-body img {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Info boxes and stat cards: keep together */
+  .article-body [class*="border-l-4"],
+  .article-body [class*="grid"] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Full width article body (no sidebar in print) */
+  .xl\:grid {
+    display: block !important;
+  }
+
+  /* Sources section: keep together */
+  .article-body + section {
+    break-inside: avoid;
+  }
 }

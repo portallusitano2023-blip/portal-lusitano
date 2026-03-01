@@ -3,13 +3,14 @@
 import { useState, useCallback } from "react";
 import { Euro, Camera, X, Upload, ImagePlus } from "lucide-react";
 import type { StepProps } from "@/components/vender-cavalo/types";
-import { disponibilidades, MAX_IMAGES, MIN_IMAGES } from "@/components/vender-cavalo/data";
+import { disponibilidades, MIN_IMAGES } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface StepPrecoApresentacaoProps extends StepProps {
   imagens: File[];
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveImage: (index: number) => void;
+  maxImages: number;
 }
 
 export default function StepPrecoApresentacao({
@@ -18,6 +19,7 @@ export default function StepPrecoApresentacao({
   imagens,
   onImageUpload,
   onRemoveImage,
+  maxImages,
 }: StepPrecoApresentacaoProps) {
   const { t } = useLanguage();
   const [isDragging, setIsDragging] = useState(false);
@@ -169,7 +171,7 @@ export default function StepPrecoApresentacao({
               {t.vender_cavalo.photos_title} *
             </h3>
             <span className="text-xs text-[var(--foreground-muted)]">
-              {imagens.length}/{MAX_IMAGES} &middot; {t.vender_cavalo.photos_min_req}
+              {imagens.length}/{maxImages} &middot; {t.vender_cavalo.photos_min_req}
             </span>
           </div>
           <p className="text-xs text-[var(--foreground-muted)] mb-4">
@@ -219,7 +221,7 @@ export default function StepPrecoApresentacao({
           )}
 
           {/* Drag & drop area */}
-          {imagens.length < MAX_IMAGES && (
+          {imagens.length < maxImages && (
             <label
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -243,7 +245,7 @@ export default function StepPrecoApresentacao({
                 </p>
                 <p className="text-xs text-[var(--foreground-muted)] mt-1">
                   JPG, PNG, WEBP &middot;{" "}
-                  {t.vender_cavalo.max_images_hint.replace("{max}", String(MAX_IMAGES))}
+                  {t.vender_cavalo.max_images_hint.replace("{max}", String(maxImages))}
                 </p>
               </div>
               <input

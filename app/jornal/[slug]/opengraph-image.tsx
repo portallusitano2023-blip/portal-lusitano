@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { fetchArticleBySlug } from "@/lib/sanity-queries";
 import { articlesDataPT } from "@/data/articlesData";
+import { slugToLegacyId } from "@/lib/journal-utils";
 
 export const runtime = "edge";
 
@@ -10,15 +11,6 @@ export const size = {
   height: 630,
 };
 export const contentType = "image/png";
-
-const slugToLegacyId: Record<string, string> = {
-  "genese-cavalo-iberico": "1",
-  "biomecanica-reuniao": "2",
-  "standard-apsl": "3",
-  "genetica-pelagens": "4",
-  "toricidade-selecao-combate": "5",
-  "novilheiro-rubi-revolucao-olimpica": "6",
-};
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

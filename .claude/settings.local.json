@@ -165,8 +165,12 @@
       "Bash(do sed -i 's|from \"\"@/lib/supabase\"\"|from \"\"@/lib/supabase-admin\"\"|g' \"$f\")",
       "Bash(while IFS= read -r file)",
       "Bash(do perl -pi -e 's|from \"\"\\\\@/lib/supabase\"\"|from \"\"\\\\@/lib/supabase-admin\"\"|g' \"$file\")",
-      "WebFetch(domain:www.portal-lusitano.pt)"
+      "WebFetch(domain:www.portal-lusitano.pt)",
+      "Bash(git rebase --continue)",
+      "Bash(GIT_EDITOR=true git rebase --continue)"
     ],
-    "additionalDirectories": ["C:\\Users\\USUARIO\\portal-lusitano\\locales"]
+    "additionalDirectories": [
+      "C:\\Users\\USUARIO\\portal-lusitano\\locales"
+    ]
   }
 }

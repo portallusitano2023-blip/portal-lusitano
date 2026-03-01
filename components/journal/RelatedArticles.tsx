@@ -3,40 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
-import { urlFor } from "@/lib/sanity-image";
 import type { SanityArticle } from "@/lib/sanity-queries";
+import { getArticleImageUrl, formatArticleDate } from "@/lib/journal-utils";
 
 interface RelatedArticlesProps {
   articles: SanityArticle[];
   language?: "pt" | "en" | "es";
-}
-
-function getImageUrl(article: SanityArticle): string {
-  if (article.image?.asset?.url) return article.image.asset.url;
-  if (article.image?.asset?._ref) {
-    try {
-      return urlFor(article.image).width(600).quality(80).url();
-    } catch {
-      return "";
-    }
-  }
-  return "";
-}
-
-function formatDate(dateStr: string, lang: string): string {
-  try {
-    const date = new Date(dateStr);
-    const locale = lang === "pt" ? "pt-PT" : lang === "es" ? "es-ES" : "en-GB";
-    return date
-      .toLocaleDateString(locale, {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-      .toUpperCase();
-  } catch {
-    return dateStr;
-  }
 }
 
 export default function RelatedArticles({ articles, language = "pt" }: RelatedArticlesProps) {
@@ -81,9 +53,9 @@ export default function RelatedArticles({ articles, language = "pt" }: RelatedAr
             <Link key={article._id} href={`/jornal/${article.slug.current}`}>
               <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/30 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
                 <div className="w-full aspect-[16/10] overflow-hidden relative">
-                  {getImageUrl(article) && (
+                  {getArticleImageUrl(article, 600) && (
                     <Image
-                      src={getImageUrl(article)}
+                      src={getArticleImageUrl(article, 600)}
                       alt={article.image?.alt || title}
                       fill
                       className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
@@ -101,7 +73,13 @@ export default function RelatedArticles({ articles, language = "pt" }: RelatedAr
                     )}
                   </span>
                   <span className="flex items-center gap-3 text-[var(--foreground-muted)]">
-                    <span>{formatDate(article.publishedAt, language)}</span>
+                    <span>
+                      {formatArticleDate(article.publishedAt, language, {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      }).toUpperCase()}
+                    </span>
                     <span className="flex items-center gap-1">
                       <Clock size={10} /> {article.estimatedReadTime} min
                     </span>

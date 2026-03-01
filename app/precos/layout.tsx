@@ -55,7 +55,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {
             question: "Quanto custa o plano Pro do Portal Lusitano?",
             answer:
-              "O plano Pro custa 9,99€ por mês. Inclui usos ilimitados em todas as ferramentas, exportação de relatórios em PDF, histórico completo de análises e suporte prioritário.",
+              "O plano Pro custa 9,99€ por mês (ou 79€/ano). Inclui usos ilimitados em todas as ferramentas, exportação de relatórios em PDF, histórico completo de análises e suporte prioritário.",
           },
           {
             question: "Existe um plano gratuito?",

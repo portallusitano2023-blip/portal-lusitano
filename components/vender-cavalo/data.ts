@@ -79,10 +79,6 @@ export const disponibilidades = [
   "Por marcação",
 ];
 
-export const PRECO_ANUNCIO = 49;
-export const PRECO_DESTAQUE = 29;
-
 export const TOTAL_STEPS = 4;
-export const MAX_IMAGES = 10;
 export const MIN_IMAGES = 3;
 export const MIN_DESCRIPTION_LENGTH = 100;

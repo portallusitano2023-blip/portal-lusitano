@@ -38,7 +38,7 @@ export default function ScrollToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className={`fixed bottom-10 right-10 z-[60] group flex flex-col items-center gap-2 transition-all duration-300 hover:scale-110 active:scale-95 ${
+      className={`fixed bottom-[calc(2.5rem+72px)] lg:bottom-10 right-6 lg:right-10 z-[60] group flex flex-col items-center gap-2 transition-all duration-300 hover:scale-110 active:scale-95 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5 pointer-events-none"
       }`}
       aria-label="Voltar ao topo"

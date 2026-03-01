@@ -1,9 +1,9 @@
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { NextRequest, NextResponse } from "next/server";
-import type Stripe from "stripe";
 import { logger } from "@/lib/logger";
 import { strictLimiter } from "@/lib/rate-limit";
+import { getListingTier } from "@/lib/listing-tiers";
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,10 +18,12 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { anuncio, destaque, formData } = await req.json();
+    const { tier, formData } = await req.json();
 
-    if (!anuncio) {
-      return NextResponse.json({ error: "Anúncio é obrigatório" }, { status: 400 });
+    // Validar tier
+    const tierData = getListingTier(tier);
+    if (!tierData) {
+      return NextResponse.json({ error: "Plano inválido" }, { status: 400 });
     }
 
     if (!formData || !formData.nomeCavalo) {
@@ -29,6 +31,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Guardar contacto em BD antes de criar sessão Stripe
+    const isDestaque = tier === "destaque" || tier === "premium";
     const { data: submission, error: submissionError } = await supabase
       .from("contact_submissions")
       .insert({
@@ -39,11 +42,10 @@ export async function POST(req: NextRequest) {
         company: null,
         form_data: {
           ...formData,
-          destaque: destaque,
-          anuncio: anuncio,
+          tier,
         },
         status: "novo",
-        priority: destaque ? "alta" : "normal", // Destaque = prioridade alta
+        priority: isDestaque ? "alta" : "normal",
         ip_address: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || null,
         user_agent: req.headers.get("user-agent") || null,
       })
@@ -58,40 +60,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
-
-    // Anúncio base (€49)
-    lineItems.push({
-      price_data: {
-        currency: "eur",
-        product_data: {
-          name: "Anúncio de Cavalo - 30 dias",
-          description: "Anúncio verificado com documentos APSL no Portal Lusitano",
-        },
-        unit_amount: 4900, // €49.00
-      },
-      quantity: 1,
-    });
-
-    // Destaque Premium adicional (€29)
-    if (destaque) {
-      lineItems.push({
-        price_data: {
-          currency: "eur",
-          product_data: {
-            name: "Destaque Premium - 7 dias",
-            description: "Topo da lista + 3x mais visualizações",
-          },
-          unit_amount: 2900, // €29.00
-        },
-        quantity: 1,
-      });
-    }
-
-    // Criar sessão de checkout Stripe
+    // Criar sessão de checkout Stripe com preço do tier
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: lineItems,
+      line_items: [
+        {
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: `Anúncio ${tierData.name} — ${tierData.durationDays} dias`,
+              description: tierData.features[0],
+            },
+            unit_amount: tierData.priceInCents,
+          },
+          quantity: 1,
+        },
+      ],
       mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/vender-cavalo/sucesso?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/vender-cavalo`,
@@ -99,7 +83,9 @@ export async function POST(req: NextRequest) {
       metadata: {
         type: "cavalo_anuncio",
         contact_submission_id: submission.id,
-        destaque: destaque ? "true" : "false",
+        tier,
+        duration_days: String(tierData.durationDays),
+        destaque: isDestaque ? "true" : "false",
         nome: formData.nomeCavalo.substring(0, 100),
       },
       billing_address_collection: "auto",

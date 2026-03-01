@@ -108,7 +108,7 @@ export default function CavaloDetail({ cavalo, relacionados, slug }: CavaloDetai
             <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-sm mb-2 font-bold">
               {tr("Puro Sangue Lusitano", "Purebred Lusitano", "Pura Sangre Lusitano")}
             </span>
-            <h1 className="text-6xl font-serif mb-6">{cavalo.nome}</h1>
+            <h1 className="text-4xl sm:text-6xl font-serif mb-6">{cavalo.nome}</h1>
 
             <div className="bg-[var(--background-secondary)]/50 border border-[var(--gold)]/30 p-8 mb-10 shadow-2xl backdrop-blur-sm">
               <div className="mb-8">

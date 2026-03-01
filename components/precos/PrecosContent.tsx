@@ -479,10 +479,10 @@ export default function PrecosContent() {
 
       {/* HERO */}
       <section className="px-6 md:px-12 pt-12 pb-20 max-w-5xl mx-auto text-center">
-        <span className="inline-block text-[var(--gold)] text-[9px] uppercase tracking-[0.4em] font-bold border border-[var(--gold)]/30 px-4 py-2 mb-8">
+        <span className="inline-block text-[var(--gold)] text-[9px] uppercase tracking-[0.25em] sm:tracking-[0.4em] font-bold border border-[var(--gold)]/30 px-4 py-2 mb-8">
           {tr("Planos e Preços", "Plans & Pricing", "Planes y Precios")}
         </span>
-        <h1 className="text-5xl md:text-7xl font-serif leading-none tracking-tight mb-6">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-serif leading-none tracking-tight mb-6">
           {tr("Ferramentas Profissionais", "Professional Tools", "Herramientas Profesionales")}
           <br />
           <em className="text-[var(--gold)]">
@@ -525,7 +525,7 @@ export default function PrecosContent() {
       <section className="px-6 md:px-12 pb-24 max-w-5xl mx-auto">
         <div className="grid md:grid-cols-3 gap-0 border border-[var(--border)]">
           {/* FREE */}
-          <div className="p-8 border-r border-[var(--border)] flex flex-col group hover:bg-[var(--background-secondary)]/40 transition-colors duration-300">
+          <div className="p-5 sm:p-8 border-b md:border-b-0 md:border-r border-[var(--border)] flex flex-col group hover:bg-[var(--background-secondary)]/40 transition-colors duration-300">
             <div className="mb-8">
               <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-3">
                 {tr("Explorador", "Explorer", "Explorador")}
@@ -572,7 +572,7 @@ export default function PrecosContent() {
           </div>
 
           {/* PRO — destacado */}
-          <div className="p-8 border-r border-[var(--border)] flex flex-col relative bg-[var(--gold)]/5">
+          <div className="p-5 sm:p-8 border-b md:border-b-0 md:border-r border-[var(--border)] flex flex-col relative bg-[var(--gold)]/5">
             {/* Borda de destaque superior */}
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-[var(--gold)]" />
             {/* Badge */}
@@ -615,7 +615,7 @@ export default function PrecosContent() {
           </div>
 
           {/* MARKETPLACE */}
-          <div className="p-8 flex flex-col group hover:bg-[var(--background-secondary)]/40 transition-colors duration-300">
+          <div className="p-5 sm:p-8 flex flex-col group hover:bg-[var(--background-secondary)]/40 transition-colors duration-300">
             <div className="mb-8">
               <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-3">
                 Marketplace
@@ -675,48 +675,50 @@ export default function PrecosContent() {
         <h2 className="text-[10px] uppercase tracking-[0.4em] text-[var(--foreground-muted)] mb-8 text-center">
           {tr("Comparação detalhada", "Detailed comparison", "Comparación detallada")}
         </h2>
-        <div className="border border-[var(--border)]">
-          <div className="grid grid-cols-3 border-b border-[var(--border)] bg-[var(--background-secondary)]">
-            <div className="p-4 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
-              {tr("Funcionalidade", "Feature", "Funcionalidad")}
+        <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+          <div className="min-w-[500px] border border-[var(--border)]">
+            <div className="grid grid-cols-3 border-b border-[var(--border)] bg-[var(--background-secondary)]">
+              <div className="p-4 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
+                {tr("Funcionalidade", "Feature", "Funcionalidad")}
+              </div>
+              <div className="p-4 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] text-center border-l border-[var(--border)]">
+                {tr("Grátis", "Free", "Gratis")}
+              </div>
+              <div className="p-4 text-[10px] uppercase tracking-widest text-[var(--gold)] text-center border-l border-[var(--border)]">
+                Pro
+              </div>
             </div>
-            <div className="p-4 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] text-center border-l border-[var(--border)]">
-              {tr("Grátis", "Free", "Gratis")}
-            </div>
-            <div className="p-4 text-[10px] uppercase tracking-widest text-[var(--gold)] text-center border-l border-[var(--border)]">
-              Pro
-            </div>
+            {comparisonRows.map((row, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-3 border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--background-secondary)]/30 transition-colors"
+              >
+                <div className="p-4 text-sm text-[var(--foreground-secondary)]">{row.feature}</div>
+                <div className="p-4 text-center border-l border-[var(--border)] flex items-center justify-center">
+                  {typeof row.free === "boolean" ? (
+                    row.free ? (
+                      <Check size={14} className="text-[var(--gold)]" />
+                    ) : (
+                      <X size={14} className="text-[var(--foreground-muted)]" />
+                    )
+                  ) : (
+                    <span className="text-xs text-[var(--foreground-secondary)]">{row.free}</span>
+                  )}
+                </div>
+                <div className="p-4 text-center border-l border-[var(--border)] flex items-center justify-center">
+                  {typeof row.pro === "boolean" ? (
+                    row.pro ? (
+                      <Check size={14} className="text-[var(--gold)]" />
+                    ) : (
+                      <X size={14} className="text-[var(--foreground-muted)]" />
+                    )
+                  ) : (
+                    <span className="text-xs text-[var(--gold)] font-medium">{row.pro}</span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-          {comparisonRows.map((row, i) => (
-            <div
-              key={i}
-              className="grid grid-cols-3 border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--background-secondary)]/30 transition-colors"
-            >
-              <div className="p-4 text-sm text-[var(--foreground-secondary)]">{row.feature}</div>
-              <div className="p-4 text-center border-l border-[var(--border)] flex items-center justify-center">
-                {typeof row.free === "boolean" ? (
-                  row.free ? (
-                    <Check size={14} className="text-[var(--gold)]" />
-                  ) : (
-                    <X size={14} className="text-[var(--foreground-muted)]" />
-                  )
-                ) : (
-                  <span className="text-xs text-[var(--foreground-secondary)]">{row.free}</span>
-                )}
-              </div>
-              <div className="p-4 text-center border-l border-[var(--border)] flex items-center justify-center">
-                {typeof row.pro === "boolean" ? (
-                  row.pro ? (
-                    <Check size={14} className="text-[var(--gold)]" />
-                  ) : (
-                    <X size={14} className="text-[var(--foreground-muted)]" />
-                  )
-                ) : (
-                  <span className="text-xs text-[var(--gold)] font-medium">{row.pro}</span>
-                )}
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 

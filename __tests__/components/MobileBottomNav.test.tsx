@@ -1,13 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import MobileBottomNav from "@/components/MobileBottomNav";
 
 // ---------------------------------------------------------------------------
 // Mocks
 // ---------------------------------------------------------------------------
-const mockOpenCart = vi.fn();
 const mockPathname = vi.fn<() => string>(() => "/");
-const mockTotalQuantity = vi.fn<() => number>(() => 0);
 const mockFavoritesCount = vi.fn<() => number>(() => 0);
 
 vi.mock("next/navigation", () => ({
@@ -31,19 +29,6 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-vi.mock("@/context/CartContext", () => ({
-  useCart: () => ({
-    openCart: mockOpenCart,
-    totalQuantity: mockTotalQuantity(),
-    cart: [],
-    isCartOpen: false,
-    closeCart: vi.fn(),
-    addToCart: vi.fn(),
-    removeFromCart: vi.fn(),
-    updateQuantity: vi.fn(),
-  }),
-}));
-
 vi.mock("@/context/HorseFavoritesContext", () => ({
   useHorseFavorites: () => ({
     favoritesCount: mockFavoritesCount(),
@@ -61,6 +46,7 @@ vi.mock("@/context/LanguageContext", () => ({
     t: {
       mobile_nav: {
         home: "Início",
+        tools: "Ferramentas",
         horses: "Cavalos",
         favorites: "Favoritos",
         account: "Conta",
@@ -72,6 +58,7 @@ vi.mock("@/context/LanguageContext", () => ({
 
 vi.mock("lucide-react", () => ({
   Home: (props: Record<string, unknown>) => <svg data-testid="icon-home" {...props} />,
+  Wrench: (props: Record<string, unknown>) => <svg data-testid="icon-wrench" {...props} />,
   ShoppingCart: (props: Record<string, unknown>) => <svg data-testid="icon-cart" {...props} />,
   Heart: (props: Record<string, unknown>) => <svg data-testid="icon-heart" {...props} />,
   User: (props: Record<string, unknown>) => <svg data-testid="icon-user" {...props} />,
@@ -82,9 +69,7 @@ vi.mock("lucide-react", () => ({
 // ---------------------------------------------------------------------------
 beforeEach(() => {
   mockPathname.mockReturnValue("/");
-  mockTotalQuantity.mockReturnValue(0);
   mockFavoritesCount.mockReturnValue(0);
-  mockOpenCart.mockClear();
 });
 
 // ---------------------------------------------------------------------------
@@ -95,10 +80,10 @@ describe("MobileBottomNav", () => {
     render(<MobileBottomNav />);
 
     expect(screen.getByText("Início")).toBeInTheDocument();
+    expect(screen.getByText("Ferramentas")).toBeInTheDocument();
     expect(screen.getByText("Cavalos")).toBeInTheDocument();
     expect(screen.getByText("Favoritos")).toBeInTheDocument();
     expect(screen.getByText("Conta")).toBeInTheDocument();
-    expect(screen.getByText("Loja")).toBeInTheDocument();
   });
 
   it("highlights the active nav item based on pathname", () => {
@@ -125,18 +110,13 @@ describe("MobileBottomNav", () => {
     expect(screen.queryByText("0")).not.toBeInTheDocument();
   });
 
-  it("shows cart badge when totalQuantity > 0", () => {
-    mockTotalQuantity.mockReturnValue(5);
+  it("highlights ferramentas nav item on tool pages", () => {
+    mockPathname.mockReturnValue("/calculadora-valor");
     render(<MobileBottomNav />);
 
-    expect(screen.getByText("5")).toBeInTheDocument();
-  });
-
-  it("does not show cart badge when totalQuantity is 0", () => {
-    mockTotalQuantity.mockReturnValue(0);
-    render(<MobileBottomNav />);
-
-    expect(screen.getByText("Loja")).toBeInTheDocument();
+    const ferramentasLink = screen.getByText("Ferramentas").closest("a");
+    expect(ferramentasLink).toBeTruthy();
+    expect(ferramentasLink?.className).toContain("text-[var(--gold)]");
   });
 
   it("hides on /admin path", () => {
@@ -155,13 +135,10 @@ describe("MobileBottomNav", () => {
     expect(nav).toBeNull();
   });
 
-  it("calls openCart when cart button is clicked", () => {
+  it("links to /ferramentas from ferramentas nav item", () => {
     render(<MobileBottomNav />);
 
-    const cartButton = screen.getByText("Loja").closest("button");
-    expect(cartButton).toBeTruthy();
-    fireEvent.click(cartButton!);
-
-    expect(mockOpenCart).toHaveBeenCalledTimes(1);
+    const ferramentasLink = screen.getByText("Ferramentas").closest("a");
+    expect(ferramentasLink).toHaveAttribute("href", "/ferramentas");
   });
 });

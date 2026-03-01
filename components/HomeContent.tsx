@@ -353,13 +353,13 @@ export default function HomeContent() {
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto space-y-8">
           <p
-            className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[var(--gold)] opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            className="text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[var(--gold)] opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
             style={{ animationDelay: "0.1s" }}
           >
             {t.home.est}
           </p>
 
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] leading-[0.9] drop-shadow-lg">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] leading-[0.9] drop-shadow-lg">
             <TextSplit text={t.home.title_main} baseDelay={0.15} wordDelay={0.06} />
           </h1>
 
@@ -401,7 +401,7 @@ export default function HomeContent() {
 
         {/* Scroll Indicator */}
         <div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          className="absolute bottom-24 lg:bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
           style={{ animationDelay: "0.6s" }}
         >
           <span className="text-[9px] tracking-[0.3em] uppercase text-[var(--foreground-muted)]">

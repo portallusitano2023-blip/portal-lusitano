@@ -1,19 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { CreditCard, Shield } from "lucide-react";
+import { CreditCard, Shield, Check, Clock, Camera, Star } from "lucide-react";
 import type { FormData } from "@/components/vender-cavalo/types";
-import { PRECO_ANUNCIO, PRECO_DESTAQUE } from "@/components/vender-cavalo/data";
+import { LISTING_TIERS } from "@/lib/listing-tiers";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface StepPagamentoProps {
   formData: FormData;
   imagens: File[];
-  opcaoDestaque: boolean;
-  onOpcaoDestaqueChange: (checked: boolean) => void;
+  selectedTier: string;
   termsAccepted: boolean;
   onTermsChange: (checked: boolean) => void;
-  precoTotal: number;
   loading: boolean;
   onSubmit: () => void;
 }
@@ -21,15 +20,28 @@ interface StepPagamentoProps {
 export default function StepPagamento({
   formData,
   imagens,
-  opcaoDestaque,
-  onOpcaoDestaqueChange,
+  selectedTier,
   termsAccepted,
   onTermsChange,
-  precoTotal,
   loading,
   onSubmit,
 }: StepPagamentoProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
+  const tier = LISTING_TIERS[selectedTier] || LISTING_TIERS.standard;
+  const precoTotal = tier.priceInCents / 100;
+
+  const durationLabel =
+    tier.durationDays === 15
+      ? tr("15 dias", "15 days", "15 días")
+      : tier.durationDays === 30
+        ? tr("30 dias", "30 days", "30 días")
+        : tr("60 dias", "60 days", "60 días");
+
+  const photosLabel =
+    tier.maxPhotos === -1 ? tr("Ilimitadas", "Unlimited", "Ilimitadas") : `${tier.maxPhotos}`;
+
+  const isDestaque = selectedTier === "destaque" || selectedTier === "premium";
 
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">
@@ -40,7 +52,7 @@ export default function StepPagamento({
         {t.vender_cavalo.step_payment_title}
       </h2>
 
-      {/* Resumo */}
+      {/* Resumo do cavalo */}
       <div className="bg-[var(--background-card)]/50 rounded-lg p-4 mb-6">
         <h3 className="text-sm font-medium mb-4">{t.vender_cavalo.ad_summary}</h3>
         <div className="grid grid-cols-2 gap-y-2 text-sm">
@@ -63,31 +75,41 @@ export default function StepPagamento({
         </div>
       </div>
 
-      {/* Opção Destaque */}
+      {/* Resumo do Tier Seleccionado */}
       <div className="border border-[var(--gold)]/30 rounded-lg p-4 mb-6">
-        <label
-          htmlFor="opcao_destaque"
-          className="flex items-start gap-4 cursor-pointer touch-manipulation"
-        >
-          <input
-            id="opcao_destaque"
-            type="checkbox"
-            checked={opcaoDestaque}
-            onChange={(e) => onOpcaoDestaqueChange(e.target.checked)}
-            className="w-5 h-5 accent-[var(--gold)] mt-1"
-          />
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-medium">{t.vender_cavalo.highlight_option}</span>
-              <span className="px-2 py-0.5 bg-[var(--gold)] text-black text-xs font-bold rounded">
-                +{PRECO_DESTAQUE}€
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Star
+              size={16}
+              className={isDestaque ? "text-[var(--gold)] fill-current" : "text-[var(--gold)]"}
+            />
+            <span className="font-semibold">
+              {tr("Plano", "Plan", "Plan")} {tier.name}
+            </span>
+            {tier.badge && (
+              <span className="px-2 py-0.5 bg-[var(--gold)]/20 text-[var(--gold)] text-[10px] font-bold uppercase tracking-wider rounded">
+                {tier.badge}
               </span>
-            </div>
-            <p className="text-sm text-[var(--foreground-secondary)]">
-              {t.vender_cavalo.highlight_desc}
-            </p>
+            )}
           </div>
-        </label>
+          <span className="text-xl font-bold text-[var(--gold)]">{precoTotal}€</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs text-[var(--foreground-secondary)]">
+          <div className="flex items-center gap-1.5">
+            <Clock size={12} className="text-[var(--gold)]" />
+            {durationLabel}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Camera size={12} className="text-[var(--gold)]" />
+            {photosLabel} {tr("fotos", "photos", "fotos")}
+          </div>
+          {isDestaque && (
+            <div className="flex items-center gap-1.5">
+              <Check size={12} className="text-[var(--gold)]" />
+              {tr("Destaque incluído", "Featured included", "Destacado incluido")}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Preço Total */}
@@ -102,8 +124,7 @@ export default function StepPagamento({
           <CreditCard size={32} className="text-[var(--gold)]" />
         </div>
         <div className="text-xs text-[var(--foreground-muted)] mt-2">
-          {t.vender_cavalo.base_ad} ({PRECO_ANUNCIO}€){" "}
-          {opcaoDestaque && `+ ${t.vender_cavalo.highlight_label} (${PRECO_DESTAQUE}€)`}
+          {tr("Plano", "Plan", "Plan")} {tier.name} — {durationLabel}
         </div>
       </div>
 

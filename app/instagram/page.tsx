@@ -141,7 +141,7 @@ export default function InstagramPage() {
             Publicidade
           </span>
 
-          <h1 className="text-5xl md:text-6xl font-serif text-white mb-5 leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif text-white mb-5 leading-tight">
             Promova no Nosso Instagram
           </h1>
 

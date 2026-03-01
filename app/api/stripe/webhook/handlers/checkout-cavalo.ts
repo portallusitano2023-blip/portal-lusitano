@@ -63,7 +63,7 @@ export async function handleCavaloAnuncio(
       altura: formData.altura,
       preco: formData.preco,
       preco_negociavel: formData.precoNegociavel || false,
-      destaque: metadata.destaque === "true",
+      destaque: metadata.tier === "destaque" || metadata.tier === "premium",
       vendedor_email: session.customer_details?.email,
       vendedor_nome: formData.proprietarioNome,
       vendedor_telefone: formData.proprietarioTelefone,
@@ -96,11 +96,12 @@ export async function handleCavaloAnuncio(
     session.payment_intent as string,
     "cavalo_anuncio",
     {
-      package: "anuncio",
-      destaque: metadata.destaque === "true",
+      package: metadata.tier || "standard",
+      destaque: metadata.tier === "destaque" || metadata.tier === "premium",
+      duration_days: metadata.duration_days || "30",
       nome_cavalo: formData.nomeCavalo,
     },
-    `Anúncio: ${formData.nomeCavalo}`
+    `Anúncio ${metadata.tier || "standard"}: ${formData.nomeCavalo}`
   );
 
   // Ligar pagamento ao contacto (se existir)
@@ -135,7 +136,8 @@ export async function handleCavaloAnuncio(
       <p><strong>Email:</strong> ${escapeHtml(customerEmail)}</p>
       <p><strong>Telefone:</strong> ${escapeHtml(String(formData.proprietarioTelefone))}</p>
       <p><strong>Preço:</strong> &euro;${escapeHtml(String(formData.preco))}</p>
-      <p><strong>Destaque:</strong> ${metadata.destaque === "true" ? "Sim" : "Não"}</p>
+      <p><strong>Plano:</strong> ${escapeHtml(metadata.tier || "standard")} (${metadata.duration_days || "30"} dias)</p>
+      <p><strong>Destaque:</strong> ${metadata.tier === "destaque" || metadata.tier === "premium" ? "Sim" : "Não"}</p>
       <p><strong>Pagamento:</strong> €${((session.amount_total ?? 0) / 100).toFixed(2)}</p>
       <p><a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://portal-lusitano.pt"}/admin">Ir para Admin Panel</a></p>
     `,

@@ -28,7 +28,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
           </span>
 
           <h1
-            className="text-5xl md:text-7xl font-serif italic text-[var(--foreground)] mb-8 tracking-wide opacity-90 selection:bg-[var(--gold)] selection:text-black opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            className="text-3xl sm:text-5xl md:text-7xl font-serif italic text-[var(--foreground)] mb-8 tracking-wide opacity-90 selection:bg-[var(--gold)] selection:text-black opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
             style={{ animationDelay: "0.2s" }}
           >
             {t.shop.legacy}

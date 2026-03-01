@@ -50,30 +50,31 @@ interface PortableTextRendererProps {
 // Componentes custom do Portable Text para o Jornal Lusitano
 export const journalComponents: PortableTextComponents = {
   block: {
-    h2: ({ children }) => (
-      <h2
-        id={
-          typeof children === "string"
-            ? children.toString().toLowerCase().replace(/\s+/g, "-")
-            : undefined
-        }
-        className="text-4xl font-serif text-[var(--gold)] mb-6 mt-16 border-b border-[var(--border)] pb-4"
-      >
-        {children}
-      </h2>
-    ),
-    h3: ({ children }) => (
-      <h3
-        id={
-          typeof children === "string"
-            ? children.toString().toLowerCase().replace(/\s+/g, "-")
-            : undefined
-        }
-        className="text-2xl font-serif text-[var(--foreground)] mb-4 mt-10"
-      >
-        {children}
-      </h3>
-    ),
+    h2: ({ children, value }) => {
+      const text =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (value?.children as any[])?.map((c) => c.text || "").join("") || "";
+      const id = text ? text.toLowerCase().replace(/\s+/g, "-") : undefined;
+      return (
+        <h2
+          id={id}
+          className="text-4xl font-serif text-[var(--gold)] mb-6 mt-16 border-b border-[var(--border)] pb-4"
+        >
+          {children}
+        </h2>
+      );
+    },
+    h3: ({ children, value }) => {
+      const text =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (value?.children as any[])?.map((c) => c.text || "").join("") || "";
+      const id = text ? text.toLowerCase().replace(/\s+/g, "-") : undefined;
+      return (
+        <h3 id={id} className="text-2xl font-serif text-[var(--foreground)] mb-4 mt-10">
+          {children}
+        </h3>
+      );
+    },
     h4: ({ children }) => (
       <h4 className="text-xl font-bold text-[var(--foreground)] mb-3 mt-8">{children}</h4>
     ),

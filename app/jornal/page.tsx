@@ -1,21 +1,13 @@
 import fs from "fs";
 import path from "path";
 import { fetchArticlesList } from "@/lib/sanity-queries";
-import { articlesListPT, articlesListEN } from "@/data/articlesList";
+import { articlesListPT, articlesListEN, articlesListES } from "@/data/articlesList";
+import { legacyIdToSlug } from "@/lib/journal-utils";
 import { ItemListSchema } from "@/components/JsonLd";
 import JornalListClient from "./JornalListClient";
 
 // ISR: Revalidar jornal diariamente (novos artigos via Sanity)
 export const revalidate = 86400;
-
-const slugMap: Record<string, string> = {
-  "1": "genese-cavalo-iberico",
-  "2": "biomecanica-reuniao",
-  "3": "standard-apsl",
-  "4": "genetica-pelagens",
-  "5": "toricidade-selecao-combate",
-  "6": "novilheiro-rubi-revolucao-olimpica",
-};
 
 // Extensões de imagem aceites (qualquer ficheiro de imagem)
 const imageExts = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".bmp", ".tiff"]);
@@ -32,7 +24,7 @@ function findLocalCover(slug: string): string | null {
 // Fallback: converter dados locais para formato compatível com Sanity
 function localToSanityFormat(articles: typeof articlesListPT) {
   return articles.map((a, i) => {
-    const slug = slugMap[a.id] || a.id;
+    const slug = legacyIdToSlug[a.id] || a.id;
     const localCover = findLocalCover(slug);
 
     return {
@@ -68,8 +60,9 @@ export default async function JornalPage() {
     articles = localToSanityFormat(articlesListPT);
   }
 
-  // Dados EN para fallback
+  // Dados EN/ES para fallback
   const articlesEN = localToSanityFormat(articlesListEN);
+  const articlesES = localToSanityFormat(articlesListES);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
@@ -85,7 +78,7 @@ export default async function JornalPage() {
           image: a.image?.asset?.url,
         }))}
       />
-      <JornalListClient articles={articles} articlesEN={articlesEN} />
+      <JornalListClient articles={articles} articlesEN={articlesEN} articlesES={articlesES} />
     </>
   );
 }

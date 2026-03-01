@@ -18,11 +18,21 @@ export default function SourcesList({ sources, language = "pt" }: SourcesListPro
   return (
     <section
       className="mt-16 pt-8 border-t border-[var(--border)]"
-      aria-label={language === "pt" ? "Fontes e Referências" : "Sources and References"}
+      aria-label={
+        language === "pt"
+          ? "Fontes e Referências"
+          : language === "es"
+            ? "Fuentes y Referencias"
+            : "Sources and References"
+      }
     >
       <h3 className="text-xl font-serif text-[var(--gold)] mb-6 flex items-center gap-3">
         <BookOpen size={20} />
-        {language === "pt" ? "Fontes e Referências" : "Sources & References"}
+        {language === "pt"
+          ? "Fontes e Referências"
+          : language === "es"
+            ? "Fuentes y Referencias"
+            : "Sources & References"}
       </h3>
       <ul className="space-y-3">
         {sources.map((source, i) => (

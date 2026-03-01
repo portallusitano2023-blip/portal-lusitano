@@ -5,13 +5,11 @@ import { useToast } from "@/context/ToastContext";
 import type { FormData, Documentos, DocumentType } from "@/components/vender-cavalo/types";
 import {
   initialFormData,
-  PRECO_ANUNCIO,
-  PRECO_DESTAQUE,
   TOTAL_STEPS,
-  MAX_IMAGES,
   MIN_IMAGES,
   MIN_DESCRIPTION_LENGTH,
 } from "@/components/vender-cavalo/data";
+import { LISTING_TIERS } from "@/lib/listing-tiers";
 import PageHeader from "@/components/vender-cavalo/PageHeader";
 import PricingBanner from "@/components/vender-cavalo/PricingBanner";
 import HowItWorks from "@/components/vender-cavalo/HowItWorks";
@@ -52,7 +50,7 @@ export default function VenderCavaloPage() {
   const [imagens, setImagens] = useState<File[]>([]);
   const [documentos, setDocumentos] = useState<Documentos>({});
   const [errors, setErrors] = useState<string[]>([]);
-  const [opcaoDestaque, setOpcaoDestaque] = useState(false);
+  const [selectedTier, setSelectedTier] = useState("standard");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [restored, setRestored] = useState(false);
@@ -65,7 +63,7 @@ export default function VenderCavaloPage() {
         const draft = JSON.parse(saved);
         if (draft.formData) setFormData(draft.formData);
         if (draft.step) setStep(draft.step);
-        if (draft.opcaoDestaque) setOpcaoDestaque(draft.opcaoDestaque);
+        if (draft.selectedTier) setSelectedTier(draft.selectedTier);
         setRestored(true);
       }
     } catch {
@@ -76,11 +74,11 @@ export default function VenderCavaloPage() {
   // Auto-save draft to localStorage on changes
   const saveDraft = useCallback(() => {
     try {
-      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({ formData, step, opcaoDestaque }));
+      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({ formData, step, selectedTier }));
     } catch {
       // Ignore storage errors (quota exceeded, etc.)
     }
-  }, [formData, step, opcaoDestaque]);
+  }, [formData, step, selectedTier]);
 
   useEffect(() => {
     saveDraft();
@@ -168,7 +166,7 @@ export default function VenderCavaloPage() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (imagens.length + files.length > MAX_IMAGES) {
+    if (tierData.maxPhotos !== -1 && imagens.length + files.length > maxImages) {
       setErrors([t.vender_cavalo.error_max_images]);
       return;
     }
@@ -214,8 +212,7 @@ export default function VenderCavaloPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          anuncio: true,
-          destaque: opcaoDestaque,
+          tier: selectedTier,
           formData: {
             proprietarioNome: formData.proprietario_nome,
             proprietarioEmail: formData.proprietario_email,
@@ -279,13 +276,15 @@ export default function VenderCavaloPage() {
     }
   };
 
-  const precoTotal = PRECO_ANUNCIO + (opcaoDestaque ? PRECO_DESTAQUE : 0);
+  const tierData = LISTING_TIERS[selectedTier] || LISTING_TIERS.standard;
+  const precoTotal = tierData.priceInCents / 100;
+  const maxImages = tierData.maxPhotos === -1 ? 50 : tierData.maxPhotos;
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">
       <PageHeader />
       <HowItWorks />
-      <PricingBanner />
+      <PricingBanner selectedTier={selectedTier} onTierChange={setSelectedTier} />
 
       <div className="max-w-3xl mx-auto">
         <StepIndicator currentStep={step} />
@@ -304,7 +303,7 @@ export default function VenderCavaloPage() {
                 clearDraft();
                 setFormData(initialFormData);
                 setStep(1);
-                setOpcaoDestaque(false);
+                setSelectedTier("standard");
                 setRestored(false);
               }}
               className="text-[var(--gold)] text-xs uppercase tracking-wider hover:underline"
@@ -357,6 +356,7 @@ export default function VenderCavaloPage() {
             imagens={imagens}
             onImageUpload={handleImageUpload}
             onRemoveImage={removeImage}
+            maxImages={maxImages}
           />
         )}
 
@@ -365,11 +365,9 @@ export default function VenderCavaloPage() {
           <StepPagamento
             formData={formData}
             imagens={imagens}
-            opcaoDestaque={opcaoDestaque}
-            onOpcaoDestaqueChange={setOpcaoDestaque}
+            selectedTier={selectedTier}
             termsAccepted={termsAccepted}
             onTermsChange={setTermsAccepted}
-            precoTotal={precoTotal}
             loading={loading}
             onSubmit={handleSubmit}
           />

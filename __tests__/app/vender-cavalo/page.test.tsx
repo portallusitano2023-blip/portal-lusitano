@@ -44,10 +44,7 @@ vi.mock("@/components/vender-cavalo/data", () => ({
     localizacao: "",
     descricao: "",
   },
-  PRECO_ANUNCIO: 49.99,
-  PRECO_DESTAQUE: 29.99,
-  TOTAL_STEPS: 6,
-  MAX_IMAGES: 10,
+  TOTAL_STEPS: 4,
   MIN_IMAGES: 3,
   MIN_DESCRIPTION_LENGTH: 100,
 }));

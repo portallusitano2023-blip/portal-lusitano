@@ -109,7 +109,7 @@ export default function DownloadPage() {
             <Check className="text-green-500" size={48} />
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6">
             {t.ebook_download.congratulations}
           </h1>
 

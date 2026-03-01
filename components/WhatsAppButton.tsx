@@ -34,7 +34,7 @@ export default function WhatsAppButton({ phoneNumber = "351939513151" }: WhatsAp
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full shadow-lg flex items-center justify-center hover:bg-[#20bd5a] hover:scale-110 active:scale-95 transition-all duration-300 group opacity-0 animate-[fadeSlideIn_0.5s_ease-out_1s_forwards]"
+        className="fixed bottom-[calc(1.5rem+72px)] lg:bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full shadow-lg flex items-center justify-center hover:bg-[#20bd5a] hover:scale-110 active:scale-95 transition-all duration-300 group opacity-0 animate-[fadeSlideIn_0.5s_ease-out_1s_forwards]"
         aria-label={
           isOpen
             ? tr3(language, "Fechar WhatsApp", "Close WhatsApp", "Cerrar WhatsApp")
@@ -55,7 +55,7 @@ export default function WhatsAppButton({ phoneNumber = "351939513151" }: WhatsAp
 
       {/* Chat Widget */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 bg-[var(--background-card)] rounded-2xl shadow-2xl overflow-hidden opacity-0 animate-[scaleIn_0.3s_ease-out_forwards] border border-[var(--border)]">
+        <div className="fixed bottom-[calc(6rem+72px)] lg:bottom-24 right-6 z-50 w-80 bg-[var(--background-card)] rounded-2xl shadow-2xl overflow-hidden opacity-0 animate-[scaleIn_0.3s_ease-out_forwards] border border-[var(--border)]">
           {/* Header */}
           <div className="bg-[#25D366] p-4">
             <div className="flex items-center gap-3">

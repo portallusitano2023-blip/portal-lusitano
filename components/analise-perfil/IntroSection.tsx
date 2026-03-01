@@ -42,7 +42,7 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
               {t.analise_perfil.badge}
               <ClipboardCheck size={14} />
             </span>
-            <h1 className="text-5xl md:text-7xl font-serif text-[var(--foreground)] mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-serif text-[var(--foreground)] mb-6 leading-tight">
               {t.analise_perfil.title_line1}
               <span className="block text-[var(--gold)] italic">
                 {t.analise_perfil.title_line2}

@@ -7,8 +7,9 @@ import { ArrowLeft, ArrowUp, Clock, Calendar, Newspaper, FileText } from "lucide
 import ShareButtons from "@/components/ShareButtons";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import { urlFor } from "@/lib/sanity-image";
 import type { SanityArticle } from "@/lib/sanity-queries";
+import { getArticleImageUrl, formatArticleDate, legacyIdToSlug } from "@/lib/journal-utils";
+import { articlesListPT, articlesListEN, articlesListES } from "@/data/articlesList";
 import PortableTextRenderer from "@/components/journal/PortableTextComponents";
 import ReadingProgressBar from "@/components/journal/ReadingProgressBar";
 import FloatingTOC from "@/components/journal/FloatingTOC";
@@ -28,29 +29,51 @@ interface ArticlePageClientProps {
   relatedArticles: SanityArticle[];
 }
 
-function getImageUrl(article: SanityArticle): string {
-  if (article.image?.asset?.url) return article.image.asset.url;
-  if (article.image?.asset?._ref) {
-    try {
-      return urlFor(article.image).width(1920).quality(85).url();
-    } catch {
-      return "";
-    }
-  }
-  return "";
-}
+function PrevNextNav({ currentId, language }: { currentId: string; language: string }) {
+  const tr = createTranslator(language);
+  const list =
+    language === "es" ? articlesListES : language === "en" ? articlesListEN : articlesListPT;
+  const idx = list.findIndex((a) => a.id === currentId);
+  if (idx === -1) return null;
+  const prev = idx > 0 ? list[idx - 1] : null;
+  const next = idx < list.length - 1 ? list[idx + 1] : null;
+  if (!prev && !next) return null;
 
-function formatDate(dateStr: string, lang: string): string {
-  try {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(lang === "pt" ? "pt-PT" : "en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  } catch {
-    return dateStr;
-  }
+  return (
+    <nav
+      className="max-w-4xl mx-auto px-8 mt-16"
+      aria-label={tr("Navegação entre artigos", "Article navigation", "Navegación entre artículos")}
+      data-no-print
+    >
+      <div className="grid grid-cols-2 gap-4 border-t border-[var(--border)] pt-8">
+        {prev ? (
+          <Link href={`/jornal/${legacyIdToSlug[prev.id] || prev.id}`} className="group text-left">
+            <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
+              ← {tr("Anterior", "Previous", "Anterior")}
+            </span>
+            <p className="text-sm font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors mt-1 line-clamp-2">
+              {prev.title}
+            </p>
+          </Link>
+        ) : (
+          <div />
+        )}
+        {next && (
+          <Link
+            href={`/jornal/${legacyIdToSlug[next.id] || next.id}`}
+            className="group text-right col-start-2"
+          >
+            <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
+              {tr("Seguinte", "Next", "Siguiente")} →
+            </span>
+            <p className="text-sm font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors mt-1 line-clamp-2">
+              {next.title}
+            </p>
+          </Link>
+        )}
+      </div>
+    </nav>
+  );
 }
 
 export default function ArticlePageClient({
@@ -93,7 +116,7 @@ export default function ArticlePageClient({
     // Renderizar artigo local (sem Portable Text, com JSX directo)
     return (
       <article className="min-h-screen bg-[var(--background)] pb-40">
-        <ReadingProgressBar />
+        <ReadingProgressBar language={language} />
         {/* BREADCRUMB VISUAL */}
         <nav
           aria-label="Breadcrumb"
@@ -156,7 +179,7 @@ export default function ArticlePageClient({
               <span className="inline-block text-[var(--gold)] text-[9px] uppercase tracking-[0.4em] font-bold border border-[var(--gold)]/30 px-4 py-2">
                 {localArticle.category}
               </span>
-              <h1 className="text-5xl md:text-7xl font-serif text-white max-w-5xl leading-none tracking-tight">
+              <h1 className="text-3xl sm:text-5xl md:text-7xl font-serif text-white max-w-5xl leading-none tracking-tight">
                 {localArticle.title}
               </h1>
               <p className="text-lg md:text-xl text-[var(--foreground-secondary)] max-w-3xl font-light italic">
@@ -169,7 +192,9 @@ export default function ArticlePageClient({
         <div className="max-w-7xl mx-auto px-8 pt-20 pb-24 relative">
           <div className="xl:grid xl:grid-cols-[1fr_250px] xl:gap-12">
             <div className="max-w-4xl">
-              <ShareButtons title={localArticle.title} />
+              <div data-no-print>
+                <ShareButtons title={localArticle.title} />
+              </div>
               <div className="prose prose-invert prose-lg max-w-none article-body">
                 {localArticle.content}
               </div>
@@ -177,7 +202,7 @@ export default function ArticlePageClient({
                 <SourcesList sources={localArticle.sources} language={language} />
               )}
               {/* SHARE (bottom) */}
-              <div className="mt-16 pt-8 border-t border-[var(--border)]">
+              <div className="mt-16 pt-8 border-t border-[var(--border)]" data-no-print>
                 <ShareButtons title={localArticle.title} />
               </div>
             </div>
@@ -188,6 +213,9 @@ export default function ArticlePageClient({
             </aside>
           </div>
         </div>
+
+        {/* NAVEGAÇÃO ANTERIOR/SEGUINTE */}
+        {legacyId && <PrevNextNav currentId={legacyId} language={language} />}
 
         {/* ARTIGOS RELACIONADOS */}
         {localArticle.relatedSlugs && localArticle.relatedSlugs.length > 0 && (
@@ -250,7 +278,7 @@ export default function ArticlePageClient({
         </div>
 
         {/* NEWSLETTER */}
-        <div className="max-w-4xl mx-auto px-8 mt-8">
+        <div className="max-w-4xl mx-auto px-8 mt-8" data-no-print>
           <Newsletter />
         </div>
 
@@ -288,7 +316,7 @@ export default function ArticlePageClient({
   }
 
   // Artigo do Sanity com Portable Text
-  const imageUrl = getImageUrl(article);
+  const imageUrl = getArticleImageUrl(article, 1920);
   const title = language === "en" ? article.titleEn || article.title : article.title;
   const subtitle = language === "en" ? article.subtitleEn || article.subtitle : article.subtitle;
   const category = language === "en" ? article.categoryEn || article.category : article.category;
@@ -297,7 +325,7 @@ export default function ArticlePageClient({
 
   return (
     <article className="min-h-screen bg-[var(--background)] pb-20">
-      <ReadingProgressBar />
+      <ReadingProgressBar language={language} />
 
       {/* BREADCRUMB VISUAL — acessibilidade + UX */}
       <nav
@@ -367,7 +395,7 @@ export default function ArticlePageClient({
             <div className="flex items-center gap-6 text-white/60 text-xs">
               <span className="flex items-center gap-2">
                 <Calendar size={14} className="text-[var(--gold)]" />
-                {formatDate(article.publishedAt, language)}
+                {formatArticleDate(article.publishedAt, language)}
               </span>
               <span className="flex items-center gap-2">
                 <Clock size={14} className="text-[var(--gold)]" />
@@ -400,7 +428,9 @@ export default function ArticlePageClient({
       <div className="max-w-7xl mx-auto px-8 pt-20 pb-24 relative">
         <div className="xl:grid xl:grid-cols-[1fr_250px] xl:gap-12">
           <div className="max-w-4xl">
-            <ShareButtons title={title} />
+            <div data-no-print>
+              <ShareButtons title={title} />
+            </div>
 
             {body && body.length > 0 ? (
               <div className="mt-8">
@@ -422,7 +452,7 @@ export default function ArticlePageClient({
             )}
 
             {/* SHARE (bottom) */}
-            <div className="mt-16 pt-8 border-t border-[var(--border)]">
+            <div className="mt-16 pt-8 border-t border-[var(--border)]" data-no-print>
               <ShareButtons title={title} />
             </div>
           </div>
@@ -464,6 +494,9 @@ export default function ArticlePageClient({
           </div>
         </div>
       )}
+
+      {/* NAVEGAÇÃO ANTERIOR/SEGUINTE */}
+      {legacyId && <PrevNextNav currentId={legacyId} language={language} />}
 
       {/* ARTIGOS RELACIONADOS */}
       {relatedArticles.length > 0 && (
@@ -522,7 +555,7 @@ export default function ArticlePageClient({
       </div>
 
       {/* NEWSLETTER */}
-      <div className="max-w-4xl mx-auto px-8 mt-8">
+      <div className="max-w-4xl mx-auto px-8 mt-8" data-no-print>
         <Newsletter />
       </div>
 

@@ -60,10 +60,16 @@ export default function LocalFloatingTOC({ language = "pt" }: LocalFloatingTOCPr
   return (
     <nav
       className="sticky top-24"
-      aria-label={language === "pt" ? "Índice do artigo" : "Table of contents"}
+      aria-label={
+        language === "pt"
+          ? "Índice do artigo"
+          : language === "es"
+            ? "Índice del artículo"
+            : "Table of contents"
+      }
     >
       <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--foreground-muted)] mb-4 font-bold">
-        {language === "pt" ? "Índice" : "Contents"}
+        {language === "pt" ? "Índice" : language === "es" ? "Índice" : "Contents"}
       </h4>
       <ul className="space-y-2 border-l border-[var(--border)]">
         {headings.map((heading) => (

@@ -3,7 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
-import { articlesListPT, articlesListEN, slugToArticleId } from "@/data/articlesList";
+import {
+  articlesListPT,
+  articlesListEN,
+  articlesListES,
+  slugToArticleId,
+} from "@/data/articlesList";
 
 interface LocalRelatedArticlesProps {
   slugs: string[];
@@ -16,7 +21,8 @@ export default function LocalRelatedArticles({
 }: LocalRelatedArticlesProps) {
   if (!slugs || slugs.length === 0) return null;
 
-  const articlesList = language === "en" ? articlesListEN : articlesListPT;
+  const articlesList =
+    language === "en" ? articlesListEN : language === "es" ? articlesListES : articlesListPT;
   const readLabel = language === "pt" ? "Ler" : language === "es" ? "Leer" : "Read";
   const sectionTitle =
     language === "pt"

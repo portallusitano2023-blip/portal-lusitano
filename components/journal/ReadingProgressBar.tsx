@@ -2,7 +2,11 @@
 
 import { useRef, useEffect } from "react";
 
-export default function ReadingProgressBar() {
+interface ReadingProgressBarProps {
+  language?: "pt" | "en" | "es";
+}
+
+export default function ReadingProgressBar({ language = "pt" }: ReadingProgressBarProps) {
   const barRef = useRef<HTMLDivElement>(null);
   const rafId = useRef(0);
 
@@ -45,7 +49,13 @@ export default function ReadingProgressBar() {
       role="progressbar"
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-label="Progresso de leitura"
+      aria-label={
+        language === "pt"
+          ? "Progresso de leitura"
+          : language === "es"
+            ? "Progreso de lectura"
+            : "Reading progress"
+      }
     >
       <div
         ref={barRef}
