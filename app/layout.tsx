@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import { Providers } from "./providers";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
-import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -160,12 +159,10 @@ export default function RootLayout({
       </head>
       <body className="bg-[var(--background)] text-[var(--foreground)] antialiased">
         <Providers>
-          <ErrorBoundary>
-            <SkipLinks />
-            <Navbar />
-            <main id="main-content">{children}</main>
-            <Footer />
-          </ErrorBoundary>
+          <SkipLinks />
+          <Navbar />
+          <main id="main-content">{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>

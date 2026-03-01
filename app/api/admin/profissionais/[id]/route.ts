@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { invalidate, CacheTags } from "@/lib/revalidate";
 
 // GET - Obter um profissional específico
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -129,6 +130,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       });
     }
 
+    invalidate(CacheTags.PROFISSIONAIS);
     return NextResponse.json({ profissional });
   } catch (error) {
     logger.error("Error updating profissional:", error);
@@ -158,6 +160,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
     if (error) throw error;
 
+    invalidate(CacheTags.PROFISSIONAIS);
     return NextResponse.json({ message: "Profissional eliminado com sucesso" });
   } catch (error) {
     logger.error("Error deleting profissional:", error);

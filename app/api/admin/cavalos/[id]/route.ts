@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { invalidate, CacheTags } from "@/lib/revalidate";
 
 // PUT - Atualizar cavalo
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -55,6 +56,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: "Erro ao atualizar cavalo" }, { status: 500 });
     }
 
+    invalidate(CacheTags.CAVALOS);
     return NextResponse.json({ cavalo: data });
   } catch (error) {
     logger.error("Erro:", error);
@@ -88,6 +90,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: "Erro ao atualizar status" }, { status: 500 });
     }
 
+    invalidate(CacheTags.CAVALOS);
     return NextResponse.json({ cavalo: data });
   } catch (error) {
     logger.error("Erro:", error);
@@ -115,6 +118,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Erro ao eliminar cavalo" }, { status: 500 });
     }
 
+    invalidate(CacheTags.CAVALOS);
     return NextResponse.json({ success: true });
   } catch (error) {
     logger.error("Erro:", error);

@@ -5,6 +5,7 @@ import { resend } from "@/lib/resend";
 import Stripe from "stripe";
 import { CONTACT_EMAIL } from "@/lib/constants";
 import { logger } from "@/lib/logger";
+import { supabaseAdmin } from "@/lib/supabase";
 import { handleCavaloAnuncio } from "./handlers/checkout-cavalo";
 import { handleInstagramAd } from "./handlers/checkout-instagram";
 import { handlePublicidade } from "./handlers/checkout-publicidade";
@@ -61,12 +62,45 @@ export async function POST(req: Request) {
 
   try {
     switch (event.type) {
-      case "checkout.session.completed":
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+      case "checkout.session.completed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const { data: existingPayment } = await supabaseAdmin
+          .from("payments")
+          .select("id")
+          .eq("stripe_session_id", session.id)
+          .maybeSingle();
+
+        if (existingPayment) {
+          logger.warn(`Duplicate webhook received for checkout session ${session.id}, skipping`);
+          return Response.json({ received: true, duplicate: true });
+        }
+
+        await handleCheckoutCompleted(session);
         break;
-      case "invoice.payment_succeeded":
-        await handlePaymentSucceeded(event.data.object as Stripe.Invoice);
+      }
+      case "invoice.payment_succeeded": {
+        const invoice = event.data.object as Stripe.Invoice;
+        if (invoice.payment_intent) {
+          const paymentIntentId =
+            typeof invoice.payment_intent === "string"
+              ? invoice.payment_intent
+              : invoice.payment_intent.id;
+
+          const { data: existingPayment } = await supabaseAdmin
+            .from("payments")
+            .select("id")
+            .eq("stripe_payment_intent_id", paymentIntentId)
+            .maybeSingle();
+
+          if (existingPayment) {
+            logger.warn(`Duplicate webhook received for payment intent ${paymentIntentId}, skipping`);
+            return Response.json({ received: true, duplicate: true });
+          }
+        }
+
+        await handlePaymentSucceeded(invoice);
         break;
+      }
       case "customer.subscription.deleted":
         await handleSubscriptionCancelled(event.data.object as Stripe.Subscription);
         break;

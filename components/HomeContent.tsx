@@ -238,6 +238,39 @@ export default function HomeContent() {
     [tr]
   );
 
+  const testimonials = useMemo(
+    () => [
+      {
+        quote: tr(
+          "O Portal Lusitano ajudou-me a encontrar o garanhão perfeito para a minha coudelaria. Processo simples e seguro.",
+          "Portal Lusitano helped me find the perfect stallion for my stud farm. Simple and secure process.",
+          "Portal Lusitano me ayudó a encontrar el semental perfecto para mi haras. Proceso simple y seguro."
+        ),
+        name: tr("João Ribeiro", "João Ribeiro", "João Ribeiro"),
+        role: tr("Criador, Coudelaria Vale do Tejo", "Breeder, Vale do Tejo Stud Farm", "Criador, Haras Vale do Tejo"),
+      },
+      {
+        quote: tr(
+          "As ferramentas Pro são indispensáveis. A calculadora de valor poupou-me horas de pesquisa de mercado.",
+          "The Pro tools are indispensable. The value calculator saved me hours of market research.",
+          "Las herramientas Pro son indispensables. La calculadora de valor me ahorró horas de investigación."
+        ),
+        name: tr("Ana Santos", "Ana Santos", "Ana Santos"),
+        role: tr("Veterinária Equina", "Equine Veterinarian", "Veterinaria Equina"),
+      },
+      {
+        quote: tr(
+          "Vendi o meu Lusitano em menos de duas semanas. Os compradores qualificados fazem toda a diferença.",
+          "I sold my Lusitano in less than two weeks. The qualified buyers make all the difference.",
+          "Vendí mi Lusitano en menos de dos semanas. Los compradores calificados marcan la diferencia."
+        ),
+        name: tr("Miguel Costa", "Miguel Costa", "Miguel Costa"),
+        role: tr("Proprietário, Alentejo", "Owner, Alentejo", "Propietario, Alentejo"),
+      },
+    ],
+    [tr]
+  );
+
   const steps = useMemo(
     () => [
       {
@@ -588,6 +621,74 @@ export default function HomeContent() {
               {tr("Ver Cavalos Disponíveis", "View Available Horses", "Ver Caballos Disponibles")}
               <ArrowRight size={14} aria-hidden="true" />
             </Link>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* ===== SOCIAL PROOF — Testimonials ===== */}
+      <section className="py-20 sm:py-28 border-t border-[var(--border)] bg-[var(--background-secondary)]/30 content-auto">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <RevealOnScroll variant="fade-scale" className="text-center mb-14">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
+              {tr("Testemunhos", "Testimonials", "Testimonios")}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+              {tr(
+                "O Que Dizem os Nossos Utilizadores",
+                "What Our Users Say",
+                "Lo Que Dicen Nuestros Usuarios"
+              )}
+            </h2>
+          </RevealOnScroll>
+
+          <div className="grid sm:grid-cols-3 gap-6">
+            {testimonials.map((item, i) => (
+              <RevealOnScroll key={item.name} delay={i * 120} variant="fade-up">
+                <div className="bg-[var(--background-card)] border border-[var(--border)] p-6 sm:p-8 relative hover:border-[var(--gold)]/20 transition-all duration-500">
+                  <span className="text-[var(--gold)]/30 text-5xl font-serif absolute top-4 left-6 leading-none select-none" aria-hidden="true">&ldquo;</span>
+                  <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-6 pt-6 italic">
+                    {item.quote}
+                  </p>
+                  <div className="border-t border-[var(--border)] pt-4">
+                    <p className="text-[var(--foreground)] font-serif text-sm">{item.name}</p>
+                    <p className="text-[var(--foreground-muted)] text-xs">{item.role}</p>
+                  </div>
+                </div>
+              </RevealOnScroll>
+            ))}
+          </div>
+
+          {/* Trust badges */}
+          <RevealOnScroll className="mt-12">
+            <div className="flex flex-wrap items-center justify-center gap-8 text-center">
+              <div>
+                <p className="text-2xl font-serif text-[var(--gold)]">5.000+</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
+                  {tr("Leads Ebook", "Ebook Leads", "Leads Ebook")}
+                </p>
+              </div>
+              <div className="w-[1px] h-8 bg-[var(--border)]" />
+              <div>
+                <p className="text-2xl font-serif text-[var(--gold)]">100+</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
+                  {tr("Cavalos Listados", "Horses Listed", "Caballos Listados")}
+                </p>
+              </div>
+              <div className="w-[1px] h-8 bg-[var(--border)]" />
+              <div>
+                <p className="text-2xl font-serif text-[var(--gold)]">50+</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
+                  {tr("Coudelarias", "Stud Farms", "Haras")}
+                </p>
+              </div>
+              <div className="w-[1px] h-8 bg-[var(--border)]" />
+              <div>
+                <p className="text-2xl font-serif text-[var(--gold)]">98%</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
+                  {tr("Satisfação", "Satisfaction", "Satisfacción")}
+                </p>
+              </div>
+            </div>
           </RevealOnScroll>
         </div>
       </section>

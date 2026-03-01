@@ -12,10 +12,8 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
   const { t } = useLanguage();
 
   const stepLabels: string[] = [
-    t.vender_cavalo.step_label_owner,
-    t.vender_cavalo.step_label_id,
-    t.vender_cavalo.step_label_lineage,
-    t.vender_cavalo.step_label_health,
+    t.vender_cavalo.step_label_owner + " & " + t.vender_cavalo.step_label_id,
+    t.vender_cavalo.step_label_lineage + " & " + t.vender_cavalo.step_label_health,
     t.vender_cavalo.step_label_price,
     t.vender_cavalo.step_label_payment,
   ];
