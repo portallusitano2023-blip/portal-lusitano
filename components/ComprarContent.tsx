@@ -100,7 +100,7 @@ function ComprarContentInner({ cavalos }: { cavalos: CavaloVenda[] }) {
           className="inline-flex items-center gap-2 px-5 py-2.5 border border-[var(--gold)]/40 text-[var(--gold)] rounded-lg hover:bg-[var(--gold)]/10 transition-colors text-sm font-medium"
         >
           <Scale className="w-4 h-4" />
-          {t.comprar_page.compare_horses || "Comparar Cavalos"}
+          {(t.comprar_page as Record<string, string>).compare_horses || "Comparar Cavalos"}
         </Link>
       </div>
 

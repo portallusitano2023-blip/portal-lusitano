@@ -24,6 +24,6 @@ export type CacheTag = (typeof CacheTags)[keyof typeof CacheTags];
  */
 export function invalidate(...tags: CacheTag[]) {
   for (const tag of tags) {
-    revalidateTag(tag);
+    revalidateTag(tag, "max");
   }
 }
