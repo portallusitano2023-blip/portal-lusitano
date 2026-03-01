@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin as supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 
 // Rate limiting: simple in-memory store (use Redis in production for multiple instances)

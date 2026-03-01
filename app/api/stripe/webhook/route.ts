@@ -4,7 +4,7 @@ import { resend } from "@/lib/resend";
 import Stripe from "stripe";
 import { CONTACT_EMAIL } from "@/lib/constants";
 import { logger } from "@/lib/logger";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { handleCavaloAnuncio } from "./handlers/checkout-cavalo";
 import { handleInstagramAd } from "./handlers/checkout-instagram";
 import { handlePublicidade } from "./handlers/checkout-publicidade";

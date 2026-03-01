@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { MonthlyReportPDF } from "@/components/admin/MonthlyReportPDF";
-import { supabaseAdmin as supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 

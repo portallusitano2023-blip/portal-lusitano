@@ -161,7 +161,10 @@
       "Bash(git restore --staged .claude/worktrees/agent-a58f9e26 .claude/worktrees/agent-af3e8f11)",
       "Bash(for f in /c/Users/USUARIO/portal-lusitano/app/*/layout.tsx)",
       "Bash(do grep -l 'generateMetadata\\\\|export const metadata' \"$f\")",
-      "Bash(sed 's/route.ts//')"
+      "Bash(sed 's/route.ts//')",
+      "Bash(do sed -i 's|from \"\"@/lib/supabase\"\"|from \"\"@/lib/supabase-admin\"\"|g' \"$f\")",
+      "Bash(while IFS= read -r file)",
+      "Bash(do perl -pi -e 's|from \"\"\\\\@/lib/supabase\"\"|from \"\"\\\\@/lib/supabase-admin\"\"|g' \"$file\")"
     ],
     "additionalDirectories": ["C:\\Users\\USUARIO\\portal-lusitano\\locales"]
   }
