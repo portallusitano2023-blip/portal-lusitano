@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 export async function GET(req: NextRequest) {
   try {
@@ -50,9 +51,12 @@ export async function GET(req: NextRequest) {
     }
 
     if (search) {
-      query = query.or(
-        `email.ilike.%${search}%,description.ilike.%${search}%,stripe_payment_intent_id.ilike.%${search}%`
-      );
+      const safeSearch = sanitizeSearchInput(search);
+      if (safeSearch) {
+        query = query.or(
+          `email.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%,stripe_payment_intent_id.ilike.%${safeSearch}%`
+        );
+      }
     }
 
     // Aplicar paginação
@@ -106,7 +110,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     logger.error("Transactions fetch error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro ao buscar transações" },
+      { error: "Erro ao buscar transações" },
       { status: 500 }
     );
   }

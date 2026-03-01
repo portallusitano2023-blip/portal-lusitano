@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 // GET - Listar profissionais com filtros
 export async function GET(req: NextRequest) {
@@ -37,11 +38,14 @@ export async function GET(req: NextRequest) {
       query = query.eq("plano", plano);
     }
 
-    // Pesquisa
+    // Pesquisa (sanitizada contra PostgREST filter injection)
     if (search) {
-      query = query.or(
-        `nome.ilike.%${search}%,cidade.ilike.%${search}%,especialidade.ilike.%${search}%,email.ilike.%${search}%`
-      );
+      const safeSearch = sanitizeSearchInput(search);
+      if (safeSearch) {
+        query = query.or(
+          `nome.ilike.%${safeSearch}%,cidade.ilike.%${safeSearch}%,especialidade.ilike.%${safeSearch}%,email.ilike.%${safeSearch}%`
+        );
+      }
     }
 
     const { data: profissionais, error, count } = await query;
@@ -81,7 +85,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao carregar profissionais",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );
@@ -135,7 +138,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao criar profissional",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );

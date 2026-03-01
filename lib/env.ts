@@ -15,7 +15,11 @@ const serverEnvSchema = z.object({
   // Auth (obrigatório em produção)
   ADMIN_SECRET: z.string().min(16, "ADMIN_SECRET deve ter pelo menos 16 caracteres").optional(),
   ADMIN_EMAIL: z.string().email("ADMIN_EMAIL deve ser um email válido").optional(),
-  ADMIN_PASSWORD: z.string().min(8, "ADMIN_PASSWORD deve ter pelo menos 8 caracteres").optional(),
+  ADMIN_PASSWORD: z.string().min(12, "ADMIN_PASSWORD deve ter pelo menos 12 caracteres").optional(),
+  ADMIN_PASSWORD_HASH: z
+    .string()
+    .min(64, "ADMIN_PASSWORD_HASH deve ser um hash SHA-256 (64 hex chars)")
+    .optional(),
 
   // Stripe (opcional, necessário para pagamentos)
   STRIPE_SECRET_KEY: z.string().optional(),

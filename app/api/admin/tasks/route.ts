@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 // GET - Listar tarefas com filtros
 export async function GET(req: NextRequest) {
@@ -51,11 +52,14 @@ export async function GET(req: NextRequest) {
       query = query.gte("due_date", startDate.toISOString()).lte("due_date", endDate.toISOString());
     }
 
-    // Pesquisa
+    // Pesquisa (sanitizada contra PostgREST filter injection)
     if (search) {
-      query = query.or(
-        `title.ilike.%${search}%,description.ilike.%${search}%,assigned_to.ilike.%${search}%,related_email.ilike.%${search}%`
-      );
+      const safeSearch = sanitizeSearchInput(search);
+      if (safeSearch) {
+        query = query.or(
+          `title.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%,assigned_to.ilike.%${safeSearch}%,related_email.ilike.%${safeSearch}%`
+        );
+      }
     }
 
     const { data: tasks, error, count } = await query;
@@ -87,7 +91,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao carregar tarefas",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );
@@ -145,7 +148,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Erro ao criar tarefa",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
       },
       { status: 500 }
     );

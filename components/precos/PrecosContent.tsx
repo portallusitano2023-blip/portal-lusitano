@@ -585,16 +585,23 @@ export default function PrecosContent() {
             <div className="mb-8 pt-3">
               <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3">Pro</p>
               <div className="flex items-end gap-2 mb-1">
-                <span className="text-4xl font-serif">4,99 €</span>
+                <span className="text-4xl font-serif">9,99 €</span>
                 <span className="text-[var(--foreground-muted)] text-sm mb-1">
                   {tr("/mês", "/month", "/mes")}
                 </span>
               </div>
-              <p className="text-xs text-[var(--foreground-muted)]">
+              <p className="text-xs text-[var(--foreground-muted)] mb-2">
                 {tr(
                   "Cancele a qualquer momento · Sem compromisso",
                   "Cancel anytime · No commitment",
                   "Cancele en cualquier momento · Sin compromiso"
+                )}
+              </p>
+              <p className="text-xs text-[var(--gold)]">
+                {tr(
+                  "Ou 79 €/ano — poupe 34%",
+                  "Or €79/year — save 34%",
+                  "O 79 €/año — ahorre 34%"
                 )}
               </p>
             </div>

@@ -27,6 +27,8 @@ import {
   Heart,
   Compass,
   Feather,
+  Stethoscope,
+  Tag,
 } from "lucide-react";
 
 export default function HomeContent() {
@@ -63,14 +65,36 @@ export default function HomeContent() {
       },
       {
         icon: Calculator,
-        title: tr("Ferramentas", "Tools", "Herramientas"),
+        title: tr("Ferramentas Pro", "Pro Tools", "Herramientas Pro"),
         desc: tr(
-          "Calculadora de valor, comparador e análise de perfil",
-          "Value calculator, comparator and profile analysis",
-          "Calculadora de valor, comparador y análisis de perfil"
+          "Calculadora de valor, comparador e análise de perfil profissional",
+          "Value calculator, comparator and professional profile analysis",
+          "Calculadora de valor, comparador y análisis de perfil profesional"
         ),
-        href: "/ferramentas",
+        href: "/precos",
         accent: "from-emerald-500/20 to-teal-500/20",
+      },
+      {
+        icon: Stethoscope,
+        title: tr("Profissionais", "Professionals", "Profesionales"),
+        desc: tr(
+          "Veterinários, treinadores e ferradores verificados",
+          "Verified veterinarians, trainers and farriers",
+          "Veterinarios, entrenadores y herradores verificados"
+        ),
+        href: "/profissionais",
+        accent: "from-cyan-500/20 to-blue-500/20",
+      },
+      {
+        icon: Tag,
+        title: tr("Publicidade", "Advertising", "Publicidad"),
+        desc: tr(
+          "Promova o seu negócio equestre à comunidade Lusitana",
+          "Promote your equestrian business to the Lusitano community",
+          "Promueva su negocio ecuestre a la comunidad Lusitana"
+        ),
+        href: "/publicidade",
+        accent: "from-orange-500/20 to-red-500/20",
       },
       {
         icon: Newspaper,
@@ -321,18 +345,18 @@ export default function HomeContent() {
           >
             <MagneticButton strength={0.2}>
               <Link
-                href="/comprar"
+                href="/vender-cavalo"
                 className="ripple-btn shimmer-gold inline-block border border-[var(--gold)]/30 bg-black/20 backdrop-blur-md px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-500"
               >
-                {tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo")}
+                {tr("Vender Cavalo", "Sell a Horse", "Vender Caballo")}
               </Link>
             </MagneticButton>
             <MagneticButton strength={0.15}>
               <Link
-                href="/loja"
+                href="/comprar"
                 className="line-draw inline-block px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300"
               >
-                {t.home.cta} →
+                {tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo")} →
               </Link>
             </MagneticButton>
           </div>
@@ -568,6 +592,60 @@ export default function HomeContent() {
         </div>
       </section>
 
+      {/* ===== VENDER CAVALO CTA ===== */}
+      <section className="border-t border-[var(--border)] content-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+          <RevealOnScroll variant="fade-right">
+            <div className="bg-[var(--background-card)] border border-[var(--border)] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-all duration-500">
+              {/* Corner ornaments */}
+              <div
+                className="absolute top-4 left-4 w-8 h-8 border-t border-l border-[var(--gold)]/20"
+                aria-hidden="true"
+              />
+              <div
+                className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-[var(--gold)]/20"
+                aria-hidden="true"
+              />
+              {/* Gold orb */}
+              <div
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--gold)]/5 rounded-full blur-[80px] pointer-events-none"
+                aria-hidden="true"
+              />
+
+              <div className="relative text-center sm:text-left">
+                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block">
+                  {tr("Para Proprietários", "For Owners", "Para Propietarios")}
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-serif text-[var(--foreground)] mb-3">
+                  {tr(
+                    "Tem um Cavalo para Vender?",
+                    "Have a Horse to Sell?",
+                    "¿Tiene un Caballo para Vender?"
+                  )}
+                </h2>
+                <p className="text-[var(--foreground-muted)] leading-relaxed max-w-lg">
+                  {tr(
+                    "Publique o seu anúncio e alcance compradores qualificados em Portugal e no mundo.",
+                    "Publish your listing and reach qualified buyers in Portugal and worldwide.",
+                    "Publique su anuncio y alcance compradores calificados en Portugal y en el mundo."
+                  )}
+                </p>
+              </div>
+
+              <MagneticButton strength={0.15}>
+                <Link
+                  href="/vender-cavalo"
+                  className="ripple-btn shimmer-gold inline-flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-[11px] uppercase tracking-[0.15em] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-300 whitespace-nowrap"
+                >
+                  {tr("Anunciar Cavalo", "List Your Horse", "Anunciar Caballo")}
+                  <ArrowRight size={14} aria-hidden="true" />
+                </Link>
+              </MagneticButton>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       {/* ===== EBOOK CTA ===== */}
       <section className="relative py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden noise-overlay content-auto">
         <div className="absolute inset-0 pointer-events-none">
@@ -625,60 +703,6 @@ export default function HomeContent() {
                   </Link>
                 </MagneticButton>
               </div>
-            </div>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      {/* ===== VENDER CAVALO CTA ===== */}
-      <section className="border-t border-[var(--border)] content-auto">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-          <RevealOnScroll variant="fade-right">
-            <div className="bg-[var(--background-card)] border border-[var(--border)] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-all duration-500">
-              {/* Corner ornaments */}
-              <div
-                className="absolute top-4 left-4 w-8 h-8 border-t border-l border-[var(--gold)]/20"
-                aria-hidden="true"
-              />
-              <div
-                className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-[var(--gold)]/20"
-                aria-hidden="true"
-              />
-              {/* Gold orb */}
-              <div
-                className="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--gold)]/5 rounded-full blur-[80px] pointer-events-none"
-                aria-hidden="true"
-              />
-
-              <div className="relative text-center sm:text-left">
-                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block">
-                  {tr("Para Proprietários", "For Owners", "Para Propietarios")}
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-serif text-[var(--foreground)] mb-3">
-                  {tr(
-                    "Tem um Cavalo para Vender?",
-                    "Have a Horse to Sell?",
-                    "¿Tiene un Caballo para Vender?"
-                  )}
-                </h2>
-                <p className="text-[var(--foreground-muted)] leading-relaxed max-w-lg">
-                  {tr(
-                    "Publique o seu anúncio e alcance compradores qualificados em Portugal e no mundo.",
-                    "Publish your listing and reach qualified buyers in Portugal and worldwide.",
-                    "Publique su anuncio y alcance compradores calificados en Portugal y en el mundo."
-                  )}
-                </p>
-              </div>
-
-              <MagneticButton strength={0.15}>
-                <Link
-                  href="/vender-cavalo"
-                  className="ripple-btn shimmer-gold inline-flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-[11px] uppercase tracking-[0.15em] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-300 whitespace-nowrap"
-                >
-                  {tr("Anunciar Cavalo", "List Your Horse", "Anunciar Caballo")}
-                  <ArrowRight size={14} aria-hidden="true" />
-                </Link>
-              </MagneticButton>
             </div>
           </RevealOnScroll>
         </div>

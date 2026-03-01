@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { Redis } from "@upstash/redis";
+import crypto from "crypto";
 
 // HIGH-03 fix: Redis session store enables instant JWT revocation
 const redis = new Redis({
@@ -81,7 +82,6 @@ export async function deleteSession() {
 
 export function checkCredentials(email: string, password: string) {
   const adminEmail = process.env.ADMIN_EMAIL || "";
-  const adminPassword = process.env.ADMIN_PASSWORD || "";
 
   // Timing-safe email comparison
   const emailBytes = new TextEncoder().encode(email);
@@ -93,14 +93,30 @@ export function checkCredentials(email: string, password: string) {
     emailMismatch |= emailBytes[i] ^ adminEmailBytes[i];
   }
 
-  // Timing-safe password comparison
-  const passBytes = new TextEncoder().encode(password);
-  const adminBytes = new TextEncoder().encode(adminPassword);
+  // Password: use SHA-256 hash if ADMIN_PASSWORD_HASH is set, otherwise fall back to plaintext
+  const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH || "";
+  const adminPassword = process.env.ADMIN_PASSWORD || "";
 
-  let passMismatch = passBytes.length ^ adminBytes.length;
-  const minPassLen = Math.min(passBytes.length, adminBytes.length);
-  for (let i = 0; i < minPassLen; i++) {
-    passMismatch |= passBytes[i] ^ adminBytes[i];
+  let passMismatch = 1; // Default: mismatch
+
+  if (adminPasswordHash) {
+    // Preferred: compare SHA-256(input) against stored hash using timingSafeEqual
+    const inputHash = crypto.createHash("sha256").update(password).digest();
+    const storedHash = Buffer.from(adminPasswordHash, "hex");
+
+    if (inputHash.length === storedHash.length) {
+      passMismatch = crypto.timingSafeEqual(inputHash, storedHash) ? 0 : 1;
+    }
+  } else if (adminPassword) {
+    // Legacy fallback: timing-safe plaintext comparison
+    const passBytes = new TextEncoder().encode(password);
+    const adminBytes = new TextEncoder().encode(adminPassword);
+
+    passMismatch = passBytes.length ^ adminBytes.length;
+    const minPassLen = Math.min(passBytes.length, adminBytes.length);
+    for (let i = 0; i < minPassLen; i++) {
+      passMismatch |= passBytes[i] ^ adminBytes[i];
+    }
   }
 
   return emailMismatch === 0 && passMismatch === 0;

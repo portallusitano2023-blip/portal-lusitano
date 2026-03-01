@@ -40,12 +40,12 @@ yarn-error.log*
 
 # temporary files
 nul
-tmp_*.html
+tmp_*
+*.exe
+
+# windows path artifacts
+CUsers*
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.vercel
-
-.vercel
