@@ -44,6 +44,6 @@
       "WebFetch(domain:www.winetourism.com)",
       "WebFetch(domain:www.tripadvisor.com)"
     ],
-    "additionalDirectories": ["\\tmp"]
+    "additionalDirectories": ["\\tmp", "C:\\Users\\USUARIO\\portal-lusitano\\.git"]
   }
 }
