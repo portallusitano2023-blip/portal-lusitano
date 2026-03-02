@@ -10,7 +10,7 @@ export default async function AdminDepoimentosPage({
 
   const { data: pendentes } = await supabase
     .from("depoimentos_cavalos")
-    .select("*, cavalos_venda(nome_cavalo)")
+    .select("*, cavalos_venda(nome)")
     .eq("status", "pendente");
 
   return (
@@ -30,7 +30,7 @@ export default async function AdminDepoimentosPage({
             >
               <div className="max-w-2xl">
                 <p className="text-[#C5A059] text-[9px] uppercase font-bold mb-2 tracking-widest">
-                  Sobre: {dep.cavalos_venda?.nome_cavalo}
+                  Sobre: {dep.cavalos_venda?.nome}
                 </p>
                 <p className="text-xl font-serif italic text-zinc-300 mb-4">
                   &ldquo;{dep.mensagem}&rdquo;

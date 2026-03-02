@@ -23,7 +23,7 @@ export async function handleCavaloAnuncio(
   if (metadata.contact_submission_id) {
     const { data: submission } = await supabase
       .from("contact_submissions")
-      .select("*")
+      .select("id, form_data")
       .eq("id", metadata.contact_submission_id)
       .single();
 

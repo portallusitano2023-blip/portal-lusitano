@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
@@ -128,13 +128,13 @@ export default function FAQSection({ items }: FAQSectionProps) {
           <p className="text-[var(--foreground-secondary)] mb-4 text-sm">
             {t.ferramentas.faq_not_found}
           </p>
-          <Link
+          <LocalizedLink
             href="/faq"
             className="inline-flex items-center gap-2 text-[var(--gold)] text-sm font-medium hover:underline"
           >
             {t.ferramentas.faq_see_all}
             <ArrowRight size={14} />
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     </section>

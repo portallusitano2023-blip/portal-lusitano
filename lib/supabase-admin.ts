@@ -7,6 +7,7 @@ if (typeof window !== "undefined") {
 }
 
 import { createClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/database.types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -21,10 +22,10 @@ if (!supabaseUrl || !supabaseServiceKey || !supabaseAnonKey) {
 }
 
 // Cliente admin (service role) — para webhooks e rotas admin que precisam de acesso elevado
-export const supabaseAdmin = createClient(supabaseUrl ?? "", supabaseServiceKey ?? "");
+export const supabaseAdmin = createClient<Database>(supabaseUrl ?? "", supabaseServiceKey ?? "");
 
 // Cliente padrão (anon key) — respeita RLS policies
-export const supabasePublic = createClient(supabaseUrl ?? "", supabaseAnonKey ?? "");
+export const supabasePublic = createClient<Database>(supabaseUrl ?? "", supabaseAnonKey ?? "");
 
 // Alias para compatibilidade — usa anon key (respeita RLS)
 export const supabase = supabasePublic;

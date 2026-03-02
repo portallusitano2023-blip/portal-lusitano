@@ -1,5 +1,5 @@
 import { memo } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Search, Heart, User, ShoppingBag, Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { useCart } from "@/context/CartContext";
@@ -80,7 +80,7 @@ export const NavIcons = memo(function NavIcons({
       </button>
 
       {/* Favoritos - only shows horse favorites count (links to /cavalos-favoritos) */}
-      <Link
+      <LocalizedLink
         href="/cavalos-favoritos"
         className="text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center relative active:scale-95 touch-manipulation"
         aria-label={
@@ -97,16 +97,16 @@ export const NavIcons = memo(function NavIcons({
             {favoritesCount}
           </span>
         )}
-      </Link>
+      </LocalizedLink>
 
       {/* Conta */}
-      <Link
+      <LocalizedLink
         href="/minha-conta"
         className="hidden md:flex text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] items-center justify-center active:scale-95 touch-manipulation"
         aria-label={tr3(language, "Minha conta", "My account", "Mi cuenta")}
       >
         <User size={20} strokeWidth={1.5} />
-      </Link>
+      </LocalizedLink>
 
       {/* Carrinho */}
       <button

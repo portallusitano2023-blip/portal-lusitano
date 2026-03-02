@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Crown, ArrowLeft, Lock } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -15,7 +15,7 @@ export function PageHeader() {
 
   return (
     <header>
-      <Link
+      <LocalizedLink
         href="/ferramentas"
         className="inline-flex items-center gap-2 text-sm text-white/40
                    hover:text-[#C5A059] transition-colors mb-8
@@ -24,7 +24,7 @@ export function PageHeader() {
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         {tr("Ferramentas", "Tools", "Herramientas")}
-      </Link>
+      </LocalizedLink>
 
       <div className="flex items-center gap-3">
         <div
@@ -145,7 +145,7 @@ export function NotSubscribedCard({ reason }: NotSubscribedCardProps) {
 
       <div className="mt-2 flex flex-col sm:flex-row gap-3 justify-center">
         {isAuthWall ? (
-          <Link
+          <LocalizedLink
             href="/ferramentas"
             className="inline-flex items-center justify-center gap-2 rounded-xl
                        bg-gradient-to-r from-[#C5A059] to-[#D4B068]
@@ -159,10 +159,10 @@ export function NotSubscribedCard({ reason }: NotSubscribedCardProps) {
               "Sign in and subscribe PRO",
               "Iniciar sesión y suscribir PRO"
             )}
-          </Link>
+          </LocalizedLink>
         ) : (
           <>
-            <Link
+            <LocalizedLink
               href="/ferramentas"
               className="inline-flex items-center justify-center gap-2 rounded-xl
                          bg-gradient-to-r from-[#C5A059] to-[#D4B068]
@@ -172,8 +172,8 @@ export function NotSubscribedCard({ reason }: NotSubscribedCardProps) {
             >
               <Crown className="h-4 w-4" aria-hidden="true" />
               {tr("Subscrever PRO", "Subscribe PRO", "Suscribir PRO")}
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               href="/ferramentas"
               className="inline-flex items-center justify-center gap-2 rounded-xl
                          border border-white/10 bg-white/5
@@ -182,7 +182,7 @@ export function NotSubscribedCard({ reason }: NotSubscribedCardProps) {
                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
             >
               {tr("Ver ferramentas gratuitas", "See free tools", "Ver herramientas gratuitas")}
-            </Link>
+            </LocalizedLink>
           </>
         )}
       </div>

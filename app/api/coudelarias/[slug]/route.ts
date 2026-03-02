@@ -14,7 +14,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Buscar coudelaria
     const { data: coudelaria, error } = await supabase
       .from("coudelarias")
-      .select("*")
+      .select(
+        "id, nome, slug, descricao, historia, localizacao, regiao, telefone, email, website, instagram, facebook, youtube, num_cavalos, ano_fundacao, especialidades, linhagens, premios, servicos, horario, coordenadas_lat, coordenadas_lng, foto_capa, galeria, video_url, cavalos_destaque, testemunhos, is_pro, destaque, views_count"
+      )
       .eq("slug", slug)
       .eq("status", "active")
       .single();

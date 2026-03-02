@@ -7,7 +7,9 @@ export async function GET() {
   try {
     const { data, error } = await supabase
       .from("linhagens")
-      .select("*")
+      .select(
+        "id, nome, descricao, historia_completa, origem, fundador, ano_fundacao, cabeca_linhagem, cabeca_linhagem_info, caracteristicas, cores_comuns, temperamento, aptidoes, cavalos_notaveis, coudelarias_principais, timeline, factos_chave, confianca"
+      )
       .order("nome", { ascending: true });
 
     if (error) {

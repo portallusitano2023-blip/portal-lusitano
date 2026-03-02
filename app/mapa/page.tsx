@@ -19,7 +19,7 @@ import {
   Map,
   Layers,
 } from "lucide-react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 
 // Leaflet carregado só no cliente (sem SSR)
@@ -160,7 +160,7 @@ const GridCard = memo(function GridCard({
 }) {
   const image = coudelaria.foto_capa || placeholderImages[index % placeholderImages.length];
   return (
-    <Link
+    <LocalizedLink
       href={`/directorio/${coudelaria.slug}`}
       className="group block bg-[var(--background-secondary)]/60 border border-[var(--border)] rounded-xl overflow-hidden hover:border-[var(--gold)]/30 transition-colors"
     >
@@ -193,7 +193,7 @@ const GridCard = memo(function GridCard({
           {coudelaria.descricao}
         </p>
       </div>
-    </Link>
+    </LocalizedLink>
   );
 });
 
@@ -550,12 +550,12 @@ export default function MapaPage() {
                     </a>
                   )}
                 </div>
-                <Link
+                <LocalizedLink
                   href={`/directorio/${selectedCoudelaria.slug}`}
                   className="flex items-center justify-center gap-2 w-full bg-[var(--gold)] text-black py-2.5 font-bold rounded-lg hover:bg-[var(--gold-hover)] transition-colors"
                 >
                   <Navigation size={16} /> {t.mapa.view_page}
-                </Link>
+                </LocalizedLink>
               </div>
             </div>
           </div>

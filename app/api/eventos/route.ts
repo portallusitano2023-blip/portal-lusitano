@@ -13,7 +13,9 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("eventos")
-      .select("*")
+      .select(
+        "id, titulo, slug, descricao, tipo, data_inicio, data_fim, hora_inicio, hora_fim, localizacao, regiao, organizador, website, preco_entrada, imagem_capa, tags, confirmado, destaque, views_count"
+      )
       .eq("status", "active")
       .gte("data_inicio", new Date().toISOString().split("T")[0])
       .order("data_inicio", { ascending: true });

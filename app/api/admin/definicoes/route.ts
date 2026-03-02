@@ -16,7 +16,9 @@ export async function GET(req: NextRequest) {
 
     let query = supabase
       .from("site_settings")
-      .select("*")
+      .select(
+        "id, key, value, category, label, description, input_type, options, is_required, validation_regex, updated_by, updated_at"
+      )
       .order("category", { ascending: true })
       .order("label", { ascending: true });
 

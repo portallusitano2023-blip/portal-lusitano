@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { useAuth } from "@/components/auth/AuthProvider";
 import {
@@ -369,13 +369,13 @@ function NotFoundState() {
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 pb-16 px-4">
       <div className="max-w-3xl mx-auto">
-        <Link
+        <LocalizedLink
           href="/ferramentas"
           className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-12 text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           Voltar as Ferramentas
-        </Link>
+        </LocalizedLink>
 
         <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-12 text-center">
           <AlertCircle className="w-12 h-12 text-[var(--foreground-muted)] mx-auto mb-4" />
@@ -386,13 +386,13 @@ function NotFoundState() {
             Este resultado pode ter sido removido, ou o link de partilha pode estar incorreto.
             Verifique o URL e tente novamente.
           </p>
-          <Link
+          <LocalizedLink
             href="/ferramentas"
             className="inline-flex items-center gap-2 mt-8 px-6 py-3 bg-[var(--gold)] text-black text-sm font-semibold rounded-lg hover:bg-[#d4b06a] transition-colors"
           >
             Explorar Ferramentas
             <ExternalLink className="w-4 h-4" />
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     </div>
@@ -488,13 +488,13 @@ export default function ResultadoPage() {
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 pb-16 px-4">
       <div className="max-w-3xl mx-auto">
         {/* Back navigation */}
-        <Link
+        <LocalizedLink
           href={isOwner ? "/historico" : "/ferramentas"}
           className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-8 text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           {isOwner ? "Voltar ao Historico" : "Voltar as Ferramentas"}
-        </Link>
+        </LocalizedLink>
 
         {/* Header card */}
         <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8 mb-8">
@@ -509,13 +509,13 @@ export default function ResultadoPage() {
                   {result.title}
                 </h1>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
-                  <Link
+                  <LocalizedLink
                     href={toolConfig.href}
                     className="text-sm text-[var(--gold)] hover:underline inline-flex items-center gap-1"
                   >
                     {toolConfig.label}
                     <ExternalLink className="w-3 h-3" />
-                  </Link>
+                  </LocalizedLink>
                   <span className="text-[var(--foreground-muted)]">|</span>
                   <span className="text-sm text-[var(--foreground-secondary)] inline-flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" />
@@ -544,21 +544,21 @@ export default function ResultadoPage() {
 
         {/* Footer actions */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link
+          <LocalizedLink
             href={isOwner ? "/historico" : "/ferramentas"}
             className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             {isOwner ? "Voltar ao Historico" : "Voltar as Ferramentas"}
-          </Link>
+          </LocalizedLink>
 
-          <Link
+          <LocalizedLink
             href={toolConfig.href}
             className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-black text-sm font-semibold rounded-lg hover:bg-[#d4b06a] transition-colors"
           >
             Usar {toolConfig.label}
             <ExternalLink className="w-4 h-4" />
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import dynamic from "next/dynamic";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -270,13 +270,13 @@ export default function CoudelariaDetail({
 
         {/* Back button */}
         <div className="absolute top-28 left-4 sm:left-6 z-10">
-          <Link
+          <LocalizedLink
             href="/directorio"
             className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/40 backdrop-blur-sm border border-white/10 px-4 py-2 hover:bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
           >
             <ArrowLeft size={16} aria-hidden="true" />
             <span className="text-sm">{t.directorio.back_to_directory}</span>
-          </Link>
+          </LocalizedLink>
         </div>
 
         {/* Destaque + Verified badges */}
@@ -1018,12 +1018,12 @@ export default function CoudelariaDetail({
                   <p className="text-[var(--foreground-secondary)] text-sm mb-5 leading-relaxed">
                     {t.directorio.has_stud_sidebar_desc}
                   </p>
-                  <Link
+                  <LocalizedLink
                     href="/directorio/registar"
                     className="block w-full bg-[var(--gold)] text-black py-3 text-sm font-bold uppercase tracking-wider hover:bg-[var(--gold-hover)] active:scale-95 transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
                   >
                     {t.directorio.register_stud}
-                  </Link>
+                  </LocalizedLink>
                 </div>
               </AnimateOnScroll>
             </div>

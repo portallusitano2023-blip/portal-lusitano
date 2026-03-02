@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
 
 function UnsubscribeContent() {
@@ -71,12 +71,12 @@ function UnsubscribeContent() {
             >
               {t.unsubscribe_page.yes_cancel}
             </button>
-            <Link
+            <LocalizedLink
               href="/"
               className="block mt-4 text-[var(--foreground-muted)] text-sm hover:text-[var(--gold)] transition-colors"
             >
               {t.unsubscribe_page.no_continue}
-            </Link>
+            </LocalizedLink>
           </>
         )}
 
@@ -96,12 +96,12 @@ function UnsubscribeContent() {
             <p className="text-[var(--foreground-muted)] text-sm mb-6">
               {t.unsubscribe_page.goodbye}
             </p>
-            <Link
+            <LocalizedLink
               href="/"
               className="inline-block bg-[var(--gold)] text-black font-bold uppercase text-xs tracking-[0.2em] py-4 px-8 hover:bg-white transition-all"
             >
               {t.unsubscribe_page.back_to_portal}
-            </Link>
+            </LocalizedLink>
           </>
         )}
 

@@ -9,7 +9,7 @@
 "use client";
 
 import { Heart, Trash2 } from "lucide-react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -50,12 +50,12 @@ export default function FavoritosPage() {
             <Heart className="text-[var(--foreground-muted)] mx-auto mb-6" size={64} />
             <h2 className="text-2xl font-serif text-[var(--foreground)] mb-3">{txt.empty}</h2>
             <p className="text-[var(--foreground-muted)] mb-8">{txt.empty_subtitle}</p>
-            <Link
+            <LocalizedLink
               href="/loja"
               className="inline-block bg-[var(--gold)] text-black px-8 py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-[var(--gold-hover)] transition-colors"
             >
               {txt.explore}
-            </Link>
+            </LocalizedLink>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
@@ -66,7 +66,7 @@ export default function FavoritosPage() {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Imagem */}
-                <Link href={`/loja/${item.handle}`} className="block">
+                <LocalizedLink href={`/loja/${item.handle}`} className="block">
                   <div className="aspect-[4/5] bg-[var(--background-secondary)] overflow-hidden relative">
                     {item.image && (
                       <Image
@@ -78,27 +78,27 @@ export default function FavoritosPage() {
                       />
                     )}
                   </div>
-                </Link>
+                </LocalizedLink>
 
                 {/* Info */}
                 <div className="p-6">
-                  <Link href={`/loja/${item.handle}`}>
+                  <LocalizedLink href={`/loja/${item.handle}`}>
                     <h3 className="text-lg font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--gold)] transition-colors">
                       {item.title}
                     </h3>
-                  </Link>
+                  </LocalizedLink>
                   <p className="text-[var(--gold)] font-serif mb-4">
                     {Number(item.price).toFixed(2)} EUR
                   </p>
 
                   {/* Acoes */}
                   <div className="flex gap-3">
-                    <Link
+                    <LocalizedLink
                       href={`/loja/${item.handle}`}
                       className="flex-1 bg-[var(--gold)] text-black py-3 text-xs uppercase tracking-widest font-bold hover:bg-[var(--gold-hover)] transition-colors text-center"
                     >
                       {txt.view}
-                    </Link>
+                    </LocalizedLink>
                     <button
                       onClick={() => removeFromWishlist(item.id)}
                       className="w-12 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-red-500 hover:border-red-500 transition-colors flex items-center justify-center"

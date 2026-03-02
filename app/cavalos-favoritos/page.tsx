@@ -9,7 +9,7 @@
 "use client";
 
 import { Heart, Trash2, MapPin, Calendar, ExternalLink, Share2, Filter } from "lucide-react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -94,12 +94,12 @@ export default function CavalosFavoritosPage() {
               <p className="text-[var(--foreground-muted)] mb-8 text-sm sm:text-base max-w-md mx-auto">
                 {txt.empty_subtitle}
               </p>
-              <Link
+              <LocalizedLink
                 href="/comprar"
                 className="inline-block bg-[var(--gold)] text-black px-6 sm:px-8 py-3 sm:py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-[var(--gold-hover)] transition-colors active:scale-95"
               >
                 {txt.explore}
-              </Link>
+              </LocalizedLink>
             </div>
           ) : (
             <>
@@ -141,7 +141,7 @@ export default function CavalosFavoritosPage() {
                     style={{ animationDelay: `${index * 0.08}s` }}
                   >
                     {/* Image */}
-                    <Link href={`/comprar/${horse.id}`} className="block">
+                    <LocalizedLink href={`/comprar/${horse.id}`} className="block">
                       <div className="aspect-[4/3] sm:aspect-[4/5] bg-[var(--background-secondary)] overflow-hidden relative">
                         {horse.image ? (
                           <Image
@@ -168,15 +168,15 @@ export default function CavalosFavoritosPage() {
                           )}
                         </div>
                       </div>
-                    </Link>
+                    </LocalizedLink>
 
                     {/* Info */}
                     <div className="p-4 sm:p-5">
-                      <Link href={`/comprar/${horse.id}`}>
+                      <LocalizedLink href={`/comprar/${horse.id}`}>
                         <h3 className="text-lg sm:text-xl font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--gold)] transition-colors line-clamp-1">
                           {horse.name}
                         </h3>
-                      </Link>
+                      </LocalizedLink>
 
                       {/* Meta info */}
                       <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[var(--foreground-muted)] mb-4">
@@ -199,12 +199,12 @@ export default function CavalosFavoritosPage() {
 
                       {/* Actions - Touch Optimized */}
                       <div className="flex gap-2">
-                        <Link
+                        <LocalizedLink
                           href={`/comprar/${horse.id}`}
                           className="flex-1 bg-[var(--gold)] text-black py-3 text-xs uppercase tracking-widest font-bold hover:bg-[var(--gold-hover)] transition-colors text-center active:scale-[0.98] touch-manipulation"
                         >
                           {txt.view}
-                        </Link>
+                        </LocalizedLink>
                         <button
                           onClick={() => handleShare(horse)}
                           className="w-12 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:border-[var(--gold)]/50 transition-colors flex items-center justify-center active:scale-95 touch-manipulation"
@@ -230,13 +230,13 @@ export default function CavalosFavoritosPage() {
                 className="mt-8 sm:mt-12 text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.5s" }}
               >
-                <Link
+                <LocalizedLink
                   href="/comprar"
                   className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors text-sm"
                 >
                   <span>{txt.continue_exploring}</span>
                   <ExternalLink size={14} />
-                </Link>
+                </LocalizedLink>
               </div>
             </>
           )}

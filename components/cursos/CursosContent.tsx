@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { BookOpen, Award, Clock, Star, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -177,12 +177,12 @@ export default function CursosContent() {
             "Suscribase a nuestro boletin para ser notificado cuando los cursos esten disponibles."
           )}
         </p>
-        <Link
+        <LocalizedLink
           href="/#newsletter"
           className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors"
         >
           {tr("Receber Novidades", "Get Updates", "Recibir Novedades")}
-        </Link>
+        </LocalizedLink>
       </section>
     </main>
   );

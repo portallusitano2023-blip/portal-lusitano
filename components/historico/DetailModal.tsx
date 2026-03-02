@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { RefreshCw, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -351,7 +351,7 @@ export default function DetailModal({ record, onClose }: DetailModalProps) {
 
         {/* Modal footer */}
         <div className="px-5 py-4 border-t border-white/5 flex gap-3">
-          <Link
+          <LocalizedLink
             href={config.href}
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl
                        bg-gradient-to-r from-[#C5A059] to-[#D4B068]
@@ -361,7 +361,7 @@ export default function DetailModal({ record, onClose }: DetailModalProps) {
           >
             <RefreshCw className="h-3.5 w-3.5" />
             {tr("Repetir análise", "Repeat analysis", "Repetir análisis")}
-          </Link>
+          </LocalizedLink>
           <button
             onClick={onClose}
             className="px-4 py-2.5 rounded-xl border border-white/10 text-sm text-white/50

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Sparkles, ArrowRight, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -66,14 +66,14 @@ export default function ToolsHero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.4s" }}
         >
-          <Link
+          <LocalizedLink
             href="/analise-perfil"
             className="group inline-flex items-center gap-2.5 px-8 py-4 min-h-[48px] bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black text-sm font-bold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all hover:shadow-xl hover:shadow-[var(--gold)]/25 hover:-translate-y-0.5 active:translate-y-0"
           >
             <Sparkles size={16} />
             {tr("Começar Agora — Grátis", "Start Now — Free", "Empezar Ahora — Gratis")}
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
+          </LocalizedLink>
           <button
             onClick={() =>
               document.getElementById("precos")?.scrollIntoView({ behavior: "smooth" })

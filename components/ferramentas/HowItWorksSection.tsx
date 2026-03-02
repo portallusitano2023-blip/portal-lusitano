@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Sparkles, ClipboardList, Zap, ArrowRight, Clock } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
@@ -113,7 +113,7 @@ export default function HowItWorksSection() {
 
         {/* Mini CTA below steps */}
         <AnimateOnScroll className="text-center mt-10">
-          <Link
+          <LocalizedLink
             href="/analise-perfil"
             className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-sm font-medium rounded-full hover:bg-[var(--gold)]/20 transition-colors"
           >
@@ -124,7 +124,7 @@ export default function HowItWorksSection() {
               "Probar ahora — es gratis"
             )}
             <ArrowRight size={15} />
-          </Link>
+          </LocalizedLink>
         </AnimateOnScroll>
       </div>
     </section>

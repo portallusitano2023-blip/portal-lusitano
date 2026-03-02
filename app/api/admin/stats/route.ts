@@ -20,7 +20,7 @@ export async function GET() {
       { data: coudelarias, error: coudError },
       { data: reviews, error: reviewsError },
     ] = await Promise.all([
-      supabase.from("leads").select("*"),
+      supabase.from("leads").select("id, converted"),
       supabase.from("cavalos_venda").select("id, status, views_count, created_at"),
       supabase.from("eventos").select("id, destaque, data_inicio, views_count"),
       supabase.from("coudelarias").select("id, destaque"),

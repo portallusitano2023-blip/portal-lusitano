@@ -15,7 +15,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const { data: user, error } = await supabase
       .from("admin_users")
-      .select("*")
+      .select("id, email, nome, role, ativo, last_login, created_at")
       .eq("id", id)
       .single();
 
@@ -46,7 +46,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     // Buscar utilizador atual para comparar
     const { data: currentUser } = await supabase
       .from("admin_users")
-      .select("*")
+      .select("id, email, role")
       .eq("id", id)
       .single();
 
@@ -112,7 +112,11 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     const { id } = await params;
 
     // Buscar utilizador
-    const { data: user } = await supabase.from("admin_users").select("*").eq("id", id).single();
+    const { data: user } = await supabase
+      .from("admin_users")
+      .select("id, email, nome")
+      .eq("id", id)
+      .single();
 
     if (!user) {
       return NextResponse.json({ error: "Utilizador não encontrado" }, { status: 404 });

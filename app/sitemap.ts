@@ -5,173 +5,157 @@ import { logger } from "@/lib/logger";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
+/** Add hreflang alternates for PT / EN / ES to a sitemap entry */
+function withAlternates(
+  path: string,
+  entry: Omit<MetadataRoute.Sitemap[number], "url" | "alternates">
+): MetadataRoute.Sitemap[number] {
+  const cleanPath = path === "/" ? "" : path;
+  return {
+    ...entry,
+    url: `${siteUrl}${path}`,
+    alternates: {
+      languages: {
+        "pt-PT": `${siteUrl}${path}`,
+        "en-US": `${siteUrl}/en${cleanPath}`,
+        "es-ES": `${siteUrl}/es${cleanPath}`,
+      },
+    },
+  };
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString();
 
   // Páginas estáticas principais
   const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: siteUrl,
-      lastModified: currentDate,
-      changeFrequency: "daily",
-      priority: 1,
-    },
-    {
-      url: `${siteUrl}/comprar`,
+    withAlternates("/", { lastModified: currentDate, changeFrequency: "daily", priority: 1 }),
+    withAlternates("/comprar", {
       lastModified: currentDate,
       changeFrequency: "daily",
       priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/loja`,
-      lastModified: currentDate,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/directorio`,
+    }),
+    withAlternates("/loja", { lastModified: currentDate, changeFrequency: "daily", priority: 0.9 }),
+    withAlternates("/directorio", {
       lastModified: currentDate,
       changeFrequency: "weekly",
       priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/profissionais`,
+    }),
+    withAlternates("/profissionais", {
       lastModified: currentDate,
       changeFrequency: "weekly",
       priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/eventos`,
+    }),
+    withAlternates("/eventos", {
       lastModified: currentDate,
       changeFrequency: "weekly",
       priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/jornal`,
+    }),
+    withAlternates("/jornal", {
       lastModified: currentDate,
       changeFrequency: "weekly",
       priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/mapa`,
+    }),
+    withAlternates("/mapa", {
       lastModified: currentDate,
       changeFrequency: "weekly",
       priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/piroplasmose`,
+    }),
+    withAlternates("/piroplasmose", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/sobre`,
+    }),
+    withAlternates("/sobre", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/glossario`,
+    }),
+    withAlternates("/glossario", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/cavalos-famosos`,
+    }),
+    withAlternates("/cavalos-famosos", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/linhagens`,
+    }),
+    withAlternates("/linhagens", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/ferramentas`,
+    }),
+    withAlternates("/ferramentas", {
       lastModified: currentDate,
       changeFrequency: "weekly",
       priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/calculadora-valor`,
+    }),
+    withAlternates("/calculadora-valor", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/comparador-cavalos`,
+    }),
+    withAlternates("/comparador-cavalos", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/verificador-compatibilidade`,
+    }),
+    withAlternates("/verificador-compatibilidade", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/analise-perfil`,
+    }),
+    withAlternates("/analise-perfil", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/ebook-gratis`,
+    }),
+    withAlternates("/ebook-gratis", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/faq`,
+    }),
+    withAlternates("/faq", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/vender-cavalo`,
+    }),
+    withAlternates("/vender-cavalo", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/cursos`,
+    }),
+    withAlternates("/cursos", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/publicidade`,
+    }),
+    withAlternates("/publicidade", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.5,
-    },
-    {
-      url: `${siteUrl}/instagram`,
+    }),
+    withAlternates("/instagram", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.5,
-    },
-    {
-      url: `${siteUrl}/precos`,
+    }),
+    withAlternates("/precos", {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/privacidade`,
+    }),
+    withAlternates("/privacidade", {
       lastModified: currentDate,
       changeFrequency: "yearly",
       priority: 0.3,
-    },
-    {
-      url: `${siteUrl}/termos`,
+    }),
+    withAlternates("/termos", {
       lastModified: currentDate,
       changeFrequency: "yearly",
       priority: 0.3,
-    },
+    }),
   ];
 
   // Buscar coudelarias dinâmicas
@@ -183,12 +167,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .eq("status", "active");
 
     if (coudelarias) {
-      coudelariasPages = coudelarias.map((c) => ({
-        url: `${siteUrl}/directorio/${c.slug}`,
-        lastModified: c.updated_at || currentDate,
-        changeFrequency: "weekly" as const,
-        priority: 0.8,
-      }));
+      coudelariasPages = coudelarias.map((c) =>
+        withAlternates(`/directorio/${c.slug}`, {
+          lastModified: c.updated_at || currentDate,
+          changeFrequency: "weekly",
+          priority: 0.8,
+        })
+      );
     }
   } catch (error) {
     logger.error("Erro ao buscar coudelarias para sitemap:", error);
@@ -203,18 +188,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .eq("status", "active");
 
     if (eventos) {
-      eventosPages = eventos.map((e) => ({
-        url: `${siteUrl}/eventos/${e.slug}`,
-        lastModified: e.updated_at || currentDate,
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
-      }));
+      eventosPages = eventos.map((e) =>
+        withAlternates(`/eventos/${e.slug}`, {
+          lastModified: e.updated_at || currentDate,
+          changeFrequency: "weekly",
+          priority: 0.7,
+        })
+      );
     }
   } catch (error) {
     logger.error("Erro ao buscar eventos para sitemap:", error);
   }
 
-  // Buscar cavalos à venda — status "active" na tabela cavalos_venda
+  // Buscar cavalos à venda
   let cavalosPages: MetadataRoute.Sitemap = [];
   try {
     const { data: cavalos } = await supabase
@@ -223,12 +209,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .eq("status", "active");
 
     if (cavalos) {
-      cavalosPages = cavalos.map((c) => ({
-        url: `${siteUrl}/comprar/${c.id}`,
-        lastModified: c.updated_at || currentDate,
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
-      }));
+      cavalosPages = cavalos.map((c) =>
+        withAlternates(`/comprar/${c.id}`, {
+          lastModified: c.updated_at || currentDate,
+          changeFrequency: "weekly",
+          priority: 0.7,
+        })
+      );
     }
   } catch (error) {
     logger.error("Erro ao buscar cavalos para sitemap:", error);
@@ -240,12 +227,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const { data: linhagens } = await supabase.from("linhagens").select("slug, updated_at");
 
     if (linhagens) {
-      linhagensPages = linhagens.map((l) => ({
-        url: `${siteUrl}/linhagens/${l.slug}`,
-        lastModified: l.updated_at || currentDate,
-        changeFrequency: "monthly" as const,
-        priority: 0.6,
-      }));
+      linhagensPages = linhagens.map((l) =>
+        withAlternates(`/linhagens/${l.slug}`, {
+          lastModified: l.updated_at || currentDate,
+          changeFrequency: "monthly",
+          priority: 0.6,
+        })
+      );
     }
   } catch (error) {
     logger.error("Erro ao buscar linhagens para sitemap:", error);
@@ -253,48 +241,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Artigos do jornal (dinâmico via Sanity)
   let journalArticles: MetadataRoute.Sitemap = [];
+  const staticSlugs = [
+    "genese-cavalo-iberico",
+    "biomecanica-reuniao",
+    "standard-apsl",
+    "genetica-pelagens",
+    "toricidade-selecao-combate",
+    "novilheiro-rubi-revolucao-olimpica",
+  ];
   try {
     const slugs = await fetchArticleSlugs();
-    if (slugs && slugs.length > 0) {
-      journalArticles = slugs.map((s) => ({
-        url: `${siteUrl}/jornal/${s.slug}`,
+    const articleSlugs = slugs && slugs.length > 0 ? slugs.map((s) => s.slug) : staticSlugs;
+    journalArticles = articleSlugs.map((slug) =>
+      withAlternates(`/jornal/${slug}`, {
         lastModified: currentDate,
-        changeFrequency: "monthly" as const,
+        changeFrequency: "monthly",
         priority: 0.7,
-      }));
-    } else {
-      // Fallback para slugs estáticos
-      const staticSlugs = [
-        "genese-cavalo-iberico",
-        "biomecanica-reuniao",
-        "standard-apsl",
-        "genetica-pelagens",
-        "toricidade-selecao-combate",
-        "novilheiro-rubi-revolucao-olimpica",
-      ];
-      journalArticles = staticSlugs.map((slug) => ({
-        url: `${siteUrl}/jornal/${slug}`,
-        lastModified: currentDate,
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      }));
-    }
+      })
+    );
   } catch {
-    // Fallback
-    const staticSlugs = [
-      "genese-cavalo-iberico",
-      "biomecanica-reuniao",
-      "standard-apsl",
-      "genetica-pelagens",
-      "toricidade-selecao-combate",
-      "novilheiro-rubi-revolucao-olimpica",
-    ];
-    journalArticles = staticSlugs.map((slug) => ({
-      url: `${siteUrl}/jornal/${slug}`,
-      lastModified: currentDate,
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    }));
+    journalArticles = staticSlugs.map((slug) =>
+      withAlternates(`/jornal/${slug}`, {
+        lastModified: currentDate,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      })
+    );
   }
 
   return [

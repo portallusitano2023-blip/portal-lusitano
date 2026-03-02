@@ -37,7 +37,9 @@ export async function GET(request: NextRequest) {
 
     let query = supabasePublic
       .from("reviews")
-      .select("*")
+      .select(
+        "id, coudelaria_id, ferramenta_slug, autor_nome, autor_localizacao, avaliacao, titulo, comentario, data_visita, tipo_visita, recomenda, created_at"
+      )
       .eq("status", "approved")
       .order("created_at", { ascending: false });
 

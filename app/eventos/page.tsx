@@ -10,7 +10,7 @@ export default async function EventosPage() {
   const { data, error } = await supabase
     .from("eventos")
     .select(
-      "id, titulo, slug, descricao, tipo, data_inicio, data_fim, localizacao, regiao, imagem_capa, confirmado, destaque, preco_entrada, status"
+      "id, titulo, slug, descricao, descricao_completa, tipo, data_inicio, data_fim, hora_inicio, hora_fim, localizacao, regiao, organizador, website, preco_entrada, imagem_capa, tags, confirmado, destaque, status"
     )
     .eq("status", "active")
     .gte("data_inicio", new Date().toISOString().split("T")[0])

@@ -12,7 +12,9 @@ export async function GET() {
 
     const { data, error } = await supabaseAdmin
       .from("profissionais_eventos")
-      .select("*")
+      .select(
+        "id, titulo, tipo, descricao, data_inicio, data_fim, local, pais, online, link_inscricao, preco, vagas, created_at"
+      )
       .eq("profissional_id", auth.profissional.id)
       .order("data_inicio", { ascending: false });
 

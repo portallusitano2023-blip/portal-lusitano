@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import TextSplit from "@/components/TextSplit";
@@ -381,20 +381,20 @@ export default function HomeContent() {
             style={{ animationDelay: "0.45s" }}
           >
             <MagneticButton strength={0.2}>
-              <Link
+              <LocalizedLink
                 href="/vender-cavalo"
                 className="ripple-btn shimmer-gold inline-block border border-[var(--gold)]/30 bg-black/20 backdrop-blur-md px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-500"
               >
                 {tr("Vender Cavalo", "Sell a Horse", "Vender Caballo")}
-              </Link>
+              </LocalizedLink>
             </MagneticButton>
             <MagneticButton strength={0.15}>
-              <Link
+              <LocalizedLink
                 href="/comprar"
                 className="line-draw inline-block px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300"
               >
                 {tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo")} →
-              </Link>
+              </LocalizedLink>
             </MagneticButton>
           </div>
         </div>
@@ -504,7 +504,7 @@ export default function HomeContent() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {features.map((feature, i) => (
               <RevealOnScroll key={feature.href} delay={i * 100} variant="fade-up">
-                <Link
+                <LocalizedLink
                   href={feature.href}
                   className="group block bg-[var(--background-card)] border border-[var(--border)] p-6 sm:p-8 hover:border-[var(--gold)]/20 transition-all duration-500 relative overflow-hidden card-premium animated-border"
                 >
@@ -529,7 +529,7 @@ export default function HomeContent() {
                       />
                     </span>
                   </div>
-                </Link>
+                </LocalizedLink>
               </RevealOnScroll>
             ))}
           </div>
@@ -618,13 +618,13 @@ export default function HomeContent() {
           </div>
 
           <RevealOnScroll className="text-center mt-12" delay={450}>
-            <Link
+            <LocalizedLink
               href="/comprar"
               className="ripple-btn inline-flex items-center gap-3 bg-[var(--gold)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:bg-white transition-all duration-300"
             >
               {tr("Ver Cavalos Disponíveis", "View Available Horses", "Ver Caballos Disponibles")}
               <ArrowRight size={14} aria-hidden="true" />
-            </Link>
+            </LocalizedLink>
           </RevealOnScroll>
         </div>
       </section>
@@ -743,13 +743,13 @@ export default function HomeContent() {
               </div>
 
               <MagneticButton strength={0.15}>
-                <Link
+                <LocalizedLink
                   href="/vender-cavalo"
                   className="ripple-btn shimmer-gold inline-flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-[11px] uppercase tracking-[0.15em] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-300 whitespace-nowrap"
                 >
                   {tr("Anunciar Cavalo", "List Your Horse", "Anunciar Caballo")}
                   <ArrowRight size={14} aria-hidden="true" />
-                </Link>
+                </LocalizedLink>
               </MagneticButton>
             </div>
           </RevealOnScroll>
@@ -804,13 +804,13 @@ export default function HomeContent() {
                   )}
                 </p>
                 <MagneticButton>
-                  <Link
+                  <LocalizedLink
                     href="/ebook-gratis"
                     className="ripple-btn inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.15)]"
                   >
                     <Gift size={16} />
                     {tr("Descarregar Grátis", "Download Free", "Descargar Gratis")}
-                  </Link>
+                  </LocalizedLink>
                 </MagneticButton>
               </div>
             </div>
@@ -840,12 +840,12 @@ export default function HomeContent() {
               )}
             </p>
             <MagneticButton>
-              <Link
+              <LocalizedLink
                 href="/loja"
                 className="ripple-btn shimmer-gold inline-block border border-[var(--border-hover)] px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-500"
               >
                 {t.home.cta}
-              </Link>
+              </LocalizedLink>
             </MagneticButton>
           </RevealOnScroll>
         </div>

@@ -105,6 +105,15 @@ export function LanguageProvider({
       // Pre-fetch the NEXT language so toggle feels instant
       const afterNext = next === "pt" ? "en" : next === "en" ? "es" : "pt";
       if (!translationsCache[afterNext]) loadTranslations(afterNext);
+
+      // Navigate to the localized URL
+      const pathname = window.location.pathname;
+      const cleanPath = pathname.replace(/^\/(en|es)/, "") || "/";
+      const newPath = next === "pt" ? cleanPath : `/${next}${cleanPath === "/" ? "" : cleanPath}`;
+      if (newPath !== pathname) {
+        window.history.replaceState(null, "", newPath);
+      }
+
       return next;
     });
   }, []);

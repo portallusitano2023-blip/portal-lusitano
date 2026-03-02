@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumb";
 import { analytics } from "@/lib/analytics-events";
@@ -203,7 +203,7 @@ export default function CavaloDetail({ cavalo, relacionados, slug }: CavaloDetai
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relacionados.map((rel) => (
-                <Link key={rel.slug} href={`/cavalo/${rel.slug}`} className="group block">
+                <LocalizedLink key={rel.slug} href={`/cavalo/${rel.slug}`} className="group block">
                   <div className="aspect-[4/5] overflow-hidden bg-[var(--background-secondary)] mb-4 border border-[var(--border)] group-hover:border-[var(--gold)] transition-all relative">
                     <Image
                       src={rel.imageUrl}
@@ -223,7 +223,7 @@ export default function CavaloDetail({ cavalo, relacionados, slug }: CavaloDetai
                   <p className="text-[var(--foreground-muted)] text-xs mt-1">
                     {rel.idade} {tr("anos", "years", "a\u00f1os")}
                   </p>
-                </Link>
+                </LocalizedLink>
               ))}
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ChevronRight, Calculator, BarChart3, Heart, UserCheck } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -140,7 +140,7 @@ export default function ToolCrossCTA({
           }
 
           return (
-            <Link
+            <LocalizedLink
               key={slug}
               href={tool.href}
               className={`group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl ${tool.hoverBorder} transition-all`}
@@ -157,7 +157,7 @@ export default function ToolCrossCTA({
                 size={16}
                 className={`${tool.iconColor} opacity-0 group-hover:opacity-100 ml-auto shrink-0 transition-opacity`}
               />
-            </Link>
+            </LocalizedLink>
           );
         })}
       </div>

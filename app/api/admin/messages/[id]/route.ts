@@ -15,7 +15,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const { data, error } = await supabase
       .from("contact_submissions")
-      .select("*")
+      .select(
+        "id, form_type, name, email, telefone, company, form_data, status, priority, tags, admin_notes, admin_response, payment_id, cavalo_id, assigned_to, created_at, read_at, responded_at, responded_by, archived_at"
+      )
       .eq("id", id)
       .single();
 

@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import {
   ArrowRight,
   Clock,
@@ -208,7 +208,7 @@ export default function JornalListClient({
           className="max-w-7xl mx-auto px-6 mb-20 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
           style={{ animationDelay: "0.4s" }}
         >
-          <Link href={`/jornal/${featuredArticle.slug.current}`}>
+          <LocalizedLink href={`/jornal/${featuredArticle.slug.current}`}>
             {/* Mobile: overlay layout */}
             <div className="group md:hidden relative w-full h-[400px] overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/40 transition-colors duration-500 cursor-pointer">
               {getArticleImageUrl(featuredArticle) && (
@@ -319,7 +319,7 @@ export default function JornalListClient({
                 </div>
               </div>
             </div>
-          </Link>
+          </LocalizedLink>
         </div>
       )}
 
@@ -523,7 +523,7 @@ export default function JornalListClient({
                 className="md:col-span-3 md:row-span-2 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: "0.15s" }}
               >
-                <Link href={`/jornal/${gridArticles[0].slug.current}`}>
+                <LocalizedLink href={`/jornal/${gridArticles[0].slug.current}`}>
                   <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/40 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
                     <div className="w-full aspect-[4/3] md:flex-1 overflow-hidden relative">
                       {getArticleImageUrl(gridArticles[0]) ? (
@@ -581,7 +581,7 @@ export default function JornalListClient({
                       </span>
                     </div>
                   </article>
-                </Link>
+                </LocalizedLink>
               </div>
 
               {/* Cards pequenos — direita, empilhados */}
@@ -591,7 +591,7 @@ export default function JornalListClient({
                   className="md:col-span-2 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                   style={{ animationDelay: `${(i + 1) * 0.08 + 0.15}s` }}
                 >
-                  <Link href={`/jornal/${article.slug.current}`}>
+                  <LocalizedLink href={`/jornal/${article.slug.current}`}>
                     <article className="group cursor-pointer h-full flex flex-row md:flex-row border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/40 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
                       <div className="w-36 md:w-40 flex-shrink-0 overflow-hidden relative">
                         {getArticleImageUrl(article) ? (
@@ -631,7 +631,7 @@ export default function JornalListClient({
                         </p>
                       </div>
                     </article>
-                  </Link>
+                  </LocalizedLink>
                 </div>
               ))}
             </div>
@@ -658,7 +658,7 @@ export default function JornalListClient({
                   style={{ animationDelay: `${index * 0.08 + 0.15}s` }}
                 >
                   {viewMode === "grid" ? (
-                    <Link href={`/jornal/${article.slug.current}`}>
+                    <LocalizedLink href={`/jornal/${article.slug.current}`}>
                       <article
                         className="group cursor-pointer h-full flex flex-col border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/40 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]"
                         aria-label={article.title}
@@ -731,10 +731,10 @@ export default function JornalListClient({
                           </div>
                         </div>
                       </article>
-                    </Link>
+                    </LocalizedLink>
                   ) : (
                     /* VISTA LISTA */
-                    <Link href={`/jornal/${article.slug.current}`}>
+                    <LocalizedLink href={`/jornal/${article.slug.current}`}>
                       <article
                         className="group cursor-pointer flex gap-5 border-b border-[var(--border)] hover:bg-[var(--surface-hover)] transition-all duration-300 py-5 px-4"
                         aria-label={article.title}
@@ -789,7 +789,7 @@ export default function JornalListClient({
                           className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] self-center flex-shrink-0 transition-all duration-300 group-hover:translate-x-1"
                         />
                       </article>
-                    </Link>
+                    </LocalizedLink>
                   )}
                 </div>
               ));

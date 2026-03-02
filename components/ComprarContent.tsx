@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Scale } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import MarketplaceGrid from "@/components/MarketplaceGrid";
@@ -24,7 +24,13 @@ interface CavaloVenda {
   status?: string;
 }
 
-function ComprarContentInner({ cavalos }: { cavalos: CavaloVenda[] }) {
+function ComprarContentInner({
+  cavalos,
+  hasError,
+}: {
+  cavalos: CavaloVenda[];
+  hasError?: boolean;
+}) {
   const { t, language } = useLanguage();
   const searchParams = useSearchParams();
   const isDev = searchParams.get("dev") === "true";
@@ -84,25 +90,68 @@ function ComprarContentInner({ cavalos }: { cavalos: CavaloVenda[] }) {
             <h2 className="text-lg sm:text-xl font-serif mb-1">{t.comprar_page.want_sell}</h2>
             <p className="text-sm text-[var(--foreground-secondary)]">{t.comprar_page.sell_desc}</p>
           </div>
-          <Link
+          <LocalizedLink
             href="/vender-cavalo"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors touch-manipulation whitespace-nowrap"
           >
             {t.comprar_page.sell_horse}
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
 
       {/* Comparator CTA */}
       <div className="mb-8 sm:mb-12 flex justify-center">
-        <Link
+        <LocalizedLink
           href="/comparador-cavalos"
           className="inline-flex items-center gap-2 px-5 py-2.5 border border-[var(--gold)]/40 text-[var(--gold)] rounded-lg hover:bg-[var(--gold)]/10 transition-colors text-sm font-medium"
         >
           <Scale className="w-4 h-4" />
           {(t.comprar_page as Record<string, string>).compare_horses || "Comparar Cavalos"}
-        </Link>
+        </LocalizedLink>
       </div>
+
+      {/* Error state */}
+      {hasError && cavalos.length === 0 && (
+        <div className="text-center py-16 sm:py-24">
+          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="text-red-400"
+            >
+              <path d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-serif text-[var(--foreground)] mb-3">
+            {language === "en"
+              ? "Unable to load horses"
+              : language === "es"
+                ? "No se pudieron cargar los caballos"
+                : "Erro ao carregar cavalos"}
+          </h2>
+          <p className="text-sm text-[var(--foreground-muted)] mb-6 max-w-md mx-auto">
+            {language === "en"
+              ? "A temporary error occurred. Please try again later."
+              : language === "es"
+                ? "Ocurrió un error temporal. Inténtelo de nuevo más tarde."
+                : "Ocorreu um erro temporário. Tente novamente mais tarde."}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors text-sm"
+          >
+            {language === "en"
+              ? "Try Again"
+              : language === "es"
+                ? "Intentar de Nuevo"
+                : "Tentar Novamente"}
+          </button>
+        </div>
+      )}
 
       {/* Client component handles filters + sorting + grid */}
       {cavalos.length > 0 ? (
@@ -132,7 +181,7 @@ function ComprarContentInner({ cavalos }: { cavalos: CavaloVenda[] }) {
                 ? "Los mejores Lusitanos están a punto de llegar. Explora nuestro diario mientras tanto."
                 : "Os melhores Lusitanos estão prestes a chegar. Explore o nosso jornal enquanto espera."}
           </p>
-          <Link
+          <LocalizedLink
             href="/jornal"
             className="inline-flex items-center gap-2 border border-[var(--gold)]/30 text-[var(--gold)] px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-[var(--gold)]/5 transition-all duration-300"
           >
@@ -141,17 +190,23 @@ function ComprarContentInner({ cavalos }: { cavalos: CavaloVenda[] }) {
               : language === "es"
                 ? "Explorar la Revista"
                 : "Explorar o Jornal"}
-          </Link>
+          </LocalizedLink>
         </div>
       )}
     </main>
   );
 }
 
-export default function ComprarContent({ cavalos }: { cavalos: CavaloVenda[] }) {
+export default function ComprarContent({
+  cavalos,
+  hasError,
+}: {
+  cavalos: CavaloVenda[];
+  hasError?: boolean;
+}) {
   return (
     <Suspense>
-      <ComprarContentInner cavalos={cavalos} />
+      <ComprarContentInner cavalos={cavalos} hasError={hasError} />
     </Suspense>
   );
 }

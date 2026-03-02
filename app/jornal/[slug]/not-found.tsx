@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 
@@ -21,12 +21,12 @@ export default function NotFound() {
           "El artículo que busca no existe o fue eliminado. Visite nuestro diario para leer las últimas noticias."
         )}
       </p>
-      <Link
+      <LocalizedLink
         href="/jornal"
         className="border border-[var(--gold)]/30 px-8 py-3 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black transition-all duration-300"
       >
         {tr("Ver Todos os Artigos", "View All Articles", "Ver Todos los Artículos")}
-      </Link>
+      </LocalizedLink>
     </div>
   );
 }

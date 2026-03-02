@@ -17,7 +17,7 @@ export async function GET(_req: NextRequest) {
       utm_source: string | null;
       utm_medium: string | null;
       utm_campaign: string | null;
-      created_at: string;
+      created_at: string | null;
     }[] = [];
 
     try {
@@ -58,7 +58,7 @@ export async function GET(_req: NextRequest) {
 
     // 2. ROI POR CANAL (Receita gerada por fonte)
     // Cruzar leads com payments por email
-    let payments: { email: string; amount: number; created_at: string }[] = [];
+    let payments: { email: string | null; amount: number; created_at: string | null }[] = [];
 
     try {
       const { data } = await supabase

@@ -92,25 +92,24 @@ function isValidOrigin(request: NextRequest): boolean {
  * Use 'self' + 'unsafe-inline' instead — still blocks XSS from external
  * domains while allowing Next.js inline scripts to execute.
  */
-function buildCsp(): string {
-  return [
-    "default-src 'self'",
-    `script-src 'self' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
-    "font-src 'self' https://fonts.gstatic.com",
-    `connect-src 'self'${IS_DEV ? " ws://localhost:* ws://127.0.0.1:*" : ""} https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google`,
-    "frame-src 'self' blob: https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
-    "object-src 'none'",
-    "base-uri 'self'",
-  ].join("; ");
-}
+// Pre-computed CSP string — computed once at module load, not per request
+const CSP_STRING = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
+  "font-src 'self' https://fonts.gstatic.com",
+  `connect-src 'self'${IS_DEV ? " ws://localhost:* ws://127.0.0.1:*" : ""} https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google`,
+  "frame-src 'self' blob: https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
+  "object-src 'none'",
+  "base-uri 'self'",
+].join("; ");
 
 function applySecurityHeaders(response: NextResponse, contentLanguage = "pt") {
   // CSP is static (no per-request nonce needed). Other security headers
   // (HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.)
   // are already set in next.config.js headers() — no need to duplicate them.
-  response.headers.set("Content-Security-Policy", buildCsp());
+  response.headers.set("Content-Security-Policy", CSP_STRING);
   response.headers.set("Content-Language", contentLanguage);
   response.headers.set("X-Download-Options", "noopen");
 }
@@ -118,6 +117,9 @@ function applySecurityHeaders(response: NextResponse, contentLanguage = "pt") {
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const pathname = request.nextUrl.pathname;
+
+  // Expose pathname to Server Components (for hreflang, lang attribute)
+  response.headers.set("x-pathname", pathname);
 
   applySecurityHeaders(response);
 
@@ -243,6 +245,7 @@ export async function middleware(request: NextRequest) {
     url.pathname = strippedPath;
 
     const rewriteResponse = NextResponse.rewrite(url);
+    rewriteResponse.headers.set("x-pathname", pathname);
     rewriteResponse.cookies.set("locale", locale, { path: "/", sameSite: "lax" });
     applySecurityHeaders(rewriteResponse, locale);
     return rewriteResponse;

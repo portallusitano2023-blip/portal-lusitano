@@ -14,7 +14,7 @@ export async function GET(_req: NextRequest) {
     // Buscar todos os pagamentos de subscrições (publicidade recorrente)
     const { data: payments, error } = await supabase
       .from("payments")
-      .select("*")
+      .select("id, amount, product_metadata, created_at")
       .eq("status", "succeeded")
       .not("product_metadata", "is", null)
       .order("created_at", { ascending: true });

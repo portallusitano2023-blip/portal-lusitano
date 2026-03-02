@@ -12,7 +12,7 @@ export async function GET() {
 
     const { data, error } = await supabaseAdmin
       .from("profissionais_artigos")
-      .select("*")
+      .select("id, titulo, categoria, resumo, conteudo, status, created_at, updated_at")
       .eq("profissional_id", auth.profissional.id)
       .order("created_at", { ascending: false });
 

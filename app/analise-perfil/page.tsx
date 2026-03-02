@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import {
   RotateCcw,
   Sparkles,
@@ -1166,7 +1166,7 @@ function AnalisePerfilContent() {
                       {tr("Continua a tua jornada", "Continue your journey", "Continúa tu viaje")}
                     </h2>
                     <div className="grid sm:grid-cols-3 gap-3">
-                      <Link
+                      <LocalizedLink
                         href="/calculadora-valor"
                         className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
                       >
@@ -1190,8 +1190,8 @@ function AnalisePerfilContent() {
                           size={16}
                           className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-[var(--gold)] transition-colors"
                         />
-                      </Link>
-                      <Link
+                      </LocalizedLink>
+                      <LocalizedLink
                         href="/comparador-cavalos"
                         className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
                       >
@@ -1219,8 +1219,8 @@ function AnalisePerfilContent() {
                           size={16}
                           className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-[var(--gold)] transition-colors"
                         />
-                      </Link>
-                      <Link
+                      </LocalizedLink>
+                      <LocalizedLink
                         href="/verificador-compatibilidade"
                         className="group flex items-center gap-3 p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/40 transition-all"
                       >
@@ -1244,7 +1244,7 @@ function AnalisePerfilContent() {
                           size={16}
                           className="text-[var(--foreground-muted)] ml-auto shrink-0 group-hover:text-pink-400 transition-colors"
                         />
-                      </Link>
+                      </LocalizedLink>
                     </div>
                   </div>
                 </section>

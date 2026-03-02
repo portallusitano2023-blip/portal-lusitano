@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     // Buscar o upload para obter o email do cliente
     const { data: upload, error: fetchError } = await supabase
       .from("instagram_uploads")
-      .select("*")
+      .select("id, customer_email, status")
       .eq("id", id)
       .single();
 

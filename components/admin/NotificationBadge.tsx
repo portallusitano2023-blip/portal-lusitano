@@ -58,30 +58,34 @@ export default function NotificationBadge({ refreshInterval = 30000 }: Notificat
 
   useEffect(() => {
     audioRef.current = new Audio(
-      "data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSaHzPLTgjMGHm7A7+OZTA8PVqnk77BeDwtJouHyvmwgBSaHzPLVgC8GHm/A7+OZTA8OVqrk77BeDwtIouDyv2wgBSWGy/LWhC8GHnDB7+OZTA8OVqrk77BfDgtIot/yvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDg=="
+      "data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSaHzPLTgjMGHm7A7+OZTA8PVqnk77BeDwtJouHyvmwgBSaHzPLVgC8GHm/A7+OZTA8OVqrk77BeDwtIouDyv2wgBSWGy/LWhC8GHnDB7+OZTA8OVqrk77BfDgtIot/yvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDgtIouDyvmwgBSaGy/LWgy8GHnDB7+OYSA8OVqrk77BfDg=="
     );
 
     requestNotificationPermission().then((granted) => {
       setPushEnabled(granted);
     });
 
-    setTimeout(checkNewMessages, 0);
-
+    const initialTimeout = setTimeout(checkNewMessages, 0);
     const interval = setInterval(checkNewMessages, refreshInterval);
+
+    // Service worker message handler — named for proper cleanup
+    const handleSwMessage = (event: MessageEvent) => {
+      if (event.data?.type === "notification-click") {
+        window.focus();
+        window.location.href = event.data.url || "/admin/mensagens";
+      }
+    };
 
     if ("Notification" in window) {
       navigator.serviceWorker?.ready.then(() => {
-        navigator.serviceWorker.addEventListener("message", (event) => {
-          if (event.data?.type === "notification-click") {
-            window.focus();
-            window.location.href = event.data.url || "/admin/mensagens";
-          }
-        });
+        navigator.serviceWorker.addEventListener("message", handleSwMessage);
       });
     }
 
     return () => {
+      clearTimeout(initialTimeout);
       clearInterval(interval);
+      navigator.serviceWorker?.removeEventListener("message", handleSwMessage);
     };
   }, [refreshInterval, checkNewMessages]);
 

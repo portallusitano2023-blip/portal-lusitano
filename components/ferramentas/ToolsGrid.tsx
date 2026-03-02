@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Check, Star, ArrowRight, Clock } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
@@ -33,7 +33,7 @@ function ToolCard({ tool, index }: ToolCardProps) {
   const Icon = tool.icon;
 
   return (
-    <Link
+    <LocalizedLink
       href={tool.href}
       className="group relative bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8 transition-all duration-300 hover:border-[var(--gold)]/50 hover:shadow-2xl hover:shadow-[var(--gold)]/8 hover:-translate-y-2 hover:scale-[1.02] opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards] overflow-hidden"
       style={{ animationDelay: `${0.2 + index * 0.1}s` }}
@@ -110,7 +110,7 @@ function ToolCard({ tool, index }: ToolCardProps) {
           </div>
         </div>
       </div>
-    </Link>
+    </LocalizedLink>
   );
 }
 

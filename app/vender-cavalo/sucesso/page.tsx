@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { CheckCircle, ArrowRight, Mail, Clock, Eye } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -90,20 +90,20 @@ function VenderCavaloSucessoContent() {
         )}
 
         <div className="space-y-4">
-          <Link
+          <LocalizedLink
             href="/comprar"
             className="flex items-center justify-center gap-2 w-full bg-[var(--gold)] hover:bg-[#B39049] text-black font-bold py-4 rounded-xl transition-all"
           >
             <span>{t.success_pages.view_marketplace}</span>
             <ArrowRight size={18} />
-          </Link>
+          </LocalizedLink>
 
-          <Link
+          <LocalizedLink
             href="/"
             className="flex items-center justify-center gap-2 w-full bg-[var(--background-secondary)] hover:bg-[var(--surface-hover)] text-[var(--foreground)] font-bold py-4 rounded-xl transition-all border border-[var(--border)]"
           >
             <span>{t.success_pages.back_home}</span>
-          </Link>
+          </LocalizedLink>
         </div>
 
         {countdown > 0 && (

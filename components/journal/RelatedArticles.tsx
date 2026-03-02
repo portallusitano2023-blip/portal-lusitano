@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ArrowRight, Clock } from "lucide-react";
 import type { SanityArticle } from "@/lib/sanity-queries";
 import { getArticleImageUrl, formatArticleDate } from "@/lib/journal-utils";
@@ -50,7 +50,7 @@ export default function RelatedArticles({ articles, language = "pt" }: RelatedAr
                 : article.category;
 
           return (
-            <Link key={article._id} href={`/jornal/${article.slug.current}`}>
+            <LocalizedLink key={article._id} href={`/jornal/${article.slug.current}`}>
               <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/30 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
                 <div className="w-full aspect-[16/10] overflow-hidden relative">
                   {getArticleImageUrl(article, 600) && (
@@ -104,7 +104,7 @@ export default function RelatedArticles({ articles, language = "pt" }: RelatedAr
                   </div>
                 </div>
               </article>
-            </Link>
+            </LocalizedLink>
           );
         })}
       </div>

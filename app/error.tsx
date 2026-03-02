@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { SUPPORT_EMAIL } from "@/lib/constants";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -96,12 +96,12 @@ export default function Error({
             {t.error_page.try_again}
           </button>
 
-          <Link
+          <LocalizedLink
             href="/"
             className="flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-xs uppercase tracking-[0.2em] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
           >
             {t.error_page.back_home}
-          </Link>
+          </LocalizedLink>
         </div>
 
         {/* Contacto de suporte */}
@@ -125,7 +125,7 @@ export default function Error({
           aria-hidden="true"
         >
           <div className="w-12 h-[1px] bg-[var(--gold)]" />
-          <span className="text-[8px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]">
+          <span className="text-[10px] sm:text-[8px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]">
             Portal Lusitano
           </span>
           <div className="w-12 h-[1px] bg-[var(--gold)]" />

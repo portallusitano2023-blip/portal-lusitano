@@ -3,6 +3,7 @@ import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { sanitizeSearchInput } from "@/lib/sanitize";
+import { adminCoudelariaSchema, parseWithZod } from "@/lib/schemas";
 
 // GET - Listar coudelarias com filtros
 export async function GET(req: NextRequest) {
@@ -82,6 +83,10 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
+    const parsed = parseWithZod(adminCoudelariaSchema, body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
+    }
     const {
       nome,
       descricao,
@@ -110,12 +115,7 @@ export async function POST(req: NextRequest) {
       proprietario_telefone,
       status,
       destaque,
-    } = body;
-
-    // Validações
-    if (!nome) {
-      return NextResponse.json({ error: "Nome é obrigatório" }, { status: 400 });
-    }
+    } = parsed.data;
 
     // Criar coudelaria
     const { data: coudelaria, error } = await supabase

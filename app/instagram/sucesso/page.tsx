@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { CheckCircle, ArrowRight, Upload, Mail, Instagram } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -48,13 +48,13 @@ function InstagramSucessoContent() {
                   {t.success_pages.upload_materials_desc}
                 </p>
                 {sessionId && (
-                  <Link
+                  <LocalizedLink
                     href={`/instagram/upload/${sessionId}`}
                     className="inline-flex items-center gap-2 text-sm text-[var(--gold)] hover:text-[var(--foreground)] transition-colors"
                   >
                     <span>{t.success_pages.upload_now}</span>
                     <ArrowRight size={16} />
-                  </Link>
+                  </LocalizedLink>
                 )}
               </div>
             </div>
@@ -102,21 +102,21 @@ function InstagramSucessoContent() {
 
         <div className="space-y-4">
           {sessionId && (
-            <Link
+            <LocalizedLink
               href={`/instagram/upload/${sessionId}`}
               className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white font-bold py-4 rounded-xl transition-all hover:opacity-90"
             >
               <Upload size={18} />
               <span>{t.success_pages.upload_materials}</span>
-            </Link>
+            </LocalizedLink>
           )}
 
-          <Link
+          <LocalizedLink
             href="/instagram"
             className="flex items-center justify-center gap-2 w-full bg-[var(--background-secondary)] hover:bg-[var(--surface-hover)] text-[var(--foreground)] font-bold py-4 rounded-xl transition-all border border-[var(--border)]"
           >
             <span>{t.success_pages.back_to_instagram}</span>
-          </Link>
+          </LocalizedLink>
         </div>
 
         {countdown > 0 && (

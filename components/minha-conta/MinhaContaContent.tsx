@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Crown, Loader2, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -271,12 +271,12 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
                 <p className="text-[var(--foreground-muted)] font-serif italic mb-4">
                   {t.account.no_orders}
                 </p>
-                <Link
+                <LocalizedLink
                   href="/loja"
                   className="text-[var(--gold)] text-xs uppercase tracking-widest hover:text-[var(--foreground)] transition-colors"
                 >
                   {t.account.explore} →
-                </Link>
+                </LocalizedLink>
               </div>
             )}
           </div>

@@ -38,7 +38,7 @@ export async function GET(_req: NextRequest) {
     }
 
     // 3. CLIENTES PAGOS (pessoas que compraram algo)
-    let payments: { email: string; amount: number; created_at: string }[] = [];
+    let payments: { email: string | null; amount: number; created_at: string | null }[] = [];
 
     try {
       const { data } = await supabase
@@ -108,6 +108,7 @@ export async function GET(_req: NextRequest) {
 
       if (leadsData) {
         leadsData.forEach((lead) => {
+          if (!lead.created_at) return;
           const date = new Date(lead.created_at);
           const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
           if (monthlyConversions[monthStr]) {
@@ -124,6 +125,7 @@ export async function GET(_req: NextRequest) {
       const uniqueCustomersByMonth: Record<string, Set<string>> = {};
 
       payments.forEach((payment) => {
+        if (!payment.created_at) return;
         const date = new Date(payment.created_at);
         const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
         if (monthlyConversions[monthStr]) {

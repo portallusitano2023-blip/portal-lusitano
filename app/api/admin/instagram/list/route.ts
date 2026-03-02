@@ -16,7 +16,9 @@ export async function GET(req: NextRequest) {
 
     let query = supabase
       .from("instagram_uploads")
-      .select("*")
+      .select(
+        "id, session_id, caption, hashtags, link, observacoes, files_urls, status, customer_email, created_at, published_at"
+      )
       .order("created_at", { ascending: false });
 
     if (filter !== "all") {

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Calculator, ArrowLeft, RefreshCw, Pencil } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -30,13 +30,13 @@ export default function CalculadoraHeader({
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/90 backdrop-blur-xl border-b border-[var(--background-secondary)]">
       <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link
+        <LocalizedLink
           href="/"
           className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
         >
           <ArrowLeft size={18} />
           <span className="text-sm font-medium hidden sm:block">Portal Lusitano</span>
-        </Link>
+        </LocalizedLink>
 
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[var(--gold)] to-[#8B7355] flex items-center justify-center">

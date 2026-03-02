@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useMemo } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Instagram, Music2, Mail, MapPin, ArrowUpRight, Gift } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { CONTACT_EMAIL } from "@/lib/constants";
@@ -52,14 +52,14 @@ export default memo(function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-16 mb-20">
           {/* IDENTIDADE */}
           <div className="col-span-2 md:col-span-4 space-y-6">
-            <Link href="/" className="inline-block group">
+            <LocalizedLink href="/" className="inline-block group">
               <span className="font-serif text-3xl sm:text-4xl text-[var(--foreground)] tracking-tighter group-hover:text-[var(--gold)] transition-all duration-500">
                 PORTAL <span className="italic font-light">LUSITANO</span>
               </span>
               <span className="text-[10px] sm:text-[9px] text-[var(--foreground-secondary)] uppercase tracking-[0.5em] block mt-2 font-bold group-hover:text-[var(--foreground-secondary)] transition-colors">
                 O Legado Nobre · Est. 2023
               </span>
-            </Link>
+            </LocalizedLink>
             <p className="text-[var(--foreground-muted)] text-sm font-light leading-relaxed max-w-sm">
               {t.home.manifesto}
             </p>
@@ -97,12 +97,12 @@ export default memo(function Footer() {
             <ul className="space-y-3">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <Link
+                  <LocalizedLink
                     href={item.href}
                     className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] text-sm font-light transition-colors"
                   >
                     {item.name}
-                  </Link>
+                  </LocalizedLink>
                 </li>
               ))}
             </ul>
@@ -116,12 +116,12 @@ export default memo(function Footer() {
             <ul className="space-y-3">
               {lusitanoItems.map((item) => (
                 <li key={item.href}>
-                  <Link
+                  <LocalizedLink
                     href={item.href}
                     className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] text-sm font-light transition-colors"
                   >
                     {item.name}
-                  </Link>
+                  </LocalizedLink>
                 </li>
               ))}
             </ul>
@@ -136,12 +136,12 @@ export default memo(function Footer() {
               <ul className="space-y-3">
                 {toolItems.map((item) => (
                   <li key={item.href}>
-                    <Link
+                    <LocalizedLink
                       href={item.href}
                       className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] text-sm font-light transition-colors"
                     >
                       {item.name}
-                    </Link>
+                    </LocalizedLink>
                   </li>
                 ))}
               </ul>
@@ -152,14 +152,14 @@ export default memo(function Footer() {
                 <MapPin className="text-[var(--gold)]" size={14} />
                 <span className="text-[var(--foreground-muted)] text-xs">{CONTACT_EMAIL}</span>
               </div>
-              <Link
+              <LocalizedLink
                 href="/ebook-gratis"
                 className="inline-flex items-center gap-2 text-[var(--gold)] text-[10px] uppercase tracking-widest font-bold hover:text-[var(--foreground)] transition-colors"
               >
                 <Gift size={12} />
                 {t.footer.ebook}
                 <ArrowUpRight size={10} />
-              </Link>
+              </LocalizedLink>
             </div>
           </div>
         </div>
@@ -194,18 +194,18 @@ export default memo(function Footer() {
             © 2026 Portal Lusitano. {t.footer.rights}.
           </p>
           <div className="flex gap-8">
-            <Link
+            <LocalizedLink
               href="/privacidade"
               className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-xs sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
             >
               {t.footer.privacy}
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               href="/termos"
               className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-xs sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
             >
               {t.footer.terms}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </div>

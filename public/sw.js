@@ -173,6 +173,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // 🔒 NEVER cache auth, admin, or payment API routes
+  if (url.pathname.startsWith('/api/admin/') ||
+      url.pathname.startsWith('/api/auth/') ||
+      url.pathname.startsWith('/api/stripe/')) {
+    return; // Let browser handle directly — no SW caching for sensitive data
+  }
+
   // ✅ STRATEGY 3: Network-First para API
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(networkFirstStrategy(request, API_CACHE));

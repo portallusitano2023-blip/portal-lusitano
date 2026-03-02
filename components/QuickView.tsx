@@ -6,7 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useToast } from "@/context/ToastContext";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import { ProductListing } from "@/types/product";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
@@ -264,13 +264,13 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
                       </button>
                     </div>
 
-                    <Link
+                    <LocalizedLink
                       href={`/loja/${product.handle}`}
                       onClick={onClose}
                       className="block text-center border border-[var(--border-hover)] text-[var(--foreground)] py-4 text-xs uppercase tracking-[0.2em] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
                     >
                       {t.viewDetails}
-                    </Link>
+                    </LocalizedLink>
                   </div>
                 </div>
               </div>

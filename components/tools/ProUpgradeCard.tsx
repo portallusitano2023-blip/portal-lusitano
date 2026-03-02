@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useRouter } from "next/navigation";
 import {
   Crown,
@@ -126,12 +126,12 @@ export default function ProUpgradeCard({ isSubscribed }: ProUpgradeCardProps) {
               {loading ? <Loader2 size={14} className="animate-spin" /> : <Crown size={14} />}
               {loading ? txt.processing : txt.subscribe}
             </button>
-            <Link
+            <LocalizedLink
               href="/precos"
               className="text-center text-xs text-[#C5A059]/70 hover:text-[#C5A059] transition-colors py-2"
             >
               {txt.see_plans}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       )}

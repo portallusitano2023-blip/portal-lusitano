@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ChevronDown } from "lucide-react";
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -70,7 +70,7 @@ export function LusitanoDropdown() {
             </span>
             <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
               {dbItems.map((item) => (
-                <Link
+                <LocalizedLink
                   key={item.href}
                   href={item.href}
                   className="dd-item"
@@ -87,7 +87,7 @@ export function LusitanoDropdown() {
                       {item.desc}
                     </div>
                   </div>
-                </Link>
+                </LocalizedLink>
               ))}
             </div>
 
@@ -100,7 +100,7 @@ export function LusitanoDropdown() {
             </span>
             <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
               {communityItems.map((item) => (
-                <Link
+                <LocalizedLink
                   key={item.href}
                   href={item.href}
                   className="dd-item"
@@ -114,7 +114,7 @@ export function LusitanoDropdown() {
                       {item.desc}
                     </div>
                   </div>
-                </Link>
+                </LocalizedLink>
               ))}
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Crown,
@@ -261,7 +261,7 @@ export function ProBannerSection() {
             </p>
           </div>
         </div>
-        <Link
+        <LocalizedLink
           href="/ferramentas/historico"
           className="flex-shrink-0 flex items-center gap-1.5 text-sm text-[#C5A059] hover:text-[#D4B068] transition-colors"
         >
@@ -270,7 +270,7 @@ export function ProBannerSection() {
             {tr("Ver histórico", "View history", "Ver historial")}
           </span>
           <span className="sm:hidden">{tr("Histórico", "History", "Historial")}</span>
-        </Link>
+        </LocalizedLink>
       </div>
     </div>
   );
@@ -336,12 +336,12 @@ export default function PricingSection() {
                 ))}
               </ul>
 
-              <Link
+              <LocalizedLink
                 href="/registar"
                 className="block w-full py-3 min-h-[44px] text-center border border-[var(--border)] text-[var(--foreground)] text-sm font-medium rounded-lg hover:bg-[var(--surface-hover)] transition-colors flex items-center justify-center"
               >
                 {t.ferramentas.create_free}
-              </Link>
+              </LocalizedLink>
             </div>
 
             {/* PRO Tier */}

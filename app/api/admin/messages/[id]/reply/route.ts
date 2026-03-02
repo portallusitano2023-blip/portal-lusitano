@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     // Buscar contacto
     const { data: contact, error: fetchError } = await supabase
       .from("contact_submissions")
-      .select("*")
+      .select("id, name, email, form_type, form_data, created_at")
       .eq("id", id)
       .single();
 

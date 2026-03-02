@@ -13,7 +13,7 @@ import {
   Gift,
   Users,
 } from "lucide-react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackEbookFunnel } from "@/lib/analytics";
@@ -233,12 +233,12 @@ export default function DownloadPage() {
           style={{ animationDelay: "0.3s" }}
         >
           <p className="text-[var(--foreground-secondary)] mb-2">{t.ebook_download.questions}</p>
-          <Link
+          <LocalizedLink
             href="/faq"
             className="text-[var(--gold)] hover:text-[var(--foreground)] transition-colors"
           >
             {t.ebook_download.visit_faq}
-          </Link>
+          </LocalizedLink>
         </div>
       </section>
     </main>

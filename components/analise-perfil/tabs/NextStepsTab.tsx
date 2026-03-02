@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Compass, Briefcase, ChevronRight, BarChart3, Heart, Calculator, Info } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -71,7 +71,7 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Calculadora de Valor */}
-          <Link
+          <LocalizedLink
             href={`/calculadora-valor?perfil=${result.profile}`}
             onClick={pushProfileContext}
             className="group flex items-start gap-4 p-4 bg-[var(--background-card)]/30 border border-[var(--border)] hover:border-[var(--gold)]/50 transition-all rounded-xl"
@@ -102,7 +102,7 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
               size={16}
               className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] shrink-0 mt-0.5 transition-colors"
             />
-          </Link>
+          </LocalizedLink>
 
           {/* Comparador de Cavalos */}
           <button
@@ -141,7 +141,7 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
 
           {/* Verificador (só para criador) */}
           {result.profile === "criador" && (
-            <Link
+            <LocalizedLink
               href="/verificador-compatibilidade"
               onClick={pushProfileContext}
               className="group flex items-start gap-4 p-4 bg-[var(--background-card)]/30 border border-[var(--border)] hover:border-pink-500/50 transition-all rounded-xl sm:col-span-2"
@@ -171,7 +171,7 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
                 size={16}
                 className="text-[var(--foreground-muted)] group-hover:text-pink-400 shrink-0 mt-0.5 transition-colors"
               />
-            </Link>
+            </LocalizedLink>
           )}
         </div>
       </div>
@@ -184,21 +184,21 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
           {t.analise_perfil.ready_desc}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
+          <LocalizedLink
             href="/directorio"
             className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black px-8 py-4 font-bold uppercase tracking-wider text-sm rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all shadow-md shadow-[var(--gold)]/20 hover:shadow-[var(--gold)]/30 hover:-translate-y-0.5 active:translate-y-0"
           >
             <Briefcase size={18} />
             {t.analise_perfil.explore_studs}
-          </Link>
-          <Link
+          </LocalizedLink>
+          <LocalizedLink
             href={`/calculadora-valor?perfil=${result.profile}&min=${result.idealHorse.priceRange.split(" ")[0].replace(".", "").replace(",", "")}`}
             onClick={pushProfileContext}
             className="inline-flex items-center justify-center gap-2 border border-[var(--gold)] text-[var(--gold)] px-8 py-4 font-bold uppercase tracking-wider text-sm rounded-xl hover:bg-[var(--gold)]/10 transition-all"
           >
             {t.analise_perfil.value_calculator}
             <ChevronRight size={18} />
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
 

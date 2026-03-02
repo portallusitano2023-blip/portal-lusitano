@@ -12,7 +12,7 @@ import {
   Loader2,
   Zap,
 } from "lucide-react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
 
 const especialidadesKeys = [
@@ -458,13 +458,13 @@ export default function RegistarCoudelariaPage() {
             <p className="text-[var(--foreground-secondary)] mb-8 max-w-md mx-auto">
               {t.registar_coudelaria.success_message}
             </p>
-            <Link
+            <LocalizedLink
               href="/directorio"
               className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white transition-colors"
             >
               {t.registar_coudelaria.btn_view_directory}
               <ArrowRight size={18} />
-            </Link>
+            </LocalizedLink>
           </div>
         )}
       </div>

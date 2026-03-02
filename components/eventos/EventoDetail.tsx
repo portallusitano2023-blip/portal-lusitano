@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumb";
 import {
@@ -498,7 +498,7 @@ END:VCALENDAR`;
                   color: "bg-zinc-500/20 text-[var(--foreground-secondary)]",
                 };
                 return (
-                  <Link
+                  <LocalizedLink
                     key={rel.id}
                     href={`/eventos/${rel.slug}`}
                     className="group bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/50 transition-all overflow-hidden"
@@ -534,7 +534,7 @@ END:VCALENDAR`;
                         })}
                       </p>
                     </div>
-                  </Link>
+                  </LocalizedLink>
                 );
               })}
             </div>

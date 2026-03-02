@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { UserCheck, Calculator, BarChart3, Heart, ArrowRight, ChevronRight } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
@@ -110,7 +110,7 @@ export default function ToolJourneySection() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4">
             {steps.map((step, i) => (
               <AnimateOnScroll key={step.href} delay={i * 100}>
-                <Link
+                <LocalizedLink
                   href={step.href}
                   className={`group relative block p-6 bg-[var(--background-secondary)]/80 border ${step.borderColor} rounded-2xl hover:shadow-xl ${step.glowColor} hover:-translate-y-1 transition-all duration-300`}
                 >
@@ -148,7 +148,7 @@ export default function ToolJourneySection() {
                       <ChevronRight size={20} className="text-[var(--gold)]/40 rotate-90" />
                     </div>
                   )}
-                </Link>
+                </LocalizedLink>
               </AnimateOnScroll>
             ))}
           </div>
@@ -156,7 +156,7 @@ export default function ToolJourneySection() {
 
         {/* Bottom CTA */}
         <AnimateOnScroll className="text-center mt-12">
-          <Link
+          <LocalizedLink
             href="/analise-perfil"
             className="group inline-flex items-center gap-2.5 px-8 py-4 min-h-[48px] bg-gradient-to-r from-[var(--gold)]/15 to-[var(--gold)]/5 border border-[var(--gold)]/30 text-[var(--gold)] text-sm font-semibold rounded-xl hover:from-[var(--gold)]/25 hover:to-[var(--gold)]/10 hover:border-[var(--gold)]/50 transition-all"
           >
@@ -166,7 +166,7 @@ export default function ToolJourneySection() {
               "Empezar la Jornada Completa"
             )}
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
+          </LocalizedLink>
           <p className="text-[var(--foreground-muted)] text-xs mt-3">
             {tr(
               "Os dados passam automaticamente de ferramenta em ferramenta",

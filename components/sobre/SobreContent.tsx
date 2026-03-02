@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { CONTACT_EMAIL } from "@/lib/constants";
@@ -452,7 +452,7 @@ export default function SobreContent() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, i) => (
               <AnimateOnScroll key={feature.title} delay={i * 80}>
-                <Link
+                <LocalizedLink
                   href={feature.href}
                   className="group block p-6 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-all duration-500 hover:bg-[var(--background-elevated)]"
                 >
@@ -474,7 +474,7 @@ export default function SobreContent() {
                   <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
                     {feature.desc}
                   </p>
-                </Link>
+                </LocalizedLink>
               </AnimateOnScroll>
             ))}
           </div>
@@ -539,7 +539,7 @@ export default function SobreContent() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-5">
               {/* Shimmer CTA button */}
-              <Link
+              <LocalizedLink
                 href="/registar"
                 className="relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold overflow-hidden group/cta hover:from-white hover:to-white transition-all duration-300"
               >
@@ -550,7 +550,7 @@ export default function SobreContent() {
                 />
                 <Users size={16} />
                 {tr("Criar Conta Grátis", "Create Free Account", "Crear Cuenta Gratis")}
-              </Link>
+              </LocalizedLink>
 
               <a
                 href={`mailto:${CONTACT_EMAIL}`}

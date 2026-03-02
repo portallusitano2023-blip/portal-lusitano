@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useAuth } from "./AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
 import { User, LogOut, Crown, History, Settings, ChevronDown } from "lucide-react";
@@ -28,13 +28,13 @@ export default function UserMenu() {
 
   if (!user) {
     return (
-      <Link
+      <LocalizedLink
         href="/login"
         className="hidden md:flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors text-sm"
       >
         <User size={18} />
         <span className="hidden xl:inline">{t.login.enter}</span>
-      </Link>
+      </LocalizedLink>
     );
   }
 
@@ -66,30 +66,30 @@ export default function UserMenu() {
           </div>
 
           <div className="py-1">
-            <Link
+            <LocalizedLink
               href="/perfil"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
             >
               <Settings size={16} className="text-[var(--foreground-muted)]" />
               {t.account.profile}
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               href="/historico"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
             >
               <History size={16} className="text-[var(--foreground-muted)]" />
               {t.account.history}
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               href="/ferramentas"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors"
             >
               <Crown size={16} />
               {t.nav.tools} PRO
-            </Link>
+            </LocalizedLink>
           </div>
 
           <div className="border-t border-[var(--border)] py-1">

@@ -13,7 +13,9 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from("eventos")
-      .select("*")
+      .select(
+        "id, titulo, slug, descricao, descricao_completa, tipo, data_inicio, data_fim, hora_inicio, hora_fim, localizacao, regiao, organizador, website, preco_entrada, imagem_capa, tags, confirmado, destaque, status, views_count, created_at"
+      )
       .order("data_inicio", { ascending: false });
 
     if (error) {

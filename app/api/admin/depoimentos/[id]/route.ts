@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { verifySession } from "@/lib/auth";
 import { logger } from "@/lib/logger";
+import { depoimentoUpdateSchema, parseWithZod } from "@/lib/schemas";
 
 // PATCH - Atualizar status do depoimento
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -12,10 +13,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     }
 
     const { id } = await params;
-    const { status } = await req.json();
+    const body = await req.json();
+    const parsed = parseWithZod(depoimentoUpdateSchema, body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
+    }
+    const { status } = parsed.data;
 
-    // Validar status
-    if (!["aprovado", "rejeitado"].includes(status)) {
+    if (!status || !["aprovado", "rejeitado"].includes(status)) {
       return NextResponse.json({ error: "Status inválido" }, { status: 400 });
     }
 

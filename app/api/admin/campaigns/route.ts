@@ -14,7 +14,9 @@ export async function GET(_req: NextRequest) {
 
     const { data: campaigns, error } = await supabase
       .from("email_campaigns")
-      .select("*")
+      .select(
+        "id, name, subject, recipient_type, recipients_count, status, scheduled_at, sent_at, sent_count, failed_count, created_by, created_at"
+      )
       .order("created_at", { ascending: false });
 
     if (error) throw error;

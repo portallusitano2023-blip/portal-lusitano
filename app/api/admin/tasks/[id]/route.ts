@@ -15,7 +15,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const { data: task, error } = await supabase
       .from("admin_tasks")
-      .select("*")
+      .select(
+        "id, title, description, task_type, due_date, status, priority, assigned_to, related_email, notes, completed_at, admin_email, created_at"
+      )
       .eq("id", id)
       .single();
 

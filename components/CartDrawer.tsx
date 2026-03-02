@@ -5,7 +5,7 @@ import { useEffect, useRef, useMemo, useState, useCallback } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { X, Minus, Plus, ShoppingBag, Loader2 } from "lucide-react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 // Module-level constant — not recreated on every render
@@ -136,13 +136,13 @@ export default function CartDrawer() {
                   <p className="text-[var(--foreground-secondary)] font-serif text-xl">
                     {ct.empty}
                   </p>
-                  <Link
+                  <LocalizedLink
                     href="/loja"
                     onClick={closeCart}
                     className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] border-b border-[var(--gold)] pb-1 hover:text-[var(--foreground)] transition-colors"
                   >
                     {ct.empty_cta}
-                  </Link>
+                  </LocalizedLink>
                 </div>
               ) : (
                 <div className="space-y-8">

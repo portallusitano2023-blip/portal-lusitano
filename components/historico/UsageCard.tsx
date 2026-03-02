@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Clock, ChevronRight, RefreshCw } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -92,7 +92,7 @@ export default function UsageCard({ record, onViewDetails }: UsageCardProps) {
           {tr("Ver detalhes", "View details", "Ver detalles")}
         </button>
 
-        <Link
+        <LocalizedLink
           href={config.href}
           className="inline-flex items-center gap-1.5 rounded-lg border border-[#C5A059]/25
                      bg-[#C5A059]/5 px-3 py-1.5 text-xs text-[#C5A059]
@@ -102,7 +102,7 @@ export default function UsageCard({ record, onViewDetails }: UsageCardProps) {
         >
           <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
           {tr("Repetir análise", "Repeat analysis", "Repetir análisis")}
-        </Link>
+        </LocalizedLink>
       </div>
     </article>
   );

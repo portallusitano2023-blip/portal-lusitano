@@ -14,7 +14,7 @@ export async function GET(_req: NextRequest) {
     // Obter todos os pagamentos succeeded
     const { data: payments, error: paymentsError } = await supabase
       .from("payments")
-      .select("*")
+      .select("id, amount, product_type, product_metadata, created_at")
       .eq("status", "succeeded")
       .order("created_at", { ascending: true });
 

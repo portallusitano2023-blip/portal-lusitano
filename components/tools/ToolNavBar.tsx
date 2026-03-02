@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -46,7 +46,7 @@ export default function ToolNavBar({ currentTool, internalProgress, rightSlot }:
 
       <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Left: Back to ferramentas */}
-        <Link
+        <LocalizedLink
           href="/ferramentas"
           className="flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors min-w-[44px] min-h-[44px]"
           aria-label={tr("Voltar a Ferramentas", "Back to Tools", "Volver a Herramientas")}
@@ -55,7 +55,7 @@ export default function ToolNavBar({ currentTool, internalProgress, rightSlot }:
           <span className="text-sm font-medium hidden sm:block">
             {tr("Ferramentas", "Tools", "Herramientas")}
           </span>
-        </Link>
+        </LocalizedLink>
 
         {/* Center: Journey indicator */}
         <nav
@@ -84,7 +84,7 @@ export default function ToolNavBar({ currentTool, internalProgress, rightSlot }:
                 )}
 
                 {/* Tool dot */}
-                <Link
+                <LocalizedLink
                   href={tool.href}
                   aria-current={isCurrent ? "page" : undefined}
                   aria-label={tool.title}
@@ -110,7 +110,7 @@ export default function ToolNavBar({ currentTool, internalProgress, rightSlot }:
                   >
                     {i + 1}
                   </span>
-                </Link>
+                </LocalizedLink>
               </div>
             );
           })}

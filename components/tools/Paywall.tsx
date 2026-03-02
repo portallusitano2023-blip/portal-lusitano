@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useRouter } from "next/navigation";
 import {
   Lock,
@@ -92,19 +92,19 @@ export default function Paywall({ toolName, requiresAuth = false, proFeatures }:
             </p>
 
             <div className="flex flex-col gap-3">
-              <Link
+              <LocalizedLink
                 href="/registar"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black font-semibold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all shadow-lg shadow-[var(--gold)]/20 hover:shadow-[var(--gold)]/30 hover:-translate-y-0.5 active:translate-y-0"
               >
                 Criar Conta Grátis
                 <ArrowRight size={16} />
-              </Link>
-              <Link
+              </LocalizedLink>
+              <LocalizedLink
                 href="/login"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[var(--border)] text-[var(--foreground-secondary)] rounded-xl hover:border-[var(--gold)]/40 hover:text-[var(--foreground)] transition-colors text-sm"
               >
                 Já tenho conta
-              </Link>
+              </LocalizedLink>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ArrowLeft, Clock, Globe, BadgeCheck } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -15,13 +15,13 @@ export default function PageHeader() {
 
   return (
     <div className="max-w-3xl mx-auto mb-10">
-      <Link
+      <LocalizedLink
         href="/comprar"
         className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-8 touch-manipulation"
       >
         <ArrowLeft size={18} />
         <span className="text-sm">{t.vender_cavalo.back_marketplace}</span>
-      </Link>
+      </LocalizedLink>
 
       <div className="text-center">
         <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-[9px] sm:text-[10px] font-bold block mb-3">

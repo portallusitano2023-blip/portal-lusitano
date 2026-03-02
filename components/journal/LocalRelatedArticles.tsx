@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ArrowRight, Clock } from "lucide-react";
 import {
   articlesListPT,
@@ -51,7 +51,7 @@ export default function LocalRelatedArticles({
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {articles.map((article) => (
-          <Link key={article.slug} href={`/jornal/${article.slug}`}>
+          <LocalizedLink key={article.slug} href={`/jornal/${article.slug}`}>
             <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/30 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
               <div className="w-full aspect-[16/10] overflow-hidden relative">
                 <Image
@@ -93,7 +93,7 @@ export default function LocalRelatedArticles({
                 </div>
               </div>
             </article>
-          </Link>
+          </LocalizedLink>
         ))}
       </div>
     </section>

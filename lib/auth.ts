@@ -101,42 +101,28 @@ export async function deleteSession() {
 
 export function checkCredentials(email: string, password: string) {
   const adminEmail = process.env.ADMIN_EMAIL || "";
-
-  // Timing-safe email comparison
-  const emailBytes = new TextEncoder().encode(email);
-  const adminEmailBytes = new TextEncoder().encode(adminEmail);
-
-  let emailMismatch = emailBytes.length ^ adminEmailBytes.length;
-  const minEmailLen = Math.min(emailBytes.length, adminEmailBytes.length);
-  for (let i = 0; i < minEmailLen; i++) {
-    emailMismatch |= emailBytes[i] ^ adminEmailBytes[i];
-  }
-
-  // Password: use SHA-256 hash if ADMIN_PASSWORD_HASH is set, otherwise fall back to plaintext
   const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH || "";
-  const adminPassword = process.env.ADMIN_PASSWORD || "";
 
-  let passMismatch = 1; // Default: mismatch
-
-  if (adminPasswordHash) {
-    // Preferred: compare SHA-256(input) against stored hash using timingSafeEqual
-    const inputHash = crypto.createHash("sha256").update(password).digest();
-    const storedHash = Buffer.from(adminPasswordHash, "hex");
-
-    if (inputHash.length === storedHash.length) {
-      passMismatch = crypto.timingSafeEqual(inputHash, storedHash) ? 0 : 1;
-    }
-  } else if (adminPassword) {
-    // Legacy fallback: timing-safe plaintext comparison
-    const passBytes = new TextEncoder().encode(password);
-    const adminBytes = new TextEncoder().encode(adminPassword);
-
-    passMismatch = passBytes.length ^ adminBytes.length;
-    const minPassLen = Math.min(passBytes.length, adminBytes.length);
-    for (let i = 0; i < minPassLen; i++) {
-      passMismatch |= passBytes[i] ^ adminBytes[i];
-    }
+  if (!adminEmail || !adminPasswordHash) {
+    return false;
   }
 
-  return emailMismatch === 0 && passMismatch === 0;
+  // Timing-safe email comparison using crypto.timingSafeEqual with zero-padded buffers
+  const maxEmailLen = Math.max(email.length, adminEmail.length);
+  const emailBuf = Buffer.alloc(maxEmailLen);
+  const adminEmailBuf = Buffer.alloc(maxEmailLen);
+  Buffer.from(email).copy(emailBuf);
+  Buffer.from(adminEmail).copy(adminEmailBuf);
+
+  const emailMatch =
+    email.length === adminEmail.length && crypto.timingSafeEqual(emailBuf, adminEmailBuf);
+
+  // Password: SHA-256 hash comparison only (no plaintext fallback)
+  const inputHash = crypto.createHash("sha256").update(password).digest();
+  const storedHash = Buffer.from(adminPasswordHash, "hex");
+
+  const passMatch =
+    inputHash.length === storedHash.length && crypto.timingSafeEqual(inputHash, storedHash);
+
+  return emailMatch && passMatch;
 }

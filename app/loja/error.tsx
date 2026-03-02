@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 
 export default function LojaError({
   error,
@@ -29,12 +29,12 @@ export default function LojaError({
           >
             Tentar novamente
           </button>
-          <Link
+          <LocalizedLink
             href="/"
             className="text-[var(--foreground-muted)] text-sm hover:text-[var(--gold)] transition-colors"
           >
             Voltar ao início
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     </main>

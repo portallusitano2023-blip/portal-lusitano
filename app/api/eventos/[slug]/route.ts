@@ -9,7 +9,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const { data: evento, error } = await supabase
       .from("eventos")
-      .select("*")
+      .select(
+        "id, titulo, slug, descricao, descricao_completa, tipo, data_inicio, data_fim, hora_inicio, hora_fim, localizacao, regiao, organizador, website, preco_entrada, imagem_capa, tags, destaque, confirmado, views_count"
+      )
       .eq("slug", slug)
       .single();
 

@@ -42,7 +42,9 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from("cavalos_venda")
-      .select("*")
+      .select(
+        "id, nome, nome_cavalo, slug, descricao, preco, linhagem, idade, sexo, pelagem, altura, peso, disciplinas, nivel, localizacao, coudelaria, image_url, imagens, destaque, status, views_count, contacto_nome, contacto_email, contacto_telefone, created_at"
+      )
       .order("created_at", { ascending: false })
       .limit(200);
 

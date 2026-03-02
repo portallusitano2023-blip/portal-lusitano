@@ -15,7 +15,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ key:
 
     const { data: setting, error } = await supabase
       .from("site_settings")
-      .select("*")
+      .select(
+        "id, key, value, category, label, description, input_type, options, is_required, validation_regex, updated_by, updated_at"
+      )
       .eq("key", key)
       .single();
 

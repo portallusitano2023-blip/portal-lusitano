@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
-import Link from "next/link";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import LocalizedLink from "@/components/LocalizedLink";
 import {
   Check,
   X,
@@ -25,59 +25,99 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { getFaqItems } from "@/app/ferramentas/faq-data";
+import { fetchWithErrorHandling, handleHttpError, ERROR_MESSAGES } from "@/lib/error-handling";
 
 // ─── BOTÃO DE CHECKOUT ───────────────────────────────────
 
-function CheckoutButton({ className }: { className?: string }) {
+function CheckoutButton({
+  className,
+  billing = "monthly",
+}: {
+  className?: string;
+  billing?: "monthly" | "annual";
+}) {
   const { user } = useAuth();
   const { language } = useLanguage();
   const tr = createTranslator(language);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleCheckout = async () => {
+  const handleCheckout = useCallback(async () => {
     if (!user) {
-      window.location.href = "/login?redirect=/precos";
+      window.location.assign("/login?redirect=/precos");
       return;
     }
     setLoading(true);
-    try {
-      const res = await fetch("/api/tools/create-checkout", { method: "POST" });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } catch {
-      // fail silently — user retries
-    } finally {
-      setLoading(false);
+    setError(null);
+
+    const { data, errorType } = await fetchWithErrorHandling(
+      async () => {
+        const res = await fetch("/api/tools/create-checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ billing }),
+        });
+        await handleHttpError(res);
+        return res.json() as Promise<{ url?: string }>;
+      },
+      { timeout: 15000 }
+    );
+
+    if (data?.url) {
+      window.location.assign(data.url);
+      return;
     }
-  };
+
+    if (errorType) {
+      setError(
+        tr(
+          ERROR_MESSAGES[errorType],
+          "Something went wrong. Please try again.",
+          "Algo salió mal. Inténtelo de nuevo."
+        )
+      );
+    } else {
+      setError(
+        tr(
+          "Erro ao iniciar checkout. Tente novamente.",
+          "Could not start checkout. Please try again.",
+          "No se pudo iniciar el pago. Inténtelo de nuevo."
+        )
+      );
+    }
+    setLoading(false);
+  }, [user, billing, tr]);
 
   return (
-    <button
-      onClick={handleCheckout}
-      disabled={loading}
-      className={
-        className ??
-        "w-full bg-[var(--gold)] text-black py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-white transition-all duration-300 disabled:opacity-60 flex items-center justify-center gap-2"
-      }
-    >
-      {loading ? (
-        <>
-          <Loader2 size={14} className="animate-spin" />{" "}
-          {tr("A redirecionar...", "Redirecting...", "Redireccionando...")}
-        </>
-      ) : (
-        <>
-          {user
-            ? tr("Activar Pro Agora", "Activate Pro Now", "Activar Pro Ahora")
-            : tr(
-                "Começar — Registo Gratuito",
-                "Start — Free Registration",
-                "Comenzar — Registro Gratuito"
-              )}
-          <ArrowRight size={14} />
-        </>
-      )}
-    </button>
+    <div>
+      <button
+        onClick={handleCheckout}
+        disabled={loading}
+        className={
+          className ??
+          "w-full bg-[var(--gold)] text-black py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-white transition-all duration-300 disabled:opacity-60 flex items-center justify-center gap-2"
+        }
+      >
+        {loading ? (
+          <>
+            <Loader2 size={14} className="animate-spin" />{" "}
+            {tr("A redirecionar...", "Redirecting...", "Redireccionando...")}
+          </>
+        ) : (
+          <>
+            {user
+              ? tr("Activar Pro Agora", "Activate Pro Now", "Activar Pro Ahora")
+              : tr(
+                  "Começar — Registo Gratuito",
+                  "Start — Free Registration",
+                  "Comenzar — Registro Gratuito"
+                )}
+            <ArrowRight size={14} />
+          </>
+        )}
+      </button>
+      {error && <p className="mt-2 text-xs text-red-400 text-center">{error}</p>}
+    </div>
   );
 }
 
@@ -154,6 +194,7 @@ function FAQ() {
 export default function PrecosContent() {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
 
   const freeFeatures = useMemo(
     () => [
@@ -464,9 +505,9 @@ export default function PrecosContent() {
       <nav aria-label="Breadcrumb" className="px-6 md:px-12 pt-28 pb-4">
         <ol className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
           <li>
-            <Link href="/" className="hover:text-[var(--gold)] transition-colors">
+            <LocalizedLink href="/" className="hover:text-[var(--gold)] transition-colors">
               {tr("Início", "Home", "Inicio")}
-            </Link>
+            </LocalizedLink>
           </li>
           <li aria-hidden className="text-[var(--gold)]/40">
             /
@@ -523,6 +564,44 @@ export default function PrecosContent() {
 
       {/* PLANOS */}
       <section className="px-6 md:px-12 pb-24 max-w-5xl mx-auto">
+        {/* Billing Toggle */}
+        <div className="flex items-center justify-center gap-4 mb-10">
+          <span
+            className={`text-sm transition-colors ${billing === "monthly" ? "text-[var(--foreground)]" : "text-[var(--foreground-muted)]"}`}
+          >
+            {tr("Mensal", "Monthly", "Mensual")}
+          </span>
+          <button
+            onClick={() => setBilling((b) => (b === "monthly" ? "annual" : "monthly"))}
+            className={`relative w-14 h-7 rounded-full transition-colors duration-300 ${
+              billing === "annual" ? "bg-[var(--gold)]" : "bg-[var(--border)]"
+            }`}
+            role="switch"
+            aria-checked={billing === "annual"}
+            aria-label={tr(
+              "Alternar entre mensal e anual",
+              "Toggle between monthly and annual",
+              "Alternar entre mensual y anual"
+            )}
+          >
+            <span
+              className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow-sm transition-all duration-300 ${
+                billing === "annual" ? "left-[calc(100%-1.625rem)]" : "left-0.5"
+              }`}
+            />
+          </button>
+          <span
+            className={`text-sm transition-colors ${billing === "annual" ? "text-[var(--foreground)]" : "text-[var(--foreground-muted)]"}`}
+          >
+            {tr("Anual", "Annual", "Anual")}
+          </span>
+          {billing === "annual" && (
+            <span className="text-[10px] uppercase tracking-wider font-bold bg-[var(--gold)]/10 text-[var(--gold)] border border-[var(--gold)]/30 px-2.5 py-1">
+              {tr("Poupe 34%", "Save 34%", "Ahorre 34%")}
+            </span>
+          )}
+        </div>
+
         <div className="grid md:grid-cols-3 gap-0 border border-[var(--border)]">
           {/* FREE */}
           <div className="p-5 sm:p-8 border-b md:border-b-0 md:border-r border-[var(--border)] flex flex-col group hover:bg-[var(--background-secondary)]/40 transition-colors duration-300">
@@ -563,12 +642,12 @@ export default function PrecosContent() {
               ))}
             </ul>
 
-            <Link
+            <LocalizedLink
               href="/ferramentas"
               className="w-full border border-[var(--border)] text-[var(--foreground-muted)] py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:border-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-all text-center block"
             >
               {tr("Experimentar Grátis", "Try for Free", "Probar Gratis")}
-            </Link>
+            </LocalizedLink>
           </div>
 
           {/* PRO — destacado */}
@@ -585,21 +664,38 @@ export default function PrecosContent() {
             <div className="mb-8 pt-3">
               <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3">Pro</p>
               <div className="flex items-end gap-2 mb-1">
-                <span className="text-4xl font-serif">9,99 €</span>
-                <span className="text-[var(--foreground-muted)] text-sm mb-1">
-                  {tr("/mês", "/month", "/mes")}
-                </span>
-              </div>
-              <p className="text-xs text-[var(--foreground-muted)] mb-2">
-                {tr(
-                  "Cancele a qualquer momento · Sem compromisso",
-                  "Cancel anytime · No commitment",
-                  "Cancele en cualquier momento · Sin compromiso"
+                {billing === "annual" ? (
+                  <>
+                    <span className="text-4xl font-serif">6,58 €</span>
+                    <span className="text-[var(--foreground-muted)] text-sm mb-1">
+                      {tr("/mês", "/month", "/mes")}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-4xl font-serif">9,99 €</span>
+                    <span className="text-[var(--foreground-muted)] text-sm mb-1">
+                      {tr("/mês", "/month", "/mes")}
+                    </span>
+                  </>
                 )}
-              </p>
-              <p className="text-xs text-[var(--gold)]">
-                {tr("Ou 79 €/ano — poupe 34%", "Or €79/year — save 34%", "O 79 €/año — ahorre 34%")}
-              </p>
+              </div>
+              {billing === "annual" ? (
+                <p className="text-xs text-[var(--foreground-muted)] mb-2">
+                  <span className="line-through mr-1">119,88 €</span>
+                  <span className="text-[var(--gold)] font-medium">
+                    79 €/{tr("ano", "year", "año")}
+                  </span>
+                </p>
+              ) : (
+                <p className="text-xs text-[var(--foreground-muted)] mb-2">
+                  {tr(
+                    "Cancele a qualquer momento · Sem compromisso",
+                    "Cancel anytime · No commitment",
+                    "Cancele en cualquier momento · Sin compromiso"
+                  )}
+                </p>
+              )}
             </div>
 
             <ul className="space-y-3 mb-10 flex-1">
@@ -611,7 +707,7 @@ export default function PrecosContent() {
               ))}
             </ul>
 
-            <CheckoutButton />
+            <CheckoutButton billing={billing} />
           </div>
 
           {/* MARKETPLACE */}
@@ -641,13 +737,13 @@ export default function PrecosContent() {
               ))}
             </ul>
 
-            <Link
+            <LocalizedLink
               href="/vender-cavalo"
               className="w-full border border-[var(--gold)] text-[var(--gold)] py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[var(--gold)] hover:text-black transition-all text-center flex items-center justify-center gap-2"
             >
               {tr("Anunciar Cavalo", "List a Horse", "Anunciar Caballo")}
               <ArrowRight size={12} />
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
 
@@ -667,6 +763,53 @@ export default function PrecosContent() {
           <span>
             {tr("Cancele quando quiser", "Cancel whenever you want", "Cancele cuando quiera")}
           </span>
+        </div>
+      </section>
+
+      {/* SOCIAL PROOF */}
+      <section className="px-6 md:px-12 pb-20 max-w-4xl mx-auto">
+        <div className="border border-[var(--border)] p-8 sm:p-12 text-center">
+          <p className="text-[10px] uppercase tracking-[0.4em] text-[var(--gold)] mb-6">
+            {tr("Confiança da comunidade", "Community trust", "Confianza de la comunidad")}
+          </p>
+          <div className="grid sm:grid-cols-3 gap-8 mb-10">
+            <div>
+              <p className="text-3xl font-serif text-[var(--foreground)]">500+</p>
+              <p className="text-xs text-[var(--foreground-muted)] mt-1">
+                {tr("Utilizadores registados", "Registered users", "Usuarios registrados")}
+              </p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[var(--gold)]">50+</p>
+              <p className="text-xs text-[var(--foreground-muted)] mt-1">
+                {tr(
+                  "Coudelarias no directório",
+                  "Stud farms in directory",
+                  "Haras en el directorio"
+                )}
+              </p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif text-[var(--foreground)]">4.8★</p>
+              <p className="text-xs text-[var(--foreground-muted)] mt-1">
+                {tr("Avaliação média", "Average rating", "Valoración media")}
+              </p>
+            </div>
+          </div>
+          <div className="max-w-lg mx-auto">
+            <blockquote className="text-sm text-[var(--foreground-secondary)] italic leading-relaxed">
+              &ldquo;
+              {tr(
+                "As ferramentas Pro pouparam-me horas de pesquisa. A calculadora de valor é essencial para quem compra ou vende Lusitanos.",
+                "The Pro tools saved me hours of research. The value calculator is essential for anyone buying or selling Lusitanos.",
+                "Las herramientas Pro me ahorraron horas de investigación. La calculadora de valor es esencial para quien compra o vende Lusitanos."
+              )}
+              &rdquo;
+            </blockquote>
+            <p className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] mt-3">
+              — {tr("Utilizador Pro", "Pro user", "Usuario Pro")}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -732,7 +875,7 @@ export default function PrecosContent() {
             {tools.map((tool) => {
               const Icon = tool.icon;
               return (
-                <Link
+                <LocalizedLink
                   key={tool.href}
                   href={tool.href}
                   className="bg-[var(--background)] p-6 hover:bg-[var(--background-secondary)] transition-colors group"
@@ -746,7 +889,7 @@ export default function PrecosContent() {
                   <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
                     {tool.description}
                   </p>
-                </Link>
+                </LocalizedLink>
               );
             })}
           </div>
@@ -780,7 +923,7 @@ export default function PrecosContent() {
             })}
           </div>
           <div className="text-center">
-            <CheckoutButton />
+            <CheckoutButton billing={billing} />
           </div>
         </div>
       </section>
@@ -814,13 +957,16 @@ export default function PrecosContent() {
             )}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
+            <LocalizedLink
               href="/ferramentas"
               className="border border-[var(--border)] text-[var(--foreground-muted)] px-10 py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:border-[var(--foreground-muted)] transition-all"
             >
               {tr("Explorar ferramentas", "Explore tools", "Explorar herramientas")}
-            </Link>
-            <CheckoutButton className="bg-[var(--gold)] text-black px-10 py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-white transition-all duration-300 disabled:opacity-60 flex items-center justify-center gap-2" />
+            </LocalizedLink>
+            <CheckoutButton
+              billing={billing}
+              className="bg-[var(--gold)] text-black px-10 py-4 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-white transition-all duration-300 disabled:opacity-60 flex items-center justify-center gap-2"
+            />
           </div>
         </div>
       </section>

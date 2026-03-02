@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ChevronRight, BookOpen } from "lucide-react";
 import ResultActions from "@/components/tools/ResultActions";
 import SourceBadge from "@/components/tools/SourceBadge";
@@ -213,14 +213,14 @@ export default function MethodologyFooter({
         <p className="text-sm text-[var(--foreground-muted)] mb-4">
           {t.calculadora.need_professional}
         </p>
-        <Link
+        <LocalizedLink
           href="/profissionais"
           className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--gold)]/50 text-[var(--gold)] rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
         >
           <BookOpen size={16} />
           {t.calculadora.find_evaluators}
           <ChevronRight size={16} />
-        </Link>
+        </LocalizedLink>
       </div>
     </>
   );

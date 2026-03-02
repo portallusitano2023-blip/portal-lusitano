@@ -23,7 +23,9 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("coudelarias")
-      .select("*")
+      .select(
+        "id, slug, nome, descricao, localizacao, regiao, telefone, email, website, foto_capa, destaque, ordem_destaque, is_pro, coordenadas_lat, coordenadas_lng, num_cavalos, especialidades, views_count"
+      )
       .eq("status", "active")
       .order("destaque", { ascending: false })
       .order("ordem_destaque", { ascending: true })

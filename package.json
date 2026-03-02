@@ -17,6 +17,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "db:types": "npx supabase gen types typescript --project-id yrfcepsagtzkxwnnrztd > lib/database.types.ts",
     "generate-pdf": "node scripts/generate-ebook-pdf.js",
     "generate-pdf:premium": "node scripts/generate-ebook-pdf-premium.js",
     "sync-images": "node scripts/sync-coudelaria-images.js",
@@ -87,6 +88,7 @@
     "lint-staged": "^16.2.7",
     "md-to-pdf": "^5.2.5",
     "prettier": "^3.8.1",
+    "supabase": "^2.76.15",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.0.18"

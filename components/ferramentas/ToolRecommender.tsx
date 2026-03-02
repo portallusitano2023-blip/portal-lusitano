@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Calculator, Scale, Dna, Target, ChevronRight, HelpCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -147,13 +147,13 @@ export default function ToolRecommender() {
               <p className="text-sm text-[var(--foreground-muted)] leading-relaxed mb-3">
                 {active.description}
               </p>
-              <Link
+              <LocalizedLink
                 href={active.href}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors"
                 style={{ backgroundColor: active.color }}
               >
                 {tr("Usar Ferramenta", "Use Tool", "Usar Herramienta")} <ChevronRight size={14} />
-              </Link>
+              </LocalizedLink>
             </div>
           </div>
         </div>

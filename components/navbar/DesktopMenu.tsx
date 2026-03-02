@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Gift } from "lucide-react";
 import { memo, useMemo } from "react";
 import { usePathname } from "next/navigation";
@@ -41,7 +41,7 @@ export const DesktopMenu = memo(function DesktopMenu({ t }: DesktopMenuProps) {
       {navItems.map((item) => {
         const active = isActive(item.href);
         return (
-          <Link
+          <LocalizedLink
             key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
@@ -57,7 +57,7 @@ export const DesktopMenu = memo(function DesktopMenu({ t }: DesktopMenuProps) {
                 active ? "w-full" : "w-0 group-hover:w-full"
               }`}
             />
-          </Link>
+          </LocalizedLink>
         );
       })}
 
@@ -65,7 +65,7 @@ export const DesktopMenu = memo(function DesktopMenu({ t }: DesktopMenuProps) {
       <LusitanoDropdown />
 
       {/* Instagram Promo Link */}
-      <Link
+      <LocalizedLink
         href="/instagram"
         aria-current={pathname === "/instagram" ? "page" : undefined}
         className={`text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 relative group py-2 ${
@@ -80,16 +80,16 @@ export const DesktopMenu = memo(function DesktopMenu({ t }: DesktopMenuProps) {
             pathname === "/instagram" ? "w-full" : "w-0 group-hover:w-full"
           }`}
         />
-      </Link>
+      </LocalizedLink>
 
       {/* Free Ebook Link */}
-      <Link
+      <LocalizedLink
         href="/ebook-gratis"
         className="relative flex items-center gap-2 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-5 py-2.5 text-[10px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_20px_rgba(197,160,89,0.15)] hover:shadow-[0_0_25px_rgba(197,160,89,0.3)]"
       >
         <Gift size={14} />
         {t.nav.free_ebook}
-      </Link>
+      </LocalizedLink>
     </div>
   );
 });

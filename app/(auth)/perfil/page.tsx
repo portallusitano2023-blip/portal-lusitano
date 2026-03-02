@@ -8,7 +8,7 @@ import { createTranslator } from "@/lib/tr";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Mail, Crown, LogOut, Loader2, Check, Pencil, Star, BarChart2 } from "lucide-react";
 
 const TOOL_LABELS: Record<string, string> = {
@@ -202,12 +202,12 @@ function PerfilContent() {
             <span className="text-2xl font-serif text-[var(--gold)]">{favoritesCount}</span>
           </div>
           {favoritesCount > 0 && (
-            <Link
+            <LocalizedLink
               href="/comprar"
               className="mt-3 text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors inline-block"
             >
               {tr("Ver cavalos guardados →", "View saved horses →", "Ver caballos guardados →")}
-            </Link>
+            </LocalizedLink>
           )}
         </div>
 

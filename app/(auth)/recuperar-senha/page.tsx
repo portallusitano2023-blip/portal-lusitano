@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { useLanguage } from "@/context/LanguageContext";
 import { Mail, ArrowLeft, Loader2, CheckCircle, AlertCircle } from "lucide-react";
@@ -61,13 +61,13 @@ export default function RecuperarSenhaPage() {
         <p className="text-xs text-[var(--foreground-muted)] mb-6 max-w-xs mx-auto">
           Receberá um link de recuperação. Verifique também a pasta de spam.
         </p>
-        <Link
+        <LocalizedLink
           href="/login"
           className="inline-flex items-center gap-2 text-sm text-[var(--gold)] hover:text-[var(--gold-hover)] transition-colors"
         >
           <ArrowLeft size={16} aria-hidden="true" />
           {t.auth.back_to_login}
-        </Link>
+        </LocalizedLink>
       </div>
     );
   }
@@ -162,13 +162,13 @@ export default function RecuperarSenhaPage() {
       </form>
 
       <p className="mt-6 text-center">
-        <Link
+        <LocalizedLink
           href="/login"
           className="text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors inline-flex items-center justify-center gap-2"
         >
           <ArrowLeft size={14} aria-hidden="true" />
           {t.auth.back_to_login}
-        </Link>
+        </LocalizedLink>
       </p>
     </div>
   );

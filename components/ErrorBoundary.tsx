@@ -2,7 +2,7 @@
 
 import { Component, ReactNode } from "react";
 import { RefreshCw, Home, AlertTriangle } from "lucide-react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 
 interface Props {
   children: ReactNode;
@@ -12,6 +12,46 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
+}
+
+type Lang = "pt" | "en" | "es";
+
+const errorText: Record<Lang, { title: string; description: string; retry: string; home: string }> =
+  {
+    pt: {
+      title: "Algo correu mal",
+      description:
+        "Ocorreu um erro inesperado. Por favor, tente novamente ou volte à página inicial.",
+      retry: "Tentar Novamente",
+      home: "Página Inicial",
+    },
+    en: {
+      title: "Something went wrong",
+      description: "An unexpected error occurred. Please try again or return to the homepage.",
+      retry: "Try Again",
+      home: "Homepage",
+    },
+    es: {
+      title: "Algo salió mal",
+      description:
+        "Ocurrió un error inesperado. Por favor, inténtelo de nuevo o vuelva a la página de inicio.",
+      retry: "Intentar de Nuevo",
+      home: "Página de Inicio",
+    },
+  };
+
+function detectLanguage(): Lang {
+  if (typeof window === "undefined") return "pt";
+  try {
+    const stored = localStorage.getItem("portal-language");
+    if (stored === "en" || stored === "es" || stored === "pt") return stored;
+  } catch {
+    // localStorage may be unavailable
+  }
+  const nav = navigator.language?.toLowerCase() || "";
+  if (nav.startsWith("en")) return "en";
+  if (nav.startsWith("es")) return "es";
+  return "pt";
 }
 
 export default class ErrorBoundary extends Component<Props, State> {
@@ -50,6 +90,9 @@ export default class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
+      const lang = detectLanguage();
+      const t = errorText[lang];
+
       return (
         <div className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
           <div className="max-w-md w-full text-center">
@@ -59,12 +102,10 @@ export default class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Titulo */}
-            <h1 className="text-3xl font-serif text-[var(--foreground)] mb-4">Algo correu mal</h1>
+            <h1 className="text-3xl font-serif text-[var(--foreground)] mb-4">{t.title}</h1>
 
             {/* Descricao */}
-            <p className="text-[var(--foreground-secondary)] mb-8">
-              Ocorreu um erro inesperado. Por favor, tente novamente ou volte à página inicial.
-            </p>
+            <p className="text-[var(--foreground-secondary)] mb-8">{t.description}</p>
 
             {/* Detalhes do erro (apenas em desenvolvimento) */}
             {process.env.NODE_ENV === "development" && this.state.error && (
@@ -80,16 +121,16 @@ export default class ErrorBoundary extends Component<Props, State> {
                 className="inline-flex items-center justify-center gap-2 bg-[var(--gold)] text-black px-6 py-3 text-xs uppercase tracking-widest font-bold hover:bg-white transition-colors"
               >
                 <RefreshCw size={16} />
-                Tentar Novamente
+                {t.retry}
               </button>
 
-              <Link
+              <LocalizedLink
                 href="/"
                 className="inline-flex items-center justify-center gap-2 border border-[var(--border-hover)] text-[var(--foreground)] px-6 py-3 text-xs uppercase tracking-widest hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
               >
                 <Home size={16} />
-                Página Inicial
-              </Link>
+                {t.home}
+              </LocalizedLink>
             </div>
           </div>
         </div>

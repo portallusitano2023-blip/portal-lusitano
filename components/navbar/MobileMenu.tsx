@@ -1,5 +1,5 @@
 import { useMemo, memo } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Heart, User, Gift } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
@@ -103,7 +103,7 @@ export const MobileMenu = memo(function MobileMenu({
         {mainNavItems.map((item) => {
           const active = isActive(item.href);
           return (
-            <Link
+            <LocalizedLink
               key={item.href}
               href={item.href}
               aria-current={active ? "page" : undefined}
@@ -115,7 +115,7 @@ export const MobileMenu = memo(function MobileMenu({
             >
               <item.icon size={20} className="text-[var(--foreground-muted)]" />
               {item.name}
-            </Link>
+            </LocalizedLink>
           );
         })}
 
@@ -126,7 +126,7 @@ export const MobileMenu = memo(function MobileMenu({
           </span>
           <div className="grid grid-cols-2 gap-2">
             {mobileDbItems.map((item) => (
-              <Link
+              <LocalizedLink
                 key={item.href}
                 href={item.href}
                 className={`flex items-center gap-3 py-3 px-3 text-sm transition-colors rounded-lg active:scale-[0.98] touch-manipulation ${
@@ -140,7 +140,7 @@ export const MobileMenu = memo(function MobileMenu({
                   className={item.highlight ? "text-green-400" : "text-[var(--gold)]/70"}
                 />
                 <span className="truncate">{item.label}</span>
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
         </div>
@@ -152,14 +152,14 @@ export const MobileMenu = memo(function MobileMenu({
           </span>
           <div className="grid grid-cols-2 gap-2">
             {mobileToolsItems.map((item) => (
-              <Link
+              <LocalizedLink
                 key={item.href}
                 href={item.href}
                 className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
               >
                 <item.icon size={18} className="text-[var(--gold)]/70" />
                 <span className="truncate">{item.label}</span>
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
         </div>
@@ -171,14 +171,14 @@ export const MobileMenu = memo(function MobileMenu({
           </span>
           <div className="grid grid-cols-2 gap-2">
             {mobileCommunityItems.map((item) => (
-              <Link
+              <LocalizedLink
                 key={item.href}
                 href={item.href}
                 className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
               >
                 <item.icon size={18} className="text-[var(--gold)]/70" />
                 <span className="truncate">{item.label}</span>
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
         </div>
@@ -186,7 +186,7 @@ export const MobileMenu = memo(function MobileMenu({
         {/* Favorites Section */}
         <div className="border-t border-[var(--border)] pt-4 mt-4">
           <div className="grid grid-cols-2 gap-2">
-            <Link
+            <LocalizedLink
               href="/cavalos-favoritos"
               className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
             >
@@ -197,8 +197,8 @@ export const MobileMenu = memo(function MobileMenu({
                   {favoritesCount}
                 </span>
               )}
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               href="/favoritos"
               className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
             >
@@ -209,36 +209,36 @@ export const MobileMenu = memo(function MobileMenu({
                   {wishlistCount}
                 </span>
               )}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
 
         {/* Additional Links */}
         <div className="border-t border-[var(--border)] pt-4 mt-4 space-y-2">
-          <Link
+          <LocalizedLink
             href="/instagram"
             className="flex items-center gap-4 py-3 px-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
             {t.nav.advertising} / Instagram
-          </Link>
-          <Link
+          </LocalizedLink>
+          <LocalizedLink
             href="/minha-conta"
             className="flex items-center gap-4 py-3 px-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
           >
             <User size={18} className="text-[var(--foreground-muted)]" />
             {t.nav.my_account}
-          </Link>
+          </LocalizedLink>
         </div>
 
         {/* CTA & Language */}
         <div className="border-t border-[var(--border)] pt-4 mt-4 space-y-3">
-          <Link
+          <LocalizedLink
             href="/ebook-gratis"
             className="flex items-center justify-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-4 py-4 text-sm uppercase tracking-widest font-bold w-full rounded-lg active:scale-[0.98] touch-manipulation shadow-[0_0_20px_rgba(197,160,89,0.2)]"
           >
             <Gift size={18} />
             {t.nav.free_ebook}
-          </Link>
+          </LocalizedLink>
           <button
             onClick={() => {
               onLanguageToggle();

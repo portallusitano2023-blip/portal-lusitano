@@ -16,7 +16,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const { data: coudelaria, error } = await supabase
       .from("coudelarias")
-      .select("*")
+      .select(
+        "id, nome, slug, descricao, historia, localizacao, regiao, morada, cidade, distrito, codigo_postal, pais, telefone, telemovel, email, website, facebook, instagram, youtube, logo_url, banner_url, foto_capa, galeria, ano_fundacao, numero_cavalos, num_cavalos, area_hectares, especialidades, certificacoes, premios, servicos, horario, coordenadas_lat, coordenadas_lng, video_url, cavalos_destaque, testemunhos, linhagens, proprietario_nome, proprietario_email, proprietario_telefone, plano, plano_valor, plano_inicio, plano_fim, plano_ativo, status, destaque, ordem_destaque, visibilidade, is_pro, views_count, meta_title, meta_description, meta_keywords, created_at, updated_at"
+      )
       .eq("id", id)
       .is("deleted_at", null)
       .single();
@@ -30,7 +32,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     // Buscar histórico de planos
     const { data: historico } = await supabase
       .from("coudelarias_plano_historico")
-      .select("*")
+      .select("id, coudelaria_id, plano, valor, inicio, fim, status, created_at")
       .eq("coudelaria_id", id)
       .order("created_at", { ascending: false });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import { MapPin, Calendar } from "lucide-react";
 import HorseFavoriteButton from "./HorseFavoriteButton";
@@ -61,7 +61,7 @@ export default function HorseCard({
       className="group cursor-pointer relative touch-manipulation"
       aria-label={horse.nome_cavalo}
     >
-      <Link
+      <LocalizedLink
         href={href}
         className="block active:scale-[0.98] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
       >
@@ -151,7 +151,7 @@ export default function HorseCard({
             )}
           </div>
         </div>
-      </Link>
+      </LocalizedLink>
 
       {/* Favorite Button — larger touch target on mobile */}
       <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">

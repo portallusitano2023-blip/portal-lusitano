@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Search as SearchIcon, X, Loader2, Clock, ChevronRight } from "lucide-react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
@@ -301,7 +301,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                   const typeInfo = TYPE_LABELS[result.type] || TYPE_LABELS.page;
                   return (
                     <li key={result.id}>
-                      <Link
+                      <LocalizedLink
                         href={result.url}
                         onClick={handleResultClick}
                         className={`flex items-center gap-4 px-4 py-3 transition-colors ${
@@ -328,7 +328,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                         <span className="text-xs text-[var(--foreground-secondary)] uppercase tracking-wider flex-shrink-0">
                           {typeInfo.label}
                         </span>
-                      </Link>
+                      </LocalizedLink>
                     </li>
                   );
                 })}

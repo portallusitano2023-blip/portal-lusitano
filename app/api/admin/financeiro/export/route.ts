@@ -22,7 +22,12 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get("search");
 
     // Construir query (sem paginação, todos os resultados)
-    let query = supabase.from("payments").select("*").order("created_at", { ascending: false });
+    let query = supabase
+      .from("payments")
+      .select(
+        "id, email, product_type, amount, currency, status, description, stripe_payment_intent_id, stripe_session_id, created_at"
+      )
+      .order("created_at", { ascending: false });
 
     // Aplicar filtros
     if (productType && productType !== "all") {

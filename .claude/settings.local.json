@@ -167,10 +167,23 @@
       "Bash(do perl -pi -e 's|from \"\"\\\\@/lib/supabase\"\"|from \"\"\\\\@/lib/supabase-admin\"\"|g' \"$file\")",
       "WebFetch(domain:www.portal-lusitano.pt)",
       "Bash(git rebase --continue)",
-      "Bash(GIT_EDITOR=true git rebase --continue)"
+      "Bash(GIT_EDITOR=true git rebase --continue)",
+      "Bash(sed 's/.*\"\"nome\"\": \"\"//')",
+      "Bash(sed 's/\"\".*//')",
+      "Bash(for dir in alcaide destinado euclides-mor fenix-de-tineo hucharia marialva-ii orphee-rbo primoroso regedor)",
+      "Bash(do echo -n \"$dir: \" find \"c:/Users/USUARIO/portal-lusitano/public/images/cavalos-famosos/$dir\" -name \"capa.webp\")",
+      "Bash(npm audit --json)",
+      "Bash(npm audit)",
+      "Bash(head -1 c:/Users/USUARIO/portal-lusitano/app/comprar/[id]/page.tsx)",
+      "Bash(head -1 c:/Users/USUARIO/portal-lusitano/app/loja/[handle]/page.tsx)",
+      "Bash(comm -23 /tmp/code_tables.txt /tmp/type_tables.txt)",
+      "Bash(do if grep -qn '<Link\\\\b' \"$f\")",
+      "Bash(then echo \"STILL HAS <Link: $f\" grep -n '<Link\\\\b' \"$f\" fi done)",
+      "WebFetch(domain:baroquehorsemagazine.com)",
+      "WebFetch(domain:www.lusitanocollection.com)",
+      "WebFetch(domain:www.herdadedoazinhal.com)",
+      "WebFetch(domain:www.teamrubi.com)"
     ],
-    "additionalDirectories": [
-      "C:\\Users\\USUARIO\\portal-lusitano\\locales"
-    ]
+    "additionalDirectories": ["C:\\Users\\USUARIO\\portal-lusitano\\locales"]
   }
 }

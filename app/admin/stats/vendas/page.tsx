@@ -62,7 +62,7 @@ export default async function AdminVendasPage({
                   className="border-b border-zinc-900/50 hover:bg-white/[0.02] transition-all duration-500 group"
                 >
                   <td className="py-8 px-6 text-zinc-500 italic">
-                    {new Date(c.created_at).toLocaleDateString("pt-PT")}
+                    {c.created_at ? new Date(c.created_at).toLocaleDateString("pt-PT") : "—"}
                   </td>
                   <td className="py-8 px-6">
                     <span className="font-serif text-xl text-white group-hover:text-[#C5A059] transition-colors">

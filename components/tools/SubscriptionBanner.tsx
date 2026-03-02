@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useRouter } from "next/navigation";
 import { Crown, Zap, Loader2 } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -94,7 +94,7 @@ export default function SubscriptionBanner({
 
   if (requiresAuth) {
     return (
-      <Link
+      <LocalizedLink
         href="/registar"
         className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-[var(--background-secondary)] border border-[var(--border)] rounded-lg hover:border-[var(--gold)]/30 transition-colors group"
       >
@@ -105,7 +105,7 @@ export default function SubscriptionBanner({
         <span className="text-xs text-[var(--foreground-secondary)] group-hover:text-[var(--foreground-secondary)] transition-colors">
           Crie uma conta para usar gratuitamente
         </span>
-      </Link>
+      </LocalizedLink>
     );
   }
 

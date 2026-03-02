@@ -15,7 +15,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const { data: lead, error } = await supabase
       .from("crm_leads")
-      .select("*")
+      .select(
+        "id, name, email, telefone, company, stage, estimated_value, probability, source_type, interests, notes, budget_min, budget_max, next_follow_up, outcome_reason, actual_value, contact_count, last_contact, created_at, updated_at"
+      )
       .eq("id", id)
       .single();
 

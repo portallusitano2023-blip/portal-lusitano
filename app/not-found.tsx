@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Home, ArrowLeft, Search } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -51,21 +51,21 @@ export default function NotFound() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
           style={{ animationDelay: "0.25s" }}
         >
-          <Link
+          <LocalizedLink
             href="/"
             className="flex items-center gap-3 bg-[var(--gold)] text-black px-8 py-4 text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors"
           >
             <Home size={16} />
             {t.not_found.back_home}
-          </Link>
+          </LocalizedLink>
 
-          <Link
+          <LocalizedLink
             href="/loja"
             className="flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-xs uppercase tracking-[0.2em] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
           >
             <Search size={16} />
             {t.not_found.explore_shop}
-          </Link>
+          </LocalizedLink>
         </div>
 
         {/* Link de voltar */}
@@ -84,7 +84,7 @@ export default function NotFound() {
           style={{ animationDelay: "0.45s" }}
         >
           <div className="w-12 h-[1px] bg-[var(--gold)]" />
-          <span className="text-[8px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]">
+          <span className="text-[10px] sm:text-[8px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]">
             Portal Lusitano
           </span>
           <div className="w-12 h-[1px] bg-[var(--gold)]" />

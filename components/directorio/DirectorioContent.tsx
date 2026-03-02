@@ -14,7 +14,7 @@ import {
   CheckCircle,
   Map,
 } from "lucide-react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import Pagination from "@/components/ui/Pagination";
@@ -261,13 +261,13 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
                   </p>
                 </div>
               </div>
-              <Link
+              <LocalizedLink
                 href="/directorio/registar"
                 className="inline-flex items-center gap-2 bg-[var(--gold)] text-black px-6 sm:px-8 py-3 sm:py-4 text-sm font-bold uppercase tracking-wider hover:bg-[var(--gold-hover)] active:scale-95 transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
               >
                 <Plus size={16} aria-hidden="true" />
                 {t.directorio.register_btn}
-              </Link>
+              </LocalizedLink>
             </div>
           </div>
         </AnimateOnScroll>
@@ -466,7 +466,7 @@ function CoudelariaCard({
 
   return (
     <AnimateOnScroll delay={index * 50}>
-      <Link
+      <LocalizedLink
         href={`/directorio/${coudelaria.slug}`}
         className="group block relative h-[400px] overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/40 transition-all duration-300 hover:shadow-[0_8px_32px_rgba(197,160,89,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
         aria-label={`${coudelaria.nome}, ${coudelaria.localizacao}`}
@@ -554,7 +554,7 @@ function CoudelariaCard({
             />
           </div>
         </div>
-      </Link>
+      </LocalizedLink>
     </AnimateOnScroll>
   );
 }

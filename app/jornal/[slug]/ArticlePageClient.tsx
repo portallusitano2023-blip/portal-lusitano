@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ArrowLeft, ArrowUp, Clock, Calendar, Newspaper, FileText } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { useLanguage } from "@/context/LanguageContext";
@@ -18,6 +18,7 @@ import RelatedArticles from "@/components/journal/RelatedArticles";
 import LocalRelatedArticles from "@/components/journal/LocalRelatedArticles";
 import SourcesList from "@/components/journal/SourcesList";
 import Newsletter from "@/components/Newsletter";
+import AdUnit from "@/components/ads/AdUnit";
 
 // Fallback para dados locais
 import { articlesDataPT, articlesDataEN } from "@/data/articlesData";
@@ -47,19 +48,22 @@ function PrevNextNav({ currentId, language }: { currentId: string; language: str
     >
       <div className="grid grid-cols-2 gap-4 border-t border-[var(--border)] pt-8">
         {prev ? (
-          <Link href={`/jornal/${legacyIdToSlug[prev.id] || prev.id}`} className="group text-left">
+          <LocalizedLink
+            href={`/jornal/${legacyIdToSlug[prev.id] || prev.id}`}
+            className="group text-left"
+          >
             <span className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
               ← {tr("Anterior", "Previous", "Anterior")}
             </span>
             <p className="text-sm font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors mt-1 line-clamp-2">
               {prev.title}
             </p>
-          </Link>
+          </LocalizedLink>
         ) : (
           <div />
         )}
         {next && (
-          <Link
+          <LocalizedLink
             href={`/jornal/${legacyIdToSlug[next.id] || next.id}`}
             className="group text-right col-start-2"
           >
@@ -69,7 +73,7 @@ function PrevNextNav({ currentId, language }: { currentId: string; language: str
             <p className="text-sm font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors mt-1 line-clamp-2">
               {next.title}
             </p>
-          </Link>
+          </LocalizedLink>
         )}
       </div>
     </nav>
@@ -102,12 +106,12 @@ export default function ArticlePageClient({
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-serif">{t.journal.unavailable}</h1>
             <p className="text-[var(--foreground-muted)]">{t.journal.unavailable_text}</p>
-            <Link
+            <LocalizedLink
               href="/jornal"
               className="text-[var(--gold)] border-b border-[var(--gold)] pb-1 uppercase text-xs tracking-widest"
             >
               {t.journal.back}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       );
@@ -124,17 +128,17 @@ export default function ArticlePageClient({
         >
           <ol className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
             <li>
-              <Link href="/" className="hover:text-[var(--gold)] transition-colors">
+              <LocalizedLink href="/" className="hover:text-[var(--gold)] transition-colors">
                 {tr("Início", "Home", "Inicio")}
-              </Link>
+              </LocalizedLink>
             </li>
             <li aria-hidden="true" className="text-[var(--gold)]/40">
               /
             </li>
             <li>
-              <Link href="/jornal" className="hover:text-[var(--gold)] transition-colors">
+              <LocalizedLink href="/jornal" className="hover:text-[var(--gold)] transition-colors">
                 {tr("Jornal", "Journal", "Revista")}
-              </Link>
+              </LocalizedLink>
             </li>
             <li aria-hidden="true" className="text-[var(--gold)]/40">
               /
@@ -162,12 +166,12 @@ export default function ArticlePageClient({
           </div>
           <div className="absolute bottom-0 left-0 w-full p-8 md:p-24 z-10">
             <div className="max-w-7xl mx-auto space-y-8">
-              <Link
+              <LocalizedLink
                 href="/jornal"
                 className="inline-flex items-center text-white/60 hover:text-[var(--gold)] transition-colors text-xs uppercase tracking-[0.2em] gap-2 mb-4"
               >
                 <ArrowLeft size={16} /> {t.journal.back_archive}
-              </Link>
+              </LocalizedLink>
               <div className="flex items-center gap-6 text-white/60 text-xs">
                 <span className="flex items-center gap-2">
                   <Calendar size={14} className="text-[var(--gold)]" /> {localArticle.date}
@@ -210,6 +214,7 @@ export default function ArticlePageClient({
             {/* FLOATING TOC - sidebar */}
             <aside className="hidden xl:block">
               <LocalFloatingTOC language={language} />
+              <AdUnit format="rectangle" className="mt-8 sticky top-[320px]" />
             </aside>
           </div>
         </div>
@@ -222,6 +227,11 @@ export default function ArticlePageClient({
           <LocalRelatedArticles slugs={localArticle.relatedSlugs} language={language} />
         )}
 
+        {/* AD — between related and internal links */}
+        <div className="max-w-4xl mx-auto px-8 mt-12" data-no-print>
+          <AdUnit format="horizontal" />
+        </div>
+
         {/* INTERNAL LINKING — explorar o portal */}
         <div className="max-w-4xl mx-auto px-8 mt-16 mb-8">
           <div className="border-t border-[var(--border)] pt-10">
@@ -229,7 +239,7 @@ export default function ArticlePageClient({
               {tr("Explorar o Portal", "Explore the Portal", "Explorar el Portal")}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <Link
+              <LocalizedLink
                 href="/comprar"
                 className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
               >
@@ -239,8 +249,8 @@ export default function ArticlePageClient({
                 <span className="text-sm font-serif">
                   {tr("Cavalos à Venda", "Horses for Sale", "Caballos en Venta")}
                 </span>
-              </Link>
-              <Link
+              </LocalizedLink>
+              <LocalizedLink
                 href="/directorio"
                 className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
               >
@@ -250,8 +260,8 @@ export default function ArticlePageClient({
                 <span className="text-sm font-serif">
                   {tr("Coudelarias", "Stud Farms", "Haras")}
                 </span>
-              </Link>
-              <Link
+              </LocalizedLink>
+              <LocalizedLink
                 href="/cavalos-famosos"
                 className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
               >
@@ -261,8 +271,8 @@ export default function ArticlePageClient({
                 <span className="text-sm font-serif">
                   {tr("Lusitanos Famosos", "Famous Lusitanos", "Lusitanos Famosos")}
                 </span>
-              </Link>
-              <Link
+              </LocalizedLink>
+              <LocalizedLink
                 href="/linhagens"
                 className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
               >
@@ -272,7 +282,7 @@ export default function ArticlePageClient({
                 <span className="text-sm font-serif">
                   {tr("Linhagens", "Bloodlines", "Linajes")}
                 </span>
-              </Link>
+              </LocalizedLink>
             </div>
           </div>
         </div>
@@ -304,12 +314,12 @@ export default function ArticlePageClient({
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-serif">{t.journal.unavailable}</h1>
           <p className="text-[var(--foreground-muted)]">{t.journal.unavailable_text}</p>
-          <Link
+          <LocalizedLink
             href="/jornal"
             className="text-[var(--gold)] border-b border-[var(--gold)] pb-1 uppercase text-xs tracking-widest"
           >
             {t.journal.back}
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     );
@@ -334,17 +344,17 @@ export default function ArticlePageClient({
       >
         <ol className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--foreground-muted)]">
           <li>
-            <Link href="/" className="hover:text-[var(--gold)] transition-colors">
+            <LocalizedLink href="/" className="hover:text-[var(--gold)] transition-colors">
               {tr("Início", "Home", "Inicio")}
-            </Link>
+            </LocalizedLink>
           </li>
           <li aria-hidden="true" className="text-[var(--gold)]/40">
             /
           </li>
           <li>
-            <Link href="/jornal" className="hover:text-[var(--gold)] transition-colors">
+            <LocalizedLink href="/jornal" className="hover:text-[var(--gold)] transition-colors">
               {tr("Jornal", "Journal", "Revista")}
-            </Link>
+            </LocalizedLink>
           </li>
           <li aria-hidden="true" className="text-[var(--gold)]/40">
             /
@@ -461,6 +471,7 @@ export default function ArticlePageClient({
           {body && body.length > 0 && (
             <aside className="hidden xl:block">
               <FloatingTOC body={body} language={language} />
+              <AdUnit format="rectangle" className="mt-8 sticky top-[320px]" />
             </aside>
           )}
         </div>
@@ -503,6 +514,11 @@ export default function ArticlePageClient({
         <RelatedArticles articles={relatedArticles} language={language} />
       )}
 
+      {/* AD — between related and internal links */}
+      <div className="max-w-4xl mx-auto px-8 mt-12" data-no-print>
+        <AdUnit format="horizontal" />
+      </div>
+
       {/* INTERNAL LINKING — explorar o portal */}
       <div className="max-w-4xl mx-auto px-8 mt-16 mb-8">
         <div className="border-t border-[var(--border)] pt-10">
@@ -510,7 +526,7 @@ export default function ArticlePageClient({
             {tr("Explorar o Portal", "Explore the Portal", "Explorar el Portal")}
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <Link
+            <LocalizedLink
               href="/comprar"
               className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
             >
@@ -520,8 +536,8 @@ export default function ArticlePageClient({
               <span className="text-sm font-serif">
                 {tr("Cavalos à Venda", "Horses for Sale", "Caballos en Venta")}
               </span>
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               href="/directorio"
               className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
             >
@@ -529,8 +545,8 @@ export default function ArticlePageClient({
                 {tr("Directório", "Directory", "Directorio")}
               </span>
               <span className="text-sm font-serif">{tr("Coudelarias", "Stud Farms", "Haras")}</span>
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               href="/cavalos-famosos"
               className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
             >
@@ -540,8 +556,8 @@ export default function ArticlePageClient({
               <span className="text-sm font-serif">
                 {tr("Lusitanos Famosos", "Famous Lusitanos", "Lusitanos Famosos")}
               </span>
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               href="/linhagens"
               className="flex flex-col gap-1 p-4 border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors group"
             >
@@ -549,7 +565,7 @@ export default function ArticlePageClient({
                 {tr("Genealogia", "Genealogy", "Genealogía")}
               </span>
               <span className="text-sm font-serif">{tr("Linhagens", "Bloodlines", "Linajes")}</span>
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </div>

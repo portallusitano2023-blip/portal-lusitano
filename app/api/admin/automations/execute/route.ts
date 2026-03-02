@@ -24,7 +24,9 @@ export async function POST(req: NextRequest) {
     // Buscar automação
     const { data: automation, error: fetchError } = await supabase
       .from("admin_automations")
-      .select("*")
+      .select(
+        "id, name, action_type, action_config, trigger_type, trigger_config, delay_minutes, enabled, total_runs, successful_runs, failed_runs, last_run_at, last_error, created_at"
+      )
       .eq("id", automation_id)
       .single();
 

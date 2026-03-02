@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 
 export interface BreadcrumbItem {
   label: string;
@@ -27,12 +27,12 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
               )}
 
               {item.href && !isLast ? (
-                <Link
+                <LocalizedLink
                   href={item.href}
                   className="text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold)]"
                 >
                   {item.label}
-                </Link>
+                </LocalizedLink>
               ) : (
                 <span
                   className="text-[var(--foreground)] truncate max-w-[200px] sm:max-w-[300px] md:max-w-none"

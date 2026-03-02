@@ -53,6 +53,60 @@ export const coudelariaRegistoSchema = z.object({
   website: z.string().url("URL inválido").optional().or(z.literal("")),
 });
 
+// Admin Coudelaria (create/update)
+export const adminCoudelariaSchema = z.object({
+  nome: z.string().min(1, "Nome é obrigatório").max(200),
+  descricao: z.string().max(5000).optional().or(z.literal("")),
+  historia: z.string().max(10000).optional().or(z.literal("")),
+  especialidades: z.array(z.string()).optional(),
+  morada: z.string().max(300).optional().or(z.literal("")),
+  cidade: z.string().max(100).optional().or(z.literal("")),
+  distrito: z.string().max(100).optional().or(z.literal("")),
+  codigo_postal: z.string().max(20).optional().or(z.literal("")),
+  pais: z.string().max(100).optional().or(z.literal("")),
+  telefone: z.string().max(20).optional().or(z.literal("")),
+  telemovel: z.string().max(20).optional().or(z.literal("")),
+  email: z.string().email().optional().or(z.literal("")),
+  website: z.string().url().optional().or(z.literal("")),
+  facebook: z.string().max(300).optional().or(z.literal("")),
+  instagram: z.string().max(300).optional().or(z.literal("")),
+  youtube: z.string().max(300).optional().or(z.literal("")),
+  logo_url: z.string().max(500).optional().or(z.literal("")),
+  banner_url: z.string().max(500).optional().or(z.literal("")),
+  galeria: z.array(z.string()).optional(),
+  ano_fundacao: z.number().int().min(1000).max(2100).optional().nullable(),
+  numero_cavalos: z.number().int().min(0).optional().nullable(),
+  area_hectares: z.number().min(0).optional().nullable(),
+  proprietario_nome: z.string().max(200).optional().or(z.literal("")),
+  proprietario_email: z.string().email().optional().or(z.literal("")),
+  proprietario_telefone: z.string().max(20).optional().or(z.literal("")),
+  status: z.enum(["pendente", "ativo", "inativo", "rejeitado"]).optional(),
+  destaque: z.boolean().optional(),
+});
+
+// Cart
+export const cartAddSchema = z.object({
+  cartId: z.string().min(1, "cartId é obrigatório"),
+  variantId: z.string().min(1, "variantId é obrigatório"),
+  quantity: z.number().int().min(1).max(100).optional().default(1),
+});
+
+// Upload
+export const uploadSchema = z.object({
+  folder: z
+    .string()
+    .min(1)
+    .max(100)
+    .regex(/^[a-zA-Z0-9_-]+$/, "Folder contém caracteres inválidos"),
+});
+
+// Admin depoimento update
+export const depoimentoUpdateSchema = z.object({
+  status: z.enum(["pendente", "aprovado", "rejeitado"]).optional(),
+  destaque: z.boolean().optional(),
+  resposta_admin: z.string().max(2000).optional().or(z.literal("")),
+});
+
 // Utility: parse with Zod and return structured error
 export function parseWithZod<T>(
   schema: z.ZodSchema<T>,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { ArrowLeft, Trophy, Sparkles, History } from "lucide-react";
 import { CavaloFamoso } from "@/app/cavalos-famosos/types";
 import { cavalosFamosos } from "@/app/cavalos-famosos/data";
@@ -59,13 +59,13 @@ export default function CavalosFamososContent() {
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-8 sm:mb-12">
-        <Link
+        <LocalizedLink
           href="/"
           className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-6 touch-manipulation"
         >
           <ArrowLeft size={18} />
           <span className="text-sm">{t.cavalos_famosos.back}</span>
-        </Link>
+        </LocalizedLink>
 
         <div className="text-center">
           <span className="text-[var(--gold)] uppercase tracking-[0.3em] text-[9px] sm:text-[10px] font-bold block mb-2">

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
-import Link from "next/link";
+import { useState, useMemo, useCallback } from "react";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import {
   Search,
@@ -279,13 +279,13 @@ export default function ProfissionaisContent({
           <RevealOnScroll variant="fade-up" delay={1200}>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <MagneticButton>
-                <Link
+                <LocalizedLink
                   href="/profissionais/registar"
                   className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors text-sm"
                 >
                   <ShieldCheck size={18} />
                   {t.profissionais.register}
-                </Link>
+                </LocalizedLink>
               </MagneticButton>
               <MagneticButton>
                 <button
@@ -683,22 +683,22 @@ export default function ProfissionaisContent({
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <MagneticButton>
-                  <Link
+                  <LocalizedLink
                     href="/profissionais/registar"
                     className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors text-sm"
                   >
                     <ShieldCheck size={18} />
                     {t.profissionais.cta_button}
-                  </Link>
+                  </LocalizedLink>
                 </MagneticButton>
                 <MagneticButton>
-                  <Link
+                  <LocalizedLink
                     href="/profissionais/registar"
                     className="inline-flex items-center gap-2 px-8 py-4 border border-[var(--gold)]/30 text-[var(--foreground)] rounded-lg hover:border-[var(--gold)]/60 hover:bg-[var(--gold)]/5 transition-all text-sm"
                   >
                     Como Funciona
                     <ArrowRight size={16} />
-                  </Link>
+                  </LocalizedLink>
                 </MagneticButton>
               </div>
             </div>

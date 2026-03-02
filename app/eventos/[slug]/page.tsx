@@ -5,7 +5,13 @@ import EventoDetail from "@/components/eventos/EventoDetail";
 export default async function EventoPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  const { data: evento } = await supabase.from("eventos").select("*").eq("slug", slug).single();
+  const { data: evento } = await supabase
+    .from("eventos")
+    .select(
+      "id, titulo, slug, descricao, descricao_completa, tipo, data_inicio, data_fim, hora_inicio, hora_fim, localizacao, regiao, organizador, website, preco_entrada, imagem_capa, tags, destaque, confirmado, views_count, status"
+    )
+    .eq("slug", slug)
+    .single();
   if (!evento) notFound();
 
   // Related events (same type, future, excluding current)

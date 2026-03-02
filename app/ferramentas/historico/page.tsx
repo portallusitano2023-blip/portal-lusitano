@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import dynamic from "next/dynamic";
 import { Inbox, Loader2, RefreshCw } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -258,14 +258,14 @@ export default function HistoricoPage() {
                   "Use las herramientas para empezar — cada resultado se guarda aquí automáticamente."
                 )}
               </p>
-              <Link
+              <LocalizedLink
                 href="/ferramentas"
                 className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#C5A059] px-5 py-2.5
                            text-sm font-semibold text-black hover:bg-[#D4B068] transition-colors
                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A059]"
               >
                 {tr("Ir para as ferramentas", "Go to tools", "Ir a las herramientas")}
-              </Link>
+              </LocalizedLink>
             </div>
           )}
 

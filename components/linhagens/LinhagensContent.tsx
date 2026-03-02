@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import {
   ArrowLeft,
   BookOpen,
@@ -44,13 +44,13 @@ export default function LinhagensContent() {
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--gold)]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
-          <Link
+          <LocalizedLink
             href="/"
             className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-8 touch-manipulation"
           >
             <ArrowLeft size={18} />
             <span className="text-sm">{t.linhagens.back}</span>
-          </Link>
+          </LocalizedLink>
 
           <div className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">

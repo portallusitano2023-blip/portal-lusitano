@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, Suspense } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { useLanguage } from "@/context/LanguageContext";
@@ -213,12 +213,12 @@ function RegistarContent() {
           Enviámos um email de confirmação para
         </p>
         <p className="text-sm font-medium text-[var(--foreground)] mb-6">{email}</p>
-        <Link
+        <LocalizedLink
           href={redirect ? `/login?returnUrl=${encodeURIComponent(redirect)}` : "/login"}
           className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#C5A059] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[#C5A059] transition-all"
         >
           {t.auth.back_to_login}
-        </Link>
+        </LocalizedLink>
       </div>
     );
   }
@@ -470,23 +470,23 @@ function RegistarContent() {
             </div>
             <span className="text-xs text-[var(--foreground-muted)] leading-relaxed">
               Aceito os{" "}
-              <Link
+              <LocalizedLink
                 href="/termos"
                 className="text-[var(--gold)] hover:text-[var(--gold-hover)] underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Termos de Serviço
-              </Link>{" "}
+              </LocalizedLink>{" "}
               e a{" "}
-              <Link
+              <LocalizedLink
                 href="/privacidade"
                 className="text-[var(--gold)] hover:text-[var(--gold-hover)] underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Política de Privacidade
-              </Link>
+              </LocalizedLink>
             </span>
           </label>
           {fieldErrors.terms && <FieldError id="reg-terms-error" message={fieldErrors.terms} />}
@@ -511,12 +511,12 @@ function RegistarContent() {
       {/* Login link */}
       <p className="mt-6 text-center text-sm text-[var(--foreground-muted)]">
         {t.auth.already_have_account}{" "}
-        <Link
+        <LocalizedLink
           href={redirect ? `/login?returnUrl=${encodeURIComponent(redirect)}` : "/login"}
           className="text-[var(--gold)] hover:text-[var(--gold-hover)] font-medium transition-colors"
         >
           {t.auth.login_account}
-        </Link>
+        </LocalizedLink>
       </p>
     </div>
   );

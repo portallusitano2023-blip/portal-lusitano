@@ -22,7 +22,9 @@ export async function GET(req: NextRequest) {
     // Buscar logs
     const { data: logs, error } = await supabase
       .from("admin_automation_logs")
-      .select("*")
+      .select(
+        "id, automation_id, status, trigger_data, action_result, error_message, executed_at, completed_at"
+      )
       .eq("automation_id", automation_id)
       .order("executed_at", { ascending: false })
       .limit(limit);

@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { usePathname } from "next/navigation";
 import { Home, ShoppingCart, Heart, User, Wrench } from "lucide-react";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
@@ -64,7 +64,7 @@ export default memo(function MobileBottomNav() {
       <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-[var(--background-secondary)] border-t border-[var(--border)] safe-area-bottom [transform:translateZ(0)]">
         <div className="flex items-center justify-around h-[72px] px-2">
           {navItems.map((item) => (
-            <Link
+            <LocalizedLink
               key={item.href}
               href={item.href}
               aria-label={item.label}
@@ -87,7 +87,7 @@ export default memo(function MobileBottomNav() {
               >
                 {item.label}
               </span>
-            </Link>
+            </LocalizedLink>
           ))}
         </div>
       </nav>

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { CreditCard, Shield, Check, Clock, Camera, Star } from "lucide-react";
 import type { FormData } from "@/components/vender-cavalo/types";
 import { LISTING_TIERS } from "@/lib/listing-tiers";
@@ -143,13 +143,13 @@ export default function StepPagamento({
           />
           <span className="text-sm text-[var(--foreground-secondary)]">
             {t.vender_cavalo.terms_agree}{" "}
-            <Link href="/termos" className="text-[var(--gold)] hover:underline">
+            <LocalizedLink href="/termos" className="text-[var(--gold)] hover:underline">
               {t.vender_cavalo.terms_link}
-            </Link>{" "}
+            </LocalizedLink>{" "}
             {t.vender_cavalo.privacy_and}{" "}
-            <Link href="/privacidade" className="text-[var(--gold)] hover:underline">
+            <LocalizedLink href="/privacidade" className="text-[var(--gold)] hover:underline">
               {t.vender_cavalo.privacy_link}
-            </Link>
+            </LocalizedLink>
             . {t.vender_cavalo.terms_confirm}
           </span>
         </label>

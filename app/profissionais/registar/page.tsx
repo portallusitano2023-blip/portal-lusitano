@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { Check, MapPin, ArrowLeft, User, Award, CheckCircle } from "lucide-react";
 import { categorias } from "@/components/profissionais/constants";
 import type { CategoriaProf } from "@/components/profissionais/types";
@@ -388,13 +388,13 @@ export default function RegistarProfissionalPage() {
       <div className="max-w-4xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-          <Link
+          <LocalizedLink
             href="/profissionais"
             className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors mb-6"
           >
             <ArrowLeft size={18} />
             <span className="text-sm">{tp.back}</span>
-          </Link>
+          </LocalizedLink>
           <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
             {tp.badge}
           </span>

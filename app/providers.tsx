@@ -12,6 +12,11 @@ import { type ReactNode, type FC } from "react";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ClientOverlays from "@/components/ClientOverlays";
 
+// FC wrapper for ErrorBoundary class component — avoids unsafe `as unknown as` cast
+function ErrorBoundaryWrapper({ children }: { children: ReactNode }) {
+  return <ErrorBoundary>{children}</ErrorBoundary>;
+}
+
 // Compose multiple providers to avoid deeply nested JSX
 // Each provider only re-renders its own consumers, not siblings
 function composeProviders(...providers: FC<{ children: ReactNode }>[]) {
@@ -24,7 +29,7 @@ function composeProviders(...providers: FC<{ children: ReactNode }>[]) {
 // ErrorBoundary > Theme > Auth > Toast > Cart > Wishlist > HorseFavorites
 // LanguageProvider extracted from compose because it needs initialLanguage prop
 const ComposedProviders = composeProviders(
-  ErrorBoundary as unknown as FC<{ children: ReactNode }>,
+  ErrorBoundaryWrapper,
   ThemeProvider,
   AuthProvider,
   ToastProvider,

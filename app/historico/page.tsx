@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import {
   Clock,
   FileText,
@@ -160,14 +160,14 @@ function EmptyState() {
         {Object.entries(TOOL_CONFIG).map(([key, config]) => {
           const Icon = config.icon;
           return (
-            <Link
+            <LocalizedLink
               key={key}
               href={config.href}
               className="inline-flex items-center gap-2 bg-[var(--background-secondary)]/80 border border-[var(--border)] text-[var(--foreground)] px-5 py-3 text-xs uppercase tracking-[0.15em] font-medium hover:border-[var(--gold)]/50 hover:text-[var(--gold)] transition-colors"
             >
               <Icon size={14} />
               {getToolLabel(key, t)}
-            </Link>
+            </LocalizedLink>
           );
         })}
       </div>
@@ -220,13 +220,13 @@ function ResultCard({
 
       {/* Actions */}
       <div className="flex gap-3">
-        <Link
+        <LocalizedLink
           href={`/resultado/${result.id}`}
           className="flex-1 bg-[var(--gold)] text-black py-2.5 text-xs uppercase tracking-[0.15em] font-bold hover:bg-[var(--gold-hover)] transition-colors text-center flex items-center justify-center gap-2"
         >
           <Search size={14} />
           {t.history_page.view}
-        </Link>
+        </LocalizedLink>
         <button
           onClick={() => onShare(result.id)}
           className="w-10 border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:border-[var(--gold)]/50 transition-colors flex items-center justify-center"
@@ -471,13 +471,13 @@ export default function HistoricoPage() {
         <div className="max-w-6xl mx-auto">
           {/* Navigation */}
           <div className="mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-            <Link
+            <LocalizedLink
               href="/"
               className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors text-sm"
             >
               <ArrowLeft size={16} />
               {t.not_found.back_home}
-            </Link>
+            </LocalizedLink>
           </div>
 
           {/* Header */}

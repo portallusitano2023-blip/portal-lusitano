@@ -16,7 +16,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const { data: profissional, error } = await supabase
       .from("profissionais")
-      .select("*")
+      .select(
+        "id, nome, slug, titulo, especialidade, categoria, localizacao, distrito, telefone, telemovel, email, website, instagram, facebook, linkedin, youtube, descricao, descricao_curta, descricao_completa, servicos, servicos_oferecidos, experiencia_anos, anos_experiencia, especializacoes, credenciais, idiomas, linguas, associacoes, foto_url, foto_perfil_url, disponivel, destaque, modalidade, pais, cidade, morada, codigo_postal, raio_deslocacao, aceita_deslocacoes, disponibilidade_urgencias, horario_atendimento, formacao_academica, certificacoes, status, plano, plano_ativo, plano_inicio, plano_fim, plano_valor, plano_renovacao_automatica, plano_metodo_pagamento, nivel_verificacao, notas_admin, stripe_customer_id, stripe_subscription_id, views_count, created_at, updated_at"
+      )
       .eq("id", id)
       .is("deleted_at", null)
       .single();
@@ -30,7 +32,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     // Buscar histórico de subscrições
     const { data: historico } = await supabase
       .from("profissionais_subscription_historico")
-      .select("*")
+      .select("id, profissional_id, plano, valor, inicio, fim, status, created_at")
       .eq("profissional_id", id)
       .order("created_at", { ascending: false });
 

@@ -18,5 +18,5 @@ export default async function ComprarPage() {
     logger.error("[ComprarPage] Supabase error:", error);
   }
 
-  return <ComprarContent cavalos={cavalos || []} />;
+  return <ComprarContent cavalos={cavalos || []} hasError={!!error} />;
 }

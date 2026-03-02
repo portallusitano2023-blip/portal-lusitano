@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { useState, useEffect, useRef, useCallback, memo } from "react";
@@ -71,7 +71,7 @@ export default memo(function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 md:h-24 flex items-center justify-between gap-4">
         {/* LOGÓTIPO COM IMAGEM */}
-        <Link href="/" className="flex items-center gap-2 md:gap-3 group flex-shrink-0">
+        <LocalizedLink href="/" className="flex items-center gap-2 md:gap-3 group flex-shrink-0">
           <Image
             src="/logo.webp"
             alt="Portal Lusitano"
@@ -84,11 +84,11 @@ export default memo(function Navbar() {
             <span className="text-base md:text-lg lg:text-xl font-serif text-[var(--foreground)] tracking-wide group-hover:text-[var(--gold)] transition-colors leading-none whitespace-nowrap">
               PORTAL LUSITANO
             </span>
-            <span className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.3em] text-[var(--foreground-muted)] mt-0.5 group-hover:text-[var(--gold)]/70 transition-colors leading-none">
+            <span className="text-[10px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.3em] text-[var(--foreground-muted)] mt-0.5 group-hover:text-[var(--gold)]/70 transition-colors leading-none">
               EST. 2023
             </span>
           </div>
-        </Link>
+        </LocalizedLink>
 
         {/* MENU DESKTOP */}
         <DesktopMenu t={t} />

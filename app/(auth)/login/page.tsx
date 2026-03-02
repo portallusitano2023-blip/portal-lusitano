@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, Suspense } from "react";
-import Link from "next/link";
+import LocalizedLink from "@/components/LocalizedLink";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { useLanguage } from "@/context/LanguageContext";
@@ -198,12 +198,12 @@ function LoginContent() {
 
         {/* Forgot password */}
         <div className="flex justify-end">
-          <Link
+          <LocalizedLink
             href="/recuperar-senha"
             className="text-xs text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
           >
             {t.auth.forgot_password}
-          </Link>
+          </LocalizedLink>
         </div>
 
         {/* Submit */}
@@ -225,14 +225,14 @@ function LoginContent() {
       {/* Register link */}
       <p className="mt-6 text-center text-sm text-[var(--foreground-muted)]">
         {t.auth.no_account}{" "}
-        <Link
+        <LocalizedLink
           href={
             returnUrl !== "/" ? `/registar?redirect=${encodeURIComponent(returnUrl)}` : "/registar"
           }
           className="text-[var(--gold)] hover:text-[var(--gold-hover)] font-medium transition-colors"
         >
           {t.auth.create_account}
-        </Link>
+        </LocalizedLink>
       </p>
     </div>
   );

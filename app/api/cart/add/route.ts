@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addToCart } from "@/lib/shopify";
 import { logger } from "@/lib/logger";
+import { cartAddSchema, parseWithZod } from "@/lib/schemas";
 
 export async function POST(request: NextRequest) {
   try {
-    const { cartId, variantId, quantity = 1 } = await request.json();
-
-    if (!cartId || !variantId) {
-      return NextResponse.json({ error: "cartId e variantId são obrigatórios" }, { status: 400 });
+    const body = await request.json();
+    const parsed = parseWithZod(cartAddSchema, body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
+    const { cartId, variantId, quantity } = parsed.data;
 
     const cart = await addToCart(cartId, variantId, quantity);
     if (!cart) {
