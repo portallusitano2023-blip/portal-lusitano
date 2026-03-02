@@ -55,13 +55,15 @@ export async function POST(req: NextRequest) {
 
     if (recipient_type === "all_leads") {
       const { data: leads } = await supabase.from("leads").select("email");
-      recipients = leads?.map((l) => l.email) || [];
+      recipients = (leads ?? []).map((l) => l.email).filter((e): e is string => e != null);
     } else if (recipient_type === "customers") {
       const { data: payments } = await supabase
         .from("payments")
         .select("email")
         .eq("status", "succeeded");
-      recipients = Array.from(new Set(payments?.map((p) => p.email) || []));
+      recipients = Array.from(
+        new Set((payments ?? []).map((p) => p.email).filter((e): e is string => e != null))
+      );
     } else if (recipient_type === "custom" && custom_emails) {
       recipients = custom_emails.split(",").map((e: string) => e.trim());
     }

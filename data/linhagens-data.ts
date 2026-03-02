@@ -21,16 +21,16 @@ export const linhagens: Linhagem[] = [
     id: "veiga",
     nome: "Veiga",
     descricao:
-      "A linhagem Veiga é a mais emblemática e reconhecível do Lusitano, com cavalos compactos, ágeis e de bravura notável. Fundada há mais de 220 anos na Quinta da Broa, produziu alguns dos cavalos mais célebres da raça.",
+      "A linhagem Veiga é a mais emblemática e reconhecível do Lusitano, com cavalos compactos, ágeis e de bravura notável. Fundada em 1817 na Quinta da Broa, produziu alguns dos cavalos mais célebres da raça.",
     historiaCompleta: [
-      "A Coudelaria Veiga, com sede na Quinta da Broa, Azinhaga do Ribatejo, foi fundada há mais de 220 anos por Rafael José da Cunha, o denominado Príncipe dos Lavradores Portugueses. De entre os reprodutores contam-se dois garanhões de sangue Alter, oferecidos por D. Fernando II e pelo seu filho D. Pedro V quando visitaram a Quinta da Broa.",
+      "A Coudelaria Veiga, com sede na Quinta da Broa, Azinhaga do Ribatejo, foi fundada em 1817 por Rafael José da Cunha, o denominado Príncipe dos Lavradores Portugueses. De entre os reprodutores contam-se dois garanhões de sangue Alter, oferecidos por D. Fernando II e pelo seu filho D. Pedro V quando visitaram a Quinta da Broa.",
       "Por herança familiar, a coudelaria foi herdada pelo Eng.º Manuel Tavares Veiga, sobrinho-bisneto de Rafael José da Cunha. O trabalho que desenvolveu foi notável, sendo justamente considerado o iniciador do novo ciclo do ginete lusitano em Portugal. Seleccionou animais cujas características melhor correspondiam à funcionalidade guerreira exigida aos cavalos de toureio, usando cruzamentos consanguíneos para fixar as características da raça. A linhagem consolidou-se com os garanhões Lidador, Agareno (nascido em 1931), Berber e Sultão. Agareno tornou-se um dos seis Chefes de Linhagem oficiais do Puro Sangue Lusitano.",
-      "O cruzamento histórico do garanhão Firme (da coudelaria Andrade) com éguas Veiga produziu quatro dos cavalos mais famosos do século XX: Novilheiro, Nilo, Neptuno e Opus II — criando a chamada 'fórmula de ouro' do Lusitano moderno.",
+      "O cruzamento histórico do garanhão Firme (da coudelaria Andrade) com éguas Veiga produziu quatro dos cavalos mais famosos do século XX: Novilheiro, Nilo, Neptuno e Opus 72 — criando a chamada 'fórmula de ouro' do Lusitano moderno.",
       "Após a morte do Eng.º Manuel Tavares Veiga, os seus netos Manuel e Carlos Tavares Veiga e o bisneto Manuel de Castro Tavares Veiga mantiveram a coudelaria com a qualidade inicial. Hoje, a influência Veiga está presente em praticamente todas as coudelarias de referência do mundo.",
     ],
     origem: "Quinta da Broa, Azinhaga, Ribatejo",
     fundador: "Rafael José da Cunha",
-    anoFundacao: "Séc. XIX",
+    anoFundacao: 1817,
     cabecaLinhagem: "Agareno",
     cabecaLinhagemInfo:
       "Nascido em 1931, filho de Lidador (MV) e Bagocha (MV). Um dos 6 Chefes de Linhagem oficiais do PSL.",
@@ -53,7 +53,7 @@ export const linhagens: Linhagem[] = [
         nome: "Novilheiro",
         ano: "1971-2000",
         conquistas:
-          "O Lusitano mais célebre da história. Campeão de saltos com John Whitaker, líder europeu em prémios (1983). Também competiu em dressage Grand Prix e concurso completo.",
+          "O Lusitano mais célebre da história. Campeão de saltos com John Whitaker, líder britânico em prémios de saltos (1983). Também competiu em dressage Grand Prix e concurso completo.",
       },
       // FONTE: https://lusitanohorsefinder.com/lusitano-bloodlines/
       {
@@ -74,7 +74,7 @@ export const linhagens: Linhagem[] = [
         nome: "Oxidado",
         ano: "1994-2020",
         conquistas:
-          "6x Campeão Europeu de Working Equitation com Pedro Torres. O cavalo mais titulado da história da disciplina.",
+          "Múltiplo Campeão Europeu e Mundial de Working Equitation com Pedro Torres. O cavalo mais titulado da história da disciplina.",
       },
     ],
     coudelariasPrincipais: [
@@ -105,7 +105,7 @@ export const linhagens: Linhagem[] = [
       },
       {
         ano: 1983,
-        evento: "Novilheiro é o cavalo com maior prémio acumulado em saltos na Europa",
+        evento: "Novilheiro é o cavalo com maior prémio acumulado em saltos na Grã-Bretanha",
         destaque: true,
       },
       {
@@ -131,15 +131,15 @@ export const linhagens: Linhagem[] = [
     id: "andrade",
     nome: "Andrade",
     descricao:
-      "A linhagem Andrade produziu cavalos com presença, andamentos e temperamento notáveis. Fundada pelo Dr. Ruy d'Andrade, ganhou mais Campeonatos de Criação que qualquer outra coudelaria e foi decisiva na salvação da linha Alter Real.",
+      "A linhagem Andrade produziu cavalos com presença, andamentos e temperamento notáveis. Fundada por Alfredo d'Andrade e desenvolvida pelo seu filho Dr. Ruy d'Andrade, ganhou mais Campeonatos de Criação que qualquer outra coudelaria e foi decisiva na salvação da linha Alter Real.",
     historiaCompleta: [
-      "A coudelaria Andrade foi formada em 1894 por Dr. Ruy d'Andrade (1880-1967), com éguas de criadores espanhóis como Hermanos Guerrero, D. Vicente Romero y Garcia e D. António Perez Tinao, todos de sangue Cartujano puro.",
+      "A coudelaria Andrade foi fundada em 1894 por Alfredo d'Andrade, com éguas de criadores espanhóis como Guerrero Hermanos, D. Vicente Romero y Garcia e D. António Perez Tinao, todas de sangue espanhol puro. Foi o seu filho, Dr. Ruy d'Andrade (1880-1967), que a partir de 1901 desenvolveu o programa de criação que a tornou célebre.",
       "A coudelaria ganhou mais Campeonatos de Criação do que qualquer outra, incluindo os títulos de Campeão Ibérico em 1970 e 1972. Garanhões notáveis incluem Rumboso, Arriero, Bergantin, Cartujano, Saltador, Novelero e Príncipe VIII.",
       "Dr. Ruy d'Andrade adquiriu dois garanhões idosos — Vigilante e Regedor — e Marialva II, salvando a linha Alter Real da extinção. Em 1942, transferiu este pequeno efectivo para o Ministério da Agricultura quando a coudelaria reabriu.",
-      "O Dr. Ruy d'Andrade também é reconhecido pela descoberta e preservação do cavalo Sorraia, uma raça primitiva ibérica. Após a sua morte em 1967, a coudelaria dividiu-se entre os seus filhos, com operações em Coruche, Elvas e Torres Vedras.",
+      "O Dr. Ruy d'Andrade também é reconhecido pela descoberta e preservação do cavalo Sorraia, uma raça primitiva ibérica. Após a sua morte em 1967, o seu filho Fernando Sommer d'Andrade continuou a obra. Quando este faleceu, a coudelaria dividiu-se entre os seus filhos, com operações em Coruche, Elvas e Torres Vedras.",
     ],
     origem: "Portugal (Coruche, Elvas, Torres Vedras)",
-    fundador: "Dr. Ruy d'Andrade (1880-1967)",
+    fundador: "Alfredo d'Andrade (1894) / Dr. Ruy d'Andrade (1901-1967)",
     anoFundacao: 1894,
     cabecaLinhagem: "Marialva II",
     cabecaLinhagemInfo:
@@ -163,7 +163,7 @@ export const linhagens: Linhagem[] = [
         nome: "Firme",
         ano: "1956-1978",
         conquistas:
-          "Garanhão da Coudelaria Andrade que, cruzado com éguas Veiga, produziu Novilheiro, Nilo, Neptuno e Opus II. Cavalo de toureio com D. José d'Athayde.",
+          "Garanhão da Coudelaria Andrade que, cruzado com éguas Veiga, produziu Novilheiro, Nilo, Neptuno e Opus 72. Cavalo de toureio com D. José d'Athayde.",
       },
     ],
     coudelariasPrincipais: [
@@ -174,7 +174,7 @@ export const linhagens: Linhagem[] = [
     timeline: [
       {
         ano: 1894,
-        evento: "Dr. Ruy d'Andrade funda a coudelaria com éguas espanholas Cartujanas",
+        evento: "Alfredo d'Andrade funda a coudelaria com éguas espanholas de sangue puro",
         destaque: true,
       },
       {
@@ -227,7 +227,7 @@ export const linhagens: Linhagem[] = [
     descricao:
       "A mais antiga e nobre linhagem equestre de Portugal, fundada pela coroa em 1748. Cavalos barrocos, compactos e de acção alta, hoje a base da Escola Portuguesa de Arte Equestre.",
     historiaCompleta: [
-      "A Coudelaria de Alter Real foi fundada em 1748 pelo Rei D. João V, no âmbito de uma política de criação equina iniciada em 1708. O stock original consistiu em cerca de 300 éguas ibéricas, maioritariamente espanholas. A coudelaria tornou-se famosa em toda a Europa como o melhor local para adquirir cavalos de Alta Escola.",
+      "A Coudelaria de Alter Real foi fundada em 1748 pelo Rei D. João V, no âmbito de uma política de criação equina iniciada em 1708. O stock original consistiu em éguas ibéricas importadas da região de Jerez de la Frontera, Espanha. A coudelaria tornou-se famosa em toda a Europa como o melhor local para adquirir cavalos de Alta Escola.",
       "A linhagem sobreviveu a múltiplas crises: as invasões napoleónicas (a partir de 1807) dizimaram os efectivos, e após a Revolução Republicana de 1910, a coudelaria foi encerrada, garanhões castrados, cavalos vendidos e registos genealógicos queimados.",
       "A salvação veio pelas mãos do Dr. Ruy d'Andrade, que adquiriu dois garanhões idosos — Vigilante e Regedor — e Marialva II. Em 1942, transferiu este pequeno efectivo para o Ministério da Agricultura quando a coudelaria reabriu.",
       "Regedor (nascido em 1923), filho de Gaivoto e Gavina, tornou-se o Chefe de Linhagem oficial da linha Alter Real. Hoje, a coudelaria é gerida pela Companhia das Lezírias (desde 2013) e cria cavalos exclusivamente para a Escola Portuguesa de Arte Equestre.",
@@ -258,7 +258,7 @@ export const linhagens: Linhagem[] = [
         nome: "Rubi AR",
         ano: "1998",
         conquistas:
-          "16º nos Jogos Olímpicos de Londres 2012 com Gonçalo Carvalho. 77.8% Grand Prix (recorde Lusitano). 19 vitórias internacionais. 5 estrelas de mérito APSL.",
+          "16º nos Jogos Olímpicos de Londres 2012 com Gonçalo Carvalho. 77.6% Freestyle Olímpico; 78.15% Freestyle em Vilamoura (recorde Lusitano). 19 vitórias internacionais. 5 estrelas de mérito APSL.",
       },
       // FONTE: https://www.lusitanostud.com/blog/2019/8/20/the-kings-stud-alter-real
       {
@@ -276,13 +276,13 @@ export const linhagens: Linhagem[] = [
       },
     ],
     coudelariasPrincipais: [
-      "Coudelaria de Alter Real (Fundação Alter Real)",
+      "Coudelaria de Alter Real (Companhia das Lezírias)",
       "Escola Portuguesa de Arte Equestre",
     ],
     timeline: [
       {
         ano: 1747,
-        evento: "Importação de ~300 éguas ibéricas de Espanha",
+        evento: "Importação de éguas ibéricas da região de Jerez de la Frontera, Espanha",
       },
       {
         ano: 1748,
@@ -320,7 +320,7 @@ export const linhagens: Linhagem[] = [
     ],
     factosChave: [
       "Fundada em 1748, é a coudelaria real mais antiga de Portugal em funcionamento contínuo",
-      "Stock original: cerca de 300 éguas ibéricas, maioritariamente espanholas",
+      "Stock original: éguas ibéricas importadas da região de Jerez de la Frontera",
       "Quase extinta após invasões napoleónicas e Revolução de 1910",
       "Salva por Dr. Ruy d'Andrade com Vigilante, Regedor e Marialva II",
       "Hoje cria cavalos exclusivamente para a Escola Portuguesa de Arte Equestre",
@@ -340,7 +340,7 @@ export const linhagens: Linhagem[] = [
       "A Coudelaria Nacional foi fundada em 1887. Está localizada na Quinta da Fonte Boa, em Santarém, nas férteis margens do rio Tejo.",
       "A Coudelaria Nacional tem Chefes de Linha oficiais associados, incluindo Hucharia (n. 1943), notável por ser a única égua entre os seis fundadores oficiais da raça. Primoroso (n. 1927) e Destinado (n. 1930), ambos de origem Dominguez Hermanos, são também garanhões fundadores associados a esta linha.",
       "Os cavalos CN são tipicamente maiores, mais redondos e com dorsos mais compridos, tornando-os muito adequados para atrelagem e dressage.",
-      "Hoje, a Coudelaria Nacional faz parte da Fundação Alter Real, juntamente com a Coudelaria de Alter e a Escola Portuguesa de Arte Equestre.",
+      "Hoje, a Coudelaria Nacional é gerida pela Companhia das Lezírias (desde 2013, após a extinção da Fundação Alter Real), juntamente com a Coudelaria de Alter e a Escola Portuguesa de Arte Equestre.",
     ],
     origem: "Quinta da Fonte Boa, Santarém",
     fundador: "Estado Português (1887)",
@@ -370,7 +370,7 @@ export const linhagens: Linhagem[] = [
           "Única égua entre os 6 Chefes de Linha oficiais do PSL. Filha de Cartujano e Viscaína.",
       },
     ],
-    coudelariasPrincipais: ["Coudelaria Nacional / Fonte Boa", "Fundação Alter Real"],
+    coudelariasPrincipais: ["Coudelaria Nacional / Fonte Boa", "Companhia das Lezírias"],
     timeline: [
       {
         ano: 1887,
@@ -402,7 +402,7 @@ export const linhagens: Linhagem[] = [
       "3 dos 6 Chefes de Linha oficiais são desta linhagem (Primoroso, Destinado, Hucharia)",
       "Hucharia é a ÚNICA égua entre os 6 fundadores oficiais da raça",
       "Linhagens CN têm origem espanhola (Dominguez Hermanos)",
-      "Faz parte da Fundação Alter Real",
+      "Gerida pela Companhia das Lezírias (desde 2013)",
     ],
     confianca: "MÉDIA-ALTA",
   },
@@ -442,7 +442,10 @@ export const timelineGlobal: EventoHistorico[] = [
   },
   { ano: 1807, evento: "Invasões napoleónicas (1807-1811) devastam as coudelarias" },
   { ano: 1887, evento: "Fundação da Coudelaria Nacional", destaque: true },
-  { ano: 1894, evento: "Dr. Ruy d'Andrade funda a coudelaria Andrade com éguas espanholas" },
+  {
+    ano: 1894,
+    evento: "Alfredo d'Andrade funda a coudelaria Andrade com éguas espanholas de sangue puro",
+  },
   {
     ano: 1910,
     evento: "Revolução: coudelaria Alter encerrada, registos queimados, garanhões castrados",

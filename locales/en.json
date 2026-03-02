@@ -216,7 +216,7 @@
     "not_found": "Specimen not found."
   },
   "privacy": {
-    "security": "Data Protection",
+    "security": "Data Security",
     "title": "Privacy Policy",
     "last_updated": "Last updated: March 1, 2026",
     "intro": "Introduction",
@@ -273,7 +273,6 @@
     "third_parties_list_3": "Google Analytics: statistical analysis of website usage",
     "third_parties_list_4": "Meta (Facebook Pixel): advertising campaign measurement",
     "third_parties_list_5": "Brevo (formerly Sendinblue): newsletter delivery",
-    "security": "Data Security",
     "security_text": "We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, loss, destruction or alteration, including SSL/TLS encryption, access control and continuous monitoring.",
     "complaint": "Right to Complain",
     "complaint_text": "If you believe that the processing of your personal data violates the GDPR, you have the right to lodge a complaint with the Portuguese Data Protection Authority (CNPD):",
@@ -1238,7 +1237,8 @@
     "notable_horses_title": "Notable Lusitanos of this Lineage",
     "no_notable_horses": "Limited information about notable horses of this lineage.",
     "historic_moments": "Historic Moments",
-    "no_timeline": "Limited timeline for this lineage."
+    "no_timeline": "Limited timeline for this lineage.",
+    "view_full_profile": "View full profile"
   },
   "marketplace_page": {
     "badge": "Marketplace",

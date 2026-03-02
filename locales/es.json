@@ -216,7 +216,7 @@
     "not_found": "Ejemplar no encontrado."
   },
   "privacy": {
-    "security": "Protección de Datos",
+    "security": "Seguridad de los Datos",
     "title": "Política de Privacidad",
     "last_updated": "Última actualización: 1 de marzo de 2026",
     "intro": "Introducción",
@@ -273,7 +273,6 @@
     "third_parties_list_3": "Google Analytics: análisis estadístico del uso del sitio",
     "third_parties_list_4": "Meta (Facebook Pixel): medición de campañas publicitarias",
     "third_parties_list_5": "Brevo (anteriormente Sendinblue): envío de newsletters",
-    "security": "Seguridad de los Datos",
     "security_text": "Implementamos medidas técnicas y organizativas adecuadas para proteger sus datos personales contra acceso no autorizado, pérdida, destrucción o alteración, incluyendo encriptación SSL/TLS, control de acceso y monitorización continua.",
     "complaint": "Derecho de Reclamación",
     "complaint_text": "Si considera que el tratamiento de sus datos personales viola el RGPD, tiene el derecho de presentar una reclamación ante la Autoridad Portuguesa de Protección de Datos (CNPD):",
@@ -1238,7 +1237,8 @@
     "notable_horses_title": "Lusitanos Notables de este Linaje",
     "no_notable_horses": "Informacion limitada sobre caballos notables de este linaje.",
     "historic_moments": "Momentos Historicos",
-    "no_timeline": "Linea temporal limitada para este linaje."
+    "no_timeline": "Linea temporal limitada para este linaje.",
+    "view_full_profile": "Ver perfil completo"
   },
   "marketplace_page": {
     "badge": "Marketplace",

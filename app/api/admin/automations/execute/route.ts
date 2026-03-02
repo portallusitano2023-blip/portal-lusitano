@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const { data: automation, error: fetchError } = await supabase
       .from("admin_automations")
       .select(
-        "id, name, action_type, action_config, trigger_type, trigger_config, delay_minutes, enabled, total_runs, successful_runs, failed_runs, last_run_at, last_error, created_at"
+        "id, name, action_type, action_config, trigger_type, delay_minutes, enabled, total_runs, successful_runs, failed_runs, last_run_at, last_error, created_at"
       )
       .eq("id", automation_id)
       .single();
@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
     if (logError) throw logError;
 
     // Executar ação com base no action_type
+    const automationData = automation as unknown as AutomationData;
     let result: Record<string, unknown> | undefined;
     let status = "success";
     let errorMessage = null;
@@ -61,23 +62,23 @@ export async function POST(req: NextRequest) {
     try {
       switch (automation.action_type) {
         case "send_email":
-          result = await executeSendEmail(automation, trigger_data);
+          result = await executeSendEmail(automationData, trigger_data);
           break;
 
         case "create_task":
-          result = await executeCreateTask(automation, trigger_data, email);
+          result = await executeCreateTask(automationData, trigger_data, email);
           break;
 
         case "update_field":
-          result = await executeUpdateField(automation, trigger_data);
+          result = await executeUpdateField(automationData, trigger_data);
           break;
 
         case "approve_review":
-          result = await executeApproveReview(automation, trigger_data);
+          result = await executeApproveReview(automationData, trigger_data);
           break;
 
         case "send_notification":
-          result = await executeSendNotification(automation, trigger_data);
+          result = await executeSendNotification(automationData, trigger_data);
           break;
 
         default:
@@ -94,7 +95,7 @@ export async function POST(req: NextRequest) {
       .from("admin_automation_logs")
       .update({
         status,
-        action_result: result,
+        action_result: result as unknown as import("@/lib/database.types").Json,
         error_message: errorMessage,
         completed_at: new Date().toISOString(),
       })
@@ -140,7 +141,7 @@ interface AutomationData {
   id: string;
   name: string;
   action_type: string;
-  action_config: Record<string, string | undefined>;
+  action_config: Record<string, string | undefined> | null;
   delay_minutes?: number;
   total_runs: number;
   successful_runs: number;
@@ -151,7 +152,7 @@ interface AutomationData {
 type TriggerData = Record<string, unknown>;
 
 async function executeSendEmail(automation: AutomationData, triggerData: TriggerData) {
-  const config = automation.action_config;
+  const config = automation.action_config ?? {};
   const to = config.to || String(triggerData.email || "");
   const subject = config.subject || "Portal Lusitano";
   const template = config.template || "default";
@@ -190,7 +191,7 @@ async function executeCreateTask(
   triggerData: TriggerData,
   adminEmail: string
 ) {
-  const config = automation.action_config;
+  const config = automation.action_config ?? {};
 
   const title = config.title || "Tarefa Automática";
   const description =
@@ -205,16 +206,17 @@ async function executeCreateTask(
   const { data: task, error } = await supabase
     .from("admin_tasks")
     .insert({
-      title,
-      description,
-      task_type,
-      priority,
+      title: String(title),
+      description: String(description),
+      task_type: String(task_type),
+      priority: String(priority),
       due_date: dueDate.toISOString(),
       status: "pendente",
-      related_email: triggerData.email || null,
+      related_email: triggerData.email ? String(triggerData.email) : null,
       notes: `Criada por automação: ${automation.name}`,
       admin_email: adminEmail,
-    })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
     .select()
     .single();
 
@@ -236,7 +238,7 @@ type AllowedTable = (typeof ALLOWED_UPDATE_TABLES)[number];
 type AllowedField = (typeof ALLOWED_UPDATE_FIELDS)[number];
 
 async function executeUpdateField(automation: AutomationData, _triggerData: TriggerData) {
-  const config = automation.action_config;
+  const config = automation.action_config ?? {};
 
   if (!config.table || !config.id || !config.field || config.value === undefined) {
     throw new Error("Configuração incompleta: table, id, field, value são obrigatórios");
@@ -262,7 +264,8 @@ async function executeUpdateField(automation: AutomationData, _triggerData: Trig
 }
 
 async function executeApproveReview(automation: AutomationData, triggerData: TriggerData) {
-  const reviewId = triggerData.review_id || automation.action_config.review_id;
+  const rawId = triggerData.review_id ?? automation.action_config?.review_id ?? "";
+  const reviewId = String(rawId);
 
   if (!reviewId) {
     throw new Error("review_id não especificado");
@@ -281,7 +284,7 @@ async function executeApproveReview(automation: AutomationData, triggerData: Tri
 }
 
 async function executeSendNotification(automation: AutomationData, triggerData: TriggerData) {
-  const config = automation.action_config;
+  const config = automation.action_config ?? {};
 
   const title = config.title || "Notificação Automática";
   const message = config.message || "Nova notificação do Portal Lusitano";

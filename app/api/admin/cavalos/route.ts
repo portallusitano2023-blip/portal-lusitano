@@ -78,8 +78,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from("cavalos_venda")
       .insert({
-        nome: body.nome,
-        nome_cavalo: body.nome_cavalo,
+        nome_cavalo: body.nome_cavalo || body.nome,
         descricao: body.descricao,
         preco: body.preco,
         linhagem: body.linhagem,
