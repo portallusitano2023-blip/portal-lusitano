@@ -98,7 +98,7 @@ export function useCalculadoraState() {
     isSubscribed,
     freeUsesLeft,
     requiresAuth,
-    recordUsage,
+    validateAndRecord,
     isLoading: accessLoading,
   } = useToolAccess("calculadora");
 
@@ -278,43 +278,54 @@ export function useCalculadoraState() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const calcular = () => {
+  const calcular = async () => {
     if (!canUse) return;
     setIsCalculating(true);
 
-    setTimeout(() => {
-      if (!isMountedRef.current) return;
-      try {
-        const result = calcularValor(form);
-        setResultado(result);
-        setIsCalculating(false);
-        recordUsage(
-          {
-            treino: form.treino,
-            mercado: form.mercado,
-            disciplina: form.disciplina,
-            sexo: form.sexo,
-          },
-          {
-            valorFinal: result.valorFinal,
-            confianca: result.confianca,
-            percentil: result.percentil,
-            disciplina: form.disciplina ?? null,
-            liquidezScore: result.liquidez?.score ?? null,
-          }
-        );
+    // Server-side validation BEFORE running the calculation
+    const formMeta = {
+      treino: form.treino,
+      mercado: form.mercado,
+      disciplina: form.disciplina,
+      sexo: form.sexo,
+    };
 
-        setTimeout(() => {
-          resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 100);
-      } catch (err) {
+    try {
+      const result = calcularValor(form);
+      const resultMeta = {
+        valorFinal: result.valorFinal,
+        confianca: result.confianca,
+        percentil: result.percentil,
+        disciplina: form.disciplina ?? null,
+        liquidezScore: result.liquidez?.score ?? null,
+      };
+
+      // Validate + record atomically on the server
+      const allowed = await validateAndRecord(formMeta, resultMeta);
+      if (!allowed) {
+        if (isMountedRef.current) {
+          setIsCalculating(false);
+          showToast("error", "Limite de uso gratuito atingido. Subscreva PRO para continuar.");
+        }
+        return;
+      }
+
+      if (!isMountedRef.current) return;
+      setResultado(result);
+      setIsCalculating(false);
+
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    } catch (err) {
+      if (isMountedRef.current) {
         setIsCalculating(false);
         if (process.env.NODE_ENV === "development") {
           console.error("[Calculadora] Erro no cálculo:", err);
         }
         showToast("error", "Erro ao calcular o valor. Verifique os dados e tente novamente.");
       }
-    }, 2000);
+    }
   };
 
   const resetar = useCallback(() => {

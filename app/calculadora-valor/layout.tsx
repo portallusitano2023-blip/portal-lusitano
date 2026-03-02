@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/calculadora-valor`,
+    languages: {
+      "pt-PT": `${SITE_URL}/calculadora-valor`,
+      "en-US": `${SITE_URL}/en/calculadora-valor`,
+      "es-ES": `${SITE_URL}/es/calculadora-valor`,
+      "x-default": `${SITE_URL}/calculadora-valor`,
+    },
   },
   openGraph: {
     title: "Calculadora de Valor | Portal Lusitano",

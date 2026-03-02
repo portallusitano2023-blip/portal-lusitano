@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/analise-perfil`,
+    languages: {
+      "pt-PT": `${SITE_URL}/analise-perfil`,
+      "en-US": `${SITE_URL}/en/analise-perfil`,
+      "es-ES": `${SITE_URL}/es/analise-perfil`,
+      "x-default": `${SITE_URL}/analise-perfil`,
+    },
   },
   openGraph: {
     title: "Análise de Perfil Equestre | Portal Lusitano",

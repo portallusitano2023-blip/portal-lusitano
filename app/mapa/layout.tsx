@@ -17,6 +17,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/mapa`,
+    languages: {
+      "pt-PT": `${SITE_URL}/mapa`,
+      "en-US": `${SITE_URL}/en/mapa`,
+      "es-ES": `${SITE_URL}/es/mapa`,
+      "x-default": `${SITE_URL}/mapa`,
+    },
   },
   openGraph: {
     title: "Mapa Equestre de Portugal | Portal Lusitano",

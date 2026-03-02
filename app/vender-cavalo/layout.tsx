@@ -14,6 +14,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/vender-cavalo`,
+    languages: {
+      "pt-PT": `${SITE_URL}/vender-cavalo`,
+      "en-US": `${SITE_URL}/en/vender-cavalo`,
+      "es-ES": `${SITE_URL}/es/vender-cavalo`,
+      "x-default": `${SITE_URL}/vender-cavalo`,
+    },
   },
   openGraph: {
     title: "Vender Cavalo | Portal Lusitano",

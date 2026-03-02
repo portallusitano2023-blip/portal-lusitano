@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/ebook-gratis`,
+    languages: {
+      "pt-PT": `${SITE_URL}/ebook-gratis`,
+      "en-US": `${SITE_URL}/en/ebook-gratis`,
+      "es-ES": `${SITE_URL}/es/ebook-gratis`,
+      "x-default": `${SITE_URL}/ebook-gratis`,
+    },
   },
   openGraph: {
     title: "Ebook Grátis | Portal Lusitano",

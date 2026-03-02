@@ -1,5 +1,4 @@
 import { createBrowserClient } from "@supabase/ssr";
-import type { Database } from "@/lib/database.types";
 
 function getEnv(key: string): string {
   const value = process.env[key];
@@ -7,8 +6,13 @@ function getEnv(key: string): string {
   return value;
 }
 
+// Database types available at @/lib/database.types for typed queries:
+//   import type { Database } from "@/lib/database.types";
+//   const supabase = createSupabaseBrowserClient();
+//   const { data } = await supabase.from("eventos").select("*");
+//   // data is typed as Database["public"]["Tables"]["eventos"]["Row"][]
 export function createSupabaseBrowserClient() {
-  return createBrowserClient<Database>(
+  return createBrowserClient(
     getEnv("NEXT_PUBLIC_SUPABASE_URL"),
     getEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
   );

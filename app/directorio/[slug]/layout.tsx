@@ -55,7 +55,15 @@ export async function generateMetadata({
     return {
       title: "Coudelaria | Portal Lusitano",
       description: "Descubra coudelarias de cavalos Lusitanos em Portugal.",
-      alternates: { canonical: `${siteUrl}/directorio/${slug}` },
+      alternates: {
+        canonical: `${siteUrl}/directorio/${slug}`,
+        languages: {
+          "pt-PT": `${siteUrl}/directorio/${slug}`,
+          "en-US": `${siteUrl}/en/directorio/${slug}`,
+          "es-ES": `${siteUrl}/es/directorio/${slug}`,
+          "x-default": `${siteUrl}/directorio/${slug}`,
+        },
+      },
     };
   }
 
@@ -67,7 +75,15 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: { canonical: `${siteUrl}/directorio/${slug}` },
+    alternates: {
+      canonical: `${siteUrl}/directorio/${slug}`,
+      languages: {
+        "pt-PT": `${siteUrl}/directorio/${slug}`,
+        "en-US": `${siteUrl}/en/directorio/${slug}`,
+        "es-ES": `${siteUrl}/es/directorio/${slug}`,
+        "x-default": `${siteUrl}/directorio/${slug}`,
+      },
+    },
     openGraph: {
       title,
       description,

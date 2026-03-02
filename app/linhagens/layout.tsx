@@ -22,6 +22,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/linhagens`,
+    languages: {
+      "pt-PT": `${SITE_URL}/linhagens`,
+      "en-US": `${SITE_URL}/en/linhagens`,
+      "es-ES": `${SITE_URL}/es/linhagens`,
+      "x-default": `${SITE_URL}/linhagens`,
+    },
   },
   openGraph: {
     title: "Linhagens do Lusitano | Portal Lusitano",

@@ -130,7 +130,18 @@ export default function CalculadoraValorPage() {
           {/* Intro */}
           {step === 0 && !resultado && (
             <>
-              <IntroSection onStart={() => setStep(1)} />
+              <IntroSection
+                onStart={() => {
+                  setStep(1);
+                  setTimeout(
+                    () =>
+                      document
+                        .getElementById("main-content")
+                        ?.scrollIntoView({ behavior: "smooth" }),
+                    50
+                  );
+                }}
+              />
               {/* Banner de draft guardado */}
               {hasDraft && (
                 <div className="max-w-2xl mx-auto px-4 -mt-12 mb-8">
@@ -491,8 +502,26 @@ export default function CalculadoraValorPage() {
                     step={step}
                     totalSteps={TOTAL_STEPS}
                     isCalculating={isCalculating}
-                    onPrevious={() => setStep((s) => s - 1)}
-                    onNext={() => setStep((s) => s + 1)}
+                    onPrevious={() => {
+                      setStep((s) => s - 1);
+                      setTimeout(
+                        () =>
+                          document
+                            .getElementById("main-content")
+                            ?.scrollIntoView({ behavior: "smooth" }),
+                        50
+                      );
+                    }}
+                    onNext={() => {
+                      setStep((s) => s + 1);
+                      setTimeout(
+                        () =>
+                          document
+                            .getElementById("main-content")
+                            ?.scrollIntoView({ behavior: "smooth" }),
+                        50
+                      );
+                    }}
                     onCalculate={calcular}
                   />
                 </div>

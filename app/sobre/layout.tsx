@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/sobre`,
+    languages: {
+      "pt-PT": `${SITE_URL}/sobre`,
+      "en-US": `${SITE_URL}/en/sobre`,
+      "es-ES": `${SITE_URL}/es/sobre`,
+      "x-default": `${SITE_URL}/sobre`,
+    },
   },
   openGraph: {
     title: "Sobre Nós | Portal Lusitano",

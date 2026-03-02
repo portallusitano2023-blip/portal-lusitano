@@ -65,7 +65,15 @@ export async function generateMetadata({
     return {
       title: "Cavalo | Portal Lusitano",
       description: "Descubra cavalos Lusitanos de qualidade no Portal Lusitano.",
-      alternates: { canonical: `${siteUrl}/cavalo/${slug}` },
+      alternates: {
+        canonical: `${siteUrl}/cavalo/${slug}`,
+        languages: {
+          "pt-PT": `${siteUrl}/cavalo/${slug}`,
+          "en-US": `${siteUrl}/en/cavalo/${slug}`,
+          "es-ES": `${siteUrl}/es/cavalo/${slug}`,
+          "x-default": `${siteUrl}/cavalo/${slug}`,
+        },
+      },
     };
   }
 
@@ -77,7 +85,15 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: { canonical: `${siteUrl}/cavalo/${slug}` },
+    alternates: {
+      canonical: `${siteUrl}/cavalo/${slug}`,
+      languages: {
+        "pt-PT": `${siteUrl}/cavalo/${slug}`,
+        "en-US": `${siteUrl}/en/cavalo/${slug}`,
+        "es-ES": `${siteUrl}/es/cavalo/${slug}`,
+        "x-default": `${siteUrl}/cavalo/${slug}`,
+      },
+    },
     openGraph: {
       title,
       description,

@@ -65,7 +65,7 @@ export default function ComparadorCavalosPage() {
     isSubscribed,
     freeUsesLeft,
     requiresAuth,
-    recordUsage,
+    validateAndRecord,
     isLoading: accessLoading,
   } = useToolAccess("comparador");
 
@@ -280,7 +280,7 @@ export default function ComparadorCavalosPage() {
     if (!shared) await copyToClipboard(url);
   };
 
-  const handleAnalyse = () => {
+  const handleAnalyse = async () => {
     if (!canUse) return;
     const cavalosValidos = cavalos.filter((c) => c.nome.trim() && !c.nome.startsWith("Cavalo"));
     if (cavalosValidos.length < 2) {
@@ -304,7 +304,9 @@ export default function ComparadorCavalosPage() {
       cavalos.length > 0
         ? calcularScore(cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b)))
         : 0;
-    recordUsage(
+
+    // Server-side validation + recording BEFORE showing results
+    const allowed = await validateAndRecord(
       { count: cavalos.length },
       {
         vencedor: vencedorNome,
@@ -315,11 +317,26 @@ export default function ComparadorCavalosPage() {
         ],
       }
     );
+    if (!allowed) {
+      setCalculando(false);
+      showToast(
+        "error",
+        tr(
+          "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
+          "Free usage limit reached. Subscribe to PRO to continue.",
+          "Límite de uso gratuito alcanzado. Suscríbete a PRO para continuar."
+        )
+      );
+      return;
+    }
+
     setTimeout(() => setCalculandoStep(1), 600);
     setTimeout(() => setCalculandoStep(2), 1200);
     setTimeout(() => {
       setCalculando(false);
       setShowAnalise(true);
+      // Scroll to top so the user sees the results
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
     }, 2000);
   };
 

@@ -14,6 +14,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/instagram`,
+    languages: {
+      "pt-PT": `${SITE_URL}/instagram`,
+      "en-US": `${SITE_URL}/en/instagram`,
+      "es-ES": `${SITE_URL}/es/instagram`,
+      "x-default": `${SITE_URL}/instagram`,
+    },
   },
   openGraph: {
     title: "Instagram | Portal Lusitano",

@@ -117,7 +117,7 @@ export function useQuizLogic() {
     isSubscribed,
     freeUsesLeft,
     requiresAuth,
-    recordUsage,
+    validateAndRecord,
     isLoading: accessLoading,
   } = useToolAccess("perfil");
 
@@ -165,7 +165,7 @@ export function useQuizLogic() {
   }, []);
 
   const handleAnswer = useCallback(
-    (option: QuestionOption) => {
+    async (option: QuestionOption) => {
       const q = questions[currentQuestion];
       const w = q.weight;
       const newAnswers = [...answers, option.value];
@@ -188,8 +188,11 @@ export function useQuizLogic() {
       setScores(newScores);
       // Reset dismissal so a newly-triggered warning becomes visible
       setCrossWarningDismissed(false);
-      if (currentQuestion < questions.length - 1) setCurrentQuestion(currentQuestion + 1);
-      else {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+        // Scroll to quiz top so the next question is visible
+        setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+      } else {
         if (!canUse) return;
 
         // Q16 (treinador) — index 15 — bonus score adjustments (weight 1.2 already applied above)
@@ -212,7 +215,7 @@ export function useQuizLogic() {
             mp = p;
           }
         });
-        // Determinar sub-perfil (antes de recordUsage para incluir nos metadados)
+        // Determinar sub-perfil
         const q1 = newAnswers[0]; // Objectivo (Q1)
         const q6 = newAnswers[5]; // Nível de treino desejado (Q6)
         const q7 = newAnswers[6]; // Orçamento (Q7)
@@ -238,18 +241,27 @@ export function useQuizLogic() {
           percentage: Math.round((s / totalScoreForMeta) * 100),
         }));
 
-        setResult(results[mp]);
-        setShowResult(true);
-        recordUsage(newScores, {
+        // Server-side validation + recording BEFORE showing results
+        const allowed = await validateAndRecord(newScores, {
           profile: mp,
           subProfile: sp ?? null,
           confidence: inlineConfidence,
           scorePercentages: scorePercentagesMeta,
         });
+
+        if (!allowed) {
+          setError("Limite de uso gratuito atingido. Subscreva PRO para continuar.");
+          return;
+        }
+
+        setResult(results[mp]);
+        setShowResult(true);
         setSubProfile(sp);
+        // Scroll to top so the user sees the result
+        setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
       }
     },
-    [currentQuestion, answers, scores, answerDetails, canUse, recordUsage]
+    [currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError]
   );
 
   const calculateConfidence = useCallback((): number => {
@@ -343,6 +355,7 @@ export function useQuizLogic() {
     if (currentQuestion > 0) {
       setCurrentQuestion(currentQuestion - 1);
       setAnswers(answers.slice(0, -1));
+      setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
       setAnswerDetails(answerDetails.slice(0, -1));
       setCrossWarningDismissed(false);
     }

@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/eventos`,
+    languages: {
+      "pt-PT": `${SITE_URL}/eventos`,
+      "en-US": `${SITE_URL}/en/eventos`,
+      "es-ES": `${SITE_URL}/es/eventos`,
+      "x-default": `${SITE_URL}/eventos`,
+    },
   },
   openGraph: {
     title: "Eventos Equestres | Portal Lusitano",

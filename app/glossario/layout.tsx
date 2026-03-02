@@ -17,6 +17,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/glossario`,
+    languages: {
+      "pt-PT": `${SITE_URL}/glossario`,
+      "en-US": `${SITE_URL}/en/glossario`,
+      "es-ES": `${SITE_URL}/es/glossario`,
+      "x-default": `${SITE_URL}/glossario`,
+    },
   },
   openGraph: {
     title: "Glossario Equestre | Portal Lusitano",

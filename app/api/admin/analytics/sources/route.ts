@@ -80,7 +80,8 @@ export async function GET(_req: NextRequest) {
     // Calcular receita por fonte
     const revenueBySource: Record<string, number> = {};
     payments.forEach((payment) => {
-      const source = emailToSource[payment.email] || "Direto";
+      const email = payment.email;
+      const source = email != null ? (emailToSource[email] ?? "Direto") : "Direto";
       revenueBySource[source] = (revenueBySource[source] || 0) + (payment.amount || 0);
     });
 
@@ -123,6 +124,7 @@ export async function GET(_req: NextRequest) {
     }
 
     leads.forEach((lead) => {
+      if (!lead.created_at) return;
       const date = new Date(lead.created_at);
       const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
       const source = lead.utm_source || "Direto";

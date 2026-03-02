@@ -18,6 +18,15 @@ interface ToolAccessState {
   freeUsesLeft: number;
   isLoading: boolean;
   requiresAuth: boolean;
+  /**
+   * Server-side validation + recording. Must be called BEFORE running calculations.
+   * Returns `true` if the user is allowed to proceed, `false` otherwise.
+   */
+  validateAndRecord: (
+    formData?: Record<string, unknown>,
+    resultData?: Record<string, unknown>
+  ) => Promise<boolean>;
+  /** @deprecated Use validateAndRecord instead — kept for backwards compat */
   recordUsage: (
     formData?: Record<string, unknown>,
     resultData?: Record<string, unknown>
@@ -66,11 +75,14 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
           setUsageCount(count || 0);
         }
       } catch (err) {
-        // On error, be permissive — but log so production issues are diagnosable
+        // SECURITY: On error, be RESTRICTIVE — block access until data loads correctly
         if (process.env.NODE_ENV !== "production") {
-          console.warn("[useToolAccess] Error loading tool access, defaulting to permissive:", err);
+          console.warn(
+            "[useToolAccess] Error loading tool access, defaulting to restrictive:",
+            err
+          );
         }
-        setUsageCount(0);
+        setUsageCount(FREE_USES_PER_TOOL); // Forces canUse = false
       } finally {
         setIsLoading(false);
       }
@@ -83,6 +95,59 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
   const canUse = !user || isSubscribed || freeUsesLeft > 0;
   const requiresAuth = !user;
 
+  /**
+   * Server-side validation + atomic usage recording.
+   * Called BEFORE calculations to ensure the user truly has access.
+   * Returns `true` if allowed, `false` if blocked.
+   */
+  const validateAndRecord = useCallback(
+    async (
+      formData?: Record<string, unknown>,
+      resultData?: Record<string, unknown>
+    ): Promise<boolean> => {
+      if (!user) return true; // Unauthenticated users get first use (they'll be prompted to register)
+
+      try {
+        const res = await fetch("/api/tools/validate-access", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            toolName,
+            record: true,
+            formData: formData || undefined,
+            resultData: resultData || undefined,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.allowed) {
+          // Update local state to match server
+          if (data.isSubscribed) {
+            setIsSubscribed(true);
+          } else {
+            setUsageCount((prev) => prev + 1);
+          }
+          return true;
+        }
+
+        // Access denied — update local state
+        if (data.freeUsesLeft !== undefined) {
+          setUsageCount(FREE_USES_PER_TOOL - data.freeUsesLeft);
+        }
+        return false;
+      } catch {
+        // SECURITY: On network/server error, DENY access
+        return false;
+      }
+    },
+    [user, toolName]
+  );
+
+  /**
+   * @deprecated Legacy client-side recording. Kept for backwards compatibility.
+   * New code should use validateAndRecord() instead.
+   */
   const recordUsage = useCallback(
     async (formData?: Record<string, unknown>, resultData?: Record<string, unknown>) => {
       if (!user) return;
@@ -93,13 +158,12 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
         await supabase.from("tool_usage").insert({
           user_id: user.id,
           tool_name: toolName,
-          form_data: formData || null,
-          result_data: resultData || null,
+          form_data: (formData as Record<string, never>) || null,
+          result_data: (resultData as Record<string, never>) || null,
         });
         const newCount = usageCount + 1;
         setUsageCount(newCount);
 
-        // Quando o utilizador esgota o uso gratuito, enviar email de upgrade (non-blocking)
         if (!isSubscribed && newCount >= FREE_USES_PER_TOOL) {
           const ctrl = new AbortController();
           const timer = setTimeout(() => ctrl.abort(), 5000);
@@ -125,6 +189,7 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
     freeUsesLeft,
     isLoading: isLoading || authLoading,
     requiresAuth,
+    validateAndRecord,
     recordUsage,
   };
 }

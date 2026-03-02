@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${siteUrl}/precos`,
+    languages: {
+      "pt-PT": `${siteUrl}/precos`,
+      "en-US": `${siteUrl}/en/precos`,
+      "es-ES": `${siteUrl}/es/precos`,
+      "x-default": `${siteUrl}/precos`,
+    },
   },
   openGraph: {
     title: "Preços e Planos | Portal Lusitano",

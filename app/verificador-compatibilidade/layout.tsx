@@ -14,6 +14,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/verificador-compatibilidade`,
+    languages: {
+      "pt-PT": `${SITE_URL}/verificador-compatibilidade`,
+      "en-US": `${SITE_URL}/en/verificador-compatibilidade`,
+      "es-ES": `${SITE_URL}/es/verificador-compatibilidade`,
+      "x-default": `${SITE_URL}/verificador-compatibilidade`,
+    },
   },
   openGraph: {
     title: "Verificador de Compatibilidade | Portal Lusitano",

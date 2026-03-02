@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   keywords: ["privacidade portal lusitano", "protecção dados", "RGPD cavalos"],
   alternates: {
     canonical: `${SITE_URL}/privacidade`,
+    languages: {
+      "pt-PT": `${SITE_URL}/privacidade`,
+      "en-US": `${SITE_URL}/en/privacidade`,
+      "es-ES": `${SITE_URL}/es/privacidade`,
+      "x-default": `${SITE_URL}/privacidade`,
+    },
   },
   openGraph: {
     title: "Política de Privacidade | Portal Lusitano",

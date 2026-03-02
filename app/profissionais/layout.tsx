@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/profissionais`,
+    languages: {
+      "pt-PT": `${SITE_URL}/profissionais`,
+      "en-US": `${SITE_URL}/en/profissionais`,
+      "es-ES": `${SITE_URL}/es/profissionais`,
+      "x-default": `${SITE_URL}/profissionais`,
+    },
   },
   openGraph: {
     title: "Profissionais Equestres | Portal Lusitano",

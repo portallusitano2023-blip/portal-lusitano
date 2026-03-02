@@ -4,7 +4,12 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import LocalizedLink from "@/components/LocalizedLink";
 import { ArrowLeft, ArrowUp, Clock, Calendar, Newspaper, FileText } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import dynamic from "next/dynamic";
+
+const ShareButtons = dynamic(() => import("@/components/ShareButtons"), {
+  ssr: false,
+  loading: () => null,
+});
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import type { SanityArticle } from "@/lib/sanity-queries";

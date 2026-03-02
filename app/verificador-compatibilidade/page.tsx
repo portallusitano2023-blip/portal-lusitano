@@ -70,7 +70,7 @@ export default function VerificadorCompatibilidadePage() {
     isSubscribed,
     freeUsesLeft,
     requiresAuth,
-    recordUsage,
+    validateAndRecord,
     isLoading: accessLoading,
   } = useToolAccess("compatibilidade");
 
@@ -251,60 +251,75 @@ export default function VerificadorCompatibilidadePage() {
     }
   };
 
-  const calcular = () => {
+  const calcular = async () => {
     // FIX C: guard against double-click while a calculation is already in progress
     if (isCalculating) return;
     if (!canUse) return;
     setIsCalculating(true);
 
-    setTimeout(() => {
-      try {
-        const resultadoFinal = calcularCompatibilidade(garanhao, egua);
-        setResultado(resultadoFinal);
-        recordUsage(
-          { garanhao: garanhao.nome, egua: egua.nome },
-          {
-            score: resultadoFinal.score,
-            nivel: resultadoFinal.nivel,
-            coi: resultadoFinal.coi,
-            riscosAltos: resultadoFinal.riscos.filter((r) => r.severidade === "alto").length,
-            pelagens: resultadoFinal.pelagens.slice(0, 2).map((p) => p.cor),
-          }
-        );
-      } catch (err) {
-        const msg =
-          err instanceof Error
-            ? err.message
-            : tr("Erro desconhecido", "Unknown error", "Error desconocido");
-        if (msg.includes("network") || msg.includes("fetch")) {
-          showError(
-            tr(
-              "Erro de ligação. Verifica a tua ligação à internet e tenta novamente.",
-              "Connection error. Check your internet connection and try again.",
-              "Error de conexión. Verifica tu conexión a internet e inténtalo de nuevo."
-            )
-          );
-        } else if (msg.includes("timeout")) {
-          showError(
-            tr(
-              "O cálculo demorou demasiado. Tenta com menos variáveis.",
-              "The calculation took too long. Try with fewer variables.",
-              "El cálculo tardó demasiado. Intenta con menos variables."
-            )
-          );
-        } else {
-          showError(
-            tr(
-              "Não foi possível calcular a compatibilidade. Verifica os dados introduzidos.",
-              "Could not calculate compatibility. Check the entered data.",
-              "No fue posible calcular la compatibilidad. Verifica los datos introducidos."
-            )
-          );
+    try {
+      const resultadoFinal = calcularCompatibilidade(garanhao, egua);
+
+      // Server-side validation + recording BEFORE showing results
+      const allowed = await validateAndRecord(
+        { garanhao: garanhao.nome, egua: egua.nome },
+        {
+          score: resultadoFinal.score,
+          nivel: resultadoFinal.nivel,
+          coi: resultadoFinal.coi,
+          riscosAltos: resultadoFinal.riscos.filter((r) => r.severidade === "alto").length,
+          pelagens: resultadoFinal.pelagens.slice(0, 2).map((p) => p.cor),
         }
-      } finally {
+      );
+
+      if (!allowed) {
         setIsCalculating(false);
+        showError(
+          tr(
+            "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
+            "Free usage limit reached. Subscribe to PRO to continue.",
+            "Límite de uso gratuito alcanzado. Suscríbete a PRO para continuar."
+          )
+        );
+        return;
       }
-    }, 2000);
+
+      setResultado(resultadoFinal);
+      // Scroll to top so the user sees the results
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
+    } catch (err) {
+      const msg =
+        err instanceof Error
+          ? err.message
+          : tr("Erro desconhecido", "Unknown error", "Error desconocido");
+      if (msg.includes("network") || msg.includes("fetch")) {
+        showError(
+          tr(
+            "Erro de ligação. Verifica a tua ligação à internet e tenta novamente.",
+            "Connection error. Check your internet connection and try again.",
+            "Error de conexión. Verifica tu conexión a internet e inténtalo de nuevo."
+          )
+        );
+      } else if (msg.includes("timeout")) {
+        showError(
+          tr(
+            "O cálculo demorou demasiado. Tenta com menos variáveis.",
+            "The calculation took too long. Try with fewer variables.",
+            "El cálculo tardó demasiado. Intenta con menos variables."
+          )
+        );
+      } else {
+        showError(
+          tr(
+            "Não foi possível calcular a compatibilidade. Verifica os dados introduzidos.",
+            "Could not calculate compatibility. Check the entered data.",
+            "No fue posible calcular la compatibilidad. Verifica los datos introducidos."
+          )
+        );
+      }
+    } finally {
+      setIsCalculating(false);
+    }
   };
 
   const resetar = () => {
@@ -413,7 +428,12 @@ export default function VerificadorCompatibilidadePage() {
         {/* Intro */}
         {step === 0 && !resultado && (
           <>
-            <IntroHero onStart={() => setStep(1)} />
+            <IntroHero
+              onStart={() => {
+                setStep(1);
+                setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
+              }}
+            />
             {hasDraft && (
               <div className="max-w-4xl mx-auto px-4 -mt-8 mb-8">
                 <div className="flex flex-col sm:flex-row items-center gap-3 px-5 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl">

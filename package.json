@@ -21,7 +21,8 @@
     "generate-pdf": "node scripts/generate-ebook-pdf.js",
     "generate-pdf:premium": "node scripts/generate-ebook-pdf-premium.js",
     "sync-images": "node scripts/sync-coudelaria-images.js",
-    "sync-cavalos": "npx tsx scripts/sync-cavalos-images.ts"
+    "sync-cavalos": "npx tsx scripts/sync-cavalos-images.ts",
+    "optimize-images": "npx tsx scripts/optimize-images.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/piroplasmose`,
+    languages: {
+      "pt-PT": `${SITE_URL}/piroplasmose`,
+      "en-US": `${SITE_URL}/en/piroplasmose`,
+      "es-ES": `${SITE_URL}/es/piroplasmose`,
+      "x-default": `${SITE_URL}/piroplasmose`,
+    },
   },
   openGraph: {
     title: "Piroplasmose Equina — Guia Completo | Portal Lusitano",

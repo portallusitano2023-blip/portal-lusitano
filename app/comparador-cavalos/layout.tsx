@@ -14,6 +14,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/comparador-cavalos`,
+    languages: {
+      "pt-PT": `${SITE_URL}/comparador-cavalos`,
+      "en-US": `${SITE_URL}/en/comparador-cavalos`,
+      "es-ES": `${SITE_URL}/es/comparador-cavalos`,
+      "x-default": `${SITE_URL}/comparador-cavalos`,
+    },
   },
   openGraph: {
     title: "Comparador de Cavalos | Portal Lusitano",

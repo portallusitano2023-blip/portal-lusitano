@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   keywords: ["termos condições portal lusitano", "regras marketplace cavalos"],
   alternates: {
     canonical: `${SITE_URL}/termos`,
+    languages: {
+      "pt-PT": `${SITE_URL}/termos`,
+      "en-US": `${SITE_URL}/en/termos`,
+      "es-ES": `${SITE_URL}/es/termos`,
+      "x-default": `${SITE_URL}/termos`,
+    },
   },
   openGraph: {
     title: "Termos e Condições | Portal Lusitano",

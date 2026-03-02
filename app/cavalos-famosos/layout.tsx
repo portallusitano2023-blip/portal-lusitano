@@ -20,6 +20,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/cavalos-famosos`,
+    languages: {
+      "pt-PT": `${SITE_URL}/cavalos-famosos`,
+      "en-US": `${SITE_URL}/en/cavalos-famosos`,
+      "es-ES": `${SITE_URL}/es/cavalos-famosos`,
+      "x-default": `${SITE_URL}/cavalos-famosos`,
+    },
   },
   openGraph: {
     title: "Lusitanos Notáveis | Portal Lusitano",

@@ -17,6 +17,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/ferramentas`,
+    languages: {
+      "pt-PT": `${SITE_URL}/ferramentas`,
+      "en-US": `${SITE_URL}/en/ferramentas`,
+      "es-ES": `${SITE_URL}/es/ferramentas`,
+      "x-default": `${SITE_URL}/ferramentas`,
+    },
   },
   openGraph: {
     title: "Ferramentas Equestres | Portal Lusitano",

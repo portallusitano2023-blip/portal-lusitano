@@ -20,6 +20,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/faq`,
+    languages: {
+      "pt-PT": `${SITE_URL}/faq`,
+      "en-US": `${SITE_URL}/en/faq`,
+      "es-ES": `${SITE_URL}/es/faq`,
+      "x-default": `${SITE_URL}/faq`,
+    },
   },
   openGraph: {
     title: "Perguntas Frequentes | Portal Lusitano",

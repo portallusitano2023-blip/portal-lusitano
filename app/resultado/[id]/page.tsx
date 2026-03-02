@@ -15,7 +15,12 @@ import {
   User,
   AlertCircle,
 } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import dynamic from "next/dynamic";
+
+const ShareButtons = dynamic(() => import("@/components/ShareButtons"), {
+  ssr: false,
+  loading: () => null,
+});
 
 // ============================================
 // TYPES

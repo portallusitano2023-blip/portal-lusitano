@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/publicidade`,
+    languages: {
+      "pt-PT": `${SITE_URL}/publicidade`,
+      "en-US": `${SITE_URL}/en/publicidade`,
+      "es-ES": `${SITE_URL}/es/publicidade`,
+      "x-default": `${SITE_URL}/publicidade`,
+    },
   },
   openGraph: {
     title: "Publicidade | Portal Lusitano",

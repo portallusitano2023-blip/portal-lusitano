@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/directorio`,
+    languages: {
+      "pt-PT": `${SITE_URL}/directorio`,
+      "en-US": `${SITE_URL}/en/directorio`,
+      "es-ES": `${SITE_URL}/es/directorio`,
+      "x-default": `${SITE_URL}/directorio`,
+    },
   },
   openGraph: {
     title: "Directório de Coudelarias | Portal Lusitano",

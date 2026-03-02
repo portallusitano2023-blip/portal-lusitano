@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/comprar`,
+    languages: {
+      "pt-PT": `${SITE_URL}/comprar`,
+      "en-US": `${SITE_URL}/en/comprar`,
+      "es-ES": `${SITE_URL}/es/comprar`,
+      "x-default": `${SITE_URL}/comprar`,
+    },
   },
   openGraph: {
     title: "Comprar Cavalo Lusitano | Portal Lusitano",

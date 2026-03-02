@@ -21,6 +21,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${siteUrl}/jornal`,
+    languages: {
+      "pt-PT": `${siteUrl}/jornal`,
+      "en-US": `${siteUrl}/en/jornal`,
+      "es-ES": `${siteUrl}/es/jornal`,
+      "x-default": `${siteUrl}/jornal`,
+    },
   },
   openGraph: {
     title: "Jornal Lusitano | Portal Lusitano",

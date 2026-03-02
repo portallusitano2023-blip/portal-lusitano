@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${SITE_URL}/loja`,
+    languages: {
+      "pt-PT": `${SITE_URL}/loja`,
+      "en-US": `${SITE_URL}/en/loja`,
+      "es-ES": `${SITE_URL}/es/loja`,
+      "x-default": `${SITE_URL}/loja`,
+    },
   },
   openGraph: {
     title: "Loja Equestre | Portal Lusitano",

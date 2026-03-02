@@ -1,6 +1,28 @@
 @import "tailwindcss";
 @import "./print.css";
 
+/* ===== FONT FALLBACK METRICS =====
+ * Reduces CLS during font swap by matching fallback metrics
+ * to the actual web fonts (Playfair Display / Montserrat).
+ * These adjustments ensure minimal layout shift when fonts load. */
+@font-face {
+  font-family: "Playfair Fallback";
+  src: local("Times New Roman");
+  ascent-override: 95%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+  size-adjust: 110%;
+}
+
+@font-face {
+  font-family: "Montserrat Fallback";
+  src: local("Arial");
+  ascent-override: 84%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+  size-adjust: 113%;
+}
+
 /* ===== THEME SYSTEM ===== */
 /* Dark mode (default) */
 :root,
