@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BreadcrumbSchema, WebApplicationSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, WebApplicationSchema, FAQSchema } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -48,6 +48,29 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const faqItems = [
+    {
+      question: "Como funciona o comparador de cavalos Lusitanos?",
+      answer:
+        "Preencha os dados de cada cavalo (nome, idade, linhagem, conformação, andamentos, temperamento, etc.). O comparador analisa até 8 dimensões diferentes e gera um score comparativo, ajudando a identificar o melhor candidato.",
+    },
+    {
+      question: "Quais são os critérios mais importantes na comparação?",
+      answer:
+        "Os critérios variam conforme o objectivo. Para competição: nível de treino e palmarés. Para reprodução: genealogia e BLUP. Para lazer: temperamento e conformação. A ferramenta ajusta os pesos conforme a disciplina selecionada.",
+    },
+    {
+      question: "Posso comparar cavalos de diferentes idades?",
+      answer:
+        "Sim, a ferramenta compara cavalos de qualquer idade. Tenha em atenção que um cavalo jovem com potencial pode ter um score menor actualmente, mas maior potencial futuro. Recomendamos considerar o potencial de maturação.",
+    },
+    {
+      question: "Como é calculado o score de compatibilidade?",
+      answer:
+        "O score considera mais de 8 dimensões: conformação, andamentos, temperamento, linhagem, nível de treino, palmarés, saúde e documentação. Cada dimensão tem um peso configurável conforme a disciplina escolhida.",
+    },
+  ];
+
   return (
     <>
       <BreadcrumbSchema
@@ -61,6 +84,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         description="Compare cavalos Lusitanos lado a lado. Analise linhagem, morfologia, aptidões e preço para encontrar o exemplar ideal."
         url={`${SITE_URL}/comparador-cavalos`}
       />
+      <FAQSchema items={faqItems} />
       {children}
     </>
   );

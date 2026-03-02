@@ -1,14 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { verifySession } from "@/lib/auth";
-import { logger } from "@/lib/logger";
+import { withAdminAuth, apiSuccess, apiError } from "@/lib/api-helpers";
 
-export async function GET(_req: NextRequest) {
-  try {
-    const email = await verifySession();
-    if (!email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+export const GET = withAdminAuth(async (_req: NextRequest) => {
 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -111,7 +105,7 @@ export async function GET(_req: NextRequest) {
           ? 100
           : 0;
 
-    return NextResponse.json({
+    return apiSuccess({
       overview: {
         totalViews,
         totalCavalosViews,
@@ -137,8 +131,4 @@ export async function GET(_req: NextRequest) {
         { type: "Eventos", views: totalEventosViews, count: eventos.length },
       ],
     });
-  } catch (error) {
-    logger.error("Traffic analytics error:", error);
-    return NextResponse.json({ error: "Erro ao buscar analytics de tráfego" }, { status: 500 });
-  }
-}
+});

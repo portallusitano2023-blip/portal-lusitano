@@ -1,10 +1,27 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import EventosContent from "@/components/eventos/EventosContent";
+import { generatePageMetadata } from "@/lib/seo";
 
 // ISR: Revalidate events every hour (matches layout)
 export const revalidate = 3600;
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "Eventos Equestres — Calendário Lusitano",
+  description:
+    "Calendário completo de eventos equestres em Portugal: exposições APSL, provas de dressage, working equitation e competições de cavalos Lusitanos. Inscrições e detalhes.",
+  path: "/eventos",
+  keywords: [
+    "eventos equestres portugal",
+    "exposições APSL",
+    "provas dressage",
+    "working equitation",
+    "competições cavalos lusitanos",
+    "calendário equestre",
+  ],
+});
 
 export default async function EventosPage() {
   const { data, error } = await supabase

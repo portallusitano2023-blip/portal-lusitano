@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BreadcrumbSchema, WebApplicationSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, WebApplicationSchema, FAQSchema } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -49,6 +49,29 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const faqItems = [
+    {
+      question: "Como é calculado o valor de um cavalo Lusitano?",
+      answer:
+        "O valor é estimado considerando múltiplos factores: idade, linhagem, nível de treino, palmarés desportivo, conformação, temperamento, saúde documentada e mercado geográfico. A ferramenta analisa mais de 15 critérios de valorização.",
+    },
+    {
+      question: "Que factores influenciam o preço de um cavalo Lusitano?",
+      answer:
+        "Os principais factores são: genealogia e linhagem (especialmente Veiga ou outras famílias elite), nível de treino (CDI, Dressage, Trabalho), palmarés (competições e prémios), conformação e aprumos, temperamento, saúde, registo APSL, e mercado (Portugal vs. Brasil vs. Resto do Mundo).",
+    },
+    {
+      question: "Posso confiar na estimativa da calculadora?",
+      answer:
+        "A calculadora fornece um intervalo aproximado baseado em dados de mercado. Para uma avaliação precisa, recomendamos uma análise veterinária completa, teste montado profissional e consulta com especialistas em genealogia Lusitana.",
+    },
+    {
+      question: "Como afecta o registo APSL o valor do cavalo?",
+      answer:
+        "Um cavalo com registo APSL (Associação Portuguesa de Stud-Book Lusitano) válido tem maior valor de mercado, especialmente se tiver genealogia documentada. Sem registo, o valor é significativamente reduzido.",
+    },
+  ];
+
   return (
     <>
       <BreadcrumbSchema
@@ -62,6 +85,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         description="Calcule o valor estimado de um cavalo Lusitano com base em idade, linhagem, nível de treino, palmarés e conformação. Ferramenta gratuita."
         url={`${SITE_URL}/calculadora-valor`}
       />
+      <FAQSchema items={faqItems} />
       {children}
     </>
   );

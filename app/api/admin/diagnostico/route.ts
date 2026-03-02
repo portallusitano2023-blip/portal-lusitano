@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { verifySession } from "@/lib/auth";
+import { withAdminAuth, apiSuccess } from "@/lib/api-helpers";
 
 interface DiagnosticoCheck {
   status: string;
@@ -11,12 +11,7 @@ interface DiagnosticoCheck {
   [key: string]: unknown;
 }
 
-export async function GET(_req: NextRequest) {
-  // Auth gate - only admins can access diagnostics
-  const sessionEmail = await verifySession();
-  if (!sessionEmail) {
-    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
-  }
+export const GET = withAdminAuth(async (_req: NextRequest, { email: sessionEmail }) => {
 
   const diagnostico: {
     timestamp: string;
@@ -137,5 +132,5 @@ export async function GET(_req: NextRequest) {
     status: checksOK === totalChecks ? "✅ TUDO OK" : "⚠️ ALGUNS PROBLEMAS",
   };
 
-  return NextResponse.json(diagnostico, { status: 200 });
-}
+  return apiSuccess(diagnostico);
+});

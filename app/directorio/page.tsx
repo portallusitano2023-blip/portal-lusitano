@@ -1,9 +1,26 @@
+import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import DirectorioContent from "@/components/directorio/DirectorioContent";
+import { generatePageMetadata } from "@/lib/seo";
 
 // ISR: Revalidate directory every hour (matches layout)
 export const revalidate = 3600;
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "Directório de Coudelarias — Criadores Lusitanos",
+  description:
+    "Directório completo de coudelarias e criadores de cavalos Lusitanos em Portugal. Encontre criadores certificados, linhagens, contactos e especializações por região.",
+  path: "/directorio",
+  keywords: [
+    "coudelarias portugal",
+    "criadores lusitanos",
+    "directório equestre",
+    "linhagens lusitano",
+    "garanhões lusitanos",
+    "coudelarias certificadas APSL",
+  ],
+});
 
 export default async function DirectorioPage() {
   const { data, error } = await supabase

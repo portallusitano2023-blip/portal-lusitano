@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BreadcrumbSchema, WebApplicationSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, WebApplicationSchema, FAQSchema } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -48,6 +48,29 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const faqItems = [
+    {
+      question: "Como saber se um cavalo é compatível comigo?",
+      answer:
+        "A compatibilidade depende do seu nível equestre, objectivos (competição, lazer, trabalho), experiência, e o temperamento do cavalo. O verificador analisa a combinação garanhão-égua e recomenda perfis de cavaleiro ideais para os descendentes.",
+    },
+    {
+      question: "O que é o verificador de compatibilidade genética?",
+      answer:
+        "É uma ferramenta que analisa a compatibilidade genética entre um garanhão e uma égua Lusitana. Calcula o Coeficiente de Consanguinidade (COI), riscos hereditários, pelagens esperadas e recomenda perfis de cavaleiro para a descendência.",
+    },
+    {
+      question: "Como é calculado o COI (Coeficiente de Inbreeding)?",
+      answer:
+        "O COI mede o grau de consanguinidade na linhagem. Um COI elevado indica maior risco de problemas genéticos. O verificador utiliza a genealogia completa e recomenda acasalamentos mais seguros para melhoramento genético.",
+    },
+    {
+      question: "Quais são os riscos de um COI elevado?",
+      answer:
+        "Um COI elevado (>10%) aumenta o risco de problemas hereditários como fragilidade óssea, imunidade reduzida e defeitos congénitos. Recomendamos preferir acasalamentos com COI mais baixo para garantir descendência mais saudável.",
+    },
+  ];
+
   return (
     <>
       <BreadcrumbSchema
@@ -64,6 +87,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         description="Verifique a compatibilidade entre cavaleiro e cavalo Lusitano. Análise personalizada de nível, objectivos e perfil equestre."
         url={`${SITE_URL}/verificador-compatibilidade`}
       />
+      <FAQSchema items={faqItems} />
       {children}
     </>
   );

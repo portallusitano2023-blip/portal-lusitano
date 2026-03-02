@@ -5,6 +5,7 @@ import Stripe from "stripe";
 import { CONTACT_EMAIL } from "@/lib/constants";
 import { logger } from "@/lib/logger";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { queueWebhookRetry } from "@/lib/webhook-retry";
 import { handleCavaloAnuncio } from "./handlers/checkout-cavalo";
 import { handleInstagramAd } from "./handlers/checkout-instagram";
 import { handlePublicidade } from "./handlers/checkout-publicidade";
@@ -115,10 +116,21 @@ export async function POST(req: Request) {
 
     return Response.json({ received: true });
   } catch (error) {
-    logger.error(
-      `Webhook handler error: ${error instanceof Error ? error.message : "Unknown error"}`
-    );
-    return Response.json({ error: "Webhook handler failed" }, { status: 500 });
+    const errorMsg = error instanceof Error ? error.message : "Unknown error";
+    logger.error(`Webhook handler error: ${errorMsg}`, {
+      eventId: event.id,
+      eventType: event.type,
+    });
+
+    // Queue failed event for retry instead of losing it
+    try {
+      await queueWebhookRetry(event.id, event.type, JSON.stringify(event.data.object));
+    } catch (queueError) {
+      logger.error("Failed to queue webhook for retry:", queueError);
+    }
+
+    // Still return 500 so Stripe knows to retry, but we've also queued it locally
+    return Response.json({ error: "Webhook handler failed, event queued for retry" }, { status: 500 });
   }
 }
 

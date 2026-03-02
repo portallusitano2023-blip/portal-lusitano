@@ -174,3 +174,20 @@ export const fetchRelatedArticles = cache(
 export const fetchArticleSlugs = cache(
   async (): Promise<Array<{ slug: string }>> => client.fetch(ARTICLE_SLUGS_QUERY)
 );
+
+// --- Cavalo queries ---
+const CAVALO_DETAIL_QUERY = `*[_type == "cavalo" && slug.current == $slug][0] {
+  nome,
+  idade,
+  ferro,
+  genealogia,
+  descricao,
+  preco,
+  "slug": slug.current,
+  "imageUrl": fotografiaPrincipal.asset->url
+}`;
+
+export const fetchCavaloBySlug = cache(
+  async (slug: string) =>
+    client.fetch(CAVALO_DETAIL_QUERY, { slug })
+);

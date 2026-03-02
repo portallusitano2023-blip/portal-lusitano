@@ -15,25 +15,67 @@ const sendToAnalytics = (metric: Metric) => {
   });
 };
 
+// Send vitals to our custom analytics API endpoint
+const sendToCustomAnalytics = (metric: Metric) => {
+  try {
+    const payload = {
+      name: metric.name,
+      value: metric.value,
+      rating: metric.rating,
+      delta: metric.delta,
+      id: metric.id,
+      navigationType: (metric as any).navigationType,
+    };
+
+    // Use sendBeacon for reliability (survives page navigation)
+    if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+      navigator.sendBeacon("/api/analytics/vitals", JSON.stringify(payload));
+    } else {
+      // Fallback to fetch for browsers without sendBeacon
+      fetch("/api/analytics/vitals", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        keepalive: true, // Ensures request completes even if page unloads
+      }).catch((error) => {
+        if (process.env.NODE_ENV === "development") {
+          logger.debug("Failed to send Web Vital to analytics", { error: error.message });
+        }
+      });
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === "development") {
+      logger.debug("Error preparing Web Vital payload", {
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+};
+
 export function reportWebVitals(metric: Metric) {
   switch (metric.name) {
     case "CLS": // Cumulative Layout Shift - deve ser < 0.1
       sendToAnalytics(metric);
+      sendToCustomAnalytics(metric);
       break;
     case "FCP": // First Contentful Paint - deve ser < 1.8s
       sendToAnalytics(metric);
+      sendToCustomAnalytics(metric);
       break;
     case "LCP": // Largest Contentful Paint - deve ser < 2.5s
       sendToAnalytics(metric);
+      sendToCustomAnalytics(metric);
       break;
     case "TTFB": // Time to First Byte - deve ser < 800ms
       sendToAnalytics(metric);
+      sendToCustomAnalytics(metric);
       break;
     case "INP": // Interaction to Next Paint - deve ser < 200ms (substitui FID)
       sendToAnalytics(metric);
+      sendToCustomAnalytics(metric);
       break;
     default:
       sendToAnalytics(metric);
+      sendToCustomAnalytics(metric);
   }
 }
 

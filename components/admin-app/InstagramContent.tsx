@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Instagram, Check, X, Loader2, ExternalLink, Download, Mail } from "lucide-react";
 
 interface InstagramUpload {
@@ -237,8 +238,14 @@ export default function InstagramContent() {
                         return (
                           <div key={idx} className="bg-black rounded-lg overflow-hidden">
                             {isImage ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img src={url} alt={`Media ${idx + 1}`} className="w-full h-auto" />
+                              <Image
+                                src={url}
+                                alt={`Media ${idx + 1}`}
+                                width={800}
+                                height={600}
+                                className="w-full h-auto object-cover"
+                                unoptimized
+                              />
                             ) : isVideo ? (
                               <video src={url} controls className="w-full h-auto" />
                             ) : (
