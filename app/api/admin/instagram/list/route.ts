@@ -1,40 +1,27 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { verifySession } from "@/lib/auth";
-import { logger } from "@/lib/logger";
+import { withAdminAuth, apiSuccess, apiError } from "@/lib/api-helpers";
 
-export async function GET(req: NextRequest) {
-  try {
-    // Verificar autenticação
-    const email = await verifySession();
-    if (!email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+export const GET = withAdminAuth(async (req: NextRequest) => {
+  const { searchParams } = new URL(req.url);
+  const filter = searchParams.get("filter") || "all";
 
-    const { searchParams } = new URL(req.url);
-    const filter = searchParams.get("filter") || "all";
+  let query = supabase
+    .from("instagram_uploads")
+    .select(
+      "id, session_id, caption, hashtags, link, observacoes, files_urls, status, customer_email, created_at, published_at"
+    )
+    .order("created_at", { ascending: false });
 
-    let query = supabase
-      .from("instagram_uploads")
-      .select(
-        "id, session_id, caption, hashtags, link, observacoes, files_urls, status, customer_email, created_at, published_at"
-      )
-      .order("created_at", { ascending: false });
-
-    if (filter !== "all") {
-      query = query.eq("status", filter);
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
-      logger.error("Supabase error:", error);
-      throw new Error(error.message);
-    }
-
-    return NextResponse.json({ uploads: data || [] });
-  } catch (error) {
-    logger.error("List error:", error);
-    return NextResponse.json({ error: "Erro ao listar uploads" }, { status: 500 });
+  if (filter !== "all") {
+    query = query.eq("status", filter);
   }
-}
+
+  const { data, error } = await query;
+
+  if (error) {
+    return apiError("Erro ao listar uploads", 500);
+  }
+
+  return apiSuccess({ uploads: data || [] });
+});

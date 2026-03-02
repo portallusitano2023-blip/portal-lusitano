@@ -85,31 +85,43 @@ function isValidOrigin(request: NextRequest): boolean {
 }
 
 /**
- * CSP: Content Security Policy.
+ * CSP: Content Security Policy with Per-Request Nonces.
  *
- * Next.js 16 with middleware no longer auto-applies nonces to script tags,
- * so 'strict-dynamic' + nonce blocks ALL scripts (hydration breaks).
- * Use 'self' + 'unsafe-inline' instead — still blocks XSS from external
- * domains while allowing Next.js inline scripts to execute.
+ * Generates a unique cryptographic nonce for each request to replace 'unsafe-inline'
+ * for scripts. Modern browsers that support nonces will ignore 'unsafe-inline' when
+ * a nonce is present, providing strong XSS protection. Older browsers fall back to
+ * 'unsafe-inline' for compatibility.
  */
-// Pre-computed CSP string — computed once at module load, not per request
-const CSP_STRING = [
-  "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
-  "font-src 'self' https://fonts.gstatic.com",
-  `connect-src 'self'${IS_DEV ? " ws://localhost:* ws://127.0.0.1:*" : ""} https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google`,
-  "frame-src 'self' blob: https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
-  "object-src 'none'",
-  "base-uri 'self'",
-].join("; ");
 
-function applySecurityHeaders(response: NextResponse, contentLanguage = "pt") {
-  // CSP is static (no per-request nonce needed). Other security headers
-  // (HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.)
-  // are already set in next.config.js headers() — no need to duplicate them.
-  response.headers.set("Content-Security-Policy", CSP_STRING);
+/**
+ * Generate a cryptographic nonce using crypto.getRandomValues().
+ * Returns a URL-safe base64 string.
+ */
+function generateNonce(): string {
+  const buffer = new Uint8Array(16);
+  crypto.getRandomValues(buffer);
+  return Buffer.from(buffer).toString("base64");
+}
+
+function buildCSPString(nonce: string): string {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
+    "font-src 'self' https://fonts.gstatic.com",
+    `connect-src 'self'${IS_DEV ? " ws://localhost:* ws://127.0.0.1:*" : ""} https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google`,
+    "frame-src 'self' blob: https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+  ].join("; ");
+}
+
+function applySecurityHeaders(response: NextResponse, nonce: string, contentLanguage = "pt") {
+  // CSP header with per-request nonce
+  response.headers.set("Content-Security-Policy", buildCSPString(nonce));
+  // Pass nonce to Server Components via custom header
+  response.headers.set("x-nonce", nonce);
   response.headers.set("Content-Language", contentLanguage);
   response.headers.set("X-Download-Options", "noopen");
 }
@@ -118,10 +130,13 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const pathname = request.nextUrl.pathname;
 
+  // Generate a unique nonce for this request
+  const nonce = generateNonce();
+
   // Expose pathname to Server Components (for hreflang, lang attribute)
   response.headers.set("x-pathname", pathname);
 
-  applySecurityHeaders(response);
+  applySecurityHeaders(response, nonce);
 
   // API routes: CSRF + Rate Limiting + CORS + Admin guard
   if (pathname.startsWith("/api/")) {
@@ -247,7 +262,7 @@ export async function middleware(request: NextRequest) {
     const rewriteResponse = NextResponse.rewrite(url);
     rewriteResponse.headers.set("x-pathname", pathname);
     rewriteResponse.cookies.set("locale", locale, { path: "/", sameSite: "lax" });
-    applySecurityHeaders(rewriteResponse, locale);
+    applySecurityHeaders(rewriteResponse, nonce, locale);
     return rewriteResponse;
   }
 
