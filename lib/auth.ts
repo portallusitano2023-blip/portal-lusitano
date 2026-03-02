@@ -9,7 +9,7 @@ const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 const redis = redisUrl && redisToken ? new Redis({ url: redisUrl, token: redisToken }) : null;
 
-const SESSION_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
+const SESSION_TTL = 60 * 60 * 2; // 2 hours in seconds
 
 function getSecret() {
   if (!process.env.ADMIN_SECRET) {
@@ -24,7 +24,7 @@ export async function createSession(email: string) {
 
   const token = await new SignJWT({ email, jti })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("7d")
+    .setExpirationTime("2h")
     .sign(getSecret());
 
   // Register session in Redis — the source of truth for session validity
@@ -71,6 +71,48 @@ export async function verifySession() {
     }
 
     return verified.payload.email as string;
+  } catch {
+    return null;
+  }
+}
+
+export async function refreshSession() {
+  const cookie = (await cookies()).get("admin_session");
+
+  if (!cookie?.value) {
+    return null;
+  }
+
+  try {
+    const verified = await jwtVerify(cookie.value, getSecret());
+    const email = verified.payload.email as string | undefined;
+    const issuedAt = verified.payload.iat as number | undefined;
+
+    if (!email || !issuedAt) {
+      return null;
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+    const ageSeconds = now - issuedAt;
+    const oneHourSeconds = 60 * 60;
+
+    // If token is older than 1 hour, create a new one
+    if (ageSeconds > oneHourSeconds) {
+      // Delete the old session
+      const jti = verified.payload.jti as string | undefined;
+      if (jti && redis) {
+        try {
+          await redis.del(`session:${jti}`);
+        } catch {
+          // Redis down — old token will expire naturally
+        }
+      }
+
+      // Create new session
+      return await createSession(email);
+    }
+
+    return cookie.value;
   } catch {
     return null;
   }

@@ -110,7 +110,7 @@ export async function GET(_req: NextRequest) {
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY,
       process.env.ADMIN_EMAIL,
-      process.env.ADMIN_PASSWORD,
+      process.env.ADMIN_PASSWORD_HASH,
       process.env.ADMIN_SECRET,
     ].every(Boolean)
       ? "✅ OK"
@@ -120,7 +120,7 @@ export async function GET(_req: NextRequest) {
       ? "✅ Definida"
       : "❌ Não definida",
     ADMIN_EMAIL: process.env.ADMIN_EMAIL ? "✅ Definida" : "❌ Não definida",
-    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ? "✅ Definida" : "❌ Não definida",
+    ADMIN_PASSWORD_HASH: process.env.ADMIN_PASSWORD_HASH ? "✅ Definida" : "❌ Não definida",
     ADMIN_SECRET: process.env.ADMIN_SECRET ? "✅ Definida" : "❌ Não definida",
   };
 

@@ -1,9 +1,10 @@
 /**
  * Sanitize user input for use in PostgREST .or() filter strings.
- * Strips characters that act as structural delimiters in PostgREST syntax.
+ * Only allows letters (including accented), numbers, spaces, and hyphens.
+ * Strips all special characters that could be used in injection attacks.
  */
 export function sanitizeSearchInput(input: string): string {
-  return input.replace(/[,().\\%]/g, "").trim();
+  return input.replace(/[^a-zA-ZÀ-ÿ0-9\s\-]/g, "").trim().substring(0, 100);
 }
 
 /**

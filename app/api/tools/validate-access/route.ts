@@ -3,7 +3,8 @@ import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { z } from "zod";
 import type { Json } from "@/lib/database.types";
 
-const FREE_USES_PER_TOOL = 1;
+// Configurable via env var — allows A/B testing different free tier limits
+const FREE_USES_PER_TOOL = parseInt(process.env.FREE_USES_PER_TOOL || "1", 10);
 
 const jsonValue: z.ZodType<Json> = z.lazy(() =>
   z.union([

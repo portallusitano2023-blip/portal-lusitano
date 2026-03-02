@@ -75,6 +75,21 @@ export async function POST(request: NextRequest) {
     }
     const body = parsed.data;
 
+    // Ensure slug uniqueness
+    if (body.slug) {
+      const { data: existingSlug } = await supabase
+        .from("cavalos_venda")
+        .select("id")
+        .eq("slug", body.slug)
+        .single();
+      if (existingSlug) {
+        return NextResponse.json(
+          { error: "Já existe um cavalo com este slug" },
+          { status: 409 }
+        );
+      }
+    }
+
     const { data, error } = await supabase
       .from("cavalos_venda")
       .insert({

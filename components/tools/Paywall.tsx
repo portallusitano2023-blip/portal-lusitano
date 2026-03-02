@@ -20,6 +20,7 @@ interface PaywallProps {
   toolName: string;
   requiresAuth?: boolean;
   proFeatures?: string[];
+  previewContent?: React.ReactNode;
 }
 
 const DEFAULT_PRO_FEATURES = [
@@ -31,7 +32,7 @@ const DEFAULT_PRO_FEATURES = [
 
 const FEATURE_ICONS = [Zap, Download, History, Share2];
 
-export default function Paywall({ toolName, requiresAuth = false, proFeatures }: PaywallProps) {
+export default function Paywall({ toolName, requiresAuth = false, proFeatures, previewContent }: PaywallProps) {
   const features = proFeatures ?? DEFAULT_PRO_FEATURES;
   const { user } = useAuth();
   const router = useRouter();
@@ -115,7 +116,17 @@ export default function Paywall({ toolName, requiresAuth = false, proFeatures }:
   return (
     <div className="relative rounded-2xl overflow-hidden my-4">
       {/* Blurred background */}
-      <div className="blur-sm pointer-events-none select-none opacity-30 min-h-[320px] bg-[var(--background-secondary)]/50 rounded-2xl" />
+      <div className="blur-sm pointer-events-none select-none opacity-40 min-h-[320px] bg-[var(--background-secondary)]/50 rounded-2xl overflow-hidden">
+        {previewContent || (
+          <div className="p-6 space-y-4">
+            <div className="h-6 bg-[var(--foreground)]/10 rounded w-3/4" />
+            <div className="h-4 bg-[var(--foreground)]/8 rounded w-full" />
+            <div className="h-4 bg-[var(--foreground)]/8 rounded w-5/6" />
+            <div className="h-32 bg-[var(--foreground)]/5 rounded-lg" />
+            <div className="h-4 bg-[var(--foreground)]/8 rounded w-2/3" />
+          </div>
+        )}
+      </div>
 
       {/* Overlay */}
       <div className="absolute inset-0 flex items-center justify-center z-10">

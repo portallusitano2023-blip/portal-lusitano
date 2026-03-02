@@ -162,10 +162,109 @@ export default async function ProfissionaisPage() {
   );
 
   return (
-    <ProfissionaisContent
-      initialProfissionais={profissionais}
-      initialEventos={eventos}
-      initialArtigos={artigos}
-    />
+    <>
+      {/* Professional Pricing Section */}
+      <section className="px-6 md:px-12 pt-32 pb-20 max-w-5xl mx-auto">
+        <div className="text-center mb-16">
+          <span className="inline-block text-[var(--gold)] text-[9px] uppercase tracking-[0.25em] sm:tracking-[0.4em] font-bold border border-[var(--gold)]/30 px-4 py-2 mb-8">
+            Registe-se como Profissional
+          </span>
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-serif leading-none tracking-tight mb-6">
+            Aumente a sua
+            <br />
+            <em className="text-[var(--gold)]">Visibilidade</em>
+          </h2>
+          <p className="text-[var(--foreground-secondary)] text-lg max-w-2xl mx-auto font-light">
+            Registe-se no directório profissional e alcance novos clientes no mercado Lusitano.
+          </p>
+        </div>
+
+        {/* Pricing Card */}
+        <div className="grid md:grid-cols-1 max-w-2xl mx-auto">
+          <div className="p-8 sm:p-10 border border-[var(--border)] rounded-2xl relative bg-[var(--gold)]/5">
+            {/* Top border accent */}
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-[var(--gold)]" />
+
+            {/* Badge */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+              <span className="flex items-center gap-1.5 bg-[var(--gold)] text-black text-[9px] uppercase tracking-wider font-bold px-3.5 py-1.5 whitespace-nowrap rounded-full">
+                Directório Profissional
+              </span>
+            </div>
+
+            <div className="mb-8 pt-6">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-4">Plano anual</p>
+              <div className="flex items-end gap-2 mb-2">
+                <span className="text-5xl font-serif bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] bg-clip-text text-transparent">
+                  6
+                </span>
+                <span className="text-[var(--foreground-secondary)] text-lg">EUR</span>
+                <span className="text-[var(--foreground-muted)] text-base">/mês</span>
+              </div>
+              <p className="text-xs text-[var(--foreground-muted)]">
+                Faturado anualmente: 72€/ano · Cancele quando quiser
+              </p>
+            </div>
+
+            {/* Features */}
+            <ul className="space-y-3.5 mb-8">
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm text-[var(--foreground-secondary)]">Perfil verificado no directório</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm text-[var(--foreground-secondary)]">Visibilidade elevada entre compradores</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm text-[var(--foreground-secondary)]">Contacto directo com clientes</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm text-[var(--foreground-secondary)]">Badge profissional exclusivo</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm text-[var(--foreground-secondary)]">Publicar eventos e artigos educativos</span>
+              </li>
+            </ul>
+
+            {/* CTA Button */}
+            <a
+              href="/profissionais/registar"
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black font-bold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all shadow-lg shadow-[var(--gold)]/25 hover:shadow-[var(--gold)]/40 hover:-translate-y-0.5 active:translate-y-0"
+            >
+              Começar Registo
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+
+            {/* Trust note */}
+            <p className="text-center text-[10px] text-[var(--foreground-muted)] mt-4">
+              Cancele a qualquer momento · Sem fidelização
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Directory Content */}
+      <ProfissionaisContent
+        initialProfissionais={profissionais}
+        initialEventos={eventos}
+        initialArtigos={artigos}
+      />
+    </>
   );
 }

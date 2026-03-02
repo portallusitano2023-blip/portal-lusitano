@@ -22,8 +22,23 @@ const LEVEL_PRIORITY: Record<LogLevel, number> = {
 const isDev = process.env.NODE_ENV !== "production";
 const minLevel: LogLevel = isDev ? "debug" : "info";
 
+// PII patterns for redaction in production
+const PII_PATTERNS: [RegExp, string][] = [
+  [/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, "[EMAIL_REDACTED]"],
+  [/\b\d{9,15}\b/g, "[PHONE_REDACTED]"],
+  [/\b\d{3}[-.]?\d{3}[-.]?\d{3}\b/g, "[NIF_REDACTED]"],
+];
+
 function shouldLog(level: LogLevel): boolean {
   return LEVEL_PRIORITY[level] >= LEVEL_PRIORITY[minLevel];
+}
+
+function redactPII(text: string): string {
+  let result = text;
+  for (const [pattern, replacement] of PII_PATTERNS) {
+    result = result.replace(pattern, replacement);
+  }
+  return result;
 }
 
 function formatArgs(args: unknown[]): unknown[] {
@@ -51,11 +66,12 @@ function log(level: LogLevel, message: string, ...args: unknown[]): void {
             : console.log;
     consoleFn(prefix, message, ...args);
   } else {
-    // Production: structured JSON for log aggregation
+    // Production: structured JSON for log aggregation with PII redaction
+    const redactedMessage = redactPII(message);
     const entry = {
       timestamp: new Date().toISOString(),
       level,
-      message,
+      message: redactedMessage,
       ...(args.length === 1 && typeof args[0] === "object" && args[0] !== null
         ? (args[0] as Record<string, unknown>)
         : args.length > 0
