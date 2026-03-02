@@ -42,7 +42,9 @@
       "WebFetch(domain:pt.wikipedia.org)",
       "WebFetch(domain:coudelariaflor-dolis.webnode.pt)",
       "WebFetch(domain:www.winetourism.com)",
-      "WebFetch(domain:www.tripadvisor.com)"
+      "WebFetch(domain:www.tripadvisor.com)",
+      "Bash(git checkout -- package-lock.json)",
+      "Bash(npm ci)"
     ],
     "additionalDirectories": ["\\tmp", "C:\\Users\\USUARIO\\portal-lusitano\\.git"]
   }

@@ -345,9 +345,9 @@ export default function SobreContent() {
                 <div className="space-y-6">
                   {[
                     tr(
-                      "O Portal Lusitano foi fundado por Francisco Gaspar com uma visão clara: criar a plataforma de referência para o cavalo Lusitano no mundo digital.",
-                      "Portal Lusitano was founded by Francisco Gaspar with a clear vision: to create the reference platform for the Lusitano horse in the digital world.",
-                      "Portal Lusitano fue fundado por Francisco Gaspar con una visión clara: crear la plataforma de referencia para el caballo Lusitano en el mundo digital."
+                      "O Portal Lusitano foi fundado com uma visão clara: criar a plataforma de referência para o cavalo Lusitano no mundo digital.",
+                      "Portal Lusitano was founded with a clear vision: to create the reference platform for the Lusitano horse in the digital world.",
+                      "Portal Lusitano fue fundado con una visión clara: crear la plataforma de referencia para el caballo Lusitano en el mundo digital."
                     ),
                     tr(
                       "Combinando engenharia digital com profundo conhecimento equestre, construímos ferramentas que ajudam cavaleiros, criadores e entusiastas a tomar decisões informadas.",
