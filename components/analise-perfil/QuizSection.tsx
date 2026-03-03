@@ -58,18 +58,61 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
       className="min-h-screen pt-24 pb-20 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
     >
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        {accessLoading ? (
-          <div className="flex items-center justify-center py-4">
-            <div className="w-5 h-5 border-2 border-[var(--gold)]/30 border-t-[var(--gold)] rounded-full animate-spin" />
-          </div>
-        ) : (
-          <SubscriptionBanner
-            isSubscribed={isSubscribed}
-            freeUsesLeft={freeUsesLeft}
-            requiresAuth={requiresAuth}
-          />
+        {/* Only show SubscriptionBanner/ProUpgradeCard when user CAN use — 
+            when !canUse the Paywall below already handles auth/subscribe prompts */}
+        {canUse && (
+          <>
+            {accessLoading ? (
+              <div className="flex items-center justify-center py-4">
+                <div className="w-5 h-5 border-2 border-[var(--gold)]/30 border-t-[var(--gold)] rounded-full animate-spin" />
+              </div>
+            ) : (
+              <SubscriptionBanner
+                isSubscribed={isSubscribed}
+                freeUsesLeft={freeUsesLeft}
+                requiresAuth={requiresAuth}
+              />
+            )}
+            <ProUpgradeCard isSubscribed={isSubscribed} />
+          </>
         )}
-        <ProUpgradeCard isSubscribed={isSubscribed} />
+
+        {/* Paywall — shown before the question card when user cannot use */}
+        {!canUse && !accessLoading && (
+          <div className="mb-8">
+            <Paywall
+              toolName={t.analise_perfil.title_line1}
+              requiresAuth={requiresAuth}
+              proFeatures={[
+                tr(
+                  "Análise completa com 14 perguntas e 4 perfis",
+                  "Full analysis with 14 questions and 4 profiles",
+                  "Análisis completo con 14 preguntas y 4 perfiles"
+                ),
+                tr(
+                  "Sub-perfil especializado (Elite FEI, Trabalho, etc.)",
+                  "Specialised sub-profile (FEI Elite, Working Eq., etc.)",
+                  "Sub-perfil especializado (Elite FEI, Trabajo, etc.)"
+                ),
+                tr(
+                  "Percentagem de confiança no resultado",
+                  "Confidence percentage in results",
+                  "Porcentaje de confianza en el resultado"
+                ),
+                tr(
+                  "Guia de cavalos recomendados por perfil",
+                  "Recommended horses guide by profile",
+                  "Guía de caballos recomendados por perfil"
+                ),
+                tr(
+                  "Plano de custos e timeline personalizada",
+                  "Personalised cost plan and timeline",
+                  "Plan de costes y cronograma personalizado"
+                ),
+              ]}
+            />
+          </div>
+        )}
 
         {/* Barra de progresso rica */}
         <div className="mb-6">
@@ -206,41 +249,8 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
                 )}
               </div>
             </div>
-            {!canUse ? (
-              <div className="mt-4">
-                <Paywall
-                  toolName={t.analise_perfil.title_line1}
-                  requiresAuth={requiresAuth}
-                  proFeatures={[
-                    tr(
-                      "Análise completa com 14 perguntas e 4 perfis",
-                      "Full analysis with 14 questions and 4 profiles",
-                      "Análisis completo con 14 preguntas y 4 perfiles"
-                    ),
-                    tr(
-                      "Sub-perfil especializado (Elite FEI, Trabalho, etc.)",
-                      "Specialised sub-profile (FEI Elite, Working Eq., etc.)",
-                      "Sub-perfil especializado (Elite FEI, Trabajo, etc.)"
-                    ),
-                    tr(
-                      "Percentagem de confiança no resultado",
-                      "Confidence percentage in results",
-                      "Porcentaje de confianza en el resultado"
-                    ),
-                    tr(
-                      "Guia de cavalos recomendados por perfil",
-                      "Recommended horses guide by profile",
-                      "Guía de caballos recomendados por perfil"
-                    ),
-                    tr(
-                      "Plano de custos e timeline personalizada",
-                      "Personalised cost plan and timeline",
-                      "Plan de costes y cronograma personalizado"
-                    ),
-                  ]}
-                />
-              </div>
-            ) : (
+            {/* Answer options — only rendered when user can use the tool */}
+            {canUse && (
               <div className="space-y-2.5">
                 {question.options.map((opt, idx) => (
                   <button
