@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
+import Breadcrumb from "@/components/Breadcrumb";
 import {
   ArrowLeft,
   BookOpen,
@@ -42,6 +43,14 @@ export default function LinhagensContent() {
             <ArrowLeft size={18} />
             <span className="text-sm">{t.linhagens.back}</span>
           </LocalizedLink>
+
+          {/* Breadcrumb */}
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Linhagens" },
+            ]}
+          />
 
           <RevealOnScroll>
             <div className="text-center">

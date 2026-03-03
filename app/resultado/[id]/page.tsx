@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import LocalizedLink from "@/components/LocalizedLink";
+import Breadcrumb from "@/components/Breadcrumb";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { useAuth } from "@/components/auth/AuthProvider";
 import {
@@ -500,6 +501,15 @@ export default function ResultadoPage() {
           <ArrowLeft className="w-4 h-4" />
           {isOwner ? "Voltar ao Historico" : "Voltar as Ferramentas"}
         </LocalizedLink>
+
+        {/* Breadcrumb */}
+        <Breadcrumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Ferramentas", href: "/ferramentas" },
+            { label: "Resultado" },
+          ]}
+        />
 
         {/* Header card */}
         <div className="bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-xl p-8 mb-8">

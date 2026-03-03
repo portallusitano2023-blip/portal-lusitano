@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 import { supabase } from "@/lib/supabase-admin";
-import { fetchArticleSlugs } from "@/lib/sanity-queries";
+import { fetchArticleSlugs, fetchCavaloSlugs } from "@/lib/sanity-queries";
 import { logger } from "@/lib/logger";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
@@ -239,6 +239,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     logger.error("Erro ao buscar linhagens para sitemap:", error);
   }
 
+  // Cavalos (dinâmico via Sanity)
+  let cavalosDetailPages: MetadataRoute.Sitemap = [];
+  try {
+    const slugs = await fetchCavaloSlugs();
+    if (slugs && slugs.length > 0) {
+      cavalosDetailPages = slugs.map((c) =>
+        withAlternates(`/cavalo/${c.slug}`, {
+          lastModified: currentDate,
+          changeFrequency: "weekly",
+          priority: 0.7,
+        })
+      );
+    }
+  } catch (error) {
+    logger.error("Erro ao buscar cavalos para sitemap:", error);
+  }
+
   // Artigos do jornal (dinâmico via Sanity)
   let journalArticles: MetadataRoute.Sitemap = [];
   const staticSlugs = [
@@ -274,6 +291,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...coudelariasPages,
     ...eventosPages,
     ...cavalosPages,
+    ...cavalosDetailPages,
     ...linhagensPages,
     ...journalArticles,
   ];

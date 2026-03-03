@@ -267,6 +267,12 @@ const CAVALO_DETAIL_QUERY = `*[_type == "cavalo" && slug.current == $slug][0] {
   "imageUrl": fotografiaPrincipal.asset->url
 }`;
 
+const CAVALO_SLUGS_QUERY = `*[_type == "cavalo"] { "slug": slug.current }`;
+
 export const fetchCavaloBySlug = cache(async (slug: string) =>
   client.fetch(CAVALO_DETAIL_QUERY, { slug })
+);
+
+export const fetchCavaloSlugs = cache(
+  async (): Promise<Array<{ slug: string }>> => client.fetch(CAVALO_SLUGS_QUERY)
 );

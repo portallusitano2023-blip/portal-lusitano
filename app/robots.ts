@@ -22,6 +22,7 @@ export default function robots(): MetadataRoute.Robots {
           "/studio/",
           "/directorio/registar",
           "/ebook-gratis/download",
+          "/resultado/",
         ],
       },
       // AI scrapers — bloquear conteúdo editorial
