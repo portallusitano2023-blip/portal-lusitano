@@ -298,8 +298,8 @@ export default function CalculadoraValorPage() {
                 </div>
               )}
 
-              {/* Form steps */}
-              {step > 0 && !resultado && !isCalculating && (
+              {/* Form steps — only shown when user can use the tool */}
+              {canUse && step > 0 && !resultado && !isCalculating && (
                 <div
                   key={`step-${step}`}
                   className="space-y-8 pt-8 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
@@ -456,20 +456,6 @@ export default function CalculadoraValorPage() {
                       );
                     })()}
 
-                  {!canUse && (
-                    <Paywall
-                      toolName={t.calculadora.tool_name}
-                      requiresAuth={requiresAuth}
-                      proFeatures={[
-                        "Avaliação completa com 15+ factores de valorização",
-                        "Score de liquidez e tempo estimado de venda",
-                        "Exportação PDF profissional com análise detalhada",
-                        "Comparação com mercado e top 10% da raça",
-                        "Recomendações personalizadas de valorização",
-                      ]}
-                    />
-                  )}
-
                   <StepNavigation
                     step={step}
                     totalSteps={TOTAL_STEPS}
@@ -495,6 +481,23 @@ export default function CalculadoraValorPage() {
                       );
                     }}
                     onCalculate={calcular}
+                  />
+                </div>
+              )}
+
+              {/* Paywall — replaces form when user cannot use */}
+              {!canUse && !resultado && !isCalculating && (
+                <div className="pt-8">
+                  <Paywall
+                    toolName={t.calculadora.tool_name}
+                    requiresAuth={requiresAuth}
+                    proFeatures={[
+                      "Avaliação completa com 15+ factores de valorização",
+                      "Score de liquidez e tempo estimado de venda",
+                      "Exportação PDF profissional com análise detalhada",
+                      "Comparação com mercado e top 10% da raça",
+                      "Recomendações personalizadas de valorização",
+                    ]}
                   />
                 </div>
               )}

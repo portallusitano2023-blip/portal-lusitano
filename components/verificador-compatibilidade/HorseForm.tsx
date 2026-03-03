@@ -134,8 +134,43 @@ export default function HorseForm({
         </button>
       </div>
 
-      {/* Formulário do Cavalo */}
-      <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-4 sm:p-6 border border-[var(--border)] space-y-6">
+      {/* Paywall — replaces form when user cannot use */}
+      {!canUse && (
+        <Paywall
+          toolName={t.verificador.tool_name}
+          requiresAuth={requiresAuth}
+          proFeatures={[
+            tr(
+              "Análise genética completa com 5 loci de pelagem",
+              "Complete genetic analysis with 5 coat loci",
+              "Análisis genético completo con 5 loci de pelaje"
+            ),
+            tr(
+              "Cálculo de COI e risco de consanguinidade",
+              "COI calculation and inbreeding risk",
+              "Cálculo de COI y riesgo de consanguinidad"
+            ),
+            tr(
+              "Probabilidades reais de pelagens dos descendentes",
+              "Real coat colour probabilities for offspring",
+              "Probabilidades reales de pelajes de los descendientes"
+            ),
+            tr(
+              "10 factores de compatibilidade reprodutiva",
+              "10 reproductive compatibility factors",
+              "10 factores de compatibilidad reproductiva"
+            ),
+            tr(
+              "Exportação PDF com relatório completo do par",
+              "PDF export with complete pair report",
+              "Exportación PDF con informe completo del par"
+            ),
+          ]}
+        />
+      )}
+
+      {/* Formulário do Cavalo — only shown when user can use */}
+      {canUse && <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-4 sm:p-6 border border-[var(--border)] space-y-6">
         <div className="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
           {tab === "garanhao" ? (
             <Crown className="text-blue-400" size={24} />
@@ -540,47 +575,10 @@ export default function HorseForm({
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Paywall */}
-      {!canUse && (
-        <div className="mt-8">
-          <Paywall
-            toolName={t.verificador.tool_name}
-            requiresAuth={requiresAuth}
-            proFeatures={[
-              tr(
-                "Análise genética completa com 5 loci de pelagem",
-                "Complete genetic analysis with 5 coat loci",
-                "Análisis genético completo con 5 loci de pelaje"
-              ),
-              tr(
-                "Cálculo de COI e risco de consanguinidade",
-                "COI calculation and inbreeding risk",
-                "Cálculo de COI y riesgo de consanguinidad"
-              ),
-              tr(
-                "Probabilidades reais de pelagens dos descendentes",
-                "Real coat colour probabilities for offspring",
-                "Probabilidades reales de pelajes de los descendientes"
-              ),
-              tr(
-                "10 factores de compatibilidade reprodutiva",
-                "10 reproductive compatibility factors",
-                "10 factores de compatibilidad reproductiva"
-              ),
-              tr(
-                "Exportação PDF com relatório completo do par",
-                "PDF export with complete pair report",
-                "Exportación PDF con informe completo del par"
-              ),
-            ]}
-          />
-        </div>
-      )}
+      </div>}
 
       {/* COI Estimado em Tempo Real */}
-      {garanhao.linhagemFamosa &&
+      {canUse && garanhao.linhagemFamosa &&
         egua.linhagemFamosa &&
         (() => {
           const COI_ESTIMADOS: Record<string, Record<string, number>> = {

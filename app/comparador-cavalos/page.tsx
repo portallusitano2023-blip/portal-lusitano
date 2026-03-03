@@ -567,31 +567,31 @@ export default function ComparadorCavalosPage() {
               </div>
             )}
 
-            {/* Analyse button */}
-            {!showAnalise && (
-              <>
-                <button
-                  onClick={handleAnalyse}
-                  disabled={!canUse || calculando}
-                  className="w-full py-4 min-h-[52px] bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <BarChart3 size={22} />
-                  {t.comparador.btn_analyse}
-                </button>
-                {!canUse && (
-                  <Paywall
-                    toolName={t.comparador.tool_name}
-                    requiresAuth={requiresAuth}
-                    proFeatures={[
-                      "Comparação ilimitada de até 4 cavalos em simultâneo",
-                      "Score de potencial e ROI a 5 anos",
-                      "Radar comparativo com 8 dimensões",
-                      "Exportação PDF e CSV para Excel",
-                      "Análise de aptidão por disciplina desportiva",
-                    ]}
-                  />
-                )}
-              </>
+            {/* Analyse button — only when user can use */}
+            {!showAnalise && canUse && (
+              <button
+                onClick={handleAnalyse}
+                disabled={calculando}
+                className="w-full py-4 min-h-[52px] bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <BarChart3 size={22} />
+                {t.comparador.btn_analyse}
+              </button>
+            )}
+
+            {/* Paywall — replaces analyse button when user cannot use */}
+            {!showAnalise && !canUse && (
+              <Paywall
+                toolName={t.comparador.tool_name}
+                requiresAuth={requiresAuth}
+                proFeatures={[
+                  "Comparação ilimitada de até 4 cavalos em simultâneo",
+                  "Score de potencial e ROI a 5 anos",
+                  "Radar comparativo com 8 dimensões",
+                  "Exportação PDF e CSV para Excel",
+                  "Análise de aptidão por disciplina desportiva",
+                ]}
+              />
             )}
 
             {/* Loading state */}

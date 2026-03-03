@@ -77,43 +77,44 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
           </>
         )}
 
-        {/* Paywall — shown before the question card when user cannot use */}
+        {/* Paywall — replaces quiz content when user cannot use */}
         {!canUse && !accessLoading && (
-          <div className="mb-8">
-            <Paywall
-              toolName={t.analise_perfil.title_line1}
-              requiresAuth={requiresAuth}
-              proFeatures={[
-                tr(
-                  "Análise completa com 14 perguntas e 4 perfis",
-                  "Full analysis with 14 questions and 4 profiles",
-                  "Análisis completo con 14 preguntas y 4 perfiles"
-                ),
-                tr(
-                  "Sub-perfil especializado (Elite FEI, Trabalho, etc.)",
-                  "Specialised sub-profile (FEI Elite, Working Eq., etc.)",
-                  "Sub-perfil especializado (Elite FEI, Trabajo, etc.)"
-                ),
-                tr(
-                  "Percentagem de confiança no resultado",
-                  "Confidence percentage in results",
-                  "Porcentaje de confianza en el resultado"
-                ),
-                tr(
-                  "Guia de cavalos recomendados por perfil",
-                  "Recommended horses guide by profile",
-                  "Guía de caballos recomendados por perfil"
-                ),
-                tr(
-                  "Plano de custos e timeline personalizada",
-                  "Personalised cost plan and timeline",
-                  "Plan de costes y cronograma personalizado"
-                ),
-              ]}
-            />
-          </div>
+          <Paywall
+            toolName={t.analise_perfil.title_line1}
+            requiresAuth={requiresAuth}
+            proFeatures={[
+              tr(
+                "Análise completa com 14 perguntas e 4 perfis",
+                "Full analysis with 14 questions and 4 profiles",
+                "Análisis completo con 14 preguntas y 4 perfiles"
+              ),
+              tr(
+                "Sub-perfil especializado (Elite FEI, Trabalho, etc.)",
+                "Specialised sub-profile (FEI Elite, Working Eq., etc.)",
+                "Sub-perfil especializado (Elite FEI, Trabajo, etc.)"
+              ),
+              tr(
+                "Percentagem de confiança no resultado",
+                "Confidence percentage in results",
+                "Porcentaje de confianza en el resultado"
+              ),
+              tr(
+                "Guia de cavalos recomendados por perfil",
+                "Recommended horses guide by profile",
+                "Guía de caballos recomendados por perfil"
+              ),
+              tr(
+                "Plano de custos e timeline personalizada",
+                "Personalised cost plan and timeline",
+                "Plan de costes y cronograma personalizado"
+              ),
+            ]}
+          />
         )}
 
+        {/* Quiz content — only rendered when user can use the tool */}
+        {(canUse || accessLoading) && (
+        <>
         {/* Barra de progresso rica */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
@@ -297,6 +298,8 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             </button>
           </div>
         </div>
+        </>
+        )}
       </div>
     </div>
   );
