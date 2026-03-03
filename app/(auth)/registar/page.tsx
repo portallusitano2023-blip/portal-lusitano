@@ -210,10 +210,14 @@ function RegistarContent() {
 
     try {
       const supabase = createSupabaseBrowserClient();
+      const redirectTo = `${window.location.origin}/auth/callback${redirect ? `?next=${encodeURIComponent(redirect)}` : ""}`;
       const { error: authError } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: name } },
+        options: {
+          data: { full_name: name },
+          emailRedirectTo: redirectTo,
+        },
       });
 
       if (authError) {

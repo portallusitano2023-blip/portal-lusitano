@@ -217,7 +217,8 @@ export async function middleware(request: NextRequest) {
       pathname === "/api/favoritos" ||
       pathname === "/api/cart/get"
     ) {
-      response.headers.set("Cache-Control", "private, no-store");
+      response.headers.set("Cache-Control", "private, no-store, no-cache, must-revalidate");
+      response.headers.set("Pragma", "no-cache");
     }
 
     // Handle preflight requests
