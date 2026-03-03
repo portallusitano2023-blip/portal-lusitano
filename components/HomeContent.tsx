@@ -1,15 +1,18 @@
 "use client";
 
 import { useMemo } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import TextSplit from "@/components/TextSplit";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
-import AnimatedCounter from "@/components/ui/AnimatedCounter";
-import MagneticButton from "@/components/ui/MagneticButton";
-import ParallaxSection from "@/components/ui/ParallaxSection";
+
+// Dynamic imports for below-fold interactive components — reduces initial JS bundle
+const AnimatedCounter = dynamic(() => import("@/components/ui/AnimatedCounter"), { ssr: false });
+const MagneticButton = dynamic(() => import("@/components/ui/MagneticButton"));
+const ParallaxSection = dynamic(() => import("@/components/ui/ParallaxSection"));
 import {
   ShoppingCart,
   Crown,

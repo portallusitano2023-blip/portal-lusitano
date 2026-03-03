@@ -155,7 +155,7 @@ export default function HistoricoPage() {
 
   if (showLoadingSkeletons) {
     return (
-      <main className="min-h-screen bg-[#050505] px-4 py-12 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-[var(--background)] px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl">
           <PageHeader />
           <section
@@ -177,7 +177,7 @@ export default function HistoricoPage() {
 
   if (!user) {
     return (
-      <main className="min-h-screen bg-[#050505] px-4 py-12 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-[var(--background)] px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl">
           <PageHeader />
           <NotSubscribedCard reason="auth" />
@@ -192,7 +192,7 @@ export default function HistoricoPage() {
 
   if (!isSubscribed) {
     return (
-      <main className="min-h-screen bg-[#050505] px-4 py-12 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-[var(--background)] px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl">
           <PageHeader />
           <NotSubscribedCard reason="not-subscribed" />
@@ -218,7 +218,7 @@ export default function HistoricoPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-[#050505] px-4 py-12 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-[var(--background)] px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl">
           <PageHeader />
 

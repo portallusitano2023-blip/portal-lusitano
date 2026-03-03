@@ -14,7 +14,14 @@ import { CavaloVenda } from "@/types/cavalo";
 // within a single server request — saves 1 Supabase round-trip per page load
 const getCavalo = cache(async (id: string) => {
   const { data } = await supabase.from("cavalos_venda").select("*").eq("id", id).single();
-  return data;
+  if (!data) return null;
+  // Normalize DB column names → component-expected names
+  // Live DB uses 'nome'/'foto_principal', components expect 'nome_cavalo'/'image_url'
+  return {
+    ...data,
+    nome_cavalo: data.nome_cavalo || data.nome,
+    image_url: data.image_url || data.foto_principal,
+  };
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";

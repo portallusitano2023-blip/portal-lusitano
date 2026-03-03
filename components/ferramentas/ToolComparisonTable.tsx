@@ -28,7 +28,10 @@ function getFeatures(tr: Tr) {
       label: tr("Comparação lado a lado", "Side-by-side comparison", "Comparación lado a lado"),
       tools: [false, true, false, false],
     },
-    { label: "Score global (0-100)", tools: [false, true, false, false] },
+    {
+      label: tr("Score global (0-100)", "Global score (0-100)", "Puntuación global (0-100)"),
+      tools: [false, true, false, false],
+    },
     {
       label: tr("Radar multi-dimensão", "Multi-dimension radar", "Radar multi-dimensión"),
       tools: [false, true, false, false],

@@ -5,7 +5,6 @@ import { z } from "zod";
 
 const CavaloSchema = z.object({
   nome: z.string().min(1).max(200),
-  nome_cavalo: z.string().min(1).max(200),
   descricao: z.string().max(5000).optional(),
   preco: z.number().positive().optional(),
   linhagem: z.string().max(200).optional(),
@@ -35,9 +34,7 @@ const CavaloSchema = z.object({
 export const GET = withAdminAuth(async (req) => {
   const { data, error } = await supabase
     .from("cavalos_venda")
-    .select(
-      "id, nome, nome_cavalo, slug, descricao, preco, linhagem, idade, sexo, pelagem, altura, peso, disciplinas, nivel, localizacao, coudelaria, image_url, imagens, destaque, status, views_count, contacto_nome, contacto_email, contacto_telefone, created_at"
-    )
+    .select("*")
     .order("created_at", { ascending: false })
     .limit(200);
 
@@ -72,7 +69,7 @@ export const POST = withAdminAuth(async (request: NextRequest) => {
   const { data, error } = await supabase
     .from("cavalos_venda")
     .insert({
-      nome_cavalo: body.nome_cavalo || body.nome,
+      nome: body.nome,
       descricao: body.descricao,
       preco: body.preco,
       linhagem: body.linhagem,
@@ -86,7 +83,7 @@ export const POST = withAdminAuth(async (request: NextRequest) => {
       localizacao: body.localizacao,
       coudelaria: body.coudelaria,
       imagens: body.imagens,
-      image_url: body.image_url,
+      foto_principal: body.image_url,
       slug: body.slug,
       destaque: body.destaque,
       contacto_nome: body.contacto_nome,

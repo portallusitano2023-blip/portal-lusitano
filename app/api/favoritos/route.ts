@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { apiSuccess, apiError } from "@/lib/api-response";
+import { logger } from "@/lib/logger";
 
 async function getAuthUser() {
   const supabaseServer = await createSupabaseServerClient();
@@ -20,30 +21,55 @@ export async function GET(_request: NextRequest) {
       return apiSuccess({ favoritos: [] });
     }
 
-    const { data, error } = await supabase
+    // Query favoritos without embedded selects (no FK relationships in DB)
+    const { data: favoritos, error } = await supabase
       .from("favoritos")
-      .select(
-        `
-        id,
-        item_id,
-        item_type,
-        created_at,
-        cavalos_venda (
-          id, slug, nome, foto_principal, preco, localizacao, regiao
-        ),
-        coudelarias (
-          id, nome, foto_capa, localizacao, regiao
-        )
-      `
-      )
+      .select("id, item_id, item_type, created_at")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) {
+      logger.error("[API favoritos/GET] Supabase error:", error);
       return apiError("Erro ao buscar favoritos", 500, "favoritos/GET");
     }
 
-    return apiSuccess({ favoritos: data || [] });
+    if (!favoritos || favoritos.length === 0) {
+      return apiSuccess({ favoritos: [] });
+    }
+
+    // Separate item IDs by type for parallel fetching
+    const cavaloIds = favoritos.filter((f) => f.item_type === "cavalo").map((f) => f.item_id);
+    const coudelariaIds = favoritos
+      .filter((f) => f.item_type === "coudelaria")
+      .map((f) => f.item_id);
+
+    const [cavalosResult, coudelariasResult] = await Promise.all([
+      cavaloIds.length > 0
+        ? supabase
+            .from("cavalos_venda")
+            .select("id, slug, nome, foto_principal, preco, localizacao, regiao")
+            .in("id", cavaloIds)
+        : Promise.resolve({ data: [] as { id: string }[] }),
+      coudelariaIds.length > 0
+        ? supabase
+            .from("coudelarias")
+            .select("id, nome, foto_capa, localizacao, regiao")
+            .in("id", coudelariaIds)
+        : Promise.resolve({ data: [] as { id: string }[] }),
+    ]);
+
+    // Create lookup maps
+    const cavalosMap = new Map((cavalosResult.data || []).map((c) => [c.id, c]));
+    const coudelariasMap = new Map((coudelariasResult.data || []).map((c) => [c.id, c]));
+
+    // Merge favoritos with related data (same shape as the old embedded select)
+    const enriched = favoritos.map((f) => ({
+      ...f,
+      cavalos_venda: f.item_type === "cavalo" ? cavalosMap.get(f.item_id) || null : null,
+      coudelarias: f.item_type === "coudelaria" ? coudelariasMap.get(f.item_id) || null : null,
+    }));
+
+    return apiSuccess({ favoritos: enriched });
   } catch {
     return apiError("Erro interno", 500, "favoritos/GET");
   }

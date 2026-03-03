@@ -21,8 +21,10 @@ export async function GET() {
         .eq("status", "approved"),
     ]);
 
-    if (countError) logger.error("Erro ao contar tool_usage:", countError);
-    if (usersError) logger.error("Erro ao contar utilizadores:", usersError);
+    if (countError && countError.code !== "PGRST205")
+      logger.error("Erro ao contar tool_usage:", countError);
+    if (usersError && usersError.code !== "PGRST205")
+      logger.error("Erro ao contar utilizadores:", usersError);
     if (reviewsError) logger.error("Erro ao buscar reviews:", reviewsError);
 
     const uniqueUsers = usersData ? new Set(usersData.map((r) => r.user_id)).size : 0;

@@ -23,11 +23,10 @@ export const metadata: Metadata = generatePageMetadata({
 });
 
 export default async function ComprarPage() {
-  const { data: cavalos, error } = await supabase
+  // Use select("*") to avoid column-not-found errors from DB schema drift
+  const { data: rawCavalos, error } = await supabase
     .from("cavalos_venda")
-    .select(
-      "id, nome_cavalo, preco, image_url, slug, localizacao, idade, raca, sexo, disciplinas, nivel, destaque, created_at, status"
-    )
+    .select("*")
     .eq("status", "active")
     .order("created_at", { ascending: false });
 
@@ -35,5 +34,24 @@ export default async function ComprarPage() {
     logger.error("[ComprarPage] Supabase error:", error);
   }
 
-  return <ComprarContent cavalos={cavalos || []} hasError={!!error} />;
+  // Normalize DB column names → component-expected names
+  // Live DB uses 'nome'/'foto_principal', components expect 'nome_cavalo'/'image_url'
+  const cavalos = (rawCavalos || []).map((c) => ({
+    id: c.id,
+    nome_cavalo: c.nome_cavalo || c.nome,
+    preco: c.preco,
+    image_url: c.image_url || c.foto_principal,
+    slug: c.slug,
+    localizacao: c.localizacao,
+    idade: c.idade,
+    raca: c.raca || c.cor,
+    sexo: c.sexo,
+    disciplinas: c.disciplinas,
+    nivel: c.nivel || c.nivel_treino,
+    destaque: c.destaque,
+    created_at: c.created_at,
+    status: c.status,
+  }));
+
+  return <ComprarContent cavalos={cavalos} hasError={!!error} />;
 }

@@ -105,6 +105,7 @@ function ProSubscribeButton({
   const { language } = useLanguage();
   const tr = createTranslator(language);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubscribe = async () => {
     if (!user) {
@@ -113,6 +114,7 @@ function ProSubscribeButton({
     }
 
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/tools/create-checkout", {
         method: "POST",
@@ -124,22 +126,33 @@ function ProSubscribeButton({
       if (data.url) {
         window.location.href = data.url;
       } else {
+        setError(tr(
+          "Erro ao criar sessão de pagamento. Tente novamente.",
+          "Error creating checkout session. Please try again.",
+          "Error al crear la sesión de pago. Inténtelo de nuevo."
+        ));
         setLoading(false);
       }
     } catch {
+      setError(tr(
+        "Erro de ligação. Verifique a sua internet e tente novamente.",
+        "Connection error. Check your internet and try again.",
+        "Error de conexión. Compruebe su internet e inténtelo de nuevo."
+      ));
       setLoading(false);
     }
   };
 
   return (
-    <button
-      onClick={handleSubscribe}
-      disabled={loading}
-      className={
-        className ||
-        "block w-full py-3 text-center bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all hover:shadow-lg hover:shadow-[var(--gold)]/20 disabled:opacity-50 disabled:cursor-not-allowed"
-      }
-    >
+    <div>
+      <button
+        onClick={handleSubscribe}
+        disabled={loading}
+        className={
+          className ||
+          "block w-full py-3 text-center bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black text-sm font-bold rounded-lg hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all hover:shadow-lg hover:shadow-[var(--gold)]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+        }
+      >
       {loading ? (
         <span className="inline-flex items-center justify-center gap-2">
           <Loader2 size={16} className="animate-spin" />
@@ -152,7 +165,13 @@ function ProSubscribeButton({
           <ArrowRight size={16} />
         </span>
       )}
-    </button>
+      </button>
+      {error && (
+        <p className="mt-2 text-xs text-red-400 text-center animate-[fadeSlideIn_0.3s_ease-out_forwards]">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
 

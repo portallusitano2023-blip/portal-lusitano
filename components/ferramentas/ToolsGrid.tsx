@@ -1,10 +1,12 @@
 "use client";
 
+import { memo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Check, Star, ArrowRight, Clock } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
+import type { User } from "@supabase/supabase-js";
 
 export interface ToolDefinition {
   title: string;
@@ -24,12 +26,14 @@ export interface ToolDefinition {
 interface ToolCardProps {
   tool: ToolDefinition;
   index: number;
+  user: User | null;
+  isLoading: boolean;
+  tr: (pt: string, en: string, es: string) => string;
+  tryLabel: string;
 }
 
-function ToolCard({ tool, index }: ToolCardProps) {
-  const { t, language } = useLanguage();
-  const tr = createTranslator(language);
-  const { user, isLoading } = useAuth();
+// memo: avoids re-rendering cards whose props haven't changed
+const ToolCard = memo(function ToolCard({ tool, index, user, isLoading, tr, tryLabel }: ToolCardProps) {
   const Icon = tool.icon;
 
   return (
@@ -101,7 +105,7 @@ function ToolCard({ tool, index }: ToolCardProps) {
         {/* CTA */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm font-medium text-[var(--gold)] group-hover:gap-3 transition-all">
-            <span>{t.ferramentas.try}</span>
+            <span>{tryLabel}</span>
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </div>
           {/* Subtle arrow circle on hover */}
@@ -112,7 +116,7 @@ function ToolCard({ tool, index }: ToolCardProps) {
       </div>
     </LocalizedLink>
   );
-}
+});
 
 interface ToolsGridProps {
   tools: ToolDefinition[];
@@ -120,6 +124,12 @@ interface ToolsGridProps {
 }
 
 export default function ToolsGrid({ tools, sectionLabel }: ToolsGridProps) {
+  // Hooks called once in parent instead of N times per ToolCard
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
+  const { user, isLoading } = useAuth();
+  const tryLabel = t.ferramentas.try;
+
   return (
     <section id="ferramentas" className="px-6 pb-24">
       <div className="max-w-6xl mx-auto">
@@ -133,7 +143,15 @@ export default function ToolsGrid({ tools, sectionLabel }: ToolsGridProps) {
         {/* Cards grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {tools.map((tool, index) => (
-            <ToolCard key={tool.href} tool={tool} index={index} />
+            <ToolCard
+              key={tool.href}
+              tool={tool}
+              index={index}
+              user={user}
+              isLoading={isLoading}
+              tr={tr}
+              tryLabel={tryLabel}
+            />
           ))}
         </div>
       </div>

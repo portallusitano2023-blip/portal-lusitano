@@ -13,7 +13,7 @@ export async function GET(_req: NextRequest) {
 
     const { data: pendentes, error } = await supabase
       .from("depoimentos_cavalos")
-      .select("*, cavalos_venda(nome_cavalo)")
+      .select("*, cavalos_venda(nome)")
       .eq("status", "pendente")
       .order("created_at", { ascending: false });
 

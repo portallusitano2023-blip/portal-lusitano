@@ -103,18 +103,21 @@ function generateNonce(): string {
   return Buffer.from(buffer).toString("base64");
 }
 
+// Pre-compute CSP static parts at module load — avoids array allocation + join on every request
+const CSP_BEFORE_NONCE = "default-src 'self'; script-src 'self' 'nonce-";
+const CSP_AFTER_NONCE = [
+  `' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
+  "font-src 'self' https://fonts.gstatic.com",
+  `connect-src 'self'${IS_DEV ? " ws://localhost:* ws://127.0.0.1:*" : ""} https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google`,
+  "frame-src 'self' blob: https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
+  "object-src 'none'",
+  "base-uri 'self'",
+].join("; ");
+
 function buildCSPString(nonce: string): string {
-  return [
-    "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
-    "font-src 'self' https://fonts.gstatic.com",
-    `connect-src 'self'${IS_DEV ? " ws://localhost:* ws://127.0.0.1:*" : ""} https://www.google-analytics.com https://www.facebook.com https://*.supabase.co https://*.shopify.com https://*.sanity.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google`,
-    "frame-src 'self' blob: https://js.stripe.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
-    "object-src 'none'",
-    "base-uri 'self'",
-  ].join("; ");
+  return `${CSP_BEFORE_NONCE}${nonce}${CSP_AFTER_NONCE}`;
 }
 
 function applySecurityHeaders(response: NextResponse, nonce: string, contentLanguage = "pt") {

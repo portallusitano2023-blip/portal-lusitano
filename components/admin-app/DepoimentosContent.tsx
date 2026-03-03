@@ -11,7 +11,7 @@ interface Depoimento {
   status: string;
   created_at: string;
   cavalos_venda?: {
-    nome_cavalo: string;
+    nome: string;
   };
 }
 
@@ -91,9 +91,9 @@ export default function DepoimentosContent() {
                 className="bg-white/5 border border-white/10 p-8 rounded-lg flex justify-between items-start hover:border-white/20 transition-all"
               >
                 <div className="max-w-2xl flex-1">
-                  {dep.cavalos_venda?.nome_cavalo && (
+                  {dep.cavalos_venda?.nome && (
                     <p className="text-[#C5A059] text-xs uppercase font-bold mb-2 tracking-widest">
-                      Sobre: {dep.cavalos_venda.nome_cavalo}
+                      Sobre: {dep.cavalos_venda.nome}
                     </p>
                   )}
                   <p className="text-xl font-serif italic text-gray-300 mb-4">

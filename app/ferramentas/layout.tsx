@@ -4,7 +4,7 @@ import { faqItems } from "./faq-data";
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Ferramentas Equestres",
+  title: "Ferramentas Equestres | Portal Lusitano",
   description:
     "Ferramentas gratuitas para o mundo equestre: calculadora de valor, comparador de cavalos, verificador de compatibilidade e análise de perfil. Optimizadas para cavalos Lusitanos.",
   keywords: [
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/opengraph-image",
+        url: `${SITE_URL}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: "Ferramentas Equestres — Portal Lusitano",
