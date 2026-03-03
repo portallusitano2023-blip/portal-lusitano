@@ -217,18 +217,22 @@ export default function CalculadoraValorPage() {
                 accessLoading={accessLoading}
                 show={step > 0 || !!resultado}
               />
-              {accessLoading ? (
-                <div className="flex items-center justify-center py-4">
-                  <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
-                </div>
-              ) : (
-                <SubscriptionBanner
-                  isSubscribed={isSubscribed}
-                  freeUsesLeft={freeUsesLeft}
-                  requiresAuth={requiresAuth}
-                />
+              {canUse && (
+                <>
+                  {accessLoading ? (
+                    <div className="flex items-center justify-center py-4">
+                      <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
+                    </div>
+                  ) : (
+                    <SubscriptionBanner
+                      isSubscribed={isSubscribed}
+                      freeUsesLeft={freeUsesLeft}
+                      requiresAuth={requiresAuth}
+                    />
+                  )}
+                  <ProUpgradeCard isSubscribed={isSubscribed} />
+                </>
               )}
-              <ProUpgradeCard isSubscribed={isSubscribed} />
 
               {/* Banner de boas-vindas — perfil vindo da Análise de Perfil (form steps) */}
               {profileContext && (step > 0 || !!resultado) && (

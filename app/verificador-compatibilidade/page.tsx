@@ -370,6 +370,7 @@ export default function VerificadorCompatibilidadePage() {
         )}
 
         {/* Subscription Banner */}
+        {canUse && (
         <div className="max-w-4xl mx-auto px-4 pt-6">
           {accessLoading ? (
             <div className="flex items-center justify-center py-4">
@@ -400,6 +401,7 @@ export default function VerificadorCompatibilidadePage() {
             className="mt-2"
           />
         </div>
+        )}
 
         {/* Intro */}
         {step === 0 && !resultado && (

@@ -527,19 +527,23 @@ export default function ComparadorCavalosPage() {
               isSubscribed={isSubscribed}
               accessLoading={accessLoading}
             />
-            {/* Subscription Banner */}
-            {accessLoading ? (
-              <div className="flex items-center justify-center py-4">
-                <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
-              </div>
-            ) : (
-              <SubscriptionBanner
-                isSubscribed={isSubscribed}
-                freeUsesLeft={freeUsesLeft}
-                requiresAuth={requiresAuth}
-              />
+            {/* Subscription Banner — only when user can use */}
+            {canUse && (
+              <>
+                {accessLoading ? (
+                  <div className="flex items-center justify-center py-4">
+                    <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
+                  </div>
+                ) : (
+                  <SubscriptionBanner
+                    isSubscribed={isSubscribed}
+                    freeUsesLeft={freeUsesLeft}
+                    requiresAuth={requiresAuth}
+                  />
+                )}
+                <ProUpgradeCard isSubscribed={isSubscribed} />
+              </>
             )}
-            <ProUpgradeCard isSubscribed={isSubscribed} />
 
             {/* Profile context banner */}
             {profileContext && (
