@@ -7,10 +7,12 @@ import { WishlistProvider } from "@/context/WishlistContext";
 import { HorseFavoritesProvider } from "@/context/HorseFavoritesContext";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
-import { type ReactNode, type FC } from "react";
+import { type ReactNode, type FC, lazy, Suspense } from "react";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ClientOverlays from "@/components/ClientOverlays";
+
+const PWAInstallPrompt = lazy(() => import("@/components/PWAInstallPrompt"));
 
 // FC wrapper for ErrorBoundary class component — avoids unsafe `as unknown as` cast
 function ErrorBoundaryWrapper({ children }: { children: ReactNode }) {
@@ -50,6 +52,9 @@ export function Providers({
       <ComposedProviders>
         {children}
         <ClientOverlays />
+        <Suspense fallback={null}>
+          <PWAInstallPrompt />
+        </Suspense>
       </ComposedProviders>
     </LanguageProvider>
   );
