@@ -1,15 +1,10 @@
 import { Suspense } from "react";
-import { getNonce } from "@/lib/nonce";
 import VenderCavaloSucessoContent from "./content";
 
-async function VenderCavaloSucessoPage() {
-  const nonce = await getNonce();
-
+export default function VenderCavaloSucessoPage() {
   return (
     <Suspense>
-      <VenderCavaloSucessoContent nonce={nonce} />
+      <VenderCavaloSucessoContent />
     </Suspense>
   );
 }
-
-export default VenderCavaloSucessoPage;

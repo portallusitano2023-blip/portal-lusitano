@@ -5,6 +5,31 @@ vi.mock("jose", () => ({
   jwtVerify: vi.fn(),
 }));
 
+// Hoisted mocks — runs before imports, so env vars and mocks are ready at module load time
+const { mockLimit } = vi.hoisted(() => {
+  // Set env vars here so middleware module-level code can create Redis/Ratelimit instances
+  process.env.UPSTASH_REDIS_REST_URL = "https://fake.upstash.io";
+  process.env.UPSTASH_REDIS_REST_TOKEN = "fake-token";
+  return { mockLimit: vi.fn() };
+});
+
+// Mock @upstash/redis and @upstash/ratelimit so rate limiting is active in tests
+vi.mock("@upstash/redis", () => ({
+  Redis: {
+    fromEnv: () => ({}),
+  },
+}));
+
+vi.mock("@upstash/ratelimit", () => ({
+  Ratelimit: class MockRatelimit {
+    constructor() {}
+    limit = mockLimit;
+    static slidingWindow() {
+      return {};
+    }
+  },
+}));
+
 type MockHeaders = ReturnType<typeof createMockHeaders>;
 
 function createMockHeaders(init: Record<string, string> = {}) {
@@ -130,6 +155,10 @@ describe("middleware", () => {
     Object.defineProperty(process.env, "NODE_ENV", { value: "production", writable: true });
     process.env.NEXT_PUBLIC_APP_URL = "https://portal-lusitano.com";
     process.env.ADMIN_SECRET = "test-secret-key";
+    process.env.UPSTASH_REDIS_REST_URL = "https://fake.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "fake-token";
+    // Default: allow requests (rate limit not exceeded)
+    mockLimit.mockResolvedValue({ success: true });
   });
 
   afterEach(() => {
@@ -138,42 +167,37 @@ describe("middleware", () => {
   });
 
   describe("Rate Limiting", () => {
-    it("deve retornar 429 apos demasiados pedidos API", async () => {
-      const ip = "192.168.1.100";
+    it("deve retornar 429 quando limite de API e excedido", async () => {
+      mockLimit.mockResolvedValue({ success: false });
 
-      for (let i = 0; i < 65; i++) {
-        const request = createMockRequest("/api/products", {
-          headers: { "x-forwarded-for": ip },
-        });
-        await middleware(request as unknown as MiddlewareRequest);
+      const request = createMockRequest("/api/products", {
+        headers: { "x-forwarded-for": "192.168.1.100" },
+      });
+      await middleware(request as unknown as MiddlewareRequest);
 
-        if (i >= 60) {
-          expect(mockJson).toHaveBeenCalledWith(
-            expect.objectContaining({
-              error: expect.stringContaining("Too many requests"),
-            }),
-            expect.objectContaining({ status: 429 })
-          );
-        }
-      }
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.stringContaining("Too many requests"),
+        }),
+        expect.objectContaining({ status: 429 })
+      );
     });
 
-    it("deve ter limite mais restritivo para rotas de autenticacao", async () => {
-      const ip = "10.0.0.50";
+    it("deve retornar 429 quando limite de autenticacao e excedido", async () => {
+      mockLimit.mockResolvedValue({ success: false });
 
-      for (let i = 0; i < 15; i++) {
-        const request = createMockRequest("/api/auth/login", {
-          headers: { "x-forwarded-for": ip },
-          method: "POST",
-        });
-        await middleware(request as unknown as MiddlewareRequest);
-      }
+      const request = createMockRequest("/api/auth/login", {
+        headers: { "x-forwarded-for": "10.0.0.50" },
+        method: "POST",
+      });
+      await middleware(request as unknown as MiddlewareRequest);
 
-      const jsonCalls = mockJson.mock.calls;
-      const has429 = jsonCalls.some(
-        (call: unknown[]) => (call[1] as { status?: number })?.status === 429
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.stringContaining("Too many requests"),
+        }),
+        expect.objectContaining({ status: 429 })
       );
-      expect(has429).toBe(true);
     });
   });
 
@@ -296,23 +320,6 @@ describe("middleware", () => {
         expect(csp).toBeTruthy();
         expect(csp).toContain("'unsafe-inline'");
         expect(csp).toContain("default-src 'self'");
-      }
-    });
-
-    it("deve definir header x-nonce", async () => {
-      const request = createMockRequest("/pagina", {
-        headers: { "x-forwarded-for": "unique-nonce-ip-1" },
-      });
-
-      const result = await middleware(request as unknown as MiddlewareRequest);
-
-      if (result?.headers) {
-        const headers = result.headers as unknown as MockHeaders;
-        const nonce = headers.get("x-nonce");
-        if (nonce) {
-          expect(nonce).toBeTruthy();
-          expect(nonce.length).toBeGreaterThan(0);
-        }
       }
     });
 

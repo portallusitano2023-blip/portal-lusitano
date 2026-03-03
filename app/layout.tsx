@@ -132,10 +132,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Removing async + getNonce()/headers() allows Next.js to statically cache pages
-  // with ISR (revalidate exports) instead of server-rendering every request.
-  // The theme-detection inline script is allowed by 'unsafe-inline' in CSP (fallback).
-  // The middleware still sets CSP with nonces for any other inline scripts.
+  // Layout is synchronous (no headers() call) so Next.js can statically cache pages
+  // with ISR. The CSP uses 'unsafe-inline' for scripts (no nonces) to allow the
+  // theme-detection script and Next.js RSC inline scripts to execute.
 
   return (
     <html lang="pt" className={`${playfair.variable} ${montserrat.variable} dark`}>

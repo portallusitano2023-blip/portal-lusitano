@@ -85,28 +85,19 @@ function isValidOrigin(request: NextRequest): boolean {
 }
 
 /**
- * CSP: Content Security Policy with Per-Request Nonces.
+ * CSP: Content Security Policy.
  *
- * Generates a unique cryptographic nonce for each request to replace 'unsafe-inline'
- * for scripts. Modern browsers that support nonces will ignore 'unsafe-inline' when
- * a nonce is present, providing strong XSS protection. Older browsers fall back to
- * 'unsafe-inline' for compatibility.
+ * Uses 'unsafe-inline' for scripts because Next.js App Router injects inline
+ * <script> tags for RSC payloads and hydration data that cannot carry nonces
+ * when pages are statically cached (ISR/SSG). Adding a nonce to the CSP header
+ * causes modern browsers to IGNORE 'unsafe-inline', which blocks those scripts
+ * and prevents the page from hydrating (infinite "loading" state).
  */
 
-/**
- * Generate a cryptographic nonce using crypto.getRandomValues().
- * Returns a URL-safe base64 string.
- */
-function generateNonce(): string {
-  const buffer = new Uint8Array(16);
-  crypto.getRandomValues(buffer);
-  return Buffer.from(buffer).toString("base64");
-}
-
-// Pre-compute CSP static parts at module load — avoids array allocation + join on every request
-const CSP_BEFORE_NONCE = "default-src 'self'; script-src 'self' 'nonce-";
-const CSP_AFTER_NONCE = [
-  `' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
+// Pre-compute CSP string at module load — avoids string allocation on every request
+const CSP_STRING = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${IS_DEV ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://www.google-analytics.com https://www.facebook.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googleusercontent.com https://*.basemaps.cartocdn.com https://*.supabase.co",
   "font-src 'self' https://fonts.gstatic.com",
@@ -116,15 +107,8 @@ const CSP_AFTER_NONCE = [
   "base-uri 'self'",
 ].join("; ");
 
-function buildCSPString(nonce: string): string {
-  return `${CSP_BEFORE_NONCE}${nonce}${CSP_AFTER_NONCE}`;
-}
-
-function applySecurityHeaders(response: NextResponse, nonce: string, contentLanguage = "pt") {
-  // CSP header with per-request nonce
-  response.headers.set("Content-Security-Policy", buildCSPString(nonce));
-  // Pass nonce to Server Components via custom header
-  response.headers.set("x-nonce", nonce);
+function applySecurityHeaders(response: NextResponse, contentLanguage = "pt") {
+  response.headers.set("Content-Security-Policy", CSP_STRING);
   response.headers.set("Content-Language", contentLanguage);
   response.headers.set("X-Download-Options", "noopen");
 }
@@ -133,13 +117,10 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const pathname = request.nextUrl.pathname;
 
-  // Generate a unique nonce for this request
-  const nonce = generateNonce();
-
   // Expose pathname to Server Components (for hreflang, lang attribute)
   response.headers.set("x-pathname", pathname);
 
-  applySecurityHeaders(response, nonce);
+  applySecurityHeaders(response);
 
   // API routes: CSRF + Rate Limiting + CORS + Admin guard
   if (pathname.startsWith("/api/")) {
@@ -265,7 +246,7 @@ export async function middleware(request: NextRequest) {
     const rewriteResponse = NextResponse.rewrite(url);
     rewriteResponse.headers.set("x-pathname", pathname);
     rewriteResponse.cookies.set("locale", locale, { path: "/", sameSite: "lax" });
-    applySecurityHeaders(rewriteResponse, nonce, locale);
+    applySecurityHeaders(rewriteResponse, locale);
     return rewriteResponse;
   }
 

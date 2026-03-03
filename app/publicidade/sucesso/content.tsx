@@ -1,17 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import LocalizedLink from "@/components/LocalizedLink";
 import { CheckCircle, ArrowRight, Mail, Megaphone, TrendingUp } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
-interface PublicidadeSucessoContentProps {
-  nonce: string;
-}
-
-export default function PublicidadeSucessoContent({ nonce }: PublicidadeSucessoContentProps) {
+export default function PublicidadeSucessoContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const sessionId = searchParams.get("session_id");
   const [countdown, setCountdown] = useState(5);
   const { t } = useLanguage();
@@ -21,7 +18,8 @@ export default function PublicidadeSucessoContent({ nonce }: PublicidadeSucessoC
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     }
-  }, [countdown]);
+    router.push("/");
+  }, [countdown, router]);
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-24 md:pt-32 pb-32 px-4 sm:px-6 md:px-12">
@@ -127,9 +125,6 @@ export default function PublicidadeSucessoContent({ nonce }: PublicidadeSucessoC
           </p>
         )}
 
-        {countdown === 0 && (
-          <script nonce={nonce} dangerouslySetInnerHTML={{ __html: `window.location.href = '/';` }} />
-        )}
       </div>
     </main>
   );
