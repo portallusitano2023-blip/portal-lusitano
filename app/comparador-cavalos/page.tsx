@@ -6,6 +6,8 @@ import dynamic from "next/dynamic";
 import ToolNavBar from "@/components/tools/ToolNavBar";
 import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import Paywall from "@/components/tools/Paywall";
+import ProStatusBar from "@/components/ferramentas/ProStatusBar";
+import FreeUsesCounter from "@/components/ferramentas/FreeUsesCounter";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
@@ -514,38 +516,17 @@ export default function ComparadorCavalosPage() {
             </div>
 
             {/* PRO Status Bar */}
-            {!accessLoading && isSubscribed && (
-              <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm">
-                <Crown size={14} className="text-[#C5A059] shrink-0" aria-hidden="true" />
-                <span className="text-[#C5A059] font-semibold">PRO Activo</span>
-                <span className="text-[#C5A059]/50">•</span>
-                <span className="text-[#C5A059]/80">Utilizações ilimitadas</span>
-                <span className="text-[#C5A059]/50">•</span>
-                <span className="text-[#C5A059]/80">Comparador desbloqueado</span>
-                <a
-                  href="/ferramentas/historico"
-                  className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
-                >
-                  Ver histórico →
-                </a>
-              </div>
-            )}
+            <ProStatusBar
+              toolName={["Comparador", "Comparator", "Comparador"]}
+              isSubscribed={isSubscribed}
+              accessLoading={accessLoading}
+            />
             {/* Free uses counter */}
-            {!accessLoading && !isSubscribed && freeUsesLeft > 0 && (
-              <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm">
-                <span className="text-amber-400/90">
-                  {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
-                  {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
-                  Subscreva PRO para utilizações ilimitadas
-                </span>
-                <a
-                  href="/ferramentas"
-                  className="ml-auto text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
-                >
-                  Subscrever
-                </a>
-              </div>
-            )}
+            <FreeUsesCounter
+              freeUsesLeft={freeUsesLeft}
+              isSubscribed={isSubscribed}
+              accessLoading={accessLoading}
+            />
             {/* Subscription Banner */}
             {accessLoading ? (
               <div className="flex items-center justify-center py-4">

@@ -7,6 +7,8 @@ import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import Paywall from "@/components/tools/Paywall";
 import ToolNavBar from "@/components/tools/ToolNavBar";
+import ProStatusBar from "@/components/ferramentas/ProStatusBar";
+import FreeUsesCounter from "@/components/ferramentas/FreeUsesCounter";
 import {
   IntroSection,
   StepIdentificacao,
@@ -202,49 +204,19 @@ export default function CalculadoraValorPage() {
           <div className="pb-24 px-4">
             <div className="max-w-2xl mx-auto">
               {/* PRO Status Bar */}
-              {!accessLoading && (step > 0 || !!resultado) && isSubscribed && (
-                <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-sm flex-wrap">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="text-[#C5A059] shrink-0"
-                    aria-hidden="true"
-                  >
-                    <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
-                  </svg>
-                  <span className="text-[#C5A059] font-semibold">PRO Activo</span>
-                  <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
-                  <span className="text-[#C5A059]/80 hidden sm:inline">Utilizações ilimitadas</span>
-                  <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
-                  <span className="text-[#C5A059]/80 hidden sm:inline">
-                    Calculadora desbloqueada
-                  </span>
-                  <a
-                    href="/ferramentas/historico"
-                    className="ml-auto text-xs sm:text-sm text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap"
-                  >
-                    Ver histórico →
-                  </a>
-                </div>
-              )}
+              <ProStatusBar
+                toolName={["Calculadora", "Calculator", "Calculadora"]}
+                isSubscribed={isSubscribed}
+                accessLoading={accessLoading}
+                show={step > 0 || !!resultado}
+              />
               {/* Free uses counter */}
-              {!accessLoading && (step > 0 || !!resultado) && !isSubscribed && freeUsesLeft > 0 && (
-                <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 mb-6 text-xs sm:text-sm flex-wrap">
-                  <span className="text-amber-400/90 flex-1">
-                    {freeUsesLeft} uso{freeUsesLeft !== 1 ? "s" : ""} gratuito
-                    {freeUsesLeft !== 1 ? "s" : ""} disponível{freeUsesLeft !== 1 ? "is" : ""} —
-                    Subscreva PRO
-                  </span>
-                  <a
-                    href="/ferramentas"
-                    className="ml-auto text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
-                  >
-                    Subscrever →
-                  </a>
-                </div>
-              )}
+              <FreeUsesCounter
+                freeUsesLeft={freeUsesLeft}
+                isSubscribed={isSubscribed}
+                accessLoading={accessLoading}
+                show={step > 0 || !!resultado}
+              />
               {accessLoading ? (
                 <div className="flex items-center justify-center py-4">
                   <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />

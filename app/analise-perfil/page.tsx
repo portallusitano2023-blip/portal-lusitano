@@ -17,6 +17,8 @@ import {
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
 import ToolNavBar from "@/components/tools/ToolNavBar";
+import ProStatusBar from "@/components/ferramentas/ProStatusBar";
+import FreeUsesCounter from "@/components/ferramentas/FreeUsesCounter";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { useQuizLogic } from "@/components/analise-perfil/useQuizLogic";
@@ -221,63 +223,20 @@ function AnalisePerfilContent() {
         ) : !showResult ? (
           <>
             {/* PRO Status Bar — quiz in progress */}
-            {!accessLoading && isSubscribed && (
-              <div className="max-w-2xl mx-auto px-4 pt-6">
-                <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="text-[#C5A059] shrink-0"
-                    aria-hidden="true"
-                  >
-                    <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
-                  </svg>
-                  <span className="text-[#C5A059] font-semibold">
-                    {tr("PRO Activo", "PRO Active", "PRO Activo")}
-                  </span>
-                  <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
-                  <span className="text-[#C5A059]/80 hidden sm:inline">
-                    {tr("Utilizações ilimitadas", "Unlimited uses", "Usos ilimitados")}
-                  </span>
-                  <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
-                  <span className="text-[#C5A059]/80 hidden sm:inline">
-                    {tr(
-                      "Análise de Perfil desbloqueada",
-                      "Profile Analysis unlocked",
-                      "Análisis de Perfil desbloqueado"
-                    )}
-                  </span>
-                  <a
-                    href="/ferramentas/historico"
-                    className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap text-xs sm:text-sm"
-                  >
-                    {tr("Ver histórico →", "View history →", "Ver historial →")}
-                  </a>
-                </div>
-              </div>
-            )}
-            {/* Free uses counter — quiz in progress */}
-            {!accessLoading && !isSubscribed && freeUsesLeft > 0 && (
-              <div className="max-w-2xl mx-auto px-4 pt-6">
-                <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
-                  <span className="text-amber-400/90 flex-1 min-w-0">
-                    {tr(
-                      `${freeUsesLeft} uso${freeUsesLeft !== 1 ? "s" : ""} gratuito${freeUsesLeft !== 1 ? "s" : ""} disponível${freeUsesLeft !== 1 ? "is" : ""} — Subscreva PRO para utilizações ilimitadas`,
-                      `${freeUsesLeft} free use${freeUsesLeft !== 1 ? "s" : ""} remaining — Subscribe to PRO for unlimited uses`,
-                      `${freeUsesLeft} uso${freeUsesLeft !== 1 ? "s" : ""} gratuito${freeUsesLeft !== 1 ? "s" : ""} disponible${freeUsesLeft !== 1 ? "s" : ""} — Suscríbase a PRO para usos ilimitados`
-                    )}
-                  </span>
-                  <a
-                    href="/ferramentas"
-                    className="text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
-                  >
-                    {tr("Subscrever", "Subscribe", "Suscribirse")}
-                  </a>
-                </div>
-              </div>
-            )}
+            <div className="max-w-2xl mx-auto px-4 pt-6">
+              <ProStatusBar
+                toolName={["Análise de Perfil", "Profile Analysis", "Análisis de Perfil"]}
+                isSubscribed={isSubscribed}
+                accessLoading={accessLoading}
+                className="mb-4"
+              />
+              <FreeUsesCounter
+                freeUsesLeft={freeUsesLeft}
+                isSubscribed={isSubscribed}
+                accessLoading={accessLoading}
+                className="mb-4"
+              />
+            </div>
             <QuizSection
               ref={quizRef}
               questions={questions}
@@ -306,63 +265,20 @@ function AnalisePerfilContent() {
                 </div>
 
                 {/* PRO Status Bar — results */}
-                {isSubscribed && (
-                  <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
-                    <div className="bg-[#C5A059]/10 border border-[#C5A059]/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="text-[#C5A059] shrink-0"
-                        aria-hidden="true"
-                      >
-                        <path d="M2 19l2-8 5 4 3-9 3 9 5-4 2 8H2z" />
-                      </svg>
-                      <span className="text-[#C5A059] font-semibold">
-                        {tr("PRO Activo", "PRO Active", "PRO Activo")}
-                      </span>
-                      <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
-                      <span className="text-[#C5A059]/80 hidden sm:inline">
-                        {tr("Utilizações ilimitadas", "Unlimited uses", "Usos ilimitados")}
-                      </span>
-                      <span className="text-[#C5A059]/50 hidden sm:inline">•</span>
-                      <span className="text-[#C5A059]/80 hidden sm:inline">
-                        {tr(
-                          "Análise de Perfil desbloqueada",
-                          "Profile Analysis unlocked",
-                          "Análisis de Perfil desbloqueado"
-                        )}
-                      </span>
-                      <a
-                        href="/ferramentas/historico"
-                        className="ml-auto text-[#C5A059]/70 hover:text-[#C5A059] transition-colors whitespace-nowrap text-xs sm:text-sm"
-                      >
-                        {tr("Ver histórico →", "View history →", "Ver historial →")}
-                      </a>
-                    </div>
-                  </div>
-                )}
-                {/* Free uses counter — results */}
-                {!isSubscribed && freeUsesLeft > 0 && (
-                  <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
-                    <div className="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 flex flex-wrap items-center gap-x-2 gap-y-1 mb-4 text-sm">
-                      <span className="text-amber-400/90 flex-1 min-w-0">
-                        {tr(
-                          `${freeUsesLeft} uso${freeUsesLeft !== 1 ? "s" : ""} gratuito${freeUsesLeft !== 1 ? "s" : ""} disponível${freeUsesLeft !== 1 ? "is" : ""} — Subscreva PRO para utilizações ilimitadas`,
-                          `${freeUsesLeft} free use${freeUsesLeft !== 1 ? "s" : ""} remaining — Subscribe to PRO for unlimited uses`,
-                          `${freeUsesLeft} uso${freeUsesLeft !== 1 ? "s" : ""} gratuito${freeUsesLeft !== 1 ? "s" : ""} disponible${freeUsesLeft !== 1 ? "s" : ""} — Suscríbase a PRO para usos ilimitados`
-                        )}
-                      </span>
-                      <a
-                        href="/ferramentas"
-                        className="text-amber-400 hover:text-amber-300 transition-colors font-medium whitespace-nowrap"
-                      >
-                        {tr("Subscrever", "Subscribe", "Suscribirse")}
-                      </a>
-                    </div>
-                  </div>
-                )}
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
+                  <ProStatusBar
+                    toolName={["Análise de Perfil", "Profile Analysis", "Análisis de Perfil"]}
+                    isSubscribed={isSubscribed}
+                    accessLoading={accessLoading}
+                    className="mb-4"
+                  />
+                  <FreeUsesCounter
+                    freeUsesLeft={freeUsesLeft}
+                    isSubscribed={isSubscribed}
+                    accessLoading={accessLoading}
+                    className="mb-4"
+                  />
+                </div>
 
                 <ResultHeader
                   result={result}

@@ -326,8 +326,10 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder
+     * - public folder assets
+     * Also excludes common static file extensions to avoid running
+     * nonce generation, CSP headers, and rate limiting on assets.
      */
-    "/((?!_next/static|_next/image|favicon.ico|images|downloads|manifest.json|sw.js).*)",
+    "/((?!_next/static|_next/image|favicon.ico|images|downloads|manifest.json|sw.js|.*\\.(?:png|jpg|jpeg|gif|svg|webp|avif|ico|woff|woff2|ttf|eot|css|js|map)$).*)",
   ],
 };

@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import { Providers } from "./providers";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
-import { getNonce } from "@/lib/nonce";
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -128,25 +127,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Default to "pt" — LanguageProvider reads locale from cookie/localStorage on client
-  // and updates document.documentElement.lang immediately on hydration.
-  // Removing cookies()/headers() here allows Next.js to statically cache pages
-  // instead of server-rendering every request (~200-500ms saving per page load).
-  // getNonce() will cause dynamic rendering on requests with CSP headers.
-
-  const nonce = await getNonce();
+  // Removing async + getNonce()/headers() allows Next.js to statically cache pages
+  // with ISR (revalidate exports) instead of server-rendering every request.
+  // The theme-detection inline script is allowed by 'unsafe-inline' in CSP (fallback).
+  // The middleware still sets CSP with nonces for any other inline scripts.
 
   return (
     <html lang="pt" className={`${playfair.variable} ${montserrat.variable} dark`}>
       <head>
         {/* Inline script to set theme before React hydration (prevents FOUC) */}
         <script
-          nonce={nonce}
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('portal-lusitano-theme');if(t==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light')}}catch(e){}})()`,
