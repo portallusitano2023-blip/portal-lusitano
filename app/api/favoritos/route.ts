@@ -17,15 +17,16 @@ export async function GET(_request: NextRequest) {
   try {
     const user = await getAuthUser();
 
-    if (!user) {
+    if (!user || !user.email) {
       return apiSuccess({ favoritos: [] });
     }
 
     // Query favoritos without embedded selects (no FK relationships in DB)
+    // DB uses user_email (migration to user_id not yet applied)
     const { data: favoritos, error } = await supabase
       .from("favoritos")
       .select("id, item_id, item_type, created_at")
-      .eq("user_id", user.id)
+      .eq("user_email", user.email)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -95,7 +96,7 @@ export async function POST(request: NextRequest) {
     const { data: existing } = await supabase
       .from("favoritos")
       .select("id")
-      .eq("user_id", user.id)
+      .eq("user_email", user.email!)
       .eq("item_id", item_id)
       .eq("item_type", item_type)
       .single();
@@ -105,7 +106,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { error } = await supabase.from("favoritos").insert({
-      user_id: user.id,
+      user_email: user.email!,
       item_id,
       item_type,
     });
@@ -136,7 +137,7 @@ export async function DELETE(request: NextRequest) {
 
     // Apagar todos os favoritos do utilizador
     if (all === "true") {
-      const { error } = await supabase.from("favoritos").delete().eq("user_id", user.id);
+      const { error } = await supabase.from("favoritos").delete().eq("user_email", user.email!);
       if (error) {
         return apiError("Erro ao limpar favoritos", 500, "favoritos/DELETE");
       }
@@ -150,7 +151,7 @@ export async function DELETE(request: NextRequest) {
     const { error } = await supabase
       .from("favoritos")
       .delete()
-      .eq("user_id", user.id)
+      .eq("user_email", user.email!)
       .eq("item_id", item_id)
       .eq("item_type", item_type);
 

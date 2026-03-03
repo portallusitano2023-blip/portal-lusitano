@@ -3,10 +3,9 @@
 import { memo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Check, Star, ArrowRight, Clock } from "lucide-react";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useAuth, type MinimalUser } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import type { User } from "@supabase/supabase-js";
 
 export interface ToolDefinition {
   title: string;
@@ -26,7 +25,7 @@ export interface ToolDefinition {
 interface ToolCardProps {
   tool: ToolDefinition;
   index: number;
-  user: User | null;
+  user: MinimalUser | null;
   isLoading: boolean;
   tr: (pt: string, en: string, es: string) => string;
   tryLabel: string;

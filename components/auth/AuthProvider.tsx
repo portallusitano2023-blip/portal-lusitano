@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, useCallback, useMemo } 
 
 // Inline minimal types to avoid importing @supabase/supabase-js in the initial bundle
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MinimalUser = { id: string; email?: string; user_metadata: Record<string, any> };
+export type MinimalUser = { id: string; email?: string; user_metadata: Record<string, any> };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MinimalSession = { user: MinimalUser; access_token: string } & Record<string, any>;
 
