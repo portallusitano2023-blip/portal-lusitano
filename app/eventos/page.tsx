@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import EventosContent from "@/components/eventos/EventosContent";
 import { generatePageMetadata } from "@/lib/seo";
+import { EventSchema } from "@/components/JsonLd";
 
 // ISR: Revalidate events every hour (matches layout)
 export const revalidate = 3600;
@@ -38,24 +39,41 @@ export default async function EventosPage() {
   }
 
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
-          <div className="max-w-6xl mx-auto animate-pulse">
-            <div className="h-8 w-48 bg-[var(--background-card)] rounded mx-auto mb-8" />
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-64 bg-[var(--background-secondary)] border border-[var(--border)] rounded-2xl"
-                />
-              ))}
+    <>
+      {/* JSON-LD: Event rich results — Google displays these prominently */}
+      {(data || []).slice(0, 10).map((e) => (
+        <EventSchema
+          key={e.id}
+          name={e.titulo}
+          description={e.descricao || e.titulo}
+          startDate={e.data_inicio}
+          endDate={e.data_fim || undefined}
+          location={e.localizacao || undefined}
+          address={e.regiao || undefined}
+          image={e.imagem_capa || undefined}
+          price={e.preco_entrada || undefined}
+          organizer={e.organizador || "Portal Lusitano"}
+        />
+      ))}
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
+            <div className="max-w-6xl mx-auto animate-pulse">
+              <div className="h-8 w-48 bg-[var(--background-card)] rounded mx-auto mb-8" />
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {[...Array(6)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-64 bg-[var(--background-secondary)] border border-[var(--border)] rounded-2xl"
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      }
-    >
-      <EventosContent eventos={data || []} />
-    </Suspense>
+        }
+      >
+        <EventosContent eventos={data || []} />
+      </Suspense>
+    </>
   );
 }

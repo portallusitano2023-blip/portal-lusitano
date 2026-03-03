@@ -16,7 +16,17 @@
 import { Redis } from "@upstash/redis";
 import { logger } from "./logger";
 
-const redis = Redis.fromEnv();
+// Graceful fallback: if Redis env vars are missing, webhook retries are disabled
+// but the app continues to function (same pattern as middleware.ts and auth.ts)
+let redis: Redis | null = null;
+try {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    redis = Redis.fromEnv();
+  }
+} catch {
+  logger.warn("[webhook-retry] Redis unavailable — webhook retry queue disabled");
+}
+
 const RETRY_KEY = "webhook:retry:queue";
 const MAX_RETRIES = 3;
 
@@ -38,6 +48,10 @@ export async function queueWebhookRetry(
   eventType: string,
   payload: string
 ): Promise<void> {
+  if (!redis) {
+    logger.warn(`[webhook-retry] Redis unavailable — webhook ${eventId} (${eventType}) not queued`);
+    return;
+  }
   try {
     const queuedEvent: QueuedWebhook = {
       eventId,
@@ -65,6 +79,7 @@ export async function queueWebhookRetry(
  * Returns up to `limit` events from the queue.
  */
 export async function dequeueWebhooks(limit: number = 10): Promise<QueuedWebhook[]> {
+  if (!redis) return [];
   try {
     const items = await redis.lrange(RETRY_KEY, 0, limit - 1);
 
@@ -93,6 +108,7 @@ export async function dequeueWebhooks(limit: number = 10): Promise<QueuedWebhook
  * Mark a webhook as successfully processed and remove from queue.
  */
 export async function removeWebhookFromQueue(eventId: string): Promise<void> {
+  if (!redis) return;
   try {
     // This is a simple implementation — fetches all, filters, and re-queues
     // For production at scale, consider using Lua scripts for atomicity
@@ -132,6 +148,7 @@ export async function removeWebhookFromQueue(eventId: string): Promise<void> {
  * Increment retry count for a webhook and re-queue if under MAX_RETRIES.
  */
 export async function incrementRetryCount(webhook: QueuedWebhook): Promise<boolean> {
+  if (!redis) return false;
   try {
     const newRetries = webhook.retries + 1;
 
@@ -173,6 +190,7 @@ export async function incrementRetryCount(webhook: QueuedWebhook): Promise<boole
  * Get queue statistics.
  */
 export async function getQueueStats(): Promise<{ size: number; oldestEventAge: string | null }> {
+  if (!redis) return { size: 0, oldestEventAge: null };
   try {
     const size = await redis.llen(RETRY_KEY);
     const items = await redis.lrange(RETRY_KEY, -1, -1); // Get last item (oldest in FIFO)

@@ -62,7 +62,19 @@ export interface SanityArticle {
   }>;
 }
 
-// Query de listagem — sem body (leve)
+// Pagination parameters type
+export interface ArticlesPaginationParams {
+  /** Number of articles to skip (0-based offset) */
+  skip: number;
+  /** Maximum number of articles to return */
+  limit: number;
+}
+
+/** Default page size — safe for OOM and Vercel timeout budgets */
+export const ARTICLES_DEFAULT_LIMIT = 20;
+
+// Query de listagem — sem body (leve), sem paginação
+// ⚠️  Deprecated for large datasets — use ARTICLES_PAGE_QUERY instead.
 const ARTICLES_LIST_QUERY = `*[_type == "artigo"] | order(publishedAt desc) {
   _id,
   title,
@@ -90,6 +102,39 @@ const ARTICLES_LIST_QUERY = `*[_type == "artigo"] | order(publishedAt desc) {
     slug
   }
 }`;
+
+// Query de listagem paginada — usa GROQ slice para limitar resultados
+// $skip → número de artigos a ignorar, $limit → número a retornar
+const ARTICLES_PAGE_QUERY = `*[_type == "artigo"] | order(publishedAt desc) [$skip...$to] {
+  _id,
+  title,
+  titleEn,
+  slug,
+  slugLegacy,
+  contentType,
+  featured,
+  subtitle,
+  subtitleEn,
+  description,
+  descriptionEn,
+  publishedAt,
+  estimatedReadTime,
+  category,
+  categoryEn,
+  "image": image {
+    asset-> { _ref, url },
+    alt,
+    hotspot
+  },
+  "categories": categories[]-> {
+    _id,
+    title,
+    slug
+  }
+}`;
+
+// Count query for pagination UI (total number of articles)
+const ARTICLES_COUNT_QUERY = `count(*[_type == "artigo"])`;
 
 // Query de detalhe — artigo completo
 const ARTICLE_DETAIL_QUERY = `*[_type == "artigo" && slug.current == $slug][0] {
@@ -161,6 +206,41 @@ export const fetchArticlesList = cache(
   async (): Promise<SanityArticle[]> => client.fetch(ARTICLES_LIST_QUERY)
 );
 
+/**
+ * Paginated article listing.
+ *
+ * Prefer this over `fetchArticlesList` for any page that may grow large.
+ * GROQ slice syntax `[$skip...$to]` is processed on Sanity's side — only
+ * the requested window is transferred over the wire.
+ *
+ * @example
+ *   // First page (0–19)
+ *   const articles = await fetchArticlesPage({ skip: 0, limit: 20 });
+ *   // Second page (20–39)
+ *   const articles = await fetchArticlesPage({ skip: 20, limit: 20 });
+ */
+export const fetchArticlesPage = cache(
+  async ({
+    skip = 0,
+    limit = ARTICLES_DEFAULT_LIMIT,
+  }: Partial<ArticlesPaginationParams> = {}): Promise<SanityArticle[]> => {
+    const safeSkip = Math.max(0, skip);
+    const safeLimit = Math.min(Math.max(1, limit), 100); // cap at 100 per page
+    return client.fetch(ARTICLES_PAGE_QUERY, {
+      skip: safeSkip,
+      to: safeSkip + safeLimit,
+    });
+  }
+);
+
+/**
+ * Total article count — use alongside `fetchArticlesPage` to build
+ * pagination controls (total pages = Math.ceil(count / limit)).
+ */
+export const fetchArticlesCount = cache(
+  async (): Promise<number> => client.fetch(ARTICLES_COUNT_QUERY)
+);
+
 export const fetchArticleBySlug = cache(
   async (slug: string): Promise<SanityArticle | null> =>
     client.fetch(ARTICLE_DETAIL_QUERY, { slug })
@@ -187,7 +267,6 @@ const CAVALO_DETAIL_QUERY = `*[_type == "cavalo" && slug.current == $slug][0] {
   "imageUrl": fotografiaPrincipal.asset->url
 }`;
 
-export const fetchCavaloBySlug = cache(
-  async (slug: string) =>
-    client.fetch(CAVALO_DETAIL_QUERY, { slug })
+export const fetchCavaloBySlug = cache(async (slug: string) =>
+  client.fetch(CAVALO_DETAIL_QUERY, { slug })
 );

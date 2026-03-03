@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import { MapPin, Calendar } from "lucide-react";
@@ -36,7 +37,9 @@ function getPrimaryDiscipline(disciplinas: string[] | string | null | undefined)
   return null;
 }
 
-export default function HorseCard({
+// memo: HorseCard re-renders for every filter/sort change in MarketplaceGrid.
+// Wrapping in memo avoids re-rendering cards whose props haven't changed.
+export default memo(function HorseCard({
   horse,
   href,
   compact = false,
@@ -159,4 +162,4 @@ export default function HorseCard({
       </div>
     </article>
   );
-}
+});

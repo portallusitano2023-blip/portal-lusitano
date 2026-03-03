@@ -25,6 +25,10 @@ type AdminHandler = (
   context: { email: string; params?: Record<string, string> }
 ) => Promise<NextResponse>;
 
+/**
+ * @deprecated Use `createApiRoute(handler, { auth: "admin" })` from `@/lib/createApiRoute` instead.
+ * This wrapper is kept for backward compatibility with older routes.
+ */
 export function withAdminAuth(handler: AdminHandler) {
   return async (req: NextRequest, routeContext?: { params?: Promise<Record<string, string>> }) => {
     try {

@@ -1,5 +1,9 @@
-"use client";
-
+// Server Component — Breadcrumb itself has no hooks or browser APIs.
+// It imports LocalizedLink (a Client Component), but that is fine:
+// Server Components can import and render Client Components — the client
+// boundary starts at LocalizedLink, not here.
+// Removing "use client" means the nav skeleton renders in the SSR payload
+// instead of being deferred to client hydration.
 import LocalizedLink from "@/components/LocalizedLink";
 
 export interface BreadcrumbItem {
@@ -11,9 +15,29 @@ interface BreadcrumbProps {
   items: BreadcrumbItem[];
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://portallusitano.com";
+
 export default function Breadcrumb({ items }: BreadcrumbProps) {
+  // BreadcrumbList JSON-LD for Google rich results
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items
+      .filter((item) => item.href || items.indexOf(item) === items.length - 1)
+      .map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.label,
+        ...(item.href ? { item: `${SITE_URL}${item.href}` } : {}),
+      })),
+  };
+
   return (
     <nav aria-label="Breadcrumb" className="mb-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ol className="flex flex-wrap items-center gap-1.5 text-xs uppercase tracking-widest">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

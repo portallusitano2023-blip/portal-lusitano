@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { supabase, supabaseAdmin } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import ProfissionaisContent from "@/components/profissionais/ProfissionaisContent";
+import { generatePageMetadata } from "@/lib/seo";
 
 import type {
   Profissional,
@@ -11,6 +13,21 @@ import type {
 } from "@/components/profissionais/types";
 
 export const revalidate = 3600;
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "Profissionais Equestres — Veterinários, Treinadores & Ferradores",
+  description:
+    "Directório de profissionais equestres verificados em Portugal. Veterinários especializados, treinadores de dressage, ferradores certificados e instrutores de equitação.",
+  path: "/profissionais",
+  keywords: [
+    "veterinários equinos portugal",
+    "treinadores cavalos lusitanos",
+    "ferradores portugal",
+    "profissionais equestres",
+    "instrutores equitação",
+    "fisioterapia equina",
+  ],
+});
 
 // -----------------------------------------------------------------------------
 // Map raw Supabase row to the Profissional type used by the client component
@@ -193,7 +210,9 @@ export default async function ProfissionaisPage() {
             </div>
 
             <div className="mb-8 pt-6">
-              <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-4">Plano anual</p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-4">
+                Plano anual
+              </p>
               <div className="flex items-end gap-2 mb-2">
                 <span className="text-5xl font-serif bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] bg-clip-text text-transparent">
                   6
@@ -209,34 +228,84 @@ export default async function ProfissionaisPage() {
             {/* Features */}
             <ul className="space-y-3.5 mb-8">
               <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span className="text-sm text-[var(--foreground-secondary)]">Perfil verificado no directório</span>
+                <span className="text-sm text-[var(--foreground-secondary)]">
+                  Perfil verificado no directório
+                </span>
               </li>
               <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span className="text-sm text-[var(--foreground-secondary)]">Visibilidade elevada entre compradores</span>
+                <span className="text-sm text-[var(--foreground-secondary)]">
+                  Visibilidade elevada entre compradores
+                </span>
               </li>
               <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span className="text-sm text-[var(--foreground-secondary)]">Contacto directo com clientes</span>
+                <span className="text-sm text-[var(--foreground-secondary)]">
+                  Contacto directo com clientes
+                </span>
               </li>
               <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span className="text-sm text-[var(--foreground-secondary)]">Badge profissional exclusivo</span>
+                <span className="text-sm text-[var(--foreground-secondary)]">
+                  Badge profissional exclusivo
+                </span>
               </li>
               <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 text-[var(--gold)] flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span className="text-sm text-[var(--foreground-secondary)]">Publicar eventos e artigos educativos</span>
+                <span className="text-sm text-[var(--foreground-secondary)]">
+                  Publicar eventos e artigos educativos
+                </span>
               </li>
             </ul>
 
@@ -247,7 +316,12 @@ export default async function ProfissionaisPage() {
             >
               Começar Registo
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </a>
 

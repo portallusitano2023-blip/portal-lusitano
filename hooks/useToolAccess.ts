@@ -92,7 +92,9 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
   }, [user, authLoading, toolName]);
 
   const freeUsesLeft = Math.max(0, FREE_USES_PER_TOOL - usageCount);
-  const canUse = !user || isSubscribed || freeUsesLeft > 0;
+  // SECURITY: Only authenticated users can use tools.
+  // Guests must create an account to get their 1 free use.
+  const canUse = !!user && (isSubscribed || freeUsesLeft > 0);
   const requiresAuth = !user;
 
   /**
@@ -105,7 +107,8 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
       formData?: Record<string, unknown>,
       resultData?: Record<string, unknown>
     ): Promise<boolean> => {
-      if (!user) return true; // Unauthenticated users get first use (they'll be prompted to register)
+      // SECURITY: Unauthenticated users cannot use tools — triggers Paywall/register flow
+      if (!user) return false;
 
       try {
         const res = await fetch("/api/tools/validate-access", {

@@ -35,6 +35,18 @@ export default memo(function Navbar() {
   const handleMobileToggle = useCallback(() => setIsMobileOpen((prev) => !prev), []);
   const handleMobileClose = useCallback(() => setIsMobileOpen(false), []);
 
+  // Global Ctrl+K / Cmd+K shortcut to open search
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    document.addEventListener("keydown", handleGlobalKeyDown);
+    return () => document.removeEventListener("keydown", handleGlobalKeyDown);
+  }, []);
+
   // Detect scroll for better mobile UX (RAF-throttled, only updates on change)
   const scrolledRef = useRef(false);
   useEffect(() => {

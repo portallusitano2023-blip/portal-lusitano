@@ -13,7 +13,7 @@ export const COLORS = {
 export const ARTICLE_IMAGE_SIZES = "(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px";
 
 /** Email principal de contacto / admin notifications */
-export const CONTACT_EMAIL = "portal.lusitano2023@gmail.com";
+export const CONTACT_EMAIL = "contacto@portal-lusitano.pt";
 
 /** Email de suporte (domínio próprio) */
 export const SUPPORT_EMAIL = "suporte@portal-lusitano.pt";

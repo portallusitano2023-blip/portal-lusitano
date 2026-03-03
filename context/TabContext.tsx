@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  ReactNode,
+} from "react";
 
 export interface Tab {
   id: string;
@@ -38,47 +46,43 @@ export function TabProvider({ children }: { children: ReactNode }) {
     }
   }, [activeTabId]);
 
-  const addTab = (newTab: Tab) => {
-    // Se tab já existe, apenas ativar
-    const existingTab = tabs.find((t) => t.id === newTab.id);
-    if (existingTab) {
+  const addTab = useCallback((newTab: Tab) => {
+    setTabs((prev) => {
+      // Se tab já existe, apenas ativar
+      if (prev.some((t) => t.id === newTab.id)) {
+        setActiveTabId(newTab.id);
+        return prev;
+      }
+      // Adicionar nova tab
       setActiveTabId(newTab.id);
-      return;
-    }
+      return [...prev, newTab];
+    });
+  }, []);
 
-    // Adicionar nova tab
-    setTabs((prev) => [...prev, newTab]);
-    setActiveTabId(newTab.id);
-  };
+  const closeTab = useCallback((tabId: string) => {
+    setTabs((prev) => {
+      const tabIndex = prev.findIndex((t) => t.id === tabId);
+      const newTabs = prev.filter((t) => t.id !== tabId);
 
-  const closeTab = (tabId: string) => {
-    const tabIndex = tabs.findIndex((t) => t.id === tabId);
-    const newTabs = tabs.filter((t) => t.id !== tabId);
+      // Se fechou a tab ativa, ativar outra
+      setActiveTabId((currentActive) => {
+        if (currentActive === tabId && newTabs.length > 0) {
+          return newTabs[Math.max(0, tabIndex - 1)].id;
+        }
+        if (newTabs.length === 0) return "";
+        return currentActive;
+      });
 
-    setTabs(newTabs);
+      return newTabs;
+    });
+  }, []);
 
-    // Se fechou a tab ativa, ativar outra
-    if (activeTabId === tabId && newTabs.length > 0) {
-      const newActiveTab = newTabs[Math.max(0, tabIndex - 1)];
-      setActiveTabId(newActiveTab.id);
-    } else if (newTabs.length === 0) {
-      setActiveTabId("");
-    }
-  };
-
-  return (
-    <TabContext.Provider
-      value={{
-        tabs,
-        activeTabId,
-        addTab,
-        closeTab,
-        setActiveTabId,
-      }}
-    >
-      {children}
-    </TabContext.Provider>
+  const value = useMemo(
+    () => ({ tabs, activeTabId, addTab, closeTab, setActiveTabId }),
+    [tabs, activeTabId, addTab, closeTab]
   );
+
+  return <TabContext.Provider value={value}>{children}</TabContext.Provider>;
 }
 
 export function useTab() {

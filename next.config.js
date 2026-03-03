@@ -6,6 +6,10 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Required for Docker: generates .next/standalone with self-contained server
+  // Without this the Dockerfile COPY .next/standalone step silently produces an empty dir
+  output: "standalone",
+
   // Catch performance/hydration bugs in development before they reach production
   reactStrictMode: true,
 

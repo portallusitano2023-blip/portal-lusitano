@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
   Dna,
@@ -16,12 +15,14 @@ import SourceBadge from "@/components/tools/SourceBadge";
 import COIGauge from "../COIGauge";
 import CoatColorSwatches from "../CoatColorSwatches";
 import PhysicalMatch from "@/components/tools/PhysicalMatch";
+import type { Cavalo, ResultadoCompatibilidade } from "../types";
+import type { Translations } from "@/context/LanguageContext";
 
 interface GeneticMetricsProps {
-  resultado: any;
-  garanhao: any;
-  egua: any;
-  t: Record<string, any>;
+  resultado: ResultadoCompatibilidade;
+  garanhao: Cavalo;
+  egua: Cavalo;
+  t: Translations;
 }
 
 export default function GeneticMetrics({ resultado, garanhao, egua, t }: GeneticMetricsProps) {
@@ -35,14 +36,14 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
             {t.verificador.coi_predicted}
             <Tooltip
               text={
-                (t.verificador as Record<string, string>).tooltip_coi ??
+                t.verificador.tooltip_coi ??
                 "Coeficiente de Consanguinidade — mede o grau de parentesco genético. Abaixo de 3% é excelente; acima de 6.25% aumenta o risco de problemas hereditários."
               }
             />
             <SourceBadge
               source="modelo"
               tooltip={
-                (t.verificador as Record<string, string>).source_coi ??
+                t.verificador.source_coi ??
                 "Calculado a partir de pedigree declarado — para COI oficial consulte a APSL"
               }
             />
@@ -67,14 +68,14 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
             {t.verificador.blup_predicted}
             <Tooltip
               text={
-                (t.verificador as Record<string, string>).tooltip_blup ??
+                t.verificador.tooltip_blup ??
                 "Estimativa do mérito genético do potro, baseada na média dos progenitores. BLUP simplificado — não oficial."
               }
             />
             <SourceBadge
               source="modelo"
               tooltip={
-                (t.verificador as Record<string, string>).source_blup ??
+                t.verificador.source_blup ??
                 "Estimativa simplificada — BLUP oficial requer base de dados APSL completa"
               }
             />
@@ -97,7 +98,7 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
             {t.verificador.estimated_height}
             <Tooltip
               text={
-                (t.verificador as Record<string, string>).tooltip_altura ??
+                t.verificador.tooltip_altura ??
                 "Estimativa baseada na média dos progenitores ±2cm. Factores ambientais podem causar variações significativas."
               }
             />
@@ -170,14 +171,14 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
           {t.verificador.coat_prediction}
           <Tooltip
             text={
-              (t.verificador as Record<string, string>).tooltip_pelagem ??
+              t.verificador.tooltip_pelagem ??
               "Probabilidades baseadas em genética mendeliana simplificada. Resultados reais dependem de alelos não testados."
             }
           />
           <SourceBadge
             source="modelo"
             tooltip={
-              (t.verificador as Record<string, string>).source_pelagem ??
+              t.verificador.source_pelagem ??
               "Genética mendeliana básica — não substitui teste genético"
             }
           />

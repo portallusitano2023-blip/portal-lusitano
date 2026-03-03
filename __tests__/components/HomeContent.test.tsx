@@ -41,29 +41,18 @@ vi.mock("next/image", () => ({
 import HomeContent from "@/components/HomeContent";
 
 describe("HomeContent", () => {
-  const mockProducts = [
-    {
-      id: "1",
-      title: "T-Shirt Lusitano",
-      handle: "t-shirt-lusitano",
-      images: [{ url: "/img.jpg", altText: "T-shirt" }],
-      variants: [{ id: "v1", price: { amount: "39.90" } }],
-      priceRange: { minVariantPrice: { amount: "39.90", currencyCode: "EUR" } },
-    },
-  ];
-
   it("should render the hero title", () => {
-    render(<HomeContent products={mockProducts} />);
+    render(<HomeContent />);
     expect(screen.getByText("NOBREZA LUSITANA")).toBeInTheDocument();
   });
 
-  it("should render with empty products array", () => {
-    render(<HomeContent products={[]} />);
+  it("should render with no props", () => {
+    render(<HomeContent />);
     expect(screen.getByText("NOBREZA LUSITANA")).toBeInTheDocument();
   });
 
   it("should render the CTA button", () => {
-    render(<HomeContent products={mockProducts} />);
+    render(<HomeContent />);
     expect(screen.getByText("Explorar Colecao")).toBeInTheDocument();
   });
 });

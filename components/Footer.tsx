@@ -149,7 +149,7 @@ export default memo(function Footer() {
 
             <div className="pt-4 border-t border-[var(--border)] space-y-3">
               <div className="flex items-center gap-3">
-                <MapPin className="text-[var(--gold)]" size={14} />
+                <Mail className="text-[var(--gold)]" size={14} />
                 <span className="text-[var(--foreground-muted)] text-xs">{CONTACT_EMAIL}</span>
               </div>
               <LocalizedLink
@@ -191,7 +191,7 @@ export default memo(function Footer() {
         {/* COPYRIGHT */}
         <div className="pt-6 border-t border-[var(--border)] flex flex-col sm:flex-row justify-between items-center gap-6">
           <p className="text-[var(--foreground-muted)] text-xs sm:text-[9px] uppercase tracking-[0.2em]">
-            © 2026 Portal Lusitano. {t.footer.rights}.
+            © {new Date().getFullYear()} Portal Lusitano. {t.footer.rights}.
           </p>
           <div className="flex gap-8">
             <LocalizedLink

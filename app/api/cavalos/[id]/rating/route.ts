@@ -11,6 +11,13 @@ function isRateLimited(ip: string): boolean {
   const now = Date.now();
   const record = rateLimitMap.get(ip);
 
+  // Clean expired entries on each check (lazy cleanup, serverless-safe)
+  if (rateLimitMap.size > 1000) {
+    for (const [key, val] of rateLimitMap.entries()) {
+      if (now > val.resetTime) rateLimitMap.delete(key);
+    }
+  }
+
   if (!record || now > record.resetTime) {
     rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
     return false;
@@ -23,19 +30,6 @@ function isRateLimited(ip: string): boolean {
   record.count++;
   return false;
 }
-
-// Cleanup old entries periodically (every 5 minutes)
-setInterval(
-  () => {
-    const now = Date.now();
-    for (const [ip, record] of rateLimitMap.entries()) {
-      if (now > record.resetTime) {
-        rateLimitMap.delete(ip);
-      }
-    }
-  },
-  5 * 60 * 1000
-);
 
 // GET - Get ratings for a specific cavalo
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {

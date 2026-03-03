@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Lock,
   Crown,
@@ -32,16 +32,22 @@ const DEFAULT_PRO_FEATURES = [
 
 const FEATURE_ICONS = [Zap, Download, History, Share2];
 
-export default function Paywall({ toolName, requiresAuth = false, proFeatures, previewContent }: PaywallProps) {
+export default function Paywall({
+  toolName,
+  requiresAuth = false,
+  proFeatures,
+  previewContent,
+}: PaywallProps) {
   const features = proFeatures ?? DEFAULT_PRO_FEATURES;
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubscribe = async () => {
     if (!user) {
-      router.push("/registar?redirect=/ferramentas");
+      router.push(`/registar?redirect=${encodeURIComponent(pathname)}`);
       return;
     }
 
@@ -64,6 +70,9 @@ export default function Paywall({ toolName, requiresAuth = false, proFeatures, p
   };
 
   if (requiresAuth) {
+    const registerHref = `/registar?tool=${encodeURIComponent(toolName)}&redirect=${encodeURIComponent(pathname)}`;
+    const loginHref = `/login?returnUrl=${encodeURIComponent(pathname)}`;
+
     return (
       <div className="relative rounded-2xl overflow-hidden my-4">
         {/* Blurred content behind */}
@@ -86,22 +95,22 @@ export default function Paywall({ toolName, requiresAuth = false, proFeatures, p
               Crie uma conta gratuita
             </h3>
             <p className="text-sm text-[var(--foreground-secondary)] mb-1">
-              Registe-se para usar a {toolName} sem custo.
+              Crie uma conta gratuita para começar a usar a {toolName}.
             </p>
             <p className="text-xs text-[var(--foreground-muted)] mb-6">
-              O primeiro uso é sempre grátis — sem cartão de crédito.
+              Receberá 1 uso grátis — sem cartão de crédito.
             </p>
 
             <div className="flex flex-col gap-3">
               <LocalizedLink
-                href="/registar"
+                href={registerHref}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black font-semibold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all shadow-lg shadow-[var(--gold)]/20 hover:shadow-[var(--gold)]/30 hover:-translate-y-0.5 active:translate-y-0"
               >
                 Criar Conta Grátis
                 <ArrowRight size={16} />
               </LocalizedLink>
               <LocalizedLink
-                href="/login"
+                href={loginHref}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[var(--border)] text-[var(--foreground-secondary)] rounded-xl hover:border-[var(--gold)]/40 hover:text-[var(--foreground)] transition-colors text-sm"
               >
                 Já tenho conta

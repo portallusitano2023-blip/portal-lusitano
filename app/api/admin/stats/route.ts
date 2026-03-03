@@ -10,81 +10,93 @@ export async function GET() {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const now = new Date();
+    const now = new Date().toISOString();
 
-    // Buscar todas as tabelas em paralelo — são queries independentes
+    // Use Supabase count queries + filtered counts in parallel
+    // This avoids downloading ALL rows just to count them in JS
     const [
-      { data: leads, error: leadsError },
-      { data: cavalos, error: cavalosError },
-      { data: eventos, error: eventosError },
-      { data: coudelarias, error: coudError },
-      { data: reviews, error: reviewsError },
+      // Leads
+      { count: totalLeads },
+      { count: convertedLeads },
+      // Cavalos
+      { count: totalCavalos },
+      { count: activeCavalos },
+      { count: soldCavalos },
+      { data: cavalosViews },
+      // Eventos
+      { count: totalEventos },
+      { count: featuredEventos },
+      { count: futureEventos },
+      { data: eventosViews },
+      // Coudelarias
+      { count: totalCoudelarias },
+      { count: featuredCoudelarias },
+      // Reviews
+      { count: totalReviews },
+      { count: pendingReviews },
+      { count: approvedReviews },
     ] = await Promise.all([
-      supabase.from("leads").select("id, converted"),
-      supabase.from("cavalos_venda").select("id, status, views_count, created_at"),
-      supabase.from("eventos").select("id, destaque, data_inicio, views_count"),
-      supabase.from("coudelarias").select("id, destaque"),
-      supabase.from("reviews").select("id, status, created_at"),
+      // Leads
+      supabase.from("leads").select("*", { count: "exact", head: true }),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("converted", true),
+      // Cavalos
+      supabase.from("cavalos_venda").select("*", { count: "exact", head: true }),
+      supabase
+        .from("cavalos_venda")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "active"),
+      supabase
+        .from("cavalos_venda")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "sold"),
+      supabase.from("cavalos_venda").select("views_count"),
+      // Eventos
+      supabase.from("eventos").select("*", { count: "exact", head: true }),
+      supabase.from("eventos").select("*", { count: "exact", head: true }).eq("destaque", true),
+      supabase.from("eventos").select("*", { count: "exact", head: true }).gte("data_inicio", now),
+      supabase.from("eventos").select("views_count"),
+      // Coudelarias
+      supabase.from("coudelarias").select("*", { count: "exact", head: true }),
+      supabase.from("coudelarias").select("*", { count: "exact", head: true }).eq("destaque", true),
+      // Reviews
+      supabase.from("reviews").select("*", { count: "exact", head: true }),
+      supabase.from("reviews").select("*", { count: "exact", head: true }).eq("status", "pending"),
+      supabase.from("reviews").select("*", { count: "exact", head: true }).eq("status", "approved"),
     ]);
 
-    if (leadsError) logger.error("Erro ao buscar leads:", leadsError);
-    if (cavalosError) logger.error("Erro ao buscar cavalos:", cavalosError);
-    if (eventosError) logger.error("Erro ao buscar eventos:", eventosError);
-    if (coudError) logger.error("Erro ao buscar coudelarias:", coudError);
-    if (reviewsError) logger.error("Erro ao buscar reviews:", reviewsError);
+    // Sum views (still need data for these since Supabase doesn't have SUM in REST API)
+    const totalCavalosViews = cavalosViews?.reduce((sum, c) => sum + (c.views_count || 0), 0) ?? 0;
+    const totalEventosViews = eventosViews?.reduce((sum, e) => sum + (e.views_count || 0), 0) ?? 0;
 
-    // Stats de leads/ebooks
-    const totalLeads = leads?.length || 0;
-    const convertedLeads = leads?.filter((l) => l.converted).length || 0;
-
-    // Stats de cavalos
-    const totalCavalos = cavalos?.length || 0;
-    const activeCavalos = cavalos?.filter((c) => c.status === "active").length || 0;
-    const soldCavalos = cavalos?.filter((c) => c.status === "sold").length || 0;
-    const cavalosViews = cavalos?.reduce((sum, c) => sum + (c.views_count || 0), 0) || 0;
-
-    // Stats de eventos
-    const totalEventos = eventos?.length || 0;
-    const featuredEventos = eventos?.filter((e) => e.destaque).length || 0;
-    const futureEventos = eventos?.filter((e) => new Date(e.data_inicio) > now).length || 0;
-    const eventosViews = eventos?.reduce((sum, e) => sum + (e.views_count || 0), 0) || 0;
-
-    // Stats de coudelarias
-    const totalCoudelarias = coudelarias?.length || 0;
-    const featuredCoudelarias = coudelarias?.filter((c) => c.destaque).length || 0;
-
-    // Stats de reviews
-    const totalReviews = reviews?.length || 0;
-    const pendingReviews = reviews?.filter((r) => r.status === "pending").length || 0;
-    const approvedReviews = reviews?.filter((r) => r.status === "approved").length || 0;
+    const tLeads = totalLeads ?? 0;
+    const cLeads = convertedLeads ?? 0;
 
     const stats = {
       // Leads/Ebooks
-      totalLeads,
-      convertedLeads,
-      conversionRate:
-        totalLeads > 0 ? parseFloat(((convertedLeads / totalLeads) * 100).toFixed(1)) : 0,
+      totalLeads: tLeads,
+      convertedLeads: cLeads,
+      conversionRate: tLeads > 0 ? parseFloat(((cLeads / tLeads) * 100).toFixed(1)) : 0,
 
       // Cavalos
-      totalCavalos,
-      activeCavalos,
-      soldCavalos,
-      cavalosViews,
+      totalCavalos: totalCavalos ?? 0,
+      activeCavalos: activeCavalos ?? 0,
+      soldCavalos: soldCavalos ?? 0,
+      cavalosViews: totalCavalosViews,
 
       // Eventos
-      totalEventos,
-      featuredEventos,
-      futureEventos,
-      eventosViews,
+      totalEventos: totalEventos ?? 0,
+      featuredEventos: featuredEventos ?? 0,
+      futureEventos: futureEventos ?? 0,
+      eventosViews: totalEventosViews,
 
       // Coudelarias
-      totalCoudelarias,
-      featuredCoudelarias,
+      totalCoudelarias: totalCoudelarias ?? 0,
+      featuredCoudelarias: featuredCoudelarias ?? 0,
 
       // Reviews
-      totalReviews,
-      pendingReviews,
-      approvedReviews,
+      totalReviews: totalReviews ?? 0,
+      pendingReviews: pendingReviews ?? 0,
+      approvedReviews: approvedReviews ?? 0,
     };
 
     return NextResponse.json(stats);

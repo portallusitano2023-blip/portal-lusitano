@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { createTranslator } from "@/lib/tr";
 
 const nl = {
   title: {
@@ -71,19 +70,23 @@ export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const { language } = useLanguage();
-  const _tr = createTranslator(language);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
 
-    const res = await fetch("/api/newsletter", {
-      method: "POST",
-      body: JSON.stringify({ email }),
-    });
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-    if (res.ok) setStatus("success");
-    else setStatus("error");
+      if (res.ok) setStatus("success");
+      else setStatus("error");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (

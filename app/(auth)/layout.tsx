@@ -16,14 +16,29 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         className="hidden lg:flex lg:w-[45%] xl:w-[40%] flex-col justify-between p-10 xl:p-14 relative overflow-hidden"
         aria-hidden="true"
       >
-        {/* Layered background: deep card + subtle radial gold glow */}
+        {/* Layered background */}
         <div className="absolute inset-0 bg-[var(--background-card)]" />
+
+        {/* Animated radial gold glow */}
         <div
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0 opacity-25 animate-auth-gradient"
           style={{
-            background: "radial-gradient(ellipse 70% 60% at 30% 50%, #C5A059 0%, transparent 70%)",
+            background:
+              "radial-gradient(ellipse 60% 50% at 30% 40%, #C5A059 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 70% 70%, #B8956F 0%, transparent 60%)",
+            backgroundSize: "200% 200%",
           }}
         />
+
+        {/* Subtle grid pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage:
+              "linear-gradient(#C5A059 1px, transparent 1px), linear-gradient(90deg, #C5A059 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
+
         {/* Decorative diagonal lines */}
         <div
           className="absolute inset-0 opacity-[0.04]"
@@ -33,24 +48,37 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           }}
         />
 
+        {/* Floating decorative orbs */}
+        <div className="absolute top-[15%] right-[15%] w-32 h-32 rounded-full bg-[var(--gold)]/5 blur-2xl animate-auth-float" />
+        <div
+          className="absolute bottom-[20%] left-[10%] w-24 h-24 rounded-full bg-[var(--gold)]/8 blur-xl animate-auth-float"
+          style={{ animationDelay: "2s" }}
+        />
+
         {/* Logo */}
         <Link href="/" className="relative z-10 inline-flex flex-col gap-1 group w-fit">
           <span className="text-2xl font-serif text-[var(--foreground)] tracking-widest group-hover:text-[var(--gold)] transition-colors duration-300">
             PORTAL LUSITANO
           </span>
-          <span className="text-[9px] uppercase tracking-[0.35em] text-[var(--foreground-muted)]">
-            EST. 2023
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] uppercase tracking-[0.35em] text-[var(--foreground-muted)]">
+              EST. 2023
+            </span>
+            <div className="h-px flex-1 bg-gradient-to-r from-[var(--gold)]/30 to-transparent" />
+          </div>
         </Link>
 
         {/* Central visual: horse icon + tagline */}
-        <div className="relative z-10 flex-1 flex flex-col items-start justify-center gap-6 py-12">
-          {/* Decorative horse silhouette mark */}
-          <div className="w-16 h-16 rounded-2xl bg-[var(--gold)]/10 border border-[var(--gold)]/20 flex items-center justify-center">
+        <div className="relative z-10 flex-1 flex flex-col items-start justify-center gap-8 py-12">
+          {/* Decorative horse silhouette mark — larger */}
+          <div
+            className="w-20 h-20 rounded-2xl bg-[var(--gold)]/10 border border-[var(--gold)]/20 flex items-center justify-center backdrop-blur-sm shadow-lg shadow-[var(--gold)]/5 animate-auth-float"
+            style={{ animationDuration: "5s" }}
+          >
             <svg
               viewBox="0 0 24 24"
-              width="32"
-              height="32"
+              width="40"
+              height="40"
               fill="none"
               stroke="var(--gold)"
               strokeWidth="1.5"
@@ -58,7 +86,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               strokeLinejoin="round"
               aria-hidden="true"
             >
-              {/* Stylised horse head path */}
               <path d="M4 17c0 0 1-5 4-7s6-2 8-4c1-0.8 1.5-2 1-3" />
               <path d="M4 17c1 1 3 2 5 1.5" />
               <path d="M8 18.5V21" />
@@ -82,16 +109,59 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </p>
           </div>
 
-          {/* Trust indicators */}
-          <div className="flex flex-col gap-2.5 mt-2">
+          {/* Trust indicators with icons */}
+          <div className="flex flex-col gap-3 mt-2 w-full max-w-xs">
             {[
-              "Calculadora de valor de mercado",
-              "Verificador de compatibilidade",
-              "Análise de perfil personalizada",
+              {
+                icon: "M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z",
+                label: "Calculadora de valor de mercado",
+              },
+              {
+                icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+                label: "Verificador de compatibilidade",
+              },
+              {
+                icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
+                label: "Análise de perfil personalizada",
+              },
             ].map((item) => (
-              <div key={item} className="flex items-center gap-2.5">
-                <div className="w-1 h-1 rounded-full bg-[var(--gold)]" />
-                <span className="text-xs text-[var(--foreground-secondary)]">{item}</span>
+              <div key={item.label} className="flex items-center gap-3 group/item">
+                <div className="w-8 h-8 rounded-lg bg-[var(--gold)]/8 border border-[var(--gold)]/15 flex items-center justify-center shrink-0 group-hover/item:bg-[var(--gold)]/15 transition-colors">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="14"
+                    height="14"
+                    fill="none"
+                    stroke="var(--gold)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d={item.icon} />
+                  </svg>
+                </div>
+                <span className="text-xs text-[var(--foreground-secondary)] leading-snug">
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Social proof stats */}
+          <div className="flex items-center gap-6 mt-4 pt-4 border-t border-[var(--border)]/30 w-full max-w-xs">
+            {[
+              { value: "500+", label: "Membros" },
+              { value: "10K+", label: "Cavalos Analisados" },
+              { value: "100%", label: "Gratuito" },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center flex-1">
+                <div className="text-lg font-bold text-[var(--gold)] leading-none mb-1">
+                  {stat.value}
+                </div>
+                <div className="text-[10px] text-[var(--foreground-muted)] uppercase tracking-wider leading-tight">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -120,16 +190,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </span>
         </Link>
 
-        {/* Form card */}
-        <div className="w-full max-w-md bg-[var(--background-secondary)]/80 border border-[var(--border)] rounded-2xl p-8 shadow-2xl shadow-black/40">
+        {/* Form card — glass-morphism */}
+        <div className="w-full max-w-md bg-[var(--background-secondary)]/80 backdrop-blur-sm border border-[var(--border)] rounded-2xl p-8 shadow-2xl shadow-black/40 animate-auth-fadeInUp">
           {children}
         </div>
 
         <Link
           href="/"
-          className="mt-6 text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
+          className="mt-6 text-sm text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors animate-auth-fadeInUp auth-stagger-7"
         >
-          Voltar ao Portal
+          ← Voltar ao Portal
         </Link>
       </div>
     </div>

@@ -61,7 +61,10 @@ export default memo(function MobileBottomNav() {
       <div className="h-[72px] lg:hidden" />
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-[var(--background-secondary)] border-t border-[var(--border)] safe-area-bottom [transform:translateZ(0)]">
+      <nav
+        aria-label={t.mobile_nav.home ? "Navegação mobile" : "Mobile navigation"}
+        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-[var(--background-secondary)] border-t border-[var(--border)] safe-area-bottom [transform:translateZ(0)]"
+      >
         <div className="flex items-center justify-around h-[72px] px-2">
           {navItems.map((item) => (
             <LocalizedLink

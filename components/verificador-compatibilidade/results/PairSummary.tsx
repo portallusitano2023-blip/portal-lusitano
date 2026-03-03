@@ -1,18 +1,19 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Info } from "lucide-react";
 import GeneticSummary from "@/components/tools/GeneticSummary";
 import ResultActions from "@/components/tools/ResultActions";
+import type { Cavalo, ResultadoCompatibilidade } from "../types";
+import type { Translations } from "@/context/LanguageContext";
 
 interface PairSummaryProps {
-  resultado: any;
-  garanhao: any;
-  egua: any;
+  resultado: ResultadoCompatibilidade;
+  garanhao: Cavalo;
+  egua: Cavalo;
   isExporting: boolean;
   onExportPDF: () => void;
   onShare: () => void;
-  t: Record<string, any>;
+  t: Translations;
 }
 
 export default function PairSummary({

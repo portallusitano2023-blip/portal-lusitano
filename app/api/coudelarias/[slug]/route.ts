@@ -2,6 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 
+// Atomic view counter increment via Supabase RPC
+// Falls back to read-then-write if RPC is unavailable
+async function incrementViews(id: string, currentCount: number) {
+  // Try atomic increment via RPC first (requires DB function: increment_views(row_id uuid))
+  const { error: rpcError } = await supabase.rpc("increment_coudelaria_views", {
+    row_id: id,
+  });
+
+  if (rpcError) {
+    // Fallback: non-atomic increment (acceptable for analytics)
+    await supabase
+      .from("coudelarias")
+      .update({ views_count: (currentCount || 0) + 1 })
+      .eq("id", id);
+  }
+}
+
 // GET - Obter coudelaria por slug
 export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -27,13 +44,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // Incrementar views (não bloqueia a resposta)
-    supabase
-      .from("coudelarias")
-      .update({ views_count: (coudelaria.views_count || 0) + 1 })
-      .eq("id", coudelaria.id)
-      .then(({ error: updateErr }) => {
-        if (updateErr) logger.error("Failed to increment coudelaria views:", updateErr);
-      });
+    incrementViews(coudelaria.id, coudelaria.views_count).catch((err) =>
+      logger.error("Failed to increment coudelaria views:", err)
+    );
 
     const response = NextResponse.json({ coudelaria });
     response.headers.set(

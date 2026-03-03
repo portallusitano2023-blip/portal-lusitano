@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
   ChevronRight,
@@ -17,16 +16,19 @@ import OffspringRadar from "@/components/tools/OffspringRadar";
 import FoalValueProjection from "@/components/tools/FoalValueProjection";
 import MatingScenarios from "@/components/tools/MatingScenarios";
 import BreedingCosts from "@/components/tools/BreedingCosts";
+import type { Cavalo, ResultadoCompatibilidade } from "../types";
+import type { Translations } from "@/context/LanguageContext";
+import type { OffspringAxis, FoalValueStage } from "../breeding";
 
 interface FactorBreakdownProps {
-  resultado: any;
-  garanhao: any;
-  egua: any;
+  resultado: ResultadoCompatibilidade;
+  garanhao: Cavalo;
+  egua: Cavalo;
   isSubscribed: boolean;
-  offspringAxes: any;
-  foalValues: any;
-  parentQuality: any;
-  t: Record<string, any>;
+  offspringAxes: OffspringAxis[];
+  foalValues: FoalValueStage[];
+  parentQuality: number;
+  t: Translations;
 }
 
 export default function FactorBreakdown({

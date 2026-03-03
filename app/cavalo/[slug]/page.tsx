@@ -6,6 +6,9 @@ import CavaloDetail from "@/components/cavalo/CavaloDetail";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
+// ISR: Revalidate horse detail every hour
+export const revalidate = 3600;
+
 type Props = {
   params: Promise<{ slug: string }>;
 };

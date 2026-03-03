@@ -63,6 +63,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLUListElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useFocusTrap(modalRef, isOpen, onClose);
 
@@ -118,8 +119,12 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
       } else if (e.key === "Enter" && selectedIndex >= 0 && results[selectedIndex]) {
         e.preventDefault();
         saveSearchHistory(query);
-        window.location.href = results[selectedIndex].url;
-        onClose();
+        handleResultClick();
+        // Navigate via the link — find and click the focused item
+        const items = resultsRef.current?.querySelectorAll("a");
+        if (items?.[selectedIndex]) {
+          items[selectedIndex].click();
+        }
       }
     };
 
@@ -154,12 +159,18 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
       return;
     }
 
+    // Abort any in-flight request before starting a new one
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setIsLoading(true);
 
     try {
       const typeParam = filter !== "all" ? `&type=${filter}` : "";
       const res = await fetch(
-        `/api/search?q=${encodeURIComponent(searchQuery)}&limit=15${typeParam}`
+        `/api/search?q=${encodeURIComponent(searchQuery)}&limit=15${typeParam}`,
+        { signal: controller.signal }
       );
       if (res.ok) {
         const data = await res.json();
@@ -167,7 +178,9 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
       } else {
         setResults([]);
       }
-    } catch {
+    } catch (err) {
+      // Don't clear results if it was just an abort
+      if (err instanceof DOMException && err.name === "AbortError") return;
       setResults([]);
     } finally {
       setIsLoading(false);

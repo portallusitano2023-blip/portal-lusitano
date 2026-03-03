@@ -31,21 +31,22 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export function WishlistProvider({ children }: { children: ReactNode }) {
-  const [wishlist, setWishlist] = useState<WishlistItem[]>(() => {
-    if (typeof window === "undefined") return [];
+  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const { showToast } = useToast();
+  const { language } = useLanguage();
+
+  // Hydrate from localStorage after mount — avoids SSR/client mismatch
+  useEffect(() => {
     try {
       const saved = localStorage.getItem("wishlist");
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) setWishlist(parsed); // eslint-disable-line react-hooks/set-state-in-effect
       }
     } catch {
-      /* ignore */
+      /* ignore corrupt data */
     }
-    return [];
-  });
-  const { showToast } = useToast();
-  const { language } = useLanguage();
+  }, []);
 
   // Guardar wishlist no localStorage
   useEffect(() => {

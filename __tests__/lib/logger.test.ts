@@ -9,10 +9,12 @@ describe("Logger PII Redaction", () => {
   });
 
   afterEach(() => {
+    // @ts-expect-error -- vitest allows NODE_ENV override for testing
     process.env.NODE_ENV = originalEnv;
   });
 
   it("redacts email addresses in production", async () => {
+    // @ts-expect-error -- vitest allows NODE_ENV override for testing
     process.env.NODE_ENV = "production";
     const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
@@ -28,6 +30,7 @@ describe("Logger PII Redaction", () => {
   });
 
   it("redacts phone numbers in production", async () => {
+    // @ts-expect-error -- vitest allows NODE_ENV override for testing
     process.env.NODE_ENV = "production";
     const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
@@ -43,6 +46,7 @@ describe("Logger PII Redaction", () => {
   });
 
   it("does not redact in development", async () => {
+    // @ts-expect-error -- vitest allows NODE_ENV override for testing
     process.env.NODE_ENV = "development";
     const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 

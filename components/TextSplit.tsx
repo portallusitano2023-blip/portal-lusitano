@@ -1,5 +1,6 @@
-"use client";
-
+// Server Component — pure JSX with CSS-only animations, no hooks/browser APIs.
+// The comment "zero JS runtime" was accurate but "use client" was incorrect.
+// Removing it sends zero JS to the browser for this component.
 /**
  * Componente que anima cada palavra de um texto individualmente.
  * CSS puro — usa a classe .text-split-word do globals.css.

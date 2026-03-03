@@ -1,9 +1,10 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { CheckCircle, AlertTriangle, Info, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import Tooltip from "@/components/tools/Tooltip";
+import type { ResultadoCompatibilidade } from "../types";
+import type { Translations } from "@/context/LanguageContext";
 
 const AnimatedRing = dynamic(() => import("@/components/tools/AnimatedRing"), {
   ssr: false,
@@ -14,12 +15,12 @@ const Confetti = dynamic(() => import("@/components/tools/Confetti"), {
 });
 
 interface CompatibilityHeroProps {
-  resultado: any;
+  resultado: ResultadoCompatibilidade;
   garanhaoNome: string;
   eguaNome: string;
   coiBannerDismissed: boolean;
   onDismissBanner: () => void;
-  t: Record<string, any>;
+  t: Translations;
 }
 
 export default function CompatibilityHero({

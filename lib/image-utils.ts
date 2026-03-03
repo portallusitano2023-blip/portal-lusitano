@@ -43,29 +43,3 @@ function shimmer(width: number, height: number): string {
 function toBase64(str: string): string {
   return typeof window === "undefined" ? Buffer.from(str).toString("base64") : window.btoa(str);
 }
-
-/**
- * Get optimized image props for Next.js Image component
- *
- * @example
- * ```tsx
- * <Image {...getImageProps('/images/hero.jpg')} alt="Hero" />
- * ```
- */
-export function getImageProps(
-  src: string,
-  options?: {
-    priority?: boolean;
-    quality?: number;
-  }
-) {
-  const filename = src.split("/").pop() || "";
-
-  return {
-    src,
-    placeholder: "blur" as const,
-    blurDataURL: getBlurDataURL(filename),
-    quality: options?.quality || 85,
-    priority: options?.priority || false,
-  };
-}

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import { sanitizeSearchInput } from "@/lib/sanitize";
+import { strictLimiter } from "@/lib/rate-limit";
+import { coudelariaRegistoSchema, parseWithZod } from "@/lib/schemas";
 
 // Criar slug a partir do nome
 function createSlug(name: string): string {
@@ -71,24 +73,26 @@ export async function GET(request: NextRequest) {
 // POST - Registar nova coudelaria
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const {
-      nome,
-      descricao,
-      localizacao,
-      regiao,
-      telefone,
-      email,
-      website,
-      instagram,
-      num_cavalos,
-      especialidades,
-    } = body;
-
-    // Validações básicas
-    if (!nome || !descricao || !localizacao || !regiao) {
-      return NextResponse.json({ error: "Campos obrigatórios em falta" }, { status: 400 });
+    // Rate limiting — max 5 submissions per minute per IP
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anonymous";
+    try {
+      await strictLimiter.check(5, ip);
+    } catch {
+      return NextResponse.json(
+        { error: "Demasiadas submissões. Tente novamente mais tarde." },
+        { status: 429 }
+      );
     }
+
+    const body = await request.json();
+
+    // Zod validation with proper error messages
+    const parsed = parseWithZod(coudelariaRegistoSchema, body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
+    }
+
+    const { nome, descricao, localizacao, regiao, telefone, email, website } = parsed.data;
 
     // Criar slug único
     let slug = createSlug(nome);
@@ -116,9 +120,9 @@ export async function POST(request: NextRequest) {
         telefone: telefone || null,
         email: email || null,
         website: website || null,
-        instagram: instagram || null,
-        num_cavalos: num_cavalos || null,
-        especialidades: especialidades || [],
+        instagram: body.instagram || null,
+        num_cavalos: body.num_cavalos || null,
+        especialidades: body.especialidades || [],
         fotos: [],
         status: "pending", // Ficam pendentes para revisão
       })

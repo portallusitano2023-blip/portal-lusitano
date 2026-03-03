@@ -63,7 +63,7 @@ function ComprarContentInner({
   const totalCount = cavalos.length;
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 sm:pt-32 md:pt-48 px-4 sm:px-6 md:px-12 lg:px-20 pb-24 sm:pb-32">
+    <section className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-24 sm:pt-32 md:pt-48 px-4 sm:px-6 md:px-12 lg:px-20 pb-24 sm:pb-32">
       {/* Header */}
       <header className="mb-8 sm:mb-12 md:mb-24 text-center">
         <span className="text-[var(--gold)] uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[9px] sm:text-[10px] font-bold block mb-2 sm:mb-4">
@@ -193,7 +193,7 @@ function ComprarContentInner({
           </LocalizedLink>
         </div>
       )}
-    </main>
+    </section>
   );
 }
 

@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
   ReactNode,
 } from "react";
 
@@ -146,6 +147,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
 
+  // Debounce refs: prevent concurrent updates for the same line item
+  // Each key is a lineId; value is the pending setTimeout handle
+  const updateTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+
   // Apply cart data from any API response that includes lines
   const applyCartData = useCallback((cartData: Parameters<typeof parseCartData>[0]) => {
     const { checkoutUrl: url, items } = parseCartData(cartData);
@@ -270,10 +275,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const updateQuantity = useCallback(
     async (lineId: string, quantity: number) => {
       if (!cartId) return;
-      const result = await apiUpdateCartLines(cartId, lineId, quantity);
-      if (result?.lines) {
-        applyCartData(result);
-      }
+
+      // Optimistic update: apply immediately for instant UI feedback
+      setCart((prev) => prev.map((item) => (item.id === lineId ? { ...item, quantity } : item)));
+
+      // Debounce: cancel any pending API call for this lineId
+      // (handles rapid +/- clicks without race conditions)
+      const existing = updateTimers.current.get(lineId);
+      if (existing) clearTimeout(existing);
+
+      const timer = setTimeout(async () => {
+        updateTimers.current.delete(lineId);
+        const activeCartId = cartId;
+        if (!activeCartId) return;
+        const result = await apiUpdateCartLines(activeCartId, lineId, quantity);
+        if (result?.lines) {
+          applyCartData(result);
+        }
+      }, 300);
+
+      updateTimers.current.set(lineId, timer);
     },
     [cartId, applyCartData]
   );

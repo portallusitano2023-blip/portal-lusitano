@@ -1,5 +1,6 @@
 import { createCart, addToCart } from "@/lib/shopify";
 import { apiSuccess, apiError } from "@/lib/api-response";
+import { logger } from "@/lib/logger";
 
 export async function POST(request: Request) {
   let body: { variantId?: string };
@@ -32,7 +33,8 @@ export async function POST(request: Request) {
 
     return apiSuccess({ checkoutUrl });
   } catch (error: unknown) {
-    const message = "Erro ao criar checkout";
-    return apiError("Erro ao criar checkout", 500, `checkout: ${message}`);
+    const detail = error instanceof Error ? error.message : "Unknown error";
+    logger.error("[Checkout] Error:", detail);
+    return apiError("Erro ao criar checkout", 500, `checkout: ${detail}`);
   }
 }

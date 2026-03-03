@@ -134,6 +134,14 @@ export default function CookieConsent() {
 
   return (
     <div
+      role="dialog"
+      aria-label={
+        language === "en"
+          ? "Cookie consent"
+          : language === "es"
+            ? "Consentimiento de cookies"
+            : "Consentimento de cookies"
+      }
       className="fixed bottom-0 left-0 right-0 z-[9998] p-4 pb-[88px] lg:pb-4 md:p-6 md:pb-[88px] lg:pb-6 opacity-0 animate-[slideUp_0.4s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
       style={{ willChange: "transform, opacity" }}
     >

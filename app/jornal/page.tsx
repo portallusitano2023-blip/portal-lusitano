@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import fs from "fs";
 import path from "path";
 import { fetchArticlesList } from "@/lib/sanity-queries";
@@ -5,9 +6,25 @@ import { articlesListPT, articlesListEN, articlesListES } from "@/data/articlesL
 import { legacyIdToSlug } from "@/lib/journal-utils";
 import { ItemListSchema } from "@/components/JsonLd";
 import JornalListClient from "./JornalListClient";
+import { generatePageMetadata } from "@/lib/seo";
 
 // ISR: Revalidar jornal diariamente (novos artigos via Sanity)
 export const revalidate = 86400;
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "Jornal Lusitano — Artigos & Crónicas Equestres",
+  description:
+    "Artigos, crónicas e reportagens sobre o cavalo Lusitano. História, genética, biomecânica, treino de dressage e actualidades do mundo equestre em Portugal.",
+  path: "/jornal",
+  keywords: [
+    "artigos cavalos lusitanos",
+    "notícias equestres portugal",
+    "crónicas lusitano",
+    "genética cavalo lusitano",
+    "treino dressage artigos",
+    "jornal equestre",
+  ],
+});
 
 // Extensões de imagem aceites (qualquer ficheiro de imagem)
 const imageExts = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".bmp", ".tiff"]);

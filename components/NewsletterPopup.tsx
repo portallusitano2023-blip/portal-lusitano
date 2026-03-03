@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { X, Mail, Loader2, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -61,6 +61,21 @@ export default function NewsletterPopup() {
     setIsVisible(false);
   };
 
+  // Close on ESC key
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isVisible) {
+        handleClose();
+      }
+    },
+    [isVisible]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -102,6 +117,15 @@ export default function NewsletterPopup() {
           {/* Modal */}
           <div className="fixed inset-0 z-[9998] flex items-center justify-center p-4">
             <div
+              role="dialog"
+              aria-modal="true"
+              aria-label={
+                language === "en"
+                  ? "Newsletter subscription"
+                  : language === "es"
+                    ? "Suscripción al boletín"
+                    : "Subscrição da newsletter"
+              }
               className="relative bg-[var(--background-secondary)] border border-[var(--border)] max-w-lg w-full overflow-hidden opacity-0 animate-[scaleIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
               style={{ animationDelay: "0.05s", willChange: "transform, opacity" }}
               onClick={(e) => e.stopPropagation()}
@@ -155,7 +179,11 @@ export default function NewsletterPopup() {
                         />
                       </div>
 
-                      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+                      {error && (
+                        <p className="text-red-500 text-sm text-center" role="alert">
+                          {error}
+                        </p>
+                      )}
 
                       <button
                         type="submit"

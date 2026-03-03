@@ -503,7 +503,7 @@ export default function CalculadoraValorPage() {
                     totalSteps={TOTAL_STEPS}
                     isCalculating={isCalculating}
                     onPrevious={() => {
-                      setStep((s) => s - 1);
+                      setStep(step - 1);
                       setTimeout(
                         () =>
                           document
@@ -513,7 +513,7 @@ export default function CalculadoraValorPage() {
                       );
                     }}
                     onNext={() => {
-                      setStep((s) => s + 1);
+                      setStep(step + 1);
                       setTimeout(
                         () =>
                           document

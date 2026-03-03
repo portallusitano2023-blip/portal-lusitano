@@ -13,6 +13,7 @@ import React, {
 import type ptType from "@/locales/pt.json";
 
 type Translations = typeof ptType;
+export type { Translations };
 type Language = "pt" | "en" | "es";
 
 // All translations loaded on demand. PT starts loading immediately at module

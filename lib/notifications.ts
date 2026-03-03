@@ -48,32 +48,3 @@ export const notifyNewMessage = (data: { name: string; type: string; id: string 
     data: { url: `/admin/mensagens` },
   });
 };
-
-export const notifyNewPayment = (data: { email: string; amount: number; type: string }) => {
-  const amountEuros = (data.amount / 100).toFixed(2);
-
-  showNotification("💰 Novo Pagamento Recebido!", {
-    body: `€${amountEuros} - ${data.email}`,
-    tag: `payment-${Date.now()}`,
-    requireInteraction: true,
-    data: { url: `/admin/financeiro` },
-  });
-};
-
-export const notifyNewLead = (data: { name: string; stage: string }) => {
-  showNotification("🎯 Novo Lead no CRM!", {
-    body: `${data.name} - ${data.stage}`,
-    tag: `lead-${Date.now()}`,
-    requireInteraction: false,
-    data: { url: `/admin/crm` },
-  });
-};
-
-export const notifyTaskDue = (data: { title: string; dueDate: string }) => {
-  showNotification("⏰ Tarefa Pendente!", {
-    body: `${data.title} - Vence: ${data.dueDate}`,
-    tag: `task-${Date.now()}`,
-    requireInteraction: true,
-    data: { url: `/admin/calendario` },
-  });
-};

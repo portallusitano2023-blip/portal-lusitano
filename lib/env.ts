@@ -12,13 +12,30 @@ const serverEnvSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url("NEXT_PUBLIC_SUPABASE_URL deve ser uma URL válida"),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, "NEXT_PUBLIC_SUPABASE_ANON_KEY é obrigatório"),
 
-  // Auth (obrigatório em produção)
-  ADMIN_SECRET: z.string().min(16, "ADMIN_SECRET deve ter pelo menos 16 caracteres").optional(),
-  ADMIN_EMAIL: z.string().email("ADMIN_EMAIL deve ser um email válido").optional(),
-  ADMIN_PASSWORD_HASH: z
-    .string()
-    .min(64, "ADMIN_PASSWORD_HASH deve ser um hash SHA-256 (64 hex chars)")
-    .optional(),
+  // Auth (obrigatório em produção — falha o build se ausentes)
+  ADMIN_SECRET:
+    process.env.NODE_ENV === "production"
+      ? z.string().min(16, "ADMIN_SECRET deve ter pelo menos 16 caracteres")
+      : z.string().min(16, "ADMIN_SECRET deve ter pelo menos 16 caracteres").optional(),
+  ADMIN_EMAIL:
+    process.env.NODE_ENV === "production"
+      ? z.string().email("ADMIN_EMAIL deve ser um email válido")
+      : z.string().email("ADMIN_EMAIL deve ser um email válido").optional(),
+  ADMIN_PASSWORD_HASH:
+    process.env.NODE_ENV === "production"
+      ? z
+          .string()
+          .min(
+            10,
+            "ADMIN_PASSWORD_HASH deve ser um hash válido (scrypt:<salt>:<hash> ou SHA-256 hex legado)"
+          )
+      : z
+          .string()
+          .min(
+            10,
+            "ADMIN_PASSWORD_HASH deve ser um hash válido (scrypt:<salt>:<hash> ou SHA-256 hex legado)"
+          )
+          .optional(),
 
   // Stripe (opcional, necessário para pagamentos)
   STRIPE_SECRET_KEY: z.string().optional(),

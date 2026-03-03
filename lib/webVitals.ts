@@ -24,7 +24,10 @@ const sendToCustomAnalytics = (metric: Metric) => {
       rating: metric.rating,
       delta: metric.delta,
       id: metric.id,
-      navigationType: (metric as any).navigationType,
+      navigationType:
+        "navigationType" in metric
+          ? (metric as unknown as Record<string, unknown>).navigationType
+          : undefined,
     };
 
     // Use sendBeacon for reliability (survives page navigation)
@@ -52,31 +55,9 @@ const sendToCustomAnalytics = (metric: Metric) => {
 };
 
 export function reportWebVitals(metric: Metric) {
-  switch (metric.name) {
-    case "CLS": // Cumulative Layout Shift - deve ser < 0.1
-      sendToAnalytics(metric);
-      sendToCustomAnalytics(metric);
-      break;
-    case "FCP": // First Contentful Paint - deve ser < 1.8s
-      sendToAnalytics(metric);
-      sendToCustomAnalytics(metric);
-      break;
-    case "LCP": // Largest Contentful Paint - deve ser < 2.5s
-      sendToAnalytics(metric);
-      sendToCustomAnalytics(metric);
-      break;
-    case "TTFB": // Time to First Byte - deve ser < 800ms
-      sendToAnalytics(metric);
-      sendToCustomAnalytics(metric);
-      break;
-    case "INP": // Interaction to Next Paint - deve ser < 200ms (substitui FID)
-      sendToAnalytics(metric);
-      sendToCustomAnalytics(metric);
-      break;
-    default:
-      sendToAnalytics(metric);
-      sendToCustomAnalytics(metric);
-  }
+  // All metrics are sent to both GA4 and our custom analytics endpoint
+  sendToAnalytics(metric);
+  sendToCustomAnalytics(metric);
 }
 
 // Inicializar Web Vitals

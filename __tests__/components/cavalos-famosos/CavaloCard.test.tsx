@@ -30,7 +30,6 @@ describe("CavaloCard", () => {
     id: "test-2",
     nome: "Novilheiro",
     anoFalecimento: 1985,
-    influenciaGenetica: 12,
     estatisticasDescendentes: {
       totalDescendentes: 4500,
       descendentesAprovados: 3200,

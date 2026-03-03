@@ -1,12 +1,12 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Calendar } from "lucide-react";
+import type { Cavalo, ResultadoCompatibilidade } from "../types";
 
 interface ObjectiveScoreProps {
-  resultado: any;
-  garanhao: any;
-  egua: any;
+  resultado: ResultadoCompatibilidade;
+  garanhao: Cavalo;
+  egua: Cavalo;
   objetivo?: string;
 }
 

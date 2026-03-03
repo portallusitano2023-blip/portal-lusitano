@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Crown, Zap, Loader2 } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 
@@ -19,12 +19,13 @@ export default function SubscriptionBanner({
 }: SubscriptionBannerProps) {
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState(false);
 
   const handleSubscribe = async () => {
     if (!user) {
-      router.push("/registar?redirect=/ferramentas");
+      router.push(`/registar?redirect=${encodeURIComponent(pathname)}`);
       return;
     }
 
@@ -95,7 +96,7 @@ export default function SubscriptionBanner({
   if (requiresAuth) {
     return (
       <LocalizedLink
-        href="/registar"
+        href={`/registar?redirect=${encodeURIComponent(pathname)}`}
         className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-[var(--background-secondary)] border border-[var(--border)] rounded-lg hover:border-[var(--gold)]/30 transition-colors group"
       >
         <Zap
@@ -103,7 +104,7 @@ export default function SubscriptionBanner({
           className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] transition-colors flex-shrink-0"
         />
         <span className="text-xs text-[var(--foreground-secondary)] group-hover:text-[var(--foreground-secondary)] transition-colors">
-          Crie uma conta para usar gratuitamente
+          Crie uma conta gratuita para usar esta ferramenta. Receberá 1 uso grátis.
         </span>
       </LocalizedLink>
     );
