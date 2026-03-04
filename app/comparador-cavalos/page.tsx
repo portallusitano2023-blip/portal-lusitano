@@ -515,21 +515,19 @@ export default function ComparadorCavalosPage() {
               ))}
             </div>
 
-            {/* PRO Status Bar */}
-            <ProStatusBar
-              toolName={["Comparador", "Comparator", "Comparador"]}
-              isSubscribed={isSubscribed}
-              accessLoading={accessLoading}
-            />
-            {/* Free uses counter */}
-            <FreeUsesCounter
-              freeUsesLeft={freeUsesLeft}
-              isSubscribed={isSubscribed}
-              accessLoading={accessLoading}
-            />
-            {/* Subscription Banner — only when user can use */}
+            {/* PRO Status Bar + Free uses + Subscription — only when user can use */}
             {canUse && (
               <>
+                <ProStatusBar
+                  toolName={["Comparador", "Comparator", "Comparador"]}
+                  isSubscribed={isSubscribed}
+                  accessLoading={accessLoading}
+                />
+                <FreeUsesCounter
+                  freeUsesLeft={freeUsesLeft}
+                  isSubscribed={isSubscribed}
+                  accessLoading={accessLoading}
+                />
                 {accessLoading ? (
                   <div className="flex items-center justify-center py-4">
                     <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />

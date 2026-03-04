@@ -222,7 +222,8 @@ function AnalisePerfilContent() {
           <IntroSection onStart={startQuiz} />
         ) : !showResult ? (
           <>
-            {/* PRO Status Bar — quiz in progress */}
+            {/* PRO Status Bar — quiz in progress (only when user can use) */}
+            {canUse && (
             <div className="max-w-2xl mx-auto px-4 pt-6">
               <ProStatusBar
                 toolName={["Análise de Perfil", "Profile Analysis", "Análisis de Perfil"]}
@@ -237,6 +238,7 @@ function AnalisePerfilContent() {
                 className="mb-4"
               />
             </div>
+            )}
             <QuizSection
               ref={quizRef}
               questions={questions}
@@ -264,7 +266,8 @@ function AnalisePerfilContent() {
                   <Confetti trigger={true} particleCount={50} duration={2800} />
                 </div>
 
-                {/* PRO Status Bar — results */}
+                {/* PRO Status Bar — results (only when user can use) */}
+                {canUse && (
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
                   <ProStatusBar
                     toolName={["Análise de Perfil", "Profile Analysis", "Análisis de Perfil"]}
@@ -279,6 +282,7 @@ function AnalisePerfilContent() {
                     className="mb-4"
                   />
                 </div>
+                )}
 
                 <ResultHeader
                   result={result}

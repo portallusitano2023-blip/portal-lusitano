@@ -203,22 +203,21 @@ export default function CalculadoraValorPage() {
           {/* Form area */}
           <div className="pb-24 px-4">
             <div className="max-w-2xl mx-auto">
-              {/* PRO Status Bar */}
-              <ProStatusBar
-                toolName={["Calculadora", "Calculator", "Calculadora"]}
-                isSubscribed={isSubscribed}
-                accessLoading={accessLoading}
-                show={step > 0 || !!resultado}
-              />
-              {/* Free uses counter */}
-              <FreeUsesCounter
-                freeUsesLeft={freeUsesLeft}
-                isSubscribed={isSubscribed}
-                accessLoading={accessLoading}
-                show={step > 0 || !!resultado}
-              />
+              {/* PRO Status Bar + Free uses + Subscription — only when user can use */}
               {canUse && (
                 <>
+                  <ProStatusBar
+                    toolName={["Calculadora", "Calculator", "Calculadora"]}
+                    isSubscribed={isSubscribed}
+                    accessLoading={accessLoading}
+                    show={step > 0 || !!resultado}
+                  />
+                  <FreeUsesCounter
+                    freeUsesLeft={freeUsesLeft}
+                    isSubscribed={isSubscribed}
+                    accessLoading={accessLoading}
+                    show={step > 0 || !!resultado}
+                  />
                   {accessLoading ? (
                     <div className="flex items-center justify-center py-4">
                       <div className="w-5 h-5 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
