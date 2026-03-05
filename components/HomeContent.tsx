@@ -315,13 +315,7 @@ export default function HomeContent() {
   );
 
   return (
-    <main
-      aria-label={tr(
-        "Portal Lusitano — Página Principal",
-        "Portal Lusitano — Home",
-        "Portal Lusitano — Inicio"
-      )}
-    >
+    <>
       {/* ===== HERO — Full Screen with Parallax ===== */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
         {/* Parallax Background Image */}
@@ -415,7 +409,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== STATS BAR — Animated Counters ===== */}
-      <section className="relative py-16 border-y border-[var(--border)] bg-[var(--background-secondary)]/50 content-auto">
+      <section className="relative py-16 border-y border-[var(--border)] bg-[var(--background-secondary)]/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
@@ -439,7 +433,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== QUALITIES GRID — Lusitano Essence ===== */}
-      <section className="py-20 sm:py-28 px-4 sm:px-6 content-auto">
+      <section className="py-20 sm:py-28 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <RevealOnScroll className="text-center mb-14">
             <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3 block">
@@ -482,7 +476,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== DISCOVER SECTION ===== */}
-      <section className="py-24 sm:py-32 px-4 sm:px-6 content-auto">
+      <section className="py-24 sm:py-32 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <RevealOnScroll variant="blur-up" className="text-center mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
@@ -540,7 +534,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== PILLARS ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)] relative overflow-hidden content-auto">
+      <section className="py-20 sm:py-28 border-t border-[var(--border)] relative overflow-hidden">
         {/* Background orb */}
         <div className="gradient-orb w-[600px] h-[600px] bg-[var(--gold)] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
@@ -575,7 +569,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== COMO FUNCIONA ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)] content-auto">
+      <section className="py-20 sm:py-28 border-t border-[var(--border)]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <RevealOnScroll variant="fade-scale" className="text-center mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
@@ -633,7 +627,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== SOCIAL PROOF — Testimonials ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)] bg-[var(--background-secondary)]/30 content-auto">
+      <section className="py-20 sm:py-28 border-t border-[var(--border)] bg-[var(--background-secondary)]/30">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <RevealOnScroll variant="fade-scale" className="text-center mb-14">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
@@ -706,7 +700,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== VENDER CAVALO CTA ===== */}
-      <section className="border-t border-[var(--border)] content-auto">
+      <section className="border-t border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
           <RevealOnScroll variant="fade-right">
             <div className="bg-[var(--background-card)] border border-[var(--border)] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-all duration-500">
@@ -760,7 +754,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== EBOOK CTA ===== */}
-      <section className="relative py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden noise-overlay content-auto">
+      <section className="relative py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden noise-overlay">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--gold)]/5 rounded-full blur-[120px]" />
         </div>
@@ -822,7 +816,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== LOJA CTA ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)] content-auto">
+      <section className="py-20 sm:py-28 border-t border-[var(--border)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <RevealOnScroll variant="fade-scale">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
@@ -853,6 +847,6 @@ export default function HomeContent() {
           </RevealOnScroll>
         </div>
       </section>
-    </main>
+    </>
   );
 }

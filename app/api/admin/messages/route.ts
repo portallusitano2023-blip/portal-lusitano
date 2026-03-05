@@ -1,9 +1,10 @@
 import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { withAdminAuth, apiSuccess, apiError } from "@/lib/api-helpers";
+import { apiSuccess, apiError } from "@/lib/api-helpers";
+import { createApiRoute } from "@/lib/createApiRoute";
 import { sanitizeSearchInput } from "@/lib/sanitize";
 
-export const GET = withAdminAuth(async (req: NextRequest) => {
+export const GET = createApiRoute(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
 
   // Parâmetros de filtro
@@ -61,4 +62,4 @@ export const GET = withAdminAuth(async (req: NextRequest) => {
       totalPages: Math.ceil((count || 0) / limit),
     },
   });
-});
+}, { auth: "admin" });

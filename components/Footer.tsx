@@ -2,9 +2,10 @@
 
 import { memo, useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
-import { Instagram, Music2, Mail, MapPin, ArrowUpRight, Gift } from "lucide-react";
+import { ArrowUpRight, Gift } from "lucide-react";
+import { IconInstagram, IconTikTok, IconEmail } from "@/components/icons/SocialIcons";
 import { useLanguage } from "@/context/LanguageContext";
-import { CONTACT_EMAIL } from "@/lib/constants";
+import { CONTACT_EMAIL, SOCIAL_LINKS } from "@/lib/constants";
 
 // memo: Footer has no local state and only re-renders when the language/translations
 // object changes. Wrapping it prevents spurious re-renders from context siblings.
@@ -65,15 +66,26 @@ export default memo(function Footer() {
             </p>
 
             {/* Redes sociais */}
-            <div className="flex gap-4 pt-2">
+            <div className="flex gap-3 pt-2">
               {[
                 {
-                  href: "https://instagram.com/portal_lusitano",
+                  href: SOCIAL_LINKS.instagram,
                   label: "Instagram",
-                  icon: Instagram,
+                  icon: IconInstagram,
+                  hoverBg: "hover:bg-gradient-to-br hover:from-purple-600 hover:via-pink-500 hover:to-orange-400",
                 },
-                { href: "https://tiktok.com/@portal_lusitano", label: "TikTok", icon: Music2 },
-                { href: `mailto:${CONTACT_EMAIL}`, label: "Email", icon: Mail },
+                {
+                  href: SOCIAL_LINKS.tiktok,
+                  label: "TikTok",
+                  icon: IconTikTok,
+                  hoverBg: "hover:bg-[#ff0050]",
+                },
+                {
+                  href: `mailto:${CONTACT_EMAIL}`,
+                  label: "Email",
+                  icon: IconEmail,
+                  hoverBg: "hover:bg-[var(--gold)]",
+                },
               ].map((social) => (
                 <a
                   key={social.label}
@@ -81,9 +93,9 @@ export default memo(function Footer() {
                   target={social.href.startsWith("http") ? "_blank" : undefined}
                   rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   aria-label={social.label}
-                  className="w-11 h-11 border border-[var(--border)] flex items-center justify-center text-[var(--foreground-muted)] hover:text-[var(--gold)] hover:border-[var(--gold)]/30 transition-all duration-300"
+                  className={`group w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[var(--foreground-muted)] hover:text-white hover:scale-110 transition-all duration-300 ${social.hoverBg}`}
                 >
-                  <social.icon size={17} />
+                  <social.icon size={16} />
                 </a>
               ))}
             </div>
@@ -149,7 +161,7 @@ export default memo(function Footer() {
 
             <div className="pt-4 border-t border-[var(--border)] space-y-3">
               <div className="flex items-center gap-3">
-                <Mail className="text-[var(--gold)]" size={14} />
+                <IconEmail className="text-[var(--gold)]" size={14} />
                 <span className="text-[var(--foreground-muted)] text-xs">{CONTACT_EMAIL}</span>
               </div>
               <LocalizedLink
@@ -190,7 +202,7 @@ export default memo(function Footer() {
 
         {/* COPYRIGHT */}
         <div className="pt-6 border-t border-[var(--border)] flex flex-col sm:flex-row justify-between items-center gap-6">
-          <p className="text-[var(--foreground-muted)] text-xs sm:text-[9px] uppercase tracking-[0.2em]">
+          <p className="text-[var(--foreground-muted)] text-xs sm:text-[9px] uppercase tracking-[0.2em]" suppressHydrationWarning>
             © {new Date().getFullYear()} Portal Lusitano. {t.footer.rights}.
           </p>
           <div className="flex gap-8">

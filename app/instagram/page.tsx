@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  Instagram,
   Users,
   Heart,
   Send,
@@ -17,6 +16,7 @@ import {
   FileText,
   CheckCircle2,
 } from "lucide-react";
+import { IconInstagram } from "@/components/icons/SocialIcons";
 
 const stats = [
   { value: "19K+", label: "Seguidores", icon: Users },
@@ -134,7 +134,7 @@ export default function InstagramPage() {
           />
 
           <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(197,89,200,0.25)]">
-            <Instagram className="text-white" size={40} />
+            <IconInstagram className="text-white" size={40} />
           </div>
 
           <span className="inline-block text-xs uppercase tracking-[0.3em] text-[#C5A059] border border-[#C5A059]/30 rounded-full px-4 py-1 mb-6">
@@ -161,7 +161,7 @@ export default function InstagramPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-8 py-3.5 rounded-full font-medium hover:opacity-90 transition-opacity shadow-[0_4px_24px_rgba(197,89,200,0.25)]"
           >
-            <Instagram size={18} />
+            <IconInstagram size={18} />
             @portal_lusitano
             <ArrowRight size={16} />
           </a>
@@ -329,7 +329,7 @@ export default function InstagramPage() {
                       Instagram
                     </label>
                     <div className="relative">
-                      <Instagram
+                      <IconInstagram
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none"
                         size={16}
                       />

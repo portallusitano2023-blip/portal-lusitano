@@ -75,7 +75,7 @@ export default function UserMenu() {
               {t.account.profile}
             </LocalizedLink>
             <LocalizedLink
-              href="/historico"
+              href="/ferramentas/historico"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
             >

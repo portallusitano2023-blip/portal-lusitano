@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { withAdminAuth, apiSuccess } from "@/lib/api-helpers";
+import { apiSuccess } from "@/lib/api-helpers";
+import { createApiRoute } from "@/lib/createApiRoute";
 
 interface DiagnosticoCheck {
   status: string;
@@ -11,7 +12,7 @@ interface DiagnosticoCheck {
   [key: string]: unknown;
 }
 
-export const GET = withAdminAuth(async (_req: NextRequest, { email: sessionEmail }) => {
+export const GET = createApiRoute(async (_req: NextRequest, ctx) => {
 
   const diagnostico: {
     timestamp: string;
@@ -25,7 +26,7 @@ export const GET = withAdminAuth(async (_req: NextRequest, { email: sessionEmail
   // 1. VERIFICAR AUTENTICAÇÃO
   diagnostico.checks.autenticacao = {
     status: "✅ OK",
-    email: sessionEmail,
+    email: ctx.auth.email,
     message: "Sessão válida",
   };
 
@@ -133,4 +134,4 @@ export const GET = withAdminAuth(async (_req: NextRequest, { email: sessionEmail
   };
 
   return apiSuccess(diagnostico);
-});
+}, { auth: "admin" });

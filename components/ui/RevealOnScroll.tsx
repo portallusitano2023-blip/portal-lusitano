@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { memo, useRef, type ReactNode } from "react";
 import { useInViewOnce } from "@/hooks/useInViewOnce";
+import { usePrefersReducedMotion } from "@/hooks/useMediaQuery";
 
 type AnimationVariant = "fade-up" | "fade-left" | "fade-right" | "fade-scale" | "blur-up";
 
@@ -39,7 +40,7 @@ const getStyles = (variant: AnimationVariant, visible: boolean, distance: number
   }
 };
 
-export default function RevealOnScroll({
+export default memo(function RevealOnScroll({
   children,
   className = "",
   delay = 0,
@@ -48,11 +49,8 @@ export default function RevealOnScroll({
   distance = 24,
 }: RevealOnScrollProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInViewOnce(ref, "0px");
-  const [prefersReducedMotion] = useState(
-    () =>
-      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
+  const inView = useInViewOnce(ref, "100px");
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   if (prefersReducedMotion) {
     return <div className={className}>{children}</div>;
@@ -83,4 +81,4 @@ export default function RevealOnScroll({
       {children}
     </div>
   );
-}
+});

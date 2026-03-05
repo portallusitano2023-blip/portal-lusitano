@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { withAdminAuth, apiSuccess, apiError } from "@/lib/api-helpers";
+import { apiSuccess, apiError } from "@/lib/api-helpers";
+import { createApiRoute } from "@/lib/createApiRoute";
 
-export const GET = withAdminAuth(async (req: NextRequest) => {
+export const GET = createApiRoute(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const filter = searchParams.get("filter") || "all";
 
@@ -24,4 +25,4 @@ export const GET = withAdminAuth(async (req: NextRequest) => {
   }
 
   return apiSuccess({ uploads: data || [] });
-});
+}, { auth: "admin" });

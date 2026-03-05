@@ -5,14 +5,11 @@ import {
   Mail,
   BookOpen,
   Share2,
-  Facebook,
-  Twitter,
-  Linkedin,
-  MessageCircle,
   Sparkles,
   Gift,
   Users,
 } from "lucide-react";
+import { IconFacebook, IconX, IconLinkedIn, IconWhatsApp } from "@/components/icons/SocialIcons";
 import LocalizedLink from "@/components/LocalizedLink";
 import { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -72,25 +69,25 @@ export default function DownloadPage() {
   const socialShare = [
     {
       name: "Facebook",
-      icon: Facebook,
+      icon: IconFacebook,
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
       color: "hover:bg-blue-600",
     },
     {
-      name: "Twitter",
-      icon: Twitter,
+      name: "X",
+      icon: IconX,
       url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
-      color: "hover:bg-sky-500",
+      color: "hover:bg-neutral-700",
     },
     {
       name: "LinkedIn",
-      icon: Linkedin,
+      icon: IconLinkedIn,
       url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
       color: "hover:bg-blue-700",
     },
     {
       name: "WhatsApp",
-      icon: MessageCircle,
+      icon: IconWhatsApp,
       url: `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`,
       color: "hover:bg-green-600",
     },

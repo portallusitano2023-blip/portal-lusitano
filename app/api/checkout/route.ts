@@ -1,5 +1,5 @@
 import { createCart, addToCart } from "@/lib/shopify";
-import { apiSuccess, apiError } from "@/lib/api-response";
+import { apiSuccess, apiError } from "@/lib/api-helpers";
 import { logger } from "@/lib/logger";
 
 export async function POST(request: Request) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import type { TypedObject } from "@portabletext/types";
 import { urlFor } from "@/lib/sanity-image";
 import {
   ArticleInfoBox,
@@ -42,8 +43,7 @@ function getIcon(name?: string): LucideIcon {
 }
 
 interface PortableTextRendererProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: any[];
+  value: TypedObject[];
   language?: "pt" | "en" | "es";
 }
 
@@ -52,8 +52,7 @@ export const journalComponents: PortableTextComponents = {
   block: {
     h2: ({ children, value }) => {
       const text =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (value?.children as any[])?.map((c) => c.text || "").join("") || "";
+        (value?.children as Array<{ text?: string }>)?.map((c) => c.text || "").join("") || "";
       const id = text ? text.toLowerCase().replace(/\s+/g, "-") : undefined;
       return (
         <h2
@@ -66,8 +65,7 @@ export const journalComponents: PortableTextComponents = {
     },
     h3: ({ children, value }) => {
       const text =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (value?.children as any[])?.map((c) => c.text || "").join("") || "";
+        (value?.children as Array<{ text?: string }>)?.map((c) => c.text || "").join("") || "";
       const id = text ? text.toLowerCase().replace(/\s+/g, "-") : undefined;
       return (
         <h3 id={id} className="text-2xl font-serif text-[var(--foreground)] mb-4 mt-10">

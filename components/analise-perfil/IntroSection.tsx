@@ -26,7 +26,7 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1920&auto=format&fit=crop"
+            src="/images/analise-perfil/capa.png"
             alt="Cavalo Lusitano"
             fill
             sizes="100vw"

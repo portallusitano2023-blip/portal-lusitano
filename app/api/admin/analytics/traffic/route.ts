@@ -1,8 +1,8 @@
-import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { withAdminAuth, apiSuccess, apiError } from "@/lib/api-helpers";
+import { apiSuccess } from "@/lib/api-helpers";
+import { createApiRoute } from "@/lib/createApiRoute";
 
-export const GET = withAdminAuth(async (_req: NextRequest) => {
+export const GET = createApiRoute(async () => {
 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -131,4 +131,4 @@ export const GET = withAdminAuth(async (_req: NextRequest) => {
         { type: "Eventos", views: totalEventosViews, count: eventos.length },
       ],
     });
-});
+}, { auth: "admin" });

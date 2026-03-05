@@ -182,8 +182,31 @@
       "WebFetch(domain:baroquehorsemagazine.com)",
       "WebFetch(domain:www.lusitanocollection.com)",
       "WebFetch(domain:www.herdadedoazinhal.com)",
-      "WebFetch(domain:www.teamrubi.com)"
+      "WebFetch(domain:www.teamrubi.com)",
+      "Bash(Remove-Item -Recurse -Force \"C:\\\\Users\\\\USUARIO\\\\portal-lusitano\\\\.next\")",
+      "Bash(while read dir)",
+      "Bash(if [ -f \"$dir/layout.tsx\" ])",
+      "Bash([ -f \"$dir/loading.tsx\" ])",
+      "Bash(if [ ! -f \"$dir/page.tsx\" ])",
+      "Bash(while read route)",
+      "Bash([ \"$route\" = \"/\" ])",
+      "Bash(route=\"app/page.tsx\")",
+      "Bash(route=\"app$route/page.tsx\")",
+      "Bash(if [ ! -f \"$route\" ])",
+      "Bash(for dir in app/admin/analytics app/admin/calendario app/admin/coudelarias app/admin/crm app/admin/financeiro app/admin/instagram app/admin/mensagens app/offline app/publicidade app/sucesso app/unsubscribe)",
+      "Bash(if [ -d \"$dir\" ])",
+      "Bash(for subdir in analytics calendario coudelarias crm financeiro instagram mensagens)",
+      "Bash(if [ -f \"app/admin/$subdir/layout.tsx\" ])",
+      "Bash([ ! -f \"app/admin/$subdir/page.tsx\" ])",
+      "Bash(for comp in \"components/LocalizedLink\" \"components/auth/AuthProvider\" \"components/JsonLd\" \"components/icons/SocialIcons\")",
+      "Bash(if [ -f \"$comp.tsx\" ])",
+      "Bash([ -f \"$comp.ts\" ])",
+      "Bash(else)",
+      "Bash(do if grep -q \"from.*createApiRoute\\\\|import.*createApiRoute\" \"$file\")",
+      "Bash(then echo \"$file\")"
     ],
-    "additionalDirectories": ["C:\\Users\\USUARIO\\portal-lusitano\\locales"]
+    "additionalDirectories": [
+      "C:\\Users\\USUARIO\\portal-lusitano\\locales"
+    ]
   }
 }

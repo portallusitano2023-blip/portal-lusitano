@@ -1,10 +1,11 @@
 import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { withAdminAuth, apiSuccess, apiError } from "@/lib/api-helpers";
+import { apiSuccess, apiError } from "@/lib/api-helpers";
+import { createApiRoute } from "@/lib/createApiRoute";
 import { sanitizeSearchInput } from "@/lib/sanitize";
 
 // GET - Listar leads com filtros
-export const GET = withAdminAuth(async (req: NextRequest) => {
+export const GET = createApiRoute(async (req: NextRequest) => {
   const searchParams = req.nextUrl.searchParams;
   const stage = searchParams.get("stage") || "all";
   const search = searchParams.get("search") || "";
@@ -64,10 +65,10 @@ export const GET = withAdminAuth(async (req: NextRequest) => {
     pipelineValue,
     wonValue,
   });
-});
+}, { auth: "admin" });
 
 // POST - Criar novo lead
-export const POST = withAdminAuth(async (req: NextRequest, { email }) => {
+export const POST = createApiRoute(async (req: NextRequest, ctx) => {
   const body = await req.json();
   const {
     name,
@@ -107,7 +108,7 @@ export const POST = withAdminAuth(async (req: NextRequest, { email }) => {
       budget_min,
       budget_max,
       next_follow_up: next_follow_up ? new Date(next_follow_up).toISOString() : null,
-      owner_email: email,
+      owner_email: ctx.auth.email,
     })
     .select()
     .single();
@@ -117,4 +118,4 @@ export const POST = withAdminAuth(async (req: NextRequest, { email }) => {
   }
 
   return apiSuccess({ lead }, undefined, 201);
-});
+}, { auth: "admin" });

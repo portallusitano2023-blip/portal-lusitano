@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { withAdminAuth, apiSuccess, apiError } from "@/lib/api-helpers";
+import { apiSuccess, apiError } from "@/lib/api-helpers";
+import { createApiRoute } from "@/lib/createApiRoute";
 import { z } from "zod";
 
 const CavaloSchema = z.object({
@@ -31,7 +32,7 @@ const CavaloSchema = z.object({
 });
 
 // GET - Listar todos os cavalos (admin)
-export const GET = withAdminAuth(async (req) => {
+export const GET = createApiRoute(async (req) => {
   const { data, error } = await supabase
     .from("cavalos_venda")
     .select("*")
@@ -43,10 +44,10 @@ export const GET = withAdminAuth(async (req) => {
   }
 
   return apiSuccess({ cavalos: data });
-});
+}, { auth: "admin" });
 
 // POST - Criar novo anúncio de cavalo
-export const POST = withAdminAuth(async (request: NextRequest) => {
+export const POST = createApiRoute(async (request: NextRequest) => {
   const raw = await request.json();
   const parsed = CavaloSchema.safeParse(raw);
   if (!parsed.success) {
@@ -100,4 +101,4 @@ export const POST = withAdminAuth(async (request: NextRequest) => {
   }
 
   return apiSuccess({ cavalo: data });
-});
+}, { auth: "admin" });

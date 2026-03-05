@@ -77,21 +77,30 @@ async function optimizeAndRename(slugDir) {
   const needsRename = files.some((f) => !isCleanName(f));
 
   if (needsRename) {
-    let galeriaIndex = 1;
     const sorted = [...files].sort(naturalSort);
+    const hasCapa = sorted.some((f) => path.parse(f).name.toLowerCase() === "capa");
+    let galeriaIndex = 1;
+    let capaAssigned = hasCapa;
 
     for (const file of sorted) {
       const ext = path.extname(file);
       const oldPath = path.join(slugDir, file);
+      const baseName = path.parse(file).name.toLowerCase();
       let newName;
 
-      if (galeriaIndex === 1 && !sorted.some((f) => path.parse(f).name.toLowerCase() === "capa")) {
+      // Skip files already correctly named
+      if (baseName === "capa") {
+        continue;
+      }
+
+      if (!capaAssigned) {
+        // First image becomes capa
         newName = `capa${ext}`;
-        galeriaIndex--; // Don't increment for capa
+        capaAssigned = true;
       } else {
         newName = `galeria-${galeriaIndex}${ext}`;
+        galeriaIndex++;
       }
-      galeriaIndex++;
 
       if (file !== newName) {
         const newPath = path.join(slugDir, newName);
@@ -126,13 +135,27 @@ async function optimizeAndRename(slugDir) {
     }
 
     try {
-      const info = await sharp(filePath)
+      // Read into buffer first so sharp releases the file handle before we try to delete it
+      // (fixes EBUSY on Windows when sharp keeps an open handle on the input file)
+      const inputBuffer = await fs.promises.readFile(filePath);
+      const info = await sharp(inputBuffer)
         .jpeg({ quality: JPEG_QUALITY, progressive: true })
         .resize({ width: MAX_WIDTH, height: MAX_HEIGHT, fit: "inside", withoutEnlargement: true })
         .toFile(jpgPath + ".tmp");
 
-      // Replace original with optimized version
-      fs.unlinkSync(filePath);
+      // Replace original with optimized version (retry on EBUSY for Windows file locking)
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          fs.unlinkSync(filePath);
+          break;
+        } catch (unlinkErr) {
+          if (unlinkErr.code === "EBUSY" && attempt < 2) {
+            await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
+          } else {
+            throw unlinkErr;
+          }
+        }
+      }
       fs.renameSync(jpgPath + ".tmp", jpgPath);
 
       const reduction = Math.round(100 - (info.size / stats.size) * 100);

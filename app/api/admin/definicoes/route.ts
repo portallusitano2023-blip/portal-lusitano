@@ -1,9 +1,10 @@
 import { NextRequest } from "next/server";
 import { supabaseAdmin as supabase } from "@/lib/supabase-admin";
-import { withAdminAuth, apiSuccess, apiError } from "@/lib/api-helpers";
+import { apiSuccess, apiError } from "@/lib/api-helpers";
+import { createApiRoute } from "@/lib/createApiRoute";
 
 // GET - Listar todas as definições (com filtro opcional por categoria)
-export const GET = withAdminAuth(async (req: NextRequest) => {
+export const GET = createApiRoute(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const category = searchParams.get("category"); // 'all' ou categoria específica
 
@@ -39,10 +40,10 @@ export const GET = withAdminAuth(async (req: NextRequest) => {
     grouped,
     categories: Object.keys(grouped),
   });
-});
+}, { auth: "admin" });
 
 // POST - Criar nova definição (admin avançado)
-export const POST = withAdminAuth(async (req: NextRequest, { email: adminEmail }) => {
+export const POST = createApiRoute(async (req: NextRequest, ctx) => {
   const body = await req.json();
   const {
     key,
@@ -73,7 +74,7 @@ export const POST = withAdminAuth(async (req: NextRequest, { email: adminEmail }
       options,
       is_required,
       validation_regex,
-      updated_by: adminEmail,
+      updated_by: ctx.auth.email,
     })
     .select()
     .single();
@@ -83,4 +84,4 @@ export const POST = withAdminAuth(async (req: NextRequest, { email: adminEmail }
   }
 
   return apiSuccess({ setting });
-});
+}, { auth: "admin" });
