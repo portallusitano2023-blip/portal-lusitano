@@ -247,7 +247,8 @@ export default function CoudelariaDetail({
   };
 
   const images = coudelaria.galeria?.length ? coudelaria.galeria : PLACEHOLDER_IMAGES;
-  const heroImage = coudelaria.foto_capa || images[0];
+  const localCapa = `/images/coudelarias/${coudelaria.slug}/capa.webp`;
+  const [heroImage, setHeroImage] = useState(coudelaria.foto_capa || localCapa);
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
@@ -262,6 +263,13 @@ export default function CoudelariaDetail({
             priority
             sizes="100vw"
             className="object-cover"
+            onError={() => {
+              if (heroImage.endsWith(".webp")) {
+                setHeroImage(`/images/coudelarias/${coudelaria.slug}/capa.jpg`);
+              } else {
+                setHeroImage(images[0]);
+              }
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/60 to-transparent" />
           {/* Subtle vignette sides */}

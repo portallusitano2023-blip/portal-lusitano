@@ -127,9 +127,9 @@ export const NavIcons = memo(function NavIcons({
         </span>
       </button>
 
-      {/* Menu Mobile */}
+      {/* Menu Mobile — hidden when BottomNav is active (< lg) */}
       <button
-        className="lg:hidden text-[var(--foreground)] p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
+        className="hidden text-[var(--foreground)] p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
         onClick={onMobileToggle}
         aria-label={
           isMobileOpen

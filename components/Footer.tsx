@@ -46,7 +46,7 @@ export default memo(function Footer() {
   );
 
   return (
-    <footer className="bg-[var(--background)] border-t border-[var(--border)] pt-24 sm:pt-32 pb-12 px-4 sm:px-6 mt-20 relative overflow-hidden">
+    <footer className="bg-[var(--background)] border-t border-[var(--border)] pt-24 sm:pt-32 pb-28 lg:pb-12 px-4 sm:px-6 mt-20 relative overflow-hidden">
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[var(--gold)] opacity-[0.03] blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">

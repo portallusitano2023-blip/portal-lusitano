@@ -462,7 +462,21 @@ function CoudelariaCard({
   index: number;
   t: ReturnType<typeof useLanguage>["t"];
 }) {
-  const image = coudelaria.foto_capa || PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length];
+  const localWebp = `/images/coudelarias/${coudelaria.slug}/capa.webp`;
+  const localJpg = `/images/coudelarias/${coudelaria.slug}/capa.jpg`;
+  const placeholder = PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length];
+  const [imgSrc, setImgSrc] = useState<string>(coudelaria.foto_capa || localWebp);
+  // Track fallback step via ref so onError always sees the latest value
+  // If foto_capa is null we already show localWebp, so skip to step 1 on error
+  const fallbackStep = useRef(coudelaria.foto_capa ? 0 : 1);
+
+  const handleError = () => {
+    const step = fallbackStep.current;
+    fallbackStep.current += 1;
+    if (step === 0) setImgSrc(localWebp);
+    else if (step === 1) setImgSrc(localJpg);
+    else setImgSrc(placeholder);
+  };
 
   return (
     <AnimateOnScroll delay={index * 50}>
@@ -472,11 +486,12 @@ function CoudelariaCard({
         aria-label={`${coudelaria.nome}, ${coudelaria.localizacao}`}
       >
         <Image
-          src={image}
+          src={imgSrc}
           alt={coudelaria.nome}
           fill
           sizes="(max-width: 1024px) 100vw, 50vw"
           className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          onError={handleError}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
         {/* Overlay shimmer on hover */}

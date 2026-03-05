@@ -3,6 +3,7 @@ import { Playfair_Display, Montserrat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BottomNav from "@/components/BottomNav";
 import { Providers } from "./providers";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
@@ -162,8 +163,9 @@ export default function RootLayout({
         <Providers>
           <SkipLinks />
           <Navbar />
-          <main id="main-content">{children}</main>
+          <main id="main-content" className="pb-16 lg:pb-0">{children}</main>
           <Footer />
+          <BottomNav />
         </Providers>
       </body>
     </html>
