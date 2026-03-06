@@ -243,7 +243,7 @@ export default function SobreContent() {
               {tr("Sobre Nós", "About Us", "Sobre Nosotros")}
             </span>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-3 leading-[1.08]">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-3 leading-[1.08]">
               {tr("A Nossa", "Our", "Nuestra")}
             </h1>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic text-[var(--gold)] mb-8 leading-[1.08]">

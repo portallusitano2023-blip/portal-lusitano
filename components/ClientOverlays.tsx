@@ -15,7 +15,6 @@ const Analytics = dynamic(() => import("@/components/Analytics"), { ssr: false }
 const ServiceWorkerRegistration = dynamic(() => import("@/components/ServiceWorkerRegistration"), {
   ssr: false,
 });
-const MobileBottomNav = dynamic(() => import("@/components/MobileBottomNav"), { ssr: false });
 const AdSenseScript = dynamic(
   () => import("@/components/AdSenseScript").then((m) => ({ default: m.AdSenseScript })),
   { ssr: false }
@@ -32,7 +31,6 @@ export default function ClientOverlays() {
       <CartDrawer />
       <ServiceWorkerRegistration />
       <Analytics />
-      <MobileBottomNav />
       <AnalyticsScripts />
       <AdSenseScript />
     </>

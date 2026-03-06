@@ -286,7 +286,7 @@ export default function MapaPage() {
               {t.mapa.badge}
             </span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-serif mb-4 text-[var(--foreground)]">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl font-serif mb-4 text-[var(--foreground)]">
             {t.mapa.title.split("Portugal")[0]}
             <span className="text-[var(--gold)]">Portugal</span>
             {t.mapa.title.split("Portugal")[1]}

@@ -103,7 +103,7 @@ export default function RegistarCoudelariaPage() {
           <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
             {t.registar_coudelaria.directory_label}
           </span>
-          <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
             {t.registar_coudelaria.title}
           </h1>
           <p className="text-[var(--foreground-secondary)] max-w-xl mx-auto">

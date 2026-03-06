@@ -93,7 +93,7 @@ export default function ProductDisplay({ product }: { product: Product }) {
           Coleção Heritage
         </span>
 
-        <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-6 leading-tight">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-6 leading-tight">
           {product.title}
         </h1>
 

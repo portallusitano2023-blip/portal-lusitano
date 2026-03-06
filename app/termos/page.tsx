@@ -12,7 +12,7 @@ export default function TermosPage() {
           <span className="text-[var(--gold)] text-[10px] sm:text-[9px] uppercase tracking-[0.4em] font-bold block mb-6 text-center">
             {t.terms.legal}
           </span>
-          <h1 className="text-4xl md:text-5xl font-serif italic mb-4 text-center">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif italic mb-4 text-center">
             {t.terms.title}
           </h1>
           <p className="text-center text-xs text-[var(--foreground-muted)] mb-16">

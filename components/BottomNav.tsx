@@ -66,7 +66,7 @@ export default memo(function BottomNav() {
     <>
       {/* Bottom Tab Bar */}
       <nav
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--nav-bg-scrolled)] border-t border-[var(--border)]"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--nav-bg-scrolled)] border-t border-[var(--border)] [transform:translateZ(0)]"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         aria-label="Navegação principal"
       >
@@ -109,14 +109,14 @@ export default memo(function BottomNav() {
         </div>
       </nav>
 
-      {/* Backdrop — always mounted, fades in/out */}
-      <div
-        className={`lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-          isMoreOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => setIsMoreOpen(false)}
-        aria-hidden="true"
-      />
+      {/* Backdrop — só renderizado quando aberto para evitar GPU layer permanente */}
+      {isMoreOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+          onClick={() => setIsMoreOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Slide-up Sheet */}
       <div

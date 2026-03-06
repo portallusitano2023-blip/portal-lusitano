@@ -310,7 +310,7 @@ export default function CoudelariaDetail({
                   {t.directorio.founded} {coudelaria.ano_fundacao}
                 </span>
               )}
-              <h1 className="text-4xl md:text-6xl font-serif text-white mb-4 leading-tight">
+              <h1 className="text-2xl sm:text-4xl md:text-6xl font-serif text-white mb-4 leading-tight">
                 {coudelaria.nome}
               </h1>
               <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">

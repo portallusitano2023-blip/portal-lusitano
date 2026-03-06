@@ -27,7 +27,7 @@ export default function FavoritosPage() {
           <div className="w-16 h-16 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Heart className="text-[var(--gold)]" size={32} />
           </div>
-          <h1 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">
             {txt.title}
           </h1>
           <p className="text-[var(--foreground-secondary)] font-serif italic">{txt.subtitle}</p>

@@ -426,7 +426,7 @@ export default function ArticlePageClient({
             {/* Linha decorativa dourada */}
             <div className="w-16 h-px bg-[var(--gold)]/60" />
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white max-w-5xl leading-[0.95] tracking-tight">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-serif text-white max-w-5xl leading-[0.95] tracking-tight">
               {title}
             </h1>
 

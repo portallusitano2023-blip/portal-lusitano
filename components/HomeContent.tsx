@@ -359,7 +359,7 @@ export default function HomeContent({
           style={{ objectPosition: "center 20%" }}
           priority
           sizes="100vw"
-          quality={90}
+          quality={75}
         />
 
         {/* Gradient Overlays */}

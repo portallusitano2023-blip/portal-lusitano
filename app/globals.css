@@ -946,12 +946,12 @@ html.light .leaflet-tooltip-portal::before {
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.08), transparent);
-  /* Start off-screen via transform — GPU composited, avoids layout reflow */
   transform: translateX(-100%);
-  will-change: transform;
   transition: none;
 }
 .shimmer-gold:hover::before {
+  /* will-change apenas durante hover — liberta GPU layer quando não está a animar */
+  will-change: transform;
   animation: shimmerSlide 0.8s ease-out;
 }
 @keyframes shimmerSlide {
@@ -1182,6 +1182,8 @@ html.light .leaflet-tooltip-portal::before {
   pointer-events: none;
   opacity: 0.06;
   contain: layout style;
+  /* Camada GPU própria — elimina repaints durante scroll */
+  transform: translateZ(0);
 }
 
 /* ===== LIVING BLUR — PRO SECTION ===== */
@@ -1267,4 +1269,34 @@ html.light .leaflet-tooltip-portal::before {
   .gradient-orb {
     opacity: 0.12;
   }
+}
+
+/* ===== RESPONSIVE TYPOGRAPHY SCALE =====
+ * Automatically scale down large text on small screens so nothing overflows.
+ * These rules apply on all screens ≤ 640px (Tailwind's default "sm" breakpoint).
+ * Because this CSS sits outside @layer blocks it cascades after Tailwind
+ * utilities, capping any large text class that wasn't given a responsive prefix. */
+@media (max-width: 640px) {
+  .text-8xl,
+  .text-9xl {
+    font-size: 2.5rem;   /* 40px — was 6–8rem */
+    line-height: 1.1;
+  }
+
+  .text-7xl {
+    font-size: 2.25rem;  /* 36px — was 4.5rem */
+    line-height: 1.1;
+  }
+
+  .text-6xl {
+    font-size: 2rem;     /* 32px — was 3.75rem */
+    line-height: 1.12;
+  }
+
+  .text-5xl {
+    font-size: 1.75rem;  /* 28px — was 3rem */
+    line-height: 1.15;
+  }
+
+  /* text-4xl (2.25rem / 36px) is kept as-is; 36px is generally fine on mobile. */
 }

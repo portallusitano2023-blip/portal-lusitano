@@ -79,7 +79,7 @@ export default memo(function Navbar() {
             ? "Navegación principal"
             : "Main navigation"
       }
-      className={`fixed w-full z-50 border-b transition-all duration-300 ${scrolled ? "bg-[var(--nav-bg-scrolled)] border-[var(--border)] shadow-lg" : "bg-[var(--nav-bg)] border-[var(--border)]"}`}
+      className={`fixed w-full z-50 border-b [transform:translateZ(0)] transition-[background-color,box-shadow] duration-300 ${scrolled ? "bg-[var(--nav-bg-scrolled)] border-[var(--border)] shadow-lg" : "bg-[var(--nav-bg)] border-[var(--border)]"}`}
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 md:h-24 flex items-center justify-between gap-4">

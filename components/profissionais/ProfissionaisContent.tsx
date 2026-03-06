@@ -259,7 +259,7 @@ export default function ProfissionaisContent({
           </RevealOnScroll>
 
           {/* Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-7xl font-serif italic mb-6">
             <TextSplit text={t.profissionais.title} baseDelay={0.15} />
           </h1>
 

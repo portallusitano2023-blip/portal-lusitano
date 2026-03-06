@@ -209,7 +209,7 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
               {t.directorio.badge}
               <span className="block w-8 h-px bg-[var(--gold)]/60" />
             </span>
-            <h1 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-5">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-5">
               {t.directorio.title}
             </h1>
             <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto text-lg leading-relaxed">

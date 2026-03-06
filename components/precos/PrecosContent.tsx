@@ -942,7 +942,7 @@ export default function PrecosContent() {
           <p className="text-[var(--foreground-muted)] text-xs uppercase tracking-widest mb-6">
             {tr("Pronto para começar?", "Ready to start?", "¿Listo para empezar?")}
           </p>
-          <h2 className="font-serif text-4xl mb-4">
+          <h2 className="font-serif text-2xl sm:text-4xl mb-4">
             {tr("Experimente gratuitamente.", "Try it for free.", "Pruébelo gratis.")}
             <br />
             <em className="text-[var(--gold)]">

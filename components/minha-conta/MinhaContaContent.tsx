@@ -166,7 +166,7 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
             <span className="text-[var(--gold)] text-[9px] uppercase tracking-[0.4em] font-bold block mb-4">
               {t.account.private_area}
             </span>
-            <h1 className="text-4xl md:text-5xl font-serif italic text-[var(--foreground)]">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif italic text-[var(--foreground)]">
               {t.account.hello}, {customer.firstName || "Membro"}
             </h1>
           </div>

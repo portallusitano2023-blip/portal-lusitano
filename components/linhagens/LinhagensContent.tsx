@@ -57,7 +57,7 @@ export default function LinhagensContent() {
               <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] block mb-4">
                 {t.linhagens.badge}
               </span>
-              <h1 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-6">
+              <h1 className="text-2xl sm:text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-6">
                 {t.linhagens.title}
               </h1>
               <p className="text-[var(--foreground-secondary)] max-w-2xl mx-auto text-lg">

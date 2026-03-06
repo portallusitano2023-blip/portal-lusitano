@@ -291,7 +291,7 @@ export default function EventosContent({ eventos }: { eventos: Evento[] }) {
           <p className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-[var(--gold)] opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             {t.eventos.badge}
           </p>
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-serif text-[var(--gold)] leading-[0.9]">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-[var(--gold)] leading-[0.9]">
             <TextSplit text={t.eventos.title} baseDelay={0.15} wordDelay={0.06} />
           </h1>
           <div
