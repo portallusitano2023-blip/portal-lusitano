@@ -1,9 +1,7 @@
 import { useMemo, memo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
-import { Heart, User, Gift } from "lucide-react";
+import { User, Gift, ShoppingBag, ArrowRight } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useWishlist } from "@/context/WishlistContext";
-import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 import {
   getMobileDbItems,
   getMobileToolsItems,
@@ -67,9 +65,6 @@ export const MobileMenu = memo(function MobileMenu({
   onLanguageToggle,
   onClose,
 }: MobileMenuProps) {
-  const { wishlist } = useWishlist();
-  const { favoritesCount } = useHorseFavorites();
-  const wishlistCount = wishlist.length;
   const pathname = usePathname();
 
   const mobileDbItems = useMemo(() => getMobileDbItems(t.nav), [t]);
@@ -183,34 +178,26 @@ export const MobileMenu = memo(function MobileMenu({
           </div>
         </div>
 
-        {/* Favorites Section */}
+        {/* Loja / Boné em destaque */}
         <div className="border-t border-[var(--border)] pt-4 mt-4">
-          <div className="grid grid-cols-2 gap-2">
-            <LocalizedLink
-              href="/cavalos-favoritos"
-              className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-            >
-              <Heart size={18} className="text-red-400" />
-              <span>{t.nav.horse_favorites}</span>
-              {favoritesCount > 0 && (
-                <span className="ml-auto bg-[var(--gold)] text-black text-xs px-2 py-0.5 rounded-full font-bold">
-                  {favoritesCount}
-                </span>
-              )}
-            </LocalizedLink>
-            <LocalizedLink
-              href="/favoritos"
-              className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] hover:bg-[var(--surface-hover)] transition-colors rounded-lg active:scale-[0.98] touch-manipulation"
-            >
-              <Heart size={18} className="text-pink-400" />
-              <span>{t.nav.shop_favorites}</span>
-              {wishlistCount > 0 && (
-                <span className="ml-auto bg-[var(--gold)] text-black text-xs px-2 py-0.5 rounded-full font-bold">
-                  {wishlistCount}
-                </span>
-              )}
-            </LocalizedLink>
-          </div>
+          <LocalizedLink
+            href="/loja"
+            onClick={onClose}
+            className="flex items-center gap-4 p-4 bg-gradient-to-r from-[var(--gold)]/15 via-[var(--gold)]/8 to-transparent border border-[var(--gold)]/30 rounded-xl active:scale-[0.98] touch-manipulation transition-transform"
+          >
+            <div className="w-12 h-12 bg-[var(--gold)]/15 border border-[var(--gold)]/30 rounded-xl flex items-center justify-center flex-shrink-0">
+              <ShoppingBag size={20} className="text-[var(--gold)]" strokeWidth={2} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-[var(--foreground)] leading-tight">
+                {language === "pt" ? "Boné Lusitano" : language === "es" ? "Gorra Lusitana" : "Lusitano Cap"}
+              </p>
+              <p className="text-[11px] text-[var(--foreground-muted)] mt-0.5 leading-tight">
+                {language === "pt" ? "Coleção exclusiva · Envio mundial" : language === "es" ? "Colección exclusiva · Envío mundial" : "Exclusive collection · Worldwide shipping"}
+              </p>
+            </div>
+            <ArrowRight size={16} className="text-[var(--gold)] flex-shrink-0" />
+          </LocalizedLink>
         </div>
 
         {/* Additional Links */}
