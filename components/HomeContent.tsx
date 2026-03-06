@@ -29,7 +29,6 @@ import {
   Star,
   Heart,
   Compass,
-  Feather,
   Stethoscope,
   Tag,
   Euro,
@@ -1402,7 +1401,7 @@ export default function HomeContent({
                     alt={featuredProduct.title}
                     fill
                     sizes="100vw"
-                    className="object-contain object-center"
+                    className="object-cover object-center"
                     priority
                   />
                 ) : (
@@ -1482,7 +1481,7 @@ export default function HomeContent({
                     alt={featuredProduct.title}
                     fill
                     sizes="58vw"
-                    className="object-contain object-center transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
+                    className="object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
                     priority
                   />
                 ) : (
