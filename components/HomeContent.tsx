@@ -32,6 +32,7 @@ import {
   Feather,
   Stethoscope,
   Tag,
+  Euro,
 } from "lucide-react";
 
 export default function HomeContent() {
@@ -317,7 +318,7 @@ export default function HomeContent() {
   return (
     <>
       {/* ===== HERO — Full Screen with Parallax ===== */}
-      <section className="relative min-h-[82vh] sm:min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
+      <section className="relative min-h-[78vh] sm:min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
         {/* Parallax Background Image */}
         <ParallaxSection speed={0.4} className="absolute inset-0 z-0">
           <div className="clip-reveal-left" style={{ animationDuration: "0.6s" }}>
@@ -348,13 +349,19 @@ export default function HomeContent() {
         />
 
         {/* Content */}
-        <div className="relative z-10 max-w-4xl mx-auto space-y-8">
-          <p
-            className="text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[var(--gold)] opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
-            style={{ animationDelay: "0.1s" }}
+        <div className="relative z-10 max-w-4xl mx-auto space-y-6 sm:space-y-8">
+          {/* Brand identity — always visible */}
+          <div
+            className="opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.05s" }}
           >
-            {t.home.est}
-          </p>
+            <p className="text-[11px] sm:text-xs uppercase tracking-[0.45em] text-[var(--gold)] font-semibold drop-shadow-md">
+              Portal Lusitano
+            </p>
+            <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[var(--foreground-muted)]/70 mt-1">
+              {t.home.est}
+            </p>
+          </div>
 
           <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] leading-[0.9] drop-shadow-lg">
             <TextSplit text={t.home.title_main} baseDelay={0.15} wordDelay={0.06} />
@@ -377,10 +384,11 @@ export default function HomeContent() {
             className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
             style={{ animationDelay: "0.45s" }}
           >
+            {/* Mobile: solid gold primary CTA | Desktop: shimmer border */}
             <MagneticButton strength={0.2}>
               <LocalizedLink
                 href="/vender-cavalo"
-                className="ripple-btn shimmer-gold inline-block border border-[var(--gold)]/30 bg-black/20 backdrop-blur-md px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-500"
+                className="ripple-btn inline-flex items-center gap-2 sm:gap-0 bg-[var(--gold)] sm:bg-black/20 text-black sm:text-[var(--foreground)] border border-[var(--gold)] sm:border-[var(--gold)]/30 sm:backdrop-blur-md shimmer-gold px-10 py-4 text-[10px] uppercase tracking-[0.3em] hover:bg-[var(--gold)] hover:text-black transition-all duration-500 font-semibold sm:font-normal w-full sm:w-auto justify-center"
               >
                 {tr("Vender Cavalo", "Sell a Horse", "Vender Caballo")}
               </LocalizedLink>
@@ -421,6 +429,7 @@ export default function HomeContent() {
               { href: "/mapa", icon: MapPin, label: tr("Mapa", "Map", "Mapa"), color: "text-rose-400" },
               { href: "/cavalos-famosos", icon: Trophy, label: tr("Famosos", "Famous", "Famosos"), color: "text-purple-400" },
               { href: "/ebook-gratis", icon: BookOpen, label: tr("Ebook", "Ebook", "Ebook"), color: "text-[var(--gold)]" },
+              { href: "/precos", icon: Sparkles, label: tr("Pro", "Pro", "Pro"), color: "text-[var(--gold)]" },
             ].map((item) => (
               <LocalizedLink
                 key={item.href}
@@ -436,6 +445,69 @@ export default function HomeContent() {
               </LocalizedLink>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ===== REVENUE ACTIONS — Mobile only ===== */}
+      <section className="sm:hidden px-4 py-5 border-b border-[var(--border)] bg-[var(--background-secondary)]/30">
+        <p className="text-[9px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-3 px-0.5">
+          {tr("O que podemos fazer por si", "What we can do for you", "Lo que podemos hacer")}
+        </p>
+
+        {/* Primary: Vender Cavalo */}
+        <LocalizedLink
+          href="/vender-cavalo"
+          className="flex items-center gap-4 p-4 mb-3 bg-gradient-to-r from-[var(--gold)]/15 via-[var(--gold)]/8 to-transparent border border-[var(--gold)]/25 rounded-2xl active:scale-[0.98] touch-manipulation transition-transform"
+        >
+          <div className="w-11 h-11 bg-[var(--gold)] rounded-xl flex items-center justify-center flex-shrink-0 shadow-[0_0_16px_rgba(197,160,89,0.35)]">
+            <Euro size={20} className="text-black" strokeWidth={2.5} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-[var(--foreground)] leading-tight">
+              {tr("Vender Cavalo", "Sell a Horse", "Vender Caballo")}
+            </p>
+            <p className="text-[11px] text-[var(--foreground-muted)] mt-0.5 leading-tight">
+              {tr("Compradores qualificados à sua espera", "Qualified buyers waiting", "Compradores cualificados esperando")}
+            </p>
+          </div>
+          <ArrowRight size={15} className="text-[var(--gold)] flex-shrink-0" />
+        </LocalizedLink>
+
+        {/* Secondary row: Pro + Ebook */}
+        <div className="grid grid-cols-2 gap-3">
+          <LocalizedLink
+            href="/precos"
+            className="flex flex-col gap-2.5 p-4 bg-[var(--background-card)] border border-[var(--border)] rounded-2xl active:scale-[0.97] touch-manipulation transition-transform hover:border-[var(--gold)]/25"
+          >
+            <div className="w-9 h-9 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center">
+              <Sparkles size={17} className="text-[var(--gold)]" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-[var(--foreground)] leading-tight">
+                {tr("Planos Pro", "Pro Plans", "Planes Pro")}
+              </p>
+              <p className="text-[10px] text-[var(--foreground-muted)] mt-0.5 leading-tight">
+                {tr("Ferramentas exclusivas", "Exclusive tools", "Herramientas exclusivas")}
+              </p>
+            </div>
+          </LocalizedLink>
+
+          <LocalizedLink
+            href="/ebook-gratis"
+            className="flex flex-col gap-2.5 p-4 bg-[var(--background-card)] border border-[var(--border)] rounded-2xl active:scale-[0.97] touch-manipulation transition-transform hover:border-[var(--gold)]/25"
+          >
+            <div className="w-9 h-9 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center">
+              <Gift size={17} className="text-[var(--gold)]" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-[var(--foreground)] leading-tight">
+                {tr("Ebook Grátis", "Free Ebook", "Ebook Gratis")}
+              </p>
+              <p className="text-[10px] text-[var(--foreground-muted)] mt-0.5 leading-tight">
+                {tr("Guia do Lusitano · 30 pág.", "Lusitano Guide · 30 pg.", "Guía Lusitano · 30 pág.")}
+              </p>
+            </div>
+          </LocalizedLink>
         </div>
       </section>
 
@@ -507,9 +579,9 @@ export default function HomeContent() {
       </section>
 
       {/* ===== DISCOVER SECTION ===== */}
-      <section className="py-12 sm:py-32 px-4 sm:px-6">
+      <section className="py-8 sm:py-32 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <RevealOnScroll variant="blur-up" className="text-center mb-8 sm:mb-16">
+          <RevealOnScroll variant="blur-up" className="text-center mb-6 sm:mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {tr("Descubra", "Discover", "Descubra")}
             </span>
@@ -565,12 +637,12 @@ export default function HomeContent() {
       </section>
 
       {/* ===== PILLARS ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)] relative overflow-hidden">
+      <section className="py-10 sm:py-28 border-t border-[var(--border)] relative overflow-hidden">
         {/* Background orb */}
         <div className="gradient-orb w-[600px] h-[600px] bg-[var(--gold)] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-          <RevealOnScroll variant="fade-scale" className="text-center mb-16">
+          <RevealOnScroll variant="fade-scale" className="text-center mb-8 sm:mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {tr("Os Nossos Pilares", "Our Pillars", "Nuestros Pilares")}
             </span>
@@ -579,7 +651,7 @@ export default function HomeContent() {
             </h2>
           </RevealOnScroll>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {pillars.map((pillar, i) => (
               <RevealOnScroll key={pillar.title} delay={i * 120} variant="fade-up">
                 <div className="text-center p-6 group">
@@ -600,9 +672,10 @@ export default function HomeContent() {
       </section>
 
       {/* ===== COMO FUNCIONA ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <RevealOnScroll variant="fade-scale" className="text-center mb-16">
+      <section className="py-10 sm:py-28 border-t border-[var(--border)]">
+        <div className="max-w-5xl mx-auto">
+          <div className="px-4 sm:px-6">
+          <RevealOnScroll variant="fade-scale" className="text-center mb-8 sm:mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {tr("Processo", "Process", "Proceso")}
             </span>
@@ -621,8 +694,30 @@ export default function HomeContent() {
               )}
             </p>
           </RevealOnScroll>
+          </div>
 
-          <div className="grid sm:grid-cols-3 gap-8 sm:gap-6">
+          {/* Mobile: horizontal scroll — Desktop: grid */}
+          <div className="sm:hidden overflow-x-auto scrollbar-hide px-4 pb-2">
+            <div className="flex gap-3" style={{ width: "max-content" }}>
+              {steps.map((step) => (
+                <div key={step.number} className="relative w-[72vw] max-w-[280px] p-5 bg-[var(--background-card)] border border-[var(--border)] flex-none">
+                  <span
+                    className="absolute top-3 right-4 text-[56px] font-serif text-[var(--foreground-muted)]/10 leading-none select-none"
+                    aria-hidden="true"
+                  >
+                    {step.number}
+                  </span>
+                  <div className="w-10 h-10 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mb-4">
+                    <step.icon size={18} className="text-[var(--gold)]" />
+                  </div>
+                  <h3 className="text-base font-serif text-[var(--foreground)] mb-2">{step.title}</h3>
+                  <p className="text-[var(--foreground-muted)] text-xs leading-relaxed">{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="hidden sm:grid sm:grid-cols-3 gap-6 px-6">
             {steps.map((step, i) => (
               <RevealOnScroll key={step.number} delay={i * 150} variant="fade-up">
                 <div className="relative p-6 sm:p-8 bg-[var(--background-card)] border border-[var(--border)] hover:border-[var(--gold)]/20 transition-all duration-500 group">
@@ -645,7 +740,7 @@ export default function HomeContent() {
             ))}
           </div>
 
-          <RevealOnScroll className="text-center mt-12" delay={450}>
+          <RevealOnScroll className="text-center mt-10 sm:mt-12 px-4 sm:px-6" delay={450}>
             <LocalizedLink
               href="/comprar"
               className="ripple-btn inline-flex items-center gap-3 bg-[var(--gold)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:bg-white transition-all duration-300"
@@ -658,9 +753,10 @@ export default function HomeContent() {
       </section>
 
       {/* ===== SOCIAL PROOF — Testimonials ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)] bg-[var(--background-secondary)]/30">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <RevealOnScroll variant="fade-scale" className="text-center mb-14">
+      <section className="py-10 sm:py-28 border-t border-[var(--border)] bg-[var(--background-secondary)]/30">
+        <div className="max-w-5xl mx-auto">
+          <div className="px-4 sm:px-6">
+          <RevealOnScroll variant="fade-scale" className="text-center mb-8 sm:mb-14">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {tr("Testemunhos", "Testimonials", "Testimonios")}
             </span>
@@ -672,8 +768,32 @@ export default function HomeContent() {
               )}
             </h2>
           </RevealOnScroll>
+          </div>
 
-          <div className="grid sm:grid-cols-3 gap-6">
+          {/* Mobile: horizontal scroll — Desktop: grid */}
+          <div className="sm:hidden overflow-x-auto scrollbar-hide px-4 pb-2">
+            <div className="flex gap-3" style={{ width: "max-content" }}>
+              {testimonials.map((item) => (
+                <div key={item.name} className="w-[80vw] max-w-[300px] flex-none bg-[var(--background-card)] border border-[var(--border)] p-5 relative">
+                  <span
+                    className="text-[var(--gold)]/30 text-5xl font-serif absolute top-3 left-5 leading-none select-none"
+                    aria-hidden="true"
+                  >
+                    &ldquo;
+                  </span>
+                  <p className="text-[var(--foreground-secondary)] text-xs leading-relaxed mb-4 pt-6 italic">
+                    {item.quote}
+                  </p>
+                  <div className="border-t border-[var(--border)] pt-3">
+                    <p className="text-[var(--foreground)] font-serif text-sm">{item.name}</p>
+                    <p className="text-[var(--foreground-muted)] text-xs">{item.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="hidden sm:grid sm:grid-cols-3 gap-6 px-6">
             {testimonials.map((item, i) => (
               <RevealOnScroll key={item.name} delay={i * 120} variant="fade-up">
                 <div className="bg-[var(--background-card)] border border-[var(--border)] p-6 sm:p-8 relative hover:border-[var(--gold)]/20 transition-all duration-500">
@@ -696,8 +816,8 @@ export default function HomeContent() {
           </div>
 
           {/* Trust badges */}
-          <RevealOnScroll className="mt-12">
-            <div className="flex flex-wrap items-center justify-center gap-8 text-center">
+          <RevealOnScroll className="mt-10 sm:mt-12 px-4 sm:px-6">
+            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-center">
               <div>
                 <p className="text-2xl font-serif text-[var(--gold)]">5.000+</p>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
@@ -731,6 +851,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== VENDER CAVALO CTA ===== */}
+
       <section className="border-t border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
           <RevealOnScroll variant="fade-right">

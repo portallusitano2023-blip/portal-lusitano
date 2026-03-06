@@ -30,6 +30,7 @@ import {
   Instagram,
   Sparkles,
   TrendingUp,
+  ArrowRight,
 } from "lucide-react";
 
 export default memo(function BottomNav() {
@@ -142,11 +143,16 @@ export default memo(function BottomNav() {
           <div className="w-10 h-1 bg-[var(--border)] rounded-full" />
         </div>
 
-        {/* Header */}
+        {/* Header — branding + close */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]/50">
-          <span className="text-sm font-medium uppercase tracking-widest text-[var(--foreground-secondary)]">
-            Menu
-          </span>
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.4em] text-[var(--gold)] font-semibold leading-none">
+              Portal Lusitano
+            </p>
+            <p className="text-[9px] uppercase tracking-[0.25em] text-[var(--foreground-muted)] mt-0.5">
+              {language === "pt" ? "Est. 2023 · Portugal" : "Est. 2023 · Portugal"}
+            </p>
+          </div>
           <button
             onClick={() => setIsMoreOpen(false)}
             className="p-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors rounded-lg touch-manipulation"
@@ -157,6 +163,26 @@ export default memo(function BottomNav() {
         </div>
 
         <div className="px-4 py-5 space-y-5">
+          {/* Vender CTA — destaque máximo */}
+          <LocalizedLink
+            href="/vender-cavalo"
+            onClick={() => setIsMoreOpen(false)}
+            className="flex items-center gap-4 p-4 bg-gradient-to-r from-[var(--gold)]/15 via-[var(--gold)]/8 to-transparent border border-[var(--gold)]/30 rounded-2xl touch-manipulation active:scale-[0.98] transition-transform"
+          >
+            <div className="w-11 h-11 bg-[var(--gold)] rounded-xl flex items-center justify-center flex-shrink-0 shadow-[0_0_16px_rgba(197,160,89,0.3)]">
+              <Euro size={20} className="text-black" strokeWidth={2.5} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-[var(--foreground)]">
+                {language === "pt" ? "Vender Cavalo" : language === "es" ? "Vender Caballo" : "Sell a Horse"}
+              </p>
+              <p className="text-[11px] text-[var(--foreground-muted)] mt-0.5">
+                {language === "pt" ? "Anunciar no marketplace" : language === "es" ? "Publicar en el marketplace" : "List on marketplace"}
+              </p>
+            </div>
+            <ArrowRight size={15} className="text-[var(--gold)] flex-shrink-0" />
+          </LocalizedLink>
+
           {/* Explorar */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] mb-2 px-1 font-medium">
