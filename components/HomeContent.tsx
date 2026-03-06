@@ -1005,37 +1005,145 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
         </LocalizedLink>
       </div>
 
-      {/* ===== LOJA CTA ===== */}
-      <section className="py-10 sm:py-28 border-t border-[var(--border)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <RevealOnScroll variant="fade-scale">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              {tr("Loja", "Shop", "Tienda")}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
-              {tr(
-                "Vestuário & Acessórios Equestres",
-                "Equestrian Clothing & Accessories",
-                "Ropa y Accesorios Ecuestres"
-              )}
-            </h2>
-            <p className="text-[var(--foreground-muted)] max-w-lg mx-auto mb-10">
-              {tr(
-                "Peças que celebram a herança equestre portuguesa. Design contemporâneo, tradição secular.",
-                "Pieces that celebrate Portuguese equestrian heritage. Contemporary design, secular tradition.",
-                "Piezas que celebran el patrimonio ecuestre portugués. Diseño contemporáneo, tradición secular."
-              )}
-            </p>
-            <MagneticButton>
-              <LocalizedLink
-                href="/loja"
-                className="ripple-btn shimmer-gold inline-block border border-[var(--border-hover)] px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-500"
-              >
-                {t.home.cta}
-              </LocalizedLink>
-            </MagneticButton>
+      {/* ===== PRODUTO EM DESTAQUE ===== */}
+      <section className="border-t border-[var(--border)] overflow-hidden">
+        {featuredProduct ? (
+          <RevealOnScroll variant="fade-up">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[520px]">
+                {/* Imagem */}
+                <LocalizedLink
+                  href={`/loja/${featuredProduct.handle}`}
+                  className="group relative bg-[var(--background-secondary)] overflow-hidden block min-h-[320px] lg:min-h-[520px]"
+                >
+                  {featuredProduct.images[0]?.url ? (
+                    <>
+                      <Image
+                        src={featuredProduct.images[0].url}
+                        alt={featuredProduct.title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        priority
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-black/20" />
+                    </>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Package size={64} className="text-[var(--gold)]/20" />
+                    </div>
+                  )}
+                  <div className="absolute top-4 left-4 lg:hidden">
+                    <span className="bg-[var(--gold)] text-black text-[9px] uppercase tracking-[0.2em] font-bold px-3 py-1.5">
+                      {tr("Exclusivo", "Exclusive", "Exclusivo")}
+                    </span>
+                  </div>
+                </LocalizedLink>
+
+                {/* Info */}
+                <div className="relative bg-[var(--background)] flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-10 lg:py-20">
+                  <div className="absolute top-6 right-6 w-10 h-10 border-t border-r border-[var(--gold)]/20 hidden lg:block" aria-hidden="true" />
+                  <div className="absolute bottom-6 left-6 w-10 h-10 border-b border-l border-[var(--gold)]/20 hidden lg:block" aria-hidden="true" />
+
+                  <div className="hidden lg:flex items-center gap-3 mb-6">
+                    <span className="bg-[var(--gold)] text-black text-[9px] uppercase tracking-[0.25em] font-bold px-3 py-1.5">
+                      {tr("Exclusivo", "Exclusive", "Exclusivo")}
+                    </span>
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
+                      {tr("Loja Portal Lusitano", "Portal Lusitano Shop", "Tienda Portal Lusitano")}
+                    </span>
+                  </div>
+
+                  <span className="lg:hidden text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3 block">
+                    {tr("Loja", "Shop", "Tienda")}
+                  </span>
+
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[var(--foreground)] mb-4 leading-tight">
+                    {featuredProduct.title}
+                  </h2>
+
+                  {featuredProduct.description && (
+                    <p className="text-[var(--foreground-secondary)] leading-relaxed mb-6 max-w-md text-sm sm:text-base">
+                      {featuredProduct.description.length > 160
+                        ? featuredProduct.description.slice(0, 157) + "..."
+                        : featuredProduct.description}
+                    </p>
+                  )}
+
+                  <div className="flex flex-col gap-2 mb-8">
+                    {[
+                      tr("Qualidade premium portuguesa", "Premium Portuguese quality", "Calidad premium portuguesa"),
+                      tr("Envio para todo o mundo", "Worldwide shipping", "Envío a todo el mundo"),
+                      tr("Design equestre exclusivo", "Exclusive equestrian design", "Diseño ecuestre exclusivo"),
+                    ].map((feat) => (
+                      <div key={feat} className="flex items-center gap-2.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] flex-shrink-0" />
+                        <span className="text-xs text-[var(--foreground-muted)]">{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)] mb-1">
+                        {tr("Preço", "Price", "Precio")}
+                      </p>
+                      <p className="text-3xl font-serif text-[var(--gold)]">
+                        {Number(featuredProduct.priceRange?.minVariantPrice.amount || 0).toFixed(2)} €
+                      </p>
+                    </div>
+
+                    <MagneticButton strength={0.2}>
+                      <LocalizedLink
+                        href={`/loja/${featuredProduct.handle}`}
+                        className="ripple-btn inline-flex items-center gap-3 bg-[var(--gold)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.25)] active:scale-95 touch-manipulation"
+                      >
+                        <ShoppingBag size={15} strokeWidth={2.5} />
+                        {tr("Comprar Agora", "Buy Now", "Comprar Ahora")}
+                      </LocalizedLink>
+                    </MagneticButton>
+                  </div>
+
+                  <LocalizedLink
+                    href="/loja"
+                    className="inline-flex items-center gap-1.5 mt-5 text-[11px] uppercase tracking-[0.2em] text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors group w-fit"
+                  >
+                    {tr("Ver toda a coleção", "View full collection", "Ver colección completa")}
+                    <ArrowRight size={11} className="group-hover:translate-x-1 transition-transform" />
+                  </LocalizedLink>
+                </div>
+              </div>
+            </div>
           </RevealOnScroll>
-        </div>
+        ) : (
+          <div className="py-10 sm:py-28">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+              <RevealOnScroll variant="fade-scale">
+                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
+                  {tr("Loja", "Shop", "Tienda")}
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+                  {tr("Vestuário & Acessórios Equestres", "Equestrian Clothing & Accessories", "Ropa y Accesorios Ecuestres")}
+                </h2>
+                <p className="text-[var(--foreground-muted)] max-w-lg mx-auto mb-10">
+                  {tr(
+                    "Peças que celebram a herança equestre portuguesa. Design contemporâneo, tradição secular.",
+                    "Pieces that celebrate Portuguese equestrian heritage. Contemporary design, secular tradition.",
+                    "Piezas que celebran el patrimonio ecuestre portugués. Diseño contemporáneo, tradición secular."
+                  )}
+                </p>
+                <MagneticButton>
+                  <LocalizedLink
+                    href="/loja"
+                    className="ripple-btn shimmer-gold inline-block border border-[var(--border-hover)] px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-500"
+                  >
+                    {t.home.cta}
+                  </LocalizedLink>
+                </MagneticButton>
+              </RevealOnScroll>
+            </div>
+          </div>
+        )}
       </section>
     </>
   );

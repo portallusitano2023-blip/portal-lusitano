@@ -9,7 +9,6 @@ import { useWishlist } from "@/context/WishlistContext";
 import {
   Home,
   ShoppingCart,
-  Crown,
   Store,
   MoreHorizontal,
   X,
@@ -31,6 +30,8 @@ import {
   Sparkles,
   TrendingUp,
   ArrowRight,
+  ShoppingBag,
+  Crown,
 } from "lucide-react";
 
 export default memo(function BottomNav() {
@@ -56,14 +57,9 @@ export default memo(function BottomNav() {
       label: language === "pt" ? "Comprar" : language === "es" ? "Comprar" : "Buy",
     },
     {
-      href: "/directorio",
-      icon: Crown,
-      label:
-        language === "pt"
-          ? "Coudelarias"
-          : language === "es"
-            ? "Cuadras"
-            : "Studs",
+      href: "/loja",
+      icon: Store,
+      label: language === "pt" ? "Loja" : language === "es" ? "Tienda" : "Shop",
     },
     {
       href: "/vender-cavalo",
@@ -163,25 +159,46 @@ export default memo(function BottomNav() {
         </div>
 
         <div className="px-4 py-5 space-y-5">
-          {/* Vender CTA — destaque máximo */}
-          <LocalizedLink
-            href="/vender-cavalo"
-            onClick={() => setIsMoreOpen(false)}
-            className="flex items-center gap-4 p-4 bg-gradient-to-r from-[var(--gold)]/15 via-[var(--gold)]/8 to-transparent border border-[var(--gold)]/30 rounded-2xl touch-manipulation active:scale-[0.98] transition-transform"
-          >
-            <div className="w-11 h-11 bg-[var(--gold)] rounded-xl flex items-center justify-center flex-shrink-0 shadow-[0_0_16px_rgba(197,160,89,0.3)]">
-              <Euro size={20} className="text-black" strokeWidth={2.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[var(--foreground)]">
-                {language === "pt" ? "Vender Cavalo" : language === "es" ? "Vender Caballo" : "Sell a Horse"}
-              </p>
-              <p className="text-[11px] text-[var(--foreground-muted)] mt-0.5">
-                {language === "pt" ? "Anunciar no marketplace" : language === "es" ? "Publicar en el marketplace" : "List on marketplace"}
-              </p>
-            </div>
-            <ArrowRight size={15} className="text-[var(--gold)] flex-shrink-0" />
-          </LocalizedLink>
+          {/* CTAs principais — Vender + Loja em grid */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Vender Cavalo */}
+            <LocalizedLink
+              href="/vender-cavalo"
+              onClick={() => setIsMoreOpen(false)}
+              className="flex flex-col gap-3 p-4 bg-gradient-to-br from-[var(--gold)]/15 via-[var(--gold)]/8 to-transparent border border-[var(--gold)]/30 rounded-2xl touch-manipulation active:scale-[0.98] transition-transform"
+            >
+              <div className="w-10 h-10 bg-[var(--gold)] rounded-xl flex items-center justify-center shadow-[0_0_16px_rgba(197,160,89,0.3)]">
+                <Euro size={18} className="text-black" strokeWidth={2.5} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-[var(--foreground)] leading-tight">
+                  {language === "pt" ? "Vender Cavalo" : language === "es" ? "Vender Caballo" : "Sell a Horse"}
+                </p>
+                <p className="text-[11px] text-[var(--foreground-muted)] mt-1 leading-tight">
+                  {language === "pt" ? "Anunciar no marketplace" : language === "es" ? "Publicar" : "List now"}
+                </p>
+              </div>
+            </LocalizedLink>
+
+            {/* Loja / Boné */}
+            <LocalizedLink
+              href="/loja"
+              onClick={() => setIsMoreOpen(false)}
+              className="flex flex-col gap-3 p-4 bg-gradient-to-br from-[var(--gold)]/10 via-[var(--gold)]/5 to-transparent border border-[var(--gold)]/20 rounded-2xl touch-manipulation active:scale-[0.98] transition-transform"
+            >
+              <div className="w-10 h-10 bg-[var(--gold)]/15 border border-[var(--gold)]/30 rounded-xl flex items-center justify-center">
+                <ShoppingBag size={18} className="text-[var(--gold)]" strokeWidth={2} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-[var(--foreground)] leading-tight">
+                  {language === "pt" ? "Loja Exclusiva" : language === "es" ? "Tienda Exclusiva" : "Exclusive Shop"}
+                </p>
+                <p className="text-[11px] text-[var(--foreground-muted)] mt-1 leading-tight">
+                  {language === "pt" ? "Boné & colecção" : language === "es" ? "Gorra & colección" : "Cap & collection"}
+                </p>
+              </div>
+            </LocalizedLink>
+          </div>
 
           {/* Explorar */}
           <section>
@@ -194,7 +211,7 @@ export default memo(function BottomNav() {
                 { href: "/eventos", icon: Calendar, label: t.nav.events },
                 { href: "/mapa", icon: MapPin, label: t.nav.map },
                 { href: "/linhagens", icon: BookOpen, label: t.nav.lineages },
-                { href: "/loja", icon: Store, label: language === "pt" ? "Loja" : language === "es" ? "Tienda" : "Shop" },
+                { href: "/directorio", icon: Crown, label: language === "pt" ? "Coudelarias" : language === "es" ? "Cuadras" : "Studs" },
                 { href: "/piroplasmose", icon: Shield, label: t.nav.piroplasmosis },
               ].map((item) => (
                 <LocalizedLink
