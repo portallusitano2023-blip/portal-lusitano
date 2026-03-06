@@ -58,7 +58,7 @@ export default function LocalRelatedArticles({
                   src={article.image}
                   alt={article.title}
                   fill
-                  className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+                  className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>

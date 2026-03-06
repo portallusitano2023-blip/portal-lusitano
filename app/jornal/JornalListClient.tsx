@@ -532,7 +532,7 @@ export default function JornalListClient({
                           alt={gridArticles[0].image?.alt || gridArticles[0].title}
                           fill
                           sizes="(max-width: 768px) 100vw, 60vw"
-                          className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105"
+                          className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105"
                         />
                       ) : (
                         <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
@@ -600,7 +600,7 @@ export default function JornalListClient({
                             alt={article.image?.alt || article.title}
                             fill
                             sizes="160px"
-                            className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500"
+                            className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-500"
                           />
                         ) : (
                           <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
@@ -671,7 +671,7 @@ export default function JornalListClient({
                               alt={article.image?.alt || article.title}
                               fill
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+                              className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
                             />
                           ) : (
                             <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
@@ -752,7 +752,7 @@ export default function JornalListClient({
                               alt={article.image?.alt || article.title}
                               fill
                               sizes="160px"
-                              className="object-cover grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500"
+                              className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-500"
                             />
                           ) : (
                             <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">

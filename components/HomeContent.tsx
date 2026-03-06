@@ -28,9 +28,8 @@ import {
   Sparkles,
   Star,
   Heart,
-  Compass,
-  Stethoscope,
-  Tag,
+
+
   Euro,
   ShoppingBag,
   Package,
@@ -73,100 +72,6 @@ export default function HomeContent({
 
   // Memoize all static data arrays so they are not recreated on every render.
   // These only need to change when `language` changes (tr/t depend on it).
-  const features = useMemo(
-    () => [
-      {
-        icon: ShoppingCart,
-        title: tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo"),
-        desc: tr(
-          "Marketplace com cavalos Lusitanos verificados à venda",
-          "Marketplace with verified Lusitano horses for sale",
-          "Mercado con caballos Lusitanos verificados en venta"
-        ),
-        href: "/comprar",
-        accent: "from-amber-500/20 to-orange-500/20",
-      },
-      {
-        icon: Crown,
-        title: tr("Coudelarias", "Stud Farms", "Haras"),
-        desc: tr(
-          "Directório das melhores coudelarias de Portugal",
-          "Directory of the best stud farms in Portugal",
-          "Directorio de los mejores haras de Portugal"
-        ),
-        href: "/directorio",
-        accent: "from-yellow-500/20 to-amber-500/20",
-      },
-      {
-        icon: Calculator,
-        title: tr("Ferramentas Pro", "Pro Tools", "Herramientas Pro"),
-        desc: tr(
-          "Calculadora de valor, comparador e análise de perfil profissional",
-          "Value calculator, comparator and professional profile analysis",
-          "Calculadora de valor, comparador y análisis de perfil profesional"
-        ),
-        href: "/precos",
-        accent: "from-emerald-500/20 to-teal-500/20",
-      },
-      {
-        icon: Stethoscope,
-        title: tr("Profissionais", "Professionals", "Profesionales"),
-        desc: tr(
-          "Veterinários, treinadores e ferradores verificados",
-          "Verified veterinarians, trainers and farriers",
-          "Veterinarios, entrenadores y herradores verificados"
-        ),
-        href: "/profissionais",
-        accent: "from-cyan-500/20 to-blue-500/20",
-      },
-      {
-        icon: Tag,
-        title: tr("Publicidade", "Advertising", "Publicidad"),
-        desc: tr(
-          "Promova o seu negócio equestre à comunidade Lusitana",
-          "Promote your equestrian business to the Lusitano community",
-          "Promueva su negocio ecuestre a la comunidad Lusitana"
-        ),
-        href: "/publicidade",
-        accent: "from-orange-500/20 to-red-500/20",
-      },
-      {
-        icon: Newspaper,
-        title: tr("Jornal", "Journal", "Revista"),
-        desc: tr(
-          "Artigos, investigação e crónicas sobre o Lusitano",
-          "Articles, research and chronicles about the Lusitano",
-          "Artículos, investigación y crónicas sobre el Lusitano"
-        ),
-        href: "/jornal",
-        accent: "from-blue-500/20 to-indigo-500/20",
-      },
-      {
-        icon: Trophy,
-        title: tr("Lusitanos Notáveis", "Notable Lusitanos", "Lusitanos Notables"),
-        desc: tr(
-          "Galeria de honra dos cavalos que fizeram história",
-          "Hall of fame of horses that made history",
-          "Galería de honor de los caballos que hicieron historia"
-        ),
-        href: "/cavalos-famosos",
-        accent: "from-purple-500/20 to-pink-500/20",
-      },
-      {
-        icon: MapPin,
-        title: tr("Mapa Interativo", "Interactive Map", "Mapa Interactivo"),
-        desc: tr(
-          "Encontre coudelarias, eventos e profissionais no mapa",
-          "Find stud farms, events and professionals on the map",
-          "Encuentre haras, eventos y profesionales en el mapa"
-        ),
-        href: "/mapa",
-        accent: "from-rose-500/20 to-red-500/20",
-      },
-    ],
-    [tr]
-  );
-
   const pillars = useMemo(
     () => [
       {
@@ -268,41 +173,6 @@ export default function HomeContent({
     [tr]
   );
 
-  const steps = useMemo(
-    () => [
-      {
-        number: "01",
-        icon: Compass,
-        title: tr("Pesquise", "Browse", "Explore"),
-        desc: tr(
-          "Filtre por disciplina, preço e localização no nosso marketplace verificado.",
-          "Filter by discipline, price and location on our verified marketplace.",
-          "Filtre por disciplina, precio y ubicación en nuestro marketplace verificado."
-        ),
-      },
-      {
-        number: "02",
-        icon: Heart,
-        title: tr("Contacte", "Connect", "Contacte"),
-        desc: tr(
-          "Entre em contacto directo com o criador ou proprietário e visite o cavalo.",
-          "Get in direct contact with the breeder or owner and visit the horse.",
-          "Entre en contacto directo con el criador o propietario y visite el caballo."
-        ),
-      },
-      {
-        number: "03",
-        icon: Trophy,
-        title: tr("Adquira", "Acquire", "Adquiera"),
-        desc: tr(
-          "Conclua a transacção com confiança e bem-vindo à família Lusitana.",
-          "Complete the transaction with confidence and welcome to the Lusitano family.",
-          "Complete la transacción con confianza y bienvenido a la familia Lusitana."
-        ),
-      },
-    ],
-    [tr]
-  );
 
   return (
     <>
@@ -559,195 +429,6 @@ export default function HomeContent({
         </div>
       </section>
 
-      {/* ===== DISCOVER SECTION ===== */}
-      <section className="relative overflow-hidden" style={{ background: "#080808" }}>
-        {/* Ambient glow — top center */}
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[1px] pointer-events-none"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(197,160,89,0.25), transparent)" }}
-        />
-
-        <div className="max-w-7xl mx-auto relative z-10">
-
-          {/* ── HEADER — split layout ── */}
-          <RevealOnScroll variant="fade-up">
-            <div
-              className="flex items-end gap-10 px-6 sm:px-12 pt-16 sm:pt-24 pb-10 sm:pb-14"
-              style={{ borderBottom: "1px solid rgba(197,160,89,0.1)" }}
-            >
-              {/* Ghost count — decorative huge number */}
-              <div
-                className="hidden lg:block flex-shrink-0 leading-none select-none font-serif"
-                style={{ fontSize: "clamp(90px, 11vw, 160px)", color: "rgba(197,160,89,0.06)", lineHeight: 0.85 }}
-              >
-                08
-              </div>
-
-              {/* Vertical gold rule */}
-              <div
-                className="hidden lg:block flex-shrink-0 w-[1px] self-stretch"
-                style={{ background: "linear-gradient(to bottom, transparent, rgba(197,160,89,0.2) 30%, rgba(197,160,89,0.2) 70%, transparent)" }}
-              />
-
-              {/* Title block */}
-              <div className="flex-1 pb-1">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-6 h-[1px] bg-[var(--gold)]" />
-                  <span className="text-[9px] uppercase tracking-[0.55em] text-[var(--gold)]">
-                    {tr("Descubra", "Discover", "Descubra")}
-                  </span>
-                </div>
-                <h2 className="font-serif text-white leading-none mb-4" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>
-                  {tr("Tudo Sobre", "Everything About", "Todo Sobre")}
-                  <br />
-                  <span style={{ color: "rgba(255,255,255,0.35)" }}>
-                    {tr("o Lusitano", "the Lusitano", "el Lusitano")}
-                  </span>
-                </h2>
-                <p className="text-white/30 text-sm max-w-md leading-relaxed">
-                  {tr(
-                    "A plataforma mais completa dedicada ao cavalo Lusitano",
-                    "The most complete platform dedicated to the Lusitano horse",
-                    "La plataforma más completa dedicada al caballo Lusitano"
-                  )}
-                </p>
-              </div>
-            </div>
-          </RevealOnScroll>
-
-          {/* ── DESKTOP: editorial horizontal list ── */}
-          <div className="hidden sm:block">
-            {features.map((feature, i) => (
-              <RevealOnScroll key={feature.href} delay={i * 55} variant="fade-up">
-                <LocalizedLink
-                  href={feature.href}
-                  className="group relative flex items-center gap-8 lg:gap-12 px-6 sm:px-12 py-7 lg:py-9"
-                  style={{ borderBottom: "1px solid rgba(197,160,89,0.07)" }}
-                >
-                  {/* Hover: subtle background lift */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: "rgba(197,160,89,0.02)" }}
-                  />
-                  {/* Hover: left gold bar sweeps down */}
-                  <div
-                    className="absolute left-0 top-0 w-[2px] h-0 group-hover:h-full transition-all duration-500 pointer-events-none"
-                    style={{ background: "linear-gradient(to bottom, transparent, var(--gold) 40%, var(--gold) 60%, transparent)" }}
-                  />
-
-                  {/* Sequential number */}
-                  <span
-                    className="flex-shrink-0 font-serif select-none transition-all duration-400 hidden lg:block"
-                    style={{
-                      fontSize: "clamp(32px, 3vw, 48px)",
-                      lineHeight: 1,
-                      color: "rgba(197,160,89,0.1)",
-                      width: "60px",
-                      textAlign: "right",
-                    }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-
-                  {/* Expanding connector line */}
-                  <div
-                    className="hidden lg:block flex-shrink-0 h-[1px] w-6 group-hover:w-10 transition-all duration-500"
-                    style={{ background: "rgba(197,160,89,0.2)" }}
-                  />
-
-                  {/* Icon */}
-                  <div
-                    className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                    style={{ border: "1px solid rgba(197,160,89,0.18)", background: "rgba(197,160,89,0.05)" }}
-                  >
-                    <feature.icon
-                      size={15}
-                      className="text-[var(--gold)] opacity-70 group-hover:opacity-100 transition-opacity duration-300"
-                    />
-                  </div>
-
-                  {/* Title */}
-                  <h3
-                    className="flex-shrink-0 font-serif text-white group-hover:text-[var(--gold)] transition-colors duration-300 leading-tight"
-                    style={{ fontSize: "clamp(1rem, 1.8vw, 1.35rem)", width: "clamp(160px, 20vw, 220px)" }}
-                  >
-                    {feature.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="flex-1 text-white/30 text-sm leading-relaxed group-hover:text-white/50 transition-colors duration-300 hidden md:block">
-                    {feature.desc}
-                  </p>
-
-                  {/* CTA */}
-                  <div className="flex-shrink-0 flex items-center gap-3 text-[10px] uppercase tracking-[0.38em] text-[var(--gold)]/35 group-hover:text-[var(--gold)] transition-colors duration-300">
-                    <span>{tr("Explorar", "Explore", "Explorar")}</span>
-                    <div className="h-[1px] w-4 group-hover:w-9 bg-current transition-all duration-500" />
-                  </div>
-                </LocalizedLink>
-              </RevealOnScroll>
-            ))}
-            {/* Bottom line */}
-            <div className="mx-6 sm:mx-12 h-[1px]" style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.15), transparent)" }} />
-          </div>
-
-          {/* ── MOBILE: compact 2-col cards ── */}
-          <div className="sm:hidden px-3 pt-6 pb-10">
-            <div className="grid grid-cols-2 gap-2">
-              {features.map((feature, i) => (
-                <RevealOnScroll key={feature.href} delay={i * 55} variant="fade-up">
-                  <LocalizedLink
-                    href={feature.href}
-                    className="group block relative overflow-hidden active:scale-[0.97] touch-manipulation transition-transform"
-                    style={{
-                      background: "#111",
-                      border: "1px solid rgba(197,160,89,0.18)",
-                      padding: "18px 16px 16px",
-                      minHeight: "155px",
-                    }}
-                  >
-                    {/* Permanent gold top accent */}
-                    <div
-                      className="absolute top-0 left-0 h-[2px] w-full pointer-events-none"
-                      style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.4), rgba(197,160,89,0.05) 60%, transparent)" }}
-                    />
-                    {/* Active sweep */}
-                    <div
-                      className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity duration-200 pointer-events-none"
-                      style={{ background: "rgba(197,160,89,0.04)" }}
-                    />
-                    {/* Ghost number */}
-                    <span
-                      className="absolute right-1 bottom-0 font-serif select-none pointer-events-none"
-                      style={{ fontSize: "70px", lineHeight: 1, color: "rgba(197,160,89,0.07)" }}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div className="relative z-10">
-                      {/* Icon with container */}
-                      <div
-                        className="w-8 h-8 flex items-center justify-center mb-3.5 flex-shrink-0"
-                        style={{ border: "1px solid rgba(197,160,89,0.2)", background: "rgba(197,160,89,0.06)" }}
-                      >
-                        <feature.icon size={14} className="text-[var(--gold)] opacity-80" />
-                      </div>
-                      <h3 className="text-[14px] font-serif text-white leading-tight mb-1 group-active:text-[var(--gold)] transition-colors duration-200">
-                        {feature.title}
-                      </h3>
-                      <div className="flex items-center gap-1.5 mt-3 text-[9px] uppercase tracking-[0.28em] text-[var(--gold)]/55">
-                        <div className="h-[1px] w-3 bg-current" />
-                        {tr("Explorar", "Explore", "Explorar")}
-                      </div>
-                    </div>
-                  </LocalizedLink>
-                </RevealOnScroll>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </section>
-
       {/* ===== PILLARS ===== */}
       <section className="py-10 sm:py-28 border-t border-[var(--border)] relative overflow-hidden">
         {/* Background orb */}
@@ -860,87 +541,6 @@ export default function HomeContent({
               </RevealOnScroll>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ===== COMO FUNCIONA ===== */}
-      <section className="py-10 sm:py-28 border-t border-[var(--border)]">
-        <div className="max-w-5xl mx-auto">
-          <div className="px-4 sm:px-6">
-          <RevealOnScroll variant="fade-scale" className="text-center mb-8 sm:mb-16">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              {tr("Processo", "Process", "Proceso")}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
-              {tr(
-                "Como Encontrar o Seu Cavalo",
-                "How to Find Your Horse",
-                "Cómo Encontrar su Caballo"
-              )}
-            </h2>
-            <p className="text-[var(--foreground-muted)] max-w-md mx-auto">
-              {tr(
-                "Três passos simples para encontrar o Lusitano perfeito.",
-                "Three simple steps to find the perfect Lusitano.",
-                "Tres pasos simples para encontrar el Lusitano perfecto."
-              )}
-            </p>
-          </RevealOnScroll>
-          </div>
-
-          {/* Mobile: horizontal scroll — Desktop: grid */}
-          <div className="sm:hidden overflow-x-auto scrollbar-hide px-4 pb-4 snap-x snap-mandatory">
-            <div className="flex gap-3" style={{ width: "max-content" }}>
-              {steps.map((step) => (
-                <div key={step.number} className="relative w-[72vw] max-w-[280px] p-5 bg-[var(--background-card)] border border-[var(--border)] flex-none snap-start">
-                  <span
-                    className="absolute top-3 right-4 text-[56px] font-serif text-[var(--foreground-muted)]/10 leading-none select-none"
-                    aria-hidden="true"
-                  >
-                    {step.number}
-                  </span>
-                  <div className="w-10 h-10 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mb-4">
-                    <step.icon size={18} className="text-[var(--gold)]" />
-                  </div>
-                  <h3 className="text-base font-serif text-[var(--foreground)] mb-2">{step.title}</h3>
-                  <p className="text-[var(--foreground-muted)] text-xs leading-relaxed">{step.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="hidden sm:grid sm:grid-cols-3 gap-6 px-6">
-            {steps.map((step, i) => (
-              <RevealOnScroll key={step.number} delay={i * 150} variant="fade-up">
-                <div className="relative p-6 sm:p-8 bg-[var(--background-card)] border border-[var(--border)] hover:border-[var(--gold)]/20 transition-all duration-500 group">
-                  {/* Step number */}
-                  <span
-                    className="absolute top-4 right-5 text-[64px] font-serif text-[var(--foreground-muted)]/10 leading-none select-none"
-                    aria-hidden="true"
-                  >
-                    {step.number}
-                  </span>
-                  <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mb-5 group-hover:bg-[var(--gold)]/20 group-hover:scale-110 transition-all duration-500">
-                    <step.icon size={22} className="text-[var(--gold)]" />
-                  </div>
-                  <h3 className="text-xl font-serif text-[var(--foreground)] mb-3">{step.title}</h3>
-                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
-                    {step.desc}
-                  </p>
-                </div>
-              </RevealOnScroll>
-            ))}
-          </div>
-
-          <RevealOnScroll className="text-center mt-10 sm:mt-12 px-4 sm:px-6" delay={450}>
-            <LocalizedLink
-              href="/comprar"
-              className="ripple-btn inline-flex items-center gap-3 bg-[var(--gold)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:bg-white transition-all duration-300"
-            >
-              {tr("Ver Cavalos Disponíveis", "View Available Horses", "Ver Caballos Disponibles")}
-              <ArrowRight size={14} aria-hidden="true" />
-            </LocalizedLink>
-          </RevealOnScroll>
         </div>
       </section>
 
@@ -1308,20 +908,122 @@ export default function HomeContent({
             <div className="flex flex-row sm:flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
               {/* Book Preview */}
               <div className="flex-shrink-0">
-                <div className="w-28 h-36 sm:w-56 sm:h-72 bg-gradient-to-br from-[var(--background-elevated)] to-[var(--background-secondary)] border border-[var(--gold)]/20 flex flex-col items-center justify-center relative shadow-2xl shadow-black/50 float-gentle">
-                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-t border-l border-[var(--gold)]/20" />
-                  <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-b border-r border-[var(--gold)]/20" />
-                  <BookOpen className="text-[var(--gold)]/40 mb-2 sm:mb-4" size={28} />
-                  <p className="text-[var(--foreground)]/80 font-serif text-[10px] sm:text-sm text-center px-3 sm:px-6 leading-snug">
-                    {tr(
-                      "Introdução ao Cavalo Lusitano",
-                      "Introduction to the Lusitano Horse",
-                      "Introducción al Caballo Lusitano"
-                    )}
-                  </p>
-                  <p className="text-[var(--foreground-muted)] text-[8px] sm:text-[9px] uppercase tracking-[0.3em] mt-2 sm:mt-3">
-                    30 {tr("Páginas", "Pages", "Páginas")}
-                  </p>
+                <div className="relative max-w-[160px] sm:max-w-[240px] mx-auto float-gentle">
+                  {/* Glow externo */}
+                  <div className="absolute inset-0 bg-[var(--gold)]/15 blur-[100px] scale-[1.3]" />
+
+                  {/* Book */}
+                  <div className="relative">
+                    {/* Spine */}
+                    <div className="absolute -left-4 top-2 bottom-2 w-6 bg-gradient-to-r from-[#2A1A04] via-[#7A5A1E] to-[#8B6B2E] shadow-2xl" />
+                    {/* Page edge */}
+                    <div className="absolute -right-0.5 top-3 bottom-3 w-1.5 bg-gradient-to-l from-transparent to-[#E8D5A0]/8" />
+
+                    {/* Cover */}
+                    <div className="relative bg-gradient-to-b from-[#0E0B04] via-[#0A0803] to-[#060401] border border-[#2A1E08] shadow-[0_30px_90px_rgba(0,0,0,0.85)] aspect-[3/4] overflow-hidden flex flex-col">
+
+                      {/* Textura diagonal */}
+                      <svg className="absolute inset-0 w-full h-full opacity-[0.022]" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <pattern id="ebook-grain-home" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                            <line x1="0" y1="0" x2="0" y2="6" stroke="#C5A059" strokeWidth="0.5"/>
+                          </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#ebook-grain-home)"/>
+                      </svg>
+
+                      {/* Barras douradas — topo */}
+                      <div className="absolute top-0 left-0 right-0 z-10">
+                        <div className="h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+                        <div className="h-px mt-[3px] bg-gradient-to-r from-transparent via-[var(--gold)]/25 to-transparent" />
+                      </div>
+
+                      {/* Bordas ornamentais */}
+                      <div className="absolute inset-3 border border-[var(--gold)]/20 pointer-events-none z-10" />
+                      <div className="absolute inset-[18px] border border-[var(--gold)]/10 pointer-events-none z-10" />
+
+                      {/* Cantos SVG */}
+                      <div className="absolute top-3 left-3 z-10">
+                        <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><path d="M22 0 L0 0 L0 22" fill="none" stroke="var(--gold)" strokeWidth="1.2" strokeOpacity="0.45"/><path d="M22 5 L5 5 L5 22" fill="none" stroke="var(--gold)" strokeWidth="0.6" strokeOpacity="0.2"/><circle cx="5" cy="5" r="1.5" fill="var(--gold)" fillOpacity="0.4"/></svg>
+                      </div>
+                      <div className="absolute top-3 right-3 z-10">
+                        <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L22 0 L22 22" fill="none" stroke="var(--gold)" strokeWidth="1.2" strokeOpacity="0.45"/><path d="M0 5 L17 5 L17 22" fill="none" stroke="var(--gold)" strokeWidth="0.6" strokeOpacity="0.2"/><circle cx="17" cy="5" r="1.5" fill="var(--gold)" fillOpacity="0.4"/></svg>
+                      </div>
+                      <div className="absolute bottom-3 left-3 z-10">
+                        <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><path d="M22 22 L0 22 L0 0" fill="none" stroke="var(--gold)" strokeWidth="1.2" strokeOpacity="0.45"/><path d="M22 17 L5 17 L5 0" fill="none" stroke="var(--gold)" strokeWidth="0.6" strokeOpacity="0.2"/><circle cx="5" cy="17" r="1.5" fill="var(--gold)" fillOpacity="0.4"/></svg>
+                      </div>
+                      <div className="absolute bottom-3 right-3 z-10">
+                        <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><path d="M0 22 L22 22 L22 0" fill="none" stroke="var(--gold)" strokeWidth="1.2" strokeOpacity="0.45"/><path d="M0 17 L17 17 L17 0" fill="none" stroke="var(--gold)" strokeWidth="0.6" strokeOpacity="0.2"/><circle cx="17" cy="17" r="1.5" fill="var(--gold)" fillOpacity="0.4"/></svg>
+                      </div>
+
+                      {/* Conteúdo interior */}
+                      <div className="relative z-10 flex flex-col items-center justify-between flex-1 py-8 px-7 text-center">
+                        {/* Topo */}
+                        <div className="flex flex-col items-center gap-2">
+                          <p className="text-[var(--gold)]/50 text-[8px] uppercase tracking-[0.4em]">Portal Lusitano</p>
+                          <div className="flex items-center gap-2">
+                            <div className="h-px w-8 bg-gradient-to-r from-transparent to-[var(--gold)]/25" />
+                            <svg width="5" height="5" viewBox="0 0 5 5" xmlns="http://www.w3.org/2000/svg">
+                              <rect x="0.5" y="0.5" width="4" height="4" transform="rotate(45 2.5 2.5)" fill="none" stroke="var(--gold)" strokeWidth="0.8" strokeOpacity="0.4"/>
+                            </svg>
+                            <div className="h-px w-8 bg-gradient-to-l from-transparent to-[var(--gold)]/25" />
+                          </div>
+                        </div>
+
+                        {/* Logo central */}
+                        <div className="flex items-center justify-center flex-1 py-2">
+                          <div className="relative flex flex-col items-center">
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(197,160,89,0.12)_0%,transparent_65%)] scale-[2.5]" />
+                            <svg className="absolute inset-[-40%] w-[180%] h-[180%]" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="50" cy="50" r="44" fill="none" stroke="var(--gold)" strokeWidth="0.5" strokeOpacity="0.15" strokeDasharray="2 3"/>
+                            </svg>
+                            <Image src="/logo.webp" alt="Portal Lusitano" width={140} height={38} className="opacity-70 object-contain relative z-10" />
+                          </div>
+                        </div>
+
+                        {/* Título */}
+                        <div className="flex flex-col items-center">
+                          <div className="flex items-center gap-2.5 mb-3">
+                            <div className="h-px w-10 bg-gradient-to-r from-transparent to-[var(--gold)]/35" />
+                            <svg width="7" height="7" viewBox="0 0 7 7" xmlns="http://www.w3.org/2000/svg">
+                              <rect x="0.5" y="0.5" width="6" height="6" transform="rotate(45 3.5 3.5)" fill="none" stroke="var(--gold)" strokeWidth="0.9" strokeOpacity="0.55"/>
+                            </svg>
+                            <div className="h-px w-10 bg-gradient-to-l from-transparent to-[var(--gold)]/35" />
+                          </div>
+                          <p className="text-[var(--foreground-secondary)]/65 text-[8px] tracking-[0.45em] uppercase mb-2">Introdução ao</p>
+                          <h3 className="font-serif text-[var(--gold)] text-[1.35rem] sm:text-[1.55rem] tracking-[0.12em] leading-none uppercase">Cavalo</h3>
+                          <h3 className="font-serif text-[var(--gold)] text-[1.35rem] sm:text-[1.55rem] tracking-[0.12em] leading-none uppercase mb-3">Lusitano</h3>
+                          <div className="flex items-center mb-2">
+                            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[var(--gold)]/18" />
+                            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[var(--gold)]/18" />
+                          </div>
+                          <p className="text-[var(--foreground-muted)]/55 text-[7px] tracking-[0.3em] uppercase">O Guia Essencial · 2026</p>
+                        </div>
+                      </div>
+
+                      {/* Barras douradas — fundo */}
+                      <div className="absolute bottom-0 left-0 right-0 z-10">
+                        <div className="h-px mb-[3px] bg-gradient-to-r from-transparent via-[var(--gold)]/25 to-transparent" />
+                        <div className="h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* GRÁTIS badge */}
+                  <div className="absolute -top-3 -right-3 sm:-top-5 sm:-right-5 bg-[var(--gold)] text-black px-3 sm:px-5 py-1.5 sm:py-2.5 text-[10px] sm:text-xs font-bold shadow-lg">
+                    GRÁTIS
+                  </div>
+
+                  {/* Star rating */}
+                  <div className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 bg-[var(--background-secondary)] border border-[var(--border)] px-3 sm:px-4 py-2 sm:py-2.5 shadow-xl flex items-center gap-2 sm:gap-2.5">
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} size={11} className="fill-[var(--gold)] text-[var(--gold)]" />
+                      ))}
+                    </div>
+                    <span className="text-[var(--foreground)] text-[10px] sm:text-xs font-medium">4.9/5</span>
+                    <span className="text-[var(--foreground-muted)] text-[10px]">(234)</span>
+                  </div>
                 </div>
               </div>
 

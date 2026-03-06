@@ -939,6 +939,12 @@ html.light .leaflet-tooltip-portal::before {
   to   { width: 100%; }
 }
 
+/* Infinite ticker marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* Gold shimmer on hover */
 .shimmer-gold {
   position: relative;
