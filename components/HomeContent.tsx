@@ -617,147 +617,180 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
       </section>
 
       {/* ===== DISCOVER SECTION ===== */}
-      <section className="py-16 sm:py-32 px-4 sm:px-6 relative overflow-hidden" style={{ background: "#080808" }}>
-        {/* Atmospheric ambient glow */}
+      <section className="relative overflow-hidden" style={{ background: "#080808" }}>
+        {/* Ambient glow — top center */}
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 40% at 50% 100%, rgba(197,160,89,0.05) 0%, transparent 70%)" }}
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[1px] pointer-events-none"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(197,160,89,0.25), transparent)" }}
         />
 
-        <div className="max-w-6xl mx-auto relative z-10">
-          {/* Header */}
-          <RevealOnScroll variant="blur-up" className="text-center mb-12 sm:mb-20">
-            <div className="flex items-center justify-center gap-5 mb-5">
-              <div className="h-[1px] w-10 sm:w-16" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.5))" }} />
-              <span className="text-[9px] uppercase tracking-[0.55em] text-[var(--gold)]">
-                {tr("Descubra", "Discover", "Descubra")}
-              </span>
-              <div className="h-[1px] w-10 sm:w-16" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.5))" }} />
+        <div className="max-w-7xl mx-auto relative z-10">
+
+          {/* ── HEADER — split layout ── */}
+          <RevealOnScroll variant="fade-up">
+            <div
+              className="flex items-end gap-10 px-6 sm:px-12 pt-16 sm:pt-24 pb-10 sm:pb-14"
+              style={{ borderBottom: "1px solid rgba(197,160,89,0.1)" }}
+            >
+              {/* Ghost count — decorative huge number */}
+              <div
+                className="hidden lg:block flex-shrink-0 leading-none select-none font-serif"
+                style={{ fontSize: "clamp(90px, 11vw, 160px)", color: "rgba(197,160,89,0.06)", lineHeight: 0.85 }}
+              >
+                08
+              </div>
+
+              {/* Vertical gold rule */}
+              <div
+                className="hidden lg:block flex-shrink-0 w-[1px] self-stretch"
+                style={{ background: "linear-gradient(to bottom, transparent, rgba(197,160,89,0.2) 30%, rgba(197,160,89,0.2) 70%, transparent)" }}
+              />
+
+              {/* Title block */}
+              <div className="flex-1 pb-1">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-6 h-[1px] bg-[var(--gold)]" />
+                  <span className="text-[9px] uppercase tracking-[0.55em] text-[var(--gold)]">
+                    {tr("Descubra", "Discover", "Descubra")}
+                  </span>
+                </div>
+                <h2 className="font-serif text-white leading-none mb-4" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>
+                  {tr("Tudo Sobre", "Everything About", "Todo Sobre")}
+                  <br />
+                  <span style={{ color: "rgba(255,255,255,0.35)" }}>
+                    {tr("o Lusitano", "the Lusitano", "el Lusitano")}
+                  </span>
+                </h2>
+                <p className="text-white/30 text-sm max-w-md leading-relaxed">
+                  {tr(
+                    "A plataforma mais completa dedicada ao cavalo Lusitano",
+                    "The most complete platform dedicated to the Lusitano horse",
+                    "La plataforma más completa dedicada al caballo Lusitano"
+                  )}
+                </p>
+              </div>
             </div>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-serif text-white leading-tight mb-5">
-              {tr(
-                "Tudo Sobre o Lusitano",
-                "Everything About the Lusitano",
-                "Todo Sobre el Lusitano"
-              )}
-            </h2>
-            <p className="text-white/35 max-w-lg mx-auto text-sm leading-relaxed">
-              {tr(
-                "A plataforma mais completa dedicada ao cavalo Lusitano",
-                "The most complete platform dedicated to the Lusitano horse",
-                "La plataforma más completa dedicada al caballo Lusitano"
-              )}
-            </p>
           </RevealOnScroll>
 
-          {/* Featured top row — 2 large cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
-            {features.slice(0, 2).map((feature, i) => (
-              <RevealOnScroll key={feature.href} delay={i * 120} variant="fade-up">
+          {/* ── DESKTOP: editorial horizontal list ── */}
+          <div className="hidden sm:block">
+            {features.map((feature, i) => (
+              <RevealOnScroll key={feature.href} delay={i * 55} variant="fade-up">
                 <LocalizedLink
                   href={feature.href}
-                  className="group block relative overflow-hidden"
-                  style={{
-                    background: "#111",
-                    border: "1px solid rgba(197,160,89,0.12)",
-                    padding: "36px 32px 32px",
-                    minHeight: "210px",
-                  }}
+                  className="group relative flex items-center gap-8 lg:gap-12 px-6 sm:px-12 py-7 lg:py-9"
+                  style={{ borderBottom: "1px solid rgba(197,160,89,0.07)" }}
                 >
-                  {/* Hover radial glow from bottom */}
+                  {/* Hover: subtle background lift */}
                   <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                    style={{ background: "radial-gradient(ellipse 70% 60% at 50% 120%, rgba(197,160,89,0.09), transparent)" }}
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ background: "rgba(197,160,89,0.02)" }}
                   />
-                  {/* Top border sweep */}
+                  {/* Hover: left gold bar sweeps down */}
                   <div
-                    className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full transition-all duration-700 pointer-events-none"
-                    style={{ background: "linear-gradient(90deg, var(--gold), rgba(197,160,89,0.2), transparent)" }}
+                    className="absolute left-0 top-0 w-[2px] h-0 group-hover:h-full transition-all duration-500 pointer-events-none"
+                    style={{ background: "linear-gradient(to bottom, transparent, var(--gold) 40%, var(--gold) 60%, transparent)" }}
                   />
-                  {/* Ghost number watermark */}
+
+                  {/* Sequential number */}
                   <span
-                    className="absolute right-3 bottom-0 font-serif select-none pointer-events-none"
-                    style={{ fontSize: "130px", lineHeight: 1, color: "rgba(197,160,89,0.04)" }}
+                    className="flex-shrink-0 font-serif select-none transition-all duration-400 hidden lg:block"
+                    style={{
+                      fontSize: "clamp(32px, 3vw, 48px)",
+                      lineHeight: 1,
+                      color: "rgba(197,160,89,0.1)",
+                      width: "60px",
+                      textAlign: "right",
+                    }}
                   >
-                    0{i + 1}
+                    {String(i + 1).padStart(2, "0")}
                   </span>
 
-                  <div className="relative z-10 h-full flex flex-col">
-                    {/* Icon box */}
-                    <div
-                      className="w-10 h-10 flex items-center justify-center mb-6 flex-shrink-0"
-                      style={{ border: "1px solid rgba(197,160,89,0.22)", background: "rgba(197,160,89,0.06)" }}
-                    >
-                      <feature.icon size={17} className="text-[var(--gold)]" />
-                    </div>
-                    <h3 className="text-xl sm:text-2xl font-serif text-white mb-2.5 group-hover:text-[var(--gold)] transition-colors duration-300 leading-tight">
-                      {feature.title}
-                    </h3>
-                    <p className="text-white/40 text-sm leading-relaxed mb-6 max-w-xs flex-1">
-                      {feature.desc}
-                    </p>
-                    <div className="flex items-center gap-2.5 text-[10px] uppercase tracking-[0.35em] text-[var(--gold)]/45 group-hover:text-[var(--gold)] transition-colors duration-300">
-                      <div className="h-[1px] w-4 bg-current transition-all duration-500 group-hover:w-7" />
-                      {tr("Explorar", "Explore", "Explorar")}
-                    </div>
-                  </div>
-                </LocalizedLink>
-              </RevealOnScroll>
-            ))}
-          </div>
+                  {/* Expanding connector line */}
+                  <div
+                    className="hidden lg:block flex-shrink-0 h-[1px] w-6 group-hover:w-10 transition-all duration-500"
+                    style={{ background: "rgba(197,160,89,0.2)" }}
+                  />
 
-          {/* Remaining 6 cards in 3-column grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-            {features.slice(2).map((feature, i) => (
-              <RevealOnScroll key={feature.href} delay={i * 80} variant="fade-up">
-                <LocalizedLink
-                  href={feature.href}
-                  className="group block relative overflow-hidden"
-                  style={{
-                    background: "#111",
-                    border: "1px solid rgba(197,160,89,0.09)",
-                    padding: "24px 20px 20px",
-                    minHeight: "150px",
-                  }}
-                >
-                  {/* Hover glow */}
+                  {/* Icon */}
                   <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                    style={{ background: "radial-gradient(ellipse 100% 80% at 50% 130%, rgba(197,160,89,0.07), transparent)" }}
-                  />
-                  {/* Top border sweep */}
-                  <div
-                    className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full transition-all duration-500 pointer-events-none"
-                    style={{ background: "linear-gradient(90deg, var(--gold), transparent)" }}
-                  />
-                  {/* Ghost number */}
-                  <span
-                    className="absolute right-2 bottom-0 font-serif select-none pointer-events-none"
-                    style={{ fontSize: "82px", lineHeight: 1, color: "rgba(197,160,89,0.045)" }}
+                    className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                    style={{ border: "1px solid rgba(197,160,89,0.18)", background: "rgba(197,160,89,0.05)" }}
                   >
-                    0{i + 3}
-                  </span>
-
-                  <div className="relative z-10">
                     <feature.icon
                       size={15}
-                      className="text-[var(--gold)] mb-4 opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                      className="text-[var(--gold)] opacity-70 group-hover:opacity-100 transition-opacity duration-300"
                     />
-                    <h3 className="text-sm sm:text-base font-serif text-white mb-1.5 group-hover:text-[var(--gold)] transition-colors duration-300 leading-tight">
-                      {feature.title}
-                    </h3>
-                    <p className="hidden sm:block text-white/30 text-xs leading-relaxed mb-4">
-                      {feature.desc}
-                    </p>
-                    <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.3em] text-[var(--gold)]/35 group-hover:text-[var(--gold)]/75 transition-colors duration-300 mt-2 sm:mt-0">
-                      <div className="h-[1px] w-3 bg-current transition-all duration-500 group-hover:w-5" />
-                      {tr("Explorar", "Explore", "Explorar")}
-                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h3
+                    className="flex-shrink-0 font-serif text-white group-hover:text-[var(--gold)] transition-colors duration-300 leading-tight"
+                    style={{ fontSize: "clamp(1rem, 1.8vw, 1.35rem)", width: "clamp(160px, 20vw, 220px)" }}
+                  >
+                    {feature.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="flex-1 text-white/30 text-sm leading-relaxed group-hover:text-white/50 transition-colors duration-300 hidden md:block">
+                    {feature.desc}
+                  </p>
+
+                  {/* CTA */}
+                  <div className="flex-shrink-0 flex items-center gap-3 text-[10px] uppercase tracking-[0.38em] text-[var(--gold)]/35 group-hover:text-[var(--gold)] transition-colors duration-300">
+                    <span>{tr("Explorar", "Explore", "Explorar")}</span>
+                    <div className="h-[1px] w-4 group-hover:w-9 bg-current transition-all duration-500" />
                   </div>
                 </LocalizedLink>
               </RevealOnScroll>
             ))}
+            {/* Bottom line */}
+            <div className="mx-6 sm:mx-12 h-[1px]" style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.15), transparent)" }} />
           </div>
+
+          {/* ── MOBILE: compact 2-col cards ── */}
+          <div className="sm:hidden px-3 pt-6 pb-10">
+            <div className="grid grid-cols-2 gap-2">
+              {features.map((feature, i) => (
+                <RevealOnScroll key={feature.href} delay={i * 55} variant="fade-up">
+                  <LocalizedLink
+                    href={feature.href}
+                    className="group block relative overflow-hidden"
+                    style={{
+                      background: "#111",
+                      border: "1px solid rgba(197,160,89,0.1)",
+                      padding: "18px 16px 16px",
+                      minHeight: "130px",
+                    }}
+                  >
+                    {/* Top sweep */}
+                    <div
+                      className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full transition-all duration-500 pointer-events-none"
+                      style={{ background: "linear-gradient(90deg, var(--gold), transparent)" }}
+                    />
+                    {/* Ghost number */}
+                    <span
+                      className="absolute right-1 bottom-0 font-serif select-none pointer-events-none"
+                      style={{ fontSize: "70px", lineHeight: 1, color: "rgba(197,160,89,0.05)" }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="relative z-10">
+                      <feature.icon size={14} className="text-[var(--gold)] mb-3 opacity-60" />
+                      <h3 className="text-[13px] font-serif text-white leading-tight mb-1 group-hover:text-[var(--gold)] transition-colors duration-300">
+                        {feature.title}
+                      </h3>
+                      <div className="flex items-center gap-1.5 mt-2.5 text-[8px] uppercase tracking-[0.28em] text-[var(--gold)]/35 group-hover:text-[var(--gold)]/70 transition-colors duration-300">
+                        <div className="h-[1px] w-3 bg-current" />
+                        {tr("Explorar", "Explore", "Explorar")}
+                      </div>
+                    </div>
+                  </LocalizedLink>
+                </RevealOnScroll>
+              ))}
+            </div>
+          </div>
+
         </div>
       </section>
 

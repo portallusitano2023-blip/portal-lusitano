@@ -148,7 +148,7 @@ export default function ArticlePageClient({
             <li aria-hidden="true" className="text-[var(--gold)]/40">
               /
             </li>
-            <li className="text-[var(--foreground-secondary)] truncate max-w-[200px] sm:max-w-xs">
+            <li className="text-[var(--foreground-secondary)] truncate max-w-[150px] sm:max-w-xs md:max-w-none">
               {localArticle.title}
             </li>
           </ol>

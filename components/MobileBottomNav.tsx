@@ -3,12 +3,10 @@
 import { memo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingCart, Heart, User, Wrench } from "lucide-react";
-import { useHorseFavorites } from "@/context/HorseFavoritesContext";
+import { Home, ShoppingCart, ShoppingBag, User, Wrench } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 export default memo(function MobileBottomNav() {
   const pathname = usePathname();
-  const { favoritesCount } = useHorseFavorites();
   const { t } = useLanguage();
   // Don't show on certain pages
   const hiddenPaths = ["/studio", "/admin"];
@@ -41,11 +39,10 @@ export default memo(function MobileBottomNav() {
       isActive: pathname.startsWith("/comprar") || pathname === "/marketplace",
     },
     {
-      href: "/cavalos-favoritos",
-      icon: Heart,
-      label: t.mobile_nav.favorites,
-      isActive: pathname === "/cavalos-favoritos" || pathname === "/favoritos",
-      badge: favoritesCount > 0 ? favoritesCount : undefined,
+      href: "/loja",
+      icon: ShoppingBag,
+      label: t.mobile_nav.shop,
+      isActive: pathname.startsWith("/loja"),
     },
     {
       href: "/minha-conta",
@@ -79,11 +76,6 @@ export default memo(function MobileBottomNav() {
             >
               <div className="relative">
                 <item.icon size={24} strokeWidth={item.isActive ? 2 : 1.5} />
-                {item.badge && (
-                  <span className="absolute -top-1 -right-2 w-5 h-5 bg-[var(--gold)] rounded-full flex items-center justify-center text-[10px] text-black font-bold">
-                    {item.badge > 9 ? "9+" : item.badge}
-                  </span>
-                )}
               </div>
               <span
                 className={`text-[10px] font-medium ${item.isActive ? "text-[var(--gold)]" : ""}`}

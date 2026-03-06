@@ -152,7 +152,7 @@ export default function NewsletterPopup() {
           role="dialog"
           aria-modal="true"
           aria-label={language === "en" ? "Newsletter subscription" : language === "es" ? "Suscripción al boletín" : "Subscrição da newsletter"}
-          className="relative w-full max-w-[720px] pointer-events-auto overflow-hidden"
+          className="relative w-full max-w-[95vw] sm:max-w-[85vw] md:max-w-[720px] pointer-events-auto overflow-hidden"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.97)",
@@ -161,10 +161,10 @@ export default function NewsletterPopup() {
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-[45%_55%] min-h-[480px]">
+          <div className="grid grid-cols-1 sm:grid-cols-[45%_55%] min-h-[420px] sm:min-h-[480px]">
 
             {/* ── LEFT PANEL — Atmospheric ──────────────────────── */}
-            <div className="relative hidden sm:flex flex-col justify-between p-8 overflow-hidden min-h-[480px]">
+            <div className="relative hidden sm:flex flex-col justify-between p-6 sm:p-8 overflow-hidden min-h-[420px] sm:min-h-[480px]">
               {/* Background image */}
               <div className="absolute inset-0">
                 <Image
@@ -233,7 +233,7 @@ export default function NewsletterPopup() {
 
             {/* ── RIGHT PANEL — Form ────────────────────────────── */}
             <div
-              className="relative flex flex-col justify-center p-7 sm:p-10"
+              className="relative flex flex-col justify-center p-5 sm:p-7 md:p-10"
               style={{ background: "var(--background)", borderLeft: "1px solid rgba(197,160,89,0.12)" }}
             >
               {/* Top gold line */}

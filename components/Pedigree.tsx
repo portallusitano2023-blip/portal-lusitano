@@ -38,10 +38,10 @@ interface PedigreeProps {
 export default function Pedigree({ cavalo }: PedigreeProps) {
   return (
     <div className="w-full overflow-x-auto py-12 border border-[var(--background-secondary)] bg-[var(--background)]">
-      <div className="flex items-center justify-center min-w-[580px] gap-4 sm:gap-8 px-4 sm:px-8">
+      <div className="flex items-center justify-center w-full min-w-0 gap-2 sm:gap-4 md:gap-8 px-4 sm:px-6 md:px-8">
         {/* COLUNA 1: O Cavalo (HERÓI) */}
         <div className="flex flex-col justify-center">
-          <div className="border border-[var(--gold)] bg-[var(--gold)]/10 p-6 min-w-[200px] relative">
+          <div className="border border-[var(--gold)] bg-[var(--gold)]/10 p-4 sm:p-6 min-w-[140px] sm:min-w-[200px] relative">
             <span className="text-[var(--gold)] text-[9px] uppercase tracking-[0.4em] font-bold block mb-2">
               O Exemplar
             </span>
@@ -53,10 +53,10 @@ export default function Pedigree({ cavalo }: PedigreeProps) {
         </div>
 
         {/* Conector Central */}
-        <div className="h-px w-10 bg-[var(--border)]"></div>
+        <div className="h-px w-2 sm:w-4 md:w-10 bg-[var(--border)]"></div>
 
         {/* COLUNA 2: Pais (Sire & Dam) */}
-        <div className="flex flex-col gap-16 relative">
+        <div className="flex flex-col gap-6 sm:gap-10 md:gap-16 relative">
           {/* Linhas de conexão verticais */}
           <div className="absolute left-0 top-1/4 bottom-1/4 w-px bg-[var(--border)] -ml-5 border-l border-[var(--border)]"></div>
           <div className="absolute left-0 top-1/4 w-5 h-px bg-[var(--border)] -ml-5"></div>
@@ -66,34 +66,34 @@ export default function Pedigree({ cavalo }: PedigreeProps) {
           <div className="relative">
             <AncestorCard type="Pai (Sire)" name={cavalo.pai} reg="LUS-2938" />
             {/* Conector para Avós */}
-            <div className="absolute -right-8 top-1/2 w-8 h-px bg-[var(--border)]"></div>
+            <div className="absolute -right-2 sm:-right-4 md:-right-8 top-1/2 w-2 sm:w-4 md:w-8 h-px bg-[var(--border)]"></div>
           </div>
 
           {/* MÃE */}
           <div className="relative">
             <AncestorCard type="Mãe (Dam)" name={cavalo.mae} reg="LUS-1102" isFemale={true} />
             {/* Conector para Avós */}
-            <div className="absolute -right-8 top-1/2 w-8 h-px bg-[var(--border)]"></div>
+            <div className="absolute -right-2 sm:-right-4 md:-right-8 top-1/2 w-2 sm:w-4 md:w-8 h-px bg-[var(--border)]"></div>
           </div>
         </div>
 
         {/* COLUNA 3: Avós (Grandparents) - Simulados visualmente */}
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2 mb-8 relative">
+        <div className="flex flex-col gap-2 sm:gap-3 md:gap-4">
+          <div className="flex flex-col gap-1.5 sm:gap-2 mb-4 sm:mb-8 relative">
             {/* Conectores */}
-            <div className="absolute left-0 top-1/4 bottom-1/4 w-px bg-[var(--border)] -ml-4"></div>
-            <div className="absolute left-0 top-1/4 w-4 h-px bg-[var(--border)] -ml-4"></div>
-            <div className="absolute left-0 bottom-1/4 w-4 h-px bg-[var(--border)] -ml-4"></div>
+            <div className="absolute left-0 top-1/4 bottom-1/4 w-px bg-[var(--border)] -ml-2 sm:-ml-3 md:-ml-4"></div>
+            <div className="absolute left-0 top-1/4 w-2 sm:w-3 md:w-4 h-px bg-[var(--border)] -ml-2 sm:-ml-3 md:-ml-4"></div>
+            <div className="absolute left-0 bottom-1/4 w-2 sm:w-3 md:w-4 h-px bg-[var(--border)] -ml-2 sm:-ml-3 md:-ml-4"></div>
 
             <AncestorCard type="Avô Paterno" name="Zimbro" reg="VEIGA" />
             <AncestorCard type="Avó Paterna" name="Xarola" reg="VEIGA" isFemale={true} />
           </div>
 
-          <div className="flex flex-col gap-2 relative">
+          <div className="flex flex-col gap-1.5 sm:gap-2 relative">
             {/* Conectores */}
-            <div className="absolute left-0 top-1/4 bottom-1/4 w-px bg-[var(--border)] -ml-4"></div>
-            <div className="absolute left-0 top-1/4 w-4 h-px bg-[var(--border)] -ml-4"></div>
-            <div className="absolute left-0 bottom-1/4 w-4 h-px bg-[var(--border)] -ml-4"></div>
+            <div className="absolute left-0 top-1/4 bottom-1/4 w-px bg-[var(--border)] -ml-2 sm:-ml-3 md:-ml-4"></div>
+            <div className="absolute left-0 top-1/4 w-2 sm:w-3 md:w-4 h-px bg-[var(--border)] -ml-2 sm:-ml-3 md:-ml-4"></div>
+            <div className="absolute left-0 bottom-1/4 w-2 sm:w-3 md:w-4 h-px bg-[var(--border)] -ml-2 sm:-ml-3 md:-ml-4"></div>
 
             <AncestorCard type="Avô Materno" name="Uivador" reg="ANDRADE" />
             <AncestorCard type="Avó Materna" name="Toleirona" reg="ANDRADE" isFemale={true} />

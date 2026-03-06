@@ -70,7 +70,7 @@ export const CardProfissional = React.memo(function CardProfissional({
               {CategoriaIcon && (
                 <CategoriaIcon size={11} className="text-[var(--gold)]/70 flex-shrink-0" />
               )}
-              <span className="text-[10px] text-[var(--gold)] font-medium uppercase tracking-wide truncate">
+              <span className="text-[10px] text-[var(--gold)] font-medium uppercase tracking-wide truncate max-w-[90px] sm:max-w-[120px] md:max-w-none">
                 {categoriaLabel}
               </span>
             </div>
