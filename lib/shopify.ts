@@ -114,6 +114,8 @@ async function shopifyRequest(
     logger.warn(`[Shopify] Missing domain or access token — skipping ${label}`);
     return { data: null };
   }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8_000);
   try {
     const response = await fetch(SHOPIFY_ENDPOINT, {
       method: "POST",
@@ -122,14 +124,17 @@ async function shopifyRequest(
         "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
       },
       body: JSON.stringify({ query, variables }),
+      signal: controller.signal,
       ...cacheOptions,
     });
+    clearTimeout(timeout);
     if (!response.ok) {
       logger.error(`[Shopify] ${label} HTTP ${response.status}: ${response.statusText}`);
       return { data: null };
     }
     return await response.json();
   } catch (error) {
+    clearTimeout(timeout);
     logger.error(`[Shopify] ${label} error:`, error);
     return { data: null };
   }
