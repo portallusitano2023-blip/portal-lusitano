@@ -519,31 +519,31 @@ function CoudelariaCard({
         </div>
 
         {/* Content (bottom overlay) */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-          <h3 className="text-xl sm:text-2xl font-serif text-white mb-2 group-hover:text-[var(--gold)] transition-colors duration-300">
+        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+          <h3 className="text-base sm:text-2xl font-serif text-white mb-1.5 sm:mb-2 group-hover:text-[var(--gold)] transition-colors duration-300 line-clamp-1 sm:line-clamp-none">
             {coudelaria.nome}
           </h3>
 
-          <div className="flex flex-wrap items-center gap-3 text-white/70 text-sm mb-3">
-            <span className="flex items-center gap-1.5">
-              <MapPin size={13} className="text-[var(--gold)]" aria-hidden="true" />
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-white/70 text-xs sm:text-sm mb-2 sm:mb-3">
+            <span className="flex items-center gap-1">
+              <MapPin size={11} className="text-[var(--gold)] flex-shrink-0" aria-hidden="true" />
               {coudelaria.localizacao}, {coudelaria.regiao}
             </span>
             {coudelaria.num_cavalos && (
-              <span className="flex items-center gap-1.5">
+              <span className="hidden sm:flex items-center gap-1.5">
                 <Users size={13} className="text-[var(--gold)]" aria-hidden="true" />
                 {coudelaria.num_cavalos} {t.directorio.horses}
               </span>
             )}
           </div>
 
-          <p className="text-white/60 line-clamp-2 mb-4 text-sm leading-relaxed">
+          <p className="text-white/60 line-clamp-1 sm:line-clamp-2 mb-2 sm:mb-4 text-xs sm:text-sm leading-relaxed">
             {coudelaria.descricao}
           </p>
 
-          {/* Especialidades */}
+          {/* Especialidades — hidden on mobile */}
           {coudelaria.especialidades?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-4">
+            <div className="hidden sm:flex flex-wrap gap-1.5 mb-4">
               {coudelaria.especialidades.slice(0, 3).map((esp) => (
                 <span
                   key={esp}
@@ -560,10 +560,10 @@ function CoudelariaCard({
             </div>
           )}
 
-          <div className="flex items-center gap-2 text-[var(--gold)] text-sm font-medium">
+          <div className="flex items-center gap-1.5 text-[var(--gold)] text-xs sm:text-sm font-medium">
             {t.directorio.view_stud || t.directorio.view_details}
             <ArrowRight
-              size={15}
+              size={13}
               className="group-hover:translate-x-1.5 transition-transform duration-300"
               aria-hidden="true"
             />
