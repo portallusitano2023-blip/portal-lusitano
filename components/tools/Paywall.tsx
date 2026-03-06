@@ -74,48 +74,60 @@ export default function Paywall({
     const loginHref = `/login?returnUrl=${encodeURIComponent(pathname)}`;
 
     return (
-      <div className="relative rounded-2xl overflow-hidden my-4">
-        {/* Blurred content behind */}
-        <div className="blur-sm pointer-events-none select-none opacity-30 min-h-[280px] bg-[var(--background-secondary)]/50 rounded-2xl" />
+      <div className="relative rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--background-card)] to-[var(--background-secondary)]/30 overflow-hidden my-4">
+        {/* Subtle gold ambient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-[var(--gold)]/8 rounded-full blur-[60px] pointer-events-none" aria-hidden="true" />
 
-        {/* Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          {/* Gradient glow */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/85 to-transparent rounded-2xl" />
-
-          <div className="relative z-10 w-full max-w-sm mx-auto px-6 py-8 text-center">
-            {/* Icon */}
-            <div className="relative mb-6 flex justify-center">
-              <div className="w-16 h-16 bg-[var(--gold)]/15 rounded-2xl flex items-center justify-center border border-[var(--gold)]/30 shadow-lg shadow-[var(--gold)]/10">
+        <div className="relative z-10 w-full px-6 py-8 sm:px-8 text-center">
+          {/* Icon with glow */}
+          <div className="flex justify-center mb-5">
+            <div className="relative">
+              <div className="absolute inset-0 bg-[var(--gold)]/20 rounded-2xl blur-lg" />
+              <div className="relative w-16 h-16 bg-gradient-to-br from-[var(--gold)]/20 to-[var(--gold)]/5 rounded-2xl flex items-center justify-center border border-[var(--gold)]/35 shadow-lg shadow-[var(--gold)]/15">
                 <Lock className="text-[var(--gold)]" size={26} />
               </div>
             </div>
+          </div>
 
-            <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
-              Crie uma conta gratuita
-            </h3>
-            <p className="text-sm text-[var(--foreground-secondary)] mb-1">
-              Crie uma conta gratuita para começar a usar a {toolName}.
-            </p>
-            <p className="text-xs text-[var(--foreground-muted)] mb-6">
-              Receberá 1 uso grátis — sem cartão de crédito.
-            </p>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--gold)]/10 border border-[var(--gold)]/25 rounded-full mb-4">
+            <span className="text-[var(--gold)] text-[10px] font-bold uppercase tracking-widest">
+              1 uso gratuito
+            </span>
+          </div>
 
-            <div className="flex flex-col gap-3">
-              <LocalizedLink
-                href={registerHref}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black font-semibold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all shadow-lg shadow-[var(--gold)]/20 hover:shadow-[var(--gold)]/30 hover:-translate-y-0.5 active:translate-y-0"
-              >
-                Criar Conta Grátis
-                <ArrowRight size={16} />
-              </LocalizedLink>
-              <LocalizedLink
-                href={loginHref}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[var(--border)] text-[var(--foreground-secondary)] rounded-xl hover:border-[var(--gold)]/40 hover:text-[var(--foreground)] transition-colors text-sm"
-              >
-                Já tenho conta
-              </LocalizedLink>
-            </div>
+          <h3 className="text-xl font-serif text-[var(--foreground)] mb-2">
+            Crie uma conta para começar
+          </h3>
+          <p className="text-sm text-[var(--foreground-secondary)] mb-4 leading-relaxed">
+            Aceda à <strong className="text-[var(--foreground)]">{toolName}</strong> gratuitamente.<br />
+            Sem cartão de crédito — leva menos de 1 minuto.
+          </p>
+
+          {/* Value bullets */}
+          <div className="flex items-center justify-center gap-4 sm:gap-6 mb-6">
+            {["1 uso grátis", "Sem cartão", "Resultado em 3 min"].map((v) => (
+              <div key={v} className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-[var(--foreground-muted)]">
+                <Check size={10} className="text-emerald-400 flex-shrink-0" />
+                {v}
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <LocalizedLink
+              href={registerHref}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[48px] bg-gradient-to-r from-[var(--gold)] to-[#D4B068] text-black font-bold rounded-xl hover:from-[#D4B068] hover:to-[#E8D5A3] transition-all shadow-lg shadow-[var(--gold)]/25 hover:shadow-[var(--gold)]/40 hover:-translate-y-0.5 active:translate-y-0 text-sm"
+            >
+              Criar Conta Grátis
+              <ArrowRight size={16} />
+            </LocalizedLink>
+            <LocalizedLink
+              href={loginHref}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border border-[var(--border)] text-[var(--foreground-secondary)] rounded-xl hover:border-[var(--gold)]/40 hover:text-[var(--foreground)] transition-colors text-sm"
+            >
+              Já tenho conta — entrar
+            </LocalizedLink>
           </div>
         </div>
       </div>
@@ -123,26 +135,19 @@ export default function Paywall({
   }
 
   return (
-    <div className="relative rounded-2xl overflow-hidden my-4">
-      {/* Blurred background */}
-      <div className="blur-sm pointer-events-none select-none opacity-40 min-h-[320px] bg-[var(--background-secondary)]/50 rounded-2xl overflow-hidden">
-        {previewContent || (
-          <div className="p-6 space-y-4">
-            <div className="h-6 bg-[var(--foreground)]/10 rounded w-3/4" />
-            <div className="h-4 bg-[var(--foreground)]/8 rounded w-full" />
-            <div className="h-4 bg-[var(--foreground)]/8 rounded w-5/6" />
-            <div className="h-32 bg-[var(--foreground)]/5 rounded-lg" />
-            <div className="h-4 bg-[var(--foreground)]/8 rounded w-2/3" />
-          </div>
-        )}
-      </div>
+    <div className="relative rounded-2xl border border-[var(--gold)]/25 bg-gradient-to-b from-[var(--background-card)] to-[var(--background-secondary)]/30 overflow-hidden my-4">
+      {/* Blurred preview — decorative only, doesn't affect layout */}
+      {previewContent && (
+        <div className="blur-sm pointer-events-none select-none opacity-20 absolute inset-0 overflow-hidden rounded-2xl">
+          {previewContent}
+        </div>
+      )}
 
-      {/* Overlay */}
-      <div className="absolute inset-0 flex items-center justify-center z-10">
-        {/* Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/88 to-transparent rounded-2xl" />
+      {/* Ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-56 h-56 bg-[var(--gold)]/8 rounded-full blur-[70px] pointer-events-none" aria-hidden="true" />
 
-        <div className="relative z-10 w-full max-w-sm mx-auto px-6 py-8">
+      {/* Content — determines height, no absolute positioning */}
+      <div className="relative z-10 w-full max-w-sm mx-auto px-6 py-8 sm:px-8">
           {/* Header */}
           <div className="text-center mb-6">
             {/* Crown icon with glow */}
@@ -226,7 +231,6 @@ export default function Paywall({
             </p>
           )}
         </div>
-      </div>
     </div>
   );
 }
