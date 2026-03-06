@@ -38,7 +38,27 @@ import {
 } from "lucide-react";
 import type { ProductListing } from "@/types/product";
 
-export default function HomeContent({ featuredProduct }: { featuredProduct?: ProductListing | null }) {
+export interface HomeProfissional {
+  id: string;
+  nome: string;
+  especialidade: string;
+  categoria: string;
+  localizacao: string;
+  avaliacao: number;
+  numAvaliacoes: number;
+  fotoUrl?: string | null;
+  nivelVerificacao: string;
+  destaque?: boolean;
+  slug?: string;
+}
+
+export default function HomeContent({
+  featuredProduct,
+  profissionais = [],
+}: {
+  featuredProduct?: ProductListing | null;
+  profissionais?: HomeProfissional[];
+}) {
   const { language, t } = useLanguage();
   // createTranslator returns a pure function of language — memoize it so
   // the same reference is reused across renders when language is unchanged.
@@ -574,44 +594,157 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
       </section>
 
       {/* ===== QUALITIES GRID — Lusitano Essence ===== */}
-      <section className="block py-10 sm:py-28 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
-          <RevealOnScroll className="text-center mb-14">
-            <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3 block">
-              {tr("A Essência", "The Essence", "La Esencia")}
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-serif text-[var(--foreground)] mb-4">
-              {tr(
-                "O Que Define o Lusitano",
-                "What Defines the Lusitano",
-                "Lo Que Define al Lusitano"
-              )}
-            </h2>
-            <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent mx-auto" />
+      <section className="relative overflow-hidden py-10 sm:py-24 border-t border-[var(--border)]">
+        {/* Ambient radial glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(197,160,89,0.04) 0%, transparent 70%)" }}
+        />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          {/* ── Header — editorial split ── */}
+          <RevealOnScroll variant="fade-up">
+            <div className="flex items-end gap-8 lg:gap-12 mb-10 sm:mb-14">
+              {/* Ghost count */}
+              <div
+                className="hidden lg:block flex-shrink-0 font-serif leading-none select-none"
+                style={{ fontSize: "clamp(80px, 9vw, 130px)", color: "rgba(197,160,89,0.05)", lineHeight: 0.9 }}
+                aria-hidden="true"
+              >
+                07
+              </div>
+              <div
+                className="hidden lg:block flex-shrink-0 w-[1px] self-stretch"
+                style={{ background: "linear-gradient(to bottom, transparent, rgba(197,160,89,0.2) 30%, rgba(197,160,89,0.2) 70%, transparent)" }}
+              />
+              <div className="pb-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-6 h-[1px] bg-[var(--gold)]" />
+                  <span className="text-[9px] uppercase tracking-[0.55em] text-[var(--gold)]">
+                    {tr("A Essência", "The Essence", "La Esencia")}
+                  </span>
+                </div>
+                <h2
+                  className="font-serif text-[var(--foreground)] leading-none"
+                  style={{ fontSize: "clamp(1.8rem, 4vw, 3.2rem)" }}
+                >
+                  {tr("O Que Define", "What Defines", "Lo Que Define")}
+                  <br />
+                  <span className="text-[var(--foreground-muted)]/40">
+                    {tr("o Lusitano", "the Lusitano", "el Lusitano")}
+                  </span>
+                </h2>
+              </div>
+            </div>
           </RevealOnScroll>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+          {/* ── Desktop: editorial sharp grid (no gaps — separated by gap-px) ── */}
+          <div
+            className="hidden sm:grid sm:grid-cols-3 lg:grid-cols-4 gap-px"
+            style={{ background: "rgba(197,160,89,0.08)" }}
+          >
             {galleryItems.map((item, index) => (
-              <RevealOnScroll
-                key={item.label}
-                className={`group relative bg-[var(--background-card)] border border-[var(--border)] rounded-lg p-6 sm:p-8 flex flex-col items-center text-center gap-4 hover:border-[var(--gold)]/30 transition-all duration-500 ${index === galleryItems.length - 1 && galleryItems.length % 2 !== 0 ? "col-span-2 sm:col-span-1" : ""}`}
-              >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-[var(--gold)]/20 flex items-center justify-center group-hover:border-[var(--gold)]/50 group-hover:bg-[var(--gold)]/5 transition-all duration-500">
-                  <item.icon
-                    size={22}
-                    className="text-[var(--gold)] group-hover:scale-110 transition-transform duration-300"
+              <RevealOnScroll key={item.label} delay={index * 55} variant="fade-up">
+                <div
+                  className="group relative overflow-hidden flex flex-col justify-between p-7 lg:p-9 min-h-[210px] cursor-default transition-all duration-500"
+                  style={{ background: "var(--background)" }}
+                >
+                  {/* Hover fill */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ background: "rgba(197,160,89,0.03)" }}
                   />
-                </div>
-                <div>
-                  <p className="text-[var(--foreground)] font-serif text-lg sm:text-xl mb-1">
-                    {item.value}
-                  </p>
-                  <p className="text-[var(--foreground-muted)] text-[9px] sm:text-[10px] uppercase tracking-[0.25em]">
-                    {item.label}
-                  </p>
+                  {/* Bottom gold border on hover */}
+                  <div className="absolute bottom-0 left-0 h-[1px] w-0 group-hover:w-full transition-all duration-500 pointer-events-none bg-[var(--gold)]/30" />
+                  {/* Left gold bar on hover */}
+                  <div className="absolute left-0 top-0 w-[2px] h-0 group-hover:h-full transition-all duration-500 pointer-events-none bg-[var(--gold)]/50" />
+
+                  {/* Ghost ordinal watermark */}
+                  <span
+                    className="absolute bottom-1 right-3 font-serif select-none pointer-events-none transition-opacity duration-500 opacity-100 group-hover:opacity-60"
+                    aria-hidden="true"
+                    style={{ fontSize: "90px", color: "rgba(197,160,89,0.06)", lineHeight: 1 }}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  {/* Top row: icon box + expanding line */}
+                  <div className="flex items-center justify-between relative z-10">
+                    <div
+                      className="w-8 h-8 flex items-center justify-center transition-all duration-300"
+                      style={{ border: "1px solid rgba(197,160,89,0.15)", background: "rgba(197,160,89,0.04)" }}
+                    >
+                      <item.icon
+                        size={13}
+                        className="text-[var(--gold)] opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                      />
+                    </div>
+                    <div className="h-[1px] w-0 group-hover:w-8 transition-all duration-500 bg-[var(--gold)]/30" />
+                  </div>
+
+                  {/* Bottom: value + label */}
+                  <div className="relative z-10 mt-6">
+                    <p
+                      className="font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors duration-400 leading-none mb-3"
+                      style={{ fontSize: "clamp(1.4rem, 1.9vw, 1.8rem)" }}
+                    >
+                      {item.value}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-[1px] bg-[var(--gold)]/25 group-hover:bg-[var(--gold)]/60 group-hover:w-5 transition-all duration-300" />
+                      <p className="text-[9px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] group-hover:text-[var(--gold)]/50 transition-colors duration-300">
+                        {item.label}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </RevealOnScroll>
             ))}
+          </div>
+
+          {/* ── Mobile: horizontal snap scroll ── */}
+          <div className="sm:hidden overflow-x-auto scrollbar-hide -mx-4 px-4 pb-3 snap-x snap-mandatory">
+            <div className="flex gap-2.5" style={{ width: "max-content" }}>
+              {galleryItems.map((item, index) => (
+                <div
+                  key={item.label}
+                  className="flex-none snap-start flex flex-col justify-between p-5 relative overflow-hidden"
+                  style={{
+                    width: "148px",
+                    minHeight: "170px",
+                    background: "#0a0a0a",
+                    border: "1px solid rgba(197,160,89,0.12)",
+                  }}
+                >
+                  {/* Ghost number */}
+                  <span
+                    className="absolute bottom-1 right-2 font-serif select-none pointer-events-none"
+                    aria-hidden="true"
+                    style={{ fontSize: "64px", color: "rgba(197,160,89,0.07)", lineHeight: 1 }}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div
+                    className="w-7 h-7 flex items-center justify-center"
+                    style={{ border: "1px solid rgba(197,160,89,0.2)" }}
+                  >
+                    <item.icon size={12} className="text-[var(--gold)] opacity-70" />
+                  </div>
+                  <div className="relative z-10 mt-5">
+                    <p className="font-serif text-white text-[1.15rem] leading-tight mb-2">
+                      {item.value}
+                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-[1px] bg-[var(--gold)]/30" />
+                      <p className="text-[8px] uppercase tracking-[0.25em] text-white/30">
+                        {item.label}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -1007,6 +1140,206 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
           </RevealOnScroll>
         </div>
       </section>
+
+      {/* ===== PROFISSIONAIS VERIFICADOS ===== */}
+      {profissionais.length > 0 && (
+        <section className="py-10 sm:py-24 border-t border-[var(--border)]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <RevealOnScroll variant="fade-up">
+              <div className="flex items-end justify-between mb-8 sm:mb-12">
+                <div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-6 h-[1px] bg-[var(--gold)]" />
+                    <span className="text-[9px] uppercase tracking-[0.55em] text-[var(--gold)]">
+                      {tr("Comunidade", "Community", "Comunidad")}
+                    </span>
+                  </div>
+                  <h2
+                    className="font-serif text-[var(--foreground)] leading-none"
+                    style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.6rem)" }}
+                  >
+                    {tr("Profissionais Verificados", "Verified Professionals", "Profesionales Verificados")}
+                  </h2>
+                </div>
+                <LocalizedLink
+                  href="/profissionais"
+                  className="hidden sm:flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors duration-300"
+                >
+                  {tr("Ver todos", "View all", "Ver todos")}
+                  <ArrowRight size={13} />
+                </LocalizedLink>
+              </div>
+            </RevealOnScroll>
+
+            {/* Desktop: sharp editorial cards */}
+            <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-px" style={{ background: "rgba(197,160,89,0.07)" }}>
+              {profissionais.map((prof, i) => (
+                <RevealOnScroll key={prof.id} delay={i * 80} variant="fade-up">
+                  <LocalizedLink href={`/profissionais/${prof.slug}`} className="group block h-full">
+                    <div
+                      className="relative h-full overflow-hidden flex flex-col p-6 transition-all duration-500"
+                      style={{ background: "var(--background)" }}
+                    >
+                      {/* Top gold sweep */}
+                      <div className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full bg-[var(--gold)]/40 transition-all duration-500 pointer-events-none" />
+                      {/* Left gold bar */}
+                      <div className="absolute left-0 top-0 w-[2px] h-0 group-hover:h-full bg-[var(--gold)]/50 transition-all duration-500 pointer-events-none" />
+
+                      {/* Avatar */}
+                      <div className="flex items-start justify-between mb-5">
+                        {prof.fotoUrl ? (
+                          <Image
+                            src={prof.fotoUrl}
+                            alt={prof.nome}
+                            width={52}
+                            height={52}
+                            className="object-cover flex-shrink-0"
+                            style={{ borderRadius: 0 }}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div
+                            className="w-[52px] h-[52px] flex items-center justify-center font-serif text-lg text-[var(--gold)] flex-shrink-0 select-none"
+                            style={{ background: "rgba(197,160,89,0.08)", border: "1px solid rgba(197,160,89,0.2)" }}
+                          >
+                            {prof.nome.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()}
+                          </div>
+                        )}
+                        {prof.nivelVerificacao === "verificado" && (
+                          <span
+                            className="text-[7px] uppercase tracking-[0.2em] px-1.5 py-0.5 font-semibold flex-shrink-0"
+                            style={{ background: "rgba(197,160,89,0.12)", color: "var(--gold)", border: "1px solid rgba(197,160,89,0.2)" }}
+                          >
+                            ✓ {tr("Verificado", "Verified", "Verificado")}
+                          </span>
+                        )}
+                        {prof.destaque && !prof.nivelVerificacao && (
+                          <Sparkles size={12} className="text-[var(--gold)] flex-shrink-0" />
+                        )}
+                      </div>
+
+                      {/* Name + specialty */}
+                      <p className="font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors duration-300 leading-tight mb-1 text-[0.95rem]">
+                        {prof.nome}
+                      </p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)]/60 mb-3 truncate">
+                        {prof.especialidade}
+                      </p>
+
+                      {/* Location */}
+                      <div className="flex items-center gap-1.5 mb-3">
+                        <MapPin size={10} className="text-[var(--foreground-muted)] flex-shrink-0" />
+                        <span className="text-[10px] text-[var(--foreground-muted)] truncate">
+                          {prof.localizacao}
+                        </span>
+                      </div>
+
+                      {/* Stars */}
+                      {prof.avaliacao > 0 && (
+                        <div className="flex items-center gap-1.5 mt-auto">
+                          <div className="flex gap-0.5">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                              <Star
+                                key={s}
+                                size={10}
+                                className={
+                                  s <= Math.round(prof.avaliacao)
+                                    ? "text-[var(--gold)] fill-[var(--gold)]"
+                                    : "text-[var(--foreground-muted)]/20"
+                                }
+                              />
+                            ))}
+                          </div>
+                          <span className="text-[10px] text-[var(--foreground-muted)]">
+                            ({prof.numAvaliacoes})
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Explore line */}
+                      <div className="flex items-center gap-2 mt-4 text-[9px] uppercase tracking-[0.3em] text-[var(--gold)]/25 group-hover:text-[var(--gold)] transition-colors duration-300">
+                        <div className="h-[1px] w-3 group-hover:w-6 bg-current transition-all duration-400" />
+                        {tr("Ver perfil", "View profile", "Ver perfil")}
+                      </div>
+                    </div>
+                  </LocalizedLink>
+                </RevealOnScroll>
+              ))}
+            </div>
+
+            {/* Mobile: horizontal snap scroll */}
+            <div className="sm:hidden overflow-x-auto scrollbar-hide -mx-4 px-4 pb-3 snap-x snap-mandatory">
+              <div className="flex gap-3" style={{ width: "max-content" }}>
+                {profissionais.map((prof) => (
+                  <LocalizedLink
+                    key={prof.id}
+                    href={`/profissionais/${prof.slug}`}
+                    className="flex-none snap-start w-[190px] active:scale-[0.97] touch-manipulation transition-transform"
+                  >
+                    <div
+                      className="w-full p-4 relative overflow-hidden"
+                      style={{ background: "#0a0a0a", border: "1px solid rgba(197,160,89,0.12)" }}
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        {prof.fotoUrl ? (
+                          <Image
+                            src={prof.fotoUrl}
+                            alt={prof.nome}
+                            width={40}
+                            height={40}
+                            className="object-cover flex-shrink-0"
+                            style={{ borderRadius: 0 }}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div
+                            className="w-10 h-10 flex items-center justify-center font-serif text-sm text-[var(--gold)] flex-shrink-0 select-none"
+                            style={{ background: "rgba(197,160,89,0.08)", border: "1px solid rgba(197,160,89,0.18)" }}
+                          >
+                            {prof.nome.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()}
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-serif text-white text-sm leading-tight truncate">{prof.nome}</p>
+                          <p className="text-[9px] uppercase tracking-[0.15em] text-[var(--gold)]/50 truncate mt-0.5">
+                            {prof.especialidade}
+                          </p>
+                        </div>
+                      </div>
+                      {prof.avaliacao > 0 && (
+                        <div className="flex items-center gap-0.5">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <Star
+                              key={s}
+                              size={9}
+                              className={
+                                s <= Math.round(prof.avaliacao)
+                                  ? "text-[var(--gold)] fill-[var(--gold)]"
+                                  : "text-white/10"
+                              }
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </LocalizedLink>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile CTA */}
+            <div className="sm:hidden mt-4">
+              <LocalizedLink
+                href="/profissionais"
+                className="flex items-center justify-center gap-2 py-3 w-full text-[11px] uppercase tracking-[0.2em] text-[var(--foreground-muted)] border border-[var(--border)] active:scale-[0.98] touch-manipulation transition-transform"
+              >
+                {tr("Ver todos os profissionais", "View all professionals", "Ver todos los profesionales")}
+                <ArrowRight size={12} />
+              </LocalizedLink>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ===== VENDER CAVALO CTA ===== */}
 
