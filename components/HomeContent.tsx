@@ -427,104 +427,128 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
         </div>
       </section>
 
-      {/* ===== QUICK ACCESS — Mobile only ===== */}
-      <section className="sm:hidden py-4 border-b border-[var(--border)] bg-[var(--background-secondary)]/40">
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-2.5 px-4" style={{ width: "max-content" }}>
-            {[
-              { href: "/comprar", icon: ShoppingCart, label: tr("Comprar", "Buy", "Comprar"), color: "text-amber-400" },
-              { href: "/directorio", icon: Crown, label: tr("Coudelarias", "Studs", "Haras"), color: "text-yellow-400" },
-              { href: "/vender-cavalo", icon: Euro, label: tr("Vender", "Sell", "Vender"), color: "text-black", special: true },
-              { href: "/calculadora-valor", icon: Calculator, label: tr("Calculadora", "Calculator", "Calculadora"), color: "text-emerald-400" },
-              { href: "/jornal", icon: Newspaper, label: tr("Jornal", "Journal", "Revista"), color: "text-blue-400" },
-              { href: "/mapa", icon: MapPin, label: tr("Mapa", "Map", "Mapa"), color: "text-rose-400" },
-              { href: "/cavalos-famosos", icon: Trophy, label: tr("Famosos", "Famous", "Famosos"), color: "text-purple-400" },
-              { href: "/ebook-gratis", icon: BookOpen, label: tr("Ebook", "Ebook", "Ebook"), color: "text-[var(--gold)]" },
-              { href: "/precos", icon: Sparkles, label: tr("Pro", "Pro", "Pro"), color: "text-[var(--gold)]" },
-            ].map((item) => (
-              <LocalizedLink
-                key={item.href}
-                href={item.href}
-                className="flex flex-col items-center gap-1.5 min-w-[64px] py-2.5 px-1 active:scale-95 touch-manipulation"
-              >
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                  (item as { special?: boolean }).special
-                    ? "bg-[var(--gold)] shadow-[0_0_12px_rgba(197,160,89,0.3)]"
-                    : "bg-[var(--background-card)] border border-[var(--border)]"
-                }`}>
-                  <item.icon size={20} className={item.color} />
-                </div>
-                <span className={`text-[10px] leading-tight text-center whitespace-nowrap ${
-                  (item as { special?: boolean }).special ? "text-[var(--gold)] font-semibold" : "text-[var(--foreground-muted)]"
-                }`}>
-                  {item.label}
-                </span>
-              </LocalizedLink>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ===== MOBILE CONVERSION HUB ===== */}
+      <section className="sm:hidden px-4 pt-5 pb-6 bg-[var(--background)]">
 
-      {/* ===== REVENUE ACTIONS — Mobile only ===== */}
-      <section className="sm:hidden px-4 py-5 border-b border-[var(--border)] bg-[var(--background-secondary)]/30">
-        <p className="text-[9px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-3 px-0.5">
-          {tr("O que podemos fazer por si", "What we can do for you", "Lo que podemos hacer")}
-        </p>
-
-        {/* Primary: Vender Cavalo */}
+        {/* ── CARD 1: VENDER CAVALO ─────────────────────────── */}
         <LocalizedLink
           href="/vender-cavalo"
-          className="flex items-center gap-4 p-4 mb-3 bg-gradient-to-r from-[var(--gold)]/15 via-[var(--gold)]/8 to-transparent border border-[var(--gold)]/25 rounded-2xl active:scale-[0.98] touch-manipulation transition-transform"
+          className="group flex items-center gap-4 w-full p-5 mb-3 rounded-2xl bg-gradient-to-r from-[var(--gold)]/20 via-[var(--gold)]/10 to-transparent border border-[var(--gold)]/40 active:scale-[0.98] touch-manipulation transition-transform relative overflow-hidden"
         >
-          <div className="w-11 h-11 bg-[var(--gold)] rounded-xl flex items-center justify-center flex-shrink-0 shadow-[0_0_16px_rgba(197,160,89,0.35)]">
-            <Euro size={20} className="text-black" strokeWidth={2.5} />
+          {/* brilho no hover */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--gold)]/5 to-transparent opacity-0 group-active:opacity-100 transition-opacity" />
+          <div className="w-14 h-14 rounded-xl bg-[var(--gold)] flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(197,160,89,0.4)]">
+            <Euro size={24} className="text-black" strokeWidth={2.5} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[var(--foreground)] leading-tight">
-              {tr("Vender Cavalo", "Sell a Horse", "Vender Caballo")}
-            </p>
-            <p className="text-[11px] text-[var(--foreground-muted)] mt-0.5 leading-tight">
-              {tr("Compradores qualificados à sua espera", "Qualified buyers waiting", "Compradores cualificados esperando")}
+            <div className="flex items-center gap-2 mb-0.5">
+              <p className="text-base font-bold text-[var(--foreground)] leading-tight">
+                {tr("Vender o seu Cavalo", "Sell Your Horse", "Vender su Caballo")}
+              </p>
+              <span className="text-[8px] uppercase tracking-[0.15em] bg-[var(--gold)]/20 text-[var(--gold)] px-1.5 py-0.5 rounded font-semibold flex-shrink-0">
+                {tr("Marketplace", "Marketplace", "Marketplace")}
+              </span>
+            </div>
+            <p className="text-[12px] text-[var(--foreground-muted)] leading-snug">
+              {tr("Compradores qualificados em Portugal e no mundo", "Qualified buyers in Portugal and worldwide", "Compradores en Portugal y en todo el mundo")}
             </p>
           </div>
-          <ArrowRight size={15} className="text-[var(--gold)] flex-shrink-0" />
+          <ArrowRight size={18} className="text-[var(--gold)] flex-shrink-0 group-active:translate-x-0.5 transition-transform" />
         </LocalizedLink>
 
-        {/* Secondary row: Pro + Ebook */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* ── CARDS 2+3: LOJA + PRO ─────────────────────────── */}
+        <div className="grid grid-cols-2 gap-3 mb-3">
+
+          {/* Loja / Boné */}
           <LocalizedLink
-            href="/precos"
-            className="flex flex-col gap-2.5 p-4 bg-[var(--background-card)] border border-[var(--border)] rounded-2xl active:scale-[0.97] touch-manipulation transition-transform hover:border-[var(--gold)]/25"
+            href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
+            className="group relative flex flex-col rounded-2xl overflow-hidden border border-[var(--border)] active:scale-[0.97] touch-manipulation transition-transform bg-[var(--background-secondary)]"
           >
-            <div className="w-9 h-9 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center">
-              <Sparkles size={17} className="text-[var(--gold)]" />
+            {/* Imagem do produto */}
+            <div className="relative w-full aspect-square bg-[var(--background-card)]">
+              {featuredProduct?.images[0]?.url ? (
+                <Image
+                  src={featuredProduct.images[0].url}
+                  alt={featuredProduct.title}
+                  fill
+                  sizes="50vw"
+                  className="object-cover group-active:scale-105 transition-transform duration-300"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <ShoppingBag size={32} className="text-[var(--gold)]/30" />
+                </div>
+              )}
+              {/* Badge */}
+              <div className="absolute top-2 left-2">
+                <span className="bg-[var(--gold)] text-black text-[8px] uppercase tracking-[0.15em] font-bold px-2 py-1 rounded-sm leading-none">
+                  {tr("Exclusivo", "Exclusive", "Exclusivo")}
+                </span>
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-semibold text-[var(--foreground)] leading-tight">
-                {tr("Planos Pro", "Pro Plans", "Planes Pro")}
+            {/* Info */}
+            <div className="p-3">
+              <p className="text-xs font-semibold text-[var(--foreground)] leading-tight mb-0.5 truncate">
+                {featuredProduct?.title ?? tr("Loja Exclusiva", "Exclusive Shop", "Tienda Exclusiva")}
               </p>
-              <p className="text-[10px] text-[var(--foreground-muted)] mt-0.5 leading-tight">
-                {tr("Ferramentas exclusivas", "Exclusive tools", "Herramientas exclusivas")}
-              </p>
+              {featuredProduct?.priceRange ? (
+                <p className="text-sm font-bold text-[var(--gold)]">
+                  {Number(featuredProduct.priceRange.minVariantPrice.amount).toFixed(2)} €
+                </p>
+              ) : (
+                <p className="text-[11px] text-[var(--foreground-muted)]">
+                  {tr("Ver loja →", "View shop →", "Ver tienda →")}
+                </p>
+              )}
             </div>
           </LocalizedLink>
 
+          {/* Ferramentas Pro */}
           <LocalizedLink
-            href="/ebook-gratis"
-            className="flex flex-col gap-2.5 p-4 bg-[var(--background-card)] border border-[var(--border)] rounded-2xl active:scale-[0.97] touch-manipulation transition-transform hover:border-[var(--gold)]/25"
+            href="/precos"
+            className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] p-4 active:scale-[0.97] touch-manipulation transition-transform bg-[var(--background-secondary)] relative overflow-hidden"
           >
-            <div className="w-9 h-9 bg-[var(--gold)]/10 rounded-xl flex items-center justify-center">
-              <Gift size={17} className="text-[var(--gold)]" />
+            {/* gradiente fundo */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--gold)]/8 via-transparent to-transparent" />
+            <div className="relative">
+              <div className="w-10 h-10 bg-[var(--gold)]/15 border border-[var(--gold)]/30 rounded-xl flex items-center justify-center mb-3">
+                <Sparkles size={18} className="text-[var(--gold)]" />
+              </div>
+              <p className="text-sm font-bold text-[var(--foreground)] leading-tight mb-1">
+                {tr("Ferramentas Pro", "Pro Tools", "Herramientas Pro")}
+              </p>
+              <p className="text-[11px] text-[var(--foreground-muted)] leading-snug">
+                {tr("Calculadora · Comparador · Análise", "Calculator · Comparator · Analysis", "Calculadora · Comparador")}
+              </p>
             </div>
-            <div>
-              <p className="text-xs font-semibold text-[var(--foreground)] leading-tight">
-                {tr("Ebook Grátis", "Free Ebook", "Ebook Gratis")}
-              </p>
-              <p className="text-[10px] text-[var(--foreground-muted)] mt-0.5 leading-tight">
-                {tr("Guia do Lusitano · 30 pág.", "Lusitano Guide · 30 pg.", "Guía Lusitano · 30 pág.")}
-              </p>
+            <div className="relative mt-4 flex items-center justify-between">
+              <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-[var(--gold)]">
+                {tr("Ver planos", "View plans", "Ver planes")}
+              </span>
+              <ArrowRight size={13} className="text-[var(--gold)] group-active:translate-x-0.5 transition-transform" />
             </div>
           </LocalizedLink>
+        </div>
+
+        {/* ── QUICK LINKS ───────────────────────────────────── */}
+        <div className="grid grid-cols-4 gap-2">
+          {[
+            { href: "/comprar", icon: ShoppingCart, label: tr("Cavalos", "Horses", "Caballos"), color: "text-amber-400" },
+            { href: "/directorio", icon: Crown, label: tr("Coudel.", "Studs", "Haras"), color: "text-yellow-400" },
+            { href: "/jornal", icon: Newspaper, label: tr("Jornal", "Journal", "Revista"), color: "text-blue-400" },
+            { href: "/ebook-gratis", icon: Gift, label: tr("Ebook", "Ebook", "Ebook"), color: "text-[var(--gold)]" },
+          ].map((item) => (
+            <LocalizedLink
+              key={item.href}
+              href={item.href}
+              className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
+            >
+              <item.icon size={18} className={item.color} />
+              <span className="text-[9px] text-[var(--foreground-muted)] leading-tight text-center">
+                {item.label}
+              </span>
+            </LocalizedLink>
+          ))}
         </div>
       </section>
 
@@ -994,14 +1018,21 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
           href="/comprar"
           className="flex-1 flex items-center justify-center py-3 text-[9px] uppercase tracking-[0.2em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] rounded-lg active:scale-95 touch-manipulation transition-transform"
         >
-          {tr("Comprar", "Buy", "Comprar")}
+          {tr("Cavalos", "Horses", "Caballos")}
+        </LocalizedLink>
+        <LocalizedLink
+          href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
+          className="flex-1 flex items-center justify-center gap-1 py-3 text-[9px] uppercase tracking-[0.2em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] rounded-lg active:scale-95 touch-manipulation transition-transform"
+        >
+          <ShoppingBag size={11} strokeWidth={2.5} />
+          {tr("Loja", "Shop", "Tienda")}
         </LocalizedLink>
         <LocalizedLink
           href="/vender-cavalo"
-          className="flex-[1.6] flex items-center justify-center gap-1.5 py-3 text-[9px] uppercase tracking-[0.2em] font-bold bg-[var(--gold)] text-black rounded-lg active:scale-95 touch-manipulation transition-transform shadow-[0_0_12px_rgba(197,160,89,0.25)]"
+          className="flex-[1.4] flex items-center justify-center gap-1.5 py-3 text-[9px] uppercase tracking-[0.2em] font-bold bg-[var(--gold)] text-black rounded-lg active:scale-95 touch-manipulation transition-transform shadow-[0_0_12px_rgba(197,160,89,0.25)]"
         >
-          <Euro size={12} strokeWidth={2.5} />
-          {tr("Vender Cavalo", "Sell Horse", "Vender")}
+          <Euro size={11} strokeWidth={2.5} />
+          {tr("Vender", "Sell", "Vender")}
         </LocalizedLink>
       </div>
 

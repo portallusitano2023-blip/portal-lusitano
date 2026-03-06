@@ -4,8 +4,6 @@ import { useState, memo } from "react";
 import { usePathname } from "next/navigation";
 import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
-import { useHorseFavorites } from "@/context/HorseFavoritesContext";
-import { useWishlist } from "@/context/WishlistContext";
 import {
   Home,
   ShoppingCart,
@@ -18,7 +16,6 @@ import {
   Calculator,
   Users,
   Trophy,
-  Heart,
   User,
   Gift,
   Euro,
@@ -38,9 +35,6 @@ export default memo(function BottomNav() {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const pathname = usePathname();
   const { language, toggleLanguage, t } = useLanguage();
-  const { favoritesCount } = useHorseFavorites();
-  const { wishlist } = useWishlist();
-  const wishlistCount = wishlist.length;
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -287,7 +281,7 @@ export default memo(function BottomNav() {
             </div>
           </section>
 
-          {/* Conta & Favoritos */}
+          {/* Conta */}
           <section>
             <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] mb-2 px-1 font-medium">
               {language === "pt" ? "Conta" : language === "es" ? "Cuenta" : "Account"}
@@ -302,32 +296,6 @@ export default memo(function BottomNav() {
                 <span className="truncate">{t.nav.my_account}</span>
               </LocalizedLink>
               <LocalizedLink
-                href="/cavalos-favoritos"
-                onClick={() => setIsMoreOpen(false)}
-                className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] rounded-xl transition-colors touch-manipulation active:scale-[0.97]"
-              >
-                <Heart size={17} className="text-red-400" />
-                <span className="truncate">{t.nav.horse_favorites}</span>
-                {favoritesCount > 0 && (
-                  <span className="ml-auto bg-[var(--gold)] text-black text-[10px] px-1.5 py-0.5 rounded-full font-bold leading-none">
-                    {favoritesCount}
-                  </span>
-                )}
-              </LocalizedLink>
-              <LocalizedLink
-                href="/favoritos"
-                onClick={() => setIsMoreOpen(false)}
-                className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] rounded-xl transition-colors touch-manipulation active:scale-[0.97]"
-              >
-                <Heart size={17} className="text-pink-400" />
-                <span className="truncate">{t.nav.shop_favorites}</span>
-                {wishlistCount > 0 && (
-                  <span className="ml-auto bg-[var(--gold)] text-black text-[10px] px-1.5 py-0.5 rounded-full font-bold leading-none">
-                    {wishlistCount}
-                  </span>
-                )}
-              </LocalizedLink>
-              <LocalizedLink
                 href="/instagram"
                 onClick={() => setIsMoreOpen(false)}
                 className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] rounded-xl transition-colors touch-manipulation active:scale-[0.97]"
@@ -337,6 +305,26 @@ export default memo(function BottomNav() {
               </LocalizedLink>
             </div>
           </section>
+
+          {/* Boné em destaque */}
+          <LocalizedLink
+            href="/loja"
+            onClick={() => setIsMoreOpen(false)}
+            className="flex items-center gap-4 p-4 bg-gradient-to-r from-[var(--gold)]/15 via-[var(--gold)]/8 to-transparent border border-[var(--gold)]/30 rounded-2xl touch-manipulation active:scale-[0.98] transition-transform"
+          >
+            <div className="w-12 h-12 bg-[var(--gold)]/15 border border-[var(--gold)]/30 rounded-xl flex items-center justify-center flex-shrink-0">
+              <ShoppingBag size={20} className="text-[var(--gold)]" strokeWidth={2} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-[var(--foreground)] leading-tight">
+                {language === "pt" ? "Boné Lusitano" : language === "es" ? "Gorra Lusitana" : "Lusitano Cap"}
+              </p>
+              <p className="text-[11px] text-[var(--foreground-muted)] mt-0.5 leading-tight">
+                {language === "pt" ? "Coleção exclusiva · Envio mundial" : language === "es" ? "Colección exclusiva · Envío mundial" : "Exclusive collection · Worldwide shipping"}
+              </p>
+            </div>
+            <ArrowRight size={16} className="text-[var(--gold)] flex-shrink-0" />
+          </LocalizedLink>
 
           {/* CTA Ebook */}
           <LocalizedLink
