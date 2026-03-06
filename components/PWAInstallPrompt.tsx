@@ -56,10 +56,10 @@ export default function PWAInstallPrompt() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-sm text-[var(--foreground)]">
-              Instalar Portal Lusitano
+              Cavalos Lusitanos sempre consigo
             </p>
             <p className="text-xs text-[var(--foreground-muted)] mt-0.5">
-              Acesso rápido direto do seu ecrã
+              Instala a app — é gratuito
             </p>
           </div>
           <button
@@ -74,9 +74,9 @@ export default function PWAInstallPrompt() {
         </div>
         <button
           onClick={handleInstall}
-          className="w-full mt-3 py-2 px-4 bg-[var(--gold)] text-black font-medium text-sm rounded-lg hover:bg-[var(--gold-hover)] transition-colors"
+          className="w-full mt-3 py-2.5 px-4 bg-[var(--gold)] text-black font-semibold text-sm rounded-lg hover:bg-[var(--gold-hover)] transition-colors active:scale-[0.98]"
         >
-          Instalar App
+          Instalar Gratuitamente
         </button>
       </div>
     </div>

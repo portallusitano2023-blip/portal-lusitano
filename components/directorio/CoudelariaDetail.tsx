@@ -1038,6 +1038,59 @@ export default function CoudelariaDetail({
           </aside>
         </div>
       </div>
+
+      {/* ── Mobile sticky contact bar ── */}
+      {(coudelaria.telefone || coudelaria.email || coudelaria.website) && (
+        <div className="lg:hidden fixed bottom-16 left-0 right-0 z-30 bg-[var(--background)]/95 backdrop-blur-md border-t border-[var(--border)] px-4 py-3 flex items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] leading-none mb-0.5 truncate">
+              {coudelaria.nome}
+            </p>
+            <p className="text-xs text-[var(--foreground-secondary)] truncate">{coudelaria.localizacao}</p>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {coudelaria.telefone && (
+              <a
+                href={`tel:${coudelaria.telefone}`}
+                aria-label="Ligar"
+                className="flex items-center justify-center w-10 h-10 bg-[var(--background-card)] border border-[var(--border)] rounded-lg text-[var(--gold)] touch-manipulation active:scale-95 transition-transform"
+              >
+                <Phone size={16} />
+              </a>
+            )}
+            {coudelaria.email && (
+              <a
+                href={`mailto:${coudelaria.email}`}
+                aria-label="Enviar email"
+                className="flex items-center justify-center w-10 h-10 bg-[var(--background-card)] border border-[var(--border)] rounded-lg text-[var(--gold)] touch-manipulation active:scale-95 transition-transform"
+              >
+                <Mail size={16} />
+              </a>
+            )}
+            {coudelaria.website && (
+              <a
+                href={coudelaria.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Website"
+                className="flex items-center gap-2 bg-[var(--gold)] text-black px-4 h-10 rounded-lg text-sm font-semibold touch-manipulation active:scale-95 transition-transform"
+              >
+                <Globe size={14} />
+                Website
+              </a>
+            )}
+            {!coudelaria.website && coudelaria.email && (
+              <a
+                href={`mailto:${coudelaria.email}`}
+                className="flex items-center gap-2 bg-[var(--gold)] text-black px-4 h-10 rounded-lg text-sm font-semibold touch-manipulation active:scale-95 transition-transform"
+              >
+                <Mail size={14} />
+                Contactar
+              </a>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

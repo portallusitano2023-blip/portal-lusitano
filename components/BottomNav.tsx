@@ -28,6 +28,8 @@ import {
   HelpCircle,
   Shield,
   Instagram,
+  Sparkles,
+  TrendingUp,
 } from "lucide-react";
 
 export default memo(function BottomNav() {
@@ -63,9 +65,9 @@ export default memo(function BottomNav() {
             : "Studs",
     },
     {
-      href: "/loja",
-      icon: Store,
-      label: language === "pt" ? "Loja" : language === "es" ? "Tienda" : "Shop",
+      href: "/vender-cavalo",
+      icon: Euro,
+      label: language === "pt" ? "Vender" : language === "es" ? "Vender" : "Sell",
     },
   ];
 
@@ -166,23 +168,16 @@ export default memo(function BottomNav() {
                 { href: "/eventos", icon: Calendar, label: t.nav.events },
                 { href: "/mapa", icon: MapPin, label: t.nav.map },
                 { href: "/linhagens", icon: BookOpen, label: t.nav.lineages },
-                { href: "/vender-cavalo", icon: Euro, label: t.nav.sell_horse, highlight: true },
+                { href: "/loja", icon: Store, label: language === "pt" ? "Loja" : language === "es" ? "Tienda" : "Shop" },
                 { href: "/piroplasmose", icon: Shield, label: t.nav.piroplasmosis },
               ].map((item) => (
                 <LocalizedLink
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMoreOpen(false)}
-                  className={`flex items-center gap-3 py-3 px-3 text-sm rounded-xl transition-colors touch-manipulation active:scale-[0.97] ${
-                    item.highlight
-                      ? "text-green-400 bg-green-500/10 border border-green-500/20"
-                      : "text-[var(--foreground-secondary)] hover:text-[var(--gold)] bg-[var(--surface)] hover:bg-[var(--surface-hover)]"
-                  }`}
+                  className="flex items-center gap-3 py-3 px-3 text-sm text-[var(--foreground-secondary)] hover:text-[var(--gold)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] rounded-xl transition-colors touch-manipulation active:scale-[0.97]"
                 >
-                  <item.icon
-                    size={17}
-                    className={item.highlight ? "text-green-400" : "text-[var(--gold)]/70"}
-                  />
+                  <item.icon size={17} className="text-[var(--gold)]/70" />
                   <span className="truncate">{item.label}</span>
                 </LocalizedLink>
               ))}
@@ -211,6 +206,18 @@ export default memo(function BottomNav() {
                   <span className="truncate">{item.label}</span>
                 </LocalizedLink>
               ))}
+              {/* Pro upsell */}
+              <LocalizedLink
+                href="/precos"
+                onClick={() => setIsMoreOpen(false)}
+                className="col-span-2 flex items-center gap-3 py-3 px-3 text-sm text-[var(--gold)] bg-[var(--gold)]/10 border border-[var(--gold)]/25 rounded-xl transition-colors touch-manipulation active:scale-[0.97] hover:bg-[var(--gold)]/15"
+              >
+                <Sparkles size={17} className="text-[var(--gold)] flex-shrink-0" />
+                <span className="truncate font-medium">
+                  {language === "pt" ? "Planos & Pro" : language === "es" ? "Planes & Pro" : "Plans & Pro"}
+                </span>
+                <TrendingUp size={14} className="text-[var(--gold)]/60 ml-auto flex-shrink-0" />
+              </LocalizedLink>
             </div>
           </section>
 
