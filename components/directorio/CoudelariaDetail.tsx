@@ -348,10 +348,10 @@ export default function CoudelariaDetail({
 
         <div className="grid lg:grid-cols-3 gap-12 mt-8">
           {/* ── Main ── */}
-          <div className="lg:col-span-2 space-y-10 sm:space-y-14">
+          <div className="lg:col-span-2 space-y-10 sm:space-y-14 min-w-0">
             {/* Description */}
             <AnimateOnScroll delay={50}>
-              <p className="text-base sm:text-xl text-[var(--foreground-secondary)] leading-relaxed">
+              <p className="text-base sm:text-xl text-[var(--foreground-secondary)] leading-relaxed break-words">
                 {coudelaria.descricao}
               </p>
             </AnimateOnScroll>
@@ -382,7 +382,7 @@ export default function CoudelariaDetail({
                   <SectionTitle icon={<Calendar size={22} />} title={t.directorio.history} />
                   <div className="space-y-4">
                     {coudelaria.historia.split("\n\n").map((paragraph, i) => (
-                      <p key={i} className="text-[var(--foreground-secondary)] leading-relaxed">
+                      <p key={i} className="text-[var(--foreground-secondary)] leading-relaxed break-words">
                         {paragraph}
                       </p>
                     ))}
@@ -821,7 +821,7 @@ export default function CoudelariaDetail({
           </div>
 
           {/* ── Sidebar ── */}
-          <aside className="lg:col-span-1" aria-label="Informacoes da coudelaria">
+          <aside className="lg:col-span-1 min-w-0" aria-label="Informacoes da coudelaria">
             <div className="sticky top-32 space-y-5">
               {/* Contact card */}
               <AnimateOnScroll delay={100}>
@@ -833,7 +833,7 @@ export default function CoudelariaDetail({
                     {coudelaria.telefone && (
                       <a
                         href={`tel:${coudelaria.telefone}`}
-                        className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group"
+                        className="flex items-center gap-3 min-w-0 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group"
                       >
                         <span className="w-9 h-9 bg-[var(--gold)]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--gold)]/20 transition-colors">
                           <Phone size={16} className="text-[var(--gold)]" aria-hidden="true" />
@@ -844,12 +844,12 @@ export default function CoudelariaDetail({
                     {coudelaria.email && (
                       <a
                         href={`mailto:${coudelaria.email}`}
-                        className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group"
+                        className="flex items-center gap-3 min-w-0 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group"
                       >
                         <span className="w-9 h-9 bg-[var(--gold)]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--gold)]/20 transition-colors">
                           <Mail size={16} className="text-[var(--gold)]" aria-hidden="true" />
                         </span>
-                        <span className="text-sm truncate">{coudelaria.email}</span>
+                        <span className="text-sm truncate min-w-0">{coudelaria.email}</span>
                       </a>
                     )}
                     {coudelaria.website && (
@@ -857,7 +857,7 @@ export default function CoudelariaDetail({
                         href={coudelaria.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group"
+                        className="flex items-center gap-3 min-w-0 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group"
                       >
                         <span className="w-9 h-9 bg-[var(--gold)]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--gold)]/20 transition-colors">
                           <Globe size={16} className="text-[var(--gold)]" aria-hidden="true" />
@@ -873,7 +873,7 @@ export default function CoudelariaDetail({
                         href={`https://www.google.com/maps/dir/?api=1&destination=${coudelaria.coordenadas_lat},${coudelaria.coordenadas_lng}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group"
+                        className="flex items-center gap-3 min-w-0 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors group"
                       >
                         <span className="w-9 h-9 bg-[var(--gold)]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--gold)]/20 transition-colors">
                           <Navigation size={16} className="text-[var(--gold)]" aria-hidden="true" />
