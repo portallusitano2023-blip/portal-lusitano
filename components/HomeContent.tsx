@@ -330,21 +330,17 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
     <>
       {/* ===== HERO — Full Screen with Parallax ===== */}
       <section className="relative min-h-[78vh] sm:min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
-        {/* Parallax Background Image */}
-        <ParallaxSection speed={0.4} className="absolute inset-0 z-0">
-          <div className="clip-reveal-left" style={{ animationDuration: "0.6s" }}>
-            <Image
-              src="/images/home/hero.png"
-              alt="Cavalo Lusitano — Nobreza Portuguesa"
-              fill
-              className="object-cover opacity-60 scale-110"
-              style={{ objectPosition: "center 20%" }}
-              priority
-              sizes="100vw"
-              quality={90}
-            />
-          </div>
-        </ParallaxSection>
+        {/* Background Image */}
+        <Image
+          src="/images/home/hero.png"
+          alt="Cavalo Lusitano — Nobreza Portuguesa"
+          fill
+          className="object-cover opacity-60 z-0"
+          style={{ objectPosition: "center 20%" }}
+          priority
+          sizes="100vw"
+          quality={90}
+        />
 
         {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/50 to-black/40 z-[1]" />
