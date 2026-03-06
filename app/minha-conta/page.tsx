@@ -16,6 +16,7 @@ export default async function MinhaContaPage() {
     firstName: nameParts[0] || user.email?.split("@")[0] || "Membro",
     lastName: nameParts.slice(1).join(" ") || "",
     email: user.email || "",
+    createdAt: user.created_at || "",
     orders: { edges: [] },
   };
 
