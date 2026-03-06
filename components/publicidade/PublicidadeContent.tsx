@@ -298,7 +298,7 @@ export default function PublicidadeContent() {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
+    <main className="min-h-screen bg-[var(--background)] pt-20 sm:pt-32 pb-20 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">

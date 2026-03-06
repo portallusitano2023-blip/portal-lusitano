@@ -195,7 +195,7 @@ function DirectorioContentInner({ coudelarias }: { coudelarias: Coudelaria[] }) 
     <main className="min-h-screen bg-[var(--background)]">
       {/* ── Hero ── */}
       <section
-        className="relative pt-32 pb-16 overflow-hidden"
+        className="relative pt-20 sm:pt-32 pb-16 overflow-hidden"
         aria-label="Cabeçalho do directório"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--gold)]/5 to-transparent pointer-events-none" />
@@ -482,7 +482,7 @@ function CoudelariaCard({
     <AnimateOnScroll delay={index * 50}>
       <LocalizedLink
         href={`/directorio/${coudelaria.slug}`}
-        className="group block relative h-[400px] overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/40 transition-all duration-300 hover:shadow-[0_8px_32px_rgba(197,160,89,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+        className="group block relative h-[280px] sm:h-[400px] overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/40 transition-all duration-300 hover:shadow-[0_8px_32px_rgba(197,160,89,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
         aria-label={`${coudelaria.nome}, ${coudelaria.localizacao}`}
       >
         <Image

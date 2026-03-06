@@ -10,10 +10,10 @@ export default function LojaContent({ products }: { products: ProductListing[] }
   const isSingle = products.length === 1;
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-32 pb-32">
-      <div className="max-w-7xl mx-auto px-6">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-32 pb-20 sm:pb-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* CABECALHO EDITORIAL DE LUXO */}
-        <div className="flex flex-col items-center text-center mb-20 md:mb-32 relative opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
+        <div className="flex flex-col items-center text-center mb-12 md:mb-32 relative opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
           {/* Linha vertical decorativa */}
           <div
             className="w-[1px] h-16 bg-gradient-to-b from-transparent via-[var(--gold)] to-transparent mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
@@ -108,7 +108,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
           </div>
         ) : (
           /* GRELHA MULTI-PRODUTO */
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-14 sm:gap-y-20 md:gap-y-32">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-8 sm:gap-y-20 md:gap-y-32">
             {products.map((product, index) => (
               <div
                 key={product.id}

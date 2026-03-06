@@ -33,7 +33,7 @@ export default function LinhagensContent() {
   return (
     <main className="min-h-screen bg-[var(--background)]" id="main-content">
       {/* Hero */}
-      <section className="relative pt-32 pb-16 overflow-hidden">
+      <section className="relative pt-20 sm:pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--gold)]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative">
           <LocalizedLink

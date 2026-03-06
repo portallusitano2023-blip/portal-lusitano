@@ -356,7 +356,7 @@ export default function HomeContent() {
             {t.home.est}
           </p>
 
-          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] leading-[0.9] drop-shadow-lg">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] leading-[0.9] drop-shadow-lg">
             <TextSplit text={t.home.title_main} baseDelay={0.15} wordDelay={0.06} />
           </h1>
 
@@ -398,7 +398,7 @@ export default function HomeContent() {
 
         {/* Scroll Indicator */}
         <div
-          className="absolute bottom-24 lg:bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+          className="absolute bottom-28 lg:bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
           style={{ animationDelay: "0.6s" }}
         >
           <span className="text-[9px] tracking-[0.3em] uppercase text-[var(--foreground-muted)]">
@@ -785,46 +785,46 @@ export default function HomeContent() {
       </section>
 
       {/* ===== EBOOK CTA ===== */}
-      <section className="relative py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden noise-overlay">
+      <section className="relative py-12 sm:py-32 border-t border-[var(--border)] overflow-hidden noise-overlay">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--gold)]/5 rounded-full blur-[120px]" />
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
           <RevealOnScroll variant="fade-left">
-            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+            <div className="flex flex-row sm:flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
               {/* Book Preview */}
               <div className="flex-shrink-0">
-                <div className="w-48 h-64 sm:w-56 sm:h-72 bg-gradient-to-br from-[var(--background-elevated)] to-[var(--background-secondary)] border border-[var(--gold)]/20 flex flex-col items-center justify-center relative shadow-2xl shadow-black/50 float-gentle">
-                  <div className="absolute top-4 left-4 w-8 h-8 border-t border-l border-[var(--gold)]/20" />
-                  <div className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-[var(--gold)]/20" />
-                  <BookOpen className="text-[var(--gold)]/40 mb-4" size={40} />
-                  <p className="text-[var(--foreground)]/80 font-serif text-sm text-center px-6">
+                <div className="w-28 h-36 sm:w-56 sm:h-72 bg-gradient-to-br from-[var(--background-elevated)] to-[var(--background-secondary)] border border-[var(--gold)]/20 flex flex-col items-center justify-center relative shadow-2xl shadow-black/50 float-gentle">
+                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-t border-l border-[var(--gold)]/20" />
+                  <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-b border-r border-[var(--gold)]/20" />
+                  <BookOpen className="text-[var(--gold)]/40 mb-2 sm:mb-4" size={28} />
+                  <p className="text-[var(--foreground)]/80 font-serif text-[10px] sm:text-sm text-center px-3 sm:px-6 leading-snug">
                     {tr(
                       "Introdução ao Cavalo Lusitano",
                       "Introduction to the Lusitano Horse",
                       "Introducción al Caballo Lusitano"
                     )}
                   </p>
-                  <p className="text-[var(--foreground-muted)] text-[9px] uppercase tracking-[0.3em] mt-3">
+                  <p className="text-[var(--foreground-muted)] text-[8px] sm:text-[9px] uppercase tracking-[0.3em] mt-2 sm:mt-3">
                     30 {tr("Páginas", "Pages", "Páginas")}
                   </p>
                 </div>
               </div>
 
               {/* Text */}
-              <div className="text-center md:text-left">
-                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
+              <div className="text-left sm:text-center md:text-left flex-1">
+                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2 sm:mb-4 block">
                   Ebook {tr("Gratuito", "Free", "Gratuito")}
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+                <h2 className="text-2xl sm:text-4xl font-serif text-[var(--foreground)] mb-3 sm:mb-4">
                   {tr(
                     "O Guia Essencial do Lusitano",
                     "The Essential Lusitano Guide",
                     "La Guía Esencial del Lusitano"
                   )}
                 </h2>
-                <p className="text-[var(--foreground-secondary)] leading-relaxed mb-8 max-w-lg">
+                <p className="hidden sm:block text-[var(--foreground-secondary)] leading-relaxed mb-8 max-w-lg">
                   {tr(
                     "Descobre a história, as características e o que torna esta raça única. 30 páginas de conhecimento gratuito.",
                     "Discover the history, characteristics and what makes this breed unique. 30 pages of free knowledge.",

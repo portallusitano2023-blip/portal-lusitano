@@ -149,43 +149,152 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
 
   return (
     <div>
+      {/* ── Mobile Filter Bottom Sheet ── */}
+      {filtersOpen && (
+        <>
+          <div
+            className="sm:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+            onClick={() => setFiltersOpen(false)}
+            aria-hidden="true"
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Filtros"
+            className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[var(--background)] border-t border-[var(--border)] rounded-t-2xl"
+            style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+          >
+            {/* Handle */}
+            <div className="flex items-center justify-center pt-3 pb-1">
+              <div className="w-10 h-1 bg-[var(--border)] rounded-full" />
+            </div>
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]/50">
+              <span className="text-sm font-medium uppercase tracking-widest text-[var(--foreground-secondary)]">
+                Filtros
+              </span>
+              <button
+                onClick={() => setFiltersOpen(false)}
+                className="p-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+                aria-label="Fechar filtros"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            {/* Filter options */}
+            <div className="px-5 py-5 space-y-5">
+              {/* Sex */}
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] mb-2 font-medium">
+                  {t.filter_sex}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { value: "all", label: t.filter_all },
+                    { value: "macho", label: t.filter_male },
+                    { value: "femea", label: t.filter_female },
+                    { value: "castrado", label: t.filter_castrated },
+                  ].map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setSexFilter(opt.value as SexFilter)}
+                      className={`px-4 py-2 text-sm rounded-xl border transition-all touch-manipulation ${sexFilter === opt.value ? "bg-[var(--gold)] border-[var(--gold)] text-black font-medium" : "border-[var(--border)] text-[var(--foreground-secondary)] bg-[var(--surface)]"}`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Price */}
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] mb-2 font-medium">
+                  {t.filter_price}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { value: "all", label: t.filter_all },
+                    { value: "under10", label: t.filter_price_under10 },
+                    { value: "10to25", label: t.filter_price_10to25 },
+                    { value: "25to50", label: t.filter_price_25to50 },
+                    { value: "over50", label: t.filter_price_over50 },
+                  ].map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setPriceRange(opt.value as PriceRange)}
+                      className={`px-4 py-2 text-sm rounded-xl border transition-all touch-manipulation ${priceRange === opt.value ? "bg-[var(--gold)] border-[var(--gold)] text-black font-medium" : "border-[var(--border)] text-[var(--foreground-secondary)] bg-[var(--surface)]"}`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Discipline */}
+              {allDisciplines.length > 0 && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] mb-2 font-medium">
+                    {t.filter_discipline}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {[{ value: "all", label: t.filter_all }, ...allDisciplines.map((d) => ({ value: d, label: d }))].map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => setDisciplineFilter(opt.value)}
+                        className={`px-4 py-2 text-sm rounded-xl border transition-all touch-manipulation ${disciplineFilter === opt.value ? "bg-[var(--gold)] border-[var(--gold)] text-black font-medium" : "border-[var(--border)] text-[var(--foreground-secondary)] bg-[var(--surface)]"}`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* Apply + Clear */}
+              <div className="flex gap-3 pt-2">
+                {hasActiveFilters && (
+                  <button
+                    onClick={() => { clearFilters(); setFiltersOpen(false); }}
+                    className="flex-1 py-3 border border-[var(--border)] text-sm text-[var(--foreground-secondary)] rounded-xl touch-manipulation"
+                  >
+                    {t.clear_filters}
+                  </button>
+                )}
+                <button
+                  onClick={() => setFiltersOpen(false)}
+                  className="flex-1 py-3 bg-[var(--gold)] text-black text-sm font-bold rounded-xl touch-manipulation"
+                >
+                  Ver {countLabel}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Filter Bar */}
       <div className="mb-6 sm:mb-8">
-        {/* Mobile: toggle filters button */}
+        {/* Mobile: trigger button row */}
         <div className="flex items-center justify-between gap-3 mb-3 sm:hidden">
           <button
-            onClick={() => setFiltersOpen((v) => !v)}
-            className="flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--foreground-secondary)] border border-[var(--border)] px-4 py-2 hover:border-[var(--gold)]/50 transition-colors"
-            aria-expanded={filtersOpen}
-            aria-controls="filter-panel"
+            onClick={() => setFiltersOpen(true)}
+            className={`flex items-center gap-2 text-sm rounded-xl px-4 py-2.5 border transition-colors touch-manipulation ${hasActiveFilters ? "border-[var(--gold)] text-[var(--gold)] bg-[var(--gold)]/10" : "border-[var(--border)] text-[var(--foreground-secondary)] bg-[var(--surface)]"}`}
+            aria-haspopup="dialog"
           >
-            <SlidersHorizontal size={14} />
-            {t.filter_sort
-              .replace("Ordenar", "Filtros")
-              .replace("Sort", "Filters")
-              .replace("Ordenar", "Filtros")}
-          </button>
-
-          <div className="flex items-center gap-2">
+            <SlidersHorizontal size={15} />
+            Filtros
             {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="text-[10px] uppercase tracking-widest text-[var(--gold)] hover:text-[var(--gold-hover)] flex items-center gap-1 transition-colors"
-              >
-                <X size={11} />
-                {t.clear_filters}
-              </button>
+              <span className="w-5 h-5 bg-[var(--gold)] text-black text-[10px] font-bold rounded-full flex items-center justify-center">
+                {[sexFilter !== "all", priceRange !== "all", disciplineFilter !== "all"].filter(Boolean).length}
+              </span>
             )}
-            <span className="text-[10px] text-[var(--foreground-muted)] uppercase tracking-widest">
-              {countLabel}
-            </span>
-          </div>
+          </button>
+          <span className="text-[11px] text-[var(--foreground-muted)] uppercase tracking-widest">
+            {countLabel}
+          </span>
         </div>
 
-        {/* Desktop filter row / Mobile collapsible panel */}
+        {/* Desktop filter row */}
         <div
           id="filter-panel"
-          className={`${filtersOpen ? "flex" : "hidden"} sm:flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-wrap`}
+          className="hidden sm:flex flex-row sm:items-center gap-3 sm:gap-4 flex-wrap"
         >
           {/* Sex filter */}
           <div className="relative flex items-center">

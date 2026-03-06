@@ -150,7 +150,7 @@ export default function JornalListClient({
       {/* ================================================================= */}
       {/* HERO EDITORIAL — tipografia dramática */}
       {/* ================================================================= */}
-      <div className="relative pt-32 pb-20 px-6 overflow-hidden">
+      <div className="relative pt-20 sm:pt-32 pb-10 sm:pb-20 px-4 sm:px-6 overflow-hidden">
         {/* Linha dourada decorativa lateral */}
         <div className="absolute left-0 top-32 bottom-20 w-px bg-gradient-to-b from-transparent via-[var(--gold)]/40 to-transparent hidden md:block" />
 
@@ -171,7 +171,7 @@ export default function JornalListClient({
                 style={{ animationDelay: "0.25s" }}
               />
 
-              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif text-[var(--foreground)] leading-[0.9] tracking-tight">
+              <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-serif text-[var(--foreground)] leading-[0.9] tracking-tight">
                 <TextSplit text={t.journal.title} baseDelay={0.1} wordDelay={0.06} />
               </h1>
             </div>

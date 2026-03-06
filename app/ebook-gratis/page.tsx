@@ -91,14 +91,14 @@ export default function EbookGratisPage() {
   return (
     <main className="min-h-screen bg-[var(--background)]">
       {/* ===== HERO ===== */}
-      <section className="relative pt-28 sm:pt-36 pb-20 sm:pb-28 overflow-hidden">
+      <section className="relative pt-20 sm:pt-36 pb-12 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 bg-gradient-to-b from-[var(--gold)]/8 via-transparent to-transparent" />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[var(--gold)]/5 rounded-full blur-[150px]" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
             {/* Left */}
             <div className="opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]">
               <div className="inline-flex items-center gap-2 bg-[var(--gold)]/10 border border-[var(--gold)]/20 px-4 py-2 mb-8">
@@ -112,14 +112,14 @@ export default function EbookGratisPage() {
                 Introdução ao <span className="text-[var(--gold)]">Cavalo Lusitano</span>
               </h1>
 
-              <p className="text-lg sm:text-xl text-[var(--foreground-secondary)] mb-8 leading-relaxed max-w-xl">
+              <p className="hidden sm:block text-lg sm:text-xl text-[var(--foreground-secondary)] mb-8 leading-relaxed max-w-xl">
                 O guia essencial para conhecer a raça mais nobre da Península Ibérica.{" "}
                 <span className="text-[var(--foreground)] font-medium">
                   30 páginas de puro conhecimento.
                 </span>
               </p>
 
-              <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-3 mb-10">
+              <div className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-3 mb-6 sm:mb-10">
                 {[
                   { icon: FileText, text: `30 ${t.ebook_page.pages}` },
                   { icon: Clock, text: `20 ${t.ebook_page.read_time}` },
@@ -141,10 +141,10 @@ export default function EbookGratisPage() {
 
             {/* Right - Book Cover */}
             <div
-              className="relative opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
+              className="relative order-first lg:order-last opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
               style={{ animationDelay: "0.2s" }}
             >
-              <div className="relative max-w-sm mx-auto">
+              <div className="relative max-w-[200px] sm:max-w-sm mx-auto">
                 {/* Glow externo */}
                 <div className="absolute inset-0 bg-[var(--gold)]/15 blur-[100px] scale-[1.3]" />
 
@@ -269,14 +269,14 @@ export default function EbookGratisPage() {
                 </div>
 
                 <div
-                  className="absolute -top-4 -right-4 sm:-top-5 sm:-right-5 bg-[var(--gold)] text-black px-5 py-2.5 text-xs font-bold shadow-lg opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+                  className="absolute -top-3 -right-3 sm:-top-5 sm:-right-5 bg-[var(--gold)] text-black px-3 sm:px-5 py-1.5 sm:py-2.5 text-[10px] sm:text-xs font-bold shadow-lg opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
                   style={{ animationDelay: "0.4s" }}
                 >
                   GRÁTIS
                 </div>
 
                 <div
-                  className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 bg-[var(--background-secondary)] border border-[var(--border)] px-4 py-2.5 shadow-xl flex items-center gap-2.5 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+                  className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 bg-[var(--background-secondary)] border border-[var(--border)] px-3 sm:px-4 py-2 sm:py-2.5 shadow-xl flex items-center gap-2 sm:gap-2.5 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
                   style={{ animationDelay: "0.5s" }}
                 >
                   <div className="flex gap-0.5">
@@ -284,7 +284,7 @@ export default function EbookGratisPage() {
                       <Star key={i} size={11} className="fill-[var(--gold)] text-[var(--gold)]" />
                     ))}
                   </div>
-                  <span className="text-[var(--foreground)] text-xs font-medium">4.9/5</span>
+                  <span className="text-[var(--foreground)] text-[10px] sm:text-xs font-medium">4.9/5</span>
                   <span className="text-[var(--foreground-muted)] text-[10px]">(234)</span>
                 </div>
               </div>
@@ -294,9 +294,9 @@ export default function EbookGratisPage() {
       </section>
 
       {/* ===== CHAPTERS ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)]">
+      <section className="py-10 sm:py-28 border-t border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+          <div className="text-center mb-8 sm:mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {t.ebook_page.content}
             </span>
@@ -371,9 +371,9 @@ export default function EbookGratisPage() {
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <section className="py-20 sm:py-28">
+      <section className="py-10 sm:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
+          <div className="text-center mb-10 sm:mb-16 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {t.ebook_page.testimonials}
             </span>
@@ -390,11 +390,11 @@ export default function EbookGratisPage() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto">
+          <div className="flex gap-4 overflow-x-auto scrollbar-hide sm:grid sm:grid-cols-3 sm:gap-6 max-w-5xl mx-auto -mx-4 px-4 sm:mx-auto sm:px-0">
             {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.name}
-                className="group bg-[var(--surface-hover)] border border-[var(--border)] p-6 sm:p-8 hover:border-[var(--gold)]/15 hover:bg-[var(--surface-hover)] transition-all duration-500 relative overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+                className="group flex-none w-[80vw] sm:w-auto bg-[var(--surface-hover)] border border-[var(--border)] p-6 sm:p-8 hover:border-[var(--gold)]/15 hover:bg-[var(--surface-hover)] transition-all duration-500 relative overflow-hidden opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-[var(--gold)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -426,7 +426,7 @@ export default function EbookGratisPage() {
       </section>
 
       {/* ===== FINAL CTA ===== */}
-      <section className="relative py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden">
+      <section className="relative py-12 sm:py-32 border-t border-[var(--border)] overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--gold)]/5 rounded-full blur-[120px]" />
         </div>

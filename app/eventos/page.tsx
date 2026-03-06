@@ -57,7 +57,7 @@ export default async function EventosPage() {
       ))}
       <Suspense
         fallback={
-          <div className="min-h-screen bg-[var(--background)] pt-32 pb-20 px-6">
+          <div className="min-h-screen bg-[var(--background)] pt-20 sm:pt-32 pb-20 px-4 sm:px-6">
             <div className="max-w-6xl mx-auto animate-pulse">
               <div className="h-8 w-48 bg-[var(--background-card)] rounded mx-auto mb-8" />
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

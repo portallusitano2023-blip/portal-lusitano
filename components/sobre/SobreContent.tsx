@@ -30,7 +30,7 @@ import {
 /* ─── Ornamental Separator ─────────────────────────────────────── */
 function OrnamentalSeparator() {
   return (
-    <div className="flex items-center gap-4 max-w-5xl mx-auto px-4 sm:px-6 mb-20 sm:mb-28">
+    <div className="flex items-center gap-4 max-w-5xl mx-auto px-4 sm:px-6 mb-10 sm:mb-28">
       <div className="flex-1 h-px bg-[var(--border)]" />
       <div className="w-1.5 h-1.5 rotate-45 bg-[var(--gold)]/40" />
       <div className="flex-1 h-px bg-[var(--border)]" />
@@ -234,9 +234,9 @@ export default function SobreContent() {
   );
 
   return (
-    <main className="min-h-screen bg-[var(--background)] pt-32 pb-20">
+    <main className="min-h-screen bg-[var(--background)] pt-20 sm:pt-32 pb-20">
       {/* ===== HERO ===== */}
-      <section className="px-4 sm:px-6 mb-20 sm:mb-28">
+      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
         <div className="max-w-4xl mx-auto text-center">
           <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-6 block">
@@ -289,7 +289,7 @@ export default function SobreContent() {
       </section>
 
       {/* ===== MANIFESTO ===== */}
-      <section className="relative px-4 sm:px-6 py-24 sm:py-32 overflow-hidden">
+      <section className="relative px-4 sm:px-6 py-12 sm:py-32 overflow-hidden">
         {/* Subtle gradient background */}
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--background)] via-[var(--background-secondary)] to-[var(--background)] pointer-events-none" />
         <div className="absolute inset-0 pointer-events-none">
@@ -329,7 +329,7 @@ export default function SobreContent() {
       <OrnamentalSeparator />
 
       {/* ===== ORIGIN STORY ===== */}
-      <section className="px-4 sm:px-6 mb-20 sm:mb-28">
+      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
         <div className="max-w-5xl mx-auto">
           <AnimateOnScroll>
             <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
@@ -401,9 +401,9 @@ export default function SobreContent() {
       <OrnamentalSeparator />
 
       {/* ===== VALUES ===== */}
-      <section className="px-4 sm:px-6 mb-20 sm:mb-28">
+      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
         <div className="max-w-5xl mx-auto">
-          <AnimateOnScroll className="text-center mb-16">
+          <AnimateOnScroll className="text-center mb-8 sm:mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {tr("Valores", "Values", "Valores")}
             </span>
@@ -438,9 +438,9 @@ export default function SobreContent() {
       <OrnamentalSeparator />
 
       {/* ===== WHAT WE OFFER ===== */}
-      <section className="px-4 sm:px-6 mb-20 sm:mb-28">
+      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
         <div className="max-w-5xl mx-auto">
-          <AnimateOnScroll className="text-center mb-16">
+          <AnimateOnScroll className="text-center mb-8 sm:mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {tr("Plataforma", "Platform", "Plataforma")}
             </span>
@@ -484,9 +484,9 @@ export default function SobreContent() {
       <OrnamentalSeparator />
 
       {/* ===== PARA QUEM ===== */}
-      <section className="px-4 sm:px-6 mb-20 sm:mb-28">
+      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
         <div className="max-w-5xl mx-auto">
-          <AnimateOnScroll className="text-center mb-16">
+          <AnimateOnScroll className="text-center mb-8 sm:mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {tr("Audiência", "Audience", "Audiencia")}
             </span>

@@ -158,7 +158,7 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
   };
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-32 pb-20 px-6 selection:bg-[var(--gold)] selection:text-black">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-32 pb-20 px-4 sm:px-6 selection:bg-[var(--gold)] selection:text-black">
       <div className="max-w-6xl mx-auto">
         {/* CABECALHO DO DASHBOARD */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-[var(--border)] pb-8 gap-6">

@@ -10,7 +10,7 @@ export default function ToolsHero() {
   const tr = createTranslator(language);
 
   return (
-    <section className="relative pt-28 sm:pt-32 pb-24 sm:pb-28 px-6 overflow-hidden">
+    <section className="relative pt-20 sm:pt-32 pb-12 sm:pb-28 px-4 sm:px-6 overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--gold)]/5 rounded-full blur-[120px]" />

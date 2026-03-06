@@ -174,6 +174,23 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
         ]}
       />
 
+      {/* ── Sticky CTA bar — mobile only (above BottomNav) ── */}
+      <div className="lg:hidden fixed bottom-16 left-0 right-0 z-30 bg-[var(--background)]/95 backdrop-blur-md border-t border-[var(--border)] px-4 py-3 flex items-center gap-3">
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] leading-none mb-0.5">Preço</p>
+          <p className="text-lg font-serif text-[var(--gold)] leading-none">
+            {Number(cavalo.preco).toLocaleString("pt-PT")} €
+          </p>
+        </div>
+        <a
+          href={`mailto:geral@portal-lusitano.pt?subject=Interesse: ${encodeURIComponent(cavalo.nome_cavalo)} (REG: ${cavalo.id.slice(0, 8).toUpperCase()})`}
+          className="flex items-center gap-2 bg-[var(--gold)] text-black px-5 py-3 text-[11px] uppercase font-bold tracking-widest rounded-lg touch-manipulation active:scale-95 whitespace-nowrap"
+        >
+          <Mail size={14} />
+          Pedir Info
+        </a>
+      </div>
+
       <div className="flex flex-col lg:flex-row min-h-screen bg-[var(--background)] text-[var(--foreground)]">
         {/* LEFT PANEL — fixed hero image (desktop) / top image (mobile) */}
         <div className="lg:w-1/2 h-[55vw] max-h-[70vh] lg:h-screen lg:max-h-none lg:fixed lg:top-0 lg:left-0 relative border-r border-[var(--background-secondary)] z-0">
@@ -237,7 +254,7 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
 
         {/* RIGHT PANEL — scrollable dossier */}
         <div className="lg:w-1/2 lg:ml-[50%] bg-[var(--background)] relative z-10">
-          <div className="px-4 sm:px-8 py-12 sm:py-16 lg:p-20 xl:p-24 max-w-2xl mx-auto space-y-12 sm:space-y-16">
+          <div className="px-4 sm:px-8 py-12 sm:py-16 lg:p-20 xl:p-24 pb-28 lg:pb-20 max-w-2xl mx-auto space-y-12 sm:space-y-16">
             {/* HEADER */}
             <header className="space-y-4 border-b border-[var(--background-secondary)] pb-8">
               {/* Breadcrumb chips */}

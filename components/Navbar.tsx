@@ -81,7 +81,7 @@ export default memo(function Navbar() {
       }
       className={`fixed w-full z-50 border-b transition-all duration-300 ${scrolled ? "bg-[var(--nav-bg-scrolled)] border-[var(--border)] shadow-lg" : "bg-[var(--nav-bg)] border-[var(--border)]"}`}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 md:h-24 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 md:h-24 flex items-center justify-between gap-4">
         {/* LOGÓTIPO COM IMAGEM */}
         <LocalizedLink href="/" className="flex items-center gap-2 md:gap-3 group flex-shrink-0">
           <Image
@@ -92,7 +92,7 @@ export default memo(function Navbar() {
             priority
             className="w-9 h-9 md:w-11 md:h-11 object-contain group-hover:scale-105 transition-transform"
           />
-          <div className="flex flex-col justify-center">
+          <div className="hidden sm:flex flex-col justify-center">
             <span className="text-base md:text-lg lg:text-xl font-serif text-[var(--foreground)] tracking-wide group-hover:text-[var(--gold)] transition-colors leading-none whitespace-nowrap">
               PORTAL LUSITANO
             </span>

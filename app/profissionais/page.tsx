@@ -181,7 +181,7 @@ export default async function ProfissionaisPage() {
   return (
     <>
       {/* Professional Pricing Section */}
-      <section className="px-6 md:px-12 pt-32 pb-20 max-w-5xl mx-auto">
+      <section className="px-4 sm:px-6 md:px-12 pt-20 sm:pt-32 pb-20 max-w-5xl mx-auto">
         <div className="text-center mb-16">
           <span className="inline-block text-[var(--gold)] text-[9px] uppercase tracking-[0.25em] sm:tracking-[0.4em] font-bold border border-[var(--gold)]/30 px-4 py-2 mb-8">
             Registe-se como Profissional
