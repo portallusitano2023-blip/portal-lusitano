@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { logger } from "@/lib/logger";
 import { strictLimiter } from "@/lib/rate-limit";
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
       }
 
       const ext = MIME_TO_EXT[file.type] || "jpg";
-      const uniqueName = `${Date.now()}-${crypto.randomUUID().replace(/-/g, "").substring(0, 8)}.${ext}`;
+      const uniqueName = `${Date.now()}-${randomUUID().replace(/-/g, "").substring(0, 8)}.${ext}`;
       const path = `pending/${uniqueName}`;
 
       const buffer = await file.arrayBuffer();
@@ -97,7 +98,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ urls });
   } catch (error) {
-    logger.error("Upload route error:", error);
-    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    logger.error("Upload route error:", message);
+    return NextResponse.json(
+      {
+        error: "Erro interno no servidor",
+        ...(process.env.NODE_ENV !== "production" && { detail: message }),
+      },
+      { status: 500 }
+    );
   }
 }
