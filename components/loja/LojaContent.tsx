@@ -1,169 +1,566 @@
 "use client";
 
+import { useState, useMemo, useRef, useEffect } from "react";
 import Image from "next/image";
 import LocalizedLink from "@/components/LocalizedLink";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, ArrowRight, ListFilter, Package, Award, Truck, Star, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { ProductListing } from "@/types/product";
 
-export default function LojaContent({ products }: { products: ProductListing[] }) {
-  const { t } = useLanguage();
-  const isSingle = products.length === 1;
+// ─── Types ─────────────────────────────────────────────────────────────────
+
+type SortKey = "default" | "price_asc" | "price_desc" | "alpha";
+
+// ─── Trust pillars ─────────────────────────────────────────────────────────
+
+const TRUST = [
+  { Icon: Package, label: "Artesanal" },
+  { Icon: Truck, label: "Envio Portugal" },
+  { Icon: Award, label: "Qualidade Premium" },
+  { Icon: Star, label: "Exclusivo" },
+] as const;
+
+// ─── Sort dropdown ──────────────────────────────────────────────────────────
+
+const SORT_OPTIONS: { key: SortKey; label: string }[] = [
+  { key: "default", label: "Relevância" },
+  { key: "price_asc", label: "Preço: Crescente" },
+  { key: "price_desc", label: "Preço: Decrescente" },
+  { key: "alpha", label: "Alfabético" },
+];
+
+function SortDropdown({
+  value,
+  onChange,
+}: {
+  value: SortKey;
+  onChange: (k: SortKey) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const active = SORT_OPTIONS.find((o) => o.key === value)!;
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-32 pb-20 sm:pb-32">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* CABECALHO EDITORIAL DE LUXO */}
-        <div className="flex flex-col items-center text-center mb-12 md:mb-32 relative opacity-0 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
-          {/* Linha vertical decorativa */}
-          <div
-            className="w-[1px] h-16 bg-gradient-to-b from-transparent via-[var(--gold)] to-transparent mb-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.2s" }}
-          />
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-secondary)] hover:text-[var(--gold)] border border-[var(--border)] hover:border-[var(--gold)]/40 px-4 py-2.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+      >
+        <ListFilter size={12} aria-hidden="true" />
+        {active.label}
+      </button>
 
+      {open && (
+        <div
+          role="listbox"
+          className="absolute right-0 top-full mt-1 z-50 bg-[var(--background)] border border-[var(--border)] shadow-[0_8px_32px_rgba(0,0,0,0.4)] min-w-[190px]"
+        >
+          {SORT_OPTIONS.map((opt) => (
+            <button
+              key={opt.key}
+              role="option"
+              aria-selected={value === opt.key}
+              onClick={() => {
+                onChange(opt.key);
+                setOpen(false);
+              }}
+              className={`w-full text-left px-4 py-3 text-[10px] uppercase tracking-[0.25em] transition-colors hover:bg-[var(--gold)]/8 hover:text-[var(--gold)] ${
+                value === opt.key
+                  ? "text-[var(--gold)] bg-[var(--gold)]/5"
+                  : "text-[var(--foreground-secondary)]"
+              }`}
+            >
+              {opt.key === value && (
+                <span className="inline-block w-1 h-1 rounded-full bg-[var(--gold)] mr-2 -translate-y-0.5" />
+              )}
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Price helper ───────────────────────────────────────────────────────────
+
+function formatPrice(product: ProductListing) {
+  return Number(product.priceRange?.minVariantPrice.amount || 0).toFixed(2);
+}
+
+// ─── Regular product card (grid) ───────────────────────────────────────────
+
+function ProductCard({
+  product,
+  index,
+  isNew,
+}: {
+  product: ProductListing;
+  index: number;
+  isNew?: boolean;
+}) {
+  const price = formatPrice(product);
+
+  return (
+    <LocalizedLink
+      href={`/loja/${product.handle}`}
+      className="group block relative overflow-hidden bg-[var(--background)] aspect-[3/4] active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+      style={{
+        opacity: 0,
+        animation: `fadeSlideIn 0.5s ease-out ${Math.min(index * 0.08, 0.5) + 0.2}s forwards`,
+      }}
+      aria-label={`${product.title} — ${price} EUR`}
+    >
+      {/* Gold top accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] z-20 bg-[var(--gold)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+      {/* Image */}
+      {product.images[0]?.url ? (
+        <Image
+          src={product.images[0].url}
+          alt={product.title}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+          priority={index < 3}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
+          <ShoppingBag className="text-[var(--foreground-muted)]" size={32} aria-hidden="true" />
+        </div>
+      )}
+
+      {/* Gradient overlay — deepens on hover */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent group-hover:from-black/95 transition-opacity duration-500" />
+
+      {/* NEW badge */}
+      {isNew && (
+        <div className="absolute top-4 left-4 z-10">
+          <span className="text-[7px] uppercase tracking-[0.45em] font-bold bg-[var(--gold)] text-black px-3 py-1.5">
+            NOVO
+          </span>
+        </div>
+      )}
+
+      {/* Content — slides up 6px on hover */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-10 translate-y-1 group-hover:translate-y-0 transition-transform duration-400">
+        <span
+          className="text-[8px] uppercase tracking-[0.45em] text-[var(--gold)]/60 block mb-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          aria-hidden="true"
+        >
+          Heritage
+        </span>
+
+        <h3 className="text-base sm:text-[17px] font-serif text-white mb-2 leading-tight group-hover:text-[var(--gold)] transition-colors duration-300 line-clamp-2">
+          {product.title}
+        </h3>
+
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-serif text-[var(--gold)] text-sm sm:text-base">
+            {price}
+            <span className="text-[10px] text-white/40 ml-1">EUR</span>
+          </span>
           <span
-            className="text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-[var(--gold)] mb-6 ml-1 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-            style={{ animationDelay: "0.15s" }}
+            className="hidden sm:flex items-center gap-1 text-[7px] uppercase tracking-[0.3em] text-white/40 group-hover:text-[var(--gold)] transition-colors duration-300"
+            aria-hidden="true"
           >
-            {t.shop.collection}
+            Ver peça
+            <ArrowRight
+              size={8}
+              className="group-hover:translate-x-0.5 transition-transform duration-300"
+            />
+          </span>
+        </div>
+      </div>
+    </LocalizedLink>
+  );
+}
+
+// ─── Hero (wide) card for first featured product ─────────────────────────
+
+function HeroCard({ product }: { product: ProductListing }) {
+  const price = formatPrice(product);
+
+  return (
+    <LocalizedLink
+      href={`/loja/${product.handle}`}
+      className="group block relative overflow-hidden bg-[var(--background)] w-full aspect-[16/9] sm:aspect-[21/9] active:scale-[0.99] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+      style={{ opacity: 0, animation: "fadeSlideIn 0.6s ease-out 0.15s forwards" }}
+      aria-label={`${product.title} — ${price} EUR`}
+    >
+      {/* Gold top accent */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] z-20 bg-[var(--gold)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+      {/* Image */}
+      {product.images[0]?.url && (
+        <Image
+          src={product.images[0].url}
+          alt={product.title}
+          fill
+          sizes="100vw"
+          className="object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
+          priority
+        />
+      )}
+
+      {/* Directional gradient — fades from left */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent" />
+      {/* Bottom vignette */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+      {/* Reveal shimmer on hover */}
+      <div className="absolute inset-0 bg-[var(--gold)]/0 group-hover:bg-[var(--gold)]/3 transition-colors duration-700" />
+
+      {/* DESTAQUE badge */}
+      <div className="absolute top-5 left-5 sm:top-8 sm:left-8 z-10 flex items-center gap-2">
+        <span className="text-[7px] uppercase tracking-[0.45em] font-bold bg-[var(--gold)] text-black px-3 py-1.5">
+          DESTAQUE
+        </span>
+      </div>
+
+      {/* Ordinal ghost watermark */}
+      <span
+        className="absolute right-6 bottom-4 text-white/4 font-serif text-[8rem] sm:text-[12rem] leading-none select-none pointer-events-none"
+        aria-hidden="true"
+      >
+        01
+      </span>
+
+      {/* Content */}
+      <div className="absolute bottom-0 left-0 sm:w-[55%] p-6 sm:p-10 md:p-12 z-10">
+        <span
+          className="text-[9px] uppercase tracking-[0.5em] text-[var(--gold)]/80 block mb-3"
+          aria-hidden="true"
+        >
+          Colecção Heritage
+        </span>
+        <h2 className="text-xl sm:text-3xl md:text-4xl font-serif text-white mb-3 leading-[1.1] group-hover:text-[var(--gold)] transition-colors duration-400">
+          {product.title}
+        </h2>
+        {product.description && (
+          <p className="text-white/55 text-sm mb-5 line-clamp-2 hidden sm:block leading-relaxed">
+            {product.description}
+          </p>
+        )}
+        <div className="flex items-center gap-5">
+          <span className="font-serif text-[var(--gold)] text-xl">
+            {price}
+            <span className="text-xs text-white/40 ml-1">EUR</span>
+          </span>
+          <span className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.3em] text-white/60 border border-white/20 px-4 py-2 group-hover:border-[var(--gold)] group-hover:text-[var(--gold)] transition-all duration-400">
+            Ver peça
+            <ArrowRight
+              size={10}
+              className="group-hover:translate-x-0.5 transition-transform duration-300"
+              aria-hidden="true"
+            />
+          </span>
+        </div>
+      </div>
+    </LocalizedLink>
+  );
+}
+
+// ─── Main component ─────────────────────────────────────────────────────────
+
+export default function LojaContent({ products }: { products: ProductListing[] }) {
+  const { t } = useLanguage();
+  const [sortKey, setSortKey] = useState<SortKey>("default");
+
+  const sorted = useMemo(() => {
+    const list = [...products];
+    if (sortKey === "price_asc")
+      return list.sort(
+        (a, b) =>
+          Number(a.priceRange?.minVariantPrice.amount || 0) -
+          Number(b.priceRange?.minVariantPrice.amount || 0)
+      );
+    if (sortKey === "price_desc")
+      return list.sort(
+        (a, b) =>
+          Number(b.priceRange?.minVariantPrice.amount || 0) -
+          Number(a.priceRange?.minVariantPrice.amount || 0)
+      );
+    if (sortKey === "alpha") return list.sort((a, b) => a.title.localeCompare(b.title));
+    return list;
+  }, [products, sortKey]);
+
+  const isSingle = products.length === 1;
+  const featuredProduct = sorted[0];
+  const restProducts = sorted.slice(1);
+
+  return (
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      {/* ── HERO HEADER ── */}
+      <section className="relative pt-24 sm:pt-40 pb-12 sm:pb-16 overflow-hidden">
+        {/* Atmospheric glows */}
+        <div
+          className="gradient-orb absolute -top-32 right-0 w-[45vw] h-[45vw] max-w-[500px] max-h-[500px] pointer-events-none"
+          style={{
+            background: "radial-gradient(circle, rgba(197,160,89,0.10) 0%, transparent 70%)",
+          }}
+          aria-hidden="true"
+        />
+        <div
+          className="gradient-orb absolute bottom-0 -left-16 w-[30vw] h-[30vw] max-w-[350px] max-h-[350px] pointer-events-none"
+          style={{
+            background: "radial-gradient(circle, rgba(197,160,89,0.06) 0%, transparent 70%)",
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Decorative top rule */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, rgba(197,160,89,0.6), transparent)",
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center relative z-10">
+          {/* Badge */}
+          <span
+            className="inline-flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] text-[var(--gold)] mb-6"
+            style={{ opacity: 0, animation: "fadeSlideIn 0.4s ease-out 0.05s forwards" }}
+          >
+            <span className="w-6 h-px bg-[var(--gold)]/50" aria-hidden="true" />
+            Colecção Portuguesa
+            <span className="w-6 h-px bg-[var(--gold)]/50" aria-hidden="true" />
           </span>
 
+          {/* Main headline */}
           <h1
-            className="text-3xl sm:text-5xl md:text-7xl font-serif italic text-[var(--foreground)] mb-8 tracking-wide opacity-90 selection:bg-[var(--gold)] selection:text-black opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
-            style={{ animationDelay: "0.2s" }}
+            className="text-4xl sm:text-6xl md:text-8xl font-serif italic text-[var(--foreground)] leading-[0.95] tracking-wide mb-4 selection:bg-[var(--gold)] selection:text-black"
+            style={{ opacity: 0, animation: "fadeSlideIn 0.4s ease-out 0.15s forwards" }}
           >
             {t.shop.legacy}
           </h1>
 
+          {/* Decorative divider */}
+          <div
+            className="flex items-center justify-center gap-4 my-6"
+            style={{ opacity: 0, animation: "fadeSlideIn 0.4s ease-out 0.25s forwards" }}
+            aria-hidden="true"
+          >
+            <span className="w-12 h-px bg-[var(--gold)]/35" />
+            <span className="text-[var(--gold)] text-[10px]">◆</span>
+            <span className="w-12 h-px bg-[var(--gold)]/35" />
+          </div>
+
+          {/* Subtitle */}
           <p
-            className="text-[9px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] max-w-lg leading-relaxed opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
-            style={{ animationDelay: "0.3s" }}
+            className="text-[9px] uppercase tracking-[0.45em] text-[var(--foreground-muted)] max-w-xs mx-auto"
+            style={{ opacity: 0, animation: "fadeSlideIn 0.4s ease-out 0.3s forwards" }}
           >
             {t.shop.legacy_subtitle}
           </p>
-        </div>
 
-        {/* PRODUTOS */}
-        {products.length === 0 ? (
+          {/* Toolbar: count + sort */}
+          {products.length > 0 && (
+            <div
+              className="mt-10 sm:mt-14 flex items-center justify-between"
+              style={{ opacity: 0, animation: "fadeSlideIn 0.4s ease-out 0.4s forwards" }}
+            >
+              {/* Left: piece count */}
+              <div className="flex items-center gap-2">
+                <span className="w-px h-4 bg-[var(--gold)]" aria-hidden="true" />
+                <span className="text-[11px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]">
+                  <span className="text-[var(--gold)] font-serif text-base mr-1">{products.length}</span>
+                  {products.length === 1 ? "peça" : "peças"}
+                </span>
+              </div>
+
+              {/* Right: sort (only if >1 product) */}
+              {products.length > 1 && (
+                <SortDropdown value={sortKey} onChange={setSortKey} />
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── PRODUCTS AREA ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24 sm:pb-36">
+        {/* ── EMPTY STATE ── */}
+        {products.length === 0 && (
           <div className="flex flex-col items-center justify-center text-center py-32 space-y-6">
-            <div className="w-16 h-[1px] bg-[var(--gold)] opacity-30" />
+            <div className="w-16 h-px bg-[var(--gold)] opacity-30" aria-hidden="true" />
+            <ShoppingBag className="text-[var(--foreground-muted)]" size={40} aria-hidden="true" />
             <p className="text-[var(--foreground-secondary)] font-serif text-xl italic">
               {t.shop.not_found || "Nenhum produto disponível de momento."}
             </p>
-            <p className="text-[var(--foreground-muted)] text-xs uppercase tracking-[0.3em]">
+            <p className="text-[var(--foreground-muted)] text-[10px] uppercase tracking-[0.35em]">
               {t.shop.back_collection || "Volte em breve"}
             </p>
           </div>
-        ) : isSingle ? (
-          /* LAYOUT PRODUTO ÚNICO — centrado e premium */
-          <div
-            className="flex flex-col items-center opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-            style={{ animationDelay: "0.3s" }}
+        )}
+
+        {/* ── SINGLE PRODUCT — split-screen ── */}
+        {isSingle && featuredProduct && (
+          <section
+            aria-label={featuredProduct.title}
+            className="grid md:grid-cols-2 gap-8 md:gap-16 items-center"
+            style={{ opacity: 0, animation: "fadeSlideIn 0.6s ease-out 0.3s forwards" }}
           >
+            {/* Image */}
             <LocalizedLink
-              href={`/loja/${products[0].handle}`}
-              className="group block w-full max-w-[520px]"
+              href={`/loja/${featuredProduct.handle}`}
+              className="group block relative aspect-[3/4] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+              aria-label={featuredProduct.title}
             >
-              {/* MOLDURA DA IMAGEM — maior para produto único */}
-              <div className="aspect-[4/5] w-full bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative mb-10">
-                <div className="absolute inset-0 z-10 shadow-[inset_0_0_60px_rgba(0,0,0,0.2)] pointer-events-none transition-opacity duration-700 group-hover:opacity-40" />
+              <div className="absolute top-0 left-0 right-0 h-[2px] z-20 bg-[var(--gold)]/0 group-hover:bg-[var(--gold)] transition-all duration-500" />
+              {featuredProduct.images[0]?.url ? (
+                <Image
+                  src={featuredProduct.images[0].url}
+                  alt={featuredProduct.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 600px"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  priority
+                />
+              ) : (
+                <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
+                  <ShoppingBag className="text-[var(--foreground-muted)]" size={48} aria-hidden="true" />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-[var(--gold)]/0 group-hover:bg-[var(--gold)]/5 transition-colors duration-500" />
+            </LocalizedLink>
 
-                {products[0].images[0]?.url ? (
-                  <Image
-                    src={products[0].images[0].url}
-                    alt={products[0].title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 520px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    priority
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-xs uppercase tracking-widest">
-                    Sem Imagem
-                  </div>
-                )}
-              </div>
-
-              {/* INFO DO PRODUTO */}
-              <div className="flex flex-col items-center text-center">
-                <h3 className="text-2xl md:text-3xl font-serif italic mb-3 group-hover:text-[var(--foreground-secondary)] transition-colors">
-                  {products[0].title}
-                </h3>
-
-                {products[0].description && (
-                  <p className="text-sm text-[var(--foreground-muted)] max-w-md mb-4 leading-relaxed">
-                    {products[0].description}
-                  </p>
-                )}
-
-                <p className="text-[var(--gold)] font-serif text-2xl mb-6">
-                  {Number(products[0].priceRange?.minVariantPrice.amount || 0).toFixed(2)}{" "}
-                  {t.shop.price_suffix}
+            {/* Info */}
+            <div className="flex flex-col justify-center">
+              <span className="text-[9px] uppercase tracking-[0.5em] text-[var(--gold)] mb-6 block">
+                Colecção Heritage
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[var(--foreground)] mb-4 leading-tight">
+                {featuredProduct.title}
+              </h2>
+              {featuredProduct.description && (
+                <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-6">
+                  {featuredProduct.description}
                 </p>
-
-                <span className="text-[9px] uppercase tracking-[0.35em] text-[var(--foreground-muted)] border border-[var(--border)] px-8 py-3 group-hover:border-[var(--gold)] group-hover:text-[var(--gold)] transition-all duration-500">
-                  {t.shop.discover}
+              )}
+              <div className="flex items-baseline gap-2 mb-10">
+                <span className="font-serif text-[var(--gold)] text-3xl">
+                  {formatPrice(featuredProduct)}
+                </span>
+                <span className="text-[var(--foreground-muted)] text-xs uppercase tracking-wider">
+                  EUR
                 </span>
               </div>
-            </LocalizedLink>
-            <LocalizedLink
-              href={`/loja/${products[0].handle}`}
-              className="mt-6 flex items-center justify-center gap-2.5 bg-[var(--gold)] text-black px-10 py-4 text-[10px] uppercase tracking-[0.25em] font-bold hover:bg-white transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.2)] active:scale-95 touch-manipulation w-full max-w-[520px]"
-            >
-              <ShoppingBag size={15} strokeWidth={2.5} />
-              Comprar Agora
-            </LocalizedLink>
-          </div>
-        ) : (
-          /* GRELHA MULTI-PRODUTO */
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-8 sm:gap-y-20 md:gap-y-32">
-            {products.map((product, index) => (
-              <div
-                key={product.id}
-                className="flex flex-col items-center opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]"
-                style={{ animationDelay: `${Math.min(index * 0.1, 0.6) + 0.3}s` }}
+              <LocalizedLink
+                href={`/loja/${featuredProduct.handle}`}
+                className="flex items-center justify-center gap-2.5 bg-[var(--gold)] text-black px-10 py-4 text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-white transition-all duration-300 active:scale-95 touch-manipulation shadow-[0_0_30px_rgba(197,160,89,0.2)]"
               >
-                <LocalizedLink
-                  href={`/loja/${product.handle}`}
-                  className="group block w-full max-w-[380px]"
+                <ShoppingBag size={14} aria-hidden="true" />
+                Descobrir Peça
+              </LocalizedLink>
+            </div>
+          </section>
+        )}
+
+        {/* ── MULTI-PRODUCT LAYOUT ── */}
+        {!isSingle && featuredProduct && (
+          <div className="space-y-px">
+            {/* HERO PRODUCT */}
+            <HeroCard product={featuredProduct} />
+
+            {/* TRUST STRIP */}
+            <div
+              className="grid grid-cols-2 sm:grid-cols-4 gap-px"
+              style={{ background: "rgba(197,160,89,0.07)" }}
+              aria-label="Características da coleção"
+            >
+              {TRUST.map(({ Icon, label }) => (
+                <div
+                  key={label}
+                  className="bg-[var(--background)] px-5 py-5 sm:py-6 flex items-center gap-3"
                 >
-                  {/* MOLDURA DA IMAGEM */}
-                  <div className="aspect-[4/5] w-full bg-[var(--background-secondary)] border border-[var(--border)] overflow-hidden relative mb-6">
-                    <div className="absolute inset-0 z-10 shadow-[inset_0_0_40px_rgba(0,0,0,0.2)] pointer-events-none transition-opacity duration-700 group-hover:opacity-40" />
+                  <Icon
+                    size={14}
+                    className="text-[var(--gold)] flex-shrink-0"
+                    aria-hidden="true"
+                  />
+                  <span className="text-[9px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]">
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
 
-                    {product.images[0]?.url ? (
-                      <Image
-                        src={product.images[0].url}
-                        alt={product.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 380px"
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        priority={index < 2}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)] text-xs uppercase tracking-widest">
-                        Sem Imagem
-                      </div>
-                    )}
-                  </div>
-
-                  {/* INFO DO PRODUTO */}
-                  <div className="flex flex-col items-center text-center">
-                    <h3 className="text-xl font-serif italic mb-2 group-hover:text-[var(--foreground-secondary)] transition-colors">
-                      {product.title}
-                    </h3>
-                    <p className="text-[var(--gold)] font-serif text-base mb-5">
-                      {Number(product.priceRange?.minVariantPrice.amount || 0).toFixed(2)}{" "}
-                      {t.shop.price_suffix}
-                    </p>
-
-                    <span className="text-[8px] uppercase tracking-[0.35em] text-[var(--foreground-muted)] border-b border-transparent pb-1 group-hover:border-[var(--gold)] group-hover:text-[var(--gold)] transition-all duration-500">
-                      {t.shop.discover}
-                    </span>
-                  </div>
-                </LocalizedLink>
+            {/* PRODUCT GRID */}
+            {restProducts.length > 0 && (
+              <div
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px"
+                style={{ background: "rgba(197,160,89,0.07)" }}
+                aria-label="Produtos"
+              >
+                {restProducts.map((product, i) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    index={i}
+                    isNew={i < 2}
+                  />
+                ))}
               </div>
-            ))}
+            )}
+          </div>
+        )}
+
+        {/* ── COLLECTION NOTE ── */}
+        {products.length > 0 && (
+          <div
+            className="mt-20 sm:mt-28 relative"
+            style={{ opacity: 0, animation: "fadeSlideIn 0.6s ease-out 0.5s forwards" }}
+          >
+            {/* Decorative top rule with gold accent midpoint */}
+            <div className="relative mb-12 sm:mb-16">
+              <div className="border-t border-[var(--border)]" />
+              <span
+                className="absolute -top-px left-1/2 -translate-x-1/2 w-12 h-px bg-[var(--gold)]"
+                aria-hidden="true"
+              />
+            </div>
+
+            <div className="text-center max-w-2xl mx-auto">
+              <span
+                className="text-[9px] uppercase tracking-[0.5em] text-[var(--gold)] block mb-6"
+                aria-hidden="true"
+              >
+                A Nossa Promessa
+              </span>
+
+              <blockquote className="font-serif italic text-xl sm:text-2xl text-[var(--foreground-secondary)] leading-relaxed mb-8">
+                &ldquo;Produção artesanal sob encomenda. Cada peça é impressa individualmente com a
+                mais alta qualidade, unindo a tradição equestre Lusitana ao design
+                contemporâneo.&rdquo;
+              </blockquote>
+
+              {/* Decorative rule */}
+              <div
+                className="flex items-center justify-center gap-4 mb-8"
+                aria-hidden="true"
+              >
+                <span className="w-8 h-px bg-[var(--border)]" />
+                <span className="text-[var(--gold)] text-[10px]">◆</span>
+                <span className="w-8 h-px bg-[var(--border)]" />
+              </div>
+
+              <p className="text-[9px] uppercase tracking-[0.4em] text-[var(--foreground-muted)]">
+                Portal Lusitano — Lisboa, Portugal
+              </p>
+            </div>
           </div>
         )}
       </div>

@@ -444,135 +444,136 @@ export default function HomeContent({
         </div>
       </section>
 
-      {/* ===== MOBILE CONVERSION HUB ===== */}
-      <section className="sm:hidden px-4 pt-5 pb-6 bg-[var(--background)]">
+      {/* ===== CONVERSION HUB ===== */}
+      <section className="px-4 sm:px-6 pt-5 sm:pt-10 pb-6 sm:pb-12 bg-[var(--background)] border-t border-[var(--border)]/40">
+        <div className="max-w-7xl mx-auto">
 
-        {/* ── CARD 1: VENDER CAVALO ─────────────────────────── */}
-        <RevealOnScroll variant="fade-up" delay={0}>
-        <LocalizedLink
-          href="/vender-cavalo"
-          className="group flex items-center gap-4 w-full p-5 mb-3 rounded-2xl bg-gradient-to-r from-[var(--gold)]/20 via-[var(--gold)]/10 to-transparent border border-[var(--gold)]/40 active:scale-[0.98] touch-manipulation transition-transform relative overflow-hidden"
-        >
-          {/* brilho no hover */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[var(--gold)]/5 to-transparent opacity-0 group-active:opacity-100 transition-opacity" />
-          <div className="w-14 h-14 rounded-xl bg-[var(--gold)] flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(197,160,89,0.4)]">
-            <Euro size={24} className="text-black" strokeWidth={2.5} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              <p className="text-base font-bold text-[var(--foreground)] leading-tight">
-                {tr("Vender o seu Cavalo", "Sell Your Horse", "Vender su Caballo")}
-              </p>
-              <span className="text-[8px] uppercase tracking-[0.15em] bg-[var(--gold)]/20 text-[var(--gold)] px-1.5 py-0.5 rounded font-semibold flex-shrink-0">
-                {tr("Marketplace", "Marketplace", "Marketplace")}
-              </span>
-            </div>
-            <p className="text-[12px] text-[var(--foreground-muted)] leading-snug">
-              {tr("Compradores qualificados em Portugal e no mundo", "Qualified buyers in Portugal and worldwide", "Compradores en Portugal y en todo el mundo")}
-            </p>
-          </div>
-          <ArrowRight size={18} className="text-[var(--gold)] flex-shrink-0 group-active:translate-x-0.5 transition-transform" />
-        </LocalizedLink>
-        </RevealOnScroll>
-
-        {/* ── CARDS 2+3: LOJA + PRO ─────────────────────────── */}
-        <div className="grid grid-cols-2 gap-3 mb-3">
-
-          {/* Loja / Boné */}
+          {/* ── CARD 1: VENDER CAVALO ─────────────────────────── */}
+          <RevealOnScroll variant="fade-up" delay={0}>
           <LocalizedLink
-            href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
-            className="group relative flex flex-col rounded-2xl overflow-hidden border border-[var(--border)] active:scale-[0.97] touch-manipulation transition-transform bg-[var(--background-secondary)]"
+            href="/vender-cavalo"
+            className="group flex items-center gap-4 sm:gap-6 w-full p-5 sm:p-7 mb-3 sm:mb-4 rounded-2xl bg-gradient-to-r from-[var(--gold)]/20 via-[var(--gold)]/10 to-transparent border border-[var(--gold)]/40 hover:border-[var(--gold)]/60 active:scale-[0.98] hover:scale-[0.995] touch-manipulation transition-all relative overflow-hidden"
           >
-            {/* Imagem do produto */}
-            <div className="relative w-full aspect-square bg-[var(--background-card)]">
-              {featuredProduct?.images[0]?.url ? (
-                <Image
-                  src={featuredProduct.images[0].url}
-                  alt={featuredProduct.title}
-                  fill
-                  sizes="50vw"
-                  className="object-cover group-active:scale-105 transition-transform duration-300"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <ShoppingBag size={32} className="text-[var(--gold)]/30" />
-                </div>
-              )}
-              {/* Badge */}
-              <div className="absolute top-2 left-2">
-                <span className="bg-[var(--gold)] text-black text-[8px] uppercase tracking-[0.15em] font-bold px-2 py-1 rounded-sm leading-none">
-                  {tr("Exclusivo", "Exclusive", "Exclusivo")}
+            <div className="absolute inset-0 bg-gradient-to-r from-[var(--gold)]/5 to-transparent opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity" />
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[var(--gold)] flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(197,160,89,0.4)]">
+              <Euro size={24} className="text-black" strokeWidth={2.5} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
+                <p className="text-base sm:text-xl font-bold text-[var(--foreground)] leading-tight">
+                  {tr("Vender o seu Cavalo", "Sell Your Horse", "Vender su Caballo")}
+                </p>
+                <span className="text-[8px] uppercase tracking-[0.15em] bg-[var(--gold)]/20 text-[var(--gold)] px-1.5 py-0.5 rounded font-semibold flex-shrink-0">
+                  {tr("Marketplace", "Marketplace", "Marketplace")}
                 </span>
               </div>
-            </div>
-            {/* Info */}
-            <div className="p-3">
-              <p className="text-xs font-semibold text-[var(--foreground)] leading-tight mb-0.5 truncate">
-                {featuredProduct?.title ?? tr("Loja Exclusiva", "Exclusive Shop", "Tienda Exclusiva")}
+              <p className="text-[12px] sm:text-sm text-[var(--foreground-muted)] leading-snug">
+                {tr("Compradores qualificados em Portugal e no mundo", "Qualified buyers in Portugal and worldwide", "Compradores en Portugal y en todo el mundo")}
               </p>
-              {featuredProduct?.priceRange ? (
-                <p className="text-sm font-bold text-[var(--gold)]">
-                  {Number(featuredProduct.priceRange.minVariantPrice.amount).toFixed(2)} €
-                </p>
-              ) : (
-                <p className="text-[11px] text-[var(--foreground-muted)]">
-                  {tr("Ver loja →", "View shop →", "Ver tienda →")}
-                </p>
-              )}
             </div>
+            <ArrowRight size={18} className="text-[var(--gold)] flex-shrink-0 group-hover:translate-x-1 group-active:translate-x-0.5 transition-transform" />
           </LocalizedLink>
+          </RevealOnScroll>
 
-          {/* Ferramentas Pro */}
-          <LocalizedLink
-            href="/precos"
-            className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] p-4 active:scale-[0.97] touch-manipulation transition-transform bg-[var(--background-secondary)] relative overflow-hidden"
-          >
-            {/* gradiente fundo */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[var(--gold)]/18 via-[var(--gold)]/8 to-transparent" />
-            <div className="relative">
-              <div className="w-10 h-10 bg-[var(--gold)]/15 border border-[var(--gold)]/30 rounded-xl flex items-center justify-center mb-3">
-                <Sparkles size={18} className="text-[var(--gold)]" />
-              </div>
-              <p className="text-sm font-bold text-[var(--foreground)] leading-tight mb-1">
-                {tr("Ferramentas Pro", "Pro Tools", "Herramientas Pro")}
-              </p>
-              <p className="text-[11px] text-[var(--foreground-muted)] leading-snug">
-                {tr("Calculadora · Comparador · Análise", "Calculator · Comparator · Analysis", "Calculadora · Comparador")}
-              </p>
-            </div>
-            <div className="relative mt-4 flex items-center justify-between">
-              <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-[var(--gold)]">
-                {tr("Ver planos", "View plans", "Ver planes")}
-              </span>
-              <ArrowRight size={13} className="text-[var(--gold)] group-active:translate-x-0.5 transition-transform" />
-            </div>
-          </LocalizedLink>
-        </div>
+          {/* ── CARDS 2+3: LOJA + PRO ─────────────────────────── */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
 
-        {/* ── QUICK LINKS ───────────────────────────────────── */}
-        <div className="grid grid-cols-4 gap-2">
-          {[
-            { href: "/comprar", icon: ShoppingCart, label: tr("Cavalos", "Horses", "Caballos"), bg: "rgba(245,158,11,0.12)", iconClass: "text-amber-400", border: "rgba(245,158,11,0.22)" },
-            { href: "/directorio", icon: Crown, label: tr("Coudel.", "Studs", "Haras"), bg: "rgba(234,179,8,0.12)", iconClass: "text-yellow-400", border: "rgba(234,179,8,0.22)" },
-            { href: "/jornal", icon: Newspaper, label: tr("Jornal", "Journal", "Revista"), bg: "rgba(59,130,246,0.12)", iconClass: "text-blue-400", border: "rgba(59,130,246,0.22)" },
-            { href: "/ebook-gratis", icon: Gift, label: tr("Ebook", "Ebook", "Ebook"), bg: "rgba(197,160,89,0.12)", iconClass: "text-[var(--gold)]", border: "rgba(197,160,89,0.25)" },
-          ].map((item) => (
+            {/* Loja / Boné */}
             <LocalizedLink
-              key={item.href}
-              href={item.href}
-              className="flex flex-col items-center gap-2 py-3.5 rounded-xl bg-[var(--background-card)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
+              href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
+              className="group relative flex flex-col rounded-2xl overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/20 active:scale-[0.97] hover:scale-[0.99] touch-manipulation transition-all bg-[var(--background-secondary)]"
             >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ background: item.bg, border: `1px solid ${item.border}` }}
-              >
-                <item.icon size={17} className={item.iconClass} />
+              {/* Imagem do produto */}
+              <div className="relative w-full aspect-square sm:aspect-[16/9] bg-[var(--background-card)]">
+                {featuredProduct?.images[0]?.url ? (
+                  <Image
+                    src={featuredProduct.images[0].url}
+                    alt={featuredProduct.title}
+                    fill
+                    sizes="(max-width: 640px) 50vw, 400px"
+                    className="object-cover group-hover:scale-105 group-active:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <ShoppingBag size={32} className="text-[var(--gold)]/30" />
+                  </div>
+                )}
+                {/* Badge */}
+                <div className="absolute top-2 left-2">
+                  <span className="bg-[var(--gold)] text-black text-[8px] uppercase tracking-[0.15em] font-bold px-2 py-1 rounded-sm leading-none">
+                    {tr("Exclusivo", "Exclusive", "Exclusivo")}
+                  </span>
+                </div>
               </div>
-              <span className="text-[10px] text-[var(--foreground-muted)] leading-tight text-center font-medium">
-                {item.label}
-              </span>
+              {/* Info */}
+              <div className="p-3 sm:p-4">
+                <p className="text-xs sm:text-sm font-semibold text-[var(--foreground)] leading-tight mb-0.5 truncate">
+                  {featuredProduct?.title ?? tr("Loja Exclusiva", "Exclusive Shop", "Tienda Exclusiva")}
+                </p>
+                {featuredProduct?.priceRange ? (
+                  <p className="text-sm sm:text-base font-bold text-[var(--gold)]">
+                    {Number(featuredProduct.priceRange.minVariantPrice.amount).toFixed(2)} €
+                  </p>
+                ) : (
+                  <p className="text-[11px] sm:text-xs text-[var(--foreground-muted)]">
+                    {tr("Ver loja →", "View shop →", "Ver tienda →")}
+                  </p>
+                )}
+              </div>
             </LocalizedLink>
-          ))}
+
+            {/* Ferramentas Pro */}
+            <LocalizedLink
+              href="/precos"
+              className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] hover:border-[var(--gold)]/20 p-4 sm:p-6 active:scale-[0.97] hover:scale-[0.99] touch-manipulation transition-all bg-[var(--background-secondary)] relative overflow-hidden"
+            >
+              {/* gradiente fundo */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--gold)]/18 via-[var(--gold)]/8 to-transparent" />
+              <div className="relative">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--gold)]/15 border border-[var(--gold)]/30 rounded-xl flex items-center justify-center mb-3">
+                  <Sparkles size={18} className="text-[var(--gold)]" />
+                </div>
+                <p className="text-sm sm:text-base font-bold text-[var(--foreground)] leading-tight mb-1">
+                  {tr("Ferramentas Pro", "Pro Tools", "Herramientas Pro")}
+                </p>
+                <p className="text-[11px] sm:text-xs text-[var(--foreground-muted)] leading-snug">
+                  {tr("Calculadora · Comparador · Análise", "Calculator · Comparator · Analysis", "Calculadora · Comparador")}
+                </p>
+              </div>
+              <div className="relative mt-4 flex items-center justify-between">
+                <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-[var(--gold)]">
+                  {tr("Ver planos", "View plans", "Ver planes")}
+                </span>
+                <ArrowRight size={13} className="text-[var(--gold)] group-hover:translate-x-0.5 group-active:translate-x-0.5 transition-transform" />
+              </div>
+            </LocalizedLink>
+          </div>
+
+          {/* ── QUICK LINKS ───────────────────────────────────── */}
+          <div className="grid grid-cols-4 gap-2 sm:gap-3">
+            {[
+              { href: "/comprar", icon: ShoppingCart, label: tr("Cavalos", "Horses", "Caballos"), bg: "rgba(245,158,11,0.12)", iconClass: "text-amber-400", border: "rgba(245,158,11,0.22)" },
+              { href: "/directorio", icon: Crown, label: tr("Coudelarias", "Studs", "Haras"), bg: "rgba(234,179,8,0.12)", iconClass: "text-yellow-400", border: "rgba(234,179,8,0.22)" },
+              { href: "/jornal", icon: Newspaper, label: tr("Jornal", "Journal", "Revista"), bg: "rgba(59,130,246,0.12)", iconClass: "text-blue-400", border: "rgba(59,130,246,0.22)" },
+              { href: "/ebook-gratis", icon: Gift, label: tr("Ebook", "Ebook", "Ebook"), bg: "rgba(197,160,89,0.12)", iconClass: "text-[var(--gold)]", border: "rgba(197,160,89,0.25)" },
+            ].map((item) => (
+              <LocalizedLink
+                key={item.href}
+                href={item.href}
+                className="flex flex-col items-center gap-2 py-3.5 sm:py-5 rounded-xl bg-[var(--background-card)] border border-[var(--border)] hover:border-[var(--gold)]/20 active:scale-95 hover:scale-[0.98] touch-manipulation transition-all"
+              >
+                <div
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center"
+                  style={{ background: item.bg, border: `1px solid ${item.border}` }}
+                >
+                  <item.icon size={17} className={`${item.iconClass} sm:w-5 sm:h-5`} />
+                </div>
+                <span className="text-[10px] sm:text-[11px] text-[var(--foreground-muted)] leading-tight text-center font-medium">
+                  {item.label}
+                </span>
+              </LocalizedLink>
+            ))}
+          </div>
         </div>
       </section>
 
