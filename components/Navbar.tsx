@@ -92,7 +92,7 @@ export default memo(function Navbar() {
             priority
             className="w-9 h-9 md:w-11 md:h-11 object-contain group-hover:scale-105 transition-transform"
           />
-          <div className="hidden sm:flex flex-col justify-center">
+          <div className="flex flex-col justify-center">
             <span className="text-base md:text-lg lg:text-xl font-serif text-[var(--foreground)] tracking-wide group-hover:text-[var(--gold)] transition-colors leading-none whitespace-nowrap">
               PORTAL LUSITANO
             </span>
