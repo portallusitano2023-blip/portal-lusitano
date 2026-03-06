@@ -317,7 +317,7 @@ export default function HomeContent() {
   return (
     <>
       {/* ===== HERO — Full Screen with Parallax ===== */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
+      <section className="relative min-h-[82vh] sm:min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
         {/* Parallax Background Image */}
         <ParallaxSection speed={0.4} className="absolute inset-0 z-0">
           <div className="clip-reveal-left" style={{ animationDuration: "0.6s" }}>
@@ -408,8 +408,39 @@ export default function HomeContent() {
         </div>
       </section>
 
+      {/* ===== QUICK ACCESS — Mobile only ===== */}
+      <section className="sm:hidden py-4 border-b border-[var(--border)] bg-[var(--background-secondary)]/40">
+        <div className="overflow-x-auto scrollbar-hide">
+          <div className="flex gap-2.5 px-4" style={{ width: "max-content" }}>
+            {[
+              { href: "/comprar", icon: ShoppingCart, label: tr("Comprar", "Buy", "Comprar"), color: "text-amber-400" },
+              { href: "/directorio", icon: Crown, label: tr("Coudelarias", "Studs", "Haras"), color: "text-yellow-400" },
+              { href: "/vender-cavalo", icon: Gift, label: tr("Vender", "Sell", "Vender"), color: "text-green-400" },
+              { href: "/calculadora-valor", icon: Calculator, label: tr("Calculadora", "Calculator", "Calculadora"), color: "text-emerald-400" },
+              { href: "/jornal", icon: Newspaper, label: tr("Jornal", "Journal", "Revista"), color: "text-blue-400" },
+              { href: "/mapa", icon: MapPin, label: tr("Mapa", "Map", "Mapa"), color: "text-rose-400" },
+              { href: "/cavalos-famosos", icon: Trophy, label: tr("Famosos", "Famous", "Famosos"), color: "text-purple-400" },
+              { href: "/ebook-gratis", icon: BookOpen, label: tr("Ebook", "Ebook", "Ebook"), color: "text-[var(--gold)]" },
+            ].map((item) => (
+              <LocalizedLink
+                key={item.href}
+                href={item.href}
+                className="flex flex-col items-center gap-1.5 min-w-[64px] py-2.5 px-1 active:scale-95 touch-manipulation"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-[var(--background-card)] border border-[var(--border)] flex items-center justify-center">
+                  <item.icon size={20} className={item.color} />
+                </div>
+                <span className="text-[10px] text-[var(--foreground-muted)] leading-tight text-center whitespace-nowrap">
+                  {item.label}
+                </span>
+              </LocalizedLink>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ===== STATS BAR — Animated Counters ===== */}
-      <section className="relative py-16 border-y border-[var(--border)] bg-[var(--background-secondary)]/50">
+      <section className="relative py-8 sm:py-16 border-y border-[var(--border)] bg-[var(--background-secondary)]/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
@@ -433,7 +464,7 @@ export default function HomeContent() {
       </section>
 
       {/* ===== QUALITIES GRID — Lusitano Essence ===== */}
-      <section className="py-20 sm:py-28 px-4 sm:px-6">
+      <section className="hidden sm:block py-20 sm:py-28 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <RevealOnScroll className="text-center mb-14">
             <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3 block">
@@ -476,9 +507,9 @@ export default function HomeContent() {
       </section>
 
       {/* ===== DISCOVER SECTION ===== */}
-      <section className="py-24 sm:py-32 px-4 sm:px-6">
+      <section className="py-12 sm:py-32 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <RevealOnScroll variant="blur-up" className="text-center mb-16">
+          <RevealOnScroll variant="blur-up" className="text-center mb-8 sm:mb-16">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {tr("Descubra", "Discover", "Descubra")}
             </span>
@@ -498,31 +529,31 @@ export default function HomeContent() {
             </p>
           </RevealOnScroll>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {features.map((feature, i) => (
               <RevealOnScroll key={feature.href} delay={i * 100} variant="fade-up">
                 <LocalizedLink
                   href={feature.href}
-                  className="group block bg-[var(--background-card)] border border-[var(--border)] p-6 sm:p-8 hover:border-[var(--gold)]/20 transition-all duration-500 relative overflow-hidden card-premium animated-border"
+                  className="group block bg-[var(--background-card)] border border-[var(--border)] p-4 sm:p-8 hover:border-[var(--gold)]/20 transition-all duration-500 relative overflow-hidden card-premium animated-border"
                 >
                   <div
                     className={`absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
                   />
                   <div className="relative">
-                    <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center mb-5 group-hover:bg-[var(--gold)]/20 transition-colors group-hover:scale-110 duration-300">
-                      <feature.icon size={22} className="text-[var(--gold)]" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center mb-3 sm:mb-5 group-hover:bg-[var(--gold)]/20 transition-colors group-hover:scale-110 duration-300">
+                      <feature.icon size={18} className="text-[var(--gold)]" />
                     </div>
-                    <h3 className="text-lg font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--gold)] transition-colors duration-300">
+                    <h3 className="text-sm sm:text-lg font-serif text-[var(--foreground)] mb-1 sm:mb-2 group-hover:text-[var(--gold)] transition-colors duration-300 leading-tight">
                       {feature.title}
                     </h3>
-                    <p className="text-[var(--foreground-muted)] text-sm leading-relaxed mb-4">
+                    <p className="hidden sm:block text-[var(--foreground-muted)] text-sm leading-relaxed mb-4">
                       {feature.desc}
                     </p>
-                    <span className="text-[11px] uppercase tracking-wider text-[var(--foreground-muted)] group-hover:text-[var(--gold)] transition-colors flex items-center gap-2">
+                    <span className="text-[10px] uppercase tracking-wider text-[var(--foreground-muted)] group-hover:text-[var(--gold)] transition-colors flex items-center gap-1.5 mt-2">
                       {tr("Explorar", "Explore", "Explorar")}
                       <ArrowRight
-                        size={12}
-                        className="group-hover:translate-x-2 transition-transform duration-300"
+                        size={10}
+                        className="group-hover:translate-x-1 transition-transform duration-300"
                       />
                     </span>
                   </div>

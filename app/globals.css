@@ -980,6 +980,15 @@ html.light .leaflet-tooltip-portal::before {
   will-change: transform;
 }
 
+/* Hide scrollbar for quick-access horizontal strips */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Glow pulse for gold accents — static shadow, animate only on hover */
 .glow-pulse {
   box-shadow: 0 0 20px rgba(197, 160, 89, 0.1);
