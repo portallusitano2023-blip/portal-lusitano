@@ -554,7 +554,7 @@ export default function CoudelariaDetail({
                     {coudelaria.testemunhos.map((test) => (
                       <blockquote
                         key={`${test.autor}-${test.data}`}
-                        className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/20 transition-colors"
+                        className="p-4 sm:p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/20 transition-colors"
                       >
                         <p className="text-[var(--foreground-secondary)] italic mb-4 leading-relaxed">
                           {`\u201C${test.texto}\u201D`}
@@ -577,11 +577,11 @@ export default function CoudelariaDetail({
             {/* Reviews */}
             <AnimateOnScroll delay={400}>
               <section aria-label={t.directorio.reviews}>
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                   <div className="flex items-center gap-3">
                     <span className="w-px h-6 bg-[var(--gold)]" aria-hidden="true" />
                     <MessageSquare className="text-[var(--gold)]" size={22} aria-hidden="true" />
-                    <h2 className="text-2xl font-serif text-[var(--foreground)]">
+                    <h2 className="text-xl sm:text-2xl font-serif text-[var(--foreground)]">
                       {t.directorio.reviews}
                     </h2>
                     {reviewStats.total > 0 && (
@@ -623,7 +623,7 @@ export default function CoudelariaDetail({
                   <AnimateOnScroll>
                     <form
                       onSubmit={submitReview}
-                      className="mb-8 p-6 bg-[var(--background-secondary)]/50 border border-[var(--gold)]/25"
+                      className="mb-6 sm:mb-8 p-4 sm:p-6 bg-[var(--background-secondary)]/50 border border-[var(--gold)]/25"
                       aria-label={t.directorio.share_experience}
                     >
                       <h3 className="text-lg font-serif text-[var(--foreground)] mb-5">
@@ -761,7 +761,7 @@ export default function CoudelariaDetail({
                     {reviews.map((review) => (
                       <article
                         key={review.id}
-                        className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/20 transition-colors"
+                        className="p-4 sm:p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] hover:border-[var(--gold)]/20 transition-colors"
                       >
                         <header className="flex items-start justify-between mb-3">
                           <div>
