@@ -1,26 +1,27 @@
-import { getCustomer } from "@/lib/shopify";
-import { cookies } from "next/headers";
+import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import MinhaContaContent from "@/components/minha-conta/MinhaContaContent";
 
 export const dynamic = "force-dynamic";
 
 export default async function MinhaContaPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("shopify_customer_token")?.value;
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!token) redirect("/login");
+  if (!user) redirect("/login");
 
-  const customer = await getCustomer(token);
-
-  if (!customer) redirect("/login");
+  // Construir objecto compatível com MinhaContaContent a partir dos dados Supabase
+  const nameParts = (user.user_metadata?.full_name || "").trim().split(" ");
+  const customer = {
+    firstName: nameParts[0] || user.email?.split("@")[0] || "Membro",
+    lastName: nameParts.slice(1).join(" ") || "",
+    email: user.email || "",
+    orders: { edges: [] },
+  };
 
   return (
-    <>
-      {/* getCustomer returns Shopify API data, cast to local Customer interface */}
-      <MinhaContaContent
-        customer={customer as unknown as Parameters<typeof MinhaContaContent>[0]["customer"]}
-      />
-    </>
+    <MinhaContaContent
+      customer={customer as unknown as Parameters<typeof MinhaContaContent>[0]["customer"]}
+    />
   );
 }
