@@ -1393,7 +1393,7 @@ export default function HomeContent({
         {featuredProduct ? (
           <RevealOnScroll variant="fade-up">
             {/* ══ MOBILE — cinematic full-bleed card ══ */}
-            <div className="lg:hidden relative bg-[#080808]" style={{ minHeight: "85vh" }}>
+            <div className="lg:hidden relative bg-[#080808]">
               {/* Full-bleed product image */}
               <div className="relative w-full" style={{ height: "55vh", minHeight: "320px" }}>
                 {featuredProduct.images[0]?.url ? (
