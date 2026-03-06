@@ -22,6 +22,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Dados do formulário incompletos" }, { status: 400 });
     }
 
+    // Strip large binary fields that are not needed for checkout and could
+    // inflate the stored form_data JSON (documentos = base64-encoded files).
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { documentos: _docs, ...sanitizedFormData } = formData as Record<string, unknown>;
+
     // Guardar contacto em BD antes de criar sessão Stripe
     const { data: submission, error: submissionError } = await supabase
       .from("contact_submissions")
@@ -31,7 +36,7 @@ export async function POST(req: NextRequest) {
         email: formData.email,
         telefone: formData.telefone || null,
         company: null,
-        form_data: formData,
+        form_data: sanitizedFormData,
         status: "novo",
         priority: "normal",
         ip_address: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || null,
@@ -86,9 +91,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    logger.error("Profissional checkout creation error:", error);
+    const message = error instanceof Error ? error.message : String(error);
+    logger.error("Profissional checkout creation error:", message);
     return NextResponse.json(
-      { error: "Erro ao criar checkout. Tente novamente." },
+      {
+        error: "Erro ao criar checkout. Tente novamente.",
+        ...(process.env.NODE_ENV !== "production" && { detail: message }),
+      },
       { status: 500 }
     );
   }

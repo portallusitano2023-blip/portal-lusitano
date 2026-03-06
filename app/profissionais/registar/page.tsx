@@ -327,10 +327,16 @@ export default function RegistarProfissionalPage() {
     setError("");
 
     try {
+      // Strip binary fields before sending — documentos can be up to 15 MB
+      // of base64 data which exceeds the API body limit. They are not needed
+      // for the Stripe checkout session creation.
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { documentos: _docs, ...formDataForCheckout } = formData;
+
       const response = await fetch("/api/profissionais/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formData }),
+        body: JSON.stringify({ formData: formDataForCheckout }),
       });
 
       const data = await response.json();
