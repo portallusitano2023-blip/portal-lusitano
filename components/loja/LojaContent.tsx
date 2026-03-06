@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import LocalizedLink from "@/components/LocalizedLink";
+import { ShoppingBag } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { ProductListing } from "@/types/product";
 
@@ -95,7 +96,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                   </p>
                 )}
 
-                <p className="text-[var(--gold)] font-serif text-xl mb-8">
+                <p className="text-[var(--gold)] font-serif text-2xl mb-6">
                   {Number(products[0].priceRange?.minVariantPrice.amount || 0).toFixed(2)}{" "}
                   {t.shop.price_suffix}
                 </p>
@@ -104,6 +105,13 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                   {t.shop.discover}
                 </span>
               </div>
+            </LocalizedLink>
+            <LocalizedLink
+              href={`/loja/${products[0].handle}`}
+              className="mt-6 flex items-center justify-center gap-2.5 bg-[var(--gold)] text-black px-10 py-4 text-[10px] uppercase tracking-[0.25em] font-bold hover:bg-white transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.2)] active:scale-95 touch-manipulation w-full max-w-[520px]"
+            >
+              <ShoppingBag size={15} strokeWidth={2.5} />
+              Comprar Agora
             </LocalizedLink>
           </div>
         ) : (

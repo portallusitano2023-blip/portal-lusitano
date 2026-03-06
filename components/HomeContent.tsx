@@ -334,13 +334,14 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
         <ParallaxSection speed={0.4} className="absolute inset-0 z-0">
           <div className="clip-reveal-left" style={{ animationDuration: "0.6s" }}>
             <Image
-              src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1920&auto=format&fit=crop"
-              alt="Nobreza Lusitana"
+              src="/images/home/hero.png"
+              alt="Cavalo Lusitano — Nobreza Portuguesa"
               fill
-              className="object-cover opacity-50 scale-110"
-              style={{ objectPosition: "center 30%" }}
+              className="object-cover opacity-60 scale-110"
+              style={{ objectPosition: "center 20%" }}
               priority
               sizes="100vw"
+              quality={90}
             />
           </div>
         </ParallaxSection>
