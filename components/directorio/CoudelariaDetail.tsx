@@ -142,14 +142,14 @@ function StarRow({ value, max = 5, size = 16 }: { value: number; max?: number; s
 
 function SectionTitle({ icon, title }: { icon?: React.ReactNode; title: string }) {
   return (
-    <div className="flex items-center gap-3 mb-6">
-      <span className="w-px h-6 bg-[var(--gold)]" aria-hidden="true" />
+    <div className="flex items-center gap-2.5 mb-4 sm:mb-6 min-w-0">
+      <span className="w-px h-5 sm:h-6 bg-[var(--gold)] flex-shrink-0" aria-hidden="true" />
       {icon && (
-        <span className="text-[var(--gold)]" aria-hidden="true">
+        <span className="text-[var(--gold)] flex-shrink-0" aria-hidden="true">
           {icon}
         </span>
       )}
-      <h2 className="text-2xl font-serif text-[var(--foreground)]">{title}</h2>
+      <h2 className="text-lg sm:text-2xl font-serif text-[var(--foreground)] leading-tight min-w-0">{title}</h2>
     </div>
   );
 }
@@ -251,7 +251,7 @@ export default function CoudelariaDetail({
   const [heroImage, setHeroImage] = useState(coudelaria.foto_capa || localCapa);
 
   return (
-    <main className="min-h-screen bg-[var(--background)]">
+    <main className="min-h-screen bg-[var(--background)] [overflow-x:clip]">
       {/* ── Hero ── */}
       <section className="relative h-[50vh] sm:h-[65vh] min-h-[340px] sm:min-h-[460px]" aria-label={coudelaria.nome}>
         {/* Background image */}
@@ -825,7 +825,7 @@ export default function CoudelariaDetail({
             <div className="sticky top-32 space-y-5">
               {/* Contact card */}
               <AnimateOnScroll delay={100}>
-                <div className="bg-[var(--background-secondary)]/60 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors p-6">
+                <div className="bg-[var(--background-secondary)]/60 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors p-4 sm:p-6">
                   <h3 className="text-base font-semibold text-[var(--foreground)] mb-5 pb-4 border-b border-[var(--border)]">
                     {t.directorio.contact_info}
                   </h3>
@@ -948,7 +948,7 @@ export default function CoudelariaDetail({
               {/* Servicos */}
               {Array.isArray(coudelaria.servicos) && coudelaria.servicos.length > 0 && (
                 <AnimateOnScroll delay={150}>
-                  <div className="bg-[var(--background-secondary)]/60 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors p-6">
+                  <div className="bg-[var(--background-secondary)]/60 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors p-4 sm:p-6">
                     <h3 className="text-base font-semibold text-[var(--foreground)] mb-4 pb-4 border-b border-[var(--border)]">
                       {t.directorio.services}
                     </h3>
@@ -974,7 +974,7 @@ export default function CoudelariaDetail({
               {/* Linhagens */}
               {Array.isArray(coudelaria.linhagens) && coudelaria.linhagens.length > 0 && (
                 <AnimateOnScroll delay={200}>
-                  <div className="bg-[var(--background-secondary)]/60 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors p-6">
+                  <div className="bg-[var(--background-secondary)]/60 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-colors p-4 sm:p-6">
                     <h3 className="text-base font-semibold text-[var(--foreground)] mb-4 pb-4 border-b border-[var(--border)]">
                       {t.directorio.lineages}
                     </h3>
@@ -1019,7 +1019,7 @@ export default function CoudelariaDetail({
 
               {/* CTA */}
               <AnimateOnScroll delay={300}>
-                <div className="bg-gradient-to-br from-[#C5A059]/15 to-[#C5A059]/5 border border-[var(--gold)]/25 p-6">
+                <div className="bg-gradient-to-br from-[#C5A059]/15 to-[#C5A059]/5 border border-[var(--gold)]/25 p-4 sm:p-6">
                   <h3 className="text-base font-semibold text-[var(--foreground)] mb-2">
                     {t.directorio.has_stud_sidebar}
                   </h3>

@@ -113,15 +113,25 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
           {/* Componente Principal */}
           <ProductDisplay product={product} />
 
-          {/* Secção de Texto Puro (O Manifesto) */}
-          <div className="mt-32 max-w-2xl border-t border-[var(--background-secondary)] pt-12">
-            <div
-              className="prose prose-invert prose-p:text-[var(--foreground-secondary)] prose-p:leading-relaxed prose-p:font-light prose-strong:text-[var(--foreground)]"
-              dangerouslySetInnerHTML={{
-                __html: sanitizeHtml(product.descriptionHtml || ""),
-              }}
-            />
-          </div>
+          {/* Manifesto — editorial description section */}
+          {product.descriptionHtml && (
+            <div className="mt-24 sm:mt-32 border-t border-[var(--border)] pt-12 sm:pt-16">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="h-px w-8 bg-gradient-to-r from-transparent to-[var(--gold)]/60" />
+                  <span className="text-[9px] uppercase tracking-[0.35em] text-[var(--gold)]">
+                    O Manifesto
+                  </span>
+                </div>
+                <div
+                  className="prose prose-invert max-w-none prose-p:text-[var(--foreground-secondary)] prose-p:leading-loose prose-p:font-light prose-p:text-sm prose-strong:text-[var(--foreground)] prose-headings:font-serif prose-headings:text-[var(--foreground)] border-l-2 border-[var(--gold)]/20 pl-6"
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(product.descriptionHtml || ""),
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </>
