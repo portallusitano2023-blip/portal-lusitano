@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import LocalizedLink from "@/components/LocalizedLink";
@@ -40,6 +40,14 @@ export default function HomeContent() {
   // createTranslator returns a pure function of language — memoize it so
   // the same reference is reused across renders when language is unchanged.
   const tr = useMemo(() => createTranslator(language), [language]);
+
+  // Show sticky CTA after scrolling past hero on mobile
+  const [showStickyCTA, setShowStickyCTA] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShowStickyCTA(window.scrollY > 380);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Memoize all static data arrays so they are not recreated on every render.
   // These only need to change when `language` changes (tr/t depend on it).
@@ -396,7 +404,7 @@ export default function HomeContent() {
             <MagneticButton strength={0.15}>
               <LocalizedLink
                 href="/comprar"
-                className="line-draw inline-block px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors duration-300"
+                className="inline-flex items-center justify-center w-full sm:w-auto px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-secondary)] border border-[var(--foreground-muted)]/25 sm:border-transparent hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-all duration-300 line-draw"
               >
                 {tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo")} →
               </LocalizedLink>
@@ -423,7 +431,7 @@ export default function HomeContent() {
             {[
               { href: "/comprar", icon: ShoppingCart, label: tr("Comprar", "Buy", "Comprar"), color: "text-amber-400" },
               { href: "/directorio", icon: Crown, label: tr("Coudelarias", "Studs", "Haras"), color: "text-yellow-400" },
-              { href: "/vender-cavalo", icon: Gift, label: tr("Vender", "Sell", "Vender"), color: "text-green-400" },
+              { href: "/vender-cavalo", icon: Euro, label: tr("Vender", "Sell", "Vender"), color: "text-black", special: true },
               { href: "/calculadora-valor", icon: Calculator, label: tr("Calculadora", "Calculator", "Calculadora"), color: "text-emerald-400" },
               { href: "/jornal", icon: Newspaper, label: tr("Jornal", "Journal", "Revista"), color: "text-blue-400" },
               { href: "/mapa", icon: MapPin, label: tr("Mapa", "Map", "Mapa"), color: "text-rose-400" },
@@ -436,10 +444,16 @@ export default function HomeContent() {
                 href={item.href}
                 className="flex flex-col items-center gap-1.5 min-w-[64px] py-2.5 px-1 active:scale-95 touch-manipulation"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[var(--background-card)] border border-[var(--border)] flex items-center justify-center">
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+                  (item as { special?: boolean }).special
+                    ? "bg-[var(--gold)] shadow-[0_0_12px_rgba(197,160,89,0.3)]"
+                    : "bg-[var(--background-card)] border border-[var(--border)]"
+                }`}>
                   <item.icon size={20} className={item.color} />
                 </div>
-                <span className="text-[10px] text-[var(--foreground-muted)] leading-tight text-center whitespace-nowrap">
+                <span className={`text-[10px] leading-tight text-center whitespace-nowrap ${
+                  (item as { special?: boolean }).special ? "text-[var(--gold)] font-semibold" : "text-[var(--foreground-muted)]"
+                }`}>
                   {item.label}
                 </span>
               </LocalizedLink>
@@ -514,7 +528,7 @@ export default function HomeContent() {
       {/* ===== STATS BAR — Animated Counters ===== */}
       <section className="relative py-8 sm:py-16 border-y border-[var(--border)] bg-[var(--background-secondary)]/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {stats.map((stat, i) => (
               <RevealOnScroll key={stat.label} delay={i * 100} variant="fade-up">
                 <div className="text-center">
@@ -654,7 +668,7 @@ export default function HomeContent() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {pillars.map((pillar, i) => (
               <RevealOnScroll key={pillar.title} delay={i * 120} variant="fade-up">
-                <div className="text-center p-6 group">
+                <div className="text-center p-4 sm:p-6 group">
                   <div className="w-14 h-14 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:bg-[var(--gold)]/20 group-hover:scale-110 transition-all duration-500 glow-pulse">
                     <pillar.icon size={24} className="text-[var(--gold)]" />
                   </div>
@@ -853,9 +867,9 @@ export default function HomeContent() {
       {/* ===== VENDER CAVALO CTA ===== */}
 
       <section className="border-t border-[var(--border)]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-20">
           <RevealOnScroll variant="fade-right">
-            <div className="bg-[var(--background-card)] border border-[var(--border)] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-all duration-500">
+            <div className="bg-[var(--background-card)] border border-[var(--border)] p-5 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-all duration-500">
               {/* Corner ornaments */}
               <div
                 className="absolute top-4 left-4 w-8 h-8 border-t border-l border-[var(--gold)]/20"
@@ -967,8 +981,29 @@ export default function HomeContent() {
         </div>
       </section>
 
+      {/* ===== STICKY SCROLL CTA — Mobile only, appears after hero ===== */}
+      <div
+        className={`sm:hidden fixed bottom-16 left-0 right-0 z-30 bg-[var(--background)]/96 backdrop-blur-md border-t border-[var(--border)] px-3 py-2.5 flex gap-2 transition-transform duration-300 ${
+          showStickyCTA ? "translate-y-0" : "translate-y-full"
+        }`}
+      >
+        <LocalizedLink
+          href="/comprar"
+          className="flex-1 flex items-center justify-center py-3 text-[9px] uppercase tracking-[0.2em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] rounded-lg active:scale-95 touch-manipulation transition-transform"
+        >
+          {tr("Comprar", "Buy", "Comprar")}
+        </LocalizedLink>
+        <LocalizedLink
+          href="/vender-cavalo"
+          className="flex-[1.6] flex items-center justify-center gap-1.5 py-3 text-[9px] uppercase tracking-[0.2em] font-bold bg-[var(--gold)] text-black rounded-lg active:scale-95 touch-manipulation transition-transform shadow-[0_0_12px_rgba(197,160,89,0.25)]"
+        >
+          <Euro size={12} strokeWidth={2.5} />
+          {tr("Vender Cavalo", "Sell Horse", "Vender")}
+        </LocalizedLink>
+      </div>
+
       {/* ===== LOJA CTA ===== */}
-      <section className="py-20 sm:py-28 border-t border-[var(--border)]">
+      <section className="py-10 sm:py-28 border-t border-[var(--border)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <RevealOnScroll variant="fade-scale">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">

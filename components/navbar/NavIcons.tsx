@@ -35,10 +35,10 @@ export const NavIcons = memo(function NavIcons({
 
   return (
     <div className="flex items-center gap-2 md:gap-4">
-      {/* Tema */}
+      {/* Tema — hidden on mobile to save space (brand text visible now) */}
       <button
         onClick={toggleTheme}
-        className="text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95 touch-manipulation"
+        className="hidden sm:flex text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] items-center justify-center active:scale-95 touch-manipulation"
         aria-label={
           theme === "dark"
             ? tr3(language, "Mudar para modo claro", "Switch to light mode", "Cambiar a modo claro")
@@ -79,10 +79,10 @@ export const NavIcons = memo(function NavIcons({
         <span className={language === "es" ? "text-[var(--gold)]" : ""}>ES</span>
       </button>
 
-      {/* Favoritos - only shows horse favorites count (links to /cavalos-favoritos) */}
+      {/* Favoritos — hidden on mobile (accessible via BottomNav) */}
       <LocalizedLink
         href="/cavalos-favoritos"
-        className="text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center relative active:scale-95 touch-manipulation"
+        className="hidden sm:flex text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors p-2 min-w-[44px] min-h-[44px] items-center justify-center relative active:scale-95 touch-manipulation"
         aria-label={
           language === "pt"
             ? "Cavalos Favoritos"
