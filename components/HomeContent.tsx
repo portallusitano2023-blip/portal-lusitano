@@ -33,9 +33,12 @@ import {
   Stethoscope,
   Tag,
   Euro,
+  ShoppingBag,
+  Package,
 } from "lucide-react";
+import type { ProductListing } from "@/types/product";
 
-export default function HomeContent() {
+export default function HomeContent({ featuredProduct }: { featuredProduct?: ProductListing | null }) {
   const { language, t } = useLanguage();
   // createTranslator returns a pure function of language — memoize it so
   // the same reference is reused across renders when language is unchanged.
