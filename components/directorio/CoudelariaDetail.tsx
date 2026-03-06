@@ -253,7 +253,7 @@ export default function CoudelariaDetail({
   return (
     <main className="min-h-screen bg-[var(--background)]">
       {/* ── Hero ── */}
-      <section className="relative h-[70vh] min-h-[500px]" aria-label={coudelaria.nome}>
+      <section className="relative h-[50vh] sm:h-[65vh] min-h-[340px] sm:min-h-[460px]" aria-label={coudelaria.nome}>
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
@@ -337,7 +337,7 @@ export default function CoudelariaDetail({
       </section>
 
       {/* ── Body ── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <Breadcrumb
           items={[
             { label: "Home", href: "/" },
@@ -348,10 +348,10 @@ export default function CoudelariaDetail({
 
         <div className="grid lg:grid-cols-3 gap-12 mt-8">
           {/* ── Main ── */}
-          <div className="lg:col-span-2 space-y-14">
+          <div className="lg:col-span-2 space-y-10 sm:space-y-14">
             {/* Description */}
             <AnimateOnScroll delay={50}>
-              <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed">
+              <p className="text-base sm:text-xl text-[var(--foreground-secondary)] leading-relaxed">
                 {coudelaria.descricao}
               </p>
             </AnimateOnScroll>
