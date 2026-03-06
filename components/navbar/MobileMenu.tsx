@@ -91,7 +91,8 @@ export const MobileMenu = memo(function MobileMenu({
     <nav
       id="mobile-menu"
       aria-label="Menu mobile"
-      className="lg:hidden bg-[var(--background)] border-t border-[var(--border)] max-h-[calc(100vh-3.5rem-72px)] overflow-y-auto overscroll-contain"
+      className="lg:hidden border-t border-[var(--gold)]/15 max-h-[calc(100svh-56px)] overflow-y-auto overscroll-contain animate-[mobileMenuIn_0.28s_cubic-bezier(0.2,0,0,1)_forwards]"
+      style={{ background: "rgba(5,5,5,0.98)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
     >
       <div className="px-4 py-6 space-y-2">
         {/* Main Navigation */}

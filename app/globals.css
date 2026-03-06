@@ -1234,3 +1234,37 @@ html.light .leaflet-tooltip-portal::before {
   will-change: background-position;
   z-index: 30;
 }
+
+/* ===== MOBILE MENU ENTRANCE ANIMATION ===== */
+@keyframes mobileMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== MOBILE TOUCH ACTIVE STATES =====
+ * :hover never fires on touch — give mobile users the same gold feedback
+ * through :active as desktop users get through :hover. */
+@media (hover: none) {
+  /* Stronger glow on active tap for card accents */
+  .glow-pulse:active {
+    box-shadow:
+      0 0 30px rgba(197, 160, 89, 0.3),
+      0 0 60px rgba(197, 160, 89, 0.12);
+  }
+
+  /* Flash shimmer sweep on tap */
+  .shimmer-gold:active::before {
+    animation: shimmerSlide 0.5s ease-out;
+  }
+
+  /* More visible orbs on small screens (OLED tends to crush subtle opacity) */
+  .gradient-orb {
+    opacity: 0.12;
+  }
+}

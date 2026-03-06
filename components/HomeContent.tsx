@@ -349,13 +349,13 @@ export default function HomeContent({
   return (
     <>
       {/* ===== HERO — Full Screen with Parallax ===== */}
-      <section className="relative min-h-[78vh] sm:min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
+      <section className="relative min-h-[100svh] sm:min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
         {/* Background Image */}
         <Image
           src="/images/home/hero.png"
           alt="Cavalo Lusitano — Nobreza Portuguesa"
           fill
-          className="object-cover opacity-60 z-0"
+          className="object-cover opacity-70 sm:opacity-60 z-0"
           style={{ objectPosition: "center 20%" }}
           priority
           sizes="100vw"
@@ -391,7 +391,7 @@ export default function HomeContent({
             </p>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] leading-[0.9] drop-shadow-lg">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] leading-[0.9] drop-shadow-lg">
             <TextSplit text={t.home.title_main} baseDelay={0.15} wordDelay={0.06} />
           </h1>
 
@@ -416,7 +416,7 @@ export default function HomeContent({
             <MagneticButton strength={0.2}>
               <LocalizedLink
                 href="/vender-cavalo"
-                className="ripple-btn inline-flex items-center gap-2 sm:gap-0 bg-[var(--gold)] sm:bg-black/20 text-black sm:text-[var(--foreground)] border border-[var(--gold)] sm:border-[var(--gold)]/30 sm:backdrop-blur-md shimmer-gold px-10 py-4 text-[10px] uppercase tracking-[0.3em] hover:bg-[var(--gold)] hover:text-black transition-all duration-500 font-semibold sm:font-normal w-full sm:w-auto justify-center"
+                className="ripple-btn inline-flex items-center gap-2 sm:gap-0 bg-[var(--gold)] sm:bg-black/20 text-black sm:text-[var(--foreground)] border border-[var(--gold)] sm:border-[var(--gold)]/30 sm:backdrop-blur-md shimmer-gold px-10 py-4 text-[11px] uppercase tracking-[0.25em] hover:bg-[var(--gold)] hover:text-black transition-all duration-500 font-semibold sm:font-normal w-full sm:w-auto justify-center"
               >
                 {tr("Vender Cavalo", "Sell a Horse", "Vender Caballo")}
               </LocalizedLink>
@@ -424,7 +424,7 @@ export default function HomeContent({
             <MagneticButton strength={0.15}>
               <LocalizedLink
                 href="/comprar"
-                className="inline-flex items-center justify-center w-full sm:w-auto px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-secondary)] border border-[var(--foreground-muted)]/25 sm:border-transparent hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-all duration-300 line-draw"
+                className="inline-flex items-center justify-center w-full sm:w-auto px-10 py-4 text-[11px] uppercase tracking-[0.25em] text-[var(--foreground-secondary)] border border-[var(--foreground-muted)]/40 sm:border-transparent hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-all duration-300 line-draw"
               >
                 {tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo")} →
               </LocalizedLink>
@@ -448,6 +448,7 @@ export default function HomeContent({
       <section className="sm:hidden px-4 pt-5 pb-6 bg-[var(--background)]">
 
         {/* ── CARD 1: VENDER CAVALO ─────────────────────────── */}
+        <RevealOnScroll variant="fade-up" delay={0}>
         <LocalizedLink
           href="/vender-cavalo"
           className="group flex items-center gap-4 w-full p-5 mb-3 rounded-2xl bg-gradient-to-r from-[var(--gold)]/20 via-[var(--gold)]/10 to-transparent border border-[var(--gold)]/40 active:scale-[0.98] touch-manipulation transition-transform relative overflow-hidden"
@@ -472,6 +473,7 @@ export default function HomeContent({
           </div>
           <ArrowRight size={18} className="text-[var(--gold)] flex-shrink-0 group-active:translate-x-0.5 transition-transform" />
         </LocalizedLink>
+        </RevealOnScroll>
 
         {/* ── CARDS 2+3: LOJA + PRO ─────────────────────────── */}
         <div className="grid grid-cols-2 gap-3 mb-3">
@@ -526,7 +528,7 @@ export default function HomeContent({
             className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] p-4 active:scale-[0.97] touch-manipulation transition-transform bg-[var(--background-secondary)] relative overflow-hidden"
           >
             {/* gradiente fundo */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[var(--gold)]/8 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--gold)]/18 via-[var(--gold)]/8 to-transparent" />
             <div className="relative">
               <div className="w-10 h-10 bg-[var(--gold)]/15 border border-[var(--gold)]/30 rounded-xl flex items-center justify-center mb-3">
                 <Sparkles size={18} className="text-[var(--gold)]" />
@@ -550,18 +552,23 @@ export default function HomeContent({
         {/* ── QUICK LINKS ───────────────────────────────────── */}
         <div className="grid grid-cols-4 gap-2">
           {[
-            { href: "/comprar", icon: ShoppingCart, label: tr("Cavalos", "Horses", "Caballos"), color: "text-amber-400" },
-            { href: "/directorio", icon: Crown, label: tr("Coudel.", "Studs", "Haras"), color: "text-yellow-400" },
-            { href: "/jornal", icon: Newspaper, label: tr("Jornal", "Journal", "Revista"), color: "text-blue-400" },
-            { href: "/ebook-gratis", icon: Gift, label: tr("Ebook", "Ebook", "Ebook"), color: "text-[var(--gold)]" },
+            { href: "/comprar", icon: ShoppingCart, label: tr("Cavalos", "Horses", "Caballos"), bg: "rgba(245,158,11,0.12)", iconClass: "text-amber-400", border: "rgba(245,158,11,0.22)" },
+            { href: "/directorio", icon: Crown, label: tr("Coudel.", "Studs", "Haras"), bg: "rgba(234,179,8,0.12)", iconClass: "text-yellow-400", border: "rgba(234,179,8,0.22)" },
+            { href: "/jornal", icon: Newspaper, label: tr("Jornal", "Journal", "Revista"), bg: "rgba(59,130,246,0.12)", iconClass: "text-blue-400", border: "rgba(59,130,246,0.22)" },
+            { href: "/ebook-gratis", icon: Gift, label: tr("Ebook", "Ebook", "Ebook"), bg: "rgba(197,160,89,0.12)", iconClass: "text-[var(--gold)]", border: "rgba(197,160,89,0.25)" },
           ].map((item) => (
             <LocalizedLink
               key={item.href}
               href={item.href}
-              className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
+              className="flex flex-col items-center gap-2 py-3.5 rounded-xl bg-[var(--background-card)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
             >
-              <item.icon size={18} className={item.color} />
-              <span className="text-[9px] text-[var(--foreground-muted)] leading-tight text-center">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ background: item.bg, border: `1px solid ${item.border}` }}
+              >
+                <item.icon size={17} className={item.iconClass} />
+              </div>
+              <span className="text-[10px] text-[var(--foreground-muted)] leading-tight text-center font-medium">
                 {item.label}
               </span>
             </LocalizedLink>
@@ -570,13 +577,13 @@ export default function HomeContent({
       </section>
 
       {/* ===== STATS BAR — Animated Counters ===== */}
-      <section className="relative py-8 sm:py-16 border-y border-[var(--border)] bg-[var(--background-secondary)]/50">
+      <section className="relative py-10 sm:py-16 border-y border-[var(--gold)]/15 bg-[var(--background-secondary)]/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {stats.map((stat, i) => (
               <RevealOnScroll key={stat.label} delay={i * 100} variant="fade-up">
                 <div className="text-center">
-                  <div className="text-4xl md:text-5xl font-serif text-gradient-gold mb-2">
+                  <div className="text-5xl font-serif text-gradient-gold mb-2">
                     <AnimatedCounter
                       end={stat.value}
                       suffix={stat.suffix}
@@ -888,32 +895,43 @@ export default function HomeContent({
                 <RevealOnScroll key={feature.href} delay={i * 55} variant="fade-up">
                   <LocalizedLink
                     href={feature.href}
-                    className="group block relative overflow-hidden"
+                    className="group block relative overflow-hidden active:scale-[0.97] touch-manipulation transition-transform"
                     style={{
                       background: "#111",
-                      border: "1px solid rgba(197,160,89,0.1)",
+                      border: "1px solid rgba(197,160,89,0.18)",
                       padding: "18px 16px 16px",
-                      minHeight: "130px",
+                      minHeight: "155px",
                     }}
                   >
-                    {/* Top sweep */}
+                    {/* Permanent gold top accent */}
                     <div
-                      className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full transition-all duration-500 pointer-events-none"
-                      style={{ background: "linear-gradient(90deg, var(--gold), transparent)" }}
+                      className="absolute top-0 left-0 h-[2px] w-full pointer-events-none"
+                      style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.4), rgba(197,160,89,0.05) 60%, transparent)" }}
+                    />
+                    {/* Active sweep */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity duration-200 pointer-events-none"
+                      style={{ background: "rgba(197,160,89,0.04)" }}
                     />
                     {/* Ghost number */}
                     <span
                       className="absolute right-1 bottom-0 font-serif select-none pointer-events-none"
-                      style={{ fontSize: "70px", lineHeight: 1, color: "rgba(197,160,89,0.05)" }}
+                      style={{ fontSize: "70px", lineHeight: 1, color: "rgba(197,160,89,0.07)" }}
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="relative z-10">
-                      <feature.icon size={14} className="text-[var(--gold)] mb-3 opacity-60" />
-                      <h3 className="text-[13px] font-serif text-white leading-tight mb-1 group-hover:text-[var(--gold)] transition-colors duration-300">
+                      {/* Icon with container */}
+                      <div
+                        className="w-8 h-8 flex items-center justify-center mb-3.5 flex-shrink-0"
+                        style={{ border: "1px solid rgba(197,160,89,0.2)", background: "rgba(197,160,89,0.06)" }}
+                      >
+                        <feature.icon size={14} className="text-[var(--gold)] opacity-80" />
+                      </div>
+                      <h3 className="text-[14px] font-serif text-white leading-tight mb-1 group-active:text-[var(--gold)] transition-colors duration-200">
                         {feature.title}
                       </h3>
-                      <div className="flex items-center gap-1.5 mt-2.5 text-[8px] uppercase tracking-[0.28em] text-[var(--gold)]/35 group-hover:text-[var(--gold)]/70 transition-colors duration-300">
+                      <div className="flex items-center gap-1.5 mt-3 text-[9px] uppercase tracking-[0.28em] text-[var(--gold)]/55">
                         <div className="h-[1px] w-3 bg-current" />
                         {tr("Explorar", "Explore", "Explorar")}
                       </div>
@@ -937,24 +955,104 @@ export default function HomeContent({
             <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
               {tr("Os Nossos Pilares", "Our Pillars", "Nuestros Pilares")}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4 leading-tight">
               {tr("Porquê o Portal Lusitano", "Why Portal Lusitano", "Por Qué Portal Lusitano")}
             </h2>
           </RevealOnScroll>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {/* Desktop: 4-col grid with gap-px hairlines */}
+          <div
+            className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-px"
+            style={{ background: "rgba(197,160,89,0.08)" }}
+          >
             {pillars.map((pillar, i) => (
               <RevealOnScroll key={pillar.title} delay={i * 120} variant="fade-up">
-                <div className="text-center p-4 sm:p-6 group">
-                  <div className="w-14 h-14 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:bg-[var(--gold)]/20 group-hover:scale-110 transition-all duration-500 glow-pulse">
-                    <pillar.icon size={24} className="text-[var(--gold)]" />
+                <div
+                  className="relative group overflow-hidden flex flex-col p-7 lg:p-9 transition-all duration-500"
+                  style={{ background: "var(--background)" }}
+                >
+                  {/* Hover fill */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "rgba(197,160,89,0.025)" }} />
+                  {/* Top gold accent */}
+                  <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.5) 0%, rgba(197,160,89,0.1) 60%, transparent 100%)" }} />
+                  {/* Bottom hover sweep */}
+                  <div className="absolute bottom-0 left-0 h-[1px] w-0 group-hover:w-full transition-all duration-500 bg-[var(--gold)]/30 pointer-events-none" />
+
+                  {/* Ordinal */}
+                  <p className="text-[9px] uppercase tracking-[0.4em] text-[var(--gold)]/35 mb-4 font-medium relative z-10">
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
+
+                  {/* Icon — square geometric */}
+                  <div
+                    className="w-11 h-11 flex items-center justify-center mb-6 relative z-10 glow-pulse group-hover:border-[var(--gold)]/40 transition-all duration-300"
+                    style={{ border: "1px solid rgba(197,160,89,0.2)", background: "rgba(197,160,89,0.05)" }}
+                  >
+                    <pillar.icon size={19} className="text-[var(--gold)]" />
                   </div>
-                  <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
+
+                  <h3 className="font-serif text-[var(--foreground)] mb-2 text-lg relative z-10">
                     {pillar.title}
                   </h3>
-                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
+                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed relative z-10">
                     {pillar.desc}
                   </p>
+
+                  {/* Ghost watermark */}
+                  <span
+                    className="absolute bottom-1 right-2 font-serif select-none pointer-events-none"
+                    aria-hidden="true"
+                    style={{ fontSize: "64px", color: "rgba(197,160,89,0.04)", lineHeight: 1 }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+              </RevealOnScroll>
+            ))}
+          </div>
+
+          {/* Mobile: 2-col tight grid */}
+          <div
+            className="sm:hidden grid grid-cols-2 gap-px"
+            style={{ background: "rgba(197,160,89,0.1)" }}
+          >
+            {pillars.map((pillar, i) => (
+              <RevealOnScroll key={pillar.title} delay={i * 80} variant="fade-up">
+                <div
+                  className="relative overflow-hidden flex flex-col p-5 active:scale-[0.97] touch-manipulation transition-transform"
+                  style={{ background: "var(--background)", minHeight: "180px" }}
+                >
+                  {/* Top gold accent */}
+                  <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.55) 0%, rgba(197,160,89,0.08) 60%, transparent 100%)" }} />
+
+                  {/* Ordinal */}
+                  <p className="text-[8px] uppercase tracking-[0.35em] text-[var(--gold)]/35 mb-3 font-medium">
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
+
+                  {/* Icon */}
+                  <div
+                    className="w-10 h-10 flex items-center justify-center mb-4 glow-pulse"
+                    style={{ border: "1px solid rgba(197,160,89,0.25)", background: "rgba(197,160,89,0.06)" }}
+                  >
+                    <pillar.icon size={17} className="text-[var(--gold)]" />
+                  </div>
+
+                  <h3 className="font-serif text-[var(--foreground)] text-base mb-1.5 leading-tight">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-[var(--foreground-muted)] text-xs leading-relaxed">
+                    {pillar.desc}
+                  </p>
+
+                  {/* Ghost watermark */}
+                  <span
+                    className="absolute bottom-0 right-1 font-serif select-none pointer-events-none"
+                    aria-hidden="true"
+                    style={{ fontSize: "52px", color: "rgba(197,160,89,0.05)", lineHeight: 1 }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                 </div>
               </RevealOnScroll>
             ))}
