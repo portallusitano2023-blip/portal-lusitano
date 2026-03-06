@@ -905,10 +905,10 @@ export default function HomeContent({
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
           <RevealOnScroll variant="fade-left">
-            <div className="flex flex-row sm:flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
               {/* Book Preview */}
               <div className="flex-shrink-0">
-                <div className="relative max-w-[160px] sm:max-w-[240px] mx-auto float-gentle">
+                <div className="relative max-w-[200px] sm:max-w-[240px] mx-auto float-gentle">
                   {/* Glow externo */}
                   <div className="absolute inset-0 bg-[var(--gold)]/15 blur-[100px] scale-[1.3]" />
 
@@ -1028,33 +1028,35 @@ export default function HomeContent({
               </div>
 
               {/* Text */}
-              <div className="text-left sm:text-center md:text-left flex-1">
+              <div className="text-center md:text-left flex-1">
                 <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2 sm:mb-4 block">
                   Ebook {tr("Gratuito", "Free", "Gratuito")}
                 </span>
-                <h2 className="text-2xl sm:text-4xl font-serif text-[var(--foreground)] mb-3 sm:mb-4">
+                <h2 className="text-xl sm:text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-3 sm:mb-4">
                   {tr(
                     "O Guia Essencial do Lusitano",
                     "The Essential Lusitano Guide",
                     "La Guía Esencial del Lusitano"
                   )}
                 </h2>
-                <p className="block text-[var(--foreground-secondary)] leading-relaxed mb-8 max-w-lg">
+                <p className="block text-sm sm:text-base text-[var(--foreground-secondary)] leading-relaxed mb-5 sm:mb-8 max-w-lg mx-auto md:mx-0">
                   {tr(
                     "Descobre a história, as características e o que torna esta raça única. 30 páginas de conhecimento gratuito.",
                     "Discover the history, characteristics and what makes this breed unique. 30 pages of free knowledge.",
                     "Descubre la historia, las características y lo que hace única a esta raza. 30 páginas de conocimiento gratuito."
                   )}
                 </p>
-                <MagneticButton>
-                  <LocalizedLink
-                    href="/ebook-gratis"
-                    className="ripple-btn inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.15)]"
-                  >
-                    <Gift size={16} />
-                    {tr("Descarregar Grátis", "Download Free", "Descargar Gratis")}
-                  </LocalizedLink>
-                </MagneticButton>
+                <div className="flex justify-center md:justify-start">
+                  <MagneticButton>
+                    <LocalizedLink
+                      href="/ebook-gratis"
+                      className="ripple-btn inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.15)]"
+                    >
+                      <Gift size={16} />
+                      {tr("Descarregar Grátis", "Download Free", "Descargar Gratis")}
+                    </LocalizedLink>
+                  </MagneticButton>
+                </div>
               </div>
             </div>
           </RevealOnScroll>
