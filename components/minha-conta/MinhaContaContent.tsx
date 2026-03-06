@@ -24,7 +24,6 @@ import {
   Sparkles,
   Package,
   Lock,
-  Horse,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -249,7 +248,7 @@ function RecentFavorites({ delay }: { delay: number }) {
                   </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-[var(--background-secondary)]/30">
-                    <Horse size={20} className="text-[var(--gold)]/30" />
+                    <Heart size={14} className="text-[var(--gold)]/20" />
                   </div>
                 )}
                 <div className="absolute bottom-0 left-0 right-0 p-2.5">
