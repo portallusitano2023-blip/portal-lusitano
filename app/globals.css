@@ -717,10 +717,10 @@ body {
   }
 }
 
-/* Bottom padding for fixed bottom nav */
+/* Bottom padding for fixed bottom nav — includes safe-area for notched iPhones */
 @media (max-width: 1024px) {
   main {
-    padding-bottom: 5rem;
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -853,18 +853,21 @@ html.light .leaflet-tooltip-portal::before {
 }
 
 /* ===== TILT 3D — PERSPECTIVE PARA CARDS ===== */
-.tilt-card {
-  transform-style: preserve-3d;
-  perspective: 800px;
-  transition: transform 0.1s ease-out;
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.tilt-card > * {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+/* Only meaningful on pointer devices — avoids dead compositor layers on mobile */
+@media (pointer: fine) {
+  .tilt-card {
+    transform-style: preserve-3d;
+    perspective: 800px;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .tilt-card > * {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
 }
 
 /* ===== ARTICLE BODY — DROP CAP + TYPOGRAPHY ===== */
@@ -889,10 +892,14 @@ html.light .leaflet-tooltip-portal::before {
 
 /* ===== PREMIUM ANIMATIONS — LEVEL ABSURDO ===== */
 
-/* Magnetic button effect */
+/* Magnetic button effect — only pays for GPU layer on pointer devices */
 .magnetic-btn {
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform; /* promove para GPU layer — elimina jank em mousemove */
+}
+@media (pointer: fine) {
+  .magnetic-btn {
+    will-change: transform;
+  }
 }
 
 /* Ripple click effect */
@@ -979,6 +986,13 @@ html.light .leaflet-tooltip-portal::before {
   animation: floatGentle 6s ease-in-out infinite;
   will-change: transform;
 }
+/* Disable continuous animation on touch devices — saves battery */
+@media (hover: none) {
+  .float-gentle {
+    animation: none;
+    will-change: auto;
+  }
+}
 
 /* Hide scrollbar for quick-access horizontal strips */
 .scrollbar-hide {
@@ -1063,7 +1077,6 @@ html.light .leaflet-tooltip-portal::before {
   gap: 1.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
   /* pan-x allows horizontal swipe without interfering with vertical page scroll */
   touch-action: pan-x;
   scrollbar-width: none;

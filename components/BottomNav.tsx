@@ -87,7 +87,7 @@ export default memo(function BottomNav() {
                   <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-[var(--gold)] rounded-full" />
                 )}
                 <tab.icon size={21} strokeWidth={active ? 2 : 1.5} />
-                <span className="text-[9px] uppercase tracking-[0.07em] font-medium leading-none">
+                <span className="text-[11px] uppercase tracking-[0.05em] font-medium leading-none">
                   {tab.label}
                 </span>
               </LocalizedLink>
@@ -102,21 +102,21 @@ export default memo(function BottomNav() {
             aria-haspopup="dialog"
           >
             <MoreHorizontal size={21} strokeWidth={1.5} />
-            <span className="text-[9px] uppercase tracking-[0.07em] font-medium leading-none">
+            <span className="text-[11px] uppercase tracking-[0.05em] font-medium leading-none">
               {language === "pt" ? "Mais" : language === "es" ? "Más" : "More"}
             </span>
           </button>
         </div>
       </nav>
 
-      {/* Backdrop */}
-      {isMoreOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
-          onClick={() => setIsMoreOpen(false)}
-          aria-hidden="true"
-        />
-      )}
+      {/* Backdrop — always mounted, fades in/out */}
+      <div
+        className={`lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+          isMoreOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsMoreOpen(false)}
+        aria-hidden="true"
+      />
 
       {/* Slide-up Sheet */}
       <div

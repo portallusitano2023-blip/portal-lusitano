@@ -574,7 +574,7 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
       </section>
 
       {/* ===== QUALITIES GRID — Lusitano Essence ===== */}
-      <section className="hidden sm:block py-20 sm:py-28 px-4 sm:px-6">
+      <section className="block py-10 sm:py-28 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <RevealOnScroll className="text-center mb-14">
             <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-3 block">
@@ -855,10 +855,10 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
           </div>
 
           {/* Mobile: horizontal scroll — Desktop: grid */}
-          <div className="sm:hidden overflow-x-auto scrollbar-hide px-4 pb-2">
+          <div className="sm:hidden overflow-x-auto scrollbar-hide px-4 pb-4 snap-x snap-mandatory">
             <div className="flex gap-3" style={{ width: "max-content" }}>
               {steps.map((step) => (
-                <div key={step.number} className="relative w-[72vw] max-w-[280px] p-5 bg-[var(--background-card)] border border-[var(--border)] flex-none">
+                <div key={step.number} className="relative w-[72vw] max-w-[280px] p-5 bg-[var(--background-card)] border border-[var(--border)] flex-none snap-start">
                   <span
                     className="absolute top-3 right-4 text-[56px] font-serif text-[var(--foreground-muted)]/10 leading-none select-none"
                     aria-hidden="true"
@@ -929,10 +929,10 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
           </div>
 
           {/* Mobile: horizontal scroll — Desktop: grid */}
-          <div className="sm:hidden overflow-x-auto scrollbar-hide px-4 pb-2">
+          <div className="sm:hidden overflow-x-auto scrollbar-hide px-4 pb-4 snap-x snap-mandatory">
             <div className="flex gap-3" style={{ width: "max-content" }}>
               {testimonials.map((item) => (
-                <div key={item.name} className="w-[80vw] max-w-[300px] flex-none bg-[var(--background-card)] border border-[var(--border)] p-5 relative">
+                <div key={item.name} className="w-[80vw] max-w-[300px] flex-none snap-start bg-[var(--background-card)] border border-[var(--border)] p-5 relative">
                   <span
                     className="text-[var(--gold)]/30 text-5xl font-serif absolute top-3 left-5 leading-none select-none"
                     aria-hidden="true"
@@ -1103,7 +1103,7 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
                     "La Guía Esencial del Lusitano"
                   )}
                 </h2>
-                <p className="hidden sm:block text-[var(--foreground-secondary)] leading-relaxed mb-8 max-w-lg">
+                <p className="block text-[var(--foreground-secondary)] leading-relaxed mb-8 max-w-lg">
                   {tr(
                     "Descobre a história, as características e o que torna esta raça única. 30 páginas de conhecimento gratuito.",
                     "Discover the history, characteristics and what makes this breed unique. 30 pages of free knowledge.",
@@ -1133,20 +1133,20 @@ export default function HomeContent({ featuredProduct }: { featuredProduct?: Pro
       >
         <LocalizedLink
           href="/comprar"
-          className="flex-1 flex items-center justify-center py-3 text-[9px] uppercase tracking-[0.2em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] rounded-lg active:scale-95 touch-manipulation transition-transform"
+          className="flex-1 flex items-center justify-center py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] rounded-lg active:scale-95 touch-manipulation transition-transform"
         >
           {tr("Cavalos", "Horses", "Caballos")}
         </LocalizedLink>
         <LocalizedLink
           href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
-          className="flex-1 flex items-center justify-center gap-1 py-3 text-[9px] uppercase tracking-[0.2em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] rounded-lg active:scale-95 touch-manipulation transition-transform"
+          className="flex-1 flex items-center justify-center gap-1 py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] rounded-lg active:scale-95 touch-manipulation transition-transform"
         >
           <ShoppingBag size={11} strokeWidth={2.5} />
           {tr("Loja", "Shop", "Tienda")}
         </LocalizedLink>
         <LocalizedLink
           href="/vender-cavalo"
-          className="flex-[1.4] flex items-center justify-center gap-1.5 py-3 text-[9px] uppercase tracking-[0.2em] font-bold bg-[var(--gold)] text-black rounded-lg active:scale-95 touch-manipulation transition-transform shadow-[0_0_12px_rgba(197,160,89,0.25)]"
+          className="flex-[1.4] flex items-center justify-center gap-1.5 py-3 text-[11px] uppercase tracking-[0.1em] font-bold bg-[var(--gold)] text-black rounded-lg active:scale-95 touch-manipulation transition-transform shadow-[0_0_12px_rgba(197,160,89,0.25)]"
         >
           <Euro size={11} strokeWidth={2.5} />
           {tr("Vender", "Sell", "Vender")}

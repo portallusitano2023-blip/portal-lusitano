@@ -167,7 +167,7 @@ export default function RootLayout({
         <Providers>
           <SkipLinks />
           <Navbar />
-          <main id="main-content" className="pb-16 lg:pb-0">{children}</main>
+          <main id="main-content">{children}</main>
           <Footer />
           <BottomNav />
         </Providers>

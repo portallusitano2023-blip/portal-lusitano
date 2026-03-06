@@ -20,8 +20,9 @@ export default function ParallaxSection({
   const rafId = useRef(0);
 
   useEffect(() => {
-    // Respect reduced motion preference
+    // Respect reduced motion preference + skip on touch devices (avoids scroll jitter)
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(hover: none)").matches) return;
 
     const container = containerRef.current;
     const inner = innerRef.current;
@@ -54,7 +55,7 @@ export default function ParallaxSection({
 
   return (
     <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
-      <div ref={innerRef} style={{ willChange: "transform" }}>
+      <div ref={innerRef}>
         {children}
       </div>
     </div>
