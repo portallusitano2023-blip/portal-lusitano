@@ -23,10 +23,12 @@ export const metadata: Metadata = generatePageMetadata({
 });
 
 export default async function ComprarPage() {
-  // Use select("*") to avoid column-not-found errors from DB schema drift
+  // select("*") is intentional — the live DB column names differ from what components
+  // expect (e.g. "nome" vs "nome_cavalo", "foto_principal" vs "image_url").
+  // Explicit columns would break on any schema drift; normalization happens below.
   const { data: rawCavalos, error } = await supabase
     .from("cavalos_venda")
-    .select("id, nome_cavalo, preco, image_url, slug, localizacao, idade, raca, cor, sexo, disciplinas, nivel, nivel_treino, destaque, created_at, status")
+    .select("*")
     .eq("status", "active")
     .order("created_at", { ascending: false });
 

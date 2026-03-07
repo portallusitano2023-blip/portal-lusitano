@@ -15,7 +15,7 @@ import { CavaloVenda } from "@/types/cavalo";
 // cache() deduplicates this call between generateMetadata and the page component
 // within a single server request — saves 1 Supabase round-trip per page load
 const getCavalo = cache(async (id: string) => {
-  const { data } = await supabase.from("cavalos_venda").select("id, nome_cavalo, preco, image_url, image_urls, slug, localizacao, idade, raca, cor, sexo, altura, pelagem, disciplinas, nivel, nivel_treino, descricao, pai, mae, pontuacao_apsl, destaque, contacto_nome, contacto_email, contacto_telefone, regiao, coudelaria, linhagem, fotos, created_at, status").eq("id", id).single();
+  const { data } = await supabase.from("cavalos_venda").select("*").eq("id", id).single();
   if (!data) return null;
   // Normalize DB column names → component-expected names
   // Live DB uses 'nome'/'foto_principal', components expect 'nome_cavalo'/'image_url'
@@ -146,7 +146,7 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
       getCavalo(id),
       supabase
         .from("cavalos_venda")
-        .select("id, nome_cavalo, preco, image_url, localizacao, idade, sexo, disciplinas, nivel, destaque")
+        .select("*")
         .eq("status", "active")
         .neq("id", id)
         .limit(4)
