@@ -49,6 +49,56 @@ export interface HomeProfissional {
   slug?: string;
 }
 
+// StickyCTA — componente isolado para o CTA mobile que aparece após scroll.
+// Separado do HomeContent para que o scroll state não force re-render de toda a página.
+function StickyCTA({ featuredProductHandle }: { featuredProductHandle?: string | null }) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    let rafId = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => setShow(window.scrollY > 380));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  return (
+    <div
+      className={`sm:hidden fixed bottom-16 left-0 right-0 z-30 bg-[var(--background)]/96 backdrop-blur-md border-t border-[var(--border)] px-3 py-2.5 flex gap-2 transition-transform duration-300 ${
+        show ? "translate-y-0" : "translate-y-full"
+      }`}
+    >
+      <LocalizedLink
+        href="/comprar"
+        className="flex-1 flex items-center justify-center py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
+      >
+        {tr("Cavalos", "Horses", "Caballos")}
+      </LocalizedLink>
+      <LocalizedLink
+        href={featuredProductHandle ? `/loja/${featuredProductHandle}` : "/loja"}
+        className="flex-1 flex items-center justify-center gap-1 py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
+      >
+        <ShoppingBag size={11} strokeWidth={2.5} />
+        {tr("Loja", "Shop", "Tienda")}
+      </LocalizedLink>
+      <LocalizedLink
+        href="/vender-cavalo"
+        className="flex-[1.4] flex items-center justify-center gap-1.5 py-3 text-[11px] uppercase tracking-[0.1em] font-bold bg-[var(--gold)] text-black active:scale-95 touch-manipulation transition-transform shadow-[0_0_12px_rgba(197,160,89,0.25)]"
+      >
+        <Euro size={11} strokeWidth={2.5} />
+        {tr("Vender", "Sell", "Vender")}
+      </LocalizedLink>
+    </div>
+  );
+}
+
 export default function HomeContent({
   featuredProduct,
   profissionais = [],
@@ -60,14 +110,6 @@ export default function HomeContent({
   // createTranslator returns a pure function of language — memoize it so
   // the same reference is reused across renders when language is unchanged.
   const tr = useMemo(() => createTranslator(language), [language]);
-
-  // Show sticky CTA after scrolling past hero on mobile
-  const [showStickyCTA, setShowStickyCTA] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setShowStickyCTA(window.scrollY > 380);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Memoize all static data arrays so they are not recreated on every render.
   // These only need to change when `language` changes (tr/t depend on it).
@@ -1314,33 +1356,8 @@ export default function HomeContent({
         </div>
       </section>
 
-      {/* ===== STICKY SCROLL CTA — Mobile only, appears after hero ===== */}
-      <div
-        className={`sm:hidden fixed bottom-16 left-0 right-0 z-30 bg-[var(--background)]/96 backdrop-blur-md border-t border-[var(--border)] px-3 py-2.5 flex gap-2 transition-transform duration-300 ${
-          showStickyCTA ? "translate-y-0" : "translate-y-full"
-        }`}
-      >
-        <LocalizedLink
-          href="/comprar"
-          className="flex-1 flex items-center justify-center py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
-        >
-          {tr("Cavalos", "Horses", "Caballos")}
-        </LocalizedLink>
-        <LocalizedLink
-          href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
-          className="flex-1 flex items-center justify-center gap-1 py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
-        >
-          <ShoppingBag size={11} strokeWidth={2.5} />
-          {tr("Loja", "Shop", "Tienda")}
-        </LocalizedLink>
-        <LocalizedLink
-          href="/vender-cavalo"
-          className="flex-[1.4] flex items-center justify-center gap-1.5 py-3 text-[11px] uppercase tracking-[0.1em] font-bold bg-[var(--gold)] text-black active:scale-95 touch-manipulation transition-transform shadow-[0_0_12px_rgba(197,160,89,0.25)]"
-        >
-          <Euro size={11} strokeWidth={2.5} />
-          {tr("Vender", "Sell", "Vender")}
-        </LocalizedLink>
-      </div>
+      {/* ===== STICKY SCROLL CTA — componente isolado para evitar re-render da página ===== */}
+      <StickyCTA featuredProductHandle={featuredProduct?.handle} />
 
       {/* ===== PRODUTO EM DESTAQUE ===== */}
       <section className="border-t border-[var(--border)] overflow-hidden">

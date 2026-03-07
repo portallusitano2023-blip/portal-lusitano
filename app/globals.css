@@ -391,6 +391,16 @@ body {
   }
 }
 
+/* CSS containment para secções estáticas — isola o cálculo de layout e
+   pintura para que alterações internas não propaguem ao resto da página.
+   Usar em secções que não afetam o layout exterior (ex: footer, sidebars). */
+.contain-layout {
+  contain: layout style;
+}
+.contain-paint {
+  contain: paint;
+}
+
 /* ===== SCROLLBAR PERSONALIZADA ===== */
 ::-webkit-scrollbar {
   width: 8px;
@@ -1184,6 +1194,13 @@ html.light .leaflet-tooltip-portal::before {
 }
 .marquee-track:hover {
   animation-play-state: paused;
+}
+/* Liberta a GPU layer do marquee em touch — dispositivos móveis não beneficiam
+   do will-change para hover e a camada consome memória GPU desnecessariamente. */
+@media (hover: none) {
+  .marquee-track {
+    will-change: auto;
+  }
 }
 
 /* Gradient orb decorative — static blur, no animation for perf */

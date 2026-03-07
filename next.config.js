@@ -17,6 +17,11 @@ const nextConfig = {
   staticPageGenerationTimeout: 120,
 
   experimental: {
+    // Inline critical CSS into HTML — eliminates the render-blocking CSS request
+    // that normally adds a full network round-trip before first paint.
+    // Especially impactful on mobile and slow connections.
+    inlineCss: true,
+
     // Tree-shake icon and component libraries — biggest single bundle win.
     // Next.js 14.1+ rewrites these imports to per-file paths at compile time,
     // eliminating the barrel-file cost without any call-site changes.
@@ -88,6 +93,9 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     // Explicit image sizes for fixed-width images (avatars, thumbnails, etc.)
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    // Cache processed images for 30 days on the server — avoids re-processing
+    // on every cold start. Default is 60s which causes excessive reprocessing.
+    minimumCacheTTL: 2592000,
   },
 
   // Compress responses

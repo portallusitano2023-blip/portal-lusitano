@@ -7,70 +7,76 @@ import {
   ShoppingBag,
   ArrowRight,
   ListFilter,
-  Package,
-  Award,
-  Truck,
-  Star,
-  Search,
   X,
+  Search,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { ProductListing } from "@/types/product";
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type SortKey = "default" | "price_asc" | "price_desc" | "alpha";
 
-// ─── Trust pillars ─────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const TRUST = [
-  { Icon: Package, label: "Artesanal",        sub: "Produção sob encomenda"      },
-  { Icon: Truck,   label: "Envio Portugal",   sub: "Entrega em todo o país"      },
-  { Icon: Award,   label: "Qualidade Premium",sub: "Materiais seleccionados"     },
-  { Icon: Star,    label: "Exclusivo",        sub: "Peças em edição limitada"    },
-] as const;
+function formatPrice(p: ProductListing) {
+  return Number(p.priceRange?.minVariantPrice.amount || 0).toFixed(2);
+}
 
-// ─── Sort options ───────────────────────────────────────────────────────────
+function pad(n: number) {
+  return String(n).padStart(2, "0");
+}
+
+// ─── Sort options ─────────────────────────────────────────────────────────────
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
-  { key: "default",    label: "Relevância"        },
-  { key: "price_asc",  label: "Preço: Crescente"  },
-  { key: "price_desc", label: "Preço: Decrescente" },
-  { key: "alpha",      label: "Alfabético"         },
+  { key: "default",    label: "Relevância" },
+  { key: "price_asc",  label: "Preço ↑"   },
+  { key: "price_desc", label: "Preço ↓"   },
+  { key: "alpha",      label: "A–Z"        },
 ];
 
-// ─── Sort dropdown ──────────────────────────────────────────────────────────
+// ─── Sort Dropdown ────────────────────────────────────────────────────────────
 
-function SortDropdown({ value, onChange }: { value: SortKey; onChange: (k: SortKey) => void }) {
+function SortDropdown({
+  value,
+  onChange,
+}: {
+  value: SortKey;
+  onChange: (k: SortKey) => void;
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const active = SORT_OPTIONS.find((o) => o.key === value)!;
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    const h = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, []);
+
+  const active = SORT_OPTIONS.find((o) => o.key === value)!;
 
   return (
     <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-2 text-[9px] uppercase tracking-[0.35em] text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors focus-visible:outline-none"
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-secondary)] hover:text-[var(--gold)] border border-[var(--border)] hover:border-[var(--gold)]/40 px-4 py-2.5 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--gold)]"
       >
-        <ListFilter size={12} aria-hidden="true" />
+        <ListFilter size={11} aria-hidden="true" />
         {active.label}
       </button>
 
       {open && (
         <div
           role="listbox"
-          className="absolute right-0 top-full mt-1 z-50 bg-[var(--background)] border border-[var(--border)] shadow-[0_12px_40px_rgba(0,0,0,0.5)] min-w-[200px]"
+          className="absolute right-0 top-full mt-2 z-50 bg-[var(--background)] shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
+          style={{ border: "1px solid rgba(197,160,89,0.12)", minWidth: "160px" }}
         >
           {SORT_OPTIONS.map((opt) => (
             <button
@@ -79,14 +85,12 @@ function SortDropdown({ value, onChange }: { value: SortKey; onChange: (k: SortK
               role="option"
               aria-selected={value === opt.key}
               onClick={() => { onChange(opt.key); setOpen(false); }}
-              className={`w-full text-left px-4 py-3 text-[10px] uppercase tracking-[0.25em] transition-colors hover:bg-[var(--gold)]/[0.08] hover:text-[var(--gold)] ${
-                value === opt.key
-                  ? "text-[var(--gold)] bg-[var(--gold)]/[0.05]"
-                  : "text-[var(--foreground-secondary)]"
+              className={`w-full text-left px-5 py-3 text-[9px] uppercase tracking-[0.3em] transition-colors hover:text-[var(--gold)] ${
+                value === opt.key ? "text-[var(--gold)]" : "text-[var(--foreground-muted)]"
               }`}
             >
-              {opt.key === value && (
-                <span className="inline-block w-1 h-1 rounded-full bg-[var(--gold)] mr-2 -translate-y-0.5" />
+              {value === opt.key && (
+                <span className="inline-block w-1 h-1 rounded-full bg-[var(--gold)] mr-2 -translate-y-px" />
               )}
               {opt.label}
             </button>
@@ -97,18 +101,8 @@ function SortDropdown({ value, onChange }: { value: SortKey; onChange: (k: SortK
   );
 }
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-function formatPrice(product: ProductListing) {
-  return Number(product.priceRange?.minVariantPrice.amount || 0).toFixed(2);
-}
-
-function ordinal(n: number) {
-  return String(n).padStart(2, "0");
-}
-
-// ─── Gallery Product Card ────────────────────────────────────────────────────
-//  Image area + info panel that slides up from below on hover
+// ─── Product Card ─────────────────────────────────────────────────────────────
+//  Cinematic card: info always visible at bottom, price + CTA reveal on hover
 
 function ProductCard({
   product,
@@ -122,100 +116,124 @@ function ProductCard({
   isNew?: boolean;
 }) {
   const price = formatPrice(product);
-  const secondImage = product.images[1]?.url;
+  const alt = product.images[1]?.url;
 
   return (
     <LocalizedLink
       href={`/loja/${product.handle}`}
-      className="group block relative overflow-hidden bg-[var(--background)] aspect-[3/4] active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--gold)]"
+      className="group block relative overflow-hidden bg-[#0a0a0a]"
       style={{
+        aspectRatio: "3/4",
         opacity: 0,
-        animation: `fadeSlideIn 0.5s ease-out ${Math.min(index * 0.08, 0.5) + 0.2}s forwards`,
+        animation: `fadeSlideIn 0.65s ease-out ${Math.min(index * 0.08, 0.48) + 0.15}s forwards`,
       }}
       aria-label={`${product.title} — ${price} EUR`}
     >
-      {/* Gold top sweep on hover */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] z-20 bg-[var(--gold)] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-
-      {/* Primary image */}
+      {/* ── Primary image ── */}
       {product.images[0]?.url ? (
         <Image
           src={product.images[0].url}
           alt={product.title}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className={`object-cover transition-all duration-700 ${secondImage ? "group-hover:opacity-0" : "group-hover:scale-[1.05]"}`}
-          priority={index < 3}
+          sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          className={`object-cover transition-all duration-[900ms] ease-out ${
+            alt
+              ? "group-hover:opacity-0"
+              : "group-hover:scale-[1.07]"
+          }`}
+          priority={index < 6}
         />
       ) : (
-        <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
-          <ShoppingBag className="text-[var(--foreground-muted)]" size={32} aria-hidden="true" />
+        <div className="absolute inset-0 flex items-center justify-center bg-[var(--background-secondary)]">
+          <ShoppingBag className="text-[var(--foreground-muted)]" size={28} />
         </div>
       )}
 
-      {/* Secondary image crossfade */}
-      {secondImage && (
+      {/* ── Secondary image crossfade ── */}
+      {alt && (
         <Image
-          src={secondImage}
-          alt={product.title}
+          src={alt}
+          alt=""
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-opacity duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-[1.03]"
+          sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          className="object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-[1.04]"
+          aria-hidden
         />
       )}
 
-      {/* Subtle gradient — just enough for contrast with the panel */}
+      {/* ── Permanent bottom vignette ── */}
       <div
-        className="absolute inset-x-0 bottom-0 h-20 pointer-events-none"
-        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.35), transparent)" }}
+        className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.5) 35%, transparent 100%)",
+        }}
         aria-hidden
       />
 
-      {/* Ghost ordinal watermark (positioned above the sliding panel) */}
+      {/* ── Hover darkening ── */}
+      <div
+        className="absolute inset-0 bg-black/0 group-hover:bg-black/12 transition-colors duration-700 z-10"
+        aria-hidden
+      />
+
+      {/* ── Lot number — top left ── */}
       <span
-        className="absolute right-3 bottom-24 sm:bottom-28 text-white/[0.05] font-serif text-[5rem] leading-none select-none pointer-events-none z-10 transition-colors duration-500 group-hover:text-white/[0.08]"
+        className="absolute top-4 left-4 z-20 font-mono text-[7px] tracking-[0.55em] text-white/18 select-none"
         aria-hidden="true"
       >
-        {ordinal(globalIndex)}
+        {pad(globalIndex)}
       </span>
 
-      {/* NOVO / EXCLUSIVO badge */}
+      {/* ── Badge ── */}
       {isNew && (
-        <div className="absolute top-4 left-4 z-20">
-          <span className="text-[7px] uppercase tracking-[0.45em] font-bold bg-[var(--gold)] text-black px-3 py-1.5">
+        <div className="absolute top-4 right-4 z-20">
+          <span className="text-[6px] uppercase tracking-[0.5em] font-bold bg-[var(--gold)] text-black px-2.5 py-1">
             NOVO
           </span>
         </div>
       )}
 
-      {/* Sliding footer panel */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"
-        style={{ background: "var(--background)", borderTop: "1px solid rgba(197,160,89,0.2)" }}
-      >
-        <div className="px-3 sm:px-4 pt-2.5 pb-3">
-          <span className="text-[7px] font-mono uppercase tracking-[0.45em] text-[var(--gold)]/55 block mb-1.5">
-            Heritage
+      {/* ── Bottom: title always visible, price + arrow reveal on hover ── */}
+      <div className="absolute inset-x-0 bottom-0 z-20 px-4 pb-4">
+        <h3
+          className="font-serif text-white leading-[1.15] mb-2 transition-all duration-500"
+          style={{ fontSize: "clamp(0.9rem, 2.2vw, 1.1rem)" }}
+        >
+          {product.title}
+        </h3>
+
+        {/* Price + CTA — slide up on hover */}
+        <div className="flex items-center justify-between translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400 ease-out">
+          <span
+            className="font-serif text-[var(--gold)]"
+            style={{ fontSize: "clamp(0.85rem, 1.8vw, 1rem)" }}
+          >
+            {price}
+            <span className="text-[7px] text-white/30 ml-1 tracking-wide font-sans">EUR</span>
           </span>
-          <div className="flex items-center justify-between gap-2">
-            <h3 className="text-sm sm:text-[15px] font-serif text-[var(--foreground)] leading-tight truncate">
-              {product.title}
-            </h3>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <span className="font-serif text-[var(--gold)] text-sm">
-                {price}
-                <span className="text-[9px] text-[var(--foreground-muted)] ml-0.5">€</span>
-              </span>
-              <ArrowRight size={12} className="text-[var(--gold)] group-hover:translate-x-0.5 transition-transform duration-200" />
-            </div>
-          </div>
+          <span className="flex items-center gap-1 text-[7px] uppercase tracking-[0.4em] text-[var(--gold)]/70">
+            Ver
+            <ArrowRight
+              size={9}
+              className="group-hover:translate-x-0.5 transition-transform duration-300"
+            />
+          </span>
         </div>
+
+        {/* Gold sweep line */}
+        <div
+          className="mt-2.5 h-px origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 delay-[40ms]"
+          style={{ background: "rgba(197,160,89,0.4)" }}
+          aria-hidden
+        />
       </div>
     </LocalizedLink>
   );
 }
 
-// ─── Hero (featured) card ─────────────────────────────────────────────────
+// ─── Hero Card ────────────────────────────────────────────────────────────────
+//  Full-bleed cinematic banner for the featured product
 
 function HeroCard({ product }: { product: ProductListing }) {
   const price = formatPrice(product);
@@ -223,8 +241,12 @@ function HeroCard({ product }: { product: ProductListing }) {
   return (
     <LocalizedLink
       href={`/loja/${product.handle}`}
-      className="group block relative overflow-hidden bg-[var(--background)] w-full aspect-[4/3] sm:aspect-[21/9] active:scale-[0.995] touch-manipulation focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--gold)]"
-      style={{ opacity: 0, animation: "fadeSlideIn 0.6s ease-out 0.15s forwards" }}
+      className="group block relative overflow-hidden bg-black w-full active:scale-[0.999] touch-manipulation focus-visible:outline-none"
+      style={{
+        aspectRatio: "21/9",
+        opacity: 0,
+        animation: "fadeSlideIn 0.8s ease-out 0.05s forwards",
+      }}
       aria-label={`${product.title} — ${price} EUR`}
     >
       {/* Image */}
@@ -234,81 +256,110 @@ function HeroCard({ product }: { product: ProductListing }) {
           alt={product.title}
           fill
           sizes="100vw"
-          className="object-cover transition-transform duration-1000 group-hover:scale-[1.04]"
+          className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
           priority
         />
       )}
 
-      {/* Top gradient */}
+      {/* Cinematic left gradient */}
       <div
-        className="absolute inset-x-0 top-0 h-28 pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.55), transparent)" }}
-        aria-hidden
-      />
-      {/* Bottom gradient (for footer bar) */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-28 pointer-events-none"
-        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75), transparent)" }}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(110deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.42) 40%, rgba(0,0,0,0.08) 100%)",
+        }}
         aria-hidden
       />
 
-      {/* Gold top sweep */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] z-20 bg-[var(--gold)] scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
+      {/* Bottom gradient for text area */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-56 pointer-events-none"
+        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.88), transparent)" }}
+        aria-hidden
+      />
 
-      {/* Subtle gold shimmer */}
-      <div className="absolute inset-0 bg-[var(--gold)]/0 group-hover:bg-[var(--gold)]/[0.03] transition-colors duration-700" />
+      {/* Gold line sweep on hover */}
+      <div
+        className="absolute top-0 inset-x-0 h-[1px] origin-left scale-x-0 group-hover:scale-x-100 transition-all duration-700 z-20"
+        style={{ background: "rgba(197,160,89,0.65)" }}
+        aria-hidden
+      />
 
-      {/* Corner ornaments */}
-      <div className="absolute top-5 left-5 w-8 h-8 border-t border-l border-[var(--gold)]/25 z-10" />
-      <div className="absolute top-5 right-5 w-8 h-8 border-t border-r border-[var(--gold)]/25 z-10" />
-      <div className="absolute bottom-[72px] left-5 w-8 h-8 border-b border-l border-[var(--gold)]/20 z-10" />
-      <div className="absolute bottom-[72px] right-5 w-8 h-8 border-b border-r border-[var(--gold)]/20 z-10" />
+      {/* Hover gold shimmer */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+        style={{ background: "rgba(197,160,89,0.025)" }}
+        aria-hidden
+      />
 
-      {/* Top meta bar */}
-      <div className="absolute top-5 sm:top-7 left-14 right-14 z-10 flex items-center justify-between">
-        <span className="text-[7px] uppercase tracking-[0.45em] font-bold bg-[var(--gold)] text-black px-3 py-1.5">
-          DESTAQUE
+      {/* Meta — top */}
+      <div className="absolute top-6 left-7 z-10 flex items-center gap-5">
+        <span className="text-[6px] uppercase tracking-[0.65em] text-white/30 font-mono">
+          Destaque
         </span>
-        <span className="text-[8px] font-mono uppercase tracking-[0.45em] text-white/45">
-          Colecção Heritage
-        </span>
-        <span className="text-[8px] font-mono text-white/25">
-          01
+        <span
+          className="w-10 h-px"
+          style={{ background: "rgba(255,255,255,0.1)" }}
+          aria-hidden
+        />
+        <span className="text-[6px] uppercase tracking-[0.6em] text-[var(--gold)]/50 font-mono">
+          Heritage · 2025
         </span>
       </div>
 
-      {/* Ghost ordinal */}
+      {/* Giant lot number watermark */}
       <span
-        className="absolute right-6 sm:right-10 bottom-16 sm:bottom-20 text-white/[0.025] font-serif text-[8rem] sm:text-[14rem] leading-none select-none pointer-events-none"
+        className="absolute right-5 sm:right-8 bottom-6 sm:bottom-8 font-serif text-white/[0.035] select-none pointer-events-none leading-none z-0 transition-opacity duration-700 group-hover:text-white/[0.055]"
+        style={{ fontSize: "clamp(5rem, 18vw, 16rem)" }}
         aria-hidden="true"
       >
         01
       </span>
 
-      {/* Footer info bar */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-between px-5 sm:px-8 py-4 sm:py-5"
-        style={{ borderTop: "1px solid rgba(197,160,89,0.15)", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)" }}
-      >
-        <h2 className="font-serif text-white text-lg sm:text-2xl md:text-3xl group-hover:text-[var(--gold)] transition-colors duration-500 leading-tight truncate mr-6">
-          {product.title}
-        </h2>
-        <div className="flex items-center gap-4 flex-shrink-0">
-          <span className="font-serif text-[var(--gold)] text-xl sm:text-2xl tabular-nums">
-            {price}
-            <span className="text-[11px] text-white/35 ml-1">EUR</span>
-          </span>
-          <span className="hidden sm:flex items-center gap-1.5 text-[8px] uppercase tracking-[0.3em] border border-white/20 group-hover:border-[var(--gold)] group-hover:text-[var(--gold)] text-white/45 px-4 py-2.5 transition-all duration-400">
-            Ver peça
-            <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform duration-300" aria-hidden="true" />
-          </span>
+      {/* Bottom composition */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 px-7 sm:px-11 pb-7 sm:pb-10">
+        <div className="flex items-end justify-between gap-5">
+          {/* Left: headline */}
+          <div className="flex-1 min-w-0">
+            <p className="text-[6px] uppercase tracking-[0.6em] text-[var(--gold)]/55 font-mono mb-3">
+              Colecção Portuguesa
+            </p>
+            <h2
+              className="font-serif text-white leading-[0.88] group-hover:text-[var(--gold)] transition-colors duration-500 truncate pr-4"
+              style={{ fontSize: "clamp(1.6rem, 3.8vw, 3rem)" }}
+            >
+              {product.title}
+            </h2>
+          </div>
+
+          {/* Right: price + CTA */}
+          <div className="flex-shrink-0 flex flex-col items-end gap-3.5">
+            <div className="text-right">
+              <span
+                className="font-serif text-[var(--gold)] block tabular-nums"
+                style={{ fontSize: "clamp(1.2rem, 2.5vw, 2rem)" }}
+              >
+                {price}
+              </span>
+              <span className="text-[6px] font-mono uppercase tracking-[0.45em] text-white/22">
+                EUR
+              </span>
+            </div>
+            <span className="hidden sm:flex items-center gap-1.5 text-[7px] uppercase tracking-[0.42em] border border-white/15 group-hover:border-[var(--gold)]/55 text-white/38 group-hover:text-[var(--gold)] px-4 py-2.5 transition-all duration-400">
+              Ver Peça
+              <ArrowRight
+                size={8}
+                className="group-hover:translate-x-0.5 transition-transform duration-300"
+              />
+            </span>
+          </div>
         </div>
       </div>
     </LocalizedLink>
   );
 }
 
-// ─── Main component ─────────────────────────────────────────────────────────
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function LojaContent({ products }: { products: ProductListing[] }) {
   const { t } = useLanguage();
@@ -329,7 +380,8 @@ export default function LojaContent({ products }: { products: ProductListing[] }
           Number(b.priceRange?.minVariantPrice.amount || 0) -
           Number(a.priceRange?.minVariantPrice.amount || 0)
       );
-    if (sortKey === "alpha") return list.sort((a, b) => a.title.localeCompare(b.title));
+    if (sortKey === "alpha")
+      return list.sort((a, b) => a.title.localeCompare(b.title));
     return list;
   }, [products, sortKey]);
 
@@ -337,248 +389,254 @@ export default function LojaContent({ products }: { products: ProductListing[] }
     if (!query.trim()) return sorted;
     const q = query.toLowerCase();
     return sorted.filter(
-      (p) => p.title.toLowerCase().includes(q) || p.description?.toLowerCase().includes(q)
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q)
     );
   }, [sorted, query]);
 
   const isSingle = products.length === 1;
-  const featuredProduct = filtered[0];
-  const restProducts = filtered.slice(1);
+  const featured = filtered[0];
+  const rest = filtered.slice(1);
+
+  const marqueeItems = [
+    "Portugal · Colecção Equestre",
+    "Artesanal · Bordado à Mão",
+    "Edição Limitada · Heritage",
+    "Envio Nacional",
+    "Qualidade Premium",
+    "Tradição Lusitana · MMXXV",
+  ];
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] overflow-x-hidden">
 
-      {/* ═══ HERO HEADER ════════════════════════════════════════════════════ */}
-      <section className="relative pt-24 sm:pt-40 pb-12 sm:pb-20 overflow-hidden">
+      {/* ═══════════════════════════════════════════════════════════════════════
+          HERO HEADER — oversized typographic entry, no max-width constraint
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section className="relative pt-20 sm:pt-28 pb-6 sm:pb-10 overflow-hidden">
 
-        {/* SVG grain overlay */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.018]"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden
-        >
-          <filter id="loja-grain">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#loja-grain)" />
-        </svg>
-
-        {/* Atmospheric orbs */}
+        {/* Atmospheric glow */}
         <div
-          className="gradient-orb absolute -top-32 right-[-10%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(197,160,89,0.12) 0%, transparent 65%)" }}
-          aria-hidden="true"
-        />
-        <div
-          className="gradient-orb absolute bottom-0 left-[-8%] w-[40vw] h-[40vw] max-w-[450px] max-h-[450px] pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(197,160,89,0.07) 0%, transparent 65%)" }}
-          aria-hidden="true"
-        />
-
-        {/* Vertical line from top */}
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-24 pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, rgba(197,160,89,0.7), transparent)" }}
-          aria-hidden="true"
-        />
-
-        {/* Editorial vertical text — right */}
-        <span
-          className="hidden lg:block absolute right-8 top-40 text-[8px] uppercase tracking-[0.6em] text-[var(--foreground-muted)] select-none pointer-events-none"
+          className="absolute -top-32 right-[-20%] w-[90vw] h-[70vw] max-w-[1000px] max-h-[700px] pointer-events-none"
           style={{
-            writingMode: "vertical-rl",
-            opacity: 0,
-            animation: "fadeSlideIn 0.6s ease-out 0.6s forwards",
+            background:
+              "radial-gradient(ellipse, rgba(197,160,89,0.08) 0%, transparent 65%)",
           }}
           aria-hidden="true"
-        >
-          Portugal — Colecção Equestre
-        </span>
+        />
 
-        {/* Editorial vertical text — left */}
-        <span
-          className="hidden lg:block absolute left-8 top-40 text-[8px] uppercase tracking-[0.6em] text-[var(--foreground-muted)] select-none pointer-events-none"
-          style={{
-            writingMode: "vertical-rl",
-            textOrientation: "mixed",
-            transform: "rotate(180deg)",
-            opacity: 0,
-            animation: "fadeSlideIn 0.6s ease-out 0.6s forwards",
-          }}
-          aria-hidden="true"
-        >
-          Heritage — Artesanal
-        </span>
+        <div className="relative z-10">
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center relative z-10">
-
-          {/* Badge */}
+          {/* ── Top bar: collection label + controls ── */}
           <div
-            className="flex items-center justify-center gap-4 mb-6"
-            style={{ opacity: 0, animation: "fadeSlideIn 0.4s ease-out 0.05s forwards" }}
-          >
-            <span className="flex-1 max-w-[80px] h-px" style={{ background: "linear-gradient(to left, rgba(197,160,89,0.5), transparent)" }} aria-hidden />
-            <span className="text-[8px] uppercase tracking-[0.55em] text-[var(--gold)]">Colecção Portuguesa</span>
-            <span className="text-[var(--gold)]/40 text-[8px]">◆</span>
-            <span className="flex-1 max-w-[80px] h-px" style={{ background: "linear-gradient(to right, rgba(197,160,89,0.5), transparent)" }} aria-hidden />
-          </div>
-
-          {/* Main headline — oversized */}
-          <h1
-            className="font-serif italic text-[var(--foreground)] leading-[0.9] tracking-[0.12em] sm:tracking-[0.18em] mb-6 selection:bg-[var(--gold)] selection:text-black"
+            className="px-6 sm:px-10 lg:px-14 flex items-center justify-between mb-10 sm:mb-16"
             style={{
-              fontSize: "clamp(3.2rem, 14vw, 10.5rem)",
               opacity: 0,
-              animation: "fadeSlideIn 0.5s ease-out 0.15s forwards",
+              animation: "fadeSlideIn 0.5s ease-out 0.05s forwards",
             }}
           >
-            {t.shop.legacy}
-          </h1>
+            <div className="flex items-center gap-4">
+              <span
+                className="w-7 h-px"
+                style={{ background: "rgba(197,160,89,0.7)" }}
+                aria-hidden
+              />
+              <span className="text-[7px] font-mono uppercase tracking-[0.6em] text-[var(--gold)]/65">
+                {t.shop.collection}
+              </span>
+            </div>
 
-          {/* Gold hairline divider */}
-          <div
-            className="flex items-center justify-center gap-3 mb-6"
-            style={{ opacity: 0, animation: "fadeSlideIn 0.4s ease-out 0.28s forwards" }}
-            aria-hidden="true"
-          >
-            <span
-              className="flex-1 max-w-[120px] h-px"
-              style={{ background: "linear-gradient(to left, rgba(197,160,89,0.4), transparent)" }}
-            />
-            <span className="text-[var(--gold)] text-[11px]">◈</span>
-            <span
-              className="flex-1 max-w-[120px] h-px"
-              style={{ background: "linear-gradient(to right, rgba(197,160,89,0.4), transparent)" }}
-            />
+            <div className="flex items-center gap-5">
+              {products.length > 1 && (
+                <SortDropdown value={sortKey} onChange={setSortKey} />
+              )}
+            </div>
           </div>
 
-          {/* Subtitle */}
-          <p
-            className="text-[8px] uppercase tracking-[0.55em] text-[var(--foreground-muted)] max-w-sm mx-auto"
-            style={{ opacity: 0, animation: "fadeSlideIn 0.4s ease-out 0.35s forwards" }}
+          {/* ── GIANT TITLE — left-aligned, fills the line ── */}
+          <div
+            className="px-6 sm:px-10 lg:px-14 overflow-hidden"
+            style={{
+              opacity: 0,
+              animation: "fadeSlideIn 0.75s ease-out 0.1s forwards",
+            }}
           >
-            {t.shop.legacy_subtitle}
-          </p>
-
-          {/* Search + Toolbar */}
-          {products.length > 0 && (
-            <div
-              className="mt-12 sm:mt-16 space-y-4 max-w-xl mx-auto"
-              style={{ opacity: 0, animation: "fadeSlideIn 0.4s ease-out 0.45s forwards" }}
+            <h1
+              className="font-serif italic text-[var(--foreground)] leading-[0.82] selection:bg-[var(--gold)] selection:text-black"
+              style={{
+                fontSize: "clamp(3.8rem, 17vw, 14rem)",
+                letterSpacing: "-0.01em",
+              }}
             >
-              {/* Search input */}
-              <div className="relative">
-                <Search
-                  size={12}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] pointer-events-none"
-                  aria-hidden="true"
-                />
-                <input
-                  type="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Pesquisar peças..."
-                  aria-label="Pesquisar produtos"
-                  className="w-full bg-transparent pl-10 pr-10 py-3 text-[11px] uppercase tracking-[0.2em] text-[var(--foreground-secondary)] placeholder:text-[var(--foreground-muted)] outline-none transition-all"
-                  style={{
-                    border: "1px solid rgba(197,160,89,0.18)",
-                    boxShadow: "none",
-                  }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(197,160,89,0.5)")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(197,160,89,0.18)")}
-                />
-                {query && (
-                  <button
-                    type="button"
-                    onClick={() => setQuery("")}
-                    aria-label="Limpar pesquisa"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
-                  >
-                    <X size={12} />
-                  </button>
-                )}
-              </div>
+              {t.shop.legacy}
+            </h1>
+          </div>
 
-              {/* Count + Sort bar */}
-              <div
-                className="flex items-center justify-between pt-3"
-                style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
-              >
-                <div className="flex items-center gap-2.5">
-                  <span className="w-px h-4 bg-[var(--gold)]" aria-hidden="true" />
-                  <span className="text-[11px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]">
-                    <span className="text-[var(--gold)] font-serif text-base mr-1">{filtered.length}</span>
-                    {filtered.length === 1 ? "peça" : "peças"}
-                    {query && <span className="ml-1">encontradas</span>}
-                  </span>
+          {/* ── Bottom info bar: subtitle left, search right ── */}
+          <div
+            className="px-6 sm:px-10 lg:px-14 mt-6 sm:mt-8 pt-5 flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-10"
+            style={{
+              borderTop: "1px solid rgba(197,160,89,0.1)",
+              opacity: 0,
+              animation: "fadeSlideIn 0.5s ease-out 0.24s forwards",
+            }}
+          >
+            <p className="text-[8px] uppercase tracking-[0.5em] text-[var(--foreground-muted)] flex-1 max-w-lg leading-relaxed">
+              {t.shop.legacy_subtitle}
+            </p>
+
+            {/* Search */}
+            {products.length > 0 && (
+              <div className="flex items-center gap-4 flex-shrink-0">
+                <div className="relative">
+                  <Search
+                    size={10}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] pointer-events-none"
+                    aria-hidden="true"
+                  />
+                  <input
+                    type="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Pesquisar..."
+                    aria-label="Pesquisar produtos"
+                    className="bg-transparent pl-8 pr-8 py-2 text-[9px] uppercase tracking-[0.2em] text-[var(--foreground-secondary)] placeholder:text-[var(--foreground-muted)] outline-none w-40 sm:w-48 transition-all"
+                    style={{ border: "1px solid rgba(197,160,89,0.14)" }}
+                    onFocus={(e) =>
+                      (e.currentTarget.style.borderColor =
+                        "rgba(197,160,89,0.45)")
+                    }
+                    onBlur={(e) =>
+                      (e.currentTarget.style.borderColor =
+                        "rgba(197,160,89,0.14)")
+                    }
+                  />
+                  {query && (
+                    <button
+                      type="button"
+                      onClick={() => setQuery("")}
+                      aria-label="Limpar pesquisa"
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
+                    >
+                      <X size={10} />
+                    </button>
+                  )}
                 </div>
-                {products.length > 1 && <SortDropdown value={sortKey} onChange={setSortKey} />}
+                <span className="text-[7px] font-mono text-[var(--foreground-muted)]/40 whitespace-nowrap tabular-nums">
+                  {filtered.length} peça{filtered.length !== 1 ? "s" : ""}
+                </span>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </section>
 
-      {/* ═══ PRODUCTS AREA ══════════════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24 sm:pb-40">
+      {/* ═══════════════════════════════════════════════════════════════════════
+          MARQUEE DIVIDER — editorial credentials ticker
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <div
+        className="overflow-hidden border-y"
+        style={{
+          borderColor: "rgba(197,160,89,0.09)",
+          background: "rgba(197,160,89,0.012)",
+        }}
+        aria-hidden="true"
+      >
+        <div
+          className="flex whitespace-nowrap py-3"
+          style={{ animation: "marquee 40s linear infinite" }}
+        >
+          {[0, 1].map((di) => (
+            <div key={di} className="flex shrink-0">
+              {marqueeItems.map((item, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-5 text-[7px] font-mono uppercase tracking-[0.45em] text-[var(--foreground-muted)]/32 px-7"
+                >
+                  {item}
+                  <span className="text-[var(--gold)]/18 text-[8px]">◆</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          PRODUCTS AREA
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <div>
 
         {/* ── Empty state ── */}
         {filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center text-center py-32 space-y-6">
-            <div className="w-16 h-px bg-[var(--gold)] opacity-30" aria-hidden="true" />
-            <ShoppingBag className="text-[var(--foreground-muted)]" size={40} aria-hidden="true" />
+          <div className="flex flex-col items-center justify-center text-center py-36 space-y-6 px-6">
+            <div
+              className="w-14 h-px"
+              style={{ background: "rgba(197,160,89,0.3)" }}
+              aria-hidden="true"
+            />
+            <ShoppingBag
+              className="text-[var(--foreground-muted)]"
+              size={36}
+              aria-hidden="true"
+            />
             {query ? (
               <>
-                <p className="text-[var(--foreground-secondary)] font-serif text-xl italic">
-                  Nenhuma peça encontrada para &ldquo;{query}&rdquo;
+                <p className="font-serif italic text-xl text-[var(--foreground-secondary)]">
+                  Nenhuma peça para &ldquo;{query}&rdquo;
                 </p>
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="text-[var(--gold)] text-[10px] uppercase tracking-[0.35em] hover:text-[var(--foreground)] transition-colors"
+                  className="text-[var(--gold)] text-[9px] uppercase tracking-[0.4em] hover:text-[var(--foreground)] transition-colors"
                 >
-                  Limpar pesquisa →
+                  Limpar &rarr;
                 </button>
               </>
             ) : (
               <>
-                <p className="text-[var(--foreground-secondary)] font-serif text-xl italic">
-                  {t.shop.not_found || "Nenhum produto disponível de momento."}
+                <p className="font-serif italic text-xl text-[var(--foreground-secondary)]">
+                  {t.shop.not_found}
                 </p>
-                <p className="text-[var(--foreground-muted)] text-[10px] uppercase tracking-[0.35em]">
-                  {t.shop.back_collection || "Volte em breve"}
+                <p className="text-[9px] uppercase tracking-[0.4em] text-[var(--foreground-muted)]">
+                  {t.shop.back_collection}
                 </p>
               </>
             )}
           </div>
         )}
 
-        {/* ── Single product — full editorial split screen ── */}
-        {isSingle && featuredProduct && (
+        {/* ════════════════════════════════════════════════════════════════════
+            SINGLE PRODUCT — full-screen split view
+        ═════════════════════════════════════════════════════════════════════ */}
+        {isSingle && featured && (
           <section
-            aria-label={featuredProduct.title}
-            className="grid md:grid-cols-2 gap-0 items-start"
-            style={{ opacity: 0, animation: "fadeSlideIn 0.6s ease-out 0.3s forwards" }}
+            aria-label={featured.title}
+            className="grid md:grid-cols-2"
+            style={{
+              opacity: 0,
+              animation: "fadeSlideIn 0.7s ease-out 0.2s forwards",
+            }}
           >
-            {/* Left: sticky image */}
+            {/* ── Left: full-height sticky image ── */}
             <LocalizedLink
-              href={`/loja/${featuredProduct.handle}`}
-              className="group block relative overflow-hidden md:sticky md:top-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--gold)]"
-              aria-label={featuredProduct.title}
+              href={`/loja/${featured.handle}`}
+              className="group block relative overflow-hidden bg-black md:sticky md:top-0 focus-visible:outline-none"
+              aria-label={featured.title}
             >
               <div className="relative aspect-[3/4] md:h-screen">
-                {/* Corner ornaments */}
-                <div className="absolute top-5 left-5 w-8 h-8 border-t border-l border-[var(--gold)]/25 z-20" />
-                <div className="absolute top-5 right-5 w-8 h-8 border-t border-r border-[var(--gold)]/25 z-20" />
-                <div className="absolute bottom-5 left-5 w-8 h-8 border-b border-l border-[var(--gold)]/25 z-20" />
-                <div className="absolute bottom-5 right-5 w-8 h-8 border-b border-r border-[var(--gold)]/25 z-20" />
-                {/* Gold top sweep */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] z-20 bg-[var(--gold)] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                {featuredProduct.images[0]?.url ? (
+                {/* Gold line sweep on hover */}
+                <div
+                  className="absolute top-0 inset-x-0 h-[1px] origin-left scale-x-0 group-hover:scale-x-100 transition-all duration-700 z-20"
+                  style={{ background: "rgba(197,160,89,0.65)" }}
+                  aria-hidden
+                />
+
+                {featured.images[0]?.url ? (
                   <Image
-                    src={featuredProduct.images[0].url}
-                    alt={featuredProduct.title}
+                    src={featured.images[0].url}
+                    alt={featured.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
@@ -586,13 +644,24 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                   />
                 ) : (
                   <div className="absolute inset-0 bg-[var(--background-secondary)] flex items-center justify-center">
-                    <ShoppingBag className="text-[var(--foreground-muted)]" size={48} aria-hidden="true" />
+                    <ShoppingBag
+                      className="text-[var(--foreground-muted)]"
+                      size={48}
+                      aria-hidden="true"
+                    />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-[var(--gold)]/0 group-hover:bg-[var(--gold)]/[0.03] transition-colors duration-700" />
-                {/* Ordinal watermark */}
+
+                {/* Hover gold tint */}
+                <div
+                  className="absolute inset-0 bg-[var(--gold)]/0 group-hover:bg-[var(--gold)]/[0.03] transition-colors duration-700"
+                  aria-hidden
+                />
+
+                {/* Giant ordinal watermark */}
                 <span
-                  className="absolute right-6 bottom-6 text-white/[0.04] font-serif text-[7rem] leading-none select-none pointer-events-none"
+                  className="absolute right-5 bottom-5 font-serif text-white/[0.04] select-none pointer-events-none leading-none"
+                  style={{ fontSize: "clamp(5rem, 15vw, 11rem)" }}
                   aria-hidden="true"
                 >
                   01
@@ -600,119 +669,141 @@ export default function LojaContent({ products }: { products: ProductListing[] }
               </div>
             </LocalizedLink>
 
-            {/* Right: product info */}
-            <div className="flex flex-col justify-center px-6 sm:px-12 py-14 md:py-20 md:min-h-screen">
-              {/* Label */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-6 h-[1px] bg-[var(--gold)]" />
-                <span className="text-[8px] font-mono uppercase tracking-[0.55em] text-[var(--gold)]/70">
-                  Colecção Heritage
+            {/* ── Right: editorial product info ── */}
+            <div className="flex flex-col justify-center px-8 sm:px-14 py-16 md:py-24 md:min-h-screen">
+              {/* Collection label */}
+              <div className="flex items-center gap-3 mb-10">
+                <span
+                  className="w-8 h-px"
+                  style={{ background: "rgba(197,160,89,0.7)" }}
+                  aria-hidden
+                />
+                <span className="text-[7px] font-mono uppercase tracking-[0.6em] text-[var(--gold)]/65">
+                  {t.shop.collection}
                 </span>
               </div>
+
               {/* Title */}
               <h2
-                className="font-serif italic text-[var(--foreground)] leading-tight mb-5"
-                style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
+                className="font-serif italic text-[var(--foreground)] leading-[0.9] mb-7"
+                style={{ fontSize: "clamp(2.2rem, 5.5vw, 4rem)" }}
               >
-                {featuredProduct.title}
+                {featured.title}
               </h2>
+
+              {/* Hairline */}
+              <div
+                className="h-px mb-7"
+                style={{ background: "rgba(197,160,89,0.12)" }}
+                aria-hidden
+              />
+
               {/* Description */}
-              {featuredProduct.description && (
-                <p className="text-[var(--foreground-secondary)] text-sm sm:text-base leading-relaxed mb-8 max-w-sm">
-                  {featuredProduct.description}
+              {featured.description && (
+                <p className="text-[var(--foreground-secondary)] text-sm sm:text-[15px] leading-[1.75] mb-10 max-w-sm">
+                  {featured.description}
                 </p>
               )}
-              {/* Hairline */}
-              <div className="h-px mb-8" style={{ background: "rgba(255,255,255,0.06)" }} />
+
               {/* Price */}
-              <div className="flex items-baseline gap-3 mb-10">
+              <div className="flex items-baseline gap-3 mb-12">
                 <span
                   className="font-serif text-[var(--gold)]"
-                  style={{ fontSize: "clamp(2.2rem, 5vw, 3.2rem)" }}
+                  style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}
                 >
-                  {formatPrice(featuredProduct)}
+                  {formatPrice(featured)}
                 </span>
-                <span className="text-[var(--foreground-muted)] text-xs uppercase tracking-wider">EUR</span>
+                <span className="text-[8px] uppercase tracking-[0.4em] text-[var(--foreground-muted)]">
+                  EUR
+                </span>
               </div>
+
               {/* CTA */}
               <LocalizedLink
-                href={`/loja/${featuredProduct.handle}`}
-                className="inline-flex items-center gap-2.5 bg-[var(--gold)] text-black px-10 py-5 text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-white transition-all duration-300 self-start shadow-[0_0_40px_rgba(197,160,89,0.22)] active:scale-95 touch-manipulation"
+                href={`/loja/${featured.handle}`}
+                className="inline-flex items-center gap-2.5 bg-[var(--gold)] text-black px-10 py-4 text-[9px] uppercase tracking-[0.35em] font-bold hover:bg-white transition-all duration-300 self-start active:scale-95 touch-manipulation focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--gold)]"
+                style={{ boxShadow: "0 0 45px rgba(197,160,89,0.2)" }}
               >
-                <ShoppingBag size={14} aria-hidden="true" />
+                <ShoppingBag size={13} aria-hidden="true" />
                 Descobrir Peça
               </LocalizedLink>
             </div>
           </section>
         )}
 
-        {/* ── Multi-product layout ── */}
-        {!isSingle && featuredProduct && (
-          <div className="space-y-px">
+        {/* ════════════════════════════════════════════════════════════════════
+            MULTI-PRODUCT LAYOUT
+        ═════════════════════════════════════════════════════════════════════ */}
+        {!isSingle && featured && (
+          <div>
 
-            {/* FEATURED HERO */}
-            <HeroCard product={featuredProduct} />
+            {/* ── Featured hero ── */}
+            <HeroCard product={featured} />
 
-            {/* TRUST STRIP */}
+            {/* ── Trust strip — editorial single line ── */}
             <div
-              className="grid grid-cols-2 sm:grid-cols-4 gap-px"
-              style={{ background: "rgba(197,160,89,0.06)" }}
-              aria-label="Características da coleção"
+              className="px-7 sm:px-11 py-5 flex flex-wrap items-center gap-x-7 gap-y-2"
+              style={{
+                borderBottom: "1px solid rgba(197,160,89,0.08)",
+                borderTop: "1px solid rgba(255,255,255,0.03)",
+              }}
             >
-              {TRUST.map(({ Icon, label, sub }, i) => (
-                <div
-                  key={label}
-                  className="relative bg-[var(--background)] px-5 py-6 sm:py-8 flex flex-col gap-3 group hover:bg-[var(--background-secondary)]/25 transition-colors duration-300 overflow-hidden"
-                >
-                  {/* Top accent hairline */}
-                  <div
-                    className="absolute top-0 left-0 right-0 h-[1px]"
-                    style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.45) 0%, rgba(197,160,89,0.06) 55%, transparent 100%)" }}
-                    aria-hidden
-                  />
-                  {/* Ordinal */}
-                  <span className="text-[8px] font-mono tracking-[0.4em] text-[var(--gold)]/30">
-                    {ordinal(i + 1)}
-                  </span>
-                  {/* Icon box */}
-                  <div
-                    className="w-9 h-9 flex items-center justify-center flex-shrink-0"
-                    style={{ border: "1px solid rgba(197,160,89,0.2)", background: "rgba(197,160,89,0.05)" }}
-                  >
-                    <Icon size={14} className="text-[var(--gold)]" aria-hidden="true" />
-                  </div>
-                  {/* Text */}
+              {[
+                { label: "Artesanal",       sub: "Produção sob encomenda" },
+                { label: "Envio Nacional",  sub: "Todo o Portugal"        },
+                { label: "Premium",         sub: "Materiais seleccionados"},
+                { label: "Edição Limitada", sub: "Peças exclusivas"       },
+              ].map(({ label, sub }, i) => (
+                <div key={label} className="flex items-center gap-3 py-1">
+                  {i > 0 && (
+                    <span
+                      className="hidden sm:block w-px h-7 flex-shrink-0"
+                      style={{ background: "rgba(197,160,89,0.12)" }}
+                      aria-hidden
+                    />
+                  )}
                   <div>
-                    <span className="font-serif text-[var(--foreground)] text-sm block mb-0.5">{label}</span>
-                    <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-[var(--foreground-muted)] block hidden sm:block">{sub}</span>
+                    <span className="text-[8px] font-mono uppercase tracking-[0.45em] text-[var(--foreground-secondary)] block leading-none">
+                      {label}
+                    </span>
+                    <span className="text-[7px] font-mono uppercase tracking-[0.3em] text-[var(--foreground-muted)]/55 block mt-0.5 leading-none">
+                      {sub}
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* PRODUCT GRID */}
-            {restProducts.length > 0 && (
+            {/* ── Product grid ── */}
+            {rest.length > 0 && (
               <>
                 {/* Grid header */}
-                <div className="flex items-center gap-3 py-8 sm:py-10">
-                  <div className="w-6 h-[1px] bg-[var(--gold)]" />
-                  <span className="text-[9px] uppercase tracking-[0.55em] text-[var(--gold)]">
-                    Toda a Colecção
-                  </span>
-                  <div
-                    className="flex-1 h-px"
-                    style={{ background: "linear-gradient(to right, rgba(197,160,89,0.15), transparent)" }}
+                <div
+                  className="px-7 sm:px-11 flex items-center gap-4 py-7 sm:py-9"
+                  style={{
+                    borderBottom: "1px solid rgba(197,160,89,0.07)",
+                  }}
+                >
+                  <span
+                    className="w-6 h-px"
+                    style={{ background: "rgba(197,160,89,0.7)" }}
                     aria-hidden
                   />
-                  <span className="font-serif text-[var(--gold)] text-sm">{restProducts.length}</span>
+                  <span className="text-[7px] uppercase tracking-[0.6em] text-[var(--gold)]/70 font-mono flex-1">
+                    Toda a Colecção
+                  </span>
+                  <span className="font-serif text-[var(--gold)] text-base tabular-nums">
+                    {rest.length}
+                  </span>
                 </div>
 
+                {/* Edge-to-edge product grid */}
                 <div
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px"
-                  style={{ background: "rgba(197,160,89,0.07)" }}
+                  className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px"
+                  style={{ background: "rgba(197,160,89,0.06)" }}
                   aria-label="Produtos"
                 >
-                  {restProducts.map((product, i) => (
+                  {rest.map((product, i) => (
                     <ProductCard
                       key={product.id}
                       product={product}
@@ -726,65 +817,50 @@ export default function LojaContent({ products }: { products: ProductListing[] }
             )}
           </div>
         )}
+      </div>
 
-        {/* ── Brand manifesto footer ── */}
-        {filtered.length > 0 && (
-          <div
-            className="mt-24 sm:mt-36 relative"
-            style={{ opacity: 0, animation: "fadeSlideIn 0.6s ease-out 0.5s forwards" }}
-          >
-            {/* Hairline with gold midpoint */}
-            <div className="relative mb-16 sm:mb-20">
-              <div
-                className="h-px"
-                style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.3) 50%, transparent)" }}
-              />
-              <span
-                className="absolute -top-px left-1/2 -translate-x-1/2 w-16 h-px bg-[var(--gold)]/60"
-                aria-hidden="true"
-              />
-            </div>
-
-            <div className="text-center max-w-2xl mx-auto">
-              <span className="text-[8px] font-mono uppercase tracking-[0.6em] text-[var(--gold)]/55 block mb-6">
-                A Nossa Promessa
-              </span>
-
-              {/* Decorative divider */}
-              <div className="flex items-center justify-center gap-4 mb-8" aria-hidden>
-                <span
-                  className="flex-1 max-w-[100px] h-px"
-                  style={{ background: "linear-gradient(to left, rgba(197,160,89,0.25), transparent)" }}
-                />
-                <span className="text-[var(--gold)]/35 text-[10px]">◆</span>
-                <span
-                  className="flex-1 max-w-[100px] h-px"
-                  style={{ background: "linear-gradient(to right, rgba(197,160,89,0.25), transparent)" }}
-                />
-              </div>
-
-              <blockquote className="font-serif italic text-2xl sm:text-3xl text-[var(--foreground-secondary)] leading-relaxed mb-10">
-                &ldquo;Produção artesanal sob encomenda. Cada peça é impressa individualmente
-                com a mais alta qualidade, unindo a tradição equestre Lusitana ao design
-                contemporâneo.&rdquo;
+      {/* ═══════════════════════════════════════════════════════════════════════
+          BRAND COLOPHON
+      ══════════════════════════════════════════════════════════════════════════ */}
+      {filtered.length > 0 && (
+        <footer
+          className="px-7 sm:px-11 py-16 sm:py-24"
+          style={{
+            borderTop: "1px solid rgba(197,160,89,0.09)",
+            opacity: 0,
+            animation: "fadeSlideIn 0.6s ease-out 0.5s forwards",
+          }}
+        >
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 max-w-6xl">
+            {/* Left: statement */}
+            <div className="max-w-2xl">
+              <blockquote
+                className="font-serif italic text-[var(--foreground-secondary)] leading-relaxed mb-6"
+                style={{ fontSize: "clamp(1.1rem, 2.5vw, 1.6rem)" }}
+              >
+                &ldquo;Produção artesanal sob encomenda. Cada peça une a tradição
+                equestre Lusitana ao design contemporâneo.&rdquo;
               </blockquote>
-
-              <div className="flex items-center justify-center gap-4 mb-8" aria-hidden>
-                <span className="w-10 h-px bg-[var(--border)]" />
-                <span className="text-[var(--gold)] text-[10px]">◆</span>
-                <span className="w-10 h-px bg-[var(--border)]" />
-              </div>
-
-              <p className="text-[8px] uppercase tracking-[0.5em] text-[var(--foreground-muted)] font-mono">
+              <p className="text-[7px] font-mono uppercase tracking-[0.55em] text-[var(--foreground-muted)]">
                 Portal Lusitano — Lisboa, Portugal
               </p>
-              <p className="text-[7px] uppercase tracking-[0.45em] text-[var(--foreground-muted)]/35 font-mono mt-1.5">
+            </div>
+
+            {/* Right: signature mark */}
+            <div className="flex flex-col items-start sm:items-end gap-1.5 flex-shrink-0">
+              <span
+                className="w-14 h-px"
+                style={{ background: "rgba(197,160,89,0.35)" }}
+                aria-hidden
+              />
+              <span className="text-[7px] font-mono uppercase tracking-[0.5em] text-[var(--foreground-muted)]/50">
                 Anno MMXXV
-              </p>
+              </span>
+              <span className="text-[var(--gold)]/30 text-[10px]">◆</span>
             </div>
           </div>
-        )}
-      </div>
+        </footer>
+      )}
     </main>
   );
 }
