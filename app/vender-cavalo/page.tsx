@@ -23,6 +23,7 @@ import StepTreinoSaude from "@/components/vender-cavalo/StepTreinoSaude";
 import StepPrecoApresentacao from "@/components/vender-cavalo/StepPrecoApresentacao";
 import StepPagamento from "@/components/vender-cavalo/StepPagamento";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 const AUTOSAVE_KEY = "vender-cavalo-draft";
 
@@ -43,7 +44,8 @@ function calcularIdade(dataNascimento: string): number {
 }
 
 export default function VenderCavaloPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
   const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -131,7 +133,7 @@ export default function VenderCavaloPage() {
       if (!formData.microchip || formData.microchip.length < 15) newErrors.push(t.form_validation.required_microchip);
       if (!formData.data_nascimento) newErrors.push(t.form_validation.required_birth_date);
       if (!formData.sexo) newErrors.push(t.form_validation.required_sex);
-      if (!formData.temperamento) newErrors.push("Selecione o temperamento do cavalo.");
+      if (!formData.temperamento) newErrors.push(tr("Selecione o temperamento do cavalo.", "Please select the horse's temperament.", "Por favor seleccione el temperamento del caballo."));
     }
 
     if (currentStep === 2) {
@@ -143,14 +145,14 @@ export default function VenderCavaloPage() {
       if (!documentos.livroAzul) newErrors.push(t.form_validation.required_blue_book);
       // Training & Health
       if (!formData.nivel_treino) newErrors.push(t.form_validation.required_training_level);
-      if (!formData.nivel_cavaleiro) newErrors.push("Selecione o nível de cavaleiro recomendado.");
+      if (!formData.nivel_cavaleiro) newErrors.push(tr("Selecione o nível de cavaleiro recomendado.", "Please select the recommended rider level.", "Por favor seleccione el nivel de jinete recomendado."));
       if (!formData.estado_saude) newErrors.push(t.form_validation.required_health_status);
       if (!formData.vacinacao_atualizada) newErrors.push(t.form_validation.required_vaccination);
     }
 
     if (currentStep === 3) {
       if (!formData.preco) newErrors.push(t.form_validation.required_price);
-      if (!formData.regiao) newErrors.push("Selecione o distrito / região do cavalo.");
+      if (!formData.regiao) newErrors.push(tr("Selecione o distrito / região do cavalo.", "Please select the horse's district / region.", "Por favor seleccione el distrito / región del caballo."));
       if (!formData.localizacao) newErrors.push(t.vender_cavalo.error_location_required);
       if (!formData.descricao || formData.descricao.length < MIN_DESCRIPTION_LENGTH)
         newErrors.push(t.vender_cavalo.error_description_min);
@@ -211,7 +213,7 @@ export default function VenderCavaloPage() {
 
         if (!uploadRes.ok) {
           const uploadErr = await uploadRes.json();
-          throw new Error(uploadErr.error || "Erro ao fazer upload das imagens");
+          throw new Error(uploadErr.error || tr("Erro ao fazer upload das imagens", "Error uploading images", "Error al subir las imágenes"));
         }
 
         const { urls } = await uploadRes.json();

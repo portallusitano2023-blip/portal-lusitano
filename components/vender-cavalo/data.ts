@@ -112,13 +112,17 @@ export const initialFormData: FormData = {
   aulas_incluidas: false,
 };
 
-export const tiposProprietario = [
-  "Particular",
-  "Coudelaria",
-  "Marchante / Comerciante",
-  "Leiloeiro",
-  "Clube / Escola de Equitação",
-];
+export const tiposProprietario = {
+  pt: [
+    "Particular",
+    "Coudelaria",
+    "Marchante / Comerciante",
+    "Leiloeiro",
+    "Clube / Escola de Equitação",
+  ],
+  en: ["Private individual", "Stud farm", "Riding club / school", "Trader / Agent"],
+  es: ["Particular", "Criadero", "Club / Escuela de equitación", "Comerciante / Agente"],
+};
 
 export const paisesOpcoes = [
   "Portugal",
@@ -134,45 +138,111 @@ export const paisesOpcoes = [
   "Outro",
 ];
 
-export const usosAtuais = [
-  "Dressage",
-  "Equitação de Trabalho",
-  "Toureio",
-  "Atrelagem",
-  "Saltos",
-  "Passeio / Lazer",
-  "Reprodução",
-  "Ensino / Escola",
-  "Alta Escola",
-  "Endurance",
-];
+export const usosAtuais = {
+  pt: [
+    "Dressage",
+    "Equitação de Trabalho",
+    "Toureio",
+    "Atrelagem",
+    "Saltos",
+    "Passeio / Lazer",
+    "Reprodução",
+    "Ensino / Escola",
+    "Alta Escola",
+    "Endurance",
+  ],
+  en: [
+    "Leisure / Hacking",
+    "Dressage / High School",
+    "Working Equitation",
+    "Show Jumping",
+    "Trail / Endurance",
+    "Breeding",
+    "Competition",
+    "Therapy / Hippotherapy",
+    "Teaching / Lessons",
+  ],
+  es: [
+    "Ocio / Paseo",
+    "Dressage / Alta Escuela",
+    "Equitación de Trabajo",
+    "Salto de Obstáculos",
+    "Trail / Endurance",
+    "Reproducción",
+    "Competición",
+    "Terapia / Hipoterapia",
+    "Enseñanza / Clases",
+  ],
+};
 
-export const regimesEstabulacao = [
-  "Estábulo (box individual)",
-  "Paddock individual",
-  "Pastagem / campo aberto",
-  "Misto (box + campo)",
-  "Coudelaria coletiva",
-];
+export const regimesEstabulacao = {
+  pt: [
+    "Estábulo (box individual)",
+    "Paddock individual",
+    "Pastagem / campo aberto",
+    "Misto (box + campo)",
+    "Coudelaria coletiva",
+  ],
+  en: ["Box 24h", "Paddock / Field", "Semi-feral", "Mixed (box + paddock)"],
+  es: ["Box 24h", "Paddock / Campo", "Semi-libertad", "Mixto (box + paddock)"],
+};
 
-export const tiposAlimentacao = [
-  "Feno + concentrado",
-  "Pastagem natural",
-  "Pastagem + concentrado",
-  "Feno + aveia",
-  "Ração completa",
-  "Dieta personalizada",
-];
+export const tiposAlimentacao = {
+  pt: [
+    "Feno + concentrado",
+    "Pastagem natural",
+    "Pastagem + concentrado",
+    "Feno + aveia",
+    "Ração completa",
+    "Dieta personalizada",
+  ],
+  en: [
+    "Hay + Feed",
+    "Hay + Specific Concentrate",
+    "Pasture only",
+    "Pasture + Supplement",
+    "Complete feed",
+  ],
+  es: [
+    "Heno + Pienso",
+    "Heno + Concentrado Específico",
+    "Solo pasto",
+    "Pasto + Suplemento",
+    "Alimentación completa",
+  ],
+};
 
-export const motivosVenda = [
-  "Excesso de cavalos na coudelaria",
-  "Mudança de disciplina",
-  "Mudança de vida / situação pessoal",
-  "Razões económicas",
-  "Reforma do cavalo",
-  "Incompatibilidade cavaleiro-cavalo",
-  "Outro",
-];
+export const motivosVenda = {
+  pt: [
+    "Excesso de cavalos na coudelaria",
+    "Mudança de disciplina",
+    "Mudança de vida / situação pessoal",
+    "Razões económicas",
+    "Reforma do cavalo",
+    "Incompatibilidade cavaleiro-cavalo",
+    "Outro",
+  ],
+  en: [
+    "Change of activity",
+    "Horse upgrade",
+    "Financial reasons",
+    "Lack of time",
+    "Horse retirement",
+    "Breeding programme change",
+    "Relocation",
+    "Other",
+  ],
+  es: [
+    "Cambio de actividad",
+    "Mejora de caballo",
+    "Razones económicas",
+    "Falta de tiempo",
+    "Retiro del caballo",
+    "Cambio de programa de cría",
+    "Traslado",
+    "Otro",
+  ],
+};
 
 export const coresCrina = [
   "Loura",
@@ -181,38 +251,100 @@ export const coresCrina = [
   "Mista (loura e escura)",
 ];
 
-export const pelagens = [
-  "Ruço",
-  "Castanho",
-  "Preto",
-  "Alazão",
-  "Baio",
-  "Palomino",
-  "Tordilho",
-  "Isabelo",
-  "Malhado",
-];
+export const pelagens = {
+  pt: ["Ruço", "Castanho", "Preto", "Alazão", "Baio", "Palomino", "Tordilho", "Isabelo", "Malhado"],
+  en: [
+    "Grey",
+    "Brown",
+    "Black",
+    "Bay",
+    "Chestnut",
+    "Palomino",
+    "Cremello",
+    "Buckskin",
+    "Dun",
+    "Roan",
+    "Piebald/Skewbald",
+    "Other",
+  ],
+  es: [
+    "Tordo",
+    "Castaño",
+    "Negro",
+    "Bayo",
+    "Alazán",
+    "Palomino",
+    "Cremello",
+    "Bayo Oscuro",
+    "Bayo Claro",
+    "Ruano",
+    "Pío",
+    "Otro",
+  ],
+};
 
-export const niveisTreino = [
-  "Potro (sem desbaste)",
-  "Desbravado",
-  "Iniciado",
-  "Intermédio",
-  "Avançado",
-  "Alta Escola",
-  "Competição",
-];
+export const niveisTreino = {
+  pt: [
+    "Potro (sem desbaste)",
+    "Desbravado",
+    "Iniciado",
+    "Intermédio",
+    "Avançado",
+    "Alta Escola",
+    "Competição",
+  ],
+  en: [
+    "Foal (unbroken)",
+    "Started",
+    "Initiated",
+    "Intermediate",
+    "Advanced",
+    "High School",
+    "Competition",
+  ],
+  es: [
+    "Potro (sin domar)",
+    "Iniciado",
+    "Comenzado",
+    "Intermedio",
+    "Avanzado",
+    "Alta Escuela",
+    "Competición",
+  ],
+};
 
-export const disciplinasOpcoes = [
-  "Dressage",
-  "Equitação de Trabalho",
-  "Toureio",
-  "Atrelagem",
-  "Saltos",
-  "Lazer",
-  "Reprodução",
-  "Ensino",
-];
+export const disciplinasOpcoes = {
+  pt: [
+    "Dressage",
+    "Equitação de Trabalho",
+    "Toureio",
+    "Atrelagem",
+    "Saltos",
+    "Lazer",
+    "Reprodução",
+    "Ensino",
+  ],
+  en: [
+    "Dressage",
+    "Working Equitation",
+    "Bullfighting",
+    "Driving",
+    "Show Jumping",
+    "Leisure",
+    "Breeding",
+    "Teaching",
+  ],
+  es: [
+    "Dressage",
+    "Equitación de Trabajo",
+    "Rejoneo",
+    "Enganche",
+    "Salto de Obstáculos",
+    "Ocio",
+    "Reproducción",
+    "Enseñanza",
+  ],
+};
 
 export const disponibilidades = [
   "Imediata",
@@ -231,27 +363,40 @@ export const linhagensPrincipais = [
   "Mistas",
 ];
 
-export const tiposFerragemOpcoes = [
-  "Ferrado (4 ferros)",
-  "Ferrado (anterior)",
-  "Ferrado (posterior)",
-  "Descalço",
-  "Com borrachas",
-  "Misto",
-];
+export const tiposFerragemOpcoes = {
+  pt: [
+    "Ferrado (4 ferros)",
+    "Ferrado (anterior)",
+    "Ferrado (posterior)",
+    "Descalço",
+    "Com borrachas",
+    "Misto",
+  ],
+  en: ["Traditional shoes", "Barefoot", "Rubber shoes", "Partial shoes", "Therapeutic shoes"],
+  es: [
+    "Herradura tradicional",
+    "Sin herradura",
+    "Herradura de goma",
+    "Herradura parcial",
+    "Herradura terapéutica",
+  ],
+};
 
 export const coresOlhos = ["Castanho", "Âmbar", "Azul", "Heterocromia"];
 
 export const coresCasco = ["Escuro", "Branco", "Misto (escuro e branco)", "Listado"];
 
-export const temperamentosOpcoes = ["Calmo", "Sensível", "Energético", "Difícil"];
+export const temperamentosOpcoes = {
+  pt: ["Calmo", "Sensível", "Energético", "Difícil"],
+  en: ["Very Calm", "Calm", "Balanced", "Sensitive", "Very Sensitive"],
+  es: ["Muy Tranquilo", "Tranquilo", "Equilibrado", "Sensible", "Muy Sensible"],
+};
 
-export const niveisCavaleiro = [
-  "Principiante",
-  "Intermédio",
-  "Avançado",
-  "Profissional / Competidor",
-];
+export const niveisCavaleiro = {
+  pt: ["Principiante", "Intermédio", "Avançado", "Profissional / Competidor"],
+  en: ["Beginner", "Intermediate", "Advanced", "Professional"],
+  es: ["Principiante", "Intermedio", "Avanzado", "Profesional"],
+};
 
 export const duracoesTrialOpcoes = [
   "1 semana",

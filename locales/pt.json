@@ -2163,7 +2163,14 @@
     "hiw_step2_title": "Verificação e publicação",
     "hiw_step2_desc": "A nossa equipa verifica a documentação APSL e publica o anúncio em até 24 horas.",
     "hiw_step3_title": "Compradores contactam-te",
-    "hiw_step3_desc": "Recebes contacto directo dos compradores interessados. Sem intermediários, sem comissões."
+    "hiw_step3_desc": "Recebes contacto directo dos compradores interessados. Sem intermediários, sem comissões.",
+    "draft_restored": "Rascunho restaurado automaticamente",
+    "clear_draft": "Limpar",
+    "temperamento": "Temperamento",
+    "rider_level": "Nível de Cavaleiro Recomendado",
+    "current_use": "Uso Atual do Cavalo",
+    "behavior_section": "Comportamento e Maneabilidade",
+    "current_trainer": "Treinador Atual"
   },
   "error_page": {
     "something_wrong": "Algo correu mal",

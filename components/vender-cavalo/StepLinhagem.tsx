@@ -4,6 +4,7 @@ import { Upload, CheckCircle, FileText } from "lucide-react";
 import type { StepProps, Documentos, DocumentType } from "@/components/vender-cavalo/types";
 import { linhagensPrincipais } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface StepLinhagemProps extends StepProps {
   documentos: Documentos;
@@ -16,7 +17,8 @@ export default function StepLinhagem({
   documentos,
   onDocUpload,
 }: StepLinhagemProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">
@@ -110,10 +112,10 @@ export default function StepLinhagem({
 
         {/* Avós Paternos (3ª geração — lado do pai) */}
         <div>
-          <h3 className="text-sm font-medium text-[var(--foreground-muted)] mb-3">Avós Paternos (3ª geração — lado do pai)</h3>
+          <h3 className="text-sm font-medium text-[var(--foreground-muted)] mb-3">{tr("Avós Paternos (3ª geração — lado do pai)", "Paternal Grandparents (3rd generation — father's side)", "Abuelos Paternos (3ª generación — lado del padre)")}</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-3">
-              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Avô Paterno (pai do pai)</p>
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">{tr("Avô Paterno (pai do pai)", "Paternal Grandfather (father's father)", "Abuelo Paterno (padre del padre)")}</p>
               <input
                 id="avo_paterno_nome"
                 type="text"
@@ -132,7 +134,7 @@ export default function StepLinhagem({
               />
             </div>
             <div className="space-y-3">
-              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Avó Paterna (mãe do pai)</p>
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">{tr("Avó Paterna (mãe do pai)", "Paternal Grandmother (father's mother)", "Abuela Paterna (madre del padre)")}</p>
               <input
                 id="avo_paterno_mae_nome"
                 type="text"
@@ -155,10 +157,10 @@ export default function StepLinhagem({
 
         {/* Avós Maternos (3ª geração — lado da mãe) */}
         <div>
-          <h3 className="text-sm font-medium text-[var(--foreground-muted)] mb-3">Avós Maternos (3ª geração — lado da mãe)</h3>
+          <h3 className="text-sm font-medium text-[var(--foreground-muted)] mb-3">{tr("Avós Maternos (3ª geração — lado da mãe)", "Maternal Grandparents (3rd generation — mother's side)", "Abuelos Maternos (3ª generación — lado de la madre)")}</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-3">
-              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Avô Materno (pai da mãe)</p>
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">{tr("Avô Materno (pai da mãe)", "Maternal Grandfather (mother's father)", "Abuelo Materno (padre de la madre)")}</p>
               <input
                 id="avo_materno_nome"
                 type="text"
@@ -177,7 +179,7 @@ export default function StepLinhagem({
               />
             </div>
             <div className="space-y-3">
-              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Avó Materna (mãe da mãe)</p>
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">{tr("Avó Materna (mãe da mãe)", "Maternal Grandmother (mother's mother)", "Abuela Materna (madre de la madre)")}</p>
               <input
                 id="avo_materno_mae_nome"
                 type="text"
@@ -205,7 +207,7 @@ export default function StepLinhagem({
               htmlFor="linhagem_principal"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              Linhagem Principal
+              {tr("Linhagem Principal", "Main Lineage", "Linaje Principal")}
             </label>
             <select
               id="linhagem_principal"

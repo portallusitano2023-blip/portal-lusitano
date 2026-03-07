@@ -4,9 +4,11 @@ import { Info } from "lucide-react";
 import type { StepProps } from "@/components/vender-cavalo/types";
 import { pelagens, coresOlhos, coresCasco, temperamentosOpcoes, coresCrina, paisesOpcoes } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 export default function StepIdentificacao({ formData, updateField }: StepProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">
@@ -123,7 +125,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
               htmlFor="raca_confirmada"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              Raça Confirmada *
+              {tr("Raça Confirmada *", "Confirmed Breed *", "Raza Confirmada *")}
             </label>
             <select
               id="raca_confirmada"
@@ -145,7 +147,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
               htmlFor="pais_nascimento"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              País de Nascimento *
+              {tr("País de Nascimento *", "Country of Birth *", "País de Nacimiento *")}
             </label>
             <select
               id="pais_nascimento"
@@ -210,7 +212,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
             >
               <option value="">{t.vender_cavalo.select}</option>
-              {pelagens.map((p) => (
+              {(pelagens[language] || pelagens.pt).map((p) => (
                 <option key={p} value={p}>
                   {p}
                 </option>
@@ -238,7 +240,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
           </div>
           <div>
             <label htmlFor="peso" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Peso
+              {tr("Peso", "Weight", "Peso")}
               <span className="text-[var(--foreground-muted)] text-xs ml-1">(kg)</span>
             </label>
             <input
@@ -254,7 +256,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
           </div>
           <div>
             <label htmlFor="cor_olhos" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Cor dos Olhos
+              {tr("Cor dos Olhos", "Eye Color", "Color de Ojos")}
             </label>
             <select
               id="cor_olhos"
@@ -273,7 +275,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
         <div className="grid sm:grid-cols-3 gap-4">
           <div>
             <label htmlFor="cor_crina" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Cor da Crina
+              {tr("Cor da Crina", "Mane Color", "Color de Crines")}
             </label>
             <select
               id="cor_crina"
@@ -289,8 +291,8 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
           </div>
           <div>
             <label htmlFor="nivel_apsl" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Pontuação Morfológica APSL
-              <span className="text-[var(--foreground-muted)] text-xs ml-1">(opcional)</span>
+              {tr("Pontuação Morfológica APSL", "APSL Morphological Score", "Puntuación Morfológica APSL")}
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">{tr("(opcional)", "(optional)", "(opcional)")}</span>
             </label>
             <input
               id="nivel_apsl"
@@ -303,7 +305,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
           </div>
           <div>
             <label htmlFor="temperamento" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Temperamento *
+              {tr("Temperamento *", "Temperament *", "Temperamento *")}
             </label>
             <select
               id="temperamento"
@@ -313,7 +315,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
             >
               <option value="">{t.vender_cavalo.select}</option>
-              {temperamentosOpcoes.map((tp) => (
+              {(temperamentosOpcoes[language] || temperamentosOpcoes.pt).map((tp) => (
                 <option key={tp} value={tp}>{tp}</option>
               ))}
             </select>
@@ -323,7 +325,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="marcas_distintivas" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Marcas Distintivas
+              {tr("Marcas Distintivas", "Distinctive Markings", "Marcas Distintivas")}
               <span className="text-[var(--foreground-muted)] text-xs ml-1">(estrela, meia-lua, meias, rodados, etc.)</span>
             </label>
             <input
@@ -337,7 +339,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
           </div>
           <div>
             <label htmlFor="cor_casco" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Cor do Casco
+              {tr("Cor do Casco", "Hoof Color", "Color del Casco")}
             </label>
             <select
               id="cor_casco"
@@ -362,7 +364,7 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
               onChange={(e) => updateField("prova_aptidao_apsl", e.target.checked)}
               className="w-5 h-5 accent-[var(--gold)]"
             />
-            <span className="text-sm">Prova de Aptidão APSL realizada</span>
+            <span className="text-sm">{tr("Prova de Aptidão APSL realizada", "APSL Aptitude Test completed", "Prueba de Aptitud APSL realizada")}</span>
           </label>
         </div>
       </div>

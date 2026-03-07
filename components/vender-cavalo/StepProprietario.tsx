@@ -3,9 +3,11 @@
 import type { StepProps } from "@/components/vender-cavalo/types";
 import { tiposProprietario, paisesOpcoes } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 export default function StepProprietario({ formData, updateField }: StepProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">
@@ -23,7 +25,7 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
               htmlFor="tipo_proprietario"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              Tipo de Vendedor *
+              {tr("Tipo de Vendedor *", "Seller Type *", "Tipo de Vendedor *")}
             </label>
             <select
               id="tipo_proprietario"
@@ -33,7 +35,7 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
             >
               <option value="">{t.vender_cavalo.select}</option>
-              {tiposProprietario.map((tp) => (
+              {(tiposProprietario[language] || tiposProprietario.pt).map((tp) => (
                 <option key={tp} value={tp}>{tp}</option>
               ))}
             </select>
@@ -43,7 +45,7 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
               htmlFor="pais_proprietario"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              País de Residência *
+              {tr("País de Residência *", "Country of Residence *", "País de Residencia *")}
             </label>
             <select
               id="pais_proprietario"
@@ -85,7 +87,7 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
               {t.vender_cavalo.nif}
-              <span className="text-[var(--foreground-muted)] text-xs ml-1">(opcional)</span>
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">{tr("(opcional)", "(optional)", "(opcional)")}</span>
             </label>
             <input
               id="proprietario_nif"
@@ -160,7 +162,7 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
               WhatsApp
-              <span className="text-[var(--foreground-muted)] text-xs ml-1">(se diferente do telefone)</span>
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">{tr("(se diferente do telefone)", "(if different from phone)", "(si diferente del teléfono)")}</span>
             </label>
             <input
               id="proprietario_whatsapp"
@@ -179,8 +181,8 @@ export default function StepProprietario({ formData, updateField }: StepProps) {
               htmlFor="website_coudelaria"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              Website da Coudelaria / Escola
-              <span className="text-[var(--foreground-muted)] text-xs ml-1">(opcional)</span>
+              {tr("Website da Coudelaria / Escola", "Stud Farm / School Website", "Sitio Web del Criadero / Escuela")}
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">{tr("(opcional)", "(optional)", "(opcional)")}</span>
             </label>
             <input
               id="website_coudelaria"

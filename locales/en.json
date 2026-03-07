@@ -2163,7 +2163,14 @@
     "hiw_step2_title": "Verification and publishing",
     "hiw_step2_desc": "Our team verifies the APSL documentation and publishes your listing within 24 hours.",
     "hiw_step3_title": "Buyers contact you directly",
-    "hiw_step3_desc": "You receive direct contact from interested buyers. No middlemen, no commissions."
+    "hiw_step3_desc": "You receive direct contact from interested buyers. No middlemen, no commissions.",
+    "draft_restored": "Draft automatically restored",
+    "clear_draft": "Clear",
+    "temperamento": "Temperament",
+    "rider_level": "Recommended Rider Level",
+    "current_use": "Current Horse Use",
+    "behavior_section": "Behaviour & Tractability",
+    "current_trainer": "Current Trainer"
   },
   "error_page": {
     "something_wrong": "Something went wrong",

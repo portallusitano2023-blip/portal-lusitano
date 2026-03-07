@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { useToast } from "@/context/ToastContext";
 import { Loader2 } from "lucide-react";
 
@@ -47,6 +48,7 @@ export default function AddToCartButton({
 }: AddToCartProps) {
   const { addItemToCart } = useCart();
   const { language } = useLanguage();
+  const tr = createTranslator(language);
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
 
@@ -59,7 +61,7 @@ export default function AddToCartButton({
     }
 
     if (!available) {
-      showToast("error", "Este produto está marcado como esgotado.");
+      showToast("error", tr("Este produto está marcado como esgotado.", "This product is marked as out of stock.", "Este producto está marcado como agotado."));
       return;
     }
 

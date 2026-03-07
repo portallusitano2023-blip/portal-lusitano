@@ -5,6 +5,7 @@ import LocalizedLink from "@/components/LocalizedLink";
 import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import {
   Mail,
   Lock,
@@ -67,8 +68,17 @@ const strengthConfig: Record<StrengthLevel, { label: string; color: string; widt
 };
 
 function PasswordStrengthBar({ password }: { password: string }) {
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
   const level = getPasswordStrength(password);
-  const { label, color } = strengthConfig[level];
+  const { color } = strengthConfig[level];
+  const strengthLabel: Record<StrengthLevel, string> = {
+    none: "",
+    weak: "Fraca",
+    medium: tr("Média", "Medium", "Media"),
+    strong: "Forte",
+  };
+  const label = strengthLabel[level];
 
   if (!password) return null;
 
@@ -107,11 +117,13 @@ function PasswordStrengthBar({ password }: { password: string }) {
 
 // ─── Password requirements checklist ─────────────────────────────────────────
 function PasswordChecks({ password }: { password: string }) {
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
   if (!password) return null;
   const checks = [
-    { ok: password.length >= 8, label: "Mínimo 8 caracteres" },
-    { ok: /[A-Z]/.test(password), label: "Uma letra maiúscula" },
-    { ok: /[0-9]/.test(password), label: "Um número" },
+    { ok: password.length >= 8, label: tr("Mínimo 8 caracteres", "Minimum 8 characters", "Mínimo 8 caracteres") },
+    { ok: /[A-Z]/.test(password), label: tr("Uma letra maiúscula", "One uppercase letter", "Una letra mayúscula") },
+    { ok: /[0-9]/.test(password), label: tr("Um número", "One number", "Un número") },
   ];
   return (
     <ul
@@ -165,7 +177,8 @@ function RegistarContent() {
   const [success, setSuccess] = useState(false);
   const [shaking, setShaking] = useState(false);
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   const passwordChecks = {
     length: password.length >= 8,
@@ -191,13 +204,13 @@ function RegistarContent() {
 
     // Client-side validation
     const errors: typeof fieldErrors = {};
-    if (!name.trim()) errors.name = "O nome é obrigatório.";
-    if (!email) errors.email = "O email é obrigatório.";
-    if (!password) errors.password = "A palavra-passe é obrigatória.";
-    else if (!passwordValid) errors.password = "A palavra-passe não cumpre os requisitos.";
+    if (!name.trim()) errors.name = tr("O nome é obrigatório.", "Name is required.", "El nombre es obligatorio.");
+    if (!email) errors.email = tr("O email é obrigatório.", "Email is required.", "El email es obligatorio.");
+    if (!password) errors.password = tr("A palavra-passe é obrigatória.", "Password is required.", "La contraseña es obligatoria.");
+    else if (!passwordValid) errors.password = tr("A palavra-passe não cumpre os requisitos.", "Password does not meet requirements.", "La contraseña no cumple los requisitos.");
     if (!confirmPassword) errors.confirmPassword = "Por favor confirme a palavra-passe.";
     else if (password !== confirmPassword)
-      errors.confirmPassword = "As palavras-passe não coincidem.";
+      errors.confirmPassword = tr("As palavras-passe não coincidem.", "Passwords do not match.", "Las contraseñas no coinciden.");
     if (!termsAccepted) errors.terms = "Deve aceitar os termos para continuar.";
 
     if (Object.keys(errors).length > 0) {

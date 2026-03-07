@@ -5,6 +5,7 @@ import LocalizedLink from "@/components/LocalizedLink";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { Mail, Lock, Eye, EyeOff, LogIn, Loader2, AlertCircle } from "lucide-react";
 
 // ─── Shared input class builder ───────────────────────────────────────────────
@@ -44,7 +45,8 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get("returnUrl") || "/";
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   const triggerShake = useCallback(() => {
     setShaking(true);
@@ -58,8 +60,8 @@ function LoginContent() {
 
     // Basic client-side validation
     const errors: { email?: string; password?: string } = {};
-    if (!email) errors.email = "O email é obrigatório.";
-    if (!password) errors.password = "A palavra-passe é obrigatória.";
+    if (!email) errors.email = tr("O email é obrigatório.", "Email is required.", "El email es obligatorio.");
+    if (!password) errors.password = tr("A palavra-passe é obrigatória.", "Password is required.", "La contraseña es obligatoria.");
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       triggerShake();

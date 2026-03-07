@@ -4,6 +4,7 @@ import { Upload, CheckCircle, Shield } from "lucide-react";
 import type { StepProps, Documentos, DocumentType } from "@/components/vender-cavalo/types";
 import { niveisTreino, disciplinasOpcoes, tiposFerragemOpcoes, niveisCavaleiro, usosAtuais, regimesEstabulacao, tiposAlimentacao } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface StepTreinoSaudeProps extends StepProps {
   documentos: Documentos;
@@ -20,7 +21,8 @@ export default function StepTreinoSaude({
   onToggleDisciplina,
   onToggleUso,
 }: StepTreinoSaudeProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = createTranslator(language);
 
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">
@@ -48,7 +50,7 @@ export default function StepTreinoSaude({
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
           >
             <option value="">{t.vender_cavalo.select}</option>
-            {niveisTreino.map((n) => (
+            {(niveisTreino[language] || niveisTreino.pt).map((n) => (
               <option key={n} value={n}>
                 {n}
               </option>
@@ -59,10 +61,10 @@ export default function StepTreinoSaude({
         {/* Uso Atual */}
         <div>
           <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
-            Uso Atual do Cavalo
+            {tr("Uso Atual do Cavalo", "Current Horse Use", "Uso Actual del Caballo")}
           </label>
           <div className="flex flex-wrap gap-2">
-            {usosAtuais.map((uso) => (
+            {(usosAtuais[language] || usosAtuais.pt).map((uso) => (
               <button
                 key={uso}
                 type="button"
@@ -85,7 +87,7 @@ export default function StepTreinoSaude({
             {t.vender_cavalo.disciplines}
           </label>
           <div className="flex flex-wrap gap-2">
-            {disciplinasOpcoes.map((disc) => (
+            {(disciplinasOpcoes[language] || disciplinasOpcoes.pt).map((disc) => (
               <button
                 key={disc}
                 type="button"
@@ -109,8 +111,8 @@ export default function StepTreinoSaude({
               htmlFor="anos_treino"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              Anos de Treino
-              <span className="text-[var(--foreground-muted)] text-xs ml-1">(anos em trabalho)</span>
+              {tr("Anos de Treino", "Training Years", "Años de Entrenamiento")}
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">{tr("(anos em trabalho)", "(years in work)", "(años en trabajo)")}</span>
             </label>
             <input
               id="anos_treino"
@@ -128,7 +130,7 @@ export default function StepTreinoSaude({
               htmlFor="nivel_cavaleiro"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              Nível de Cavaleiro Recomendado *
+              {tr("Nível de Cavaleiro Recomendado *", "Recommended Rider Level *", "Nivel de Jinete Recomendado *")}
             </label>
             <select
               id="nivel_cavaleiro"
@@ -138,7 +140,7 @@ export default function StepTreinoSaude({
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
             >
               <option value="">{t.vender_cavalo.select}</option>
-              {niveisCavaleiro.map((n) => (
+              {(niveisCavaleiro[language] || niveisCavaleiro.pt).map((n) => (
                 <option key={n} value={n}>{n}</option>
               ))}
             </select>
@@ -152,8 +154,8 @@ export default function StepTreinoSaude({
               htmlFor="treinador_atual"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              Treinador Atual
-              <span className="text-[var(--foreground-muted)] text-xs ml-1">(opcional)</span>
+              {tr("Treinador Atual", "Current Trainer", "Entrenador Actual")}
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">{tr("(opcional)", "(optional)", "(opcional)")}</span>
             </label>
             <input
               id="treinador_atual"
@@ -169,8 +171,8 @@ export default function StepTreinoSaude({
               htmlFor="ginete_habitual"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              Ginete Habitual
-              <span className="text-[var(--foreground-muted)] text-xs ml-1">(opcional)</span>
+              {tr("Ginete Habitual", "Regular Rider", "Jinete Habitual")}
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">{tr("(opcional)", "(optional)", "(opcional)")}</span>
             </label>
             <input
               id="ginete_habitual"
@@ -223,10 +225,10 @@ export default function StepTreinoSaude({
         <div className="border-t border-[var(--border)] pt-6">
           <h3 className="text-sm font-medium text-[var(--foreground)] mb-4 flex items-center gap-2">
             <Shield size={18} className="text-[var(--gold)]" />
-            Comportamento e Maneabilidade
+            {tr("Comportamento e Maneabilidade", "Behaviour & Tractability", "Comportamiento y Manejabilidad")}
           </h3>
           <p className="text-xs text-[var(--foreground-muted)] mb-4">
-            Assinale as características confirmadas. Esta informação é muito valorizada pelos compradores.
+            {tr("Assinale as características confirmadas. Esta informação é muito valorizada pelos compradores.", "Mark confirmed characteristics. This information is highly valued by buyers.", "Marque las características confirmadas. Esta información es muy valorada por los compradores.")}
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
@@ -257,13 +259,13 @@ export default function StepTreinoSaude({
         <div className="border-t border-[var(--border)] pt-6">
           <h3 className="text-sm font-medium text-[var(--foreground)] mb-4 flex items-center gap-2">
             <Shield size={18} className="text-[var(--gold)]" />
-            Maneio e Rotina
+            {tr("Maneio e Rotina", "Management & Routine", "Manejo y Rutina")}
           </h3>
 
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <div>
               <label htmlFor="regime_estabulacao" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-                Regime de Estabulação
+                {tr("Regime de Estabulação", "Stabling Regime", "Régimen de Estabulación")}
               </label>
               <select
                 id="regime_estabulacao"
@@ -271,15 +273,15 @@ export default function StepTreinoSaude({
                 onChange={(e) => updateField("regime_estabulacao", e.target.value)}
                 className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
               >
-                <option value="">Selecionar</option>
-                {regimesEstabulacao.map((r) => (
+                <option value="">{tr("Selecionar", "Select", "Seleccionar")}</option>
+                {(regimesEstabulacao[language] || regimesEstabulacao.pt).map((r) => (
                   <option key={r} value={r}>{r}</option>
                 ))}
               </select>
             </div>
             <div>
               <label htmlFor="tipo_alimentacao" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-                Tipo de Alimentação
+                {tr("Tipo de Alimentação", "Feeding Type", "Tipo de Alimentación")}
               </label>
               <select
                 id="tipo_alimentacao"
@@ -287,8 +289,8 @@ export default function StepTreinoSaude({
                 onChange={(e) => updateField("tipo_alimentacao", e.target.value)}
                 className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
               >
-                <option value="">Selecionar</option>
-                {tiposAlimentacao.map((a) => (
+                <option value="">{tr("Selecionar", "Select", "Seleccionar")}</option>
+                {(tiposAlimentacao[language] || tiposAlimentacao.pt).map((a) => (
                   <option key={a} value={a}>{a}</option>
                 ))}
               </select>
@@ -297,7 +299,7 @@ export default function StepTreinoSaude({
 
           <div className="mb-4">
             <label htmlFor="horas_trabalho_semana" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-              Horas de Trabalho por Semana
+              {tr("Horas de Trabalho por Semana", "Working Hours per Week", "Horas de Trabajo por Semana")}
               <span className="text-[var(--foreground-muted)] text-xs ml-1">(horas/semana)</span>
             </label>
             <input
@@ -506,7 +508,7 @@ export default function StepTreinoSaude({
                 htmlFor="tipo_ferragem"
                 className="block text-sm text-[var(--foreground-secondary)] mb-1"
               >
-                Tipo de Ferragem
+                {tr("Tipo de Ferragem", "Shoeing Type", "Tipo de Herraje")}
               </label>
               <select
                 id="tipo_ferragem"
@@ -514,9 +516,9 @@ export default function StepTreinoSaude({
                 onChange={(e) => updateField("tipo_ferragem", e.target.value)}
                 className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
               >
-                <option value="">Selecionar</option>
-                {tiposFerragemOpcoes.map((t) => (
-                  <option key={t} value={t}>{t}</option>
+                <option value="">{tr("Selecionar", "Select", "Seleccionar")}</option>
+                {(tiposFerragemOpcoes[language] || tiposFerragemOpcoes.pt).map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
                 ))}
               </select>
             </div>
