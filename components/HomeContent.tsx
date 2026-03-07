@@ -463,7 +463,7 @@ export default function HomeContent({
                     alt={featuredProduct.title}
                     fill
                     sizes="(max-width: 640px) 50vw, 380px"
-                    className="object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700"
+                    className="object-cover opacity-100 group-hover:scale-[1.04] transition-all duration-700"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center bg-[var(--background-card)]">
@@ -473,7 +473,7 @@ export default function HomeContent({
                 {/* Cinematic gradient */}
                 <div
                   className="absolute inset-0 pointer-events-none"
-                  style={{ background: "linear-gradient(to top, rgba(3,3,3,0.96) 0%, rgba(3,3,3,0.55) 45%, rgba(3,3,3,0.1) 75%, transparent 100%)" }}
+                  style={{ background: "linear-gradient(to top, rgba(3,3,3,0.92) 0%, rgba(3,3,3,0.35) 40%, transparent 70%)" }}
                   aria-hidden
                 />
                 {/* Gold hairline on hover */}
