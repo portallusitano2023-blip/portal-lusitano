@@ -229,29 +229,32 @@ export default function HomeContent({
     <>
       {/* ===== HERO — Full Screen with Parallax ===== */}
       <section className="relative min-h-[100svh] sm:min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
-        {/* Background Image — Mobile (portrait, up to lg) */}
-        <Image
-          src="/images/home/mobile/hero.png"
-          alt="Cavalo Lusitano — Nobreza Portuguesa"
-          fill
-          className="object-cover opacity-70 z-0 lg:hidden"
-          style={{ objectPosition: "center 20%" }}
-          priority
-          sizes="100vw"
-          quality={80}
-        />
-
-        {/* Background Image — Desktop (landscape, lg and up) */}
-        <Image
-          src="/images/home/desktop/hero.png"
-          alt="Cavalo Lusitano — Nobreza Portuguesa"
-          fill
-          className="object-cover opacity-60 z-0 hidden lg:block"
-          style={{ objectPosition: "center center" }}
-          priority
-          sizes="100vw"
-          quality={85}
-        />
+        {/* Background Image — native picture element for art direction */}
+        {/* Mobile: portrait hero  |  Desktop (≥1024px): landscape hero  */}
+        <picture
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0 }}
+          aria-hidden="true"
+        >
+          <source
+            media="(min-width: 1024px)"
+            srcSet="/images/home/desktop/hero.png"
+          />
+          <img
+            src="/images/home/mobile/hero.png"
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center 20%",
+              opacity: 0.65,
+            }}
+            fetchPriority="high"
+            loading="eager"
+          />
+        </picture>
 
         {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/50 to-black/40 z-[1]" />
