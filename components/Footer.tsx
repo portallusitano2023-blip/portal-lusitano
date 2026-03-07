@@ -1,30 +1,27 @@
 "use client";
 
-import { memo, useMemo } from "react";
+import { memo, useMemo, Fragment } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
-import { ArrowUpRight, Gift } from "lucide-react";
+import { ArrowUpRight, Gift, ArrowRight } from "lucide-react";
 import { IconInstagram, IconTikTok, IconEmail } from "@/components/icons/SocialIcons";
 import { useLanguage } from "@/context/LanguageContext";
 import { CONTACT_EMAIL, SOCIAL_LINKS } from "@/lib/constants";
 
-// memo: Footer has no local state and only re-renders when the language/translations
-// object changes. Wrapping it prevents spurious re-renders from context siblings.
 export default memo(function Footer() {
   const { t } = useLanguage();
 
-  // Memoized so array references stay stable between renders when translations
-  // haven't changed, which avoids re-rendering the mapped list items.
-  const navItems = useMemo(
+  const col1 = useMemo(
     () => [
       { name: t.nav.home, href: "/" },
       { name: t.nav.shop, href: "/loja" },
       { name: t.nav.journal, href: "/jornal" },
       { name: t.footer.about, href: "/sobre" },
+      { name: t.footer.pricing, href: "/precos" },
     ],
-    [t.nav.home, t.nav.shop, t.nav.journal, t.footer.about]
+    [t.nav.home, t.nav.shop, t.nav.journal, t.footer.about, t.footer.pricing]
   );
 
-  const lusitanoItems = useMemo(
+  const col2 = useMemo(
     () => [
       { name: t.footer.buy_horse, href: "/comprar" },
       { name: t.footer.studs, href: "/directorio" },
@@ -35,7 +32,7 @@ export default memo(function Footer() {
     [t.footer.buy_horse, t.footer.studs, t.footer.events, t.footer.lineages, t.footer.notable]
   );
 
-  const toolItems = useMemo(
+  const col3 = useMemo(
     () => [
       { name: t.footer.calculator, href: "/calculadora-valor" },
       { name: t.footer.comparator, href: "/comparador-cavalos" },
@@ -45,182 +42,271 @@ export default memo(function Footer() {
     [t.footer.calculator, t.footer.comparator, t.footer.compatibility, t.footer.profile_analysis]
   );
 
+  const col4 = useMemo(
+    () => [
+      { name: t.footer.sell_horse, href: "/vender-cavalo" },
+      { name: t.footer.professionals, href: "/profissionais" },
+      { name: t.footer.returns, href: "/devolucoes" },
+      { name: t.footer.contact, href: "/contacto" },
+    ],
+    [t.footer.sell_horse, t.footer.professionals, t.footer.returns, t.footer.contact]
+  );
+
+  const legalLinks = useMemo(
+    () => [
+      { label: t.footer.complaints_book, href: "https://www.livroreclamacoes.pt", external: true },
+      { label: t.footer.dispute_resolution, href: "https://ec.europa.eu/consumers/odr", external: true },
+      { label: t.footer.privacy, href: "/privacidade", external: false },
+      { label: t.footer.terms, href: "/termos", external: false },
+    ],
+    [t.footer.complaints_book, t.footer.dispute_resolution, t.footer.privacy, t.footer.terms]
+  );
+
+  const MARQUEE =
+    "Cavalos Lusitanos · Portugal · Est. 2023 · O Legado Nobre · Raça Lusitana · Évora · The Lusitano Archive · Coudelarias · Profissionais Equestres · ";
+
+  const socials = [
+    {
+      href: SOCIAL_LINKS.instagram,
+      label: "Instagram",
+      icon: IconInstagram,
+      hover: "hover:bg-gradient-to-br hover:from-purple-600 hover:via-pink-500 hover:to-orange-400",
+    },
+    { href: SOCIAL_LINKS.tiktok, label: "TikTok", icon: IconTikTok, hover: "hover:bg-[#ff0050]" },
+    { href: `mailto:${CONTACT_EMAIL}`, label: "Email", icon: IconEmail, hover: "hover:bg-[var(--gold)]" },
+  ];
+
+  const cols = [
+    { label: t.footer.navigation, items: col1 },
+    { label: t.footer.lusitano, items: col2 },
+    { label: t.footer.tools, items: col3 },
+    { label: "Portal", items: col4 },
+  ];
+
   return (
-    <footer className="bg-[var(--background)] border-t border-[var(--border)] pt-10 sm:pt-14 pb-16 lg:pb-12 px-4 sm:px-6 relative overflow-hidden">
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[var(--gold)] opacity-[0.03] blur-[100px] pointer-events-none [transform:translateZ(0)]" />
+    <footer className="bg-[var(--background)] relative overflow-hidden">
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-16 mb-20">
-          {/* IDENTIDADE */}
-          <div className="col-span-2 md:col-span-4 space-y-6">
-            <LocalizedLink href="/" className="inline-block group">
-              <span className="font-serif text-3xl sm:text-4xl text-[var(--foreground)] tracking-tighter group-hover:text-[var(--gold)] transition-all duration-500">
-                PORTAL <span className="italic font-light">LUSITANO</span>
-              </span>
-              <span className="text-[10px] sm:text-[9px] text-[var(--foreground-secondary)] uppercase tracking-[0.5em] block mt-2 font-bold group-hover:text-[var(--foreground-secondary)] transition-colors">
-                O Legado Nobre · Est. 2023
-              </span>
-            </LocalizedLink>
-            <p className="text-[var(--foreground-muted)] text-sm font-light leading-relaxed max-w-sm">
-              {t.home.manifesto}
-            </p>
+      {/* ── AMBIENT LIGHT ─────────────────────────────── */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-[var(--gold)] opacity-[0.045] blur-[130px] [transform:translateZ(0)]" />
+        <div className="absolute top-0 left-1/4 w-[400px] h-[250px] bg-[var(--gold)] opacity-[0.018] blur-[90px] [transform:translateZ(0)]" />
+        <div className="absolute top-0 right-1/4 w-[400px] h-[250px] bg-[var(--gold)] opacity-[0.018] blur-[90px] [transform:translateZ(0)]" />
+      </div>
 
-            {/* Redes sociais */}
-            <div className="flex gap-3 pt-2">
-              {[
-                {
-                  href: SOCIAL_LINKS.instagram,
-                  label: "Instagram",
-                  icon: IconInstagram,
-                  hoverBg: "hover:bg-gradient-to-br hover:from-purple-600 hover:via-pink-500 hover:to-orange-400",
-                },
-                {
-                  href: SOCIAL_LINKS.tiktok,
-                  label: "TikTok",
-                  icon: IconTikTok,
-                  hoverBg: "hover:bg-[#ff0050]",
-                },
-                {
-                  href: `mailto:${CONTACT_EMAIL}`,
-                  label: "Email",
-                  icon: IconEmail,
-                  hoverBg: "hover:bg-[var(--gold)]",
-                },
-              ].map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target={social.href.startsWith("http") ? "_blank" : undefined}
-                  rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  aria-label={social.label}
-                  className={`group w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[var(--foreground-muted)] hover:text-white hover:scale-110 transition-all duration-300 ${social.hoverBg}`}
-                >
-                  <social.icon size={16} />
-                </a>
-              ))}
-            </div>
+      {/* ── TOP GOLD HAIRLINE ─────────────────────────── */}
+      <div
+        className="h-px w-full"
+        style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.45) 50%, transparent)" }}
+        aria-hidden="true"
+      />
+
+      {/* ── BRAND STATEMENT ───────────────────────────── */}
+      <div className="relative text-center pt-14 sm:pt-20 pb-10 sm:pb-14 px-4 sm:px-6 overflow-hidden">
+
+        {/* Grain texture */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.03] pointer-events-none select-none" aria-hidden="true">
+          <filter id="ftg">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#ftg)" />
+        </svg>
+
+        {/* Corner ornaments */}
+        {[
+          "top-6 left-4 sm:left-10 border-t border-l",
+          "top-6 right-4 sm:right-10 border-t border-r",
+          "bottom-6 left-4 sm:left-10 border-b border-l",
+          "bottom-6 right-4 sm:right-10 border-b border-r",
+        ].map((cls) => (
+          <div key={cls} className={`absolute ${cls} w-7 h-7 border-[var(--gold)]/20 pointer-events-none`} aria-hidden="true" />
+        ))}
+
+        {/* Est. label */}
+        <div className="flex items-center justify-center gap-3 mb-7">
+          <div className="h-px w-6 sm:w-16" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.5))" }} />
+          <span className="text-[var(--gold)] text-[8px] uppercase tracking-[0.5em]">Est. MMXXIII · Portugal</span>
+          <div className="h-px w-6 sm:w-16" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.5))" }} />
+        </div>
+
+        {/* Wordmark — medium, refined */}
+        <LocalizedLink href="/" className="group inline-block mb-2" aria-label="Portal Lusitano">
+          <div className="leading-[0.9]">
+            <span
+              className="block font-serif font-normal tracking-[-0.03em] text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors duration-700"
+              style={{ fontSize: "clamp(2.2rem, 5.5vw, 4.5rem)" }}
+            >
+              PORTAL
+            </span>
+            <span
+              className="block font-serif italic font-light tracking-[-0.01em] text-[var(--gold)]"
+              style={{ fontSize: "clamp(2.2rem, 5.5vw, 4.5rem)" }}
+            >
+              Lusitano
+            </span>
           </div>
+        </LocalizedLink>
 
-          {/* NAVEGAÇÃO */}
-          <nav aria-label="Links principais" className="md:col-span-2 space-y-5">
-            <h2 className="text-[var(--foreground)] text-[10px] uppercase tracking-[0.3em] font-bold">
-              {t.footer.navigation}
-            </h2>
-            <ul className="space-y-3">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <LocalizedLink
-                    href={item.href}
-                    className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] text-sm font-light transition-colors"
-                  >
-                    {item.name}
-                  </LocalizedLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
+        {/* Diamond + tagline */}
+        <div className="flex items-center justify-center gap-3 mt-5 mb-5">
+          <div className="h-px w-8 sm:w-28" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.3))" }} />
+          <svg width="5" height="5" viewBox="0 0 5 5" fill="currentColor" className="text-[var(--gold)]/50 rotate-45 flex-shrink-0" aria-hidden="true">
+            <rect width="5" height="5" />
+          </svg>
+          <div className="h-px w-8 sm:w-28" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.3))" }} />
+        </div>
 
-          {/* LUSITANO */}
-          <nav aria-label="Links Lusitano" className="md:col-span-3 space-y-5">
-            <h2 className="text-[var(--foreground)] text-[10px] uppercase tracking-[0.3em] font-bold">
-              {t.footer.lusitano}
-            </h2>
-            <ul className="space-y-3">
-              {lusitanoItems.map((item) => (
-                <li key={item.href}>
-                  <LocalizedLink
-                    href={item.href}
-                    className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] text-sm font-light transition-colors"
-                  >
-                    {item.name}
-                  </LocalizedLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
+        <p className="text-[var(--foreground-muted)] text-xs sm:text-sm font-light max-w-sm mx-auto leading-relaxed mb-7">
+          {t.home.manifesto}
+        </p>
 
-          {/* FERRAMENTAS + CONTACTO */}
-          <div className="md:col-span-3 space-y-8">
-            <div className="space-y-5">
-              <h2 className="text-[var(--foreground)] text-[10px] uppercase tracking-[0.3em] font-bold">
-                {t.footer.tools}
-              </h2>
-              <ul className="space-y-3">
-                {toolItems.map((item) => (
+        {/* Social icons — centered */}
+        <div className="flex items-center justify-center gap-2.5">
+          {socials.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target={s.href.startsWith("http") ? "_blank" : undefined}
+              rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
+              aria-label={s.label}
+              className={`w-9 h-9 border border-[var(--border)] flex items-center justify-center text-[var(--foreground-muted)] hover:text-white hover:border-transparent transition-all duration-300 ${s.hover}`}
+            >
+              <s.icon size={15} />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* ── MARQUEE ───────────────────────────────────── */}
+      <div
+        className="overflow-hidden py-2.5"
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.05)",
+          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          maskImage: "linear-gradient(to right, transparent, black 7%, black 93%, transparent)",
+          WebkitMaskImage: "linear-gradient(to right, transparent, black 7%, black 93%, transparent)",
+        }}
+        aria-hidden="true"
+      >
+        <div
+          className="flex whitespace-nowrap"
+          style={{ animation: "footer-marquee 38s linear infinite", willChange: "transform" }}
+        >
+          {[0, 1].map((i) => (
+            <span key={i} className="text-[7px] sm:text-[8px] uppercase tracking-[0.45em] text-[var(--foreground-muted)]/30 flex-shrink-0 pr-0">
+              {Array(6).fill(MARQUEE).join("")}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── MAIN CONTAINER ────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+
+        {/* ── 4-COLUMN NAV ──────────────────────────── */}
+        <div
+          className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 py-8 sm:py-10"
+          style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          {cols.map((col) => (
+            <nav key={col.label} aria-label={col.label}>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-px bg-[var(--gold)]" />
+                <h3 className="text-[var(--gold)] text-[7px] sm:text-[8px] uppercase tracking-[0.4em] font-medium">
+                  {col.label}
+                </h3>
+              </div>
+              <ul className="space-y-1.5">
+                {col.items.map((item) => (
                   <li key={item.href}>
                     <LocalizedLink
                       href={item.href}
-                      className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] text-sm font-light transition-colors"
+                      className="group flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] text-[11px] sm:text-[12px] font-light tracking-[0.02em] transition-colors duration-200"
                     >
+                      <span className="w-2 h-px bg-[var(--gold)] opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity duration-200" />
                       {item.name}
                     </LocalizedLink>
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
+          ))}
+        </div>
 
-            <div className="pt-4 border-t border-[var(--border)] space-y-3">
-              <div className="flex items-center gap-3">
-                <IconEmail className="text-[var(--gold)]" size={14} />
-                <span className="text-[var(--foreground-muted)] text-xs">{CONTACT_EMAIL}</span>
-              </div>
-              <LocalizedLink
-                href="/ebook-gratis"
-                className="inline-flex items-center gap-2 text-[var(--gold)] text-[10px] uppercase tracking-widest font-bold hover:text-[var(--foreground)] transition-colors"
-              >
-                <Gift size={12} />
-                {t.footer.ebook}
-                <ArrowUpRight size={10} />
-              </LocalizedLink>
+        {/* ── EBOOK CTA ─────────────────────────────── */}
+        <LocalizedLink
+          href="/ebook-gratis"
+          className="group flex items-center justify-between gap-4 py-5"
+          style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="w-8 h-8 border border-[var(--gold)]/35 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--gold)]/10 transition-colors duration-300">
+              <Gift size={13} className="text-[var(--gold)]" />
             </div>
+            <div className="min-w-0">
+              <p className="text-[var(--foreground)] text-xs font-medium tracking-wide">{t.footer.ebook}</p>
+              <p className="text-[var(--foreground-muted)] text-[10px] font-light">
+                {t.footer.ebook_subtitle}
+              </p>
+            </div>
+          </div>
+          <ArrowRight
+            size={14}
+            className="text-[var(--gold)]/50 flex-shrink-0 group-hover:translate-x-1 group-hover:text-[var(--gold)] transition-all duration-300"
+          />
+        </LocalizedLink>
+
+        {/* ── LEGAL ─────────────────────────────────── */}
+        <div
+          className="py-3.5"
+          style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            {legalLinks.map((link, i) =>
+              link.external ? (
+                <Fragment key={link.href}>
+                  {i > 0 && <span className="text-[var(--foreground-muted)]/20 text-[8px] select-none" aria-hidden="true">·</span>}
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[8px] uppercase tracking-[0.22em] text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-colors"
+                  >
+                    {link.label}
+                    <ArrowUpRight size={8} />
+                  </a>
+                </Fragment>
+              ) : (
+                <Fragment key={link.href}>
+                  {i > 0 && <span className="text-[var(--foreground-muted)]/20 text-[8px] select-none" aria-hidden="true">·</span>}
+                  <LocalizedLink
+                    href={link.href}
+                    className="text-[8px] uppercase tracking-[0.22em] text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-colors"
+                  >
+                    {link.label}
+                  </LocalizedLink>
+                </Fragment>
+              )
+            )}
           </div>
         </div>
 
-        {/* LEGAL — Obrigatório por DL 199/2015 e Regulamento UE 524/2013 */}
-        <div className="pt-8 border-t border-[var(--border)] mb-8">
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[var(--foreground-muted)]">
-            <a
-              href="https://www.livroreclamacoes.pt"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[var(--foreground-secondary)] transition-colors flex items-center gap-1.5"
-            >
-              {t.footer.complaints_book}
-              <ArrowUpRight size={10} />
-            </a>
-            <a
-              href="https://ec.europa.eu/consumers/odr"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[var(--foreground-secondary)] transition-colors flex items-center gap-1.5"
-            >
-              {t.footer.dispute_resolution}
-              <ArrowUpRight size={10} />
-            </a>
-          </div>
-        </div>
-
-        {/* COPYRIGHT */}
-        <div className="pt-6 border-t border-[var(--border)] flex flex-col sm:flex-row justify-between items-center gap-6">
-          <p className="text-[var(--foreground-muted)] text-xs sm:text-[9px] uppercase tracking-[0.2em]" suppressHydrationWarning>
-            © {new Date().getFullYear()} Portal Lusitano. {t.footer.rights}.
+        {/* ── COPYRIGHT ─────────────────────────────── */}
+        <div className="py-4 pb-16 lg:pb-12 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="text-[var(--foreground-muted)] text-[8px] uppercase tracking-[0.25em]" suppressHydrationWarning>
+            © {new Date().getFullYear()} Portal Lusitano · {t.footer.rights}
           </p>
-          <div className="flex gap-8">
-            <LocalizedLink
-              href="/privacidade"
-              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-xs sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
-            >
-              {t.footer.privacy}
-            </LocalizedLink>
-            <LocalizedLink
-              href="/termos"
-              className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-xs sm:text-[9px] uppercase tracking-[0.2em] transition-colors"
-            >
-              {t.footer.terms}
-            </LocalizedLink>
-          </div>
+          <p className="text-[var(--foreground-muted)] text-[8px] tracking-wide">
+            NIF 255669801 · Évora, Portugal
+          </p>
         </div>
       </div>
+
+      <style>{`
+        @keyframes footer-marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+      `}</style>
     </footer>
   );
 });

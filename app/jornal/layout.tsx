@@ -36,21 +36,13 @@ export const metadata: Metadata = {
     siteName: "Portal Lusitano",
     locale: "pt_PT",
     type: "website",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Jornal Lusitano — Portal Lusitano",
-      },
-    ],
+    // Sem `images` manual: Next.js auto-descobre app/jornal/opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
     title: "Jornal Lusitano | Portal Lusitano",
     description:
       "Jornal do Portal Lusitano — artigos, crónicas e investigação aprofundada sobre história, criação, treino e saúde do cavalo Lusitano.",
-    images: ["/opengraph-image"],
   },
 };
 

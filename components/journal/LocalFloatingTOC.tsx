@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface TOCItem {
   id: string;
@@ -12,24 +13,35 @@ interface LocalFloatingTOCProps {
 }
 
 export default function LocalFloatingTOC({ language = "pt" }: LocalFloatingTOCProps) {
+  const { t } = useLanguage();
   const [headings, setHeadings] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
-  // Extract headings from the DOM after render
+  // Extract headings from the DOM — uses MutationObserver to wait for content instead of a timeout
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const extractHeadings = () => {
       const elements = document.querySelectorAll('[id^="section-"]');
+      if (elements.length === 0) return;
       const items: TOCItem[] = [];
       elements.forEach((el) => {
-        items.push({
-          id: el.id,
-          text: el.textContent || "",
-        });
+        items.push({ id: el.id, text: el.textContent || "" });
       });
       setHeadings(items);
-    }, 100);
+      observer.disconnect();
+    };
 
-    return () => clearTimeout(timer);
+    const observer = new MutationObserver(extractHeadings);
+
+    // Try immediately in case headings are already in the DOM
+    extractHeadings();
+
+    // If not found yet, watch for DOM changes in the article body
+    const articleBody = document.querySelector(".article-body");
+    if (articleBody) {
+      observer.observe(articleBody, { childList: true, subtree: true });
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   // IntersectionObserver for active heading tracking
@@ -69,7 +81,7 @@ export default function LocalFloatingTOC({ language = "pt" }: LocalFloatingTOCPr
       }
     >
       <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--foreground-muted)] mb-4 font-bold">
-        {language === "pt" ? "Índice" : language === "es" ? "Índice" : "Contents"}
+        {t.journal.table_of_contents}
       </h4>
       <ul className="space-y-2 border-l border-[var(--border)]">
         {headings.map((heading) => (
@@ -79,7 +91,11 @@ export default function LocalFloatingTOC({ language = "pt" }: LocalFloatingTOCPr
               onClick={(e) => {
                 e.preventDefault();
                 const el = document.getElementById(heading.id);
-                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+                  el.focus({ preventScroll: true });
+                }
               }}
               className={`block text-xs leading-relaxed transition-colors border-l-2 -ml-px pl-4 py-1 ${
                 activeId === heading.id

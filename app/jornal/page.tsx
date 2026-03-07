@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import fs from "fs";
-import path from "path";
 import { fetchArticlesList } from "@/lib/sanity-queries";
 import { articlesListPT, articlesListEN, articlesListES } from "@/data/articlesList";
 import { legacyIdToSlug } from "@/lib/journal-utils";
+import { findLocalCover } from "@/lib/journal-server-utils";
 import { ItemListSchema } from "@/components/JsonLd";
 import JornalListClient from "./JornalListClient";
 import { generatePageMetadata } from "@/lib/seo";
@@ -26,23 +25,24 @@ export const metadata: Metadata = generatePageMetadata({
   ],
 });
 
-// Extensões de imagem aceites (qualquer ficheiro de imagem)
-const imageExts = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".bmp", ".tiff"]);
-
-// Detecta qualquer imagem na pasta public/images/jornal/{slug}/
-function findLocalCover(slug: string): string | null {
-  const dir = path.join(process.cwd(), "public", "images", "jornal", slug);
-  if (!fs.existsSync(dir)) return null;
-  const files = fs.readdirSync(dir);
-  const img = files.find((f) => imageExts.has(path.extname(f).toLowerCase()));
-  return img ? `/images/jornal/${slug}/${img}` : null;
-}
-
-// Fallback: converter dados locais para formato compatível com Sanity
+/**
+ * Converter dados locais para formato compatível com Sanity.
+ * Usa as datas reais dos artigos em vez de datas artificialmente geradas.
+ */
 function localToSanityFormat(articles: typeof articlesListPT) {
   return articles.map((a, i) => {
     const slug = legacyIdToSlug[a.id] || a.id;
     const localCover = findLocalCover(slug);
+
+    // Converter a data formatada (ex: "25 JAN 2026") para ISO — usa a data real do artigo
+    const parseLocalDate = (dateStr: string): string => {
+      try {
+        const d = new Date(dateStr);
+        if (!isNaN(d.getTime())) return d.toISOString();
+      } catch { /* */ }
+      // Fallback se a data não for parseable directamente
+      return new Date(2026, 0, 25 - i * 5).toISOString();
+    };
 
     return {
       _id: `local-${a.id}`,
@@ -51,7 +51,7 @@ function localToSanityFormat(articles: typeof articlesListPT) {
       contentType: "article" as const,
       featured: i === 0,
       subtitle: a.subtitle,
-      publishedAt: new Date(2026, 0, 25 - i * 5).toISOString(),
+      publishedAt: parseLocalDate(a.date),
       estimatedReadTime: parseInt(a.readTime) || 30,
       category: a.category,
       image: {
@@ -69,15 +69,13 @@ export default async function JornalPage() {
     if (sanityArticles && sanityArticles.length > 0) {
       articles = sanityArticles;
     } else {
-      // Fallback para dados locais se Sanity estiver vazio
       articles = localToSanityFormat(articlesListPT);
     }
   } catch {
-    // Fallback se Sanity não estiver disponível
     articles = localToSanityFormat(articlesListPT);
   }
 
-  // Dados EN/ES para fallback
+  // Dados EN/ES para fallback de idioma
   const articlesEN = localToSanityFormat(articlesListEN);
   const articlesES = localToSanityFormat(articlesListES);
 

@@ -9,6 +9,7 @@ import {
   articlesListES,
   slugToArticleId,
 } from "@/data/articlesList";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface LocalRelatedArticlesProps {
   slugs: string[];
@@ -19,17 +20,13 @@ export default function LocalRelatedArticles({
   slugs,
   language = "pt",
 }: LocalRelatedArticlesProps) {
+  const { t } = useLanguage();
   if (!slugs || slugs.length === 0) return null;
 
   const articlesList =
     language === "en" ? articlesListEN : language === "es" ? articlesListES : articlesListPT;
   const readLabel = language === "pt" ? "Ler" : language === "es" ? "Leer" : "Read";
-  const sectionTitle =
-    language === "pt"
-      ? "Artigos Relacionados"
-      : language === "es"
-        ? "Artículos Relacionados"
-        : "Related Articles";
+  const sectionLabel = t.journal.related_articles;
 
   const articles = slugs
     .map((slug) => {
@@ -44,57 +41,96 @@ export default function LocalRelatedArticles({
   if (articles.length === 0) return null;
 
   return (
-    <section className="max-w-7xl mx-auto px-8 py-16 border-t border-[var(--border)]">
-      <div className="flex items-center gap-4 mb-10">
-        <div className="w-12 h-px bg-[var(--gold)]/50" />
-        <h3 className="text-2xl font-serif text-[var(--foreground)]">{sectionTitle}</h3>
+    <section
+      className="max-w-7xl mx-auto px-4 sm:px-8 py-12"
+      style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+    >
+      {/* Section header */}
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-3 h-px bg-[var(--gold)]" />
+        <h3 className="text-[8px] uppercase tracking-[0.42em] text-[var(--foreground-muted)]">
+          {sectionLabel}
+        </h3>
+        <div
+          className="flex-1 h-px"
+          style={{ background: "linear-gradient(to right, rgba(255,255,255,0.05), transparent)" }}
+        />
+        <span className="text-[8px] font-mono text-[var(--foreground-muted)]/30 tabular-nums">
+          {String(articles.length).padStart(2, "0")}
+        </span>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {articles.map((article) => (
-          <LocalizedLink key={article.slug} href={`/jornal/${article.slug}`}>
-            <article className="group cursor-pointer h-full flex flex-col border border-[var(--border)] border-t-2 border-t-transparent hover:border-[var(--gold)]/30 hover:border-t-[var(--gold)] transition-all duration-500 bg-[var(--surface-hover)] hover:shadow-[0_0_40px_rgba(197,160,89,0.08)]">
-              <div className="w-full aspect-[16/10] overflow-hidden relative">
-                <Image
-                  src={article.image}
-                  alt={article.title}
-                  fill
-                  className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-              </div>
-              <div className="px-6 pt-4 pb-0 flex items-center justify-between text-[10px] uppercase tracking-widest">
-                <span className="flex items-center gap-1.5 text-[var(--gold)]">
-                  <span className="inline-block w-1 h-1 rounded-full bg-[var(--gold)]" />
-                  {article.category}
-                </span>
-                <span className="flex items-center gap-3 text-[var(--foreground-muted)]">
-                  <span>{article.date}</span>
-                  <span className="flex items-center gap-1">
-                    <Clock size={10} /> {article.readTime}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {articles.map((article, i) => {
+          const num = String(i + 1).padStart(2, "0");
+
+          return (
+            <LocalizedLink key={article.slug} href={`/jornal/${article.slug}`}>
+              <article className="group cursor-pointer h-full flex flex-col bg-[var(--surface-hover)] border border-[var(--border)] hover:border-[var(--gold)]/25 hover:-translate-y-0.5 hover:shadow-[0_8px_40px_rgba(0,0,0,0.35),0_0_30px_rgba(197,160,89,0.06)] transition-all duration-400">
+                {/* Image */}
+                <div className="w-full aspect-[3/2] overflow-hidden relative">
+                  <Image
+                    src={article.image}
+                    alt={article.title}
+                    fill
+                    className="object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                  {/* Editorial number watermark */}
+                  <span
+                    className="absolute bottom-2 right-3 font-mono text-white/[0.12] select-none pointer-events-none leading-none"
+                    style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)" }}
+                    aria-hidden
+                  >
+                    {num}
                   </span>
-                </span>
-              </div>
-              <div className="px-6 pt-3 pb-6 flex flex-col flex-grow">
-                <h4 className="text-lg font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--gold)] transition-colors duration-300 leading-tight">
-                  {article.title}
-                </h4>
-                <p className="text-[var(--foreground-muted)] text-sm leading-relaxed flex-grow font-serif line-clamp-2">
-                  {article.subtitle}
-                </p>
-                <div className="mt-4">
-                  <span className="inline-flex items-center gap-2 text-[var(--foreground)] text-xs uppercase tracking-widest relative">
-                    {readLabel}
-                    <ArrowRight
-                      size={12}
-                      className="text-[var(--gold)] group-hover:translate-x-1 transition-transform duration-300"
-                    />
-                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-all duration-500" />
+                  {/* Category pill */}
+                  {article.category && (
+                    <span className="absolute top-3 left-3 text-[7px] uppercase tracking-[0.35em] text-[var(--gold)] border border-[var(--gold)]/25 bg-black/60 backdrop-blur-sm px-2 py-1">
+                      {article.category}
+                    </span>
+                  )}
+                  {/* Gold hairline */}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
+                    style={{ background: "rgba(197,160,89,0.5)" }}
+                    aria-hidden
+                  />
+                </div>
+
+                {/* Info */}
+                <div className="px-4 pt-3.5 pb-0 flex items-center justify-between text-[9px] uppercase tracking-[0.25em]">
+                  <span className="text-[var(--foreground-muted)]/50">
+                    {article.date}
+                  </span>
+                  <span className="flex items-center gap-1 text-[var(--foreground-muted)]/40">
+                    <Clock size={9} className="flex-shrink-0" />
+                    {article.readTime}
                   </span>
                 </div>
-              </div>
-            </article>
-          </LocalizedLink>
-        ))}
+
+                {/* Content */}
+                <div className="px-4 pt-2.5 pb-5 flex flex-col flex-grow">
+                  <h4 className="text-sm font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--gold)] transition-colors duration-300 leading-snug line-clamp-2">
+                    {article.title}
+                  </h4>
+                  {article.subtitle && (
+                    <p className="text-[11px] text-[var(--foreground-muted)] leading-relaxed flex-grow font-serif line-clamp-2 mb-3">
+                      {article.subtitle}
+                    </p>
+                  )}
+                  <span className="inline-flex items-center gap-1.5 text-[var(--foreground-muted)] text-[9px] uppercase tracking-[0.3em] group-hover:text-[var(--gold)] transition-colors duration-300 mt-auto">
+                    {readLabel}
+                    <ArrowRight
+                      size={10}
+                      className="group-hover:translate-x-1 transition-transform duration-300"
+                    />
+                  </span>
+                </div>
+              </article>
+            </LocalizedLink>
+          );
+        })}
       </div>
     </section>
   );

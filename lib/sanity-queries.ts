@@ -194,8 +194,15 @@ const RELATED_ARTICLES_QUERY = `*[_type == "artigo" && slug.current != $slug && 
   }
 }`;
 
-// Query para slugs (sitemap / generateStaticParams)
-const ARTICLE_SLUGS_QUERY = `*[_type == "artigo"] { "slug": slug.current }`;
+// Query para slugs (sitemap / generateStaticParams / navegação prev-next)
+const ARTICLE_SLUGS_QUERY = `*[_type == "artigo"] | order(publishedAt desc) {
+  "slug": slug.current,
+  title,
+  titleEn,
+  category,
+  categoryEn,
+  publishedAt
+}`;
 
 // Funções helper — cache() deduplicates calls with the same args within a
 // single server request (e.g. generateMetadata + page component both calling
@@ -252,7 +259,8 @@ export const fetchRelatedArticles = cache(
 );
 
 export const fetchArticleSlugs = cache(
-  async (): Promise<Array<{ slug: string }>> => client.fetch(ARTICLE_SLUGS_QUERY)
+  async (): Promise<Array<{ slug: string; title?: string; titleEn?: string; category?: string; categoryEn?: string; publishedAt?: string }>> =>
+    client.fetch(ARTICLE_SLUGS_QUERY)
 );
 
 // --- Cavalo queries ---

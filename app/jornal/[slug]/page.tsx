@@ -1,32 +1,19 @@
-import { existsSync, readdirSync } from "fs";
-import path from "path";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchArticleBySlug, fetchRelatedArticles, fetchArticleSlugs } from "@/lib/sanity-queries";
-import { ArticleSchema, BreadcrumbSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, EducationalArticleSchema } from "@/components/JsonLd";
 import ArticlePageClient from "./ArticlePageClient";
 
 // Fallback: dados locais para quando Sanity está vazio
 import { articlesDataPT } from "@/data/articlesData";
-
-// Extensões de imagem aceites (qualquer ficheiro de imagem)
-const imageExts = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".bmp", ".tiff"]);
-
-// Detecta qualquer imagem na pasta public/images/jornal/{slug}/
-function findLocalCover(slug: string): string | null {
-  const dir = path.join(process.cwd(), "public", "images", "jornal", slug);
-  if (!existsSync(dir)) return null;
-  const files = readdirSync(dir);
-  const img = files.find((f) => imageExts.has(path.extname(f).toLowerCase()));
-  return img ? `/images/jornal/${slug}/${img}` : null;
-}
+import { articlesListPT } from "@/data/articlesList";
+import { slugToLegacyId } from "@/lib/journal-utils";
+import { findLocalCover } from "@/lib/journal-server-utils";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
 
 // ISR: artigos do jornal revalidam a cada 6 horas
 export const revalidate = 21600;
-
-import { slugToLegacyId } from "@/lib/journal-utils";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -39,9 +26,8 @@ export async function generateStaticParams() {
       return slugs.map((s) => ({ slug: s.slug }));
     }
   } catch {
-    // Fallback
+    // Fallback silencioso — sem logging para não quebrar build
   }
-  // Retornar slugs dos artigos locais
   return Object.keys(slugToLegacyId).map((slug) => ({ slug }));
 }
 
@@ -50,6 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let title = "Artigo não encontrado";
   let description = "";
   let imageUrl = "/opengraph-image";
+  let publishedAt: string | undefined;
 
   try {
     const article = await fetchArticleBySlug(slug);
@@ -57,8 +44,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title = article.title;
       description = article.description || article.subtitle || "";
       if (article.image?.asset?.url) imageUrl = article.image.asset.url;
+      publishedAt = article.publishedAt;
     } else {
-      // Fallback para dados locais
       const legacyId = slugToLegacyId[slug];
       if (legacyId && articlesDataPT[legacyId]) {
         const local = articlesDataPT[legacyId];
@@ -86,14 +73,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [{ url: imageUrl, alt: title }],
       type: "article",
       url: `${siteUrl}/jornal/${slug}`,
+      siteName: "Portal Lusitano",
+      locale: "pt_PT",
+      ...(publishedAt ? { publishedTime: publishedAt } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [{ url: imageUrl, alt: title }],
     },
     alternates: {
       canonical: `${siteUrl}/jornal/${slug}`,
+      languages: {
+        "pt-PT": `${siteUrl}/jornal/${slug}`,
+        "en-US": `${siteUrl}/en/jornal/${slug}`,
+        "es-ES": `${siteUrl}/es/jornal/${slug}`,
+      },
     },
   };
 }
@@ -103,11 +99,21 @@ export default async function ArticlePage({ params }: Props) {
 
   let article = null;
   let relatedArticles: Awaited<ReturnType<typeof fetchRelatedArticles>> = [];
+  let prevArticle: { slug: string; title: string; category?: string } | null = null;
+  let nextArticle: { slug: string; title: string; category?: string } | null = null;
 
   try {
     article = await fetchArticleBySlug(slug);
     if (article?.category) {
       relatedArticles = await fetchRelatedArticles(slug, article.category);
+    }
+
+    // Prev/next navigation for Sanity articles
+    const allSlugs = await fetchArticleSlugs();
+    if (allSlugs && allSlugs.length > 0) {
+      const idx = allSlugs.findIndex((s) => s.slug === slug);
+      if (idx > 0) prevArticle = allSlugs[idx - 1] as { slug: string; title: string; category?: string };
+      if (idx >= 0 && idx < allSlugs.length - 1) nextArticle = allSlugs[idx + 1] as { slug: string; title: string; category?: string };
     }
   } catch {
     // Will fallback in client
@@ -119,17 +125,35 @@ export default async function ArticlePage({ params }: Props) {
     if (!legacyId || !articlesDataPT[legacyId]) {
       notFound();
     }
-    // Passar slug e legacyId para o client component resolver o fallback
+
+    const local = articlesDataPT[legacyId];
+    const localMeta = articlesListPT.find((a) => a.id === legacyId);
+    const localImageUrl = findLocalCover(slug) || local.image;
+
     return (
       <>
         <BreadcrumbSchema
           items={[
             { name: "Portal Lusitano", url: siteUrl },
             { name: "Jornal Lusitano", url: `${siteUrl}/jornal` },
-            { name: articlesDataPT[legacyId].title, url: `${siteUrl}/jornal/${slug}` },
+            { name: local.title, url: `${siteUrl}/jornal/${slug}` },
           ]}
         />
-        <ArticlePageClient slug={slug} legacyId={legacyId} article={null} relatedArticles={[]} />
+        <EducationalArticleSchema
+          name={local.title}
+          description={local.description || local.subtitle}
+          url={`${siteUrl}/jornal/${slug}`}
+          keywords={local.keywords}
+          educationalLevel="Advanced"
+        />
+        <ArticlePageClient
+          legacyId={legacyId}
+          localImageUrl={localImageUrl}
+          article={null}
+          relatedArticles={[]}
+          prevArticle={prevArticle}
+          nextArticle={nextArticle}
+        />
       </>
     );
   }
@@ -140,19 +164,24 @@ export default async function ArticlePage({ params }: Props) {
         items={[
           { name: "Portal Lusitano", url: siteUrl },
           { name: "Jornal Lusitano", url: `${siteUrl}/jornal` },
-          { name: article.title, url: `${siteUrl}/jornal/${slug}` },
+          {
+            name: article.titleEn || article.title,
+            url: `${siteUrl}/jornal/${slug}`,
+          },
         ]}
       />
-      <ArticleSchema
-        title={article.title}
+      <EducationalArticleSchema
+        name={article.title}
         description={article.description || article.subtitle || ""}
-        image={article.image?.asset?.url || "/opengraph-image"}
-        datePublished={article.publishedAt}
-        author={article.author?.name || "Portal Lusitano"}
-        newsArticle={true}
-        estimatedReadTime={article.estimatedReadTime}
+        url={`${siteUrl}/jornal/${slug}`}
+        educationalLevel="Advanced"
       />
-      <ArticlePageClient slug={slug} article={article} relatedArticles={relatedArticles} />
+      <ArticlePageClient
+        article={article}
+        relatedArticles={relatedArticles}
+        prevArticle={prevArticle}
+        nextArticle={nextArticle}
+      />
     </>
   );
 }

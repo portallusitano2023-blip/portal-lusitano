@@ -1,19 +1,25 @@
 import { urlFor } from "@/lib/sanity-image";
 import type { SanityArticle } from "@/lib/sanity-queries";
+import { slugToArticleId, articleIdToSlug } from "@/data/articlesList";
 
-// Mapeamento slug ↔ legacy ID (fonte única de verdade — reutilizado em page.tsx, OG, etc.)
-export const slugToLegacyId: Record<string, string> = {
-  "genese-cavalo-iberico": "1",
-  "biomecanica-reuniao": "2",
-  "standard-apsl": "3",
-  "genetica-pelagens": "4",
-  "toricidade-selecao-combate": "5",
-  "novilheiro-rubi-revolucao-olimpica": "6",
-};
+// ── Slug ↔ Legacy ID (fonte única: data/articlesList.ts) ──────────────────
+export const slugToLegacyId: Record<string, string> = slugToArticleId;
+export const legacyIdToSlug: Record<string, string> = articleIdToSlug;
 
-export const legacyIdToSlug: Record<string, string> = Object.fromEntries(
-  Object.entries(slugToLegacyId).map(([k, v]) => [v, k])
-);
+/**
+ * Normaliza o texto de um heading para um ID de âncora HTML válido.
+ * Remove diacríticos e caracteres especiais; substitui espaços por hífens.
+ * Fonte única — importar em FloatingTOC, PortableTextComponents e ArticleComponents.
+ */
+export function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove diacríticos
+    .replace(/[^\w\s-]/g, "")         // remove pontuação especial
+    .replace(/\s+/g, "-")             // espaços → hífens
+    .trim();
+}
 
 /** URL da imagem de um artigo Sanity, com fallback gracioso. */
 export function getArticleImageUrl(article: SanityArticle, width = 1200): string {

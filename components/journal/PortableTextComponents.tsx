@@ -11,6 +11,7 @@ import {
   ArticleWarningBox,
   ArticleImage,
 } from "./ArticleComponents";
+import { slugifyHeading } from "@/lib/journal-utils";
 import {
   BookOpen,
   AlertTriangle,
@@ -53,7 +54,7 @@ export const journalComponents: PortableTextComponents = {
     h2: ({ children, value }) => {
       const text =
         (value?.children as Array<{ text?: string }>)?.map((c) => c.text || "").join("") || "";
-      const id = text ? text.toLowerCase().replace(/\s+/g, "-") : undefined;
+      const id = text ? slugifyHeading(text) : undefined;
       return (
         <h2
           id={id}
@@ -66,7 +67,7 @@ export const journalComponents: PortableTextComponents = {
     h3: ({ children, value }) => {
       const text =
         (value?.children as Array<{ text?: string }>)?.map((c) => c.text || "").join("") || "";
-      const id = text ? text.toLowerCase().replace(/\s+/g, "-") : undefined;
+      const id = text ? slugifyHeading(text) : undefined;
       return (
         <h3 id={id} className="text-2xl font-serif text-[var(--foreground)] mb-4 mt-10">
           {children}
@@ -199,7 +200,12 @@ export const journalComponents: PortableTextComponents = {
     ),
     articleSection: ({ value }) => (
       <ArticleSection title={value.title}>
-        <></>
+        {(value.content || value.body) && (
+          <PortableText
+            value={value.content ?? value.body}
+            components={journalComponents}
+          />
+        )}
       </ArticleSection>
     ),
     warningBox: ({ value }) => {

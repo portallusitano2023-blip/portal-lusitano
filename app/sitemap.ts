@@ -256,30 +256,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     logger.error("Erro ao buscar cavalos para sitemap:", error);
   }
 
-  // Artigos do jornal (dinâmico via Sanity)
+  // Artigos do jornal (dinâmico via Sanity, com datas reais de publicação)
   let journalArticles: MetadataRoute.Sitemap = [];
-  const staticSlugs = [
-    "genese-cavalo-iberico",
-    "biomecanica-reuniao",
-    "standard-apsl",
-    "genetica-pelagens",
-    "toricidade-selecao-combate",
-    "novilheiro-rubi-revolucao-olimpica",
-  ];
+
+  // Datas reais dos artigos locais: mapeamento slug → data ISO
+  const localArticleDates: Record<string, string> = {
+    "genese-cavalo-iberico":           "2026-01-25T00:00:00.000Z",
+    "biomecanica-reuniao":             "2026-01-18T00:00:00.000Z",
+    "standard-apsl":                   "2026-01-15T00:00:00.000Z",
+    "genetica-pelagens":               "2026-01-12T00:00:00.000Z",
+    "toricidade-selecao-combate":      "2026-01-08T00:00:00.000Z",
+    "novilheiro-rubi-revolucao-olimpica": "2026-01-02T00:00:00.000Z",
+  };
+  const staticSlugs = Object.keys(localArticleDates);
+
   try {
     const slugs = await fetchArticleSlugs();
-    const articleSlugs = slugs && slugs.length > 0 ? slugs.map((s) => s.slug) : staticSlugs;
-    journalArticles = articleSlugs.map((slug) =>
-      withAlternates(`/jornal/${slug}`, {
-        lastModified: currentDate,
-        changeFrequency: "monthly",
-        priority: 0.7,
-      })
-    );
+    if (slugs && slugs.length > 0) {
+      journalArticles = slugs.map((s) =>
+        withAlternates(`/jornal/${s.slug}`, {
+          lastModified: s.publishedAt || localArticleDates[s.slug] || currentDate,
+          changeFrequency: "monthly",
+          priority: 0.7,
+        })
+      );
+    } else {
+      journalArticles = staticSlugs.map((slug) =>
+        withAlternates(`/jornal/${slug}`, {
+          lastModified: localArticleDates[slug],
+          changeFrequency: "monthly",
+          priority: 0.7,
+        })
+      );
+    }
   } catch {
     journalArticles = staticSlugs.map((slug) =>
       withAlternates(`/jornal/${slug}`, {
-        lastModified: currentDate,
+        lastModified: localArticleDates[slug],
         changeFrequency: "monthly",
         priority: 0.7,
       })

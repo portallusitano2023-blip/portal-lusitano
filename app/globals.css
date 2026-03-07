@@ -1312,3 +1312,19 @@ html.light .leaflet-tooltip-portal::before {
 
   /* text-4xl (2.25rem / 36px) is kept as-is; 36px is generally fine on mobile. */
 }
+
+/* ===== JOURNAL ANIMATIONS ===== */
+@keyframes jornal-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes hero-scroll-cue {
+  0%, 100% { opacity: 0.2; transform: scaleY(1); }
+  50%       { opacity: 0.6; transform: scaleY(1.4); }
+}
+
+@keyframes hub-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}

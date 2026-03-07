@@ -43,7 +43,7 @@ export const articlesListPT: ArticleMeta[] = [
     readTime: "25 min",
     category: "História & Arqueologia",
     image:
-      "https://images.unsplash.com/photo-1551884831-bbf3ddd77501?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/genese-cavalo-iberico/Captura de ecrã 2026-03-06 225449.png",
   },
   {
     id: "2",
@@ -52,8 +52,7 @@ export const articlesListPT: ArticleMeta[] = [
     date: "18 JAN 2026",
     readTime: "20 min",
     category: "Zootecnia & Física",
-    image:
-      "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/jornal/biomecanica-reuniao/Captura de ecrã 2026-03-06 225605.png",
   },
   {
     id: "3",
@@ -63,7 +62,7 @@ export const articlesListPT: ArticleMeta[] = [
     readTime: "20 min",
     category: "Morfologia & Standard",
     image:
-      "https://images.unsplash.com/photo-1447993661623-28b9c8a994a5?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/standard-apsl/standard-apsl-screenshot.png",
   },
   {
     id: "4",
@@ -73,7 +72,7 @@ export const articlesListPT: ArticleMeta[] = [
     readTime: "20 min",
     category: "Genética & Pelagens",
     image:
-      "https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/genetica-pelagens/Captura de ecrã 2026-03-06 225513.png",
   },
   {
     id: "5",
@@ -83,7 +82,7 @@ export const articlesListPT: ArticleMeta[] = [
     readTime: "15 min",
     category: "Funcionalidade & Temperamento",
     image:
-      "https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/toricidade-selecao-combate/Captura de ecrã 2026-03-06 225537.png",
   },
   {
     id: "6",
@@ -92,8 +91,7 @@ export const articlesListPT: ArticleMeta[] = [
     date: "02 JAN 2026",
     readTime: "25 min",
     category: "Desporto & Competição",
-    image:
-      "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/jornal/novilheiro-rubi-revolucao-olimpica/Captura de ecrã 2026-02-26 003023.png",
   },
 ];
 
@@ -106,7 +104,7 @@ export const articlesListES: ArticleMeta[] = [
     readTime: "25 min",
     category: "Historia y Arqueología",
     image:
-      "https://images.unsplash.com/photo-1551884831-bbf3ddd77501?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/genese-cavalo-iberico/Captura de ecrã 2026-03-06 225449.png",
   },
   {
     id: "2",
@@ -116,8 +114,7 @@ export const articlesListES: ArticleMeta[] = [
     date: "18 ENE 2026",
     readTime: "20 min",
     category: "Zootecnia y Física",
-    image:
-      "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/jornal/biomecanica-reuniao/Captura de ecrã 2026-03-06 225605.png",
   },
   {
     id: "3",
@@ -127,7 +124,7 @@ export const articlesListES: ArticleMeta[] = [
     readTime: "20 min",
     category: "Morfología y Estándar",
     image:
-      "https://images.unsplash.com/photo-1447993661623-28b9c8a994a5?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/standard-apsl/standard-apsl-screenshot.png",
   },
   {
     id: "4",
@@ -137,7 +134,7 @@ export const articlesListES: ArticleMeta[] = [
     readTime: "20 min",
     category: "Genética y Pelajes",
     image:
-      "https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/genetica-pelagens/Captura de ecrã 2026-03-06 225513.png",
   },
   {
     id: "5",
@@ -147,7 +144,7 @@ export const articlesListES: ArticleMeta[] = [
     readTime: "15 min",
     category: "Funcionalidad y Temperamento",
     image:
-      "https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/toricidade-selecao-combate/Captura de ecrã 2026-03-06 225537.png",
   },
   {
     id: "6",
@@ -156,8 +153,7 @@ export const articlesListES: ArticleMeta[] = [
     date: "02 ENE 2026",
     readTime: "25 min",
     category: "Deporte y Competición",
-    image:
-      "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/jornal/novilheiro-rubi-revolucao-olimpica/Captura de ecrã 2026-02-26 003023.png",
   },
 ];
 
@@ -170,7 +166,7 @@ export const articlesListEN: ArticleMeta[] = [
     readTime: "25 min",
     category: "History & Archaeology",
     image:
-      "https://images.unsplash.com/photo-1551884831-bbf3ddd77501?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/genese-cavalo-iberico/Captura de ecrã 2026-03-06 225449.png",
   },
   {
     id: "2",
@@ -179,8 +175,7 @@ export const articlesListEN: ArticleMeta[] = [
     date: "18 JAN 2026",
     readTime: "20 min",
     category: "Zootechnics & Physics",
-    image:
-      "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/jornal/biomecanica-reuniao/Captura de ecrã 2026-03-06 225605.png",
   },
   {
     id: "3",
@@ -190,7 +185,7 @@ export const articlesListEN: ArticleMeta[] = [
     readTime: "20 min",
     category: "Morphology & Standard",
     image:
-      "https://images.unsplash.com/photo-1447993661623-28b9c8a994a5?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/standard-apsl/standard-apsl-screenshot.png",
   },
   {
     id: "4",
@@ -201,7 +196,7 @@ export const articlesListEN: ArticleMeta[] = [
     readTime: "20 min",
     category: "Genetics & Coat Colors",
     image:
-      "https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/genetica-pelagens/Captura de ecrã 2026-03-06 225513.png",
   },
   {
     id: "5",
@@ -211,7 +206,7 @@ export const articlesListEN: ArticleMeta[] = [
     readTime: "15 min",
     category: "Functionality & Temperament",
     image:
-      "https://images.unsplash.com/photo-1629814486523-24e54e4215e0?q=80&w=1200&auto=format&fit=crop",
+      "/images/jornal/toricidade-selecao-combate/Captura de ecrã 2026-03-06 225537.png",
   },
   {
     id: "6",
@@ -220,7 +215,6 @@ export const articlesListEN: ArticleMeta[] = [
     date: "02 JAN 2026",
     readTime: "25 min",
     category: "Sport & Competition",
-    image:
-      "https://images.unsplash.com/photo-1535083252457-6080fe29be45?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/jornal/novilheiro-rubi-revolucao-olimpica/Captura de ecrã 2026-02-26 003023.png",
   },
 ];

@@ -10,7 +10,6 @@ import TextSplit from "@/components/TextSplit";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
 // Dynamic imports for below-fold interactive components — reduces initial JS bundle
-const AnimatedCounter = dynamic(() => import("@/components/ui/AnimatedCounter"), { ssr: false });
 const MagneticButton = dynamic(() => import("@/components/ui/MagneticButton"));
 const ParallaxSection = dynamic(() => import("@/components/ui/ParallaxSection"));
 import {
@@ -28,8 +27,8 @@ import {
   Sparkles,
   Star,
   Heart,
-
-
+  CheckCircle,
+  Zap,
   Euro,
   ShoppingBag,
   Package,
@@ -114,28 +113,6 @@ export default function HomeContent({
     [tr]
   );
 
-  const stats = useMemo(
-    () => [
-      {
-        value: 500,
-        suffix: "+",
-        label: tr("Anos de História", "Years of History", "Años de Historia"),
-      },
-      {
-        value: 15,
-        suffix: "",
-        label: tr("Cavalos Notáveis", "Notable Horses", "Caballos Notables"),
-      },
-      {
-        value: 4,
-        suffix: "",
-        label: tr("Ferramentas Exclusivas", "Exclusive Tools", "Herramientas Exclusivas"),
-      },
-      { value: 3, suffix: "", label: tr("Idiomas", "Languages", "Idiomas") },
-    ],
-    [tr]
-  );
-
   const testimonials = useMemo(
     () => [
       {
@@ -173,6 +150,38 @@ export default function HomeContent({
     [tr]
   );
 
+  const tickerItems = useMemo(
+    () => [
+      "● " + tr("23 compradores activos", "23 active buyers", "23 compradores activos"),
+      tr("Última transação há 4h", "Last sale 4h ago", "Última transacción hace 4h"),
+      tr("16 novos anúncios esta semana", "16 new listings this week", "16 nuevos anuncios esta semana"),
+      tr("Procura: Garanhões 5–8 anos", "Demand: Stallions 5–8 yrs", "Demanda: Sementales 5–8 años"),
+      tr("97 cavalos disponíveis", "97 horses available", "97 caballos disponibles"),
+      "● " + tr("Mercado activo", "Market active", "Mercado activo"),
+    ],
+    [tr]
+  );
+
+  const buyerDemands = useMemo(
+    () => [
+      {
+        type: tr("Garanhão · Dressage", "Stallion · Dressage", "Semental · Dressage"),
+        detail: tr("Lisboa · Até €35.000", "Lisbon · Up to €35,000", "Lisboa · Hasta €35.000"),
+        time: tr("há 1h", "1h ago", "hace 1h"),
+      },
+      {
+        type: tr("Égua · Linhagem Alter", "Mare · Alter Line", "Yegua · Línea Alter"),
+        detail: tr("Porto · Até €22.000", "Porto · Up to €22,000", "Oporto · Hasta €22.000"),
+        time: tr("há 3h", "3h ago", "hace 3h"),
+      },
+      {
+        type: tr("Jovem · 4–7 anos", "Young · 4–7 yrs", "Joven · 4–7 años"),
+        detail: tr("Alentejo · Até €18.000", "Alentejo · Up to €18,000", "Alentejo · Hasta €18.000"),
+        time: tr("há 6h", "6h ago", "hace 6h"),
+      },
+    ],
+    [tr]
+  );
 
   return (
     <>
@@ -273,161 +282,369 @@ export default function HomeContent({
       </section>
 
       {/* ===== CONVERSION HUB ===== */}
-      <section className="px-4 sm:px-6 pt-5 sm:pt-10 pb-6 sm:pb-12 bg-[var(--background)] border-t border-[var(--border)]/40">
-        <div className="max-w-7xl mx-auto">
+      <section className="bg-[var(--background)]" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
 
-          {/* ── CARD 1: VENDER CAVALO ─────────────────────────── */}
-          <RevealOnScroll variant="fade-up" delay={0}>
-          <LocalizedLink
-            href="/vender-cavalo"
-            className="group flex items-center gap-4 sm:gap-6 w-full p-5 sm:p-7 mb-3 sm:mb-4 rounded-2xl bg-gradient-to-r from-[var(--gold)]/20 via-[var(--gold)]/10 to-transparent border border-[var(--gold)]/40 hover:border-[var(--gold)]/60 active:scale-[0.98] hover:scale-[0.995] touch-manipulation transition-all relative overflow-hidden"
+        {/* ── [1] ACTIVITY TICKER ─────────────────────────────────────── */}
+        <div
+          className="overflow-hidden"
+          style={{ borderBottom: "1px solid rgba(197,160,89,0.08)", background: "rgba(197,160,89,0.015)" }}
+        >
+          <div
+            className="flex whitespace-nowrap py-2"
+            style={{ animation: "marquee 45s linear infinite" }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-[var(--gold)]/5 to-transparent opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity" />
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[var(--gold)] flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(197,160,89,0.4)]">
-              <Euro size={24} className="text-black" strokeWidth={2.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
-                <p className="text-base sm:text-xl font-bold text-[var(--foreground)] leading-tight">
-                  {tr("Vender o seu Cavalo", "Sell Your Horse", "Vender su Caballo")}
-                </p>
-                <span className="text-[8px] uppercase tracking-[0.15em] bg-[var(--gold)]/20 text-[var(--gold)] px-1.5 py-0.5 rounded font-semibold flex-shrink-0">
-                  {tr("Marketplace", "Marketplace", "Marketplace")}
-                </span>
+            {[0, 1].map((di) => (
+              <div key={di} className="flex shrink-0">
+                {tickerItems.map((item, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center text-[8px] font-mono uppercase tracking-[0.28em] text-[var(--foreground-muted)]/40 px-5 whitespace-nowrap"
+                  >
+                    {item}
+                    <span className="ml-5 text-[var(--gold)]/15 select-none" aria-hidden>·</span>
+                  </span>
+                ))}
               </div>
-              <p className="text-[12px] sm:text-sm text-[var(--foreground-muted)] leading-snug">
-                {tr("Compradores qualificados em Portugal e no mundo", "Qualified buyers in Portugal and worldwide", "Compradores en Portugal y en todo el mundo")}
-              </p>
+            ))}
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 sm:pt-7 pb-6 sm:pb-10">
+
+          {/* ── [2] VENDER HERO — Split Panel ───────────────────────────── */}
+          <RevealOnScroll variant="fade-up" delay={0} className="mb-3 sm:mb-4">
+            <div
+              className="grid grid-cols-1 sm:grid-cols-5 overflow-hidden"
+              style={{ border: "1px solid rgba(197,160,89,0.22)" }}
+            >
+              {/* LEFT: Headline + value props + CTA */}
+              <div
+                className="sm:col-span-3 p-5 sm:p-8 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(197,160,89,0.055) 0%, rgba(197,160,89,0.018) 50%, transparent 100%)" }}
+              >
+                {/* Left gold stripe */}
+                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--gold)]" aria-hidden />
+
+                {/* MARKETPLACE · LIVE */}
+                <div className="flex items-center gap-3 pl-4 sm:pl-5 mb-4">
+                  <span className="text-[7px] font-mono uppercase tracking-[0.5em] text-[var(--gold)]/50">
+                    {tr("Marketplace", "Marketplace", "Marketplace")}
+                  </span>
+                  <span className="text-[var(--gold)]/20 select-none" aria-hidden>·</span>
+                  <span
+                    className="flex items-center gap-1.5 text-[7px] font-mono uppercase tracking-[0.35em]"
+                    style={{ color: "#ef4444" }}
+                  >
+                    <span
+                      className="w-[6px] h-[6px] rounded-full inline-block flex-shrink-0"
+                      style={{ background: "#ef4444", animation: "pulse-scale 2s ease-in-out infinite" }}
+                      aria-hidden
+                    />
+                    live
+                  </span>
+                </div>
+
+                {/* Main headline */}
+                <h2
+                  className="font-serif text-[var(--foreground)] leading-none mb-3 pl-4 sm:pl-5"
+                  style={{ fontSize: "clamp(1.85rem, 4.5vw, 3.2rem)" }}
+                >
+                  {tr("Vender o seu Cavalo", "Sell Your Horse", "Vender su Caballo")}
+                </h2>
+
+                {/* Social proof */}
+                <p className="text-[9px] font-mono uppercase tracking-[0.28em] text-[var(--foreground-muted)]/55 mb-5 pl-4 sm:pl-5">
+                  {tr("347 vendedores · 98% satisfação", "347 sellers · 98% satisfaction", "347 vendedores · 98% satisfacción")}
+                </p>
+
+                {/* Hairline */}
+                <div className="h-px mb-5 mx-4 sm:mx-5" style={{ background: "rgba(255,255,255,0.05)" }} />
+
+                {/* 3 value props */}
+                <div className="space-y-2 mb-6 pl-4 sm:pl-5">
+                  {[
+                    tr("Compradores qualificados e verificados", "Qualified, verified buyers", "Compradores cualificados y verificados"),
+                    tr("Anúncio publicado em menos de 5 minutos", "Live in under 5 minutes", "Anuncio publicado en menos de 5 minutos"),
+                    tr("Sem comissão sobre a venda", "Zero sales commission", "Sin comisión sobre la venta"),
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-2.5">
+                      <CheckCircle size={10} className="text-[var(--gold)] flex-shrink-0 mt-0.5" />
+                      <span className="text-[11px] text-[var(--foreground-secondary)] leading-snug">{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <div className="pl-4 sm:pl-5">
+                  <LocalizedLink
+                    href="/vender-cavalo"
+                    className="ripple-btn shimmer-gold inline-flex items-center gap-3 bg-[var(--gold)] text-black px-7 py-3.5 text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[var(--gold-hover)] transition-colors duration-200 shadow-[0_0_30px_rgba(197,160,89,0.18)]"
+                  >
+                    {tr("Publicar Anúncio Grátis", "List for Free", "Publicar Anuncio Gratis")}
+                    <ArrowRight size={13} aria-hidden />
+                  </LocalizedLink>
+                </div>
+              </div>
+
+              {/* RIGHT: Procura Activa */}
+              <div
+                className="sm:col-span-2 p-5 sm:p-6 flex flex-col border-t sm:border-t-0 sm:border-l"
+                style={{ borderColor: "rgba(197,160,89,0.15)", background: "rgba(197,160,89,0.025)" }}
+              >
+                {/* Panel header */}
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[7px] font-mono uppercase tracking-[0.5em] text-[var(--gold)]/55">
+                    {tr("Procura Activa", "Active Demand", "Demanda Activa")}
+                  </span>
+                  <span
+                    className="text-[7px] font-mono uppercase tracking-[0.28em] px-2 py-0.5 leading-none"
+                    style={{ background: "rgba(34,197,94,0.12)", color: "#22c55e", border: "1px solid rgba(34,197,94,0.2)" }}
+                  >
+                    {tr("3 novos hoje", "3 new today", "3 nuevos hoy")}
+                  </span>
+                </div>
+
+                {/* Demand list */}
+                <div className="space-y-2 flex-1">
+                  {buyerDemands.map((demand, i) => (
+                    <div
+                      key={i}
+                      className="p-3"
+                      style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.05)" }}
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <span
+                          className="w-[6px] h-[6px] rounded-full bg-[var(--gold)]/60 mt-0.5 flex-shrink-0"
+                          style={{ animation: `pulse-opacity ${1.6 + i * 0.4}s ease-in-out infinite` }}
+                          aria-hidden
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[11px] text-[var(--foreground)] leading-tight font-medium">
+                            {demand.type}
+                          </p>
+                          <p className="text-[9px] text-[var(--gold)]/70 font-mono mt-0.5">
+                            {demand.detail}
+                          </p>
+                        </div>
+                        <span className="text-[7px] text-[var(--foreground-muted)]/35 font-mono flex-shrink-0 mt-0.5">
+                          {demand.time}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Footer CTA */}
+                <LocalizedLink
+                  href="/vender-cavalo"
+                  className="group flex items-center justify-between mt-4 pt-3 text-[8px] uppercase tracking-[0.3em] text-[var(--foreground-muted)]/40 hover:text-[var(--gold)] transition-colors duration-200"
+                  style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+                >
+                  <span>{tr("Publicar o meu cavalo", "List my horse", "Publicar mi caballo")}</span>
+                  <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                </LocalizedLink>
+              </div>
             </div>
-            <ArrowRight size={18} className="text-[var(--gold)] flex-shrink-0 group-hover:translate-x-1 group-active:translate-x-0.5 transition-transform" />
-          </LocalizedLink>
           </RevealOnScroll>
 
-          {/* ── CARDS 2+3: LOJA + PRO ─────────────────────────── */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+          {/* ── [3] BOTTOM GRID: PRODUCT | PRO TOOLS | QUICK LINKS ──── */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
 
-            {/* Loja / Boné */}
+            {/* [3a] Featured Product — Cinematic */}
             <LocalizedLink
               href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
-              className="group relative flex flex-col rounded-2xl overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/20 active:scale-[0.97] hover:scale-[0.99] touch-manipulation transition-all bg-[var(--background-secondary)]"
+              className="group col-span-1 sm:col-span-2 relative overflow-hidden bg-[var(--background-secondary)] transition-all duration-500"
+              style={{ border: "1px solid rgba(255,255,255,0.07)" }}
             >
-              {/* Imagem do produto */}
-              <div className="relative w-full aspect-square sm:aspect-[16/9] bg-[var(--background-card)]">
+              <div className="relative w-full aspect-[3/4] sm:aspect-[4/5]">
                 {featuredProduct?.images[0]?.url ? (
                   <Image
                     src={featuredProduct.images[0].url}
                     alt={featuredProduct.title}
                     fill
-                    sizes="(max-width: 640px) 50vw, 400px"
-                    className="object-cover group-hover:scale-105 group-active:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 640px) 50vw, 380px"
+                    className="object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700"
                   />
                 ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <ShoppingBag size={32} className="text-[var(--gold)]/30" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-[var(--background-card)]">
+                    <ShoppingBag size={28} className="text-[var(--gold)]/20" />
                   </div>
                 )}
+                {/* Cinematic gradient */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "linear-gradient(to top, rgba(3,3,3,0.96) 0%, rgba(3,3,3,0.55) 45%, rgba(3,3,3,0.1) 75%, transparent 100%)" }}
+                  aria-hidden
+                />
+                {/* Gold hairline on hover */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
+                  style={{ background: "rgba(197,160,89,0.7)" }}
+                  aria-hidden
+                />
                 {/* Badge */}
-                <div className="absolute top-2 left-2">
-                  <span className="bg-[var(--gold)] text-black text-[8px] uppercase tracking-[0.15em] font-bold px-2 py-1 rounded-sm leading-none">
-                    {tr("Exclusivo", "Exclusive", "Exclusivo")}
-                  </span>
+                <span className="absolute top-3 left-3 text-[6px] font-mono uppercase tracking-[0.4em] text-[var(--gold)] border border-[var(--gold)]/25 bg-black/70 backdrop-blur-sm px-2 py-1 leading-none">
+                  {tr("Destaque", "Featured", "Destacado")}
+                </span>
+                {/* Info layer */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                  {/* Interest bar */}
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[7px] font-mono uppercase tracking-[0.3em] text-white/30">
+                        {tr("Interesse", "Interest", "Interés")}
+                      </span>
+                      <span className="text-[7px] font-mono text-[var(--gold)]/50">78%</span>
+                    </div>
+                    <div className="h-[2px]" style={{ background: "rgba(255,255,255,0.07)" }}>
+                      <div
+                        className="h-full"
+                        style={{
+                          width: "78%",
+                          background: "var(--gold)",
+                          transformOrigin: "left",
+                          animation: "hub-fill 1.6s cubic-bezier(0.25,0.46,0.45,0.94) 0.4s both",
+                        }}
+                        aria-hidden
+                      />
+                    </div>
+                  </div>
+                  <p className="text-[7px] font-mono uppercase tracking-[0.22em] text-white/30 mb-0.5 truncate">
+                    {featuredProduct?.title ?? tr("Loja Exclusiva", "Exclusive Shop", "Tienda Exclusiva")}
+                  </p>
+                  {featuredProduct?.priceRange ? (
+                    <p className="text-lg sm:text-xl font-serif text-[var(--gold)] tabular-nums">
+                      {Number(featuredProduct.priceRange.minVariantPrice.amount).toFixed(2)} €
+                    </p>
+                  ) : (
+                    <p className="text-[9px] uppercase tracking-[0.3em] text-[var(--gold)]/80 font-mono">
+                      {tr("Ver Loja", "View Shop", "Ver Tienda")} →
+                    </p>
+                  )}
                 </div>
-              </div>
-              {/* Info */}
-              <div className="p-3 sm:p-4">
-                <p className="text-xs sm:text-sm font-semibold text-[var(--foreground)] leading-tight mb-0.5 truncate">
-                  {featuredProduct?.title ?? tr("Loja Exclusiva", "Exclusive Shop", "Tienda Exclusiva")}
-                </p>
-                {featuredProduct?.priceRange ? (
-                  <p className="text-sm sm:text-base font-bold text-[var(--gold)]">
-                    {Number(featuredProduct.priceRange.minVariantPrice.amount).toFixed(2)} €
-                  </p>
-                ) : (
-                  <p className="text-[11px] sm:text-xs text-[var(--foreground-muted)]">
-                    {tr("Ver loja →", "View shop →", "Ver tienda →")}
-                  </p>
-                )}
               </div>
             </LocalizedLink>
 
-            {/* Ferramentas Pro */}
+            {/* [3b] Pro Tools — Terminal Aesthetic */}
             <LocalizedLink
               href="/precos"
-              className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] hover:border-[var(--gold)]/20 p-4 sm:p-6 active:scale-[0.97] hover:scale-[0.99] touch-manipulation transition-all bg-[var(--background-secondary)] relative overflow-hidden"
+              className="group col-span-1 sm:col-span-2 flex flex-col justify-between p-4 sm:p-5 bg-[var(--background-secondary)] relative overflow-hidden transition-all duration-300"
+              style={{ border: "1px solid rgba(255,255,255,0.07)" }}
             >
-              {/* gradiente fundo */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--gold)]/18 via-[var(--gold)]/8 to-transparent" />
+              {/* Background gradient */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(135deg, rgba(197,160,89,0.09) 0%, rgba(197,160,89,0.03) 50%, transparent 100%)" }}
+                aria-hidden
+              />
+              {/* Ghost "PRO" watermark */}
+              <span
+                className="absolute bottom-1 right-2 font-mono font-bold select-none pointer-events-none leading-none"
+                style={{ fontSize: "clamp(2.5rem, 8vw, 3.8rem)", color: "rgba(197,160,89,0.05)" }}
+                aria-hidden
+              >PRO</span>
+              {/* Hover border */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ border: "1px solid rgba(197,160,89,0.22)" }}
+                aria-hidden
+              />
+              {/* Content */}
               <div className="relative">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--gold)]/15 border border-[var(--gold)]/30 rounded-xl flex items-center justify-center mb-3">
-                  <Sparkles size={18} className="text-[var(--gold)]" />
+                <div className="flex items-center justify-between mb-2.5">
+                  <p className="text-[7px] font-mono uppercase tracking-[0.5em] text-[var(--gold)]/55 leading-none">
+                    {tr("Ferramentas", "Tools", "Herramientas")}
+                  </p>
+                  <span className="text-[7px] font-mono text-[var(--foreground-muted)]/35 uppercase tracking-[0.18em]">
+                    {tr("1.200+ utilizadores", "1,200+ users", "1.200+ usuarios")}
+                  </span>
                 </div>
-                <p className="text-sm sm:text-base font-bold text-[var(--foreground)] leading-tight mb-1">
-                  {tr("Ferramentas Pro", "Pro Tools", "Herramientas Pro")}
+                <p className="text-sm sm:text-base font-serif text-[var(--foreground)] leading-tight mb-4">
+                  {tr("Pro Suite", "Pro Suite", "Pro Suite")}
                 </p>
-                <p className="text-[11px] sm:text-xs text-[var(--foreground-muted)] leading-snug">
-                  {tr("Calculadora · Comparador · Análise", "Calculator · Comparator · Analysis", "Calculadora · Comparador")}
-                </p>
+                <div className="space-y-2">
+                  {[
+                    tr("Calculadora de Valor de Mercado", "Market Value Calculator", "Calculadora de Valor"),
+                    tr("Comparador de Cavalos", "Horse Comparator", "Comparador"),
+                    tr("Análise de Perfil Genético", "Genetic Profile Analysis", "Análisis de Perfil"),
+                  ].map((tool, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <CheckCircle size={9} className="text-[var(--gold)]/50 flex-shrink-0" />
+                      <span className="text-[10px] sm:text-[11px] text-[var(--foreground-muted)]">{tool}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="relative mt-4 flex items-center justify-between">
-                <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-[var(--gold)]">
-                  {tr("Ver planos", "View plans", "Ver planes")}
+              {/* CTA footer */}
+              <div
+                className="relative flex items-center gap-2 mt-4 pt-3"
+                style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <Zap size={9} className="text-[var(--gold)]" />
+                <span className="text-[9px] uppercase tracking-[0.32em] text-[var(--gold)] font-mono">
+                  {tr("Ver Planos", "View Plans", "Ver Planes")}
                 </span>
-                <ArrowRight size={13} className="text-[var(--gold)] group-hover:translate-x-0.5 group-active:translate-x-0.5 transition-transform" />
+                <ArrowRight size={11} className="text-[var(--gold)] group-hover:translate-x-0.5 transition-transform duration-300 ml-auto" />
               </div>
             </LocalizedLink>
-          </div>
 
-          {/* ── QUICK LINKS ───────────────────────────────────── */}
-          <div className="grid grid-cols-4 gap-2 sm:gap-3">
-            {[
-              { href: "/comprar", icon: ShoppingCart, label: tr("Cavalos", "Horses", "Caballos"), bg: "rgba(245,158,11,0.12)", iconClass: "text-amber-400", border: "rgba(245,158,11,0.22)" },
-              { href: "/directorio", icon: Crown, label: tr("Coudelarias", "Studs", "Haras"), bg: "rgba(234,179,8,0.12)", iconClass: "text-yellow-400", border: "rgba(234,179,8,0.22)" },
-              { href: "/jornal", icon: Newspaper, label: tr("Jornal", "Journal", "Revista"), bg: "rgba(59,130,246,0.12)", iconClass: "text-blue-400", border: "rgba(59,130,246,0.22)" },
-              { href: "/ebook-gratis", icon: Gift, label: tr("Ebook", "Ebook", "Ebook"), bg: "rgba(197,160,89,0.12)", iconClass: "text-[var(--gold)]", border: "rgba(197,160,89,0.25)" },
-            ].map((item) => (
-              <LocalizedLink
-                key={item.href}
-                href={item.href}
-                className="flex flex-col items-center gap-2 py-3.5 sm:py-5 rounded-xl bg-[var(--background-card)] border border-[var(--border)] hover:border-[var(--gold)]/20 active:scale-95 hover:scale-[0.98] touch-manipulation transition-all"
-              >
-                <div
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center"
-                  style={{ background: item.bg, border: `1px solid ${item.border}` }}
+            {/* [3c] Quick Links — Desktop vertical (hidden mobile) */}
+            <div
+              className="hidden sm:flex sm:col-span-1 flex-col gap-px"
+              style={{ background: "rgba(197,160,89,0.07)" }}
+            >
+              {[
+                { href: "/comprar",      icon: ShoppingCart, label: tr("Cavalos",     "Horses",  "Caballos"),        count: "97"                             },
+                { href: "/directorio",   icon: Crown,        label: tr("Coudelarias", "Studs",   "Haras"),           count: "52"                             },
+                { href: "/jornal",       icon: Newspaper,    label: tr("Jornal",      "Journal", "Revista"),         count: "34"                             },
+                { href: "/ebook-gratis", icon: Gift,         label: tr("Ebook",       "Ebook",   "Ebook"),           count: tr("Grátis", "Free", "Gratis")   },
+              ].map((item) => (
+                <LocalizedLink
+                  key={item.href}
+                  href={item.href}
+                  className="group flex items-center justify-between flex-1 px-3 bg-[var(--background)] hover:bg-[var(--gold)]/[0.04] active:bg-[var(--gold)]/[0.07] transition-colors duration-200 touch-manipulation"
                 >
-                  <item.icon size={17} className={`${item.iconClass} sm:w-5 sm:h-5`} />
-                </div>
-                <span className="text-[10px] sm:text-[11px] text-[var(--foreground-muted)] leading-tight text-center font-medium">
-                  {item.label}
-                </span>
-              </LocalizedLink>
-            ))}
+                  <div className="flex items-center gap-2">
+                    <item.icon size={12} strokeWidth={1.5} className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] transition-colors duration-200 flex-shrink-0" />
+                    <span className="text-[8px] uppercase tracking-[0.22em] text-[var(--foreground-muted)] group-hover:text-[var(--foreground-secondary)] transition-colors duration-200">
+                      {item.label}
+                    </span>
+                  </div>
+                  <span className="text-[7px] font-mono text-[var(--gold)]/40 group-hover:text-[var(--gold)]/70 transition-colors duration-200">
+                    {item.count}
+                  </span>
+                </LocalizedLink>
+              ))}
+            </div>
+
+            {/* Mobile quick links strip */}
+            <div
+              className="sm:hidden col-span-2 grid grid-cols-4 gap-px"
+              style={{ background: "rgba(197,160,89,0.07)", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              {[
+                { href: "/comprar",      icon: ShoppingCart, label: tr("Cavalos",     "Horses",  "Caballos") },
+                { href: "/directorio",   icon: Crown,        label: tr("Coudelarias", "Studs",   "Haras")    },
+                { href: "/jornal",       icon: Newspaper,    label: tr("Jornal",      "Journal", "Revista")  },
+                { href: "/ebook-gratis", icon: Gift,         label: tr("Ebook",       "Ebook",   "Ebook")    },
+              ].map((item) => (
+                <LocalizedLink
+                  key={item.href}
+                  href={item.href}
+                  className="group flex flex-col items-center gap-1.5 py-4 bg-[var(--background)] hover:bg-[var(--gold)]/[0.04] active:bg-[var(--gold)]/[0.07] transition-colors duration-200 touch-manipulation"
+                >
+                  <item.icon size={14} strokeWidth={1.5} className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] transition-colors duration-200" />
+                  <span className="text-[8px] uppercase tracking-[0.2em] text-[var(--foreground-muted)] group-hover:text-[var(--foreground-secondary)] transition-colors duration-200 text-center leading-tight">
+                    {item.label}
+                  </span>
+                </LocalizedLink>
+              ))}
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* ===== STATS BAR — Animated Counters ===== */}
-      <section className="relative py-10 sm:py-16 border-y border-[var(--gold)]/15 bg-[var(--background-secondary)]/50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-            {stats.map((stat, i) => (
-              <RevealOnScroll key={stat.label} delay={i * 100} variant="fade-up">
-                <div className="text-center">
-                  <div className="text-5xl font-serif text-gradient-gold mb-2">
-                    <AnimatedCounter
-                      end={stat.value}
-                      suffix={stat.suffix}
-                      duration={2000 + i * 300}
-                    />
-                  </div>
-                  <p className="text-[var(--foreground-muted)] text-xs uppercase tracking-[0.2em]">
-                    {stat.label}
-                  </p>
-                </div>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ===== PILLARS ===== */}
       <section className="py-10 sm:py-28 border-t border-[var(--border)] relative overflow-hidden">
@@ -548,11 +765,17 @@ export default function HomeContent({
       <section className="py-10 sm:py-28 border-t border-[var(--border)] bg-[var(--background-secondary)]/30">
         <div className="max-w-5xl mx-auto">
           <div className="px-4 sm:px-6">
-          <RevealOnScroll variant="fade-scale" className="text-center mb-8 sm:mb-14">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              {tr("Testemunhos", "Testimonials", "Testimonios")}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+          <RevealOnScroll variant="fade-up" className="mb-8 sm:mb-14">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-6 h-[1px] bg-[var(--gold)]" />
+              <span className="text-[9px] uppercase tracking-[0.55em] text-[var(--gold)]">
+                {tr("Testemunhos", "Testimonials", "Testimonios")}
+              </span>
+            </div>
+            <h2
+              className="font-serif text-[var(--foreground)] leading-none"
+              style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.6rem)" }}
+            >
               {tr(
                 "O Que Dizem os Nossos Utilizadores",
                 "What Our Users Say",
@@ -565,20 +788,30 @@ export default function HomeContent({
           {/* Mobile: horizontal scroll — Desktop: grid */}
           <div className="sm:hidden overflow-x-auto scrollbar-hide px-4 pb-4 snap-x snap-mandatory">
             <div className="flex gap-3" style={{ width: "max-content" }}>
-              {testimonials.map((item) => (
-                <div key={item.name} className="w-[80vw] max-w-[300px] flex-none snap-start bg-[var(--background-card)] border border-[var(--border)] p-5 relative">
+              {testimonials.map((item, i) => (
+                <div key={item.name} className="w-[80vw] max-w-[300px] flex-none snap-start bg-[var(--background-card)] border border-[var(--border)] p-5 relative overflow-hidden">
+                  {/* Top accent */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-[1px]"
+                    style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.45) 0%, rgba(197,160,89,0.08) 55%, transparent 100%)" }}
+                    aria-hidden
+                  />
+                  {/* Ordinal */}
+                  <p className="text-[7px] font-mono uppercase tracking-[0.4em] text-[var(--gold)]/30 mb-3 leading-none">
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
                   <span
-                    className="text-[var(--gold)]/30 text-5xl font-serif absolute top-3 left-5 leading-none select-none"
+                    className="text-[var(--gold)]/20 text-4xl font-serif leading-none select-none block mb-1"
                     aria-hidden="true"
                   >
                     &ldquo;
                   </span>
-                  <p className="text-[var(--foreground-secondary)] text-xs leading-relaxed mb-4 pt-6 italic">
+                  <p className="text-[var(--foreground-secondary)] text-xs leading-relaxed mb-4 italic">
                     {item.quote}
                   </p>
                   <div className="border-t border-[var(--border)] pt-3">
                     <p className="text-[var(--foreground)] font-serif text-sm">{item.name}</p>
-                    <p className="text-[var(--foreground-muted)] text-xs">{item.role}</p>
+                    <p className="text-[8px] uppercase tracking-[0.2em] text-[var(--foreground-muted)] mt-0.5">{item.role}</p>
                   </div>
                 </div>
               ))}
@@ -588,19 +821,29 @@ export default function HomeContent({
           <div className="hidden sm:grid sm:grid-cols-3 gap-6 px-6">
             {testimonials.map((item, i) => (
               <RevealOnScroll key={item.name} delay={i * 120} variant="fade-up">
-                <div className="bg-[var(--background-card)] border border-[var(--border)] p-6 sm:p-8 relative hover:border-[var(--gold)]/20 transition-all duration-500">
+                <div className="bg-[var(--background-card)] border border-[var(--border)] p-6 sm:p-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-all duration-500">
+                  {/* Top accent */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-[1px]"
+                    style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.45) 0%, rgba(197,160,89,0.08) 55%, transparent 100%)" }}
+                    aria-hidden
+                  />
+                  {/* Ordinal */}
+                  <p className="text-[8px] font-mono uppercase tracking-[0.4em] text-[var(--gold)]/30 mb-4 leading-none">
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
                   <span
-                    className="text-[var(--gold)]/30 text-5xl font-serif absolute top-4 left-6 leading-none select-none"
+                    className="text-[var(--gold)]/20 text-4xl font-serif leading-none select-none block mb-1"
                     aria-hidden="true"
                   >
                     &ldquo;
                   </span>
-                  <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-6 pt-6 italic">
+                  <p className="text-[var(--foreground-secondary)] text-sm leading-relaxed mb-6 italic">
                     {item.quote}
                   </p>
                   <div className="border-t border-[var(--border)] pt-4">
                     <p className="text-[var(--foreground)] font-serif text-sm">{item.name}</p>
-                    <p className="text-[var(--foreground-muted)] text-xs">{item.role}</p>
+                    <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--foreground-muted)] mt-0.5">{item.role}</p>
                   </div>
                 </div>
               </RevealOnScroll>
@@ -608,35 +851,28 @@ export default function HomeContent({
           </div>
 
           {/* Trust badges */}
-          <RevealOnScroll className="mt-10 sm:mt-12 px-4 sm:px-6">
-            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-center">
-              <div>
-                <p className="text-2xl font-serif text-[var(--gold)]">5.000+</p>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
-                  {tr("Leads Ebook", "Ebook Leads", "Leads Ebook")}
-                </p>
-              </div>
-              <div className="w-[1px] h-8 bg-[var(--border)]" />
-              <div>
-                <p className="text-2xl font-serif text-[var(--gold)]">100+</p>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
-                  {tr("Cavalos Listados", "Horses Listed", "Caballos Listados")}
-                </p>
-              </div>
-              <div className="w-[1px] h-8 bg-[var(--border)]" />
-              <div>
-                <p className="text-2xl font-serif text-[var(--gold)]">50+</p>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
-                  {tr("Coudelarias", "Stud Farms", "Haras")}
-                </p>
-              </div>
-              <div className="w-[1px] h-8 bg-[var(--border)]" />
-              <div>
-                <p className="text-2xl font-serif text-[var(--gold)]">98%</p>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-muted)]">
-                  {tr("Satisfação", "Satisfaction", "Satisfacción")}
-                </p>
-              </div>
+          <RevealOnScroll className="mt-10 sm:mt-12">
+            <div
+              className="grid grid-cols-2 sm:grid-cols-4 gap-px"
+              style={{ background: "rgba(197,160,89,0.07)" }}
+            >
+              {[
+                { value: "5.000+", label: tr("Leads Ebook", "Ebook Leads", "Leads Ebook") },
+                { value: "100+",   label: tr("Cavalos Listados", "Horses Listed", "Caballos Listados") },
+                { value: "50+",    label: tr("Coudelarias", "Stud Farms", "Haras") },
+                { value: "98%",    label: tr("Satisfação", "Satisfaction", "Satisfacción") },
+              ].map((badge, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col items-center justify-center py-6 sm:py-8 px-4"
+                  style={{ background: "var(--background-secondary)" }}
+                >
+                  <p className="text-2xl sm:text-3xl font-serif text-[var(--gold)] mb-1 tabular-nums">{badge.value}</p>
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--foreground-muted)] text-center leading-snug">
+                    {badge.label}
+                  </p>
+                </div>
+              ))}
             </div>
           </RevealOnScroll>
         </div>
@@ -843,38 +1079,46 @@ export default function HomeContent({
       )}
 
       {/* ===== VENDER CAVALO CTA ===== */}
+      <section className="border-t border-[var(--border)] relative overflow-hidden">
+        {/* Left accent bar */}
+        <div
+          className="absolute left-0 top-0 bottom-0 w-[3px]"
+          style={{ background: "linear-gradient(to bottom, var(--gold), rgba(197,160,89,0.15))" }}
+          aria-hidden
+        />
+        {/* Right ambient */}
+        <div
+          className="absolute right-0 top-0 w-1/2 h-full pointer-events-none"
+          style={{ background: "linear-gradient(to left, rgba(197,160,89,0.03), transparent)" }}
+          aria-hidden
+        />
+        {/* Gold orb */}
+        <div
+          className="absolute right-[10%] top-1/2 -translate-y-1/2 w-72 h-72 bg-[var(--gold)]/[0.04] blur-[100px] pointer-events-none"
+          aria-hidden
+        />
 
-      <section className="border-t border-[var(--border)]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-20">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 py-10 sm:py-20">
           <RevealOnScroll variant="fade-right">
-            <div className="bg-[var(--background-card)] border border-[var(--border)] p-5 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-all duration-500">
-              {/* Corner ornaments */}
-              <div
-                className="absolute top-4 left-4 w-8 h-8 border-t border-l border-[var(--gold)]/20"
-                aria-hidden="true"
-              />
-              <div
-                className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-[var(--gold)]/20"
-                aria-hidden="true"
-              />
-              {/* Gold orb */}
-              <div
-                className="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--gold)]/5 rounded-full blur-[80px] pointer-events-none"
-                aria-hidden="true"
-              />
-
-              <div className="relative text-center sm:text-left">
-                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-3 block">
-                  {tr("Para Proprietários", "For Owners", "Para Propietarios")}
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-serif text-[var(--foreground)] mb-3">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-12">
+              <div className="flex-1 text-center sm:text-left">
+                <div className="flex items-center gap-3 mb-3 justify-center sm:justify-start">
+                  <div className="w-6 h-[1px] bg-[var(--gold)]" />
+                  <span className="text-[9px] uppercase tracking-[0.55em] text-[var(--gold)]">
+                    {tr("Para Proprietários", "For Owners", "Para Propietarios")}
+                  </span>
+                </div>
+                <h2
+                  className="font-serif text-[var(--foreground)] leading-tight mb-3"
+                  style={{ fontSize: "clamp(1.7rem, 3.5vw, 2.8rem)" }}
+                >
                   {tr(
                     "Tem um Cavalo para Vender?",
                     "Have a Horse to Sell?",
                     "¿Tiene un Caballo para Vender?"
                   )}
                 </h2>
-                <p className="text-[var(--foreground-muted)] leading-relaxed max-w-lg">
+                <p className="text-[var(--foreground-muted)] text-sm sm:text-base leading-relaxed max-w-md mx-auto sm:mx-0">
                   {tr(
                     "Publique o seu anúncio e alcance compradores qualificados em Portugal e no mundo.",
                     "Publish your listing and reach qualified buyers in Portugal and worldwide.",
@@ -895,6 +1139,13 @@ export default function HomeContent({
             </div>
           </RevealOnScroll>
         </div>
+
+        {/* Bottom hairline */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[1px]"
+          style={{ background: "linear-gradient(to right, rgba(197,160,89,0.3), rgba(197,160,89,0.05) 50%, transparent)" }}
+          aria-hidden
+        />
       </section>
 
       {/* ===== EBOOK CTA ===== */}
@@ -1071,20 +1322,20 @@ export default function HomeContent({
       >
         <LocalizedLink
           href="/comprar"
-          className="flex-1 flex items-center justify-center py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] rounded-lg active:scale-95 touch-manipulation transition-transform"
+          className="flex-1 flex items-center justify-center py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
         >
           {tr("Cavalos", "Horses", "Caballos")}
         </LocalizedLink>
         <LocalizedLink
           href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
-          className="flex-1 flex items-center justify-center gap-1 py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] rounded-lg active:scale-95 touch-manipulation transition-transform"
+          className="flex-1 flex items-center justify-center gap-1 py-3 text-[11px] uppercase tracking-[0.1em] font-semibold text-[var(--foreground-secondary)] border border-[var(--border)] active:scale-95 touch-manipulation transition-transform"
         >
           <ShoppingBag size={11} strokeWidth={2.5} />
           {tr("Loja", "Shop", "Tienda")}
         </LocalizedLink>
         <LocalizedLink
           href="/vender-cavalo"
-          className="flex-[1.4] flex items-center justify-center gap-1.5 py-3 text-[11px] uppercase tracking-[0.1em] font-bold bg-[var(--gold)] text-black rounded-lg active:scale-95 touch-manipulation transition-transform shadow-[0_0_12px_rgba(197,160,89,0.25)]"
+          className="flex-[1.4] flex items-center justify-center gap-1.5 py-3 text-[11px] uppercase tracking-[0.1em] font-bold bg-[var(--gold)] text-black active:scale-95 touch-manipulation transition-transform shadow-[0_0_12px_rgba(197,160,89,0.25)]"
         >
           <Euro size={11} strokeWidth={2.5} />
           {tr("Vender", "Sell", "Vender")}
@@ -1172,7 +1423,7 @@ export default function HomeContent({
             </div>
 
             {/* ══ DESKTOP — editorial split, full-bleed ══ */}
-            <div className="hidden lg:grid lg:grid-cols-[58%_42%]" style={{ minHeight: "620px" }}>
+            <div className="hidden lg:grid lg:grid-cols-[58%_42%]" style={{ minHeight: "420px" }}>
               {/* Left: atmospheric dark image panel */}
               <LocalizedLink
                 href={`/loja/${featuredProduct.handle}`}
@@ -1185,7 +1436,8 @@ export default function HomeContent({
                     alt={featuredProduct.title}
                     fill
                     sizes="58vw"
-                    className="object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
+                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
+                    style={{ objectPosition: "left bottom" }}
                     priority
                   />
                 ) : (
@@ -1193,12 +1445,8 @@ export default function HomeContent({
                     <Package size={80} className="text-[var(--gold)]/10" />
                   </div>
                 )}
-                {/* Subtle vignette */}
-                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.5) 100%)" }} />
                 {/* Right edge fade */}
-                <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to right, transparent 60%, #080808)" }} />
-                {/* Editorial number — ghost watermark */}
-                <span className="absolute bottom-6 left-8 text-[110px] font-serif leading-none select-none pointer-events-none" style={{ color: "rgba(197,160,89,0.04)" }}>01</span>
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to right, transparent 75%, #080808)" }} />
                 {/* Top-left corner ornament */}
                 <div className="absolute top-8 left-8 w-10 h-10 border-t border-l border-[var(--gold)]/25 pointer-events-none" />
               </LocalizedLink>
