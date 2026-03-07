@@ -24,7 +24,7 @@ export default function ReadinessTab({
   confidence,
 }: ReadinessTabProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   // Sub-scores
   const experienceScore = confidence;

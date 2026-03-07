@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Sparkles, ArrowRight, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -7,7 +8,7 @@ import { createTranslator } from "@/lib/tr";
 
 export default function ToolsHero() {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <section className="relative pt-20 sm:pt-32 pb-12 sm:pb-28 px-4 sm:px-6 overflow-hidden">

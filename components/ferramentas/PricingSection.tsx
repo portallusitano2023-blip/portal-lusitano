@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -103,7 +103,7 @@ function ProSubscribeButton({
   const { user } = useAuth();
   const router = useRouter();
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -178,7 +178,7 @@ function ProSubscribeButton({
 function CheckoutFeedbackInner() {
   const searchParams = useSearchParams();
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const isSuccess = searchParams.get("success") === "true";
   const isCancelled = searchParams.get("cancelled") === "true";
   const [dismissed, setDismissed] = useState(false);
@@ -256,7 +256,7 @@ export function CheckoutFeedback() {
 export function ProBannerSection() {
   const { isSubscribed, isLoading } = useToolAccess("calculadora");
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   if (isLoading || !isSubscribed) return null;
 
@@ -297,7 +297,7 @@ export function ProBannerSection() {
 
 export default function PricingSection() {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const freeTierFeatures = getFreeTierFeatures(tr);
   const proTierFeatures = getProTierFeatures(tr);
   const [billing, setBilling] = useState<BillingPeriod>("monthly");

@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useMemo } from "react";
 import { Crown, Check, Sparkles, Lightbulb } from "lucide-react";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import dynamic from "next/dynamic";
@@ -23,7 +24,7 @@ interface ValorHeroProps {
 
 export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { after } from "next/server";
 import { supabase } from "@/lib/supabase-admin";
 import CoudelariaDetail from "@/components/directorio/CoudelariaDetail";
 
@@ -64,25 +65,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CoudelariaPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  const { data: coudelaria } = await supabase
+  // Fetch just the ID first (single lightweight column lookup)
+  const { data: idRow } = await supabase
     .from("coudelarias")
-    .select(
-      "id, nome, slug, descricao, historia, localizacao, regiao, telefone, email, website, instagram, facebook, youtube, num_cavalos, ano_fundacao, especialidades, linhagens, premios, servicos, horario, coordenadas_lat, coordenadas_lng, foto_capa, galeria, video_url, cavalos_destaque, testemunhos, is_pro, destaque, views_count"
-    )
+    .select("id")
     .eq("slug", slug)
     .eq("status", "active")
     .single();
 
-  if (!coudelaria) notFound();
+  if (!idRow) notFound();
 
-  const { data: reviewsData } = await supabase
-    .from("reviews")
-    .select(
-      "id, autor_nome, autor_localizacao, avaliacao, titulo, comentario, data_visita, tipo_visita, recomenda, created_at"
-    )
-    .eq("status", "approved")
-    .eq("coudelaria_id", coudelaria.id)
-    .order("created_at", { ascending: false });
+  // Now run the full coudelaria query and the reviews query in parallel
+  const [{ data: coudelaria }, { data: reviewsData }] = await Promise.all([
+    supabase
+      .from("coudelarias")
+      .select(
+        "id, nome, slug, descricao, historia, localizacao, regiao, telefone, email, website, instagram, facebook, youtube, num_cavalos, ano_fundacao, especialidades, linhagens, premios, servicos, horario, coordenadas_lat, coordenadas_lng, foto_capa, galeria, video_url, cavalos_destaque, testemunhos, is_pro, destaque, views_count"
+      )
+      .eq("id", idRow.id)
+      .eq("status", "active")
+      .single(),
+    supabase
+      .from("reviews")
+      .select(
+        "id, autor_nome, autor_localizacao, avaliacao, titulo, comentario, data_visita, tipo_visita, recomenda, created_at"
+      )
+      .eq("status", "approved")
+      .eq("coudelaria_id", idRow.id)
+      .order("created_at", { ascending: false }),
+  ]);
+
+  if (!coudelaria) notFound();
 
   const reviews = reviewsData || [];
   const total = reviews.length;
@@ -93,12 +106,13 @@ export default async function CoudelariaPage({ params }: { params: Promise<{ slu
         ) / 10
       : 0;
 
-  // View count fire-and-forget
-  supabase
-    .from("coudelarias")
-    .update({ views_count: (coudelaria.views_count || 0) + 1 })
-    .eq("id", coudelaria.id)
-    .then(() => {});
+  // View count fire-and-forget (deferred until after the response is sent)
+  after(async () => {
+    await supabase
+      .from("coudelarias")
+      .update({ views_count: (coudelaria.views_count || 0) + 1 })
+      .eq("id", coudelaria.id);
+  });
 
   return (
     <CoudelariaDetail

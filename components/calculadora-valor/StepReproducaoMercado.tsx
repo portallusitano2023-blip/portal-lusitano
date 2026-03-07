@@ -19,7 +19,7 @@ import type { FormData, StepProps } from "./types";
 
 export default function StepReproducaoMercado({ form, update }: StepProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const trendOptions = useMemo(
     () => [

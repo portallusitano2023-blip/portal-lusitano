@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
@@ -20,12 +21,27 @@ const AdSenseScript = dynamic(
   { ssr: false }
 );
 
+function DeferredNewsletterPopup() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    try {
+      const dismissed = localStorage.getItem("newsletter-dismissed");
+      const subscribed = localStorage.getItem("newsletter-subscribed");
+      if (dismissed || subscribed) return;
+    } catch {}
+    const timer = setTimeout(() => setReady(true), 30_000);
+    return () => clearTimeout(timer);
+  }, []);
+  if (!ready) return null;
+  return <NewsletterPopup />;
+}
+
 export default function ClientOverlays() {
   return (
     <>
       <ScrollToTop />
       <CookieConsent />
-      <NewsletterPopup />
+      <DeferredNewsletterPopup />
       <PushNotificationPrompt />
       <WhatsAppButton />
       <CartDrawer />

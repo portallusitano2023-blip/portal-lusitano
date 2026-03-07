@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Zap } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -8,7 +9,7 @@ import type { NumericFormKey, StepProps } from "./types";
 
 export default function StepAndamentosTemperamento({ form, update }: StepProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const gaitItems: Array<{ key: NumericFormKey; label: string; desc: string; tooltip: string }> = [
     {

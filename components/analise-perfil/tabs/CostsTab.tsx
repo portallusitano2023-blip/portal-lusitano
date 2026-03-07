@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { DollarSign, Check, Activity } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -13,7 +14,7 @@ interface CostsTabProps {
 
 export default function CostsTab({ result }: CostsTabProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <div key="custos" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">

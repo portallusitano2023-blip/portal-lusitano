@@ -15,14 +15,14 @@ import { CavaloVenda } from "@/types/cavalo";
 // cache() deduplicates this call between generateMetadata and the page component
 // within a single server request — saves 1 Supabase round-trip per page load
 const getCavalo = cache(async (id: string) => {
-  const { data } = await supabase.from("cavalos_venda").select("*").eq("id", id).single();
+  const { data } = await supabase.from("cavalos_venda").select("id, nome_cavalo, preco, image_url, image_urls, slug, localizacao, idade, raca, cor, sexo, altura, pelagem, disciplinas, nivel, nivel_treino, descricao, pai, mae, pontuacao_apsl, destaque, contacto_nome, contacto_email, contacto_telefone, regiao, coudelaria, linhagem, fotos, created_at, status").eq("id", id).single();
   if (!data) return null;
   // Normalize DB column names → component-expected names
   // Live DB uses 'nome'/'foto_principal', components expect 'nome_cavalo'/'image_url'
   return {
     ...data,
-    nome_cavalo: data.nome_cavalo || data.nome,
-    image_url: data.image_url || data.foto_principal,
+    nome_cavalo: data.nome_cavalo || (data as unknown as Record<string, unknown>)["nome"],
+    image_url: data.image_url || (data as unknown as Record<string, unknown>)["foto_principal"],
   };
 });
 
@@ -116,6 +116,7 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
   const { id } = resolvedParams;
 
   let cavalo: CavaloDetalhe | null = null;
+  let similarHorses: CavaloDetalhe[] = [];
 
   // --- MODO DEMO ---
   if (id === "demo") {
@@ -141,7 +142,17 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
   }
   // --- MODO REAL (Supabase) ---
   else {
-    cavalo = await getCavalo(id);
+    const [fetchedCavalo, { data: similar }] = await Promise.all([
+      getCavalo(id),
+      supabase
+        .from("cavalos_venda")
+        .select("id, nome_cavalo, preco, image_url, localizacao, idade, sexo, disciplinas, nivel, destaque")
+        .eq("status", "active")
+        .neq("id", id)
+        .limit(4)
+    ]);
+    cavalo = fetchedCavalo;
+    similarHorses = (similar || []).map((c) => ({ ...c }));
   }
 
   if (!cavalo) {
@@ -174,24 +185,6 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
   })();
 
   const hasImage = allPhotos.length > 0;
-
-  // Similar horses (same discipline or similar price range, exclude current)
-  let similarHorses: CavaloDetalhe[] = [];
-  if (id !== "demo") {
-    try {
-      const { data: similar } = await supabase
-        .from("cavalos_venda")
-        .select("id, nome_cavalo, preco, image_url, localizacao, idade, sexo, disciplinas, nivel, destaque")
-        .eq("status", "active")
-        .neq("id", id)
-        .limit(4);
-      similarHorses = (similar || []).map((c) => ({
-        ...c,
-      }));
-    } catch {
-      // silently fail — similar horses are non-critical
-    }
-  }
 
   // WhatsApp link helper
   const whatsappLink = cavalo.contacto_telefone

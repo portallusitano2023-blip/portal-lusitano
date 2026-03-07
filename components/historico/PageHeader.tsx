@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Crown, ArrowLeft, Lock } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -11,7 +12,7 @@ import { createTranslator } from "@/lib/tr";
 
 export function PageHeader() {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <header>
@@ -65,7 +66,7 @@ interface NotSubscribedCardProps {
 
 export function NotSubscribedCard({ reason }: NotSubscribedCardProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const isAuthWall = reason === "auth";
 
   const benefits = [

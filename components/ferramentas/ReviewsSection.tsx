@@ -82,7 +82,7 @@ function useRelativeDate(language: string) {
 
 export default function ReviewsSection() {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const toolSlugToName = getToolSlugToName(tr);
   const formatRelativeDate = useRelativeDate(language);
 

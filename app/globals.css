@@ -72,17 +72,17 @@ html.light {
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans, Arial, Helvetica, sans-serif);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+}
+
+/* Theme transition only runs during explicit theme toggle */
+html.is-theme-transitioning body {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ... (mantém o que já lá estava) */
@@ -488,7 +488,7 @@ html {
     display: none;
   }
 
-  * {
+  html, body {
     scrollbar-width: none;
   }
 }
@@ -653,37 +653,37 @@ body {
 }
 
 /* Aplica delay crescente a cada filho directo */
-[class*="animate-[fadeSlideIn"] > *:nth-child(1) {
+.animate-stagger > *:nth-child(1) {
   animation-delay: 0s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(2) {
+.animate-stagger > *:nth-child(2) {
   animation-delay: 0.04s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(3) {
+.animate-stagger > *:nth-child(3) {
   animation-delay: 0.08s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(4) {
+.animate-stagger > *:nth-child(4) {
   animation-delay: 0.12s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(5) {
+.animate-stagger > *:nth-child(5) {
   animation-delay: 0.16s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(6) {
+.animate-stagger > *:nth-child(6) {
   animation-delay: 0.2s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(7) {
+.animate-stagger > *:nth-child(7) {
   animation-delay: 0.24s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(8) {
+.animate-stagger > *:nth-child(8) {
   animation-delay: 0.28s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(9) {
+.animate-stagger > *:nth-child(9) {
   animation-delay: 0.32s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(10) {
+.animate-stagger > *:nth-child(10) {
   animation-delay: 0.36s;
 }
-[class*="animate-[fadeSlideIn"] > *:nth-child(n + 11) {
+.animate-stagger > *:nth-child(n + 11) {
   animation-delay: 0.4s;
 }
 
@@ -869,9 +869,11 @@ html.light .leaflet-tooltip-portal::before {
     transform-style: preserve-3d;
     perspective: 800px;
     transition: transform 0.1s ease-out;
-    will-change: transform;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+  }
+  .tilt-card:hover {
+    will-change: transform;
   }
   .tilt-card > * {
     transform: translateZ(0);
@@ -1027,13 +1029,20 @@ html.light .leaflet-tooltip-portal::before {
 
 /* Glow pulse for gold accents — static shadow, animate only on hover */
 .glow-pulse {
-  box-shadow: 0 0 20px rgba(197, 160, 89, 0.1);
-  transition: box-shadow 0.5s ease;
+  position: relative;
 }
-.glow-pulse:hover {
-  box-shadow:
-    0 0 40px rgba(197, 160, 89, 0.25),
-    0 0 80px rgba(197, 160, 89, 0.1);
+.glow-pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 40px rgba(197, 160, 89, 0.25), 0 0 80px rgba(197, 160, 89, 0.1);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+.glow-pulse:hover::after {
+  opacity: 1;
 }
 
 /* Gradient border animation */
@@ -1070,7 +1079,6 @@ html.light .leaflet-tooltip-portal::before {
 }
 .animated-border:hover::before {
   opacity: 1;
-  animation: borderGradient 4s linear infinite;
 }
 
 /* Text gradient animation */
@@ -1243,6 +1251,11 @@ html.light .leaflet-tooltip-portal::before {
 }
 
 /* PRO border — always-visible animated gradient border */
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
 .pro-border-active {
   position: relative;
 }
@@ -1252,9 +1265,8 @@ html.light .leaflet-tooltip-portal::before {
   inset: 0;
   padding: 1px;
   border-radius: inherit;
-  background: linear-gradient(45deg, var(--gold), transparent, var(--gold), transparent);
-  background-size: 300% 300%;
-  animation: borderGradient 4s linear infinite;
+  background: conic-gradient(from var(--border-angle), var(--gold), transparent 40%, var(--gold) 60%, transparent);
+  animation: borderRotate 4s linear infinite;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -1262,8 +1274,10 @@ html.light .leaflet-tooltip-portal::before {
   mask-composite: exclude;
   pointer-events: none;
   opacity: 0.4;
-  will-change: background-position;
   z-index: 30;
+}
+@keyframes borderRotate {
+  to { --border-angle: 360deg; }
 }
 
 /* ===== MOBILE MENU ENTRANCE ANIMATION ===== */
@@ -1283,10 +1297,8 @@ html.light .leaflet-tooltip-portal::before {
  * through :active as desktop users get through :hover. */
 @media (hover: none) {
   /* Stronger glow on active tap for card accents */
-  .glow-pulse:active {
-    box-shadow:
-      0 0 30px rgba(197, 160, 89, 0.3),
-      0 0 60px rgba(197, 160, 89, 0.12);
+  .glow-pulse:active::after {
+    opacity: 1;
   }
 
   /* Flash shimmer sweep on tap */
@@ -1331,10 +1343,6 @@ html.light .leaflet-tooltip-portal::before {
 }
 
 /* ===== JOURNAL ANIMATIONS ===== */
-@keyframes jornal-marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
 
 @keyframes hero-scroll-cue {
   0%, 100% { opacity: 0.2; transform: scaleY(1); }

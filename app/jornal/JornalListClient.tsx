@@ -431,7 +431,7 @@ export default function JornalListClient({
         >
           <div
             className="flex whitespace-nowrap"
-            style={{ animation: "jornal-marquee 30s linear infinite" }}
+            style={{ animation: "marquee 30s linear infinite" }}
           >
             {[0, 1].map((i) => (
               <span

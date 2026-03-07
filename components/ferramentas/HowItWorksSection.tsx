@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Sparkles, ClipboardList, Zap, ArrowRight, Clock } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
@@ -8,7 +9,7 @@ import { createTranslator } from "@/lib/tr";
 
 export default function HowItWorksSection() {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const steps = [
     {

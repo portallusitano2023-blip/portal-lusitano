@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { CreditCard, Shield, Check, Clock, Camera, Star } from "lucide-react";
 import type { FormData } from "@/components/vender-cavalo/types";
@@ -27,7 +28,7 @@ export default function StepPagamento({
   onSubmit,
 }: StepPagamentoProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const tier = LISTING_TIERS[selectedTier] || LISTING_TIERS.standard;
   const precoTotal = tier.priceInCents / 100;
 

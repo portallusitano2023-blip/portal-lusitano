@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import type { StepProps } from "@/components/vender-cavalo/types";
 import { tiposProprietario, paisesOpcoes } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
@@ -7,7 +8,7 @@ import { createTranslator } from "@/lib/tr";
 
 export default function StepProprietario({ formData, updateField }: StepProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">

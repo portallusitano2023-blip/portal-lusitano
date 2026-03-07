@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Users,
   Feather,
@@ -49,7 +49,7 @@ interface TabGroup {
 
 export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const tabs: TabDef[] = [
     { id: "perfil", label: t.analise_perfil.tab_profile, icon: Users },

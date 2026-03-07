@@ -1,7 +1,7 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { client } from "@/lib/client";
-import { fetchCavaloBySlug } from "@/lib/sanity-queries";
 import CavaloDetail from "@/components/cavalo/CavaloDetail";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt";
@@ -9,15 +9,48 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://portal-lusitano.pt"
 // ISR: Revalidate horse detail every hour
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+  try {
+    const slugs = await client.fetch<Array<{ slug: string }>>(
+      `*[_type == "cavalo" && defined(slug.current)]{ "slug": slug.current }`
+    );
+    return (slugs || []).map((s) => ({ slug: s.slug }));
+  } catch {
+    return [];
+  }
+}
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+// cache() deduplicates this call between generateMetadata and the page component
+// within a single server request — saves 1 Sanity round-trip per page load
+const getCavaloPage = cache(async (slug: string) => {
+  return client.fetch(
+    `{
+      "atual": *[_type == "cavalo" && slug.current == $slug][0]{
+        nome, idade, ferro, genealogia, descricao, preco,
+        "imageUrl": fotografiaPrincipal.asset->url + "?w=1200&auto=format&q=85",
+        "galeriaUrls": galeria[].asset->url + "?w=800&auto=format&q=80"
+      },
+      "relacionados": *[_type == "cavalo" && slug.current != $slug][0...3]{
+        nome,
+        "slug": slug.current,
+        "imageUrl": fotografiaPrincipal.asset->url,
+        idade
+      }
+    }`,
+    { slug }
+  );
+});
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
   try {
-    const cavalo = await fetchCavaloBySlug(slug);
+    const result = await getCavaloPage(slug);
+    const cavalo = result?.atual;
 
     if (cavalo) {
       const description =
@@ -63,22 +96,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CavaloPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  const result = await client.fetch(
-    `{
-      "atual": *[_type == "cavalo" && slug.current == $slug][0]{
-        nome, idade, ferro, genealogia, descricao, preco,
-        "imageUrl": fotografiaPrincipal.asset->url,
-        "galeriaUrls": galeria[].asset->url
-      },
-      "relacionados": *[_type == "cavalo" && slug.current != $slug][0...3]{
-        nome,
-        "slug": slug.current,
-        "imageUrl": fotografiaPrincipal.asset->url,
-        idade
-      }
-    }`,
-    { slug }
-  );
+  const result = await getCavaloPage(slug);
 
   if (!result?.atual) notFound();
 

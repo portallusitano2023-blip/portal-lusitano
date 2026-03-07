@@ -21,7 +21,7 @@ const PROFILE_COLORS: Record<string, string> = {
 
 export default function AffinityTab({ result, scorePercentages }: AffinityTabProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const PROFILE_DESCRIPTIONS: Record<string, string> = {
     competidor: tr(

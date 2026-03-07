@@ -28,7 +28,7 @@ function formatEUR(value: number): string {
 
 export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const baseMonthlyCost = useMemo(() => {
     if (result.profile === "competidor") return 1800;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Upload, CheckCircle, FileText } from "lucide-react";
 import type { StepProps, Documentos, DocumentType } from "@/components/vender-cavalo/types";
 import { linhagensPrincipais } from "@/components/vender-cavalo/data";
@@ -18,7 +19,7 @@ export default function StepLinhagem({
   onDocUpload,
 }: StepLinhagemProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <div className="bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl p-6">

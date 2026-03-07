@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { BookOpen, Award, Clock, Star, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -18,7 +19,7 @@ interface Course {
 
 export default function CursosContent() {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const courses: Course[] = [
     {

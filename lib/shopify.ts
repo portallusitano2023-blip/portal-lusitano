@@ -141,7 +141,7 @@ async function shopifyRequest(
 }
 
 async function shopifyFetch(params: ShopifyFetchParams): Promise<ShopifyResponse> {
-  return shopifyRequest(params, { next: { revalidate: 120 } }, "fetch");
+  return shopifyRequest(params, { next: { revalidate: 1800 } }, "fetch");
 }
 
 export async function getProducts(): Promise<

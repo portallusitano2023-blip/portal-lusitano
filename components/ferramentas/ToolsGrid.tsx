@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Check, Star, ArrowRight, Clock } from "lucide-react";
 import { useAuth, type MinimalUser } from "@/components/auth/AuthProvider";
@@ -125,7 +125,7 @@ interface ToolsGridProps {
 export default function ToolsGrid({ tools, sectionLabel }: ToolsGridProps) {
   // Hooks called once in parent instead of N times per ToolCard
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const { user, isLoading } = useAuth();
   const tryLabel = t.ferramentas.try;
 

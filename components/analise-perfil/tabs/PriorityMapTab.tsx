@@ -27,7 +27,7 @@ interface Quadrant {
 
 export default function PriorityMapTab({ result }: PriorityMapTabProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const quadrants: Quadrant[] = useMemo(() => {
     const items: PriorityItem[] = [

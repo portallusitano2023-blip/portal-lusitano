@@ -38,7 +38,7 @@ function CheckoutButton({
 }) {
   const { user } = useAuth();
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

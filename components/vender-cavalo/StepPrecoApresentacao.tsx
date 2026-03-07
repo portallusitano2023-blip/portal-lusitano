@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { Euro, Camera, X, Upload, ImagePlus } from "lucide-react";
 import type { StepProps } from "@/components/vender-cavalo/types";
 import { disponibilidades, MIN_IMAGES, regioesPT, duracoesTrialOpcoes, motivosVenda } from "@/components/vender-cavalo/data";
@@ -23,7 +23,7 @@ export default function StepPrecoApresentacao({
   maxImages,
 }: StepPrecoApresentacaoProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Calculator, Scale, Dna, Target, ChevronRight, HelpCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -83,7 +83,7 @@ function getOptions(tr: Tr) {
 
 export default function ToolRecommender() {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const options = getOptions(tr);
 
   const [selected, setSelected] = useState<string>("preco");

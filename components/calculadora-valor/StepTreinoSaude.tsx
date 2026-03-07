@@ -65,7 +65,7 @@ const HEALTH_IMPACT: Record<string, string> = {
 
 export default function StepTreinoSaude({ form, update }: StepProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const trainingOptions = useMemo(
     () => [

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { X, Check, Crown, Euro, TrendingUp } from "lucide-react";
 import dynamic from "next/dynamic";
 import Tooltip from "@/components/tools/Tooltip";
@@ -47,7 +48,7 @@ export default function HorseForm({
 }: HorseFormProps) {
   const comp = t.comparador as Record<string, string>;
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const PESOS_DISC: Record<string, Record<string, number>> = {
     dressage: { conformacao: 0.2, andamentos: 0.3, elevacao: 0.25, temperamento: 0.15, saude: 0.1 },

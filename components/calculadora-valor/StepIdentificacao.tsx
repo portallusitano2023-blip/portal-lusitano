@@ -19,7 +19,7 @@ const COAT_IMPACT: Record<string, { label: string; type: "pos" | "neg" | "base" 
 
 export default function StepIdentificacao({ form, update }: StepProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const pelagens = useMemo(
     () => [

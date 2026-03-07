@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Crown, History } from "lucide-react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
@@ -27,7 +28,7 @@ export default function ProStatusBar({
   className = "",
 }: ProStatusBarProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   if (accessLoading || !isSubscribed || !show) return null;
 

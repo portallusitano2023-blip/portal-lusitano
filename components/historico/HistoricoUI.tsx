@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Filter } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -15,7 +16,7 @@ interface StatsBarProps {
 
 export function StatsBar({ records }: StatsBarProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const toolConfig = getToolConfig(tr);
   const filterLabels = getFilterLabels(tr);
 
@@ -104,7 +105,7 @@ interface FilterTabsProps {
 
 export function FilterTabs({ records, active, onChange }: FilterTabsProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const toolConfig = getToolConfig(tr);
   const filterLabels = getFilterLabels(tr);
 

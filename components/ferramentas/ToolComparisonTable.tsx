@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Check, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -74,7 +75,7 @@ function getFeatures(tr: Tr) {
 
 export default function ToolComparisonTable() {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const tools = getTools(tr);
   const features = getFeatures(tr);
 

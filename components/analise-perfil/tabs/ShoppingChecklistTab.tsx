@@ -57,7 +57,7 @@ const PRIORITY_COLORS: Record<ChecklistItem["priority"], string> = {
 
 export default function ShoppingChecklistTab({ phases }: ShoppingChecklistTabProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const PRIORITY_CONFIG: Record<ChecklistItem["priority"], { color: string; label: string }> = {
     essential: {

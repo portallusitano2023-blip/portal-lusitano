@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -36,7 +36,7 @@ interface CavaloDetailProps {
 export default function CavaloDetail({ cavalo, relacionados, slug }: CavaloDetailProps) {
   const [fotoAtiva, setFotoAtiva] = useState<string>(cavalo.imageUrl);
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   useEffect(() => {
     analytics.viewCavalo({

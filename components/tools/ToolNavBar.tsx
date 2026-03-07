@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -29,7 +30,7 @@ const TOOL_ORDER: ToolSlug[] = [
 
 export default function ToolNavBar({ currentTool, internalProgress, rightSlot }: ToolNavBarProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const tools = getTools(tr);
 
   const toolMap = new Map(tools.map((t) => [t.href.replace("/", ""), t]));

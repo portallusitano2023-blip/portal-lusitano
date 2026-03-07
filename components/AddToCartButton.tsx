@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -48,7 +48,7 @@ export default function AddToCartButton({
 }: AddToCartProps) {
   const { addItemToCart } = useCart();
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
 

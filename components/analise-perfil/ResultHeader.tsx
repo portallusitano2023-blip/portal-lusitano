@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject } from "react";
+import { RefObject, useMemo } from "react";
 import {
   Check,
   Save,
@@ -50,7 +50,7 @@ export default function ResultHeader({
   onCopyLink,
 }: ResultHeaderProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const SUB_PROFILE_LABELS: Record<string, string> = {
     competidor_elite: tr("Alta Competição FEI", "FEI High Competition", "Alta Competición FEI"),

@@ -154,6 +154,7 @@ export default function RootLayout({
         {/* Preconnect para recursos críticos — reduz latência de first requests */}
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://yrfcepsagtzkxwnnrztd.supabase.co" crossOrigin="anonymous" />
         {/* dns-prefetch para recursos secundários */}
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />

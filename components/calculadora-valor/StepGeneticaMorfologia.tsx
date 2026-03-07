@@ -19,7 +19,7 @@ const LINEAGE_IMPACT: Record<string, { label: string; type: "pos" | "neg" | "bas
 
 export default function StepGeneticaMorfologia({ form, update }: StepProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const lineageOptions = useMemo(
     () => [

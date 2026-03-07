@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Check, Star, Crown, Zap } from "lucide-react";
 import { LISTING_TIERS, type ListingTier } from "@/lib/listing-tiers";
 import { useLanguage } from "@/context/LanguageContext";
@@ -21,7 +22,7 @@ const TIER_ICONS: Record<string, React.ReactNode> = {
 
 export default function PricingBanner({ selectedTier, onTierChange }: PricingBannerProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <div className="max-w-5xl mx-auto mb-8">
@@ -69,7 +70,7 @@ function TierCard({
   language: string;
   onClick: () => void;
 }) {
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const price = tier.priceInCents / 100;
 
   const durationLabel =

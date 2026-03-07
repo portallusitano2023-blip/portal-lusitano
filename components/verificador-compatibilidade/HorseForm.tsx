@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Crown, Heart, Dna, CheckCircle, Palette } from "lucide-react";
 import Paywall from "@/components/tools/Paywall";
 import Tooltip from "@/components/tools/Tooltip";
@@ -41,7 +42,7 @@ export default function HorseForm({
   onCalcular,
 }: HorseFormProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const cavalo = tab === "garanhao" ? garanhao : egua;
   const setCavalo = tab === "garanhao" ? setGaranhao : setEgua;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { RefreshCw, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -260,7 +260,7 @@ interface DetailModalProps {
 
 export default function DetailModal({ record, onClose }: DetailModalProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const locale = langToLocale(language);
   const toolConfig = getToolConfig(tr);
 

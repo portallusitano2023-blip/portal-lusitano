@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Clock, ChevronRight, RefreshCw } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -21,7 +22,7 @@ interface UsageCardProps {
 
 export default function UsageCard({ record, onViewDetails }: UsageCardProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const locale = langToLocale(language);
   const toolConfig = getToolConfig(tr);
 

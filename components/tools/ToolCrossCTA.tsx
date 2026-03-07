@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { ChevronRight, Calculator, BarChart3, Heart, UserCheck } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -84,7 +85,7 @@ export default function ToolCrossCTA({
   exclude = [],
 }: ToolCrossCTAProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   const others = (Object.keys(TOOLS) as ToolSlug[]).filter(
     (slug) => slug !== currentTool && !exclude.includes(slug)

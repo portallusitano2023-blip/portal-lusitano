@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { UserCheck, Calculator, BarChart3, Heart, ArrowRight, ChevronRight } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
@@ -71,7 +72,7 @@ const journeySteps = (tr: ReturnType<typeof createTranslator>) => [
 
 export default function ToolJourneySection() {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const steps = journeySteps(tr);
 
   return (

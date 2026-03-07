@@ -79,7 +79,7 @@ interface DonutChartProps {
 
 function DonutChart({ categories, total, visible, idPrefix }: DonutChartProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const size = 220;
   const strokeWidth = 32;
   const radius = (size - strokeWidth) / 2;
@@ -186,7 +186,7 @@ interface AnnualProjectionProps {
 
 function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const MONTHS_PT = [
     "Jan",
     "Fev",
@@ -400,7 +400,7 @@ function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionP
 
 export default function BudgetPlannerTab({ categories, profileName }: BudgetPlannerTabProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [barsAnimated, setBarsAnimated] = useState(false);

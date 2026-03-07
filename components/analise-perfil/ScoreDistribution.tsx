@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import dynamic from "next/dynamic";
@@ -18,7 +19,7 @@ interface ScoreDistributionProps {
 
 export default function ScoreDistribution({ radarData, scorePercentages }: ScoreDistributionProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <section className="py-12 border-b border-[var(--border)]">

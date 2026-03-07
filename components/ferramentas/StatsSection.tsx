@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Activity, Users, TrendingUp } from "lucide-react";
 import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { useLanguage } from "@/context/LanguageContext";
@@ -92,7 +92,7 @@ export default function StatsSection() {
   const [stats, setStats] = useState<ToolStats | null>(null);
   const [loading, setLoading] = useState(true);
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   useEffect(() => {
     fetch("/api/tools/stats")

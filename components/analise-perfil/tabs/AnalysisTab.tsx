@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Percent, BarChart3, Activity } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -28,7 +29,7 @@ export default function AnalysisTab({
   confidence,
 }: AnalysisTabProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <div key="analise" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">

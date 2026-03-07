@@ -103,13 +103,17 @@ export default async function ArticlePage({ params }: Props) {
   let nextArticle: { slug: string; title: string; category?: string } | null = null;
 
   try {
-    article = await fetchArticleBySlug(slug);
+    const [fetchedArticle, allSlugs] = await Promise.all([
+      fetchArticleBySlug(slug),
+      fetchArticleSlugs(),
+    ]);
+    article = fetchedArticle;
+
     if (article?.category) {
       relatedArticles = await fetchRelatedArticles(slug, article.category);
     }
 
     // Prev/next navigation for Sanity articles
-    const allSlugs = await fetchArticleSlugs();
     if (allSlugs && allSlugs.length > 0) {
       const idx = allSlugs.findIndex((s) => s.slug === slug);
       if (idx > 0) prevArticle = allSlugs[idx - 1] as { slug: string; title: string; category?: string };

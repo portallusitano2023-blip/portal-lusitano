@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Compass, Briefcase, ChevronRight, BarChart3, Heart, Calculator, Info } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -16,7 +17,7 @@ interface NextStepsTabProps {
 
 export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const ap = t.analise_perfil as Record<string, string>;
 
   const pushProfileContext = () => {

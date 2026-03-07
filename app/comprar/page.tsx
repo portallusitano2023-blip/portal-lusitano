@@ -26,7 +26,7 @@ export default async function ComprarPage() {
   // Use select("*") to avoid column-not-found errors from DB schema drift
   const { data: rawCavalos, error } = await supabase
     .from("cavalos_venda")
-    .select("*")
+    .select("id, nome_cavalo, preco, image_url, slug, localizacao, idade, raca, cor, sexo, disciplinas, nivel, nivel_treino, destaque, created_at, status")
     .eq("status", "active")
     .order("created_at", { ascending: false });
 
@@ -38,9 +38,9 @@ export default async function ComprarPage() {
   // Live DB uses 'nome'/'foto_principal', components expect 'nome_cavalo'/'image_url'
   const cavalos = (rawCavalos || []).map((c) => ({
     id: c.id,
-    nome_cavalo: c.nome_cavalo || c.nome,
+    nome_cavalo: c.nome_cavalo || (c as unknown as Record<string, unknown>)["nome"],
     preco: c.preco,
-    image_url: c.image_url || c.foto_principal,
+    image_url: c.image_url || (c as unknown as Record<string, unknown>)["foto_principal"],
     slug: c.slug,
     localizacao: c.localizacao,
     idade: c.idade,

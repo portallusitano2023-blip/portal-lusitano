@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useMemo } from "react";
 import { BarChart3, Sparkles, ChevronRight, Scale, Lightbulb } from "lucide-react";
 import dynamic from "next/dynamic";
 import BlurredProSection from "@/components/tools/BlurredProSection";
@@ -44,7 +45,7 @@ export default function BreakdownAnalysis({
   t,
 }: BreakdownAnalysisProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   // PRO projections
   const investmentProjections = calcularProjecaoValor(resultado.valorFinal, form.idade);

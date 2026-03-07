@@ -407,7 +407,8 @@ export default function HomeContent({
                   sizes="(max-width: 1024px) 100vw, 33vw"
                   className="object-contain group-hover:scale-[1.04] transition-transform duration-700"
                   style={{ padding: "28px" }}
-                  quality={90}
+                  quality={85}
+                  priority
                 />
               ) : (
                 <ShoppingBag size={56} className="text-[#b0a08080]" />

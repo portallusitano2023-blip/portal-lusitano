@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -25,7 +26,7 @@ export default function FreeUsesCounter({
   className = "",
 }: FreeUsesCounterProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   if (accessLoading || isSubscribed || freeUsesLeft <= 0 || !show) return null;
 
