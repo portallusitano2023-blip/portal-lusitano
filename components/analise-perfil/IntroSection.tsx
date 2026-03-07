@@ -3,14 +3,12 @@
 import Image from "next/image";
 import {
   ChevronRight,
-  ChevronDown,
   Clock,
   BookOpen,
   Target,
   Feather,
   DollarSign,
   Trophy,
-  ClipboardCheck,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -22,8 +20,8 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
   const { t } = useLanguage();
 
   return (
-    <div key="intro" className="min-h-screen animate-[fadeSlideIn_0.4s_ease-out_forwards]">
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div className="animate-[fadeSlideIn_0.4s_ease-out_forwards]">
+      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="/images/analise-perfil/capa.png"
@@ -37,14 +35,14 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <div className="opacity-0 animate-[fadeSlideIn_0.6s_ease-out_forwards]">
-            <span className="inline-flex items-center gap-2 text-[var(--gold)] text-xs uppercase tracking-[0.3em] mb-6">
-              <ClipboardCheck size={14} />
+            <span
+              className="inline-block px-4 py-1.5 bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-xs font-medium uppercase tracking-[0.2em] rounded-full mb-6"
+            >
               {t.analise_perfil.badge}
-              <ClipboardCheck size={14} />
             </span>
             <h1 className="text-3xl sm:text-5xl md:text-7xl font-serif text-[var(--foreground)] mb-6 leading-tight">
               {t.analise_perfil.title_line1}
-              <span className="block text-[var(--gold)] italic">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] italic mt-2">
                 {t.analise_perfil.title_line2}
               </span>
             </h1>
@@ -67,23 +65,20 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
             </div>
             <button
               onClick={onStart}
-              className="group inline-flex items-center gap-3 bg-[var(--gold)] text-black px-10 py-5 text-sm uppercase tracking-[0.2em] font-bold hover:bg-white transition-all hover:scale-[1.02] active:scale-[0.98] transition-transform"
+              className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-[var(--gold)] to-[#B8956F] text-black font-semibold rounded-lg hover:from-[#D4AF6A] hover:to-[var(--gold)] transition-all shadow-lg shadow-[var(--gold)]/20 hover:shadow-[var(--gold)]/30 hover:scale-[1.02] active:scale-[0.98]"
             >
               {t.analise_perfil.start}
-              <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+              <ChevronRight size={18} />
             </button>
-          </div>
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-[gentle-bounce_2s_ease-in-out_infinite]">
-            <ChevronDown className="text-[var(--foreground)]/30" size={32} />
           </div>
         </div>
       </section>
-      <section className="py-20 border-t border-[var(--border)]">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-center text-2xl font-serif text-[var(--foreground)] mb-12">
-            {t.analise_perfil.discover_title}
-          </h2>
-          <div className="grid md:grid-cols-4 gap-8">
+      <section className="py-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div
+            className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            style={{ animationDelay: "0.35s" }}
+          >
             {[
               {
                 icon: Target,
@@ -105,17 +100,16 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
                 title: t.analise_perfil.feat_references,
                 desc: t.analise_perfil.feat_references_desc,
               },
-            ].map((f, i) => (
+            ].map((f) => (
               <div
                 key={f.title}
-                className="text-center opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-                style={{ animationDelay: `${i * 0.1}s` }}
+                className="p-6 bg-[var(--background-secondary)]/50 border border-[var(--border)] rounded-xl"
               >
-                <div className="w-14 h-14 mx-auto bg-[var(--gold)]/10 rounded-full flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center mb-4">
                   <f.icon className="text-[var(--gold)]" size={24} />
                 </div>
-                <h3 className="text-[var(--foreground)] font-medium mb-2">{f.title}</h3>
-                <p className="text-sm text-[var(--foreground-muted)]">{f.desc}</p>
+                <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">{f.title}</h3>
+                <p className="text-sm text-[var(--foreground-secondary)]">{f.desc}</p>
               </div>
             ))}
           </div>

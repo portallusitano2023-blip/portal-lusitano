@@ -33,7 +33,7 @@ export default function IntroSection({
   return (
     <div className="animate-[fadeSlideIn_0.4s_ease-out_forwards]">
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1534307671554-9a6d81f4d629?q=80&w=1920"
@@ -41,7 +41,7 @@ export default function IntroSection({
             fill
             priority
             sizes="100vw"
-            className="object-cover opacity-30"
+            className="object-cover opacity-40"
             style={{ objectPosition: "center 40%" }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/80 to-black/60" />

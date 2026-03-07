@@ -43,7 +43,7 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
             style={{ animationDelay: "0.15s" }}
           >
             {t.calculadora.title}
-            <span className="block text-[var(--gold)] mt-2">{t.calculadora.title_accent}</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--gold)] to-[#E8D5A3] mt-2">{t.calculadora.title_accent}</span>
           </h1>
 
           <p
