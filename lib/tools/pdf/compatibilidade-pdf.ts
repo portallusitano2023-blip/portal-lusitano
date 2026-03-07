@@ -1,14 +1,37 @@
-import type jsPDF from "jspdf";
 import {
-  createBasePDF,
-  addSection,
-  addKeyValue,
-  addProgressBar,
-  addFooter,
-  addText,
+  createPremiumPDF,
+  fillPageBg,
+  addCoverTopBar,
+  addPageHeader,
+  addSectionTitle,
+  addSectionTitleWithCount,
+  addKV,
+  addKVWithHealthBadge,
+  addLargeBar,
+  addBulletItem,
+  addMetricsRow,
+  addScoreArc,
+  addPremiumFooter,
+  addPremiumWatermark,
+  safe,
   GOLD,
+  CARD_BG,
+  CARD_BG2,
+  DARK_BG,
+  WHITE,
+  ZINC400,
+  ZINC600,
+  ZINC300,
+  GREEN,
+  AMBER,
+  RED,
   MARGIN,
-} from "./base";
+  PAGE_W,
+  PAGE_H,
+  CONTENT_W,
+} from "./base-premium";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface CavaloCompat {
   nome: string;
@@ -38,129 +61,568 @@ interface ResultadoCompat {
   pontosForteseFracos: { fortes: string[]; fracos: string[] };
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function nivelColor(score: number): [number, number, number] {
+  if (score >= 80) return GREEN;
+  if (score >= 60) return GOLD;
+  if (score >= 40) return AMBER;
+  return RED;
+}
+
+function riscoColor(
+  severidade: "alto" | "medio" | "baixo"
+): [number, number, number] {
+  if (severidade === "alto") return RED;
+  if (severidade === "medio") return AMBER;
+  return GOLD;
+}
+
+// ─── Main Export ──────────────────────────────────────────────────────────────
+
 export async function generateCompatibilidadePDF(
   garanhao: CavaloCompat,
   egua: CavaloCompat,
-  resultado: ResultadoCompat
+  resultado: ResultadoCompat,
+  isPremium = false
 ): Promise<void> {
-  const doc = await createBasePDF(
-    "Analise de Compatibilidade",
-    `${garanhao.nome || "Garanhao"} x ${egua.nome || "Egua"}`
-  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const doc: any = await createPremiumPDF();
+  const pairName = `${garanhao.nome || "Garanhão"} × ${egua.nome || "Égua"}`;
+  const date = new Date().toLocaleDateString("pt-PT", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+  const refNum = `PLP-${Date.now().toString(36).toUpperCase().slice(-8)}`;
+  const scoreColor = nivelColor(resultado.score);
 
-  let y = 50;
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PAGE 1 — COVER
+  // ═══════════════════════════════════════════════════════════════════════════
+  fillPageBg(doc);
 
-  // Main score
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
+  // Background decorative elements
+  doc.setDrawColor(20, 20, 20);
+  doc.setLineWidth(0.3);
+  doc.line(PAGE_W, 0, PAGE_W - PAGE_H, PAGE_H);
+  doc.line(PAGE_W + 50, 0, PAGE_W + 50 - PAGE_H, PAGE_H);
+  doc.setDrawColor(15, 15, 15);
+  doc.setLineWidth(0.4);
+  doc.circle(PAGE_W * 0.72, PAGE_H * 0.42, 55, "S");
+
+  addCoverTopBar(doc);
+
+  // Gold corner brackets
+  doc.setDrawColor(...GOLD);
+  doc.setLineWidth(0.6);
+  const bLen = 3;
+  const bTop = 22;
+  const bBot = 268;
+  const bL = MARGIN - 4;
+  const bR = PAGE_W - MARGIN + 4;
+  doc.line(bL, bTop, bL + bLen, bTop);
+  doc.line(bL, bTop, bL, bTop + bLen);
+  doc.line(bR, bTop, bR - bLen, bTop);
+  doc.line(bR, bTop, bR, bTop + bLen);
+  doc.line(bL, bBot, bL + bLen, bBot);
+  doc.line(bL, bBot, bL, bBot - bLen);
+  doc.line(bR, bBot, bR - bLen, bBot);
+  doc.line(bR, bBot, bR, bBot - bLen);
+
+  // Compatibility score arc (top-right)
+  addScoreArc(doc, resultado.score, PAGE_W - MARGIN - 14, 35, 10);
+
+  // Title
+  let y = 28;
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(22);
   doc.setFont("helvetica", "bold");
-  doc.text(`${resultado.score}/100 - ${resultado.nivel}`, MARGIN, y);
+  const titleLines = doc.splitTextToSize(safe(pairName), CONTENT_W - 28);
+  doc.text(titleLines[0] ?? safe(pairName), MARGIN, y);
+  if (titleLines[1]) {
+    y += 7;
+    doc.text(titleLines[1], MARGIN, y);
+  }
+
+  // Gold underline
+  y += 4;
+  doc.setFillColor(...GOLD);
+  doc.rect(MARGIN, y, CONTENT_W, 0.6, "F");
+
+  // Subtitle
+  y += 7;
+  doc.setTextColor(...ZINC400);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.text("Análise de Compatibilidade Genética e Reprodutiva PSL", MARGIN, y);
+
+  // Compatibility level badge
+  y += 8;
+  const nivelLabel = safe(resultado.nivel);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  const nivelW = doc.getTextWidth(nivelLabel) + 10;
+  doc.setFillColor(
+    Math.round(scoreColor[0] * 0.2 + DARK_BG[0] * 0.8),
+    Math.round(scoreColor[1] * 0.2 + DARK_BG[1] * 0.8),
+    Math.round(scoreColor[2] * 0.2 + DARK_BG[2] * 0.8)
+  );
+  doc.roundedRect(MARGIN, y, nivelW, 6, 1.5, 1.5, "F");
+  doc.setDrawColor(...scoreColor);
+  doc.setLineWidth(0.4);
+  doc.roundedRect(MARGIN, y, nivelW, 6, 1.5, 1.5, "S");
+  doc.setTextColor(...scoreColor);
+  doc.text(nivelLabel, MARGIN + nivelW / 2, y + 4, { align: "center" });
   y += 12;
 
-  // Genetic metrics
-  y = addSection(doc, "Metricas Geneticas", y);
-  y = addKeyValue(doc, "COI Previsto", `${resultado.coi.toFixed(1)}%`, y);
-  y = addKeyValue(doc, "BLUP Previsto", `${resultado.blup}`, y);
-  y = addKeyValue(doc, "Altura Estimada", `${resultado.altura.min}-${resultado.altura.max} cm`, y);
+  // ── Hero Score Card ──────────────────────────────────────────────────────
+  const heroH = 52;
+  doc.setFillColor(...CARD_BG);
+  doc.roundedRect(MARGIN, y, CONTENT_W, heroH, 3, 3, "F");
+  doc.setDrawColor(...scoreColor);
+  doc.setLineWidth(0.7);
+  doc.roundedRect(MARGIN, y, CONTENT_W, heroH, 3, 3, "S");
+  doc.setFillColor(...scoreColor);
+  doc.roundedRect(MARGIN, y, 3, heroH, 1.5, 1.5, "F");
+
+  // Left: score value
+  doc.setTextColor(...ZINC400);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text("SCORE DE COMPATIBILIDADE", MARGIN + 9, y + 11);
+
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(38);
+  doc.setFont("helvetica", "bold");
+  doc.text(`${resultado.score}`, MARGIN + 9, y + 34);
+
+  doc.setTextColor(...scoreColor);
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("/100", MARGIN + 9, y + 44);
+
+  // Right: three key genetic metrics
+  const rightX = MARGIN + CONTENT_W * 0.5;
+  const rightW = CONTENT_W * 0.5 - 6;
+
+  // COI
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text("COI PREVISTO", rightX, y + 11);
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(13);
+  doc.setFont("helvetica", "bold");
+  doc.text(`${resultado.coi.toFixed(1)}%`, rightX, y + 22);
+
+  // BLUP
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text("BLUP PREVISTO", rightX + rightW / 2, y + 11, { align: "center" });
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(13);
+  doc.setFont("helvetica", "bold");
+  doc.text(`${resultado.blup}`, rightX + rightW / 2, y + 22, { align: "center" });
+
+  // Height range
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text("ALTURA ESTIMADA", rightX + rightW, y + 11, { align: "right" });
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text(
+    `${resultado.altura.min}-${resultado.altura.max} cm`,
+    rightX + rightW,
+    y + 22,
+    { align: "right" }
+  );
+
+  // Mini metric bar under COI/BLUP/height
+  const coiPct = Math.min(resultado.coi / 12, 1); // 12% max COI warning threshold
+  const coiColor: [number, number, number] = resultado.coi < 3 ? GREEN : resultado.coi < 6 ? GOLD : AMBER;
+  const miniBarW = rightW - 4;
+  doc.setFillColor(30, 30, 30);
+  doc.roundedRect(rightX, y + 28, miniBarW, 3, 0.8, 0.8, "F");
+  if (coiPct > 0.01) {
+    doc.setFillColor(...coiColor);
+    doc.roundedRect(rightX, y + 28, Math.max(miniBarW * (1 - coiPct), 4), 3, 0.8, 0.8, "F");
+  }
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(5.5);
+  doc.setFont("helvetica", "normal");
+  doc.text("Saúde Genética", rightX, y + 35);
+  doc.setTextColor(...coiColor);
+  doc.setFont("helvetica", "bold");
+  doc.text(
+    resultado.coi < 3 ? "Excelente" : resultado.coi < 6 ? "Boa" : "Atenção",
+    rightX + miniBarW,
+    y + 35,
+    { align: "right" }
+  );
+
+  // Separator
+  doc.setDrawColor(35, 35, 35);
+  doc.setLineWidth(0.3);
+  doc.line(rightX - 5, y + 5, rightX - 5, y + heroH - 5);
+
+  y += heroH + 6;
+
+  // ── Metrics Row ────────────────────────────────────────────────────────────
+  y = addMetricsRow(
+    doc,
+    [
+      { label: "Compatibilidade", value: `${resultado.score}%` },
+      { label: "Progenitores", value: "2" },
+      { label: "Factores Avaliados", value: `${resultado.factores.length}` },
+      { label: "Pelagens Previstas", value: `${resultado.pelagens.length}` },
+    ],
+    y
+  );
+
+  // ── Progenitor summary ──────────────────────────────────────────────────────
   y += 4;
+  doc.setFillColor(35, 35, 35);
+  doc.rect(MARGIN, y, CONTENT_W, 0.3, "F");
+  y += 8;
 
-  // Horse details side by side
-  y = addSection(doc, "Progenitores", y);
+  const halfW = CONTENT_W / 2 - 4;
+  const garX = MARGIN;
+  const eguaX = MARGIN + CONTENT_W / 2 + 4;
 
-  const headers = ["Parametro", "Garanhao", "Egua"];
-  const rows = [
-    ["Nome", garanhao.nome || "-", egua.nome || "-"],
-    ["Idade", `${garanhao.idade} anos`, `${egua.idade} anos`],
-    ["Altura", `${garanhao.altura} cm`, `${egua.altura} cm`],
-    ["Pelagem", garanhao.pelagem, egua.pelagem],
-    ["Linhagem", garanhao.linhagem, egua.linhagem],
-    ["Conformacao", `${garanhao.conformacao}/10`, `${egua.conformacao}/10`],
-    ["Andamentos", `${garanhao.andamentos}/10`, `${egua.andamentos}/10`],
-    ["Temperamento", garanhao.temperamento, egua.temperamento],
-    ["Saude", `${garanhao.saude}/10`, `${egua.saude}/10`],
-    ["BLUP", `${garanhao.blup}`, `${egua.blup}`],
-    ["COI", `${garanhao.coi}%`, `${egua.coi}%`],
+  // Garanhão card
+  doc.setFillColor(...CARD_BG2);
+  doc.roundedRect(garX, y, halfW, 22, 2, 2, "F");
+  doc.setFillColor(...GOLD);
+  doc.roundedRect(garX, y, halfW, 1.5, 0.5, 0.5, "F");
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(6.5);
+  doc.setFont("helvetica", "normal");
+  doc.text("GARANHÃO ♂", garX + halfW / 2, y + 6, { align: "center" });
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "bold");
+  const garName = doc.splitTextToSize(safe(garanhao.nome || "Garanhão"), halfW - 8);
+  doc.text(garName[0], garX + halfW / 2, y + 13, { align: "center" });
+  doc.setTextColor(...ZINC400);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text(`${garanhao.idade} anos · ${garanhao.altura} cm · BLUP ${garanhao.blup}`, garX + halfW / 2, y + 19, { align: "center" });
+
+  // Égua card
+  doc.setFillColor(...CARD_BG2);
+  doc.roundedRect(eguaX, y, halfW, 22, 2, 2, "F");
+  doc.setFillColor(...GOLD);
+  doc.roundedRect(eguaX, y, halfW, 1.5, 0.5, 0.5, "F");
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(6.5);
+  doc.setFont("helvetica", "normal");
+  doc.text("ÉGUA ♀", eguaX + halfW / 2, y + 6, { align: "center" });
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "bold");
+  const eguaName = doc.splitTextToSize(safe(egua.nome || "Égua"), halfW - 8);
+  doc.text(eguaName[0], eguaX + halfW / 2, y + 13, { align: "center" });
+  doc.setTextColor(...ZINC400);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text(`${egua.idade} anos · ${egua.altura} cm · BLUP ${egua.blup}`, eguaX + halfW / 2, y + 19, { align: "center" });
+
+  // "×" connector
+  doc.setTextColor(...GOLD);
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("×", PAGE_W / 2, y + 13, { align: "center" });
+
+  y += 30;
+
+  // ── Content preview ─────────────────────────────────────────────────────────
+  const previews = [
+    "Dados dos progenitores comparados  (pág. 2)",
+    "Análise por factor de compatibilidade  (pág. 2)",
+    "Previsão de pelagens da cria  (pág. 3)",
+    "Alertas genéticos e riscos  (pág. 3)",
+    "Pontos fortes, fracos e recomendações  (pág. 3)",
   ];
 
-  (doc as jsPDF & { autoTable: (opts: Record<string, unknown>) => void }).autoTable({
-    startY: y,
-    head: [headers],
-    body: rows,
-    theme: "grid",
-    styles: {
-      fillColor: [20, 20, 20],
-      textColor: [200, 200, 200],
-      fontSize: 8,
-      cellPadding: 2,
-    },
-    headStyles: {
-      fillColor: [GOLD[0], GOLD[1], GOLD[2]],
-      textColor: [0, 0, 0],
-      fontStyle: "bold",
-    },
-    alternateRowStyles: { fillColor: [30, 30, 30] },
-    margin: { left: MARGIN, right: MARGIN },
+  const colW2 = CONTENT_W / 2 - 4;
+  const colRX2 = MARGIN + CONTENT_W / 2 + 4;
+  const itemLineH = 7;
+
+  previews.forEach((p, idx) => {
+    const isRight = idx >= 3;
+    const xPos = isRight ? colRX2 : MARGIN;
+    const rowIdx = isRight ? idx - 3 : idx;
+    const yPos = y + rowIdx * itemLineH;
+    doc.setFillColor(...GOLD);
+    doc.circle(xPos + 2, yPos - 1, 0.9, "F");
+    doc.setTextColor(...ZINC400);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    const lines = doc.splitTextToSize(safe(p), colW2 - 8);
+    doc.text(lines[0] ?? safe(p), xPos + 7, yPos);
   });
 
-  y = (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY
-    ? (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10
-    : y + 70;
+  y += 3 * itemLineH + 4;
 
-  // Coat prediction
-  if (resultado.pelagens.length > 0) {
-    y = addSection(doc, "Previsao de Pelagem", y);
-    for (const p of resultado.pelagens) {
-      y = addKeyValue(doc, p.cor, `${p.prob}% (${p.genetica})`, y);
-    }
-    y += 4;
-  }
+  // ── Bottom accent ───────────────────────────────────────────────────────────
+  doc.setFillColor(...GOLD);
+  doc.rect(MARGIN, 270, CONTENT_W, 0.4, "F");
+  doc.setTextColor(...GOLD);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "bold");
+  doc.text(`PORTAL LUSITANO  |  ANÁLISE REPRODUTIVA  |  ${safe(date)}`, PAGE_W / 2, 275, { align: "center" });
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(6.5);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Ref: ${refNum}`, PAGE_W - MARGIN, 280, { align: "right" });
 
-  // Risks
-  if (resultado.riscos.length > 0) {
-    y = addSection(doc, "Alertas e Riscos", y);
-    for (const r of resultado.riscos) {
-      const color =
-        r.severidade === "alto"
-          ? ([239, 68, 68] as const)
-          : r.severidade === "medio"
-            ? ([245, 158, 11] as const)
-            : ([234, 179, 8] as const);
-      y = addText(doc, `[${r.severidade.toUpperCase()}] ${r.texto}`, y, { color });
-    }
-    y += 4;
-  }
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PAGE 2 — PROGENITORES & ANÁLISE POR FACTOR
+  // ═══════════════════════════════════════════════════════════════════════════
+  doc.addPage();
+  fillPageBg(doc);
+  addPageHeader(doc, "Dados dos Progenitores", "Página 2 de 3");
 
-  // Factor analysis
-  y = addSection(doc, "Analise por Factor", y);
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(6.5);
+  doc.setFont("helvetica", "italic");
+  doc.text(safe(pairName).slice(0, 40), PAGE_W / 2, 15, { align: "center" });
+
+  y = 30;
+  y = addSectionTitle(doc, "Comparação dos Progenitores", y);
+
+  // Two-column horse data
+  const colLX = MARGIN;
+  const colRX = MARGIN + CONTENT_W / 2 + 5;
+  const colW = CONTENT_W / 2 - 7;
+
+  // Column headers
+  doc.setFillColor(...CARD_BG2);
+  doc.roundedRect(colLX, y, colW, 8, 1.5, 1.5, "F");
+  doc.setFillColor(...GOLD);
+  doc.roundedRect(colLX, y, colW, 1.5, 0.5, 0.5, "F");
+  doc.setTextColor(...ZINC400);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "bold");
+  doc.text("GARANHÃO", colLX + colW / 2, y + 5.5, { align: "center" });
+
+  doc.setFillColor(...CARD_BG2);
+  doc.roundedRect(colRX, y, colW, 8, 1.5, 1.5, "F");
+  doc.setFillColor(...GOLD);
+  doc.roundedRect(colRX, y, colW, 1.5, 0.5, 0.5, "F");
+  doc.setTextColor(...ZINC400);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "bold");
+  doc.text("ÉGUA", colRX + colW / 2, y + 5.5, { align: "center" });
+
+  y += 12;
+
+  let yL = y;
+  let yR = y;
+
+  yL = addKV(doc, "Nome", garanhao.nome || "Não especificado", colLX, yL, colW);
+  yL = addKV(doc, "Idade", `${garanhao.idade} anos`, colLX, yL, colW);
+  yL = addKV(doc, "Altura", `${garanhao.altura} cm`, colLX, yL, colW);
+  yL = addKV(doc, "Pelagem", safe(garanhao.pelagem), colLX, yL, colW);
+  yL = addKV(doc, "Linhagem", safe(garanhao.linhagem), colLX, yL, colW);
+  yL = addKV(doc, "Conformação", `${garanhao.conformacao}/10`, colLX, yL, colW);
+  yL = addKV(doc, "Andamentos", `${garanhao.andamentos}/10`, colLX, yL, colW);
+  yL = addKV(doc, "Temperamento", safe(garanhao.temperamento), colLX, yL, colW);
+  yL = addKVWithHealthBadge(doc, "Saúde", `${garanhao.saude}/10`, garanhao.saude >= 8 ? "excelente" : garanhao.saude >= 6 ? "bom" : "regular", colLX, yL, colW);
+  yL = addKV(doc, "BLUP", `${garanhao.blup}`, colLX, yL, colW);
+  yL = addKV(doc, "COI", `${garanhao.coi}%`, colLX, yL, colW);
+
+  yR = addKV(doc, "Nome", egua.nome || "Não especificado", colRX, yR, colW);
+  yR = addKV(doc, "Idade", `${egua.idade} anos`, colRX, yR, colW);
+  yR = addKV(doc, "Altura", `${egua.altura} cm`, colRX, yR, colW);
+  yR = addKV(doc, "Pelagem", safe(egua.pelagem), colRX, yR, colW);
+  yR = addKV(doc, "Linhagem", safe(egua.linhagem), colRX, yR, colW);
+  yR = addKV(doc, "Conformação", `${egua.conformacao}/10`, colRX, yR, colW);
+  yR = addKV(doc, "Andamentos", `${egua.andamentos}/10`, colRX, yR, colW);
+  yR = addKV(doc, "Temperamento", safe(egua.temperamento), colRX, yR, colW);
+  yR = addKVWithHealthBadge(doc, "Saúde", `${egua.saude}/10`, egua.saude >= 8 ? "excelente" : egua.saude >= 6 ? "bom" : "regular", colRX, yR, colW);
+  yR = addKV(doc, "BLUP", `${egua.blup}`, colRX, yR, colW);
+  yR = addKV(doc, "COI", `${egua.coi}%`, colRX, yR, colW);
+
+  y = Math.max(yL, yR) + 6;
+
+  // Separator
+  doc.setFillColor(35, 35, 35);
+  doc.rect(MARGIN, y, CONTENT_W, 0.3, "F");
+  y += 9;
+
+  // Factor analysis bars
+  y = addSectionTitle(doc, "Análise por Factor de Compatibilidade", y);
+
   for (const f of resultado.factores) {
-    y = addProgressBar(doc, f.nome, f.score, f.max, y);
+    if (y > 265) break;
+    y = addLargeBar(doc, f.nome, f.score, f.max, y, f.descricao || undefined);
   }
-  y += 4;
 
-  // Strengths & Weaknesses
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PAGE 3 — PELAGENS, RISCOS & RECOMENDAÇÕES
+  // ═══════════════════════════════════════════════════════════════════════════
+  doc.addPage();
+  fillPageBg(doc);
+  addPageHeader(doc, "Previsão Genética & Recomendações", "Página 3 de 3");
+
+  doc.setTextColor(...ZINC600);
+  doc.setFontSize(6.5);
+  doc.setFont("helvetica", "italic");
+  doc.text(safe(pairName).slice(0, 40), PAGE_W / 2, 15, { align: "center" });
+
+  y = 30;
+
+  // ── Coat colour predictions ────────────────────────────────────────────────
+  if (resultado.pelagens.length > 0) {
+    y = addSectionTitle(doc, "Previsão de Pelagem da Cria", y);
+
+    const coatCols = Math.min(resultado.pelagens.length, 3);
+    const coatGap = 3;
+    const coatW = (CONTENT_W - coatGap * (coatCols - 1)) / coatCols;
+    const coatH = 24;
+
+    resultado.pelagens.slice(0, 6).forEach((p, i) => {
+      const col = i % 3;
+      const row = Math.floor(i / 3);
+      const cx = MARGIN + col * (coatW + coatGap);
+      const cy = y + row * (coatH + 3);
+
+      const probColor: [number, number, number] = p.prob >= 40 ? GREEN : p.prob >= 20 ? GOLD : ZINC400;
+
+      doc.setFillColor(...CARD_BG2);
+      doc.roundedRect(cx, cy, coatW, coatH, 2, 2, "F");
+      doc.setFillColor(...probColor);
+      doc.roundedRect(cx, cy, coatW, 1.5, 0.5, 0.5, "F");
+
+      doc.setTextColor(...WHITE);
+      doc.setFontSize(8.5);
+      doc.setFont("helvetica", "bold");
+      doc.text(safe(p.cor), cx + coatW / 2, cy + 9, { align: "center" });
+
+      doc.setTextColor(...probColor);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${p.prob}%`, cx + coatW / 2, cy + 17, { align: "center" });
+
+      doc.setTextColor(...ZINC600);
+      doc.setFontSize(6);
+      doc.setFont("helvetica", "normal");
+      const genLines = doc.splitTextToSize(safe(p.genetica), coatW - 4);
+      doc.text(genLines[0] ?? safe(p.genetica), cx + coatW / 2, cy + 22, { align: "center" });
+    });
+
+    const coatRows = Math.ceil(Math.min(resultado.pelagens.length, 6) / 3);
+    y += coatRows * (coatH + 3) + 4;
+  }
+
+  // ── Genetic risks ──────────────────────────────────────────────────────────
+  if (resultado.riscos.length > 0) {
+    y = addSectionTitleWithCount(doc, "Alertas e Riscos Genéticos", resultado.riscos.length, RED, y);
+
+    for (const r of resultado.riscos) {
+      if (y > 265) break;
+      const rColor = riscoColor(r.severidade);
+      const rBulletType = r.severidade === "alto" ? "fraco" : "recomendacao";
+
+      // Severity badge
+      const sevLabel = `${r.severidade.toUpperCase()}`;
+      y = addBulletItem(doc, `[${sevLabel}] ${r.texto}`, rBulletType, y);
+    }
+    y += 4;
+  }
+
+  // ── Strengths ──────────────────────────────────────────────────────────────
   if (resultado.pontosForteseFracos.fortes.length > 0) {
-    y = addSection(doc, "Pontos Fortes", y);
-    for (const p of resultado.pontosForteseFracos.fortes) {
-      y = addText(doc, `+ ${p}`, y, { color: [34, 197, 94] as const });
+    y = addSectionTitleWithCount(
+      doc,
+      "Pontos Fortes da Combinação",
+      resultado.pontosForteseFracos.fortes.length,
+      GREEN,
+      y
+    );
+    for (const ponto of resultado.pontosForteseFracos.fortes) {
+      if (y > 265) break;
+      y = addBulletItem(doc, ponto, "forte", y);
     }
+    y += 4;
   }
 
+  // ── Weaknesses ─────────────────────────────────────────────────────────────
   if (resultado.pontosForteseFracos.fracos.length > 0) {
-    y = addSection(doc, "Pontos Fracos", y);
-    for (const p of resultado.pontosForteseFracos.fracos) {
-      y = addText(doc, `- ${p}`, y, { color: [251, 146, 60] as const });
+    y = addSectionTitleWithCount(
+      doc,
+      "Áreas de Atenção",
+      resultado.pontosForteseFracos.fracos.length,
+      AMBER,
+      y
+    );
+    for (const ponto of resultado.pontosForteseFracos.fracos) {
+      if (y > 265) break;
+      y = addBulletItem(doc, ponto, "fraco", y);
     }
+    y += 4;
   }
 
-  // Recommendations
+  // ── Recommendations ────────────────────────────────────────────────────────
   if (resultado.recomendacoes.length > 0) {
-    y = addSection(doc, "Recomendacoes", y);
+    y = addSectionTitleWithCount(
+      doc,
+      "Recomendações",
+      resultado.recomendacoes.length,
+      GOLD,
+      y
+    );
     for (const rec of resultado.recomendacoes) {
-      y = addText(doc, `> ${rec}`, y, { color: GOLD });
+      if (y > 265) break;
+      y = addBulletItem(doc, rec, "recomendacao", y);
     }
+    y += 4;
   }
 
-  addFooter(doc);
+  // ── Methodology note ───────────────────────────────────────────────────────
+  if (y < 258) {
+    y += 4;
+    const methBoxH = 22;
+    doc.setFillColor(25, 25, 25);
+    doc.roundedRect(MARGIN, y, CONTENT_W, methBoxH, 2, 2, "F");
+    doc.setFillColor(...GOLD);
+    doc.roundedRect(MARGIN, y, 2.5, methBoxH, 1, 1, "F");
+
+    doc.setTextColor(...GOLD);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold");
+    doc.text("METODOLOGIA DE ANÁLISE", MARGIN + 7, y + 6);
+
+    const methBullets = [
+      safe("Cálculo de COI (Coeficiente de Endogamia) previsto com base nas linhagens dos progenitores"),
+      safe("BLUP estimado pela média ponderada dos valores genéticos dos pais e descendentes"),
+      safe("Compatibilidade avaliada por 8+ factores incluindo genética, morfologia, temperamento e saúde"),
+    ];
+
+    doc.setTextColor(...ZINC400);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    methBullets.forEach((bullet, i) => {
+      const bulletY = y + 12 + i * 4.5;
+      doc.setFillColor(...GOLD);
+      doc.circle(MARGIN + 8.5, bulletY - 1, 0.7, "F");
+      const bulletLines = doc.splitTextToSize(bullet, CONTENT_W - 18) as string[];
+      doc.setTextColor(...ZINC400);
+      doc.text(bulletLines[0] ?? bullet, MARGIN + 11, bulletY);
+    });
+  }
+
+  // ── Footer & watermark ─────────────────────────────────────────────────────
+  addPremiumFooter(doc);
+  if (!isPremium) {
+    addPremiumWatermark(doc);
+  }
+
   doc.save(
     `compatibilidade-${garanhao.nome || "garanhao"}-${egua.nome || "egua"}-${Date.now()}.pdf`
   );
