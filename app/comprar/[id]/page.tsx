@@ -6,7 +6,9 @@ import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase-admin";
 import Pedigree from "@/components/Pedigree";
 import { HorseSchema, BreadcrumbSchema } from "@/components/JsonLd";
-import { MapPin, Calendar, ArrowLeft, Phone, Mail, ChevronRight } from "lucide-react";
+import { MapPin, Calendar, ArrowLeft, Phone, Mail, ChevronRight, MessageCircle, Share2, Heart } from "lucide-react";
+import HorseCard from "@/components/HorseCard";
+import PhotoGallery from "@/components/PhotoGallery";
 
 import { CavaloVenda } from "@/types/cavalo";
 
@@ -101,6 +103,12 @@ interface CavaloDetalhe extends CavaloVenda {
   contacto_email?: string;
   contacto_telefone?: string;
   destaque?: boolean;
+  // Multiple photos stored as JSON array or comma-separated string
+  image_urls?: string[] | string | null;
+  fotos?: string[] | string | null;
+  regiao?: string;
+  coudelaria?: string;
+  linhagem?: string;
 }
 
 export default async function DetalheCavaloPage({ params }: { params: Promise<{ id: string }> }) {
@@ -153,7 +161,42 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
     return [];
   })();
 
-  const hasImage = Boolean(cavalo.image_url);
+  // Collect all available photos (primary + extras)
+  const allPhotos: string[] = (() => {
+    const photos: string[] = [];
+    if (cavalo.image_url) photos.push(cavalo.image_url);
+    const extras = cavalo.image_urls || cavalo.fotos;
+    if (extras) {
+      const arr = Array.isArray(extras) ? extras : typeof extras === "string" ? extras.split(",") : [];
+      arr.forEach((u: string) => { const t = u.trim(); if (t && !photos.includes(t)) photos.push(t); });
+    }
+    return photos;
+  })();
+
+  const hasImage = allPhotos.length > 0;
+
+  // Similar horses (same discipline or similar price range, exclude current)
+  let similarHorses: CavaloDetalhe[] = [];
+  if (id !== "demo") {
+    try {
+      const { data: similar } = await supabase
+        .from("cavalos_venda")
+        .select("id, nome_cavalo, preco, image_url, localizacao, idade, sexo, disciplinas, nivel, destaque")
+        .eq("status", "active")
+        .neq("id", id)
+        .limit(4);
+      similarHorses = (similar || []).map((c) => ({
+        ...c,
+      }));
+    } catch {
+      // silently fail — similar horses are non-critical
+    }
+  }
+
+  // WhatsApp link helper
+  const whatsappLink = cavalo.contacto_telefone
+    ? `https://wa.me/${cavalo.contacto_telefone.replace(/\D/g, "")}?text=${encodeURIComponent(`Olá! Tenho interesse no cavalo "${cavalo.nome_cavalo}" (REG: ${cavalo.id.slice(0, 8).toUpperCase()}) anunciado no Portal Lusitano.`)}`
+    : null;
 
   return (
     <>
@@ -175,78 +218,48 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
       />
 
       {/* ── Sticky CTA bar — mobile only (above BottomNav) ── */}
-      <div className="lg:hidden fixed bottom-16 left-0 right-0 z-30 bg-[var(--background)]/95 backdrop-blur-md border-t border-[var(--border)] px-4 py-3 flex items-center gap-3">
+      <div className="lg:hidden fixed bottom-16 left-0 right-0 z-30 bg-[var(--background)]/95 backdrop-blur-md border-t border-[var(--border)] px-3 py-2.5 flex items-center gap-2">
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] leading-none mb-0.5">Preço</p>
-          <p className="text-lg font-serif text-[var(--gold)] leading-none">
+          <p className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)] leading-none mb-0.5">Preço</p>
+          <p className="text-base font-serif text-[var(--gold)] leading-none">
             {Number(cavalo.preco).toLocaleString("pt-PT")} €
           </p>
         </div>
+        {whatsappLink ? (
+          <a
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-4 py-2.5 text-[11px] uppercase font-bold tracking-wide rounded-lg touch-manipulation active:scale-95 whitespace-nowrap"
+            style={{ background: "#25D366", color: "#fff" }}
+          >
+            <MessageCircle size={14} />
+            WhatsApp
+          </a>
+        ) : null}
         <a
-          href={`mailto:geral@portal-lusitano.pt?subject=Interesse: ${encodeURIComponent(cavalo.nome_cavalo)} (REG: ${cavalo.id.slice(0, 8).toUpperCase()})`}
-          className="flex items-center gap-2 bg-[var(--gold)] text-black px-5 py-3 text-[11px] uppercase font-bold tracking-widest rounded-lg touch-manipulation active:scale-95 whitespace-nowrap"
+          href={`mailto:${cavalo.contacto_email || "geral@portal-lusitano.pt"}?subject=Interesse: ${encodeURIComponent(cavalo.nome_cavalo)} (REG: ${cavalo.id.slice(0, 8).toUpperCase()})`}
+          className="flex items-center gap-1.5 bg-[var(--gold)] text-black px-4 py-2.5 text-[11px] uppercase font-bold tracking-wide rounded-lg touch-manipulation active:scale-95 whitespace-nowrap"
         >
           <Mail size={14} />
-          Pedir Info
+          Email
         </a>
       </div>
 
       <div className="flex flex-col lg:flex-row min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-        {/* LEFT PANEL — fixed hero image (desktop) / top image (mobile) */}
-        <div className="lg:w-1/2 h-[55vw] max-h-[70vh] lg:h-screen lg:max-h-none lg:fixed lg:top-0 lg:left-0 relative border-r border-[var(--background-secondary)] z-0">
+        {/* LEFT PANEL — gallery (desktop sticky / mobile top) */}
+        <div className="lg:w-1/2 lg:fixed lg:top-0 lg:left-0 lg:h-screen bg-[var(--background-secondary)] border-r border-[var(--background-secondary)] z-0 flex flex-col">
           {hasImage ? (
-            <>
-              <Image
-                src={cavalo.image_url}
-                alt={`${cavalo.nome_cavalo} — Cavalo Lusitano`}
-                fill
-                className="object-cover grayscale brightness-75"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-              />
-              {/* Bottom fade for mobile legibility */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent lg:hidden" />
-              {/* Subtle top vignette */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent opacity-60" />
-            </>
+            <PhotoGallery
+              photos={allPhotos}
+              alt={cavalo.nome_cavalo}
+              backHref="/comprar"
+              destaque={cavalo.destaque}
+            />
           ) : (
-            /* Fallback when no image is available */
-            <div
-              className="w-full h-full flex items-center justify-center bg-[var(--background-secondary)]"
-              role="img"
-              aria-label={`${cavalo.nome_cavalo} — sem fotografia`}
-            >
+            <div className="w-full h-[55vw] lg:h-full flex items-center justify-center bg-[var(--background-secondary)]">
               <span className="text-[var(--foreground-muted)] text-[10px] uppercase tracking-widest">
                 Sem Fotografia
-              </span>
-            </div>
-          )}
-
-          {/* Watermark */}
-          <div
-            className="absolute top-8 left-8 hidden lg:block pointer-events-none select-none"
-            aria-hidden="true"
-          >
-            <span className="text-white/10 font-serif text-9xl italic leading-none">PL</span>
-          </div>
-
-          {/* Back link */}
-          <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10">
-            <Link
-              href="/comprar"
-              className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/70 hover:text-white transition-colors bg-black/30 backdrop-blur-sm px-3 py-2 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
-              aria-label="Voltar ao marketplace"
-            >
-              <ArrowLeft size={12} aria-hidden="true" />
-              Marketplace
-            </Link>
-          </div>
-
-          {/* Destaque badge on hero */}
-          {cavalo.destaque && (
-            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
-              <span className="bg-[var(--gold)] text-black text-[9px] uppercase tracking-[0.2em] font-bold px-3 py-1">
-                Destaque
               </span>
             </div>
           )}
@@ -429,82 +442,117 @@ export default async function DetalheCavaloPage({ params }: { params: Promise<{ 
             >
               <h2
                 id="contact-heading"
-                className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold mb-8"
+                className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold mb-6"
               >
-                Solicitar Informação
+                Contactar Vendedor
               </h2>
 
-              <div className="bg-[var(--background-secondary)] border border-[var(--border)] p-6 sm:p-8 space-y-6">
-                <div>
-                  <p className="text-[var(--foreground)] font-serif italic text-xl sm:text-2xl mb-2">
-                    Interessado neste exemplar?
-                  </p>
-                  <p className="text-[var(--foreground-secondary)] text-sm font-light leading-relaxed">
-                    Entre em contacto com o vendedor para agendar uma visita, solicitar o dossier
-                    veterinário completo ou obter mais informações sobre este cavalo.
-                  </p>
-                </div>
-
-                {/* Contact details if available */}
-                {(cavalo.contacto_nome || cavalo.contacto_telefone || cavalo.contacto_email) && (
-                  <div className="space-y-3 border-t border-[var(--border)] pt-6">
-                    {cavalo.contacto_nome && (
-                      <p className="text-sm text-[var(--foreground)]">
-                        <span className="text-[9px] uppercase tracking-widest text-[var(--foreground-muted)] block mb-0.5">
-                          Contacto
-                        </span>
-                        {cavalo.contacto_nome}
-                      </p>
-                    )}
-                    {cavalo.contacto_telefone && (
-                      <a
-                        href={`tel:${cavalo.contacto_telefone.replace(/\s/g, "")}`}
-                        className="inline-flex items-center gap-2 text-[var(--gold)] hover:text-[var(--gold-hover)] transition-colors text-sm"
-                        aria-label={`Ligar para ${cavalo.contacto_telefone}`}
-                      >
-                        <Phone size={14} aria-hidden="true" />
-                        {cavalo.contacto_telefone}
-                      </a>
-                    )}
-                    {cavalo.contacto_email && (
-                      <a
-                        href={`mailto:${cavalo.contacto_email}?subject=Pedido de informação: ${encodeURIComponent(cavalo.nome_cavalo)}`}
-                        className="inline-flex items-center gap-2 text-[var(--gold)] hover:text-[var(--gold-hover)] transition-colors text-sm"
-                        aria-label={`Enviar email para ${cavalo.contacto_email}`}
-                      >
-                        <Mail size={14} aria-hidden="true" />
-                        {cavalo.contacto_email}
-                      </a>
-                    )}
+              <div className="space-y-3">
+                {/* Seller info chip */}
+                {cavalo.contacto_nome && (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-[var(--background-secondary)] border border-[var(--border)]">
+                    <div className="w-9 h-9 rounded-full bg-[var(--gold)]/15 flex items-center justify-center flex-shrink-0">
+                      <span className="text-[var(--gold)] text-sm font-bold">
+                        {cavalo.contacto_nome.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[var(--foreground)]">{cavalo.contacto_nome}</p>
+                      <p className="text-[10px] text-[var(--foreground-muted)] uppercase tracking-wide">Vendedor verificado</p>
+                    </div>
                   </div>
                 )}
 
-                {/* Primary CTA — email portal or contact link */}
-                <div className="space-y-3 pt-2">
+                {/* WhatsApp CTA — primary */}
+                {whatsappLink && (
                   <a
-                    href={`mailto:geral@portal-lusitano.pt?subject=Interesse: ${encodeURIComponent(cavalo.nome_cavalo)} (REG: ${cavalo.id.slice(0, 8).toUpperCase()})`}
-                    className="flex w-full items-center justify-center gap-3 bg-[var(--gold)] text-black py-4 sm:py-5 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[var(--gold-hover)] transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2"
+                    href={whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center gap-3 py-4 text-[12px] uppercase font-bold tracking-[0.2em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    style={{ background: "#25D366", color: "#fff" }}
                   >
-                    <Mail size={15} aria-hidden="true" />
-                    Pedir Informação
+                    <MessageCircle size={16} aria-hidden="true" />
+                    Contactar via WhatsApp
                   </a>
-                  <p className="text-center text-[9px] text-[var(--foreground-muted)] uppercase tracking-widest">
-                    Resposta em menos de 24 horas
-                  </p>
-                </div>
+                )}
+
+                {/* Phone call */}
+                {cavalo.contacto_telefone && (
+                  <a
+                    href={`tel:${cavalo.contacto_telefone.replace(/\s/g, "")}`}
+                    className="flex w-full items-center justify-center gap-3 py-4 text-[12px] uppercase font-bold tracking-[0.2em] bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--gold)]/50 transition-all duration-300"
+                  >
+                    <Phone size={16} aria-hidden="true" />
+                    {cavalo.contacto_telefone}
+                  </a>
+                )}
+
+                {/* Email — always available as fallback */}
+                <a
+                  href={`mailto:${cavalo.contacto_email || "geral@portal-lusitano.pt"}?subject=Interesse: ${encodeURIComponent(cavalo.nome_cavalo)} (REG: ${cavalo.id.slice(0, 8).toUpperCase()})`}
+                  className="flex w-full items-center justify-center gap-3 bg-[var(--gold)] text-black py-4 text-[12px] uppercase font-bold tracking-[0.2em] hover:bg-[var(--gold-hover)] transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.2)]"
+                >
+                  <Mail size={16} aria-hidden="true" />
+                  Enviar Mensagem
+                </a>
+
+                <p className="text-center text-[9px] text-[var(--foreground-muted)] uppercase tracking-widest pt-1">
+                  Resposta em menos de 24 horas · Transacção segura
+                </p>
               </div>
             </section>
 
+            {/* SIMILAR HORSES */}
+            {similarHorses.length > 0 && (
+              <section className="border-t border-[var(--background-secondary)] pt-10">
+                <h2 className="text-[var(--gold)] uppercase tracking-[0.5em] text-[10px] font-bold mb-6">
+                  Anúncios Similares
+                </h2>
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  {similarHorses.map((h, i) => (
+                    <HorseCard
+                      key={h.id}
+                      horse={{
+                        id: h.id,
+                        nome_cavalo: h.nome_cavalo,
+                        preco: h.preco,
+                        image_url: h.image_url,
+                        localizacao: h.localizacao,
+                        idade: h.idade,
+                        disciplinas: h.disciplinas,
+                        nivel: h.nivel,
+                        destaque: h.destaque,
+                      }}
+                      href={`/comprar/${h.id}`}
+                      compact
+                      priority={false}
+                    />
+                  ))}
+                </div>
+                <div className="mt-6 text-center">
+                  <Link
+                    href="/comprar"
+                    className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] border border-[var(--gold)]/30 px-5 py-3 hover:bg-[var(--gold)]/5 transition-all"
+                  >
+                    Ver todos os anúncios
+                  </Link>
+                </div>
+              </section>
+            )}
+
             {/* Back to marketplace */}
-            <div className="border-t border-[var(--background-secondary)] pt-8">
-              <Link
-                href="/comprar"
-                className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
-              >
-                <ArrowLeft size={12} aria-hidden="true" />
-                Ver todos os anúncios
-              </Link>
-            </div>
+            {similarHorses.length === 0 && (
+              <div className="border-t border-[var(--background-secondary)] pt-8">
+                <Link
+                  href="/comprar"
+                  className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
+                >
+                  <ArrowLeft size={12} aria-hidden="true" />
+                  Ver todos os anúncios
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

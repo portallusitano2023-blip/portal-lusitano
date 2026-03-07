@@ -2,7 +2,7 @@
 
 import { Info } from "lucide-react";
 import type { StepProps } from "@/components/vender-cavalo/types";
-import { pelagens } from "@/components/vender-cavalo/data";
+import { pelagens, coresOlhos, coresCasco, temperamentosOpcoes, coresCrina, paisesOpcoes } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function StepIdentificacao({ formData, updateField }: StepProps) {
@@ -92,7 +92,6 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
               required
               minLength={15}
               maxLength={15}
-              pattern="\d{15}"
               value={formData.microchip}
               onChange={(e) => updateField("microchip", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
@@ -116,6 +115,51 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
             placeholder={t.vender_cavalo.placeholder_passport}
           />
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="raca_confirmada"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Raça Confirmada *
+            </label>
+            <select
+              id="raca_confirmada"
+              required
+              value={formData.raca_confirmada}
+              onChange={(e) => updateField("raca_confirmada", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              <option value="PSL — Puro Sangue Lusitano">PSL — Puro Sangue Lusitano</option>
+              <option value="Cruzado PSL (com passaporte)">Cruzado PSL (com passaporte)</option>
+              <option value="PRE — Pura Raza Española">PRE — Pura Raza Española</option>
+              <option value="Anglo-Lusitano">Anglo-Lusitano</option>
+              <option value="Outro (com registo)">Outro (com registo)</option>
+            </select>
+          </div>
+          <div>
+            <label
+              htmlFor="pais_nascimento"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              País de Nascimento *
+            </label>
+            <select
+              id="pais_nascimento"
+              required
+              value={formData.pais_nascimento}
+              onChange={(e) => updateField("pais_nascimento", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {paisesOpcoes.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="grid sm:grid-cols-3 gap-4">
@@ -175,20 +219,151 @@ export default function StepIdentificacao({ formData, updateField }: StepProps) 
           </div>
         </div>
 
-        <div>
-          <label htmlFor="altura" className="block text-sm text-[var(--foreground-secondary)] mb-1">
-            {t.vender_cavalo.height}
+        <div className="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label htmlFor="altura" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              {t.vender_cavalo.height}
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(cm)</span>
+            </label>
+            <input
+              id="altura"
+              type="number"
+              value={formData.altura}
+              onChange={(e) => updateField("altura", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder={t.vender_cavalo.placeholder_height}
+              min={140}
+              max={180}
+            />
+          </div>
+          <div>
+            <label htmlFor="peso" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              Peso
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(kg)</span>
+            </label>
+            <input
+              id="peso"
+              type="number"
+              value={formData.peso}
+              onChange={(e) => updateField("peso", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder="500"
+              min={100}
+              max={900}
+            />
+          </div>
+          <div>
+            <label htmlFor="cor_olhos" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              Cor dos Olhos
+            </label>
+            <select
+              id="cor_olhos"
+              value={formData.cor_olhos}
+              onChange={(e) => updateField("cor_olhos", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {coresOlhos.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label htmlFor="cor_crina" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              Cor da Crina
+            </label>
+            <select
+              id="cor_crina"
+              value={formData.cor_crina}
+              onChange={(e) => updateField("cor_crina", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {coresCrina.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="nivel_apsl" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              Pontuação Morfológica APSL
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(opcional)</span>
+            </label>
+            <input
+              id="nivel_apsl"
+              type="text"
+              value={formData.nivel_apsl}
+              onChange={(e) => updateField("nivel_apsl", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder="Ex: 78.5 pontos — Muito Bom"
+            />
+          </div>
+          <div>
+            <label htmlFor="temperamento" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              Temperamento *
+            </label>
+            <select
+              id="temperamento"
+              required
+              value={formData.temperamento}
+              onChange={(e) => updateField("temperamento", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {temperamentosOpcoes.map((tp) => (
+                <option key={tp} value={tp}>{tp}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="marcas_distintivas" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              Marcas Distintivas
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(estrela, meia-lua, meias, rodados, etc.)</span>
+            </label>
+            <input
+              id="marcas_distintivas"
+              type="text"
+              value={formData.marcas_distintivas}
+              onChange={(e) => updateField("marcas_distintivas", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder="Ex: Estrela na testa, meia-lua, meia no posterior esquerdo"
+            />
+          </div>
+          <div>
+            <label htmlFor="cor_casco" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              Cor do Casco
+            </label>
+            <select
+              id="cor_casco"
+              value={formData.cor_casco}
+              onChange={(e) => updateField("cor_casco", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {coresCasco.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <label htmlFor="prova_aptidao_apsl" className="flex items-center gap-3 cursor-pointer touch-manipulation">
+            <input
+              id="prova_aptidao_apsl"
+              type="checkbox"
+              checked={formData.prova_aptidao_apsl}
+              onChange={(e) => updateField("prova_aptidao_apsl", e.target.checked)}
+              className="w-5 h-5 accent-[var(--gold)]"
+            />
+            <span className="text-sm">Prova de Aptidão APSL realizada</span>
           </label>
-          <input
-            id="altura"
-            type="number"
-            value={formData.altura}
-            onChange={(e) => updateField("altura", e.target.value)}
-            className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
-            placeholder={t.vender_cavalo.placeholder_height}
-            min={140}
-            max={180}
-          />
         </div>
       </div>
     </div>

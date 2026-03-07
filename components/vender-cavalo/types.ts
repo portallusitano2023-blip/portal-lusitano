@@ -3,8 +3,12 @@ export interface FormData {
   proprietario_nome: string;
   proprietario_email: string;
   proprietario_telefone: string;
+  proprietario_whatsapp: string;
   proprietario_nif: string;
   proprietario_morada: string;
+  tipo_proprietario: string;
+  pais_proprietario: string;
+  website_coudelaria: string;
 
   // Identificacao do Cavalo
   nome: string;
@@ -12,12 +16,27 @@ export interface FormData {
   numero_registo: string;
   microchip: string;
   passaporte_equino: string;
+  raca_confirmada: string;
+  pais_nascimento: string;
+  peso: string;
+  cor_olhos: string;
+  cor_crina: string;
+  nivel_apsl: string;
 
   // Linhagem
   pai_nome: string;
   pai_registo: string;
   mae_nome: string;
   mae_registo: string;
+  avo_paterno_nome: string;       // pai do pai
+  avo_paterno_registo: string;
+  avo_paterno_mae_nome: string;   // mãe do pai
+  avo_paterno_mae_registo: string;
+  avo_materno_nome: string;       // pai da mãe
+  avo_materno_registo: string;
+  avo_materno_mae_nome: string;   // mãe da mãe
+  avo_materno_mae_registo: string;
+  linhagem_principal: string;
   coudelaria_origem: string;
 
   // Caracteristicas
@@ -25,30 +44,76 @@ export interface FormData {
   sexo: string;
   pelagem: string;
   altura: string;
+  temperamento: string;
+  marcas_distintivas: string;
+  cor_casco: string;
+  prova_aptidao_apsl: boolean;
 
   // Treino e Competicao
   nivel_treino: string;
+  anos_treino: string;
+  nivel_cavaleiro: string;
+  treinador_atual: string;
+  ginete_habitual: string;
+  uso_atual: string[];
   disciplinas: string[];
   competicoes: string;
   premios: string;
 
+  // Comportamento e Maneabilidade
+  habituado_transporte: boolean;
+  habituado_ferrador: boolean;
+  habituado_veterinario: boolean;
+  trabalha_em_grupo: boolean;
+  trabalha_solto: boolean;
+  trabalha_a_mao: boolean;
+  habituado_campo: boolean;
+  apto_criancas: boolean;
+
+  // Maneio
+  regime_estabulacao: string;
+  tipo_alimentacao: string;
+  horas_trabalho_semana: string;
+  teste_dna_realizado: boolean;
+  seguro_equino: boolean;
+
   // Saude
   estado_saude: string;
   vacinacao_atualizada: boolean;
+  data_ultima_vacinacao: string;
   desparasitacao_atualizada: boolean;
+  data_ultima_desparasitacao: string;
   exame_veterinario: boolean;
+  radiografias_disponivel: boolean;
+  piroplasmose_testado: boolean;
+  data_ultima_ferragem: string;
+  tipo_ferragem: string;
+  nome_veterinario: string;
+  historico_lesoes: string;
   observacoes_saude: string;
 
   // Venda
   preco: string;
   negociavel: boolean;
   aceita_troca: boolean;
+  transporte_incluido: boolean;
+  trial_possivel: boolean;
+  duracao_trial: string;
+  financiamento_possivel: boolean;
+  exportacao_possivel: boolean;
+  acompanhamento_pos_venda: boolean;
+  disponivel_cobricao: boolean;
+  preco_cobricao: string;
+  regiao: string;
   localizacao: string;
   disponibilidade_visita: string;
 
   // Descricao
   descricao: string;
   videos_url: string;
+  videos_url_2: string;
+  internato_possivel: boolean;
+  aulas_incluidas: boolean;
 }
 
 export interface Documentos {

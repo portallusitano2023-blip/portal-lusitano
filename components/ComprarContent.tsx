@@ -63,52 +63,50 @@ function ComprarContentInner({
   const totalCount = cavalos.length;
 
   return (
-    <section className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-16 sm:pt-32 md:pt-48 px-4 sm:px-6 md:px-12 lg:px-20 pb-24 sm:pb-32">
-      {/* Header */}
-      <header className="mb-8 sm:mb-12 md:mb-24 text-center">
-        <span className="text-[var(--gold)] uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[9px] sm:text-[10px] font-bold block mb-2 sm:mb-4">
-          {t.comprar_page.prestige_marketplace}
-        </span>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif italic text-[var(--foreground)] mb-4 sm:mb-8">
-          {t.comprar_page.buy_specimen}
-        </h1>
-        <div className="w-16 sm:w-24 h-[1px] bg-[var(--gold)] mx-auto opacity-40" />
+    <section className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-16 sm:pt-20 pb-24 sm:pb-32">
+      {/* ── Marketplace Header — funcional, tipo OLX ── */}
+      <header
+        className="px-4 sm:px-6 md:px-12 lg:px-20 py-8 sm:py-10"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-serif text-[var(--foreground)] leading-tight">
+              {language === "en" ? "Lusitano Horses for Sale" : language === "es" ? "Caballos Lusitanos en Venta" : "Cavalos Lusitanos à Venda"}
+            </h1>
+            {totalCount > 0 && (
+              <p className="text-sm text-[var(--foreground-muted)] mt-1">
+                {totalCount}{" "}
+                {totalCount === 1 ? t.comprar_page.horse_available : t.comprar_page.horses_available}
+                {" "}·{" "}
+                <span className="text-[var(--gold)]">
+                  {language === "en" ? "Verified listings" : language === "es" ? "Anuncios verificados" : "Anúncios verificados"}
+                </span>
+              </p>
+            )}
+          </div>
 
-        {/* Total count badge */}
-        {totalCount > 0 && (
-          <p className="mt-4 sm:mt-6 text-[var(--foreground-muted)] text-sm">
-            {totalCount}{" "}
-            {totalCount === 1 ? t.comprar_page.horse_available : t.comprar_page.horses_available}
-          </p>
-        )}
+          {/* Sell + Compare CTAs */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <LocalizedLink
+              href="/comparador-cavalos"
+              className="inline-flex items-center gap-2 px-4 py-2.5 border border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--gold)]/50 hover:text-[var(--gold)] transition-colors text-sm touch-manipulation"
+            >
+              <Scale className="w-4 h-4" />
+              <span className="hidden sm:inline">{(t.comprar_page as Record<string, string>).compare_horses || "Comparar"}</span>
+              <span className="sm:hidden">Comparar</span>
+            </LocalizedLink>
+            <LocalizedLink
+              href="/vender-cavalo"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--gold)] text-black font-semibold hover:bg-[var(--gold-hover)] transition-colors text-sm touch-manipulation whitespace-nowrap"
+            >
+              + {language === "en" ? "List Horse" : language === "es" ? "Anunciar" : "Anunciar Cavalo"}
+            </LocalizedLink>
+          </div>
+        </div>
       </header>
 
-      {/* Sell CTA Banner */}
-      <div className="mb-8 sm:mb-12 bg-gradient-to-r from-[var(--gold)]/20 via-[var(--gold)]/10 to-transparent border border-[var(--gold)]/30 rounded-xl p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h2 className="text-lg sm:text-xl font-serif mb-1">{t.comprar_page.want_sell}</h2>
-            <p className="text-sm text-[var(--foreground-secondary)]">{t.comprar_page.sell_desc}</p>
-          </div>
-          <LocalizedLink
-            href="/vender-cavalo"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--gold)] text-black font-semibold rounded-lg hover:bg-[var(--gold-hover)] transition-colors touch-manipulation whitespace-nowrap"
-          >
-            {t.comprar_page.sell_horse}
-          </LocalizedLink>
-        </div>
-      </div>
-
-      {/* Comparator CTA */}
-      <div className="mb-8 sm:mb-12 flex justify-center">
-        <LocalizedLink
-          href="/comparador-cavalos"
-          className="inline-flex items-center gap-2 px-5 py-2.5 border border-[var(--gold)]/40 text-[var(--gold)] rounded-lg hover:bg-[var(--gold)]/10 transition-colors text-sm font-medium"
-        >
-          <Scale className="w-4 h-4" />
-          {(t.comprar_page as Record<string, string>).compare_horses || "Comparar Cavalos"}
-        </LocalizedLink>
-      </div>
+      <div className="px-4 sm:px-6 md:px-12 lg:px-20 pt-8">
 
       {/* Error state */}
       {hasError && cavalos.length === 0 && (
@@ -159,15 +157,7 @@ function ComprarContentInner({
       ) : (
         <div className="text-center py-20 sm:py-32 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
           <div className="w-16 h-16 border border-[var(--gold)]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="text-[var(--foreground-muted)]"
-            >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--foreground-muted)]">
               <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
@@ -185,14 +175,11 @@ function ComprarContentInner({
             href="/jornal"
             className="inline-flex items-center gap-2 border border-[var(--gold)]/30 text-[var(--gold)] px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-[var(--gold)]/5 transition-all duration-300"
           >
-            {language === "en"
-              ? "Explore the Journal"
-              : language === "es"
-                ? "Explorar la Revista"
-                : "Explorar o Jornal"}
+            {language === "en" ? "Explore the Journal" : language === "es" ? "Explorar la Revista" : "Explorar o Jornal"}
           </LocalizedLink>
         </div>
       )}
+      </div>
     </section>
   );
 }

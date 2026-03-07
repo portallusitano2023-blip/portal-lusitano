@@ -2,6 +2,7 @@
 
 import { Upload, CheckCircle, FileText } from "lucide-react";
 import type { StepProps, Documentos, DocumentType } from "@/components/vender-cavalo/types";
+import { linhagensPrincipais } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface StepLinhagemProps extends StepProps {
@@ -107,22 +108,133 @@ export default function StepLinhagem({
           </div>
         </div>
 
-        {/* Coudelaria */}
+        {/* Avós Paternos (3ª geração — lado do pai) */}
         <div>
-          <label
-            htmlFor="coudelaria_origem"
-            className="block text-sm text-[var(--foreground-secondary)] mb-1"
-          >
-            {t.vender_cavalo.stud_origin}
-          </label>
-          <input
-            id="coudelaria_origem"
-            type="text"
-            value={formData.coudelaria_origem}
-            onChange={(e) => updateField("coudelaria_origem", e.target.value)}
-            className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
-            placeholder={t.vender_cavalo.placeholder_stud_origin}
-          />
+          <h3 className="text-sm font-medium text-[var(--foreground-muted)] mb-3">Avós Paternos (3ª geração — lado do pai)</h3>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Avô Paterno (pai do pai)</p>
+              <input
+                id="avo_paterno_nome"
+                type="text"
+                value={formData.avo_paterno_nome}
+                onChange={(e) => updateField("avo_paterno_nome", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+                placeholder="Nome"
+              />
+              <input
+                id="avo_paterno_registo"
+                type="text"
+                value={formData.avo_paterno_registo}
+                onChange={(e) => updateField("avo_paterno_registo", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+                placeholder="Nº Registo"
+              />
+            </div>
+            <div className="space-y-3">
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Avó Paterna (mãe do pai)</p>
+              <input
+                id="avo_paterno_mae_nome"
+                type="text"
+                value={formData.avo_paterno_mae_nome}
+                onChange={(e) => updateField("avo_paterno_mae_nome", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+                placeholder="Nome"
+              />
+              <input
+                id="avo_paterno_mae_registo"
+                type="text"
+                value={formData.avo_paterno_mae_registo}
+                onChange={(e) => updateField("avo_paterno_mae_registo", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+                placeholder="Nº Registo"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Avós Maternos (3ª geração — lado da mãe) */}
+        <div>
+          <h3 className="text-sm font-medium text-[var(--foreground-muted)] mb-3">Avós Maternos (3ª geração — lado da mãe)</h3>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Avô Materno (pai da mãe)</p>
+              <input
+                id="avo_materno_nome"
+                type="text"
+                value={formData.avo_materno_nome}
+                onChange={(e) => updateField("avo_materno_nome", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+                placeholder="Nome"
+              />
+              <input
+                id="avo_materno_registo"
+                type="text"
+                value={formData.avo_materno_registo}
+                onChange={(e) => updateField("avo_materno_registo", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+                placeholder="Nº Registo"
+              />
+            </div>
+            <div className="space-y-3">
+              <p className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">Avó Materna (mãe da mãe)</p>
+              <input
+                id="avo_materno_mae_nome"
+                type="text"
+                value={formData.avo_materno_mae_nome}
+                onChange={(e) => updateField("avo_materno_mae_nome", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+                placeholder="Nome"
+              />
+              <input
+                id="avo_materno_mae_registo"
+                type="text"
+                value={formData.avo_materno_mae_registo}
+                onChange={(e) => updateField("avo_materno_mae_registo", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+                placeholder="Nº Registo"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Linhagem + Coudelaria */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="linhagem_principal"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Linhagem Principal
+            </label>
+            <select
+              id="linhagem_principal"
+              value={formData.linhagem_principal}
+              onChange={(e) => updateField("linhagem_principal", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {linhagensPrincipais.map((l) => (
+                <option key={l} value={l}>{l}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label
+              htmlFor="coudelaria_origem"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              {t.vender_cavalo.stud_origin}
+            </label>
+            <input
+              id="coudelaria_origem"
+              type="text"
+              value={formData.coudelaria_origem}
+              onChange={(e) => updateField("coudelaria_origem", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder={t.vender_cavalo.placeholder_stud_origin}
+            />
+          </div>
         </div>
 
         {/* Upload Documentos */}

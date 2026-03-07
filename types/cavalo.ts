@@ -64,8 +64,8 @@ export interface CavaloVenda {
   preco: number;
   idade: number;
   localizacao: string;
-  linhagem: string;
-  descricao: string;
+  linhagem?: string;
+  descricao?: string;
   image_url: string;
   pai?: string;
   mae?: string;

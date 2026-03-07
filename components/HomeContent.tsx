@@ -229,16 +229,28 @@ export default function HomeContent({
     <>
       {/* ===== HERO — Full Screen with Parallax ===== */}
       <section className="relative min-h-[100svh] sm:min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
-        {/* Background Image */}
+        {/* Background Image — Mobile (portrait, up to lg) */}
         <Image
-          src="/images/home/hero.png"
+          src="/images/home/mobile/hero.png"
           alt="Cavalo Lusitano — Nobreza Portuguesa"
           fill
-          className="object-cover opacity-70 sm:opacity-60 z-0"
+          className="object-cover opacity-70 z-0 lg:hidden"
           style={{ objectPosition: "center 20%" }}
           priority
           sizes="100vw"
-          quality={75}
+          quality={80}
+        />
+
+        {/* Background Image — Desktop (landscape, lg and up) */}
+        <Image
+          src="/images/home/desktop/hero.png"
+          alt="Cavalo Lusitano — Nobreza Portuguesa"
+          fill
+          className="object-cover opacity-60 z-0 hidden lg:block"
+          style={{ objectPosition: "center center" }}
+          priority
+          sizes="100vw"
+          quality={85}
         />
 
         {/* Gradient Overlays */}
@@ -391,7 +403,8 @@ export default function HomeContent({
                     alt={featuredProduct.title}
                     fill
                     sizes="(max-width: 1024px) 100vw, 33vw"
-                    className="object-contain p-8 group-hover:scale-[1.04] transition-transform duration-700"
+                    className="object-contain p-4 group-hover:scale-[1.04] transition-transform duration-700"
+                    quality={90}
                   />
                   {/* Subtle vignette around edges only */}
                   <div
@@ -1407,7 +1420,7 @@ export default function HomeContent({
             </div>
 
             {/* ══ DESKTOP — editorial split, full-bleed ══ */}
-            <div className="hidden lg:grid lg:grid-cols-[58%_42%]" style={{ minHeight: "420px" }}>
+            <div className="hidden lg:grid lg:grid-cols-[62%_38%]" style={{ minHeight: "580px" }}>
               {/* Left: atmospheric dark image panel */}
               <LocalizedLink
                 href={`/loja/${featuredProduct.handle}`}
@@ -1419,10 +1432,11 @@ export default function HomeContent({
                     src={featuredProduct.images[0].url}
                     alt={featuredProduct.title}
                     fill
-                    sizes="58vw"
-                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
-                    style={{ objectPosition: "left bottom" }}
+                    sizes="62vw"
+                    className="object-contain transition-transform duration-1000 ease-out group-hover:scale-[1.03]"
+                    style={{ objectPosition: "center 40%", padding: "32px 40px" }}
                     priority
+                    quality={90}
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">

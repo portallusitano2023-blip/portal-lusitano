@@ -2,13 +2,14 @@
 
 import { Upload, CheckCircle, Shield } from "lucide-react";
 import type { StepProps, Documentos, DocumentType } from "@/components/vender-cavalo/types";
-import { niveisTreino, disciplinasOpcoes } from "@/components/vender-cavalo/data";
+import { niveisTreino, disciplinasOpcoes, tiposFerragemOpcoes, niveisCavaleiro, usosAtuais, regimesEstabulacao, tiposAlimentacao } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface StepTreinoSaudeProps extends StepProps {
   documentos: Documentos;
   onDocUpload: (type: DocumentType, file: File) => void;
   onToggleDisciplina: (disc: string) => void;
+  onToggleUso: (uso: string) => void;
 }
 
 export default function StepTreinoSaude({
@@ -17,6 +18,7 @@ export default function StepTreinoSaude({
   documentos,
   onDocUpload,
   onToggleDisciplina,
+  onToggleUso,
 }: StepTreinoSaudeProps) {
   const { t } = useLanguage();
 
@@ -54,6 +56,29 @@ export default function StepTreinoSaude({
           </select>
         </div>
 
+        {/* Uso Atual */}
+        <div>
+          <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
+            Uso Atual do Cavalo
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {usosAtuais.map((uso) => (
+              <button
+                key={uso}
+                type="button"
+                onClick={() => onToggleUso(uso)}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-colors touch-manipulation ${
+                  formData.uso_atual.includes(uso)
+                    ? "bg-[var(--gold)] text-black"
+                    : "bg-[var(--background-card)] text-[var(--foreground-secondary)] hover:bg-[var(--surface-hover)]"
+                }`}
+              >
+                {uso}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Disciplinas */}
         <div>
           <label className="block text-sm text-[var(--foreground-secondary)] mb-2">
@@ -74,6 +99,87 @@ export default function StepTreinoSaude({
                 {disc}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Anos de Treino + Nível Cavaleiro */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="anos_treino"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Anos de Treino
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(anos em trabalho)</span>
+            </label>
+            <input
+              id="anos_treino"
+              type="number"
+              min={0}
+              max={30}
+              value={formData.anos_treino}
+              onChange={(e) => updateField("anos_treino", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder="Ex: 5"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="nivel_cavaleiro"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Nível de Cavaleiro Recomendado *
+            </label>
+            <select
+              id="nivel_cavaleiro"
+              required
+              value={formData.nivel_cavaleiro}
+              onChange={(e) => updateField("nivel_cavaleiro", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {niveisCavaleiro.map((n) => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Treinador + Ginete */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="treinador_atual"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Treinador Atual
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(opcional)</span>
+            </label>
+            <input
+              id="treinador_atual"
+              type="text"
+              value={formData.treinador_atual}
+              onChange={(e) => updateField("treinador_atual", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder="Nome do treinador"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="ginete_habitual"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Ginete Habitual
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(opcional)</span>
+            </label>
+            <input
+              id="ginete_habitual"
+              type="text"
+              value={formData.ginete_habitual}
+              onChange={(e) => updateField("ginete_habitual", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder="Nome do cavaleiro habitual"
+            />
           </div>
         </div>
 
@@ -110,6 +216,123 @@ export default function StepTreinoSaude({
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
               placeholder={t.vender_cavalo.placeholder_awards}
             />
+          </div>
+        </div>
+
+        {/* Comportamento e Maneabilidade */}
+        <div className="border-t border-[var(--border)] pt-6">
+          <h3 className="text-sm font-medium text-[var(--foreground)] mb-4 flex items-center gap-2">
+            <Shield size={18} className="text-[var(--gold)]" />
+            Comportamento e Maneabilidade
+          </h3>
+          <p className="text-xs text-[var(--foreground-muted)] mb-4">
+            Assinale as características confirmadas. Esta informação é muito valorizada pelos compradores.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {[
+              { id: "habituado_transporte", label: "Habituado a transporte (lorry/trailer)" },
+              { id: "habituado_ferrador", label: "Bom com o ferrador" },
+              { id: "habituado_veterinario", label: "Bom com o veterinário" },
+              { id: "trabalha_em_grupo", label: "Trabalha bem em grupo" },
+              { id: "trabalha_solto", label: "Trabalha solto / em liberdade" },
+              { id: "trabalha_a_mao", label: "Trabalha à mão (longe / corda)" },
+              { id: "habituado_campo", label: "Habituado a campo / exterior" },
+              { id: "apto_criancas", label: "Apto para crianças / principiantes" },
+            ].map(({ id, label }) => (
+              <label key={id} htmlFor={id} className="flex items-center gap-3 cursor-pointer touch-manipulation">
+                <input
+                  id={id}
+                  type="checkbox"
+                  checked={formData[id as keyof typeof formData] as boolean}
+                  onChange={(e) => updateField(id as keyof typeof formData, e.target.checked)}
+                  className="w-5 h-5 accent-[var(--gold)]"
+                />
+                <span className="text-sm">{label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Maneio */}
+        <div className="border-t border-[var(--border)] pt-6">
+          <h3 className="text-sm font-medium text-[var(--foreground)] mb-4 flex items-center gap-2">
+            <Shield size={18} className="text-[var(--gold)]" />
+            Maneio e Rotina
+          </h3>
+
+          <div className="grid sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label htmlFor="regime_estabulacao" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+                Regime de Estabulação
+              </label>
+              <select
+                id="regime_estabulacao"
+                value={formData.regime_estabulacao}
+                onChange={(e) => updateField("regime_estabulacao", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              >
+                <option value="">Selecionar</option>
+                {regimesEstabulacao.map((r) => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="tipo_alimentacao" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+                Tipo de Alimentação
+              </label>
+              <select
+                id="tipo_alimentacao"
+                value={formData.tipo_alimentacao}
+                onChange={(e) => updateField("tipo_alimentacao", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              >
+                <option value="">Selecionar</option>
+                {tiposAlimentacao.map((a) => (
+                  <option key={a} value={a}>{a}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="horas_trabalho_semana" className="block text-sm text-[var(--foreground-secondary)] mb-1">
+              Horas de Trabalho por Semana
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(horas/semana)</span>
+            </label>
+            <input
+              id="horas_trabalho_semana"
+              type="number"
+              min={0}
+              max={40}
+              value={formData.horas_trabalho_semana}
+              onChange={(e) => updateField("horas_trabalho_semana", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder="Ex: 5"
+            />
+          </div>
+
+          <div className="flex flex-wrap gap-4">
+            <label htmlFor="teste_dna_realizado" className="flex items-center gap-3 cursor-pointer touch-manipulation">
+              <input
+                id="teste_dna_realizado"
+                type="checkbox"
+                checked={formData.teste_dna_realizado}
+                onChange={(e) => updateField("teste_dna_realizado", e.target.checked)}
+                className="w-5 h-5 accent-[var(--gold)]"
+              />
+              <span className="text-sm">Teste de DNA realizado (parentesco verificado)</span>
+            </label>
+            <label htmlFor="seguro_equino" className="flex items-center gap-3 cursor-pointer touch-manipulation">
+              <input
+                id="seguro_equino"
+                type="checkbox"
+                checked={formData.seguro_equino}
+                onChange={(e) => updateField("seguro_equino", e.target.checked)}
+                className="w-5 h-5 accent-[var(--gold)]"
+              />
+              <span className="text-sm">Seguro equino ativo</span>
+            </label>
           </div>
         </div>
 
@@ -181,6 +404,140 @@ export default function StepTreinoSaude({
               />
               <span className="text-sm">{t.vender_cavalo.vet_exam_available}</span>
             </label>
+            <label
+              htmlFor="radiografias_disponivel"
+              className="flex items-center gap-3 cursor-pointer touch-manipulation"
+            >
+              <input
+                id="radiografias_disponivel"
+                type="checkbox"
+                checked={formData.radiografias_disponivel}
+                onChange={(e) => updateField("radiografias_disponivel", e.target.checked)}
+                className="w-5 h-5 accent-[var(--gold)]"
+              />
+              <span className="text-sm">Radiografias disponíveis (membros / coluna)</span>
+            </label>
+            <label
+              htmlFor="piroplasmose_testado"
+              className="flex items-center gap-3 cursor-pointer touch-manipulation"
+            >
+              <input
+                id="piroplasmose_testado"
+                type="checkbox"
+                checked={formData.piroplasmose_testado}
+                onChange={(e) => updateField("piroplasmose_testado", e.target.checked)}
+                className="w-5 h-5 accent-[var(--gold)]"
+              />
+              <span className="text-sm">Testado para Piroplasmose (negativo)</span>
+            </label>
+          </div>
+
+          {/* Datas vacinação/desparasitação + Veterinário */}
+          <div className="mt-4 grid sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="data_ultima_vacinacao"
+                className="block text-sm text-[var(--foreground-secondary)] mb-1"
+              >
+                Data da Última Vacinação
+              </label>
+              <input
+                id="data_ultima_vacinacao"
+                type="date"
+                value={formData.data_ultima_vacinacao}
+                onChange={(e) => updateField("data_ultima_vacinacao", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="data_ultima_desparasitacao"
+                className="block text-sm text-[var(--foreground-secondary)] mb-1"
+              >
+                Data da Última Desparasitação
+              </label>
+              <input
+                id="data_ultima_desparasitacao"
+                type="date"
+                value={formData.data_ultima_desparasitacao}
+                onChange={(e) => updateField("data_ultima_desparasitacao", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              />
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <label
+              htmlFor="nome_veterinario"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Médico Veterinário de Referência
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(nome e contacto)</span>
+            </label>
+            <input
+              id="nome_veterinario"
+              type="text"
+              value={formData.nome_veterinario}
+              onChange={(e) => updateField("nome_veterinario", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              placeholder="Ex: Dr. João Silva — +351 912 345 678"
+            />
+          </div>
+
+          {/* Ferragem */}
+          <div className="mt-4 grid sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="data_ultima_ferragem"
+                className="block text-sm text-[var(--foreground-secondary)] mb-1"
+              >
+                Data da Última Ferragem
+              </label>
+              <input
+                id="data_ultima_ferragem"
+                type="date"
+                value={formData.data_ultima_ferragem}
+                onChange={(e) => updateField("data_ultima_ferragem", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="tipo_ferragem"
+                className="block text-sm text-[var(--foreground-secondary)] mb-1"
+              >
+                Tipo de Ferragem
+              </label>
+              <select
+                id="tipo_ferragem"
+                value={formData.tipo_ferragem}
+                onChange={(e) => updateField("tipo_ferragem", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)]"
+              >
+                <option value="">Selecionar</option>
+                {tiposFerragemOpcoes.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Histórico de Lesões */}
+          <div className="mt-4">
+            <label
+              htmlFor="historico_lesoes"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Histórico de Lesões / Cirurgias
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(se aplicável)</span>
+            </label>
+            <textarea
+              id="historico_lesoes"
+              value={formData.historico_lesoes}
+              onChange={(e) => updateField("historico_lesoes", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] h-20 resize-none"
+              placeholder="Ex: Cólica cirúrgica em 2021, totalmente recuperado. Sem lesões articulares."
+            />
           </div>
 
           <div className="mt-4">

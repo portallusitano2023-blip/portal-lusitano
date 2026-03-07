@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useDeferredValue } from "react";
-import { X, SlidersHorizontal } from "lucide-react";
+import { X, SlidersHorizontal, Search } from "lucide-react";
 import HorseCard from "@/components/HorseCard";
 
 // Shape of a horse row from cavalos_venda table
@@ -24,6 +24,7 @@ export interface MarketplaceHorse {
 type SortOption = "recent" | "price_asc" | "price_desc";
 type PriceRange = "all" | "under10" | "10to25" | "25to50" | "over50";
 type SexFilter = "all" | "macho" | "femea" | "castrado";
+type AgeRange = "all" | "potro" | "jovem" | "adulto" | "senior";
 
 interface Translations {
   filter_sex: string;
@@ -78,10 +79,23 @@ function priceInRange(preco: number, range: PriceRange): boolean {
   return true;
 }
 
+function ageInRange(idade: number | undefined, range: AgeRange): boolean {
+  if (range === "all") return true;
+  const age = idade ?? 0;
+  if (range === "potro") return age <= 3;
+  if (range === "jovem") return age >= 4 && age <= 7;
+  if (range === "adulto") return age >= 8 && age <= 14;
+  if (range === "senior") return age >= 15;
+  return true;
+}
+
 export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridProps) {
   const [sexFilter, setSexFilter] = useState<SexFilter>("all");
   const [priceRange, setPriceRange] = useState<PriceRange>("all");
   const [disciplineFilter, setDisciplineFilter] = useState<string>("all");
+  const [ageRange, setAgeRange] = useState<AgeRange>("all");
+  const [regionFilter, setRegionFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState<SortOption>("recent");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -92,11 +106,33 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
     return Array.from(set).sort();
   }, [horses]);
 
+  // Derive unique regions from all horses (first word of localizacao)
+  const allRegions = useMemo(() => {
+    const set = new Set<string>();
+    horses.forEach((h) => {
+      if (h.localizacao) {
+        // Use district-level (e.g. "Lisboa", "Santarém") — take last meaningful part
+        const loc = h.localizacao.trim();
+        if (loc) set.add(loc);
+      }
+    });
+    return Array.from(set).sort();
+  }, [horses]);
+
   const hasActiveFilters =
-    sexFilter !== "all" || priceRange !== "all" || disciplineFilter !== "all";
+    sexFilter !== "all" || priceRange !== "all" || disciplineFilter !== "all" ||
+    ageRange !== "all" || regionFilter !== "all" || searchQuery.trim() !== "";
 
   const filteredAndSortedRaw = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+
     let result = horses.filter((h) => {
+      // Text search
+      if (q) {
+        const searchable = [h.nome_cavalo, h.localizacao, h.nivel, ...(getDisciplines(h))].join(" ").toLowerCase();
+        if (!searchable.includes(q)) return false;
+      }
+
       // Sex filter
       if (sexFilter !== "all") {
         const horseSex = (h.sexo || "").toLowerCase().trim();
@@ -112,13 +148,23 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
         if (!disciplines.includes(disciplineFilter)) return false;
       }
 
+      // Age range filter
+      if (!ageInRange(h.idade, ageRange)) return false;
+
+      // Region filter
+      if (regionFilter !== "all") {
+        if (h.localizacao !== regionFilter) return false;
+      }
+
       return true;
     });
 
-    // Sort
+    // Destaques sempre primeiro
     result = [...result].sort((a, b) => {
+      if (a.destaque && !b.destaque) return -1;
+      if (!a.destaque && b.destaque) return 1;
+
       if (sortOption === "recent") {
-        // Preserve server order (already newest first) — use created_at if present
         const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
         const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
         return dateB - dateA;
@@ -129,7 +175,7 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
     });
 
     return result;
-  }, [horses, sexFilter, priceRange, disciplineFilter, sortOption]);
+  }, [horses, sexFilter, priceRange, disciplineFilter, ageRange, regionFilter, searchQuery, sortOption]);
 
   // Defer grid re-render so filter dropdowns stay responsive
   const filteredAndSorted = useDeferredValue(filteredAndSortedRaw);
@@ -138,6 +184,9 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
     setSexFilter("all");
     setPriceRange("all");
     setDisciplineFilter("all");
+    setAgeRange("all");
+    setRegionFilter("all");
+    setSearchQuery("");
   };
 
   const resultCount = filteredAndSorted.length;
@@ -149,6 +198,28 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
 
   return (
     <div>
+      {/* ── Search Bar ── */}
+      <div className="relative mb-5">
+        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] pointer-events-none" aria-hidden />
+        <input
+          type="search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Pesquisar por nome, localização, disciplina..."
+          className="w-full pl-11 pr-4 py-3 bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground)] text-sm placeholder:text-[var(--foreground-muted)] focus:outline-none focus:border-[var(--gold)] transition-colors"
+          aria-label="Pesquisar cavalos"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+            aria-label="Limpar pesquisa"
+          >
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
       {/* ── Mobile Filter Bottom Sheet ── */}
       {filtersOpen && (
         <>
@@ -247,6 +318,50 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
                   </div>
                 </div>
               )}
+              {/* Age range */}
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] mb-2 font-medium">
+                  Idade
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { value: "all", label: "Todas" },
+                    { value: "potro", label: "Potro (0-3)" },
+                    { value: "jovem", label: "Jovem (4-7)" },
+                    { value: "adulto", label: "Adulto (8-14)" },
+                    { value: "senior", label: "Sénior (15+)" },
+                  ].map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setAgeRange(opt.value as AgeRange)}
+                      className={`px-4 py-2 text-sm rounded-xl border transition-all touch-manipulation ${ageRange === opt.value ? "bg-[var(--gold)] border-[var(--gold)] text-black font-medium" : "border-[var(--border)] text-[var(--foreground-secondary)] bg-[var(--surface)]"}`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Region */}
+              {allRegions.length > 1 && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] mb-2 font-medium">
+                    Localização
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {[{ value: "all", label: "Todas" }, ...allRegions.map((r) => ({ value: r, label: r }))].map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => setRegionFilter(opt.value)}
+                        className={`px-4 py-2 text-sm rounded-xl border transition-all touch-manipulation ${regionFilter === opt.value ? "bg-[var(--gold)] border-[var(--gold)] text-black font-medium" : "border-[var(--border)] text-[var(--foreground-secondary)] bg-[var(--surface)]"}`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Apply + Clear */}
               <div className="flex gap-3 pt-2">
                 {hasActiveFilters && (
@@ -398,6 +513,49 @@ export default function MarketplaceGrid({ horses, isDev, t }: MarketplaceGridPro
                       strokeLinejoin="round"
                     />
                   </svg>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Age range filter */}
+          <div className="relative flex items-center">
+            <div className="relative">
+              <select
+                value={ageRange}
+                onChange={(e) => setAgeRange(e.target.value as AgeRange)}
+                className={selectBase}
+                aria-label="Filtrar por idade"
+              >
+                <option value="all">Idade: Todas</option>
+                <option value="potro">Potro (0-3 anos)</option>
+                <option value="jovem">Jovem (4-7 anos)</option>
+                <option value="adulto">Adulto (8-14 anos)</option>
+                <option value="senior">Sénior (15+ anos)</option>
+              </select>
+              <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Region filter */}
+          {allRegions.length > 1 && (
+            <div className="relative flex items-center">
+              <div className="relative">
+                <select
+                  value={regionFilter}
+                  onChange={(e) => setRegionFilter(e.target.value)}
+                  className={selectBase}
+                  aria-label="Filtrar por localização"
+                >
+                  <option value="all">Localização: Todas</option>
+                  {allRegions.map((r) => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
               </div>
             </div>

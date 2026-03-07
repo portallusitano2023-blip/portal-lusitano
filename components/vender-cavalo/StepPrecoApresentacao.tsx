@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { Euro, Camera, X, Upload, ImagePlus } from "lucide-react";
 import type { StepProps } from "@/components/vender-cavalo/types";
-import { disponibilidades, MIN_IMAGES } from "@/components/vender-cavalo/data";
+import { disponibilidades, MIN_IMAGES, regioesPT, duracoesTrialOpcoes, motivosVenda } from "@/components/vender-cavalo/data";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface StepPrecoApresentacaoProps extends StepProps {
@@ -94,22 +94,44 @@ export default function StepPrecoApresentacao({
           </div>
           <div>
             <label
-              htmlFor="localizacao"
+              htmlFor="regiao"
               className="block text-sm text-[var(--foreground-secondary)] mb-1"
             >
-              {t.vender_cavalo.location} *
+              Distrito / Região *
             </label>
-            <input
-              id="localizacao"
-              type="text"
+            <select
+              id="regiao"
               required
-              minLength={3}
-              value={formData.localizacao}
-              onChange={(e) => updateField("localizacao", e.target.value)}
+              value={formData.regiao}
+              onChange={(e) => updateField("regiao", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
-              placeholder={t.vender_cavalo.placeholder_location}
-            />
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {regioesPT.map((r) => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
           </div>
+        </div>
+
+        <div>
+          <label
+            htmlFor="localizacao"
+            className="block text-sm text-[var(--foreground-secondary)] mb-1"
+          >
+            {t.vender_cavalo.location} *
+            <span className="text-[var(--foreground-muted)] text-xs ml-1">(localidade ou coudelaria)</span>
+          </label>
+          <input
+            id="localizacao"
+            type="text"
+            required
+            minLength={3}
+            value={formData.localizacao}
+            onChange={(e) => updateField("localizacao", e.target.value)}
+            className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
+            placeholder={t.vender_cavalo.placeholder_location}
+          />
         </div>
 
         <div className="flex flex-wrap gap-4">
@@ -139,29 +161,237 @@ export default function StepPrecoApresentacao({
             />
             <span className="text-sm">{t.vender_cavalo.accepts_trade}</span>
           </label>
+          <label
+            htmlFor="transporte_incluido"
+            className="flex items-center gap-3 cursor-pointer touch-manipulation"
+          >
+            <input
+              id="transporte_incluido"
+              type="checkbox"
+              checked={formData.transporte_incluido}
+              onChange={(e) => updateField("transporte_incluido", e.target.checked)}
+              className="w-5 h-5 accent-[var(--gold)]"
+            />
+            <span className="text-sm">Transporte incluído no preço</span>
+          </label>
+          <label
+            htmlFor="trial_possivel"
+            className="flex items-center gap-3 cursor-pointer touch-manipulation"
+          >
+            <input
+              id="trial_possivel"
+              type="checkbox"
+              checked={formData.trial_possivel}
+              onChange={(e) => updateField("trial_possivel", e.target.checked)}
+              className="w-5 h-5 accent-[var(--gold)]"
+            />
+            <span className="text-sm">Trial / Período de prova possível</span>
+          </label>
+          <label
+            htmlFor="financiamento_possivel"
+            className="flex items-center gap-3 cursor-pointer touch-manipulation"
+          >
+            <input
+              id="financiamento_possivel"
+              type="checkbox"
+              checked={formData.financiamento_possivel}
+              onChange={(e) => updateField("financiamento_possivel", e.target.checked)}
+              className="w-5 h-5 accent-[var(--gold)]"
+            />
+            <span className="text-sm">Financiamento / pagamento parcelado disponível</span>
+          </label>
+          <label
+            htmlFor="exportacao_possivel"
+            className="flex items-center gap-3 cursor-pointer touch-manipulation"
+          >
+            <input
+              id="exportacao_possivel"
+              type="checkbox"
+              checked={formData.exportacao_possivel}
+              onChange={(e) => updateField("exportacao_possivel", e.target.checked)}
+              className="w-5 h-5 accent-[var(--gold)]"
+            />
+            <span className="text-sm">Exportação possível (documentação disponível)</span>
+          </label>
+          <label
+            htmlFor="acompanhamento_pos_venda"
+            className="flex items-center gap-3 cursor-pointer touch-manipulation"
+          >
+            <input
+              id="acompanhamento_pos_venda"
+              type="checkbox"
+              checked={formData.acompanhamento_pos_venda}
+              onChange={(e) => updateField("acompanhamento_pos_venda", e.target.checked)}
+              className="w-5 h-5 accent-[var(--gold)]"
+            />
+            <span className="text-sm">Acompanhamento pós-venda oferecido</span>
+          </label>
+          <label
+            htmlFor="internato_possivel"
+            className="flex items-center gap-3 cursor-pointer touch-manipulation"
+          >
+            <input
+              id="internato_possivel"
+              type="checkbox"
+              checked={formData.internato_possivel}
+              onChange={(e) => updateField("internato_possivel", e.target.checked)}
+              className="w-5 h-5 accent-[var(--gold)]"
+            />
+            <span className="text-sm">Internato possível (cavalo permanece na coudelaria durante adaptação)</span>
+          </label>
+          <label
+            htmlFor="aulas_incluidas"
+            className="flex items-center gap-3 cursor-pointer touch-manipulation"
+          >
+            <input
+              id="aulas_incluidas"
+              type="checkbox"
+              checked={formData.aulas_incluidas}
+              onChange={(e) => updateField("aulas_incluidas", e.target.checked)}
+              className="w-5 h-5 accent-[var(--gold)]"
+            />
+            <span className="text-sm">Aulas de equitação incluídas na venda</span>
+          </label>
+          {formData.sexo === "Garanhão" && (
+            <label
+              htmlFor="disponivel_cobricao"
+              className="flex items-center gap-3 cursor-pointer touch-manipulation"
+            >
+              <input
+                id="disponivel_cobricao"
+                type="checkbox"
+                checked={formData.disponivel_cobricao}
+                onChange={(e) => updateField("disponivel_cobricao", e.target.checked)}
+                className="w-5 h-5 accent-[var(--gold)]"
+              />
+              <span className="text-sm">Disponível para cobrição</span>
+            </label>
+          )}
+        </div>
+
+        {formData.trial_possivel && (
+          <div>
+            <label
+              htmlFor="duracao_trial"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Duração do Trial
+            </label>
+            <select
+              id="duracao_trial"
+              value={formData.duracao_trial}
+              onChange={(e) => updateField("duracao_trial", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {duracoesTrialOpcoes.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {formData.sexo === "Garanhão" && formData.disponivel_cobricao && (
+          <div>
+            <label
+              htmlFor="preco_cobricao"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Preço de Cobrição (€)
+            </label>
+            <div className="relative">
+              <Euro
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+              />
+              <input
+                id="preco_cobricao"
+                type="number"
+                min={0}
+                value={formData.preco_cobricao}
+                onChange={(e) => updateField("preco_cobricao", e.target.value)}
+                className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg pl-12 pr-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
+                placeholder="500"
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="disponibilidade_visita"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              {t.vender_cavalo.visit_availability}
+            </label>
+            <select
+              id="disponibilidade_visita"
+              value={formData.disponibilidade_visita}
+              onChange={(e) => updateField("disponibilidade_visita", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {disponibilidades.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label
+              htmlFor="motivo_venda"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              Motivo da Venda
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(opcional)</span>
+            </label>
+            <select
+              id="motivo_venda"
+              value={formData.motivo_venda}
+              onChange={(e) => updateField("motivo_venda", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
+            >
+              <option value="">{t.vender_cavalo.select}</option>
+              {motivosVenda.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div>
           <label
-            htmlFor="disponibilidade_visita"
+            htmlFor="equipamento_incluido"
             className="block text-sm text-[var(--foreground-secondary)] mb-1"
           >
-            {t.vender_cavalo.visit_availability}
+            Equipamento Incluído na Venda
+            <span className="text-[var(--foreground-muted)] text-xs ml-1">(sela, cabeçada, mantas, etc.)</span>
           </label>
-          <select
-            id="disponibilidade_visita"
-            value={formData.disponibilidade_visita}
-            onChange={(e) => updateField("disponibilidade_visita", e.target.value)}
+          <input
+            id="equipamento_incluido"
+            type="text"
+            value={formData.equipamento_incluido}
+            onChange={(e) => updateField("equipamento_incluido", e.target.value)}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
-          >
-            <option value="">{t.vender_cavalo.select}</option>
-            {disponibilidades.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
+            placeholder="Ex: Sela Pessoa + 2 mantas + cabeçada de couro"
+          />
         </div>
+
+        <label
+          htmlFor="aceita_visita_veterinario"
+          className="flex items-center gap-3 cursor-pointer touch-manipulation"
+        >
+          <input
+            id="aceita_visita_veterinario"
+            type="checkbox"
+            checked={formData.aceita_visita_veterinario}
+            onChange={(e) => updateField("aceita_visita_veterinario", e.target.checked)}
+            className="w-5 h-5 accent-[var(--gold)]"
+          />
+          <span className="text-sm">Aceita exame de pré-compra por veterinário do comprador</span>
+        </label>
 
         {/* Fotos */}
         <div className="border-t border-[var(--border)] pt-6">
@@ -294,21 +524,41 @@ export default function StepPrecoApresentacao({
         </div>
 
         {/* Vídeos */}
-        <div>
-          <label
-            htmlFor="videos_url"
-            className="block text-sm text-[var(--foreground-secondary)] mb-1"
-          >
-            {t.vender_cavalo.video_link}
-          </label>
-          <input
-            id="videos_url"
-            type="url"
-            value={formData.videos_url}
-            onChange={(e) => updateField("videos_url", e.target.value)}
-            className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
-            placeholder="https://youtube.com/watch?v=..."
-          />
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="videos_url"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              {t.vender_cavalo.video_link}
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(vídeo 1)</span>
+            </label>
+            <input
+              id="videos_url"
+              type="url"
+              value={formData.videos_url}
+              onChange={(e) => updateField("videos_url", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
+              placeholder="https://youtube.com/watch?v=..."
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="videos_url_2"
+              className="block text-sm text-[var(--foreground-secondary)] mb-1"
+            >
+              {t.vender_cavalo.video_link}
+              <span className="text-[var(--foreground-muted)] text-xs ml-1">(vídeo 2)</span>
+            </label>
+            <input
+              id="videos_url_2"
+              type="url"
+              value={formData.videos_url_2}
+              onChange={(e) => updateField("videos_url_2", e.target.value)}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold)] transition-colors"
+              placeholder="https://youtube.com/watch?v=..."
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import { memo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
-import { MapPin, Calendar } from "lucide-react";
+import { MapPin, Calendar, Flame } from "lucide-react";
 import HorseFavoriteButton from "./HorseFavoriteButton";
 import { getBlurDataURL } from "@/lib/image-utils";
 
@@ -20,6 +20,7 @@ interface HorseCardProps {
     destaque?: boolean;
     nivel?: string;
     disciplinas?: string[] | string | null;
+    created_at?: string;
   };
   href: string;
   compact?: boolean;
@@ -106,14 +107,21 @@ export default memo(function HorseCard({
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-          {/* Destaque badge — top left */}
-          {horse.destaque && (
-            <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
-              <span className="bg-[var(--gold)] text-black text-[8px] sm:text-[9px] uppercase tracking-[0.15em] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 leading-none">
+          {/* Top-left badges stack */}
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 flex flex-col gap-1">
+            {horse.destaque && (
+              <span className="flex items-center gap-1 bg-[var(--gold)] text-black text-[8px] sm:text-[9px] uppercase tracking-[0.15em] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 leading-none">
+                <Flame size={9} aria-hidden />
                 Destaque
               </span>
-            </div>
-          )}
+            )}
+            {/* "Novo" badge — listings from the last 7 days */}
+            {horse.created_at && Date.now() - new Date(horse.created_at).getTime() < 7 * 86400000 && (
+              <span className="bg-emerald-500 text-white text-[7px] sm:text-[8px] uppercase tracking-[0.15em] font-bold px-2 py-0.5 leading-none">
+                Novo
+              </span>
+            )}
+          </div>
 
           {/* Discipline/level badge — above price, bottom right */}
           {badgeLabel && (

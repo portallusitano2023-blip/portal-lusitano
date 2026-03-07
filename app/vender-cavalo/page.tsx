@@ -110,19 +110,19 @@ export default function VenderCavaloPage() {
     const newErrors: string[] = [];
 
     if (currentStep === 1) {
-      // Owner info
+      // Owner info — apenas essenciais para contacto
       if (!formData.proprietario_nome) newErrors.push(t.form_validation.required_owner_name);
       if (!formData.proprietario_email) newErrors.push(t.form_validation.required_email);
       if (!formData.proprietario_telefone) newErrors.push(t.form_validation.required_phone);
-      if (!formData.proprietario_nif) newErrors.push(t.form_validation.required_nif);
-      // Horse ID
+      // NIF is optional (collected for invoicing later)
+      // Horse ID — apenas o essencial
       if (!formData.nome) newErrors.push(t.form_validation.required_horse_name);
       if (!formData.nome_registo) newErrors.push(t.form_validation.required_registration_name);
       if (!formData.numero_registo) newErrors.push(t.form_validation.required_registration_number);
-      if (!formData.microchip) newErrors.push(t.form_validation.required_microchip);
+      if (!formData.microchip || formData.microchip.length < 15) newErrors.push(t.form_validation.required_microchip);
       if (!formData.data_nascimento) newErrors.push(t.form_validation.required_birth_date);
       if (!formData.sexo) newErrors.push(t.form_validation.required_sex);
-      if (!formData.pelagem) newErrors.push(t.form_validation.required_coat);
+      if (!formData.temperamento) newErrors.push("Selecione o temperamento do cavalo.");
     }
 
     if (currentStep === 2) {
@@ -134,12 +134,14 @@ export default function VenderCavaloPage() {
       if (!documentos.livroAzul) newErrors.push(t.form_validation.required_blue_book);
       // Training & Health
       if (!formData.nivel_treino) newErrors.push(t.form_validation.required_training_level);
+      if (!formData.nivel_cavaleiro) newErrors.push("Selecione o nível de cavaleiro recomendado.");
       if (!formData.estado_saude) newErrors.push(t.form_validation.required_health_status);
       if (!formData.vacinacao_atualizada) newErrors.push(t.form_validation.required_vaccination);
     }
 
     if (currentStep === 3) {
       if (!formData.preco) newErrors.push(t.form_validation.required_price);
+      if (!formData.regiao) newErrors.push("Selecione o distrito / região do cavalo.");
       if (!formData.localizacao) newErrors.push(t.vender_cavalo.error_location_required);
       if (!formData.descricao || formData.descricao.length < MIN_DESCRIPTION_LENGTH)
         newErrors.push(t.vender_cavalo.error_description_min);
@@ -217,37 +219,82 @@ export default function VenderCavaloPage() {
             proprietarioNome: formData.proprietario_nome,
             proprietarioEmail: formData.proprietario_email,
             proprietarioTelefone: formData.proprietario_telefone,
-            proprietarioWhatsapp: formData.proprietario_telefone,
+            proprietarioWhatsapp: formData.proprietario_whatsapp || formData.proprietario_telefone,
             nomeCavalo: formData.nome,
             nomeRegisto: formData.nome_registo,
             numeroRegisto: formData.numero_registo,
             microchip: formData.microchip,
             passaporteEquino: formData.passaporte_equino,
+            peso: formData.peso,
+            corOlhos: formData.cor_olhos,
+            nivelApsl: formData.nivel_apsl,
             pai: formData.pai_nome,
             paiRegisto: formData.pai_registo,
             mae: formData.mae_nome,
             maeRegisto: formData.mae_registo,
+            avoPaterno: formData.avo_paterno_nome,
+            avoPaternoRegisto: formData.avo_paterno_registo,
+            avoPaternoMae: formData.avo_paterno_mae_nome,
+            avoPaternoMaeRegisto: formData.avo_paterno_mae_registo,
+            avoMaterno: formData.avo_materno_nome,
+            avoMaternoRegisto: formData.avo_materno_registo,
+            avoMaternoMae: formData.avo_materno_mae_nome,
+            avoMaternoMaeRegisto: formData.avo_materno_mae_registo,
+            linhagemPrincipal: formData.linhagem_principal,
             coudelariaOrigem: formData.coudelaria_origem,
-            linhagem: formData.coudelaria_origem,
             dataNascimento: formData.data_nascimento,
             idade: calcularIdade(formData.data_nascimento),
             sexo: formData.sexo,
             pelagem: formData.pelagem,
             altura: formData.altura,
+            temperamento: formData.temperamento,
+            marcasDistintivas: formData.marcas_distintivas,
+            corCasco: formData.cor_casco,
+            provaAptidaoApsl: formData.prova_aptidao_apsl,
             nivelTreino: formData.nivel_treino,
+            anosTreino: formData.anos_treino,
+            nivelCavaleiro: formData.nivel_cavaleiro,
+            treinadorAtual: formData.treinador_atual,
+            gineteHabitual: formData.ginete_habitual,
             disciplinas: formData.disciplinas,
             competicoes: formData.competicoes,
             premios: formData.premios,
+            habituadoTransporte: formData.habituado_transporte,
+            habituadoFerrador: formData.habituado_ferrador,
+            habituadoVeterinario: formData.habituado_veterinario,
+            trabalhaEmGrupo: formData.trabalha_em_grupo,
+            trabalhaSolto: formData.trabalha_solto,
+            aptoCriancas: formData.apto_criancas,
             estadoSaude: formData.estado_saude,
             vacinacaoAtualizada: formData.vacinacao_atualizada,
+            dataUltimaVacinacao: formData.data_ultima_vacinacao,
             desparasitacaoAtualizada: formData.desparasitacao_atualizada,
+            dataUltimaDesparasitacao: formData.data_ultima_desparasitacao,
             exameVeterinario: formData.exame_veterinario,
+            radiografiasDisponivel: formData.radiografias_disponivel,
+            piroplasmoseTestado: formData.piroplasmose_testado,
+            dataUltimaFerragem: formData.data_ultima_ferragem,
+            tipoFerragem: formData.tipo_ferragem,
+            nomeVeterinario: formData.nome_veterinario,
+            historicoLesoes: formData.historico_lesoes,
             observacoesSaude: formData.observacoes_saude,
             preco: formData.preco,
             precoNegociavel: formData.negociavel,
+            aceitaTroca: formData.aceita_troca,
+            transporteIncluido: formData.transporte_incluido,
+            trialPossivel: formData.trial_possivel,
+            duracaoTrial: formData.duracao_trial,
+            financiamentoPossivel: formData.financiamento_possivel,
+            exportacaoPossivel: formData.exportacao_possivel,
+            acompanhamentoPosVenda: formData.acompanhamento_pos_venda,
+            internatoPossivel: formData.internato_possivel,
+            aulasIncluidas: formData.aulas_incluidas,
+            disponivelCobricao: formData.disponivel_cobricao,
+            precoCobricao: formData.preco_cobricao,
+            regiao: formData.regiao,
             localizacao: formData.localizacao,
-            regiao: "Ribatejo",
             descricao: formData.descricao,
+            videosUrl2: formData.videos_url_2,
             registoAPSL: formData.numero_registo,
             documentosEmDia: formData.vacinacao_atualizada && formData.desparasitacao_atualizada,
             imageUrls,
