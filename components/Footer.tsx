@@ -63,7 +63,7 @@ export default memo(function Footer() {
   );
 
   const MARQUEE =
-    "Cavalos Lusitanos · Portugal · Est. 2023 · O Legado Nobre · Raça Lusitana · Évora · The Lusitano Archive · Coudelarias · Profissionais Equestres · ";
+    "Cavalos Lusitanos · Portugal · Est. 2023 · O Legado Nobre · Raça Lusitana · The Lusitano Archive · Coudelarias · Profissionais Equestres · ";
 
   const socials = [
     {
@@ -296,7 +296,7 @@ export default memo(function Footer() {
             © {new Date().getFullYear()} Portal Lusitano · {t.footer.rights}
           </p>
           <p className="text-[var(--foreground-muted)] text-[8px] tracking-wide">
-            NIF 255669801 · Évora, Portugal
+            NIF 255669801
           </p>
         </div>
       </div>

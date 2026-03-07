@@ -842,7 +842,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                 equestre Lusitana ao design contemporâneo.&rdquo;
               </blockquote>
               <p className="text-[7px] font-mono uppercase tracking-[0.55em] text-[var(--foreground-muted)]">
-                Portal Lusitano — Lisboa, Portugal
+                Portal Lusitano
               </p>
             </div>
 
