@@ -107,6 +107,9 @@ export interface FormData {
   regiao: string;
   localizacao: string;
   disponibilidade_visita: string;
+  motivo_venda: string;
+  aceita_visita_veterinario: boolean;
+  equipamento_incluido: string;
 
   // Descricao
   descricao: string;

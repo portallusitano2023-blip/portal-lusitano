@@ -105,6 +105,15 @@ export default function VenderCavaloPage() {
     }));
   };
 
+  const toggleUso = (uso: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      uso_atual: prev.uso_atual.includes(uso)
+        ? prev.uso_atual.filter((u) => u !== uso)
+        : [...prev.uso_atual, uso],
+    }));
+  };
+
   // Merged step validation: Step 1 = Owner+ID, Step 2 = Lineage+Health, Step 3 = Price, Step 4 = Payment
   const validateStep = (currentStep: number): boolean => {
     const newErrors: string[] = [];
@@ -390,6 +399,7 @@ export default function VenderCavaloPage() {
                 documentos={documentos}
                 onDocUpload={handleDocUpload}
                 onToggleDisciplina={toggleDisciplina}
+                onToggleUso={toggleUso}
               />
             </div>
           </>
