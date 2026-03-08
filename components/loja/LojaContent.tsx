@@ -779,19 +779,18 @@ export default function LojaContent({ products }: { products: ProductListing[] }
               <>
                 {/* Grid header */}
                 <div
-                  className="px-7 sm:px-11 flex items-center gap-4 py-7 sm:py-9"
-                  style={{
-                    borderBottom: "1px solid rgba(197,160,89,0.07)",
-                  }}
+                  className="px-7 sm:px-11 flex items-center gap-3 py-8 sm:py-10"
+                  style={{ borderBottom: "1px solid rgba(197,160,89,0.07)" }}
                 >
-                  <span
-                    className="w-6 h-px"
-                    style={{ background: "rgba(197,160,89,0.7)" }}
-                    aria-hidden
-                  />
-                  <span className="text-[7px] uppercase tracking-[0.6em] text-[var(--gold)]/70 font-mono flex-1">
+                  <div className="w-6 h-[1px] bg-[var(--gold)]" aria-hidden />
+                  <span className="text-[9px] uppercase tracking-[0.55em] text-[var(--gold)]">
                     Toda a Colecção
                   </span>
+                  <div
+                    className="flex-1 h-px"
+                    style={{ background: "linear-gradient(to right, rgba(197,160,89,0.15), transparent)" }}
+                    aria-hidden
+                  />
                   <span className="font-serif text-[var(--gold)] text-base tabular-nums">
                     {rest.length}
                   </span>
