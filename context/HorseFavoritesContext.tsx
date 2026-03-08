@@ -56,7 +56,7 @@ export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<FavoriteHorse[]>(readLocalStorage);
   const { showToast } = useToast();
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const { user } = useAuth();
 
   // Persist to localStorage whenever favorites change
@@ -124,44 +124,44 @@ export function HorseFavoritesProvider({ children }: { children: ReactNode }) {
 
   const addToFavorites = useCallback(
     (horse: FavoriteHorse) => {
-      if (isFavorite(horse.id)) return;
-      setFavorites((prev) => [...prev, horse]);
-      showToast(
-        "success",
-        tr(`${horse.name} adicionado aos favoritos`, `${horse.name} added to favorites`)
-      );
-      // Sync to backend (fire-and-forget)
-      if (user) {
-        fetch("/api/favoritos", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ item_id: horse.id, item_type: "cavalo" }),
-        }).catch(() => {
-          /* best-effort backend sync — localStorage is primary store */
-        });
-      }
+      setFavorites((prev) => {
+        if (prev.some((h) => h.id === horse.id)) return prev;
+        showToast(
+          "success",
+          tr(`${horse.name} adicionado aos favoritos`, `${horse.name} added to favorites`)
+        );
+        // Sync to backend (fire-and-forget)
+        if (user) {
+          fetch("/api/favoritos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ item_id: horse.id, item_type: "cavalo" }),
+          }).catch(() => {});
+        }
+        return [...prev, horse];
+      });
     },
-    [isFavorite, showToast, language, user]
+    [showToast, tr, user]
   );
 
   const removeFromFavorites = useCallback(
     (id: string) => {
-      const horse = favorites.find((h) => h.id === id);
-      setFavorites((prev) => prev.filter((h) => h.id !== id));
-      if (horse) {
-        showToast(
-          "info",
-          tr(`${horse.name} removido dos favoritos`, `${horse.name} removed from favorites`)
-        );
-      }
-      // Sync to backend (fire-and-forget)
-      if (user) {
-        fetch(`/api/favoritos?item_id=${id}&item_type=cavalo`, { method: "DELETE" }).catch(() => {
-          /* best-effort backend sync — localStorage is primary store */
-        });
-      }
+      setFavorites((prev) => {
+        const horse = prev.find((h) => h.id === id);
+        if (horse) {
+          showToast(
+            "info",
+            tr(`${horse.name} removido dos favoritos`, `${horse.name} removed from favorites`)
+          );
+        }
+        // Sync to backend (fire-and-forget)
+        if (user) {
+          fetch(`/api/favoritos?item_id=${id}&item_type=cavalo`, { method: "DELETE" }).catch(() => {});
+        }
+        return prev.filter((h) => h.id !== id);
+      });
     },
-    [favorites, showToast, language, user]
+    [showToast, tr, user]
   );
 
   const clearFavorites = useCallback(() => {

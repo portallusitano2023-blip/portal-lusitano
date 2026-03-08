@@ -60,32 +60,36 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
 
   const addToWishlist = useCallback(
     (item: WishlistItem) => {
-      if (wishlist.some((i) => i.id === item.id)) return;
-      setWishlist((prev) => [...prev, item]);
-      showToast(
-        "success",
-        language === "pt"
-          ? `${item.title} adicionado aos favoritos`
-          : `${item.title} added to wishlist`
-      );
+      setWishlist((prev) => {
+        if (prev.some((i) => i.id === item.id)) return prev;
+        showToast(
+          "success",
+          language === "pt"
+            ? `${item.title} adicionado aos favoritos`
+            : `${item.title} added to wishlist`
+        );
+        return [...prev, item];
+      });
     },
-    [wishlist, showToast, language]
+    [showToast, language]
   );
 
   const removeFromWishlist = useCallback(
     (id: string) => {
-      const item = wishlist.find((i) => i.id === id);
-      setWishlist((prev) => prev.filter((i) => i.id !== id));
-      if (item) {
-        showToast(
-          "info",
-          language === "pt"
-            ? `${item.title} removido dos favoritos`
-            : `${item.title} removed from wishlist`
-        );
-      }
+      setWishlist((prev) => {
+        const item = prev.find((i) => i.id === id);
+        if (item) {
+          showToast(
+            "info",
+            language === "pt"
+              ? `${item.title} removido dos favoritos`
+              : `${item.title} removed from wishlist`
+          );
+        }
+        return prev.filter((i) => i.id !== id);
+      });
     },
-    [wishlist, showToast, language]
+    [showToast, language]
   );
 
   const clearWishlist = useCallback(() => {

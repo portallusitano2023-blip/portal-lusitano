@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { getProduct } from "@/lib/shopify";
 import ProductDisplay from "@/components/ProductDisplay";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -7,6 +8,8 @@ import { ArrowLeft } from "lucide-react";
 import sanitize from "sanitize-html";
 import { SITE_URL } from "@/lib/constants";
 import { ProductSchema } from "@/components/JsonLd";
+
+const getCachedProduct = cache((handle: string) => getProduct(handle));
 
 /** Sanitize Shopify product HTML — allow only safe formatting tags */
 function sanitizeHtml(html: string): string {
@@ -26,7 +29,7 @@ export async function generateMetadata({
   params: Promise<{ handle: string }>;
 }): Promise<Metadata> {
   const { handle } = await params;
-  const product = await getProduct(decodeURIComponent(handle));
+  const product = await getCachedProduct(decodeURIComponent(handle));
 
   if (!product) {
     return { title: "Produto não encontrado" };
@@ -56,7 +59,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   const resolvedParams = await params;
   const handle = decodeURIComponent(resolvedParams.handle);
 
-  const product = await getProduct(handle);
+  const product = await getCachedProduct(handle);
 
   if (!product) {
     return (

@@ -86,6 +86,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "cdn.sanity.io",
       },
+      {
+        protocol: "https",
+        hostname: "yrfcepsagtzkxwnnrztd.supabase.co",
+      },
     ],
     // Prefer modern formats for smaller payloads
     formats: ["image/avif", "image/webp"],

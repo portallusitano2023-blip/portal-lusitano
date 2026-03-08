@@ -42,13 +42,26 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === "dark" ? "light" : "dark";
-      localStorage.setItem("portal-lusitano-theme", next);
-      document.documentElement.classList.toggle("dark", next === "dark");
-      document.documentElement.classList.toggle("light", next === "light");
-      return next;
-    });
+    const apply = () => {
+      setTheme((prev) => {
+        const next = prev === "dark" ? "light" : "dark";
+        localStorage.setItem("portal-lusitano-theme", next);
+        document.documentElement.classList.toggle("dark", next === "dark");
+        document.documentElement.classList.toggle("light", next === "light");
+        return next;
+      });
+    };
+
+    // Use View Transitions API for animated theme switch (Chrome/Edge 111+)
+    if (
+      typeof document !== "undefined" &&
+      "startViewTransition" in document &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      (document as Document & { startViewTransition: (cb: () => void) => void }).startViewTransition(apply);
+    } else {
+      apply();
+    }
   }, []);
 
   const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme]);

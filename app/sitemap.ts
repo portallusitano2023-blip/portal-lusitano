@@ -158,102 +158,86 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   ];
 
-  // Buscar coudelarias dinâmicas
+  // Fetch all dynamic data in parallel
+  const [
+    coudelariasResult,
+    eventosResult,
+    cavalosResult,
+    linhagensResult,
+    cavaloSlugsResult,
+    articleSlugsResult,
+  ] = await Promise.allSettled([
+    supabase.from("coudelarias").select("slug, updated_at").eq("status", "active"),
+    supabase.from("eventos").select("slug, updated_at").eq("status", "active"),
+    supabase.from("cavalos_venda").select("id, updated_at").eq("status", "active"),
+    supabase.from("linhagens").select("slug, updated_at"),
+    fetchCavaloSlugs(),
+    fetchArticleSlugs(),
+  ]);
+
   let coudelariasPages: MetadataRoute.Sitemap = [];
-  try {
-    const { data: coudelarias } = await supabase
-      .from("coudelarias")
-      .select("slug, updated_at")
-      .eq("status", "active");
-
-    if (coudelarias) {
-      coudelariasPages = coudelarias.map((c) =>
-        withAlternates(`/directorio/${c.slug}`, {
-          lastModified: c.updated_at || currentDate,
-          changeFrequency: "weekly",
-          priority: 0.8,
-        })
-      );
-    }
-  } catch (error) {
-    logger.error("Erro ao buscar coudelarias para sitemap:", error);
+  if (coudelariasResult.status === "fulfilled" && coudelariasResult.value.data) {
+    coudelariasPages = coudelariasResult.value.data.map((c) =>
+      withAlternates(`/directorio/${c.slug}`, {
+        lastModified: c.updated_at || currentDate,
+        changeFrequency: "weekly",
+        priority: 0.8,
+      })
+    );
+  } else if (coudelariasResult.status === "rejected") {
+    logger.error("Erro ao buscar coudelarias para sitemap:", coudelariasResult.reason);
   }
 
-  // Buscar eventos dinâmicos
   let eventosPages: MetadataRoute.Sitemap = [];
-  try {
-    const { data: eventos } = await supabase
-      .from("eventos")
-      .select("slug, updated_at")
-      .eq("status", "active");
-
-    if (eventos) {
-      eventosPages = eventos.map((e) =>
-        withAlternates(`/eventos/${e.slug}`, {
-          lastModified: e.updated_at || currentDate,
-          changeFrequency: "weekly",
-          priority: 0.7,
-        })
-      );
-    }
-  } catch (error) {
-    logger.error("Erro ao buscar eventos para sitemap:", error);
+  if (eventosResult.status === "fulfilled" && eventosResult.value.data) {
+    eventosPages = eventosResult.value.data.map((e) =>
+      withAlternates(`/eventos/${e.slug}`, {
+        lastModified: e.updated_at || currentDate,
+        changeFrequency: "weekly",
+        priority: 0.7,
+      })
+    );
+  } else if (eventosResult.status === "rejected") {
+    logger.error("Erro ao buscar eventos para sitemap:", eventosResult.reason);
   }
 
-  // Buscar cavalos à venda
   let cavalosPages: MetadataRoute.Sitemap = [];
-  try {
-    const { data: cavalos } = await supabase
-      .from("cavalos_venda")
-      .select("id, updated_at")
-      .eq("status", "active");
-
-    if (cavalos) {
-      cavalosPages = cavalos.map((c) =>
-        withAlternates(`/comprar/${c.id}`, {
-          lastModified: c.updated_at || currentDate,
-          changeFrequency: "weekly",
-          priority: 0.7,
-        })
-      );
-    }
-  } catch (error) {
-    logger.error("Erro ao buscar cavalos para sitemap:", error);
+  if (cavalosResult.status === "fulfilled" && cavalosResult.value.data) {
+    cavalosPages = cavalosResult.value.data.map((c) =>
+      withAlternates(`/comprar/${c.id}`, {
+        lastModified: c.updated_at || currentDate,
+        changeFrequency: "weekly",
+        priority: 0.7,
+      })
+    );
+  } else if (cavalosResult.status === "rejected") {
+    logger.error("Erro ao buscar cavalos para sitemap:", cavalosResult.reason);
   }
 
-  // Buscar linhagens
   let linhagensPages: MetadataRoute.Sitemap = [];
-  try {
-    const { data: linhagens } = await supabase.from("linhagens").select("slug, updated_at");
-
-    if (linhagens) {
-      linhagensPages = linhagens.map((l) =>
-        withAlternates(`/linhagens/${l.slug}`, {
-          lastModified: l.updated_at || currentDate,
-          changeFrequency: "monthly",
-          priority: 0.6,
-        })
-      );
-    }
-  } catch (error) {
-    logger.error("Erro ao buscar linhagens para sitemap:", error);
+  if (linhagensResult.status === "fulfilled" && linhagensResult.value.data) {
+    linhagensPages = linhagensResult.value.data.map((l) =>
+      withAlternates(`/linhagens/${l.slug}`, {
+        lastModified: l.updated_at || currentDate,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      })
+    );
+  } else if (linhagensResult.status === "rejected") {
+    logger.error("Erro ao buscar linhagens para sitemap:", linhagensResult.reason);
   }
 
-  // Cavalos (dinâmico via Sanity)
   let cavalosDetailPages: MetadataRoute.Sitemap = [];
-  try {
-    const slugs = await fetchCavaloSlugs();
-    if (slugs && slugs.length > 0) {
-      cavalosDetailPages = slugs.map((c) =>
-        withAlternates(`/cavalo/${c.slug}`, {
-          lastModified: currentDate,
-          changeFrequency: "weekly",
-          priority: 0.7,
-        })
-      );
-    }
-  } catch (error) {
-    logger.error("Erro ao buscar cavalos para sitemap:", error);
+  if (cavaloSlugsResult.status === "fulfilled" && cavaloSlugsResult.value?.length) {
+    cavalosDetailPages = cavaloSlugsResult.value.map((c) =>
+      withAlternates(`/cavalo/${c.slug}`, {
+        lastModified: currentDate,
+        changeFrequency: "weekly",
+        priority: 0.7,
+      })
+    );
+  } else if (cavaloSlugsResult.status === "rejected") {
+    logger.error("Erro ao buscar cavalos para sitemap:", cavaloSlugsResult.reason);
   }
 
   // Artigos do jornal (dinâmico via Sanity, com datas reais de publicação)
@@ -270,26 +254,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   };
   const staticSlugs = Object.keys(localArticleDates);
 
-  try {
-    const slugs = await fetchArticleSlugs();
-    if (slugs && slugs.length > 0) {
-      journalArticles = slugs.map((s) =>
-        withAlternates(`/jornal/${s.slug}`, {
-          lastModified: s.publishedAt || localArticleDates[s.slug] || currentDate,
-          changeFrequency: "monthly",
-          priority: 0.7,
-        })
-      );
-    } else {
-      journalArticles = staticSlugs.map((slug) =>
-        withAlternates(`/jornal/${slug}`, {
-          lastModified: localArticleDates[slug],
-          changeFrequency: "monthly",
-          priority: 0.7,
-        })
-      );
-    }
-  } catch {
+  if (articleSlugsResult.status === "fulfilled" && articleSlugsResult.value?.length) {
+    journalArticles = articleSlugsResult.value.map((s) =>
+      withAlternates(`/jornal/${s.slug}`, {
+        lastModified: s.publishedAt || localArticleDates[s.slug] || currentDate,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      })
+    );
+  } else {
     journalArticles = staticSlugs.map((slug) =>
       withAlternates(`/jornal/${slug}`, {
         lastModified: localArticleDates[slug],

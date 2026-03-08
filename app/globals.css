@@ -1,28 +1,39 @@
 @import "tailwindcss";
 @import "./print.css";
 
+/* ===== LENIS SMOOTH SCROLL ===== */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ===== VIEW TRANSITIONS — THEME SWITCH ===== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+  animation-timing-function: ease-in-out;
+}
+::view-transition-old(root) {
+  animation-name: fade-out;
+}
+::view-transition-new(root) {
+  animation-name: fade-in;
+}
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes fade-in  { from { opacity: 0; } }
+
 /* ===== FONT FALLBACK METRICS =====
  * Reduces CLS during font swap by matching fallback metrics
  * to the actual web fonts (Playfair Display / Montserrat).
  * These adjustments ensure minimal layout shift when fonts load. */
-@font-face {
-  font-family: "Playfair Fallback";
-  src: local("Times New Roman");
-  ascent-override: 95%;
-  descent-override: 22%;
-  line-gap-override: 0%;
-  size-adjust: 110%;
-}
-
-@font-face {
-  font-family: "Montserrat Fallback";
-  src: local("Arial");
-  ascent-override: 84%;
-  descent-override: 22%;
-  line-gap-override: 0%;
-  size-adjust: 113%;
-}
-
 /* ===== THEME SYSTEM ===== */
 /* Dark mode (default) */
 :root,
@@ -953,8 +964,8 @@ html.light .leaflet-tooltip-portal::before {
 
 /* Expand underline left→right */
 @keyframes expandWidth {
-  from { width: 0; }
-  to   { width: 100%; }
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
 }
 
 /* Infinite ticker marquee */
@@ -1180,15 +1191,10 @@ html.light .leaflet-tooltip-portal::before {
 
 /* Card lift on hover */
 .card-premium {
-  transition:
-    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .card-premium:hover {
   transform: translateY(-4px);
-  box-shadow:
-    0 20px 40px -12px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(197, 160, 89, 0.1);
 }
 
 /* Marquee for testimonials/brands */

@@ -218,9 +218,7 @@ export default function BlurredProSection({
           opacity: isRevealing ? 0 : 1,
           transition: reducedMotion
             ? "none"
-            : isTransitioning
-              ? "backdrop-filter 0.8s cubic-bezier(0.25,0.46,0.45,0.94), background 0.6s ease, opacity 0.6s ease"
-              : "opacity 0.3s ease",
+            : "opacity 0.6s ease, background 0.6s ease",
           pointerEvents: "none",
         }}
       />
