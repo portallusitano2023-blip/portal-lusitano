@@ -351,30 +351,25 @@ export default function HomeContent({
           style={{ borderTop: "1px solid rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
         >
 
-          {/* ══ [A] LOJA — Produto ══════════════════════════════════════════ */}
-          {/* bg image: public/images/home/loja/bg.jpg (900×700px recomendado) */}
+          {/* ══ [A] LOJA ═════════════════════════════════════════════════════ */}
+          {/* bg image: public/images/home/loja/bg.jpg  — OR product image is used as bg */}
           <LocalizedLink
-            href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
-            className="group relative flex flex-col order-1 lg:order-1 overflow-hidden bg-[#050507]"
-            style={{ borderRight: "1px solid rgba(255,255,255,0.06)", minHeight: "560px" }}
+            href="/loja"
+            className="group relative flex flex-col order-1 lg:order-1 overflow-hidden bg-[#06060a]"
+            style={{ borderRight: "1px solid rgba(255,255,255,0.06)", minHeight: "400px" }}
           >
-            {/* Background image */}
+            {/* Background image — full-bleed, cap centred in upper portion */}
             <img
-              src="/images/home/loja/bg.jpg"
+              src={featuredProduct?.images[0]?.url ?? "/images/home/loja/bg.jpg"}
               alt=""
               aria-hidden
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 65%", opacity: 0.72 }}
             />
-            {/* Gradient overlay — light top, dark bottom for text */}
-            <div
-              className="absolute inset-0 z-[1] pointer-events-none"
-              style={{ background: "linear-gradient(to bottom, rgba(5,5,7,0.08) 0%, rgba(5,5,7,0.28) 45%, rgba(5,5,7,0.92) 100%)" }}
-              aria-hidden
-            />
+            {/* Dark vignette — only at bottom for text readability */}
+            <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(6,6,10,0.08) 0%, rgba(6,6,10,0.32) 50%, rgba(6,6,10,0.88) 100%)" }} aria-hidden />
 
             {/* Content */}
             <div className="relative z-[2] flex flex-col h-full">
-
               {/* Panel label */}
               <div
                 className="flex items-center justify-between px-6 py-4 flex-shrink-0"
@@ -394,65 +389,31 @@ export default function HomeContent({
                 </span>
               </div>
 
-              {/* Product image — floating centred over the background */}
-              <div className="flex-1 flex items-center justify-center py-6 px-8">
-                {featuredProduct?.images[0]?.url ? (
-                  <div className="relative w-full" style={{ maxWidth: "260px", aspectRatio: "1/1" }}>
-                    {/* Soft dark halo behind product */}
-                    <div
-                      className="absolute inset-0 pointer-events-none"
-                      style={{ background: "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(5,5,7,0.55) 0%, transparent 75%)" }}
-                      aria-hidden
-                    />
-                    <Image
-                      src={featuredProduct.images[0].url}
-                      alt={featuredProduct.title}
-                      fill
-                      sizes="(max-width: 1024px) 60vw, 20vw"
-                      className="object-contain group-hover:scale-[1.06] transition-transform duration-700 ease-out"
-                      quality={85}
-                      priority
-                    />
-                  </div>
-                ) : (
-                  <ShoppingBag size={56} className="text-white/10" />
-                )}
-              </div>
-
-              {/* Info zone */}
-              <div className="px-6 pb-7">
-                <div
-                  className="w-full mb-5"
-                  style={{ height: "1px", background: "linear-gradient(90deg, rgba(197,160,89,0.6) 0%, rgba(197,160,89,0.1) 100%)" }}
-                />
-                <p className="text-[7px] uppercase tracking-[0.65em] mb-3" style={{ color: "rgba(197,160,89,0.5)" }}>
-                  {tr("Produto em Destaque", "Featured Product", "Producto Destacado")}
+              {/* Main content */}
+              <div className="flex-1 flex flex-col justify-center px-7 py-10">
+                <p className="text-[8px] uppercase tracking-[0.55em] text-[var(--gold)]/65 mb-4 font-medium">
+                  {tr("Artesanal · Edição Limitada", "Handcrafted · Limited Edition", "Artesanal · Edición Limitada")}
                 </p>
-                <h3
-                  className="font-serif text-white leading-[1.08] mb-6"
-                  style={{ fontSize: "clamp(1.3rem, 3.5vw, 2rem)" }}
+                <h2
+                  className="font-serif text-white leading-tight mb-4"
+                  style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)" }}
                 >
-                  {featuredProduct?.title ?? tr("Colecção Portal", "Portal Collection", "Colección Portal")}
-                </h3>
-                <div className="flex items-end justify-between gap-4">
-                  {featuredProduct?.priceRange ? (
-                    <div className="flex-shrink-0">
-                      <p className="text-[7px] uppercase tracking-[0.35em] mb-1.5" style={{ color: "rgba(255,255,255,0.22)" }}>
-                        {tr("Preço", "Price", "Precio")}
-                      </p>
-                      <p className="font-serif text-[var(--gold)] tabular-nums leading-none" style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.1rem)" }}>
-                        {Number(featuredProduct.priceRange.minVariantPrice.amount).toFixed(2)}
-                        <span className="font-sans font-light ml-1.5" style={{ fontSize: "0.55em", verticalAlign: "0.2em" }}>€</span>
-                      </p>
-                    </div>
-                  ) : null}
-                  <div className="flex items-center gap-2.5 bg-[var(--gold)] text-black px-6 py-3.5 text-[9px] uppercase tracking-[0.28em] font-bold flex-shrink-0 group-hover:bg-[var(--gold-hover)] group-hover:shadow-[0_0_32px_rgba(197,160,89,0.4)] transition-all duration-300">
-                    <ShoppingBag size={11} strokeWidth={2.5} />
-                    {tr("Comprar", "Buy now", "Comprar")}
-                  </div>
+                  {tr("Compra na", "Shop the", "Compra en")}
+                  <br />
+                  <span style={{ color: "var(--gold)" }}>{tr("Nossa Loja.", "Our Store.", "Nuestra Tienda.")}</span>
+                </h2>
+                <p className="text-[13px] text-white/55 mb-8 leading-relaxed max-w-[320px]">
+                  {tr(
+                    "Produtos artesanais portugueses. Qualidade premium, edição limitada.",
+                    "Portuguese handcrafted products. Premium quality, limited edition.",
+                    "Productos artesanales portugueses. Calidad premium, edición limitada."
+                  )}
+                </p>
+                <div className="inline-flex items-center gap-3 bg-[var(--gold)] text-black px-7 py-4 text-[10px] uppercase tracking-[0.25em] font-bold group-hover:bg-[var(--gold-hover)] transition-colors duration-200 w-fit shadow-[0_4px_30px_rgba(197,160,89,0.2)]">
+                  {tr("Ver Colecção", "View Collection", "Ver Colección")}
+                  <ArrowRight size={12} aria-hidden />
                 </div>
               </div>
-
             </div>
           </LocalizedLink>
 
