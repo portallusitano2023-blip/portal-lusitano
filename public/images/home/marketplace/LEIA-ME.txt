@@ -1,0 +1,1 @@
+# Coloca aqui a imagem de fundo do painel Marketplace. Nome: bg.jpg (recomendado: 900x700px, fotografia de cavalo lusitano)

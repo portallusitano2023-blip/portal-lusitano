@@ -204,27 +204,6 @@ export default function HomeContent({
     [tr]
   );
 
-  const buyerDemands = useMemo(
-    () => [
-      {
-        type: tr("Garanhão · Dressage", "Stallion · Dressage", "Semental · Dressage"),
-        detail: tr("Lisboa · Até €35.000", "Lisbon · Up to €35,000", "Lisboa · Hasta €35.000"),
-        time: tr("há 1h", "1h ago", "hace 1h"),
-      },
-      {
-        type: tr("Égua · Linhagem Alter", "Mare · Alter Line", "Yegua · Línea Alter"),
-        detail: tr("Porto · Até €22.000", "Porto · Up to €22,000", "Oporto · Hasta €22.000"),
-        time: tr("há 3h", "3h ago", "hace 3h"),
-      },
-      {
-        type: tr("Jovem · 4–7 anos", "Young · 4–7 yrs", "Joven · 4–7 años"),
-        detail: tr("Alentejo · Até €18.000", "Alentejo · Up to €18,000", "Alentejo · Hasta €18.000"),
-        time: tr("há 6h", "6h ago", "hace 6h"),
-      },
-    ],
-    [tr]
-  );
-
   return (
     <>
       {/* ===== HERO — Full Screen with Parallax ===== */}
@@ -373,273 +352,242 @@ export default function HomeContent({
         >
 
           {/* ══ [A] LOJA — Produto ══════════════════════════════════════════ */}
+          {/* bg image: public/images/home/loja/bg.jpg (900×700px recomendado) */}
           <LocalizedLink
             href={featuredProduct?.handle ? `/loja/${featuredProduct.handle}` : "/loja"}
-            className="group flex flex-col order-1 lg:order-1"
-            style={{ borderRight: "1px solid rgba(255,255,255,0.06)", minHeight: "460px" }}
+            className="group relative flex flex-col order-1 lg:order-1 overflow-hidden bg-[#050507]"
+            style={{ borderRight: "1px solid rgba(255,255,255,0.06)", minHeight: "560px" }}
           >
-            {/* Panel label */}
+            {/* Background image */}
+            <img
+              src="/images/home/loja/bg.jpg"
+              alt=""
+              aria-hidden
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
+            />
+            {/* Gradient overlay — light top, dark bottom for text */}
             <div
-              className="flex items-center justify-between px-6 py-3.5 flex-shrink-0 bg-[#090909]"
-              style={{ borderBottom: "1px solid rgba(197,160,89,0.08)" }}
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="w-1 h-1 rounded-full bg-[var(--gold)]" />
-                <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--foreground-secondary)]">
-                  {tr("Loja", "Shop", "Tienda")}
-                </span>
-              </div>
-              <span
-                className="text-[7px] font-mono uppercase tracking-[0.35em] px-2 py-1"
-                style={{ color: "var(--gold)", border: "1px solid rgba(197,160,89,0.25)", background: "rgba(197,160,89,0.05)" }}
+              className="absolute inset-0 z-[1] pointer-events-none"
+              style={{ background: "linear-gradient(to bottom, rgba(5,5,7,0.08) 0%, rgba(5,5,7,0.28) 45%, rgba(5,5,7,0.92) 100%)" }}
+              aria-hidden
+            />
+
+            {/* Content */}
+            <div className="relative z-[2] flex flex-col h-full">
+
+              {/* Panel label */}
+              <div
+                className="flex items-center justify-between px-6 py-4 flex-shrink-0"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
               >
-                {tr("Nova Colecção", "New Collection", "Nueva Colección")}
-              </span>
-            </div>
-
-            {/* Product image — ivory/cream stage, full product visible */}
-            <div className="relative flex-1 flex items-center justify-center overflow-hidden" style={{ background: "#f0ebe1", minHeight: "260px" }}>
-              {featuredProduct?.images[0]?.url ? (
-                <Image
-                  src={featuredProduct.images[0].url}
-                  alt={featuredProduct.title}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 33vw"
-                  className="object-contain group-hover:scale-[1.04] transition-transform duration-700"
-                  style={{ padding: "28px" }}
-                  quality={85}
-                  priority
-                />
-              ) : (
-                <ShoppingBag size={56} className="text-[#b0a08080]" />
-              )}
-              {/* Corner brackets */}
-              <div className="absolute top-4 left-4 w-5 h-5 border-t border-l border-[#C5A059]/35 pointer-events-none" />
-              <div className="absolute top-4 right-4 w-5 h-5 border-t border-r border-[#C5A059]/35 pointer-events-none" />
-              <div className="absolute bottom-4 left-4 w-5 h-5 border-b border-l border-[#C5A059]/35 pointer-events-none" />
-              <div className="absolute bottom-4 right-4 w-5 h-5 border-b border-r border-[#C5A059]/35 pointer-events-none" />
-            </div>
-
-            {/* Product info */}
-            <div
-              className="flex-shrink-0 px-5 pt-4 pb-5 bg-[#090909]"
-              style={{ borderTop: "1px solid rgba(197,160,89,0.12)" }}
-            >
-              {/* Label row */}
-              <div className="flex items-center gap-2 mb-2.5">
-                <div className="w-3 h-px bg-[var(--gold)]" />
-                <span className="text-[7px] uppercase tracking-[0.5em] text-[var(--gold)]/55">
-                  {tr("Produto em Destaque", "Featured Product", "Producto Destacado")}
+                <div className="flex items-center gap-2.5">
+                  <ShoppingBag size={12} className="text-[var(--gold)]" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--foreground-secondary)]">
+                    {tr("Loja", "Shop", "Tienda")}
+                  </span>
+                </div>
+                <span
+                  className="text-[7px] font-mono uppercase tracking-[0.3em] px-2 py-1"
+                  style={{ color: "var(--gold)", border: "1px solid rgba(197,160,89,0.22)", background: "rgba(5,5,7,0.55)" }}
+                >
+                  {tr("Nova Colecção", "New Collection", "Nueva Colección")}
                 </span>
               </div>
-              <h3 className="font-serif text-[clamp(1.05rem,4vw,1.3rem)] text-white leading-tight mb-4">
-                {featuredProduct?.title ?? tr("Colecção Portal", "Portal Collection", "Colección Portal")}
-              </h3>
-              {/* Price + CTA */}
-              <div className="flex items-center justify-between gap-3">
-                {featuredProduct?.priceRange ? (
-                  <p className="text-xl font-serif text-[var(--gold)] tabular-nums flex-shrink-0">
-                    {Number(featuredProduct.priceRange.minVariantPrice.amount).toFixed(2)} €
-                  </p>
-                ) : null}
-                <div className="flex items-center gap-2 bg-[var(--gold)] text-black px-4 py-2.5 text-[8.5px] uppercase tracking-[0.22em] font-bold group-hover:bg-[var(--gold-hover)] transition-colors duration-200 flex-shrink-0 ml-auto">
-                  <ShoppingBag size={10} strokeWidth={2.5} />
-                  {tr("Comprar", "Buy now", "Comprar")}
+
+              {/* Product image — floating centred over the background */}
+              <div className="flex-1 flex items-center justify-center py-6 px-8">
+                {featuredProduct?.images[0]?.url ? (
+                  <div className="relative w-full" style={{ maxWidth: "260px", aspectRatio: "1/1" }}>
+                    {/* Soft dark halo behind product */}
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(5,5,7,0.55) 0%, transparent 75%)" }}
+                      aria-hidden
+                    />
+                    <Image
+                      src={featuredProduct.images[0].url}
+                      alt={featuredProduct.title}
+                      fill
+                      sizes="(max-width: 1024px) 60vw, 20vw"
+                      className="object-contain group-hover:scale-[1.06] transition-transform duration-700 ease-out"
+                      quality={85}
+                      priority
+                    />
+                  </div>
+                ) : (
+                  <ShoppingBag size={56} className="text-white/10" />
+                )}
+              </div>
+
+              {/* Info zone */}
+              <div className="px-6 pb-7">
+                <div
+                  className="w-full mb-5"
+                  style={{ height: "1px", background: "linear-gradient(90deg, rgba(197,160,89,0.6) 0%, rgba(197,160,89,0.1) 100%)" }}
+                />
+                <p className="text-[7px] uppercase tracking-[0.65em] mb-3" style={{ color: "rgba(197,160,89,0.5)" }}>
+                  {tr("Produto em Destaque", "Featured Product", "Producto Destacado")}
+                </p>
+                <h3
+                  className="font-serif text-white leading-[1.08] mb-6"
+                  style={{ fontSize: "clamp(1.3rem, 3.5vw, 2rem)" }}
+                >
+                  {featuredProduct?.title ?? tr("Colecção Portal", "Portal Collection", "Colección Portal")}
+                </h3>
+                <div className="flex items-end justify-between gap-4">
+                  {featuredProduct?.priceRange ? (
+                    <div className="flex-shrink-0">
+                      <p className="text-[7px] uppercase tracking-[0.35em] mb-1.5" style={{ color: "rgba(255,255,255,0.22)" }}>
+                        {tr("Preço", "Price", "Precio")}
+                      </p>
+                      <p className="font-serif text-[var(--gold)] tabular-nums leading-none" style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.1rem)" }}>
+                        {Number(featuredProduct.priceRange.minVariantPrice.amount).toFixed(2)}
+                        <span className="font-sans font-light ml-1.5" style={{ fontSize: "0.55em", verticalAlign: "0.2em" }}>€</span>
+                      </p>
+                    </div>
+                  ) : null}
+                  <div className="flex items-center gap-2.5 bg-[var(--gold)] text-black px-6 py-3.5 text-[9px] uppercase tracking-[0.28em] font-bold flex-shrink-0 group-hover:bg-[var(--gold-hover)] group-hover:shadow-[0_0_32px_rgba(197,160,89,0.4)] transition-all duration-300">
+                    <ShoppingBag size={11} strokeWidth={2.5} />
+                    {tr("Comprar", "Buy now", "Comprar")}
+                  </div>
                 </div>
               </div>
+
             </div>
           </LocalizedLink>
 
           {/* ══ [B] MARKETPLACE — Vender Cavalo ════════════════════════════ */}
+          {/* bg image: public/images/home/marketplace/bg.jpg (900×700px recomendado) */}
           <div
-            className="flex flex-col order-2 lg:order-2"
-            style={{ borderRight: "1px solid rgba(255,255,255,0.06)" }}
+            className="relative flex flex-col order-2 lg:order-2 overflow-hidden bg-[#06060a]"
+            style={{ borderRight: "1px solid rgba(255,255,255,0.06)", minHeight: "400px" }}
           >
-            {/* Panel label */}
-            <div
-              className="flex items-center justify-between px-6 py-4 flex-shrink-0"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              <div className="flex items-center gap-2.5">
-                <Crown size={13} className="text-[var(--gold)]" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[var(--foreground-secondary)]">
-                  Marketplace
+            {/* Background image */}
+            <img
+              src="/images/home/marketplace/bg.jpg"
+              alt=""
+              aria-hidden
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
+            />
+            {/* Dark vignette — only at bottom for text readability */}
+            <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(6,6,10,0.08) 0%, rgba(6,6,10,0.32) 50%, rgba(6,6,10,0.88) 100%)" }} aria-hidden />
+
+            {/* Content */}
+            <div className="relative z-[2] flex flex-col h-full">
+              {/* Panel label */}
+              <div
+                className="flex items-center justify-between px-6 py-4 flex-shrink-0"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Crown size={12} className="text-[var(--gold)]" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--foreground-secondary)]">
+                    Marketplace
+                  </span>
+                </div>
+                <span className="flex items-center gap-1.5 text-[7px] font-mono uppercase tracking-[0.25em]" style={{ color: "#ef4444" }}>
+                  <span
+                    className="w-[5px] h-[5px] rounded-full flex-shrink-0"
+                    style={{ background: "#ef4444", animation: "pulse-scale 2s ease-in-out infinite" }}
+                    aria-hidden
+                  />
+                  {tr("Activo", "Live", "Activo")}
                 </span>
               </div>
-              <span className="flex items-center gap-1.5 text-[8px] font-mono uppercase tracking-[0.25em]" style={{ color: "#ef4444" }}>
-                <span
-                  className="w-[6px] h-[6px] rounded-full flex-shrink-0"
-                  style={{ background: "#ef4444", animation: "pulse-scale 2s ease-in-out infinite" }}
-                  aria-hidden
-                />
-                {tr("Activo", "Live", "Activo")}
-              </span>
-            </div>
 
-            {/* Main content */}
-            <div className="flex-1 flex flex-col justify-between p-6 sm:p-8 lg:p-10">
-
-              {/* Headline */}
-              <div className="mb-8">
-                <p className="text-[10px] uppercase tracking-[0.45em] text-[var(--gold)]/60 mb-5 font-medium">
+              {/* Main content */}
+              <div className="flex-1 flex flex-col justify-center px-7 py-10">
+                <p className="text-[8px] uppercase tracking-[0.55em] text-[var(--gold)]/65 mb-4 font-medium">
                   {tr("Vender o seu Cavalo", "Sell Your Horse", "Vender su Caballo")}
                 </p>
                 <h2
-                  className="font-serif text-[var(--foreground)] leading-[0.9] mb-5"
-                  style={{ fontSize: "clamp(2.2rem, 4vw, 4rem)" }}
+                  className="font-serif text-white leading-tight mb-4"
+                  style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)" }}
                 >
-                  {tr("Compradores", "Qualified", "Compradores")}
+                  {tr("Vende o teu", "Sell your", "Vende tu")}
                   <br />
-                  {tr("qualificados,", "buyers,", "calificados,")}
-                  <br />
-                  <span style={{ color: "var(--gold)" }}>{tr("a aguardar.", "waiting.", "esperando.")}</span>
+                  <span style={{ color: "var(--gold)" }}>{tr("Cavalo.", "Horse.", "Caballo.")}</span>
                 </h2>
-                <p className="text-sm text-[var(--foreground-muted)] leading-relaxed max-w-[340px]">
+                <p className="text-[13px] text-white/55 mb-8 leading-relaxed max-w-[320px]">
                   {tr(
-                    "Rede exclusiva de compradores verificados. Sem comissão sobre a transacção.",
-                    "Exclusive network of verified buyers. Zero sales commission.",
-                    "Red exclusiva de compradores verificados. Sin comisión sobre la venta."
+                    "Sem comissão. Compradores verificados. Publicado em menos de 5 minutos.",
+                    "No commission. Verified buyers. Live in under 5 minutes.",
+                    "Sin comisión. Compradores verificados. Publicado en menos de 5 minutos."
                   )}
                 </p>
-              </div>
-
-              {/* Buyer demand feed */}
-              <div className="mb-8 space-y-2">
-                <p className="text-[9px] font-semibold uppercase tracking-[0.4em] text-[var(--foreground-muted)]/50 mb-3">
-                  {tr("Procura activa", "Active demand", "Demanda activa")}
-                </p>
-                {buyerDemands.map((demand, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3 px-4 py-3"
-                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
-                  >
-                    <span
-                      className="w-[6px] h-[6px] rounded-full bg-[var(--gold)] flex-shrink-0"
-                      style={{ animation: `pulse-opacity ${1.8 + i * 0.5}s ease-in-out infinite` }}
-                      aria-hidden
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[12px] text-[var(--foreground)] font-medium truncate">{demand.type}</p>
-                      <p className="text-[10px] text-[var(--gold)]/55 font-mono">{demand.detail}</p>
-                    </div>
-                    <span className="text-[9px] text-[var(--foreground-muted)]/35 font-mono flex-shrink-0">{demand.time}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* CTA */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <LocalizedLink
                   href="/vender-cavalo"
-                  className="ripple-btn shimmer-gold inline-flex items-center gap-3 bg-[var(--gold)] text-black px-7 py-4 text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[var(--gold-hover)] transition-colors duration-200 shadow-[0_0_50px_rgba(197,160,89,0.18)]"
+                  className="inline-flex items-center gap-3 bg-[var(--gold)] text-black px-7 py-4 text-[10px] uppercase tracking-[0.25em] font-bold hover:bg-[var(--gold-hover)] transition-colors duration-200 w-fit shadow-[0_4px_30px_rgba(197,160,89,0.2)]"
                 >
-                  {tr("Anunciar o meu Cavalo", "List My Horse", "Anunciar mi Caballo")}
-                  <ArrowRight size={13} aria-hidden />
+                  {tr("Anunciar Agora", "List Now", "Anunciar Ahora")}
+                  <ArrowRight size={12} aria-hidden />
                 </LocalizedLink>
-                <p className="text-[9px] text-[var(--foreground-muted)]/45 uppercase tracking-[0.2em]">
-                  {tr("Publicado em &lt; 5 min", "Live in &lt; 5 min", "Publicado en &lt; 5 min")}
-                </p>
               </div>
             </div>
           </div>
 
-          {/* ══ [C] PRO SUITE — Ferramentas ════════════════════════════════ */}
+          {/* ══ [C] FERRAMENTAS ══════════════════════════════════════════════ */}
+          {/* bg image: public/images/home/ferramentas/bg.jpg (900×700px recomendado) */}
           <LocalizedLink
-            href="/precos"
-            className="group flex flex-col order-3 bg-[#060608]"
+            href="/ferramentas"
+            className="group relative flex flex-col order-3 overflow-hidden bg-[#06060a]"
             style={{ minHeight: "400px" }}
           >
-            {/* Panel label */}
-            <div
-              className="flex items-center justify-between px-6 py-4 flex-shrink-0"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              <div className="flex items-center gap-2.5">
-                <Zap size={13} className="text-[var(--gold)]" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[var(--foreground-secondary)]">
-                  Pro Suite
-                </span>
-              </div>
-              <span
-                className="text-[8px] font-mono uppercase tracking-[0.25em] px-2 py-1"
-                style={{ color: "#22c55e", border: "1px solid rgba(34,197,94,0.25)", background: "rgba(34,197,94,0.06)" }}
-              >
-                {tr("Activo", "Active", "Activo")}
-              </span>
-            </div>
+            {/* Background image */}
+            <img
+              src="/images/home/ferramentas/bg.jpg"
+              alt=""
+              aria-hidden
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
+            />
+            {/* Dark vignette — only at bottom for text readability */}
+            <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(6,6,10,0.08) 0%, rgba(6,6,10,0.32) 50%, rgba(6,6,10,0.88) 100%)" }} aria-hidden />
 
             {/* Content */}
-            <div className="flex-1 flex flex-col p-6 sm:p-8">
-              <p className="text-[10px] uppercase tracking-[0.45em] text-[var(--gold)]/60 mb-5 font-medium">
-                {tr("Ferramentas Exclusivas", "Exclusive Tools", "Herramientas Exclusivas")}
-              </p>
-              <h3
-                className="font-serif text-[var(--foreground)] leading-tight mb-2"
-                style={{ fontSize: "clamp(1.5rem, 3vw, 2.4rem)" }}
+            <div className="relative z-[2] flex flex-col h-full">
+              {/* Panel label */}
+              <div
+                className="flex items-center justify-between px-6 py-4 flex-shrink-0"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
               >
-                {tr("Tome decisões", "Make decisions", "Tome decisiones")}
-                <br />
-                <span style={{ color: "var(--gold)" }}>{tr("com dados reais.", "with real data.", "con datos reales.")}</span>
-              </h3>
-              <p className="text-sm text-[var(--foreground-muted)] mb-8 leading-relaxed">
-                {tr("1.200+ utilizadores activos", "1,200+ active users", "1.200+ usuarios activos")}
-              </p>
-
-              {/* Tools — bigger, clearer */}
-              <div className="flex-1 space-y-3 mb-8">
-                {[
-                  {
-                    icon: "₪",
-                    label: tr("Calculadora de Valor", "Market Value Calculator", "Calculadora de Valor"),
-                    desc: tr("Preço justo de mercado", "Fair market price", "Precio justo de mercado"),
-                  },
-                  {
-                    icon: "⇄",
-                    label: tr("Comparador de Cavalos", "Horse Comparator", "Comparador de Caballos"),
-                    desc: tr("Compare lado a lado", "Compare side by side", "Compara lado a lado"),
-                  },
-                  {
-                    icon: "◎",
-                    label: tr("Perfil Genético", "Genetic Profile", "Perfil Genético"),
-                    desc: tr("Análise de linhagem", "Lineage analysis", "Análisis de linaje"),
-                  },
-                ].map((tool, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-4 px-4 py-3.5 group-hover:border-[var(--gold)]/10 transition-colors duration-300"
-                    style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.05)" }}
-                  >
-                    <span
-                      className="text-base flex-shrink-0 w-8 text-center leading-none"
-                      style={{ color: "var(--gold)", opacity: 0.7 }}
-                      aria-hidden
-                    >
-                      {tool.icon}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[12px] font-semibold text-[var(--foreground)] truncate">{tool.label}</p>
-                      <p className="text-[10px] text-[var(--foreground-muted)]/55 mt-0.5">{tool.desc}</p>
-                    </div>
-                    <span
-                      className="text-[7px] uppercase tracking-[0.2em] px-1.5 py-0.5 flex-shrink-0"
-                      style={{ color: "#22c55e", border: "1px solid rgba(34,197,94,0.2)" }}
-                    >
-                      ON
-                    </span>
-                  </div>
-                ))}
+                <div className="flex items-center gap-2.5">
+                  <Zap size={12} className="text-[var(--gold)]" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--foreground-secondary)]">
+                    {tr("Ferramentas", "Tools", "Herramientas")}
+                  </span>
+                </div>
+                <span
+                  className="text-[7px] font-mono uppercase tracking-[0.3em] px-2 py-1"
+                  style={{ color: "#22c55e", border: "1px solid rgba(34,197,94,0.25)", background: "rgba(34,197,94,0.06)" }}
+                >
+                  Pro
+                </span>
               </div>
 
-              {/* CTA */}
-              <div
-                className="flex items-center justify-between pt-5"
-                style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
-              >
-                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[var(--gold)]">
-                  {tr("Ver Planos", "View Plans", "Ver Planes")}
-                </span>
-                <ArrowRight size={14} className="text-[var(--gold)] group-hover:translate-x-1 transition-transform duration-300" aria-hidden />
+              {/* Main content */}
+              <div className="flex-1 flex flex-col justify-center px-7 py-10">
+                <p className="text-[8px] uppercase tracking-[0.55em] text-[var(--gold)]/65 mb-4 font-medium">
+                  {tr("Ferramentas Premium", "Premium Tools", "Herramientas Premium")}
+                </p>
+                <h3
+                  className="font-serif text-white leading-tight mb-4"
+                  style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)" }}
+                >
+                  {tr("Decisões mais", "Make smarter", "Decisiones más")}
+                  <br />
+                  <span style={{ color: "var(--gold)" }}>{tr("inteligentes.", "decisions.", "inteligentes.")}</span>
+                </h3>
+                <p className="text-[13px] text-white/55 mb-8 leading-relaxed max-w-[320px]">
+                  {tr(
+                    "Calculadora de valor · Comparador · Análise de perfil.",
+                    "Value calculator · Comparator · Profile analysis.",
+                    "Calculadora de valor · Comparador · Análisis de perfil."
+                  )}
+                </p>
+                <div className="inline-flex items-center gap-3 border border-[var(--gold)]/50 text-[var(--gold)] px-7 py-4 text-[10px] uppercase tracking-[0.25em] font-bold group-hover:bg-[var(--gold)] group-hover:text-black group-hover:border-[var(--gold)] transition-all duration-300 w-fit">
+                  {tr("Explorar Ferramentas", "Explore Tools", "Explorar Herramientas")}
+                  <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" aria-hidden />
+                </div>
               </div>
             </div>
           </LocalizedLink>
