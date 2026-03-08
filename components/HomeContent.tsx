@@ -363,6 +363,7 @@ export default function HomeContent({
               src={featuredProduct?.images[0]?.url ?? "/images/home/loja/bg.jpg"}
               alt=""
               aria-hidden
+              loading="lazy"
               style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 65%", opacity: 0.72 }}
             />
             {/* Dark vignette — only at bottom for text readability */}
@@ -428,6 +429,7 @@ export default function HomeContent({
               src="/images/home/marketplace/bg.jpg"
               alt=""
               aria-hidden
+              loading="lazy"
               style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
             />
             {/* Dark vignette — only at bottom for text readability */}
@@ -499,6 +501,7 @@ export default function HomeContent({
               src="/images/home/ferramentas/bg.jpg"
               alt=""
               aria-hidden
+              loading="lazy"
               style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
             />
             {/* Dark vignette — only at bottom for text readability */}
@@ -1272,7 +1275,7 @@ export default function HomeContent({
                     sizes="100vw"
                     className="object-contain"
                     style={{ padding: "28px 24px 56px" }}
-                    priority
+                    loading="lazy"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -1375,7 +1378,7 @@ export default function HomeContent({
                     sizes="62vw"
                     className="object-contain transition-transform duration-1000 ease-out group-hover:scale-[1.03]"
                     style={{ objectPosition: "center 40%", padding: "32px 40px" }}
-                    priority
+                    loading="lazy"
                     quality={90}
                   />
                 ) : (

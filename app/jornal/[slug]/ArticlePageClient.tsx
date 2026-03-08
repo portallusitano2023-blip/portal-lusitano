@@ -395,7 +395,15 @@ export default function ArticlePageClient({
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setShowBackToTop(window.scrollY > 500);
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setShowBackToTop(window.scrollY > 500);
+        ticking = false;
+      });
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
