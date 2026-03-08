@@ -289,7 +289,7 @@ export default function HomeContent({
             <MagneticButton strength={0.2}>
               <LocalizedLink
                 href="/vender-cavalo"
-                className="ripple-btn inline-flex items-center gap-2 sm:gap-0 bg-[var(--gold)] sm:bg-black/20 text-black sm:text-[var(--foreground)] border border-[var(--gold)] sm:border-[var(--gold)]/30 sm:backdrop-blur-md shimmer-gold px-10 py-4 text-[11px] uppercase tracking-[0.25em] hover:bg-[var(--gold)] hover:text-black transition-all duration-500 font-semibold sm:font-normal w-full sm:w-auto justify-center"
+                className="ripple-btn inline-flex items-center gap-2 sm:gap-0 bg-[var(--gold)] sm:bg-black/20 text-black sm:text-[var(--foreground)] border border-[var(--gold)] sm:border-[var(--gold)]/30 sm:backdrop-blur-md shimmer-gold px-10 py-4 text-[11px] uppercase tracking-[0.25em] hover:bg-[var(--gold)] hover:text-black transition-[background-color,color] duration-500 font-semibold sm:font-normal w-full sm:w-auto justify-center"
               >
                 {tr("Vender Cavalo", "Sell a Horse", "Vender Caballo")}
               </LocalizedLink>
@@ -297,7 +297,7 @@ export default function HomeContent({
             <MagneticButton strength={0.15}>
               <LocalizedLink
                 href="/comprar"
-                className="inline-flex items-center justify-center w-full sm:w-auto px-10 py-4 text-[11px] uppercase tracking-[0.25em] text-[var(--foreground-secondary)] border border-[var(--foreground-muted)]/40 sm:border-transparent hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-all duration-300 line-draw"
+                className="inline-flex items-center justify-center w-full sm:w-auto px-10 py-4 text-[11px] uppercase tracking-[0.25em] text-[var(--foreground-secondary)] border border-[var(--foreground-muted)]/40 sm:border-transparent hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-[color,border-color] duration-300 line-draw"
               >
                 {tr("Comprar Cavalo", "Buy a Horse", "Comprar Caballo")} →
               </LocalizedLink>
@@ -548,7 +548,7 @@ export default function HomeContent({
                     "Calculadora de valor · Comparador · Análisis de perfil."
                   )}
                 </p>
-                <div className="inline-flex items-center gap-3 border border-[var(--gold)]/50 text-[var(--gold)] px-7 py-4 text-[10px] uppercase tracking-[0.25em] font-bold group-hover:bg-[var(--gold)] group-hover:text-black group-hover:border-[var(--gold)] transition-all duration-300 w-fit">
+                <div className="inline-flex items-center gap-3 border border-[var(--gold)]/50 text-[var(--gold)] px-7 py-4 text-[10px] uppercase tracking-[0.25em] font-bold group-hover:bg-[var(--gold)] group-hover:text-black group-hover:border-[var(--gold)] transition-[background-color,color,border-color] duration-300 w-fit">
                   {tr("Explorar Ferramentas", "Explore Tools", "Explorar Herramientas")}
                   <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" aria-hidden />
                 </div>
@@ -611,7 +611,7 @@ export default function HomeContent({
             {pillars.map((pillar, i) => (
               <RevealOnScroll key={pillar.title} delay={i * 120} variant="fade-up">
                 <div
-                  className="relative group overflow-hidden flex flex-col p-7 lg:p-9 transition-all duration-500"
+                  className="relative group overflow-hidden flex flex-col p-7 lg:p-9"
                   style={{ background: "var(--background)" }}
                 >
                   {/* Hover fill */}
@@ -619,7 +619,7 @@ export default function HomeContent({
                   {/* Top gold accent */}
                   <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.5) 0%, rgba(197,160,89,0.1) 60%, transparent 100%)" }} />
                   {/* Bottom hover sweep */}
-                  <div className="absolute bottom-0 left-0 h-[1px] w-0 group-hover:w-full transition-all duration-500 bg-[var(--gold)]/30 pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 h-[1px] w-0 group-hover:w-full transition-[width] duration-500 bg-[var(--gold)]/30 pointer-events-none" />
 
                   {/* Ordinal */}
                   <p className="text-[9px] uppercase tracking-[0.4em] text-[var(--gold)]/35 mb-4 font-medium relative z-10">
@@ -628,7 +628,7 @@ export default function HomeContent({
 
                   {/* Icon — square geometric */}
                   <div
-                    className="w-11 h-11 flex items-center justify-center mb-6 relative z-10 glow-pulse group-hover:border-[var(--gold)]/40 transition-all duration-300"
+                    className="w-11 h-11 flex items-center justify-center mb-6 relative z-10 glow-pulse group-hover:border-[var(--gold)]/40 transition-[border-color] duration-300"
                     style={{ border: "1px solid rgba(197,160,89,0.2)", background: "rgba(197,160,89,0.05)" }}
                   >
                     <pillar.icon size={19} className="text-[var(--gold)]" />
@@ -763,7 +763,7 @@ export default function HomeContent({
           <div className="hidden sm:grid sm:grid-cols-3 gap-6 px-6">
             {testimonials.map((item, i) => (
               <RevealOnScroll key={item.name} delay={i * 120} variant="fade-up">
-                <div className="bg-[var(--background-card)] border border-[var(--border)] p-6 sm:p-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-all duration-500">
+                <div className="bg-[var(--background-card)] border border-[var(--border)] p-6 sm:p-8 relative overflow-hidden hover:border-[var(--gold)]/20 transition-[border-color] duration-500">
                   {/* Top accent */}
                   <div
                     className="absolute top-0 left-0 right-0 h-[1px]"
@@ -856,13 +856,13 @@ export default function HomeContent({
                 <RevealOnScroll key={prof.id} delay={i * 80} variant="fade-up">
                   <LocalizedLink href={`/profissionais/${prof.slug}`} className="group block h-full">
                     <div
-                      className="relative h-full overflow-hidden flex flex-col p-6 transition-all duration-500"
+                      className="relative h-full overflow-hidden flex flex-col p-6"
                       style={{ background: "var(--background)" }}
                     >
                       {/* Top gold sweep */}
-                      <div className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full bg-[var(--gold)]/40 transition-all duration-500 pointer-events-none" />
+                      <div className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full bg-[var(--gold)]/40 transition-[width] duration-500 pointer-events-none" />
                       {/* Left gold bar */}
-                      <div className="absolute left-0 top-0 w-[2px] h-0 group-hover:h-full bg-[var(--gold)]/50 transition-all duration-500 pointer-events-none" />
+                      <div className="absolute left-0 top-0 w-[2px] h-0 group-hover:h-full bg-[var(--gold)]/50 transition-[height] duration-500 pointer-events-none" />
 
                       {/* Avatar */}
                       <div className="flex items-start justify-between mb-5">
@@ -937,7 +937,7 @@ export default function HomeContent({
 
                       {/* Explore line */}
                       <div className="flex items-center gap-2 mt-4 text-[9px] uppercase tracking-[0.3em] text-[var(--gold)]/25 group-hover:text-[var(--gold)] transition-colors duration-300">
-                        <div className="h-[1px] w-3 group-hover:w-6 bg-current transition-all duration-400" />
+                        <div className="h-[1px] w-3 group-hover:w-6 bg-current transition-[width] duration-400" />
                         {tr("Ver perfil", "View profile", "Ver perfil")}
                       </div>
                     </div>
@@ -1072,7 +1072,7 @@ export default function HomeContent({
               <MagneticButton strength={0.15}>
                 <LocalizedLink
                   href="/vender-cavalo"
-                  className="ripple-btn shimmer-gold inline-flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-[11px] uppercase tracking-[0.15em] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-300 whitespace-nowrap"
+                  className="ripple-btn shimmer-gold inline-flex items-center gap-3 border border-[var(--border-hover)] text-[var(--foreground)] px-8 py-4 text-[11px] uppercase tracking-[0.15em] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-[background-color,color,border-color] duration-300 whitespace-nowrap"
                 >
                   {tr("Anunciar Cavalo", "List Your Horse", "Anunciar Caballo")}
                   <ArrowRight size={14} aria-hidden="true" />
@@ -1243,7 +1243,7 @@ export default function HomeContent({
                   <MagneticButton>
                     <LocalizedLink
                       href="/ebook-gratis"
-                      className="ripple-btn inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-all duration-300 shadow-[0_0_30px_rgba(197,160,89,0.15)]"
+                      className="ripple-btn inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-[background,box-shadow] duration-300 shadow-[0_0_30px_rgba(197,160,89,0.15)]"
                     >
                       <Gift size={16} />
                       {tr("Descarregar Grátis", "Download Free", "Descargar Gratis")}
@@ -1459,7 +1459,7 @@ export default function HomeContent({
                 <MagneticButton strength={0.2}>
                   <LocalizedLink
                     href={`/loja/${featuredProduct.handle}`}
-                    className="ripple-btn group inline-flex items-center justify-center gap-3 bg-[var(--gold)] text-black px-10 py-5 text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-white transition-all duration-300 shadow-[0_16px_50px_rgba(197,160,89,0.35)] w-full max-w-[280px]"
+                    className="ripple-btn group inline-flex items-center justify-center gap-3 bg-[var(--gold)] text-black px-10 py-5 text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-white transition-[background-color] duration-300 shadow-[0_16px_50px_rgba(197,160,89,0.35)] w-full max-w-[280px]"
                   >
                     <ShoppingBag size={14} strokeWidth={2.5} />
                     {tr("Comprar Agora", "Buy Now", "Comprar Ahora")}
@@ -1497,7 +1497,7 @@ export default function HomeContent({
                 <MagneticButton>
                   <LocalizedLink
                     href="/loja"
-                    className="ripple-btn shimmer-gold inline-block border border-[var(--border-hover)] px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-all duration-500"
+                    className="ripple-btn shimmer-gold inline-block border border-[var(--border-hover)] px-10 py-4 text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)] hover:bg-[var(--gold)] hover:text-black hover:border-[var(--gold)] transition-[background-color,color,border-color] duration-500"
                   >
                     {t.home.cta}
                   </LocalizedLink>

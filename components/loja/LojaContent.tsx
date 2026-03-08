@@ -66,7 +66,7 @@ function ProductCard({
               alt={product.title}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 33vw"
-              className={`object-cover transition-all duration-700 ease-out ${
+              className={`object-cover transition-[opacity] duration-700 ease-out ${
                 secondaryImageUrl
                   ? "group-hover:opacity-0"
                   : "group-hover:scale-[1.06]"
@@ -291,7 +291,7 @@ function FeaturedPanel({ product }: { product: ProductListing }) {
         {/* CTA */}
         <LocalizedLink
           href={`/loja/${product.handle}`}
-          className="inline-flex items-center gap-3 self-start px-8 py-3.5 text-[8px] uppercase tracking-[0.4em] font-bold bg-[var(--gold)] text-black hover:bg-white transition-all duration-300 active:scale-[0.97] touch-manipulation group/cta focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--gold)]"
+          className="inline-flex items-center gap-3 self-start px-8 py-3.5 text-[8px] uppercase tracking-[0.4em] font-bold bg-[var(--gold)] text-black hover:bg-white transition-[background-color,transform] duration-300 active:scale-[0.97] touch-manipulation group/cta focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--gold)]"
         >
           <ShoppingBag size={11} aria-hidden />
           Descobrir Peça
@@ -493,7 +493,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                   .getElementById("colecao")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
-              className="inline-flex items-center gap-3 group/cta border text-[7.5px] font-mono uppercase tracking-[0.45em] px-7 py-3.5 text-white/45 border-white/12 hover:border-[var(--gold)]/45 hover:text-[var(--gold)] transition-all duration-400 focus-visible:outline-none focus-visible:border-[var(--gold)]"
+              className="inline-flex items-center gap-3 group/cta border text-[7.5px] font-mono uppercase tracking-[0.45em] px-7 py-3.5 text-white/45 border-white/12 hover:border-[var(--gold)]/45 hover:text-[var(--gold)] transition-[border-color,color] duration-400 focus-visible:outline-none focus-visible:border-[var(--gold)]"
               aria-label={isSingle ? "Descobrir peça" : "Ver colecção"}
             >
               {isSingle ? "Descobrir Peça" : "Ver Colecção"}
@@ -647,7 +647,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
 
               <LocalizedLink
                 href={`/loja/${featured.handle}`}
-                className="inline-flex items-center gap-3 self-start px-8 py-3.5 text-[8px] uppercase tracking-[0.4em] font-bold bg-[var(--gold)] text-black hover:bg-white transition-all duration-300 active:scale-[0.97] touch-manipulation group/cta focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--gold)]"
+                className="inline-flex items-center gap-3 self-start px-8 py-3.5 text-[8px] uppercase tracking-[0.4em] font-bold bg-[var(--gold)] text-black hover:bg-white transition-[background-color,transform] duration-300 active:scale-[0.97] touch-manipulation group/cta focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--gold)]"
               >
                 <ShoppingBag size={11} aria-hidden />
                 Descobrir Peça
@@ -694,7 +694,7 @@ export default function LojaContent({ products }: { products: ProductListing[] }
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Pesquisar..."
                   aria-label="Pesquisar produtos"
-                  className="bg-transparent pl-7 pr-6 py-1.5 text-[7px] uppercase tracking-[0.25em] text-[var(--foreground-secondary)] placeholder:text-[var(--foreground-muted)]/28 outline-none w-28 sm:w-40 transition-all"
+                  className="bg-transparent pl-7 pr-6 py-1.5 text-[7px] uppercase tracking-[0.25em] text-[var(--foreground-secondary)] placeholder:text-[var(--foreground-muted)]/28 outline-none w-28 sm:w-40 transition-[border-color]"
                   style={{ border: "1px solid rgba(197,160,89,0.11)" }}
                   onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(197,160,89,0.35)")}
                   onBlur={(e) =>  (e.currentTarget.style.borderColor = "rgba(197,160,89,0.11)")}

@@ -82,7 +82,7 @@ function ArticleCard({
   return (
     <LocalizedLink href={`/jornal/${article.slug.current}`}>
       <article
-        className="group cursor-pointer h-full flex flex-col bg-[var(--background)] border border-[var(--border)] hover:border-[var(--gold)]/30 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_0_0_1px_rgba(197,160,89,0.1)]"
+        className="group cursor-pointer h-full flex flex-col bg-[var(--background)] border border-[var(--border)] hover:border-[var(--gold)]/30 transition-[border-color,transform,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_0_0_1px_rgba(197,160,89,0.1)]"
       >
         {/* Image */}
         <div className="w-full aspect-[16/10] overflow-hidden relative bg-[var(--background-secondary)]">
@@ -92,7 +92,7 @@ function ArticleCard({
               alt={article.image?.alt || article.title}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700"
+              className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.04] transition-[opacity,transform] duration-700"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -143,7 +143,7 @@ function ArticleCard({
 
           {/* Gold hairline */}
           <div
-            className="h-px mb-4 w-0 group-hover:w-full transition-all duration-500"
+            className="h-px mb-4 w-0 group-hover:w-full transition-[width] duration-500"
             style={{ background: "linear-gradient(to right, rgba(197,160,89,0.6), transparent)" }}
           />
 
@@ -162,7 +162,7 @@ function ArticleCard({
             <span className="inline-flex items-center gap-1.5 text-[var(--gold)] text-[9px] uppercase tracking-[0.25em] relative">
               {readLabel}
               <ArrowRight size={11} className="group-hover:translate-x-1 transition-transform duration-300" />
-              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-all duration-500" />
+              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-[width] duration-500" />
             </span>
           </div>
         </div>
@@ -189,7 +189,7 @@ function ArticleListItem({
   return (
     <LocalizedLink href={`/jornal/${article.slug.current}`}>
       <article
-        className="group cursor-pointer flex items-center gap-0 border-b border-[var(--border)] hover:border-b-[var(--gold)]/20 transition-all duration-300"
+        className="group cursor-pointer flex items-center gap-0 border-b border-[var(--border)] hover:border-b-[var(--gold)]/20 transition-[border-color,transform,box-shadow] duration-300"
       >
         {/* Large editorial number */}
         <span className="hidden sm:flex items-center justify-center w-16 lg:w-20 flex-shrink-0 self-stretch border-r border-[var(--border)] group-hover:border-[var(--gold)]/20 transition-colors">
@@ -206,7 +206,7 @@ function ArticleListItem({
               alt={article.image?.alt || article.title}
               fill
               sizes="144px"
-              className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+              className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-[opacity,transform] duration-500"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -245,7 +245,7 @@ function ArticleListItem({
         {/* Arrow */}
         <ArrowRight
           size={13}
-          className="text-[var(--foreground-muted)]/30 group-hover:text-[var(--gold)] self-center flex-shrink-0 mr-5 transition-all duration-300 group-hover:translate-x-1"
+          className="text-[var(--foreground-muted)]/30 group-hover:text-[var(--gold)] self-center flex-shrink-0 mr-5 transition-[color,transform] duration-300 group-hover:translate-x-1"
         />
       </article>
     </LocalizedLink>
@@ -461,7 +461,7 @@ export default function JornalListClient({
                   src={getArticleImageUrl(featuredArticle)}
                   alt={featuredArticle.image?.alt || featuredArticle.title}
                   fill
-                  className="object-cover opacity-75 group-hover:opacity-95 group-hover:scale-[1.03] transition-all duration-700"
+                  className="object-cover opacity-75 group-hover:opacity-95 group-hover:scale-[1.03] transition-[opacity,transform] duration-700"
                   sizes="100vw"
                   priority
                 />
@@ -495,7 +495,7 @@ export default function JornalListClient({
             </div>
 
             {/* Desktop — editorial split */}
-            <div className="group hidden md:grid md:grid-cols-[3fr_2fr] overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/30 transition-all duration-500 hover:shadow-[0_0_60px_rgba(197,160,89,0.06)]">
+            <div className="group hidden md:grid md:grid-cols-[3fr_2fr] overflow-hidden border border-[var(--border)] hover:border-[var(--gold)]/30 transition-[border-color,transform,box-shadow] duration-500 hover:shadow-[0_0_60px_rgba(197,160,89,0.06)]">
               {/* Image */}
               <div className="relative aspect-[3/2] overflow-hidden bg-[var(--background-secondary)]">
                 {getArticleImageUrl(featuredArticle) && (
@@ -503,7 +503,7 @@ export default function JornalListClient({
                     src={getArticleImageUrl(featuredArticle)}
                     alt={featuredArticle.image?.alt || featuredArticle.title}
                     fill
-                    className="object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700"
+                    className="object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.03] transition-[opacity,transform] duration-700"
                     sizes="60vw"
                     priority
                   />
@@ -573,10 +573,10 @@ export default function JornalListClient({
                       {formatArticleDate(featuredArticle.publishedAt, language)}
                     </p>
                   )}
-                  <span className="inline-flex items-center gap-2 text-[var(--gold)] text-[9px] uppercase tracking-[0.3em] group-hover:gap-3 transition-all duration-300 relative">
+                  <span className="inline-flex items-center gap-2 text-[var(--gold)] text-[9px] uppercase tracking-[0.3em] group-hover:gap-3 transition-[gap] duration-300 relative">
                     {t.journal.read_study}
                     <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-all duration-500" />
+                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-[width] duration-500" />
                   </span>
                 </div>
               </div>
@@ -622,7 +622,7 @@ export default function JornalListClient({
             {/* All chip */}
             <button
               onClick={() => { setSelectedCategory(null); setSelectedType(null); }}
-              className={`flex-shrink-0 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] transition-all border ${
+              className={`flex-shrink-0 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] transition-[background-color,color,border-color] border ${
                 !selectedCategory && !selectedType
                   ? "bg-[var(--gold)] text-black font-bold border-[var(--gold)]"
                   : "bg-transparent text-[var(--foreground-muted)] hover:text-[var(--foreground)] border-[var(--border)] hover:border-[var(--gold)]/30"
@@ -636,7 +636,7 @@ export default function JornalListClient({
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat === selectedCategory ? null : cat)}
-                className={`flex-shrink-0 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] transition-all border ${
+                className={`flex-shrink-0 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] transition-[background-color,color,border-color] border ${
                   selectedCategory === cat
                     ? "bg-[var(--gold)] text-black font-bold border-[var(--gold)]"
                     : "bg-transparent text-[var(--foreground-muted)] hover:text-[var(--foreground)] border-[var(--border)] hover:border-[var(--gold)]/30"
@@ -651,7 +651,7 @@ export default function JornalListClient({
             {/* Article type chips */}
             <button
               onClick={() => setSelectedType(selectedType === "article" ? null : "article")}
-              className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] transition-all border ${
+              className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] transition-[background-color,color,border-color] border ${
                 selectedType === "article"
                   ? "bg-[var(--gold)] text-black font-bold border-[var(--gold)]"
                   : "bg-transparent text-[var(--foreground-muted)] hover:text-[var(--foreground)] border-[var(--border)] hover:border-[var(--gold)]/30"
@@ -662,7 +662,7 @@ export default function JornalListClient({
             </button>
             <button
               onClick={() => setSelectedType(selectedType === "post" ? null : "post")}
-              className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] transition-all border ${
+              className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 text-[9px] uppercase tracking-[0.2em] transition-[background-color,color,border-color] border ${
                 selectedType === "post"
                   ? "bg-[var(--gold)] text-black font-bold border-[var(--gold)]"
                   : "bg-transparent text-[var(--foreground-muted)] hover:text-[var(--foreground)] border-[var(--border)] hover:border-[var(--gold)]/30"
@@ -676,7 +676,7 @@ export default function JornalListClient({
             {hasFilters && (
               <button
                 onClick={() => { setSearchQuery(""); setSelectedCategory(null); setSelectedType(null); }}
-                className="flex-shrink-0 flex items-center gap-1 px-2 py-1 text-[9px] uppercase tracking-[0.15em] text-[var(--foreground-muted)] hover:text-red-400 border border-transparent hover:border-red-400/30 transition-all"
+                className="flex-shrink-0 flex items-center gap-1 px-2 py-1 text-[9px] uppercase tracking-[0.15em] text-[var(--foreground-muted)] hover:text-red-400 border border-transparent hover:border-red-400/30 transition-[color,border-color]"
               >
                 <X size={10} />
                 {clearFiltersLabel}
@@ -763,7 +763,7 @@ export default function JornalListClient({
                 style={{ animationDelay: "0.1s" }}
               >
                 <LocalizedLink href={`/jornal/${gridArticles[0].slug.current}`}>
-                  <article className="group cursor-pointer h-full flex flex-col bg-[var(--background)] border border-[var(--border)] hover:border-[var(--gold)]/30 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_0_0_1px_rgba(197,160,89,0.1)]">
+                  <article className="group cursor-pointer h-full flex flex-col bg-[var(--background)] border border-[var(--border)] hover:border-[var(--gold)]/30 transition-[border-color,transform,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_0_0_1px_rgba(197,160,89,0.1)]">
                     <div className="w-full aspect-[4/3] overflow-hidden relative bg-[var(--background-secondary)]">
                       {getArticleImageUrl(gridArticles[0]) ? (
                         <Image
@@ -771,7 +771,7 @@ export default function JornalListClient({
                           alt={gridArticles[0].image?.alt || gridArticles[0].title}
                           fill
                           sizes="(max-width: 768px) 100vw, 60vw"
-                          className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700"
+                          className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.04] transition-[opacity,transform] duration-700"
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -799,7 +799,7 @@ export default function JornalListClient({
                           {gridArticles[0].estimatedReadTime}&thinsp;{minReadLabel}
                         </span>
                       </div>
-                      <div className="h-px mb-4 w-0 group-hover:w-full transition-all duration-500" style={{ background: "linear-gradient(to right, rgba(197,160,89,0.6), transparent)" }} />
+                      <div className="h-px mb-4 w-0 group-hover:w-full transition-[width] duration-500" style={{ background: "linear-gradient(to right, rgba(197,160,89,0.6), transparent)" }} />
                       <h3 className="text-xl sm:text-2xl font-serif text-[var(--foreground)] mb-2.5 group-hover:text-[var(--gold)] transition-colors duration-300 leading-snug">
                         {gridArticles[0].title}
                       </h3>
@@ -809,7 +809,7 @@ export default function JornalListClient({
                       <span className="inline-flex items-center gap-1.5 text-[var(--gold)] text-[9px] uppercase tracking-[0.25em] relative">
                         {readLabel}
                         <ArrowRight size={11} className="group-hover:translate-x-1 transition-transform duration-300" />
-                        <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-all duration-500" />
+                        <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[var(--gold)] group-hover:w-full transition-[width] duration-500" />
                       </span>
                     </div>
                   </article>
@@ -825,7 +825,7 @@ export default function JornalListClient({
                     style={{ animationDelay: `${(i + 1) * 0.08 + 0.1}s` }}
                   >
                     <LocalizedLink href={`/jornal/${article.slug.current}`}>
-                      <article className="group cursor-pointer h-full flex flex-row bg-[var(--background)] border border-[var(--border)] hover:border-[var(--gold)]/30 transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
+                      <article className="group cursor-pointer h-full flex flex-row bg-[var(--background)] border border-[var(--border)] hover:border-[var(--gold)]/30 transition-[border-color,transform,box-shadow] duration-500 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
                         <div className="w-32 sm:w-36 flex-shrink-0 overflow-hidden relative bg-[var(--background-secondary)]">
                           {getArticleImageUrl(article) ? (
                             <Image
@@ -833,7 +833,7 @@ export default function JornalListClient({
                               alt={article.image?.alt || article.title}
                               fill
                               sizes="144px"
-                              className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                              className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-[opacity,transform] duration-500"
                             />
                           ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
@@ -851,7 +851,7 @@ export default function JornalListClient({
                               {article.category}
                             </span>
                           )}
-                          <div className="h-px mb-2.5 w-0 group-hover:w-8 transition-all duration-400" style={{ background: "rgba(197,160,89,0.5)" }} />
+                          <div className="h-px mb-2.5 w-0 group-hover:w-8 transition-[width] duration-400" style={{ background: "rgba(197,160,89,0.5)" }} />
                           <h3 className="text-sm font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors duration-300 leading-snug line-clamp-2 mb-1.5">
                             {article.title}
                           </h3>
