@@ -502,6 +502,12 @@ html {
   }
 }
 
+/* Suppress native WebKit search cancel button — we provide our own */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 /* Prevent horizontal scroll on mobile */
 html,
 body {
