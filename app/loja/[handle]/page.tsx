@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { cache } from "react";
 import { getProduct } from "@/lib/shopify";
 import ProductDisplay from "@/components/ProductDisplay";
-import Breadcrumb from "@/components/Breadcrumb";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import sanitize from "sanitize-html";
 import { SITE_URL } from "@/lib/constants";
 import { ProductSchema } from "@/components/JsonLd";
@@ -98,20 +96,6 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
       />
       <main className="bg-[var(--background)] min-h-screen pt-40 pb-20 selection:bg-[var(--gold)] selection:text-black">
         <div className="max-w-7xl mx-auto px-6">
-          <Link
-            href="/loja"
-            className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] transition-colors text-sm mb-4"
-          >
-            <ArrowLeft size={16} />
-            <span>Voltar à Colecção</span>
-          </Link>
-          <Breadcrumb
-            items={[
-              { label: "Home", href: "/" },
-              { label: "Loja", href: "/loja" },
-              { label: product.title },
-            ]}
-          />
 
           {/* Componente Principal */}
           <ProductDisplay product={product} />

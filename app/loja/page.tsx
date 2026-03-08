@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { getProducts } from "@/lib/shopify";
 import LojaContent from "@/components/loja/LojaContent";
 import { generatePageMetadata } from "@/lib/seo";
@@ -28,6 +29,11 @@ export default async function LojaPage() {
   const products = allProducts.filter(
     (p) => !HIDDEN_PRODUCTS.has(p.handle ?? "") && !p.title.toLowerCase().includes("crest case")
   );
+
+  // Single product: redirect straight to the product page
+  if (products.length === 1 && products[0].handle) {
+    redirect(`/loja/${products[0].handle}`);
+  }
 
   return <LojaContent products={products} />;
 }
