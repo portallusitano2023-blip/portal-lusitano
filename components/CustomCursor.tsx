@@ -19,7 +19,7 @@ export default function CustomCursor() {
   const visible = useRef(false);
   const raf = useRef(0);
   const moving = useRef(false);
-  const idleTimer = useRef<ReturnType<typeof setTimeout>>();
+  const idleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const TRAIL_COUNT = 3;
 

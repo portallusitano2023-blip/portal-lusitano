@@ -360,12 +360,13 @@ export default function HomeContent({
             style={{ borderRight: "1px solid rgba(255,255,255,0.06)", minHeight: "400px" }}
           >
             {/* Background image — full-bleed, cap centred in upper portion */}
-            <img
+            <Image
               src={featuredProduct?.images[0]?.url ?? "/images/home/loja/bg.jpg"}
               alt=""
               aria-hidden
-              loading="lazy"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 65%", opacity: 0.72 }}
+              fill
+              sizes="(min-width: 1024px) 33vw, 100vw"
+              style={{ objectFit: "cover", objectPosition: "center 65%", opacity: 0.72 }}
             />
             {/* Dark vignette — only at bottom for text readability */}
             <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(6,6,10,0.08) 0%, rgba(6,6,10,0.32) 50%, rgba(6,6,10,0.88) 100%)" }} aria-hidden />
@@ -426,12 +427,13 @@ export default function HomeContent({
             style={{ borderRight: "1px solid rgba(255,255,255,0.06)", minHeight: "400px" }}
           >
             {/* Background image */}
-            <img
+            <Image
               src="/images/home/marketplace/bg.jpg"
               alt=""
               aria-hidden
-              loading="lazy"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
+              fill
+              sizes="(min-width: 1024px) 33vw, 100vw"
+              style={{ objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
             />
             {/* Dark vignette — only at bottom for text readability */}
             <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(6,6,10,0.08) 0%, rgba(6,6,10,0.32) 50%, rgba(6,6,10,0.88) 100%)" }} aria-hidden />
@@ -498,12 +500,13 @@ export default function HomeContent({
             style={{ minHeight: "400px" }}
           >
             {/* Background image */}
-            <img
+            <Image
               src="/images/home/ferramentas/bg.jpg"
               alt=""
               aria-hidden
-              loading="lazy"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
+              fill
+              sizes="(min-width: 1024px) 33vw, 100vw"
+              style={{ objectFit: "cover", objectPosition: "center", opacity: 0.72 }}
             />
             {/* Dark vignette — only at bottom for text readability */}
             <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(6,6,10,0.08) 0%, rgba(6,6,10,0.32) 50%, rgba(6,6,10,0.88) 100%)" }} aria-hidden />
