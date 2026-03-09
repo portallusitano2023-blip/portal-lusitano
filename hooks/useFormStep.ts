@@ -119,7 +119,9 @@ export function useFormStep(options: UseFormStepOptions): FormStepContextValue &
       };
       localStorage.setItem(persistKey, JSON.stringify(draft));
     } catch (err) {
-      console.error("[useFormStep] Draft save failed:", err);
+      if (process.env.NODE_ENV === "development") {
+        console.error("[useFormStep] Draft save failed:", err);
+      }
     }
   };
 
@@ -142,7 +144,9 @@ export function useFormStep(options: UseFormStepOptions): FormStepContextValue &
         setHasDraft(false);
         setDraftDate(null);
       } catch (err) {
-        console.error("[useFormStep] Draft clear failed:", err);
+        if (process.env.NODE_ENV === "development") {
+          console.error("[useFormStep] Draft clear failed:", err);
+        }
       }
     }
   };

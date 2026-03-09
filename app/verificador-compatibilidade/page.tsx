@@ -364,6 +364,7 @@ export default function VerificadorCompatibilidadePage() {
             <button
               onClick={() => setError(null)}
               className="ml-auto text-red-400 hover:text-red-200"
+              aria-label={tr("Fechar", "Close", "Cerrar")}
             >
               &#10005;
             </button>

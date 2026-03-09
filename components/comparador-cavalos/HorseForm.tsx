@@ -101,6 +101,7 @@ export default function HorseForm({
             <button
               onClick={() => onRemove(c.id)}
               className="text-[var(--foreground-muted)] hover:text-red-400 transition-colors"
+              aria-label={tr("Remover cavalo", "Remove horse", "Eliminar caballo")}
             >
               <X size={18} />
             </button>

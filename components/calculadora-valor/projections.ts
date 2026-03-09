@@ -34,11 +34,12 @@ export interface InvestmentProjection {
 
 export function calcularProjecaoValor(
   valorActual: number,
-  idadeActual: number
+  idadeActual: number,
+  labels?: string[]
 ): InvestmentProjection[] {
   const currentFactor = getAgeFactor(idadeActual);
   const offsets = [0, 1, 2, 3, 5];
-  const labels = ["Agora", "+1 ano", "+2 anos", "+3 anos", "+5 anos"];
+  const effectiveLabels = labels ?? ["Agora", "+1 ano", "+2 anos", "+3 anos", "+5 anos"];
 
   return offsets.map((offset, i) => {
     const futureAge = idadeActual + offset;
@@ -46,7 +47,7 @@ export function calcularProjecaoValor(
     const ratio = currentFactor > 0 ? futureFactor / currentFactor : 1;
     return {
       year: offset,
-      label: labels[i],
+      label: effectiveLabels[i],
       value: Math.round(valorActual * ratio),
     };
   });
@@ -101,7 +102,9 @@ export interface TrainingROILevel {
 export function calcularTrainingROI(
   form: FormData,
   valorActual: number,
-  totalMultiplier: number
+  totalMultiplier: number,
+  locale?: string,
+  trMeses?: string
 ): TrainingROILevel[] {
   const currentIndex = TRAINING_ORDER.indexOf(form.treino);
   if (currentIndex === -1 || currentIndex >= TRAINING_ORDER.length - 1) return [];
@@ -136,9 +139,9 @@ export function calcularTrainingROI(
       estimatedValue,
       roi,
       costRange: transition
-        ? `€${transition.costMin.toLocaleString("pt-PT")} - €${transition.costMax.toLocaleString("pt-PT")}`
+        ? `€${transition.costMin.toLocaleString(locale ?? "pt-PT")} - €${transition.costMax.toLocaleString(locale ?? "pt-PT")}`
         : "",
-      duration: transition ? `${transition.months} meses` : "",
+      duration: transition ? `${transition.months} ${trMeses ?? "meses"}` : "",
       cumulativeCostMin,
       cumulativeCostMax,
     });

@@ -57,8 +57,8 @@ const ICON_MAP: Record<string, LucideIcon> = {
 // CURRENCY FORMATTER
 // ============================================
 
-function formatEUR(value: number): string {
-  return value.toLocaleString("pt-PT", {
+function formatEUR(value: number, locale?: string): string {
+  return value.toLocaleString(locale ?? "pt-PT", {
     style: "currency",
     currency: "EUR",
     minimumFractionDigits: 0,
@@ -80,6 +80,7 @@ interface DonutChartProps {
 function DonutChart({ categories, total, visible, idPrefix }: DonutChartProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const size = 220;
   const strokeWidth = 32;
   const radius = (size - strokeWidth) / 2;
@@ -166,7 +167,7 @@ function DonutChart({ categories, total, visible, idPrefix }: DonutChartProps) {
             transition: "opacity 0.5s ease-out 0.3s, transform 0.5s ease-out 0.3s",
           }}
         >
-          {formatEUR(total)}
+          {formatEUR(total, locale)}
         </span>
       </div>
     </div>
@@ -187,6 +188,7 @@ interface AnnualProjectionProps {
 function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const MONTHS_PT = [
     "Jan",
     "Fev",
@@ -306,7 +308,7 @@ function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionP
               fill="var(--foreground-muted)"
             >
               {line.value >= 1000
-                ? `${(line.value / 1000).toLocaleString("pt-PT", { maximumFractionDigits: 1 })}k`
+                ? `${(line.value / 1000).toLocaleString(locale, { maximumFractionDigits: 1 })}k`
                 : Math.round(line.value).toString()}
             </text>
           </g>
@@ -386,7 +388,7 @@ function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionP
               transition: "opacity 0.5s ease-out 1.2s",
             }}
           >
-            {formatEUR(annualTotal)}
+            {formatEUR(annualTotal, locale)}
           </text>
         )}
       </svg>
@@ -401,6 +403,7 @@ function AnnualProjection({ totalMonthly, visible, idPrefix }: AnnualProjectionP
 export default function BudgetPlannerTab({ categories, profileName }: BudgetPlannerTabProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [barsAnimated, setBarsAnimated] = useState(false);
@@ -469,7 +472,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
               {tr("Total Mensal", "Monthly Total", "Total Mensual")}
             </p>
             <p className="text-4xl font-serif font-bold text-[var(--foreground)]">
-              {formatEUR(totalMonthly)}
+              {formatEUR(totalMonthly, locale)}
             </p>
           </div>
 
@@ -487,7 +490,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
               {tr("Total Anual", "Annual Total", "Total Anual")}
             </p>
             <p className="text-4xl font-serif font-bold text-[var(--gold)]">
-              {formatEUR(totalAnnual)}
+              {formatEUR(totalAnnual, locale)}
             </p>
           </div>
         </div>
@@ -557,7 +560,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
                       {cat.label}
                     </span>
                     <span className="text-sm font-serif font-bold text-[var(--foreground)] tabular-nums whitespace-nowrap">
-                      {formatEUR(cat.monthly)}
+                      {formatEUR(cat.monthly, locale)}
                     </span>
                     <span className="text-xs text-[var(--foreground-muted)] tabular-nums w-12 text-right whitespace-nowrap">
                       {percentage}%
@@ -590,9 +593,9 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
         </h3>
         <p className="text-xs text-[var(--foreground-muted)] mb-6">
           {tr(
-            `Custo mensal fixo de ${formatEUR(totalMonthly)} com linha cumulativa ao longo do ano`,
-            `Fixed monthly cost of ${formatEUR(totalMonthly)} with cumulative line throughout the year`,
-            `Coste mensual fijo de ${formatEUR(totalMonthly)} con línea acumulativa a lo largo del año`
+            `Custo mensal fixo de ${formatEUR(totalMonthly, locale)} com linha cumulativa ao longo do ano`,
+            `Fixed monthly cost of ${formatEUR(totalMonthly, locale)} with cumulative line throughout the year`,
+            `Coste mensual fijo de ${formatEUR(totalMonthly, locale)} con línea acumulativa a lo largo del año`
           )}
         </p>
 
@@ -610,7 +613,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
               {tr("Custo/Dia", "Cost/Day", "Coste/Día")}
             </p>
             <p className="text-lg font-serif font-bold text-[var(--foreground)]">
-              {formatEUR(Math.round(totalAnnual / 365))}
+              {formatEUR(Math.round(totalAnnual / 365), locale)}
             </p>
           </div>
           <div className="text-center">
@@ -618,7 +621,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
               {tr("Custo/Semana", "Cost/Week", "Coste/Semana")}
             </p>
             <p className="text-lg font-serif font-bold text-[var(--foreground)]">
-              {formatEUR(Math.round(totalAnnual / 52))}
+              {formatEUR(Math.round(totalAnnual / 52), locale)}
             </p>
           </div>
           <div className="text-center">
@@ -626,7 +629,7 @@ export default function BudgetPlannerTab({ categories, profileName }: BudgetPlan
               {tr("Custo/Trimestre", "Cost/Quarter", "Coste/Trimestre")}
             </p>
             <p className="text-lg font-serif font-bold text-[var(--foreground)]">
-              {formatEUR(Math.round(totalAnnual / 4))}
+              {formatEUR(Math.round(totalAnnual / 4), locale)}
             </p>
           </div>
         </div>

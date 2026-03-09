@@ -120,7 +120,7 @@ export default function ComparadorCavalosPage() {
         if (age < 7 * 24 * 60 * 60 * 1000) {
           setHasDraft(true);
           setDraftDate(
-            new Date(savedAt).toLocaleDateString("pt-PT", {
+            new Date(savedAt).toLocaleDateString(language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT", {
               day: "numeric",
               month: "long",
               hour: "2-digit",
@@ -227,7 +227,7 @@ export default function ComparadorCavalosPage() {
   const adicionar = () => {
     if (cavalos.length >= 4) return;
     const id = String(Date.now());
-    setCavalos([...cavalos, criarCavalo(id, `Cavalo ${String.fromCharCode(65 + cavalos.length)}`)]);
+    setCavalos([...cavalos, criarCavalo(id, `${tr("Cavalo", "Horse", "Caballo")} ${String.fromCharCode(65 + cavalos.length)}`)]);
   };
 
   const remover = (id: string) => {
@@ -431,7 +431,7 @@ export default function ComparadorCavalosPage() {
                                   {tr("Vencedor", "Winner", "Ganador")}: {entry.vencedor}
                                 </span>
                                 <span className="text-[10px] text-[var(--foreground-muted)] shrink-0 ml-2">
-                                  {new Date(entry.timestamp).toLocaleDateString("pt-PT", {
+                                  {new Date(entry.timestamp).toLocaleDateString(language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT", {
                                     day: "numeric",
                                     month: "short",
                                     hour: "2-digit",

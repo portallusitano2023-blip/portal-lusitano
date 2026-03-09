@@ -17,8 +17,8 @@ interface Milestone {
   extra: number;
 }
 
-function formatEUR(value: number): string {
-  return value.toLocaleString("pt-PT", {
+function formatEUR(value: number, locale?: string): string {
+  return value.toLocaleString(locale ?? "pt-PT", {
     style: "currency",
     currency: "EUR",
     minimumFractionDigits: 0,
@@ -29,6 +29,7 @@ function formatEUR(value: number): string {
 export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   const baseMonthlyCost = useMemo(() => {
     if (result.profile === "competidor") return 1800;
@@ -196,7 +197,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
               {tr("Custo Base Mensal", "Base Monthly Cost", "Coste Base Mensual")}
             </p>
             <p className="text-2xl font-serif font-bold text-[var(--foreground)]">
-              {formatEUR(baseMonthlyCost)}
+              {formatEUR(baseMonthlyCost, locale)}
             </p>
           </div>
           <div className="text-center p-4 bg-[var(--background-secondary)]/50 border border-[var(--border)]">
@@ -204,7 +205,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
               {tr("Total 1.º Ano", "1st Year Total", "Total 1.er Año")}
             </p>
             <p className="text-2xl font-serif font-bold text-[var(--gold)]">
-              {formatEUR(totalYear)}
+              {formatEUR(totalYear, locale)}
             </p>
           </div>
         </div>
@@ -251,11 +252,11 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
                     </div>
                     <div className="text-right flex-shrink-0">
                       <p className="text-sm font-serif font-bold text-[var(--foreground)]">
-                        {formatEUR(milestone.milestoneCost)}
+                        {formatEUR(milestone.milestoneCost, locale)}
                       </p>
                       {milestone.extra > 0 && (
                         <p className="text-[10px] text-[var(--foreground-muted)]">
-                          (extra: {formatEUR(milestone.extra)})
+                          (extra: {formatEUR(milestone.extra, locale)})
                         </p>
                       )}
                     </div>
@@ -267,7 +268,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
                     <p className="text-xs text-[var(--foreground-muted)]">
                       {tr("Acumulado:", "Cumulative:", "Acumulado:")}{" "}
                       <span className="font-medium text-[var(--gold)]">
-                        {formatEUR(milestone.cumulative)}
+                        {formatEUR(milestone.cumulative, locale)}
                       </span>
                     </p>
                   </div>
@@ -342,7 +343,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
                 className="text-[10px] font-semibold"
                 fill="var(--gold)"
               >
-                {formatEUR(totalYear)}
+                {formatEUR(totalYear, locale)}
               </text>
             )}
           </svg>
