@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from "next/image";
 import LocalizedLink from "@/components/LocalizedLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { CONTACT_EMAIL } from "@/lib/constants";
-import { AnimateOnScroll } from "@/components/AnimateOnScroll";
+import RevealOnScroll from "@/components/ui/RevealOnScroll";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import {
   BookOpen,
   Shield,
@@ -26,17 +28,6 @@ import {
   Check,
   LucideIcon,
 } from "lucide-react";
-
-/* ─── Ornamental Separator ─────────────────────────────────────── */
-function OrnamentalSeparator() {
-  return (
-    <div className="flex items-center gap-4 max-w-5xl mx-auto px-4 sm:px-6 mb-10 sm:mb-28">
-      <div className="flex-1 h-px bg-[var(--border)]" />
-      <div className="w-1.5 h-1.5 rotate-45 bg-[var(--gold)]/40" />
-      <div className="flex-1 h-px bg-[var(--border)]" />
-    </div>
-  );
-}
 
 export default function SobreContent() {
   const { language } = useLanguage();
@@ -158,15 +149,17 @@ export default function SobreContent() {
   const stats = useMemo(
     () => [
       {
-        value: "15",
+        value: 15,
+        suffix: "+",
         label: tr("Cavalos documentados", "Documented horses", "Caballos documentados"),
       },
       {
-        value: "4",
+        value: 4,
+        suffix: "",
         label: tr("Ferramentas especializadas", "Specialist tools", "Herramientas especializadas"),
       },
-      { value: "3", label: tr("Línguas", "Languages", "Idiomas") },
-      { value: "2023", label: tr("Ano de fundação", "Founded", "Año de fundación") },
+      { value: 3, suffix: "", label: tr("Línguas", "Languages", "Idiomas") },
+      { value: 2023, suffix: "", label: tr("Ano de fundação", "Founded", "Año de fundación") },
     ],
     [tr]
   );
@@ -234,79 +227,281 @@ export default function SobreContent() {
   );
 
   return (
-    <main className="min-h-screen bg-[var(--background)] pt-20 sm:pt-32 pb-20">
-      {/* ===== HERO ===== */}
-      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-6 block">
-              {tr("Sobre Nós", "About Us", "Sobre Nosotros")}
+    <main className="min-h-screen bg-[var(--background)] overflow-x-hidden">
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          HERO — cinematic full-viewport with background image
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative flex items-center justify-center overflow-hidden"
+        style={{ minHeight: "100svh" }}
+      >
+        {/* Background image */}
+        <Image
+          src="/images/home/marketplace/bg.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-[center_40%]"
+          priority
+          aria-hidden
+        />
+
+        {/* Dark cinematic overlays */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.85) 100%)" }}
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 40%, rgba(0,0,0,0.4) 100%)" }}
+          aria-hidden
+        />
+
+        {/* Gold tech grid */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(197,160,89,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(197,160,89,0.02) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+          aria-hidden
+        />
+
+        {/* Scan lines */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(197,160,89,0.006) 2px, rgba(197,160,89,0.006) 4px)",
+          }}
+          aria-hidden
+        />
+
+        {/* Vignette */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%)" }}
+          aria-hidden
+        />
+
+        {/* Corner ornaments */}
+        <div className="absolute top-8 left-6 sm:left-10 lg:left-16 w-14 h-14 border-t border-l border-[var(--gold)]/15 pointer-events-none z-10" aria-hidden />
+        <div className="absolute top-8 right-6 sm:right-10 lg:right-16 w-14 h-14 border-t border-r border-[var(--gold)]/15 pointer-events-none hidden sm:block z-10" aria-hidden />
+        <div className="absolute bottom-8 left-6 sm:left-10 lg:left-16 w-14 h-14 border-b border-l border-[var(--gold)]/15 pointer-events-none hidden sm:block z-10" aria-hidden />
+        <div className="absolute bottom-8 right-6 sm:right-10 lg:right-16 w-14 h-14 border-b border-r border-[var(--gold)]/15 pointer-events-none hidden sm:block z-10" aria-hidden />
+
+        {/* Top bar */}
+        <div
+          className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-6 sm:px-10 lg:px-16"
+          style={{
+            paddingTop: "max(env(safe-area-inset-top), 2rem)",
+            opacity: 0,
+            animation: "fadeSlideIn 0.6s ease-out 0.1s forwards",
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-5 h-px" style={{ background: "rgba(197,160,89,0.5)" }} aria-hidden />
+            <span className="text-[6px] font-mono uppercase tracking-[0.7em] text-white/30">
+              Portal Lusitano
             </span>
+          </div>
+          <span className="text-[6px] font-mono uppercase tracking-[0.5em] text-white/20 hidden sm:block">
+            Est. MMXXIII · Portugal
+          </span>
+        </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif text-[var(--foreground)] mb-3 leading-[1.08]">
-              {tr("A Nossa", "Our", "Nuestra")}
-            </h1>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic text-[var(--gold)] mb-8 leading-[1.08]">
-              {tr("Missão", "Mission", "Misión")}
-            </h1>
-
-            <p className="text-lg sm:text-xl text-[var(--foreground-secondary)] leading-relaxed max-w-2xl mx-auto mb-10">
-              {tr(
-                "O Portal Lusitano nasceu para elevar o Cavalo Lusitano ao palco global. Unimos tecnologia, investigação e paixão equestre numa plataforma sem precedentes.",
-                "Portal Lusitano was born to elevate the Lusitano Horse to the global stage. We unite technology, research and equestrian passion in an unprecedented platform.",
-                "Portal Lusitano nació para elevar el Caballo Lusitano al escenario global. Unimos tecnología, investigación y pasión ecuestre en una plataforma sin precedentes."
-              )}
-            </p>
-
-            {/* Decorative golden line */}
-            <div className="flex items-center justify-center gap-3 mx-auto">
-              <div className="w-16 h-px bg-[var(--gold)]/30" />
-              <div className="w-1 h-1 rotate-45 bg-[var(--gold)]/50" />
-              <div className="w-px h-14 bg-[var(--gold)]/25" />
-              <div className="w-1 h-1 rotate-45 bg-[var(--gold)]/50" />
-              <div className="w-16 h-px bg-[var(--gold)]/30" />
+        {/* Content */}
+        <div
+          className="relative z-10 text-center px-6 sm:px-10 max-w-4xl mx-auto"
+          style={{ opacity: 0, animation: "fadeSlideIn 0.9s ease-out 0.2s forwards" }}
+        >
+          {/* Logo with glow */}
+          <div className="mb-10 flex justify-center relative">
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] pointer-events-none"
+              style={{ background: "radial-gradient(ellipse, rgba(197,160,89,0.08) 0%, transparent 60%)" }}
+              aria-hidden
+            />
+            <div className="relative w-[110px] h-[110px] sm:w-[140px] sm:h-[140px]">
+              <Image
+                src="/logo.webp"
+                alt="Portal Lusitano"
+                fill
+                sizes="140px"
+                className="object-contain drop-shadow-[0_0_40px_rgba(197,160,89,0.15)]"
+                priority
+              />
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ===== STATS BAR ===== */}
-      <section className="px-4 sm:px-6 border-y border-[var(--border)] py-10 sm:py-14">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
-            {stats.map((stat, i) => (
-              <AnimateOnScroll key={stat.label} delay={i * 80} className="text-center">
-                <p className="text-4xl sm:text-5xl font-serif text-[var(--gold)] mb-2">
-                  {stat.value}
-                </p>
-                <p className="text-xs uppercase tracking-[0.15em] text-[var(--foreground-muted)]">
-                  {stat.label}
-                </p>
-              </AnimateOnScroll>
-            ))}
+          {/* Label */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-12 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.55))" }} aria-hidden />
+            <span className="text-[8px] font-mono uppercase tracking-[0.7em] text-[var(--gold)]/70">
+              {tr("Sobre Nós", "About Us", "Sobre Nosotros")}
+            </span>
+            <div className="w-12 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.55))" }} aria-hidden />
+          </div>
+
+          {/* Title */}
+          <h1
+            className="font-serif text-white leading-[0.88] mb-3"
+            style={{ fontSize: "clamp(2.8rem, 7vw, 5.5rem)", letterSpacing: "-0.01em" }}
+          >
+            {tr("A Nossa", "Our", "Nuestra")}
+          </h1>
+          <h1
+            className="font-serif italic text-[var(--gold)] leading-[0.88] mb-10"
+            style={{ fontSize: "clamp(3.2rem, 9vw, 7rem)", letterSpacing: "-0.01em" }}
+          >
+            {tr("Missão", "Mission", "Misión")}
+          </h1>
+
+          {/* Gold line */}
+          <div
+            className="mx-auto mb-8"
+            style={{
+              width: "clamp(60px, 12vw, 140px)",
+              height: "1px",
+              background: "linear-gradient(to right, transparent, rgba(197,160,89,0.8), transparent)",
+            }}
+            aria-hidden
+          />
+
+          {/* Description */}
+          <p className="text-white/55 text-base sm:text-lg leading-[1.85] max-w-2xl mx-auto mb-12">
+            {tr(
+              "O Portal Lusitano nasceu para elevar o Cavalo Lusitano ao palco global. Unimos tecnologia, investigação e paixão equestre numa plataforma sem precedentes.",
+              "Portal Lusitano was born to elevate the Lusitano Horse to the global stage. We unite technology, research and equestrian passion in an unprecedented platform.",
+              "Portal Lusitano nació para elevar el Caballo Lusitano al escenario global. Unimos tecnología, investigación y pasión ecuestre en una plataforma sin precedentes."
+            )}
+          </p>
+
+          {/* Scroll indicator */}
+          <div className="flex flex-col items-center gap-3" aria-hidden>
+            <span className="text-[5px] font-mono uppercase tracking-[0.65em] text-white/15">
+              Scroll
+            </span>
+            <div
+              className="w-px"
+              style={{
+                height: "48px",
+                background: "linear-gradient(to bottom, rgba(197,160,89,0.3), transparent)",
+              }}
+            />
           </div>
         </div>
-      </section>
 
-      {/* ===== MANIFESTO ===== */}
-      <section className="relative px-4 sm:px-6 py-12 sm:py-32 overflow-hidden">
-        {/* Subtle gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--background)] via-[var(--background-secondary)] to-[var(--background)] pointer-events-none" />
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[var(--gold)]/4 rounded-full blur-[140px]" />
+        {/* Coordinates */}
+        <div
+          className="absolute bottom-5 right-6 sm:right-10 lg:right-16 hidden md:block z-20"
+          aria-hidden
+          style={{ opacity: 0, animation: "fadeSlideIn 0.5s ease-out 0.6s forwards" }}
+        >
+          <span className="text-[5.5px] font-mono tracking-[0.35em] text-white/12">
+            38.7° N · 9.1° W
+          </span>
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <AnimateOnScroll>
-            {/* Decorative opening quotation mark */}
-            <div className="relative mb-6 select-none pointer-events-none" aria-hidden="true">
-              <span className="absolute left-1/2 -translate-x-1/2 -top-4 text-[10rem] sm:text-[14rem] font-serif leading-none text-[var(--gold)]/8 select-none">
+        {/* Vertical text */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 right-6 lg:right-10 z-10 hidden md:block"
+          aria-hidden
+        >
+          <span
+            className="text-[6px] font-mono uppercase tracking-[0.8em] text-white/8"
+            style={{ writingMode: "vertical-lr" }}
+          >
+            {tr("Sobre o Portal Lusitano", "About Portal Lusitano", "Sobre Portal Lusitano")}
+          </span>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          STATS — editorial pillars
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section
+        className="grid grid-cols-2 sm:grid-cols-4 gap-px"
+        style={{ background: "rgba(197,160,89,0.07)" }}
+      >
+        {stats.map((stat, i) => (
+          <RevealOnScroll key={stat.label} delay={i * 100} variant="fade-up">
+            <div
+              className="relative group overflow-hidden flex flex-col items-center text-center p-8 sm:p-12 lg:p-14"
+              style={{ background: "var(--background)" }}
+            >
+              {/* Top gold accent */}
+              <div
+                className="absolute top-0 left-0 right-0 h-[1px]"
+                style={{ background: "linear-gradient(90deg, rgba(197,160,89,0.5) 0%, rgba(197,160,89,0.1) 60%, transparent 100%)" }}
+                aria-hidden
+              />
+              {/* Hover sweep */}
+              <div className="absolute bottom-0 left-0 h-[1px] w-0 group-hover:w-full transition-[width] duration-500 bg-[var(--gold)]/30 pointer-events-none" aria-hidden />
+              {/* Hover fill */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "rgba(197,160,89,0.025)" }} />
+
+              {/* Animated number */}
+              <div className="relative z-10" style={{ fontSize: "clamp(2.2rem, 5vw, 3.5rem)" }}>
+                <AnimatedCounter
+                  end={stat.value}
+                  duration={1800}
+                  suffix={stat.suffix}
+                  className="font-serif text-[var(--gold)] tabular-nums leading-none"
+                />
+              </div>
+
+              <p className="text-[7px] sm:text-[8px] font-mono uppercase tracking-[0.35em] text-[var(--foreground-muted)]/60 mt-3 relative z-10">
+                {stat.label}
+              </p>
+
+              {/* Ghost watermark */}
+              <span
+                className="absolute bottom-1 right-3 font-serif select-none pointer-events-none"
+                aria-hidden
+                style={{ fontSize: "56px", color: "rgba(197,160,89,0.04)", lineHeight: 1 }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            </div>
+          </RevealOnScroll>
+        ))}
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          MANIFESTO — cinematic quote
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section className="relative px-6 sm:px-10 lg:px-16 py-24 sm:py-40 overflow-hidden">
+        {/* Atmospheric glow */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+          style={{
+            width: "800px",
+            height: "500px",
+            background: "radial-gradient(ellipse, rgba(197,160,89,0.05) 0%, transparent 55%)",
+          }}
+          aria-hidden
+        />
+
+        <RevealOnScroll variant="blur-up" duration={700}>
+          <div className="max-w-4xl mx-auto text-center relative">
+            {/* Giant quotation mark */}
+            <div className="relative mb-6 select-none pointer-events-none" aria-hidden>
+              <span
+                className="absolute left-1/2 -translate-x-1/2 -top-8 font-serif leading-none text-[var(--gold)]/8 select-none"
+                style={{ fontSize: "clamp(8rem, 20vw, 16rem)" }}
+              >
                 &ldquo;
               </span>
             </div>
 
-            <blockquote className="relative">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[var(--foreground)] leading-[1.4] max-w-3xl mx-auto">
+            <blockquote className="relative z-10">
+              <p
+                className="font-serif italic text-[var(--foreground)] leading-[1.35] max-w-3xl mx-auto"
+                style={{ fontSize: "clamp(1.5rem, 4vw, 2.8rem)" }}
+              >
                 {tr(
                   "O Lusitano não é apenas uma raça — é uma civilização inteira a galope.",
                   "The Lusitano is not just a breed — it is an entire civilisation at full gallop.",
@@ -315,34 +510,42 @@ export default function SobreContent() {
               </p>
             </blockquote>
 
-            <div className="mt-8 flex items-center justify-center gap-3">
-              <div className="w-8 h-px bg-[var(--gold)]/40" />
-              <span className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)]/60">
+            <div className="mt-10 flex items-center justify-center gap-4">
+              <div className="w-10 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.4))" }} />
+              <span className="text-[8px] font-mono uppercase tracking-[0.5em] text-[var(--gold)]/50">
                 Portal Lusitano
               </span>
-              <div className="w-8 h-px bg-[var(--gold)]/40" />
+              <div className="w-10 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.4))" }} />
             </div>
-          </AnimateOnScroll>
-        </div>
+          </div>
+        </RevealOnScroll>
       </section>
 
-      <OrnamentalSeparator />
-
-      {/* ===== ORIGIN STORY ===== */}
-      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
-        <div className="max-w-5xl mx-auto">
-          <AnimateOnScroll>
-            <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+      {/* ═══════════════════════════════════════════════════════════════════════
+          ORIGIN STORY — editorial timeline
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section className="px-6 sm:px-10 lg:px-16 py-16 sm:py-28" style={{ borderTop: "1px solid rgba(197,160,89,0.06)" }}>
+        <div className="max-w-6xl mx-auto">
+          <RevealOnScroll variant="fade-up">
+            <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-16 lg:gap-24 items-start">
+              {/* Left — story */}
               <div>
-                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-                  {tr("A Origem", "The Origin", "El Origen")}
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-6 h-px" style={{ background: "rgba(197,160,89,0.55)" }} aria-hidden />
+                  <span className="text-[8px] font-mono uppercase tracking-[0.6em] text-[var(--gold)]/60">
+                    {tr("A Origem", "The Origin", "El Origen")}
+                  </span>
+                </div>
+
+                <h2
+                  className="font-serif text-[var(--foreground)] leading-[0.92] mb-10"
+                  style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}
+                >
                   {tr("Fundado em 2023", "Founded in 2023", "Fundado en 2023")}
                 </h2>
 
-                {/* Timeline paragraphs with golden left border */}
-                <div className="space-y-6">
+                {/* Timeline */}
+                <div className="space-y-8">
                   {[
                     tr(
                       "O Portal Lusitano foi fundado com uma visão clara: criar a plataforma de referência para o cavalo Lusitano no mundo digital.",
@@ -361,12 +564,19 @@ export default function SobreContent() {
                     ),
                   ].map((text, i) => (
                     <div key={i} className="flex gap-5">
-                      {/* Timeline indicator */}
-                      <div className="flex flex-col items-center flex-shrink-0 pt-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]/60 flex-shrink-0" />
-                        {i < 2 && <div className="w-px flex-1 mt-2 bg-[var(--gold)]/15" />}
+                      <div className="flex flex-col items-center flex-shrink-0 pt-2">
+                        <div
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ background: "rgba(197,160,89,0.5)", boxShadow: "0 0 12px rgba(197,160,89,0.2)" }}
+                        />
+                        {i < 2 && (
+                          <div
+                            className="w-px flex-1 mt-2"
+                            style={{ background: "linear-gradient(to bottom, rgba(197,160,89,0.2), transparent)" }}
+                          />
+                        )}
                       </div>
-                      <p className="text-[var(--foreground-secondary)] leading-relaxed pb-2">
+                      <p className="text-[var(--foreground-secondary)] leading-[1.8] text-sm sm:text-base">
                         {text}
                       </p>
                     </div>
@@ -374,15 +584,29 @@ export default function SobreContent() {
                 </div>
               </div>
 
-              <div className="flex justify-center">
-                <div className="w-full max-w-xs">
-                  <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--gold)] mb-6">
+              {/* Right — commitments card */}
+              <RevealOnScroll variant="fade-up" delay={200}>
+                <div
+                  className="p-8 sm:p-10 relative"
+                  style={{
+                    border: "1px solid rgba(197,160,89,0.1)",
+                    background: "rgba(197,160,89,0.015)",
+                  }}
+                >
+                  {/* Corner ornaments */}
+                  <div className="absolute top-3 left-3 w-6 h-6 border-t border-l border-[var(--gold)]/20 pointer-events-none" aria-hidden />
+                  <div className="absolute bottom-3 right-3 w-6 h-6 border-b border-r border-[var(--gold)]/20 pointer-events-none" aria-hidden />
+
+                  <p className="text-[8px] font-mono uppercase tracking-[0.5em] text-[var(--gold)]/70 mb-8">
                     {tr("Os Nossos Compromissos", "Our Commitments", "Nuestros Compromisos")}
                   </p>
-                  <ul className="space-y-3">
+                  <ul className="space-y-4">
                     {principles.map((p) => (
-                      <li key={p} className="flex items-center gap-3 group/item">
-                        <div className="w-5 h-5 rounded-full bg-[var(--gold)]/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-[var(--gold)]/20 transition-colors duration-300">
+                      <li key={p} className="flex items-center gap-4 group/item">
+                        <div
+                          className="w-6 h-6 flex items-center justify-center flex-shrink-0 group-hover/item:bg-[var(--gold)]/15 transition-colors duration-300"
+                          style={{ border: "1px solid rgba(197,160,89,0.2)" }}
+                        >
                           <Check size={11} className="text-[var(--gold)]" />
                         </div>
                         <span className="text-sm text-[var(--foreground-secondary)] group-hover/item:text-[var(--foreground)] transition-colors duration-300">
@@ -392,144 +616,283 @@ export default function SobreContent() {
                     ))}
                   </ul>
                 </div>
-              </div>
+              </RevealOnScroll>
             </div>
-          </AnimateOnScroll>
+          </RevealOnScroll>
         </div>
       </section>
 
-      <OrnamentalSeparator />
+      {/* ═══════════════════════════════════════════════════════════════════════
+          FULL-BLEED IMAGE BREAK — cinematic interlude
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section className="relative h-[50vh] sm:h-[60vh] overflow-hidden">
+        <Image
+          src="/images/home/desktop/hero.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-[center_35%]"
+          loading="lazy"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.7) 100%)" }}
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.5) 100%)" }}
+          aria-hidden
+        />
 
-      {/* ===== VALUES ===== */}
-      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
-        <div className="max-w-5xl mx-auto">
-          <AnimateOnScroll className="text-center mb-8 sm:mb-16">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              {tr("Valores", "Values", "Valores")}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+        {/* Centered editorial text */}
+        <RevealOnScroll variant="blur-up" duration={700} className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="text-center px-6">
+            <p
+              className="font-serif italic text-white/80 leading-[1.3] max-w-xl mx-auto"
+              style={{ fontSize: "clamp(1.3rem, 3.5vw, 2.2rem)" }}
+            >
+              {tr(
+                "500 anos de tradição equestre portuguesa, preservada e elevada através da tecnologia.",
+                "500 years of Portuguese equestrian tradition, preserved and elevated through technology.",
+                "500 años de tradición ecuestre portuguesa, preservada y elevada a través de la tecnología."
+              )}
+            </p>
+            <div className="flex items-center justify-center gap-3 mt-6">
+              <div className="w-8 h-px" style={{ background: "rgba(197,160,89,0.5)" }} />
+              <span className="text-[7px] font-mono uppercase tracking-[0.5em] text-[var(--gold)]/60">
+                Est. MMXXIII
+              </span>
+              <div className="w-8 h-px" style={{ background: "rgba(197,160,89,0.5)" }} />
+            </div>
+          </div>
+        </RevealOnScroll>
+
+        {/* Gold horizontal lines */}
+        <div className="absolute top-0 inset-x-0 h-px" style={{ background: "rgba(197,160,89,0.1)" }} aria-hidden />
+        <div className="absolute bottom-0 inset-x-0 h-px" style={{ background: "rgba(197,160,89,0.1)" }} aria-hidden />
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          VALUES — editorial grid
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section className="px-6 sm:px-10 lg:px-16 py-16 sm:py-28" style={{ borderTop: "1px solid rgba(197,160,89,0.06)" }}>
+        <div className="max-w-6xl mx-auto">
+          <RevealOnScroll variant="fade-up" className="text-center mb-12 sm:mb-20">
+            <div className="flex items-center justify-center gap-4 mb-5">
+              <div className="w-8 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.5))" }} aria-hidden />
+              <span className="text-[8px] font-mono uppercase tracking-[0.6em] text-[var(--gold)]/60">
+                {tr("Valores", "Values", "Valores")}
+              </span>
+              <div className="w-8 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.5))" }} aria-hidden />
+            </div>
+            <h2
+              className="font-serif text-[var(--foreground)]"
+              style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
+            >
               {tr("O Que Nos Define", "What Defines Us", "Lo Que Nos Define")}
             </h2>
-          </AnimateOnScroll>
+          </RevealOnScroll>
 
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-px" style={{ background: "rgba(197,160,89,0.06)" }}>
             {values.map((value, i) => (
-              <AnimateOnScroll key={value.title} delay={i * 100}>
-                <div className="group bg-[var(--background-card)] border border-[var(--border)] p-8 hover:border-[var(--gold)]/25 transition-all duration-500 hover:bg-gradient-to-br hover:from-[var(--gold)]/5 hover:to-transparent">
-                  <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center mb-5 group-hover:bg-[var(--gold)]/20 group-hover:scale-105 transition-all duration-300">
-                    <value.icon
-                      size={22}
-                      className="text-[var(--gold)] group-hover:text-[var(--gold)]"
-                    />
+              <RevealOnScroll key={value.title} delay={i * 100} variant="fade-up">
+                <div
+                  className="group relative overflow-hidden p-8 sm:p-10 lg:p-12 transition-colors duration-500"
+                  style={{ background: "var(--background)" }}
+                >
+                  {/* Hover fill */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "rgba(197,160,89,0.02)" }} />
+
+                  {/* Gold sweep on hover */}
+                  <div className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full transition-[width] duration-700 bg-[var(--gold)]/40 pointer-events-none" aria-hidden />
+
+                  {/* Ordinal */}
+                  <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-[var(--gold)]/30 mb-6 block relative z-10" aria-hidden>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+
+                  {/* Icon */}
+                  <div
+                    className="w-12 h-12 flex items-center justify-center mb-6 relative z-10 group-hover:bg-[var(--gold)]/10 transition-colors duration-300"
+                    style={{ border: "1px solid rgba(197,160,89,0.15)" }}
+                  >
+                    <value.icon size={20} className="text-[var(--gold)]" />
                   </div>
-                  <h3 className="text-xl font-serif text-[var(--foreground)] mb-3">
+
+                  <h3
+                    className="font-serif text-[var(--foreground)] mb-4 relative z-10"
+                    style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)" }}
+                  >
                     {value.title}
                   </h3>
-                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
+                  <p className="text-[var(--foreground-muted)] text-sm leading-[1.8] relative z-10">
                     {value.desc}
                   </p>
+
+                  {/* Ghost number */}
+                  <span
+                    className="absolute bottom-2 right-4 font-serif select-none pointer-events-none"
+                    aria-hidden
+                    style={{ fontSize: "72px", color: "rgba(197,160,89,0.03)", lineHeight: 1 }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                 </div>
-              </AnimateOnScroll>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
       </section>
 
-      <OrnamentalSeparator />
-
-      {/* ===== WHAT WE OFFER ===== */}
-      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
-        <div className="max-w-5xl mx-auto">
-          <AnimateOnScroll className="text-center mb-8 sm:mb-16">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              {tr("Plataforma", "Platform", "Plataforma")}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+      {/* ═══════════════════════════════════════════════════════════════════════
+          WHAT WE OFFER — feature cards
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section className="px-6 sm:px-10 lg:px-16 py-16 sm:py-28" style={{ borderTop: "1px solid rgba(197,160,89,0.06)" }}>
+        <div className="max-w-6xl mx-auto">
+          <RevealOnScroll variant="fade-up" className="text-center mb-12 sm:mb-20">
+            <div className="flex items-center justify-center gap-4 mb-5">
+              <div className="w-8 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.5))" }} aria-hidden />
+              <span className="text-[8px] font-mono uppercase tracking-[0.6em] text-[var(--gold)]/60">
+                {tr("Plataforma", "Platform", "Plataforma")}
+              </span>
+              <div className="w-8 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.5))" }} aria-hidden />
+            </div>
+            <h2
+              className="font-serif text-[var(--foreground)]"
+              style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
+            >
               {tr("O Que Oferecemos", "What We Offer", "Lo Que Ofrecemos")}
             </h2>
-          </AnimateOnScroll>
+          </RevealOnScroll>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: "rgba(197,160,89,0.06)" }}>
             {features.map((feature, i) => (
-              <AnimateOnScroll key={feature.title} delay={i * 80}>
+              <RevealOnScroll key={feature.title} delay={i * 80} variant="fade-up">
                 <LocalizedLink
                   href={feature.href}
-                  className="group block p-6 border border-[var(--border)] hover:border-[var(--gold)]/30 transition-all duration-500 hover:bg-[var(--background-elevated)]"
+                  className="group block relative overflow-hidden p-7 sm:p-9 transition-colors duration-500"
+                  style={{ background: "var(--background)" }}
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-10 h-10 bg-[var(--gold)]/10 rounded-lg flex items-center justify-center group-hover:bg-[var(--gold)]/20 group-hover:scale-105 transition-all duration-300">
-                      <feature.icon
-                        size={18}
-                        className="text-[var(--gold)]/70 group-hover:text-[var(--gold)] transition-colors duration-300"
-                      />
+                  {/* Hover fill */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "rgba(197,160,89,0.02)" }} />
+
+                  {/* Gold sweep */}
+                  <div className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full transition-[width] duration-600 bg-[var(--gold)]/40 pointer-events-none" aria-hidden />
+
+                  <div className="flex items-start justify-between mb-5 relative z-10">
+                    <div
+                      className="w-10 h-10 flex items-center justify-center group-hover:bg-[var(--gold)]/10 transition-colors duration-300"
+                      style={{ border: "1px solid rgba(197,160,89,0.12)" }}
+                    >
+                      <feature.icon size={17} className="text-[var(--gold)]/70 group-hover:text-[var(--gold)] transition-colors duration-300" />
                     </div>
                     <ArrowUpRight
                       size={15}
-                      className="text-[var(--gold)]/0 group-hover:text-[var(--gold)]/60 transition-all duration-300 opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 translate-x-1 group-hover:translate-x-0"
+                      className="text-[var(--gold)]/0 group-hover:text-[var(--gold)]/60 transition-[opacity,transform,color] duration-300 opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 translate-x-1 group-hover:translate-x-0"
                     />
                   </div>
-                  <h3 className="text-lg font-serif text-[var(--foreground)] mb-2">
+                  <h3
+                    className="font-serif text-[var(--foreground)] mb-2 relative z-10 group-hover:text-[var(--gold)] transition-colors duration-300"
+                    style={{ fontSize: "clamp(1rem, 2vw, 1.2rem)" }}
+                  >
                     {feature.title}
                   </h3>
-                  <p className="text-[var(--foreground-muted)] text-sm leading-relaxed">
+                  <p className="text-[var(--foreground-muted)] text-sm leading-[1.7] relative z-10">
                     {feature.desc}
                   </p>
                 </LocalizedLink>
-              </AnimateOnScroll>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
       </section>
 
-      <OrnamentalSeparator />
-
-      {/* ===== PARA QUEM ===== */}
-      <section className="px-4 sm:px-6 mb-10 sm:mb-28">
-        <div className="max-w-5xl mx-auto">
-          <AnimateOnScroll className="text-center mb-8 sm:mb-16">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-4 block">
-              {tr("Audiência", "Audience", "Audiencia")}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+      {/* ═══════════════════════════════════════════════════════════════════════
+          AUDIENCE — who is this for
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section className="px-6 sm:px-10 lg:px-16 py-16 sm:py-28" style={{ borderTop: "1px solid rgba(197,160,89,0.06)" }}>
+        <div className="max-w-6xl mx-auto">
+          <RevealOnScroll variant="fade-up" className="text-center mb-12 sm:mb-20">
+            <div className="flex items-center justify-center gap-4 mb-5">
+              <div className="w-8 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.5))" }} aria-hidden />
+              <span className="text-[8px] font-mono uppercase tracking-[0.6em] text-[var(--gold)]/60">
+                {tr("Audiência", "Audience", "Audiencia")}
+              </span>
+              <div className="w-8 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.5))" }} aria-hidden />
+            </div>
+            <h2
+              className="font-serif text-[var(--foreground)]"
+              style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
+            >
               {tr("Para Quem é o Portal?", "Who Is the Portal For?", "¿Para Quién es el Portal?")}
             </h2>
-          </AnimateOnScroll>
+          </RevealOnScroll>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px" style={{ background: "rgba(197,160,89,0.06)" }}>
             {audience.map((a, i) => (
-              <AnimateOnScroll key={a.title} delay={i * 80}>
-                <div className="group flex flex-col items-center text-center p-6 bg-[var(--background-card)] border border-[var(--border)] hover:border-[var(--gold)]/25 hover:bg-[var(--background-elevated)] transition-all duration-500">
-                  <div className="w-12 h-12 bg-[var(--gold)]/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-[var(--gold)]/20 group-hover:scale-105 transition-all duration-300">
-                    <a.icon
-                      size={20}
-                      className="text-[var(--gold)] group-hover:brightness-125 transition-all duration-300"
-                    />
+              <RevealOnScroll key={a.title} delay={i * 80} variant="fade-up">
+                <div
+                  className="group relative overflow-hidden flex flex-col items-center text-center p-6 sm:p-8 transition-colors duration-500"
+                  style={{ background: "var(--background)" }}
+                >
+                  {/* Hover fill */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "rgba(197,160,89,0.025)" }} />
+
+                  {/* Gold sweep */}
+                  <div className="absolute top-0 left-0 h-[1px] w-0 group-hover:w-full transition-[width] duration-500 bg-[var(--gold)]/30 pointer-events-none" aria-hidden />
+
+                  <div
+                    className="w-14 h-14 flex items-center justify-center mb-5 relative z-10 group-hover:bg-[var(--gold)]/10 transition-colors duration-300"
+                    style={{ border: "1px solid rgba(197,160,89,0.12)" }}
+                  >
+                    <a.icon size={22} className="text-[var(--gold)] group-hover:scale-110 transition-transform duration-300" />
                   </div>
-                  <h3 className="text-base font-serif text-[var(--foreground)] mb-2">{a.title}</h3>
-                  <p className="text-xs text-[var(--foreground-muted)] leading-relaxed group-hover:text-[var(--foreground-secondary)] transition-colors duration-300">
+                  <h3 className="font-serif text-[var(--foreground)] mb-2 relative z-10 text-base sm:text-lg">
+                    {a.title}
+                  </h3>
+                  <p className="text-[var(--foreground-muted)] text-xs sm:text-sm leading-relaxed relative z-10 group-hover:text-[var(--foreground-secondary)] transition-colors duration-300">
                     {a.desc}
                   </p>
                 </div>
-              </AnimateOnScroll>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== CTA ===== */}
-      <section className="relative px-4 sm:px-6 py-24 sm:py-32 border-t border-[var(--border)] overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[var(--gold)]/6 rounded-full blur-[130px]" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-[var(--gold)]/3 rounded-full blur-[100px]" />
-        </div>
+      {/* ═══════════════════════════════════════════════════════════════════════
+          CTA — join the community
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <section className="relative px-6 sm:px-10 lg:px-16 py-24 sm:py-40 overflow-hidden" style={{ borderTop: "1px solid rgba(197,160,89,0.06)" }}>
+        {/* Atmospheric glow */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+          style={{
+            width: "800px",
+            height: "400px",
+            background: "radial-gradient(ellipse, rgba(197,160,89,0.05) 0%, transparent 55%)",
+          }}
+          aria-hidden
+        />
 
-        <div className="max-w-3xl mx-auto relative z-10 text-center">
-          <AnimateOnScroll>
-            <Heart className="text-[var(--gold)]/30 mx-auto mb-6" size={32} />
-            <h2 className="text-3xl sm:text-4xl font-serif text-[var(--foreground)] mb-4">
+        <RevealOnScroll variant="blur-up" duration={700}>
+          <div className="max-w-3xl mx-auto relative z-10 text-center">
+            {/* Diamond separator */}
+            <div className="flex items-center justify-center gap-4 mb-10" aria-hidden>
+              <div className="w-14 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.4))" }} />
+              <Heart className="text-[var(--gold)]/30" size={18} />
+              <div className="w-14 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.4))" }} />
+            </div>
+
+            <h2
+              className="font-serif text-[var(--foreground)] mb-5"
+              style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
+            >
               {tr("Junta-te à Comunidade", "Join the Community", "Únete a la Comunidad")}
             </h2>
-            <p className="text-[var(--foreground-secondary)] mb-10 max-w-lg mx-auto leading-relaxed">
+            <p className="text-[var(--foreground-secondary)] mb-12 max-w-lg mx-auto leading-[1.8] text-sm sm:text-base">
               {tr(
                 "Faz parte da maior comunidade digital dedicada ao cavalo Lusitano. Regista-te gratuitamente.",
                 "Be part of the largest digital community dedicated to the Lusitano horse. Register for free.",
@@ -537,41 +900,57 @@ export default function SobreContent() {
               )}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-5">
-              {/* Shimmer CTA button */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-8">
               <LocalizedLink
                 href="/registar"
-                className="relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold overflow-hidden group/cta hover:from-white hover:to-white transition-all duration-300"
+                className="ripple-btn inline-flex items-center gap-3 bg-[var(--gold)] text-black px-10 py-4.5 text-[9px] uppercase tracking-[0.35em] font-bold hover:bg-white transition-[background-color] duration-300 shadow-[0_8px_32px_rgba(197,160,89,0.25)] group/cta"
               >
-                {/* Shimmer overlay */}
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 -translate-x-full group-hover/cta:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/25 to-transparent pointer-events-none"
-                />
-                <Users size={16} />
+                <Users size={14} aria-hidden />
                 {tr("Criar Conta Grátis", "Create Free Account", "Crear Cuenta Gratis")}
+                <ArrowRight
+                  size={11}
+                  className="group-hover/cta:translate-x-1 transition-transform duration-300"
+                  aria-hidden
+                />
               </LocalizedLink>
 
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] text-[11px] uppercase tracking-[0.15em] transition-colors"
+                className="inline-flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--gold)] text-[8px] uppercase tracking-[0.3em] transition-colors duration-300 group/mail"
               >
-                <Mail size={14} />
-                {tr("Contactar", "Contact", "Contactar")} <ArrowRight size={12} />
+                <Mail size={12} />
+                {tr("Contactar", "Contact", "Contactar")}
+                <ArrowRight size={10} className="group-hover/mail:translate-x-0.5 transition-transform duration-300" />
               </a>
             </div>
 
-            {/* Reassurance line */}
-            <p className="text-[11px] text-[var(--foreground-muted)] tracking-wide">
+            <p className="text-[7px] font-mono uppercase tracking-[0.4em] text-[var(--foreground-muted)]/40">
               {tr(
                 "Sem cartão de crédito. Sem compromisso.",
                 "No credit card. No commitment.",
                 "Sin tarjeta de crédito. Sin compromiso."
               )}
             </p>
-          </AnimateOnScroll>
-        </div>
+          </div>
+        </RevealOnScroll>
       </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          FOOTER COLOPHON
+      ══════════════════════════════════════════════════════════════════════════ */}
+      <footer
+        className="px-6 sm:px-10 lg:px-16 py-14 flex flex-col items-center text-center gap-5"
+        style={{ borderTop: "1px solid rgba(197,160,89,0.06)" }}
+      >
+        <div className="flex items-center gap-4" aria-hidden>
+          <div className="w-8 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.3))" }} />
+          <span className="text-[var(--gold)]/30 text-[8px]">&#9670;</span>
+          <div className="w-8 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(197,160,89,0.3))" }} />
+        </div>
+        <span className="text-[6px] font-mono uppercase tracking-[0.6em] text-[var(--foreground-muted)]/25">
+          38.7° N · 9.1° W — Portal Lusitano · Est. MMXXIII · Portugal
+        </span>
+      </footer>
     </main>
   );
 }
