@@ -1,10 +1,11 @@
 "use client";
 
-import { forwardRef, useRef, useEffect } from "react";
+import { forwardRef, useMemo, useRef, useEffect } from "react";
 import { Scale } from "lucide-react";
 import dynamic from "next/dynamic";
 import LiquidityScore from "@/components/tools/LiquidityScore";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import SensitivityPanel from "./SensitivityPanel";
 import type { FormData, Resultado } from "./types";
 import {
@@ -48,7 +49,8 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
     },
     ref
   ) {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
+    const tr = useMemo(() => createTranslator(language), [language]);
     const hasShownConfetti = useRef(false);
 
     useEffect(() => {
@@ -114,17 +116,17 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
                 }`}
               >
                 {resultado.percentil >= 65
-                  ? "O teu cavalo está bem posicionado — confirma o valor"
+                  ? tr("O teu cavalo está bem posicionado — confirma o valor", "Your horse is well positioned — confirm the value", "Tu caballo está bien posicionado — confirma el valor")
                   : resultado.percentil >= 40
-                    ? "Compara com cavalos semelhantes no mercado"
-                    : "O preço parece abaixo do mercado — verifica com cavalos similares"}
+                    ? tr("Compara com cavalos semelhantes no mercado", "Compare with similar horses on the market", "Compara con caballos similares en el mercado")
+                    : tr("O preço parece abaixo do mercado — verifica com cavalos similares", "The price seems below market — check with similar horses", "El precio parece por debajo del mercado — verifica con caballos similares")}
               </p>
               <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
                 {resultado.percentil >= 65
-                  ? "Compara lado a lado com outros candidatos para confirmar que o preço é competitivo antes de vender."
+                  ? tr("Compara lado a lado com outros candidatos para confirmar que o preço é competitivo antes de vender.", "Compare side by side with other candidates to confirm the price is competitive before selling.", "Compara lado a lado con otros candidatos para confirmar que el precio es competitivo antes de vender.")
                   : resultado.percentil >= 40
-                    ? "Usa o Comparador para posicionar o teu cavalo face a outros e tomar melhores decisões de preço."
-                    : "Benchmarks de mercado sugerem que podes valorizar mais. Compara com cavalos de perfil similar."}
+                    ? tr("Usa o Comparador para posicionar o teu cavalo face a outros e tomar melhores decisões de preço.", "Use the Comparator to position your horse against others and make better pricing decisions.", "Usa el Comparador para posicionar tu caballo frente a otros y tomar mejores decisiones de precio.")
+                    : tr("Benchmarks de mercado sugerem que podes valorizar mais. Compara com cavalos de perfil similar.", "Market benchmarks suggest you can increase the value. Compare with horses of a similar profile.", "Los benchmarks de mercado sugieren que puedes valorizar más. Compara con caballos de perfil similar.")}
               </p>
             </div>
             <button
@@ -137,7 +139,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
                     : "bg-amber-500/20 text-amber-400 hover:bg-amber-500/30"
               }`}
             >
-              Comparar →
+              {tr("Comparar →", "Compare →", "Comparar →")}
             </button>
           </div>
         )}

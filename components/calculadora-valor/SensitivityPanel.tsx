@@ -126,7 +126,13 @@ function buildScenarios(form: FormData, resultado: Resultado, tr: (pt: string, e
 export default function SensitivityPanel({ form, resultado }: SensitivityPanelProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
-  const scenarios = buildScenarios(form, resultado, tr);
+  const scenarios = useMemo(() => {
+    try {
+      return buildScenarios(form, resultado, tr);
+    } catch {
+      return [];
+    }
+  }, [form, resultado, tr]);
 
   if (scenarios.length === 0) return null;
 

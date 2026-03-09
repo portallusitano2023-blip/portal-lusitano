@@ -228,6 +228,17 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
       });
     });
     total -= defeitosComuns.length * 10;
+    factores.push({
+      nome: tr("Saúde Genética", "Genetic Health", "Salud Genética"),
+      score: 0,
+      max: defeitosComuns.length * 10,
+      tipo: "aviso",
+      descricao: tr(
+        `Penalização: defeitos genéticos em comum (${defeitosComuns.join(", ")})`,
+        `Penalty: common genetic defects (${defeitosComuns.join(", ")})`,
+        `Penalización: defectos genéticos en común (${defeitosComuns.join(", ")})`
+      ),
+    });
     fracos.push(tr(`Defeitos genéticos em comum: ${defeitosComuns.join(", ")}`, `Common genetic defects: ${defeitosComuns.join(", ")}`, `Defectos genéticos en común: ${defeitosComuns.join(", ")}`));
   }
 

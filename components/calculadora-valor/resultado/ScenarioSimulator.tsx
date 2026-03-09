@@ -36,7 +36,9 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
     emoji: string;
   };
 
-  const cenarios: Cenario[] = [];
+  const top = useMemo(() => {
+    try {
+      const cenarios: Cenario[] = [];
 
   // Cenário 1: Subir nível de treino (se não for já o máximo)
   if (TREINO_PROGRESSAO[form.treino]) {
@@ -126,10 +128,13 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
     });
   }
 
-  if (cenarios.length === 0) return null;
+      return cenarios.sort((a, b) => b.delta - a.delta).slice(0, 4);
+    } catch {
+      return [];
+    }
+  }, [form, resultado, tr]);
 
-  // Ordena por delta (maior primeiro), mostra top 4
-  const top = cenarios.sort((a, b) => b.delta - a.delta).slice(0, 4);
+  if (top.length === 0) return null;
 
   return (
     <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)] mb-6">

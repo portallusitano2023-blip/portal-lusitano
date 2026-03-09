@@ -169,7 +169,7 @@ export default function VerificadorCompatibilidadePage() {
       setChainBanner(bannerText);
       setChainImported(true);
     } catch (err) {
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env.NODE_ENV === "development") {
         console.warn("[Tool Chain] Erro ao importar dados:", err);
       }
     }

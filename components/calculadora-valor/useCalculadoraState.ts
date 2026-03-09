@@ -201,7 +201,7 @@ export function useCalculadoraState() {
     try {
       const entry: CalcHistoryEntry = {
         timestamp: Date.now(),
-        nome: (formStep.data as FormData).nome || "Sem nome",
+        nome: (formStep.data as FormData).nome || tr("Sem nome", "Unnamed", "Sin nombre"),
         valorFinal: resultado.valorFinal,
         confianca: resultado.confianca,
         treino: (formStep.data as FormData).treino,

@@ -194,7 +194,7 @@ export default function MethodologyFooter({
           (t.calculadora as Record<string, string>).limitation_4 ??
             tr("Não substitui avaliação presencial por profissional qualificado", "Does not replace in-person evaluation by a qualified professional", "No sustituye la evaluación presencial por un profesional cualificado"),
         ]}
-        version={(t.calculadora as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"}
+        version={(t.calculadora as Record<string, string>).methodology_version ?? tr("v2.1 — Fev 2026", "v2.1 — Feb 2026", "v2.1 — Feb 2026")}
         references={[
           (t.calculadora as Record<string, string>).ref_apsl ?? tr("Padrões de conformação APSL", "APSL conformation standards", "Estándares de conformación APSL"),
           (t.calculadora as Record<string, string>).ref_fei ?? tr("Escalas de treino FEI", "FEI training scales", "Escalas de entrenamiento FEI"),
@@ -210,7 +210,7 @@ export default function MethodologyFooter({
           </strong>{" "}
           {t.calculadora.disclaimer_text}
           <span className="block mt-1 text-[10px] text-[var(--foreground-muted)]/40 font-mono">
-            {(t.calculadora as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"}
+            {(t.calculadora as Record<string, string>).methodology_version ?? tr("v2.1 — Fev 2026", "v2.1 — Feb 2026", "v2.1 — Feb 2026")}
           </span>
         </p>
       </div>
