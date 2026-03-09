@@ -113,8 +113,8 @@ export default function ComparadorCavalosPage() {
           parsed.horses.length >= 2
         ) {
           const [h1, h2] = parsed.horses;
-          const cavalo1 = { ...criarCavalo("1", h1.nome || "Garanhão"), ...h1, id: "1" };
-          const cavalo2 = { ...criarCavalo("2", h2.nome || "Égua"), ...h2, id: "2" };
+          const cavalo1 = { ...criarCavalo("1", h1.nome || tr("Garanhão", "Stallion", "Garañón")), ...h1, id: "1" };
+          const cavalo2 = { ...criarCavalo("2", h2.nome || tr("Égua", "Mare", "Yegua")), ...h2, id: "2" };
           setCavalos([cavalo1, cavalo2]);
           sessionStorage.removeItem(CHAIN_KEY);
           setStep(1);

@@ -23,7 +23,7 @@ export default function StrengthsWeaknesses({ fortes, fracos, t }: StrengthsWeak
           <ul className="space-y-2">
             {fortes.map((ponto, i) => (
               <li
-                key={i}
+                key={ponto}
                 className="flex items-start gap-2 text-sm text-[var(--foreground-secondary)]"
               >
                 <Check size={14} className="text-emerald-400 mt-0.5 flex-shrink-0" />
@@ -42,7 +42,7 @@ export default function StrengthsWeaknesses({ fortes, fracos, t }: StrengthsWeak
           <ul className="space-y-2">
             {fracos.map((ponto, i) => (
               <li
-                key={i}
+                key={ponto}
                 className="flex items-start gap-2 text-sm text-[var(--foreground-secondary)]"
               >
                 <ChevronRight size={14} className="text-orange-400 mt-0.5 flex-shrink-0" />

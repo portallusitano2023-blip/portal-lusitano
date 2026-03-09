@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { RadarChartData } from "@/components/analise-perfil/types";
 
 interface RadarChartProps {
@@ -9,7 +10,8 @@ interface RadarChartProps {
 }
 
 export default function RadarChart({ data }: RadarChartProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function RadarChart({ data }: RadarChartProps) {
 
   return (
     <div className="relative w-full max-w-[320px] mx-auto">
-      <svg viewBox="0 0 300 300" className="w-full h-auto" role="img" aria-label="Gráfico radar de perfil equestre">
+      <svg viewBox="0 0 300 300" className="w-full h-auto" role="img" aria-label={tr("Gráfico radar de perfil equestre", "Equestrian profile radar chart", "Gráfico radar de perfil ecuestre")}>
         {[0.25, 0.5, 0.75, 1].map((l) => (
           <polygon
             key={l}

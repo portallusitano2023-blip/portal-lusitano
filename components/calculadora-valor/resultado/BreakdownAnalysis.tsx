@@ -98,7 +98,7 @@ export default function BreakdownAnalysis({
           </h3>
           <div className="space-y-4">
             {resultado.categorias.slice(0, 6).map((cat, i) => (
-              <div key={i}>
+              <div key={cat.nome}>
                 <div className="flex items-center justify-between mb-1">
                   <div>
                     <span className="text-sm text-[var(--foreground-secondary)]">{cat.nome}</span>
@@ -136,7 +136,7 @@ export default function BreakdownAnalysis({
             <ul className="space-y-3">
               {resultado.recomendacoes.map((rec, i) => (
                 <li
-                  key={i}
+                  key={rec}
                   className="flex items-start gap-3 text-sm text-[var(--foreground-secondary)]"
                 >
                   <ChevronRight size={16} className="text-[var(--gold)] flex-shrink-0 mt-0.5" />
@@ -356,7 +356,7 @@ export default function BreakdownAnalysis({
                   const isWeak = f.score < 5;
                   return (
                     <div
-                      key={i}
+                      key={f.nome}
                       className={`px-6 py-4 ${i % 2 === 0 ? "bg-[#111111]" : "bg-[#0D0D0D]"}`}
                     >
                       <div className="flex items-start justify-between gap-4 mb-2">
@@ -576,7 +576,7 @@ export default function BreakdownAnalysis({
               <div className="grid sm:grid-cols-2 gap-4 p-6">
                 {dicasFiltradas.map((dica, i) => (
                   <div
-                    key={i}
+                    key={dica.titulo}
                     className={`rounded-xl p-5 border ${dica.cor} hover:scale-[1.01] transition-transform duration-200`}
                   >
                     <div className="flex items-start justify-between gap-3 mb-3">

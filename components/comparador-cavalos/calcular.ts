@@ -197,6 +197,7 @@ export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr): ScoreFactor[] 
 // ============================================
 
 export function getMelhor(cavalos: Cavalo[], campo: keyof Cavalo, maior = true): number {
+  if (cavalos.length === 0) return 0;
   const vals = cavalos.map((c) => c[campo] as number);
   return maior ? Math.max(...vals) : Math.min(...vals);
 }
