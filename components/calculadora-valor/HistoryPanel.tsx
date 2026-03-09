@@ -27,7 +27,7 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
 
   if (history.length === 0) return null;
 
-  const locale = language === "pt" ? "pt-PT" : language === "es" ? "es-ES" : "en-US";
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   return (
     <div className="relative">
@@ -70,7 +70,7 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-[var(--foreground)]">
-                    {entry.valorFinal.toLocaleString("pt-PT")}€
+                    {entry.valorFinal.toLocaleString(locale)}€
                   </span>
                   <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--background-secondary)] text-[var(--foreground-secondary)]">
                     {TREINO_LABELS[entry.treino] ?? entry.treino}

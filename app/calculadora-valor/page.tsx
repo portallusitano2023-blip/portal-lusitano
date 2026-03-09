@@ -80,6 +80,7 @@ export default function CalculadoraValorPage() {
 
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   // Track which steps the user has visited for validation feedback
   const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
@@ -133,8 +134,8 @@ export default function CalculadoraValorPage() {
                   {tr("Estimativa parcial", "Partial estimate", "Estimación parcial")}
                 </p>
                 <p className="text-xs font-semibold text-[var(--gold)] leading-tight">
-                  €{estimativaParcial.min.toLocaleString("pt-PT")} – €
-                  {estimativaParcial.max.toLocaleString("pt-PT")}
+                  €{estimativaParcial.min.toLocaleString(locale)} – €
+                  {estimativaParcial.max.toLocaleString(locale)}
                 </p>
               </div>
             ) : step > 0 ? (
@@ -337,11 +338,11 @@ export default function CalculadoraValorPage() {
                         </div>
                         <div className="flex items-center gap-1 flex-wrap justify-end">
                           <span className="text-xs sm:text-sm font-bold text-[#C5A059] whitespace-nowrap">
-                            {estimativaParcial.min.toLocaleString("pt-PT")}€
+                            {estimativaParcial.min.toLocaleString(locale)}€
                           </span>
                           <span className="text-xs text-[var(--foreground-muted)]">–</span>
                           <span className="text-xs sm:text-sm font-bold text-[#C5A059] whitespace-nowrap">
-                            {estimativaParcial.max.toLocaleString("pt-PT")}€
+                            {estimativaParcial.max.toLocaleString(locale)}€
                           </span>
                           <span className="text-[10px] text-[var(--foreground-muted)]">
                             ({tr("parcial", "partial", "parcial")})

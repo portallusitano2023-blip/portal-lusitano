@@ -49,6 +49,7 @@ export default function HorseForm({
   const comp = t.comparador as Record<string, string>;
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   const PESOS_DISC: Record<string, Record<string, number>> = {
     dressage: { conformacao: 0.2, andamentos: 0.3, elevacao: 0.25, temperamento: 0.15, saude: 0.1 },
@@ -384,7 +385,7 @@ export default function HorseForm({
           <div className="text-xs text-[var(--foreground-muted)] flex items-center gap-1.5">
             {comp.value_per_point}{" "}
             <span className="text-[var(--foreground-secondary)]">
-              {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
+              {calcularValorPorPonto(c).toLocaleString(locale)}€
             </span>
             <Tooltip
               text={

@@ -68,6 +68,7 @@ export const INITIAL_FORM: FormData = {
 export function useCalculadoraState() {
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const { showToast } = useToast();
   const { session } = useAuth();
 
@@ -345,13 +346,13 @@ export function useCalculadoraState() {
   const handleSendEmail = async () => {
     if (!resultado || !session?.access_token) return;
     const summary: Record<string, string> = {
-      Cavalo: (formStep.data as FormData).nome || "—",
-      "Valor estimado": `€${resultado.valorFinal.toLocaleString("pt-PT")}`,
-      Intervalo: `€${resultado.valorMin.toLocaleString("pt-PT")} – €${resultado.valorMax.toLocaleString("pt-PT")}`,
-      Confiança: `${resultado.confianca}%`,
-      "Percentil de mercado": `Top ${100 - resultado.percentil}%`,
-      "Nível de treino": (formStep.data as FormData).treino,
-      Mercado: (formStep.data as FormData).mercado,
+      [tr("Cavalo", "Horse", "Caballo")]: (formStep.data as FormData).nome || "—",
+      [tr("Valor estimado", "Estimated value", "Valor estimado")]: `€${resultado.valorFinal.toLocaleString(locale)}`,
+      [tr("Intervalo", "Range", "Intervalo")]: `€${resultado.valorMin.toLocaleString(locale)} – €${resultado.valorMax.toLocaleString(locale)}`,
+      [tr("Confiança", "Confidence", "Confianza")]: `${resultado.confianca}%`,
+      [tr("Percentil de mercado", "Market percentile", "Percentil de mercado")]: `Top ${100 - resultado.percentil}%`,
+      [tr("Nível de treino", "Training level", "Nivel de entrenamiento")]: (formStep.data as FormData).treino,
+      [tr("Mercado", "Market", "Mercado")]: (formStep.data as FormData).mercado,
     };
     try {
       const res = await fetch("/api/tools/send-results", {

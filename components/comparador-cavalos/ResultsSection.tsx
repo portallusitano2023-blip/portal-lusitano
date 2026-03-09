@@ -77,6 +77,7 @@ export default function ResultsSection({
   const comp = t.comparador as Record<string, string>;
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const vencedor = cavalos.length > 0
     ? cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b))
     : cavalos[0];
@@ -290,7 +291,7 @@ export default function ResultsSection({
               </div>
               <div className="bg-[var(--background-secondary)]/60 rounded-xl p-3 text-center">
                 <p className="text-sm font-semibold text-[var(--foreground)] truncate">
-                  {vencedor.preco > 0 ? `${vencedor.preco.toLocaleString("pt-PT")} €` : "—"}
+                  {vencedor.preco > 0 ? `${vencedor.preco.toLocaleString(locale)} €` : "—"}
                 </p>
                 <p className="text-xs text-[var(--foreground-muted)] mt-0.5">{tr("Preço", "Price", "Precio")}</p>
               </div>
@@ -302,8 +303,8 @@ export default function ResultsSection({
                   <span className="text-emerald-400 font-medium">{tr("Melhor custo-benefício:", "Best cost-benefit:", "Mejor costo-beneficio:")}</span>{" "}
                   <span className="font-medium text-[var(--foreground)]">{melhorValor.nome}</span>{" "}
                   <span className="text-[var(--foreground-muted)]">
-                    ({calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")} €/pt vs.{" "}
-                    {calcularValorPorPonto(vencedor).toLocaleString("pt-PT")} €/pt)
+                    ({calcularValorPorPonto(melhorValor).toLocaleString(locale)} €/pt vs.{" "}
+                    {calcularValorPorPonto(vencedor).toLocaleString(locale)} €/pt)
                   </span>
                 </p>
               </div>
@@ -822,7 +823,7 @@ export default function ResultsSection({
                         className={`text-center py-3 px-3 ${getClasseCor(c[campo] as number, getMelhor(cavalos, campo, maior), maior)}`}
                       >
                         {campo === "preco"
-                          ? `${(c[campo] as number).toLocaleString("pt-PT")}${suffix}`
+                          ? `${(c[campo] as number).toLocaleString(locale)}${suffix}`
                           : `${c[campo]}${suffix}`}
                       </td>
                     ))}
@@ -864,7 +865,7 @@ export default function ResultsSection({
                       key={c.id}
                       className={`text-center py-3 px-3 ${c.id === melhorValor.id ? "text-emerald-400 font-semibold" : "text-[var(--foreground-secondary)]"}`}
                     >
-                      {calcularValorPorPonto(c).toLocaleString("pt-PT")}€
+                      {calcularValorPorPonto(c).toLocaleString(locale)}€
                     </td>
                   ))}
                 </tr>
@@ -921,10 +922,10 @@ export default function ResultsSection({
             <div>
               <p className="text-xl font-bold text-emerald-400">{melhorValor.nome}</p>
               <p className="text-sm text-[var(--foreground-secondary)]">
-                {calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")}€ {comp.per_point}
+                {calcularValorPorPonto(melhorValor).toLocaleString(locale)}€ {comp.per_point}
               </p>
               <p className="text-xs text-[var(--foreground-muted)] mt-1">
-                {melhorValor.preco.toLocaleString("pt-PT")}€ • Score {calcularScore(melhorValor)}
+                {melhorValor.preco.toLocaleString(locale)}€ • Score {calcularScore(melhorValor)}
               </p>
             </div>
           </div>

@@ -46,6 +46,7 @@ export default function BreakdownAnalysis({
 }: BreakdownAnalysisProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   // PRO projections
   const investmentProjections = calcularProjecaoValor(resultado.valorFinal, form.idade);
@@ -101,7 +102,7 @@ export default function BreakdownAnalysis({
                     className={`text-sm font-medium ${cat.impacto >= 0 ? "text-emerald-400" : "text-red-400"}`}
                   >
                     {cat.impacto >= 0 ? "+" : ""}
-                    {cat.impacto.toLocaleString("pt-PT")}&euro;
+                    {cat.impacto.toLocaleString(locale)}&euro;
                   </span>
                 </div>
                 <div className="h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
@@ -368,7 +369,7 @@ export default function BreakdownAnalysis({
                           <span
                             className={`text-sm font-semibold ${isStrong ? "text-emerald-400" : isWeak ? "text-orange-400" : "text-[var(--gold)]"}`}
                           >
-                            +{contribuicao.toLocaleString("pt-PT")} €
+                            +{contribuicao.toLocaleString(locale)} €
                           </span>
                           <p className="text-[10px] text-[var(--foreground-muted)] mt-0.5">
                             {f.score.toFixed(1)}/10
@@ -398,7 +399,7 @@ export default function BreakdownAnalysis({
                     {tr("Valor total calculado", "Total calculated value", "Valor total calculado")}
                   </span>
                   <span className="text-base font-semibold text-[var(--gold)]">
-                    {resultado.valorFinal.toLocaleString("pt-PT")} €
+                    {resultado.valorFinal.toLocaleString(locale)} €
                   </span>
                 </div>
                 <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-1 leading-relaxed">
@@ -575,8 +576,8 @@ export default function BreakdownAnalysis({
                         <Sparkles size={14} className="text-[var(--gold)]" />
                       </div>
                       <span className="text-xs font-bold px-2 py-1 rounded-full bg-[var(--background-card)] text-[var(--gold)] border border-[var(--gold)]/20 whitespace-nowrap">
-                        +{dica.ganhoMin.toLocaleString("pt-PT")} a{" "}
-                        {dica.ganhoMax.toLocaleString("pt-PT")} €
+                        +{dica.ganhoMin.toLocaleString(locale)} a{" "}
+                        {dica.ganhoMax.toLocaleString(locale)} €
                       </span>
                     </div>
                     <h4 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-2">

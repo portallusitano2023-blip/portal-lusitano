@@ -25,7 +25,8 @@ export default function CalculadoraHeader({
   estimativaParcial,
   children,
 }: CalculadoraHeaderProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/90 backdrop-blur-xl border-b border-[var(--background-secondary)]">
@@ -78,8 +79,8 @@ export default function CalculadoraHeader({
               Estimativa parcial
             </p>
             <p className="text-xs font-semibold text-[var(--gold)] leading-tight">
-              €{estimativaParcial.min.toLocaleString("pt-PT")} – €
-              {estimativaParcial.max.toLocaleString("pt-PT")}
+              €{estimativaParcial.min.toLocaleString(locale)} – €
+              {estimativaParcial.max.toLocaleString(locale)}
             </p>
           </div>
         ) : step > 0 ? (
