@@ -27,6 +27,7 @@ import {
   Sparkles,
   Star,
   Heart,
+  Check,
   CheckCircle,
   Zap,
   Euro,
@@ -1090,32 +1091,57 @@ export default function HomeContent({
         />
       </section>
 
-      {/* ===== EBOOK CTA ===== */}
-      <section className="relative py-12 sm:py-32 border-t border-[var(--border)] overflow-hidden noise-overlay">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--gold)]/5 rounded-full blur-[120px]" />
-        </div>
+      {/* ===== EBOOK CTA — cinematic editorial ===== */}
+      <section className="relative overflow-hidden" style={{ borderTop: "1px solid rgba(197,160,89,0.08)" }}>
+        {/* Background atmospheric */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(197,160,89,0.04) 0%, transparent 60%)" }} aria-hidden />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 70% 80%, rgba(197,160,89,0.03) 0%, transparent 50%)" }} aria-hidden />
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
-          <RevealOnScroll variant="fade-left">
-            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
-              {/* Book Preview */}
-              <div className="flex-shrink-0">
-                <div className="relative max-w-[200px] sm:max-w-[240px] mx-auto float-gentle">
-                  {/* Glow externo */}
-                  <div className="absolute inset-0 bg-[var(--gold)]/15 blur-[100px] scale-[1.3]" />
+        {/* Gold tech grid */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: "linear-gradient(rgba(197,160,89,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(197,160,89,0.015) 1px, transparent 1px)",
+            backgroundSize: "80px 80px",
+          }}
+          aria-hidden
+        />
 
-                  {/* Book */}
-                  <div className="relative">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-20 sm:py-32 lg:py-40 relative z-10">
+          <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-20 items-center">
+
+            {/* Left — Book with 3D perspective */}
+            <RevealOnScroll variant="fade-up" delay={100}>
+              <div className="flex justify-center lg:justify-end">
+                <div className="relative" style={{ perspective: "1200px" }}>
+                  {/* Glow behind book */}
+                  <div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                    style={{ width: "350px", height: "450px", background: "radial-gradient(ellipse, rgba(197,160,89,0.1) 0%, transparent 60%)" }}
+                    aria-hidden
+                  />
+
+                  {/* Book container with subtle 3D tilt */}
+                  <div
+                    className="relative w-[220px] sm:w-[260px] lg:w-[280px] float-gentle"
+                    style={{ transformStyle: "preserve-3d", transform: "rotateY(-4deg)" }}
+                  >
                     {/* Spine */}
-                    <div className="absolute -left-4 top-2 bottom-2 w-6 bg-gradient-to-r from-[#2A1A04] via-[#7A5A1E] to-[#8B6B2E] shadow-2xl" />
-                    {/* Page edge */}
-                    <div className="absolute -right-0.5 top-3 bottom-3 w-1.5 bg-gradient-to-l from-transparent to-[#E8D5A0]/8" />
+                    <div
+                      className="absolute -left-5 top-3 bottom-3 w-7 shadow-2xl"
+                      style={{
+                        background: "linear-gradient(to right, #1A0E02, #7A5A1E 40%, #8B6B2E 70%, #5A4010)",
+                        transform: "rotateY(90deg) translateZ(14px)",
+                      }}
+                    />
+
+                    {/* Page edges */}
+                    <div className="absolute -right-1 top-4 bottom-4 w-2" style={{ background: "linear-gradient(to left, transparent, rgba(232,213,160,0.06))" }} />
 
                     {/* Cover */}
-                    <div className="relative bg-gradient-to-b from-[#0E0B04] via-[#0A0803] to-[#060401] border border-[#2A1E08] shadow-[0_30px_90px_rgba(0,0,0,0.85)] aspect-[3/4] overflow-hidden flex flex-col">
+                    <div className="relative bg-gradient-to-b from-[#0E0B04] via-[#0A0803] to-[#060401] border border-[#2A1E08] shadow-[0_40px_100px_rgba(0,0,0,0.8),0_0_60px_rgba(197,160,89,0.06)] aspect-[3/4] overflow-hidden flex flex-col">
 
-                      {/* Textura diagonal */}
+                      {/* Texture diagonal */}
                       <svg className="absolute inset-0 w-full h-full opacity-[0.022]" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                           <pattern id="ebook-grain-home" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -1125,17 +1151,17 @@ export default function HomeContent({
                         <rect width="100%" height="100%" fill="url(#ebook-grain-home)"/>
                       </svg>
 
-                      {/* Barras douradas — topo */}
+                      {/* Top gold bars */}
                       <div className="absolute top-0 left-0 right-0 z-10">
                         <div className="h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
                         <div className="h-px mt-[3px] bg-gradient-to-r from-transparent via-[var(--gold)]/25 to-transparent" />
                       </div>
 
-                      {/* Bordas ornamentais */}
+                      {/* Ornamental borders */}
                       <div className="absolute inset-3 border border-[var(--gold)]/20 pointer-events-none z-10" />
                       <div className="absolute inset-[18px] border border-[var(--gold)]/10 pointer-events-none z-10" />
 
-                      {/* Cantos SVG */}
+                      {/* SVG Corners */}
                       <div className="absolute top-3 left-3 z-10">
                         <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><path d="M22 0 L0 0 L0 22" fill="none" stroke="var(--gold)" strokeWidth="1.2" strokeOpacity="0.45"/><path d="M22 5 L5 5 L5 22" fill="none" stroke="var(--gold)" strokeWidth="0.6" strokeOpacity="0.2"/><circle cx="5" cy="5" r="1.5" fill="var(--gold)" fillOpacity="0.4"/></svg>
                       </div>
@@ -1149,9 +1175,8 @@ export default function HomeContent({
                         <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><path d="M0 22 L22 22 L22 0" fill="none" stroke="var(--gold)" strokeWidth="1.2" strokeOpacity="0.45"/><path d="M0 17 L17 17 L17 0" fill="none" stroke="var(--gold)" strokeWidth="0.6" strokeOpacity="0.2"/><circle cx="17" cy="17" r="1.5" fill="var(--gold)" fillOpacity="0.4"/></svg>
                       </div>
 
-                      {/* Conteúdo interior */}
+                      {/* Interior content */}
                       <div className="relative z-10 flex flex-col items-center justify-between flex-1 py-8 px-7 text-center">
-                        {/* Topo */}
                         <div className="flex flex-col items-center gap-2">
                           <p className="text-[var(--gold)]/50 text-[8px] uppercase tracking-[0.4em]">Portal Lusitano</p>
                           <div className="flex items-center gap-2">
@@ -1163,7 +1188,6 @@ export default function HomeContent({
                           </div>
                         </div>
 
-                        {/* Logo central */}
                         <div className="flex items-center justify-center flex-1 py-2">
                           <div className="relative flex flex-col items-center">
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(197,160,89,0.12)_0%,transparent_65%)] scale-[2.5]" />
@@ -1174,7 +1198,6 @@ export default function HomeContent({
                           </div>
                         </div>
 
-                        {/* Título */}
                         <div className="flex flex-col items-center">
                           <div className="flex items-center gap-2.5 mb-3">
                             <div className="h-px w-10 bg-gradient-to-r from-transparent to-[var(--gold)]/35" />
@@ -1183,18 +1206,18 @@ export default function HomeContent({
                             </svg>
                             <div className="h-px w-10 bg-gradient-to-l from-transparent to-[var(--gold)]/35" />
                           </div>
-                          <p className="text-[var(--foreground-secondary)]/65 text-[8px] tracking-[0.45em] uppercase mb-2">Introdução ao</p>
-                          <h3 className="font-serif text-[var(--gold)] text-[1.35rem] sm:text-[1.55rem] tracking-[0.12em] leading-none uppercase">Cavalo</h3>
-                          <h3 className="font-serif text-[var(--gold)] text-[1.35rem] sm:text-[1.55rem] tracking-[0.12em] leading-none uppercase mb-3">Lusitano</h3>
+                          <p className="text-[var(--foreground-secondary)]/65 text-[8px] tracking-[0.45em] uppercase mb-2">{tr("Introdução ao", "Introduction to", "Introducción al")}</p>
+                          <h3 className="font-serif text-[var(--gold)] text-[1.35rem] sm:text-[1.55rem] tracking-[0.12em] leading-none uppercase">{tr("Cavalo", "Lusitano", "Caballo")}</h3>
+                          <h3 className="font-serif text-[var(--gold)] text-[1.35rem] sm:text-[1.55rem] tracking-[0.12em] leading-none uppercase mb-3">{tr("Lusitano", "Horse", "Lusitano")}</h3>
                           <div className="flex items-center mb-2">
                             <div className="h-px w-12 bg-gradient-to-r from-transparent to-[var(--gold)]/18" />
                             <div className="h-px w-12 bg-gradient-to-l from-transparent to-[var(--gold)]/18" />
                           </div>
-                          <p className="text-[var(--foreground-muted)]/55 text-[7px] tracking-[0.3em] uppercase">O Guia Essencial · 2026</p>
+                          <p className="text-[var(--foreground-muted)]/55 text-[7px] tracking-[0.3em] uppercase">{tr("O Guia Essencial", "The Essential Guide", "La Guía Esencial")} · 2026</p>
                         </div>
                       </div>
 
-                      {/* Barras douradas — fundo */}
+                      {/* Bottom gold bars */}
                       <div className="absolute bottom-0 left-0 right-0 z-10">
                         <div className="h-px mb-[3px] bg-gradient-to-r from-transparent via-[var(--gold)]/25 to-transparent" />
                         <div className="h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
@@ -1202,58 +1225,121 @@ export default function HomeContent({
                     </div>
                   </div>
 
-                  {/* GRÁTIS badge */}
-                  <div className="absolute -top-3 -right-3 sm:-top-5 sm:-right-5 bg-[var(--gold)] text-black px-3 sm:px-5 py-1.5 sm:py-2.5 text-[10px] sm:text-xs font-bold shadow-lg">
-                    GRÁTIS
+                  {/* GRATIS badge — refined */}
+                  <div
+                    className="absolute -top-4 -right-4 sm:-top-5 sm:-right-5 z-20 bg-[var(--gold)] text-black px-4 sm:px-6 py-2 sm:py-3 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] shadow-[0_8px_30px_rgba(197,160,89,0.3)]"
+                  >
+                    {tr("Grátis", "Free", "Gratis")}
                   </div>
 
-                  {/* Star rating */}
-                  <div className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 bg-[var(--background-secondary)] border border-[var(--border)] px-3 sm:px-4 py-2 sm:py-2.5 shadow-xl flex items-center gap-2 sm:gap-2.5">
+                  {/* Star rating — refined */}
+                  <div
+                    className="absolute -bottom-4 -left-4 sm:-bottom-5 sm:-left-5 z-20 flex items-center gap-2.5 px-4 sm:px-5 py-2.5 sm:py-3 shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
+                    style={{ background: "var(--background)", border: "1px solid rgba(197,160,89,0.12)" }}
+                  >
                     <div className="flex gap-0.5">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} size={11} className="fill-[var(--gold)] text-[var(--gold)]" />
                       ))}
                     </div>
                     <span className="text-[var(--foreground)] text-[10px] sm:text-xs font-medium">4.9/5</span>
-                    <span className="text-[var(--foreground-muted)] text-[10px]">(234)</span>
+                    <span className="text-[var(--foreground-muted)] text-[9px]">(234)</span>
                   </div>
                 </div>
               </div>
+            </RevealOnScroll>
 
-              {/* Text */}
-              <div className="text-center md:text-left flex-1">
-                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--gold)] mb-2 sm:mb-4 block">
-                  Ebook {tr("Gratuito", "Free", "Gratuito")}
-                </span>
-                <h2 className="text-xl sm:text-3xl md:text-4xl font-serif text-[var(--foreground)] mb-3 sm:mb-4">
+            {/* Right — Editorial content */}
+            <RevealOnScroll variant="fade-up" delay={250}>
+              <div className="text-center lg:text-left">
+                {/* Section label */}
+                <div className="flex items-center justify-center lg:justify-start gap-3 mb-6">
+                  <div className="w-6 h-px" style={{ background: "rgba(197,160,89,0.55)" }} aria-hidden />
+                  <span className="text-[8px] font-mono uppercase tracking-[0.6em] text-[var(--gold)]/70">
+                    Ebook {tr("Gratuito", "Free", "Gratuito")}
+                  </span>
+                  <div className="w-6 h-px hidden lg:block" style={{ background: "linear-gradient(to right, rgba(197,160,89,0.55), transparent)" }} aria-hidden />
+                </div>
+
+                {/* Title */}
+                <h2
+                  className="font-serif text-[var(--foreground)] leading-[0.95] mb-6"
+                  style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)" }}
+                >
                   {tr(
                     "O Guia Essencial do Lusitano",
                     "The Essential Lusitano Guide",
                     "La Guía Esencial del Lusitano"
                   )}
                 </h2>
-                <p className="block text-sm sm:text-base text-[var(--foreground-secondary)] leading-relaxed mb-5 sm:mb-8 max-w-lg mx-auto md:mx-0">
+
+                {/* Gold accent line */}
+                <div
+                  className="mb-8 mx-auto lg:mx-0"
+                  style={{
+                    width: "clamp(50px, 10vw, 100px)",
+                    height: "1px",
+                    background: "linear-gradient(to right, rgba(197,160,89,0.7), transparent)",
+                  }}
+                  aria-hidden
+                />
+
+                {/* Description */}
+                <p className="text-[var(--foreground-secondary)] text-sm sm:text-base leading-[1.85] mb-10 max-w-lg mx-auto lg:mx-0">
                   {tr(
-                    "Descobre a história, as características e o que torna esta raça única. 30 páginas de conhecimento gratuito.",
-                    "Discover the history, characteristics and what makes this breed unique. 30 pages of free knowledge.",
-                    "Descubre la historia, las características y lo que hace única a esta raza. 30 páginas de conocimiento gratuito."
+                    "Descobre a história, as características e o que torna esta raça única. 30 páginas de conhecimento gratuito para entusiastas e profissionais.",
+                    "Discover the history, characteristics and what makes this breed unique. 30 pages of free knowledge for enthusiasts and professionals.",
+                    "Descubre la historia, las características y lo que hace única a esta raza. 30 páginas de conocimiento gratuito para entusiastas y profesionales."
                   )}
                 </p>
-                <div className="flex justify-center md:justify-start">
+
+                {/* What you'll learn — editorial list */}
+                <div className="mb-10 space-y-3 text-left max-w-md mx-auto lg:mx-0">
+                  {[
+                    tr("Origens e evolução da raça", "Origins and breed evolution", "Orígenes y evolución de la raza"),
+                    tr("Características físicas e temperamento", "Physical traits and temperament", "Características físicas y temperamento"),
+                    tr("Disciplinas e aptidões naturais", "Disciplines and natural abilities", "Disciplinas y aptitudes naturales"),
+                    tr("Guia de aquisição responsável", "Responsible acquisition guide", "Guía de adquisición responsable"),
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 group/item">
+                      <div
+                        className="w-5 h-5 flex items-center justify-center flex-shrink-0 group-hover/item:bg-[var(--gold)]/10 transition-colors duration-300"
+                        style={{ border: "1px solid rgba(197,160,89,0.2)" }}
+                      >
+                        <Check size={10} className="text-[var(--gold)]" />
+                      </div>
+                      <span className="text-[var(--foreground-secondary)] text-sm group-hover/item:text-[var(--foreground)] transition-colors duration-300">
+                        {item}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <div className="flex justify-center lg:justify-start">
                   <MagneticButton>
                     <LocalizedLink
                       href="/ebook-gratis"
-                      className="ripple-btn inline-flex items-center gap-3 bg-gradient-to-r from-[var(--gold)] to-[var(--gold-hover)] text-black px-8 py-4 text-[11px] uppercase tracking-[0.15em] font-bold hover:from-white hover:to-white transition-[background,box-shadow] duration-300 shadow-[0_0_30px_rgba(197,160,89,0.15)]"
+                      className="ripple-btn inline-flex items-center gap-3 bg-[var(--gold)] text-black px-10 py-4.5 text-[9px] uppercase tracking-[0.3em] font-bold hover:bg-white transition-[background-color] duration-300 shadow-[0_8px_32px_rgba(197,160,89,0.2)] group/cta"
                     >
-                      <Gift size={16} />
+                      <Gift size={15} aria-hidden />
                       {tr("Descarregar Grátis", "Download Free", "Descargar Gratis")}
+                      <ArrowRight size={11} className="group-hover/cta:translate-x-1 transition-transform duration-300" aria-hidden />
                     </LocalizedLink>
                   </MagneticButton>
                 </div>
+
+                {/* Micro-copy */}
+                <p className="text-[7px] font-mono uppercase tracking-[0.4em] text-[var(--foreground-muted)]/35 mt-5 text-center lg:text-left">
+                  {tr("PDF · 30 páginas · Sem registo obrigatório", "PDF · 30 pages · No registration required", "PDF · 30 páginas · Sin registro obligatorio")}
+                </p>
               </div>
-            </div>
-          </RevealOnScroll>
+            </RevealOnScroll>
+          </div>
         </div>
+
+        {/* Bottom hairline */}
+        <div className="absolute bottom-0 inset-x-0 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(197,160,89,0.15), transparent)" }} aria-hidden />
       </section>
 
       {/* ===== STICKY SCROLL CTA — componente isolado para evitar re-render da página ===== */}
