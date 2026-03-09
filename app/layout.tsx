@@ -8,10 +8,10 @@ import { Providers } from "./providers";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
 
-const CustomCursor = dynamic(() => import("@/components/CustomCursor"));
-const SmoothScroll = dynamic(() => import("@/components/SmoothScroll"));
-const RouteProgressBar = dynamic(() => import("@/components/RouteProgressBar"));
-const BottomNav = dynamic(() => import("@/components/BottomNav"));
+const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
+const SmoothScroll = dynamic(() => import("@/components/SmoothScroll"), { ssr: false });
+const RouteProgressBar = dynamic(() => import("@/components/RouteProgressBar"), { ssr: false });
+const BottomNav = dynamic(() => import("@/components/BottomNav"), { ssr: false });
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({

@@ -18,6 +18,8 @@ export default function CustomCursor() {
   const trailPositions = useRef<{ x: number; y: number }[]>([]);
   const visible = useRef(false);
   const raf = useRef(0);
+  const moving = useRef(false);
+  const idleTimer = useRef<ReturnType<typeof setTimeout>>();
 
   const TRAIL_COUNT = 3;
 
@@ -25,15 +27,21 @@ export default function CustomCursor() {
     if (el) trailRefs.current[i] = el;
   }, []);
 
-  // Trail-only RAF loop — dot is updated directly in mousemove
+  // Trail-only RAF loop — stops when trail converges (idle cursor)
   const animateTrail = useCallback(() => {
+    let needsUpdate = false;
     for (let i = 0; i < TRAIL_COUNT; i++) {
       const target = i === 0 ? pos.current : trailPositions.current[i - 1];
       const tp = trailPositions.current[i];
       if (!tp || !target) continue;
 
-      tp.x += (target.x - tp.x) * 0.45;
-      tp.y += (target.y - tp.y) * 0.45;
+      const dx = target.x - tp.x;
+      const dy = target.y - tp.y;
+      if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+        needsUpdate = true;
+        tp.x += dx * 0.45;
+        tp.y += dy * 0.45;
+      }
 
       const el = trailRefs.current[i];
       if (el) {
@@ -41,7 +49,11 @@ export default function CustomCursor() {
       }
     }
 
-    raf.current = requestAnimationFrame(animateTrail);
+    if (needsUpdate) {
+      raf.current = requestAnimationFrame(animateTrail);
+    } else {
+      moving.current = false;
+    }
   }, []);
 
   useEffect(() => {
@@ -88,6 +100,12 @@ export default function CustomCursor() {
         }
         show();
       }
+
+      // Restart RAF loop if idle
+      if (!moving.current) {
+        moving.current = true;
+        raf.current = requestAnimationFrame(animateTrail);
+      }
     };
 
     const onLeave = () => { visible.current = false; hide(); };
@@ -116,6 +134,7 @@ export default function CustomCursor() {
     document.addEventListener("mouseover", onOver, { passive: true });
     document.addEventListener("mouseout", onOut, { passive: true });
 
+    moving.current = true;
     raf.current = requestAnimationFrame(animateTrail);
 
     return () => {
@@ -125,6 +144,7 @@ export default function CustomCursor() {
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOut);
       cancelAnimationFrame(raf.current);
+      clearTimeout(idleTimer.current);
       style.remove();
     };
   }, [animateTrail]);

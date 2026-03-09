@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("cavalos_venda")
-      .select("*, coudelarias(nome, slug)")
+      .select("id, nome, slug, sexo, idade, preco, regiao, nivel_treino, disciplina, raca, imagens, destaque, created_at, coudelarias(nome, slug)")
       .eq("status", "active")
       .order("destaque", { ascending: false })
       .order("created_at", { ascending: false });

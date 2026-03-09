@@ -1,6 +1,3 @@
-"use client";
-
-import type { Metadata } from "next";
 import LocalizedLink from "@/components/LocalizedLink";
 
 export default function DevolucoesPage() {

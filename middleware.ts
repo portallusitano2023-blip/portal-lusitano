@@ -46,6 +46,7 @@ function getClientIp(request: NextRequest): string {
 // Pre-computed at module load — avoids string concatenation on every request
 const IS_DEV = process.env.NODE_ENV === "development";
 const ALLOWED_ORIGIN = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
+const ALLOWED_HOSTS = [new URL(ALLOWED_ORIGIN).host, "localhost:3000", "localhost:3001"];
 
 /**
  * CSRF protection: validate Origin header on state-changing requests.
@@ -63,7 +64,7 @@ function isValidOrigin(request: NextRequest): boolean {
   // Webhooks (Stripe, cron) don't send Origin — allow server-to-server calls
   if (!origin && !referer) return true;
 
-  const allowedHosts = [new URL(ALLOWED_ORIGIN).host, "localhost:3000", "localhost:3001"];
+  const allowedHosts = ALLOWED_HOSTS;
 
   if (origin) {
     try {
