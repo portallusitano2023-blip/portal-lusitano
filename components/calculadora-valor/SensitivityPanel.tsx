@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { TrendingUp, ArrowUpRight } from "lucide-react";
 import type { FormData, Resultado } from "./types";
 import { calcularValor } from "./utils";
-import { TREINO_LABELS, COMP_LABELS, SAUDE_LABELS, LINHAGEM_LABELS } from "@/lib/tools/shared-data";
+import { TREINO_LABELS, COMP_LABELS, SAUDE_LABELS, LINHAGEM_LABELS, getSharedLabel } from "@/lib/tools/shared-data";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 

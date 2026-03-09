@@ -14,7 +14,7 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import Tooltip from "@/components/tools/Tooltip";
-import { MERCADOS } from "./data";
+import { MERCADOS, localizedLabel } from "./data";
 import type { FormData, StepProps } from "./types";
 
 export default function StepReproducaoMercado({ form, update }: StepProps) {
@@ -121,7 +121,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                       : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
                   }`}
                 >
-                  <span>{m.label}</span>
+                  <span>{localizedLabel(m, language)}</span>
                   <span
                     className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
                       badgeType === "pos"

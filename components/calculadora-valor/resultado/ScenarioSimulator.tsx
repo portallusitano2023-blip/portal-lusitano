@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Zap } from "lucide-react";
 import { calcularValor } from "../utils";
 import type { FormData, Resultado } from "../types";
-import { TREINO_LABELS, COMP_LABELS } from "@/lib/tools/shared-data";
+import { TREINO_LABELS, COMP_LABELS, getSharedLabel } from "@/lib/tools/shared-data";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 

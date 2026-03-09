@@ -1,8 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { Calculator, ArrowLeft, RefreshCw, Pencil } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface CalculadoraHeaderProps {
   step: number;
@@ -26,6 +28,7 @@ export default function CalculadoraHeader({
   children,
 }: CalculadoraHeaderProps) {
   const { t, language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   return (

@@ -5,7 +5,7 @@ import { Dna } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import Tooltip from "@/components/tools/Tooltip";
-import { LINHAGENS_FAMOSAS } from "./data";
+import { LINHAGENS_FAMOSAS, localizedLabel, localizedDesc } from "./data";
 import type { FormData, NumericFormKey, StepProps } from "./types";
 
 const LINEAGE_IMPACT: Record<string, { label: string; type: "pos" | "neg" | "base" }> = {
@@ -160,9 +160,9 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
                   <span
                     className={`block text-sm font-medium ${form.linhagemPrincipal === lin.value ? "text-[var(--gold)]" : "text-[var(--foreground-secondary)]"}`}
                   >
-                    {lin.label}
+                    {localizedLabel(lin, language)}
                   </span>
-                  <span className="text-xs text-[var(--foreground-muted)]">{lin.desc}</span>
+                  <span className="text-xs text-[var(--foreground-muted)]">{localizedDesc(lin, language)}</span>
                 </button>
               ))}
             </div>
@@ -205,7 +205,7 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
                   aria-valuenow={form[item.key]}
                   aria-valuemin={1}
                   aria-valuemax={10}
-                  aria-valuetext={`${form[item.key]} de 10`}
+                  aria-valuetext={`${form[item.key]} ${tr("de", "of", "de")} 10`}
                   className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-[var(--gold)]"
                   style={{ touchAction: "manipulation" }}
                 />
