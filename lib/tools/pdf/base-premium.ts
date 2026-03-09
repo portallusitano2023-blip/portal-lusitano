@@ -79,7 +79,8 @@ export function fillPageBg(doc: jsPDF): void {
 }
 
 /** Gold gradient top bar with PORTAL LUSITANO branding (cover page) — 18mm tall */
-export function addCoverTopBar(doc: jsPDF): void {
+export function addCoverTopBar(doc: jsPDF, language?: string): void {
+  const L = (pt: string, en: string, es: string) => language === "en" ? en : language === "es" ? es : pt;
   const barH = 18;
 
   // Dark base (full bar)
@@ -100,7 +101,7 @@ export function addCoverTopBar(doc: jsPDF): void {
   doc.setTextColor(...WHITE);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("Relatório de Avaliação Equina", PAGE_W / 2, 15, { align: "center" });
+  doc.text(L("Relatório de Avaliação Equina", "Equine Evaluation Report", "Informe de Evaluación Equina"), PAGE_W / 2, 15, { align: "center" });
 }
 
 /** Header bar for inner pages (pages 2+) */
@@ -143,7 +144,8 @@ export interface HeroConfig {
  * Right (40%): decorative diamond with "Top X%" percentile.
  * Height: 79mm (was 65mm, +14mm for confidence bar section).
  */
-export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number, locale?: string): number {
+export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number, locale?: string, language?: string): number {
+  const L = (pt: string, en: string, es: string) => language === "en" ? en : language === "es" ? es : pt;
   const { value, min, max, percentil } = cfg;
   const cardH = 79; // expanded from 65 to fit confidence bar
   const cardX = MARGIN;
@@ -170,7 +172,7 @@ export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number, locale?: st
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("VALOR ESTIMADO", cardX + 9, y + 11);
+  doc.text(L("VALOR ESTIMADO", "ESTIMATED VALUE", "VALOR ESTIMADO"), cardX + 9, y + 11);
 
   // Main EUR value (large hero element)
   const valueStr = value.toLocaleString(locale ?? "pt-PT");
@@ -212,7 +214,7 @@ export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number, locale?: st
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6);
   doc.setFont("helvetica", "normal");
-  doc.text("Percentil", confBarX, confBarY + confBarH + 4);
+  doc.text(L("Percentil", "Percentile", "Percentil"), confBarX, confBarY + confBarH + 4);
 
   // "Top X%" value to the right in GOLD bold
   doc.setTextColor(...GOLD);
@@ -276,7 +278,7 @@ export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number, locale?: st
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("do mercado", rightCenterX, diamondCY + 6, { align: "center" });
+  doc.text(L("do mercado", "of market", "del mercado"), rightCenterX, diamondCY + 6, { align: "center" });
 
   return y + cardH + 7;
 }
@@ -324,17 +326,17 @@ export function addMetricsRow(doc: jsPDF, metrics: MetricBox[], y: number): numb
 
 // ─── Training Level ───────────────────────────────────────────────────────────
 
-const TRAINING_LEVELS = [
-  { key: "iniciacao", label: "Iniciação" },
-  { key: "elementar", label: "Elementar" },
-  { key: "medio", label: "Médio" },
-  { key: "avancado", label: "Avançado" },
-  { key: "alto_escolar", label: "A.Escolar" },
-  { key: "internacional", label: "Intern." },
-] as const;
-
 /** Segmented training level indicator */
-export function addTrainingLevel(doc: jsPDF, treinoKey: string, y: number): number {
+export function addTrainingLevel(doc: jsPDF, treinoKey: string, y: number, language?: string): number {
+  const L = (pt: string, en: string, es: string) => language === "en" ? en : language === "es" ? es : pt;
+  const TRAINING_LEVELS = [
+    { key: "iniciacao", label: L("Iniciação", "Initiation", "Iniciación") },
+    { key: "elementar", label: L("Elementar", "Elementary", "Elemental") },
+    { key: "medio", label: L("Médio", "Medium", "Medio") },
+    { key: "avancado", label: L("Avançado", "Advanced", "Avanzado") },
+    { key: "alto_escolar", label: L("A.Escolar", "A.School", "A.Escolar") },
+    { key: "internacional", label: L("Intern.", "Intern.", "Intern.") },
+  ];
   const activeIdx = TRAINING_LEVELS.findIndex((l) => l.key === treinoKey);
   const segW = CONTENT_W / TRAINING_LEVELS.length;
   const segH = 7;
@@ -343,7 +345,7 @@ export function addTrainingLevel(doc: jsPDF, treinoKey: string, y: number): numb
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7.5);
   doc.setFont("helvetica", "normal");
-  doc.text("NÍVEL DE TREINO", MARGIN, y - 2);
+  doc.text(L("NÍVEL DE TREINO", "TRAINING LEVEL", "NIVEL DE ENTRENAMIENTO"), MARGIN, y - 2);
 
   TRAINING_LEVELS.forEach((level, i) => {
     const x = MARGIN + i * segW;
@@ -906,7 +908,8 @@ export function addScoreGrid(
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 /** Premium footer on every page */
-export function addPremiumFooter(doc: jsPDF): void {
+export function addPremiumFooter(doc: jsPDF, language?: string): void {
+  const L = (pt: string, en: string, es: string) => language === "en" ? en : language === "es" ? es : pt;
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
@@ -924,7 +927,11 @@ export function addPremiumFooter(doc: jsPDF): void {
     doc.setFontSize(6.5);
     doc.setFont("helvetica", "normal");
     doc.text(
-      "portal-lusitano.pt  |  Avaliação estimativa. Não substitui avaliação profissional.",
+      L(
+        "portal-lusitano.pt  |  Avaliação estimativa. Não substitui avaliação profissional.",
+        "portal-lusitano.pt  |  Estimated valuation. Does not replace professional assessment.",
+        "portal-lusitano.pt  |  Valoración estimativa. No sustituye evaluación profesional."
+      ),
       MARGIN,
       290
     );
@@ -949,14 +956,16 @@ export function addPremiumFooter(doc: jsPDF): void {
 }
 
 /** Diagonal watermark for free-tier PDFs */
-export function addPremiumWatermark(doc: jsPDF, text = "VERSÃO GRATUITA"): void {
+export function addPremiumWatermark(doc: jsPDF, language?: string, text?: string): void {
+  const L = (pt: string, en: string, es: string) => language === "en" ? en : language === "es" ? es : pt;
+  const label = text ?? L("VERSÃO GRATUITA", "FREE VERSION", "VERSIÓN GRATUITA");
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setTextColor(38, 38, 38);
     doc.setFontSize(36);
     doc.setFont("helvetica", "bold");
-    doc.text(text, PAGE_W / 2, PAGE_H / 2, { align: "center", angle: 45 });
+    doc.text(label, PAGE_W / 2, PAGE_H / 2, { align: "center", angle: 45 });
   }
 }
 

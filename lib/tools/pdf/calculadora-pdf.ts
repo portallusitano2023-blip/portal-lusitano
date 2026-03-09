@@ -185,7 +185,7 @@ export async function generateCalculadoraPDF(
   doc.setLineWidth(0.4);
   doc.circle(PAGE_W * 0.75, PAGE_H * 0.4, 60, "S");
 
-  addCoverTopBar(doc); // 18mm tall bar
+  addCoverTopBar(doc, language); // 18mm tall bar
 
   // Decorative gold corner brackets
   doc.setDrawColor(...GOLD);
@@ -256,7 +256,7 @@ export async function generateCalculadoraPDF(
       cdi5: L("CDI5* Top FEI", "CDI5* Top FEI", "CDI5* Top FEI"),
       campeonato_mundo: L("Campe\u00E3o Mundial", "World Champion", "Campe\u00F3n Mundial"),
     };
-    badges.push(compBadge[form.competicoes] ?? "Competi\u00E7\u00E3o");
+    badges.push(compBadge[form.competicoes] ?? L("Competição", "Competition", "Competición"));
   }
   if (form.raioX && form.exameVeterinario) {
     badges.push(L("Docs Completos", "Full Documentation", "Docs Completos"));
@@ -296,18 +296,19 @@ export async function generateCalculadoraPDF(
       percentil: resultado.percentil,
     },
     y,
-    locale
+    locale,
+    language
   );
 
   // 4 key metrics (26mm boxes)
   y = addMetricsRow(
     doc,
     [
-      { label: "Confiança", value: `${resultado.confianca}%` },
+      { label: L("Confiança", "Confidence", "Confianza"), value: `${resultado.confianca}%` },
       { label: "BLUP", value: String(resultado.blup) },
       { label: "Ranking", value: `Top ${Math.max(1, 100 - resultado.percentil)}%` },
       {
-        label: "Liquidez",
+        label: L("Liquidez", "Liquidity", "Liquidez"),
         value: resultado.liquidez
           ? safe(resultado.liquidez.label.split(" ")[0])
           : `${resultado.multiplicador}x`,
@@ -317,7 +318,7 @@ export async function generateCalculadoraPDF(
   );
 
   // Training level segmented bar
-  y = addTrainingLevel(doc, form.treino, y + 3);
+  y = addTrainingLevel(doc, form.treino, y + 3, language);
 
   // Decorative divider
   y += 3;
@@ -392,7 +393,7 @@ export async function generateCalculadoraPDF(
       const liqColor: [number, number, number] =
         liqScore >= 80 ? GREEN : liqScore >= 65 ? GOLD : liqScore >= 50 ? AMBER : RED;
 
-      const liqStr = `~${resultado.liquidez.tempoDias} dias`;
+      const liqStr = `~${resultado.liquidez.tempoDias} ${L("dias", "days", "días")}`;
       doc.setFontSize(6.5);
       doc.setFont("helvetica", "bold");
       const liqW = doc.getTextWidth(safe(liqStr)) + 6;
@@ -571,43 +572,43 @@ export async function generateCalculadoraPDF(
 
   // ── Improvement 4: Grouped score grid with category headers ────────────────
   if (form.morfologia !== undefined || form.andamentos !== undefined) {
-    const scoreItems: { label: string; score: number }[] = [];
+    const scoreItems: { key: string; label: string; score: number }[] = [];
     if (form.morfologia !== undefined)
-      scoreItems.push({ label: "Morfologia", score: form.morfologia });
-    if (form.garupa !== undefined) scoreItems.push({ label: "Garupa", score: form.garupa });
-    if (form.espádua !== undefined) scoreItems.push({ label: "Esp\u00E1dua", score: form.espádua });
-    if (form.cabeca !== undefined) scoreItems.push({ label: "Cabe\u00E7a", score: form.cabeca });
-    if (form.membros !== undefined) scoreItems.push({ label: "Membros", score: form.membros });
+      scoreItems.push({ key: "morfologia", label: L("Morfologia", "Morphology", "Morfología"), score: form.morfologia });
+    if (form.garupa !== undefined) scoreItems.push({ key: "garupa", label: L("Garupa", "Croup", "Grupa"), score: form.garupa });
+    if (form.espádua !== undefined) scoreItems.push({ key: "espadua", label: L("Espádua", "Shoulder", "Espalda"), score: form.espádua });
+    if (form.cabeca !== undefined) scoreItems.push({ key: "cabeca", label: L("Cabeça", "Head", "Cabeza"), score: form.cabeca });
+    if (form.membros !== undefined) scoreItems.push({ key: "membros", label: L("Membros", "Limbs", "Miembros"), score: form.membros });
     if (form.andamentos !== undefined)
-      scoreItems.push({ label: "Andamentos", score: form.andamentos });
+      scoreItems.push({ key: "andamentos", label: L("Andamentos", "Gaits", "Aires"), score: form.andamentos });
     if (form.elevacao !== undefined)
-      scoreItems.push({ label: "Eleva\u00E7\u00E3o", score: form.elevacao });
+      scoreItems.push({ key: "elevacao", label: L("Elevação", "Elevation", "Elevación"), score: form.elevacao });
     if (form.suspensao !== undefined)
-      scoreItems.push({ label: "Suspens\u00E3o", score: form.suspensao });
+      scoreItems.push({ key: "suspensao", label: L("Suspensão", "Suspension", "Suspensión"), score: form.suspensao });
     if (form.regularidade !== undefined)
-      scoreItems.push({ label: "Regularidade", score: form.regularidade });
+      scoreItems.push({ key: "regularidade", label: L("Regularidade", "Regularity", "Regularidad"), score: form.regularidade });
     if (form.temperamento !== undefined)
-      scoreItems.push({ label: "Temperamento", score: form.temperamento });
+      scoreItems.push({ key: "temperamento", label: L("Temperamento", "Temperament", "Temperamento"), score: form.temperamento });
     if (form.sensibilidade !== undefined)
-      scoreItems.push({ label: "Sensibilidade", score: form.sensibilidade });
+      scoreItems.push({ key: "sensibilidade", label: L("Sensibilidade", "Sensitivity", "Sensibilidad"), score: form.sensibilidade });
     if (form.vontadeTrabalho !== undefined)
-      scoreItems.push({ label: "Vont. Trabalho", score: form.vontadeTrabalho });
+      scoreItems.push({ key: "vontade_trabalho", label: L("Vont. Trabalho", "Work Ethic", "Vol. Trabajo"), score: form.vontadeTrabalho });
 
     if (scoreItems.length > 0) {
       doc.setFillColor(35, 35, 35);
       doc.rect(MARGIN, y, CONTENT_W, 0.3, "F");
       y += 9;
-      y = addSectionTitle(doc, L("Avalia\u00E7\u00E3o Detalhada", "Detailed Evaluation", "Evaluaci\u00F3n Detallada"), y);
+      y = addSectionTitle(doc, L("Avaliação Detalhada", "Detailed Evaluation", "Evaluación Detallada"), y);
 
-      // Group items into three morphological / movement / character buckets
+      // Group items into three morphological / movement / character buckets using stable keys
       const morfoItems = scoreItems.filter((s) =>
-        ["Morfologia", "Garupa", "Esp\u00E1dua", "Cabe\u00E7a", "Membros"].includes(s.label)
+        ["morfologia", "garupa", "espadua", "cabeca", "membros"].includes(s.key)
       );
       const andItems = scoreItems.filter((s) =>
-        ["Andamentos", "Eleva\u00E7\u00E3o", "Suspens\u00E3o", "Regularidade"].includes(s.label)
+        ["andamentos", "elevacao", "suspensao", "regularidade"].includes(s.key)
       );
       const tempItems = scoreItems.filter((s) =>
-        ["Temperamento", "Sensibilidade", "Vont. Trabalho"].includes(s.label)
+        ["temperamento", "sensibilidade", "vontade_trabalho"].includes(s.key)
       );
 
       const groups: { title: string; items: typeof scoreItems }[] = [
@@ -1073,9 +1074,9 @@ export async function generateCalculadoraPDF(
   doc.text(blupStr, blupPillX + blupW / 2, certY + 24.5, { align: "center" });
 
   // ── Footer + optional watermark ────────────────────────────────────────────
-  addPremiumFooter(doc);
+  addPremiumFooter(doc, language);
   if (!isPremium) {
-    addPremiumWatermark(doc);
+    addPremiumWatermark(doc, language);
   }
 
   const blob = doc.output("blob");

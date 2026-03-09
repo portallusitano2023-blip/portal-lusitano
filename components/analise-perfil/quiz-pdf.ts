@@ -94,7 +94,7 @@ export async function generateProfilePDF(
   doc.setLineWidth(0.4);
   doc.circle(PAGE_W * 0.75, PAGE_H * 0.4, 60, "S");
 
-  addCoverTopBar(doc);
+  addCoverTopBar(doc, language);
 
   // Gold corner brackets
   doc.setDrawColor(...GOLD);
@@ -768,8 +768,8 @@ export async function generateProfilePDF(
   }
 
   // ── Footer ──────────────────────────────────────────────────────────────────
-  addPremiumFooter(doc);
-  addPremiumWatermark(doc, "PORTAL LUSITANO");
+  addPremiumFooter(doc, language);
+  addPremiumWatermark(doc, language, "PORTAL LUSITANO");
 
   doc.save(`analise-perfil-${result.profile}-${Date.now().toString(36).slice(-6)}.pdf`);
 }

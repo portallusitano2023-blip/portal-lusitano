@@ -115,7 +115,7 @@ export async function generateCompatibilidadePDF(
   doc.setLineWidth(0.4);
   doc.circle(PAGE_W * 0.72, PAGE_H * 0.42, 55, "S");
 
-  addCoverTopBar(doc);
+  addCoverTopBar(doc, language);
 
   // Gold corner brackets
   doc.setDrawColor(...GOLD);
@@ -634,9 +634,9 @@ export async function generateCompatibilidadePDF(
   }
 
   // ── Footer & watermark ─────────────────────────────────────────────────────
-  addPremiumFooter(doc);
+  addPremiumFooter(doc, language);
   if (!isPremium) {
-    addPremiumWatermark(doc);
+    addPremiumWatermark(doc, language);
   }
 
   doc.save(
