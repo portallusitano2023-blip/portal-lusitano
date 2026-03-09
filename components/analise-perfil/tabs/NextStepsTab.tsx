@@ -106,11 +106,9 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
           </LocalizedLink>
 
           {/* Comparador de Cavalos */}
-          <button
-            onClick={() => {
-              pushProfileContext();
-              window.location.href = "/comparador-cavalos";
-            }}
+          <LocalizedLink
+            href="/comparador-cavalos"
+            onClick={pushProfileContext}
             className="group flex items-start gap-4 p-4 bg-[var(--background-card)]/30 border border-[var(--border)] hover:border-blue-500/50 transition-all rounded-xl text-left w-full"
           >
             <div className="w-10 h-10 rounded-lg bg-blue-500/15 flex items-center justify-center shrink-0 group-hover:bg-blue-500/25 transition-colors">
@@ -138,7 +136,7 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
               size={16}
               className="text-[var(--foreground-muted)] group-hover:text-blue-400 shrink-0 mt-0.5 transition-colors"
             />
-          </button>
+          </LocalizedLink>
 
           {/* Verificador (só para criador) */}
           {result.profile === "criador" && (

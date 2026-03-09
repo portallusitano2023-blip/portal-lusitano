@@ -63,7 +63,6 @@ vi.mock("@/hooks/useToolAccess", () => ({
     isSubscribed: false,
     freeUsesLeft: 3,
     requiresAuth: false,
-    recordUsage: vi.fn(),
     isLoading: false,
   }),
 }));

@@ -1,8 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
 import { Info } from "lucide-react";
 import GeneticSummary from "@/components/tools/GeneticSummary";
 import ResultActions from "@/components/tools/ResultActions";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Cavalo, ResultadoCompatibilidade } from "../types";
 import type { Translations } from "@/context/LanguageContext";
 
@@ -25,6 +28,9 @@ export default function PairSummary({
   onShare,
   t: _t,
 }: PairSummaryProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   return (
     <>
       {/* O que significa este score? */}
@@ -33,7 +39,11 @@ export default function PairSummary({
         const interpretation =
           s >= 80
             ? {
-                text: "Excelente compatibilidade genética. Esta combinação tem alto potencial para produzir descendentes de qualidade superior. Recomendado para programa de cruzamento seletivo.",
+                text: tr(
+                  "Excelente compatibilidade genética. Esta combinação tem alto potencial para produzir descendentes de qualidade superior. Recomendado para programa de cruzamento seletivo.",
+                  "Excellent genetic compatibility. This combination has high potential to produce superior quality offspring. Recommended for selective breeding programme.",
+                  "Excelente compatibilidad genética. Esta combinación tiene alto potencial para producir descendientes de calidad superior. Recomendado para programa de cruzamiento selectivo."
+                ),
                 border: "border-l-emerald-500",
                 bg: "bg-emerald-500/5",
                 iconColor: "text-emerald-400",
@@ -41,7 +51,11 @@ export default function PairSummary({
               }
             : s >= 65
               ? {
-                  text: "Boa compatibilidade genética. Esta combinação é adequada para cruzamento com expectativas de descendentes competitivos. Considere os fatores específicos abaixo.",
+                  text: tr(
+                    "Boa compatibilidade genética. Esta combinação é adequada para cruzamento com expectativas de descendentes competitivos. Considere os fatores específicos abaixo.",
+                    "Good genetic compatibility. This combination is suitable for breeding with competitive offspring expectations. Consider the specific factors below.",
+                    "Buena compatibilidad genética. Esta combinación es adecuada para cruzamiento con expectativas de descendientes competitivos. Considere los factores específicos abajo."
+                  ),
                   border: "border-l-blue-500",
                   bg: "bg-blue-500/5",
                   iconColor: "text-blue-400",
@@ -49,14 +63,22 @@ export default function PairSummary({
                 }
               : s >= 50
                 ? {
-                    text: "Compatibilidade moderada. Esta combinação pode ser viável, mas requer atenção aos pontos de risco identificados. Consulte um veterinário especializado.",
+                    text: tr(
+                      "Compatibilidade moderada. Esta combinação pode ser viável, mas requer atenção aos pontos de risco identificados. Consulte um veterinário especializado.",
+                      "Moderate compatibility. This combination may be viable, but requires attention to the identified risk points. Consult a specialised veterinarian.",
+                      "Compatibilidad moderada. Esta combinación puede ser viable, pero requiere atención a los puntos de riesgo identificados. Consulte a un veterinario especializado."
+                    ),
                     border: "border-l-amber-500",
                     bg: "bg-amber-500/5",
                     iconColor: "text-amber-400",
                     titleColor: "text-amber-400",
                   }
                 : {
-                    text: "Compatibilidade limitada. Existem fatores de risco significativos nesta combinação. Recomendamos consultar um especialista em genética equina antes de prosseguir.",
+                    text: tr(
+                      "Compatibilidade limitada. Existem fatores de risco significativos nesta combinação. Recomendamos consultar um especialista em genética equina antes de prosseguir.",
+                      "Limited compatibility. There are significant risk factors in this combination. We recommend consulting an equine genetics specialist before proceeding.",
+                      "Compatibilidad limitada. Existen factores de riesgo significativos en esta combinación. Recomendamos consultar a un especialista en genética equina antes de proceder."
+                    ),
                     border: "border-l-red-500",
                     bg: "bg-red-500/5",
                     iconColor: "text-red-400",
@@ -70,7 +92,7 @@ export default function PairSummary({
             <h3
               className={`text-sm font-semibold mb-2 flex items-center gap-2 ${interpretation.titleColor}`}
             >
-              <Info size={15} className={interpretation.iconColor} />O que significa este score?
+              <Info size={15} className={interpretation.iconColor} />{tr("O que significa este score?", "What does this score mean?", "¿Qué significa esta puntuación?")}
             </h3>
             <p className="text-sm text-[var(--foreground-secondary)] leading-relaxed">
               {interpretation.text}
@@ -89,29 +111,29 @@ export default function PairSummary({
         return (
           <div className="bg-[var(--background-secondary)]/30 rounded-xl p-4 border border-[var(--border)]/60 mb-6">
             <h3 className="text-xs font-semibold text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
-              Resumo do Par
+              {tr("Resumo do Par", "Pair Summary", "Resumen del Par")}
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 {
-                  label: "Altura estimada",
+                  label: tr("Altura estimada", "Estimated height", "Altura estimada"),
                   value: `${alturaMedia - 2}–${alturaMedia + 2}cm`,
-                  sub: "do potro adulto",
+                  sub: tr("do potro adulto", "of adult foal", "del potro adulto"),
                 },
                 {
-                  label: "BLUP médio",
+                  label: tr("BLUP médio", "Average BLUP", "BLUP medio"),
                   value: blupMedio,
-                  sub: blupMedio >= 110 ? "acima da média" : "dentro da média",
+                  sub: blupMedio >= 110 ? tr("acima da média", "above average", "por encima de la media") : tr("dentro da média", "within average", "dentro de la media"),
                 },
                 {
-                  label: "Saúde combinada",
+                  label: tr("Saúde combinada", "Combined health", "Salud combinada"),
                   value: `${saudeMed}/10`,
-                  sub: saudeMed >= 8 ? "excelente" : saudeMed >= 6 ? "boa" : "a melhorar",
+                  sub: saudeMed >= 8 ? tr("excelente", "excellent", "excelente") : saudeMed >= 6 ? tr("boa", "good", "buena") : tr("a melhorar", "needs improvement", "a mejorar"),
                 },
                 {
-                  label: "Conformação",
+                  label: tr("Conformação", "Conformation", "Conformación"),
                   value: `${conformMed}/10`,
-                  sub: conformMed >= 8 ? "excepcional" : "adequada",
+                  sub: conformMed >= 8 ? tr("excepcional", "exceptional", "excepcional") : tr("adequada", "adequate", "adecuada"),
                 },
               ].map((item) => (
                 <div

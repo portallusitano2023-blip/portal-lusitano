@@ -34,7 +34,7 @@ const PAGE_SIZE = 50;
 export default function HistoricoPage() {
   const { user, isLoading: authLoading } = useAuth();
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const toolConfig = getToolConfig(tr);
 
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -112,8 +112,7 @@ export default function HistoricoPage() {
     };
 
     run();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, authLoading]);
+  }, [user, authLoading, tr]);
 
   const loadMore = async () => {
     if (!user || isLoadingMore) return;

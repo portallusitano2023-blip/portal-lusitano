@@ -8,9 +8,9 @@ import Tooltip from "@/components/tools/Tooltip";
 import type { StepProps } from "./types";
 
 const COAT_IMPACT: Record<string, { label: string; type: "pos" | "neg" | "base" }> = {
-  Ruço: { label: "+8%", type: "pos" },
+  Ruço: { label: "+8%*", type: "pos" },
   Castanho: { label: "base", type: "base" },
-  Preto: { label: "+6%", type: "pos" },
+  Preto: { label: "+6%*", type: "pos" },
   Baio: { label: "base", type: "base" },
   Tordilho: { label: "base", type: "base" },
   Isabela: { label: "+4%", type: "pos" },
@@ -100,11 +100,12 @@ export default function StepIdentificacao({ form, update }: StepProps) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="campo-idade" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.calculadora.label_age}
             </label>
             <div className="relative">
               <input
+                id="campo-idade"
                 type="number"
                 value={form.idade}
                 onChange={(e) => update("idade", Math.max(0, Math.min(30, Number(e.target.value))))}
@@ -122,11 +123,12 @@ export default function StepIdentificacao({ form, update }: StepProps) {
           </div>
 
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="campo-altura" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.calculadora.label_height}
             </label>
             <div className="relative">
               <input
+                id="campo-altura"
                 type="number"
                 value={form.altura}
                 onChange={(e) => update("altura", Number(e.target.value))}
@@ -140,20 +142,20 @@ export default function StepIdentificacao({ form, update }: StepProps) {
             </div>
             <span
               className={`text-xs mt-1 block font-medium ${
-                form.altura >= 155 && form.altura <= 170
+                form.altura >= 160 && form.altura <= 168
                   ? "text-emerald-400"
-                  : form.altura >= 150 && form.altura <= 175
+                  : form.altura >= 155 && form.altura <= 172
                     ? "text-amber-400"
                     : "text-red-400"
               }`}
             >
-              {form.altura >= 155 && form.altura <= 170
+              {form.altura >= 160 && form.altura <= 168
                 ? tr(
-                    "Dentro do padrão APSL (155–170cm)",
-                    "Within APSL standard (155–170cm)",
-                    "Dentro del estándar APSL (155–170cm)"
+                    "Dentro do padrão APSL (160–168cm)",
+                    "Within APSL standard (160–168cm)",
+                    "Dentro del estándar APSL (160–168cm)"
                   )
-                : form.altura >= 150 && form.altura <= 175
+                : form.altura >= 155 && form.altura <= 172
                   ? tr(
                       "Ligeiramente fora do padrão ideal",
                       "Slightly outside ideal standard",
@@ -177,6 +179,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               <button
                 key={opt.value}
                 onClick={() => update("sexo", opt.value as typeof form.sexo)}
+                aria-pressed={form.sexo === opt.value}
                 className={`py-3 px-2 sm:px-4 rounded-lg border text-xs sm:text-sm font-medium transition-all flex flex-col items-center gap-1 min-h-[44px] ${
                   form.sexo === opt.value
                     ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
@@ -199,6 +202,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               <button
                 key={p.value}
                 onClick={() => update("pelagem", p.value)}
+                aria-pressed={form.pelagem === p.value}
                 className={`py-3 px-4 rounded-lg border text-left transition-all ${
                   form.pelagem === p.value
                     ? "border-[var(--gold)] bg-[var(--gold)]/10"
@@ -227,6 +231,13 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               </button>
             ))}
           </div>
+          <p className="text-[10px] text-[var(--foreground-muted)] mt-2 italic">
+            {tr(
+              "*Ruço: bonus aplicável nos mercados Brasil/EUA. Preto: bonus em mercados internacionais.",
+              "*Ruco: bonus applicable in Brazil/USA markets. Black: bonus in international markets.",
+              "*Ruço: bonus aplicable en los mercados Brasil/EE.UU. Negro: bonus en mercados internacionales."
+            )}
+          </p>
         </div>
 
         <div className="pt-4 border-t border-[var(--background-secondary)]">
@@ -249,6 +260,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => update("registoAPSL", true)}
+              aria-pressed={form.registoAPSL === true}
               className={`py-3 px-4 rounded-lg border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
                 form.registoAPSL
                   ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
@@ -260,6 +272,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
             </button>
             <button
               onClick={() => update("registoAPSL", false)}
+              aria-pressed={form.registoAPSL === false}
               className={`py-3 px-4 rounded-lg border text-sm font-medium transition-all ${
                 !form.registoAPSL
                   ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
@@ -280,6 +293,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                   <button
                     key={opt.value}
                     onClick={() => update("livroAPSL", opt.value as typeof form.livroAPSL)}
+                    aria-pressed={form.livroAPSL === opt.value}
                     className={`py-2 px-2 rounded-lg border text-xs font-medium transition-all min-h-[44px] ${
                       form.livroAPSL === opt.value
                         ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"

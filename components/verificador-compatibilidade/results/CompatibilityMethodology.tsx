@@ -31,57 +31,77 @@ export default function CompatibilityMethodology({
           }
           factors={[
             {
-              name: "COI",
-              weight: "25%",
-              description:
-                (t.verificador as Record<string, string>).method_coi ??
-                "Coeficiente de consanguinidade estimado",
-              standard: "modelo",
-            },
-            {
-              name: "BLUP Parental",
-              weight: "20%",
-              description:
-                (t.verificador as Record<string, string>).method_blup ??
-                "Média ponderada do mérito genético dos progenitores",
-              standard: "modelo",
-            },
-            {
-              name: "Conformação",
-              weight: "15%",
-              description:
-                (t.verificador as Record<string, string>).method_conformacao ??
-                "Complementaridade morfológica do par",
-              standard: "APSL",
-            },
-            {
-              name: "Andamentos",
-              weight: "15%",
-              description:
-                (t.verificador as Record<string, string>).method_andamentos ??
-                "Compatibilidade da qualidade de andamentos",
-            },
-            {
-              name: "Hist. Reprodutivo",
-              weight: "10%",
-              description:
-                (t.verificador as Record<string, string>).method_repro ??
-                "Historial de fertilidade e partos",
-            },
-            {
-              name: "Registo APSL",
-              weight: "10%",
-              description:
-                (t.verificador as Record<string, string>).method_apsl ??
-                "Bónus para ambos com registo oficial",
-              standard: "APSL",
-            },
-            {
-              name: "Linhagem",
-              weight: "5%",
+              name: "Qualidade Genética / Linhagem",
+              weight: "20pts",
               description:
                 (t.verificador as Record<string, string>).method_linhagem ??
-                "Diversidade e qualidade do pedigree",
+                "Média da qualidade das linhagens dos progenitores",
+              standard: "APSL",
+            },
+            {
+              name: "Idade Reprodutiva",
+              weight: "15pts",
+              description:
+                (t.verificador as Record<string, string>).method_idade ??
+                "Idade ideal: Garanhão 4-20, Égua 4-18 anos",
+            },
+            {
+              name: "Conformação Morfológica",
+              weight: "15pts",
+              description:
+                (t.verificador as Record<string, string>).method_conformacao ??
+                "Qualidade morfológica média dos progenitores",
+              standard: "APSL",
+            },
+            {
+              name: "Compatibilidade Física",
+              weight: "10pts",
+              description:
+                (t.verificador as Record<string, string>).method_fisica ??
+                "Diferença de altura entre os progenitores",
+            },
+            {
+              name: "Qualidade dos Andamentos",
+              weight: "10pts",
+              description:
+                (t.verificador as Record<string, string>).method_andamentos ??
+                "Funcionalidade e expressão de movimentos",
+            },
+            {
+              name: "Compatibilidade Temperamento",
+              weight: "10pts",
+              description:
+                (t.verificador as Record<string, string>).method_temperamento ??
+                "Combinação dos temperamentos dos progenitores",
+            },
+            {
+              name: "Estado de Saúde",
+              weight: "10pts",
+              description:
+                (t.verificador as Record<string, string>).method_saude ??
+                "Condição veterinária geral dos progenitores",
+            },
+            {
+              name: "Índice de Fertilidade",
+              weight: "5pts",
+              description:
+                (t.verificador as Record<string, string>).method_repro ??
+                "Historial de fertilidade dos progenitores",
+            },
+            {
+              name: "Aprovação como Reprodutores",
+              weight: "5pts (bónus)",
+              description:
+                (t.verificador as Record<string, string>).method_apsl ??
+                "Bónus para ambos aprovados oficialmente como reprodutores",
+              standard: "APSL",
+            },
+            {
+              name: "Historial Reprodutivo",
+              weight: "5pts",
+              description:
+                (t.verificador as Record<string, string>).method_historial ??
+                "Coberturas realizadas e potros nascidos vivos",
             },
           ]}
           limitations={[

@@ -5,19 +5,14 @@ import { BarChart3, Feather } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import type { Result } from "@/components/analise-perfil/types";
+import { PROFILE_COLORS_HEX } from "@/components/analise-perfil/types";
 
 interface AffinityTabProps {
   result: Result;
   scorePercentages: Record<string, number>;
 }
 
-const PROFILE_COLORS: Record<string, string> = {
-  competidor: "#3b82f6",
-  tradicional: "#C5A059",
-  criador: "#ec4899",
-  amador: "#22c55e",
-  investidor: "#f59e0b",
-};
+const PROFILE_COLORS = PROFILE_COLORS_HEX;
 
 export default function AffinityTab({ result, scorePercentages }: AffinityTabProps) {
   const { t, language } = useLanguage();
@@ -44,11 +39,6 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
       "Leisure, trail riding and pleasure of riding",
       "Ocio, paseo y placer de montar"
     ),
-    investidor: tr(
-      "Retorno financeiro, valorização e mercado equestre",
-      "Financial return, appreciation and equestrian market",
-      "Retorno financiero, valorización y mercado ecuestre"
-    ),
   };
 
   const PROFILE_LABELS: Record<string, string> = {
@@ -56,7 +46,6 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
     tradicional: tr("Tradicional", "Traditional", "Tradicional"),
     criador: tr("Criador", "Breeder", "Criador"),
     amador: tr("Amador", "Amateur", "Aficionado"),
-    investidor: tr("Investidor", "Investor", "Inversor"),
   };
 
   const HORSE_RECOMMENDATIONS: Record<string, string> = {
@@ -79,11 +68,6 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
       "Cavalo calmo, entre 8-14 anos, com treino básico a elementar",
       "Calm horse, aged 8-14, with basic to elementary training",
       "Caballo tranquilo, entre 8-14 años, con entrenamiento básico a elemental"
-    ),
-    investidor: tr(
-      "Cavalo jovem (3-6 anos) de linhagem premium ou elite",
-      "Young horse (3-6 years) of premium or elite lineage",
-      "Caballo joven (3-6 años) de linaje premium o élite"
     ),
   };
 

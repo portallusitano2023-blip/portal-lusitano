@@ -129,7 +129,7 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
     <section className="sticky top-0 z-20 bg-[var(--background)]/95 backdrop-blur-sm border-b border-[var(--border)]">
       <div className="max-w-5xl mx-auto px-0 sm:px-6">
         {/* Desktop: horizontal scroll (unchanged) */}
-        <div className="hidden sm:flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide">
+        <div className="hidden sm:flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide" role="tablist">
           {tabs.map((tab) => {
             const isPro = PRO_TABS.has(tab.id);
             const isActive = selectedTab === tab.id;
@@ -137,6 +137,8 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
               <button
                 key={tab.id}
                 onClick={() => onSelectTab(tab.id)}
+                role="tab"
+                aria-selected={selectedTab === tab.id}
                 title={
                   isPro
                     ? `${tab.label} — ${tr("requer PRO", "requires PRO", "requiere PRO")}`
@@ -182,7 +184,7 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
                   />
                 </button>
                 {isExpanded && (
-                  <div className="flex flex-col pb-1">
+                  <div className="flex flex-col pb-1" role="tablist">
                     {group.tabs.map((tab) => {
                       const isPro = PRO_TABS.has(tab.id);
                       const isActive = selectedTab === tab.id;
@@ -190,6 +192,8 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
                         <button
                           key={tab.id}
                           onClick={() => handleTabSelect(tab.id)}
+                          role="tab"
+                          aria-selected={isActive}
                           className={`flex items-center gap-2 px-6 py-2.5 text-sm font-medium transition-colors ${
                             isActive
                               ? "text-[var(--gold)] bg-[var(--gold)]/5"

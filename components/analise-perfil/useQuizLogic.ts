@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { questions } from "@/components/analise-perfil/data/questions";
 import { results } from "@/components/analise-perfil/data/results";
 import {
@@ -32,7 +33,12 @@ export interface CrossValidationWarning {
   severity: "info" | "warning";
 }
 
-function getCrossValidationWarning(answers: string[]): CrossValidationWarning | null {
+type TranslatorFn = (pt: string, en: string, es?: string) => string;
+
+function getCrossValidationWarning(
+  answers: string[],
+  tr: TranslatorFn
+): CrossValidationWarning | null {
   const objectivo = answers[0];
   const experiencia = answers[1];
   const dedicacao = answers[7];
@@ -43,8 +49,11 @@ function getCrossValidationWarning(answers: string[]): CrossValidationWarning | 
   // Iniciante + Alta Competição de Dressage
   if (objectivo === "dressage_comp" && experiencia === "iniciante") {
     return {
-      message:
+      message: tr(
         "Dressage de competição requer normalmente 5 ou mais anos de experiência equestre consolidada. Considera começar com Alta Escola Clássica e progredir gradualmente — o PSL responde excepcionalmente bem a cavaleiros que crescem com ele.",
+        "Competition dressage typically requires 5 or more years of consolidated equestrian experience. Consider starting with Classical High School and progressing gradually — the PSL responds exceptionally well to riders who grow with it.",
+        "El dressage de competición normalmente requiere 5 o más años de experiencia ecuestre consolidada. Considera empezar con Alta Escuela Clásica y progresar gradualmente — el PSL responde excepcionalmente bien a jinetes que crecen con él."
+      ),
       severity: "warning",
     };
   }
@@ -52,8 +61,11 @@ function getCrossValidationWarning(answers: string[]): CrossValidationWarning | 
   // Pouca dedicação + Alta Competição de Dressage (só avalia quando Q8 foi respondida)
   if (objectivo === "dressage_comp" && dedicacao === "weekend") {
     return {
-      message:
+      message: tr(
         "Cavalos de competição de dressage requerem treino regular de 5 a 7 dias por semana para manter a forma de prova. Com disponibilidade apenas ao fim de semana, um PSL de Alta Escola Clássica ou lazer será mais adequado e mais justo para o cavalo.",
+        "Competition dressage horses require regular training of 5 to 7 days per week to stay in show form. With only weekend availability, a Classical High School or leisure PSL would be more suitable and fairer to the horse.",
+        "Los caballos de dressage de competición requieren entrenamiento regular de 5 a 7 días por semana para mantenerse en forma de concurso. Con disponibilidad solo los fines de semana, un PSL de Alta Escuela Clásica o de ocio sería más adecuado y más justo para el caballo."
+      ),
       severity: "warning",
     };
   }
@@ -61,8 +73,11 @@ function getCrossValidationWarning(answers: string[]): CrossValidationWarning | 
   // Equitação de Trabalho + Iniciante
   if (objectivo === "trabalho" && experiencia === "iniciante") {
     return {
-      message:
+      message: tr(
         "A Equitação de Trabalho e o Toureio a cavalo exigem controlo preciso de ajudas e muito equilíbrio em situações imprevisíveis. Para iniciantes, recomenda-se uma base sólida em dressage clássico antes de iniciar esta disciplina.",
+        "Working Equitation and mounted bullfighting demand precise aid control and strong balance in unpredictable situations. For beginners, a solid foundation in classical dressage is recommended before starting this discipline.",
+        "La Equitación de Trabajo y el toreo a caballo exigen un control preciso de las ayudas y mucho equilibrio en situaciones imprevisibles. Para principiantes, se recomienda una base sólida en dressage clásico antes de iniciar esta disciplina."
+      ),
       severity: "warning",
     };
   }
@@ -70,8 +85,11 @@ function getCrossValidationWarning(answers: string[]): CrossValidationWarning | 
   // Criação + Iniciante
   if (objectivo === "criacao" && experiencia === "iniciante") {
     return {
-      message:
+      message: tr(
         "Criação equina envolve conhecimentos avançados de genética, reprodução, cuidados neonatais e selecção por índice BLUP. Recomenda-se experiência prévia com equinos ou apoio próximo de um criador ou veterinário especializado.",
+        "Horse breeding involves advanced knowledge of genetics, reproduction, neonatal care and BLUP index selection. Prior experience with horses or close support from a breeder or specialist veterinarian is recommended.",
+        "La cría equina implica conocimientos avanzados de genética, reproducción, cuidados neonatales y selección por índice BLUP. Se recomienda experiencia previa con equinos o apoyo cercano de un criador o veterinario especializado."
+      ),
       severity: "info",
     };
   }
@@ -79,8 +97,11 @@ function getCrossValidationWarning(answers: string[]): CrossValidationWarning | 
   // Criação + pouca dedicação semanal (só avalia quando Q8 foi respondida)
   if (objectivo === "criacao" && dedicacao === "weekend") {
     return {
-      message:
+      message: tr(
         "Um programa de criação activo requer presença diária ou quasi-diária, especialmente em períodos de cobrição, gestação e cuidados ao poldro recém-nascido. Confirma que tens disponibilidade suficiente ou uma equipa de apoio.",
+        "An active breeding programme requires daily or near-daily presence, especially during covering, gestation and newborn foal care. Confirm that you have sufficient availability or a support team.",
+        "Un programa de cría activo requiere presencia diaria o casi diaria, especialmente en períodos de cubrición, gestación y cuidados del potro recién nacido. Confirma que tienes disponibilidad suficiente o un equipo de apoyo."
+      ),
       severity: "info",
     };
   }
@@ -89,7 +110,8 @@ function getCrossValidationWarning(answers: string[]): CrossValidationWarning | 
 }
 
 export function useQuizLogic() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
   const [showIntro, setShowIntro] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
@@ -195,18 +217,6 @@ export function useQuizLogic() {
       } else {
         if (!canUse) return;
 
-        // Q16 (treinador) — index 15 — bonus score adjustments (weight 1.2 already applied above)
-        const treinadorAnswer = newAnswers[15];
-        if (treinadorAnswer === "dedicado") {
-          newScores.competidor = (newScores.competidor || 0) + 8;
-        } else if (treinadorAnswer === "regular") {
-          newScores.competidor = (newScores.competidor || 0) + 4;
-        } else if (treinadorAnswer === "autonomo") {
-          newScores.amador = (newScores.amador || 0) + 3;
-        }
-        // Q17 (transporte) — index 16 — minimal impact (weight 0.5 already applied above)
-        // Used primarily for recommendations; no additional score boost needed
-
         let mp = "amador";
         let ms = 0;
         Object.entries(newScores).forEach(([p, s]) => {
@@ -250,7 +260,13 @@ export function useQuizLogic() {
         });
 
         if (!allowed) {
-          setError("Limite de uso gratuito atingido. Subscreva PRO para continuar.");
+          setError(
+            tr(
+              "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
+              "Free usage limit reached. Subscribe to PRO to continue.",
+              "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
+            )
+          );
           return;
         }
 
@@ -261,7 +277,7 @@ export function useQuizLogic() {
         setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
       }
     },
-    [currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError]
+    [currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, tr]
   );
 
   const calculateConfidence = useCallback((): number => {
@@ -301,20 +317,26 @@ export function useQuizLogic() {
         setTimeout(() => setCopied(false), 3000);
       })
       .catch(() => {
-        showError("Erro de ligação. Verifica a tua internet.");
+        showError(
+          tr(
+            "Erro de ligação. Verifica a tua internet.",
+            "Connection error. Check your internet.",
+            "Error de conexión. Verifica tu internet."
+          )
+        );
       });
-  }, [getShareUrl, showError]);
+  }, [getShareUrl, showError, tr]);
 
   const shareWhatsApp = useCallback(
-    () => doShareWhatsApp(result, scores, subProfile),
-    [result, scores, subProfile]
+    () => doShareWhatsApp(result, scores, subProfile, tr),
+    [result, scores, subProfile, tr]
   );
 
   const shareFacebook = useCallback(() => doShareFacebook(getShareUrl()), [getShareUrl]);
 
   const shareInstagram = useCallback(
-    () => doShareInstagram(result, scores, t.analise_perfil.instagram_copied),
-    [result, scores, t]
+    () => doShareInstagram(result, scores, t.analise_perfil.instagram_copied, tr),
+    [result, scores, t, tr]
   );
 
   const downloadPDF = useCallback(async () => {
@@ -322,19 +344,31 @@ export function useQuizLogic() {
     try {
       await generateProfilePDF(result, scores);
     } catch {
-      showError("Erro ao gerar PDF. Tenta novamente.");
+      showError(
+        tr(
+          "Erro ao gerar PDF. Tenta novamente.",
+          "Error generating PDF. Please try again.",
+          "Error al generar PDF. Inténtalo de nuevo."
+        )
+      );
     }
-  }, [result, scores, showError]);
+  }, [result, scores, showError, tr]);
 
   const downloadBadge = useCallback(async () => {
     if (!badgeRef.current || !result) return;
     try {
       await generateBadge(badgeRef.current, result, scores);
     } catch {
-      showError("Erro ao gerar imagem. A tentar formato alternativo...");
-      generateBadgeSVGFallback(result, scores);
+      showError(
+        tr(
+          "Erro ao gerar imagem. A tentar formato alternativo...",
+          "Error generating image. Trying alternative format...",
+          "Error al generar imagen. Intentando formato alternativo..."
+        )
+      );
+      generateBadgeSVGFallback(result, scores, tr);
     }
-  }, [result, scores, showError]);
+  }, [result, scores, showError, tr]);
 
   const resetQuiz = useCallback(() => {
     setShowIntro(true);
@@ -353,10 +387,32 @@ export function useQuizLogic() {
 
   const goBack = useCallback(() => {
     if (currentQuestion > 0) {
+      const newAnswers = answers.slice(0, -1);
+      const newDetails = answerDetails.slice(0, -1);
+
+      // Recalculate scores from scratch to avoid stale accumulated points
+      const freshScores: Record<string, number> = {
+        competidor: 0,
+        tradicional: 0,
+        criador: 0,
+        amador: 0,
+      };
+      newAnswers.forEach((answerValue, qIdx) => {
+        const question = questions[qIdx];
+        const option = question.options.find((o) => o.value === answerValue);
+        if (option) {
+          const w = question.weight;
+          Object.entries(option.points).forEach(([p, pts]) => {
+            freshScores[p] = (freshScores[p] || 0) + pts * w;
+          });
+        }
+      });
+
+      setScores(freshScores);
+      setAnswers(newAnswers);
+      setAnswerDetails(newDetails);
       setCurrentQuestion(currentQuestion - 1);
-      setAnswers(answers.slice(0, -1));
       setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
-      setAnswerDetails(answerDetails.slice(0, -1));
       setCrossWarningDismissed(false);
     }
   }, [currentQuestion, answers, answerDetails]);
@@ -367,42 +423,53 @@ export function useQuizLogic() {
 
   // Derived data
   const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-  const scorePercentages: ScorePercentage[] = Object.entries(scores)
-    .map(([p, s]) => ({
-      profile: p,
-      percentage: Math.round((s / totalScore) * 100),
-      label: results[p]?.title || p,
-    }))
-    .sort((a, b) => b.percentage - a.percentage);
+  const scorePercentages: ScorePercentage[] = useMemo(
+    () =>
+      Object.entries(scores)
+        .map(([p, s]) => ({
+          profile: p,
+          percentage: Math.round((s / totalScore) * 100),
+          label: results[p]?.title || p,
+        }))
+        .sort((a, b) => b.percentage - a.percentage),
+    [scores, totalScore]
+  );
 
   // Real-time dominant profile for quiz preview
-  const PROFILE_LABELS: Record<string, string> = {
-    competidor: "Competidor",
-    criador: "Criador",
-    amador: "Apreciador Amador",
-    tradicional: "Tradicionalista",
-  };
+  const PROFILE_LABELS: Record<string, string> = useMemo(
+    () => ({
+      competidor: tr("Competidor", "Competitor", "Competidor"),
+      criador: tr("Criador", "Breeder", "Criador"),
+      amador: tr("Apreciador Amador", "Amateur Enthusiast", "Aficionado Amateur"),
+      tradicional: tr("Tradicionalista", "Traditionalist", "Tradicionalista"),
+    }),
+    [tr]
+  );
   const currentDominant = Object.entries(scores).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
   const dominantProfile = currentDominant;
+  const calculatingLabel = tr("A calcular...", "Calculating...", "Calculando...");
   const dominantProfileLabel = currentDominant
-    ? (PROFILE_LABELS[currentDominant] ?? "A calcular...")
-    : "A calcular...";
+    ? (PROFILE_LABELS[currentDominant] ?? calculatingLabel)
+    : calculatingLabel;
 
-  const radarData: RadarChartData = {
-    competicao: (scores.competidor / totalScore) * 100,
-    tradicao: (scores.tradicional / totalScore) * 100,
-    criacao: (scores.criador / totalScore) * 100,
-    lazer: (scores.amador / totalScore) * 100,
-    investimento: scorePercentages[0]?.percentage || 0,
-    dedicacao: Math.min(
-      100,
-      answers.filter((a) => ["diario", "frequente", "completo", "treinador_top"].includes(a))
-        .length * 25
-    ),
-  };
+  const radarData: RadarChartData = useMemo(
+    () => ({
+      competicao: (scores.competidor / totalScore) * 100,
+      tradicao: (scores.tradicional / totalScore) * 100,
+      criacao: (scores.criador / totalScore) * 100,
+      lazer: (scores.amador / totalScore) * 100,
+      investimento: scorePercentages[0]?.percentage || 0,
+      dedicacao: Math.min(
+        100,
+        answers.filter((a) => ["diario", "frequente", "completo", "treinador_top"].includes(a))
+          .length * 25
+      ),
+    }),
+    [scores, totalScore, scorePercentages, answers]
+  );
 
   // Computed cross-validation warning (null when both key questions not yet answered or dismissed)
-  const rawCrossWarning = getCrossValidationWarning(answers);
+  const rawCrossWarning = getCrossValidationWarning(answers, tr);
   const crossValidationWarning = crossWarningDismissed ? null : rawCrossWarning;
 
   return {

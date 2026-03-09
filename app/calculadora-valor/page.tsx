@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { X, Sparkles, TrendingUp, RefreshCw, Pencil } from "lucide-react";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -9,6 +10,8 @@ import Paywall from "@/components/tools/Paywall";
 import ToolNavBar from "@/components/tools/ToolNavBar";
 import ProStatusBar from "@/components/ferramentas/ProStatusBar";
 import FreeUsesCounter from "@/components/ferramentas/FreeUsesCounter";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import {
   IntroSection,
   StepIdentificacao,
@@ -17,7 +20,6 @@ import {
   StepTreinoSaude,
   StepReproducaoMercado,
   StepNavigation,
-  estimarValorParcial,
 } from "@/components/calculadora-valor";
 import HistoryPanel from "@/components/calculadora-valor/HistoryPanel";
 import { useCalculadoraState } from "@/components/calculadora-valor/useCalculadoraState";
@@ -76,6 +78,23 @@ export default function CalculadoraValorPage() {
     TOTAL_STEPS,
   } = useCalculadoraState();
 
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
+  // Track which steps the user has visited for validation feedback
+  const [visitedSteps, setVisitedSteps] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (step > 0) {
+      setVisitedSteps((prev) => {
+        if (prev.has(step)) return prev;
+        const next = new Set(prev);
+        next.add(step);
+        return next;
+      });
+    }
+  }, [step]);
+
   return (
     <>
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
@@ -98,7 +117,7 @@ export default function CalculadoraValorPage() {
                   className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5"
                 >
                   <Pencil size={13} />
-                  <span className="hidden sm:inline">Editar</span>
+                  <span className="hidden sm:inline">{tr("Editar", "Edit", "Editar")}</span>
                 </button>
                 <button
                   onClick={() => setShowResetConfirm(true)}
@@ -111,7 +130,7 @@ export default function CalculadoraValorPage() {
             ) : step > 1 && estimativaParcial ? (
               <div className="text-right">
                 <p className="text-[10px] text-[var(--foreground-muted)] leading-tight">
-                  Estimativa parcial
+                  {tr("Estimativa parcial", "Partial estimate", "Estimación parcial")}
                 </p>
                 <p className="text-xs font-semibold text-[var(--gold)] leading-tight">
                   €{estimativaParcial.min.toLocaleString("pt-PT")} – €
@@ -149,20 +168,20 @@ export default function CalculadoraValorPage() {
                 <div className="max-w-2xl mx-auto px-4 -mt-12 mb-8">
                   <div className="flex flex-col sm:flex-row items-center gap-3 px-5 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl">
                     <p className="text-xs text-[var(--gold)] flex-1 text-center sm:text-left">
-                      Tem uma avaliação guardada de {draftDate}
+                      {tr("Tem uma avaliação guardada de", "You have a saved evaluation from", "Tiene una evaluación guardada de")} {draftDate}
                     </p>
                     <div className="flex gap-2">
                       <button
                         onClick={restaurarDraft}
                         className="px-3 py-1.5 bg-[var(--gold)] text-black text-xs font-bold rounded-lg hover:bg-[#D4B068] transition-colors"
                       >
-                        Continuar
+                        {tr("Continuar", "Continue", "Continuar")}
                       </button>
                       <button
                         onClick={descartarDraft}
                         className="px-3 py-1.5 bg-transparent border border-[var(--gold)]/40 text-[var(--gold)] text-xs rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
                       >
-                        Descartar
+                        {tr("Descartar", "Discard", "Descartar")}
                       </button>
                     </div>
                   </div>
@@ -175,7 +194,7 @@ export default function CalculadoraValorPage() {
                     <Sparkles size={16} className="text-[var(--gold)] shrink-0 mt-0.5" />
                     <p className="text-xs text-[var(--gold)] flex-1 leading-relaxed">
                       <strong>
-                        Bem-vindo,{" "}
+                        {tr("Bem-vindo", "Welcome", "Bienvenido")},{" "}
                         {PROFILE_LABELS[profileContext.profile] ?? profileContext.profile}
                         {profileContext.subProfile
                           ? ` — ${SUBPROFILE_LABELS[profileContext.subProfile] ?? profileContext.subProfile}`
@@ -183,14 +202,14 @@ export default function CalculadoraValorPage() {
                       </strong>
                       <span className="text-[var(--gold)]/70">
                         {" "}
-                        · Intervalo sugerido pelo teu perfil:{" "}
+                        · {tr("Intervalo sugerido pelo teu perfil:", "Range suggested by your profile:", "Rango sugerido por tu perfil:")}{" "}
                         <strong>{profileContext.priceRange}</strong>
                       </span>
                     </p>
                     <button
                       onClick={() => setProfileContext(null)}
                       className="text-[var(--gold)]/50 hover:text-[var(--gold)] transition-colors shrink-0"
-                      aria-label="Fechar"
+                      aria-label={tr("Fechar", "Close", "Cerrar")}
                     >
                       <X size={14} />
                     </button>
@@ -246,7 +265,7 @@ export default function CalculadoraValorPage() {
                     </strong>
                     <span className="text-[var(--gold)]/70">
                       {" "}
-                      — intervalo recomendado: <strong>{profileContext.priceRange}</strong>
+                      — {tr("intervalo recomendado:", "recommended range:", "rango recomendado:")} <strong>{profileContext.priceRange}</strong>
                     </span>
                   </p>
                   <button
@@ -263,7 +282,7 @@ export default function CalculadoraValorPage() {
               {isCalculating && (
                 <div
                   role="status"
-                  aria-label="A calcular o valor do seu cavalo"
+                  aria-label={tr("A calcular o valor do seu cavalo", "Calculating your horse's value", "Calculando el valor de su caballo")}
                   className="flex flex-col items-center justify-center py-24 gap-8"
                 >
                   <div className="relative w-20 h-20">
@@ -273,7 +292,7 @@ export default function CalculadoraValorPage() {
                   </div>
                   <div className="text-center space-y-2">
                     <p className="text-[#C5A059] font-semibold text-lg tracking-wide">
-                      A avaliar {form.nome ? `"${form.nome}"` : "o seu cavalo"}...
+                      {tr("A avaliar", "Evaluating", "Evaluando")} {form.nome ? `"${form.nome}"` : tr("o seu cavalo", "your horse", "su caballo")}...
                     </p>
                     <p className="text-white/40 text-sm">
                       {form.treino && `${form.treino} · `}
@@ -284,18 +303,18 @@ export default function CalculadoraValorPage() {
                     <div className="flex items-center gap-3 animate-[fadeSlideIn_0.3s_ease-out_0.1s_both]">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-pulse" />
                       <span className="text-white/60 text-sm">
-                        Analisando genealogia e linhagem...
+                        {tr("Analisando genealogia e linhagem...", "Analyzing genealogy and lineage...", "Analizando genealogia y linaje...")}
                       </span>
                     </div>
                     <div className="flex items-center gap-3 animate-[fadeSlideIn_0.3s_ease-out_0.5s_both]">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-pulse [animation-delay:0.4s]" />
                       <span className="text-white/60 text-sm">
-                        Avaliando formação e andamentos...
+                        {tr("Avaliando formação e andamentos...", "Evaluating training and gaits...", "Evaluando formación y movimientos...")}
                       </span>
                     </div>
                     <div className="flex items-center gap-3 animate-[fadeSlideIn_0.3s_ease-out_0.9s_both]">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-pulse [animation-delay:0.8s]" />
-                      <span className="text-white/60 text-sm">Calculando valor de mercado...</span>
+                      <span className="text-white/60 text-sm">{tr("Calculando valor de mercado...", "Calculating market value...", "Calculando valor de mercado...")}</span>
                     </div>
                   </div>
                 </div>
@@ -309,24 +328,23 @@ export default function CalculadoraValorPage() {
                 >
                   {/* Live Estimate Banner */}
                   {(() => {
-                    const estimativa = estimarValorParcial(form);
-                    if (!estimativa) return null;
+                    if (!estimativaParcial) return null;
                     return (
                       <div className="flex items-center justify-between gap-2 px-4 py-2.5 bg-[var(--background-secondary)]/60 border border-[var(--gold)]/20 rounded-xl mb-4 backdrop-blur-sm">
                         <div className="flex items-center gap-2 shrink-0">
                           <TrendingUp size={14} className="text-[#C5A059]" />
-                          <span className="text-xs text-[var(--foreground-muted)]">Estimativa</span>
+                          <span className="text-xs text-[var(--foreground-muted)]">{tr("Estimativa", "Estimate", "Estimación")}</span>
                         </div>
                         <div className="flex items-center gap-1 flex-wrap justify-end">
                           <span className="text-xs sm:text-sm font-bold text-[#C5A059] whitespace-nowrap">
-                            {estimativa.min.toLocaleString("pt-PT")}€
+                            {estimativaParcial.min.toLocaleString("pt-PT")}€
                           </span>
                           <span className="text-xs text-[var(--foreground-muted)]">–</span>
                           <span className="text-xs sm:text-sm font-bold text-[#C5A059] whitespace-nowrap">
-                            {estimativa.max.toLocaleString("pt-PT")}€
+                            {estimativaParcial.max.toLocaleString("pt-PT")}€
                           </span>
                           <span className="text-[10px] text-[var(--foreground-muted)]">
-                            (parcial)
+                            ({tr("parcial", "partial", "parcial")})
                           </span>
                         </div>
                       </div>
@@ -360,7 +378,7 @@ export default function CalculadoraValorPage() {
                           />
                         </div>
                         <span className="text-[10px] text-[var(--foreground-muted)] whitespace-nowrap">
-                          {preenchidos}/{total} campos — {pct}% completo
+                          {preenchidos}/{total} {tr("campos", "fields", "campos")} — {pct}% {tr("completo", "complete", "completo")}
                         </span>
                       </div>
                     );
@@ -396,14 +414,14 @@ export default function CalculadoraValorPage() {
                           </div>
                           <div>
                             <p className="text-xs font-semibold text-[var(--foreground)]">
-                              Confiança da Avaliação
+                              {tr("Confiança da Avaliação", "Evaluation Confidence", "Confianza de la Evaluación")}
                             </p>
                             <p className="text-[10px] text-[var(--foreground-muted)]">
                               {conf >= 80
-                                ? "Excelente — dados completos para avaliação precisa"
+                                ? tr("Excelente — dados completos para avaliação precisa", "Excellent — complete data for accurate evaluation", "Excelente — datos completos para evaluación precisa")
                                 : conf >= 70
-                                  ? "Boa — adicione documentação para aumentar precisão"
-                                  : "Moderada — registo APSL e exame vet. melhoram a confiança"}
+                                  ? tr("Boa — adicione documentação para aumentar precisão", "Good — add documentation to increase accuracy", "Buena — añada documentación para aumentar precisión")
+                                  : tr("Moderada — registo APSL e exame vet. melhoram a confiança", "Moderate — APSL registration and vet exam improve confidence", "Moderada — registro APSL y examen vet. mejoran la confianza")}
                             </p>
                           </div>
                         </div>
@@ -423,28 +441,28 @@ export default function CalculadoraValorPage() {
                       const tips: Record<number, Partial<Record<string, string>>> = {
                         3: {
                           competidor_elite:
-                            "Andamentos e elevação com notas 8+ são diferenciais chave para competidores de Alta Escola.",
+                            tr("Andamentos e elevação com notas 8+ são diferenciais chave para competidores de Alta Escola.", "Gaits and elevation with scores 8+ are key differentiators for Haute École competitors.", "Movimientos y elevación con notas 8+ son diferenciales clave para competidores de Alta Escuela."),
                           competidor_nacional:
-                            "Andamentos regulares e impulsão são valorizados em provas de Dressage Nacional.",
+                            tr("Andamentos regulares e impulsão são valorizados em provas de Dressage Nacional.", "Regular gaits and impulsion are valued in National Dressage competitions.", "Movimientos regulares e impulsión son valorados en pruebas de Doma Nacional."),
                           competidor_trabalho:
-                            "Temperamento e impulsão são decisivos para a Equitação de Trabalho.",
+                            tr("Temperamento e impulsão são decisivos para a Equitação de Trabalho.", "Temperament and impulsion are decisive for Working Equitation.", "Temperamento e impulsión son decisivos para la Equitación de Trabajo."),
                         },
                         4: {
                           competidor_elite:
-                            "Para Alta Escola, nível de treino CDI3* ou superior maximiza o valor de mercado.",
+                            tr("Para Alta Escola, nível de treino CDI3* ou superior maximiza o valor de mercado.", "For Haute École, CDI3* training level or above maximizes market value.", "Para Alta Escuela, nivel de entrenamiento CDI3* o superior maximiza el valor de mercado."),
                           competidor_nacional:
-                            "Nível Avançado ou acima é ideal para o teu perfil de Competição Nacional.",
-                          criador: "Saúde e conformação têm maior peso para cavalos de reprodução.",
+                            tr("Nível Avançado ou acima é ideal para o teu perfil de Competição Nacional.", "Advanced level or above is ideal for your National Competition profile.", "Nivel Avanzado o superior es ideal para tu perfil de Competición Nacional."),
+                          criador: tr("Saúde e conformação têm maior peso para cavalos de reprodução.", "Health and conformation carry more weight for breeding horses.", "Salud y conformación tienen mayor peso para caballos de reproducción."),
                           investidor:
-                            "Cavalo jovem com treino baixo + potencial elevado = maior ROI a longo prazo.",
+                            tr("Cavalo jovem com treino baixo + potencial elevado = maior ROI a longo prazo.", "Young horse with low training + high potential = higher long-term ROI.", "Caballo joven con entrenamiento bajo + potencial elevado = mayor ROI a largo plazo."),
                         },
                         5: {
                           criador:
-                            "Activa 'Reprodução' para incluir a análise de descendentes e valorizações de linhagem.",
+                            tr("Activa 'Reprodução' para incluir a análise de descendentes e valorizações de linhagem.", "Enable 'Breeding' to include offspring analysis and lineage valuations.", "Activa 'Reproducción' para incluir el análisis de descendientes y valoraciones de linaje."),
                           investidor:
-                            "Mercados Brasil e EUA tendem a valorizar mais cavalos PSL de linhagem Elite.",
+                            tr("Mercados Brasil e EUA tendem a valorizar mais cavalos PSL de linhagem Elite.", "Brazil and USA markets tend to value PSL horses with Elite lineage more.", "Los mercados de Brasil y EE.UU. tienden a valorar más los caballos PSL de linaje Elite."),
                           amador_projeto:
-                            "Cavalos jovens com treino inicial têm maior margem de valorização.",
+                            tr("Cavalos jovens com treino inicial têm maior margem de valorização.", "Young horses with initial training have greater appreciation margin.", "Caballos jóvenes con entrenamiento inicial tienen mayor margen de valorización."),
                         },
                       };
                       const tip = tips[step]?.[profile] ?? tips[step]?.[profileContext.profile];
@@ -453,7 +471,7 @@ export default function CalculadoraValorPage() {
                         <div className="flex items-start gap-3 px-4 py-3 bg-[var(--gold)]/8 border border-[var(--gold)]/25 rounded-xl">
                           <Sparkles size={14} className="text-[var(--gold)]/70 shrink-0 mt-0.5" />
                           <p className="text-xs text-[var(--gold)]/80 leading-relaxed">
-                            <strong>Dica para o teu perfil:</strong> {tip}
+                            <strong>{tr("Dica para o teu perfil:", "Tip for your profile:", "Consejo para tu perfil:")}</strong> {tip}
                           </p>
                         </div>
                       );
@@ -485,6 +503,15 @@ export default function CalculadoraValorPage() {
                     }}
                     onCalculate={calcular}
                   />
+                  {visitedSteps.size < TOTAL_STEPS && (
+                    <p className="text-xs text-amber-400/70 mt-2 text-center">
+                      {tr(
+                        "Visite todos os passos para uma avaliação mais precisa",
+                        "Visit all steps for a more accurate evaluation",
+                        "Visite todos los pasos para una evaluación más precisa"
+                      )}
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -495,11 +522,11 @@ export default function CalculadoraValorPage() {
                     toolName={t.calculadora.tool_name}
                     requiresAuth={requiresAuth}
                     proFeatures={[
-                      "Avaliação completa com 15+ factores de valorização",
-                      "Score de liquidez e tempo estimado de venda",
-                      "Exportação PDF profissional com análise detalhada",
-                      "Comparação com mercado e top 10% da raça",
-                      "Recomendações personalizadas de valorização",
+                      tr("Avaliação completa com 15+ factores de valorização", "Complete evaluation with 15+ valuation factors", "Evaluación completa con 15+ factores de valorización"),
+                      tr("Score de liquidez e tempo estimado de venda", "Liquidity score and estimated selling time", "Puntuación de liquidez y tiempo estimado de venta"),
+                      tr("Exportação PDF profissional com análise detalhada", "Professional PDF export with detailed analysis", "Exportación PDF profesional con análisis detallado"),
+                      tr("Comparação com mercado e top 10% da raça", "Market comparison and top 10% of the breed", "Comparación con mercado y top 10% de la raza"),
+                      tr("Recomendações personalizadas de valorização", "Personalized valuation recommendations", "Recomendaciones personalizadas de valorización"),
                     ]}
                   />
                 </div>
@@ -529,21 +556,20 @@ export default function CalculadoraValorPage() {
 
       {/* PDF Preview Modal */}
       {pdfPreviewUrl && (
-        <div className="fixed inset-0 z-[200] flex flex-col bg-black/90">
+        <div className="fixed inset-0 z-[200] flex flex-col bg-black/90" role="dialog" aria-modal="true" aria-label={tr("Pré-visualização PDF", "PDF Preview", "Vista previa PDF")}>
           <p className="text-xs text-white/50 text-center py-1">
-            Pressione <kbd className="bg-white/10 px-1.5 py-0.5 rounded text-xs">ESC</kbd> para
-            fechar
+            {tr("Pressione", "Press", "Pulse")} <kbd className="bg-white/10 px-1.5 py-0.5 rounded text-xs">ESC</kbd> {tr("para fechar", "to close", "para cerrar")}
           </p>
           <div className="flex items-center justify-between px-4 py-3 bg-[#0A0A0A] border-b border-[#C5A059]/30 shrink-0">
             <span className="text-[#C5A059] font-semibold text-sm">
-              Avaliação PDF — Portal Lusitano
+              {tr("Avaliação PDF — Portal Lusitano", "PDF Evaluation — Portal Lusitano", "Evaluación PDF — Portal Lusitano")}
             </span>
             <div className="flex items-center gap-3">
               <button
                 onClick={handleDownloadPdf}
                 className="px-4 py-1.5 rounded-lg bg-[#C5A059] text-black text-sm font-semibold hover:bg-[#d4af6a] transition-colors"
               >
-                Guardar PDF
+                {tr("Guardar PDF", "Save PDF", "Guardar PDF")}
               </button>
               <button
                 onClick={handleClosePdfPreview}
@@ -553,17 +579,17 @@ export default function CalculadoraValorPage() {
               </button>
             </div>
           </div>
-          <iframe src={pdfPreviewUrl} className="flex-1 w-full border-0" title="Avaliação PDF" />
+          <iframe src={pdfPreviewUrl} className="flex-1 w-full border-0" title={tr("Avaliação PDF", "PDF Evaluation", "Evaluación PDF")} />
         </div>
       )}
 
       {/* Reset Confirm Dialog */}
       <ConfirmDialog
         open={showResetConfirm}
-        title="Recomeçar análise?"
-        message="Os dados actuais serão perdidos. Tens a certeza que queres recomeçar?"
-        confirmLabel="Recomeçar"
-        cancelLabel="Cancelar"
+        title={tr("Recomeçar análise?", "Restart analysis?", "Reiniciar análisis?")}
+        message={tr("Os dados actuais serão perdidos. Tens a certeza que queres recomeçar?", "Current data will be lost. Are you sure you want to restart?", "Los datos actuales se perderán. ¿Estás seguro de que quieres reiniciar?")}
+        confirmLabel={tr("Recomeçar", "Restart", "Reiniciar")}
+        cancelLabel={tr("Cancelar", "Cancel", "Cancelar")}
         variant="warning"
         onConfirm={resetar}
         onCancel={() => setShowResetConfirm(false)}

@@ -5,12 +5,13 @@ import { SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Verificador de Compatibilidade",
   description:
-    "Verifique a compatibilidade entre cavaleiro e cavalo Lusitano. Análise personalizada de nível, objectivos e perfil equestre.",
+    "Verifique a compatibilidade genética entre garanhão e égua Lusitana. Análise de COI, linhagem, conformação, temperamento e previsão de pelagens para cruzamento.",
   keywords: [
-    "compatibilidade cavaleiro cavalo",
-    "verificador equestre",
-    "cavalo ideal para mim",
-    "perfil cavaleiro lusitano",
+    "compatibilidade genética lusitano",
+    "cruzamento cavalo lusitano",
+    "verificador reprodução equina",
+    "COI consanguinidade lusitano",
+    "compatibilidade garanhão égua",
   ],
   alternates: {
     canonical: `${SITE_URL}/verificador-compatibilidade`,
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Verificador de Compatibilidade | Portal Lusitano",
     description:
-      "Verifique a compatibilidade entre cavaleiro e cavalo Lusitano. Análise personalizada de nível, objectivos e perfil equestre.",
+      "Verifique a compatibilidade genética entre garanhão e égua Lusitana. Análise de COI, linhagem, conformação, temperamento e previsão de pelagens para cruzamento.",
     url: `${SITE_URL}/verificador-compatibilidade`,
     siteName: "Portal Lusitano",
     locale: "pt_PT",
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Verificador de Compatibilidade | Portal Lusitano",
     description:
-      "Verifique a compatibilidade entre cavaleiro e cavalo Lusitano. Análise personalizada de nível, objectivos e perfil equestre.",
+      "Verifique a compatibilidade genética entre garanhão e égua Lusitana. Análise de COI, linhagem, conformação, temperamento e previsão de pelagens para cruzamento.",
     images: ["/opengraph-image"],
   },
 };
@@ -84,7 +85,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       />
       <WebApplicationSchema
         name="Verificador de Compatibilidade"
-        description="Verifique a compatibilidade entre cavaleiro e cavalo Lusitano. Análise personalizada de nível, objectivos e perfil equestre."
+        description="Verifique a compatibilidade genética entre garanhão e égua Lusitana. Análise de COI, linhagem, conformação, temperamento e previsão de pelagens para cruzamento."
         url={`${SITE_URL}/verificador-compatibilidade`}
       />
       <FAQSchema items={faqItems} />

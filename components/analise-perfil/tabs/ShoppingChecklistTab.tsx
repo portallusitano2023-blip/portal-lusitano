@@ -32,6 +32,7 @@ interface ChecklistPhase {
 
 interface ShoppingChecklistTabProps {
   phases: ChecklistPhase[];
+  profile: string;
 }
 
 /* ------------------------------------------------------------------ */
@@ -55,7 +56,7 @@ const PRIORITY_COLORS: Record<ChecklistItem["priority"], string> = {
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export default function ShoppingChecklistTab({ phases }: ShoppingChecklistTabProps) {
+export default function ShoppingChecklistTab({ phases, profile }: ShoppingChecklistTabProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
 
@@ -72,7 +73,15 @@ export default function ShoppingChecklistTab({ phases }: ShoppingChecklistTabPro
   };
 
   /* ---------- state ---------- */
-  const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const storageKey = `perfil-checklist-${profile}`;
+
+  const [checked, setChecked] = useState<Record<string, boolean>>(() => {
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return {};
+  });
   const [expandedPhases, setExpandedPhases] = useState<Record<number, boolean>>(() => {
     const initial: Record<number, boolean> = {};
     phases.forEach((_, i) => {
@@ -102,6 +111,13 @@ export default function ShoppingChecklistTab({ phases }: ShoppingChecklistTabPro
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
+
+  /* ---------- persist checked state ---------- */
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(checked));
+    } catch {}
+  }, [checked, storageKey]);
 
   /* ---------- derived counts ---------- */
   const totalItems = useMemo(

@@ -85,6 +85,7 @@ export default function HorseForm({
       <div className="flex gap-2 mb-8">
         <button
           onClick={() => setTab("garanhao")}
+          aria-pressed={tab === "garanhao"}
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
             tab === "garanhao"
               ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/20"
@@ -112,6 +113,7 @@ export default function HorseForm({
         </button>
         <button
           onClick={() => setTab("egua")}
+          aria-pressed={tab === "egua"}
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
             tab === "egua"
               ? "bg-gradient-to-r from-pink-600 to-pink-500 text-white shadow-lg shadow-pink-500/20"
@@ -294,6 +296,7 @@ export default function HorseForm({
               <button
                 key={lin.value}
                 onClick={() => update("linhagemFamosa", lin.value)}
+                aria-pressed={cavalo.linhagemFamosa === lin.value}
                 className={`py-2 px-3 min-h-[44px] rounded-lg border text-left transition-all ${
                   cavalo.linhagemFamosa === lin.value
                     ? "border-pink-500 bg-pink-500/10"
@@ -381,6 +384,11 @@ export default function HorseForm({
                 max="10"
                 value={cavalo[field]}
                 onChange={(e) => update(field, +e.target.value)}
+                aria-label={label}
+                aria-valuenow={cavalo[field]}
+                aria-valuemin={1}
+                aria-valuemax={10}
+                aria-valuetext={`${cavalo[field]} de 10`}
                 className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-pink-500 touch-pan-y py-3"
               />
             </div>
@@ -527,6 +535,7 @@ export default function HorseForm({
           </div>
           <button
             onClick={() => update("aprovado", !cavalo.aprovado)}
+            aria-pressed={cavalo.aprovado}
             className={`w-full py-3 px-4 rounded-lg border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
               cavalo.aprovado
                 ? "border-green-500 bg-green-500/10 text-green-400"
@@ -548,6 +557,7 @@ export default function HorseForm({
               <button
                 key={d.value}
                 onClick={() => toggleDefeito(d.value)}
+                aria-pressed={cavalo.defeitos.includes(d.value)}
                 className={`p-3 min-h-[44px] rounded-lg border text-left transition-all ${
                   cavalo.defeitos.includes(d.value)
                     ? d.risco === "alto"

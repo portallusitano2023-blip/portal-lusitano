@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   Dna,
   AlertTriangle,
@@ -15,6 +16,8 @@ import SourceBadge from "@/components/tools/SourceBadge";
 import COIGauge from "../COIGauge";
 import CoatColorSwatches from "../CoatColorSwatches";
 import PhysicalMatch from "@/components/tools/PhysicalMatch";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Cavalo, ResultadoCompatibilidade } from "../types";
 import type { Translations } from "@/context/LanguageContext";
 
@@ -26,6 +29,9 @@ interface GeneticMetricsProps {
 }
 
 export default function GeneticMetrics({ resultado, garanhao, egua, t }: GeneticMetricsProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   return (
     <>
       {/* Métricas Genéticas */}
@@ -37,28 +43,36 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
             <Tooltip
               text={
                 t.verificador.tooltip_coi ??
-                "Coeficiente de Consanguinidade — mede o grau de parentesco genético. Abaixo de 3% é excelente; acima de 6.25% aumenta o risco de problemas hereditários."
+                tr(
+                  "Coeficiente de Consanguinidade — mede o grau de parentesco genético. Abaixo de 3% é excelente; acima de 6.25% aumenta o risco de problemas hereditários.",
+                  "Inbreeding Coefficient — measures the degree of genetic relatedness. Below 3% is excellent; above 6.25% increases the risk of hereditary problems.",
+                  "Coeficiente de Consanguinidad — mide el grado de parentesco genético. Por debajo de 3% es excelente; por encima de 6.25% aumenta el riesgo de problemas hereditarios."
+                )
               }
             />
             <SourceBadge
               source="modelo"
               tooltip={
                 t.verificador.source_coi ??
-                "Calculado a partir de pedigree declarado — para COI oficial consulte a APSL"
+                tr(
+                  "Calculado a partir de pedigree declarado — para COI oficial consulte a APSL",
+                  "Calculated from declared pedigree — for official COI consult APSL",
+                  "Calculado a partir de pedigrí declarado — para COI oficial consulte la APSL"
+                )
               }
             />
           </div>
           <COIGauge coi={resultado.coi} />
           <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-2 text-center leading-snug">
             {resultado.coi <= 1.5
-              ? "≈ Antepassados comuns muito distantes (6.ª geração+)"
+              ? tr("≈ Antepassados comuns muito distantes (6.ª geração+)", "≈ Very distant common ancestors (6th generation+)", "≈ Antepasados comunes muy distantes (6.ª generación+)")
               : resultado.coi <= 3
-                ? "≈ Primos de 4.º-5.º grau"
+                ? tr("≈ Primos de 4.º-5.º grau", "≈ 4th-5th degree cousins", "≈ Primos de 4.º-5.º grado")
                 : resultado.coi <= 6.25
-                  ? "≈ Primos de 2.º-3.º grau"
+                  ? tr("≈ Primos de 2.º-3.º grau", "≈ 2nd-3rd degree cousins", "≈ Primos de 2.º-3.º grado")
                   : resultado.coi <= 12.5
-                    ? "≈ Primo-irmãos — monitorizar"
-                    : "≈ Meio-irmãos — risco hereditário elevado"}
+                    ? tr("≈ Primo-irmãos — monitorizar", "≈ First cousins — monitor", "≈ Primos hermanos — monitorizar")
+                    : tr("≈ Meio-irmãos — risco hereditário elevado", "≈ Half-siblings — high hereditary risk", "≈ Medio hermanos — riesgo hereditario elevado")}
           </p>
         </div>
 
@@ -69,14 +83,22 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
             <Tooltip
               text={
                 t.verificador.tooltip_blup ??
-                "Estimativa do mérito genético do potro, baseada na média dos progenitores. BLUP simplificado — não oficial."
+                tr(
+                  "Estimativa do mérito genético do potro, baseada na média dos progenitores. BLUP simplificado — não oficial.",
+                  "Estimate of the foal's genetic merit, based on the average of the parents. Simplified BLUP — not official.",
+                  "Estimación del mérito genético del potro, basada en el promedio de los progenitores. BLUP simplificado — no oficial."
+                )
               }
             />
             <SourceBadge
               source="modelo"
               tooltip={
                 t.verificador.source_blup ??
-                "Estimativa simplificada — BLUP oficial requer base de dados APSL completa"
+                tr(
+                  "Estimativa simplificada — BLUP oficial requer base de dados APSL completa",
+                  "Simplified estimate — official BLUP requires complete APSL database",
+                  "Estimación simplificada — BLUP oficial requiere base de datos APSL completa"
+                )
               }
             />
           </div>
@@ -99,7 +121,11 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
             <Tooltip
               text={
                 t.verificador.tooltip_altura ??
-                "Estimativa baseada na média dos progenitores ±2cm. Factores ambientais podem causar variações significativas."
+                tr(
+                  "Estimativa baseada na média dos progenitores ±2cm. Factores ambientais podem causar variações significativas.",
+                  "Estimate based on parent average ±2cm. Environmental factors may cause significant variations.",
+                  "Estimación basada en el promedio de los progenitores ±2cm. Factores ambientales pueden causar variaciones significativas."
+                )
               }
             />
           </div>
@@ -172,14 +198,22 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
           <Tooltip
             text={
               t.verificador.tooltip_pelagem ??
-              "Probabilidades baseadas em genética mendeliana simplificada. Resultados reais dependem de alelos não testados."
+              tr(
+                "Probabilidades baseadas em genética mendeliana simplificada. Resultados reais dependem de alelos não testados.",
+                "Probabilities based on simplified Mendelian genetics. Actual results depend on untested alleles.",
+                "Probabilidades basadas en genética mendeliana simplificada. Los resultados reales dependen de alelos no probados."
+              )
             }
           />
           <SourceBadge
             source="modelo"
             tooltip={
               t.verificador.source_pelagem ??
-              "Genética mendeliana básica — não substitui teste genético"
+              tr(
+                "Genética mendeliana básica — não substitui teste genético",
+                "Basic Mendelian genetics — does not replace genetic testing",
+                "Genética mendeliana básica — no sustituye prueba genética"
+              )
             }
           />
         </h3>
@@ -217,12 +251,12 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
           <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)] mb-6">
             <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-3 flex items-center gap-2">
               <Baby size={15} className="text-pink-400" />
-              Probabilidade de Sucesso Reprodutivo
+              {tr("Probabilidade de Sucesso Reprodutivo", "Reproductive Success Probability", "Probabilidad de Éxito Reproductivo")}
             </h3>
             <div className="flex items-center gap-4 mb-3">
               <div className="text-center">
                 <p className={`text-3xl font-serif font-bold ${textColor}`}>{prob}%</p>
-                <p className="text-[10px] text-[var(--foreground-muted)]">probabilidade</p>
+                <p className="text-[10px] text-[var(--foreground-muted)]">{tr("probabilidade", "probability", "probabilidad")}</p>
               </div>
               <div className="flex-1">
                 <div className="h-3 bg-[var(--background-card)] rounded-full overflow-hidden mb-1">
@@ -233,16 +267,19 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
                 </div>
                 <p className="text-xs text-[var(--foreground-muted)]">
                   {prob >= 70
-                    ? "Probabilidade elevada de gestação na primeira tentativa"
+                    ? tr("Probabilidade elevada de gestação na primeira tentativa", "High probability of pregnancy on first attempt", "Alta probabilidad de gestación en el primer intento")
                     : prob >= 55
-                      ? "Probabilidade moderada — 1-2 coberturas podem ser necessárias"
-                      : "Probabilidade reduzida — consulte veterinário especializado"}
+                      ? tr("Probabilidade moderada — 1-2 coberturas podem ser necessárias", "Moderate probability — 1-2 breedings may be necessary", "Probabilidad moderada — 1-2 cubriciones pueden ser necesarias")
+                      : tr("Probabilidade reduzida — consulte veterinário especializado", "Low probability — consult a specialised veterinarian", "Probabilidad reducida — consulte al veterinario especializado")}
                 </p>
               </div>
             </div>
             <p className="text-[10px] text-[var(--foreground-muted)]/60">
-              Estimativa baseada em score de compatibilidade, COI, saúde e idade da égua. Não
-              substitui avaliação veterinária.
+              {tr(
+                "Estimativa baseada em score de compatibilidade, COI, saúde e idade da égua. Não substitui avaliação veterinária.",
+                "Estimate based on compatibility score, COI, health and mare age. Does not replace veterinary assessment.",
+                "Estimación basada en puntuación de compatibilidad, COI, salud y edad de la yegua. No sustituye evaluación veterinaria."
+              )}
             </p>
           </div>
         );

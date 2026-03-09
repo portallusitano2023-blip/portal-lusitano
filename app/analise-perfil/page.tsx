@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import dynamic from "next/dynamic";
 import LocalizedLink from "@/components/LocalizedLink";
 import {
@@ -149,6 +149,12 @@ function AnalisePerfilContent() {
       : questions.length > 0
         ? Math.round(((currentQuestion + 1) / questions.length) * 100)
         : 0;
+
+  // Memoised map of profile -> percentage for tabs that need a Record<string, number>
+  const scorePercentagesMap = useMemo(
+    () => Object.fromEntries(scorePercentages.map((sp) => [sp.profile, sp.percentage])),
+    [scorePercentages]
+  );
 
   return (
     <>
@@ -569,9 +575,7 @@ function AnalisePerfilContent() {
                     {selectedTab === "afinidade" && (
                       <AffinityTab
                         result={result}
-                        scorePercentages={Object.fromEntries(
-                          scorePercentages.map((sp) => [sp.profile, sp.percentage])
-                        )}
+                        scorePercentages={scorePercentagesMap}
                       />
                     )}
                     {selectedTab === "custos" && (
@@ -602,9 +606,6 @@ function AnalisePerfilContent() {
                     {selectedTab === "prioridades" && (
                       <PriorityMapTab
                         result={result}
-                        scorePercentages={Object.fromEntries(
-                          scorePercentages.map((sp) => [sp.profile, sp.percentage])
-                        )}
                       />
                     )}
                     {selectedTab === "checklist" && (
@@ -613,6 +614,7 @@ function AnalisePerfilContent() {
                         title={t.analise_perfil.tab_checklist}
                       >
                         <ShoppingChecklistTab
+                          profile={result.profile}
                           phases={[
                             {
                               title: t.analise_perfil.checklist_before,

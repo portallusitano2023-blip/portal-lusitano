@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import type { ToolName } from "@/lib/tools/shared-data";
 
 // Lazy singleton — Supabase loaded only when an authenticated user needs tool access
 let supabasePromise: Promise<typeof import("@/lib/supabase-browser")> | null = null;
@@ -9,8 +10,6 @@ function getSupabase() {
   if (!supabasePromise) supabasePromise = import("@/lib/supabase-browser");
   return supabasePromise;
 }
-
-type ToolName = "calculadora" | "comparador" | "compatibilidade" | "perfil";
 
 interface ToolAccessState {
   canUse: boolean;
@@ -26,11 +25,6 @@ interface ToolAccessState {
     formData?: Record<string, unknown>,
     resultData?: Record<string, unknown>
   ) => Promise<boolean>;
-  /** @deprecated Use validateAndRecord instead — kept for backwards compat */
-  recordUsage: (
-    formData?: Record<string, unknown>,
-    resultData?: Record<string, unknown>
-  ) => Promise<void>;
 }
 
 const FREE_USES_PER_TOOL = 1;
@@ -147,45 +141,6 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
     [user, toolName]
   );
 
-  /**
-   * @deprecated Legacy client-side recording. Kept for backwards compatibility.
-   * New code should use validateAndRecord() instead.
-   */
-  const recordUsage = useCallback(
-    async (formData?: Record<string, unknown>, resultData?: Record<string, unknown>) => {
-      if (!user) return;
-
-      try {
-        const { createSupabaseBrowserClient } = await getSupabase();
-        const supabase = createSupabaseBrowserClient();
-        await supabase.from("tool_usage").insert({
-          user_id: user.id,
-          tool_name: toolName,
-          form_data: (formData as Record<string, never>) || null,
-          result_data: (resultData as Record<string, never>) || null,
-        });
-        const newCount = usageCount + 1;
-        setUsageCount(newCount);
-
-        if (!isSubscribed && newCount >= FREE_USES_PER_TOOL) {
-          const ctrl = new AbortController();
-          const timer = setTimeout(() => ctrl.abort(), 5000);
-          fetch("/api/tools/limit-reached", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ toolSlug: toolName }),
-            signal: ctrl.signal,
-          })
-            .catch(() => {})
-            .finally(() => clearTimeout(timer));
-        }
-      } catch {
-        // Silently fail - don't block user
-      }
-    },
-    [user, toolName, usageCount, isSubscribed]
-  );
-
   return {
     canUse,
     isSubscribed,
@@ -193,6 +148,5 @@ export function useToolAccess(toolName: ToolName): ToolAccessState {
     isLoading: isLoading || authLoading,
     requiresAuth,
     validateAndRecord,
-    recordUsage,
   };
 }

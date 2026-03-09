@@ -359,7 +359,7 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
   }
 
   return {
-    score: Math.max(total, 0),
+    score: Math.min(100, Math.max(total, 0)),
     nivel,
     coi: coiPrevisto,
     blup: blupPrevisto,

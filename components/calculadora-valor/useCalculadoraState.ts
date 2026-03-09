@@ -6,6 +6,7 @@ import { useToolAccess } from "@/hooks/useToolAccess";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import { useToast } from "@/context/ToastContext";
 import { calcularValor, estimarValorParcial } from "./utils";
 import { PROFILE_LABELS, SUBPROFILE_LABELS, PROFILE_CONTEXT_KEY } from "@/lib/tools/shared-data";
@@ -65,7 +66,8 @@ export const INITIAL_FORM: FormData = {
 // ============================================
 
 export function useCalculadoraState() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
   const { showToast } = useToast();
   const { session } = useAuth();
 
@@ -253,7 +255,7 @@ export function useCalculadoraState() {
     };
 
     try {
-      const result = calcularValor(formStep.data as FormData);
+      const result = calcularValor(formStep.data as FormData, tr);
       const resultMeta = {
         valorFinal: result.valorFinal,
         confianca: result.confianca,
@@ -383,16 +385,20 @@ export function useCalculadoraState() {
       muito_bom: 8,
       excelente: 10,
       bom: 6,
-      razoavel: 4,
+      regular: 4,
     };
     const compMap: Record<string, string> = {
       nenhuma: "Nenhuma",
       regional: "Regional",
       nacional: "Nacional",
-      internacional: "Internacional",
+      cdi1: "Internacional",
+      cdi3: "Internacional",
+      cdi5: "Internacional",
+      campeonato_mundo: "Internacional",
     };
     const linhagemMap: Record<string, string> = {
-      sem_registo: "Desconhecida",
+      desconhecida: "Desconhecida",
+      comum: "Registada",
       registada: "Registada",
       certificada: "Certificada",
       premium: "Premium",
@@ -422,6 +428,10 @@ export function useCalculadoraState() {
     try {
       sessionStorage.setItem(CHAIN_KEY, JSON.stringify({ source: "calculadora", horse }));
     } catch {}
+    // Full page reload is intentional here: the target page reads horse data from
+    // sessionStorage on mount, so the data must persist across navigation.
+    // Using router.push() would work but sessionStorage is already populated above,
+    // and a full reload guarantees a clean mount of the comparador page.
     window.location.href = "/comparador-cavalos";
   };
 
@@ -432,7 +442,7 @@ export function useCalculadoraState() {
       muito_bom: 8,
       excelente: 10,
       bom: 6,
-      razoavel: 4,
+      regular: 4,
     };
     chainCalcToVerificador(
       {

@@ -1,8 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
 import { CheckCircle, AlertTriangle, Info, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import Tooltip from "@/components/tools/Tooltip";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { ResultadoCompatibilidade } from "../types";
 import type { Translations } from "@/context/LanguageContext";
 
@@ -31,6 +34,9 @@ export default function CompatibilityHero({
   onDismissBanner,
   t,
 }: CompatibilityHeroProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   return (
     <>
       {/* Banner: Modelo Educativo Simplificado */}
@@ -39,13 +45,14 @@ export default function CompatibilityHero({
           <Info size={15} className="text-blue-400 mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-blue-300/90 mb-0.5">
-              Modelo Educativo Simplificado
+              {tr("Modelo Educativo Simplificado", "Simplified Educational Model", "Modelo Educativo Simplificado")}
             </p>
             <p className="text-xs text-blue-300/70 leading-relaxed">
-              O Coeficiente de Endogamia (COI) apresentado é uma estimativa baseada nas linhagens
-              declaradas. O COI real requer análise de pedigree completo (5+ gerações) por
-              geneticista equino certificado. Para decisões de cruzamento, consulte um especialista
-              ou a base de dados{}
+              {tr(
+                "O Coeficiente de Endogamia (COI) apresentado é uma estimativa baseada nas linhagens declaradas. O COI real requer análise de pedigree completo (5+ gerações) por geneticista equino certificado. Para decisões de cruzamento, consulte um especialista ou a base de dados",
+                "The Inbreeding Coefficient (COI) shown is an estimate based on declared lineages. The actual COI requires complete pedigree analysis (5+ generations) by a certified equine geneticist. For breeding decisions, consult a specialist or the",
+                "El Coeficiente de Endogamia (COI) presentado es una estimación basada en las líneas declaradas. El COI real requiere análisis de pedigrí completo (5+ generaciones) por un genetista equino certificado. Para decisiones de cruzamiento, consulte a un especialista o la base de datos"
+              )}{" "}
               <a
                 href="https://www.cavalo-lusitano.com"
                 target="_blank"
@@ -54,12 +61,12 @@ export default function CompatibilityHero({
               >
                 APSL
               </a>
-              .
+              {tr(" .", " database.", " .")}
             </p>
           </div>
           <button
             onClick={onDismissBanner}
-            aria-label="Fechar aviso"
+            aria-label={tr("Fechar aviso", "Close notice", "Cerrar aviso")}
             className="text-blue-400/60 hover:text-blue-300 transition-colors shrink-0 mt-0.5"
           >
             <X size={14} />
@@ -112,7 +119,11 @@ export default function CompatibilityHero({
             <Tooltip
               text={
                 (t.verificador as Record<string, string>).tooltip_score ??
-                "Score de compatibilidade genética (0-100) baseado em COI, BLUP, conformação, andamentos e historial de ambos os progenitores."
+                tr(
+                  "Score de compatibilidade genética (0-100) baseado em COI, BLUP, conformação, andamentos e historial de ambos os progenitores.",
+                  "Genetic compatibility score (0-100) based on COI, BLUP, conformation, gaits and history of both parents.",
+                  "Puntuación de compatibilidad genética (0-100) basada en COI, BLUP, conformación, movimientos e historial de ambos progenitores."
+                )
               }
             />
           </div>

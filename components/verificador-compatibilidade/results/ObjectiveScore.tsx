@@ -1,6 +1,9 @@
 "use client";
 
+import { useMemo } from "react";
 import { Calendar } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Cavalo, ResultadoCompatibilidade } from "../types";
 
 interface ObjectiveScoreProps {
@@ -16,6 +19,9 @@ export default function ObjectiveScore({
   egua,
   objetivo,
 }: ObjectiveScoreProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   return (
     <>
       {/* Score Ajustado por Objetivo */}
@@ -50,10 +56,10 @@ export default function ObjectiveScore({
           })();
           const capped = Math.min(100, Math.max(0, adjustedScore));
           const OBJETIVO_LABELS: Record<string, string> = {
-            competicao: "Alta Competição",
-            reproducao: "Programa de Cria",
-            lazer: "Lazer & Turismo",
-            show: "Exposição/Show",
+            competicao: tr("Alta Competição", "High Competition", "Alta Competición"),
+            reproducao: tr("Programa de Cria", "Breeding Programme", "Programa de Cría"),
+            lazer: tr("Lazer & Turismo", "Leisure & Tourism", "Ocio & Turismo"),
+            show: tr("Exposição/Show", "Exhibition/Show", "Exposición/Show"),
           };
           const diff = capped - s;
           return (
@@ -75,11 +81,14 @@ export default function ObjectiveScore({
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-[var(--foreground)]">
-                  Score para {OBJETIVO_LABELS[objetivo] ?? objetivo}
+                  {tr("Score para", "Score for", "Puntuación para")} {OBJETIVO_LABELS[objetivo] ?? objetivo}
                 </p>
                 <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
-                  {diff >= 0 ? `+${diff}` : diff} pontos vs. score global ({s}/100) — pesos
-                  ajustados para este objectivo
+                  {diff >= 0 ? `+${diff}` : diff} {tr(
+                    `pontos vs. score global (${s}/100) — pesos ajustados para este objectivo`,
+                    `points vs. global score (${s}/100) — weights adjusted for this objective`,
+                    `puntos vs. puntuación global (${s}/100) — pesos ajustados para este objetivo`
+                  )}
                 </p>
               </div>
             </div>
@@ -90,11 +99,14 @@ export default function ObjectiveScore({
       <div className="bg-[var(--background-secondary)]/30 rounded-lg p-3 border border-[var(--border)]/60 mb-4 flex items-center gap-3">
         <Calendar size={16} className="text-emerald-400 shrink-0" />
         <p className="text-xs text-[var(--foreground-secondary)]">
-          <strong className="text-emerald-400">Época ideal:</strong> Março–Maio (fotoperíodo longo
-          estimula ovulação natural).
+          <strong className="text-emerald-400">{tr("Época ideal:", "Ideal season:", "Época ideal:")}</strong> {tr(
+            "Março–Maio (fotoperíodo longo estimula ovulação natural).",
+            "March–May (long photoperiod stimulates natural ovulation).",
+            "Marzo–Mayo (fotoperíodo largo estimula ovulación natural)."
+          )}
           {resultado.score >= 70
-            ? " Esta combinação está pronta para cobrição primaveril."
-            : " Consulte veterinário antes de avançar."}
+            ? ` ${tr("Esta combinação está pronta para cobrição primaveril.", "This combination is ready for spring breeding.", "Esta combinación está lista para cubrición primaveral.")}`
+            : ` ${tr("Consulte veterinário antes de avançar.", "Consult a veterinarian before proceeding.", "Consulte al veterinario antes de proceder.")}`}
         </p>
       </div>
     </>

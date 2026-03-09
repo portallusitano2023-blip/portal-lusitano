@@ -1,8 +1,11 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useMemo } from "react";
 import { Sparkles } from "lucide-react";
 import type { FormData, Resultado } from "../types";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface ImprovementActionsProps {
   resultado: Resultado;

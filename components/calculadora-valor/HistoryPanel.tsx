@@ -1,6 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
 import { History, X, TrendingUp } from "lucide-react";
+import { TREINO_LABELS } from "@/lib/tools/shared-data";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 export interface CalcHistoryEntry {
   timestamp: number;
@@ -17,19 +21,13 @@ interface HistoryPanelProps {
   onClose: () => void;
 }
 
-const TREINO_LABELS: Record<string, string> = {
-  potro: "Potro",
-  desbravado: "Desbravado",
-  iniciado: "Iniciado",
-  elementar: "Elementar",
-  medio: "Médio",
-  avancado: "Avançado",
-  alta_escola: "Alta Escola",
-  grand_prix: "Grand Prix",
-};
-
 export default function HistoryPanel({ history, show, onToggle, onClose }: HistoryPanelProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   if (history.length === 0) return null;
+
+  const locale = language === "pt" ? "pt-PT" : language === "es" ? "es-ES" : "en-US";
 
   return (
     <div className="relative">
@@ -38,18 +36,18 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
         className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)]"
       >
         <History size={13} />
-        <span className="hidden sm:inline">Histórico ({history.length})</span>
+        <span className="hidden sm:inline">{tr("Histórico", "History", "Historial")} ({history.length})</span>
       </button>
       {show && (
         <div className="absolute right-0 top-full mt-2 w-80 bg-[var(--background-card)] border border-[var(--border)] rounded-xl shadow-2xl z-50 overflow-hidden">
           <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
             <span className="text-xs font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider">
-              Últimas Avaliações
+              {tr("Últimas Avaliações", "Recent Evaluations", "Últimas Evaluaciones")}
             </span>
             <button
               onClick={onClose}
               className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
-              aria-label="Fechar histórico"
+              aria-label={tr("Fechar histórico", "Close history", "Cerrar historial")}
             >
               <X size={13} />
             </button>
@@ -59,10 +57,10 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
               <div key={i} className="px-4 py-3">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-[#C5A059] font-semibold truncate max-w-[140px]">
-                    {entry.nome || "Sem nome"}
+                    {entry.nome || tr("Sem nome", "Unnamed", "Sin nombre")}
                   </span>
                   <span className="text-[10px] text-[var(--foreground-muted)] shrink-0 ml-2">
-                    {new Date(entry.timestamp).toLocaleDateString("pt-PT", {
+                    {new Date(entry.timestamp).toLocaleDateString(locale, {
                       day: "numeric",
                       month: "short",
                       hour: "2-digit",

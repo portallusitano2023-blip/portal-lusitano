@@ -1,10 +1,13 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useMemo } from "react";
 import { Dna, BarChart3 } from "lucide-react";
 import HorseSilhouette from "@/components/tools/HorseSilhouette";
 import Tooltip from "@/components/tools/Tooltip";
 import SourceBadge from "@/components/tools/SourceBadge";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { FormData, Resultado } from "../types";
 
 interface MorphologyGeneticsProps {
@@ -14,6 +17,9 @@ interface MorphologyGeneticsProps {
 }
 
 export default function MorphologyGenetics({ form, resultado, t }: MorphologyGeneticsProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   return (
     <>
       {/* Horse Silhouette - Morphology Map */}
@@ -50,14 +56,7 @@ export default function MorphologyGenetics({ form, resultado, t }: MorphologyGen
               <Tooltip
                 text={
                   (t.calculadora as Record<string, string>).tooltip_blup ??
-                  "Best Linear Unbiased Prediction — indicador de mérito genético. O BLUP aqui é uma estimativa simplificada, NÃO um BLUP oficial APSL."
-                }
-              />
-              <SourceBadge
-                source="modelo"
-                tooltip={
-                  (t.calculadora as Record<string, string>).source_blup ??
-                  "Estimativa simplificada — não substitui BLUP oficial APSL"
+                  "Índice de mérito genético estimado com base nos dados fornecidos. Esta é uma estimativa simplificada, NÃO um BLUP oficial APSL."
                 }
               />
             </span>
@@ -68,6 +67,13 @@ export default function MorphologyGenetics({ form, resultado, t }: MorphologyGen
           <div className="text-xs text-[var(--foreground-muted)] mt-1">
             {t.calculadora.blup_avg}
           </div>
+          <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-1.5 italic">
+            {tr(
+              "Estimativa baseada nos dados fornecidos",
+              "Estimate based on provided data",
+              "Estimacion basada en los datos proporcionados"
+            )}
+          </p>
           <div className="mt-3 h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-purple-500 to-purple-400"

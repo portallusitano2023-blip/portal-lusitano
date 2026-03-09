@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, useRef, useEffect } from "react";
 import { Scale } from "lucide-react";
 import dynamic from "next/dynamic";
 import LiquidityScore from "@/components/tools/LiquidityScore";
@@ -49,15 +49,20 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
     ref
   ) {
     const { t } = useLanguage();
+    const hasShownConfetti = useRef(false);
+
+    useEffect(() => {
+      hasShownConfetti.current = true;
+    }, []);
 
     return (
       <div
         ref={ref}
         className="space-y-6 pt-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       >
-        {/* Confetti celebration */}
+        {/* Confetti celebration — fires only once per mount */}
         <div className="relative">
-          <Confetti trigger={true} particleCount={50} duration={2800} />
+          <Confetti trigger={!hasShownConfetti.current} particleCount={50} duration={2800} />
         </div>
 
         <ValorHero resultado={resultado} form={form} t={t} />

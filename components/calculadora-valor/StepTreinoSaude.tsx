@@ -406,6 +406,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
               <button
                 key={opt.value}
                 onClick={() => update("treino", opt.value)}
+                aria-pressed={form.treino === opt.value}
                 className={`py-3 px-3 rounded-lg border text-left transition-all min-h-[44px] ${
                   form.treino === opt.value
                     ? "border-[var(--gold)] bg-[var(--gold)]/10"
@@ -480,6 +481,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                 <button
                   key={d.value}
                   onClick={() => update("disciplina", d.value)}
+                  aria-pressed={form.disciplina === d.value}
                   className={`py-3 px-3 rounded-lg border text-left transition-all min-h-[44px] ${
                     form.disciplina === d.value
                       ? "border-[var(--gold)] bg-[var(--gold)]/10"
@@ -532,6 +534,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                 <button
                   key={opt.value}
                   onClick={() => update("competicoes", opt.value as FormData["competicoes"])}
+                  aria-pressed={form.competicoes === opt.value}
                   className={`py-3 px-3 rounded-lg border text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 min-h-[44px] ${
                     form.competicoes === opt.value
                       ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
@@ -575,6 +578,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                 <button
                   key={opt.value}
                   onClick={() => update("saude", opt.value as FormData["saude"])}
+                  aria-pressed={form.saude === opt.value}
                   className={`py-3 px-4 rounded-lg border text-left transition-all ${
                     form.saude === opt.value
                       ? "border-[var(--gold)] bg-[var(--gold)]/10"
@@ -610,6 +614,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
           <div className="grid grid-cols-2 gap-2 mt-4">
             <button
               onClick={() => update("raioX", !form.raioX)}
+              aria-pressed={form.raioX}
               className={`py-3 px-3 rounded-lg border text-xs sm:text-sm transition-all flex items-center justify-center gap-2 min-h-[44px] ${
                 form.raioX
                   ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
@@ -621,6 +626,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
             </button>
             <button
               onClick={() => update("exameVeterinario", !form.exameVeterinario)}
+              aria-pressed={form.exameVeterinario}
               className={`py-3 px-3 rounded-lg border text-xs sm:text-sm transition-all flex items-center justify-center gap-2 min-h-[44px] ${
                 form.exameVeterinario
                   ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"

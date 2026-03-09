@@ -109,22 +109,23 @@ export function calcularAptidoesPotro(garanhao: Cavalo, egua: Cavalo): Offspring
     (egua.conformacao + egua.andamentos) * 5 + (egua.blup > 100 ? 10 : 0)
   );
 
+  // Fertility values match FERTILIDADES in data.ts: "Muito Alta" | "Alta" | "Normal" | "Baixa"
   const stallionRepro =
-    garanhao.fertilidade === "comprovada"
-      ? 90
-      : garanhao.fertilidade === "boa"
-        ? 75
-        : garanhao.fertilidade === "desconhecida"
-          ? 50
-          : 30;
+    garanhao.fertilidade === "Muito Alta"
+      ? 95
+      : garanhao.fertilidade === "Alta"
+        ? 80
+        : garanhao.fertilidade === "Normal"
+          ? 60
+          : 30; // "Baixa" or unknown
   const mareRepro =
-    egua.fertilidade === "comprovada"
-      ? 90
-      : egua.fertilidade === "boa"
-        ? 75
-        : egua.fertilidade === "desconhecida"
-          ? 50
-          : 30;
+    egua.fertilidade === "Muito Alta"
+      ? 95
+      : egua.fertilidade === "Alta"
+        ? 80
+        : egua.fertilidade === "Normal"
+          ? 60
+          : 30; // "Baixa" or unknown
 
   const stallionGen = Math.min(100, (garanhao.blup / 150) * 100);
   const mareGen = Math.min(100, (egua.blup / 150) * 100);

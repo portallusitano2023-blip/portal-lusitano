@@ -145,7 +145,7 @@ export default function ToolJourneySection() {
 
                   {/* Arrow connector (mobile/tablet between cards) */}
                   {i < steps.length - 1 && (
-                    <div className="lg:hidden flex justify-center py-2 -mb-8 relative z-10 sm:hidden">
+                    <div className="lg:hidden flex justify-center py-2 -mb-8 relative z-10">
                       <ChevronRight size={20} className="text-[var(--gold)]/40 rotate-90" />
                     </div>
                   )}

@@ -380,7 +380,7 @@ export default function ComparadorCavalosPage() {
                   className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5"
                 >
                   <Scale size={13} />
-                  <span className="hidden sm:inline">Editar</span>
+                  <span className="hidden sm:inline">{tr("Editar", "Edit", "Editar")}</span>
                 </button>
                 {history.length > 0 && (
                   <div className="relative">
@@ -389,18 +389,18 @@ export default function ComparadorCavalosPage() {
                       className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)]"
                     >
                       <History size={13} />
-                      <span className="hidden sm:inline">Histórico ({history.length})</span>
+                      <span className="hidden sm:inline">{tr("Histórico", "History", "Historial")} ({history.length})</span>
                     </button>
                     {showHistory && (
                       <div className="absolute right-0 top-full mt-2 w-72 bg-[var(--background-card)] border border-[var(--border)] rounded-xl shadow-2xl z-50 overflow-hidden">
                         <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
                           <span className="text-xs font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider">
-                            Últimas Comparações
+                            {tr("Últimas Comparações", "Recent Comparisons", "Últimas Comparaciones")}
                           </span>
                           <button
                             onClick={() => setShowHistory(false)}
                             className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
-                            aria-label="Fechar histórico"
+                            aria-label={tr("Fechar histórico", "Close history", "Cerrar historial")}
                           >
                             <X size={13} />
                           </button>
@@ -410,7 +410,7 @@ export default function ComparadorCavalosPage() {
                             <div key={i} className="px-4 py-3">
                               <div className="flex items-center justify-between mb-1">
                                 <span className="text-xs text-[#C5A059] font-semibold truncate">
-                                  Vencedor: {entry.vencedor}
+                                  {tr("Vencedor", "Winner", "Ganador")}: {entry.vencedor}
                                 </span>
                                 <span className="text-[10px] text-[var(--foreground-muted)] shrink-0 ml-2">
                                   {new Date(entry.timestamp).toLocaleDateString("pt-PT", {
@@ -477,11 +477,13 @@ export default function ComparadorCavalosPage() {
                   💡
                 </span>
                 <div>
-                  <p className="text-sm font-medium text-blue-300">Como usar o Comparador</p>
+                  <p className="text-sm font-medium text-blue-300">{tr("Como usar o Comparador", "How to use the Comparator", "Cómo usar el Comparador")}</p>
                   <p className="text-xs text-[var(--foreground-muted)] mt-0.5">
-                    Preenche os dados de cada cavalo nos campos abaixo. Podes comparar até 4 cavalos
-                    simultaneamente. Todos os campos têm valores por defeito — edita apenas os que
-                    conheces.
+                    {tr(
+                      "Preenche os dados de cada cavalo nos campos abaixo. Podes comparar até 4 cavalos simultaneamente. Todos os campos têm valores por defeito — edita apenas os que conheces.",
+                      "Fill in the data for each horse in the fields below. You can compare up to 4 horses simultaneously. All fields have default values — edit only those you know.",
+                      "Rellena los datos de cada caballo en los campos de abajo. Puedes comparar hasta 4 caballos simultáneamente. Todos los campos tienen valores por defecto — edita solo los que conozcas."
+                    )}
                   </p>
                 </div>
               </div>
@@ -556,13 +558,13 @@ export default function ComparadorCavalosPage() {
                   </strong>
                   <span className="text-[var(--gold)]/70">
                     {" "}
-                    — orçamento recomendado: <strong>{profileContext.priceRange}</strong>
+                    — {tr("orçamento recomendado", "recommended budget", "presupuesto recomendado")}: <strong>{profileContext.priceRange}</strong>
                   </span>
                 </p>
                 <button
                   onClick={() => setProfileContext(null)}
                   className="text-[var(--gold)]/40 hover:text-[var(--gold)] transition-colors shrink-0"
-                  aria-label="Fechar"
+                  aria-label={tr("Fechar", "Close", "Cerrar")}
                 >
                   <X size={13} />
                 </button>
@@ -587,11 +589,11 @@ export default function ComparadorCavalosPage() {
                 toolName={t.comparador.tool_name}
                 requiresAuth={requiresAuth}
                 proFeatures={[
-                  "Comparação ilimitada de até 4 cavalos em simultâneo",
-                  "Score de potencial e ROI a 5 anos",
-                  "Radar comparativo com 8 dimensões",
-                  "Exportação PDF e CSV para Excel",
-                  "Análise de aptidão por disciplina desportiva",
+                  tr("Comparação ilimitada de até 4 cavalos em simultâneo", "Unlimited comparison of up to 4 horses simultaneously", "Comparación ilimitada de hasta 4 caballos simultáneamente"),
+                  tr("Score de potencial e ROI a 5 anos", "Potential score and 5-year ROI", "Puntuación de potencial y ROI a 5 años"),
+                  tr("Radar comparativo com 8 dimensões", "Comparative radar with 8 dimensions", "Radar comparativo con 8 dimensiones"),
+                  tr("Exportação PDF e CSV para Excel", "PDF and CSV export for Excel", "Exportación PDF y CSV para Excel"),
+                  tr("Análise de aptidão por disciplina desportiva", "Suitability analysis by sport discipline", "Análisis de aptitud por disciplina deportiva"),
                 ]}
               />
             )}

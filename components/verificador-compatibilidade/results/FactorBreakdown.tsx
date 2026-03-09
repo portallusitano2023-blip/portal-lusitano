@@ -280,43 +280,83 @@ export default function FactorBreakdown({
         </div>
       </BlurredProSection>
 
-      {/* PRO: Análise Genética Detalhada */}
-      <BlurredProSection isSubscribed={isSubscribed} title="Análise Genética Detalhada">
+      {/* PRO: Indicadores de Compatibilidade */}
+      <BlurredProSection isSubscribed={isSubscribed} title="Indicadores de Compatibilidade">
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
           <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-1 flex items-center gap-2">
             <BarChart3 size={16} className="text-[#C5A059]" />
-            Análise Genética Detalhada
+            Indicadores de Compatibilidade
           </h3>
           <p className="text-xs text-[var(--foreground-muted)] mb-5">
-            Breakdown completo por categorias genéticas
+            Indicadores baseados nos dados disponíveis do cálculo de compatibilidade
           </p>
           <div className="grid sm:grid-cols-2 gap-4">
-            {((): { label: string; score: number; color: string }[] => {
-              const s = resultado.score;
+            {((): { label: string; value: string; detail: string; color: string }[] => {
+              const findFactor = (nome: string) =>
+                resultado.factores.find((f: any) => f.nome === nome);
+              const confFactor = findFactor("Conformação Morfológica");
+              const tempFactor = findFactor("Compatibilidade Temperamento");
+              const andFactor = findFactor("Qualidade dos Andamentos");
+              const saudeFactor = findFactor("Estado de Saúde");
+              const linFactor = findFactor("Qualidade Genética");
+
               return [
                 {
-                  label: "Conformação",
-                  score: Math.min(100, Math.round(s * 1.05 + Math.sin(s) * 3)),
+                  label: "COI Previsto",
+                  value: `${resultado.coi.toFixed(1)}%`,
+                  detail:
+                    resultado.coi <= 3
+                      ? "Baixa consanguinidade — boa diversidade genética"
+                      : resultado.coi <= 6.25
+                        ? "Consanguinidade moderada — monitorizar"
+                        : "Consanguinidade elevada — risco acrescido",
+                  color: resultado.coi <= 3 ? "#34d399" : resultado.coi <= 6.25 ? "#fbbf24" : "#f87171",
+                },
+                {
+                  label: "Compatibilidade de Linhagem",
+                  value: linFactor ? `${linFactor.score}/${linFactor.max}` : "Dados insuficientes",
+                  detail: linFactor
+                    ? linFactor.descricao
+                    : "Dados insuficientes",
                   color: "#C5A059",
                 },
                 {
-                  label: "Temperamento",
-                  score: Math.min(100, Math.round(s * 0.97 + Math.cos(s * 0.7) * 4)),
+                  label: "Compatibilidade Temperamento",
+                  value: tempFactor ? `${tempFactor.score}/${tempFactor.max}` : "Dados insuficientes",
+                  detail: tempFactor
+                    ? `${garanhao.temperamento} + ${egua.temperamento}`
+                    : "Dados insuficientes",
                   color: "#a78bfa",
                 },
                 {
-                  label: "Aptidão Desportiva",
-                  score: Math.min(100, Math.round(s * 1.02 - Math.sin(s * 1.3) * 3)),
+                  label: "Conformação Morfológica",
+                  value: confFactor ? `${confFactor.score}/${confFactor.max}` : "Dados insuficientes",
+                  detail: confFactor
+                    ? confFactor.descricao
+                    : "Dados insuficientes",
                   color: "#60a5fa",
                 },
                 {
-                  label: "Longevidade",
-                  score: Math.min(100, Math.round(s * 0.94 + Math.cos(s * 0.4) * 5)),
+                  label: "Qualidade dos Andamentos",
+                  value: andFactor ? `${andFactor.score}/${andFactor.max}` : "Dados insuficientes",
+                  detail: andFactor
+                    ? andFactor.descricao
+                    : "Dados insuficientes",
                   color: "#34d399",
                 },
                 {
-                  label: "Saúde Hereditária",
-                  score: Math.min(100, Math.round(s * 0.99 - Math.sin(s * 0.9) * 2)),
+                  label: "Pelagens Previstas",
+                  value:
+                    resultado.pelagens.length > 0
+                      ? resultado.pelagens
+                          .slice(0, 2)
+                          .map((p: any) => `${p.cor} ${p.prob}%`)
+                          .join(", ")
+                      : "Dados insuficientes",
+                  detail:
+                    resultado.pelagens.length > 0
+                      ? `${resultado.pelagens.length} pelagem(ns) possível(is) calculada(s)`
+                      : "Dados insuficientes para previsão de pelagem",
                   color: "#f472b6",
                 },
               ];
@@ -330,31 +370,18 @@ export default function FactorBreakdown({
                     {cat.label}
                   </span>
                   <span className="text-sm font-bold" style={{ color: cat.color }}>
-                    {cat.score}%
+                    {cat.value}
                   </span>
                 </div>
-                <div className="h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{
-                      width: `${cat.score}%`,
-                      background: `linear-gradient(90deg, ${cat.color}99, ${cat.color})`,
-                    }}
-                  />
-                </div>
-                <p className="text-[11px] text-[var(--foreground-muted)] mt-1.5">
-                  {cat.score >= 75
-                    ? "Excelente potencial hereditário"
-                    : cat.score >= 55
-                      ? "Potencial adequado — monitorizar"
-                      : "Requer atenção especial nesta categoria"}
+                <p className="text-[11px] text-[var(--foreground-muted)] mt-1.5 leading-relaxed">
+                  {cat.detail}
                 </p>
               </div>
             ))}
           </div>
           <p className="text-[11px] text-[var(--foreground-muted)]/50 mt-4 leading-relaxed">
-            Scores derivados do índice de compatibilidade global. Não substituem análise genética
-            laboratorial.
+            Indicadores derivados dos dados introduzidos. Não substituem análise genética laboratorial
+            nem consulta veterinária.
           </p>
         </div>
       </BlurredProSection>

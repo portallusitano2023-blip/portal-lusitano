@@ -49,7 +49,7 @@ function FAQAccordion({ item, index, isOpen, onClick }: FAQAccordionProps) {
         className="grid transition-all duration-200"
         style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
       >
-        <div className="overflow-hidden">
+        <div className="overflow-hidden" aria-hidden={!isOpen}>
           <p className="pb-6 text-[var(--foreground-secondary)] leading-relaxed">{item.answer}</p>
         </div>
       </div>

@@ -1,8 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import { TrendingUp, ArrowUpRight } from "lucide-react";
 import type { FormData, Resultado } from "./types";
 import { calcularValor } from "./utils";
+import { TREINO_LABELS, COMP_LABELS, SAUDE_LABELS, LINHAGEM_LABELS } from "@/lib/tools/shared-data";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface SensitivityPanelProps {
   form: FormData;
@@ -20,17 +24,6 @@ const TREINO_ORDER: FormData["treino"][] = [
   "grand_prix",
 ];
 
-const TREINO_LABELS: Record<string, string> = {
-  potro: "Potro",
-  desbravado: "Desbravado",
-  iniciado: "Iniciado",
-  elementar: "Elementar",
-  medio: "Médio",
-  avancado: "Avançado",
-  alta_escola: "Alta Escola",
-  grand_prix: "Grand Prix",
-};
-
 const COMP_ORDER: FormData["competicoes"][] = [
   "nenhuma",
   "regional",
@@ -41,16 +34,6 @@ const COMP_ORDER: FormData["competicoes"][] = [
   "campeonato_mundo",
 ];
 
-const COMP_LABELS: Record<string, string> = {
-  nenhuma: "Nenhuma",
-  regional: "Regional",
-  nacional: "Nacional",
-  cdi1: "CDI 1*",
-  cdi3: "CDI 3*",
-  cdi5: "CDI 5*",
-  campeonato_mundo: "Camp. Mundo",
-};
-
 const LINHAGEM_ORDER: FormData["linhagem"][] = [
   "desconhecida",
   "comum",
@@ -60,23 +43,7 @@ const LINHAGEM_ORDER: FormData["linhagem"][] = [
   "elite",
 ];
 
-const LINHAGEM_LABELS: Record<string, string> = {
-  desconhecida: "Desconhecida",
-  comum: "Comum",
-  registada: "Registada",
-  certificada: "Certificada",
-  premium: "Premium",
-  elite: "Elite",
-};
-
 const SAUDE_ORDER: FormData["saude"][] = ["regular", "bom", "muito_bom", "excelente"];
-
-const SAUDE_LABELS: Record<string, string> = {
-  regular: "Regular",
-  bom: "Bom",
-  muito_bom: "Muito Bom",
-  excelente: "Excelente",
-};
 
 interface Scenario {
   label: string;
@@ -85,7 +52,7 @@ interface Scenario {
   percentage: number;
 }
 
-function buildScenarios(form: FormData, resultado: Resultado): Scenario[] {
+function buildScenarios(form: FormData, resultado: Resultado, tr: (pt: string, en: string, es: string) => string): Scenario[] {
   const scenarios: Scenario[] = [];
   const current = resultado.valorFinal;
 
@@ -93,12 +60,12 @@ function buildScenarios(form: FormData, resultado: Resultado): Scenario[] {
   const treinoIdx = TREINO_ORDER.indexOf(form.treino);
   if (treinoIdx >= 0 && treinoIdx < TREINO_ORDER.length - 1) {
     const nextTreino = TREINO_ORDER[treinoIdx + 1];
-    const nextResult = calcularValor({ ...form, treino: nextTreino });
+    const nextResult = calcularValor({ ...form, treino: nextTreino }, tr);
     const delta = nextResult.valorFinal - current;
     if (delta > 0) {
       scenarios.push({
-        label: `Treino → ${TREINO_LABELS[nextTreino]}`,
-        description: "Próximo nível de treino",
+        label: `${tr("Treino", "Training", "Entrenamiento")} → ${TREINO_LABELS[nextTreino]}`,
+        description: tr("Próximo nível de treino", "Next training level", "Siguiente nivel de entrenamiento"),
         delta,
         percentage: Math.round((delta / current) * 100),
       });
@@ -109,12 +76,12 @@ function buildScenarios(form: FormData, resultado: Resultado): Scenario[] {
   const compIdx = COMP_ORDER.indexOf(form.competicoes);
   if (compIdx >= 0 && compIdx < COMP_ORDER.length - 1) {
     const nextComp = COMP_ORDER[compIdx + 1];
-    const nextResult = calcularValor({ ...form, competicoes: nextComp });
+    const nextResult = calcularValor({ ...form, competicoes: nextComp }, tr);
     const delta = nextResult.valorFinal - current;
     if (delta > 0) {
       scenarios.push({
-        label: `Competição → ${COMP_LABELS[nextComp]}`,
-        description: "Próximo nível competitivo",
+        label: `${tr("Competição", "Competition", "Competición")} → ${COMP_LABELS[nextComp]}`,
+        description: tr("Próximo nível competitivo", "Next competition level", "Siguiente nivel competitivo"),
         delta,
         percentage: Math.round((delta / current) * 100),
       });
@@ -125,12 +92,12 @@ function buildScenarios(form: FormData, resultado: Resultado): Scenario[] {
   const saudeIdx = SAUDE_ORDER.indexOf(form.saude);
   if (saudeIdx >= 0 && saudeIdx < SAUDE_ORDER.length - 1) {
     const nextSaude = SAUDE_ORDER[saudeIdx + 1];
-    const nextResult = calcularValor({ ...form, saude: nextSaude });
+    const nextResult = calcularValor({ ...form, saude: nextSaude }, tr);
     const delta = nextResult.valorFinal - current;
     if (delta > 0) {
       scenarios.push({
-        label: `Saúde → ${SAUDE_LABELS[nextSaude]}`,
-        description: "Melhorar estado de saúde",
+        label: `${tr("Saúde", "Health", "Salud")} → ${SAUDE_LABELS[nextSaude]}`,
+        description: tr("Melhorar estado de saúde", "Improve health status", "Mejorar estado de salud"),
         delta,
         percentage: Math.round((delta / current) * 100),
       });
@@ -141,12 +108,12 @@ function buildScenarios(form: FormData, resultado: Resultado): Scenario[] {
   const linhagemIdx = LINHAGEM_ORDER.indexOf(form.linhagem);
   if (linhagemIdx >= 0 && linhagemIdx < LINHAGEM_ORDER.length - 1) {
     const nextLinhagem = LINHAGEM_ORDER[linhagemIdx + 1];
-    const nextResult = calcularValor({ ...form, linhagem: nextLinhagem });
+    const nextResult = calcularValor({ ...form, linhagem: nextLinhagem }, tr);
     const delta = nextResult.valorFinal - current;
     if (delta > 0) {
       scenarios.push({
-        label: `Linhagem → ${LINHAGEM_LABELS[nextLinhagem]}`,
-        description: "Próximo nível de linhagem",
+        label: `${tr("Linhagem", "Lineage", "Linaje")} → ${LINHAGEM_LABELS[nextLinhagem]}`,
+        description: tr("Próximo nível de linhagem", "Next lineage level", "Siguiente nivel de linaje"),
         delta,
         percentage: Math.round((delta / current) * 100),
       });
@@ -157,7 +124,9 @@ function buildScenarios(form: FormData, resultado: Resultado): Scenario[] {
 }
 
 export default function SensitivityPanel({ form, resultado }: SensitivityPanelProps) {
-  const scenarios = buildScenarios(form, resultado);
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+  const scenarios = buildScenarios(form, resultado, tr);
 
   if (scenarios.length === 0) return null;
 
@@ -165,10 +134,14 @@ export default function SensitivityPanel({ form, resultado }: SensitivityPanelPr
     <div className="bg-[var(--background-secondary)]/50 rounded-xl border border-[var(--border)] p-4 sm:p-5">
       <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider mb-4 flex items-center gap-2">
         <TrendingUp size={15} className="text-[#C5A059]" />
-        Análise What-If
+        {tr("Análise What-If", "What-If Analysis", "Análisis What-If")}
       </h3>
       <p className="text-xs text-[var(--foreground-muted)] mb-4">
-        Impacto estimado de cada melhoria no valor do cavalo:
+        {tr(
+          "Impacto estimado de cada melhoria no valor do cavalo:",
+          "Estimated impact of each improvement on horse value:",
+          "Impacto estimado de cada mejora en el valor del caballo:"
+        )}
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         {scenarios.map((s, i) => (

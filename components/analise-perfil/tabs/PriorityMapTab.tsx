@@ -8,7 +8,6 @@ import type { Result } from "@/components/analise-perfil/types";
 
 interface PriorityMapTabProps {
   result: Result;
-  scorePercentages: Record<string, number>;
 }
 
 interface PriorityItem {

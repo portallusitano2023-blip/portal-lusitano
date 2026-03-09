@@ -22,6 +22,8 @@ const RadarChart = ({
       width="100%"
       className="mx-auto w-full"
       style={{ height: "auto", maxWidth: `${size}px` }}
+      role="img"
+      aria-label="Gráfico radar de comparação"
     >
       {/* Grid circles */}
       {[2, 4, 6, 8, 10].map((level) => (

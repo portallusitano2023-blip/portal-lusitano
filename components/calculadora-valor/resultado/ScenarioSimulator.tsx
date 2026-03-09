@@ -1,8 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import { Zap } from "lucide-react";
 import { calcularValor } from "../utils";
 import type { FormData, Resultado } from "../types";
+import { TREINO_LABELS, COMP_LABELS } from "@/lib/tools/shared-data";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface ScenarioSimulatorProps {
   form: FormData;
@@ -10,6 +14,9 @@ interface ScenarioSimulatorProps {
 }
 
 export default function ScenarioSimulator({ form, resultado }: ScenarioSimulatorProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   const TREINO_PROGRESSAO: Record<string, string> = {
     potro: "desbravado",
     desbravado: "iniciado",
@@ -18,16 +25,6 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
     medio: "avancado",
     avancado: "alta_escola",
     alta_escola: "grand_prix",
-  };
-  const TREINO_LABELS: Record<string, string> = {
-    potro: "Potro",
-    desbravado: "Desbravado",
-    iniciado: "Iniciado",
-    elementar: "Elementar",
-    medio: "Médio",
-    avancado: "Avançado",
-    alta_escola: "Alta Escola",
-    grand_prix: "Grand Prix",
   };
 
   type Cenario = {
@@ -45,10 +42,10 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
   if (TREINO_PROGRESSAO[form.treino]) {
     const novoTreino = TREINO_PROGRESSAO[form.treino];
     const novoForm = { ...form, treino: novoTreino as FormData["treino"] };
-    const novoResultado = calcularValor(novoForm);
+    const novoResultado = calcularValor(novoForm, tr);
     cenarios.push({
-      titulo: `Treino → ${TREINO_LABELS[novoTreino] ?? novoTreino}`,
-      descricao: "Progressão de nível de treino",
+      titulo: `${tr("Treino", "Training", "Entrenamiento")} → ${TREINO_LABELS[novoTreino] ?? novoTreino}`,
+      descricao: tr("Progressão de nível de treino", "Training level progression", "Progresión de nivel de entrenamiento"),
       valorNovo: novoResultado.valorFinal,
       delta: novoResultado.valorFinal - resultado.valorFinal,
       deltaPercent: Math.round(
@@ -61,10 +58,10 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
   // Cenário 2: Documentação Veterinária Completa
   if (!form.raioX || !form.exameVeterinario) {
     const novoForm = { ...form, raioX: true, exameVeterinario: true };
-    const novoResultado = calcularValor(novoForm);
+    const novoResultado = calcularValor(novoForm, tr);
     cenarios.push({
-      titulo: "Documentação Veterinária Completa",
-      descricao: "Raio-X + Exame veterinário",
+      titulo: tr("Documentação Veterinária Completa", "Complete Veterinary Documentation", "Documentación Veterinaria Completa"),
+      descricao: tr("Raio-X + Exame veterinário", "X-ray + Veterinary examination", "Rayos-X + Examen veterinario"),
       valorNovo: novoResultado.valorFinal,
       delta: novoResultado.valorFinal - resultado.valorFinal,
       deltaPercent: Math.round(
@@ -77,10 +74,10 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
   // Cenário 3: Mudar mercado para Alemanha (se estiver em PT)
   if (form.mercado === "Portugal") {
     const novoForm = { ...form, mercado: "Alemanha" };
-    const novoResultado = calcularValor(novoForm);
+    const novoResultado = calcularValor(novoForm, tr);
     cenarios.push({
-      titulo: "Venda para Mercado Alemão",
-      descricao: "Reorientar para mercado internacional",
+      titulo: tr("Venda para Mercado Alemão", "Sale to German Market", "Venta al Mercado Alemán"),
+      descricao: tr("Reorientar para mercado internacional", "Redirect to international market", "Reorientar al mercado internacional"),
       valorNovo: novoResultado.valorFinal,
       delta: novoResultado.valorFinal - resultado.valorFinal,
       deltaPercent: Math.round(
@@ -97,19 +94,13 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
     nacional: "cdi1",
     cdi1: "cdi3",
   };
-  const COMP_LABELS: Record<string, string> = {
-    regional: "Provas Regionais",
-    nacional: "Provas Nacionais",
-    cdi1: "CDI 1*",
-    cdi3: "CDI 3*",
-  };
   if (COMP_UPGRADE[form.competicoes]) {
     const novoComp = COMP_UPGRADE[form.competicoes];
     const novoForm = { ...form, competicoes: novoComp as FormData["competicoes"] };
-    const novoResultado = calcularValor(novoForm);
+    const novoResultado = calcularValor(novoForm, tr);
     cenarios.push({
-      titulo: `Competir em ${COMP_LABELS[novoComp] ?? novoComp}`,
-      descricao: "Progressão no palmarés desportivo",
+      titulo: `${tr("Competir em", "Compete at", "Competir en")} ${COMP_LABELS[novoComp] ?? novoComp}`,
+      descricao: tr("Progressão no palmarés desportivo", "Progression in competition record", "Progresión en el palmarés deportivo"),
       valorNovo: novoResultado.valorFinal,
       delta: novoResultado.valorFinal - resultado.valorFinal,
       deltaPercent: Math.round(
@@ -122,10 +113,10 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
   // Cenário 5: Certificado de exportação
   if (!(form.certificadoExportacao ?? false) && form.mercado !== "Portugal") {
     const novoForm = { ...form, certificadoExportacao: true };
-    const novoResultado = calcularValor(novoForm);
+    const novoResultado = calcularValor(novoForm, tr);
     cenarios.push({
-      titulo: "Certificado de Exportação",
-      descricao: "Documentação para venda internacional",
+      titulo: tr("Certificado de Exportação", "Export Certificate", "Certificado de Exportación"),
+      descricao: tr("Documentação para venda internacional", "Documentation for international sale", "Documentación para venta internacional"),
       valorNovo: novoResultado.valorFinal,
       delta: novoResultado.valorFinal - resultado.valorFinal,
       deltaPercent: Math.round(
@@ -144,10 +135,14 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
     <div className="bg-[var(--background-secondary)]/50 rounded-xl p-5 border border-[var(--border)] mb-6">
       <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-1 flex items-center gap-2">
         <Zap size={15} className="text-[#C5A059]" />
-        Simulador de Cenários
+        {tr("Simulador de Cenários", "Scenario Simulator", "Simulador de Escenarios")}
       </h3>
       <p className="text-xs text-[var(--foreground-muted)] mb-4">
-        Impacto estimado de cada melhoria no valor actual de{" "}
+        {tr(
+          "Impacto estimado de cada melhoria no valor actual de",
+          "Estimated impact of each improvement on the current value of",
+          "Impacto estimado de cada mejora en el valor actual de"
+        )}{" "}
         {resultado.valorFinal.toLocaleString("pt-PT")}€
       </p>
       <div className="grid sm:grid-cols-2 gap-3">
@@ -171,7 +166,11 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
         ))}
       </div>
       <p className="text-[10px] text-[var(--foreground-muted)]/40 mt-3">
-        Simulações baseadas no modelo interno — valores ilustrativos, não constituem garantia.
+        {tr(
+          "Simulações baseadas no modelo interno — valores ilustrativos, não constituem garantia.",
+          "Simulations based on internal model — illustrative values, not a guarantee.",
+          "Simulaciones basadas en el modelo interno — valores ilustrativos, no constituyen garantía."
+        )}
       </p>
     </div>
   );

@@ -1,12 +1,15 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useMemo } from "react";
 import LocalizedLink from "@/components/LocalizedLink";
 import { ChevronRight, BookOpen } from "lucide-react";
 import ResultActions from "@/components/tools/ResultActions";
 import SourceBadge from "@/components/tools/SourceBadge";
 import MethodologyPanel from "@/components/tools/MethodologyPanel";
 import ToolCrossCTA from "@/components/tools/ToolCrossCTA";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { FormData, Resultado } from "../types";
 
 interface MethodologyFooterProps {
@@ -34,6 +37,9 @@ export default function MethodologyFooter({
   onVerificarCompat,
   t,
 }: MethodologyFooterProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   return (
     <>
       {/* Informacoes do Cavalo */}
@@ -65,7 +71,7 @@ export default function MethodologyFooter({
                 source="FEI"
                 tooltip={
                   (t.calculadora as Record<string, string>).source_treino ??
-                  "Níveis de treino referenciados às escalas da FEI"
+                  tr("Níveis de treino referenciados às escalas da FEI", "Training levels referenced to FEI scales", "Niveles de entrenamiento referenciados a las escalas de la FEI")
                 }
               />
             </span>

@@ -79,7 +79,71 @@ export async function POST(request: Request) {
       });
     }
 
-    // Non-subscriber — check usage count
+    // Non-subscriber — handle free-tier access
+    if (record) {
+      // SECURITY: Optimistic insert-then-verify pattern to prevent race conditions.
+      // Insert the usage row FIRST, then count. If concurrent requests both insert,
+      // both inserts are visible to the subsequent count, so at most one will be
+      // within the limit. Any insert that pushes the count over the limit is rolled
+      // back by deleting the just-inserted row.
+      const { data: inserted, error: insertError } = await supabase
+        .from("tool_usage")
+        .insert({
+          user_id: user.id,
+          tool_name: toolName,
+          form_data: formData || null,
+          result_data: resultData || null,
+        })
+        .select("id")
+        .single();
+
+      if (insertError || !inserted) {
+        console.error("[validate-access] Failed to record usage:", insertError?.message);
+        // On insert failure, fall through to a read-only count check below
+      } else {
+        // Re-count AFTER insert to detect concurrent inserts
+        const { count: postInsertCount } = await supabase
+          .from("tool_usage")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .eq("tool_name", toolName);
+
+        const totalUsed = postInsertCount ?? 1;
+
+        if (totalUsed > FREE_USES_PER_TOOL) {
+          // Over limit — roll back the optimistic insert
+          await supabase.from("tool_usage").delete().eq("id", inserted.id);
+          return NextResponse.json({
+            allowed: false,
+            reason: "limit_reached",
+            isSubscribed: false,
+            freeUsesLeft: 0,
+          });
+        }
+
+        const newFreeUsesLeft = Math.max(0, FREE_USES_PER_TOOL - totalUsed);
+
+        // Trigger limit-reached email if this exhausted their free uses (non-blocking)
+        if (newFreeUsesLeft <= 0) {
+          fetch(new URL("/api/tools/limit-reached", request.url).toString(), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Cookie: request.headers.get("Cookie") || "",
+            },
+            body: JSON.stringify({ toolSlug: toolName }),
+          }).catch(() => {});
+        }
+
+        return NextResponse.json({
+          allowed: true,
+          isSubscribed: false,
+          freeUsesLeft: newFreeUsesLeft,
+        });
+      }
+    }
+
+    // Read-only check (no recording requested, or insert failed above)
     const { count } = await supabase
       .from("tool_usage")
       .select("*", { count: "exact", head: true })
@@ -95,42 +159,6 @@ export async function POST(request: Request) {
         reason: "limit_reached",
         isSubscribed: false,
         freeUsesLeft: 0,
-      });
-    }
-
-    // Has free uses — allowed
-    if (record) {
-      // Record usage atomically
-      const { error: insertError } = await supabase.from("tool_usage").insert({
-        user_id: user.id,
-        tool_name: toolName,
-        form_data: formData || null,
-        result_data: resultData || null,
-      });
-
-      if (insertError) {
-        // If insert fails, still allow (don't block user) but log
-        console.error("[validate-access] Failed to record usage:", insertError.message);
-      }
-
-      const newFreeUsesLeft = Math.max(0, FREE_USES_PER_TOOL - (usageCount + 1));
-
-      // Trigger limit-reached email if this exhausted their free uses (non-blocking)
-      if (newFreeUsesLeft <= 0) {
-        fetch(new URL("/api/tools/limit-reached", request.url).toString(), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: request.headers.get("Cookie") || "",
-          },
-          body: JSON.stringify({ toolSlug: toolName }),
-        }).catch(() => {});
-      }
-
-      return NextResponse.json({
-        allowed: true,
-        isSubscribed: false,
-        freeUsesLeft: newFreeUsesLeft,
       });
     }
 

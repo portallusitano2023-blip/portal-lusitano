@@ -47,7 +47,7 @@ export default function RadarChart({ data }: RadarChartProps) {
 
   return (
     <div className="relative w-full max-w-[320px] mx-auto">
-      <svg viewBox="0 0 300 300" className="w-full h-auto">
+      <svg viewBox="0 0 300 300" className="w-full h-auto" role="img" aria-label="Gráfico radar de perfil equestre">
         {[0.25, 0.5, 0.75, 1].map((l) => (
           <polygon
             key={l}

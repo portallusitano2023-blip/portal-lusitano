@@ -1,10 +1,17 @@
 "use client";
 
+import { useMemo } from "react";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
+
 interface COIGaugeProps {
   coi: number;
 }
 
 export default function COIGauge({ coi }: COIGaugeProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   // COI range: 0-12%, gauge is semicircular
   const maxCOI = 12;
   const clampedCOI = Math.min(Math.max(coi, 0), maxCOI);
@@ -12,7 +19,7 @@ export default function COIGauge({ coi }: COIGaugeProps) {
 
   // Color thresholds
   const color = coi <= 3 ? "#22c55e" : coi <= 6.25 ? "#f59e0b" : "#ef4444";
-  const label = coi <= 3 ? "Excelente" : coi <= 6.25 ? "Aceitável" : "Elevado";
+  const label = coi <= 3 ? tr("Excelente", "Excellent", "Excelente") : coi <= 6.25 ? tr("Aceitável", "Acceptable", "Aceptable") : tr("Elevado", "High", "Elevado");
 
   // SVG semicircle arc
   const size = 180;
@@ -124,7 +131,7 @@ export default function COIGauge({ coi }: COIGaugeProps) {
           fontSize="8"
           textAnchor="middle"
         >
-          Média PSL: ~4%
+          {tr("Média PSL: ~4%", "PSL Avg: ~4%", "Media PSL: ~4%")}
         </text>
       </svg>
       <style jsx>{`

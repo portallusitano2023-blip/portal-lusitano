@@ -3,6 +3,11 @@ import { BreadcrumbSchema, WebApplicationSchema, FAQSchema } from "@/components/
 import { faqItems } from "./faq-data";
 import { SITE_URL } from "@/lib/constants";
 
+// TODO: Metadata here is hardcoded in Portuguese because this is a server component
+// without access to route-level language params. To internationalise metadata,
+// the app would need route-based locale segments (e.g. /[lang]/ferramentas) or
+// Next.js i18n routing with generateMetadata receiving params.lang.
+
 export const metadata: Metadata = {
   title: "Ferramentas Equestres | Portal Lusitano",
   description:

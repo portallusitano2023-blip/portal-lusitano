@@ -4,13 +4,20 @@ import { sendEmail } from "@/lib/resend";
 import { logger } from "@/lib/logger";
 import { apiLimiter } from "@/lib/rate-limit";
 import { escapeHtml } from "@/lib/sanitize";
+import { createTranslator } from "@/lib/tr";
 
-const TOOL_NAMES: Record<string, string> = {
-  calculadora: "Calculadora de Valor",
-  comparador: "Comparador de Cavalos",
-  compatibilidade: "Verificador de Compatibilidade",
-  perfil: "Análise de Perfil",
+const TOOL_NAMES_I18N: Record<string, Record<string, string>> = {
+  calculadora: { pt: "Calculadora de Valor", en: "Value Calculator", es: "Calculadora de Valor" },
+  comparador: { pt: "Comparador de Cavalos", en: "Horse Comparator", es: "Comparador de Caballos" },
+  compatibilidade: { pt: "Verificador de Compatibilidade", en: "Compatibility Checker", es: "Verificador de Compatibilidad" },
+  perfil: { pt: "Análise de Perfil", en: "Profile Analysis", es: "Análisis de Perfil" },
 };
+
+function getToolName(toolKey: string, language: string): string {
+  const names = TOOL_NAMES_I18N[toolKey];
+  if (!names) return toolKey;
+  return names[language] ?? names["pt"] ?? toolKey;
+}
 
 const TOOL_LINKS: Record<string, string> = {
   calculadora: "/calculadora-valor",
@@ -20,7 +27,7 @@ const TOOL_LINKS: Record<string, string> = {
 };
 
 // POST /api/tools/send-results
-// Envia resultados por email — exclusivo para utilizadores com subscrição PRO activa
+// Send tool results via email — exclusive to users with active PRO subscription
 export async function POST(request: NextRequest) {
   try {
     // Rate limit
@@ -28,15 +35,15 @@ export async function POST(request: NextRequest) {
     try {
       await apiLimiter.check(5, ip);
     } catch {
-      return NextResponse.json({ error: "Demasiados pedidos." }, { status: 429 });
+      return NextResponse.json({ error: "Too many requests." }, { status: 429 });
     }
 
-    // Autenticação obrigatória
+    // Authentication required
     const authHeader = request.headers.get("authorization");
     const token = authHeader?.replace("Bearer ", "");
 
     if (!token) {
-      return NextResponse.json({ error: "Autenticação necessária." }, { status: 401 });
+      return NextResponse.json({ error: "Authentication required." }, { status: 401 });
     }
 
     const {
@@ -45,10 +52,10 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser(token);
 
     if (authError || !user?.email) {
-      return NextResponse.json({ error: "Sessão inválida." }, { status: 401 });
+      return NextResponse.json({ error: "Invalid session." }, { status: 401 });
     }
 
-    // Verificar subscrição PRO
+    // Check PRO subscription
     const { data: profile } = await supabase
       .from("user_profiles")
       .select("tools_subscription_status")
@@ -57,56 +64,63 @@ export async function POST(request: NextRequest) {
 
     if (profile?.tools_subscription_status !== "active") {
       return NextResponse.json(
-        { error: "Funcionalidade exclusiva do plano PRO." },
+        { error: "PRO plan exclusive feature." },
         { status: 403 }
       );
     }
 
     const body = await request.json();
-    const { toolName, resultSummary } = body as {
+    const { toolName, resultSummary, language: reqLanguage } = body as {
       toolName: string;
       resultSummary: Record<string, unknown>;
+      language?: string;
     };
 
+    const language = (reqLanguage === "en" || reqLanguage === "es") ? reqLanguage : "pt";
+    const tr = createTranslator(language);
+
     if (!toolName || !resultSummary) {
-      return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });
+      return NextResponse.json({ error: tr("Dados incompletos.", "Incomplete data.", "Datos incompletos.") }, { status: 400 });
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://portal-lusitano.pt";
-    const html = buildResultEmail(toolName, resultSummary, baseUrl);
+    const html = buildResultEmail(toolName, resultSummary, baseUrl, language, tr);
 
+    const displayName = getToolName(toolName, language);
     const result = await sendEmail({
       to: user.email,
-      subject: `Resultados: ${TOOL_NAMES[toolName] || toolName} — Portal Lusitano`,
+      subject: `${tr("Resultados", "Results", "Resultados")}: ${escapeHtml(displayName)} — Portal Lusitano`,
       html,
       template: "tool-results",
     });
 
     if (!result.success) {
-      logger.error("Erro ao enviar email de resultados:", result.error);
-      return NextResponse.json({ error: "Erro ao enviar email." }, { status: 500 });
+      logger.error("Error sending results email:", result.error);
+      return NextResponse.json({ error: tr("Erro ao enviar email.", "Error sending email.", "Error al enviar email.") }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, sentTo: user.email });
   } catch (error) {
-    logger.error("Erro em /api/tools/send-results:", error);
-    return NextResponse.json({ error: "Erro interno do servidor." }, { status: 500 });
+    logger.error("Error in /api/tools/send-results:", error);
+    return NextResponse.json({ error: "Internal server error." }, { status: 500 });
   }
 }
 
 function buildResultEmail(
   toolName: string,
   summary: Record<string, unknown>,
-  baseUrl: string
+  baseUrl: string,
+  language: string,
+  tr: ReturnType<typeof createTranslator>
 ): string {
-  const displayName = TOOL_NAMES[toolName] || toolName;
+  const displayName = escapeHtml(getToolName(toolName, language));
   const toolPath = TOOL_LINKS[toolName] || "/ferramentas";
-  const toolUrl = `${baseUrl}${toolPath}`;
+  const toolUrl = escapeHtml(`${baseUrl}${toolPath}`);
 
-  // Gerar linhas de resumo a partir do objecto de resultado
+  // Generate summary rows from the result object
   const summaryLines = Object.entries(summary)
     .filter(([, v]) => v !== null && v !== undefined && v !== "")
-    .slice(0, 8) // Máximo 8 campos no email
+    .slice(0, 8) // Max 8 fields in the email
     .map(
       ([k, v]) =>
         `<tr>
@@ -115,6 +129,38 @@ function buildResultEmail(
         </tr>`
     )
     .join("");
+
+  const emptyFallback = tr(
+    "Ver resultados completos no portal",
+    "View full results on the portal",
+    "Ver resultados completos en el portal"
+  );
+
+  const headerSubtitle = tr(
+    `Os seus resultados da ${displayName}`,
+    `Your ${displayName} results`,
+    `Sus resultados de ${displayName}`
+  );
+
+  const ctaLabel = tr(
+    "Ver análise completa",
+    "View full analysis",
+    "Ver análisis completo"
+  );
+
+  const disclaimer = tr(
+    "Os resultados apresentados são estimativas baseadas nos dados fornecidos e na metodologia do Portal Lusitano. Não substituem avaliações profissionais de médicos veterinários ou especialistas equestres.",
+    "The results presented are estimates based on the data provided and the Portal Lusitano methodology. They do not replace professional evaluations by veterinarians or equestrian specialists.",
+    "Los resultados presentados son estimaciones basadas en los datos proporcionados y la metodología de Portal Lusitano. No sustituyen evaluaciones profesionales de veterinarios o especialistas ecuestres."
+  );
+
+  const toolsLabel = tr("Ferramentas", "Tools", "Herramientas");
+
+  const footerNotice = tr(
+    "Recebeu este email porque tem uma subscrição PRO activa.",
+    "You received this email because you have an active PRO subscription.",
+    "Recibió este email porque tiene una suscripción PRO activa."
+  );
 
   return `<!DOCTYPE html>
 <html>
@@ -128,7 +174,7 @@ function buildResultEmail(
     <!-- Header -->
     <div style="background:linear-gradient(135deg,#C5A059 0%,#8B6914 100%);padding:32px 24px;border-radius:12px 12px 0 0;text-align:center;">
       <h1 style="margin:0;color:#000;font-size:22px;font-weight:700;">Portal Lusitano</h1>
-      <p style="margin:8px 0 0;color:#000;font-size:14px;opacity:0.75;">Os seus resultados da ${displayName}</p>
+      <p style="margin:8px 0 0;color:#000;font-size:14px;opacity:0.75;">${escapeHtml(headerSubtitle)}</p>
     </div>
 
     <!-- Body -->
@@ -138,30 +184,29 @@ function buildResultEmail(
       <!-- Summary table -->
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
         <tbody>
-          ${summaryLines || '<tr><td colspan="2" style="padding:12px;color:#999;text-align:center;">Ver resultados completos no portal</td></tr>'}
+          ${summaryLines || `<tr><td colspan="2" style="padding:12px;color:#999;text-align:center;">${escapeHtml(emptyFallback)}</td></tr>`}
         </tbody>
       </table>
 
       <!-- CTA -->
       <div style="text-align:center;margin:24px 0;">
         <a href="${toolUrl}" style="display:inline-block;background:#C5A059;color:#000;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">
-          Ver análise completa →
+          ${escapeHtml(ctaLabel)} &rarr;
         </a>
       </div>
 
       <p style="color:#666;font-size:12px;margin:16px 0 0;line-height:1.6;">
-        Os resultados apresentados são estimativas baseadas nos dados fornecidos e na metodologia do Portal Lusitano.
-        Não substituem avaliações profissionais de médicos veterinários ou especialistas equestres.
+        ${escapeHtml(disclaimer)}
       </p>
     </div>
 
     <!-- Footer -->
     <div style="background:#0a0a0a;padding:20px 24px;border-radius:0 0 12px 12px;text-align:center;border:1px solid #222;border-top:none;">
       <p style="color:#555;font-size:12px;margin:0;">
-        Portal Lusitano PRO — <a href="${baseUrl}/ferramentas" style="color:#C5A059;text-decoration:none;">Ferramentas</a>
+        Portal Lusitano PRO — <a href="${baseUrl}/ferramentas" style="color:#C5A059;text-decoration:none;">${escapeHtml(toolsLabel)}</a>
       </p>
       <p style="color:#333;font-size:11px;margin:8px 0 0;">
-        Recebeu este email porque tem uma subscrição PRO activa.
+        ${escapeHtml(footerNotice)}
       </p>
     </div>
 

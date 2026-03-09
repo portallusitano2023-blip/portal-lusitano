@@ -58,9 +58,9 @@ export default function HorseForm({
   };
   const DISC_LABELS: Record<string, string> = {
     dressage: "Dressage FEI",
-    trabalho: "Equit. Trabalho",
-    reproducao: "Reprodução",
-    lazer: "Lazer",
+    trabalho: tr("Equit. Trabalho", "Working Equit.", "Equit. Trabajo"),
+    reproducao: tr("Reprodução", "Breeding", "Reproducción"),
+    lazer: tr("Lazer", "Leisure", "Ocio"),
   };
 
   return (
@@ -81,8 +81,8 @@ export default function HorseForm({
             <div
               className="absolute top-3 right-3 w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-lg transition-all duration-300 select-none"
               style={{ backgroundColor: badgeColor, boxShadow: `0 0 8px ${badgeColor}55` }}
-              title={`Pontuação estimada: ${liveScore}/100`}
-              aria-label={`Pontuação estimada ${liveScore} de 100`}
+              title={tr(`Pontuação estimada: ${liveScore}/100`, `Estimated score: ${liveScore}/100`, `Puntuación estimada: ${liveScore}/100`)}
+              aria-label={tr(`Pontuação estimada ${liveScore} de 100`, `Estimated score ${liveScore} out of 100`, `Puntuación estimada ${liveScore} de 100`)}
             >
               {liveScore}
             </div>
@@ -261,6 +261,11 @@ export default function HorseForm({
               max="10"
               value={c[field]}
               onChange={(e) => onUpdate(c.id, field, +e.target.value)}
+              aria-label={label}
+              aria-valuenow={c[field]}
+              aria-valuemin={1}
+              aria-valuemax={10}
+              aria-valuetext={tr(`${c[field]} de 10`, `${c[field]} out of 10`, `${c[field]} de 10`)}
               className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer touch-pan-x"
               style={{ accentColor: CORES[i] }}
             />
@@ -331,6 +336,7 @@ export default function HorseForm({
 
         <button
           onClick={() => onUpdate(c.id, "registoAPSL", !c.registoAPSL)}
+          aria-pressed={c.registoAPSL}
           className={`w-full py-2 px-3 rounded-lg border text-xs font-medium transition-all flex items-center justify-center gap-2 ${
             c.registoAPSL
               ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
@@ -403,13 +409,13 @@ export default function HorseForm({
               if (pesos.blupNorm) discScore += Math.min((c.blup / 130) * 100, 100) * pesos.blupNorm;
               return (
                 <div className="mt-1.5 text-xs text-[var(--foreground-muted)]">
-                  <span className="text-[#C5A059]/70">{Math.round(discScore)} pts</span> para{" "}
+                  <span className="text-[#C5A059]/70">{Math.round(discScore)} pts</span> {tr("para", "for", "para")}{" "}
                   {DISC_LABELS[filtroDisciplina] ?? filtroDisciplina}
                 </div>
               );
             })()}
           <div className="mt-3">
-            <ScoreBreakdown factors={getScoreFactors(c)} total={calcularScore(c)} />
+            <ScoreBreakdown factors={getScoreFactors(c, tr)} total={calcularScore(c)} />
           </div>
         </div>
       )}

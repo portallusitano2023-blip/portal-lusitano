@@ -107,6 +107,7 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
               <button
                 key={opt.value}
                 onClick={() => update("linhagem", opt.value as FormData["linhagem"])}
+                aria-pressed={form.linhagem === opt.value}
                 className={`py-3 px-3 rounded-lg border text-left transition-all ${
                   form.linhagem === opt.value
                     ? "border-[var(--gold)] bg-[var(--gold)]/10"
@@ -149,6 +150,7 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
                 <button
                   key={lin.value}
                   onClick={() => update("linhagemPrincipal", lin.value)}
+                  aria-pressed={form.linhagemPrincipal === lin.value}
                   className={`py-3 px-4 rounded-lg border text-left transition-all ${
                     form.linhagemPrincipal === lin.value
                       ? "border-[var(--gold)] bg-[var(--gold)]/10"
@@ -199,6 +201,11 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
                   max={10}
                   value={form[item.key]}
                   onChange={(e) => update(item.key, Number(e.target.value))}
+                  aria-label={item.label}
+                  aria-valuenow={form[item.key]}
+                  aria-valuemin={1}
+                  aria-valuemax={10}
+                  aria-valuetext={`${form[item.key]} de 10`}
                   className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-[var(--gold)]"
                   style={{ touchAction: "manipulation" }}
                 />

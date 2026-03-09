@@ -139,6 +139,11 @@ export default function StepAndamentosTemperamento({ form, update }: StepProps) 
                   max={10}
                   value={form[item.key]}
                   onChange={(e) => update(item.key, Number(e.target.value))}
+                  aria-label={item.label}
+                  aria-valuenow={form[item.key]}
+                  aria-valuemin={1}
+                  aria-valuemax={10}
+                  aria-valuetext={`${form[item.key]} de 10`}
                   className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-[var(--gold)]"
                   style={{ touchAction: "manipulation" }}
                 />
@@ -182,6 +187,11 @@ export default function StepAndamentosTemperamento({ form, update }: StepProps) 
                   max={10}
                   value={form[item.key]}
                   onChange={(e) => update(item.key, Number(e.target.value))}
+                  aria-label={item.label}
+                  aria-valuenow={form[item.key]}
+                  aria-valuemin={1}
+                  aria-valuemax={10}
+                  aria-valuetext={`${form[item.key]} de 10`}
                   className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-[var(--gold)]"
                   style={{ touchAction: "manipulation" }}
                 />

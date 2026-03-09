@@ -22,7 +22,8 @@ function calcMultIdade(idade: number): number {
   return 1.0; // Under 5 — potro
 }
 
-export function calcularValor(form: FormData): Resultado {
+export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: string) => string): Resultado {
+  const t = tr || ((pt: string) => pt); // fallback to Portuguese
   const base = VALORES_BASE[form.treino];
   const mercadoData = MERCADOS.find((m) => m.value === form.mercado);
   const multMercado = mercadoData?.mult || 1.0;
@@ -32,6 +33,23 @@ export function calcularValor(form: FormData): Resultado {
   const multSaude = MULT_SAUDE[form.saude] ?? 1.0;
   const multComp = MULT_COMP[form.competicoes] ?? 1.0;
   const multLivro = MULT_LIVRO[form.livroAPSL] ?? 1.0;
+
+  // Linhagem famosa — bonus when a recognised lineage is paired with premium/elite quality
+  let multLinhagemFamosa = 1.0;
+  if (
+    form.linhagemPrincipal &&
+    form.linhagemPrincipal !== "outra" &&
+    (form.linhagem === "premium" || form.linhagem === "elite")
+  ) {
+    const LINEAGE_BONUSES: Record<string, number> = {
+      veiga: 1.08,
+      andrade: 1.06,
+      alter_real: 1.05,
+      coudelaria_nacional: 1.04,
+      infante_da_camara: 1.04,
+    };
+    multLinhagemFamosa = LINEAGE_BONUSES[form.linhagemPrincipal] ?? 1.0;
+  }
 
   // Idade ideal: 7-12 anos
   const multIdade = calcMultIdade(form.idade);
@@ -97,6 +115,7 @@ export function calcularValor(form: FormData): Resultado {
 
   const totalMult =
     multLinhagem *
+    multLinhagemFamosa *
     multSaude *
     multComp *
     multIdade *
@@ -124,58 +143,58 @@ export function calcularValor(form: FormData): Resultado {
 
   const categorias = [
     {
-      nome: "Genética & Linhagem",
+      nome: t("Genética & Linhagem", "Genetics & Lineage", "Genética y Linaje"),
       impacto: Math.round((multLinhagem - 1) * base),
       score: multLinhagem * 4.5,
-      descricao: "Qualidade do pedigree e historial genético",
+      descricao: t("Qualidade do pedigree e historial genético", "Pedigree quality and genetic history", "Calidad del pedigrí e historial genético"),
     },
     {
-      nome: "Conformação Morfológica",
+      nome: t("Conformação Morfológica", "Morphological Conformation", "Conformación Morfológica"),
       impacto: Math.round((multMorfo - 1) * base),
       score: morfMedia,
-      descricao: "Estrutura física segundo padrões APSL",
+      descricao: t("Estrutura física segundo padrões APSL", "Physical structure per APSL standards", "Estructura física según estándares APSL"),
     },
     {
-      nome: "Qualidade dos Andamentos",
+      nome: t("Qualidade dos Andamentos", "Gait Quality", "Calidad de los Movimientos"),
       impacto: Math.round((multAnd - 1) * base),
       score: andMedia,
-      descricao: "Elevação, suspensão e regularidade",
+      descricao: t("Elevação, suspensão e regularidade", "Elevation, suspension and regularity", "Elevación, suspensión y regularidad"),
     },
     {
-      nome: "Nível de Treino",
+      nome: t("Nível de Treino", "Training Level", "Nivel de Entrenamiento"),
       impacto: Math.round(base * 0.4),
       score: Object.keys(VALORES_BASE).indexOf(form.treino) + 3,
-      descricao: "Formação e preparação técnica",
+      descricao: t("Formação e preparação técnica", "Education and technical preparation", "Formación y preparación técnica"),
     },
     {
-      nome: "Saúde & Veterinária",
+      nome: t("Estado de Saúde", "Health Status", "Estado de Salud"),
       impacto: Math.round((multSaude * multDoc - 1) * base),
       score: multSaude * 8,
-      descricao: "Condição física e documentação",
+      descricao: t("Condição física e documentação", "Physical condition and documentation", "Condición física y documentación"),
     },
     {
-      nome: "Carácter & Temperamento",
+      nome: t("Carácter & Temperamento", "Character & Temperament", "Carácter y Temperamento"),
       impacto: Math.round((multTemp - 1) * base),
       score: tempMedia,
-      descricao: "Sensibilidade e vontade de trabalho",
+      descricao: t("Sensibilidade e vontade de trabalho", "Sensitivity and willingness to work", "Sensibilidad y voluntad de trabajo"),
     },
     {
-      nome: "Palmarés Desportivo",
+      nome: t("Palmarés Desportivo", "Competition Record", "Palmarés Deportivo"),
       impacto: Math.round((multComp - 1) * base),
-      score: multComp * 6,
-      descricao: "Resultados em competição oficial",
+      score: Math.min(10, multComp * 6),
+      descricao: t("Resultados em competição oficial", "Results in official competition", "Resultados en competición oficial"),
     },
     {
-      nome: "Valor Reprodutivo",
+      nome: t("Potencial Reprodutivo", "Reproductive Potential", "Potencial Reproductivo"),
       impacto: Math.round((multRepro - 1) * base),
       score: form.reproducao ? 8 : 4,
-      descricao: "Potencial e historial reprodutivo",
+      descricao: t("Potencial e historial reprodutivo", "Reproductive potential and history", "Potencial e historial reproductivo"),
     },
     {
-      nome: "Disciplina & Vocação",
+      nome: t("Disciplina & Especialização", "Discipline & Specialization", "Disciplina y Especialización"),
       impacto: Math.round((multDisciplina - 1) * base),
       score: multDisciplina * 7,
-      descricao: "Adequação à disciplina e mercado-alvo",
+      descricao: t("Adequação à disciplina e mercado-alvo", "Suitability for discipline and target market", "Adecuación a la disciplina y mercado objetivo"),
     },
   ].sort((a, b) => b.impacto - a.impacto);
 
@@ -183,35 +202,35 @@ export function calcularValor(form: FormData): Resultado {
   const fortes: string[] = [];
   const fracos: string[] = [];
 
-  if (multLinhagem >= 1.5) fortes.push("Linhagem de prestígio reconhecido");
-  if (multLinhagem < 1.0) fracos.push("Pedigree pouco documentado");
-  if (morfMedia >= 8) fortes.push("Conformação morfológica excepcional");
-  if (morfMedia < 6) fracos.push("Morfologia abaixo do padrão ideal");
-  if (andMedia >= 8) fortes.push("Andamentos de qualidade superior");
-  if (andMedia < 6) fracos.push("Andamentos precisam de desenvolvimento");
-  if (form.competicoes !== "nenhuma") fortes.push("Experiência comprovada em competição");
+  if (multLinhagem >= 1.5) fortes.push(t("Linhagem de prestígio reconhecido", "Recognised prestigious lineage", "Linaje de prestigio reconocido"));
+  if (multLinhagem < 1.0) fracos.push(t("Pedigree pouco documentado", "Poorly documented pedigree", "Pedigrí poco documentado"));
+  if (morfMedia >= 8) fortes.push(t("Conformação morfológica excepcional", "Exceptional morphological conformation", "Conformación morfológica excepcional"));
+  if (morfMedia < 6) fracos.push(t("Morfologia abaixo do padrão ideal", "Morphology below ideal standard", "Morfología por debajo del estándar ideal"));
+  if (andMedia >= 8) fortes.push(t("Andamentos de qualidade superior", "Superior quality gaits", "Movimientos de calidad superior"));
+  if (andMedia < 6) fracos.push(t("Andamentos precisam de desenvolvimento", "Gaits need development", "Movimientos necesitan desarrollo"));
+  if (form.competicoes !== "nenhuma") fortes.push(t("Experiência comprovada em competição", "Proven competition experience", "Experiencia comprobada en competición"));
   if (form.registoAPSL && form.livroAPSL === "definitivo")
-    fortes.push("Registo APSL Livro Definitivo");
-  if (!form.registoAPSL) fracos.push("Sem registo no Stud Book APSL");
-  if (form.raioX && form.exameVeterinario) fortes.push("Documentação veterinária completa");
-  if (tempMedia >= 8) fortes.push("Temperamento equilibrado e cooperativo");
-  if (form.idade >= 7 && form.idade <= 12) fortes.push("Idade ideal para performance");
-  if (form.idade > 15) fracos.push("Idade avançada limita valorização");
+    fortes.push(t("Registo APSL Livro Definitivo", "APSL Definitive Book registration", "Registro APSL Libro Definitivo"));
+  if (!form.registoAPSL) fracos.push(t("Sem registo no Stud Book APSL", "No APSL Stud Book registration", "Sin registro en el Stud Book APSL"));
+  if (form.raioX && form.exameVeterinario) fortes.push(t("Documentação veterinária completa", "Complete veterinary documentation", "Documentación veterinaria completa"));
+  if (tempMedia >= 8) fortes.push(t("Temperamento equilibrado e cooperativo", "Balanced and cooperative temperament", "Temperamento equilibrado y cooperativo"));
+  if (form.idade >= 7 && form.idade <= 12) fortes.push(t("Idade ideal para performance", "Ideal age for performance", "Edad ideal para rendimiento"));
+  if (form.idade > 15) fracos.push(t("Idade avançada limita valorização", "Advanced age limits appreciation", "Edad avanzada limita la valorización"));
 
   // Comparacoes de mercado
   const comparacao = [
     {
-      tipo: "Média do mercado (mesmo nível)",
+      tipo: t("Média do mercado (mesmo nível)", "Market average (same level)", "Media del mercado (mismo nivel)"),
       valorMedio: Math.round(base * 1.1),
       diferenca: Math.round((valorFinal / (base * 1.1) - 1) * 100),
     },
     {
-      tipo: "Cavalos de linhagem similar",
+      tipo: t("Cavalos de linhagem similar", "Horses of similar lineage", "Caballos de linaje similar"),
       valorMedio: Math.round(base * multLinhagem),
       diferenca: Math.round((valorFinal / (base * multLinhagem) - 1) * 100),
     },
     {
-      tipo: "Top 10% da raça",
+      tipo: t("Top 10% da raça", "Top 10% of the breed", "Top 10% de la raza"),
       valorMedio: Math.round(base * 2.0),
       diferenca: Math.round((valorFinal / (base * 2.0) - 1) * 100),
     },
@@ -221,24 +240,46 @@ export function calcularValor(form: FormData): Resultado {
   const recomendacoes: string[] = [];
   if (form.morfologia < 7)
     recomendacoes.push(
-      "Investir em trabalho de ginástica funcional pode melhorar a apresentação e valorizar 10-15%"
+      t(
+        "Investir em trabalho de ginástica funcional pode melhorar a apresentação e valorizar 10-15%",
+        "Investing in functional gymnastic work can improve presentation and add 10-15% value",
+        "Invertir en trabajo de gimnasia funcional puede mejorar la presentación y valorizar 10-15%"
+      )
     );
   if (!form.registoAPSL)
     recomendacoes.push(
-      "O registo APSL é fundamental - valoriza automaticamente 15-20% no mercado internacional"
+      t(
+        "O registo APSL é fundamental - valoriza automaticamente 15-20% no mercado internacional",
+        "APSL registration is essential - automatically adds 15-20% value in the international market",
+        "El registro APSL es fundamental - valoriza automáticamente 15-20% en el mercado internacional"
+      )
     );
   if (form.competicoes === "nenhuma" && form.treino !== "potro" && form.treino !== "desbravado") {
     recomendacoes.push(
-      "Participação em provas regionais aumenta credibilidade e pode valorizar 10-12%"
+      t(
+        "Participação em provas regionais aumenta credibilidade e pode valorizar 10-12%",
+        "Participation in regional competitions increases credibility and can add 10-12% value",
+        "Participación en pruebas regionales aumenta credibilidad y puede valorizar 10-12%"
+      )
     );
   }
   if (form.saude !== "excelente" && !form.raioX) {
     recomendacoes.push(
-      "Exame veterinário completo com radiografias é essencial para compradores exigentes"
+      t(
+        "Exame veterinário completo com radiografias é essencial para compradores exigentes",
+        "Complete veterinary examination with X-rays is essential for demanding buyers",
+        "Examen veterinario completo con radiografías es esencial para compradores exigentes"
+      )
     );
   }
   if (form.treino === "elementar" || form.treino === "iniciado") {
-    recomendacoes.push("Progressão para nível Médio pode aumentar o valor em 40-60%");
+    recomendacoes.push(
+      t(
+        "Progressão para nível Médio pode aumentar o valor em 40-60%",
+        "Progression to Medium level can increase value by 40-60%",
+        "Progresión al nivel Medio puede aumentar el valor en 40-60%"
+      )
+    );
   }
   if (
     form.sexo === "garanhao" &&
@@ -247,17 +288,29 @@ export function calcularValor(form: FormData): Resultado {
     form.andamentos >= 7
   ) {
     recomendacoes.push(
-      "Considerar aprovação como reprodutor - garanhões aprovados têm valorização significativa"
+      t(
+        "Considerar aprovação como reprodutor - garanhões aprovados têm valorização significativa",
+        "Consider approval as breeding stallion - approved stallions have significant value increase",
+        "Considerar aprobación como reproductor - sementales aprobados tienen valorización significativa"
+      )
     );
   }
   if (!form.exameVeterinario) {
     recomendacoes.push(
-      "Relatório veterinário atualizado transmite segurança e facilita negociação"
+      t(
+        "Relatório veterinário atualizado transmite segurança e facilita negociação",
+        "Updated veterinary report conveys confidence and facilitates negotiation",
+        "Informe veterinario actualizado transmite seguridad y facilita la negociación"
+      )
     );
   }
   if (form.mercado === "Portugal" && multMorfo > 1.1) {
     recomendacoes.push(
-      "Com esta qualidade, mercados como Alemanha ou EUA podem oferecer valores 25-35% superiores"
+      t(
+        "Com esta qualidade, mercados como Alemanha ou EUA podem oferecer valores 25-35% superiores",
+        "With this quality, markets like Germany or USA can offer 25-35% higher values",
+        "Con esta calidad, mercados como Alemania o EE.UU. pueden ofrecer valores 25-35% superiores"
+      )
     );
   }
 
@@ -280,12 +333,12 @@ export function calcularValor(form: FormData): Resultado {
     liquidezScore >= 80 ? 30 : liquidezScore >= 65 ? 60 : liquidezScore >= 50 ? 90 : 180;
   const liquidezLabel =
     liquidezScore >= 80
-      ? "Alta Liquidez"
+      ? t("Alta Liquidez", "High Liquidity", "Alta Liquidez")
       : liquidezScore >= 65
-        ? "Boa Liquidez"
+        ? t("Boa Liquidez", "Good Liquidity", "Buena Liquidez")
         : liquidezScore >= 50
-          ? "Liquidez Moderada"
-          : "Liquidez Baixa";
+          ? t("Liquidez Moderada", "Moderate Liquidity", "Liquidez Moderada")
+          : t("Liquidez Baixa", "Low Liquidity", "Liquidez Baja");
 
   return {
     valorFinal,
@@ -293,12 +346,12 @@ export function calcularValor(form: FormData): Resultado {
     valorMax: Math.round(valorFinal * (1 + variance)),
     confianca: Math.min(
       95,
-      65 +
-        (form.registoAPSL ? 10 : 0) +
-        (form.raioX ? 5 : 0) +
-        (form.exameVeterinario ? 5 : 0) +
-        Math.round(morfMedia) +
-        Math.round(andMedia / 2)
+      45 +
+        (form.registoAPSL ? 15 : 0) +
+        (form.raioX ? 8 : 0) +
+        (form.exameVeterinario ? 8 : 0) +
+        Math.round(morfMedia * 1.2) +
+        Math.round(andMedia * 0.8)
     ),
     blup: Math.max(
       50,

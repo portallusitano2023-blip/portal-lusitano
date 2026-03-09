@@ -53,6 +53,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
 
             <button
               onClick={() => update("reproducao", !form.reproducao)}
+              aria-pressed={form.reproducao}
               className={`w-full py-3 px-4 rounded-lg border text-sm font-medium transition-all flex items-center justify-center gap-2 mb-4 ${
                 form.reproducao
                   ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
@@ -68,10 +69,11 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
             {form.reproducao && (
               <div className="grid grid-cols-2 gap-4 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
                 <div>
-                  <label className="block text-xs text-[var(--foreground-muted)] mb-2">
+                  <label htmlFor="campo-descendentes" className="block text-xs text-[var(--foreground-muted)] mb-2">
                     {t.calculadora.label_registered_offspring}
                   </label>
                   <input
+                    id="campo-descendentes"
                     type="number"
                     value={form.descendentes}
                     onChange={(e) => update("descendentes", Math.max(0, Number(e.target.value)))}
@@ -80,10 +82,11 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-[var(--foreground-muted)] mb-2">
+                  <label htmlFor="campo-descendentes-aprovados" className="block text-xs text-[var(--foreground-muted)] mb-2">
                     {t.calculadora.label_approved_offspring}
                   </label>
                   <input
+                    id="campo-descendentes-aprovados"
                     type="number"
                     value={form.descendentesAprovados}
                     onChange={(e) =>
@@ -111,6 +114,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                 <button
                   key={m.value}
                   onClick={() => update("mercado", m.value)}
+                  aria-pressed={form.mercado === m.value}
                   className={`py-2 px-2 rounded-lg border text-xs sm:text-sm transition-all min-h-[44px] leading-tight flex flex-col items-center gap-0.5 ${
                     form.mercado === m.value
                       ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
@@ -147,6 +151,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
               <button
                 key={opt.value}
                 onClick={() => update("tendencia", opt.value as FormData["tendencia"])}
+                aria-pressed={form.tendencia === opt.value}
                 className={`py-4 px-4 rounded-lg border text-sm font-medium transition-all flex flex-col items-center gap-2 ${
                   form.tendencia === opt.value
                     ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
@@ -188,6 +193,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
               onClick={() =>
                 update("certificadoExportacao", !(form.certificadoExportacao ?? false))
               }
+              aria-pressed={form.certificadoExportacao ?? false}
               className={`w-full py-2.5 px-4 rounded-lg border text-sm font-medium transition-all flex items-center justify-center gap-2 ${
                 form.certificadoExportacao
                   ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"
@@ -232,6 +238,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                   <button
                     key={n}
                     onClick={() => update("proprietariosAnteriores", n)}
+                    aria-pressed={(form.proprietariosAnteriores ?? 0) === n}
                     className={`py-2 rounded-lg border text-sm font-medium transition-all flex flex-col items-center gap-0.5 ${
                       (form.proprietariosAnteriores ?? 0) === n
                         ? "border-[var(--gold)] bg-[var(--gold)]/10 text-[var(--gold)]"

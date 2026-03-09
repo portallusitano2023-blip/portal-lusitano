@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Gauge, CheckCircle, XCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
+import { questions } from "@/components/analise-perfil/data/questions";
 import type { Result, AnswerDetail } from "@/components/analise-perfil/types";
 
 interface ReadinessTabProps {
@@ -20,34 +21,45 @@ interface SubScore {
 
 export default function ReadinessTab({
   result,
-  answerDetails: _answerDetails,
+  answerDetails,
   confidence,
 }: ReadinessTabProps) {
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
 
+  // Helper to find the selected option index for a given question id
+  const getAnswerIndex = (questionId: number): number => {
+    const detail = answerDetails.find((d) => d.questionId === questionId);
+    if (!detail) return 0;
+    const question = questions.find((q) => q.id === questionId);
+    if (!question) return 0;
+    const idx = question.options.findIndex((o) => o.text === detail.answerText);
+    return idx >= 0 ? idx : 0;
+  };
+
   // Sub-scores
   const experienceScore = confidence;
 
-  const budgetScore = 60;
+  const BUDGET_SCORES = [40, 55, 70, 85];
+  const budgetScore = BUDGET_SCORES[getAnswerIndex(7)];
 
   const timeDemand: Record<string, number> = {
     competidor: 70,
     criador: 65,
     tradicional: 55,
     amador: 80,
-    investidor: 50,
   };
   const timeScore = timeDemand[result.profile] || 60;
 
-  const infraScore = 55;
+  const INFRA_SCORES = [35, 50, 65, 80];
+  const infraScore = INFRA_SCORES[getAnswerIndex(11)];
 
   const globalScore = useMemo(
     () =>
       Math.round(
         experienceScore * 0.35 + budgetScore * 0.25 + timeScore * 0.25 + infraScore * 0.15
       ),
-    [experienceScore, timeScore]
+    [experienceScore, budgetScore, timeScore, infraScore]
   );
 
   const subScores: SubScore[] = [

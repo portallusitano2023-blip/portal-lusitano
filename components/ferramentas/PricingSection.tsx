@@ -232,7 +232,7 @@ function CheckoutFeedbackInner() {
           </span>
           <button
             onClick={() => setDismissed(true)}
-            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground-secondary)] ml-2 flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] ml-2 flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Fechar"
           >
             <X size={16} />

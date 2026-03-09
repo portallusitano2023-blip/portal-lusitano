@@ -7,6 +7,7 @@ import { createTranslator } from "@/lib/tr";
 import { results } from "@/components/analise-perfil/data/results";
 import Tooltip from "@/components/tools/Tooltip";
 import type { Result, AnswerDetail, ScorePercentage } from "@/components/analise-perfil/types";
+import { PROFILE_COLORS_TW } from "@/components/analise-perfil/types";
 
 interface AnalysisTabProps {
   result: Result;
@@ -15,12 +16,7 @@ interface AnalysisTabProps {
   confidence: number;
 }
 
-const PROFILE_COLORS: Record<string, string> = {
-  competidor: "bg-amber-500",
-  tradicional: "bg-emerald-500",
-  criador: "bg-purple-500",
-  amador: "bg-rose-500",
-};
+const PROFILE_COLORS = PROFILE_COLORS_TW;
 
 export default function AnalysisTab({
   result,

@@ -105,3 +105,19 @@ export type ResultTab =
   | "budget"
   | "simulador"
   | "preparacao";
+
+/** Hex colors used in the AffinityTab bar chart and similar visualisations. */
+export const PROFILE_COLORS_HEX: Record<string, string> = {
+  competidor: "#3b82f6",
+  tradicional: "#C5A059",
+  criador: "#ec4899",
+  amador: "#22c55e",
+};
+
+/** Tailwind background classes used in the AnalysisTab badges. */
+export const PROFILE_COLORS_TW: Record<string, string> = {
+  competidor: "bg-amber-500",
+  tradicional: "bg-emerald-500",
+  criador: "bg-purple-500",
+  amador: "bg-rose-500",
+};
