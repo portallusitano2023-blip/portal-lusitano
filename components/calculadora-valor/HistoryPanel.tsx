@@ -53,8 +53,8 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
             </button>
           </div>
           <div className="divide-y divide-[var(--border)]/50 max-h-72 overflow-y-auto">
-            {history.map((entry, i) => (
-              <div key={i} className="px-4 py-3">
+            {history.map((entry) => (
+              <div key={entry.timestamp} className="px-4 py-3">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-[#C5A059] font-semibold truncate max-w-[140px]">
                     {entry.nome || tr("Sem nome", "Unnamed", "Sin nombre")}

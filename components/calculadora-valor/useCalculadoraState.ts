@@ -216,7 +216,8 @@ export function useCalculadoraState() {
         return updated;
       });
     } catch {}
-  }, [resultado]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultado, formStep.data, tr]);
 
   // ESC key for PDF preview
   useEffect(() => {

@@ -17,6 +17,7 @@ export {
   SUBPROFILE_LABELS,
   PRESETS,
   criarCavalo,
+  localizedLabel,
 } from "./data";
 
 export {

@@ -18,7 +18,7 @@ export interface BreedingMilestone {
   description: string;
 }
 
-export function calcularCalendarioCriacao(_mesActual: number, tr: TranslatorFn = defaultTr): BreedingMilestone[] {
+export function calcularCalendarioCriacao(tr: TranslatorFn = defaultTr): BreedingMilestone[] {
   return [
     {
       label: tr("Época de Cobrição", "Breeding Season", "Época de Cubrición"),
@@ -234,7 +234,7 @@ export function calcularQualidadePais(garanhao: Cavalo, egua: Cavalo): number {
     Math.round(
       (confMedia / 10) * 30 + // 30% peso conformação
         (andMedia / 10) * 30 + // 30% peso andamentos
-        ((blupMedia / 150) * 40 * 100) / 100 // 40% peso BLUP
+        (blupMedia / 150) * 40 // 40% peso BLUP
     )
   );
 }

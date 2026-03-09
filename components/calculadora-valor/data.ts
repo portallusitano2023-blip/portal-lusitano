@@ -13,16 +13,20 @@ export const PELAGENS = [
 ];
 
 export const LINHAGENS_FAMOSAS = [
-  { value: "veiga", label: "Veiga", desc: "Alta Escola, piaffé natural" },
-  { value: "andrade", label: "Andrade", desc: "Força e trabalho de campo" },
-  { value: "alter_real", label: "Alter Real", desc: "Tradição Real portuguesa" },
+  { value: "veiga", label: "Veiga", labelEn: "Veiga", labelEs: "Veiga", desc: "Alta Escola, piaffé natural", descEn: "Haute Ecole, natural piaffe", descEs: "Alta Escuela, piaffé natural" },
+  { value: "andrade", label: "Andrade", labelEn: "Andrade", labelEs: "Andrade", desc: "Força e trabalho de campo", descEn: "Strength and fieldwork", descEs: "Fuerza y trabajo de campo" },
+  { value: "alter_real", label: "Alter Real", labelEn: "Alter Real", labelEs: "Alter Real", desc: "Tradição Real portuguesa", descEn: "Portuguese Royal tradition", descEs: "Tradición Real portuguesa" },
   {
     value: "coudelaria_nacional",
     label: "Coudelaria Nacional",
+    labelEn: "National Stud",
+    labelEs: "Yeguada Nacional",
     desc: "Versatilidade e equilíbrio",
+    descEn: "Versatility and balance",
+    descEs: "Versatilidad y equilibrio",
   },
-  { value: "infante_da_camara", label: "Infante da Câmara", desc: "Refinamento e elegância" },
-  { value: "outra", label: "Outra / Mista", desc: "Linhagem não listada" },
+  { value: "infante_da_camara", label: "Infante da Câmara", labelEn: "Infante da Câmara", labelEs: "Infante da Câmara", desc: "Refinamento e elegância", descEn: "Refinement and elegance", descEs: "Refinamiento y elegancia" },
+  { value: "outra", label: "Outra / Mista", labelEn: "Other / Mixed", labelEs: "Otra / Mixta", desc: "Linhagem não listada", descEn: "Unlisted lineage", descEs: "Linaje no listado" },
 ];
 
 export const DISCIPLINAS = [
@@ -104,17 +108,17 @@ export const DISCIPLINAS_DETAILED: DisciplinaOption[] = [
 ];
 
 export const MERCADOS = [
-  { value: "Portugal", label: "Portugal", mult: 1.0 },
-  { value: "Espanha", label: "Espanha", mult: 1.05 },
-  { value: "França", label: "França", mult: 1.15 },
-  { value: "Alemanha", label: "Alemanha", mult: 1.25 },
-  { value: "Holanda", label: "Holanda", mult: 1.2 },
-  { value: "Bélgica", label: "Bélgica", mult: 1.15 },
-  { value: "Suíça", label: "Suíça", mult: 1.3 },
-  { value: "Reino Unido", label: "Reino Unido", mult: 1.2 },
-  { value: "Brasil", label: "Brasil", mult: 0.85 },
-  { value: "EUA", label: "EUA", mult: 1.35 },
-  { value: "México", label: "México", mult: 0.9 },
+  { value: "Portugal", label: "Portugal", labelEn: "Portugal", labelEs: "Portugal", mult: 1.0 },
+  { value: "Espanha", label: "Espanha", labelEn: "Spain", labelEs: "España", mult: 1.05 },
+  { value: "França", label: "França", labelEn: "France", labelEs: "Francia", mult: 1.15 },
+  { value: "Alemanha", label: "Alemanha", labelEn: "Germany", labelEs: "Alemania", mult: 1.25 },
+  { value: "Holanda", label: "Holanda", labelEn: "Netherlands", labelEs: "Holanda", mult: 1.2 },
+  { value: "Bélgica", label: "Bélgica", labelEn: "Belgium", labelEs: "Bélgica", mult: 1.15 },
+  { value: "Suíça", label: "Suíça", labelEn: "Switzerland", labelEs: "Suiza", mult: 1.3 },
+  { value: "Reino Unido", label: "Reino Unido", labelEn: "United Kingdom", labelEs: "Reino Unido", mult: 1.2 },
+  { value: "Brasil", label: "Brasil", labelEn: "Brazil", labelEs: "Brasil", mult: 0.85 },
+  { value: "EUA", label: "EUA", labelEn: "USA", labelEs: "EE.UU.", mult: 1.35 },
+  { value: "México", label: "México", labelEn: "Mexico", labelEs: "México", mult: 0.9 },
 ];
 
 export const VALORES_BASE: Record<string, number> = {
@@ -171,3 +175,17 @@ export const MULT_LIVRO: Record<string, number> = {
   auxiliar: 0.9,
   nenhum: 0.7,
 };
+
+/** Pick the right label based on language */
+export function localizedLabel(item: { label: string; labelEn?: string; labelEs?: string }, lang?: string): string {
+  if (lang === "en" && item.labelEn) return item.labelEn;
+  if (lang === "es" && item.labelEs) return item.labelEs;
+  return item.label;
+}
+
+/** Pick the right desc based on language */
+export function localizedDesc(item: { desc: string; descEn?: string; descEs?: string }, lang?: string): string {
+  if (lang === "en" && item.descEn) return item.descEn;
+  if (lang === "es" && item.descEs) return item.descEs;
+  return item.desc;
+}
