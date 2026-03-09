@@ -449,6 +449,14 @@ export function useCalculadoraState() {
       bom: 6,
       regular: 4,
     };
+    const linhagemMapVerif: Record<string, string> = {
+      desconhecida: "Desconhecida",
+      comum: "Comum",
+      registada: "Registada",
+      certificada: "Certificada",
+      premium: "Premium",
+      elite: "Elite",
+    };
     chainCalcToVerificador(
       {
         nome: form.nome || "Cavalo",
@@ -456,7 +464,7 @@ export function useCalculadoraState() {
         idade: form.idade,
         altura: form.altura,
         pelagem: form.pelagem,
-        linhagem: form.linhagem,
+        linhagem: linhagemMapVerif[form.linhagem] ?? "Certificada",
         linhagemFamosa: form.linhagemPrincipal || "veiga",
         conformacao: form.morfologia,
         andamentos: form.andamentos,

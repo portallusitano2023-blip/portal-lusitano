@@ -133,6 +133,7 @@ export function useQuizLogic() {
   const [error, setError] = useState<string | null>(null);
   const [crossWarningDismissed, setCrossWarningDismissed] = useState(false);
   const [chainContext, setChainContext] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
   const quizRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
@@ -198,6 +199,7 @@ export function useQuizLogic() {
 
   const handleAnswer = useCallback(
     async (option: QuestionOption) => {
+      if (isPending) return;
       const q = questions[currentQuestion];
       const w = q.weight;
       const newAnswers = [...answers, option.value];
@@ -270,13 +272,28 @@ export function useQuizLogic() {
           percentage: Math.round((s / totalScoreForMeta) * 100),
         }));
 
-        // Server-side validation + recording BEFORE showing results
-        const allowed = await validateAndRecord(newScores, {
-          profile: mp,
-          subProfile: sp ?? null,
-          confidence: inlineConfidence,
-          scorePercentages: scorePercentagesMeta,
-        });
+        setIsPending(true);
+        let allowed = false;
+        try {
+          // Server-side validation + recording BEFORE showing results
+          allowed = await validateAndRecord(newScores, {
+            profile: mp,
+            subProfile: sp ?? null,
+            confidence: inlineConfidence,
+            scorePercentages: scorePercentagesMeta,
+          });
+        } catch {
+          showError(
+            tr(
+              "Erro de ligação. Verifica a tua ligação à internet.",
+              "Connection error. Please check your internet connection.",
+              "Error de conexión. Verifica tu conexión a internet."
+            )
+          );
+          return;
+        } finally {
+          setIsPending(false);
+        }
 
         if (!allowed) {
           setError(
@@ -296,7 +313,7 @@ export function useQuizLogic() {
         setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
       }
     },
-    [currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, tr, results]
+    [isPending, currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, tr, results]
   );
 
   const calculateConfidence = useCallback((): number => {
@@ -444,7 +461,7 @@ export function useQuizLogic() {
       setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
       setCrossWarningDismissed(false);
     }
-  }, [currentQuestion, answers, answerDetails]);
+  }, [currentQuestion, answers, answerDetails, questions]);
 
   const dismissCrossWarning = useCallback(() => {
     setCrossWarningDismissed(true);
@@ -533,6 +550,7 @@ export function useQuizLogic() {
     freeUsesLeft,
     requiresAuth,
     accessLoading,
+    isPending,
     // Actions
     startQuiz,
     handleAnswer,

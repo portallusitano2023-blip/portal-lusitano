@@ -111,6 +111,7 @@ function AnalisePerfilContent() {
     freeUsesLeft,
     requiresAuth,
     accessLoading,
+    isPending,
     handleAnswer,
     goBack,
     result,
@@ -254,6 +255,7 @@ function AnalisePerfilContent() {
               freeUsesLeft={freeUsesLeft}
               requiresAuth={requiresAuth}
               accessLoading={accessLoading}
+              isPending={isPending}
               onAnswer={handleAnswer}
               onBack={goBack}
               onReset={resetQuiz}

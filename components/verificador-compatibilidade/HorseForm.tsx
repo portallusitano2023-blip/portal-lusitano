@@ -199,7 +199,7 @@ export default function HorseForm({
               value={cavalo.nome}
               onChange={(e) => update("nome", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
-              placeholder={`Nome do ${cavalo.sexo}`}
+              placeholder={tr(`Nome do ${cavalo.sexo}`, tab === "garanhao" ? "Stallion name" : "Mare name", tab === "garanhao" ? "Nombre del semental" : "Nombre de la yegua")}
             />
           </div>
           <div>
@@ -388,7 +388,7 @@ export default function HorseForm({
                 aria-valuenow={cavalo[field]}
                 aria-valuemin={1}
                 aria-valuemax={10}
-                aria-valuetext={`${cavalo[field]} de 10`}
+                aria-valuetext={tr(`${cavalo[field]} de 10`, `${cavalo[field]} out of 10`, `${cavalo[field]} de 10`)}
                 className="w-full h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-pink-500 touch-pan-y py-3"
               />
             </div>

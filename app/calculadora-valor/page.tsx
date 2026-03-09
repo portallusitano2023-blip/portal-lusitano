@@ -272,7 +272,7 @@ export default function CalculadoraValorPage() {
                   <button
                     onClick={() => setProfileContext(null)}
                     className="text-[var(--gold)]/40 hover:text-[var(--gold)] transition-colors shrink-0"
-                    aria-label="Fechar"
+                    aria-label={tr("Fechar", "Close", "Cerrar")}
                   >
                     <X size={13} />
                   </button>

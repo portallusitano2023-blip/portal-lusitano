@@ -181,7 +181,7 @@ export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr): ScoreFactor[] 
     { name: tr("Conformação", "Conformation", "Conformación"), weight: "10%", score: c.conformacao, max: 10 },
     { name: tr("Andamentos", "Gaits", "Aires"), weight: "10%", score: c.andamentos, max: 10 },
     { name: tr("Idade", "Age", "Edad"), weight: "10%", score: idadeScore, max: 10 },
-    { name: tr("Competições", "Competitions", "Competiciones"), weight: "8%", score: compScore, max: 8 },
+    { name: tr("Competições", "Competitions", "Competiciones"), weight: "15%", score: compScore, max: 15 },
     { name: tr("Altura", "Height", "Altura"), weight: "8%", score: alturaScore, max: 8 },
     { name: tr("Temperamento", "Temperament", "Temperamento"), weight: "7%", score: temperamentoScore, max: 7 },
     { name: tr("Saúde", "Health", "Salud"), weight: "7%", score: saudeScore, max: 7 },
