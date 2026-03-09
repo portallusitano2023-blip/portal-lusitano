@@ -171,8 +171,16 @@ export function useQuizLogic() {
       try {
         const decoded = JSON.parse(atob(sharedResult));
         if (decoded.profile && results[decoded.profile]) {
+          const PROFILE_KEYS = ["competidor", "tradicional", "criador", "amador"] as const;
+          const raw = decoded.scores;
+          const safeScores =
+            raw && typeof raw === "object" && !Array.isArray(raw)
+              ? Object.fromEntries(
+                  PROFILE_KEYS.map((k) => [k, typeof raw[k] === "number" ? (raw[k] as number) : 0])
+                )
+              : { competidor: 0, tradicional: 0, criador: 0, amador: 0 };
           // eslint-disable-next-line react-hooks/set-state-in-effect -- URL param initialization on mount
-          setScores(decoded.scores || { competidor: 0, tradicional: 0, criador: 0, amador: 0 });
+          setScores(safeScores as Record<string, number>);
           setResult(results[decoded.profile]);
           setShowIntro(false);
           setShowResult(true);
@@ -480,11 +488,17 @@ export function useQuizLogic() {
       criacao: (scores.criador / totalScore) * 100,
       lazer: (scores.amador / totalScore) * 100,
       investimento: scorePercentages[0]?.percentage || 0,
-      dedicacao: Math.min(
-        100,
-        answers.filter((a) => ["diario", "frequente", "completo", "treinador_top"].includes(a))
-          .length * 25
-      ),
+      dedicacao: (() => {
+        // Q8 (answers[7]) — "Quanto tempo pode dedicar ao cavalo semanalmente?"
+        const q8 = answers[7];
+        const DEDICACAO_SCORES: Record<string, number> = {
+          diario: 100,
+          frequente: 75,
+          weekend: 30,
+          ausente: 50,
+        };
+        return DEDICACAO_SCORES[q8] ?? 0;
+      })(),
     }),
     [scores, totalScore, scorePercentages, answers]
   );

@@ -126,6 +126,7 @@ function buildScenarios(form: FormData, resultado: Resultado, tr: (pt: string, e
 export default function SensitivityPanel({ form, resultado }: SensitivityPanelProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const scenarios = useMemo(() => {
     try {
       return buildScenarios(form, resultado, tr);
@@ -164,7 +165,7 @@ export default function SensitivityPanel({ form, resultado }: SensitivityPanelPr
             </div>
             <div className="text-right shrink-0">
               <span className="text-sm font-bold text-emerald-400">
-                +{s.delta.toLocaleString("pt-PT")}€
+                +{s.delta.toLocaleString(locale)}€
               </span>
               <span className="block text-[10px] text-emerald-400/70">+{s.percentage}%</span>
             </div>

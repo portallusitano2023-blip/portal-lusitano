@@ -16,6 +16,7 @@ interface ScenarioSimulatorProps {
 export default function ScenarioSimulator({ form, resultado }: ScenarioSimulatorProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   const TREINO_PROGRESSAO: Record<string, string> = {
     potro: "desbravado",
@@ -148,7 +149,7 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
           "Estimated impact of each improvement on the current value of",
           "Impacto estimado de cada mejora en el valor actual de"
         )}{" "}
-        {resultado.valorFinal.toLocaleString("pt-PT")}€
+        {resultado.valorFinal.toLocaleString(locale)}€
       </p>
       <div className="grid sm:grid-cols-2 gap-3">
         {top.map((c, i) => (
@@ -163,7 +164,7 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
             </div>
             <div className="text-right shrink-0">
               <p className="text-sm font-bold text-emerald-400">
-                +{c.delta.toLocaleString("pt-PT")}€
+                +{c.delta.toLocaleString(locale)}€
               </p>
               <p className="text-[10px] text-emerald-500/70">+{c.deltaPercent}%</p>
             </div>

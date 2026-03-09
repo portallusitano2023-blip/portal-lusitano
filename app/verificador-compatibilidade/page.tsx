@@ -8,6 +8,7 @@ import SubscriptionBanner from "@/components/tools/SubscriptionBanner";
 import ProUpgradeCard from "@/components/tools/ProUpgradeCard";
 import ProStatusBar from "@/components/ferramentas/ProStatusBar";
 import FreeUsesCounter from "@/components/ferramentas/FreeUsesCounter";
+import Paywall from "@/components/tools/Paywall";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
@@ -473,7 +474,7 @@ export default function VerificadorCompatibilidadePage() {
         )}
 
         {/* Form */}
-        {step === 1 && !resultado && (
+        {step === 1 && !resultado && canUse && (
           <HorseForm
             garanhao={garanhao}
             egua={egua}
@@ -486,6 +487,38 @@ export default function VerificadorCompatibilidadePage() {
             isCalculating={isCalculating}
             onCalcular={calcular}
           />
+        )}
+
+        {/* Paywall — replaces form when user cannot use */}
+        {step === 1 && !resultado && !canUse && (
+          <div className="pt-8 max-w-4xl mx-auto px-4">
+            <Paywall
+              toolName={t.verificador.tool_name}
+              requiresAuth={requiresAuth}
+              proFeatures={[
+                tr(
+                  "Análise genética detalhada com COI, BLUP e previsão de pelagem",
+                  "Detailed genetic analysis with COI, BLUP and coat prediction",
+                  "Análisis genético detallado con COI, BLUP y predicción de capa"
+                ),
+                tr(
+                  "Score de compatibilidade com 8 factores ponderados",
+                  "Compatibility score with 8 weighted factors",
+                  "Puntuación de compatibilidad con 8 factores ponderados"
+                ),
+                tr(
+                  "Relatório PDF com análise completa do cruzamento",
+                  "PDF report with complete breeding analysis",
+                  "Informe PDF con análisis completo del cruzamiento"
+                ),
+                tr(
+                  "Pontos fortes, riscos e recomendações personalizadas",
+                  "Strengths, risks and personalised recommendations",
+                  "Puntos fuertes, riesgos y recomendaciones personalizadas"
+                ),
+              ]}
+            />
+          </div>
         )}
 
         {/* Selector de Objectivo */}
