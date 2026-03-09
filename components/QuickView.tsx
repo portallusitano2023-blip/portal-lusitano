@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Heart, ShoppingBag, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { useCart } from "@/context/CartContext";
+import { useCartData } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useToast } from "@/context/ToastContext";
 import LocalizedLink from "@/components/LocalizedLink";
@@ -43,7 +43,7 @@ export default function QuickView({ product, isOpen, onClose }: QuickViewProps) 
   const modalRef = useRef<HTMLDivElement>(null);
 
   useFocusTrap(modalRef, isOpen, onClose);
-  const { addItemToCart } = useCart();
+  const { addItemToCart } = useCartData();
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist();
   const { showToast } = useToast();
 

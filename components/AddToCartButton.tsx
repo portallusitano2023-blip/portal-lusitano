@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useCart } from "@/context/CartContext";
+import { useCartData } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { useToast } from "@/context/ToastContext";
@@ -46,7 +46,7 @@ export default function AddToCartButton({
   productPrice,
   variantTitle,
 }: AddToCartProps) {
-  const { addItemToCart } = useCart();
+  const { addItemToCart } = useCartData();
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
   const { showToast } = useToast();

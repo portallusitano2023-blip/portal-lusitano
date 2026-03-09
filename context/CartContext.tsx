@@ -28,21 +28,30 @@ interface OptimisticMeta {
   variantTitle?: string;
 }
 
-interface CartContextType {
+// --- Split contexts to prevent UI-only changes from re-rendering data consumers ---
+
+interface CartDataContextType {
   cart: CartItem[];
   cartId: string | null;
   checkoutUrl: string | null;
+  totalQuantity: number;
+  addItemToCart: (variantId: string, quantity: number, meta?: OptimisticMeta) => Promise<void>;
+  removeFromCart: (lineId: string) => Promise<void>;
+  updateQuantity: (lineId: string, quantity: number) => Promise<void>;
+}
+
+interface CartUIContextType {
   isCartOpen: boolean;
   isAdding: boolean;
   openCart: () => void;
   closeCart: () => void;
-  addItemToCart: (variantId: string, quantity: number, meta?: OptimisticMeta) => Promise<void>;
-  removeFromCart: (lineId: string) => Promise<void>;
-  updateQuantity: (lineId: string, quantity: number) => Promise<void>;
-  totalQuantity: number;
 }
 
-const CartContext = createContext<CartContextType | null>(null);
+// Combined type for backwards compatibility
+interface CartContextType extends CartDataContextType, CartUIContextType {}
+
+const CartDataContext = createContext<CartDataContextType | null>(null);
+const CartUIContext = createContext<CartUIContextType | null>(null);
 
 // --- Helper: chamadas ao servidor via API routes ---
 
@@ -315,40 +324,57 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const totalQuantity = useMemo(() => cart.reduce((acc, item) => acc + item.quantity, 0), [cart]);
 
-  const value = useMemo<CartContextType>(
+  // Split into two context values so UI-only changes (isCartOpen, isAdding)
+  // don't re-render data-only consumers (Navbar badge, AddToCartButton)
+  const dataValue = useMemo<CartDataContextType>(
     () => ({
       cart,
       cartId,
       checkoutUrl,
-      isCartOpen,
-      isAdding,
-      openCart,
-      closeCart,
+      totalQuantity,
       addItemToCart,
       removeFromCart: removeLineItem,
       updateQuantity,
-      totalQuantity,
     }),
-    [
-      cart,
-      cartId,
-      checkoutUrl,
+    [cart, cartId, checkoutUrl, totalQuantity, addItemToCart, removeLineItem, updateQuantity]
+  );
+
+  const uiValue = useMemo<CartUIContextType>(
+    () => ({
       isCartOpen,
       isAdding,
       openCart,
       closeCart,
-      addItemToCart,
-      removeLineItem,
-      updateQuantity,
-      totalQuantity,
-    ]
+    }),
+    [isCartOpen, isAdding, openCart, closeCart]
   );
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartDataContext.Provider value={dataValue}>
+      <CartUIContext.Provider value={uiValue}>
+        {children}
+      </CartUIContext.Provider>
+    </CartDataContext.Provider>
+  );
 }
 
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) throw new Error("useCart deve ser usado dentro de um CartProvider");
+/** Use only cart data (items, totals, actions). Does NOT re-render on UI state changes. */
+export const useCartData = () => {
+  const context = useContext(CartDataContext);
+  if (!context) throw new Error("useCartData deve ser usado dentro de um CartProvider");
   return context;
+};
+
+/** Use only cart UI state (isOpen, isAdding, open/close). Does NOT re-render on data changes. */
+export const useCartUI = () => {
+  const context = useContext(CartUIContext);
+  if (!context) throw new Error("useCartUI deve ser usado dentro de um CartProvider");
+  return context;
+};
+
+/** Combined hook — backwards compatible. Re-renders on ANY cart change. */
+export const useCart = (): CartContextType => {
+  const data = useCartData();
+  const ui = useCartUI();
+  return { ...data, ...ui };
 };
