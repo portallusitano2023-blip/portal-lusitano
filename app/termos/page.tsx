@@ -1,9 +1,7 @@
-"use client";
+import { getServerLanguage } from "@/lib/get-server-language";
 
-import { useLanguage } from "@/context/LanguageContext";
-
-export default function TermosPage() {
-  const { t } = useLanguage();
+export default async function TermosPage() {
+  const { t } = await getServerLanguage();
 
   return (
     <>

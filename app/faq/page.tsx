@@ -1,58 +1,11 @@
-"use client";
-
-import { useState } from "react";
-import { ChevronDown, HelpCircle } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
-import { createTranslator } from "@/lib/tr";
-import { faqData, type FAQItem } from "@/data/faqData";
+import { HelpCircle } from "lucide-react";
+import { getServerLanguage } from "@/lib/get-server-language";
+import { faqData } from "@/data/faqData";
 import { CONTACT_EMAIL } from "@/lib/constants";
+import FAQAccordionList from "@/components/FAQAccordionList";
 
-function FAQAccordion({
-  item,
-  isOpen,
-  onClick,
-}: {
-  item: FAQItem;
-  isOpen: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <div className="border-b border-[var(--border)]">
-      <button
-        onClick={onClick}
-        aria-expanded={isOpen}
-        className="w-full py-6 flex items-center justify-between text-left group"
-      >
-        <span className="text-lg font-serif text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors pr-8">
-          {item.question}
-        </span>
-        <div
-          className="flex-shrink-0 transition-transform duration-200"
-          style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-        >
-          <ChevronDown
-            className={`${isOpen ? "text-[var(--gold)]" : "text-[var(--foreground-muted)]"} transition-colors`}
-            size={20}
-          />
-        </div>
-      </button>
-
-      <div
-        className="grid transition-all duration-200"
-        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
-      >
-        <div className="overflow-hidden">
-          <p className="pb-6 text-[var(--foreground-secondary)] leading-relaxed">{item.answer}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function FAQPage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const { language } = useLanguage();
-  const tr = createTranslator(language);
+export default async function FAQPage() {
+  const { language, tr } = await getServerLanguage();
   const faqs = faqData[language] ?? faqData.pt;
 
   return (
@@ -78,20 +31,8 @@ export default function FAQPage() {
           </p>
         </div>
 
-        {/* FAQ List */}
-        <div
-          className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
-          style={{ animationDelay: "0.1s" }}
-        >
-          {faqs.map((faq, index) => (
-            <FAQAccordion
-              key={faq.question}
-              item={faq}
-              isOpen={openIndex === index}
-              onClick={() => setOpenIndex(openIndex === index ? null : index)}
-            />
-          ))}
-        </div>
+        {/* FAQ List — client component for accordion interactivity */}
+        <FAQAccordionList faqs={faqs} />
 
         {/* Contact CTA */}
         <div

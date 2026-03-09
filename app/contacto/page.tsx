@@ -1,17 +1,7 @@
-"use client";
-
-import { useState } from "react";
 import { Mail, MapPin, Clock, FileText, ExternalLink } from "lucide-react";
-import LocalizedLink from "@/components/LocalizedLink";
+import CopyEmailButton from "@/components/CopyEmailButton";
 
 export default function ContactoPage() {
-  const [copied, setCopied] = useState(false);
-
-  const copyEmail = () => {
-    navigator.clipboard.writeText("portal.lusitano2023@gmail.com");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 sm:pt-32 pb-20 px-4 sm:px-6 selection:bg-[var(--gold)] selection:text-black">
@@ -44,12 +34,7 @@ export default function ContactoPage() {
             <p className="text-[var(--foreground)] text-sm font-light break-all">
               portal.lusitano2023@gmail.com
             </p>
-            <button
-              onClick={copyEmail}
-              className="text-[9px] uppercase tracking-[0.2em] text-[var(--foreground-muted)] hover:text-[var(--gold)] transition-colors"
-            >
-              {copied ? "Copiado ✓" : "Copiar email"}
-            </button>
+            <CopyEmailButton />
           </div>
 
           {/* Morada */}
