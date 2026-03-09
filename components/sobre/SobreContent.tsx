@@ -57,9 +57,9 @@ export default function SobreContent() {
         icon: Crown,
         title: tr("Tradição", "Tradition", "Tradición"),
         desc: tr(
-          "Honramos 500 anos de criação equestre portuguesa, preservando o legado das grandes coudelarias.",
-          "We honour 500 years of Portuguese horse breeding, preserving the legacy of the great stud farms.",
-          "Honramos 500 años de cría ecuestre portuguesa, preservando el legado de los grandes establos."
+          "Honramos a tradição de criação equestre portuguesa, preservando o legado das grandes coudelarias.",
+          "We honour the tradition of Portuguese horse breeding, preserving the legacy of the great stud farms.",
+          "Honramos la tradición de cría ecuestre portuguesa, preservando el legado de los grandes establos."
         ),
       },
       {
@@ -238,7 +238,7 @@ export default function SobreContent() {
       >
         {/* Background image */}
         <Image
-          src="/images/home/marketplace/bg.jpg"
+          src="/images/sobre/hero/hero.png"
           alt=""
           fill
           sizes="100vw"
@@ -627,7 +627,7 @@ export default function SobreContent() {
       ══════════════════════════════════════════════════════════════════════════ */}
       <section className="relative h-[50vh] sm:h-[60vh] overflow-hidden">
         <Image
-          src="/images/home/desktop/hero.png"
+          src="/images/sobre/break/break.png"
           alt=""
           fill
           sizes="100vw"
@@ -654,9 +654,9 @@ export default function SobreContent() {
               style={{ fontSize: "clamp(1.3rem, 3.5vw, 2.2rem)" }}
             >
               {tr(
-                "500 anos de tradição equestre portuguesa, preservada e elevada através da tecnologia.",
-                "500 years of Portuguese equestrian tradition, preserved and elevated through technology.",
-                "500 años de tradición ecuestre portuguesa, preservada y elevada a través de la tecnología."
+                "Tecnologia ao serviço da tradição equestre portuguesa.",
+                "Technology in service of Portuguese equestrian tradition.",
+                "Tecnología al servicio de la tradición ecuestre portuguesa."
               )}
             </p>
             <div className="flex items-center justify-center gap-3 mt-6">

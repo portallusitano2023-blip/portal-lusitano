@@ -137,9 +137,9 @@ export default function HomeContent({
         icon: Crown,
         title: tr("Tradição", "Tradition", "Tradición"),
         desc: tr(
-          "500 anos de história equestre portuguesa",
-          "500 years of Portuguese equestrian history",
-          "500 años de historia ecuestre portuguesa"
+          "Herança equestre portuguesa de excelência",
+          "Portuguese equestrian heritage of excellence",
+          "Herencia ecuestre portuguesa de excelencia"
         ),
       },
       {
