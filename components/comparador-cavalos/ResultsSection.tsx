@@ -559,6 +559,7 @@ export default function ResultsSection({
                 "Pedigree",
                 tr("Treino", "Training", "Entren."),
               ]}
+              language={language}
             />
           </div>
           <div className="flex flex-wrap justify-center gap-4 mt-6">

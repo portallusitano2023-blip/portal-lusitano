@@ -39,10 +39,10 @@ function getProfileLabels(L: (pt: string, en: string, es?: string) => string): R
 }
 
 const PROFILE_COLORS: Record<string, [number, number, number]> = {
-  competidor: [197, 160, 89],  // GOLD
-  tradicional: [34, 197, 94],  // GREEN
-  criador: [251, 146, 60],     // AMBER
-  amador: [99, 179, 237],      // BLUE
+  competidor: [59, 130, 246],    // #3b82f6 (blue)
+  tradicional: [197, 160, 89],   // #C5A059 (gold)
+  criador: [236, 72, 153],       // #ec4899 (pink)
+  amador: [34, 197, 94],         // #22c55e (green)
 };
 
 // ─── Main Export ──────────────────────────────────────────────────────────────

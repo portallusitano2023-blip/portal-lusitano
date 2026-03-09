@@ -1,10 +1,18 @@
 const RadarChart = ({
   cavalos,
   labels,
+  language,
 }: {
   cavalos: { nome: string; valores: number[]; cor: string }[];
   labels: string[];
+  language?: string;
 }) => {
+  const ariaLabel =
+    language === "en"
+      ? "Comparison radar chart"
+      : language === "es"
+        ? "Gráfico radar de comparación"
+        : "Gráfico radar de comparação";
   const size = 280;
   const center = size / 2;
   const radius = size * 0.38;
@@ -23,7 +31,7 @@ const RadarChart = ({
       className="mx-auto w-full"
       style={{ height: "auto", maxWidth: `${size}px` }}
       role="img"
-      aria-label="Gráfico radar de comparação"
+      aria-label={ariaLabel}
     >
       {/* Grid circles */}
       {[2, 4, 6, 8, 10].map((level) => (

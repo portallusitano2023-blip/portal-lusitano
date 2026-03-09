@@ -70,14 +70,6 @@ function nivelColor(score: number): [number, number, number] {
   return RED;
 }
 
-function riscoColor(
-  severidade: "alto" | "medio" | "baixo"
-): [number, number, number] {
-  if (severidade === "alto") return RED;
-  if (severidade === "medio") return AMBER;
-  return GOLD;
-}
-
 // ─── Main Export ──────────────────────────────────────────────────────────────
 
 export async function generateCompatibilidadePDF(
@@ -530,7 +522,6 @@ export async function generateCompatibilidadePDF(
 
     for (const r of resultado.riscos) {
       if (y > 265) break;
-      const rColor = riscoColor(r.severidade);
       const rBulletType = r.severidade === "alto" ? "fraco" : "recomendacao";
 
       // Severity badge

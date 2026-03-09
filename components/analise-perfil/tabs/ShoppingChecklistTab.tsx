@@ -252,8 +252,12 @@ export default function ShoppingChecklistTab({ phases, profile }: ShoppingCheckl
                 <div>
                   <h4 className="text-[var(--foreground)] font-medium">{phase.title}</h4>
                   <p className="text-xs text-[var(--foreground-muted)] mt-0.5">
-                    {phaseCount}/{phase.items.length} {tr("concluído", "completed", "completado")}
-                    {phase.items.length !== 1 ? "s" : ""}
+                    {phaseCount}/{phase.items.length}{" "}
+                    {tr(
+                      phase.items.length !== 1 ? "concluídos" : "concluído",
+                      "completed",
+                      phase.items.length !== 1 ? "completados" : "completado"
+                    )}
                   </p>
                 </div>
               </div>

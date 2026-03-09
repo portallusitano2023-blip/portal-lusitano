@@ -144,7 +144,7 @@ export default function IntroSection({
               <button
                 onClick={onDismissProfile}
                 className="text-[var(--gold)]/50 hover:text-[var(--gold)] transition-colors shrink-0"
-                aria-label="Fechar"
+                aria-label={tr("Fechar", "Close", "Cerrar")}
               >
                 <X size={14} />
               </button>

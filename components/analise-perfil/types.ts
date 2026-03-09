@@ -116,8 +116,8 @@ export const PROFILE_COLORS_HEX: Record<string, string> = {
 
 /** Tailwind background classes used in the AnalysisTab badges. */
 export const PROFILE_COLORS_TW: Record<string, string> = {
-  competidor: "bg-amber-500",
-  tradicional: "bg-emerald-500",
-  criador: "bg-purple-500",
-  amador: "bg-rose-500",
+  competidor: "bg-blue-500",
+  tradicional: "bg-[#C5A059]",
+  criador: "bg-pink-500",
+  amador: "bg-green-500",
 };
