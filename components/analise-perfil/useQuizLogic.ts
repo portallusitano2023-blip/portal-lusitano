@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import { questions } from "@/components/analise-perfil/data/questions";
+import { getQuestions } from "@/components/analise-perfil/data/questions";
 import { getResults } from "@/components/analise-perfil/data/results";
 import {
   getShareUrl as buildShareUrl,
@@ -113,6 +113,7 @@ export function useQuizLogic() {
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
   const results = useMemo(() => getResults(tr), [tr]);
+  const questions = useMemo(() => getQuestions(tr), [tr]);
   const [showIntro, setShowIntro] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);

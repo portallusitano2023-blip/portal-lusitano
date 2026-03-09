@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Gauge, CheckCircle, XCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import { questions } from "@/components/analise-perfil/data/questions";
+import { getQuestions } from "@/components/analise-perfil/data/questions";
 import type { Result, AnswerDetail } from "@/components/analise-perfil/types";
 
 interface ReadinessTabProps {
@@ -26,6 +26,7 @@ export default function ReadinessTab({
 }: ReadinessTabProps) {
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const questions = useMemo(() => getQuestions(tr), [tr]);
 
   // Helper to find the selected option index for a given question id
   const getAnswerIndex = (questionId: number): number => {
