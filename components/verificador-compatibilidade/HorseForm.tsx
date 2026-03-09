@@ -14,6 +14,8 @@ import {
   TEMPERAMENTOS,
   FERTILIDADES,
   DEFEITOS_GENETICOS,
+  localizedLabel,
+  localizedDesc,
 } from "@/components/verificador-compatibilidade/data";
 
 interface HorseFormProps {
@@ -253,7 +255,7 @@ export default function HorseForm({
             >
               {COUDELARIAS.map((c) => (
                 <option key={c.value} value={c.value}>
-                  {c.label}
+                  {localizedLabel(c, language)}
                 </option>
               ))}
             </select>
@@ -269,7 +271,7 @@ export default function HorseForm({
             >
               {LINHAGENS.map((l) => (
                 <option key={l.value} value={l.value}>
-                  {l.label}
+                  {localizedLabel(l, language)}
                 </option>
               ))}
             </select>
@@ -306,9 +308,9 @@ export default function HorseForm({
                 <span
                   className={`block text-sm font-medium ${cavalo.linhagemFamosa === lin.value ? "text-pink-400" : "text-[var(--foreground-secondary)]"}`}
                 >
-                  {lin.label}
+                  {localizedLabel(lin, language)}
                 </span>
-                <span className="text-xs text-[var(--foreground-muted)]">{lin.desc}</span>
+                <span className="text-xs text-[var(--foreground-muted)]">{localizedDesc(lin, language)}</span>
               </button>
             ))}
           </div>
@@ -433,7 +435,7 @@ export default function HorseForm({
             >
               {TEMPERAMENTOS.map((temp) => (
                 <option key={temp.value} value={temp.value}>
-                  {temp.label} - {temp.desc}
+                  {localizedLabel(temp, language)} - {localizedDesc(temp, language)}
                 </option>
               ))}
             </select>
@@ -459,7 +461,7 @@ export default function HorseForm({
             >
               {FERTILIDADES.map((f) => (
                 <option key={f.value} value={f.value}>
-                  {f.label}
+                  {localizedLabel(f, language)}
                 </option>
               ))}
             </select>
@@ -579,9 +581,9 @@ export default function HorseForm({
                       : "text-[var(--foreground-secondary)]"
                   }`}
                 >
-                  {d.label}
+                  {localizedLabel(d, language)}
                 </span>
-                <span className="text-xs text-[var(--foreground-muted)]">{d.desc}</span>
+                <span className="text-xs text-[var(--foreground-muted)]">{localizedDesc(d, language)}</span>
               </button>
             ))}
           </div>

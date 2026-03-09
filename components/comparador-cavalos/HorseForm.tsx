@@ -8,7 +8,7 @@ import SourceBadge from "@/components/tools/SourceBadge";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import type { Cavalo } from "./types";
-import { CORES, PELAGENS, LINHAGENS, TREINOS, SEXOS, COMPETICOES, PRESETS } from "./data";
+import { CORES, PELAGENS, LINHAGENS, TREINOS, SEXOS, COMPETICOES, PRESETS, localizedLabel } from "./data";
 import {
   calcularScore,
   calcularPotencial,
@@ -185,7 +185,7 @@ export default function HorseForm({
           >
             {SEXOS.map((s) => (
               <option key={s.value} value={s.value}>
-                {s.label}
+                {localizedLabel(s, language)}
               </option>
             ))}
           </select>
@@ -203,7 +203,7 @@ export default function HorseForm({
             >
               {PELAGENS.map((p) => (
                 <option key={p.value} value={p.value}>
-                  {p.label}
+                  {localizedLabel(p, language)}
                 </option>
               ))}
             </select>
@@ -219,7 +219,7 @@ export default function HorseForm({
             >
               {LINHAGENS.map((l) => (
                 <option key={l.value} value={l.value}>
-                  {l.label}
+                  {localizedLabel(l, language)}
                 </option>
               ))}
             </select>
@@ -235,9 +235,9 @@ export default function HorseForm({
             onChange={(e) => onUpdate(c.id, "treino", e.target.value)}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
           >
-            {TREINOS.map((tr) => (
-              <option key={tr.value} value={tr.value}>
-                {tr.label}
+            {TREINOS.map((tItem) => (
+              <option key={tItem.value} value={tItem.value}>
+                {localizedLabel(tItem, language)}
               </option>
             ))}
           </select>
@@ -286,7 +286,7 @@ export default function HorseForm({
             >
               {COMPETICOES.map((co) => (
                 <option key={co.value} value={co.value}>
-                  {co.label}
+                  {localizedLabel(co, language)}
                 </option>
               ))}
             </select>

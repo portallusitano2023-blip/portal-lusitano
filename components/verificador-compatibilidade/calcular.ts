@@ -329,10 +329,12 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
 
   // Normalizar para somar 100% e filtrar pelagens < 2%
   const totalProb = rawPelagens.reduce((s, p) => s + p.prob, 0);
-  const pelagens: ResultadoCompatibilidade["pelagens"] = rawPelagens
-    .map((p) => ({ ...p, prob: Math.round((p.prob / totalProb) * 100) }))
-    .filter((p) => p.prob >= 2)
-    .sort((a, b) => b.prob - a.prob);
+  const pelagens: ResultadoCompatibilidade["pelagens"] = totalProb > 0
+    ? rawPelagens
+        .map((p) => ({ ...p, prob: Math.round((p.prob / totalProb) * 100) }))
+        .filter((p) => p.prob >= 2)
+        .sort((a, b) => b.prob - a.prob)
+    : [];
 
   // Altura prevista do potro
   const alturaMedia = (garanhao.altura + egua.altura) / 2;

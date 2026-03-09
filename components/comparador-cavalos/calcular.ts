@@ -166,7 +166,7 @@ export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr): ScoreFactor[] 
     Elite: 15,
   };
   const linhagemScore = linPoints[c.linhagem] || 8;
-  const treinoObj = TREINOS.find((tr) => tr.value === c.treino);
+  const treinoObj = TREINOS.find((t) => t.value === c.treino);
   const treinoScore = treinoObj ? Math.round(treinoObj.nivel * 1.9) : 5;
   const elevacaoScore = Math.round(c.elevacao / 2);
   const regularidadeScore = Math.round(c.regularidade / 2);

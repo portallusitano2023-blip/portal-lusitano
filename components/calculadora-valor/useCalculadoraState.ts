@@ -170,9 +170,9 @@ export function useCalculadoraState() {
           competidor_elite: { disciplina: "Alta Escola", competicoes: "cdi3" },
           competidor_nacional: { disciplina: "Dressage Clássica", competicoes: "nacional" },
           competidor_trabalho: { disciplina: "Equitação de Trabalho", competicoes: "regional" },
-          amador_projeto: { disciplina: "Lazer", competicoes: "nenhuma" },
+          amador_projeto: { disciplina: "Lazer / Passeio", competicoes: "nenhuma" },
           criador: { reproducao: true },
-          amador: { disciplina: "Lazer", competicoes: "nenhuma" },
+          amador: { disciplina: "Lazer / Passeio", competicoes: "nenhuma" },
           investidor: { disciplina: "Dressage Clássica" },
         };
         const key = parsed.subProfile ?? parsed.profile;
