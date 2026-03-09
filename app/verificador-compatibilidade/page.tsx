@@ -490,8 +490,15 @@ export default function VerificadorCompatibilidadePage() {
           />
         )}
 
-        {/* Paywall — replaces form when user cannot use */}
-        {step === 1 && !resultado && !canUse && (
+        {/* Loading skeleton while access session resolves */}
+        {step === 1 && !resultado && accessLoading && (
+          <div className="pt-8 max-w-4xl mx-auto px-4 flex items-center justify-center py-16">
+            <div className="w-6 h-6 border-2 border-[#C5A059]/30 border-t-[#C5A059] rounded-full animate-spin" />
+          </div>
+        )}
+
+        {/* Paywall — replaces form when user cannot use (only after session is known) */}
+        {step === 1 && !resultado && !canUse && !accessLoading && (
           <div className="pt-8 max-w-4xl mx-auto px-4">
             <Paywall
               toolName={t.verificador.tool_name}

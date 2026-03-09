@@ -49,11 +49,19 @@ export default function BreakdownAnalysis({
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   // PRO projections
-  const investmentProjections = calcularProjecaoValor(resultado.valorFinal, form.idade);
+  const investmentProjections = calcularProjecaoValor(resultado.valorFinal, form.idade, [
+    tr("Agora", "Now", "Ahora"),
+    tr("+1 ano", "+1 yr", "+1 año"),
+    tr("+2 anos", "+2 yrs", "+2 años"),
+    tr("+3 anos", "+3 yrs", "+3 años"),
+    tr("+5 anos", "+5 yrs", "+5 años"),
+  ]);
   const trainingROILevels = calcularTrainingROI(
     form,
     resultado.valorFinal,
-    resultado.multiplicador
+    resultado.multiplicador,
+    locale,
+    tr("meses", "months", "meses")
   );
 
   return (

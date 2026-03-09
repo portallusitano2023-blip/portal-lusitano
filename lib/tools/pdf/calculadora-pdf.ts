@@ -295,7 +295,8 @@ export async function generateCalculadoraPDF(
       max: resultado.valorMax,
       percentil: resultado.percentil,
     },
-    y
+    y,
+    locale
   );
 
   // 4 key metrics (26mm boxes)
