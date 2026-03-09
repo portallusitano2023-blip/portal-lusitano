@@ -21,7 +21,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import RadarChart from "./RadarChart";
 import type { Cavalo } from "./types";
-import { CORES, TREINOS, COMPETICOES, DISCIPLINE_MATRIX, BREEDING_CHAIN_KEY } from "./data";
+import { CORES, TREINOS, COMPETICOES, DISCIPLINE_MATRIX, BREEDING_CHAIN_KEY, localizedLabel } from "./data";
 import {
   calcularScore,
   calcularPotencial,
@@ -724,7 +724,7 @@ export default function ResultsSection({
                 return (
                   <tr key={disc.label}>
                     <td className="py-3 pr-4 text-[var(--foreground-secondary)] font-medium text-xs">
-                      {disc.label}
+                      {localizedLabel(disc, language)}
                     </td>
                     {scores.map((score, i) => {
                       const isBest = score === maxScore && cavalos.length > 1;

@@ -3,13 +3,13 @@
 // ============================================
 
 export const PELAGENS = [
-  { value: "Ruço", label: "Ruço", desc: "Pelagem mais valorizada" },
-  { value: "Castanho", label: "Castanho", desc: "Clássica e tradicional" },
-  { value: "Preto", label: "Preto", desc: "Elegante e rara" },
-  { value: "Baio", label: "Baio", desc: "Tonalidade dourada" },
-  { value: "Tordilho", label: "Tordilho", desc: "Progressiva para branco" },
-  { value: "Isabela", label: "Isabela", desc: "Rara e distinta" },
-  { value: "Palomino", label: "Palomino", desc: "Dourado excepcional" },
+  { value: "Ruço", label: "Ruço", labelEn: "Grey", labelEs: "Ruano", desc: "Pelagem mais valorizada", descEn: "Most valued coat", descEs: "Pelaje más valorado" },
+  { value: "Castanho", label: "Castanho", labelEn: "Bay", labelEs: "Castaño", desc: "Clássica e tradicional", descEn: "Classic and traditional", descEs: "Clásico y tradicional" },
+  { value: "Preto", label: "Preto", labelEn: "Black", labelEs: "Negro", desc: "Elegante e rara", descEn: "Elegant and rare", descEs: "Elegante y raro" },
+  { value: "Baio", label: "Baio", labelEn: "Dun", labelEs: "Bayo", desc: "Tonalidade dourada", descEn: "Golden shade", descEs: "Tonalidad dorada" },
+  { value: "Tordilho", label: "Tordilho", labelEn: "Dapple Grey", labelEs: "Tordillo", desc: "Progressiva para branco", descEn: "Progressive to white", descEs: "Progresivo a blanco" },
+  { value: "Isabela", label: "Isabela", labelEn: "Buckskin", labelEs: "Isabela", desc: "Rara e distinta", descEn: "Rare and distinct", descEs: "Rara y distinta" },
+  { value: "Palomino", label: "Palomino", labelEn: "Palomino", labelEs: "Palomino", desc: "Dourado excepcional", descEn: "Exceptional golden", descEs: "Dorado excepcional" },
 ];
 
 export const LINHAGENS_FAMOSAS = [
