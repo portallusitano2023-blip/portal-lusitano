@@ -59,7 +59,7 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
     Premium: 4,
     Elite: 5,
   };
-  const linMedia = (linNiveis[garanhao.linhagem] + linNiveis[egua.linhagem]) / 2;
+  const linMedia = ((linNiveis[garanhao.linhagem] ?? 0) + (linNiveis[egua.linhagem] ?? 0)) / 2;
   const linScore = Math.round(linMedia * 4);
   factores.push({
     nome: tr("Qualidade Genética", "Genetic Quality", "Calidad Genética"),

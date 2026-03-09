@@ -341,10 +341,14 @@ export function useCalculadoraState() {
   };
 
   const handleShare = async () => {
-    const url = window.location.href;
-    const text = `${t.calculadora.tool_name} - Portal Lusitano`;
-    const shared = await shareNative(t.calculadora.tool_name, text, url);
-    if (!shared) await copyToClipboard(url);
+    try {
+      const url = window.location.href;
+      const text = `${t.calculadora.tool_name} - Portal Lusitano`;
+      const shared = await shareNative(t.calculadora.tool_name, text, url);
+      if (!shared) await copyToClipboard(url);
+    } catch {
+      showToast("error", tr("Erro ao partilhar. Copia o link manualmente.", "Error sharing. Copy the link manually.", "Error al compartir. Copia el enlace manualmente."));
+    }
   };
 
   const handleSendEmail = async () => {

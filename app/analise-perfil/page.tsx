@@ -112,6 +112,8 @@ function AnalisePerfilContent() {
     requiresAuth,
     accessLoading,
     isPending,
+    isPdfLoading,
+    isBadgeLoading,
     handleAnswer,
     goBack,
     result,
@@ -303,6 +305,8 @@ function AnalisePerfilContent() {
                   onSave={saveResult}
                   onDownloadPDF={downloadPDF}
                   onDownloadBadge={downloadBadge}
+                  isPdfLoading={isPdfLoading}
+                  isBadgeLoading={isBadgeLoading}
                   onShareWhatsApp={shareWhatsApp}
                   onShareFacebook={shareFacebook}
                   onShareInstagram={shareInstagram}

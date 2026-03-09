@@ -201,7 +201,8 @@ export default function ResultsSection({
         />
         <button
           onClick={onExportCSV}
-          className="w-full py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2"
+          disabled={isExporting}
+          className="w-full py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <TrendingUp size={16} />
           {tr("Exportar CSV (Excel)", "Export CSV (Excel)", "Exportar CSV (Excel)")}

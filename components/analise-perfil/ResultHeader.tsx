@@ -27,6 +27,8 @@ interface ResultHeaderProps {
   onSave: () => void;
   onDownloadPDF: () => void;
   onDownloadBadge: () => void;
+  isPdfLoading?: boolean;
+  isBadgeLoading?: boolean;
   onShareWhatsApp: () => void;
   onShareFacebook: () => void;
   onShareInstagram: () => void;
@@ -44,6 +46,8 @@ export default function ResultHeader({
   onSave,
   onDownloadPDF,
   onDownloadBadge,
+  isPdfLoading = false,
+  isBadgeLoading = false,
   onShareWhatsApp,
   onShareFacebook,
   onShareInstagram,
@@ -192,17 +196,19 @@ export default function ResultHeader({
               </button>
               <button
                 onClick={onDownloadPDF}
-                className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-sm rounded-lg border border-[var(--gold)]/50 text-[var(--gold)] hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all"
+                disabled={isPdfLoading}
+                className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-sm rounded-lg border border-[var(--gold)]/50 text-[var(--gold)] hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FileDown size={15} />
-                PDF
+                {isPdfLoading ? "..." : "PDF"}
               </button>
               <button
                 onClick={onDownloadBadge}
-                className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-sm rounded-lg border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-all"
+                disabled={isBadgeLoading}
+                className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-sm rounded-lg border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Download size={15} />
-                Badge
+                {isBadgeLoading ? "..." : "Badge"}
               </button>
               <button
                 onClick={onCopyLink}

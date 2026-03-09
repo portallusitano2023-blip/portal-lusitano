@@ -152,7 +152,9 @@ export default function CompatibilityMethodology({
                       conformacao: garanhao.conformacao,
                       andamentos: garanhao.andamentos,
                       temperamento:
-                        typeof garanhao.temperamento === "string" ? 7 : garanhao.temperamento,
+                        typeof garanhao.temperamento === "string"
+                          ? (({ Calmo: 9, Equilibrado: 7, Energético: 5, Nervoso: 3 } as Record<string, number>)[garanhao.temperamento] ?? 7)
+                          : garanhao.temperamento,
                       saude: garanhao.saude,
                       blup: garanhao.blup,
                       registoAPSL: garanhao.aprovado,
@@ -167,7 +169,10 @@ export default function CompatibilityMethodology({
                       linhagemFamosa: egua.linhagemFamosa,
                       conformacao: egua.conformacao,
                       andamentos: egua.andamentos,
-                      temperamento: typeof egua.temperamento === "string" ? 7 : egua.temperamento,
+                      temperamento:
+                        typeof egua.temperamento === "string"
+                          ? (({ Calmo: 9, Equilibrado: 7, Energético: 5, Nervoso: 3 } as Record<string, number>)[egua.temperamento] ?? 7)
+                          : egua.temperamento,
                       saude: egua.saude,
                       blup: egua.blup,
                       registoAPSL: egua.aprovado,

@@ -162,7 +162,7 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
     },
     {
       nome: t("Nível de Treino", "Training Level", "Nivel de Entrenamiento"),
-      impacto: Math.round(base * 0.4),
+      impacto: Math.round(base - VALORES_BASE["potro"]),
       score: Object.keys(VALORES_BASE).indexOf(form.treino) + 3,
       descricao: t("Formação e preparação técnica", "Education and technical preparation", "Formación y preparación técnica"),
     },

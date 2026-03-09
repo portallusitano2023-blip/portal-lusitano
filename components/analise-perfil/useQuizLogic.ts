@@ -134,6 +134,8 @@ export function useQuizLogic() {
   const [crossWarningDismissed, setCrossWarningDismissed] = useState(false);
   const [chainContext, setChainContext] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
+  const [isPdfLoading, setIsPdfLoading] = useState(false);
+  const [isBadgeLoading, setIsBadgeLoading] = useState(false);
   const quizRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
@@ -313,7 +315,7 @@ export function useQuizLogic() {
         setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
       }
     },
-    [isPending, currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, tr, results]
+    [isPending, currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, showError, tr, results]
   );
 
   const calculateConfidence = useCallback((): number => {
@@ -386,7 +388,8 @@ export function useQuizLogic() {
   );
 
   const downloadPDF = useCallback(async () => {
-    if (!result) return;
+    if (!result || isPdfLoading) return;
+    setIsPdfLoading(true);
     try {
       await generateProfilePDF(result, scores, language);
     } catch {
@@ -397,11 +400,14 @@ export function useQuizLogic() {
           "Error al generar PDF. Inténtalo de nuevo."
         )
       );
+    } finally {
+      setIsPdfLoading(false);
     }
-  }, [result, scores, showError, tr]);
+  }, [result, scores, isPdfLoading, showError, tr]);
 
   const downloadBadge = useCallback(async () => {
-    if (!badgeRef.current || !result) return;
+    if (!badgeRef.current || !result || isBadgeLoading) return;
+    setIsBadgeLoading(true);
     try {
       await generateBadge(badgeRef.current, result, scores);
     } catch {
@@ -413,8 +419,10 @@ export function useQuizLogic() {
         )
       );
       generateBadgeSVGFallback(result, scores, tr);
+    } finally {
+      setIsBadgeLoading(false);
     }
-  }, [result, scores, showError, tr]);
+  }, [result, scores, isBadgeLoading, showError, tr]);
 
   const resetQuiz = useCallback(() => {
     setShowIntro(true);
@@ -551,6 +559,8 @@ export function useQuizLogic() {
     requiresAuth,
     accessLoading,
     isPending,
+    isPdfLoading,
+    isBadgeLoading,
     // Actions
     startQuiz,
     handleAnswer,

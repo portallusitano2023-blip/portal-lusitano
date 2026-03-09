@@ -30,7 +30,7 @@ function mapTemperamentScore(t: number): string {
   if (t >= 8) return "Calmo";
   if (t >= 6) return "Equilibrado";
   if (t >= 4) return "Energético";
-  return "Difícil";
+  return "Nervoso";
 }
 
 interface ChainHorse {
