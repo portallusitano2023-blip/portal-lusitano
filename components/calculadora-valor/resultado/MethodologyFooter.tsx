@@ -10,6 +10,8 @@ import MethodologyPanel from "@/components/tools/MethodologyPanel";
 import ToolCrossCTA from "@/components/tools/ToolCrossCTA";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
+import { TREINO_LABELS, getSharedLabel } from "@/lib/tools/shared-data";
+import { MERCADOS, localizedLabel as localizedMercadoLabel } from "../data";
 import type { FormData, Resultado } from "../types";
 
 interface MethodologyFooterProps {
@@ -76,14 +78,19 @@ export default function MethodologyFooter({
               />
             </span>
             <span className="text-[var(--foreground-secondary)] capitalize">
-              {form.treino.replace("_", " ")}
+              {getSharedLabel(TREINO_LABELS, form.treino, language)}
             </span>
           </div>
           <div>
             <span className="text-[var(--foreground-muted)] block">
               {t.calculadora.result_market}
             </span>
-            <span className="text-[var(--foreground-secondary)]">{form.mercado}</span>
+            <span className="text-[var(--foreground-secondary)]">
+              {localizedMercadoLabel(
+                MERCADOS.find((m) => m.value === form.mercado) ?? { label: form.mercado },
+                language
+              )}
+            </span>
           </div>
         </div>
       </div>

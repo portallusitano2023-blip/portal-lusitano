@@ -12,6 +12,7 @@ import ProStatusBar from "@/components/ferramentas/ProStatusBar";
 import FreeUsesCounter from "@/components/ferramentas/FreeUsesCounter";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
+import { getSharedLabel } from "@/lib/tools/shared-data";
 import {
   IntroSection,
   StepIdentificacao,
@@ -196,9 +197,9 @@ export default function CalculadoraValorPage() {
                     <p className="text-xs text-[var(--gold)] flex-1 leading-relaxed">
                       <strong>
                         {tr("Bem-vindo", "Welcome", "Bienvenido")},{" "}
-                        {PROFILE_LABELS[profileContext.profile] ?? profileContext.profile}
+                        {getSharedLabel(PROFILE_LABELS, profileContext.profile, language)}
                         {profileContext.subProfile
-                          ? ` — ${SUBPROFILE_LABELS[profileContext.subProfile] ?? profileContext.subProfile}`
+                          ? ` — ${getSharedLabel(SUBPROFILE_LABELS, profileContext.subProfile, language)}`
                           : ""}
                       </strong>
                       <span className="text-[var(--gold)]/70">
@@ -259,9 +260,9 @@ export default function CalculadoraValorPage() {
                   <Sparkles size={14} className="text-[var(--gold)] shrink-0 mt-0.5" />
                   <p className="text-xs text-[var(--gold)] flex-1 leading-relaxed">
                     <strong>
-                      {PROFILE_LABELS[profileContext.profile] ?? profileContext.profile}
+                      {getSharedLabel(PROFILE_LABELS, profileContext.profile, language)}
                       {profileContext.subProfile
-                        ? ` · ${SUBPROFILE_LABELS[profileContext.subProfile] ?? profileContext.subProfile}`
+                        ? ` · ${getSharedLabel(SUBPROFILE_LABELS, profileContext.subProfile, language)}`
                         : ""}
                     </strong>
                     <span className="text-[var(--gold)]/70">

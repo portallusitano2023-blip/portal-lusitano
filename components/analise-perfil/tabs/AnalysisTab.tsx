@@ -18,6 +18,19 @@ interface AnalysisTabProps {
 
 const PROFILE_COLORS = PROFILE_COLORS_TW;
 
+const PROFILE_LABEL_MAP: Record<string, Record<string, string>> = {
+  competidor:  { pt: "Competidor",  en: "Competitor",  es: "Competidor" },
+  tradicional: { pt: "Tradicional", en: "Traditional", es: "Tradicional" },
+  criador:     { pt: "Criador",     en: "Breeder",     es: "Criador" },
+  amador:      { pt: "Amador",      en: "Amateur",     es: "Amateur" },
+};
+
+function profileLabel(key: string, language: string): string {
+  const entry = PROFILE_LABEL_MAP[key];
+  if (!entry) return key.charAt(0).toUpperCase() + key.slice(1);
+  return entry[language] ?? entry.pt ?? key;
+}
+
 export default function AnalysisTab({
   result,
   answerDetails,
@@ -108,8 +121,7 @@ export default function AnalysisTab({
                   <div
                     className={`px-2 py-1 text-xs font-medium text-white rounded ${PROFILE_COLORS[maxProfile[0] as string] || "bg-zinc-600"}`}
                   >
-                    {(maxProfile[0] as string).charAt(0).toUpperCase() +
-                      (maxProfile[0] as string).slice(1)}
+                    {profileLabel(maxProfile[0] as string, language)}
                   </div>
                 </div>
                 <div className="flex gap-1 h-2">
@@ -118,7 +130,7 @@ export default function AnalysisTab({
                       key={profile}
                       className={PROFILE_COLORS[profile]}
                       style={{ width: `${(pts / 10) * 100}%`, opacity: pts / 10 }}
-                      title={`${profile}: ${pts}`}
+                      title={`${profileLabel(profile, language)}: ${pts}`}
                     />
                   ))}
                 </div>

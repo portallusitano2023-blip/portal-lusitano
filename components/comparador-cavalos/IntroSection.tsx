@@ -4,6 +4,7 @@ import { Scale, BarChart3, Euro, ChevronRight, Sparkles, X } from "lucide-react"
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { PROFILE_LABELS, SUBPROFILE_LABELS } from "./data";
+import { getSharedLabel } from "@/lib/tools/shared-data";
 
 interface IntroSectionProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -130,9 +131,9 @@ export default function IntroSection({
               <p className="text-xs text-[var(--gold)] flex-1 leading-relaxed text-left">
                 <strong>
                   {tr("Bem-vindo", "Welcome", "Bienvenido")},{" "}
-                  {PROFILE_LABELS[profileContext.profile] ?? profileContext.profile}
+                  {getSharedLabel(PROFILE_LABELS, profileContext.profile, language)}
                   {profileContext.subProfile
-                    ? ` — ${SUBPROFILE_LABELS[profileContext.subProfile] ?? profileContext.subProfile}`
+                    ? ` — ${getSharedLabel(SUBPROFILE_LABELS, profileContext.subProfile, language)}`
                     : ""}
                 </strong>
                 <span className="text-[var(--gold)]/70">

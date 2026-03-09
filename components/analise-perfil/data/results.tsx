@@ -40,7 +40,7 @@ export function getResults(tr: Tr): Record<string, Result> {
         tr("Conformação atlética", "Athletic conformation", "Conformación atlética"),
       ],
       idealHorse: {
-        age: "6-12 anos (feito) ou 3-5 anos (projecto)",
+        age: tr("6-12 anos (feito) ou 3-5 anos (projecto)", "6-12 years (finished) or 3-5 years (project)", "6-12 años (hecho) o 3-5 años (proyecto)"),
         height: "1.62m — 1.72m",
         training: tr(
           "Nível S/GP ou potencial comprovado",
@@ -410,7 +410,7 @@ export function getResults(tr: Tr): Record<string, Result> {
         tr("Carácter cooperativo", "Cooperative character", "Carácter cooperativo"),
       ],
       idealHorse: {
-        age: "5-12 anos (experiência)",
+        age: tr("5-12 anos (experiência)", "5-12 years (experience)", "5-12 años (experiencia)"),
         height: "1.58m — 1.65m",
         training: tr(
           "Desbravado a trabalho médio",
@@ -771,8 +771,8 @@ export function getResults(tr: Tr): Record<string, Result> {
         ),
       ],
       idealHorse: {
-        age: "3-8 anos (reprodução activa)",
-        height: "Mínimo 1.60m (garanhões)",
+        age: tr("3-8 anos (reprodução activa)", "3-8 years (active breeding)", "3-8 años (reproducción activa)"),
+        height: tr("Mínimo 1.60m (garanhões)", "Minimum 1.60m (stallions)", "Mínimo 1.60m (sementales)"),
         training: tr(
           "Funcionalidade demonstrada",
           "Demonstrated functionality",
@@ -1133,8 +1133,8 @@ export function getResults(tr: Tr): Record<string, Result> {
         ),
       ],
       idealHorse: {
-        age: "8-16 anos (maturidade)",
-        height: "1.55m — 1.65m (confortável)",
+        age: tr("8-16 anos (maturidade)", "8-16 years (maturity)", "8-16 años (madurez)"),
+        height: tr("1.55m — 1.65m (confortável)", "1.55m — 1.65m (comfortable)", "1.55m — 1.65m (cómodo)"),
         training: tr(
           "Básico a médio (bem confirmado)",
           "Basic to intermediate (well confirmed)",

@@ -47,7 +47,7 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
     const novoForm = { ...form, treino: novoTreino as FormData["treino"] };
     const novoResultado = calcularValor(novoForm, tr);
     cenarios.push({
-      titulo: `${tr("Treino", "Training", "Entrenamiento")} → ${TREINO_LABELS[novoTreino] ?? novoTreino}`,
+      titulo: `${tr("Treino", "Training", "Entrenamiento")} → ${getSharedLabel(TREINO_LABELS, novoTreino, language)}`,
       descricao: tr("Progressão de nível de treino", "Training level progression", "Progresión de nivel de entrenamiento"),
       valorNovo: novoResultado.valorFinal,
       delta: novoResultado.valorFinal - resultado.valorFinal,
@@ -102,7 +102,7 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
     const novoForm = { ...form, competicoes: novoComp as FormData["competicoes"] };
     const novoResultado = calcularValor(novoForm, tr);
     cenarios.push({
-      titulo: `${tr("Competir em", "Compete at", "Competir en")} ${COMP_LABELS[novoComp] ?? novoComp}`,
+      titulo: `${tr("Competir em", "Compete at", "Competir en")} ${getSharedLabel(COMP_LABELS, novoComp, language)}`,
       descricao: tr("Progressão no palmarés desportivo", "Progression in competition record", "Progresión en el palmarés deportivo"),
       valorNovo: novoResultado.valorFinal,
       delta: novoResultado.valorFinal - resultado.valorFinal,

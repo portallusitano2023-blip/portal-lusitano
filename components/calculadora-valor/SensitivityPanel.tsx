@@ -52,7 +52,7 @@ interface Scenario {
   percentage: number;
 }
 
-function buildScenarios(form: FormData, resultado: Resultado, tr: (pt: string, en: string, es: string) => string): Scenario[] {
+function buildScenarios(form: FormData, resultado: Resultado, tr: (pt: string, en: string, es: string) => string, language: string): Scenario[] {
   const scenarios: Scenario[] = [];
   const current = resultado.valorFinal;
 
@@ -64,7 +64,7 @@ function buildScenarios(form: FormData, resultado: Resultado, tr: (pt: string, e
     const delta = nextResult.valorFinal - current;
     if (delta > 0) {
       scenarios.push({
-        label: `${tr("Treino", "Training", "Entrenamiento")} → ${TREINO_LABELS[nextTreino]}`,
+        label: `${tr("Treino", "Training", "Entrenamiento")} → ${getSharedLabel(TREINO_LABELS, nextTreino, language)}`,
         description: tr("Próximo nível de treino", "Next training level", "Siguiente nivel de entrenamiento"),
         delta,
         percentage: Math.round((delta / current) * 100),
@@ -80,7 +80,7 @@ function buildScenarios(form: FormData, resultado: Resultado, tr: (pt: string, e
     const delta = nextResult.valorFinal - current;
     if (delta > 0) {
       scenarios.push({
-        label: `${tr("Competição", "Competition", "Competición")} → ${COMP_LABELS[nextComp]}`,
+        label: `${tr("Competição", "Competition", "Competición")} → ${getSharedLabel(COMP_LABELS, nextComp, language)}`,
         description: tr("Próximo nível competitivo", "Next competition level", "Siguiente nivel competitivo"),
         delta,
         percentage: Math.round((delta / current) * 100),
@@ -96,7 +96,7 @@ function buildScenarios(form: FormData, resultado: Resultado, tr: (pt: string, e
     const delta = nextResult.valorFinal - current;
     if (delta > 0) {
       scenarios.push({
-        label: `${tr("Saúde", "Health", "Salud")} → ${SAUDE_LABELS[nextSaude]}`,
+        label: `${tr("Saúde", "Health", "Salud")} → ${getSharedLabel(SAUDE_LABELS, nextSaude, language)}`,
         description: tr("Melhorar estado de saúde", "Improve health status", "Mejorar estado de salud"),
         delta,
         percentage: Math.round((delta / current) * 100),
@@ -112,7 +112,7 @@ function buildScenarios(form: FormData, resultado: Resultado, tr: (pt: string, e
     const delta = nextResult.valorFinal - current;
     if (delta > 0) {
       scenarios.push({
-        label: `${tr("Linhagem", "Lineage", "Linaje")} → ${LINHAGEM_LABELS[nextLinhagem]}`,
+        label: `${tr("Linhagem", "Lineage", "Linaje")} → ${getSharedLabel(LINHAGEM_LABELS, nextLinhagem, language)}`,
         description: tr("Próximo nível de linhagem", "Next lineage level", "Siguiente nivel de linaje"),
         delta,
         percentage: Math.round((delta / current) * 100),
@@ -129,11 +129,11 @@ export default function SensitivityPanel({ form, resultado }: SensitivityPanelPr
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const scenarios = useMemo(() => {
     try {
-      return buildScenarios(form, resultado, tr);
+      return buildScenarios(form, resultado, tr, language);
     } catch {
       return [];
     }
-  }, [form, resultado, tr]);
+  }, [form, resultado, tr, language]);
 
   if (scenarios.length === 0) return null;
 

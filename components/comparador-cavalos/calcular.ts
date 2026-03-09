@@ -1,5 +1,5 @@
 import type { Cavalo, ScoreFactor } from "./types";
-import { TREINOS, COMPETICOES } from "./data";
+import { TREINOS, COMPETICOES, LINHAGENS, localizedLabel } from "./data";
 
 type TrFn = (pt: string, en: string, es: string) => string;
 const defaultTr: TrFn = (pt) => pt;
@@ -223,10 +223,13 @@ export function getClasseCor(val: number, melhor: number, maior = true): string 
 // VERDICT GENERATION (PRO)
 // ============================================
 
-export function gerarVeredicto(c: Cavalo, tr: TrFn = defaultTr) {
+export function gerarVeredicto(c: Cavalo, tr: TrFn = defaultTr, language?: string) {
   const score = calcularScore(c);
   const strengths: string[] = [];
   const weaknesses: string[] = [];
+
+  const treinoLabel = localizedLabel(TREINOS.find((t) => t.value === c.treino) ?? { label: c.treino }, language).toLowerCase();
+  const linhagemLabel = localizedLabel(LINHAGENS.find((l) => l.value === c.linhagem) ?? { label: c.linhagem }, language).toLowerCase();
 
   if (c.conformacao >= 8) strengths.push(tr("Conformação excelente", "Excellent conformation", "Conformación excelente"));
   else if (c.conformacao <= 5) weaknesses.push(tr("Conformação abaixo da média", "Below average conformation", "Conformación por debajo de la media"));
@@ -260,9 +263,9 @@ export function gerarVeredicto(c: Cavalo, tr: TrFn = defaultTr) {
   const recommendation =
     score >= 75
       ? tr(
-          `${c.nome} é um cavalo excepcional com elevado potencial. A combinação de ${c.treino.toLowerCase()} com ${c.linhagem.toLowerCase()} torna-o uma escolha sólida para ${bestUse.toLowerCase()}.`,
-          `${c.nome} is an exceptional horse with high potential. The combination of ${c.treino.toLowerCase()} with ${c.linhagem.toLowerCase()} makes it a solid choice for ${bestUse.toLowerCase()}.`,
-          `${c.nome} es un caballo excepcional con alto potencial. La combinación de ${c.treino.toLowerCase()} con ${c.linhagem.toLowerCase()} lo convierte en una elección sólida para ${bestUse.toLowerCase()}.`
+          `${c.nome} é um cavalo excepcional com elevado potencial. A combinação de ${treinoLabel} com ${linhagemLabel} torna-o uma escolha sólida para ${bestUse.toLowerCase()}.`,
+          `${c.nome} is an exceptional horse with high potential. The combination of ${treinoLabel} with ${linhagemLabel} makes it a solid choice for ${bestUse.toLowerCase()}.`,
+          `${c.nome} es un caballo excepcional con alto potencial. La combinación de ${treinoLabel} con ${linhagemLabel} lo convierte en una elección sólida para ${bestUse.toLowerCase()}.`
         )
       : score >= 50
         ? tr(

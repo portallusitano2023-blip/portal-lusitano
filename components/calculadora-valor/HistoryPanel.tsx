@@ -73,7 +73,7 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
                     {entry.valorFinal.toLocaleString(locale)}€
                   </span>
                   <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--background-secondary)] text-[var(--foreground-secondary)]">
-                    {TREINO_LABELS[entry.treino] ?? entry.treino}
+                    {getSharedLabel(TREINO_LABELS, entry.treino, language)}
                   </span>
                   <span className="text-[10px] flex items-center gap-0.5 ml-auto">
                     <TrendingUp size={9} className="text-emerald-400" />

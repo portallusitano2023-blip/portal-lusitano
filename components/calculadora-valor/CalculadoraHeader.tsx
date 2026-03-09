@@ -65,7 +65,7 @@ export default function CalculadoraHeader({
                 className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5"
               >
                 <Pencil size={13} />
-                <span className="hidden sm:inline">Editar</span>
+                <span className="hidden sm:inline">{tr("Editar", "Edit", "Editar")}</span>
               </button>
             )}
             <button
@@ -79,7 +79,7 @@ export default function CalculadoraHeader({
         ) : step > 1 && estimativaParcial ? (
           <div className="text-right">
             <p className="text-[10px] text-[var(--foreground-muted)] leading-tight">
-              Estimativa parcial
+              {tr("Estimativa parcial", "Partial estimate", "Estimación parcial")}
             </p>
             <p className="text-xs font-semibold text-[var(--gold)] leading-tight">
               €{estimativaParcial.min.toLocaleString(locale)} – €

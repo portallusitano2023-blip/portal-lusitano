@@ -943,7 +943,7 @@ export default function ResultsSection({
           <p className="text-xs text-[var(--foreground-muted)] mb-4">{comp.verdict_desc}</p>
           <div className="grid md:grid-cols-2 gap-4">
             {cavalos.map((c) => {
-              const v = gerarVeredicto(c, tr);
+              const v = gerarVeredicto(c, tr, language);
               return (
                 <HorseVerdictCard
                   key={c.id}

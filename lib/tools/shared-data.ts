@@ -3,19 +3,19 @@
 // ============================================
 
 /** Rótulos de perfil equestre (usados em comparador, calculadora, análise de perfil) */
-export const PROFILE_LABELS: Record<string, string> = {
-  competidor: "Competidor",
-  criador: "Criador",
-  amador: "Apreciador Amador",
-  investidor: "Investidor",
+export const PROFILE_LABELS: Record<string, Record<string, string>> = {
+  competidor:  { pt: "Competidor",        en: "Competitor",        es: "Competidor" },
+  criador:     { pt: "Criador",           en: "Breeder",           es: "Criador" },
+  amador:      { pt: "Apreciador Amador", en: "Amateur Enthusiast", es: "Aficionado Amateur" },
+  investidor:  { pt: "Investidor",        en: "Investor",          es: "Inversor" },
 };
 
 /** Sub-perfis (competidor elite, nacional, trabalho, amador projeto) */
-export const SUBPROFILE_LABELS: Record<string, string> = {
-  competidor_elite: "Alta Competição FEI",
-  competidor_nacional: "Competição Nacional",
-  competidor_trabalho: "Equitação de Trabalho",
-  amador_projeto: "Projeto em Desenvolvimento",
+export const SUBPROFILE_LABELS: Record<string, Record<string, string>> = {
+  competidor_elite:    { pt: "Alta Competição FEI",        en: "FEI High Competition",      es: "Alta Competición FEI" },
+  competidor_nacional: { pt: "Competição Nacional",        en: "National Competition",      es: "Competición Nacional" },
+  competidor_trabalho: { pt: "Equitação de Trabalho",      en: "Working Equitation",        es: "Equitación de Trabajo" },
+  amador_projeto:      { pt: "Projeto em Desenvolvimento", en: "Project in Development",    es: "Proyecto en Desarrollo" },
 };
 
 /** Chave de sessionStorage para contexto de perfil (partilhada entre ferramentas) */

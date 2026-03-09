@@ -278,12 +278,12 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
   // Calcular probabilidades de cada pelagem (somam exatamente 100%)
   const rawPelagens: { cor: string; prob: number; genetica: string }[] = [];
 
-  if (p_grey > 0.01) rawPelagens.push({ cor: "Ruço", prob: p_grey, genetica: "G_" });
+  if (p_grey > 0.01) rawPelagens.push({ cor: tr("Ruço", "Grey", "Tordo"), prob: p_grey, genetica: "G_" });
 
   if (ng > 0.01) {
     // Base Alazão (ee)
     const p_al = ng * p_ee * p_NN * p_nodun;
-    if (p_al > 0.01) rawPelagens.push({ cor: "Alazão", prob: p_al, genetica: "ee" });
+    if (p_al > 0.01) rawPelagens.push({ cor: tr("Alazão", "Chestnut", "Alazán"), prob: p_al, genetica: "ee" });
 
     const p_palomino = ng * p_ee * p_CrN;
     if (p_palomino > 0.01)
@@ -294,11 +294,11 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
       rawPelagens.push({ cor: "Cremello", prob: p_cremello, genetica: "ee CrCr" });
 
     const p_redDun = ng * p_ee * p_NN * p_dun;
-    if (p_redDun > 0.01) rawPelagens.push({ cor: "Alazão Dun", prob: p_redDun, genetica: "ee D_" });
+    if (p_redDun > 0.01) rawPelagens.push({ cor: tr("Alazão Dun", "Red Dun", "Alazán Dun"), prob: p_redDun, genetica: "ee D_" });
 
     // Base Castanho/Baio (E_A_)
     const p_cast = ng * p_E_ * p_A_ * p_NN * p_nodun;
-    if (p_cast > 0.01) rawPelagens.push({ cor: "Castanho/Baio", prob: p_cast, genetica: "E_A_" });
+    if (p_cast > 0.01) rawPelagens.push({ cor: tr("Castanho/Baio", "Bay", "Castaño/Bayo"), prob: p_cast, genetica: "E_A_" });
 
     const p_buckskin = ng * p_E_ * p_A_ * p_CrN;
     if (p_buckskin > 0.01)
@@ -309,11 +309,11 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
       rawPelagens.push({ cor: "Perlino", prob: p_perlino, genetica: "E_A_ CrCr" });
 
     const p_bayDun = ng * p_E_ * p_A_ * p_NN * p_dun;
-    if (p_bayDun > 0.01) rawPelagens.push({ cor: "Baio Dun", prob: p_bayDun, genetica: "E_A_ D_" });
+    if (p_bayDun > 0.01) rawPelagens.push({ cor: tr("Baio Dun", "Bay Dun", "Bayo Dun"), prob: p_bayDun, genetica: "E_A_ D_" });
 
     // Base Preto (E_aa)
     const p_preto = ng * p_E_ * p_aa * p_NN * p_nodun;
-    if (p_preto > 0.01) rawPelagens.push({ cor: "Preto", prob: p_preto, genetica: "E_aa" });
+    if (p_preto > 0.01) rawPelagens.push({ cor: tr("Preto", "Black", "Negro"), prob: p_preto, genetica: "E_aa" });
 
     const p_smoky = ng * p_E_ * p_aa * p_CrN;
     if (p_smoky > 0.01)
