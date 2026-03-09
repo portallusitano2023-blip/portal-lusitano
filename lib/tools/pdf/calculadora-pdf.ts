@@ -152,12 +152,16 @@ const MARKET_MULT: Record<string, number> = {
 export async function generateCalculadoraPDF(
   form: CalcForm,
   resultado: CalcResultado,
+  language?: string,
   isPremium = false
 ): Promise<string> {
+  const L = (pt: string, en: string, es?: string): string =>
+    language === "en" ? en : language === "es" && es ? es : pt;
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc: any = await createPremiumPDF();
-  const horseName = form.nome || "Puro Sangue Lusitano";
-  const date = new Date().toLocaleDateString("pt-PT", {
+  const horseName = form.nome || L("Puro Sangue Lusitano", "Lusitano Horse", "Caballo Lusitano");
+  const date = new Date().toLocaleDateString(locale, {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -221,7 +225,7 @@ export async function generateCalculadoraPDF(
   doc.setTextColor(...ZINC400);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.text("Avalia\u00E7\u00E3o de Puro Sangue Lusitano", MARGIN, y);
+  doc.text(L("Avalia\u00E7\u00E3o de Puro Sangue Lusitano", "Lusitano Horse Valuation", "Valoraci\u00F3n de Puro Sangre Lusitano"), MARGIN, y);
 
   // ── Improvement 2: 3 top positive factors subtitle line ───────────────────
   if (resultado.pontosForteseFracos.fortes.length > 0) {
@@ -239,25 +243,25 @@ export async function generateCalculadoraPDF(
   // ── Improvement 2: Achievement badges — contextual based on form data ──────
   const badges: string[] = [];
   if (form.registoAPSL && form.livroAPSL === "definitivo") {
-    badges.push("APSL Livro Definitivo");
+    badges.push(L("APSL Livro Definitivo", "APSL Full Register", "APSL Libro Definitivo"));
   } else if (form.registoAPSL) {
-    badges.push("APSL Registado");
+    badges.push(L("APSL Registado", "APSL Registered", "APSL Registrado"));
   }
   if (form.competicoes && form.competicoes !== "nenhuma") {
     const compBadge: Record<string, string> = {
-      regional: "Competi\u00E7\u00E3o Regional",
-      nacional: "Competi\u00E7\u00E3o Nacional",
-      cdi1: "CDI1* Internacional",
-      cdi3: "CDI3* Grand Prix",
-      cdi5: "CDI5* Top FEI",
-      campeonato_mundo: "Campe\u00E3o Mundial",
+      regional: L("Competi\u00E7\u00E3o Regional", "Regional Competition", "Competici\u00F3n Regional"),
+      nacional: L("Competi\u00E7\u00E3o Nacional", "National Competition", "Competici\u00F3n Nacional"),
+      cdi1: L("CDI1* Internacional", "CDI1* International", "CDI1* Internacional"),
+      cdi3: L("CDI3* Grand Prix", "CDI3* Grand Prix", "CDI3* Grand Prix"),
+      cdi5: L("CDI5* Top FEI", "CDI5* Top FEI", "CDI5* Top FEI"),
+      campeonato_mundo: L("Campe\u00E3o Mundial", "World Champion", "Campe\u00F3n Mundial"),
     };
     badges.push(compBadge[form.competicoes] ?? "Competi\u00E7\u00E3o");
   }
   if (form.raioX && form.exameVeterinario) {
-    badges.push("Docs Completos");
+    badges.push(L("Docs Completos", "Full Documentation", "Docs Completos"));
   } else if (form.certificadoExportacao) {
-    badges.push("Cert. Exporta\u00E7\u00E3o");
+    badges.push(L("Cert. Exporta\u00E7\u00E3o", "Export Certificate", "Cert. Exportaci\u00F3n"));
   }
 
   if (badges.length > 0) {
@@ -323,11 +327,11 @@ export async function generateCalculadoraPDF(
   y += 8;
 
   const previews = [
-    "Ficha completa & scores detalhados  (pág. 2)",
-    "Perfil radar de avaliação  (pág. 3)",
-    "Pontos fortes, fracos e recomendações  (pág. 3)",
-    "Progressão de valor por treino  (pág. 4)",
-    "Estratégia de mercado  (pág. 4)",
+    L("Ficha completa & scores detalhados  (p\u00E1g. 2)", "Full profile & detailed scores  (p. 2)", "Ficha completa & scores detallados  (p\u00E1g. 2)"),
+    L("Perfil radar de avalia\u00E7\u00E3o  (p\u00E1g. 3)", "Evaluation radar profile  (p. 3)", "Perfil radar de evaluaci\u00F3n  (p\u00E1g. 3)"),
+    L("Pontos fortes, fracos e recomenda\u00E7\u00F5es  (p\u00E1g. 3)", "Strengths, weaknesses and recommendations  (p. 3)", "Puntos fuertes, d\u00E9biles y recomendaciones  (p\u00E1g. 3)"),
+    L("Progress\u00E3o de valor por treino  (p\u00E1g. 4)", "Value progression by training  (p. 4)", "Progresi\u00F3n de valor por entrenamiento  (p\u00E1g. 4)"),
+    L("Estrat\u00E9gia de mercado  (p\u00E1g. 4)", "Market strategy  (p. 4)", "Estrategia de mercado  (p\u00E1g. 4)"),
   ];
 
   // Left column: items 0, 1, 2 — Right column: items 3, 4
@@ -365,20 +369,20 @@ export async function generateCalculadoraPDF(
     doc.setTextColor(...ZINC400);
     doc.setFontSize(7);
     doc.setFont("helvetica", "bold");
-    doc.text("RESUMO EXECUTIVO", MARGIN + 7, y + 7);
+    doc.text(L("RESUMO EXECUTIVO", "EXECUTIVE SUMMARY", "RESUMEN EJECUTIVO"), MARGIN + 7, y + 7);
 
     doc.setFillColor(35, 35, 35);
     doc.rect(MARGIN + 7, y + 9, CONTENT_W - 12, 0.3, "F");
 
-    const rangeStr = `Intervalo: ${resultado.valorMin.toLocaleString("pt-PT")} \u2014 ${resultado.valorMax.toLocaleString("pt-PT")} EUR`;
+    const rangeStr = `${L("Intervalo", "Range", "Rango")}: ${resultado.valorMin.toLocaleString(locale)} \u2014 ${resultado.valorMax.toLocaleString(locale)} EUR`;
     doc.setTextColor(...ZINC400);
     doc.setFontSize(7.5);
     doc.setFont("helvetica", "normal");
     doc.text(safe(rangeStr), MARGIN + 7, y + 15);
 
     const liquidezInfo = resultado.liquidez
-      ? `Liquidez: ${resultado.liquidez.label} (~${resultado.liquidez.tempoDias} dias)`
-      : `Confiança da avaliação: ${resultado.confianca}%`;
+      ? `${L("Liquidez", "Liquidity", "Liquidez")}: ${resultado.liquidez.label} (~${resultado.liquidez.tempoDias} ${L("dias", "days", "d\u00EDas")})`
+      : `${L("Confian\u00E7a da avalia\u00E7\u00E3o", "Assessment confidence", "Confianza de la evaluaci\u00F3n")}: ${resultado.confianca}%`;
     doc.text(safe(liquidezInfo), MARGIN + 7, y + 22);
 
     // ── Improvement 10: Liquidity badge in executive summary ──────────────────
@@ -432,7 +436,7 @@ export async function generateCalculadoraPDF(
   doc.setTextColor(...GOLD);
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
-  doc.text(`PORTAL LUSITANO  |  CONFIDENCIAL  |  ${safe(date)}`, PAGE_W / 2, 275, {
+  doc.text(`PORTAL LUSITANO  |  ${L("CONFIDENCIAL", "CONFIDENTIAL", "CONFIDENCIAL")}  |  ${safe(date)}`, PAGE_W / 2, 275, {
     align: "center",
   });
 
@@ -447,7 +451,7 @@ export async function generateCalculadoraPDF(
   // ═══════════════════════════════════════════════════════════════════════════
   doc.addPage();
   fillPageBg(doc);
-  addPageHeader(doc, "Dados do Cavalo & Categorias", "P\u00E1gina 2 de 4");
+  addPageHeader(doc, L("Dados do Cavalo & Categorias", "Horse Data & Categories", "Datos del Caballo & Categor\u00EDas"), L("P\u00E1gina 2 de 4", "Page 2 of 4", "P\u00E1gina 2 de 4"));
 
   // Horse name subtle subtitle in header
   doc.setTextColor(...ZINC600);
@@ -456,7 +460,7 @@ export async function generateCalculadoraPDF(
   doc.text(safe(horseName).slice(0, 30), PAGE_W / 2, 15, { align: "center" });
 
   y = 30;
-  y = addSectionTitle(doc, "Ficha do Cavalo", y);
+  y = addSectionTitle(doc, L("Ficha do Cavalo", "Horse Profile", "Ficha del Caballo"), y);
 
   // Two-column horse data layout
   const colLX = MARGIN;
@@ -467,40 +471,40 @@ export async function generateCalculadoraPDF(
   let yR = y;
 
   // Left column: basic identifiers
-  yL = addKV(doc, "Nome", form.nome || "N\u00E3o especificado", colLX, yL, colW);
-  yL = addKV(doc, "Idade", `${form.idade} anos`, colLX, yL, colW);
-  yL = addKV(doc, "Sexo", SEXO_LABELS[form.sexo] ?? safe(form.sexo), colLX, yL, colW);
-  yL = addKV(doc, "Pelagem", safe(form.pelagem), colLX, yL, colW);
-  yL = addKV(doc, "Altura", `${form.altura} cm`, colLX, yL, colW);
+  yL = addKV(doc, L("Nome", "Name", "Nombre"), form.nome || L("N\u00E3o especificado", "Not specified", "No especificado"), colLX, yL, colW);
+  yL = addKV(doc, L("Idade", "Age", "Edad"), `${form.idade} ${L("anos", "years", "a\u00F1os")}`, colLX, yL, colW);
+  yL = addKV(doc, L("Sexo", "Sex", "Sexo"), SEXO_LABELS[form.sexo] ?? safe(form.sexo), colLX, yL, colW);
+  yL = addKV(doc, L("Pelagem", "Coat", "Capa"), safe(form.pelagem), colLX, yL, colW);
+  yL = addKV(doc, L("Altura", "Height", "Alzada"), `${form.altura} cm`, colLX, yL, colW);
   if (form.linhagemPrincipal) {
-    yL = addKV(doc, "Fam\u00EDlia", safe(form.linhagemPrincipal), colLX, yL, colW);
+    yL = addKV(doc, L("Fam\u00EDlia", "Family", "Familia"), safe(form.linhagemPrincipal), colLX, yL, colW);
   }
   const docParts = [
-    form.raioX ? "Raio-X" : "",
-    form.exameVeterinario ? "Exame Vet." : "",
-    form.certificadoExportacao ? "Cert. Export." : "",
+    form.raioX ? L("Raio-X", "X-Ray", "Rayos-X") : "",
+    form.exameVeterinario ? L("Exame Vet.", "Vet Exam", "Examen Vet.") : "",
+    form.certificadoExportacao ? L("Cert. Export.", "Export Cert.", "Cert. Export.") : "",
   ].filter(Boolean);
-  const docStatus = docParts.length > 0 ? docParts.join(" + ") : "Sem documenta\u00E7\u00E3o";
-  yL = addKV(doc, "Documenta\u00E7\u00E3o", docStatus, colLX, yL, colW);
+  const docStatus = docParts.length > 0 ? docParts.join(" + ") : L("Sem documenta\u00E7\u00E3o", "No documentation", "Sin documentaci\u00F3n");
+  yL = addKV(doc, L("Documenta\u00E7\u00E3o", "Documentation", "Documentaci\u00F3n"), docStatus, colLX, yL, colW);
   if (form.proprietariosAnteriores !== undefined) {
     const propStr =
       form.proprietariosAnteriores === 0
-        ? "1.\u00BA propriet\u00E1rio"
+        ? L("1.\u00BA propriet\u00E1rio", "1st owner", "1.er propietario")
         : form.proprietariosAnteriores === 1
-          ? "1 anterior"
+          ? L("1 anterior", "1 previous", "1 anterior")
           : form.proprietariosAnteriores === 2
-            ? "2 anteriores"
-            : "3+ anteriores";
-    yL = addKV(doc, "Propriet\u00E1rios", propStr, colLX, yL, colW);
+            ? L("2 anteriores", "2 previous", "2 anteriores")
+            : L("3+ anteriores", "3+ previous", "3+ anteriores");
+    yL = addKV(doc, L("Propriet\u00E1rios", "Owners", "Propietarios"), propStr, colLX, yL, colW);
   }
 
   // ── Improvement 4: Reproduction info ──────────────────────────────────────
   if (form.reproducao) {
     const repVal =
       form.descendentes && form.descendentes > 0
-        ? `Aprovado (${form.descendentes} desc.)`
-        : "Aprovado";
-    yL = addKV(doc, "Reprodu\u00E7\u00E3o", repVal, colLX, yL, colW);
+        ? `${L("Aprovado", "Approved", "Aprobado")} (${form.descendentes} ${L("desc.", "off.", "desc.")})`
+        : L("Aprovado", "Approved", "Aprobado");
+    yL = addKV(doc, L("Reprodu\u00E7\u00E3o", "Breeding", "Reproducci\u00F3n"), repVal, colLX, yL, colW);
   }
 
   // Right column: pedigree + performance
