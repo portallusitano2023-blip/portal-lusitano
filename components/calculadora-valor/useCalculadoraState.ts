@@ -268,7 +268,7 @@ export function useCalculadoraState() {
       const allowed = await validateAndRecord(formMeta, resultMeta);
       if (!allowed) {
         if (isMountedRef.current) {
-          showToast("error", "Limite de uso gratuito atingido. Subscreva PRO para continuar.");
+          showToast("error", tr("Limite de uso gratuito atingido. Subscreva PRO para continuar.", "Free usage limit reached. Subscribe to PRO to continue.", "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."));
         }
         return;
       }
@@ -284,7 +284,7 @@ export function useCalculadoraState() {
         if (process.env.NODE_ENV === "development") {
           console.error("[Calculadora] Erro no cálculo:", err);
         }
-        showToast("error", "Erro ao calcular o valor. Verifique os dados e tente novamente.");
+        showToast("error", tr("Erro ao calcular o valor. Verifique os dados e tente novamente.", "Error calculating value. Please check the data and try again.", "Error al calcular el valor. Verifique los datos e inténtelo de nuevo."));
       }
     }
   };

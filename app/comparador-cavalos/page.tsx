@@ -309,17 +309,32 @@ export default function ComparadorCavalosPage() {
         : 0;
 
     // Server-side validation + recording BEFORE showing results
-    const allowed = await validateAndRecord(
-      { count: cavalos.length },
-      {
-        vencedor: vencedorNome,
-        vencedorScore,
-        count: cavalos.length,
-        disciplinas: [
-          ...new Set(cavalos.flatMap((c) => (c.competicoes !== "Nenhuma" ? [c.competicoes] : []))),
-        ],
-      }
-    );
+    let allowed = false;
+    try {
+      allowed = await validateAndRecord(
+        { count: cavalos.length },
+        {
+          vencedor: vencedorNome,
+          vencedorScore,
+          count: cavalos.length,
+          disciplinas: [
+            ...new Set(cavalos.flatMap((c) => (c.competicoes !== "Nenhuma" ? [c.competicoes] : []))),
+          ],
+        }
+      );
+    } catch {
+      setCalculando(false);
+      setCalculandoStep(0);
+      showToast(
+        "error",
+        tr(
+          "Erro de ligação. Verifica a tua ligação e tenta novamente.",
+          "Connection error. Check your connection and try again.",
+          "Error de conexión. Comprueba tu conexión e inténtalo de nuevo."
+        )
+      );
+      return;
+    }
     if (!allowed) {
       setCalculando(false);
       showToast(
