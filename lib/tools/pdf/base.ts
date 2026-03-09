@@ -24,7 +24,7 @@ async function loadJsPDF() {
   return jsPDFCtor;
 }
 
-export async function createBasePDF(title: string, subtitle?: string): Promise<jsPDF> {
+export async function createBasePDF(title: string, subtitle?: string, locale?: string): Promise<jsPDF> {
   const JsPDF = await loadJsPDF();
   const doc = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
@@ -58,7 +58,8 @@ export async function createBasePDF(title: string, subtitle?: string): Promise<j
   // Date on right
   doc.setTextColor(...ZINC600);
   doc.setFontSize(8);
-  const date = new Date().toLocaleDateString("pt-PT", {
+  const loc = locale ?? "pt-PT";
+  const date = new Date().toLocaleDateString(loc, {
     day: "2-digit",
     month: "long",
     year: "numeric",

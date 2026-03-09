@@ -54,10 +54,11 @@ interface PerfilData {
 
 // ─── Main Export ──────────────────────────────────────────────────────────────
 
-export async function generatePerfilPDF(profileData: PerfilData): Promise<void> {
+export async function generatePerfilPDF(profileData: PerfilData, language?: string): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc: any = await createPremiumPDF();
-  const date = new Date().toLocaleDateString("pt-PT", {
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+  const date = new Date().toLocaleDateString(locale, {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -389,7 +390,7 @@ export async function generatePerfilPDF(profileData: PerfilData): Promise<void> 
   doc.setFont("helvetica", "normal");
   doc.text("INTERVALO ANUAL", MARGIN + 9, y + 9);
 
-  const costsStr = `${profileData.annualCosts.min.toLocaleString("pt-PT")} — ${profileData.annualCosts.max.toLocaleString("pt-PT")} EUR`;
+  const costsStr = `${profileData.annualCosts.min.toLocaleString(locale)} — ${profileData.annualCosts.max.toLocaleString(locale)} EUR`;
   doc.setTextColor(...WHITE);
   doc.setFontSize(15);
   doc.setFont("helvetica", "bold");
@@ -401,7 +402,7 @@ export async function generatePerfilPDF(profileData: PerfilData): Promise<void> 
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
   doc.text(
-    safe(`~${monthlyMin.toLocaleString("pt-PT")} — ${monthlyMax.toLocaleString("pt-PT")} EUR/mês`),
+    safe(`~${monthlyMin.toLocaleString(locale)} — ${monthlyMax.toLocaleString(locale)} EUR/mês`),
     PAGE_W - MARGIN - 5,
     y + 19,
     { align: "right" }

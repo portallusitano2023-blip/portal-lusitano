@@ -47,7 +47,15 @@ export default function ObjectiveScore({
                   (g.aprovado && e.aprovado ? 10 : 0)
               );
             } else if (objetivo === "lazer") {
-              const tempMedia = 7; // temperamento é string no tipo Cavalo — valor neutro 7
+              const TEMP_SCORES: Record<string, number> = {
+                Calmo: 9,
+                Equilibrado: 7,
+                Energético: 5,
+                Nervoso: 3,
+              };
+              const tempG = TEMP_SCORES[g.temperamento] ?? 7;
+              const tempE = TEMP_SCORES[e.temperamento] ?? 7;
+              const tempMedia = (tempG + tempE) / 2;
               return Math.round(s * 0.3 + tempMedia * 5 + ((g.saude + e.saude) / 2) * 4);
             } else {
               // show: prioriza conformação

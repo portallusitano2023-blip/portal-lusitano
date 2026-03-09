@@ -143,7 +143,7 @@ export interface HeroConfig {
  * Right (40%): decorative diamond with "Top X%" percentile.
  * Height: 79mm (was 65mm, +14mm for confidence bar section).
  */
-export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number): number {
+export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number, locale?: string): number {
   const { value, min, max, percentil } = cfg;
   const cardH = 79; // expanded from 65 to fit confidence bar
   const cardX = MARGIN;
@@ -173,7 +173,7 @@ export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number): number {
   doc.text("VALOR ESTIMADO", cardX + 9, y + 11);
 
   // Main EUR value (large hero element)
-  const valueStr = value.toLocaleString("pt-PT");
+  const valueStr = value.toLocaleString(locale ?? "pt-PT");
   doc.setTextColor(...WHITE);
   doc.setFontSize(32);
   doc.setFont("helvetica", "bold");
@@ -186,7 +186,7 @@ export function addValueHero(doc: jsPDF, cfg: HeroConfig, y: number): number {
   doc.text("EUR", cardX + 9, y + 47);
 
   // Range below
-  const rangeStr = `${min.toLocaleString("pt-PT")} \u2014 ${max.toLocaleString("pt-PT")} EUR`;
+  const rangeStr = `${min.toLocaleString(locale ?? "pt-PT")} \u2014 ${max.toLocaleString(locale ?? "pt-PT")} EUR`;
   doc.setTextColor(...ZINC400);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
