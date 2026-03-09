@@ -510,8 +510,8 @@ export async function generateCalculadoraPDF(
   // Right column: pedigree + performance
   yR = addKV(
     doc,
-    "Registo APSL",
-    form.registoAPSL ? `Sim (${form.livroAPSL})` : "Não",
+    L("Registo APSL", "APSL Register", "Registro APSL"),
+    form.registoAPSL ? `${L("Sim", "Yes", "S\u00ED")} (${form.livroAPSL})` : L("N\u00E3o", "No", "No"),
     colRX,
     yR,
     colW
@@ -519,37 +519,37 @@ export async function generateCalculadoraPDF(
 
   // ── Improvement 3: Translate linhagem key to readable label ────────────────
   const linhagemLabels: Record<string, string> = {
-    desconhecida: "Desconhecida",
-    comum: "Comum",
-    registada: "Registada",
-    certificada: "Certificada",
+    desconhecida: L("Desconhecida", "Unknown", "Desconocida"),
+    comum: L("Comum", "Common", "Com\u00FAn"),
+    registada: L("Registada", "Registered", "Registrada"),
+    certificada: L("Certificada", "Certified", "Certificada"),
     premium: "Premium",
-    elite: "Elite / Campe\u00E3o",
+    elite: L("Elite / Campe\u00E3o", "Elite / Champion", "Elite / Campe\u00F3n"),
   };
   yR = addKV(
     doc,
-    "Linhagem",
+    L("Linhagem", "Bloodline", "Linaje"),
     linhagemLabels[form.linhagem] ?? safe(form.linhagem),
     colRX,
     yR,
     colW
   );
 
-  yR = addKV(doc, "Treino", safe(form.treino.replace("_", " ")), colRX, yR, colW);
-  yR = addKV(doc, "Disciplina", safe(form.disciplina), colRX, yR, colW);
+  yR = addKV(doc, L("Treino", "Training", "Entrenamiento"), safe(form.treino.replace("_", " ")), colRX, yR, colW);
+  yR = addKV(doc, L("Disciplina", "Discipline", "Disciplina"), safe(form.disciplina), colRX, yR, colW);
   if (form.competicoes !== undefined) {
     const compLabels: Record<string, string> = {
-      nenhuma: "Nenhuma",
-      regional: "Regional",
-      nacional: "Nacional",
+      nenhuma: L("Nenhuma", "None", "Ninguna"),
+      regional: L("Regional", "Regional", "Regional"),
+      nacional: L("Nacional", "National", "Nacional"),
       cdi1: "CDI1* Internacional",
       cdi3: "CDI3* Grand Prix Int.",
       cdi5: "CDI5* Top FEI",
-      campeonato_mundo: "Camp. Mundo",
+      campeonato_mundo: L("Camp. Mundo", "World Champ.", "Camp. Mundo"),
     };
     yR = addKV(
       doc,
-      "Competi\u00E7\u00F5es",
+      L("Competi\u00E7\u00F5es", "Competitions", "Competiciones"),
       compLabels[form.competicoes] ?? safe(form.competicoes),
       colRX,
       yR,
@@ -558,7 +558,7 @@ export async function generateCalculadoraPDF(
   }
   yR = addKVWithHealthBadge(
     doc,
-    "Saúde",
+    L("Sa\u00FAde", "Health", "Salud"),
     SAUDE_LABELS[form.saude] ?? safe(form.saude),
     form.saude,
     colRX,
@@ -596,7 +596,7 @@ export async function generateCalculadoraPDF(
       doc.setFillColor(35, 35, 35);
       doc.rect(MARGIN, y, CONTENT_W, 0.3, "F");
       y += 9;
-      y = addSectionTitle(doc, "Avalia\u00E7\u00E3o Detalhada", y);
+      y = addSectionTitle(doc, L("Avalia\u00E7\u00E3o Detalhada", "Detailed Evaluation", "Evaluaci\u00F3n Detallada"), y);
 
       // Group items into three morphological / movement / character buckets
       const morfoItems = scoreItems.filter((s) =>
@@ -610,9 +610,9 @@ export async function generateCalculadoraPDF(
       );
 
       const groups: { title: string; items: typeof scoreItems }[] = [
-        { title: "Conforma\u00E7\u00E3o Morfol\u00F3gica", items: morfoItems },
-        { title: "Qualidade dos Andamentos", items: andItems },
-        { title: "Car\u00E1cter e Temperamento", items: tempItems },
+        { title: L("Conforma\u00E7\u00E3o Morfol\u00F3gica", "Morphological Conformation", "Conformaci\u00F3n Morfol\u00F3gica"), items: morfoItems },
+        { title: L("Qualidade dos Andamentos", "Movement Quality", "Calidad de los Movimientos"), items: andItems },
+        { title: L("Car\u00E1cter e Temperamento", "Character & Temperament", "Car\u00E1cter y Temperamento"), items: tempItems },
       ];
 
       for (const group of groups) {
@@ -639,7 +639,7 @@ export async function generateCalculadoraPDF(
   y += 9;
 
   // Category impact bars — radar chart is on page 3, so we can use more room here
-  y = addSectionTitle(doc, "Impacto por Categoria", y);
+  y = addSectionTitle(doc, L("Impacto por Categoria", "Impact by Category", "Impacto por Categoría"), y);
 
   for (const cat of resultado.categorias.slice(0, 8)) {
     if (y > 265) break;
@@ -651,7 +651,7 @@ export async function generateCalculadoraPDF(
   // ═══════════════════════════════════════════════════════════════════════════
   doc.addPage();
   fillPageBg(doc);
-  addPageHeader(doc, "Perfil Radar & An\u00E1lise", "P\u00E1gina 3 de 4");
+  addPageHeader(doc, L("Perfil Radar & Análise", "Radar Profile & Analysis", "Perfil Radar & Análisis"), L("Página 3 de 4", "Page 3 of 4", "Página 3 de 4"));
 
   // Horse name subtle subtitle in header
   doc.setTextColor(...ZINC600);
@@ -663,7 +663,7 @@ export async function generateCalculadoraPDF(
 
   // Radar chart at the top of page 3
   if (resultado.categorias.length >= 3) {
-    y = addSectionTitle(doc, "Perfil Radar de Avalia\u00E7\u00E3o", y);
+    y = addSectionTitle(doc, L("Perfil Radar de Avaliação", "Evaluation Radar Profile", "Perfil Radar de Evaluación"), y);
     y = addRadarChart(doc, resultado.categorias, y);
     y += 4;
   }
@@ -672,7 +672,7 @@ export async function generateCalculadoraPDF(
   if (resultado.pontosForteseFracos.fortes.length > 0) {
     y = addSectionTitleWithCount(
       doc,
-      "Pontos Fortes",
+      L("Pontos Fortes", "Strengths", "Puntos Fuertes"),
       resultado.pontosForteseFracos.fortes.length,
       GREEN,
       y
@@ -688,7 +688,7 @@ export async function generateCalculadoraPDF(
   if (resultado.pontosForteseFracos.fracos.length > 0) {
     y = addSectionTitleWithCount(
       doc,
-      "\u00C1reas de Aten\u00E7\u00E3o",
+      L("Áreas de Atenção", "Areas of Attention", "Áreas de Atención"),
       resultado.pontosForteseFracos.fracos.length,
       AMBER,
       y
@@ -704,7 +704,7 @@ export async function generateCalculadoraPDF(
   if (resultado.recomendacoes.length > 0) {
     y = addSectionTitleWithCount(
       doc,
-      "Recomenda\u00E7\u00F5es",
+      L("Recomendações", "Recommendations", "Recomendaciones"),
       resultado.recomendacoes.length,
       GOLD,
       y
@@ -720,7 +720,7 @@ export async function generateCalculadoraPDF(
 
   // Comparação de Mercado
   if (resultado.comparacao.length > 0 && y < 262) {
-    y = addSectionTitle(doc, "Compara\u00E7\u00E3o de Mercado", y);
+    y = addSectionTitle(doc, L("Comparação de Mercado", "Market Comparison", "Comparación de Mercado"), y);
 
     // Header row
     const pillH = 11;
@@ -730,11 +730,11 @@ export async function generateCalculadoraPDF(
     doc.setTextColor(...ZINC600);
     doc.setFontSize(7);
     doc.setFont("helvetica", "bold");
-    doc.text("REFER\u00CANCIA DE MERCADO", MARGIN + 4, y + 2.5);
+    doc.text(L("REFERÊNCIA DE MERCADO", "MARKET REFERENCE", "REFERENCIA DE MERCADO"), MARGIN + 4, y + 2.5);
 
     const midX = MARGIN + CONTENT_W * 0.5;
-    doc.text("VALOR M\u00C9DIO", midX, y + 2.5, { align: "center" });
-    doc.text("DIFEREN\u00C7A", PAGE_W - MARGIN - 4, y + 2.5, { align: "right" });
+    doc.text(L("VALOR MÉDIO", "AVERAGE VALUE", "VALOR MEDIO"), midX, y + 2.5, { align: "center" });
+    doc.text(L("DIFERENÇA", "DIFFERENCE", "DIFERENCIA"), PAGE_W - MARGIN - 4, y + 2.5, { align: "right" });
 
     y += pillH + 1;
 
@@ -756,7 +756,7 @@ export async function generateCalculadoraPDF(
       doc.setFont("helvetica", "normal");
       doc.text(safe(comp.tipo), MARGIN + 4, y + 2.5);
 
-      const valueStr = `${comp.valorMedio.toLocaleString("pt-PT")} EUR`;
+      const valueStr = `${comp.valorMedio.toLocaleString(locale)} EUR`;
       doc.setTextColor(...WHITE);
       doc.setFontSize(8);
       doc.setFont("helvetica", "bold");
@@ -801,14 +801,14 @@ export async function generateCalculadoraPDF(
       doc.setTextColor(...ZINC600);
       doc.setFontSize(6);
       doc.setFont("helvetica", "normal");
-      doc.text(`${mktMin.toLocaleString("pt-PT")} EUR`, barX, y + barH + 4);
-      doc.text(`${mktMax.toLocaleString("pt-PT")} EUR`, barX + barW, y + barH + 4, {
+      doc.text(`${mktMin.toLocaleString(locale)} EUR`, barX, y + barH + 4);
+      doc.text(`${mktMax.toLocaleString(locale)} EUR`, barX + barW, y + barH + 4, {
         align: "right",
       });
 
       doc.setTextColor(...ZINC400);
       doc.setFontSize(6.5);
-      doc.text("Posi\u00E7\u00E3o no mercado", PAGE_W / 2, y + barH + 4, { align: "center" });
+      doc.text(L("Posição no mercado", "Market position", "Posición en el mercado"), PAGE_W / 2, y + barH + 4, { align: "center" });
 
       y += barH + 10;
     }
@@ -827,18 +827,30 @@ export async function generateCalculadoraPDF(
     doc.setTextColor(...GOLD);
     doc.setFontSize(7);
     doc.setFont("helvetica", "bold");
-    doc.text(safe("METODOLOGIA DE AVALIA\u00C7\u00C3O"), MARGIN + 7, y + 6);
+    doc.text(safe(L("METODOLOGIA DE AVALIAÇÃO", "EVALUATION METHODOLOGY", "METODOLOGÍA DE EVALUACIÓN")), MARGIN + 7, y + 6);
 
     // 3 bullet lines in ZINC400
     const methBullets = [
       safe(
-        "17 fatores ponderados: gen\u00E9tica, treino, morfologia, andamentos, sa\u00FAde, competi\u00E7\u00E3o, mercado e reprodu\u00E7\u00E3o"
+        L(
+          "17 fatores ponderados: genética, treino, morfologia, andamentos, saúde, competição, mercado e reprodução",
+          "17 weighted factors: genetics, training, morphology, gaits, health, competition, market and breeding",
+          "17 factores ponderados: genética, entrenamiento, morfología, aires, salud, competición, mercado y reproducción"
+        )
       ),
       safe(
-        "Base de dados: mais de 500 transa\u00E7\u00F5es reais de PSL em Portugal, Europa e Am\u00E9rica"
+        L(
+          "Base de dados: mais de 500 transações reais de PSL em Portugal, Europa e América",
+          "Database: over 500 real PSL transactions in Portugal, Europe and America",
+          "Base de datos: más de 500 transacciones reales de PSL en Portugal, Europa y América"
+        )
       ),
       safe(
-        "Confiabilidade calculada por percentil relativo \u00E0 base de transa\u00E7\u00F5es validadas"
+        L(
+          "Confiabilidade calculada por percentil relativo à base de transações validadas",
+          "Reliability calculated by percentile relative to validated transaction database",
+          "Confiabilidad calculada por percentil relativo a la base de transacciones validadas"
+        )
       ),
     ];
 
@@ -865,7 +877,7 @@ export async function generateCalculadoraPDF(
   // ═══════════════════════════════════════════════════════════════════════════
   doc.addPage();
   fillPageBg(doc);
-  addPageHeader(doc, "An\u00E1lise de Valor Avan\u00E7ada", "P\u00E1gina 4 de 4");
+  addPageHeader(doc, L("Análise de Valor Avançada", "Advanced Value Analysis", "Análisis de Valor Avanzado"), L("Página 4 de 4", "Page 4 of 4", "Página 4 de 4"));
 
   // Horse name subtle subtitle in header
   doc.setTextColor(...ZINC600);
@@ -877,13 +889,13 @@ export async function generateCalculadoraPDF(
 
   // ── Section A: Personalized value progression bar chart ───────────────────
   // ── Improvement 8: Apply current horse's multipliers to all training levels ─
-  y = addSectionTitle(doc, "Progress\u00E3o de Valor por N\u00EDvel de Treino", y);
+  y = addSectionTitle(doc, L("Progressão de Valor por Nível de Treino", "Value Progression by Training Level", "Progresión de Valor por Nivel de Entrenamiento"), y);
 
   // Personalized subtitle
   doc.setTextColor(...ZINC600);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("Estimativa personalizada baseada nas caracter\u00EDsticas deste cavalo", MARGIN, y - 4);
+  doc.text(L("Estimativa personalizada baseada nas características deste cavalo", "Personalized estimate based on this horse's characteristics", "Estimación personalizada basada en las características de este caballo"), MARGIN, y - 4);
 
   // Compute the personalization ratio: valorFinal / base_value_for_current_training
   const currentBaseIdx = Array.from(TREINO_KEYS).indexOf(
@@ -907,7 +919,7 @@ export async function generateCalculadoraPDF(
     doc.setFillColor(35, 35, 35);
     doc.rect(MARGIN, y, CONTENT_W, 0.3, "F");
     y += 9;
-    y = addSectionTitle(doc, "Estrat\u00E9gia de Mercado", y);
+    y = addSectionTitle(doc, L("Estratégia de Mercado", "Market Strategy", "Estrategia de Mercado"), y);
 
     const topMarkets = Object.entries(MARKET_MULT)
       .sort((a, b) => b[1] - a[1])
@@ -948,7 +960,7 @@ export async function generateCalculadoraPDF(
       doc.setTextColor(...(isBest ? GOLD : ZINC600));
       doc.setFontSize(7);
       doc.setFont("helvetica", isBest ? "bold" : "normal");
-      const vStr = `${mkt.value.toLocaleString("pt-PT")} EUR`;
+      const vStr = `${mkt.value.toLocaleString(locale)} EUR`;
       doc.text(safe(vStr), mx + mktW / 2, y + 8, { align: "center" });
 
       // Gain % vs current market at y + 11.5 (only when positive)
@@ -957,7 +969,7 @@ export async function generateCalculadoraPDF(
         doc.setTextColor(...(isBest ? GREEN : ZINC600));
         doc.setFontSize(6);
         doc.setFont("helvetica", isBest ? "bold" : "normal");
-        doc.text(safe(`+${gain}% vs atual`), mx + mktW / 2, y + 11.5, { align: "center" });
+        doc.text(safe(`+${gain}% vs ${L("atual", "current", "actual")}`), mx + mktW / 2, y + 11.5, { align: "center" });
       }
     });
 
@@ -976,13 +988,11 @@ export async function generateCalculadoraPDF(
       doc.roundedRect(MARGIN, y, 3, recCardH, 1.5, 1.5, "F");
 
       const recText = safe(
-        "Recomenda\u00E7\u00E3o: Mercado " +
-          bestMarket.name +
-          " oferece +" +
-          bestGain +
-          "% vs " +
-          form.mercado +
-          ". Para venda internacional, considere tamb\u00E9m obter Certificado de Exporta\u00E7\u00E3o APSL."
+        L(
+          "Recomendação: Mercado " + bestMarket.name + " oferece +" + bestGain + "% vs " + form.mercado + ". Para venda internacional, considere também obter Certificado de Exportação APSL.",
+          "Recommendation: " + bestMarket.name + " market offers +" + bestGain + "% vs " + form.mercado + ". For international sales, also consider obtaining APSL Export Certificate.",
+          "Recomendación: Mercado " + bestMarket.name + " ofrece +" + bestGain + "% vs " + form.mercado + ". Para venta internacional, considere también obtener Certificado de Exportación APSL."
+        )
       );
       doc.setTextColor(...ZINC400);
       doc.setFontSize(7.5);
@@ -1013,7 +1023,7 @@ export async function generateCalculadoraPDF(
   doc.setTextColor(...GOLD);
   doc.setFontSize(7.5);
   doc.setFont("helvetica", "bold");
-  doc.text("AVALIA\u00C7\u00C3O CERTIFICADA PORTAL LUSITANO", MARGIN + 9, certY + 7);
+  doc.text(L("AVALIAÇÃO CERTIFICADA PORTAL LUSITANO", "CERTIFIED VALUATION PORTAL LUSITANO", "VALORACIÓN CERTIFICADA PORTAL LUSITANO"), MARGIN + 9, certY + 7);
 
   // Separator line
   doc.setFillColor(35, 35, 35);
@@ -1031,14 +1041,14 @@ export async function generateCalculadoraPDF(
   doc.setFont("helvetica", "normal");
   doc.text(
     safe(
-      `Valor estimado: ${resultado.valorFinal.toLocaleString("pt-PT")} EUR  |  ${date}  |  Ref: ${refNum}`
+      `${L("Valor estimado", "Estimated value", "Valor estimado")}: ${resultado.valorFinal.toLocaleString(locale)} EUR  |  ${date}  |  Ref: ${refNum}`
     ),
     MARGIN + 9,
     certY + 22
   );
 
   // Confiança pill (right side of cert block)
-  const confStr = safe("Confian\u00E7a: " + resultado.confianca + "%");
+  const confStr = safe(L("Confiança", "Confidence", "Confianza") + ": " + resultado.confianca + "%");
   doc.setFontSize(7);
   const confW = doc.getTextWidth(confStr) + 8;
   const confPillX = PAGE_W - MARGIN - confW - 2;

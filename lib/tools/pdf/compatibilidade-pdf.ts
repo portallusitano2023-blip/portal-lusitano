@@ -84,12 +84,16 @@ export async function generateCompatibilidadePDF(
   garanhao: CavaloCompat,
   egua: CavaloCompat,
   resultado: ResultadoCompat,
+  language?: string,
   isPremium = false
 ): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc: any = await createPremiumPDF();
-  const pairName = `${garanhao.nome || "Garanhão"} × ${egua.nome || "Égua"}`;
-  const date = new Date().toLocaleDateString("pt-PT", {
+  const L = (pt: string, en: string, es?: string): string =>
+    language === "en" ? en : language === "es" && es ? es : pt;
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+  const pairName = `${garanhao.nome || L("Garanhão", "Stallion", "Garañón")} × ${egua.nome || L("Égua", "Mare", "Yegua")}`;
+  const date = new Date().toLocaleDateString(locale, {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -155,7 +159,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC400);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.text("Análise de Compatibilidade Genética e Reprodutiva PSL", MARGIN, y);
+  doc.text(L("Análise de Compatibilidade Genética e Reprodutiva PSL", "PSL Genetic and Reproductive Compatibility Analysis", "Análisis de Compatibilidad Genética y Reproductiva PSL"), MARGIN, y);
 
   // Compatibility level badge
   y += 8;
@@ -190,7 +194,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("SCORE DE COMPATIBILIDADE", MARGIN + 9, y + 11);
+  doc.text(L("SCORE DE COMPATIBILIDADE", "COMPATIBILITY SCORE", "SCORE DE COMPATIBILIDAD"), MARGIN + 9, y + 11);
 
   doc.setTextColor(...WHITE);
   doc.setFontSize(38);
@@ -210,7 +214,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC600);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("COI PREVISTO", rightX, y + 11);
+  doc.text(L("COI PREVISTO", "PREDICTED COI", "COI PREVISTO"), rightX, y + 11);
   doc.setTextColor(...WHITE);
   doc.setFontSize(13);
   doc.setFont("helvetica", "bold");
@@ -220,7 +224,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC600);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("BLUP PREVISTO", rightX + rightW / 2, y + 11, { align: "center" });
+  doc.text(L("BLUP PREVISTO", "PREDICTED BLUP", "BLUP PREVISTO"), rightX + rightW / 2, y + 11, { align: "center" });
   doc.setTextColor(...WHITE);
   doc.setFontSize(13);
   doc.setFont("helvetica", "bold");
@@ -230,7 +234,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC600);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("ALTURA ESTIMADA", rightX + rightW, y + 11, { align: "right" });
+  doc.text(L("ALTURA ESTIMADA", "ESTIMATED HEIGHT", "ALTURA ESTIMADA"), rightX + rightW, y + 11, { align: "right" });
   doc.setTextColor(...WHITE);
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
@@ -254,11 +258,11 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC600);
   doc.setFontSize(5.5);
   doc.setFont("helvetica", "normal");
-  doc.text("Saúde Genética", rightX, y + 35);
+  doc.text(L("Saúde Genética", "Genetic Health", "Salud Genética"), rightX, y + 35);
   doc.setTextColor(...coiColor);
   doc.setFont("helvetica", "bold");
   doc.text(
-    resultado.coi < 3 ? "Excelente" : resultado.coi < 6 ? "Boa" : "Atenção",
+    resultado.coi < 3 ? L("Excelente", "Excellent", "Excelente") : resultado.coi < 6 ? L("Boa", "Good", "Buena") : L("Atenção", "Attention", "Atención"),
     rightX + miniBarW,
     y + 35,
     { align: "right" }
@@ -275,10 +279,10 @@ export async function generateCompatibilidadePDF(
   y = addMetricsRow(
     doc,
     [
-      { label: "Compatibilidade", value: `${resultado.score}%` },
-      { label: "Progenitores", value: "2" },
-      { label: "Factores Avaliados", value: `${resultado.factores.length}` },
-      { label: "Pelagens Previstas", value: `${resultado.pelagens.length}` },
+      { label: L("Compatibilidade", "Compatibility", "Compatibilidad"), value: `${resultado.score}%` },
+      { label: L("Progenitores", "Progenitors", "Progenitores"), value: "2" },
+      { label: L("Factores Avaliados", "Factors Evaluated", "Factores Evaluados"), value: `${resultado.factores.length}` },
+      { label: L("Pelagens Previstas", "Predicted Coats", "Pelajes Previstos"), value: `${resultado.pelagens.length}` },
     ],
     y
   );
@@ -301,16 +305,16 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
   doc.setFont("helvetica", "normal");
-  doc.text("GARANHÃO ♂", garX + halfW / 2, y + 6, { align: "center" });
+  doc.text(L("GARANHÃO ♂", "STALLION ♂", "GARAÑÓN ♂"), garX + halfW / 2, y + 6, { align: "center" });
   doc.setTextColor(...WHITE);
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
-  const garName = doc.splitTextToSize(safe(garanhao.nome || "Garanhão"), halfW - 8);
+  const garName = doc.splitTextToSize(safe(garanhao.nome || L("Garanhão", "Stallion", "Garañón")), halfW - 8);
   doc.text(garName[0], garX + halfW / 2, y + 13, { align: "center" });
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text(`${garanhao.idade} anos · ${garanhao.altura} cm · BLUP ${garanhao.blup}`, garX + halfW / 2, y + 19, { align: "center" });
+  doc.text(`${garanhao.idade} ${L("anos", "years", "años")} · ${garanhao.altura} cm · BLUP ${garanhao.blup}`, garX + halfW / 2, y + 19, { align: "center" });
 
   // Égua card
   doc.setFillColor(...CARD_BG2);
@@ -320,16 +324,16 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
   doc.setFont("helvetica", "normal");
-  doc.text("ÉGUA ♀", eguaX + halfW / 2, y + 6, { align: "center" });
+  doc.text(L("ÉGUA ♀", "MARE ♀", "YEGUA ♀"), eguaX + halfW / 2, y + 6, { align: "center" });
   doc.setTextColor(...WHITE);
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
-  const eguaName = doc.splitTextToSize(safe(egua.nome || "Égua"), halfW - 8);
+  const eguaName = doc.splitTextToSize(safe(egua.nome || L("Égua", "Mare", "Yegua")), halfW - 8);
   doc.text(eguaName[0], eguaX + halfW / 2, y + 13, { align: "center" });
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text(`${egua.idade} anos · ${egua.altura} cm · BLUP ${egua.blup}`, eguaX + halfW / 2, y + 19, { align: "center" });
+  doc.text(`${egua.idade} ${L("anos", "years", "años")} · ${egua.altura} cm · BLUP ${egua.blup}`, eguaX + halfW / 2, y + 19, { align: "center" });
 
   // "×" connector
   doc.setTextColor(...GOLD);
@@ -341,11 +345,11 @@ export async function generateCompatibilidadePDF(
 
   // ── Content preview ─────────────────────────────────────────────────────────
   const previews = [
-    "Dados dos progenitores comparados  (pág. 2)",
-    "Análise por factor de compatibilidade  (pág. 2)",
-    "Previsão de pelagens da cria  (pág. 3)",
-    "Alertas genéticos e riscos  (pág. 3)",
-    "Pontos fortes, fracos e recomendações  (pág. 3)",
+    L("Dados dos progenitores comparados  (pág. 2)", "Compared progenitor data  (p. 2)", "Datos de los progenitores comparados  (pág. 2)"),
+    L("Análise por factor de compatibilidade  (pág. 2)", "Compatibility factor analysis  (p. 2)", "Análisis por factor de compatibilidad  (pág. 2)"),
+    L("Previsão de pelagens da cria  (pág. 3)", "Offspring coat prediction  (p. 3)", "Previsión de pelajes de la cría  (pág. 3)"),
+    L("Alertas genéticos e riscos  (pág. 3)", "Genetic alerts and risks  (p. 3)", "Alertas genéticas y riesgos  (pág. 3)"),
+    L("Pontos fortes, fracos e recomendações  (pág. 3)", "Strengths, weaknesses and recommendations  (p. 3)", "Puntos fuertes, débiles y recomendaciones  (pág. 3)"),
   ];
 
   const colW2 = CONTENT_W / 2 - 4;
@@ -374,7 +378,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...GOLD);
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
-  doc.text(`PORTAL LUSITANO  |  ANÁLISE REPRODUTIVA  |  ${safe(date)}`, PAGE_W / 2, 275, { align: "center" });
+  doc.text(L("PORTAL LUSITANO  |  ANÁLISE REPRODUTIVA", "PORTAL LUSITANO  |  REPRODUCTIVE ANALYSIS", "PORTAL LUSITANO  |  ANÁLISIS REPRODUCTIVO") + "  |  " + safe(date), PAGE_W / 2, 275, { align: "center" });
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
   doc.setFont("helvetica", "normal");
@@ -385,7 +389,7 @@ export async function generateCompatibilidadePDF(
   // ═══════════════════════════════════════════════════════════════════════════
   doc.addPage();
   fillPageBg(doc);
-  addPageHeader(doc, "Dados dos Progenitores", "Página 2 de 3");
+  addPageHeader(doc, L("Dados dos Progenitores", "Progenitor Data", "Datos de los Progenitores"), L("Página 2 de 3", "Page 2 of 3", "Página 2 de 3"));
 
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
@@ -393,7 +397,7 @@ export async function generateCompatibilidadePDF(
   doc.text(safe(pairName).slice(0, 40), PAGE_W / 2, 15, { align: "center" });
 
   y = 30;
-  y = addSectionTitle(doc, "Comparação dos Progenitores", y);
+  y = addSectionTitle(doc, L("Comparação dos Progenitores", "Progenitor Comparison", "Comparación de los Progenitores"), y);
 
   // Two-column horse data
   const colLX = MARGIN;
@@ -408,7 +412,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
-  doc.text("GARANHÃO", colLX + colW / 2, y + 5.5, { align: "center" });
+  doc.text(L("GARANHÃO", "STALLION", "GARAÑÓN"), colLX + colW / 2, y + 5.5, { align: "center" });
 
   doc.setFillColor(...CARD_BG2);
   doc.roundedRect(colRX, y, colW, 8, 1.5, 1.5, "F");
@@ -417,34 +421,34 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
-  doc.text("ÉGUA", colRX + colW / 2, y + 5.5, { align: "center" });
+  doc.text(L("ÉGUA", "MARE", "YEGUA"), colRX + colW / 2, y + 5.5, { align: "center" });
 
   y += 12;
 
   let yL = y;
   let yR = y;
 
-  yL = addKV(doc, "Nome", garanhao.nome || "Não especificado", colLX, yL, colW);
-  yL = addKV(doc, "Idade", `${garanhao.idade} anos`, colLX, yL, colW);
-  yL = addKV(doc, "Altura", `${garanhao.altura} cm`, colLX, yL, colW);
-  yL = addKV(doc, "Pelagem", safe(garanhao.pelagem), colLX, yL, colW);
-  yL = addKV(doc, "Linhagem", safe(garanhao.linhagem), colLX, yL, colW);
-  yL = addKV(doc, "Conformação", `${garanhao.conformacao}/10`, colLX, yL, colW);
-  yL = addKV(doc, "Andamentos", `${garanhao.andamentos}/10`, colLX, yL, colW);
-  yL = addKV(doc, "Temperamento", safe(garanhao.temperamento), colLX, yL, colW);
-  yL = addKVWithHealthBadge(doc, "Saúde", `${garanhao.saude}/10`, garanhao.saude >= 8 ? "excelente" : garanhao.saude >= 6 ? "bom" : "regular", colLX, yL, colW);
+  yL = addKV(doc, L("Nome", "Name", "Nombre"), garanhao.nome || L("Não especificado", "Not specified", "No especificado"), colLX, yL, colW);
+  yL = addKV(doc, L("Idade", "Age", "Edad"), `${garanhao.idade} ${L("anos", "years", "años")}`, colLX, yL, colW);
+  yL = addKV(doc, L("Altura", "Height", "Altura"), `${garanhao.altura} cm`, colLX, yL, colW);
+  yL = addKV(doc, L("Pelagem", "Coat", "Pelaje"), safe(garanhao.pelagem), colLX, yL, colW);
+  yL = addKV(doc, L("Linhagem", "Lineage", "Linaje"), safe(garanhao.linhagem), colLX, yL, colW);
+  yL = addKV(doc, L("Conformação", "Conformation", "Conformación"), `${garanhao.conformacao}/10`, colLX, yL, colW);
+  yL = addKV(doc, L("Andamentos", "Gaits", "Aires"), `${garanhao.andamentos}/10`, colLX, yL, colW);
+  yL = addKV(doc, L("Temperamento", "Temperament", "Temperamento"), safe(garanhao.temperamento), colLX, yL, colW);
+  yL = addKVWithHealthBadge(doc, L("Saúde", "Health", "Salud"), `${garanhao.saude}/10`, garanhao.saude >= 8 ? "excelente" : garanhao.saude >= 6 ? "bom" : "regular", colLX, yL, colW);
   yL = addKV(doc, "BLUP", `${garanhao.blup}`, colLX, yL, colW);
   yL = addKV(doc, "COI", `${garanhao.coi}%`, colLX, yL, colW);
 
-  yR = addKV(doc, "Nome", egua.nome || "Não especificado", colRX, yR, colW);
-  yR = addKV(doc, "Idade", `${egua.idade} anos`, colRX, yR, colW);
-  yR = addKV(doc, "Altura", `${egua.altura} cm`, colRX, yR, colW);
-  yR = addKV(doc, "Pelagem", safe(egua.pelagem), colRX, yR, colW);
-  yR = addKV(doc, "Linhagem", safe(egua.linhagem), colRX, yR, colW);
-  yR = addKV(doc, "Conformação", `${egua.conformacao}/10`, colRX, yR, colW);
-  yR = addKV(doc, "Andamentos", `${egua.andamentos}/10`, colRX, yR, colW);
-  yR = addKV(doc, "Temperamento", safe(egua.temperamento), colRX, yR, colW);
-  yR = addKVWithHealthBadge(doc, "Saúde", `${egua.saude}/10`, egua.saude >= 8 ? "excelente" : egua.saude >= 6 ? "bom" : "regular", colRX, yR, colW);
+  yR = addKV(doc, L("Nome", "Name", "Nombre"), egua.nome || L("Não especificado", "Not specified", "No especificado"), colRX, yR, colW);
+  yR = addKV(doc, L("Idade", "Age", "Edad"), `${egua.idade} ${L("anos", "years", "años")}`, colRX, yR, colW);
+  yR = addKV(doc, L("Altura", "Height", "Altura"), `${egua.altura} cm`, colRX, yR, colW);
+  yR = addKV(doc, L("Pelagem", "Coat", "Pelaje"), safe(egua.pelagem), colRX, yR, colW);
+  yR = addKV(doc, L("Linhagem", "Lineage", "Linaje"), safe(egua.linhagem), colRX, yR, colW);
+  yR = addKV(doc, L("Conformação", "Conformation", "Conformación"), `${egua.conformacao}/10`, colRX, yR, colW);
+  yR = addKV(doc, L("Andamentos", "Gaits", "Aires"), `${egua.andamentos}/10`, colRX, yR, colW);
+  yR = addKV(doc, L("Temperamento", "Temperament", "Temperamento"), safe(egua.temperamento), colRX, yR, colW);
+  yR = addKVWithHealthBadge(doc, L("Saúde", "Health", "Salud"), `${egua.saude}/10`, egua.saude >= 8 ? "excelente" : egua.saude >= 6 ? "bom" : "regular", colRX, yR, colW);
   yR = addKV(doc, "BLUP", `${egua.blup}`, colRX, yR, colW);
   yR = addKV(doc, "COI", `${egua.coi}%`, colRX, yR, colW);
 
@@ -456,7 +460,7 @@ export async function generateCompatibilidadePDF(
   y += 9;
 
   // Factor analysis bars
-  y = addSectionTitle(doc, "Análise por Factor de Compatibilidade", y);
+  y = addSectionTitle(doc, L("Análise por Factor de Compatibilidade", "Compatibility Factor Analysis", "Análisis por Factor de Compatibilidad"), y);
 
   for (const f of resultado.factores) {
     if (y > 265) break;
@@ -468,7 +472,7 @@ export async function generateCompatibilidadePDF(
   // ═══════════════════════════════════════════════════════════════════════════
   doc.addPage();
   fillPageBg(doc);
-  addPageHeader(doc, "Previsão Genética & Recomendações", "Página 3 de 3");
+  addPageHeader(doc, L("Previsão Genética & Recomendações", "Genetic Prediction & Recommendations", "Previsión Genética & Recomendaciones"), L("Página 3 de 3", "Page 3 of 3", "Página 3 de 3"));
 
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
@@ -479,7 +483,7 @@ export async function generateCompatibilidadePDF(
 
   // ── Coat colour predictions ────────────────────────────────────────────────
   if (resultado.pelagens.length > 0) {
-    y = addSectionTitle(doc, "Previsão de Pelagem da Cria", y);
+    y = addSectionTitle(doc, L("Previsão de Pelagem da Cria", "Offspring Coat Prediction", "Previsión de Pelaje de la Cría"), y);
 
     const coatCols = Math.min(resultado.pelagens.length, 3);
     const coatGap = 3;
@@ -522,7 +526,7 @@ export async function generateCompatibilidadePDF(
 
   // ── Genetic risks ──────────────────────────────────────────────────────────
   if (resultado.riscos.length > 0) {
-    y = addSectionTitleWithCount(doc, "Alertas e Riscos Genéticos", resultado.riscos.length, RED, y);
+    y = addSectionTitleWithCount(doc, L("Alertas e Riscos Genéticos", "Genetic Alerts and Risks", "Alertas y Riesgos Genéticos"), resultado.riscos.length, RED, y);
 
     for (const r of resultado.riscos) {
       if (y > 265) break;
@@ -540,7 +544,7 @@ export async function generateCompatibilidadePDF(
   if (resultado.pontosForteseFracos.fortes.length > 0) {
     y = addSectionTitleWithCount(
       doc,
-      "Pontos Fortes da Combinação",
+      L("Pontos Fortes da Combinação", "Combination Strengths", "Puntos Fuertes de la Combinación"),
       resultado.pontosForteseFracos.fortes.length,
       GREEN,
       y
@@ -556,7 +560,7 @@ export async function generateCompatibilidadePDF(
   if (resultado.pontosForteseFracos.fracos.length > 0) {
     y = addSectionTitleWithCount(
       doc,
-      "Áreas de Atenção",
+      L("Áreas de Atenção", "Areas of Attention", "Áreas de Atención"),
       resultado.pontosForteseFracos.fracos.length,
       AMBER,
       y
@@ -572,7 +576,7 @@ export async function generateCompatibilidadePDF(
   if (resultado.recomendacoes.length > 0) {
     y = addSectionTitleWithCount(
       doc,
-      "Recomendações",
+      L("Recomendações", "Recommendations", "Recomendaciones"),
       resultado.recomendacoes.length,
       GOLD,
       y
@@ -596,12 +600,24 @@ export async function generateCompatibilidadePDF(
     doc.setTextColor(...GOLD);
     doc.setFontSize(7);
     doc.setFont("helvetica", "bold");
-    doc.text("METODOLOGIA DE ANÁLISE", MARGIN + 7, y + 6);
+    doc.text(L("METODOLOGIA DE ANÁLISE", "ANALYSIS METHODOLOGY", "METODOLOGÍA DE ANÁLISIS"), MARGIN + 7, y + 6);
 
     const methBullets = [
-      safe("Cálculo de COI (Coeficiente de Endogamia) previsto com base nas linhagens dos progenitores"),
-      safe("BLUP estimado pela média ponderada dos valores genéticos dos pais e descendentes"),
-      safe("Compatibilidade avaliada por 8+ factores incluindo genética, morfologia, temperamento e saúde"),
+      safe(L(
+        "Cálculo de COI (Coeficiente de Endogamia) previsto com base nas linhagens dos progenitores",
+        "COI (Inbreeding Coefficient) calculation predicted based on progenitor lineages",
+        "Cálculo de COI (Coeficiente de Endogamia) previsto con base en los linajes de los progenitores"
+      )),
+      safe(L(
+        "BLUP estimado pela média ponderada dos valores genéticos dos pais e descendentes",
+        "BLUP estimated by weighted average of parents' and descendants' genetic values",
+        "BLUP estimado por la media ponderada de los valores genéticos de los padres y descendientes"
+      )),
+      safe(L(
+        "Compatibilidade avaliada por 8+ factores incluindo genética, morfologia, temperamento e saúde",
+        "Compatibility evaluated by 8+ factors including genetics, morphology, temperament and health",
+        "Compatibilidad evaluada por 8+ factores incluyendo genética, morfología, temperamento y salud"
+      )),
     ];
 
     doc.setTextColor(...ZINC400);
