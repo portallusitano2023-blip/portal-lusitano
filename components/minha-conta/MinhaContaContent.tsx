@@ -271,7 +271,8 @@ function RecentFavorites({ delay }: { delay: number }) {
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function MinhaContaContent({ customer }: { customer: Customer }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const { isActive } = useSubscriptionStatus();
   const [visible, setVisible] = useState(false);
 
@@ -294,11 +295,11 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
     .filter(Boolean).join("").toUpperCase() || "M";
   const fullName = [customer.firstName, customer.lastName].filter(Boolean).join(" ") || "Membro";
   const memberSince = customer.createdAt
-    ? new Date(customer.createdAt).toLocaleDateString("pt-PT", { month: "long", year: "numeric" })
+    ? new Date(customer.createdAt).toLocaleDateString(locale, { month: "long", year: "numeric" })
     : "—";
 
   const formatPrice = (amount: string, currency: string) =>
-    new Intl.NumberFormat("pt-PT", { style: "currency", currency }).format(Number(amount));
+    new Intl.NumberFormat(locale, { style: "currency", currency }).format(Number(amount));
 
   // Tools — first is free, rest PRO-locked for non-subscribers
   const tools = [
@@ -580,7 +581,7 @@ export default function MinhaContaContent({ customer }: { customer: Customer }) 
                             {t.account.order} #{order.orderNumber}
                           </p>
                           <p className="text-[var(--foreground-muted)] text-[10px] mt-0.5">
-                            {new Date(order.processedAt).toLocaleDateString("pt-PT")}
+                            {new Date(order.processedAt).toLocaleDateString(locale)}
                           </p>
                         </div>
                         <div className="text-right">
