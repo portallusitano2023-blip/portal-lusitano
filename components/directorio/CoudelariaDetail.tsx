@@ -172,6 +172,7 @@ export default function CoudelariaDetail({
   const { showToast } = useToast();
   const { t, language } = useLanguage();
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   const [activeImage, setActiveImage] = useState(0);
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
