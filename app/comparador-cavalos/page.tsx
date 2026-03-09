@@ -51,7 +51,15 @@ export default function ComparadorCavalosPage() {
   const [calculandoStep, setCalculandoStep] = useState(0);
   const [isExporting, setIsExporting] = useState(false);
   const [hasDraft, setHasDraft] = useState(false);
-  const [draftDate, setDraftDate] = useState("");
+  const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
+
+  const draftDate = useMemo(() => {
+    if (!draftSavedAt) return "";
+    return new Date(draftSavedAt).toLocaleDateString(
+      language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT",
+      { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }
+    );
+  }, [draftSavedAt, language]);
   const [profileContext, setProfileContext] = useState<{
     profile: string;
     subProfile: string | null;
@@ -128,14 +136,7 @@ export default function ComparadorCavalosPage() {
         const age = Date.now() - new Date(savedAt).getTime();
         if (age < 7 * 24 * 60 * 60 * 1000) {
           setHasDraft(true);
-          setDraftDate(
-            new Date(savedAt).toLocaleDateString(language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT", {
-              day: "numeric",
-              month: "long",
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          );
+          setDraftSavedAt(savedAt);
         } else {
           localStorage.removeItem(DRAFT_KEY);
         }
@@ -271,6 +272,7 @@ export default function ComparadorCavalosPage() {
   };
 
   const handleExportPDF = async () => {
+    if (isExporting) return;
     setIsExporting(true);
     try {
       const scores = cavalos.map((c) => calcularScore(c));
@@ -443,8 +445,8 @@ export default function ComparadorCavalosPage() {
                           </button>
                         </div>
                         <div className="divide-y divide-[var(--border)]/50">
-                          {history.map((entry, i) => (
-                            <div key={i} className="px-4 py-3">
+                          {history.map((entry) => (
+                            <div key={entry.timestamp} className="px-4 py-3">
                               <div className="flex items-center justify-between mb-1">
                                 <span className="text-xs text-[#C5A059] font-semibold truncate">
                                   {tr("Vencedor", "Winner", "Ganador")}: {entry.vencedor}
@@ -461,7 +463,7 @@ export default function ComparadorCavalosPage() {
                               <div className="flex flex-wrap gap-1">
                                 {entry.cavalos.map((cv, j) => (
                                   <span
-                                    key={j}
+                                    key={`${entry.timestamp}-${cv.nome}-${j}`}
                                     className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--background-secondary)] text-[var(--foreground-secondary)]"
                                   >
                                     {cv.nome}:{" "}

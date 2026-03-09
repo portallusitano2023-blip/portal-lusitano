@@ -91,18 +91,7 @@ interface CalcResultado {
 
 // ─── Label Maps ───────────────────────────────────────────────────────────────
 
-const SEXO_LABELS: Record<string, string> = {
-  garanhao: "Garanhão",
-  egua: "Égua",
-  castrado: "Castrado",
-};
-
-const SAUDE_LABELS: Record<string, string> = {
-  excelente: "Excelente",
-  muito_bom: "Muito Bom",
-  bom: "Bom",
-  regular: "Regular",
-};
+// Label maps are built inside generateCalculadoraPDF after L() is defined
 
 // ─── Training level value progression data ────────────────────────────────────
 
@@ -117,16 +106,7 @@ const TREINO_KEYS = [
   "grand_prix",
 ] as const;
 
-const TREINO_LABELS = [
-  "Potro",
-  "Desbravado",
-  "Iniciado",
-  "Elementar",
-  "Médio",
-  "Avançado",
-  "Alta Escola",
-  "Grand Prix",
-];
+// TREINO_LABELS built inside generateCalculadoraPDF after L() is defined
 
 const TREINO_BASE_VALUES = [8000, 15000, 25000, 40000, 65000, 100000, 150000, 250000];
 
@@ -158,6 +138,30 @@ export async function generateCalculadoraPDF(
   const L = (pt: string, en: string, es?: string): string =>
     language === "en" ? en : language === "es" && es ? es : pt;
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+
+  const SEXO_LABELS: Record<string, string> = {
+    garanhao: L("Garanhão", "Stallion", "Semental"),
+    egua: L("Égua", "Mare", "Yegua"),
+    castrado: L("Castrado", "Gelding", "Castrado"),
+  };
+
+  const SAUDE_LABELS: Record<string, string> = {
+    excelente: L("Excelente", "Excellent", "Excelente"),
+    muito_bom: L("Muito Bom", "Very Good", "Muy Bueno"),
+    bom: L("Bom", "Good", "Bueno"),
+    regular: L("Regular", "Fair", "Regular"),
+  };
+
+  const TREINO_LABELS = [
+    L("Potro", "Colt", "Potro"),
+    L("Desbravado", "Broken", "Desbravado"),
+    L("Iniciado", "Started", "Iniciado"),
+    L("Elementar", "Elementary", "Elemental"),
+    L("Médio", "Medium", "Medio"),
+    L("Avançado", "Advanced", "Avanzado"),
+    L("Alta Escola", "High School", "Alta Escuela"),
+    L("Grand Prix", "Grand Prix", "Grand Prix"),
+  ];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc: any = await createPremiumPDF();
   const horseName = form.nome || L("Puro Sangue Lusitano", "Lusitano Horse", "Caballo Lusitano");

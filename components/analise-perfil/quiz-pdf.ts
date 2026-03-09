@@ -50,7 +50,8 @@ const PROFILE_COLORS: Record<string, [number, number, number]> = {
 export async function generateProfilePDF(
   result: Result,
   scores: Record<string, number>,
-  language?: string
+  language?: string,
+  isPremium = false
 ): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc: any = await createPremiumPDF();
@@ -769,7 +770,9 @@ export async function generateProfilePDF(
 
   // ── Footer ──────────────────────────────────────────────────────────────────
   addPremiumFooter(doc, language);
-  addPremiumWatermark(doc, language, "PORTAL LUSITANO");
+  if (!isPremium) {
+    addPremiumWatermark(doc, language, "PORTAL LUSITANO");
+  }
 
   doc.save(`analise-perfil-${result.profile}-${Date.now().toString(36).slice(-6)}.pdf`);
 }

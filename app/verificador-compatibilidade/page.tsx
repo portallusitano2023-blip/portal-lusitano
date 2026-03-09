@@ -64,7 +64,15 @@ export default function VerificadorCompatibilidadePage() {
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasDraft, setHasDraft] = useState(false);
-  const [draftDate, setDraftDate] = useState<string>("");
+  const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
+
+  const draftDate = useMemo(() => {
+    if (!draftSavedAt) return "";
+    return new Date(draftSavedAt).toLocaleDateString(
+      language === "pt" ? "pt-PT" : language === "es" ? "es-ES" : "en-GB",
+      { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }
+    );
+  }, [draftSavedAt, language]);
   const [chainBanner, setChainBanner] = useState<string | null>(null);
   const [chainImported, setChainImported] = useState(false);
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
@@ -89,20 +97,14 @@ export default function VerificadorCompatibilidadePage() {
         const age = Date.now() - new Date(savedAt).getTime();
         if (age < 7 * 24 * 60 * 60 * 1000) {
           setHasDraft(true);
-          setDraftDate(
-            new Date(savedAt).toLocaleDateString(language === "pt" ? "pt-PT" : language === "es" ? "es-ES" : "en-GB", {
-              day: "numeric",
-              month: "long",
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          );
+          setDraftSavedAt(savedAt);
         } else {
           localStorage.removeItem(DRAFT_KEY);
         }
       }
     } catch {}
-  }, [language]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ============================================
   // TOOL CHAIN: ler par do Comparador de Cavalos
@@ -218,11 +220,11 @@ export default function VerificadorCompatibilidadePage() {
   };
 
   const handleExportPDF = async () => {
-    if (!resultado) return;
+    if (!resultado || isExporting) return;
     setIsExporting(true);
     try {
       const { generateCompatibilidadePDF } = await import("@/lib/tools/pdf/compatibilidade-pdf");
-      await generateCompatibilidadePDF(garanhao, egua, resultado, language);
+      await generateCompatibilidadePDF(garanhao, egua, resultado, language, isSubscribed);
     } catch {
       showError(
         tr(

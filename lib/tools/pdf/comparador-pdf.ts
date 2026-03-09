@@ -10,6 +10,7 @@ import {
   GREEN,
   AMBER,
   MARGIN,
+  addPremiumWatermark,
 } from "./base-premium";
 
 // ─── Landscape A4 Constants ───────────────────────────────────────────────────
@@ -225,7 +226,8 @@ export async function generateComparadorPDF(
   scores: number[],
   vencedorNome: string,
   melhorValorNome: string,
-  language?: string
+  language?: string,
+  isPremium = false
 ): Promise<void> {
   const JsPDF = await loadJsPDF();
 
@@ -581,6 +583,11 @@ export async function generateComparadorPDF(
 
   // ── Footer on all pages ──
   addLandscapeFooter(doc, language);
+
+  // ── Watermark for free-tier users ──
+  if (!isPremium) {
+    addPremiumWatermark(doc, language);
+  }
 
   // ── Download ──
   const fileName = `comparacao-cavalos-${Date.now().toString(36).toUpperCase().slice(-6)}.pdf`;

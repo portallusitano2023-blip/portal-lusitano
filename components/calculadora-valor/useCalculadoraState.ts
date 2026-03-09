@@ -312,11 +312,11 @@ export function useCalculadoraState() {
   };
 
   const handleExportPDF = async () => {
-    if (!resultado) return;
+    if (!resultado || isExporting) return;
     setIsExporting(true);
     try {
       const { generateCalculadoraPDF } = await import("@/lib/tools/pdf/calculadora-pdf");
-      const blobUrl = await generateCalculadoraPDF(formStep.data as FormData, resultado, language);
+      const blobUrl = await generateCalculadoraPDF(formStep.data as FormData, resultado, language, isSubscribed);
       if (pdfPreviewUrl) URL.revokeObjectURL(pdfPreviewUrl);
       setPdfPreviewUrl(blobUrl);
     } catch (error) {

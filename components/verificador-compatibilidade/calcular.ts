@@ -135,7 +135,7 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
   // 8. Fertilidade (5pts)
   const fertNiveis: Record<string, number> = { "Muito Alta": 5, Alta: 4, Normal: 3, Baixa: 1 };
   const fertScore = Math.round(
-    (fertNiveis[garanhao.fertilidade] + fertNiveis[egua.fertilidade]) / 2
+    ((fertNiveis[garanhao.fertilidade] ?? 3) + (fertNiveis[egua.fertilidade] ?? 3)) / 2
   );
   factores.push({
     nome: tr("Índice de Fertilidade", "Fertility Index", "Índice de Fertilidad"),

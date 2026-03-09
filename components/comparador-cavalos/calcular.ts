@@ -100,7 +100,9 @@ export function calcularROI(c: Cavalo, tr: TrFn = defaultTr): { roi5yr: number; 
   else if (c.idade > 14) annualRate = -0.04;
 
   const estimatedValue5yr = Math.round(c.preco * Math.pow(1 + annualRate, 5));
-  const roi5yr = Math.round(((estimatedValue5yr - c.preco) / c.preco) * 100);
+  const roi5yr = c.preco > 0
+    ? Math.round(((estimatedValue5yr - c.preco) / c.preco) * 100)
+    : 0;
 
   const baseTraining = 200 + nivel * 100;
   const annualCost =

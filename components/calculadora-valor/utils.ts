@@ -136,7 +136,7 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
 
   const rawValor = base * totalMult;
   if (!isFinite(rawValor)) {
-    throw new Error("Cálculo resultou em valor inválido — verifique os dados de entrada");
+    throw new Error(t("Cálculo resultou em valor inválido — verifique os dados de entrada", "Calculation produced an invalid value — check input data", "El cálculo produjo un valor inválido — revisa los datos"));
   }
   const valorFinal = Math.round(rawValor);
   const variance = form.registoAPSL ? 0.12 : 0.2;

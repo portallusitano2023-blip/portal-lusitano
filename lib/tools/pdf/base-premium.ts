@@ -330,12 +330,14 @@ export function addMetricsRow(doc: jsPDF, metrics: MetricBox[], y: number): numb
 export function addTrainingLevel(doc: jsPDF, treinoKey: string, y: number, language?: string): number {
   const L = (pt: string, en: string, es: string) => language === "en" ? en : language === "es" ? es : pt;
   const TRAINING_LEVELS = [
-    { key: "iniciacao", label: L("Iniciação", "Initiation", "Iniciación") },
+    { key: "potro", label: L("Potro", "Colt", "Potro") },
+    { key: "desbravado", label: L("Desbrav.", "Broken", "Desbrav.") },
+    { key: "iniciado", label: L("Iniciado", "Started", "Iniciado") },
     { key: "elementar", label: L("Elementar", "Elementary", "Elemental") },
     { key: "medio", label: L("Médio", "Medium", "Medio") },
     { key: "avancado", label: L("Avançado", "Advanced", "Avanzado") },
-    { key: "alto_escolar", label: L("A.Escolar", "A.School", "A.Escolar") },
-    { key: "internacional", label: L("Intern.", "Intern.", "Intern.") },
+    { key: "alta_escola", label: L("A.Escola", "H.School", "A.Escuela") },
+    { key: "grand_prix", label: L("G.Prix", "G.Prix", "G.Prix") },
   ];
   const activeIdx = TRAINING_LEVELS.findIndex((l) => l.key === treinoKey);
   const segW = CONTENT_W / TRAINING_LEVELS.length;
@@ -962,10 +964,12 @@ export function addPremiumWatermark(doc: jsPDF, language?: string, text?: string
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
+    const pw = doc.internal.pageSize.getWidth();
+    const ph = doc.internal.pageSize.getHeight();
     doc.setTextColor(38, 38, 38);
     doc.setFontSize(36);
     doc.setFont("helvetica", "bold");
-    doc.text(label, PAGE_W / 2, PAGE_H / 2, { align: "center", angle: 45 });
+    doc.text(label, pw / 2, ph / 2, { align: "center", angle: 45 });
   }
 }
 

@@ -61,7 +61,8 @@ export default function BreakdownAnalysis({
     resultado.valorFinal,
     resultado.multiplicador,
     locale,
-    tr("meses", "months", "meses")
+    tr("meses", "months", "meses"),
+    language
   );
 
   return (

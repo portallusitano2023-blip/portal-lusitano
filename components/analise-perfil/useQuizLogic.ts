@@ -367,9 +367,9 @@ export function useQuizLogic() {
       .catch(() => {
         showError(
           tr(
-            "Erro de ligação. Verifica a tua internet.",
-            "Connection error. Check your internet.",
-            "Error de conexión. Verifica tu internet."
+            "Não foi possível copiar. Usa o link acima.",
+            "Could not copy. Use the link above.",
+            "No se pudo copiar. Usa el enlace de arriba."
           )
         );
       });
@@ -391,7 +391,7 @@ export function useQuizLogic() {
     if (!result || isPdfLoading) return;
     setIsPdfLoading(true);
     try {
-      await generateProfilePDF(result, scores, language);
+      await generateProfilePDF(result, scores, language, isSubscribed);
     } catch {
       showError(
         tr(
@@ -403,7 +403,7 @@ export function useQuizLogic() {
     } finally {
       setIsPdfLoading(false);
     }
-  }, [result, scores, isPdfLoading, showError, tr]);
+  }, [result, scores, isPdfLoading, showError, tr, language, isSubscribed]);
 
   const downloadBadge = useCallback(async () => {
     if (!badgeRef.current || !result || isBadgeLoading) return;

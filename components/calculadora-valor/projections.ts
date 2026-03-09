@@ -65,15 +65,15 @@ const TRAINING_ORDER = [
   "grand_prix",
 ];
 
-const TRAINING_LABELS: Record<string, string> = {
-  potro: "Potro",
-  desbravado: "Desbravado",
-  iniciado: "Iniciado",
-  elementar: "Elementar",
-  medio: "Médio (M)",
-  avancado: "Avançado (S)",
-  alta_escola: "Alta Escola",
-  grand_prix: "Grand Prix",
+const TRAINING_LABELS: Record<string, Record<string, string>> = {
+  potro: { pt: "Potro", en: "Colt", es: "Potro" },
+  desbravado: { pt: "Desbravado", en: "Broken", es: "Desbravado" },
+  iniciado: { pt: "Iniciado", en: "Started", es: "Iniciado" },
+  elementar: { pt: "Elementar", en: "Elementary", es: "Elemental" },
+  medio: { pt: "Médio (M)", en: "Medium (M)", es: "Medio (M)" },
+  avancado: { pt: "Avançado (S)", en: "Advanced (S)", es: "Avanzado (S)" },
+  alta_escola: { pt: "Alta Escola", en: "High School", es: "Alta Escuela" },
+  grand_prix: { pt: "Grand Prix", en: "Grand Prix", es: "Grand Prix" },
 };
 
 // Custo estimado e duração para transição entre níveis
@@ -104,8 +104,10 @@ export function calcularTrainingROI(
   valorActual: number,
   totalMultiplier: number,
   locale?: string,
-  trMeses?: string
+  trMeses?: string,
+  language?: string
 ): TrainingROILevel[] {
+  const lang = language ?? "pt";
   const currentIndex = TRAINING_ORDER.indexOf(form.treino);
   if (currentIndex === -1 || currentIndex >= TRAINING_ORDER.length - 1) return [];
 
@@ -135,7 +137,7 @@ export function calcularTrainingROI(
 
     levels.push({
       level: nextLevel,
-      label: TRAINING_LABELS[nextLevel] || nextLevel,
+      label: TRAINING_LABELS[nextLevel]?.[lang] || TRAINING_LABELS[nextLevel]?.pt || nextLevel,
       estimatedValue,
       roi,
       costRange: transition
