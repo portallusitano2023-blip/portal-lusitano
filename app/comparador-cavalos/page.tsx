@@ -602,7 +602,7 @@ export default function ComparadorCavalosPage() {
             )}
 
             {/* Paywall — replaces analyse button when user cannot use */}
-            {!showAnalise && !canUse && (
+            {!showAnalise && !canUse && !accessLoading && (
               <Paywall
                 toolName={t.comparador.tool_name}
                 requiresAuth={requiresAuth}

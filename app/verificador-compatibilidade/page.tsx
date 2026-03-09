@@ -475,7 +475,7 @@ export default function VerificadorCompatibilidadePage() {
         )}
 
         {/* Form */}
-        {step === 1 && !resultado && canUse && (
+        {step === 1 && !resultado && canUse && !accessLoading && (
           <HorseForm
             garanhao={garanhao}
             egua={egua}

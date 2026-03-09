@@ -58,6 +58,7 @@ export async function generatePerfilPDF(profileData: PerfilData, language?: stri
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc: any = await createPremiumPDF();
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+  const trMes = language === "en" ? "month" : language === "es" ? "mes" : "mês";
   const date = new Date().toLocaleDateString(locale, {
     day: "2-digit",
     month: "long",
@@ -402,7 +403,7 @@ export async function generatePerfilPDF(profileData: PerfilData, language?: stri
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
   doc.text(
-    safe(`~${monthlyMin.toLocaleString(locale)} — ${monthlyMax.toLocaleString(locale)} EUR/mês`),
+    safe(`~${monthlyMin.toLocaleString(locale)} — ${monthlyMax.toLocaleString(locale)} EUR/${trMes}`),
     PAGE_W - MARGIN - 5,
     y + 19,
     { align: "right" }

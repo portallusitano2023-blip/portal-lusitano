@@ -91,6 +91,7 @@ export function useCalculadoraState() {
     priceRange: string;
     training: string;
   } | null>(null);
+  const [isCalculating, setIsCalculating] = useState(false);
   const [calcHistory, setCalcHistory] = useState<CalcHistoryEntry[]>([]);
   const [showCalcHistory, setShowCalcHistory] = useState(false);
 
@@ -246,7 +247,7 @@ export function useCalculadoraState() {
   };
 
   const calcular = async () => {
-    if (!canUse) return;
+    if (!canUse || isCalculating) return;
 
     const formMeta = {
       treino: (formStep.data as FormData).treino,
@@ -255,6 +256,7 @@ export function useCalculadoraState() {
       sexo: (formStep.data as FormData).sexo,
     };
 
+    setIsCalculating(true);
     try {
       const result = calcularValor(formStep.data as FormData, tr);
       const resultMeta = {
@@ -286,6 +288,8 @@ export function useCalculadoraState() {
         }
         showToast("error", tr("Erro ao calcular o valor. Verifique os dados e tente novamente.", "Error calculating value. Please check the data and try again.", "Error al calcular el valor. Verifique los datos e inténtelo de nuevo."));
       }
+    } finally {
+      if (isMountedRef.current) setIsCalculating(false);
     }
   };
 
@@ -479,7 +483,7 @@ export function useCalculadoraState() {
     setStep: formStep.goToStep,
 
     // Calculation
-    isCalculating: formStep.isCalculating,
+    isCalculating,
     resultado,
     estimativaParcial,
     calcular,
