@@ -77,10 +77,12 @@ export default function ResultsSection({
   const comp = t.comparador as Record<string, string>;
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
-  const vencedor = cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b));
-  const melhorValor = cavalos.reduce((a, b) =>
-    calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b
-  );
+  const vencedor = cavalos.length > 0
+    ? cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b))
+    : cavalos[0];
+  const melhorValor = cavalos.length > 0
+    ? cavalos.reduce((a, b) => calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b)
+    : cavalos[0];
 
   // ============================================
   // INLINE HELPERS

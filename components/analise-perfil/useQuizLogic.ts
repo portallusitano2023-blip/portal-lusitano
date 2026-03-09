@@ -217,7 +217,16 @@ export function useQuizLogic() {
         // Scroll to quiz top so the next question is visible
         setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
       } else {
-        if (!canUse) return;
+        if (!canUse) {
+          showError(
+            tr(
+              "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
+              "Free usage limit reached. Subscribe to PRO to continue.",
+              "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
+            )
+          );
+          return;
+        }
 
         let mp = "amador";
         let ms = 0;
@@ -300,14 +309,24 @@ export function useQuizLogic() {
 
   const saveResult = useCallback(() => {
     if (result) {
-      localStorage.setItem(
-        "analise-perfil-result",
-        JSON.stringify({ profile: result.profile, scores, date: new Date().toISOString() })
-      );
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
+      try {
+        localStorage.setItem(
+          "analise-perfil-result",
+          JSON.stringify({ profile: result.profile, scores, date: new Date().toISOString() })
+        );
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000);
+      } catch {
+        showError(
+          tr(
+            "Não foi possível guardar o resultado localmente.",
+            "Could not save result locally.",
+            "No se pudo guardar el resultado localmente."
+          )
+        );
+      }
     }
-  }, [result, scores]);
+  }, [result, scores, showError, tr]);
 
   const getShareUrl = useCallback((): string => buildShareUrl(result, scores), [result, scores]);
 

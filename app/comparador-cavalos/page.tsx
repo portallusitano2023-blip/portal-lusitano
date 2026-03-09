@@ -42,8 +42,8 @@ export default function ComparadorCavalosPage() {
   const { showToast } = useToast();
 
   const [cavalos, setCavalos] = useState<Cavalo[]>([
-    criarCavalo("1", "Cavalo A"),
-    criarCavalo("2", "Cavalo B"),
+    criarCavalo("1", tr("Cavalo A", "Horse A", "Caballo A")),
+    criarCavalo("2", tr("Cavalo B", "Horse B", "Caballo B")),
   ]);
   const [step, setStep] = useState(0);
   const [showAnalise, setShowAnalise] = useState(false);
@@ -88,11 +88,11 @@ export default function ComparadorCavalosPage() {
 
         if (parsed.source === "calculadora" && parsed.horse) {
           const novo = {
-            ...criarCavalo("1", parsed.horse.nome || "Cavalo A"),
+            ...criarCavalo("1", parsed.horse.nome || tr("Cavalo A", "Horse A", "Caballo A")),
             ...parsed.horse,
             id: "1",
           };
-          setCavalos([novo, criarCavalo("2", "Cavalo B"), criarCavalo("3", "Cavalo C")]);
+          setCavalos([novo, criarCavalo("2", tr("Cavalo B", "Horse B", "Caballo B")), criarCavalo("3", tr("Cavalo C", "Horse C", "Caballo C"))]);
           sessionStorage.removeItem(CHAIN_KEY);
           setStep(1);
           return;
@@ -246,7 +246,7 @@ export default function ComparadorCavalosPage() {
   const resetar = () => {
     setStep(0);
     setShowAnalise(false);
-    setCavalos([criarCavalo("1", "Cavalo A"), criarCavalo("2", "Cavalo B")]);
+    setCavalos([criarCavalo("1", tr("Cavalo A", "Horse A", "Caballo A")), criarCavalo("2", tr("Cavalo B", "Horse B", "Caballo B"))]);
     try {
       localStorage.removeItem(DRAFT_KEY);
     } catch {}
@@ -284,7 +284,8 @@ export default function ComparadorCavalosPage() {
 
   const handleAnalyse = async () => {
     if (!canUse) return;
-    const cavalosValidos = cavalos.filter((c) => c.nome.trim() && !c.nome.startsWith("Cavalo"));
+    const isDefaultName = (nome: string) => ["Cavalo", "Horse", "Caballo"].some((p) => nome.startsWith(p));
+    const cavalosValidos = cavalos.filter((c) => c.nome.trim() && !isDefaultName(c.nome));
     if (cavalosValidos.length < 2) {
       showToast(
         "error",
@@ -346,10 +347,12 @@ export default function ComparadorCavalosPage() {
   // DERIVED
   // ============================================
 
-  const vencedor = cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b));
-  const melhorValor = cavalos.reduce((a, b) =>
-    calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b
-  );
+  const vencedor = cavalos.length > 0
+    ? cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b))
+    : null;
+  const melhorValor = cavalos.length > 0
+    ? cavalos.reduce((a, b) => calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b)
+    : null;
 
   // ============================================
   // RENDER
@@ -471,7 +474,7 @@ export default function ComparadorCavalosPage() {
         {step === 1 && (
           <div className="max-w-7xl mx-auto px-4 py-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
             {/* Hint for new users */}
-            {!showAnalise && cavalos.every((c) => c.nome.startsWith("Cavalo")) && (
+            {!showAnalise && cavalos.every((c) => ["Cavalo", "Horse", "Caballo"].some((p) => c.nome.startsWith(p))) && (
               <div className="flex items-start gap-3 p-4 bg-blue-500/8 border border-blue-500/20 rounded-xl mb-4">
                 <span className="text-blue-400 text-lg leading-none mt-0.5" aria-hidden="true">
                   💡
@@ -506,8 +509,8 @@ export default function ComparadorCavalosPage() {
                   index={i}
                   totalCavalos={cavalos.length}
                   showAnalise={showAnalise}
-                  vencedorId={vencedor.id}
-                  melhorValorId={melhorValor.id}
+                  vencedorId={vencedor?.id ?? ""}
+                  melhorValorId={melhorValor?.id ?? ""}
                   filtroDisciplina={filtroDisciplina}
                   t={t}
                   onUpdate={update}

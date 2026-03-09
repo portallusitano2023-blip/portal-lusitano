@@ -15,11 +15,12 @@ interface ImprovementActionsProps {
 
 export default function ImprovementActions({
   resultado,
-  form: _form,
+  form,
   t: _t,
 }: ImprovementActionsProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   interface Acao {
     titulo: string;
@@ -34,7 +35,7 @@ export default function ImprovementActions({
 
   const r = resultado;
 
-  if (!r.pontosForteseFracos.fortes.includes("Documentação veterinária completa")) {
+  if (!(form.raioX && form.exameVeterinario)) {
     acoes.push({
       titulo: tr("Exame Veterinário + Raio-X", "Veterinary Exam + X-Ray", "Examen Veterinario + Rayos-X"),
       descricao: tr("Documentação completa transmite segurança ao comprador", "Complete documentation conveys confidence to the buyer", "Documentación completa transmite seguridad al comprador"),
@@ -44,7 +45,7 @@ export default function ImprovementActions({
       badgeColor: "text-emerald-400 bg-emerald-500/15",
     });
   }
-  if (!r.pontosForteseFracos.fortes.includes("Registo APSL Livro Definitivo")) {
+  if (!(form.registoAPSL && form.livroAPSL === "definitivo")) {
     acoes.push({
       titulo: tr("Registo APSL Livro Definitivo", "APSL Definitive Book Registration", "Registro APSL Libro Definitivo"),
       descricao: tr("Valoriza automaticamente no mercado internacional", "Automatically adds value in the international market", "Valoriza automáticamente en el mercado internacional"),
@@ -54,7 +55,7 @@ export default function ImprovementActions({
       badgeColor: "text-[#C5A059] bg-[#C5A059]/15",
     });
   }
-  if (r.pontosForteseFracos.fracos.some((f) => f.includes("competição"))) {
+  if (form.competicoes === "nenhuma") {
     acoes.push({
       titulo: tr("Participar em Provas Regionais", "Participate in Regional Competitions", "Participar en Pruebas Regionales"),
       descricao: tr("Palmarés aumenta credibilidade e confiança do comprador", "Competition record increases credibility and buyer confidence", "Palmarés aumenta credibilidad y confianza del comprador"),
@@ -119,7 +120,7 @@ export default function ImprovementActions({
             </div>
             <div className="text-right shrink-0">
               <p className="text-sm font-bold text-emerald-400">
-                +{acao.ganhoEstimado.toLocaleString("pt-PT")}€
+                +{acao.ganhoEstimado.toLocaleString(locale)}€
               </p>
               <p className="text-[10px] text-[var(--foreground-muted)]">
                 {acao.prazoMeses === 1 ? tr("1 mês", "1 month", "1 mes") : `${acao.prazoMeses} ${tr("meses", "months", "meses")}`}
