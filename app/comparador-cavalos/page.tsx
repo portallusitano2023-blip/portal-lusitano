@@ -84,6 +84,7 @@ export default function ComparadorCavalosPage() {
           source: string;
           horse?: Partial<Cavalo>;
           horses?: Partial<Cavalo>[];
+          linhagemAdjusted?: boolean;
         };
 
         if (parsed.source === "calculadora" && parsed.horse) {
@@ -95,6 +96,14 @@ export default function ComparadorCavalosPage() {
           setCavalos([novo, criarCavalo("2", tr("Cavalo B", "Horse B", "Caballo B")), criarCavalo("3", tr("Cavalo C", "Horse C", "Caballo C"))]);
           sessionStorage.removeItem(CHAIN_KEY);
           setStep(1);
+          if (parsed.linhagemAdjusted) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps -- showToast is stable from context
+            setTimeout(() => showToast("info", tr(
+              "Linhagem 'Comum' aproximada para 'Registada' (mais próximo disponível no Comparador).",
+              "Lineage 'Common' approximated to 'Registered' (closest available in the Comparator).",
+              "Linaje 'Común' aproximado a 'Registada' (más cercano disponible en el Comparador)."
+            )), 300);
+          }
           return;
         }
 

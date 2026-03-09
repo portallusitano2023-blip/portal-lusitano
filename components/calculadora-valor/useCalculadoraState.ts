@@ -431,7 +431,7 @@ export function useCalculadoraState() {
       registoAPSL: form.registoAPSL,
     };
     try {
-      sessionStorage.setItem(CHAIN_KEY, JSON.stringify({ source: "calculadora", horse }));
+      sessionStorage.setItem(CHAIN_KEY, JSON.stringify({ source: "calculadora", horse, linhagemAdjusted: form.linhagem === "comum" }));
     } catch {}
     // Full page reload is intentional here: the target page reads horse data from
     // sessionStorage on mount, so the data must persist across navigation.
