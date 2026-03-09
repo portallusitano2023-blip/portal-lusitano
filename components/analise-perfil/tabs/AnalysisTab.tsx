@@ -27,6 +27,7 @@ export default function AnalysisTab({
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
   const results = useMemo(() => getResults(tr), [tr]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   return (
     <div key="analise" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
@@ -154,7 +155,7 @@ export default function AnalysisTab({
                       {t.analise_perfil.costs_label}
                     </span>{" "}
                     <span className="text-[var(--foreground-secondary)]">
-                      {r.annualCosts.min.toLocaleString()}-{r.annualCosts.max.toLocaleString()}/
+                      {r.annualCosts.min.toLocaleString(locale)}-{r.annualCosts.max.toLocaleString(locale)}/
                       {tr("ano", "year", "año")}
                     </span>
                   </div>

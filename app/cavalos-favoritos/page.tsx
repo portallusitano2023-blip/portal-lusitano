@@ -16,11 +16,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useHorseFavorites } from "@/context/HorseFavoritesContext";
 
 export default function CavalosFavoritosPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { favorites, removeFromFavorites, clearFavorites, favoritesCount } = useHorseFavorites();
   const [sortBy, setSortBy] = useState<"recent" | "price-asc" | "price-desc">("recent");
 
   const txt = t.cavalos_favoritos;
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   // Sort favorites
   const sortedFavorites = [...favorites].sort((a, b) => {
@@ -163,7 +164,7 @@ export default function CavalosFavoritosPage() {
                         <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
                           {horse.price && (
                             <p className="text-[var(--gold)] font-serif text-lg sm:text-xl font-medium">
-                              {Number(horse.price).toLocaleString("pt-PT")} €
+                              {Number(horse.price).toLocaleString(locale)} €
                             </p>
                           )}
                         </div>

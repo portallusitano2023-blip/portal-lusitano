@@ -16,6 +16,7 @@ export default function CostsTab({ result }: CostsTabProps) {
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
   const results = useMemo(() => getResults(tr), [tr]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   return (
     <div key="custos" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
@@ -39,7 +40,7 @@ export default function CostsTab({ result }: CostsTabProps) {
             {t.analise_perfil.estimated_range}
           </p>
           <p className="text-4xl font-serif text-[var(--foreground)]">
-            {result.annualCosts.min.toLocaleString()} - {result.annualCosts.max.toLocaleString()}{" "}
+            {result.annualCosts.min.toLocaleString(locale)} - {result.annualCosts.max.toLocaleString(locale)}{" "}
             {t.analise_perfil.euros}
           </p>
         </div>
@@ -87,7 +88,7 @@ export default function CostsTab({ result }: CostsTabProps) {
               <div
                 className={`w-48 text-right text-sm ${k === result.profile ? "text-[var(--gold)]" : "text-[var(--foreground-muted)]"}`}
               >
-                {r.annualCosts.min.toLocaleString()} - {r.annualCosts.max.toLocaleString()}
+                {r.annualCosts.min.toLocaleString(locale)} - {r.annualCosts.max.toLocaleString(locale)}
               </div>
             </div>
           ))}
