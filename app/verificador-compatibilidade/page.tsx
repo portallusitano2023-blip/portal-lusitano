@@ -221,7 +221,7 @@ export default function VerificadorCompatibilidadePage() {
     setIsExporting(true);
     try {
       const { generateCompatibilidadePDF } = await import("@/lib/tools/pdf/compatibilidade-pdf");
-      await generateCompatibilidadePDF(garanhao, egua, resultado);
+      await generateCompatibilidadePDF(garanhao, egua, resultado, language);
     } catch {
       showError(
         tr(

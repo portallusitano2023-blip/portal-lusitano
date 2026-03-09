@@ -311,7 +311,7 @@ export function useCalculadoraState() {
     setIsExporting(true);
     try {
       const { generateCalculadoraPDF } = await import("@/lib/tools/pdf/calculadora-pdf");
-      const blobUrl = await generateCalculadoraPDF(formStep.data as FormData, resultado);
+      const blobUrl = await generateCalculadoraPDF(formStep.data as FormData, resultado, language);
       if (pdfPreviewUrl) URL.revokeObjectURL(pdfPreviewUrl);
       setPdfPreviewUrl(blobUrl);
     } catch (error) {

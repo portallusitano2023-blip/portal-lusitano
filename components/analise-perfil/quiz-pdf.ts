@@ -29,12 +29,14 @@ import {
 
 // ─── Profile display config ───────────────────────────────────────────────────
 
-const PROFILE_LABELS: Record<string, string> = {
-  competidor: "Competidor de Elite",
-  tradicional: "Cavaleiro Tradicional",
-  criador: "Criador / Produtor",
-  amador: "Cavaleiro Amador",
-};
+function getProfileLabels(L: (pt: string, en: string, es?: string) => string): Record<string, string> {
+  return {
+    competidor: L("Competidor de Elite", "Elite Competitor", "Competidor de Élite"),
+    tradicional: L("Cavaleiro Tradicional", "Traditional Rider", "Jinete Tradicional"),
+    criador: L("Criador / Produtor", "Breeder / Producer", "Criador / Productor"),
+    amador: L("Cavaleiro Amador", "Amateur Rider", "Jinete Amateur"),
+  };
+}
 
 const PROFILE_COLORS: Record<string, [number, number, number]> = {
   competidor: [197, 160, 89],  // GOLD
@@ -47,15 +49,21 @@ const PROFILE_COLORS: Record<string, [number, number, number]> = {
 
 export async function generateProfilePDF(
   result: Result,
-  scores: Record<string, number>
+  scores: Record<string, number>,
+  language?: string
 ): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc: any = await createPremiumPDF();
 
+  const L = (pt: string, en: string, es?: string): string =>
+    language === "en" ? en : language === "es" && es ? es : pt;
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+  const PROFILE_LABELS = getProfileLabels(L);
+
   const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
   const mainPct = Math.round((scores[result.profile] / totalScore) * 100);
   const profileColor: [number, number, number] = PROFILE_COLORS[result.profile] ?? GOLD;
-  const date = new Date().toLocaleDateString("pt-PT", {
+  const date = new Date().toLocaleDateString(locale, {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -156,7 +164,7 @@ export async function generateProfilePDF(
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("COMPATIBILIDADE COM PERFIL", MARGIN + 9, y + 10);
+  doc.text(L("COMPATIBILIDADE COM PERFIL", "PROFILE COMPATIBILITY", "COMPATIBILIDAD CON PERFIL"), MARGIN + 9, y + 10);
 
   doc.setTextColor(...WHITE);
   doc.setFontSize(36);
@@ -175,7 +183,7 @@ export async function generateProfilePDF(
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
   doc.setFont("helvetica", "bold");
-  doc.text("DISTRIBUIÇÃO DE PERFIL", rightStartX, y + 8);
+  doc.text(L("DISTRIBUIÇÃO DE PERFIL", "PROFILE DISTRIBUTION", "DISTRIBUCIÓN DE PERFIL"), rightStartX, y + 8);
 
   allProfiles.slice(0, 4).forEach((p, i) => {
     const barY = y + 12 + i * 7.5;
@@ -210,10 +218,10 @@ export async function generateProfilePDF(
   y = addMetricsRow(
     doc,
     [
-      { label: "Match de Perfil", value: `${mainPct}%` },
-      { label: "Características", value: `${result.characteristics.length}` },
-      { label: "Disciplinas", value: `${result.disciplinas.length}` },
-      { label: "Próximos Passos", value: `${result.nextSteps.length}` },
+      { label: L("Match de Perfil", "Profile Match", "Match de Perfil"), value: `${mainPct}%` },
+      { label: L("Características", "Characteristics", "Características"), value: `${result.characteristics.length}` },
+      { label: L("Disciplinas", "Disciplines", "Disciplinas"), value: `${result.disciplinas.length}` },
+      { label: L("Próximos Passos", "Next Steps", "Próximos Pasos"), value: `${result.nextSteps.length}` },
     ],
     y
   );
@@ -232,13 +240,13 @@ export async function generateProfilePDF(
   doc.setTextColor(...ZINC600);
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
-  doc.text("CAVALO IDEAL PARA O SEU PERFIL", PAGE_W / 2, y + 7, { align: "center" });
+  doc.text(L("CAVALO IDEAL PARA O SEU PERFIL", "IDEAL HORSE FOR YOUR PROFILE", "CABALLO IDEAL PARA SU PERFIL"), PAGE_W / 2, y + 7, { align: "center" });
 
   const horseItems = [
-    { k: "Idade", v: result.idealHorse.age },
-    { k: "Altura", v: result.idealHorse.height },
-    { k: "Treino", v: result.idealHorse.training },
-    { k: "Preço", v: result.idealHorse.priceRange },
+    { k: L("Idade", "Age", "Edad"), v: result.idealHorse.age },
+    { k: L("Altura", "Height", "Altura"), v: result.idealHorse.height },
+    { k: L("Treino", "Training", "Entrenamiento"), v: result.idealHorse.training },
+    { k: L("Preço", "Price", "Precio"), v: result.idealHorse.priceRange },
   ];
   const hColW = CONTENT_W / 4;
   horseItems.forEach((item, i) => {
@@ -258,11 +266,11 @@ export async function generateProfilePDF(
 
   // ── Content preview ───────────────────────────────────────────────────────
   const previews = [
-    "Características completas do perfil  (pág. 2)",
-    "Cavalo ideal e regiões recomendadas  (pág. 2)",
-    "Custos anuais estimados  (pág. 3)",
-    "Linhagens e cavalos de referência  (pág. 3)",
-    "Dicas e próximos passos  (pág. 4)",
+    L("Características completas do perfil  (pág. 2)", "Full profile characteristics  (p. 2)", "Características completas del perfil  (pág. 2)"),
+    L("Cavalo ideal e regiões recomendadas  (pág. 2)", "Ideal horse and recommended regions  (p. 2)", "Caballo ideal y regiones recomendadas  (pág. 2)"),
+    L("Custos anuais estimados  (pág. 3)", "Estimated annual costs  (p. 3)", "Costos anuales estimados  (pág. 3)"),
+    L("Linhagens e cavalos de referência  (pág. 3)", "Lineages and reference horses  (p. 3)", "Linajes y caballos de referencia  (pág. 3)"),
+    L("Dicas e próximos passos  (pág. 4)", "Tips and next steps  (p. 4)", "Consejos y próximos pasos  (pág. 4)"),
   ];
   const colW2 = CONTENT_W / 2 - 4;
   const colRX2 = MARGIN + CONTENT_W / 2 + 4;
@@ -290,7 +298,7 @@ export async function generateProfilePDF(
   doc.setTextColor(...GOLD);
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
-  doc.text(`PORTAL LUSITANO  |  ANÁLISE DE PERFIL EQUESTRE  |  ${safe(date)}`, PAGE_W / 2, 275, { align: "center" });
+  doc.text(L("PORTAL LUSITANO  |  ANÁLISE DE PERFIL EQUESTRE", "PORTAL LUSITANO  |  EQUESTRIAN PROFILE ANALYSIS", "PORTAL LUSITANO  |  ANÁLISIS DE PERFIL ECUESTRE") + "  |  " + safe(date), PAGE_W / 2, 275, { align: "center" });
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
   doc.setFont("helvetica", "normal");
@@ -301,7 +309,7 @@ export async function generateProfilePDF(
   // ═══════════════════════════════════════════════════════════════════════════
   doc.addPage();
   fillPageBg(doc);
-  addPageHeader(doc, "Características & Cavalo Ideal", "Página 2 de 4");
+  addPageHeader(doc, L("Características & Cavalo Ideal", "Characteristics & Ideal Horse", "Características & Caballo Ideal"), L("Página 2 de 4", "Page 2 of 4", "Página 2 de 4"));
 
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
@@ -311,7 +319,7 @@ export async function generateProfilePDF(
   y = 30;
 
   // Characteristics
-  y = addSectionTitle(doc, "Características do Perfil", y);
+  y = addSectionTitle(doc, L("Características do Perfil", "Profile Characteristics", "Características del Perfil"), y);
 
   result.characteristics.forEach((c, i) => {
     if (y > 265) return;
@@ -353,7 +361,7 @@ export async function generateProfilePDF(
 
   // Disciplines as pills
   if (result.disciplinas.length > 0) {
-    y = addSectionTitle(doc, "Disciplinas Recomendadas", y);
+    y = addSectionTitle(doc, L("Disciplinas Recomendadas", "Recommended Disciplines", "Disciplinas Recomendadas"), y);
     let dx = MARGIN;
     result.disciplinas.forEach((d) => {
       if (y > 265) return;
@@ -387,7 +395,7 @@ export async function generateProfilePDF(
   y += 9;
 
   // Ideal horse section
-  y = addSectionTitle(doc, "Cavalo Ideal para o Seu Perfil", y);
+  y = addSectionTitle(doc, L("Cavalo Ideal para o Seu Perfil", "Ideal Horse for Your Profile", "Caballo Ideal para Su Perfil"), y);
 
   const horseCardH = 40;
   doc.setFillColor(...CARD_BG);
@@ -399,11 +407,11 @@ export async function generateProfilePDF(
   doc.roundedRect(MARGIN, y, 3, horseCardH, 1.5, 1.5, "F");
 
   const horseFields = [
-    { k: "Idade", v: result.idealHorse.age },
-    { k: "Altura", v: result.idealHorse.height },
-    { k: "Nível de Treino", v: result.idealHorse.training },
-    { k: "Temperamento", v: result.idealHorse.temperament },
-    { k: "Faixa de Preço", v: result.idealHorse.priceRange },
+    { k: L("Idade", "Age", "Edad"), v: result.idealHorse.age },
+    { k: L("Altura", "Height", "Altura"), v: result.idealHorse.height },
+    { k: L("Nível de Treino", "Training Level", "Nivel de Entrenamiento"), v: result.idealHorse.training },
+    { k: L("Temperamento", "Temperament", "Temperamento"), v: result.idealHorse.temperament },
+    { k: L("Faixa de Preço", "Price Range", "Rango de Precio"), v: result.idealHorse.priceRange },
   ];
 
   const hfColW = CONTENT_W / 2 - 4;
@@ -431,7 +439,7 @@ export async function generateProfilePDF(
 
   // Recommended regions
   if (result.recommendedRegions.length > 0) {
-    y = addSectionTitle(doc, "Regiões Recomendadas", y);
+    y = addSectionTitle(doc, L("Regiões Recomendadas", "Recommended Regions", "Regiones Recomendadas"), y);
 
     const regGap = 3;
     const regW = (CONTENT_W - regGap * (result.recommendedRegions.length - 1)) / Math.max(result.recommendedRegions.length, 1);
@@ -457,7 +465,7 @@ export async function generateProfilePDF(
   // ═══════════════════════════════════════════════════════════════════════════
   doc.addPage();
   fillPageBg(doc);
-  addPageHeader(doc, "Custos & Linhagens", "Página 3 de 4");
+  addPageHeader(doc, L("Custos & Linhagens", "Costs & Lineages", "Costos & Linajes"), L("Página 3 de 4", "Page 3 of 4", "Página 3 de 4"));
 
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
@@ -467,7 +475,7 @@ export async function generateProfilePDF(
   y = 30;
 
   // Annual costs hero card
-  y = addSectionTitle(doc, "Custos Anuais Estimados", y);
+  y = addSectionTitle(doc, L("Custos Anuais Estimados", "Estimated Annual Costs", "Costos Anuales Estimados"), y);
 
   const costsH = 28;
   doc.setFillColor(...CARD_BG);
@@ -482,9 +490,9 @@ export async function generateProfilePDF(
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("INTERVALO ANUAL ESTIMADO", MARGIN + 9, y + 10);
+  doc.text(L("INTERVALO ANUAL ESTIMADO", "ESTIMATED ANNUAL RANGE", "RANGO ANUAL ESTIMADO"), MARGIN + 9, y + 10);
 
-  const costsStr = `${result.annualCosts.min.toLocaleString("pt-PT")} — ${result.annualCosts.max.toLocaleString("pt-PT")} EUR`;
+  const costsStr = `${result.annualCosts.min.toLocaleString(locale)} — ${result.annualCosts.max.toLocaleString(locale)} EUR`;
   doc.setTextColor(...WHITE);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
@@ -497,7 +505,7 @@ export async function generateProfilePDF(
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
   doc.text(
-    safe(`~${monthlyMin.toLocaleString("pt-PT")} — ${monthlyMax.toLocaleString("pt-PT")} EUR / mês`),
+    safe(`~${monthlyMin.toLocaleString(locale)} — ${monthlyMax.toLocaleString(locale)} EUR / ${L("mês", "month", "mes")}`),
     PAGE_W - MARGIN - 5,
     y + 22,
     { align: "right" }
@@ -510,7 +518,7 @@ export async function generateProfilePDF(
     doc.setTextColor(...ZINC600);
     doc.setFontSize(6.5);
     doc.setFont("helvetica", "bold");
-    doc.text("INCLUI:", MARGIN, y);
+    doc.text(L("INCLUI:", "INCLUDES:", "INCLUYE:"), MARGIN, y);
     y += 5;
 
     const includesCols = 2;
@@ -542,7 +550,7 @@ export async function generateProfilePDF(
 
   // Lineages
   if (result.linhagens.length > 0) {
-    y = addSectionTitle(doc, "Linhagens Recomendadas", y);
+    y = addSectionTitle(doc, L("Linhagens Recomendadas", "Recommended Lineages", "Linajes Recomendados"), y);
 
     result.linhagens.forEach((lin) => {
       if (y > 265) return;
@@ -574,7 +582,7 @@ export async function generateProfilePDF(
     doc.rect(MARGIN, y, CONTENT_W, 0.3, "F");
     y += 9;
 
-    y = addSectionTitle(doc, "Cavalos de Referência PSL", y);
+    y = addSectionTitle(doc, L("Cavalos de Referência PSL", "PSL Reference Horses", "Caballos de Referencia PSL"), y);
 
     const fhCols = 2;
     const fhColW = CONTENT_W / fhCols - 3;
@@ -612,7 +620,7 @@ export async function generateProfilePDF(
   // ═══════════════════════════════════════════════════════════════════════════
   doc.addPage();
   fillPageBg(doc);
-  addPageHeader(doc, "Dicas & Próximos Passos", "Página 4 de 4");
+  addPageHeader(doc, L("Dicas & Próximos Passos", "Tips & Next Steps", "Consejos & Próximos Pasos"), L("Página 4 de 4", "Page 4 of 4", "Página 4 de 4"));
 
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
@@ -623,7 +631,7 @@ export async function generateProfilePDF(
 
   // Tips
   if (result.tips.length > 0) {
-    y = addSectionTitle(doc, "Dicas para o Seu Perfil", y);
+    y = addSectionTitle(doc, L("Dicas para o Seu Perfil", "Tips for Your Profile", "Consejos para Su Perfil"), y);
     for (const tip of result.tips) {
       if (y > 265) break;
       y = addBulletItem(doc, tip, "recomendacao", y);
@@ -640,7 +648,7 @@ export async function generateProfilePDF(
 
   // Next steps as numbered list
   if (result.nextSteps.length > 0) {
-    y = addSectionTitle(doc, "Próximos Passos Recomendados", y);
+    y = addSectionTitle(doc, L("Próximos Passos Recomendados", "Recommended Next Steps", "Próximos Pasos Recomendados"), y);
 
     result.nextSteps.forEach((step, i) => {
       if (y > 268) return;
@@ -674,7 +682,7 @@ export async function generateProfilePDF(
     doc.rect(MARGIN, y, CONTENT_W, 0.3, "F");
     y += 9;
 
-    y = addSectionTitle(doc, "Cronograma Recomendado", y);
+    y = addSectionTitle(doc, L("Cronograma Recomendado", "Recommended Timeline", "Cronograma Recomendado"), y);
 
     result.timeline.slice(0, 6).forEach((tl, i) => {
       if (y > 268) return;
@@ -729,7 +737,7 @@ export async function generateProfilePDF(
     doc.setTextColor(...GOLD);
     doc.setFontSize(7.5);
     doc.setFont("helvetica", "bold");
-    doc.text("ANÁLISE DE PERFIL — PORTAL LUSITANO", MARGIN + 9, certY + 7);
+    doc.text(L("ANÁLISE DE PERFIL — PORTAL LUSITANO", "PROFILE ANALYSIS — PORTAL LUSITANO", "ANÁLISIS DE PERFIL — PORTAL LUSITANO"), MARGIN + 9, certY + 7);
 
     doc.setFillColor(35, 35, 35);
     doc.rect(MARGIN + 9, certY + 9, CONTENT_W - 13, 0.3, "F");
@@ -743,7 +751,7 @@ export async function generateProfilePDF(
     doc.setFontSize(7);
     doc.setFont("helvetica", "normal");
     doc.text(
-      safe(`Compatibilidade: ${mainPct}%  |  ${date}  |  Ref: ${refNum}`),
+      safe(`${L("Compatibilidade", "Compatibility", "Compatibilidad")}: ${mainPct}%  |  ${date}  |  Ref: ${refNum}`),
       MARGIN + 9,
       certY + 22
     );

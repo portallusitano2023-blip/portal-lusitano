@@ -344,7 +344,7 @@ export function useQuizLogic() {
   const downloadPDF = useCallback(async () => {
     if (!result) return;
     try {
-      await generateProfilePDF(result, scores);
+      await generateProfilePDF(result, scores, language);
     } catch {
       showError(
         tr(
