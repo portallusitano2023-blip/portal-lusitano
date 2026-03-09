@@ -283,7 +283,7 @@ export default function ComparadorCavalosPage() {
         calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b
       ).nome;
       const { generateComparadorPDF } = await import("@/lib/tools/pdf/comparador-pdf");
-      generateComparadorPDF(cavalos, scores, vencedorNome, melhorValorNome, language);
+      generateComparadorPDF(cavalos, scores, vencedorNome, melhorValorNome, language, isSubscribed);
     } catch (error) {
       if (process.env.NODE_ENV === "development") console.error("[Comparador]", error);
       showToast("error", t.errors.error_export_pdf);
