@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type {
   Cavalo,
   ResultadoCompatibilidade,
@@ -45,12 +46,13 @@ export default function CompatibilityResults({
   isSubscribed,
   objetivo,
 }: CompatibilityResultsProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
   const [coiBannerDismissed, setCoiBannerDismissed] = useState(false);
 
   // PRO breeding projections
-  const offspringAxes = calcularAptidoesPotro(garanhao, egua);
-  const foalValues = calcularValorPotro(resultado, garanhao, egua);
+  const offspringAxes = calcularAptidoesPotro(garanhao, egua, tr);
+  const foalValues = calcularValorPotro(resultado, garanhao, egua, tr);
   const parentQuality = calcularQualidadePais(garanhao, egua);
 
   return (

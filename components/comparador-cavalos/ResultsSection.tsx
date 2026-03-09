@@ -136,7 +136,7 @@ export default function ResultsSection({
 
   const disciplinasAptidao: { nome: string; pesos: Record<string, number> }[] = [
     {
-      nome: "Alta Escola",
+      nome: tr("Alta Escola", "Haute Ecole", "Alta Escuela"),
       pesos: {
         conformacao: 0.2,
         andamentos: 0.25,
@@ -157,15 +157,15 @@ export default function ResultsSection({
       },
     },
     {
-      nome: "Equit. Trabalho",
+      nome: tr("Equit. Trabalho", "Working Equit.", "Equit. Trabajo"),
       pesos: { conformacao: 0.25, andamentos: 0.2, temperamento: 0.25, saude: 0.2, blupNorm: 0.1 },
     },
     {
-      nome: "Lazer/Turismo",
+      nome: tr("Lazer/Turismo", "Leisure/Tourism", "Ocio/Turismo"),
       pesos: { temperamento: 0.35, saude: 0.3, conformacao: 0.2, andamentos: 0.15 },
     },
     {
-      nome: "Reprodução",
+      nome: tr("Reprodução", "Breeding", "Reproducción"),
       pesos: { blupNorm: 0.35, conformacao: 0.25, saude: 0.25, andamentos: 0.15 },
     },
   ];
@@ -241,12 +241,11 @@ export default function ResultsSection({
             <div className="flex items-center gap-3 p-3 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl mb-4">
               <Target size={16} className="text-[#C5A059] shrink-0" />
               <p className="text-sm text-[var(--foreground-secondary)]">
-                Para{" "}
+                {tr("Para", "For", "Para")}{" "}
                 <strong className="text-[var(--foreground)]">
                   {DISC_LABELS[filtroDisciplina]}
                 </strong>
-                : <strong className="text-[#C5A059]">{melhor?.nome || "Cavalo A"}</strong> tem
-                melhor aptidão ({melhor?.score ?? 0} pts)
+                : <strong className="text-[#C5A059]">{melhor?.nome || tr("Cavalo A", "Horse A", "Caballo A")}</strong> {tr("tem melhor aptidão", "has the best aptitude", "tiene mejor aptitud")} ({melhor?.score ?? 0} pts)
               </p>
             </div>
           );
@@ -255,7 +254,7 @@ export default function ResultsSection({
       {/* Recomendação hero card */}
       {(() => {
         const vencedorScore = calcularScore(vencedor);
-        const fatores = getScoreFactors(vencedor);
+        const fatores = getScoreFactors(vencedor, tr);
         const melhorFator = fatores.reduce((a, b) => (a.score / a.max > b.score / b.max ? a : b));
         const vencedorIndex = cavalos.findIndex((cv) => cv.id === vencedor.id);
         const corVencedor = CORES[vencedorIndex] || "#C5A059";
@@ -267,11 +266,10 @@ export default function ResultsSection({
               </div>
               <div>
                 <p className="text-xs font-medium text-[#C5A059]/70 uppercase tracking-[0.15em]">
-                  Recomendação
+                  {tr("Recomendação", "Recommendation", "Recomendación")}
                 </p>
                 <h3 className="text-lg font-serif text-[var(--foreground)] leading-tight">
-                  <span style={{ color: corVencedor }}>{vencedor.nome}</span> é o mais equilibrado
-                  para a sua decisão
+                  <span style={{ color: corVencedor }}>{vencedor.nome}</span> {tr("é o mais equilibrado para a sua decisão", "is the most balanced for your decision", "es el más equilibrado para su decisión")}
                 </h3>
               </div>
             </div>
@@ -280,26 +278,26 @@ export default function ResultsSection({
                 <p className="text-2xl font-bold" style={{ color: corVencedor }}>
                   {vencedorScore}
                 </p>
-                <p className="text-xs text-[var(--foreground-muted)] mt-0.5">Score global</p>
+                <p className="text-xs text-[var(--foreground-muted)] mt-0.5">{tr("Score global", "Global Score", "Score global")}</p>
               </div>
               <div className="bg-[var(--background-secondary)]/60 rounded-xl p-3 text-center">
                 <p className="text-sm font-semibold text-[var(--foreground)] truncate">
                   {melhorFator.name}
                 </p>
-                <p className="text-xs text-[var(--foreground-muted)] mt-0.5">Melhor categoria</p>
+                <p className="text-xs text-[var(--foreground-muted)] mt-0.5">{tr("Melhor categoria", "Best category", "Mejor categoría")}</p>
               </div>
               <div className="bg-[var(--background-secondary)]/60 rounded-xl p-3 text-center">
                 <p className="text-sm font-semibold text-[var(--foreground)] truncate">
                   {vencedor.preco > 0 ? `${vencedor.preco.toLocaleString("pt-PT")} €` : "—"}
                 </p>
-                <p className="text-xs text-[var(--foreground-muted)] mt-0.5">Preço</p>
+                <p className="text-xs text-[var(--foreground-muted)] mt-0.5">{tr("Preço", "Price", "Precio")}</p>
               </div>
             </div>
             {melhorValor.id !== vencedor.id && (
               <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-emerald-500/8 border border-emerald-500/20 rounded-lg">
                 <Euro size={14} className="text-emerald-400 shrink-0" aria-hidden="true" />
                 <p className="text-xs text-[var(--foreground-secondary)] leading-relaxed">
-                  <span className="text-emerald-400 font-medium">Melhor custo-benefício:</span>{" "}
+                  <span className="text-emerald-400 font-medium">{tr("Melhor custo-benefício:", "Best cost-benefit:", "Mejor costo-beneficio:")}</span>{" "}
                   <span className="font-medium text-[var(--foreground)]">{melhorValor.nome}</span>{" "}
                   <span className="text-[var(--foreground-muted)]">
                     ({calcularValorPorPonto(melhorValor).toLocaleString("pt-PT")} €/pt vs.{" "}
@@ -309,7 +307,7 @@ export default function ResultsSection({
               </div>
             )}
             <p className="text-xs text-[#C5A059]/60 text-center">
-              Consulte a análise completa abaixo ↓
+              {tr("Consulte a análise completa abaixo ↓", "See the full analysis below ↓", "Consulte el análisis completo abajo ↓")}
             </p>
           </div>
         );
@@ -329,11 +327,14 @@ export default function ResultsSection({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-emerald-400 mb-0.5">
-                Escolha clara: <span style={{ color: cor }}>{vencedor.nome}</span>
+                {tr("Escolha clara:", "Clear choice:", "Elección clara:")} <span style={{ color: cor }}>{vencedor.nome}</span>
               </p>
               <p className="text-xs text-[var(--foreground-muted)] leading-snug">
-                Margem de {gap} pontos em relação ao segundo — diferença significativa e consistente
-                entre os cavalos comparados.
+                {tr(
+                  `Margem de ${gap} pontos em relação ao segundo — diferença significativa e consistente entre os cavalos comparados.`,
+                  `Margin of ${gap} points over the second — significant and consistent difference between the compared horses.`,
+                  `Margen de ${gap} puntos respecto al segundo — diferencia significativa y consistente entre los caballos comparados.`
+                )}
               </p>
             </div>
           </div>
@@ -354,46 +355,86 @@ export default function ResultsSection({
 
           const pontosFortesVencedor: string[] = [];
           if (bestC.conformacao >= 8)
-            pontosFortesVencedor.push("conformação morfológica excepcional");
-          if (bestC.andamentos >= 8) pontosFortesVencedor.push("andamentos de qualidade superior");
-          if (bestC.blup >= 115) pontosFortesVencedor.push("elevado mérito genético (BLUP)");
-          if (bestC.saude >= 8) pontosFortesVencedor.push("saúde excelente");
+            pontosFortesVencedor.push(tr("conformação morfológica excepcional", "exceptional morphological conformation", "conformación morfológica excepcional"));
+          if (bestC.andamentos >= 8) pontosFortesVencedor.push(tr("andamentos de qualidade superior", "superior quality gaits", "aires de calidad superior"));
+          if (bestC.blup >= 115) pontosFortesVencedor.push(tr("elevado mérito genético (BLUP)", "high genetic merit (BLUP)", "alto mérito genético (BLUP)"));
+          if (bestC.saude >= 8) pontosFortesVencedor.push(tr("saúde excelente", "excellent health", "salud excelente"));
           if (bestC.competicoes !== "Nenhuma" && bestC.competicoes !== "nenhuma")
-            pontosFortesVencedor.push("palmarés desportivo comprovado");
+            pontosFortesVencedor.push(tr("palmarés desportivo comprovado", "proven sport record", "palmarés deportivo comprobado"));
           if (bestC.idade >= 7 && bestC.idade <= 12)
-            pontosFortesVencedor.push("idade ideal de performance");
+            pontosFortesVencedor.push(tr("idade ideal de performance", "ideal performance age", "edad ideal de rendimiento"));
 
           const pontosFortesSeg: string[] = [];
-          if (secondC.conformacao > bestC.conformacao) pontosFortesSeg.push("conformação");
-          if (secondC.andamentos > bestC.andamentos) pontosFortesSeg.push("andamentos");
-          if (secondC.blup > bestC.blup) pontosFortesSeg.push("mérito genético");
-          if ((secondC.saude ?? 0) > (bestC.saude ?? 0)) pontosFortesSeg.push("saúde");
+          if (secondC.conformacao > bestC.conformacao) pontosFortesSeg.push(tr("conformação", "conformation", "conformación"));
+          if (secondC.andamentos > bestC.andamentos) pontosFortesSeg.push(tr("andamentos", "gaits", "aires"));
+          if (secondC.blup > bestC.blup) pontosFortesSeg.push(tr("mérito genético", "genetic merit", "mérito genético"));
+          if ((secondC.saude ?? 0) > (bestC.saude ?? 0)) pontosFortesSeg.push(tr("saúde", "health", "salud"));
 
           const introText =
             gap >= 25
-              ? `Com uma margem expressiva de ${gap} pontos, **${bestC.nome || "Cavalo A"}** é a escolha clara e inequívoca.`
+              ? tr(
+                  `Com uma margem expressiva de ${gap} pontos, **${bestC.nome || "Cavalo A"}** é a escolha clara e inequívoca.`,
+                  `With a significant margin of ${gap} points, **${bestC.nome || "Horse A"}** is the clear and unequivocal choice.`,
+                  `Con un margen expresivo de ${gap} puntos, **${bestC.nome || "Caballo A"}** es la elección clara e inequívoca.`
+                )
               : gap >= 15
-                ? `**${bestC.nome || "Cavalo A"}** destaca-se com ${gap} pontos de vantagem numa comparação competitiva.`
+                ? tr(
+                    `**${bestC.nome || "Cavalo A"}** destaca-se com ${gap} pontos de vantagem numa comparação competitiva.`,
+                    `**${bestC.nome || "Horse A"}** stands out with a ${gap}-point advantage in a competitive comparison.`,
+                    `**${bestC.nome || "Caballo A"}** se destaca con ${gap} puntos de ventaja en una comparación competitiva.`
+                  )
                 : gap >= 5
-                  ? `**${bestC.nome || "Cavalo A"}** lidera com uma vantagem de ${gap} pontos num confronto equilibrado.`
-                  : `Numa comparação muito próxima (margem de ${gap} pontos), **${bestC.nome || "Cavalo A"}** obtém uma ligeira vantagem.`;
+                  ? tr(
+                      `**${bestC.nome || "Cavalo A"}** lidera com uma vantagem de ${gap} pontos num confronto equilibrado.`,
+                      `**${bestC.nome || "Horse A"}** leads with a ${gap}-point advantage in a balanced matchup.`,
+                      `**${bestC.nome || "Caballo A"}** lidera con una ventaja de ${gap} puntos en un enfrentamiento equilibrado.`
+                    )
+                  : tr(
+                      `Numa comparação muito próxima (margem de ${gap} pontos), **${bestC.nome || "Cavalo A"}** obtém uma ligeira vantagem.`,
+                      `In a very close comparison (margin of ${gap} points), **${bestC.nome || "Horse A"}** obtains a slight advantage.`,
+                      `En una comparación muy cerrada (margen de ${gap} puntos), **${bestC.nome || "Caballo A"}** obtiene una ligera ventaja.`
+                    );
 
           const pontosStr =
             pontosFortesVencedor.length > 0
-              ? `Os seus principais trunfos são: ${pontosFortesVencedor.slice(0, 3).join(", ")}.`
+              ? tr(
+                  `Os seus principais trunfos são: ${pontosFortesVencedor.slice(0, 3).join(", ")}.`,
+                  `Its main strengths are: ${pontosFortesVencedor.slice(0, 3).join(", ")}.`,
+                  `Sus principales fortalezas son: ${pontosFortesVencedor.slice(0, 3).join(", ")}.`
+                )
               : "";
           const segStr =
             pontosFortesSeg.length > 0
-              ? `${secondC.nome || "Cavalo B"} mantém vantagem em ${pontosFortesSeg.join(" e ")}.`
+              ? tr(
+                  `${secondC.nome || "Cavalo B"} mantém vantagem em ${pontosFortesSeg.join(" e ")}.`,
+                  `${secondC.nome || "Horse B"} maintains an advantage in ${pontosFortesSeg.join(" and ")}.`,
+                  `${secondC.nome || "Caballo B"} mantiene ventaja en ${pontosFortesSeg.join(" y ")}.`
+                )
               : "";
           const recomStr = (() => {
             if (bestC.idade < 7 && best.score >= 65)
-              return `Com ${bestC.idade} anos e este score, ${bestC.nome || "este cavalo"} tem elevado potencial de valorização nos próximos anos.`;
+              return tr(
+                `Com ${bestC.idade} anos e este score, ${bestC.nome || "este cavalo"} tem elevado potencial de valorização nos próximos anos.`,
+                `At ${bestC.idade} years old with this score, ${bestC.nome || "this horse"} has high appreciation potential in the coming years.`,
+                `Con ${bestC.idade} años y esta puntuación, ${bestC.nome || "este caballo"} tiene alto potencial de valorización en los próximos años.`
+              );
             if (bestC.sexo === "Garanhão" && best.score >= 70)
-              return `Como garanhão de qualidade, ${bestC.nome || "este cavalo"} combina valor desportivo com potencial reprodutivo.`;
+              return tr(
+                `Como garanhão de qualidade, ${bestC.nome || "este cavalo"} combina valor desportivo com potencial reprodutivo.`,
+                `As a quality stallion, ${bestC.nome || "this horse"} combines sport value with breeding potential.`,
+                `Como semental de calidad, ${bestC.nome || "este caballo"} combina valor deportivo con potencial reproductivo.`
+              );
             if (best.score >= 80)
-              return `Um score acima de 80 pontos posiciona ${bestC.nome || "este cavalo"} no quartil superior da raça Lusitana.`;
-            return `Recomendamos avaliação presencial antes de qualquer decisão de compra.`;
+              return tr(
+                `Um score acima de 80 pontos posiciona ${bestC.nome || "este cavalo"} no quartil superior da raça Lusitana.`,
+                `A score above 80 points positions ${bestC.nome || "this horse"} in the upper quartile of the Lusitano breed.`,
+                `Una puntuación superior a 80 puntos posiciona a ${bestC.nome || "este caballo"} en el cuartil superior de la raza Lusitana.`
+              );
+            return tr(
+              `Recomendamos avaliação presencial antes de qualquer decisão de compra.`,
+              `We recommend an in-person evaluation before any purchase decision.`,
+              `Recomendamos evaluación presencial antes de cualquier decisión de compra.`
+            );
           })();
 
           const linhas = [introText, pontosStr, segStr, recomStr].filter(Boolean);
@@ -401,7 +442,7 @@ export default function ResultsSection({
           return (
             <div className="bg-gradient-to-br from-[var(--background-secondary)] to-[var(--background-card)] rounded-xl p-5 border border-[var(--gold)]/20 mb-2">
               <h3 className="text-sm font-semibold text-[#C5A059] mb-3 flex items-center gap-2 uppercase tracking-wider">
-                <Award size={15} /> Veredicto Profissional
+                <Award size={15} /> {tr("Veredicto Profissional", "Professional Verdict", "Veredicto Profesional")}
               </h3>
               <div className="space-y-2 text-sm text-[var(--foreground-secondary)] leading-relaxed">
                 {linhas.map((linha, i) => (
@@ -423,11 +464,11 @@ export default function ResultsSection({
                   Score: <strong className="text-[#C5A059]">{best.score}</strong> / 100
                 </span>
                 <span>
-                  vs. {secondC.nome || "Cavalo B"}: <strong>{second.score}</strong>
+                  vs. {secondC.nome || tr("Cavalo B", "Horse B", "Caballo B")}: <strong>{second.score}</strong>
                 </span>
                 {gap >= 15 && (
                   <span className="ml-auto px-2 py-0.5 bg-emerald-500/15 text-emerald-400 rounded-full font-medium">
-                    Escolha Clara
+                    {tr("Escolha Clara", "Clear Choice", "Elección Clara")}
                   </span>
                 )}
               </div>
@@ -444,12 +485,11 @@ export default function ResultsSection({
               <Dna size={18} className="text-pink-400 shrink-0 mt-0.5" />
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-[var(--foreground)]">
-                  Verificar Compatibilidade Reprodutiva
+                  {tr("Verificar Compatibilidade Reprodutiva", "Check Breeding Compatibility", "Verificar Compatibilidad Reproductiva")}
                 </p>
                 <p className="text-xs text-[var(--foreground-muted)]">
-                  {cavalos.find((c) => c.sexo === "Garanhão")?.nome || "Garanhão"} ×{" "}
-                  {cavalos.find((c) => c.sexo === "Égua")?.nome || "Égua"} — analisar
-                  compatibilidade genética
+                  {cavalos.find((c) => c.sexo === "Garanhão")?.nome || tr("Garanhão", "Stallion", "Semental")} ×{" "}
+                  {cavalos.find((c) => c.sexo === "Égua")?.nome || tr("Égua", "Mare", "Yegua")} — {tr("analisar compatibilidade genética", "analyse genetic compatibility", "analizar compatibilidad genética")}
                 </p>
               </div>
             </div>
@@ -467,7 +507,7 @@ export default function ResultsSection({
               }}
               className="flex items-center justify-center gap-1.5 px-4 py-3 min-h-[44px] bg-pink-500/20 border border-pink-500/40 text-pink-300 text-xs font-semibold rounded-lg hover:bg-pink-500/30 transition-all whitespace-nowrap w-full sm:w-auto"
             >
-              Verificar <ChevronRight size={13} />
+              {tr("Verificar", "Check", "Verificar")} <ChevronRight size={13} />
             </button>
           </div>
         )}
@@ -506,14 +546,14 @@ export default function ResultsSection({
                 cor: CORES[i],
               }))}
               labels={[
-                "Conform.",
-                "Andam.",
-                "Elevação",
-                "Regular.",
-                "Temper.",
-                "Saúde",
+                tr("Conform.", "Conform.", "Conform."),
+                tr("Andam.", "Gaits", "Aires"),
+                tr("Elevação", "Elevation", "Elevación"),
+                tr("Regular.", "Regular.", "Regular."),
+                tr("Temper.", "Temper.", "Temper."),
+                tr("Saúde", "Health", "Salud"),
                 "Pedigree",
-                "Treino",
+                tr("Treino", "Training", "Entren."),
               ]}
             />
           </div>
@@ -557,7 +597,7 @@ export default function ResultsSection({
           return (
             <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-5 border border-[var(--border)]">
               <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider mb-4">
-                Categorias Vencidas ({total} categorias)
+                {tr("Categorias Vencidas", "Categories Won", "Categorías Ganadas")} ({total} {tr("categorias", "categories", "categorías")})
               </h3>
               <div
                 className={`grid gap-3 ${cavalos.length === 2 ? "grid-cols-2" : cavalos.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-4"}`}
@@ -571,7 +611,7 @@ export default function ResultsSection({
                       {v.vitorias}
                     </p>
                     <p className="text-[10px] text-[var(--foreground-muted)] uppercase tracking-wider mb-1">
-                      de {total}
+                      {tr("de", "of", "de")} {total}
                     </p>
                     <p className="text-xs font-medium text-[var(--foreground-secondary)] truncate">
                       {v.nome}
@@ -589,14 +629,14 @@ export default function ResultsSection({
       {/* Discipline Matrix (Free) */}
       <div className="bg-[var(--background-secondary)]/50 rounded-xl p-4 sm:p-6 border border-[var(--border)] mb-6">
         <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider mb-5 flex items-center gap-2">
-          <Target size={16} className="text-[#C5A059]" /> Aptidão por Disciplina
+          <Target size={16} className="text-[#C5A059]" /> {tr("Aptidão por Disciplina", "Discipline Suitability", "Aptitud por Disciplina")}
         </h3>
         <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
           <table className="w-full text-sm" style={{ minWidth: "320px" }}>
             <thead>
               <tr className="border-b border-[var(--border)]">
                 <th className="text-left text-xs text-[var(--foreground-muted)] pb-3 pr-4 min-w-[100px]">
-                  Disciplina
+                  {tr("Disciplina", "Discipline", "Disciplina")}
                 </th>
                 {cavalos.map((c, i) => (
                   <th
@@ -604,7 +644,7 @@ export default function ResultsSection({
                     className="text-center text-xs pb-3 px-2 min-w-[60px]"
                     style={{ color: CORES[i] }}
                   >
-                    {c.nome || `Cavalo ${i + 1}`}
+                    {c.nome || tr(`Cavalo ${i + 1}`, `Horse ${i + 1}`, `Caballo ${i + 1}`)}
                   </th>
                 ))}
               </tr>
@@ -640,8 +680,11 @@ export default function ResultsSection({
           </table>
         </div>
         <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-3">
-          ★ Melhor cavalo por disciplina. Scores de 0-100 baseados em pesos específicos de cada
-          disciplina.
+          {tr(
+            "★ Melhor cavalo por disciplina. Scores de 0-100 baseados em pesos específicos de cada disciplina.",
+            "★ Best horse per discipline. Scores from 0-100 based on discipline-specific weights.",
+            "★ Mejor caballo por disciplina. Puntuaciones de 0-100 basadas en pesos específicos de cada disciplina."
+          )}
         </p>
       </div>
 
@@ -655,7 +698,7 @@ export default function ResultsSection({
             <thead>
               <tr>
                 <th className="text-left text-xs text-[var(--foreground-muted)] font-medium pb-3 pr-4 min-w-[160px]">
-                  Disciplina
+                  {tr("Disciplina", "Discipline", "Disciplina")}
                 </th>
                 {cavalos.map((c, i) => (
                   <th
@@ -663,7 +706,7 @@ export default function ResultsSection({
                     className="text-center text-xs font-semibold pb-3 px-2 min-w-[80px]"
                     style={{ color: CORES[i] }}
                   >
-                    {c.nome || `Cavalo ${String.fromCharCode(65 + i)}`}
+                    {c.nome || tr(`Cavalo ${String.fromCharCode(65 + i)}`, `Horse ${String.fromCharCode(65 + i)}`, `Caballo ${String.fromCharCode(65 + i)}`)}
                   </th>
                 ))}
               </tr>
@@ -703,7 +746,11 @@ export default function ResultsSection({
             </tbody>
           </table>
           <p className="text-xs text-[var(--foreground-muted)] mt-3 text-right">
-            Verde ≥70 · Âmbar 50-69 · Vermelho &lt;50 · Destaque = melhor nessa disciplina
+            {tr(
+              "Verde ≥70 · Âmbar 50-69 · Vermelho <50 · Destaque = melhor nessa disciplina",
+              "Green ≥70 · Amber 50-69 · Red <50 · Highlight = best in that discipline",
+              "Verde ≥70 · Ámbar 50-69 · Rojo <50 · Destaque = mejor en esa disciplina"
+            )}
           </p>
         </div>
       </BlurredProSection>
@@ -797,11 +844,11 @@ export default function ResultsSection({
                       <div className="flex items-center justify-center gap-1 mt-1">
                         <TrendingUp size={11} className="text-emerald-400" />
                         <span className="text-xs text-emerald-400 font-medium">
-                          Potencial: {calcularPotencial(c)}
+                          {tr("Potencial", "Potential", "Potencial")}: {calcularPotencial(c)}
                         </span>
                       </div>
                       <div className="mt-2 text-left">
-                        <ScoreBreakdown factors={getScoreFactors(c)} total={calcularScore(c)} />
+                        <ScoreBreakdown factors={getScoreFactors(c, tr)} total={calcularScore(c)} />
                       </div>
                     </td>
                   ))}
@@ -834,7 +881,11 @@ export default function ResultsSection({
             <Tooltip
               text={
                 comp.tooltip_melhor_score ??
-                "O cavalo com maior score total no conjunto de factores avaliados."
+                tr(
+                  "O cavalo com maior score total no conjunto de factores avaliados.",
+                  "The horse with the highest total score across all evaluated factors.",
+                  "El caballo con mayor puntuación total en el conjunto de factores evaluados."
+                )
               }
             />
           </h3>
@@ -858,7 +909,7 @@ export default function ResultsSection({
             <Euro className="text-emerald-400" size={20} />
             {comp.best_cost_benefit}
             <Tooltip
-              text={comp.tooltip_melhor_valor ?? "O cavalo com menor custo por ponto de score."}
+              text={comp.tooltip_melhor_valor ?? tr("O cavalo com menor custo por ponto de score.", "The horse with the lowest cost per score point.", "El caballo con menor costo por punto de puntuación.")}
             />
           </h3>
           <div className="flex items-center gap-4">
@@ -887,7 +938,7 @@ export default function ResultsSection({
           <p className="text-xs text-[var(--foreground-muted)] mb-4">{comp.verdict_desc}</p>
           <div className="grid md:grid-cols-2 gap-4">
             {cavalos.map((c) => {
-              const v = gerarVeredicto(c);
+              const v = gerarVeredicto(c, tr);
               return (
                 <HorseVerdictCard
                   key={c.id}
@@ -917,7 +968,7 @@ export default function ResultsSection({
             className={`mt-4 grid gap-3 ${cavalos.length === 2 ? "grid-cols-2" : cavalos.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-4"}`}
           >
             {cavalos.map((c, i) => {
-              const roi = calcularROI(c);
+              const roi = calcularROI(c, tr);
               return (
                 <div
                   key={c.id}
@@ -936,9 +987,9 @@ export default function ResultsSection({
                     {roi.roi5yr >= 0 ? "+" : ""}
                     {roi.roi5yr}%
                   </p>
-                  <p className="text-[10px] text-[var(--foreground-muted)]">ROI 5 anos</p>
+                  <p className="text-[10px] text-[var(--foreground-muted)]">{tr("ROI 5 anos", "5-year ROI", "ROI 5 años")}</p>
                   <p className="text-[10px] text-[var(--foreground-muted)] mt-1">
-                    Horizonte:{" "}
+                    {tr("Horizonte:", "Horizon:", "Horizonte:")}{" "}
                     <span className="text-[var(--foreground-secondary)]">{roi.horizonte}</span>
                   </p>
                 </div>

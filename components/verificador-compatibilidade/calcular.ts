@@ -5,7 +5,10 @@ import { DEFEITOS_GENETICOS } from "./data";
 // LÓGICA DE CÁLCULO - Verificador de Compatibilidade
 // ============================================
 
-export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): ResultadoCompatibilidade {
+type TranslatorFn = (pt: string, en: string, es?: string) => string;
+const defaultTr: TranslatorFn = (pt) => pt;
+
+export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: TranslatorFn = defaultTr): ResultadoCompatibilidade {
   const factores: ResultadoCompatibilidade["factores"] = [];
   const riscos: ResultadoCompatibilidade["riscos"] = [];
   const fortes: string[] = [];
@@ -17,32 +20,32 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
   const idadeEguaOk = egua.idade >= 4 && egua.idade <= 18;
   const idadeScore = idadeGaranhaoOk && idadeEguaOk ? 15 : idadeGaranhaoOk || idadeEguaOk ? 10 : 5;
   factores.push({
-    nome: "Idade Reprodutiva",
+    nome: tr("Idade Reprodutiva", "Reproductive Age", "Edad Reproductiva"),
     score: idadeScore,
     max: 15,
     tipo: idadeScore >= 12 ? "excelente" : idadeScore >= 8 ? "bom" : "aviso",
-    descricao: "Idade ideal: Garanhão 4-20, Égua 4-18 anos",
+    descricao: tr("Idade ideal: Garanhão 4-20, Égua 4-18 anos", "Ideal age: Stallion 4-20, Mare 4-18 years", "Edad ideal: Semental 4-20, Yegua 4-18 años"),
   });
   if (egua.idade > 16)
-    riscos.push({ texto: "Égua com idade avançada para reprodução", severidade: "medio" });
-  if (egua.idade < 4) riscos.push({ texto: "Égua demasiado jovem", severidade: "alto" });
+    riscos.push({ texto: tr("Égua com idade avançada para reprodução", "Mare with advanced age for reproduction", "Yegua con edad avanzada para reproducción"), severidade: "medio" });
+  if (egua.idade < 4) riscos.push({ texto: tr("Égua demasiado jovem", "Mare too young", "Yegua demasiado joven"), severidade: "alto" });
   if (garanhao.idade > 18)
-    riscos.push({ texto: "Garanhão com idade avançada", severidade: "baixo" });
+    riscos.push({ texto: tr("Garanhão com idade avançada", "Stallion with advanced age", "Semental con edad avanzada"), severidade: "baixo" });
   total += idadeScore;
 
   // 2. Compatibilidade Física (10pts)
   const difAltura = Math.abs(garanhao.altura - egua.altura);
   const tamanhoScore = difAltura <= 5 ? 10 : difAltura <= 8 ? 8 : difAltura <= 12 ? 5 : 3;
   factores.push({
-    nome: "Compatibilidade Física",
+    nome: tr("Compatibilidade Física", "Physical Compatibility", "Compatibilidad Física"),
     score: tamanhoScore,
     max: 10,
     tipo: tamanhoScore >= 8 ? "excelente" : tamanhoScore >= 5 ? "bom" : "aviso",
-    descricao: `Diferença de altura: ${difAltura}cm`,
+    descricao: tr(`Diferença de altura: ${difAltura}cm`, `Height difference: ${difAltura}cm`, `Diferencia de altura: ${difAltura}cm`),
   });
   if (difAltura > 10)
     riscos.push({
-      texto: `Diferença de altura significativa (${difAltura}cm)`,
+      texto: tr(`Diferença de altura significativa (${difAltura}cm)`, `Significant height difference (${difAltura}cm)`, `Diferencia de altura significativa (${difAltura}cm)`),
       severidade: "baixo",
     });
   total += tamanhoScore;
@@ -59,40 +62,40 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
   const linMedia = (linNiveis[garanhao.linhagem] + linNiveis[egua.linhagem]) / 2;
   const linScore = Math.round(linMedia * 4);
   factores.push({
-    nome: "Qualidade Genética",
+    nome: tr("Qualidade Genética", "Genetic Quality", "Calidad Genética"),
     score: linScore,
     max: 20,
     tipo: linScore >= 16 ? "excelente" : linScore >= 10 ? "bom" : "neutro",
-    descricao: "Média da qualidade das linhagens dos progenitores",
+    descricao: tr("Média da qualidade das linhagens dos progenitores", "Average quality of the parents' lineages", "Promedio de la calidad de las líneas de los progenitores"),
   });
-  if (linScore >= 16) fortes.push("Ambos progenitores com linhagem de prestígio");
-  if (linScore < 8) fracos.push("Linhagem pouco documentada");
+  if (linScore >= 16) fortes.push(tr("Ambos progenitores com linhagem de prestígio", "Both parents with prestigious lineage", "Ambos progenitores con línea de prestigio"));
+  if (linScore < 8) fracos.push(tr("Linhagem pouco documentada", "Poorly documented lineage", "Línea poco documentada"));
   total += linScore;
 
   // 4. Conformação (15pts)
   const confMedia = (garanhao.conformacao + egua.conformacao) / 2;
   const confScore = Math.round(confMedia * 1.5);
   factores.push({
-    nome: "Conformação Morfológica",
+    nome: tr("Conformação Morfológica", "Morphological Conformation", "Conformación Morfológica"),
     score: confScore,
     max: 15,
     tipo: confScore >= 12 ? "excelente" : confScore >= 9 ? "bom" : "neutro",
-    descricao: "Qualidade morfológica média dos progenitores",
+    descricao: tr("Qualidade morfológica média dos progenitores", "Average morphological quality of the parents", "Calidad morfológica promedio de los progenitores"),
   });
-  if (confMedia >= 8) fortes.push("Excelente conformação em ambos progenitores");
+  if (confMedia >= 8) fortes.push(tr("Excelente conformação em ambos progenitores", "Excellent conformation in both parents", "Excelente conformación en ambos progenitores"));
   total += confScore;
 
   // 5. Andamentos (10pts)
   const andMedia = (garanhao.andamentos + egua.andamentos) / 2;
   const andScore = Math.round(andMedia);
   factores.push({
-    nome: "Qualidade dos Andamentos",
+    nome: tr("Qualidade dos Andamentos", "Gait Quality", "Calidad de los Movimientos"),
     score: andScore,
     max: 10,
     tipo: andScore >= 8 ? "excelente" : andScore >= 6 ? "bom" : "neutro",
-    descricao: "Funcionalidade e expressão de movimentos",
+    descricao: tr("Funcionalidade e expressão de movimentos", "Functionality and expression of movements", "Funcionalidad y expresión de movimientos"),
   });
-  if (andMedia >= 8) fortes.push("Andamentos de qualidade superior em ambos");
+  if (andMedia >= 8) fortes.push(tr("Andamentos de qualidade superior em ambos", "Superior quality gaits in both", "Movimientos de calidad superior en ambos"));
   total += andScore;
 
   // 6. Temperamento (10pts)
@@ -104,29 +107,29 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
   };
   const tempScore = tempCompat[garanhao.temperamento]?.[egua.temperamento] || 5;
   factores.push({
-    nome: "Compatibilidade Temperamento",
+    nome: tr("Compatibilidade Temperamento", "Temperament Compatibility", "Compatibilidad de Temperamento"),
     score: tempScore,
     max: 10,
     tipo:
       tempScore >= 8 ? "excelente" : tempScore >= 6 ? "bom" : tempScore >= 4 ? "aviso" : "risco",
-    descricao: "Combinação dos temperamentos dos progenitores",
+    descricao: tr("Combinação dos temperamentos dos progenitores", "Combination of the parents' temperaments", "Combinación de los temperamentos de los progenitores"),
   });
   if (tempScore <= 4)
-    riscos.push({ texto: "Temperamentos potencialmente incompatíveis", severidade: "medio" });
-  if (tempScore >= 9) fortes.push("Temperamentos complementares");
+    riscos.push({ texto: tr("Temperamentos potencialmente incompatíveis", "Potentially incompatible temperaments", "Temperamentos potencialmente incompatibles"), severidade: "medio" });
+  if (tempScore >= 9) fortes.push(tr("Temperamentos complementares", "Complementary temperaments", "Temperamentos complementarios"));
   total += tempScore;
 
   // 7. Estado de Saúde (10pts)
   const saudeMedia = (garanhao.saude + egua.saude) / 2;
   const saudeScore = Math.round(saudeMedia);
   factores.push({
-    nome: "Estado de Saúde",
+    nome: tr("Estado de Saúde", "Health Status", "Estado de Salud"),
     score: saudeScore,
     max: 10,
     tipo: saudeScore >= 8 ? "excelente" : saudeScore >= 6 ? "bom" : "aviso",
-    descricao: "Condição veterinária geral dos progenitores",
+    descricao: tr("Condição veterinária geral dos progenitores", "General veterinary condition of the parents", "Condición veterinaria general de los progenitores"),
   });
-  if (saudeMedia < 6) riscos.push({ texto: "Estado de saúde requer atenção", severidade: "medio" });
+  if (saudeMedia < 6) riscos.push({ texto: tr("Estado de saúde requer atenção", "Health status requires attention", "Estado de salud requiere atención"), severidade: "medio" });
   total += saudeScore;
 
   // 8. Fertilidade (5pts)
@@ -135,22 +138,22 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
     (fertNiveis[garanhao.fertilidade] + fertNiveis[egua.fertilidade]) / 2
   );
   factores.push({
-    nome: "Índice de Fertilidade",
+    nome: tr("Índice de Fertilidade", "Fertility Index", "Índice de Fertilidad"),
     score: fertScore,
     max: 5,
     tipo: fertScore >= 4 ? "excelente" : fertScore >= 3 ? "bom" : "aviso",
-    descricao: "Historial reprodutivo dos progenitores",
+    descricao: tr("Historial reprodutivo dos progenitores", "Reproductive history of the parents", "Historial reproductivo de los progenitores"),
   });
   if (fertScore <= 2)
-    riscos.push({ texto: "Fertilidade baixa pode dificultar concepção", severidade: "medio" });
+    riscos.push({ texto: tr("Fertilidade baixa pode dificultar concepção", "Low fertility may hinder conception", "Fertilidad baja puede dificultar la concepción"), severidade: "medio" });
   total += fertScore;
 
   // 9. Aprovação como reprodutores (5pts bónus)
   if (garanhao.aprovado && egua.aprovado) {
     total += 5;
-    fortes.push("Ambos aprovados oficialmente como reprodutores");
+    fortes.push(tr("Ambos aprovados oficialmente como reprodutores", "Both officially approved as breeders", "Ambos aprobados oficialmente como reproductores"));
   } else if (!garanhao.aprovado) {
-    fracos.push("Garanhão não aprovado como reprodutor");
+    fracos.push(tr("Garanhão não aprovado como reprodutor", "Stallion not approved as breeder", "Semental no aprobado como reproductor"));
   }
 
   // 10. Historial Reprodutivo (0-5 pts)
@@ -163,13 +166,17 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
   if (potGar > 3 || potEgu > 2) historialScore += 2;
   if (potGar > 10 || potEgu > 5) historialScore += 1;
   factores.push({
-    nome: "Historial Reprodutivo",
+    nome: tr("Historial Reprodutivo", "Reproductive History", "Historial Reproductivo"),
     score: historialScore,
     max: 5,
     tipo: historialScore >= 4 ? "excelente" : historialScore >= 2 ? "bom" : "neutro",
-    descricao: `Garanhão: ${matGar} coberturas, ${potGar} potros — Égua: ${matEgu} coberturas, ${potEgu} potros`,
+    descricao: tr(
+      `Garanhão: ${matGar} coberturas, ${potGar} potros — Égua: ${matEgu} coberturas, ${potEgu} potros`,
+      `Stallion: ${matGar} breedings, ${potGar} foals — Mare: ${matEgu} breedings, ${potEgu} foals`,
+      `Semental: ${matGar} cubriciones, ${potGar} potros — Yegua: ${matEgu} cubriciones, ${potEgu} potros`
+    ),
   });
-  if (historialScore >= 4) fortes.push("Historial reprodutivo comprovado");
+  if (historialScore >= 4) fortes.push(tr("Historial reprodutivo comprovado", "Proven reproductive history", "Historial reproductivo comprobado"));
   total += historialScore;
 
   // COI e BLUP previstos
@@ -196,15 +203,15 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
 
   if (coiPrevisto > 6.25) {
     riscos.push({
-      texto: `COI elevado previsto: ${coiPrevisto.toFixed(1)}%`,
+      texto: tr(`COI elevado previsto: ${coiPrevisto.toFixed(1)}%`, `High predicted COI: ${coiPrevisto.toFixed(1)}%`, `COI elevado previsto: ${coiPrevisto.toFixed(1)}%`),
       severidade: "alto",
     });
-    fracos.push("Consanguinidade elevada pode causar problemas genéticos");
+    fracos.push(tr("Consanguinidade elevada pode causar problemas genéticos", "High inbreeding may cause genetic problems", "Consanguinidad elevada puede causar problemas genéticos"));
   } else if (coiPrevisto < 3) {
-    fortes.push("Baixa consanguinidade - excelente diversidade genética");
+    fortes.push(tr("Baixa consanguinidade - excelente diversidade genética", "Low inbreeding - excellent genetic diversity", "Baja consanguinidad - excelente diversidad genética"));
   }
 
-  if (blupPrevisto > 110) fortes.push(`BLUP previsto elevado: ${blupPrevisto}`);
+  if (blupPrevisto > 110) fortes.push(tr(`BLUP previsto elevado: ${blupPrevisto}`, `High predicted BLUP: ${blupPrevisto}`, `BLUP previsto elevado: ${blupPrevisto}`));
 
   // Defeitos genéticos comuns
   const defeitosComuns = garanhao.defeitos.filter((d) => egua.defeitos.includes(d));
@@ -212,18 +219,22 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
     defeitosComuns.forEach((d) => {
       const defeito = DEFEITOS_GENETICOS.find((def) => def.value === d);
       riscos.push({
-        texto: `Ambos portadores de ${defeito?.label || d} - risco para descendência`,
+        texto: tr(
+          `Ambos portadores de ${defeito?.label || d} - risco para descendência`,
+          `Both carriers of ${defeito?.label || d} - risk for offspring`,
+          `Ambos portadores de ${defeito?.label || d} - riesgo para la descendencia`
+        ),
         severidade: "alto",
       });
     });
     total -= defeitosComuns.length * 10;
-    fracos.push(`Defeitos genéticos em comum: ${defeitosComuns.join(", ")}`);
+    fracos.push(tr(`Defeitos genéticos em comum: ${defeitosComuns.join(", ")}`, `Common genetic defects: ${defeitosComuns.join(", ")}`, `Defectos genéticos en común: ${defeitosComuns.join(", ")}`));
   }
 
   // WFFS específico
   if (garanhao.defeitos.includes("WFFS") && egua.defeitos.includes("WFFS")) {
     riscos.push({
-      texto: "RISCO CRÍTICO: 25% dos potros podem ter WFFS fatal",
+      texto: tr("RISCO CRÍTICO: 25% dos potros podem ter WFFS fatal", "CRITICAL RISK: 25% of foals may have fatal WFFS", "RIESGO CRÍTICO: 25% de los potros pueden tener WFFS fatal"),
       severidade: "alto",
     });
   }
@@ -320,41 +331,41 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo): Resulta
   // Nível de compatibilidade
   const nivel =
     total >= 85
-      ? "Excelente"
+      ? tr("Excelente", "Excellent", "Excelente")
       : total >= 70
-        ? "Muito Boa"
+        ? tr("Muito Boa", "Very Good", "Muy Buena")
         : total >= 55
-          ? "Boa"
+          ? tr("Boa", "Good", "Buena")
           : total >= 40
-            ? "Razoável"
-            : "Problemática";
+            ? tr("Razoável", "Fair", "Razonable")
+            : tr("Problemática", "Problematic", "Problemática");
 
   // Recomendações
   const recomendacoes: string[] = [];
   if (coiPrevisto > 5) {
     recomendacoes.push(
-      "Considere um reprodutor de linhagem diferente para aumentar diversidade genética"
+      tr("Considere um reprodutor de linhagem diferente para aumentar diversidade genética", "Consider a breeder from a different lineage to increase genetic diversity", "Considere un reproductor de línea diferente para aumentar la diversidad genética")
     );
   }
   if (defeitosComuns.length > 0) {
-    recomendacoes.push("Recomenda-se teste genético completo antes de prosseguir com cruzamento");
+    recomendacoes.push(tr("Recomenda-se teste genético completo antes de prosseguir com cruzamento", "Complete genetic testing is recommended before proceeding with breeding", "Se recomienda prueba genética completa antes de proceder con el cruzamiento"));
   }
   if (egua.idade > 14) {
-    recomendacoes.push("Acompanhamento veterinário intensivo recomendado durante gestação");
+    recomendacoes.push(tr("Acompanhamento veterinário intensivo recomendado durante gestação", "Intensive veterinary monitoring recommended during pregnancy", "Seguimiento veterinario intensivo recomendado durante la gestación"));
   }
   if (tempScore < 7) {
     recomendacoes.push(
-      "Potros podem herdar temperamento mais desafiante - preparar para trabalho de doma adequado"
+      tr("Potros podem herdar temperamento mais desafiante - preparar para trabalho de doma adequado", "Foals may inherit a more challenging temperament - prepare for appropriate training", "Los potros pueden heredar un temperamento más desafiante - preparar para trabajo de doma adecuado")
     );
   }
   if (total >= 80) {
     recomendacoes.push(
-      "Cruzamento promissor - considere registar potro no Livro de Nascimentos APSL"
+      tr("Cruzamento promissor - considere registar potro no Livro de Nascimentos APSL", "Promising cross - consider registering the foal in the APSL Birth Book", "Cruzamiento prometedor - considere registrar el potro en el Libro de Nacimientos APSL")
     );
   }
   if (andMedia >= 8 && confMedia >= 8) {
     recomendacoes.push(
-      "Potencial para potro de competição - considere plano de treino desde jovem"
+      tr("Potencial para potro de competição - considere plano de treino desde jovem", "Potential for competition foal - consider a training plan from a young age", "Potencial para potro de competición - considere un plan de entrenamiento desde joven")
     );
   }
 

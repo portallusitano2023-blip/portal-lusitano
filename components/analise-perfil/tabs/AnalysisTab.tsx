@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Percent, BarChart3, Activity } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import { results } from "@/components/analise-perfil/data/results";
+import { getResults } from "@/components/analise-perfil/data/results";
 import Tooltip from "@/components/tools/Tooltip";
 import type { Result, AnswerDetail, ScorePercentage } from "@/components/analise-perfil/types";
 import { PROFILE_COLORS_TW } from "@/components/analise-perfil/types";
@@ -26,6 +26,7 @@ export default function AnalysisTab({
 }: AnalysisTabProps) {
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const results = useMemo(() => getResults(tr), [tr]);
 
   return (
     <div key="analise" className="space-y-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { ArrowRight, Heart, RefreshCw, Trophy, Dna, Leaf, Star } from "lucide-react";
 import ToolNavBar from "@/components/tools/ToolNavBar";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -49,7 +49,7 @@ interface ChainHorse {
 
 export default function VerificadorCompatibilidadePage() {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const [garanhao, setGaranhao] = useState<Cavalo>(criarCavalo("Garanhão"));
   const [egua, setEgua] = useState<Cavalo>(criarCavalo("Égua"));
   const [tab, setTab] = useState<"garanhao" | "egua">("garanhao");
@@ -89,7 +89,7 @@ export default function VerificadorCompatibilidadePage() {
         if (age < 7 * 24 * 60 * 60 * 1000) {
           setHasDraft(true);
           setDraftDate(
-            new Date(savedAt).toLocaleDateString("pt-PT", {
+            new Date(savedAt).toLocaleDateString(language === "pt" ? "pt-PT" : language === "es" ? "es-ES" : "en-GB", {
               day: "numeric",
               month: "long",
               hour: "2-digit",
@@ -101,7 +101,7 @@ export default function VerificadorCompatibilidadePage() {
         }
       }
     } catch {}
-  }, []);
+  }, [language]);
 
   // ============================================
   // TOOL CHAIN: ler par do Comparador de Cavalos
@@ -162,10 +162,10 @@ export default function VerificadorCompatibilidadePage() {
       if (hasEgua && !hasGaranhao) setTab("garanhao");
       const bannerText =
         hasGaranhao && hasEgua
-          ? `${g.nome || "Garanhão"} × ${e.nome || "Égua"}`
+          ? `${g.nome || tr("Garanhão", "Stallion", "Semental")} × ${e.nome || tr("Égua", "Mare", "Yegua")}`
           : hasGaranhao
-            ? `${g.nome} — preencha a égua`
-            : `${e.nome} — preencha o garanhão`;
+            ? `${g.nome} — ${tr("preencha a égua", "fill in the mare", "complete la yegua")}`
+            : `${e.nome} — ${tr("preencha o garanhão", "fill in the stallion", "complete el semental")}`;
       setChainBanner(bannerText);
       setChainImported(true);
     } catch (err) {
@@ -260,7 +260,7 @@ export default function VerificadorCompatibilidadePage() {
     setIsCalculating(true);
 
     try {
-      const resultadoFinal = calcularCompatibilidade(garanhao, egua);
+      const resultadoFinal = calcularCompatibilidade(garanhao, egua, tr);
 
       // Server-side validation + recording BEFORE showing results
       const allowed = await validateAndRecord(
@@ -416,20 +416,20 @@ export default function VerificadorCompatibilidadePage() {
               <div className="max-w-4xl mx-auto px-4 -mt-8 mb-8">
                 <div className="flex flex-col sm:flex-row items-center gap-3 px-5 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl">
                   <p className="text-xs text-[var(--gold)] flex-1 text-center sm:text-left">
-                    Tem uma análise guardada de {draftDate}
+                    {tr("Tem uma análise guardada de", "You have a saved analysis from", "Tienes un análisis guardado de")} {draftDate}
                   </p>
                   <div className="flex gap-2">
                     <button
                       onClick={restaurarDraft}
                       className="px-3 py-1.5 bg-[var(--gold)] text-black text-xs font-bold rounded-lg hover:bg-[#D4B068] transition-colors"
                     >
-                      Continuar
+                      {tr("Continuar", "Continue", "Continuar")}
                     </button>
                     <button
                       onClick={descartarDraft}
                       className="px-3 py-1.5 bg-transparent border border-[var(--gold)]/40 text-[var(--gold)] text-xs rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
                     >
-                      Descartar
+                      {tr("Descartar", "Discard", "Descartar")}
                     </button>
                   </div>
                 </div>
@@ -444,13 +444,13 @@ export default function VerificadorCompatibilidadePage() {
             <div className="bg-pink-900/20 border border-pink-500/30 rounded-xl p-4 flex items-center gap-3">
               <Heart size={15} className="text-pink-400 shrink-0" />
               <p className="text-sm text-pink-300 flex-1">
-                Par importado do Comparador: <span className="font-semibold">{chainBanner}</span> —
-                revê os dados e clica em Calcular.
+                {tr("Par importado do Comparador:", "Pair imported from Comparator:", "Par importado del Comparador:")} <span className="font-semibold">{chainBanner}</span> —
+                {tr("revê os dados e clica em Calcular.", "review the data and click Calculate.", "revisa los datos y haz clic en Calcular.")}
               </p>
               <button
                 onClick={() => setChainBanner(null)}
                 className="text-pink-400/60 hover:text-pink-400 text-lg leading-none"
-                aria-label="Fechar"
+                aria-label={tr("Fechar", "Close", "Cerrar")}
               >
                 ×
               </button>
@@ -463,8 +463,11 @@ export default function VerificadorCompatibilidadePage() {
           <div className="max-w-4xl mx-auto px-4 mb-4 mt-4">
             <div className="flex items-center gap-2 px-4 py-2.5 bg-blue-900/20 border border-blue-500/30 rounded-xl text-sm text-blue-300">
               <ArrowRight size={15} className="shrink-0" />
-              Dados importados do Comparador — reveja os campos e clique em &quot;Verificar
-              Compatibilidade&quot;
+              {tr(
+                "Dados importados do Comparador — reveja os campos e clique em \"Verificar Compatibilidade\"",
+                "Data imported from Comparator — review the fields and click \"Check Compatibility\"",
+                "Datos importados del Comparador — revise los campos y haga clic en \"Verificar Compatibilidad\""
+              )}
             </div>
           </div>
         )}

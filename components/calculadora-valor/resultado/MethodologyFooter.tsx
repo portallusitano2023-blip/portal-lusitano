@@ -104,102 +104,102 @@ export default function MethodologyFooter({
       <MethodologyPanel
         title={
           (t.calculadora as Record<string, string>).methodology_panel_title ??
-          "Metodologia de Avaliação"
+          tr("Metodologia de Avaliação", "Valuation Methodology", "Metodología de Evaluación")
         }
         factors={[
           {
-            name: (t.calculadora as Record<string, string>).factor_conformacao ?? "Conformação",
+            name: (t.calculadora as Record<string, string>).factor_conformacao ?? tr("Conformação", "Conformation", "Conformación"),
             weight: "15%",
             description:
               (t.calculadora as Record<string, string>).factor_conformacao_desc ??
-              "Avaliação segundo padrões APSL",
+              tr("Avaliação segundo padrões APSL", "Evaluation per APSL standards", "Evaluación según estándares APSL"),
             standard: "APSL",
           },
           {
-            name: (t.calculadora as Record<string, string>).factor_andamentos ?? "Andamentos",
+            name: (t.calculadora as Record<string, string>).factor_andamentos ?? tr("Andamentos", "Gaits", "Movimientos"),
             weight: "15%",
             description:
               (t.calculadora as Record<string, string>).factor_andamentos_desc ??
-              "Elevação, suspensão, regularidade",
+              tr("Elevação, suspensão, regularidade", "Elevation, suspension, regularity", "Elevación, suspensión, regularidad"),
             standard: "FEI",
           },
           {
-            name: (t.calculadora as Record<string, string>).factor_treino ?? "Treino",
+            name: (t.calculadora as Record<string, string>).factor_treino ?? tr("Treino", "Training", "Entrenamiento"),
             weight: "15%",
             description:
               (t.calculadora as Record<string, string>).factor_treino_desc ??
-              "Nível conforme escalas FEI",
+              tr("Nível conforme escalas FEI", "Level per FEI scales", "Nivel según escalas FEI"),
             standard: "FEI",
           },
           {
-            name: (t.calculadora as Record<string, string>).factor_linhagem ?? "Linhagem",
+            name: (t.calculadora as Record<string, string>).factor_linhagem ?? tr("Linhagem", "Lineage", "Linaje"),
             weight: "12%",
             description:
               (t.calculadora as Record<string, string>).factor_linhagem_desc ??
-              "Qualidade do pedigree e registo",
+              tr("Qualidade do pedigree e registo", "Pedigree quality and registration", "Calidad del pedigrí y registro"),
           },
           {
-            name: (t.calculadora as Record<string, string>).factor_competicoes ?? "Competições",
+            name: (t.calculadora as Record<string, string>).factor_competicoes ?? tr("Competições", "Competitions", "Competiciones"),
             weight: "10%",
             description:
               (t.calculadora as Record<string, string>).factor_competicoes_desc ??
-              "Historial competitivo e resultados",
+              tr("Historial competitivo e resultados", "Competition history and results", "Historial competitivo y resultados"),
           },
           {
             name: (t.calculadora as Record<string, string>).factor_blup ?? "BLUP",
             weight: "8%",
             description:
               (t.calculadora as Record<string, string>).factor_blup_desc ??
-              "Estimativa de mérito genético",
-            standard: "modelo",
+              tr("Estimativa de mérito genético", "Genetic merit estimate", "Estimación de mérito genético"),
+            standard: tr("modelo", "model", "modelo"),
           },
           {
-            name: (t.calculadora as Record<string, string>).factor_temperamento ?? "Temperamento",
+            name: (t.calculadora as Record<string, string>).factor_temperamento ?? tr("Temperamento", "Temperament", "Temperamento"),
             weight: "8%",
             description:
               (t.calculadora as Record<string, string>).factor_temperamento_desc ??
-              "Docilidade e predisposição para trabalho",
+              tr("Docilidade e predisposição para trabalho", "Docility and work predisposition", "Docilidad y predisposición para el trabajo"),
           },
           {
-            name: (t.calculadora as Record<string, string>).factor_saude ?? "Saúde",
+            name: (t.calculadora as Record<string, string>).factor_saude ?? tr("Saúde", "Health", "Salud"),
             weight: "7%",
             description:
               (t.calculadora as Record<string, string>).factor_saude_desc ??
-              "Historial clínico e documentação veterinária",
-            standard: "veterinário",
+              tr("Historial clínico e documentação veterinária", "Clinical history and veterinary documentation", "Historial clínico y documentación veterinaria"),
+            standard: tr("veterinário", "veterinary", "veterinario"),
           },
           {
-            name: (t.calculadora as Record<string, string>).factor_idade ?? "Idade",
+            name: (t.calculadora as Record<string, string>).factor_idade ?? tr("Idade", "Age", "Edad"),
             weight: "5%",
             description:
               (t.calculadora as Record<string, string>).factor_idade_desc ??
-              "Faixa etária ideal: 6-12 anos",
+              tr("Faixa etária ideal: 6-12 anos", "Ideal age range: 6-12 years", "Rango de edad ideal: 6-12 años"),
           },
           {
-            name: (t.calculadora as Record<string, string>).factor_mercado ?? "Mercado",
+            name: (t.calculadora as Record<string, string>).factor_mercado ?? tr("Mercado", "Market", "Mercado"),
             weight: "5%",
             description:
               (t.calculadora as Record<string, string>).factor_mercado_desc ??
-              "Dinâmicas regionais de oferta e procura",
-            standard: "mercado",
+              tr("Dinâmicas regionais de oferta e procura", "Regional supply and demand dynamics", "Dinámicas regionales de oferta y demanda"),
+            standard: tr("mercado", "market", "mercado"),
           },
         ]}
         limitations={[
           (t.calculadora as Record<string, string>).limitation_1 ??
-            "Não considera condição física actual do cavalo",
+            tr("Não considera condição física actual do cavalo", "Does not consider the horse's current physical condition", "No considera la condición física actual del caballo"),
           (t.calculadora as Record<string, string>).limitation_2 ??
-            "BLUP é uma estimativa simplificada, não oficial APSL",
+            tr("BLUP é uma estimativa simplificada, não oficial APSL", "BLUP is a simplified estimate, not official APSL", "BLUP es una estimación simplificada, no oficial APSL"),
           (t.calculadora as Record<string, string>).limitation_3 ??
-            "Valores de mercado baseados em médias sectoriais",
+            tr("Valores de mercado baseados em médias sectoriais", "Market values based on sector averages", "Valores de mercado basados en promedios sectoriales"),
           (t.calculadora as Record<string, string>).limitation_4 ??
-            "Não substitui avaliação presencial por profissional qualificado",
+            tr("Não substitui avaliação presencial por profissional qualificado", "Does not replace in-person evaluation by a qualified professional", "No sustituye la evaluación presencial por un profesional cualificado"),
         ]}
         version={(t.calculadora as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"}
         references={[
-          (t.calculadora as Record<string, string>).ref_apsl ?? "Padrões de conformação APSL",
-          (t.calculadora as Record<string, string>).ref_fei ?? "Escalas de treino FEI",
+          (t.calculadora as Record<string, string>).ref_apsl ?? tr("Padrões de conformação APSL", "APSL conformation standards", "Estándares de conformación APSL"),
+          (t.calculadora as Record<string, string>).ref_fei ?? tr("Escalas de treino FEI", "FEI training scales", "Escalas de entrenamiento FEI"),
           (t.calculadora as Record<string, string>).ref_mercado ??
-            "Médias mercado equestre PT (2024-2025)",
+            tr("Médias mercado equestre PT (2024-2025)", "PT equestrian market averages (2024-2025)", "Promedios del mercado ecuestre PT (2024-2025)"),
         ]}
       />
 

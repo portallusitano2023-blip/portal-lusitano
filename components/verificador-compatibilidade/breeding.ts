@@ -4,6 +4,9 @@
 
 import type { Cavalo, ResultadoCompatibilidade } from "./types";
 
+type TranslatorFn = (pt: string, en: string, es?: string) => string;
+const defaultTr: TranslatorFn = (pt) => pt;
+
 // ============================================
 // Calendário de Criação — Milestones
 // ============================================
@@ -15,43 +18,43 @@ export interface BreedingMilestone {
   description: string;
 }
 
-export function calcularCalendarioCriacao(_mesActual: number): BreedingMilestone[] {
+export function calcularCalendarioCriacao(_mesActual: number, tr: TranslatorFn = defaultTr): BreedingMilestone[] {
   return [
     {
-      label: "Época de Cobrição",
+      label: tr("Época de Cobrição", "Breeding Season", "Época de Cubrición"),
       startMonth: 3,
       durationMonths: 4,
-      description: "Março a Junho — período ideal para cobrição natural ou IA",
+      description: tr("Março a Junho — período ideal para cobrição natural ou IA", "March to June — ideal period for natural breeding or AI", "Marzo a Junio — período ideal para cubrición natural o IA"),
     },
     {
-      label: "Gestação",
+      label: tr("Gestação", "Gestation", "Gestación"),
       startMonth: 4,
       durationMonths: 11,
-      description: "Aproximadamente 340 dias de gestação",
+      description: tr("Aproximadamente 340 dias de gestação", "Approximately 340 days of gestation", "Aproximadamente 340 días de gestación"),
     },
     {
-      label: "Nascimento Estimado",
+      label: tr("Nascimento Estimado", "Estimated Birth", "Nacimiento Estimado"),
       startMonth: ((4 + 11 - 1) % 12) + 1, // ~March next year
       durationMonths: 1,
-      description: "Nascimento previsto na primavera seguinte",
+      description: tr("Nascimento previsto na primavera seguinte", "Expected birth in the following spring", "Nacimiento previsto en la primavera siguiente"),
     },
     {
-      label: "Desmame",
+      label: tr("Desmame", "Weaning", "Destete"),
       startMonth: ((4 + 11 + 6 - 1) % 12) + 1,
       durationMonths: 1,
-      description: "Desmame aos 6 meses de idade",
+      description: tr("Desmame aos 6 meses de idade", "Weaning at 6 months of age", "Destete a los 6 meses de edad"),
     },
     {
-      label: "Primeira Manipulação",
+      label: tr("Primeira Manipulação", "First Handling", "Primera Manipulación"),
       startMonth: ((4 + 11 + 12 - 1) % 12) + 1,
       durationMonths: 2,
-      description: "Início do maneio e habituação ao contacto humano",
+      description: tr("Início do maneio e habituação ao contacto humano", "Start of handling and habituation to human contact", "Inicio del manejo y habituación al contacto humano"),
     },
     {
-      label: "Início do Desbaste",
+      label: tr("Início do Desbaste", "Start of Breaking", "Inicio de la Doma"),
       startMonth: ((4 + 11 - 1) % 12) + 1, // same month, 3 years later
       durationMonths: 6,
-      description: "Desbaste aos 3 anos — início do trabalho montado",
+      description: tr("Desbaste aos 3 anos — início do trabalho montado", "Breaking at 3 years — start of ridden work", "Doma a los 3 años — inicio del trabajo montado"),
     },
   ];
 }
@@ -67,7 +70,7 @@ export interface OffspringAxis {
   offspringScore: number;
 }
 
-export function calcularAptidoesPotro(garanhao: Cavalo, egua: Cavalo): OffspringAxis[] {
+export function calcularAptidoesPotro(garanhao: Cavalo, egua: Cavalo, tr: TranslatorFn = defaultTr): OffspringAxis[] {
   // Pesos diferenciados:
   // Conformação: garanhão 55%, égua 45%
   // Andamentos: garanhão 50%, égua 50%
@@ -132,37 +135,37 @@ export function calcularAptidoesPotro(garanhao: Cavalo, egua: Cavalo): Offspring
 
   return [
     {
-      label: "Conformação",
+      label: tr("Conformação", "Conformation", "Conformación"),
       stallionScore: stallionConf,
       mareScore: mareConf,
       offspringScore: Math.round(stallionConf * 0.55 + mareConf * 0.45),
     },
     {
-      label: "Andamentos",
+      label: tr("Andamentos", "Gaits", "Movimientos"),
       stallionScore: stallionAnd,
       mareScore: mareAnd,
       offspringScore: Math.round(stallionAnd * 0.5 + mareAnd * 0.5),
     },
     {
-      label: "Temperamento",
+      label: tr("Temperamento", "Temperament", "Temperamento"),
       stallionScore: stallionTemp,
       mareScore: mareTemp,
       offspringScore: Math.round(stallionTemp * 0.45 + mareTemp * 0.55),
     },
     {
-      label: "Aptidão Desportiva",
+      label: tr("Aptidão Desportiva", "Sport Aptitude", "Aptitud Deportiva"),
       stallionScore: stallionSport,
       mareScore: mareSport,
       offspringScore: Math.round(stallionSport * 0.55 + mareSport * 0.45),
     },
     {
-      label: "Potencial Reprodutivo",
+      label: tr("Potencial Reprodutivo", "Reproductive Potential", "Potencial Reproductivo"),
       stallionScore: stallionRepro,
       mareScore: mareRepro,
       offspringScore: Math.round(stallionRepro * 0.4 + mareRepro * 0.6),
     },
     {
-      label: "Valor Genético",
+      label: tr("Valor Genético", "Genetic Value", "Valor Genético"),
       stallionScore: Math.round(stallionGen),
       mareScore: Math.round(mareGen),
       offspringScore: Math.round(stallionGen * 0.5 + mareGen * 0.5),
@@ -183,7 +186,8 @@ export interface FoalValueStage {
 export function calcularValorPotro(
   resultado: ResultadoCompatibilidade,
   garanhao: Cavalo,
-  egua: Cavalo
+  egua: Cavalo,
+  tr: TranslatorFn = defaultTr
 ): FoalValueStage[] {
   // Qualidade da linhagem baseada na compatibilidade
   const qualidadeLinhagem = resultado.score / 100; // 0-1
@@ -201,19 +205,19 @@ export function calcularValorPotro(
 
   return [
     {
-      stage: "Desmame (6 meses)",
+      stage: tr("Desmame (6 meses)", "Weaning (6 months)", "Destete (6 meses)"),
       value: Math.round(valorDesmame),
-      description: "Valor ao desmame, baseado na qualidade genética e linhagem dos pais",
+      description: tr("Valor ao desmame, baseado na qualidade genética e linhagem dos pais", "Value at weaning, based on genetic quality and parents' lineage", "Valor al destete, basado en la calidad genética y línea de los padres"),
     },
     {
-      stage: "Desbravado (3 anos)",
+      stage: tr("Desbravado (3 anos)", "Broken in (3 years)", "Domado (3 años)"),
       value: Math.round(valor3anos),
-      description: "Valor após desbaste inicial, com maneio básico e primeiros trabalhos montados",
+      description: tr("Valor após desbaste inicial, com maneio básico e primeiros trabalhos montados", "Value after initial breaking, with basic handling and first ridden work", "Valor tras doma inicial, con manejo básico y primeros trabajos montados"),
     },
     {
-      stage: "Treinado (5 anos)",
+      stage: tr("Treinado (5 anos)", "Trained (5 years)", "Entrenado (5 años)"),
       value: Math.round(valor5anos),
-      description: "Valor com treino elementar a médio, pronto para competição ou trabalho",
+      description: tr("Valor com treino elementar a médio, pronto para competição ou trabalho", "Value with elementary to medium training, ready for competition or work", "Valor con entrenamiento elemental a medio, listo para competición o trabajo"),
     },
   ];
 }

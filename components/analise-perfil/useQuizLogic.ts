@@ -6,7 +6,7 @@ import { useToolAccess } from "@/hooks/useToolAccess";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { questions } from "@/components/analise-perfil/data/questions";
-import { results } from "@/components/analise-perfil/data/results";
+import { getResults } from "@/components/analise-perfil/data/results";
 import {
   getShareUrl as buildShareUrl,
   shareWhatsApp as doShareWhatsApp,
@@ -112,6 +112,7 @@ function getCrossValidationWarning(
 export function useQuizLogic() {
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
+  const results = useMemo(() => getResults(tr), [tr]);
   const [showIntro, setShowIntro] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
@@ -179,7 +180,7 @@ export function useQuizLogic() {
         // Invalid shared result - silenced
       }
     }
-  }, [searchParams]);
+  }, [searchParams, results]);
 
   const startQuiz = useCallback(() => {
     setShowIntro(false);
@@ -277,7 +278,7 @@ export function useQuizLogic() {
         setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
       }
     },
-    [currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, tr]
+    [currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, tr, results]
   );
 
   const calculateConfidence = useCallback((): number => {
@@ -432,7 +433,7 @@ export function useQuizLogic() {
           label: results[p]?.title || p,
         }))
         .sort((a, b) => b.percentage - a.percentage),
-    [scores, totalScore]
+    [scores, totalScore, results]
   );
 
   // Real-time dominant profile for quiz preview

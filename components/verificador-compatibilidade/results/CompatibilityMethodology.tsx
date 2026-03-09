@@ -1,9 +1,12 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useMemo } from "react";
 import { ChevronRight, TrendingUp, BarChart3, Target } from "lucide-react";
 import { chainVerificadorToPerfil } from "@/lib/tools/tool-chain";
 import MethodologyPanel from "@/components/tools/MethodologyPanel";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface CompatibilityMethodologyProps {
   resultado: any;
@@ -20,6 +23,9 @@ export default function CompatibilityMethodology({
   isSubscribed: _isSubscribed,
   t,
 }: CompatibilityMethodologyProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   return (
     <>
       {/* Methodology Panel */}
@@ -27,97 +33,101 @@ export default function CompatibilityMethodology({
         <MethodologyPanel
           title={
             (t.verificador as Record<string, string>).methodology_panel_title ??
-            "Metodologia de Compatibilidade"
+            tr("Metodologia de Compatibilidade", "Compatibility Methodology", "Metodología de Compatibilidad")
           }
           factors={[
             {
-              name: "Qualidade Genética / Linhagem",
+              name: tr("Qualidade Genética / Linhagem", "Genetic Quality / Lineage", "Calidad Genética / Línea"),
               weight: "20pts",
               description:
                 (t.verificador as Record<string, string>).method_linhagem ??
-                "Média da qualidade das linhagens dos progenitores",
+                tr("Média da qualidade das linhagens dos progenitores", "Average quality of the parents' lineages", "Promedio de la calidad de las líneas de los progenitores"),
               standard: "APSL",
             },
             {
-              name: "Idade Reprodutiva",
+              name: tr("Idade Reprodutiva", "Reproductive Age", "Edad Reproductiva"),
               weight: "15pts",
               description:
                 (t.verificador as Record<string, string>).method_idade ??
-                "Idade ideal: Garanhão 4-20, Égua 4-18 anos",
+                tr("Idade ideal: Garanhão 4-20, Égua 4-18 anos", "Ideal age: Stallion 4-20, Mare 4-18 years", "Edad ideal: Semental 4-20, Yegua 4-18 años"),
             },
             {
-              name: "Conformação Morfológica",
+              name: tr("Conformação Morfológica", "Morphological Conformation", "Conformación Morfológica"),
               weight: "15pts",
               description:
                 (t.verificador as Record<string, string>).method_conformacao ??
-                "Qualidade morfológica média dos progenitores",
+                tr("Qualidade morfológica média dos progenitores", "Average morphological quality of the parents", "Calidad morfológica promedio de los progenitores"),
               standard: "APSL",
             },
             {
-              name: "Compatibilidade Física",
+              name: tr("Compatibilidade Física", "Physical Compatibility", "Compatibilidad Física"),
               weight: "10pts",
               description:
                 (t.verificador as Record<string, string>).method_fisica ??
-                "Diferença de altura entre os progenitores",
+                tr("Diferença de altura entre os progenitores", "Height difference between parents", "Diferencia de altura entre los progenitores"),
             },
             {
-              name: "Qualidade dos Andamentos",
+              name: tr("Qualidade dos Andamentos", "Gait Quality", "Calidad de los Movimientos"),
               weight: "10pts",
               description:
                 (t.verificador as Record<string, string>).method_andamentos ??
-                "Funcionalidade e expressão de movimentos",
+                tr("Funcionalidade e expressão de movimentos", "Functionality and expression of movements", "Funcionalidad y expresión de movimientos"),
             },
             {
-              name: "Compatibilidade Temperamento",
+              name: tr("Compatibilidade Temperamento", "Temperament Compatibility", "Compatibilidad de Temperamento"),
               weight: "10pts",
               description:
                 (t.verificador as Record<string, string>).method_temperamento ??
-                "Combinação dos temperamentos dos progenitores",
+                tr("Combinação dos temperamentos dos progenitores", "Combination of the parents' temperaments", "Combinación de los temperamentos de los progenitores"),
             },
             {
-              name: "Estado de Saúde",
+              name: tr("Estado de Saúde", "Health Status", "Estado de Salud"),
               weight: "10pts",
               description:
                 (t.verificador as Record<string, string>).method_saude ??
-                "Condição veterinária geral dos progenitores",
+                tr("Condição veterinária geral dos progenitores", "General veterinary condition of the parents", "Condición veterinaria general de los progenitores"),
             },
             {
-              name: "Índice de Fertilidade",
+              name: tr("Índice de Fertilidade", "Fertility Index", "Índice de Fertilidad"),
               weight: "5pts",
               description:
                 (t.verificador as Record<string, string>).method_repro ??
-                "Historial de fertilidade dos progenitores",
+                tr("Historial de fertilidade dos progenitores", "Fertility history of the parents", "Historial de fertilidad de los progenitores"),
             },
             {
-              name: "Aprovação como Reprodutores",
-              weight: "5pts (bónus)",
+              name: tr("Aprovação como Reprodutores", "Approval as Breeders", "Aprobación como Reproductores"),
+              weight: tr("5pts (bónus)", "5pts (bonus)", "5pts (bono)"),
               description:
                 (t.verificador as Record<string, string>).method_apsl ??
-                "Bónus para ambos aprovados oficialmente como reprodutores",
+                tr("Bónus para ambos aprovados oficialmente como reprodutores", "Bonus for both officially approved as breeders", "Bonificación para ambos aprobados oficialmente como reproductores"),
               standard: "APSL",
             },
             {
-              name: "Historial Reprodutivo",
+              name: tr("Historial Reprodutivo", "Reproductive History", "Historial Reproductivo"),
               weight: "5pts",
               description:
                 (t.verificador as Record<string, string>).method_historial ??
-                "Coberturas realizadas e potros nascidos vivos",
+                tr("Coberturas realizadas e potros nascidos vivos", "Breedings performed and live foals born", "Cubriciones realizadas y potros nacidos vivos"),
             },
           ]}
           limitations={[
             (t.verificador as Record<string, string>).limitation_1 ??
-              "Não considera doenças genéticas específicas",
+              tr("Não considera doenças genéticas específicas", "Does not consider specific genetic diseases", "No considera enfermedades genéticas específicas"),
             (t.verificador as Record<string, string>).limitation_2 ??
-              "COI baseado em pedigree declarado, não em análise DNA",
+              tr("COI baseado em pedigree declarado, não em análise DNA", "COI based on declared pedigree, not DNA analysis", "COI basado en pedigrí declarado, no en análisis de ADN"),
             (t.verificador as Record<string, string>).limitation_3 ??
-              "BLUP estimado, não oficial APSL",
+              tr("BLUP estimado, não oficial APSL", "Estimated BLUP, not official APSL", "BLUP estimado, no oficial APSL"),
             (t.verificador as Record<string, string>).limitation_4 ??
-              "Não substitui consulta veterinária reprodutiva",
+              tr("Não substitui consulta veterinária reprodutiva", "Does not replace reproductive veterinary consultation", "No sustituye consulta veterinaria reproductiva"),
           ]}
           version={
             (t.verificador as Record<string, string>).methodology_version ?? "v2.1 — Fev 2026"
           }
-          references={["Genética quantitativa equina", "Padrões APSL", "Wright (1922) — COI"]}
+          references={[
+            tr("Genética quantitativa equina", "Equine quantitative genetics", "Genética cuantitativa equina"),
+            tr("Padrões APSL", "APSL standards", "Estándares APSL"),
+            "Wright (1922) — COI",
+          ]}
         />
       </div>
 
@@ -176,10 +186,10 @@ export default function CompatibilityMethodology({
           />
           <div>
             <p className="text-sm font-semibold text-[var(--foreground)]">
-              Abrir ambos no Comparador
+              {tr("Abrir ambos no Comparador", "Open both in Comparator", "Abrir ambos en el Comparador")}
             </p>
             <p className="text-xs text-[var(--foreground-muted)]">
-              {garanhao.nome || "Garanhão"} × {egua.nome || "Égua"} lado a lado
+              {garanhao.nome || tr("Garanhão", "Stallion", "Semental")} × {egua.nome || tr("Égua", "Mare", "Yegua")} {tr("lado a lado", "side by side", "lado a lado")}
             </p>
           </div>
           <ChevronRight
@@ -199,9 +209,9 @@ export default function CompatibilityMethodology({
             className="text-[var(--gold)] shrink-0 group-hover:scale-110 transition-transform"
           />
           <div>
-            <p className="text-sm font-semibold text-[var(--foreground)]">Estimar Valor do Potro</p>
+            <p className="text-sm font-semibold text-[var(--foreground)]">{tr("Estimar Valor do Potro", "Estimate Foal Value", "Estimar Valor del Potro")}</p>
             <p className="text-xs text-[var(--foreground-muted)]">
-              Calculadora de Valor para o descendente
+              {tr("Calculadora de Valor para o descendente", "Value calculator for the offspring", "Calculadora de Valor para el descendiente")}
             </p>
           </div>
           <ChevronRight
@@ -214,8 +224,8 @@ export default function CompatibilityMethodology({
           onClick={() =>
             chainVerificadorToPerfil(
               resultado.score,
-              garanhao.nome || "Garanhão",
-              egua.nome || "Égua"
+              garanhao.nome || tr("Garanhão", "Stallion", "Semental"),
+              egua.nome || tr("Égua", "Mare", "Yegua")
             )
           }
           className="group flex items-center gap-3 p-4 bg-emerald-900/15 border border-emerald-500/30 rounded-xl hover:border-emerald-500/60 transition-all text-left"
@@ -225,9 +235,9 @@ export default function CompatibilityMethodology({
             className="text-emerald-400 shrink-0 group-hover:scale-110 transition-transform"
           />
           <div>
-            <p className="text-sm font-semibold text-[var(--foreground)]">Perfil de Comprador</p>
+            <p className="text-sm font-semibold text-[var(--foreground)]">{tr("Perfil de Comprador", "Buyer Profile", "Perfil de Comprador")}</p>
             <p className="text-xs text-[var(--foreground-muted)]">
-              Descobre o perfil ideal para este potro
+              {tr("Descobre o perfil ideal para este potro", "Discover the ideal profile for this foal", "Descubre el perfil ideal para este potro")}
             </p>
           </div>
           <ChevronRight

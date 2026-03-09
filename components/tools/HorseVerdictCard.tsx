@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CheckCircle, AlertTriangle, Target, Shield } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 
 interface HorseVerdictCardProps {
   nome: string;
@@ -9,7 +11,7 @@ interface HorseVerdictCardProps {
   strengths: string[]; // top 3 strength descriptions
   weaknesses: string[]; // top 3 weakness descriptions
   bestUse: string; // "Competicao" | "Criacao" | "Lazer" | "Investimento"
-  riskLevel: "Baixo" | "Médio" | "Alto";
+  riskLevel: string;
   recommendation: string; // 1-paragraph recommendation text
 }
 
@@ -71,25 +73,31 @@ function ScoreRing({ value, animated }: { value: number; animated: boolean }) {
 /* ------------------------------------------------------------------ */
 /*  Risk-level colour mapping                                          */
 /* ------------------------------------------------------------------ */
-function riskStyles(level: HorseVerdictCardProps["riskLevel"]): {
+function riskStyles(level: string): {
   bg: string;
   text: string;
   border: string;
 } {
   switch (level) {
     case "Baixo":
+    case "Low":
+    case "Bajo":
       return {
         bg: "rgba(34,197,94,0.1)",
         text: "#22c55e",
         border: "rgba(34,197,94,0.3)",
       };
     case "Médio":
+    case "Medium":
+    case "Medio":
       return {
         bg: "rgba(245,158,11,0.1)",
         text: "#f59e0b",
         border: "rgba(245,158,11,0.3)",
       };
     case "Alto":
+    case "High":
+    default:
       return {
         bg: "rgba(239,68,68,0.1)",
         text: "#ef4444",
@@ -110,6 +118,8 @@ export default function HorseVerdictCard({
   riskLevel,
   recommendation,
 }: HorseVerdictCardProps) {
+  const { language } = useLanguage();
+  const tr = createTranslator(language);
   const cardRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -138,7 +148,7 @@ export default function HorseVerdictCard({
     <article
       ref={cardRef}
       role="region"
-      aria-label={`Veredicto para ${nome}`}
+      aria-label={tr(`Veredicto para ${nome}`, `Verdict for ${nome}`, `Veredicto para ${nome}`)}
       className="verdict-card"
       style={{
         opacity: visible ? 1 : 0,
@@ -188,7 +198,7 @@ export default function HorseVerdictCard({
               textTransform: "uppercase",
             }}
           >
-            Veredicto do Cavalo
+            {tr("Veredicto do Cavalo", "Horse Verdict", "Veredicto del Caballo")}
           </p>
         </div>
       </div>
@@ -225,9 +235,9 @@ export default function HorseVerdictCard({
             }}
           >
             <CheckCircle size={14} aria-hidden="true" />
-            Pontos Fortes
+            {tr("Pontos Fortes", "Strengths", "Puntos Fuertes")}
           </h4>
-          <ul style={{ listStyle: "none", margin: 0, padding: 0 }} aria-label="Pontos fortes">
+          <ul style={{ listStyle: "none", margin: 0, padding: 0 }} aria-label={tr("Pontos fortes", "Strengths", "Puntos fuertes")}>
             {strengths.slice(0, 3).map((s, i) => (
               <li
                 key={i}
@@ -275,9 +285,9 @@ export default function HorseVerdictCard({
             }}
           >
             <AlertTriangle size={14} aria-hidden="true" />
-            Pontos Fracos
+            {tr("Pontos Fracos", "Weaknesses", "Puntos Débiles")}
           </h4>
-          <ul style={{ listStyle: "none", margin: 0, padding: 0 }} aria-label="Pontos fracos">
+          <ul style={{ listStyle: "none", margin: 0, padding: 0 }} aria-label={tr("Pontos fracos", "Weaknesses", "Puntos débiles")}>
             {weaknesses.slice(0, 3).map((w, i) => (
               <li
                 key={i}
@@ -348,7 +358,7 @@ export default function HorseVerdictCard({
           }}
         >
           <Shield size={13} aria-hidden="true" />
-          Risco {riskLevel}
+          {tr("Risco", "Risk", "Riesgo")} {riskLevel}
         </span>
       </div>
 

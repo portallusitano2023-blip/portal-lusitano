@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   ChevronRight,
   Info,
@@ -16,6 +17,8 @@ import OffspringRadar from "@/components/tools/OffspringRadar";
 import FoalValueProjection from "@/components/tools/FoalValueProjection";
 import MatingScenarios from "@/components/tools/MatingScenarios";
 import BreedingCosts from "@/components/tools/BreedingCosts";
+import { useLanguage } from "@/context/LanguageContext";
+import { createTranslator } from "@/lib/tr";
 import type { Cavalo, ResultadoCompatibilidade } from "../types";
 import type { Translations } from "@/context/LanguageContext";
 import type { OffspringAxis, FoalValueStage } from "../breeding";
@@ -41,6 +44,9 @@ export default function FactorBreakdown({
   parentQuality,
   t,
 }: FactorBreakdownProps) {
+  const { language } = useLanguage();
+  const tr = useMemo(() => createTranslator(language), [language]);
+
   return (
     <>
       {/* Próximos Passos Recomendados */}
@@ -49,27 +55,27 @@ export default function FactorBreakdown({
         const passos =
           s >= 70
             ? [
-                "Agende a cobrição para o período primaveril (Mar–Mai)",
-                "Realize exame veterinário pré-cobrição",
-                "Documente o pedigree dos progenitores na APSL",
+                tr("Agende a cobrição para o período primaveril (Mar–Mai)", "Schedule breeding for the spring period (Mar–May)", "Programe la cubrición para el período primaveral (Mar–May)"),
+                tr("Realize exame veterinário pré-cobrição", "Perform pre-breeding veterinary examination", "Realice examen veterinario pre-cubrición"),
+                tr("Documente o pedigree dos progenitores na APSL", "Document the parents' pedigree with APSL", "Documente el pedigrí de los progenitores en la APSL"),
               ]
             : s >= 50
               ? [
-                  "Consulte um veterinário especializado em reprodução equina",
-                  "Peça análise genética detalhada (PRO)",
-                  "Considere alternativas com melhor compatibilidade",
+                  tr("Consulte um veterinário especializado em reprodução equina", "Consult a veterinarian specialised in equine reproduction", "Consulte a un veterinario especializado en reproducción equina"),
+                  tr("Peça análise genética detalhada (PRO)", "Request detailed genetic analysis (PRO)", "Solicite análisis genético detallado (PRO)"),
+                  tr("Considere alternativas com melhor compatibilidade", "Consider alternatives with better compatibility", "Considere alternativas con mejor compatibilidad"),
                 ]
               : [
-                  "Não recomendamos avançar sem consulta veterinária",
-                  "Explore outros garanhões com melhor compatibilidade",
-                  "Consulte o nosso Verificador com outros cavalos",
+                  tr("Não recomendamos avançar sem consulta veterinária", "We do not recommend proceeding without veterinary consultation", "No recomendamos avanzar sin consulta veterinaria"),
+                  tr("Explore outros garanhões com melhor compatibilidade", "Explore other stallions with better compatibility", "Explore otros sementales con mejor compatibilidad"),
+                  tr("Consulte o nosso Verificador com outros cavalos", "Use our Checker with other horses", "Consulte nuestro Verificador con otros caballos"),
                 ];
 
         return (
           <div className="bg-[#111111] border border-[var(--border)] rounded-xl p-5 mb-6">
             <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] mb-4 flex items-center gap-2">
               <ListChecks size={16} className="text-[#C5A059]" />
-              Próximos Passos Recomendados
+              {tr("Próximos Passos Recomendados", "Recommended Next Steps", "Próximos Pasos Recomendados")}
             </h3>
             <ul className="space-y-3">
               {passos.map((passo, i) => (
@@ -109,11 +115,18 @@ export default function FactorBreakdown({
             <div className="bg-amber-900/15 border border-amber-500/30 rounded-xl p-5 mb-6">
               <h3 className="text-sm font-semibold text-amber-400 mb-4 flex items-center gap-2">
                 <Sparkles size={15} className="shrink-0" />
-                Perfil do Garanhão Ideal para {egua.nome || "esta Égua"}
+                {tr(
+                  `Perfil do Garanhão Ideal para ${egua.nome || "esta Égua"}`,
+                  `Ideal Stallion Profile for ${egua.nome || "this Mare"}`,
+                  `Perfil del Semental Ideal para ${egua.nome || "esta Yegua"}`
+                )}
               </h3>
               <p className="text-xs text-[var(--foreground-muted)] mb-4">
-                Com base nos pontos mais fracos desta combinação, um garanhão ideal para{" "}
-                {egua.nome || "esta égua"} teria as seguintes características:
+                {tr(
+                  `Com base nos pontos mais fracos desta combinação, um garanhão ideal para ${egua.nome || "esta égua"} teria as seguintes características:`,
+                  `Based on the weakest points of this combination, an ideal stallion for ${egua.nome || "this mare"} would have the following characteristics:`,
+                  `Con base en los puntos más débiles de esta combinación, un semental ideal para ${egua.nome || "esta yegua"} tendría las siguientes características:`
+                )}
               </p>
               <div className="space-y-2 mb-4">
                 {weakFactors.map((f: any) => (
@@ -123,19 +136,22 @@ export default function FactorBreakdown({
                   >
                     <ChevronRight size={13} className="text-amber-400 shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-[var(--foreground)]">{f.nome}:</strong> score actual{" "}
-                      {Math.round((f.score / f.max) * 100)}% — procurar garanhão com{" "}
-                      {f.nome.toLowerCase()} superior (≥ {Math.ceil(f.max * 0.75)}pts)
+                      <strong className="text-[var(--foreground)]">{f.nome}:</strong> {tr("score actual", "current score", "puntuación actual")}{" "}
+                      {Math.round((f.score / f.max) * 100)}% — {tr(
+                        `procurar garanhão com ${f.nome.toLowerCase()} superior (≥ ${Math.ceil(f.max * 0.75)}pts)`,
+                        `look for a stallion with higher ${f.nome.toLowerCase()} (≥ ${Math.ceil(f.max * 0.75)}pts)`,
+                        `buscar semental con ${f.nome.toLowerCase()} superior (≥ ${Math.ceil(f.max * 0.75)}pts)`
+                      )}
                     </span>
                   </div>
                 ))}
               </div>
               {resultado.coi > 6 && (
                 <div className="text-xs text-[var(--foreground-secondary)] mt-3 p-3 bg-[var(--background-secondary)]/50 rounded-lg">
-                  <strong className="text-amber-300">Diversidade genética:</strong> COI elevado (
+                  <strong className="text-amber-300">{tr("Diversidade genética:", "Genetic diversity:", "Diversidad genética:")}</strong> {tr("COI elevado", "High COI", "COI elevado")} (
                   {resultado.coi.toFixed(1)}
-                  %). Para {egua.nome || "esta égua"} de linhagem{" "}
-                  <strong>{garanhao.linhagemFamosa}</strong>, considere garanhões de:{" "}
+                  %). {tr("Para", "For", "Para")} {egua.nome || tr("esta égua", "this mare", "esta yegua")} {tr("de linhagem", "of lineage", "de línea")}{" "}
+                  <strong>{garanhao.linhagemFamosa}</strong>, {tr("considere garanhões de:", "consider stallions from:", "considere sementales de:")}{" "}
                   <span className="text-[var(--gold)]">{altLinhagens.join(", ")}</span>
                 </div>
               )}
@@ -260,7 +276,7 @@ export default function FactorBreakdown({
       <BlurredProSection
         isSubscribed={isSubscribed}
         title={
-          (t.verificador as Record<string, string>).scenarios_title ?? "Cenários de Acasalamento"
+          (t.verificador as Record<string, string>).scenarios_title ?? tr("Cenários de Acasalamento", "Mating Scenarios", "Escenarios de Apareamiento")
         }
       >
         <div className="mb-6">
@@ -272,7 +288,7 @@ export default function FactorBreakdown({
       <BlurredProSection
         isSubscribed={isSubscribed}
         title={
-          (t.verificador as Record<string, string>).breeding_costs_title ?? "Custos de Criação"
+          (t.verificador as Record<string, string>).breeding_costs_title ?? tr("Custos de Criação", "Breeding Costs", "Costes de Cría")
         }
       >
         <div className="mb-6">
@@ -281,82 +297,92 @@ export default function FactorBreakdown({
       </BlurredProSection>
 
       {/* PRO: Indicadores de Compatibilidade */}
-      <BlurredProSection isSubscribed={isSubscribed} title="Indicadores de Compatibilidade">
+      <BlurredProSection isSubscribed={isSubscribed} title={tr("Indicadores de Compatibilidade", "Compatibility Indicators", "Indicadores de Compatibilidad")}>
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
           <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-1 flex items-center gap-2">
             <BarChart3 size={16} className="text-[#C5A059]" />
-            Indicadores de Compatibilidade
+            {tr("Indicadores de Compatibilidade", "Compatibility Indicators", "Indicadores de Compatibilidad")}
           </h3>
           <p className="text-xs text-[var(--foreground-muted)] mb-5">
-            Indicadores baseados nos dados disponíveis do cálculo de compatibilidade
+            {tr(
+              "Indicadores baseados nos dados disponíveis do cálculo de compatibilidade",
+              "Indicators based on available data from the compatibility calculation",
+              "Indicadores basados en los datos disponibles del cálculo de compatibilidad"
+            )}
           </p>
           <div className="grid sm:grid-cols-2 gap-4">
             {((): { label: string; value: string; detail: string; color: string }[] => {
               const findFactor = (nome: string) =>
                 resultado.factores.find((f: any) => f.nome === nome);
-              const confFactor = findFactor("Conformação Morfológica");
-              const tempFactor = findFactor("Compatibilidade Temperamento");
-              const andFactor = findFactor("Qualidade dos Andamentos");
-              const saudeFactor = findFactor("Estado de Saúde");
-              const linFactor = findFactor("Qualidade Genética");
+              const confFactor = findFactor(tr("Conformação Morfológica", "Morphological Conformation", "Conformación Morfológica"));
+              const tempFactor = findFactor(tr("Compatibilidade Temperamento", "Temperament Compatibility", "Compatibilidad de Temperamento"));
+              const andFactor = findFactor(tr("Qualidade dos Andamentos", "Gait Quality", "Calidad de los Movimientos"));
+              const saudeFactor = findFactor(tr("Estado de Saúde", "Health Status", "Estado de Salud"));
+              const linFactor = findFactor(tr("Qualidade Genética", "Genetic Quality", "Calidad Genética"));
+
+              const insufficientData = tr("Dados insuficientes", "Insufficient data", "Datos insuficientes");
 
               return [
                 {
-                  label: "COI Previsto",
+                  label: tr("COI Previsto", "Predicted COI", "COI Previsto"),
                   value: `${resultado.coi.toFixed(1)}%`,
                   detail:
                     resultado.coi <= 3
-                      ? "Baixa consanguinidade — boa diversidade genética"
+                      ? tr("Baixa consanguinidade — boa diversidade genética", "Low inbreeding — good genetic diversity", "Baja consanguinidad — buena diversidad genética")
                       : resultado.coi <= 6.25
-                        ? "Consanguinidade moderada — monitorizar"
-                        : "Consanguinidade elevada — risco acrescido",
+                        ? tr("Consanguinidade moderada — monitorizar", "Moderate inbreeding — monitor", "Consanguinidad moderada — monitorizar")
+                        : tr("Consanguinidade elevada — risco acrescido", "High inbreeding — increased risk", "Consanguinidad elevada — riesgo aumentado"),
                   color: resultado.coi <= 3 ? "#34d399" : resultado.coi <= 6.25 ? "#fbbf24" : "#f87171",
                 },
                 {
-                  label: "Compatibilidade de Linhagem",
-                  value: linFactor ? `${linFactor.score}/${linFactor.max}` : "Dados insuficientes",
+                  label: tr("Compatibilidade de Linhagem", "Lineage Compatibility", "Compatibilidad de Línea"),
+                  value: linFactor ? `${linFactor.score}/${linFactor.max}` : insufficientData,
                   detail: linFactor
                     ? linFactor.descricao
-                    : "Dados insuficientes",
+                    : insufficientData,
                   color: "#C5A059",
                 },
                 {
-                  label: "Compatibilidade Temperamento",
-                  value: tempFactor ? `${tempFactor.score}/${tempFactor.max}` : "Dados insuficientes",
+                  label: tr("Compatibilidade Temperamento", "Temperament Compatibility", "Compatibilidad de Temperamento"),
+                  value: tempFactor ? `${tempFactor.score}/${tempFactor.max}` : insufficientData,
                   detail: tempFactor
                     ? `${garanhao.temperamento} + ${egua.temperamento}`
-                    : "Dados insuficientes",
+                    : insufficientData,
                   color: "#a78bfa",
                 },
                 {
-                  label: "Conformação Morfológica",
-                  value: confFactor ? `${confFactor.score}/${confFactor.max}` : "Dados insuficientes",
+                  label: tr("Conformação Morfológica", "Morphological Conformation", "Conformación Morfológica"),
+                  value: confFactor ? `${confFactor.score}/${confFactor.max}` : insufficientData,
                   detail: confFactor
                     ? confFactor.descricao
-                    : "Dados insuficientes",
+                    : insufficientData,
                   color: "#60a5fa",
                 },
                 {
-                  label: "Qualidade dos Andamentos",
-                  value: andFactor ? `${andFactor.score}/${andFactor.max}` : "Dados insuficientes",
+                  label: tr("Qualidade dos Andamentos", "Gait Quality", "Calidad de los Movimientos"),
+                  value: andFactor ? `${andFactor.score}/${andFactor.max}` : insufficientData,
                   detail: andFactor
                     ? andFactor.descricao
-                    : "Dados insuficientes",
+                    : insufficientData,
                   color: "#34d399",
                 },
                 {
-                  label: "Pelagens Previstas",
+                  label: tr("Pelagens Previstas", "Predicted Coats", "Pelajes Previstos"),
                   value:
                     resultado.pelagens.length > 0
                       ? resultado.pelagens
                           .slice(0, 2)
                           .map((p: any) => `${p.cor} ${p.prob}%`)
                           .join(", ")
-                      : "Dados insuficientes",
+                      : insufficientData,
                   detail:
                     resultado.pelagens.length > 0
-                      ? `${resultado.pelagens.length} pelagem(ns) possível(is) calculada(s)`
-                      : "Dados insuficientes para previsão de pelagem",
+                      ? tr(
+                          `${resultado.pelagens.length} pelagem(ns) possível(is) calculada(s)`,
+                          `${resultado.pelagens.length} possible coat(s) calculated`,
+                          `${resultado.pelagens.length} pelaje(s) posible(s) calculado(s)`
+                        )
+                      : tr("Dados insuficientes para previsão de pelagem", "Insufficient data for coat prediction", "Datos insuficientes para previsión de pelaje"),
                   color: "#f472b6",
                 },
               ];
@@ -380,21 +406,24 @@ export default function FactorBreakdown({
             ))}
           </div>
           <p className="text-[11px] text-[var(--foreground-muted)]/50 mt-4 leading-relaxed">
-            Indicadores derivados dos dados introduzidos. Não substituem análise genética laboratorial
-            nem consulta veterinária.
+            {tr(
+              "Indicadores derivados dos dados introduzidos. Não substituem análise genética laboratorial nem consulta veterinária.",
+              "Indicators derived from the entered data. They do not replace laboratory genetic analysis or veterinary consultation.",
+              "Indicadores derivados de los datos introducidos. No sustituyen análisis genético de laboratorio ni consulta veterinaria."
+            )}
           </p>
         </div>
       </BlurredProSection>
 
       {/* PRO: Calendário de Cobrição */}
-      <BlurredProSection isSubscribed={isSubscribed} title="Calendário de Cobrição Recomendado">
+      <BlurredProSection isSubscribed={isSubscribed} title={tr("Calendário de Cobrição Recomendado", "Recommended Breeding Calendar", "Calendario de Cubrición Recomendado")}>
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
           <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-1 flex items-center gap-2">
             <Calendar size={16} className="text-[#C5A059]" />
-            Calendário de Cobrição Recomendado
+            {tr("Calendário de Cobrição Recomendado", "Recommended Breeding Calendar", "Calendario de Cubrición Recomendado")}
           </h3>
           <p className="text-xs text-[var(--foreground-muted)] mb-5">
-            Timing ideal para maximizar resultados
+            {tr("Timing ideal para maximizar resultados", "Ideal timing to maximise results", "Timing ideal para maximizar resultados")}
           </p>
 
           {/* Month grid */}
@@ -404,18 +433,18 @@ export default function FactorBreakdown({
               full: string;
               status: "optimal" | "acceptable" | "avoid";
             }[] = [
-              { abbr: "Jan", full: "Janeiro", status: "avoid" },
-              { abbr: "Fev", full: "Fevereiro", status: "avoid" },
-              { abbr: "Mar", full: "Março", status: "optimal" },
-              { abbr: "Abr", full: "Abril", status: "optimal" },
-              { abbr: "Mai", full: "Maio", status: "optimal" },
-              { abbr: "Jun", full: "Junho", status: "acceptable" },
-              { abbr: "Jul", full: "Julho", status: "acceptable" },
-              { abbr: "Ago", full: "Agosto", status: "acceptable" },
-              { abbr: "Set", full: "Setembro", status: "avoid" },
-              { abbr: "Out", full: "Outubro", status: "avoid" },
-              { abbr: "Nov", full: "Novembro", status: "avoid" },
-              { abbr: "Dez", full: "Dezembro", status: "avoid" },
+              { abbr: tr("Jan", "Jan", "Ene"), full: tr("Janeiro", "January", "Enero"), status: "avoid" },
+              { abbr: tr("Fev", "Feb", "Feb"), full: tr("Fevereiro", "February", "Febrero"), status: "avoid" },
+              { abbr: tr("Mar", "Mar", "Mar"), full: tr("Março", "March", "Marzo"), status: "optimal" },
+              { abbr: tr("Abr", "Apr", "Abr"), full: tr("Abril", "April", "Abril"), status: "optimal" },
+              { abbr: tr("Mai", "May", "May"), full: tr("Maio", "May", "Mayo"), status: "optimal" },
+              { abbr: tr("Jun", "Jun", "Jun"), full: tr("Junho", "June", "Junio"), status: "acceptable" },
+              { abbr: tr("Jul", "Jul", "Jul"), full: tr("Julho", "July", "Julio"), status: "acceptable" },
+              { abbr: tr("Ago", "Aug", "Ago"), full: tr("Agosto", "August", "Agosto"), status: "acceptable" },
+              { abbr: tr("Set", "Sep", "Sep"), full: tr("Setembro", "September", "Septiembre"), status: "avoid" },
+              { abbr: tr("Out", "Oct", "Oct"), full: tr("Outubro", "October", "Octubre"), status: "avoid" },
+              { abbr: tr("Nov", "Nov", "Nov"), full: tr("Novembro", "November", "Noviembre"), status: "avoid" },
+              { abbr: tr("Dez", "Dec", "Dic"), full: tr("Dezembro", "December", "Diciembre"), status: "avoid" },
             ];
             const colorMap = {
               optimal: {
@@ -461,33 +490,45 @@ export default function FactorBreakdown({
                 <div className="flex flex-wrap gap-4 mb-5 text-xs">
                   <div className="flex items-center gap-1.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                    <span className="text-emerald-400 font-medium">Ideal</span>
-                    <span className="text-[var(--foreground-muted)]">— Primavera (Mar–Mai)</span>
+                    <span className="text-emerald-400 font-medium">{tr("Ideal", "Ideal", "Ideal")}</span>
+                    <span className="text-[var(--foreground-muted)]">— {tr("Primavera (Mar–Mai)", "Spring (Mar–May)", "Primavera (Mar–May)")}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                    <span className="text-amber-400 font-medium">Aceitável</span>
-                    <span className="text-[var(--foreground-muted)]">— Verão (Jun–Ago)</span>
+                    <span className="text-amber-400 font-medium">{tr("Aceitável", "Acceptable", "Aceptable")}</span>
+                    <span className="text-[var(--foreground-muted)]">— {tr("Verão (Jun–Ago)", "Summer (Jun–Aug)", "Verano (Jun–Ago)")}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-[var(--border)]" />
-                    <span className="text-[var(--foreground-muted)] font-medium">Evitar</span>
-                    <span className="text-[var(--foreground-muted)]">— Outono/Inverno</span>
+                    <span className="text-[var(--foreground-muted)] font-medium">{tr("Evitar", "Avoid", "Evitar")}</span>
+                    <span className="text-[var(--foreground-muted)]">— {tr("Outono/Inverno", "Autumn/Winter", "Otoño/Invierno")}</span>
                   </div>
                 </div>
 
                 {/* Gestation estimate */}
                 <div className="bg-[#C5A059]/8 border border-[#C5A059]/25 rounded-xl p-4 space-y-2">
-                  <p className="text-xs font-semibold text-[#C5A059]">Estimativa de Gestação</p>
+                  <p className="text-xs font-semibold text-[#C5A059]">{tr("Estimativa de Gestação", "Gestation Estimate", "Estimación de Gestación")}</p>
                   <p className="text-xs text-[var(--foreground-secondary)]">
-                    Cobrição em <strong className="text-emerald-400">Março/Abril</strong> → parto
-                    estimado em <strong className="text-emerald-400">Fevereiro/Março</strong> do ano
-                    seguinte (±340 dias).
+                    {tr(
+                      "Cobrição em",
+                      "Breeding in",
+                      "Cubrición en"
+                    )} <strong className="text-emerald-400">{tr("Março/Abril", "March/April", "Marzo/Abril")}</strong> → {tr(
+                      "parto estimado em",
+                      "estimated foaling in",
+                      "parto estimado en"
+                    )} <strong className="text-emerald-400">{tr("Fevereiro/Março", "February/March", "Febrero/Marzo")}</strong> {tr(
+                      "do ano seguinte (±340 dias).",
+                      "of the following year (±340 days).",
+                      "del año siguiente (±340 días)."
+                    )}
                   </p>
                   <p className="text-xs text-[var(--foreground-muted)] border-t border-[var(--border)]/50 pt-2 mt-2">
-                    Considere o ciclo éstrico da égua (21 dias) e confirmação ecográfica de
-                    gestação. A cobrição na Primavera aproveita o fotoperíodo longo, que estimula
-                    naturalmente a ovulação.
+                    {tr(
+                      "Considere o ciclo éstrico da égua (21 dias) e confirmação ecográfica de gestação. A cobrição na Primavera aproveita o fotoperíodo longo, que estimula naturalmente a ovulação.",
+                      "Consider the mare's oestrous cycle (21 days) and ultrasound pregnancy confirmation. Spring breeding takes advantage of the long photoperiod, which naturally stimulates ovulation.",
+                      "Considere el ciclo éstrico de la yegua (21 días) y confirmación ecográfica de gestación. La cubrición en primavera aprovecha el fotoperíodo largo, que estimula naturalmente la ovulación."
+                    )}
                   </p>
                 </div>
               </>
@@ -497,65 +538,74 @@ export default function FactorBreakdown({
       </BlurredProSection>
 
       {/* PRO: Avaliação de Risco Genético */}
-      <BlurredProSection isSubscribed={isSubscribed} title="Avaliação de Risco Genético">
+      <BlurredProSection isSubscribed={isSubscribed} title={tr("Avaliação de Risco Genético", "Genetic Risk Assessment", "Evaluación de Riesgo Genético")}>
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)] mb-6">
           <h3 className="text-sm font-medium text-[var(--foreground-secondary)] uppercase tracking-wider mb-1 flex items-center gap-2">
             <ShieldAlert size={16} className="text-[#C5A059]" />
-            Avaliação de Risco Genético
+            {tr("Avaliação de Risco Genético", "Genetic Risk Assessment", "Evaluación de Riesgo Genético")}
           </h3>
           <p className="text-xs text-[var(--foreground-muted)] mb-5">
-            Factores hereditários e coeficiente de consanguinidade estimado
+            {tr(
+              "Factores hereditários e coeficiente de consanguinidade estimado",
+              "Hereditary factors and estimated inbreeding coefficient",
+              "Factores hereditarios y coeficiente de consanguinidad estimado"
+            )}
           </p>
 
           {(() => {
             const s = resultado.score;
-            const riskLevel: "Baixo" | "Médio" | "Elevado" =
+            const riskLevelLabel = s >= 70 ? tr("Baixo", "Low", "Bajo") : s >= 50 ? tr("Médio", "Medium", "Medio") : tr("Elevado", "High", "Elevado");
+            const riskLevelKey: "Baixo" | "Médio" | "Elevado" =
               s >= 70 ? "Baixo" : s >= 50 ? "Médio" : "Elevado";
             const riskColor =
-              riskLevel === "Baixo"
+              riskLevelKey === "Baixo"
                 ? {
                     bg: "bg-emerald-500/15",
                     border: "border-emerald-500/30",
                     text: "text-emerald-400",
                   }
-                : riskLevel === "Médio"
+                : riskLevelKey === "Médio"
                   ? { bg: "bg-amber-500/15", border: "border-amber-500/30", text: "text-amber-400" }
                   : { bg: "bg-red-500/15", border: "border-red-500/30", text: "text-red-400" };
 
             const categories: {
               label: string;
               level: "Baixo" | "Médio" | "Elevado";
+              levelLabel: string;
               note: string;
             }[] = [
               {
-                label: "Doenças Hereditárias",
+                label: tr("Doenças Hereditárias", "Hereditary Diseases", "Enfermedades Hereditarias"),
                 level: resultado.coi <= 3 ? "Baixo" : resultado.coi <= 6.25 ? "Médio" : "Elevado",
+                levelLabel: resultado.coi <= 3 ? tr("Baixo", "Low", "Bajo") : resultado.coi <= 6.25 ? tr("Médio", "Medium", "Medio") : tr("Elevado", "High", "Elevado"),
                 note:
                   resultado.coi <= 3
-                    ? "COI baixo — risco mínimo de expressão de alelos recessivos"
+                    ? tr("COI baixo — risco mínimo de expressão de alelos recessivos", "Low COI — minimal risk of recessive allele expression", "COI bajo — riesgo mínimo de expresión de alelos recesivos")
                     : resultado.coi <= 6.25
-                      ? "COI moderado — aconselha-se painel de doenças hereditárias"
-                      : "COI elevado — risco aumentado de homozigotia em loci patogénicos",
+                      ? tr("COI moderado — aconselha-se painel de doenças hereditárias", "Moderate COI — hereditary disease panel recommended", "COI moderado — se aconseja panel de enfermedades hereditarias")
+                      : tr("COI elevado — risco aumentado de homozigotia em loci patogénicos", "High COI — increased risk of homozygosity at pathogenic loci", "COI elevado — riesgo aumentado de homocigosis en loci patogénicos"),
               },
               {
-                label: "Conformação Estrutural",
+                label: tr("Conformação Estrutural", "Structural Conformation", "Conformación Estructural"),
                 level: s >= 70 ? "Baixo" : s >= 55 ? "Médio" : "Elevado",
+                levelLabel: s >= 70 ? tr("Baixo", "Low", "Bajo") : s >= 55 ? tr("Médio", "Medium", "Medio") : tr("Elevado", "High", "Elevado"),
                 note:
                   s >= 70
-                    ? "Complementaridade morfológica adequada entre os progenitores"
+                    ? tr("Complementaridade morfológica adequada entre os progenitores", "Adequate morphological complementarity between parents", "Complementariedad morfológica adecuada entre los progenitores")
                     : s >= 55
-                      ? "Algumas divergências estruturais — avaliação presencial recomendada"
-                      : "Divergências relevantes — consultar veterinário especializado em reprodução",
+                      ? tr("Algumas divergências estruturais — avaliação presencial recomendada", "Some structural divergences — in-person assessment recommended", "Algunas divergencias estructurales — evaluación presencial recomendada")
+                      : tr("Divergências relevantes — consultar veterinário especializado em reprodução", "Relevant divergences — consult veterinarian specialised in reproduction", "Divergencias relevantes — consultar veterinario especializado en reproducción"),
               },
               {
-                label: "Compatibilidade Reprodutiva",
+                label: tr("Compatibilidade Reprodutiva", "Reproductive Compatibility", "Compatibilidad Reproductiva"),
                 level: resultado.blup >= 100 ? "Baixo" : resultado.blup >= 70 ? "Médio" : "Elevado",
+                levelLabel: resultado.blup >= 100 ? tr("Baixo", "Low", "Bajo") : resultado.blup >= 70 ? tr("Médio", "Medium", "Medio") : tr("Elevado", "High", "Elevado"),
                 note:
                   resultado.blup >= 100
-                    ? "BLUP parental positivo — boa herança de aptidão reprodutiva"
+                    ? tr("BLUP parental positivo — boa herança de aptidão reprodutiva", "Positive parental BLUP — good reproductive aptitude inheritance", "BLUP parental positivo — buena herencia de aptitud reproductiva")
                     : resultado.blup >= 70
-                      ? "BLUP dentro da média — resultados reprodutivos esperados normais"
-                      : "BLUP abaixo da média — historial reprodutivo merece atenção",
+                      ? tr("BLUP dentro da média — resultados reprodutivos esperados normais", "BLUP within average — normal expected reproductive results", "BLUP dentro de la media — resultados reproductivos esperados normales")
+                      : tr("BLUP abaixo da média — historial reprodutivo merece atenção", "BLUP below average — reproductive history deserves attention", "BLUP por debajo de la media — historial reproductivo merece atención"),
               },
             ];
 
@@ -574,11 +624,11 @@ export default function FactorBreakdown({
                 >
                   <ShieldAlert size={22} className={riskColor.text} />
                   <div>
-                    <p className="text-xs text-[var(--foreground-muted)]">Nível de Risco Global</p>
-                    <p className={`text-lg font-bold ${riskColor.text}`}>{riskLevel}</p>
+                    <p className="text-xs text-[var(--foreground-muted)]">{tr("Nível de Risco Global", "Overall Risk Level", "Nivel de Riesgo Global")}</p>
+                    <p className={`text-lg font-bold ${riskColor.text}`}>{riskLevelLabel}</p>
                   </div>
                   <div className="ml-auto text-right">
-                    <p className="text-xs text-[var(--foreground-muted)]">COI estimado</p>
+                    <p className="text-xs text-[var(--foreground-muted)]">{tr("COI estimado", "Estimated COI", "COI estimado")}</p>
                     <p
                       className={`text-lg font-bold ${resultado.coi > 6.25 ? "text-red-400" : resultado.coi > 3 ? "text-amber-400" : "text-emerald-400"}`}
                     >
@@ -607,7 +657,7 @@ export default function FactorBreakdown({
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border self-start sm:mt-0.5 whitespace-nowrap ${badgeColor(cat.level)}`}
                       >
-                        {cat.level}
+                        {cat.levelLabel}
                       </span>
                     </div>
                   ))}
@@ -617,9 +667,11 @@ export default function FactorBreakdown({
                 <div className="flex items-start gap-2.5 p-3 bg-[var(--background-card)]/40 rounded-lg border border-[var(--border)]/40">
                   <Info size={14} className="text-[#C5A059] mt-0.5 flex-shrink-0" />
                   <p className="text-[11px] text-[var(--foreground-muted)] leading-relaxed">
-                    <strong className="text-[var(--foreground-secondary)]">Aviso:</strong> Avaliação
-                    baseada em dados genealógicos conhecidos. Consulte sempre um médico veterinário
-                    especializado em reprodução equina antes de tomar decisões de cobrição.
+                    <strong className="text-[var(--foreground-secondary)]">{tr("Aviso:", "Notice:", "Aviso:")}</strong> {tr(
+                      "Avaliação baseada em dados genealógicos conhecidos. Consulte sempre um médico veterinário especializado em reprodução equina antes de tomar decisões de cobrição.",
+                      "Assessment based on known genealogical data. Always consult a veterinarian specialised in equine reproduction before making breeding decisions.",
+                      "Evaluación basada en datos genealógicos conocidos. Consulte siempre a un veterinario especializado en reproducción equina antes de tomar decisiones de cubrición."
+                    )}
                   </p>
                 </div>
               </>

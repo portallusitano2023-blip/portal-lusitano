@@ -253,7 +253,7 @@ export default function ComparadorCavalosPage() {
     setHasDraft(false);
   };
 
-  const handleExportCSV = () => exportarCSV(cavalos);
+  const handleExportCSV = () => exportarCSV(cavalos, tr);
 
   const handleExportPDF = async () => {
     setIsExporting(true);
