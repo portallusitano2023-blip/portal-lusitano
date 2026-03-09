@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { BarChart3, Check } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -8,7 +9,7 @@ interface ProcessingOverlayProps {
 
 export default function ProcessingOverlay({ step }: ProcessingOverlayProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <div className="flex flex-col items-center justify-center py-16 gap-8 animate-[fadeSlideIn_0.3s_ease-out_forwards]">

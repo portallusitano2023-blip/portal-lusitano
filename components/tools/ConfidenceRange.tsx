@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface ConfidenceRangeProps {
@@ -21,7 +22,8 @@ export default function ConfidenceRange({
   label,
   explanation,
 }: ConfidenceRangeProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const common = t.common as Record<string, string>;
 
   const range = max - min;
@@ -39,7 +41,7 @@ export default function ConfidenceRange({
   const confLabel = common?.confidence_range_label ?? "Intervalo de confiança";
 
   const fmt = (n: number) =>
-    unit === "€" ? n.toLocaleString("pt-PT") + unit : n.toLocaleString("pt-PT") + (unit || "");
+    unit === "€" ? n.toLocaleString(locale) + unit : n.toLocaleString(locale) + (unit || "");
 
   return (
     <div className="space-y-2">

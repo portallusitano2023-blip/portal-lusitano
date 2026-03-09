@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle, AlertTriangle, Target, Shield } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -119,7 +119,7 @@ export default function HorseVerdictCard({
   recommendation,
 }: HorseVerdictCardProps) {
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const cardRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 

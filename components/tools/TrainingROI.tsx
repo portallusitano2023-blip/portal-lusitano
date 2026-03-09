@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { ArrowUp, TrendingUp, Clock, Coins } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface TrainingLevel {
   level: string;
@@ -49,7 +50,10 @@ export default function TrainingROI({ currentLevel, currentValue, levels }: Trai
     return () => observer.disconnect();
   }, [levels.length]);
 
-  const formatValue = (val: number) => `${val.toLocaleString("pt-PT")}\u00A0\u20AC`;
+  const { language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+
+  const formatValue = (val: number) => `${val.toLocaleString(locale)}\u00A0\u20AC`;
 
   return (
     <div ref={containerRef} className="relative">

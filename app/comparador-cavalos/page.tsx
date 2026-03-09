@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Plus, Scale, Crown, BarChart3, RefreshCw, History, X, Sparkles } from "lucide-react";
 import dynamic from "next/dynamic";
 import ToolNavBar from "@/components/tools/ToolNavBar";
@@ -38,7 +38,7 @@ const ProUpgradeCard = dynamic(() => import("@/components/tools/ProUpgradeCard")
 
 export default function ComparadorCavalosPage() {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const { showToast } = useToast();
 
   const [cavalos, setCavalos] = useState<Cavalo[]>([

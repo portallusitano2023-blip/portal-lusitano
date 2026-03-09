@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface ValueWaterfallProps {
@@ -10,7 +10,8 @@ interface ValueWaterfallProps {
 }
 
 export default function ValueWaterfall({ categorias, valorBase, valorFinal }: ValueWaterfallProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const [animated, setAnimated] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const hasAnimated = useRef(false);
@@ -36,9 +37,9 @@ export default function ValueWaterfall({ categorias, valorBase, valorFinal }: Va
   }, []);
 
   const formatValue = (val: number) =>
-    `${val >= 0 ? "+" : ""}${val.toLocaleString("pt-PT")}\u00A0\u20AC`;
+    `${val >= 0 ? "+" : ""}${val.toLocaleString(locale)}\u00A0\u20AC`;
 
-  const formatAbsolute = (val: number) => `${val.toLocaleString("pt-PT")}\u00A0\u20AC`;
+  const formatAbsolute = (val: number) => `${val.toLocaleString(locale)}\u00A0\u20AC`;
 
   // Build cumulative positions for waterfall bars
   const maxValue = Math.max(

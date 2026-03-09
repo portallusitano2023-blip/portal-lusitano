@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useId } from "react";
+import { useState, useEffect, useRef, useCallback, useId, useMemo } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface InvestmentTimelineProps {
   projections: { year: number; label: string; value: number }[];
@@ -32,6 +33,9 @@ export default function InvestmentTimeline({ projections, currentValue }: Invest
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  const { language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   // --- Layout constants ---
   const viewW = 600;
@@ -83,12 +87,12 @@ export default function InvestmentTimeline({ projections, currentValue }: Invest
   });
 
   const formatValue = (val: number) =>
-    val.toLocaleString("pt-PT", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+    val.toLocaleString(locale, { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
   const formatShort = (val: number) => {
     if (val >= 1_000_000) return `${(val / 1_000_000).toFixed(1).replace(".", ",")}M`;
     if (val >= 1_000) return `${(val / 1_000).toFixed(0)}k`;
-    return val.toLocaleString("pt-PT");
+    return val.toLocaleString(locale);
   };
 
   // Find the index of the "current value" point (year 0)

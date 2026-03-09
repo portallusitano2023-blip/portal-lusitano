@@ -97,7 +97,7 @@ const MethodologyPanel = dynamic(() => import("@/components/tools/MethodologyPan
 
 function AnalisePerfilContent() {
   const { t, language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
   const {
     showIntro,
     showResult,

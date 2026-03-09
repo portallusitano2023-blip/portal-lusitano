@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface MarketBenchmark {
   label: string;
@@ -48,7 +49,10 @@ export default function MarketPositionChart({
 
   const estimatedPos = getPosition(estimatedValue);
 
-  const formatValue = (val: number) => `${val.toLocaleString("pt-PT")}${currency}`;
+  const { language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+
+  const formatValue = (val: number) => `${val.toLocaleString(locale)}${currency}`;
 
   return (
     <div ref={ref} className="space-y-4">

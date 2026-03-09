@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import Image from "next/image";
 import { Scale, BarChart3, Euro, ChevronRight, Sparkles, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -28,7 +29,7 @@ export default function IntroSection({
 }: IntroSectionProps) {
   const comp = t.comparador as Record<string, string>;
   const { language } = useLanguage();
-  const tr = createTranslator(language);
+  const tr = useMemo(() => createTranslator(language), [language]);
 
   return (
     <div className="animate-[fadeSlideIn_0.4s_ease-out_forwards]">
