@@ -17,6 +17,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useLanguage } from "@/context/LanguageContext";
 
 const ShareButtons = dynamic(() => import("@/components/ShareButtons"), {
   ssr: false,
@@ -78,15 +79,15 @@ function formatLabel(key: string): string {
     .trim();
 }
 
-function formatValue(value: unknown): string {
+function formatValue(value: unknown, locale = "pt-PT"): string {
   if (value === null || value === undefined) return "N/A";
   if (typeof value === "boolean") return value ? "Sim" : "Nao";
   if (typeof value === "number") {
     if (Number.isInteger(value) && value > 1000) {
-      return value.toLocaleString("pt-PT");
+      return value.toLocaleString(locale);
     }
     if (!Number.isInteger(value)) {
-      return value.toLocaleString("pt-PT", {
+      return value.toLocaleString(locale, {
         minimumFractionDigits: 1,
         maximumFractionDigits: 2,
       });
@@ -99,8 +100,8 @@ function formatValue(value: unknown): string {
   return String(value);
 }
 
-function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString("pt-PT", {
+function formatDate(dateStr: string, locale = "pt-PT"): string {
+  return new Date(dateStr).toLocaleDateString(locale, {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -170,6 +171,8 @@ function DataGrid({
   data: Record<string, unknown>;
   highlightKeys?: string[];
 }) {
+  const { language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined && v !== "");
 
   if (entries.length === 0) {
@@ -234,7 +237,7 @@ function DataGrid({
                   : "text-[var(--foreground)]"
               }`}
             >
-              {formatValue(value)}
+              {formatValue(value, locale)}
             </p>
           </div>
         );
@@ -413,6 +416,8 @@ export default function ResultadoPage() {
   const params = useParams();
   const id = params.id as string;
 
+  const { language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const { user, isLoading: authLoading } = useAuth();
   const [result, setResult] = useState<SavedResult | null>(null);
   const [loading, setLoading] = useState(true);
@@ -534,7 +539,7 @@ export default function ResultadoPage() {
                   <span className="text-[var(--foreground-muted)]">|</span>
                   <span className="text-sm text-[var(--foreground-secondary)] inline-flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" />
-                    {formatDate(result.created_at)}
+                    {formatDate(result.created_at, locale)}
                   </span>
                 </div>
               </div>

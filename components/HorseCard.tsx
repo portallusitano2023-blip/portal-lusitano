@@ -5,6 +5,7 @@ import LocalizedLink from "@/components/LocalizedLink";
 import Image from "next/image";
 import { MapPin, Calendar, Flame } from "lucide-react";
 import HorseFavoriteButton from "./HorseFavoriteButton";
+import { useLanguage } from "@/context/LanguageContext";
 import { getBlurDataURL } from "@/lib/image-utils";
 
 interface HorseCardProps {
@@ -46,6 +47,8 @@ export default memo(function HorseCard({
   compact = false,
   priority = false,
 }: HorseCardProps) {
+  const { language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
   const favoriteHorse = {
     id: horse.id,
     slug: horse.slug || horse.id,
@@ -135,7 +138,7 @@ export default memo(function HorseCard({
           {/* Price badge - visible on image */}
           <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
             <p className="text-[var(--gold)] font-serif text-lg sm:text-xl font-medium drop-shadow-lg">
-              {Number(horse.preco).toLocaleString("pt-PT")} €
+              {Number(horse.preco).toLocaleString(locale)} €
             </p>
           </div>
         </div>

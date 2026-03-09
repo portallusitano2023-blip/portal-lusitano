@@ -170,7 +170,8 @@ export default function CoudelariaDetail({
   initialReviewStats,
 }: CoudelariaDetailProps) {
   const { showToast } = useToast();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
   const [activeImage, setActiveImage] = useState(0);
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
@@ -535,7 +536,7 @@ export default function CoudelariaDetail({
                           </dl>
                           {cavalo.preco && !cavalo.vendido && (
                             <div className="text-[var(--gold)] font-bold text-lg">
-                              {cavalo.preco.toLocaleString("pt-PT")}
+                              {cavalo.preco.toLocaleString(locale)}
                             </div>
                           )}
                         </div>
@@ -798,7 +799,7 @@ export default function CoudelariaDetail({
                         </p>
                         <footer className="mt-3 text-[var(--foreground-muted)] text-xs">
                           <time dateTime={review.created_at}>
-                            {new Date(review.created_at).toLocaleDateString("pt-PT")}
+                            {new Date(review.created_at).toLocaleDateString(locale)}
                           </time>
                         </footer>
                       </article>
