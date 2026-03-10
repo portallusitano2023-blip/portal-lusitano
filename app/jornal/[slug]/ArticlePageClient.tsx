@@ -27,6 +27,7 @@ import AdUnit from "@/components/ads/AdUnit";
 
 // Fallback para dados locais
 import { articlesDataPT, articlesDataEN } from "@/data/articlesData";
+import "../journal.css";
 
 interface ArticlePageClientProps {
   legacyId?: string;

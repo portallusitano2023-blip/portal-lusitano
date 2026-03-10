@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/context/LanguageContext";
 import { useIsMobile, usePrefersReducedMotion } from "@/hooks/useMediaQuery";
 import MagneticButton from "@/components/ui/MagneticButton";
+import "../pro-section.css";
 
 interface BlurredProSectionProps {
   isSubscribed: boolean;

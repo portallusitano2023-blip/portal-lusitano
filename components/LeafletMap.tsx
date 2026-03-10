@@ -3,6 +3,7 @@
 import { MapContainer, TileLayer, Marker, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "./leaflet-tooltip.css";
 
 interface Coudelaria {
   id: string;

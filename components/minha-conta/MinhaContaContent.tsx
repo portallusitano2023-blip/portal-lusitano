@@ -29,6 +29,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { logout } from "@/app/minha-conta/actions";
+import "../pro-section.css";
 
 interface Customer {
   firstName: string;

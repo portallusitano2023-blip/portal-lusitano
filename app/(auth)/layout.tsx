@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import "./auth.css";
 
 export const metadata: Metadata = {
   title: "Autenticação",
