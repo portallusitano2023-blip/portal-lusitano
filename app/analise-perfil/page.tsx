@@ -13,6 +13,7 @@ import {
   Calculator,
   Scale,
   Dna,
+  BookOpen,
 } from "lucide-react";
 import Confetti from "@/components/tools/Confetti";
 import BlurredProSection from "@/components/tools/BlurredProSection";
@@ -143,6 +144,9 @@ function AnalisePerfilContent() {
     dismissCrossWarning,
     chainContext,
     setChainContext,
+    hasSavedProgress,
+    resumeQuiz,
+    clearSavedProgress,
   } = useQuizLogic();
 
   // Progress: 0 on intro, quiz progress during quiz, 100 on result
@@ -229,7 +233,36 @@ function AnalisePerfilContent() {
         )}
 
         {showIntro ? (
-          <IntroSection onStart={startQuiz} />
+          <>
+            {/* Resume saved progress banner */}
+            {hasSavedProgress && (
+              <div className="max-w-2xl mx-auto px-4 pt-20 -mb-12 relative z-10">
+                <div className="flex items-center gap-3 px-5 py-4 bg-gradient-to-r from-[#C5A059]/15 to-[#C5A059]/5 border border-[#C5A059]/40 rounded-xl animate-[fadeSlideIn_0.4s_ease-out_forwards]">
+                  <BookOpen size={16} className="text-[#C5A059] shrink-0" />
+                  <p className="text-sm text-[var(--foreground-muted)] flex-1">
+                    {tr(
+                      "Tens progresso guardado. Queres continuar?",
+                      "You have saved progress. Continue where you left off?",
+                      "Tienes progreso guardado. ¿Quieres continuar?"
+                    )}
+                  </p>
+                  <button
+                    onClick={resumeQuiz}
+                    className="px-3 py-1.5 text-xs font-medium bg-[#C5A059]/20 hover:bg-[#C5A059]/30 text-[#C5A059] rounded-lg transition-colors"
+                  >
+                    {tr("Continuar", "Resume", "Continuar")}
+                  </button>
+                  <button
+                    onClick={clearSavedProgress}
+                    className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] text-xs transition-colors"
+                  >
+                    {tr("Descartar", "Discard", "Descartar")}
+                  </button>
+                </div>
+              </div>
+            )}
+            <IntroSection onStart={startQuiz} />
+          </>
         ) : !showResult ? (
           <>
             {/* PRO Status Bar — quiz in progress (only when user can use) */}

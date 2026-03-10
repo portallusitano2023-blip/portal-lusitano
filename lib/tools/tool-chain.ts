@@ -62,37 +62,40 @@ export function chainVerificadorToPerfil(
 
 // Chain: Calculadora → Comparador
 // Pre-fills one horse in the comparator with data from a completed valuation
-export interface CalcToComparadorPayload {
-  source: "calculadora";
-  nome: string;
-  idade: number;
-  sexo: string;
-  pelagem: string;
-  altura: number;
-  registoAPSL: boolean;
-  linhagem: string;
-  linhagemFamosa: string;
-  conformacao: number;
-  andamentos: number;
-  elevacao: number;
-  suspensao: number;
-  regularidade: number;
-  temperamento: number;
-  sensibilidade: number;
-  vontadeTrabalho: number;
-  treino: string;
-  competicoes: string;
-  disciplina: string;
-  saude: string;
-  raioX: boolean;
-  exameVeterinario: boolean;
-  preco: number;
-  blup: number;
-}
-
-export function chainCalcToComparador(payload: CalcToComparadorPayload): void {
+export function chainCalcToComparador(
+  horse: Partial<{
+    nome: string;
+    idade: number;
+    sexo: string;
+    pelagem: string;
+    altura: number;
+    registoAPSL: boolean;
+    linhagem: string;
+    linhagemFamosa: string;
+    conformacao: number;
+    andamentos: number;
+    elevacao: number;
+    suspensao: number;
+    regularidade: number;
+    temperamento: number;
+    sensibilidade: number;
+    vontadeTrabalho: number;
+    treino: string;
+    competicoes: string;
+    disciplina: string;
+    saude: number;
+    raioX: boolean;
+    exameVeterinario: boolean;
+    preco: number;
+    blup: number;
+  }>,
+  linhagemAdjusted?: boolean
+): void {
   try {
-    sessionStorage.setItem(CHAIN_KEYS.HORSE, JSON.stringify(payload));
+    sessionStorage.setItem(
+      CHAIN_KEYS.HORSE,
+      JSON.stringify({ source: "calculadora", horse, linhagemAdjusted })
+    );
   } catch {}
   window.location.href = "/comparador-cavalos";
 }

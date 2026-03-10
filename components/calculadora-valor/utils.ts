@@ -20,7 +20,7 @@ const MAX_HORSE_VALUE = 5_000_000;
 // Curva mais realista com pico em 8-10 e declínio gradual
 function calcMultIdade(idade: number): number {
   if (idade >= 8 && idade <= 10) return 1.15; // Sweet spot
-  if (idade >= 7 || (idade >= 11 && idade <= 12)) return 1.10; // Very good
+  if (idade === 7 || (idade >= 11 && idade <= 12)) return 1.10; // Very good
   if (idade >= 5 && idade <= 6) return 1.05; // Young adult, developing
   if (idade >= 13 && idade <= 15) return 0.95; // Starting decline
   if (idade >= 16 && idade <= 18) return 0.85; // Mature, declining

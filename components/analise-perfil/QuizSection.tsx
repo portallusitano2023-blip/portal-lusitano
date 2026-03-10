@@ -62,7 +62,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
       className="min-h-screen pt-24 pb-20 animate-[fadeSlideIn_0.4s_ease-out_forwards]"
     >
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        {/* Only show SubscriptionBanner/ProUpgradeCard when user CAN use — 
+        {/* Only show SubscriptionBanner/ProUpgradeCard when user CAN use —
             when !canUse the Paywall below already handles auth/subscribe prompts */}
         {canUse && (
           <>
@@ -256,6 +256,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             </div>
             {/* Answer options — only rendered when user can use the tool */}
             {canUse && (
+              <>
               <div className="space-y-2.5" role="radiogroup" aria-label={question.question}>
                 {question.options.map((opt, idx) => (
                   <button
@@ -290,9 +291,10 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
                   disabled={isPending}
                   className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-colors px-4 py-2 min-h-[36px] rounded-lg hover:bg-[var(--background-secondary)]/40 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {tr("N\u00e3o sei / Passar", "Not sure / Skip", "No s\u00e9 / Pasar")}
+                  {tr("Não sei / Passar", "Not sure / Skip", "No sé / Pasar")}
                 </button>
               </div>
+              </>
             )}
           </div>
           <div className="flex items-center justify-between">

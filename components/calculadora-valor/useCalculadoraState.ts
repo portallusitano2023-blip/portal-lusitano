@@ -12,6 +12,7 @@ import { calcularValor, estimarValorParcial } from "./utils";
 import { PROFILE_LABELS, SUBPROFILE_LABELS, PROFILE_CONTEXT_KEY } from "@/lib/tools/shared-data";
 import type { FormData, Resultado } from "./types";
 import { chainCalcToVerificador } from "@/lib/tools/tool-chain";
+import { chainCalcToComparador } from "@/lib/tools/tool-chain";
 import type { CalcHistoryEntry } from "./HistoryPanel";
 
 // ============================================
@@ -19,7 +20,6 @@ import type { CalcHistoryEntry } from "./HistoryPanel";
 // ============================================
 
 const DRAFT_KEY = "calculadora_draft_v1";
-const CHAIN_KEY = "tool_chain_horse";
 const CALC_HISTORY_KEY = "calculadora_history";
 
 export const TOTAL_STEPS = 5;
@@ -435,14 +435,7 @@ export function useCalculadoraState() {
       blup: resultado.blup,
       registoAPSL: form.registoAPSL,
     };
-    try {
-      sessionStorage.setItem(CHAIN_KEY, JSON.stringify({ source: "calculadora", horse, linhagemAdjusted: form.linhagem === "comum" }));
-    } catch {}
-    // Full page reload is intentional here: the target page reads horse data from
-    // sessionStorage on mount, so the data must persist across navigation.
-    // Using router.push() would work but sessionStorage is already populated above,
-    // and a full reload guarantees a clean mount of the comparador page.
-    window.location.href = "/comparador-cavalos";
+    chainCalcToComparador(horse, form.linhagem === "comum");
   };
 
   const handleVerificarCompat = () => {
