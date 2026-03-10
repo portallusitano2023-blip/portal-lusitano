@@ -115,6 +115,7 @@ function AnalisePerfilContent() {
     isPdfLoading,
     isBadgeLoading,
     handleAnswer,
+    skipQuestion,
     goBack,
     result,
     scorePercentages,
@@ -259,6 +260,7 @@ function AnalisePerfilContent() {
               accessLoading={accessLoading}
               isPending={isPending}
               onAnswer={handleAnswer}
+              onSkip={skipQuestion}
               onBack={goBack}
               onReset={resetQuiz}
               dominantProfile={dominantProfile}

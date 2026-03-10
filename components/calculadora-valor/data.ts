@@ -29,16 +29,6 @@ export const LINHAGENS_FAMOSAS = [
   { value: "outra", label: "Outra / Mista", labelEn: "Other / Mixed", labelEs: "Otra / Mixta", desc: "Linhagem não listada", descEn: "Unlisted lineage", descEs: "Linaje no listado" },
 ];
 
-export const DISCIPLINAS = [
-  "Dressage Clássica",
-  "Equitação de Trabalho",
-  "Alta Escola",
-  "Ensino / Equitação",
-  "Atrelagem",
-  "Toureio a Cavalo",
-  "Lazer / Passeio",
-];
-
 export interface DisciplinaOption {
   value: string;
   labelPt: string;

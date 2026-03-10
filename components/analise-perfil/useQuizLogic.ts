@@ -109,6 +109,9 @@ function getCrossValidationWarning(
   return null;
 }
 
+const QUIZ_PROGRESS_KEY = "portal-lusitano-quiz-progress";
+const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
+
 export function useQuizLogic() {
   const { t, language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
@@ -123,6 +126,7 @@ export function useQuizLogic() {
     tradicional: 0,
     criador: 0,
     amador: 0,
+    aprendiz: 0,
   });
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
@@ -136,6 +140,7 @@ export function useQuizLogic() {
   const [isPending, setIsPending] = useState(false);
   const [isPdfLoading, setIsPdfLoading] = useState(false);
   const [isBadgeLoading, setIsBadgeLoading] = useState(false);
+  const [hasSavedProgress, setHasSavedProgress] = useState(false);
   const quizRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
@@ -167,6 +172,34 @@ export function useQuizLogic() {
     } catch {}
   }, []);
 
+  // Check for saved quiz progress in localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(QUIZ_PROGRESS_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as {
+        answers: Record<number, number>;
+        currentStep: number;
+        timestamp: number;
+      };
+      if (
+        saved &&
+        typeof saved.timestamp === "number" &&
+        Date.now() - saved.timestamp < TWENTY_FOUR_HOURS_MS &&
+        saved.currentStep > 0
+      ) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage initialization on mount
+        setHasSavedProgress(true);
+      } else {
+        // Expired or invalid — clean up
+        localStorage.removeItem(QUIZ_PROGRESS_KEY);
+      }
+    } catch {
+      // Corrupted data — clean up silently
+      try { localStorage.removeItem(QUIZ_PROGRESS_KEY); } catch {}
+    }
+  }, []);
+
   // Check for shared result in URL
   useEffect(() => {
     const sharedResult = searchParams.get("r");
@@ -174,14 +207,14 @@ export function useQuizLogic() {
       try {
         const decoded = JSON.parse(atob(sharedResult));
         if (decoded.profile && results[decoded.profile]) {
-          const PROFILE_KEYS = ["competidor", "tradicional", "criador", "amador"] as const;
+          const PROFILE_KEYS = ["competidor", "tradicional", "criador", "amador", "aprendiz"] as const;
           const raw = decoded.scores;
           const safeScores =
             raw && typeof raw === "object" && !Array.isArray(raw)
               ? Object.fromEntries(
                   PROFILE_KEYS.map((k) => [k, typeof raw[k] === "number" ? (raw[k] as number) : 0])
                 )
-              : { competidor: 0, tradicional: 0, criador: 0, amador: 0 };
+              : { competidor: 0, tradicional: 0, criador: 0, amador: 0, aprendiz: 0 };
           // eslint-disable-next-line react-hooks/set-state-in-effect -- URL param initialization on mount
           setScores(safeScores as Record<string, number>);
           setResult(results[decoded.profile]);
@@ -198,6 +231,99 @@ export function useQuizLogic() {
     setShowIntro(false);
     setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
   }, []);
+
+  // ---------------------------------------------------------------------------
+  // localStorage persistence helpers
+  // ---------------------------------------------------------------------------
+  const saveProgressToStorage = useCallback(
+    (newAnswers: string[], nextStep: number) => {
+      try {
+        const data: Record<string, unknown> = {
+          answers: Object.fromEntries(newAnswers.map((v, i) => [i, v])),
+          currentStep: nextStep,
+          timestamp: Date.now(),
+        };
+        localStorage.setItem(QUIZ_PROGRESS_KEY, JSON.stringify(data));
+      } catch {
+        // Storage full or unavailable — silently ignore
+      }
+    },
+    []
+  );
+
+  const clearSavedProgress = useCallback(() => {
+    try {
+      localStorage.removeItem(QUIZ_PROGRESS_KEY);
+    } catch {}
+    setHasSavedProgress(false);
+  }, []);
+
+  const resumeQuiz = useCallback(() => {
+    try {
+      const raw = localStorage.getItem(QUIZ_PROGRESS_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as {
+        answers: Record<number, number | string>;
+        currentStep: number;
+        timestamp: number;
+      };
+      if (!saved || Date.now() - saved.timestamp >= TWENTY_FOUR_HOURS_MS) {
+        clearSavedProgress();
+        return;
+      }
+      // Reconstruct answers array from the saved Record<number, value>
+      const restoredAnswers: string[] = [];
+      for (let i = 0; i < saved.currentStep; i++) {
+        const val = saved.answers[i];
+        restoredAnswers.push(val != null ? String(val) : "__skip__");
+      }
+      // Recalculate scores from restored answers
+      const restoredScores: Record<string, number> = {
+        competidor: 0,
+        tradicional: 0,
+        criador: 0,
+        amador: 0,
+        aprendiz: 0,
+      };
+      restoredAnswers.forEach((answerValue, qIdx) => {
+        if (answerValue === "__skip__" || !questions[qIdx]) return;
+        const question = questions[qIdx];
+        const option = question.options.find((o) => o.value === answerValue);
+        if (option) {
+          const w = question.weight;
+          Object.entries(option.points).forEach(([p, pts]) => {
+            restoredScores[p] = (restoredScores[p] || 0) + pts * w;
+          });
+        }
+      });
+      // Reconstruct answer details
+      const restoredDetails: AnswerDetail[] = restoredAnswers
+        .map((answerValue, qIdx) => {
+          if (answerValue === "__skip__" || !questions[qIdx]) return null;
+          const question = questions[qIdx];
+          const option = question.options.find((o) => o.value === answerValue);
+          if (!option) return null;
+          return {
+            questionId: question.id,
+            questionText: question.question,
+            answerText: option.text,
+            points: option.points,
+            weight: question.weight,
+          } as AnswerDetail;
+        })
+        .filter((d): d is AnswerDetail => d !== null);
+
+      setAnswers(restoredAnswers);
+      setAnswerDetails(restoredDetails);
+      setScores(restoredScores);
+      setCurrentQuestion(saved.currentStep);
+      setShowIntro(false);
+      setHasSavedProgress(false);
+      setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+    } catch {
+      clearSavedProgress();
+    }
+  }, [questions, clearSavedProgress]);
 
   const handleAnswer = useCallback(
     async (option: QuestionOption) => {
@@ -226,6 +352,8 @@ export function useQuizLogic() {
       setCrossWarningDismissed(false);
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
+        // Save progress to localStorage
+        saveProgressToStorage(newAnswers, currentQuestion + 1);
         // Scroll to quiz top so the next question is visible
         setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
       } else {
@@ -311,11 +439,13 @@ export function useQuizLogic() {
         setResult(results[mp]);
         setShowResult(true);
         setSubProfile(sp);
+        // Clear saved progress on completion
+        clearSavedProgress();
         // Scroll to top so the user sees the result
         setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
       }
     },
-    [isPending, currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, showError, tr, results]
+    [isPending, currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, showError, tr, results, saveProgressToStorage, clearSavedProgress]
   );
 
   const calculateConfidence = useCallback((): number => {
@@ -429,7 +559,7 @@ export function useQuizLogic() {
     setCurrentQuestion(0);
     setAnswers([]);
     setAnswerDetails([]);
-    setScores({ competidor: 0, tradicional: 0, criador: 0, amador: 0 });
+    setScores({ competidor: 0, tradicional: 0, criador: 0, amador: 0, aprendiz: 0 });
     setShowResult(false);
     setResult(null);
     setSubProfile(null);
@@ -437,7 +567,106 @@ export function useQuizLogic() {
     setSaved(false);
     setCopied(false);
     setCrossWarningDismissed(false);
-  }, []);
+    clearSavedProgress();
+  }, [clearSavedProgress]);
+
+  const skipQuestion = useCallback(() => {
+    if (isPending) return;
+    const newAnswers = [...answers, "__skip__"];
+    // No points added for a skip
+    setAnswers(newAnswers);
+    setCrossWarningDismissed(false);
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      saveProgressToStorage(newAnswers, currentQuestion + 1);
+      setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+    } else {
+      // Last question was skipped — trigger the same completion logic as handleAnswer
+      // but without adding points. We need to determine the profile from existing scores.
+      if (!canUse) {
+        showError(
+          tr(
+            "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
+            "Free usage limit reached. Subscribe to PRO to continue.",
+            "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
+          )
+        );
+        return;
+      }
+
+      let mp = "amador";
+      let ms = 0;
+      Object.entries(scores).forEach(([p, s]) => {
+        if (s > ms) {
+          ms = s;
+          mp = p;
+        }
+      });
+      const q1 = newAnswers[0];
+      const q6 = newAnswers[5];
+      const q7 = newAnswers[6];
+      let sp: string | null = null;
+      if (mp === "competidor") {
+        if (q1 === "trabalho") sp = "competidor_trabalho";
+        else if (q7 === "premium" || q7 === "alto") sp = "competidor_elite";
+        else sp = "competidor_nacional";
+      } else if (mp === "amador") {
+        if (q6 === "desbravado" || q6 === "basico") sp = "amador_projeto";
+      }
+      const sortedScores = Object.values(scores).sort((a: number, b: number) => b - a);
+      const inlineConfidence =
+        sortedScores.length >= 2 && sortedScores[0] + sortedScores[1] > 0
+          ? Math.round((sortedScores[0] / (sortedScores[0] + sortedScores[1])) * 100)
+          : 100;
+      const totalScoreForMeta =
+        Object.values(scores).reduce((a: number, b: number) => a + b, 0) || 1;
+      const scorePercentagesMeta = Object.entries(scores).map(([p, s]) => ({
+        profile: p,
+        percentage: Math.round((s / totalScoreForMeta) * 100),
+      }));
+
+      setIsPending(true);
+      (async () => {
+        let allowed = false;
+        try {
+          allowed = await validateAndRecord(scores, {
+            profile: mp,
+            subProfile: sp ?? null,
+            confidence: inlineConfidence,
+            scorePercentages: scorePercentagesMeta,
+          });
+        } catch {
+          showError(
+            tr(
+              "Erro de ligação. Verifica a tua ligação à internet.",
+              "Connection error. Please check your internet connection.",
+              "Error de conexión. Verifica tu conexión a internet."
+            )
+          );
+          return;
+        } finally {
+          setIsPending(false);
+        }
+
+        if (!allowed) {
+          setError(
+            tr(
+              "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
+              "Free usage limit reached. Subscribe to PRO to continue.",
+              "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
+            )
+          );
+          return;
+        }
+
+        setResult(results[mp]);
+        setShowResult(true);
+        setSubProfile(sp);
+        clearSavedProgress();
+        setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
+      })();
+    }
+  }, [isPending, currentQuestion, answers, scores, questions.length, canUse, validateAndRecord, setError, showError, tr, results, saveProgressToStorage, clearSavedProgress]);
 
   const goBack = useCallback(() => {
     if (currentQuestion > 0) {
@@ -450,8 +679,10 @@ export function useQuizLogic() {
         tradicional: 0,
         criador: 0,
         amador: 0,
+        aprendiz: 0,
       };
       newAnswers.forEach((answerValue, qIdx) => {
+        if (answerValue === "__skip__") return; // Skip doesn't contribute points
         const question = questions[qIdx];
         const option = question.options.find((o) => o.value === answerValue);
         if (option) {
@@ -496,6 +727,7 @@ export function useQuizLogic() {
       criador: tr("Criador", "Breeder", "Criador"),
       amador: tr("Apreciador Amador", "Amateur Enthusiast", "Aficionado Amateur"),
       tradicional: tr("Tradicionalista", "Traditionalist", "Tradicionalista"),
+      aprendiz: tr("Aprendiz", "Learning Rider", "Aprendiz"),
     }),
     [tr]
   );
@@ -561,9 +793,14 @@ export function useQuizLogic() {
     isPending,
     isPdfLoading,
     isBadgeLoading,
+    // Persistence
+    hasSavedProgress,
+    resumeQuiz,
+    clearSavedProgress,
     // Actions
     startQuiz,
     handleAnswer,
+    skipQuestion,
     goBack,
     resetQuiz,
     saveResult,

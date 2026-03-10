@@ -20,6 +20,7 @@ interface QuizSectionProps {
   accessLoading: boolean;
   isPending: boolean;
   onAnswer: (option: QuestionOption) => void;
+  onSkip: () => void;
   onBack: () => void;
   onReset: () => void;
   dominantProfile: string | null;
@@ -39,6 +40,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
     accessLoading,
     isPending,
     onAnswer,
+    onSkip,
     onBack,
     onReset,
     dominantProfile,
@@ -280,6 +282,16 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
                     </div>
                   </button>
                 ))}
+              </div>
+              {/* Skip / Don't know button */}
+              <div className="flex justify-center mt-3">
+                <button
+                  onClick={onSkip}
+                  disabled={isPending}
+                  className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-colors px-4 py-2 min-h-[36px] rounded-lg hover:bg-[var(--background-secondary)]/40 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {tr("N\u00e3o sei / Passar", "Not sure / Skip", "No s\u00e9 / Pasar")}
+                </button>
               </div>
             )}
           </div>

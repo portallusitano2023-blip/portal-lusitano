@@ -33,6 +33,18 @@ export interface Cavalo {
   potradasNascidos: number; // nº potros nascidos vivos
 }
 
+export interface Cavaleiro {
+  pesoCavaleiro: number;       // kg, range 40-120
+  alturaCavaleiro: number;     // cm, range 140-200
+  nivelFitness: "sedentario" | "moderado" | "ativo" | "atleta";
+}
+
+export interface RedFlag {
+  title: string;
+  description: string;
+  severity: "critical" | "warning";
+}
+
 export interface ResultadoCompatibilidade {
   score: number;
   nivel: string;
@@ -44,4 +56,5 @@ export interface ResultadoCompatibilidade {
   factores: { nome: string; score: number; max: number; tipo: string; descricao: string }[];
   recomendacoes: string[];
   pontosForteseFracos: { fortes: string[]; fracos: string[] };
+  redFlags: RedFlag[];
 }

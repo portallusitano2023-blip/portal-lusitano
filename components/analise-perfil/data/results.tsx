@@ -1,4 +1,4 @@
-import { Trophy, Shield, Crown, Heart } from "lucide-react";
+import { Trophy, Shield, Crown, Heart, GraduationCap } from "lucide-react";
 import { createTranslator } from "@/lib/tr";
 import { Result } from "../types";
 
@@ -1438,6 +1438,355 @@ export function getResults(tr: Tr): Record<string, Result> {
             "Conhecer o cavalo, estabelecer rotinas, desfrutar da nova parceria sem pressas.",
             "Get to know the horse, establish routines, enjoy the new partnership without rushing.",
             "Conocer al caballo, establecer rutinas, disfrutar de la nueva alianza sin prisas."
+          ),
+        },
+      ],
+    },
+    aprendiz: {
+      profile: "aprendiz",
+      title: tr("Cavaleiro Aprendiz", "Learning Rider", "Jinete Aprendiz"),
+      subtitle: tr(
+        "Primeiros Passos no Mundo Equestre",
+        "First Steps in the Equestrian World",
+        "Primeros Pasos en el Mundo Ecuestre"
+      ),
+      description: tr(
+        "O seu perfil indica alguém que está a dar os primeiros passos no mundo equestre. Ainda não possui cavalo e procura aprender, explorar e construir uma base sólida antes de tomar decisões. Valoriza a orientação, a segurança e o progresso gradual.",
+        "Your profile indicates someone taking their first steps in the equestrian world. You don't yet own a horse and are looking to learn, explore and build a solid foundation before making decisions. You value guidance, safety and gradual progress.",
+        "Su perfil indica a alguien que está dando sus primeros pasos en el mundo ecuestre. Aún no posee caballo y busca aprender, explorar y construir una base sólida antes de tomar decisiones. Valora la orientación, la seguridad y el progreso gradual."
+      ),
+      characteristics: [
+        tr(
+          "Mentalidade aberta e curiosa",
+          "Open and curious mindset",
+          "Mentalidad abierta y curiosa"
+        ),
+        tr(
+          "Paciência para aprender progressivamente",
+          "Patience to learn progressively",
+          "Paciencia para aprender progresivamente"
+        ),
+        tr(
+          "Abordagem cautelosa e responsável",
+          "Cautious and responsible approach",
+          "Enfoque cauteloso y responsable"
+        ),
+        tr(
+          "Foco na segurança e no bem-estar animal",
+          "Focus on safety and animal welfare",
+          "Enfoque en la seguridad y el bienestar animal"
+        ),
+        tr(
+          "Respeito pelo ritmo natural de aprendizagem",
+          "Respect for the natural learning pace",
+          "Respeto por el ritmo natural de aprendizaje"
+        ),
+        tr(
+          "Disposição para investir em formação antes de comprar",
+          "Willingness to invest in training before buying",
+          "Disposición para invertir en formación antes de comprar"
+        ),
+        tr(
+          "Valoriza a relação humano-cavalo acima de resultados",
+          "Values the human-horse bond above results",
+          "Valora la relación humano-caballo por encima de resultados"
+        ),
+      ],
+      idealHorse: {
+        age: tr("10-16 anos (experiente e calmo)", "10-16 years (experienced and calm)", "10-16 años (experimentado y tranquilo)"),
+        height: tr("1.55m — 1.65m (confortável)", "1.55m — 1.65m (comfortable)", "1.55m — 1.65m (cómodo)"),
+        training: tr(
+          "Bem treinado e confirmado (schoolmaster)",
+          "Well trained and confirmed (schoolmaster)",
+          "Bien entrenado y confirmado (schoolmaster)"
+        ),
+        temperament: tr(
+          "Muito calmo, perdoador, paciente e previsível",
+          "Very calm, forgiving, patient and predictable",
+          "Muy tranquilo, tolerante, paciente y predecible"
+        ),
+        priceRange: "5.000 — 15.000 euros",
+      },
+      annualCosts: {
+        min: 3000,
+        max: 6000,
+        includes: [
+          tr(
+            "Aulas regulares em escola de equitação",
+            "Regular lessons at a riding school",
+            "Clases regulares en escuela de equitación"
+          ),
+          tr(
+            "Aluguer de cavalo de escola",
+            "School horse rental",
+            "Alquiler de caballo de escuela"
+          ),
+          tr(
+            "Equipamento básico pessoal (capacete, botas)",
+            "Basic personal equipment (helmet, boots)",
+            "Equipamiento básico personal (casco, botas)"
+          ),
+          tr("Seguro pessoal", "Personal insurance", "Seguro personal"),
+          tr(
+            "Workshops e clínicas de iniciação",
+            "Introductory workshops and clinics",
+            "Talleres y clínicas de iniciación"
+          ),
+        ],
+      },
+      recommendedRegions: [
+        "Lisboa",
+        tr("Centro", "Centre", "Centro"),
+        tr("Norte", "North", "Norte"),
+        tr(
+          "Qualquer região com escolas de equitação",
+          "Any region with riding schools",
+          "Cualquier región con escuelas de equitación"
+        ),
+      ],
+      linhagens: [
+        {
+          name: "Alter Real",
+          reason: tr(
+            "Linhagem com cavalos equilibrados e perdoadores",
+            "Lineage with balanced and forgiving horses",
+            "Linaje con caballos equilibrados y tolerantes"
+          ),
+        },
+        {
+          name: "Andrade",
+          reason: tr(
+            "Tendência para temperamentos dóceis e sensatos",
+            "Tendency for docile and sensible temperaments",
+            "Tendencia a temperamentos dóciles y sensatos"
+          ),
+        },
+        {
+          name: tr("Cavalos de escola", "School horses", "Caballos de escuela"),
+          reason: tr(
+            "Temperamentos excepcionalmente pacientes",
+            "Exceptionally patient temperaments",
+            "Temperamentos excepcionalmente pacientes"
+          ),
+        },
+      ],
+      disciplinas: [
+        tr("Equitação de Base", "Basic Riding", "Equitación de Base"),
+        tr("Passeio", "Trail Riding", "Paseo"),
+      ],
+      famousHorses: [
+        {
+          name: tr("Cavalos de escola da EAE", "EAE School Horses", "Caballos de escuela de la EAE"),
+          achievement: tr(
+            "Formaram centenas de cavaleiros na Escola de Artes Equestres",
+            "Trained hundreds of riders at the School of Equestrian Arts",
+            "Formaron cientos de jinetes en la Escuela de Artes Ecuestres"
+          ),
+        },
+        {
+          name: tr("Mestres de picadeiro", "Arena schoolmasters", "Maestros de picadero"),
+          achievement: tr(
+            "Cavalos veteranos que ensinam pacientemente os fundamentos da equitação",
+            "Veteran horses that patiently teach the fundamentals of riding",
+            "Caballos veteranos que enseñan pacientemente los fundamentos de la equitación"
+          ),
+        },
+      ],
+      tips: [
+        tr(
+          "Comece por ter aulas regulares durante pelo menos 6 meses antes de pensar em comprar",
+          "Start by taking regular lessons for at least 6 months before thinking about buying",
+          "Comience por tomar clases regulares durante al menos 6 meses antes de pensar en comprar"
+        ),
+        tr(
+          "Procure um cavalo schoolmaster — experiente, calmo e que perdoe erros",
+          "Look for a schoolmaster horse — experienced, calm and forgiving of mistakes",
+          "Busque un caballo schoolmaster — experimentado, tranquilo y tolerante con los errores"
+        ),
+        tr(
+          "Peça sempre a opinião do seu instrutor antes de tomar qualquer decisão",
+          "Always ask your instructor's opinion before making any decision",
+          "Pida siempre la opinión de su instructor antes de tomar cualquier decisión"
+        ),
+        tr(
+          "Considere meia-pensão ou partilha de cavalo como primeiro passo",
+          "Consider half-board or horse sharing as a first step",
+          "Considere media pensión o compartir caballo como primer paso"
+        ),
+        tr(
+          "Não tenha pressa — o cavalo certo aparecerá quando estiver preparado",
+          "Don't rush — the right horse will come when you are ready",
+          "No tenga prisa — el caballo adecuado aparecerá cuando esté preparado"
+        ),
+      ],
+      nextSteps: [
+        tr(
+          "Inscrever-se numa escola de equitação com boas referências",
+          "Enrol in a riding school with good references",
+          "Inscribirse en una escuela de equitación con buenas referencias"
+        ),
+        tr(
+          "Ter aulas regulares (mínimo 2x por semana)",
+          "Take regular lessons (minimum 2x per week)",
+          "Tener clases regulares (mínimo 2x por semana)"
+        ),
+        tr(
+          "Aprender sobre cuidados básicos do cavalo (grooming, alimentação)",
+          "Learn about basic horse care (grooming, feeding)",
+          "Aprender sobre cuidados básicos del caballo (grooming, alimentación)"
+        ),
+        tr(
+          "Participar em workshops e clínicas para iniciantes",
+          "Attend workshops and clinics for beginners",
+          "Participar en talleres y clínicas para principiantes"
+        ),
+        tr(
+          "Visitar feiras e eventos equestres para conhecer o meio",
+          "Visit fairs and equestrian events to learn about the community",
+          "Visitar ferias y eventos ecuestres para conocer el medio"
+        ),
+      ],
+      icon: <GraduationCap className="text-[#C5A059]" size={48} />,
+      color: "from-violet-500/20",
+      quotes: [
+        {
+          author: "Mestre Nuno Oliveira",
+          role: tr("Mestre de Equitação", "Riding Master", "Maestro de Equitación"),
+          quote: tr(
+            "A equitação é uma escola de humildade. Quanto mais aprendemos, mais percebemos o quanto ainda há para aprender.",
+            "Riding is a school of humility. The more we learn, the more we realise how much there is still to learn.",
+            "La equitación es una escuela de humildad. Cuanto más aprendemos, más nos damos cuenta de lo mucho que queda por aprender."
+          ),
+        },
+        {
+          author: "Instrutor Pedro Silva",
+          role: tr(
+            "Director de Escola de Equitação",
+            "Riding School Director",
+            "Director de Escuela de Equitación"
+          ),
+          quote: tr(
+            "O melhor investimento de um cavaleiro aprendiz é em boas aulas com bons cavalos. O resto vem com o tempo.",
+            "The best investment for a learning rider is in good lessons with good horses. The rest comes with time.",
+            "La mejor inversión de un jinete aprendiz es en buenas clases con buenos caballos. El resto viene con el tiempo."
+          ),
+        },
+      ],
+      faq: [
+        {
+          question: tr(
+            "Quando devo comprar o meu primeiro cavalo?",
+            "When should I buy my first horse?",
+            "¿Cuándo debo comprar mi primer caballo?"
+          ),
+          answer: tr(
+            "Recomenda-se pelo menos 1-2 anos de aulas regulares antes de comprar. Quando se sentir confortável a montar, a tratar e a lidar com situações inesperadas, estará mais preparado.",
+            "At least 1-2 years of regular lessons are recommended before buying. When you feel comfortable riding, grooming and handling unexpected situations, you will be more prepared.",
+            "Se recomiendan al menos 1-2 años de clases regulares antes de comprar. Cuando se sienta cómodo montando, cuidando y manejando situaciones inesperadas, estará más preparado."
+          ),
+        },
+        {
+          question: tr(
+            "Meia-pensão ou cavalo próprio para começar?",
+            "Half-board or own horse to start?",
+            "¿Media pensión o caballo propio para empezar?"
+          ),
+          answer: tr(
+            "Meia-pensão é uma excelente opção para começar. Partilha custos e responsabilidades, e permite aprender sem o compromisso total de ser proprietário.",
+            "Half-board is an excellent option to start with. It shares costs and responsibilities, and lets you learn without the full commitment of ownership.",
+            "Media pensión es una excelente opción para empezar. Comparte costes y responsabilidades, y permite aprender sin el compromiso total de ser propietario."
+          ),
+        },
+        {
+          question: tr(
+            "Qual o investimento inicial mínimo para aprender?",
+            "What is the minimum initial investment to learn?",
+            "¿Cuál es la inversión inicial mínima para aprender?"
+          ),
+          answer: tr(
+            "Capacete aprovado (50-150 euros), botas adequadas (80-200 euros), e mensalidade de aulas (150-400 euros/mês). Total inicial de 300-750 euros mais mensalidade.",
+            "An approved helmet (50-150 euros), suitable boots (80-200 euros), and lesson fees (150-400 euros/month). Initial total of 300-750 euros plus monthly fees.",
+            "Casco homologado (50-150 euros), botas adecuadas (80-200 euros), y mensualidad de clases (150-400 euros/mes). Total inicial de 300-750 euros más mensualidad."
+          ),
+        },
+      ],
+      timeline: [
+        {
+          month: tr("Mês 1", "Month 1", "Mes 1"),
+          title: tr(
+            "Descoberta",
+            "Discovery",
+            "Descubrimiento"
+          ),
+          description: tr(
+            "Inscrever-se numa escola de equitação, ter as primeiras aulas, aprender a aproximar-se e a cuidar do cavalo em segurança.",
+            "Enrol in a riding school, take the first lessons, learn how to approach and care for the horse safely.",
+            "Inscribirse en una escuela de equitación, tener las primeras clases, aprender a acercarse y cuidar del caballo con seguridad."
+          ),
+        },
+        {
+          month: tr("Mês 2-3", "Month 2-3", "Mes 2-3"),
+          title: tr(
+            "Fundamentos",
+            "Fundamentals",
+            "Fundamentos"
+          ),
+          description: tr(
+            "Aprender as bases da equitação: posição, equilíbrio, uso das ajudas. Começar a fazer grooming e a selar sozinho.",
+            "Learn riding basics: position, balance, use of aids. Start grooming and tacking up independently.",
+            "Aprender las bases de la equitación: posición, equilibrio, uso de las ayudas. Empezar a hacer grooming y ensillar solo."
+          ),
+        },
+        {
+          month: tr("Mês 3-4", "Month 3-4", "Mes 3-4"),
+          title: tr(
+            "Prática Regular",
+            "Regular Practice",
+            "Práctica Regular"
+          ),
+          description: tr(
+            "Aumentar frequência de aulas, experimentar diferentes cavalos de escola, participar em actividades do centro hípico.",
+            "Increase lesson frequency, try different school horses, participate in riding centre activities.",
+            "Aumentar frecuencia de clases, probar diferentes caballos de escuela, participar en actividades del centro hípico."
+          ),
+        },
+        {
+          month: tr("Mês 4-5", "Month 4-5", "Mes 4-5"),
+          title: tr(
+            "Passeios e Exterior",
+            "Hacking and Outdoors",
+            "Paseos y Exterior"
+          ),
+          description: tr(
+            "Começar a fazer passeios no exterior com acompanhamento, ganhar confiança em diferentes ambientes.",
+            "Start going on accompanied outdoor rides, gain confidence in different environments.",
+            "Empezar a hacer paseos al exterior con acompañamiento, ganar confianza en diferentes entornos."
+          ),
+        },
+        {
+          month: tr("Mês 5-6", "Month 5-6", "Mes 5-6"),
+          title: tr(
+            "Autonomia Crescente",
+            "Growing Autonomy",
+            "Autonomía Creciente"
+          ),
+          description: tr(
+            "Começar a montar com mais independência, considerar meia-pensão, participar no primeiro workshop ou clínica.",
+            "Begin riding with more independence, consider half-board, attend first workshop or clinic.",
+            "Empezar a montar con más independencia, considerar media pensión, participar en el primer taller o clínica."
+          ),
+        },
+        {
+          month: tr("Mês 6+", "Month 6+", "Mes 6+"),
+          title: tr(
+            "Avaliação e Próximos Passos",
+            "Evaluation and Next Steps",
+            "Evaluación y Próximos Pasos"
+          ),
+          description: tr(
+            "Avaliar progresso com o instrutor, definir objectivos a médio prazo, considerar se é o momento de pensar em meia-pensão ou cavalo próprio.",
+            "Evaluate progress with the instructor, set medium-term goals, consider whether it is time to think about half-board or owning a horse.",
+            "Evaluar progreso con el instructor, definir objetivos a medio plazo, considerar si es el momento de pensar en media pensión o caballo propio."
           ),
         },
       ],

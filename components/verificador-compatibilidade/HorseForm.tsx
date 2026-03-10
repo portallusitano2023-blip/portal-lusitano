@@ -1,12 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
-import { Crown, Heart, Dna, CheckCircle, Palette } from "lucide-react";
+import { Crown, Heart, Dna, CheckCircle, Palette, Weight, Ruler, Activity, Minus, Plus } from "lucide-react";
 import Paywall from "@/components/tools/Paywall";
 import Tooltip from "@/components/tools/Tooltip";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import type { Cavalo, GeneticaPelagem } from "@/components/verificador-compatibilidade/types";
+import type { Cavalo, GeneticaPelagem, Cavaleiro } from "@/components/verificador-compatibilidade/types";
 import {
   COUDELARIAS,
   LINHAGENS,
@@ -23,6 +23,8 @@ interface HorseFormProps {
   egua: Cavalo;
   setGaranhao: React.Dispatch<React.SetStateAction<Cavalo>>;
   setEgua: React.Dispatch<React.SetStateAction<Cavalo>>;
+  cavaleiro: Cavaleiro;
+  setCavaleiro: React.Dispatch<React.SetStateAction<Cavaleiro>>;
   tab: "garanhao" | "egua";
   setTab: (tab: "garanhao" | "egua") => void;
   canUse: boolean;
@@ -36,6 +38,8 @@ export default function HorseForm({
   egua,
   setGaranhao,
   setEgua,
+  cavaleiro,
+  setCavaleiro,
   tab,
   setTab,
   canUse,
@@ -590,7 +594,176 @@ export default function HorseForm({
         </div>
       </div>}
 
-      {/* COI Estimado em Tempo Real */}
+      {/* Perfil Físico do Cavaleiro */}
+      {canUse && (
+        <div className="mt-6 bg-[var(--background-secondary)]/50 rounded-2xl p-4 sm:p-6 border border-[var(--border)] space-y-6">
+          <div className="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
+            <Activity className="text-emerald-400" size={24} />
+            <div>
+              <h2 className="text-xl font-serif text-[var(--foreground)]">
+                {tr("Perfil Físico do Cavaleiro", "Rider Physical Profile", "Perfil Físico del Jinete")}
+              </h2>
+              <p className="text-sm text-[var(--foreground-muted)]">
+                {tr(
+                  "Dados do cavaleiro para avaliar compatibilidade física",
+                  "Rider data to assess physical compatibility",
+                  "Datos del jinete para evaluar compatibilidad física"
+                )}
+              </p>
+            </div>
+          </div>
+
+          {/* Peso do Cavaleiro — +/- buttons */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-3">
+              <Weight className="text-emerald-400" size={16} />
+              <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                {tr("Peso do Cavaleiro", "Rider Weight", "Peso del Jinete")}
+              </label>
+              <Tooltip
+                text={tr(
+                  "Peso do cavaleiro em quilogramas. Cavaleiros mais pesados necessitam de cavalos mais altos e robustos.",
+                  "Rider weight in kilograms. Heavier riders need taller, more robust horses.",
+                  "Peso del jinete en kilogramos. Jinetes más pesados necesitan caballos más altos y robustos."
+                )}
+                position="top"
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setCavaleiro((prev) => ({ ...prev, pesoCavaleiro: Math.max(40, prev.pesoCavaleiro - 1) }))}
+                aria-label={tr("Diminuir peso", "Decrease weight", "Disminuir peso")}
+                className="w-11 h-11 rounded-lg border border-[var(--border)] bg-[var(--background-card)] flex items-center justify-center hover:border-emerald-500 transition-colors"
+              >
+                <Minus size={16} />
+              </button>
+              <div className="flex-1 relative">
+                <input
+                  type="number"
+                  min={40}
+                  max={120}
+                  value={cavaleiro.pesoCavaleiro}
+                  onChange={(e) => setCavaleiro((prev) => ({ ...prev, pesoCavaleiro: Math.max(40, Math.min(120, Number(e.target.value) || 70)) }))}
+                  className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-center text-lg font-medium focus:border-emerald-500 outline-none transition-colors"
+                  aria-label={tr("Peso em kg", "Weight in kg", "Peso en kg")}
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-sm">kg</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCavaleiro((prev) => ({ ...prev, pesoCavaleiro: Math.min(120, prev.pesoCavaleiro + 1) }))}
+                aria-label={tr("Aumentar peso", "Increase weight", "Aumentar peso")}
+                className="w-11 h-11 rounded-lg border border-[var(--border)] bg-[var(--background-card)] flex items-center justify-center hover:border-emerald-500 transition-colors"
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+            <p className="text-xs text-[var(--foreground-muted)] mt-1.5">
+              {cavaleiro.pesoCavaleiro > 100
+                ? tr("Peso elevado — cavalos mais altos recomendados", "High weight — taller horses recommended", "Peso elevado — caballos más altos recomendados")
+                : cavaleiro.pesoCavaleiro > 90
+                  ? tr("Peso acima da média — verificar altura dos cavalos", "Above average weight — check horse heights", "Peso por encima de la media — verificar altura de los caballos")
+                  : tr("Peso dentro do intervalo ideal", "Weight within ideal range", "Peso dentro del rango ideal")}
+            </p>
+          </div>
+
+          {/* Altura do Cavaleiro — range slider */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-3">
+              <Ruler className="text-emerald-400" size={16} />
+              <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                {tr("Altura do Cavaleiro", "Rider Height", "Altura del Jinete")}
+              </label>
+            </div>
+            <div className="flex items-center gap-4">
+              <input
+                type="range"
+                min={140}
+                max={200}
+                value={cavaleiro.alturaCavaleiro}
+                onChange={(e) => setCavaleiro((prev) => ({ ...prev, alturaCavaleiro: Number(e.target.value) }))}
+                aria-label={tr("Altura do cavaleiro em centímetros", "Rider height in centimetres", "Altura del jinete en centímetros")}
+                aria-valuenow={cavaleiro.alturaCavaleiro}
+                aria-valuemin={140}
+                aria-valuemax={200}
+                aria-valuetext={`${cavaleiro.alturaCavaleiro} cm`}
+                className="flex-1 h-2 bg-[var(--background-card)] rounded-full appearance-none cursor-pointer accent-emerald-500 touch-pan-y py-3"
+              />
+              <span className="text-lg font-medium text-emerald-400 tabular-nums w-20 text-right">
+                {cavaleiro.alturaCavaleiro} cm
+              </span>
+            </div>
+          </div>
+
+          {/* Nível de Fitness — 4 buttons com ícones */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-3">
+              <Activity className="text-emerald-400" size={16} />
+              <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                {tr("Nível de Fitness", "Fitness Level", "Nivel de Fitness")}
+              </label>
+              <Tooltip
+                text={tr(
+                  "O nível de condição física do cavaleiro influencia a compatibilidade com cavalos mais energéticos ou exigentes.",
+                  "The rider's fitness level influences compatibility with more energetic or demanding horses.",
+                  "El nivel de condición física del jinete influye en la compatibilidad con caballos más enérgicos o exigentes."
+                )}
+                position="top"
+              />
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {([
+                {
+                  value: "sedentario" as const,
+                  label: tr("Sedentário", "Sedentary", "Sedentario"),
+                  desc: tr("Pouca actividade física", "Low physical activity", "Poca actividad física"),
+                  icon: "🚶",
+                },
+                {
+                  value: "moderado" as const,
+                  label: tr("Moderado", "Moderate", "Moderado"),
+                  desc: tr("Exercício regular", "Regular exercise", "Ejercicio regular"),
+                  icon: "🏃",
+                },
+                {
+                  value: "ativo" as const,
+                  label: tr("Ativo", "Active", "Activo"),
+                  desc: tr("Treino frequente", "Frequent training", "Entrenamiento frecuente"),
+                  icon: "⚡",
+                },
+                {
+                  value: "atleta" as const,
+                  label: tr("Atleta", "Athlete", "Atleta"),
+                  desc: tr("Competição activa", "Active competition", "Competición activa"),
+                  icon: "🏆",
+                },
+              ]).map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setCavaleiro((prev) => ({ ...prev, nivelFitness: opt.value }))}
+                  aria-pressed={cavaleiro.nivelFitness === opt.value}
+                  className={`py-3 px-3 min-h-[44px] rounded-lg border text-center transition-all ${
+                    cavaleiro.nivelFitness === opt.value
+                      ? "border-emerald-500 bg-emerald-500/10"
+                      : "border-[var(--border)] hover:border-[var(--foreground-muted)]"
+                  }`}
+                >
+                  <span className="block text-lg mb-1" aria-hidden="true">{opt.icon}</span>
+                  <span
+                    className={`block text-sm font-medium ${
+                      cavaleiro.nivelFitness === opt.value ? "text-emerald-400" : "text-[var(--foreground-secondary)]"
+                    }`}
+                  >
+                    {opt.label}
+                  </span>
+                  <span className="text-xs text-[var(--foreground-muted)]">{opt.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
       {canUse && garanhao.linhagemFamosa &&
         egua.linhagemFamosa &&
         (() => {
