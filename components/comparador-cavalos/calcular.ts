@@ -168,8 +168,8 @@ export function calcularValorPorPonto(c: Cavalo): number {
 }
 
 // Score de potencial: score máximo atingível dado idade e treino atual
-export function calcularPotencial(c: Cavalo): number {
-  const scoreAtual = calcularScore(c);
+export function calcularPotencial(c: Cavalo, weights?: CategoryWeights): number {
+  const scoreAtual = weights ? calcularScoreWeighted(c, weights) : calcularScore(c);
   const treino = TREINOS.find((t) => t.value === c.treino);
   const nivel = treino?.nivel ?? 4;
   const nivelMax = 8; // Grand Prix
@@ -183,7 +183,7 @@ export function calcularPotencial(c: Cavalo): number {
   // Margem de competição: máximo (Internacional) = ~15pts
   const comp = COMPETICOES.find((co) => co.value === c.competicoes);
   const compScore = comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
-  const compMax = 13;
+  const compMax = 15;
   const compHeadroom = Math.max(0, compMax - compScore);
 
   const potencialBonus = Math.round((treinoHeadroom + compHeadroom) * ageFactor);
@@ -264,7 +264,7 @@ export function calcDisciplineScore(c: Cavalo, weights: Record<string, number>):
 // SCORE FACTORS
 // ============================================
 
-export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr): ScoreFactor[] {
+export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr, weights?: CategoryWeights): ScoreFactor[] {
   const ageDist = Math.abs(c.idade - 9);
   const idadeScore = Math.max(4, 10 - ageDist);
   const htDist = Math.abs(c.altura - 163);
@@ -288,6 +288,36 @@ export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr): ScoreFactor[] 
   const blupScore = Math.min(5, Math.round(normalizeBlup(c.blup) / 2));
   const premiosScore = Math.min(5, c.premios);
   const apslScore = c.registoAPSL ? 3 : 0;
+
+  if (weights) {
+    const defaultTotal = Object.values(DEFAULT_WEIGHTS).reduce((a, b) => a + b, 0);
+    const currentTotal = Object.values(weights).reduce((a, b) => a + b, 0);
+    const w = (key: keyof CategoryWeights): number => {
+      const dw = DEFAULT_WEIGHTS[key];
+      return currentTotal > 0 && dw > 0 ? (weights[key] * (defaultTotal / currentTotal)) / dw : 0;
+    };
+    const pct = (key: keyof CategoryWeights) =>
+      currentTotal > 0 ? `${Math.round((weights[key] / currentTotal) * 100)}%` : "0%";
+
+    const wf = (key: keyof CategoryWeights) => w(key);
+
+    return [
+      { name: tr("Linhagem", "Lineage", "Linaje"), weight: pct("linhagem"), score: Math.round(linhagemScore * wf("linhagem")), max: Math.round(15 * wf("linhagem")) },
+      { name: tr("Treino", "Training", "Entrenamiento"), weight: pct("treino"), score: Math.round(treinoScore * wf("treino")), max: Math.round(15 * wf("treino")) },
+      { name: tr("Conformação", "Conformation", "Conformación"), weight: pct("conformacao"), score: Math.round(c.conformacao * wf("conformacao")), max: Math.round(10 * wf("conformacao")) },
+      { name: tr("Andamentos", "Gaits", "Aires"), weight: pct("andamentos"), score: Math.round(c.andamentos * wf("andamentos")), max: Math.round(10 * wf("andamentos")) },
+      { name: tr("Idade", "Age", "Edad"), weight: pct("idade"), score: Math.round(idadeScore * wf("idade")), max: Math.round(10 * wf("idade")) },
+      { name: tr("Competições", "Competitions", "Competiciones"), weight: pct("competicoes"), score: Math.round(compScore * wf("competicoes")), max: Math.round(15 * wf("competicoes")) },
+      { name: tr("Altura", "Height", "Altura"), weight: pct("altura"), score: Math.round(alturaScore * wf("altura")), max: Math.round(8 * wf("altura")) },
+      { name: tr("Temperamento", "Temperament", "Temperamento"), weight: pct("temperamento"), score: Math.round(temperamentoScore * wf("temperamento")), max: Math.round(7 * wf("temperamento")) },
+      { name: tr("Saúde", "Health", "Salud"), weight: pct("saude"), score: Math.round(saudeScore * wf("saude")), max: Math.round(7 * wf("saude")) },
+      { name: "BLUP", weight: pct("blup"), score: Math.round(blupScore * wf("blup")), max: Math.round(5 * wf("blup")) },
+      { name: tr("Elevação", "Elevation", "Elevación"), weight: pct("elevacao"), score: Math.round(elevacaoScore * wf("elevacao")), max: Math.round(5 * wf("elevacao")) },
+      { name: tr("Regularidade", "Regularity", "Regularidad"), weight: pct("regularidade"), score: Math.round(regularidadeScore * wf("regularidade")), max: Math.round(5 * wf("regularidade")) },
+      { name: tr("Prémios", "Awards", "Premios"), weight: pct("premios"), score: Math.round(premiosScore * wf("premios")), max: Math.round(5 * wf("premios")) },
+      { name: tr("Registo APSL", "APSL Registration", "Registro APSL"), weight: pct("registoAPSL"), score: Math.round(apslScore * wf("registoAPSL")), max: Math.round(3 * wf("registoAPSL")) },
+    ];
+  }
 
   return [
     { name: tr("Linhagem", "Lineage", "Linaje"), weight: "15%", score: linhagemScore, max: 15 },
@@ -380,8 +410,8 @@ export function getClasseCor(val: number, melhor: number, maior = true): string 
 // VERDICT GENERATION (PRO)
 // ============================================
 
-export function gerarVeredicto(c: Cavalo, tr: TrFn = defaultTr, language?: string) {
-  const score = calcularScore(c);
+export function gerarVeredicto(c: Cavalo, tr: TrFn = defaultTr, language?: string, weights?: CategoryWeights) {
+  const score = weights ? calcularScoreWeighted(c, weights) : calcularScore(c);
   const strengths: string[] = [];
   const weaknesses: string[] = [];
 
@@ -454,6 +484,13 @@ export function gerarCustos(c: Cavalo) {
   const nivel = treino?.nivel ?? 4;
   const baseTraining = 200 + nivel * 100;
 
+  // Use same compound growth logic as calcularROI
+  let annualRate = 0.02;
+  if (c.idade <= 5 && nivel <= 3) annualRate = 0.16;
+  else if (c.idade <= 7 && nivel <= 4) annualRate = 0.1;
+  else if (c.idade >= 8 && c.idade <= 12 && nivel >= 5) annualRate = 0.05;
+  else if (c.idade > 14) annualRate = -0.04;
+
   return {
     nome: c.nome,
     purchasePrice: c.preco,
@@ -465,9 +502,7 @@ export function gerarCustos(c: Cavalo) {
       treino: baseTraining * 12,
       seguro: Math.round(c.preco * 0.04),
     },
-    estimatedValue5yr: Math.round(
-      c.preco * (c.idade >= 4 && c.idade <= 10 ? 1.1 : c.idade > 14 ? 0.6 : 0.85)
-    ),
+    estimatedValue5yr: Math.round(c.preco * Math.pow(1 + annualRate, 5)),
   };
 }
 

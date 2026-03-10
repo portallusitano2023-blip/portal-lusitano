@@ -302,15 +302,13 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             {/* Answer options — only rendered when user can use the tool */}
             {canUse && (
               <>
-              <div className="space-y-2.5" role="radiogroup" aria-label={question.question}>
+              <div className="space-y-2.5" role="list" aria-label={question.question}>
                 {question.options.map((opt, idx) => (
                   <button
                     key={opt.value}
                     ref={(el) => { optionsRef.current[idx] = el; }}
                     onClick={() => onAnswer(opt)}
                     disabled={isPending}
-                    role="radio"
-                    aria-checked="false"
                     className="w-full text-left p-5 bg-[var(--background-card)]/30 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/50 hover:bg-[var(--gold)]/5 transition-all group hover:translate-x-1 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:border-[var(--border)] disabled:hover:bg-transparent"
                     style={{ animationDelay: `${idx * 0.08}s` }}
                   >

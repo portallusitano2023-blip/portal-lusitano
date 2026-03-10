@@ -73,6 +73,7 @@ export interface AnswerDetail {
   questionId: number;
   questionText: string;
   answerText: string;
+  answerValue: string;
   points: Record<string, number>;
   weight: number;
 }

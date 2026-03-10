@@ -29,20 +29,23 @@ export default function ReadinessTab({
   const questions = useMemo(() => getQuestions(tr), [tr]);
 
   // Helper to find the selected option index for a given question id
-  const getAnswerIndex = (questionId: number): number => {
+  const getAnswerIndex = (questionId: number): number | null => {
     const detail = answerDetails.find((d) => d.questionId === questionId);
-    if (!detail) return 0;
+    if (!detail) return null;
     const question = questions.find((q) => q.id === questionId);
-    if (!question) return 0;
-    const idx = question.options.findIndex((o) => o.text === detail.answerText);
-    return idx >= 0 ? idx : 0;
+    if (!question) return null;
+    const idx = question.options.findIndex((o) => o.value === detail.answerValue);
+    return idx >= 0 ? idx : null;
   };
 
   // Sub-scores
-  const experienceScore = confidence;
+  const EXPERIENCE_SCORES = [30, 50, 75, 90]; // maps Q2 options: iniciante, intermedio, avancado, profissional
+  const expIdx = getAnswerIndex(2);
+  const experienceScore = expIdx !== null ? EXPERIENCE_SCORES[expIdx] : 50;
 
   const BUDGET_SCORES = [40, 55, 70, 85];
-  const budgetScore = BUDGET_SCORES[getAnswerIndex(7)];
+  const budgetIdx = getAnswerIndex(7);
+  const budgetScore = budgetIdx !== null ? BUDGET_SCORES[budgetIdx] : 55;
 
   const timeDemand: Record<string, number> = {
     competidor: 70,
@@ -51,10 +54,13 @@ export default function ReadinessTab({
     amador: 80,
     aprendiz: 85,
   };
-  const timeScore = timeDemand[result.profile] || 60;
+  const TIME_SCORES = [90, 70, 50, 65]; // maps Q8 options: diario, frequente, fim-de-semana, delegado
+  const timeIdx = getAnswerIndex(8);
+  const timeScore = timeIdx !== null ? TIME_SCORES[timeIdx] : (timeDemand[result.profile] || 60);
 
-  const INFRA_SCORES = [35, 50, 65, 80];
-  const infraScore = INFRA_SCORES[getAnswerIndex(11)];
+  const INFRA_SCORES = [85, 65, 50, 75]; // completo=85, pensao=65, proprio_basico=50, coudelaria=75
+  const infraIdx = getAnswerIndex(11);
+  const infraScore = infraIdx !== null ? INFRA_SCORES[infraIdx] : 55;
 
   const globalScore = useMemo(
     () =>

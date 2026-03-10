@@ -68,14 +68,13 @@ export default function VerificadorCompatibilidadePage() {
   const [hasDraft, setHasDraft] = useState(false);
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
 
-  // Re-run calculation when objective changes post-results (re-evaluates red flags)
+  // Re-run calculation when objective or language changes post-results (re-evaluates red flags)
   useEffect(() => {
     if (!resultado) return;
     const updated = calcularCompatibilidade(garanhao, egua, tr, cavaleiro, objetivo);
     setResultado(updated);
-  // Only re-run when objetivo changes while results are shown
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [objetivo]);
+  }, [objetivo, tr]);
 
   const draftDate = useMemo(() => {
     if (!draftSavedAt) return "";
@@ -142,8 +141,8 @@ export default function VerificadorCompatibilidadePage() {
         setGaranhao((prev) => ({
           ...prev,
           nome: g.nome || prev.nome,
-          idade: g.idade ?? prev.idade,
-          altura: g.altura ?? prev.altura,
+          idade: (typeof g.idade === "number" && g.idade >= 1 && g.idade <= 30) ? g.idade : prev.idade,
+          altura: (typeof g.altura === "number" && g.altura >= 140 && g.altura <= 180) ? g.altura : prev.altura,
           pelagem: g.pelagem || prev.pelagem,
           linhagem: g.linhagem || prev.linhagem,
           linhagemFamosa: g.linhagemFamosa || prev.linhagemFamosa,
@@ -158,8 +157,8 @@ export default function VerificadorCompatibilidadePage() {
         setEgua((prev) => ({
           ...prev,
           nome: e.nome || prev.nome,
-          idade: e.idade ?? prev.idade,
-          altura: e.altura ?? prev.altura,
+          idade: (typeof e.idade === "number" && e.idade >= 1 && e.idade <= 30) ? e.idade : prev.idade,
+          altura: (typeof e.altura === "number" && e.altura >= 140 && e.altura <= 180) ? e.altura : prev.altura,
           pelagem: e.pelagem || prev.pelagem,
           linhagem: e.linhagem || prev.linhagem,
           linhagemFamosa: e.linhagemFamosa || prev.linhagemFamosa,

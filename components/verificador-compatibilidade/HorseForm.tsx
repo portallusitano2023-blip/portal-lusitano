@@ -55,16 +55,18 @@ export default function HorseForm({
   const setCavalo = tab === "garanhao" ? setGaranhao : setEgua;
 
   // Calcula completude do perfil do cavalo (0-100%)
+  // Only check fields that have actual UI controls
   const calcCompletude = (c: Cavalo): number => {
     let filled = 0;
-    const total = 7;
+    const total = 6;
+    const defaultAge = c.sexo === "Garanhão" ? 8 : 7;
+    const defaultHeight = c.sexo === "Garanhão" ? 163 : 158;
     if (c.nome.trim().length > 0) filled++;
-    if (c.pelagem && c.pelagem !== "Ruço") filled++;
+    if (c.idade !== defaultAge) filled++;
+    if (c.altura !== defaultHeight) filled++;
     if (c.linhagem && c.linhagem !== "Certificada") filled++;
-    if (c.linhagemFamosa && c.linhagemFamosa !== "veiga") filled++;
     if (c.blup !== 100) filled++;
-    if (c.saude !== 8) filled++;
-    if (c.conformacao !== 7 || c.andamentos !== 7) filled++;
+    if (c.coudelaria && c.coudelaria !== "Particular" && c.coudelaria.trim().length > 0) filled++;
     return Math.round((filled / total) * 100);
   };
 

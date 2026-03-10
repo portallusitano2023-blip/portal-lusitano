@@ -67,10 +67,12 @@ function HorseCard({
   cavalo,
   approvedLabel,
   notApprovedLabel,
+  coatLabel,
 }: {
   cavalo: Cavalo;
   approvedLabel: string;
   notApprovedLabel: string;
+  coatLabel: string;
 }) {
   return (
     <div className="bg-[var(--background-card,#111)]/50 rounded-lg p-4 border border-[var(--border,rgba(255,255,255,0.1))] flex flex-col gap-2">
@@ -97,7 +99,7 @@ function HorseCard({
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[var(--foreground-muted,#71717a)]">Pelagem</span>
+          <span className="text-[var(--foreground-muted,#71717a)]">{coatLabel}</span>
           <span className="font-medium text-[var(--foreground-secondary,#a1a1aa)]">
             {cavalo.pelagem}
           </span>
@@ -122,8 +124,10 @@ function HorseCard({
 // ── Main component ─────────────────────────────────────────────────────
 
 export default function GeneticSummary({ garanhao, egua, resultado }: GeneticSummaryProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const v = t.verificador;
+
+  const coatLabel = language === "en" ? "Coat" : language === "es" ? "Pelaje" : "Pelagem";
 
   const topCoat =
     resultado.pelagens.length > 0
@@ -144,6 +148,7 @@ export default function GeneticSummary({ garanhao, egua, resultado }: GeneticSum
           cavalo={garanhao}
           approvedLabel={v.genetic_summary_approved}
           notApprovedLabel={v.genetic_summary_not_approved}
+          coatLabel={coatLabel}
         />
 
         {/* Center: Crossing */}
@@ -203,6 +208,7 @@ export default function GeneticSummary({ garanhao, egua, resultado }: GeneticSum
           cavalo={egua}
           approvedLabel={v.genetic_summary_approved}
           notApprovedLabel={v.genetic_summary_not_approved}
+          coatLabel={coatLabel}
         />
       </div>
     </div>

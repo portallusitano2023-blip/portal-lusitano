@@ -67,9 +67,9 @@ interface ResultadoCompat {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function nivelColor(score: number): [number, number, number] {
-  if (score >= 80) return GREEN;
-  if (score >= 60) return GOLD;
-  if (score >= 40) return AMBER;
+  if (score >= 85) return GREEN;
+  if (score >= 70) return GOLD;
+  if (score >= 55) return AMBER;
   return RED;
 }
 
@@ -250,7 +250,7 @@ export async function generateCompatibilidadePDF(
 
   // Mini metric bar under COI/BLUP/height
   const coiPct = Math.min(resultado.coi / 12, 1); // 12% max COI warning threshold
-  const coiColor: [number, number, number] = resultado.coi < 3 ? GREEN : resultado.coi < 6 ? GOLD : AMBER;
+  const coiColor: [number, number, number] = resultado.coi <= 3 ? GREEN : resultado.coi <= 6.25 ? GOLD : RED;
   const miniBarW = rightW - 4;
   doc.setFillColor(30, 30, 30);
   doc.roundedRect(rightX, y + 28, miniBarW, 3, 0.8, 0.8, "F");
@@ -265,7 +265,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...coiColor);
   doc.setFont("helvetica", "bold");
   doc.text(
-    resultado.coi < 3 ? L("Excelente", "Excellent", "Excelente") : resultado.coi < 6 ? L("Boa", "Good", "Buena") : L("Atenção", "Attention", "Atención"),
+    resultado.coi <= 3 ? L("Excelente", "Excellent", "Excelente") : resultado.coi <= 6.25 ? L("Boa", "Good", "Buena") : L("Atenção", "Attention", "Atención"),
     rightX + miniBarW,
     y + 35,
     { align: "right" }
@@ -282,7 +282,7 @@ export async function generateCompatibilidadePDF(
   y = addMetricsRow(
     doc,
     [
-      { label: L("Compatibilidade", "Compatibility", "Compatibilidad"), value: `${resultado.score}%` },
+      { label: L("Compatibilidade", "Compatibility", "Compatibilidad"), value: `${resultado.score}/100` },
       { label: L("Progenitores", "Progenitors", "Progenitores"), value: "2" },
       { label: L("Factores Avaliados", "Factors Evaluated", "Factores Evaluados"), value: `${resultado.factores.length}` },
       { label: L("Pelagens Previstas", "Predicted Coats", "Pelajes Previstos"), value: `${resultado.pelagens.length}` },
@@ -308,7 +308,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC600);
   doc.setFontSize(6.5);
   doc.setFont("helvetica", "normal");
-  doc.text(L("GARANHÃO ♂", "STALLION ♂", "GARAÑÓN ♂"), garX + halfW / 2, y + 6, { align: "center" });
+  doc.text(L("GARANHÃO ♂", "STALLION ♂", "SEMENTAL ♂"), garX + halfW / 2, y + 6, { align: "center" });
   doc.setTextColor(...WHITE);
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
@@ -415,7 +415,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
   doc.setFont("helvetica", "bold");
-  doc.text(L("GARANHÃO", "STALLION", "GARAÑÓN"), colLX + colW / 2, y + 5.5, { align: "center" });
+  doc.text(L("GARANHÃO", "STALLION", "SEMENTAL"), colLX + colW / 2, y + 5.5, { align: "center" });
 
   doc.setFillColor(...CARD_BG2);
   doc.roundedRect(colRX, y, colW, 8, 1.5, 1.5, "F");
@@ -434,7 +434,6 @@ export async function generateCompatibilidadePDF(
   yL = addKV(doc, L("Nome", "Name", "Nombre"), garanhao.nome || L("Não especificado", "Not specified", "No especificado"), colLX, yL, colW);
   yL = addKV(doc, L("Idade", "Age", "Edad"), `${garanhao.idade} ${L("anos", "years", "años")}`, colLX, yL, colW);
   yL = addKV(doc, L("Altura", "Height", "Altura"), `${garanhao.altura} cm`, colLX, yL, colW);
-  yL = addKV(doc, L("Pelagem", "Coat", "Pelaje"), safe(garanhao.pelagem), colLX, yL, colW);
   yL = addKV(doc, L("Linhagem", "Lineage", "Linaje"), safe(garanhao.linhagem), colLX, yL, colW);
   yL = addKV(doc, L("Conformação", "Conformation", "Conformación"), `${garanhao.conformacao}/10`, colLX, yL, colW);
   yL = addKV(doc, L("Andamentos", "Gaits", "Aires"), `${garanhao.andamentos}/10`, colLX, yL, colW);
@@ -446,7 +445,6 @@ export async function generateCompatibilidadePDF(
   yR = addKV(doc, L("Nome", "Name", "Nombre"), egua.nome || L("Não especificado", "Not specified", "No especificado"), colRX, yR, colW);
   yR = addKV(doc, L("Idade", "Age", "Edad"), `${egua.idade} ${L("anos", "years", "años")}`, colRX, yR, colW);
   yR = addKV(doc, L("Altura", "Height", "Altura"), `${egua.altura} cm`, colRX, yR, colW);
-  yR = addKV(doc, L("Pelagem", "Coat", "Pelaje"), safe(egua.pelagem), colRX, yR, colW);
   yR = addKV(doc, L("Linhagem", "Lineage", "Linaje"), safe(egua.linhagem), colRX, yR, colW);
   yR = addKV(doc, L("Conformação", "Conformation", "Conformación"), `${egua.conformacao}/10`, colRX, yR, colW);
   yR = addKV(doc, L("Andamentos", "Gaits", "Aires"), `${egua.andamentos}/10`, colRX, yR, colW);
@@ -466,7 +464,12 @@ export async function generateCompatibilidadePDF(
   y = addSectionTitle(doc, L("Análise por Factor de Compatibilidade", "Compatibility Factor Analysis", "Análisis por Factor de Compatibilidad"), y);
 
   for (const f of resultado.factores) {
-    if (y > 265) break;
+    if (y > 265) {
+      doc.setFontSize(8);
+      doc.setTextColor(120, 120, 120);
+      doc.text(L("+ mais itens — ver resultados completos online", "+ more items — see full results online", "+ más elementos — ver resultados completos en línea"), 105, y + 5, { align: "center" });
+      break;
+    }
     y = addLargeBar(doc, f.nome, f.score, f.max, y, f.descricao || undefined);
   }
 
@@ -532,7 +535,12 @@ export async function generateCompatibilidadePDF(
     y = addSectionTitleWithCount(doc, L("Alertas de Segurança", "Safety Alerts", "Alertas de Seguridad"), resultado.redFlags.length, RED, y);
 
     for (const flag of resultado.redFlags) {
-      if (y > 265) break;
+      if (y > 265) {
+        doc.setFontSize(8);
+        doc.setTextColor(120, 120, 120);
+        doc.text(L("+ mais itens — ver resultados completos online", "+ more items — see full results online", "+ más elementos — ver resultados completos en línea"), 105, y + 5, { align: "center" });
+        break;
+      }
       const sevLabel = flag.severity === "critical" ? L("CRÍTICO", "CRITICAL", "CRÍTICO") : L("AVISO", "WARNING", "AVISO");
       y = addBulletItem(doc, `[${sevLabel}] ${flag.title}: ${flag.description}`, "fraco", y);
     }
@@ -544,7 +552,12 @@ export async function generateCompatibilidadePDF(
     y = addSectionTitleWithCount(doc, L("Alertas e Riscos Genéticos", "Genetic Alerts and Risks", "Alertas y Riesgos Genéticos"), resultado.riscos.length, RED, y);
 
     for (const r of resultado.riscos) {
-      if (y > 265) break;
+      if (y > 265) {
+        doc.setFontSize(8);
+        doc.setTextColor(120, 120, 120);
+        doc.text(L("+ mais itens — ver resultados completos online", "+ more items — see full results online", "+ más elementos — ver resultados completos en línea"), 105, y + 5, { align: "center" });
+        break;
+      }
       const rBulletType = r.severidade === "alto" ? "fraco" : "recomendacao";
 
       // Severity badge
@@ -564,7 +577,12 @@ export async function generateCompatibilidadePDF(
       y
     );
     for (const ponto of resultado.pontosForteseFracos.fortes) {
-      if (y > 265) break;
+      if (y > 265) {
+        doc.setFontSize(8);
+        doc.setTextColor(120, 120, 120);
+        doc.text(L("+ mais itens — ver resultados completos online", "+ more items — see full results online", "+ más elementos — ver resultados completos en línea"), 105, y + 5, { align: "center" });
+        break;
+      }
       y = addBulletItem(doc, ponto, "forte", y);
     }
     y += 4;
@@ -580,7 +598,12 @@ export async function generateCompatibilidadePDF(
       y
     );
     for (const ponto of resultado.pontosForteseFracos.fracos) {
-      if (y > 265) break;
+      if (y > 265) {
+        doc.setFontSize(8);
+        doc.setTextColor(120, 120, 120);
+        doc.text(L("+ mais itens — ver resultados completos online", "+ more items — see full results online", "+ más elementos — ver resultados completos en línea"), 105, y + 5, { align: "center" });
+        break;
+      }
       y = addBulletItem(doc, ponto, "fraco", y);
     }
     y += 4;
@@ -596,7 +619,12 @@ export async function generateCompatibilidadePDF(
       y
     );
     for (const rec of resultado.recomendacoes) {
-      if (y > 265) break;
+      if (y > 265) {
+        doc.setFontSize(8);
+        doc.setTextColor(120, 120, 120);
+        doc.text(L("+ mais itens — ver resultados completos online", "+ more items — see full results online", "+ más elementos — ver resultados completos en línea"), 105, y + 5, { align: "center" });
+        break;
+      }
       y = addBulletItem(doc, rec, "recomendacao", y);
     }
     y += 4;
@@ -653,7 +681,8 @@ export async function generateCompatibilidadePDF(
     addPremiumWatermark(doc, language);
   }
 
+  const safeName = (n: string) => n.replace(/[^a-zA-Z0-9À-ÿ_-]/g, "_").slice(0, 30);
   doc.save(
-    `compatibilidade-${garanhao.nome || "garanhao"}-${egua.nome || "egua"}-${Date.now()}.pdf`
+    `compatibilidade-${safeName(garanhao.nome || "garanhao")}-${safeName(egua.nome || "egua")}-${Date.now()}.pdf`
   );
 }

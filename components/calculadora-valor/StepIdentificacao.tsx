@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import Tooltip from "@/components/tools/Tooltip";
 import type { StepProps } from "./types";
+import { MULT_LIVRO } from "./data";
 
 const COAT_IMPACT: Record<string, { label: string; type: "pos" | "neg" | "base" }> = {
   Ruço: { label: "+8%*", type: "pos" },
@@ -260,9 +261,15 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               )}
               position="top"
             />
-            <span className="text-[11px] px-1.5 py-0.5 rounded-full font-medium bg-emerald-500/15 text-emerald-400">
-              +20%
-            </span>
+            {form.registoAPSL && (() => {
+              const mult = MULT_LIVRO[form.livroAPSL] ?? 1.0;
+              const pct = Math.round((mult - 1) * 100);
+              return (
+                <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${pct >= 0 ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'}`}>
+                  {pct >= 0 ? `+${pct}%` : `${pct}%`}
+                </span>
+              );
+            })()}
           </div>
           <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t.calculadora.label_apsl_reg}>
             <button

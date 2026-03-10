@@ -235,6 +235,61 @@ export async function generateComparadorPDF(
     language === "en" ? en : language === "es" && es ? es : pt;
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
 
+  // ── Enum localisation helpers ──
+  const localSexo = (s: string) =>
+    s === "Garanhão" ? L("Garanhão","Stallion","Semental")
+    : s === "Égua" ? L("Égua","Mare","Yegua")
+    : s === "Castrado" ? L("Castrado","Gelding","Castrado")
+    : s;
+
+  const localTreino = (t: string) => {
+    const map: Record<string, string> = {
+      "Potro": L("Potro","Colt","Potro"),
+      "Desbravado": L("Desbravado","Broken","Desbravado"),
+      "Iniciado": L("Iniciado","Started","Iniciado"),
+      "Elementar": L("Elementar","Elementary","Elemental"),
+      "Médio": L("Médio (M)","Medium (M)","Medio (M)"),
+      "Avançado": L("Avançado (S)","Advanced (S)","Avanzado (S)"),
+      "Alta Escola": L("Alta Escola","High School","Alta Escuela"),
+      "Grand Prix": L("Grand Prix","Grand Prix","Grand Prix"),
+    };
+    return map[t] ?? t;
+  };
+
+  const localLinhagem = (l: string) => {
+    const map: Record<string, string> = {
+      "Desconhecida": L("Desconhecida","Unknown","Desconocida"),
+      "Registada": L("Registada APSL","Registered APSL","Registrada APSL"),
+      "Certificada": L("Certificada","Certified","Certificada"),
+      "Premium": L("Premium","Premium","Premium"),
+      "Elite": L("Elite","Elite","Élite"),
+    };
+    return map[l] ?? l;
+  };
+
+  const localPelagem = (p: string) => {
+    const map: Record<string, string> = {
+      "Ruço": L("Ruço","Grey","Ruano"),
+      "Castanho": L("Castanho","Bay","Castaño"),
+      "Preto": L("Preto","Black","Negro"),
+      "Alazão": L("Alazão","Chestnut","Alazán"),
+      "Baio": L("Baio","Dun","Bayo"),
+      "Palomino": L("Palomino","Palomino","Palomino"),
+      "Isabelo": L("Isabelo","Buckskin","Isabelo"),
+    };
+    return map[p] ?? p;
+  };
+
+  const localCompeticoes = (c: string) => {
+    const map: Record<string, string> = {
+      "Nenhuma": L("Nenhuma","None","Ninguna"),
+      "Regional": L("Regional","Regional","Regional"),
+      "Nacional": L("Nacional","National","Nacional"),
+      "Internacional": L("Internacional","International","Internacional"),
+    };
+    return map[c] ?? c;
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc: any = new JsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
@@ -354,11 +409,11 @@ export async function generateComparadorPDF(
 
     // Key data rows (label left, value right)
     const kvItems: { k: string; v: string }[] = [
-      { k: L("Sexo", "Sex", "Sexo"), v: cavalo.sexo },
+      { k: L("Sexo", "Sex", "Sexo"), v: localSexo(cavalo.sexo) },
       { k: L("Idade", "Age", "Edad"), v: `${cavalo.idade} ${L("anos", "years", "años")}` },
-      { k: L("Treino", "Training", "Entrenamiento"), v: cavalo.treino },
-      { k: L("Linhagem", "Lineage", "Linaje"), v: cavalo.linhagem },
-      { k: L("Competições", "Competitions", "Competiciones"), v: cavalo.competicoes },
+      { k: L("Treino", "Training", "Entrenamiento"), v: localTreino(cavalo.treino) },
+      { k: L("Linhagem", "Lineage", "Linaje"), v: localLinhagem(cavalo.linhagem) },
+      { k: L("Competições", "Competitions", "Competiciones"), v: localCompeticoes(cavalo.competicoes) },
       { k: L("Prémios", "Awards", "Premios"), v: `${cavalo.premios ?? 0}` },
       { k: L("Preço", "Price", "Precio"), v: `${cavalo.preco.toLocaleString(locale)} €` },
     ];
@@ -471,12 +526,12 @@ export async function generateComparadorPDF(
   const tableRows: { label: string; getValue: (c: CavaloComp, idx: number) => string }[] = [
     { label: L("Score Global", "Overall Score", "Score Global"), getValue: (_, idx) => `${scores[idx] ?? 0} pts` },
     { label: L("Idade", "Age", "Edad"), getValue: (c) => `${c.idade} ${L("anos", "years", "años")}` },
-    { label: L("Sexo", "Sex", "Sexo"), getValue: (c) => c.sexo },
+    { label: L("Sexo", "Sex", "Sexo"), getValue: (c) => localSexo(c.sexo) },
     { label: L("Altura", "Height", "Altura"), getValue: (c) => `${c.altura} cm` },
-    { label: L("Pelagem", "Coat", "Pelaje"), getValue: (c) => c.pelagem },
-    { label: L("Linhagem", "Lineage", "Linaje"), getValue: (c) => c.linhagem },
-    { label: L("Treino", "Training", "Entrenamiento"), getValue: (c) => c.treino },
-    { label: L("Competições", "Competitions", "Competiciones"), getValue: (c) => c.competicoes },
+    { label: L("Pelagem", "Coat", "Capa"), getValue: (c) => localPelagem(c.pelagem) },
+    { label: L("Linhagem", "Lineage", "Linaje"), getValue: (c) => localLinhagem(c.linhagem) },
+    { label: L("Treino", "Training", "Entrenamiento"), getValue: (c) => localTreino(c.treino) },
+    { label: L("Competições", "Competitions", "Competiciones"), getValue: (c) => localCompeticoes(c.competicoes) },
     { label: L("Conformação", "Conformation", "Conformación"), getValue: (c) => `${c.conformacao}/10` },
     { label: L("Andamentos", "Gaits", "Aires"), getValue: (c) => `${c.andamentos}/10` },
     { label: L("Elevação", "Elevation", "Elevación"), getValue: (c) => `${c.elevacao}/10` },
@@ -492,10 +547,12 @@ export async function generateComparadorPDF(
     },
     {
       label: L("Valor / Ponto", "Value / Point", "Valor / Punto"),
-      getValue: (c, idx) =>
-        scores[idx] > 0
-          ? `${Math.round(c.preco / scores[idx]).toLocaleString(locale)} €`
-          : "N/A",
+      getValue: (c, idx) => {
+        const vpp = Math.round(c.preco / scores[idx]);
+        return isFinite(vpp) && scores[idx] > 0 && c.preco > 0
+          ? `${vpp.toLocaleString(locale)} €`
+          : "N/A";
+      },
     },
   ];
 
@@ -577,7 +634,7 @@ export async function generateComparadorPDF(
     doc.setFont("helvetica", "normal");
     const summaryLine = winner
       ? safe(
-          `Score: ${winnerScore} pts  \u2022  ${L("Treino", "Training", "Entrenamiento")}: ${winner.treino}  \u2022  BLUP: ${winner.blup}  \u2022  ${L("Preço", "Price", "Precio")}: ${winner.preco.toLocaleString(locale)} \u20ac  \u2022  ${L("Melhor valor/ponto", "Best value/point", "Mejor valor/punto")}: ${melhorValorNome}`
+          `Score: ${winnerScore} pts  \u2022  ${L("Treino", "Training", "Entrenamiento")}: ${localTreino(winner.treino)}  \u2022  BLUP: ${winner.blup}  \u2022  ${L("Preço", "Price", "Precio")}: ${winner.preco.toLocaleString(locale)} \u20ac  \u2022  ${L("Melhor valor/ponto", "Best value/point", "Mejor valor/punto")}: ${melhorValorNome}`
         )
       : safe(`Score: ${winnerScore} pts`);
     doc.text(summaryLine, MARGIN + 8, summaryY + 12);

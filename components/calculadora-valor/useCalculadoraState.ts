@@ -102,6 +102,9 @@ export function useCalculadoraState() {
   // ── Refs ───────────────────────────────────────────
   const resultRef = useRef<HTMLDivElement>(null);
   const isMountedRef = useRef(true);
+  // Fix #11: Keep a stable ref for tr to avoid re-triggering history effect on language change
+  const trRef = useRef(tr);
+  trRef.current = tr;
 
   // ── Tool access ────────────────────────────────────
   const {
@@ -207,7 +210,7 @@ export function useCalculadoraState() {
     try {
       const entry: CalcHistoryEntry = {
         timestamp: Date.now(),
-        nome: (formStep.data as FormData).nome || tr("Sem nome", "Unnamed", "Sin nombre"),
+        nome: (formStep.data as FormData).nome || trRef.current("Sem nome", "Unnamed", "Sin nombre"),
         valorFinal: resultado.valorFinal,
         confianca: resultado.confianca,
         treino: (formStep.data as FormData).treino,
@@ -221,7 +224,7 @@ export function useCalculadoraState() {
       });
     } catch (e) { if (process.env.NODE_ENV === "development") console.warn("Storage error:", e); }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resultado, formStep.data, tr]);
+  }, [resultado, formStep.data]);
 
   // ESC key for PDF preview
   useEffect(() => {
@@ -249,6 +252,17 @@ export function useCalculadoraState() {
 
   const update = <K extends keyof FormData>(key: K, value: FormData[K]) => {
     formStep.updateData(key, value);
+    if (key === "sexo" && value === "castrado") {
+      formStep.updateData("reproducao", false);
+      formStep.updateData("descendentes", 0);
+      formStep.updateData("descendentesAprovados", 0);
+    }
+    if (key === "descendentes") {
+      const newDesc = value as number;
+      if ((formStep.data as any).descendentesAprovados > newDesc) {
+        formStep.updateData("descendentesAprovados", newDesc);
+      }
+    }
     // C-05: Track fields the user explicitly modified
     setTouchedFields((prev) => {
       if (prev.has(key)) return prev;
@@ -273,6 +287,15 @@ export function useCalculadoraState() {
         "Few fields changed — results may not reflect the actual horse. Review training, age, sex, lineage and health.",
         "Pocos campos modificados — los resultados pueden no reflejar el caballo real. Revise entrenamiento, edad, sexo, linaje y salud."
       ));
+    }
+
+    // Check for validation errors (severity: "error") before proceeding
+    const validationWarnings = validateFormLogic(formStep.data as FormData, tr);
+    const validationErrors = validationWarnings.filter((w) => w.severity === "error");
+    if (validationErrors.length > 0) {
+      setWarnings(validationWarnings);
+      showToast("error", validationErrors[0].message);
+      return;
     }
 
     const formMeta = {
@@ -322,16 +345,40 @@ export function useCalculadoraState() {
   const resetar = () => {
     setShowResetConfirm(false);
     setResultado(null);
+    setTouchedFields(new Set());
+    setWarnings([]);
     formStep.reset();
   };
 
   const editarResultado = () => {
     setResultado(null);
-    formStep.goToStep(0);
+    setWarnings([]);
+    formStep.goToStep(1);
   };
 
   const restaurarDraft = () => {
+    // Read draft data directly from localStorage before restoring,
+    // because formStep.data is stale until the next render after restoreDraft().
+    let draftData: FormData | null = null;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.data) draftData = parsed.data as FormData;
+      }
+    } catch { /* ignore */ }
+
     formStep.restoreDraft();
+
+    // Populate touchedFields from the draft data (not from stale formStep.data)
+    const restored = draftData ?? (formStep.data as FormData);
+    const touched = new Set<string>();
+    for (const key of Object.keys(INITIAL_FORM) as (keyof FormData)[]) {
+      if (restored[key] !== INITIAL_FORM[key]) {
+        touched.add(key);
+      }
+    }
+    setTouchedFields(touched);
   };
 
   const descartarDraft = () => {

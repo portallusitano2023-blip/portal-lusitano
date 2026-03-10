@@ -12,8 +12,8 @@ export default function COIGauge({ coi }: COIGaugeProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
 
-  // COI range: 0-12%, gauge is semicircular
-  const maxCOI = 12;
+  // COI range: 0-25%, gauge is semicircular
+  const maxCOI = 25;
   const clampedCOI = Math.min(Math.max(coi, 0), maxCOI);
   const percentage = clampedCOI / maxCOI;
 
@@ -56,7 +56,17 @@ export default function COIGauge({ coi }: COIGaugeProps) {
 
   return (
     <div className="flex flex-col items-center">
-      <svg width={size} height={size / 2 + 30} viewBox={`0 0 ${size} ${size / 2 + 30}`}>
+      <svg
+        width={size}
+        height={size / 2 + 30}
+        viewBox={`0 0 ${size} ${size / 2 + 30}`}
+        role="img"
+        aria-label={tr(
+          `Coeficiente de consanguinidade: ${coi.toFixed(1)}%, ${label}`,
+          `Inbreeding coefficient: ${coi.toFixed(1)}%, ${label}`,
+          `Coeficiente de consanguinidad: ${coi.toFixed(1)}%, ${label}`
+        )}
+      >
         {/* Background arc */}
         <path
           d={bgPath}

@@ -238,6 +238,25 @@ export default function HorseForm({
         </div>
 
         <div>
+          <label htmlFor={`select-linhagem-famosa-${c.id}`} className="text-xs text-[var(--foreground-muted)] block mb-1">
+            {tr("Linhagem Famosa", "Famous Bloodline", "Linaje Famoso")}
+          </label>
+          <select
+            id={`select-linhagem-famosa-${c.id}`}
+            value={c.linhagemFamosa ?? ""}
+            onChange={(e) => onUpdate(c.id, "linhagemFamosa", e.target.value)}
+            className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+          >
+            <option value="">{tr("Nenhuma", "None", "Ninguna")}</option>
+            {LINHAGENS_FAMOSAS.filter((lf) => lf.value !== "").map((lf) => (
+              <option key={lf.value} value={lf.value}>
+                {localizedLabel(lf, language)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
           <label htmlFor={`select-treino-${c.id}`} className="text-xs text-[var(--foreground-muted)] block mb-1">
             {comp.label_training}
           </label>
@@ -410,7 +429,7 @@ export default function HorseForm({
             <span className="flex items-center gap-2 flex-wrap justify-end">
               {(() => {
                 const previewScore = customWeights ? calcularScoreWeighted(c, customWeights) : calcularScore(c);
-                const potencial = calcularPotencial(c);
+                const potencial = calcularPotencial(c, customWeights);
                 return (
                   <>
                     <span className="text-2xl font-bold" style={{ color: CORES[i] }}>
@@ -453,10 +472,13 @@ export default function HorseForm({
           {filtroDisciplina !== "geral" &&
             (() => {
               const pesos = PESOS_DISC[filtroDisciplina] ?? {};
+              const nivelTreino = ((TREINOS.find((t) => t.value === c.treino)?.nivel ?? 4) / 8) * 10;
               let discScore = 0;
               if (pesos.conformacao) discScore += (c.conformacao / 10) * 100 * pesos.conformacao;
               if (pesos.andamentos) discScore += (c.andamentos / 10) * 100 * pesos.andamentos;
               if (pesos.elevacao) discScore += (c.elevacao / 10) * 100 * (pesos.elevacao ?? 0);
+              if (pesos.regularidade) discScore += (c.regularidade / 10) * 100 * pesos.regularidade;
+              if (pesos.treino) discScore += (nivelTreino / 10) * 100 * pesos.treino;
               if (pesos.temperamento) discScore += (c.temperamento / 10) * 100 * pesos.temperamento;
               if (pesos.saude) discScore += (c.saude / 10) * 100 * pesos.saude;
               if (pesos.blupNorm) discScore += normalizeBlup(c.blup) * 10 * pesos.blupNorm;
@@ -468,7 +490,7 @@ export default function HorseForm({
               );
             })()}
           <div className="mt-3">
-            <ScoreBreakdown factors={getScoreFactors(c, tr)} total={customWeights ? calcularScoreWeighted(c, customWeights) : calcularScore(c)} />
+            <ScoreBreakdown factors={getScoreFactors(c, tr, customWeights)} total={customWeights ? calcularScoreWeighted(c, customWeights) : calcularScore(c)} />
           </div>
         </div>
       )}

@@ -38,7 +38,8 @@ interface CategoryDef {
 }
 
 function buildCategories(
-  tr: (pt: string, en: string, es: string) => string
+  tr: (pt: string, en: string, es: string) => string,
+  locale: string
 ): CategoryDef[] {
   return [
     {
@@ -231,7 +232,7 @@ function buildCategories(
       rows: [
         {
           label: tr("Preço", "Price", "Precio"),
-          getValue: (c) => `${c.preco.toLocaleString()} \u20AC`,
+          getValue: (c) => `${c.preco.toLocaleString(locale)} \u20AC`,
           getRaw: (c) => c.preco,
           mode: "lower",
         },
@@ -310,7 +311,8 @@ interface ComparisonTableProps {
 export default function ComparisonTable({ cavalos }: ComparisonTableProps) {
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
-  const categories = useMemo(() => buildCategories(tr), [tr]);
+  const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+  const categories = useMemo(() => buildCategories(tr, locale), [tr, locale]);
 
   return (
     <div className="bg-[var(--background-secondary)]/50 rounded-2xl border border-[var(--border)] overflow-hidden">

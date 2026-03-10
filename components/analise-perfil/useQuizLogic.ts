@@ -236,7 +236,7 @@ export function useQuizLogic() {
     const sharedResult = searchParams.get("r");
     if (sharedResult) {
       try {
-        const decoded = JSON.parse(atob(decodeURIComponent(sharedResult)));
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(sharedResult))));
         if (decoded.profile && results[decoded.profile]) {
           const PROFILE_KEYS = ["competidor", "tradicional", "criador", "amador", "aprendiz"] as const;
           const raw = decoded.scores;
@@ -345,6 +345,7 @@ export function useQuizLogic() {
             questionId: question.id,
             questionText: question.question,
             answerText: option.text,
+            answerValue: option.value,
             points: option.points,
             weight: question.weight,
           } as AnswerDetail;
@@ -460,7 +461,8 @@ export function useQuizLogic() {
       } else if (mp === "amador") {
         if (q6 === "desbravado" || q6 === "basico") sp = "amador_projeto";
       } else if (mp === "aprendiz") {
-        if (q2 === "iniciante") sp = "aprendiz_iniciante";
+        if (q2 === "__skip__" || !q2) sp = null;
+        else if (q2 === "iniciante") sp = "aprendiz_iniciante";
         else sp = "aprendiz_transicao";
       } else if (mp === "tradicional") {
         // q1 = primary discipline answer
@@ -521,7 +523,7 @@ export function useQuizLogic() {
       }
 
       if (!allowed) {
-        setError(
+        showError(
           tr(
             "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
             "Free usage limit reached. Subscribe to PRO to continue.",
@@ -566,6 +568,7 @@ export function useQuizLogic() {
         questionId: q.id,
         questionText: q.question,
         answerText: option.text,
+        answerValue: option.value,
         points: option.points,
         weight: w,
       };
@@ -659,8 +662,8 @@ export function useQuizLogic() {
   }, [getShareUrl, showError, tr]);
 
   const shareWhatsApp = useCallback(
-    () => doShareWhatsApp(result, scores, subProfile, tr),
-    [result, scores, subProfile, tr]
+    () => doShareWhatsApp(result, scores, subProfile, tr, calculateConfidence()),
+    [result, scores, subProfile, tr, calculateConfidence]
   );
 
   const shareFacebook = useCallback(() => doShareFacebook(getShareUrl()), [getShareUrl]);
@@ -745,7 +748,10 @@ export function useQuizLogic() {
   const goBack = useCallback(() => {
     if (currentQuestion > 0) {
       const newAnswers = answers.slice(0, -1);
-      const newDetails = answerDetails.slice(0, -1);
+      // Only remove last detail if the removed answer was NOT a skip
+      // (skipQuestion never adds a detail entry, so slicing would remove a prior answer's detail)
+      const removedAnswer = answers[answers.length - 1];
+      const newDetails = removedAnswer === "__skip__" ? answerDetails : answerDetails.slice(0, -1);
 
       // Recalculate scores from scratch to avoid stale accumulated points
       const freshScores: Record<string, number> = {
@@ -823,24 +829,32 @@ export function useQuizLogic() {
       investimento: (() => {
         // Issue 20: Use Q7 budget data for investment axis
         const q7 = answers[6];
-        const INVESTIMENTO_SCORES: Record<string, number> = {
-          economico: 25,
-          medio: 50,
-          alto: 75,
-          premium: 100,
-        };
-        return INVESTIMENTO_SCORES[q7] ?? 0;
+        if (q7 && q7 !== "__skip__") {
+          const INVESTIMENTO_SCORES: Record<string, number> = {
+            economico: 25,
+            medio: 50,
+            alto: 75,
+            premium: 100,
+          };
+          return INVESTIMENTO_SCORES[q7] ?? 0;
+        }
+        // Shared result fallback: derive from scores (competidor+criador higher = more investment)
+        return Math.min(100, ((scores.competidor + scores.criador) / (totalScore || 1)) * 150);
       })(),
       dedicacao: (() => {
         // Q8 (answers[7]) — "Quanto tempo pode dedicar ao cavalo semanalmente?"
         const q8 = answers[7];
-        const DEDICACAO_SCORES: Record<string, number> = {
-          diario: 100,
-          frequente: 75,
-          weekend: 30,
-          ausente: 50,
-        };
-        return DEDICACAO_SCORES[q8] ?? 0;
+        if (q8 && q8 !== "__skip__") {
+          const DEDICACAO_SCORES: Record<string, number> = {
+            diario: 100,
+            frequente: 75,
+            weekend: 30,
+            ausente: 50,
+          };
+          return DEDICACAO_SCORES[q8] ?? 0;
+        }
+        // Shared result fallback: derive from scores (competidor+tradicional higher = more dedication)
+        return Math.min(100, ((scores.competidor + scores.tradicional) / (totalScore || 1)) * 150);
       })(),
     }),
     [scores, totalScore, answers]

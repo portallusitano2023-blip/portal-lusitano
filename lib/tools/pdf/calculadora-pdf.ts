@@ -256,7 +256,8 @@ export async function generateCalculadoraPDF(
   }
   if (form.raioX && form.exameVeterinario) {
     badges.push(L("Docs Completos", "Full Documentation", "Docs Completos"));
-  } else if (form.certificadoExportacao) {
+  }
+  if (form.certificadoExportacao) {
     badges.push(L("Cert. Exporta\u00E7\u00E3o", "Export Certificate", "Cert. Exportaci\u00F3n"));
   }
 
@@ -306,7 +307,9 @@ export async function generateCalculadoraPDF(
       {
         label: L("Liquidez", "Liquidity", "Liquidez"),
         value: resultado.liquidez
-          ? safe(resultado.liquidez.label.split(" ")[0])
+          ? safe(language === "en"
+              ? resultado.liquidez.label.split(" ")[0]
+              : resultado.liquidez.label.split(" ").pop()!)
           : `${resultado.multiplicador}x`,
       },
     ],
@@ -506,10 +509,11 @@ export async function generateCalculadoraPDF(
   }
 
   // Right column: pedigree + performance
+  const livroLabel = { definitivo: L("Definitivo","Definitive","Definitivo"), provisorio: L("Provisório","Provisional","Provisorio"), auxiliar: L("Auxiliar","Auxiliary","Auxiliar"), nenhum: L("Nenhum","None","Ninguno") }[form.livroAPSL] ?? form.livroAPSL;
   yR = addKV(
     doc,
     L("Registo APSL", "APSL Register", "Registro APSL"),
-    form.registoAPSL ? `${L("Sim", "Yes", "S\u00ED")} (${form.livroAPSL})` : L("N\u00E3o", "No", "No"),
+    form.registoAPSL ? `${L("Sim", "Yes", "S\u00ED")} (${livroLabel})` : L("N\u00E3o", "No", "No"),
     colRX,
     yR,
     colW
@@ -556,6 +560,15 @@ export async function generateCalculadoraPDF(
       colW
     );
   }
+  if (form.tendencia) {
+    const tendenciaLabels: Record<string, string> = {
+      alta: L("Alta (Bullish)", "Alta (Bullish)", "Alta (Bullish)"),
+      estavel: L("Estável (Stable)", "Stable", "Estable"),
+      baixa: L("Baixa (Bearish)", "Baixa (Bearish)", "Baja (Bearish)"),
+    };
+    const tendenciaLabel = tendenciaLabels[form.tendencia] ?? safe(form.tendencia);
+    yR = addKV(doc, L("Tendência", "Trend", "Tendencia"), tendenciaLabel, colRX, yR, colW);
+  }
   yR = addKVWithHealthBadge(
     doc,
     L("Sa\u00FAde", "Health", "Salud"),
@@ -588,7 +601,7 @@ export async function generateCalculadoraPDF(
     if (form.temperamento !== undefined)
       scoreItems.push({ key: "temperamento", label: L("Temperamento", "Temperament", "Temperamento"), score: form.temperamento });
     if (form.sensibilidade !== undefined)
-      scoreItems.push({ key: "sensibilidade", label: L("Sensibilidade", "Sensitivity", "Sensibilidad"), score: form.sensibilidade });
+      scoreItems.push({ key: "sensibilidade", label: L("Sensibilidade (5=ideal)", "Sensitivity (5=ideal)", "Sensibilidad (5=ideal)"), score: form.sensibilidade });
     if (form.vontadeTrabalho !== undefined)
       scoreItems.push({ key: "vontade_trabalho", label: L("Vont. Trabalho", "Work Ethic", "Vol. Trabajo"), score: form.vontadeTrabalho });
 
@@ -833,9 +846,9 @@ export async function generateCalculadoraPDF(
     const methBullets = [
       safe(
         L(
-          "17 fatores ponderados: genética, treino, morfologia, andamentos, saúde, competição, mercado e reprodução",
-          "17 weighted factors: genetics, training, morphology, gaits, health, competition, market and breeding",
-          "17 factores ponderados: genética, entrenamiento, morfología, aires, salud, competición, mercado y reproducción"
+          "mais de 15 fatores ponderados: genética, treino, morfologia, andamentos, saúde, competição, mercado e reprodução",
+          "over 15 weighted factors: genetics, training, morphology, gaits, health, competition, market and breeding",
+          "más de 15 factores ponderados: genética, entrenamiento, morfología, aires, salud, competición, mercado y reproducción"
         )
       ),
       safe(

@@ -22,6 +22,12 @@ const COAT_GRADIENTS: Record<string, string> = {
   "Alazão Dun": "linear-gradient(135deg, #dc6720, #b45309)",
   "Baio Dun": "linear-gradient(135deg, #ca8a04, #92400e)",
   Grullo: "linear-gradient(135deg, #71717a, #52525b)",
+  Dunalino: "linear-gradient(135deg, #fcd34d, #f59e0b)",
+  "Cremello Dun": "linear-gradient(135deg, #fef9c3, #fef08a)",
+  Dunskin: "linear-gradient(135deg, #f59e0b, #a16207)",
+  "Perlino Dun": "linear-gradient(135deg, #fef9c3, #fdba74)",
+  "Smoky Grullo": "linear-gradient(135deg, #64748b, #334155)",
+  "Smoky Cream Dun": "linear-gradient(135deg, #d1d5db, #fde68a)",
   // English
   Grey: "linear-gradient(135deg, #d4d4d4, #9ca3af)",
   Bay: "linear-gradient(135deg, #92400e, #78350f)",

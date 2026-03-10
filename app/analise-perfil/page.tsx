@@ -150,6 +150,9 @@ function AnalisePerfilContent() {
     sharedConfidence,
   } = useQuizLogic();
 
+  // Confidence: null when shared result has no confidence data (avoids showing 0%)
+  const displayConfidence = sharedConfidence ?? (answerDetails.length > 0 ? calculateConfidence() : null);
+
   // Progress: 0 on intro, quiz progress during quiz, 100 on result
   const quizProgress = showIntro
     ? 0
@@ -350,7 +353,7 @@ function AnalisePerfilContent() {
                   copied={copied}
                   badgeRef={badgeRef}
                   subProfile={subProfile}
-                  confidence={sharedConfidence ?? calculateConfidence()}
+                  confidence={displayConfidence !== null ? displayConfidence : undefined}
                   onSave={saveResult}
                   onDownloadPDF={downloadPDF}
                   onDownloadBadge={downloadBadge}
@@ -574,21 +577,89 @@ function AnalisePerfilContent() {
                                       "Participe en exposiciones APSL para ganar experiencia en el sector"
                                     ),
                                   ],
-                                  competidor_investidor: [
+                                  competidor_tradicional: [
                                     tr(
-                                      "Foque em cavalos jovens com alto BLUP — melhor ROI a 3-5 anos",
-                                      "Focus on young horses with high BLUP — best ROI at 3-5 years",
-                                      "Enfóquese en caballos jóvenes con alto BLUP — mejor ROI a 3-5 años"
+                                      "Equilibre a preparação competitiva com os princípios da equitação clássica portuguesa",
+                                      "Balance competitive preparation with the principles of Portuguese classical riding",
+                                      "Equilibre la preparación competitiva con los principios de la equitación clásica portuguesa"
                                     ),
                                     tr(
-                                      "Competições CDI aumentam significativamente o valor de mercado",
-                                      "CDI competitions significantly increase market value",
-                                      "Competiciones CDI aumentan significativamente el valor de mercado"
+                                      "Provas de Equitação de Trabalho unem tradição e competição de forma natural",
+                                      "Working Equitation trials naturally unite tradition and competition",
+                                      "Las pruebas de Equitación de Trabajo unen tradición y competición de forma natural"
                                     ),
                                     tr(
-                                      "Documente todo o percurso desportivo para facilitar a venda futura",
-                                      "Document the entire sport career to facilitate future sale",
-                                      "Documente todo el recorrido deportivo para facilitar la venta futura"
+                                      "Procure cavalos com formação clássica que se adaptem ao contexto desportivo",
+                                      "Look for horses with classical training that adapt to the sporting context",
+                                      "Busque caballos con formación clásica que se adapten al contexto deportivo"
+                                    ),
+                                  ],
+                                  aprendiz_amador: [
+                                    tr(
+                                      "Combine aulas regulares com passeios recreativos para manter a motivação",
+                                      "Combine regular lessons with recreational rides to keep motivation high",
+                                      "Combine clases regulares con paseos recreativos para mantener la motivación"
+                                    ),
+                                    tr(
+                                      "Um cavalo schoolmaster é ideal para aprender com segurança e prazer",
+                                      "A schoolmaster horse is ideal for learning safely and enjoyably",
+                                      "Un caballo schoolmaster es ideal para aprender con seguridad y placer"
+                                    ),
+                                    tr(
+                                      "Não tenha pressa — o percurso de aprendizagem é tão valioso quanto o destino",
+                                      "Don't rush — the learning journey is as valuable as the destination",
+                                      "No tenga prisa — el camino de aprendizaje es tan valioso como el destino"
+                                    ),
+                                  ],
+                                  aprendiz_tradicional: [
+                                    tr(
+                                      "A equitação clássica portuguesa é uma excelente base para cavaleiros em formação",
+                                      "Portuguese classical riding is an excellent foundation for riders in training",
+                                      "La equitación clásica portuguesa es una excelente base para jinetes en formación"
+                                    ),
+                                    tr(
+                                      "Procure mestres de equitação tradicional que aceitem alunos — a transmissão directa é insubstituível",
+                                      "Seek traditional riding masters who accept students — direct transmission is irreplaceable",
+                                      "Busque maestros de equitación tradicional que acepten alumnos — la transmisión directa es insustituible"
+                                    ),
+                                    tr(
+                                      "Visite festivais e feiras equestres para absorver a cultura antes de investir",
+                                      "Visit equestrian festivals and fairs to absorb the culture before investing",
+                                      "Visite festivales y ferias ecuestres para absorber la cultura antes de invertir"
+                                    ),
+                                  ],
+                                  tradicional_amador: [
+                                    tr(
+                                      "A tradição equestre lusitana pode ser vivida de forma casual em festas e romarias",
+                                      "Lusitanian equestrian tradition can be enjoyed casually at festivals and pilgrimages",
+                                      "La tradición ecuestre lusitana puede vivirse de forma casual en fiestas y romerías"
+                                    ),
+                                    tr(
+                                      "Um cavalo de temperamento dócil com boa linhagem une tradição e prazer",
+                                      "A gentle-tempered horse with good lineage unites tradition and pleasure",
+                                      "Un caballo de temperamento dócil con buen linaje une tradición y placer"
+                                    ),
+                                    tr(
+                                      "Participe em eventos APSL e passeios organizados para viver a cultura equestre",
+                                      "Participate in APSL events and organised rides to experience equestrian culture",
+                                      "Participe en eventos APSL y paseos organizados para vivir la cultura ecuestre"
+                                    ),
+                                  ],
+                                  criador_tradicional: [
+                                    tr(
+                                      "Foque na preservação de linhagens clássicas com histórico comprovado na tradição portuguesa",
+                                      "Focus on preserving classical bloodlines with proven history in Portuguese tradition",
+                                      "Enfóquese en la preservación de linajes clásicos con historial comprobado en la tradición portuguesa"
+                                    ),
+                                    tr(
+                                      "Visite coudelarias históricas para estudar os padrões tradicionais de selecção",
+                                      "Visit historic stud farms to study traditional selection standards",
+                                      "Visite ganaderías históricas para estudiar los patrones tradicionales de selección"
+                                    ),
+                                    tr(
+                                      "A criação com foco na tradição valoriza funcionalidade, temperamento e tipicidade racial",
+                                      "Breeding with a focus on tradition values functionality, temperament and breed typicality",
+                                      "La cría con enfoque en la tradición valora funcionalidad, temperamento y tipicidad racial"
                                     ),
                                   ],
                                 };
@@ -651,7 +722,7 @@ function AnalisePerfilContent() {
                           result={result}
                           answerDetails={answerDetails}
                           scorePercentages={scorePercentages}
-                          confidence={sharedConfidence ?? calculateConfidence()}
+                          confidence={displayConfidence ?? 0}
                         />
                       </BlurredProSection>
                     )}
@@ -901,7 +972,7 @@ function AnalisePerfilContent() {
                         title={t.analise_perfil.tab_budget}
                       >
                         <BudgetPlannerTab
-                          profileName={result.profile}
+                          profileName={result.title}
                           categories={[
                             {
                               label: tr("Pensão", "Board", "Pensión"),
@@ -992,7 +1063,7 @@ function AnalisePerfilContent() {
                         <ReadinessTab
                           result={result}
                           answerDetails={answerDetails}
-                          confidence={sharedConfidence ?? calculateConfidence()}
+                          confidence={displayConfidence ?? 0}
                         />
                       </BlurredProSection>
                     )}

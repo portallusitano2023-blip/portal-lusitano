@@ -37,7 +37,7 @@ export default function PairSummary({
       {(() => {
         const s = resultado.score;
         const interpretation =
-          s >= 80
+          s >= 85
             ? {
                 text: tr(
                   "Excelente compatibilidade genética. Esta combinação tem alto potencial para produzir descendentes de qualidade superior. Recomendado para programa de cruzamento seletivo.",
@@ -49,7 +49,7 @@ export default function PairSummary({
                 iconColor: "text-emerald-400",
                 titleColor: "text-emerald-400",
               }
-            : s >= 65
+            : s >= 70
               ? {
                   text: tr(
                     "Boa compatibilidade genética. Esta combinação é adequada para cruzamento com expectativas de descendentes competitivos. Considere os fatores específicos abaixo.",
@@ -61,7 +61,7 @@ export default function PairSummary({
                   iconColor: "text-blue-400",
                   titleColor: "text-blue-400",
                 }
-              : s >= 50
+              : s >= 55
                 ? {
                     text: tr(
                       "Compatibilidade moderada. Esta combinação pode ser viável, mas requer atenção aos pontos de risco identificados. Consulte um veterinário especializado.",
@@ -73,17 +73,29 @@ export default function PairSummary({
                     iconColor: "text-amber-400",
                     titleColor: "text-amber-400",
                   }
-                : {
-                    text: tr(
-                      "Compatibilidade limitada. Existem fatores de risco significativos nesta combinação. Recomendamos consultar um especialista em genética equina antes de prosseguir.",
-                      "Limited compatibility. There are significant risk factors in this combination. We recommend consulting an equine genetics specialist before proceeding.",
-                      "Compatibilidad limitada. Existen factores de riesgo significativos en esta combinación. Recomendamos consultar a un especialista en genética equina antes de proceder."
-                    ),
-                    border: "border-l-red-500",
-                    bg: "bg-red-500/5",
-                    iconColor: "text-red-400",
-                    titleColor: "text-red-400",
-                  };
+                : s >= 40
+                  ? {
+                      text: tr(
+                        "Compatibilidade limitada. Existem fatores de risco significativos nesta combinação. Recomendamos consultar um especialista em genética equina antes de prosseguir.",
+                        "Limited compatibility. There are significant risk factors in this combination. We recommend consulting an equine genetics specialist before proceeding.",
+                        "Compatibilidad limitada. Existen factores de riesgo significativos en esta combinación. Recomendamos consultar a un especialista en genética equina antes de proceder."
+                      ),
+                      border: "border-l-orange-500",
+                      bg: "bg-orange-500/5",
+                      iconColor: "text-orange-400",
+                      titleColor: "text-orange-400",
+                    }
+                  : {
+                      text: tr(
+                        "Compatibilidade não recomendada. Os riscos genéticos e reprodutivos desta combinação são elevados. Consulte um especialista antes de considerar este cruzamento.",
+                        "Compatibility not recommended. The genetic and reproductive risks of this combination are high. Consult a specialist before considering this cross.",
+                        "Compatibilidad no recomendada. Los riesgos genéticos y reproductivos de esta combinación son elevados. Consulte a un especialista antes de considerar este cruzamiento."
+                      ),
+                      border: "border-l-red-500",
+                      bg: "bg-red-500/5",
+                      iconColor: "text-red-400",
+                      titleColor: "text-red-400",
+                    };
 
         return (
           <div
@@ -103,7 +115,6 @@ export default function PairSummary({
 
       {/* Resumo Executivo do Par */}
       {(() => {
-        const alturaMedia = Math.round((garanhao.altura + egua.altura) / 2);
         const blupMedio = Math.round((garanhao.blup + egua.blup) / 2);
         const saudeMed = Math.round((garanhao.saude + egua.saude) / 2);
         const conformMed = Math.round((garanhao.conformacao + egua.conformacao) / 2);
@@ -117,7 +128,7 @@ export default function PairSummary({
               {[
                 {
                   label: tr("Altura estimada", "Estimated height", "Altura estimada"),
-                  value: `${alturaMedia - 2}–${alturaMedia + 2}cm`,
+                  value: `${resultado.altura.min}–${resultado.altura.max}cm`,
                   sub: tr("do potro adulto", "of adult foal", "del potro adulto"),
                 },
                 {

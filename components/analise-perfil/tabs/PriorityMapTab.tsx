@@ -51,18 +51,18 @@ export default function PriorityMapTab({ result }: PriorityMapTabProps) {
       },
       {
         label: tr("Contactar treinador", "Contact trainer", "Contactar entrenador"),
-        urgency: result.profile === "competidor" ? 80 : 50,
-        importance: result.profile === "competidor" ? 85 : 60,
+        urgency: result.profile === "competidor" ? 80 : result.profile === "aprendiz" ? 85 : 50,
+        importance: result.profile === "competidor" ? 85 : result.profile === "aprendiz" ? 90 : 60,
       },
       {
         label: tr("Pesquisar linhagens", "Research bloodlines", "Investigar linajes"),
-        urgency: 40,
-        importance: result.profile === "criador" ? 90 : 55,
+        urgency: result.profile === "tradicional" ? 70 : 40,
+        importance: result.profile === "criador" ? 90 : result.profile === "tradicional" ? 85 : 55,
       },
       {
         label: tr("Visitar coudelarias", "Visit stud farms", "Visitar ganaderías"),
-        urgency: 60,
-        importance: 75,
+        urgency: result.profile === "tradicional" ? 75 : 60,
+        importance: result.profile === "tradicional" ? 80 : 75,
       },
       {
         label: tr("Seguro equino", "Horse insurance", "Seguro equino"),
@@ -76,8 +76,8 @@ export default function PriorityMapTab({ result }: PriorityMapTabProps) {
       },
       {
         label: tr("Formação equestre", "Equestrian training", "Formación ecuestre"),
-        urgency: result.profile === "amador" ? 70 : 30,
-        importance: result.profile === "amador" ? 80 : 40,
+        urgency: result.profile === "amador" ? 70 : result.profile === "aprendiz" ? 90 : 30,
+        importance: result.profile === "amador" ? 80 : result.profile === "aprendiz" ? 95 : 40,
       },
       {
         label: tr("Rede de contactos", "Network of contacts", "Red de contactos"),
@@ -91,8 +91,8 @@ export default function PriorityMapTab({ result }: PriorityMapTabProps) {
       },
       {
         label: tr("Plano de competição", "Competition plan", "Plan de competición"),
-        urgency: result.profile === "competidor" ? 65 : 15,
-        importance: result.profile === "competidor" ? 75 : 20,
+        urgency: result.profile === "competidor" ? 65 : result.profile === "aprendiz" ? 10 : 15,
+        importance: result.profile === "competidor" ? 75 : result.profile === "aprendiz" ? 15 : 20,
       },
     ];
 

@@ -75,6 +75,7 @@ export default function ComparadorCavalosPage() {
   const [customWeights, setCustomWeights] = useState<CategoryWeights>({ ...DEFAULT_WEIGHTS });
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const historyDialogRef = useRef<HTMLDivElement>(null);
 
   const {
     canUse,
@@ -174,14 +175,14 @@ export default function ComparadorCavalosPage() {
       try {
         localStorage.setItem(
           DRAFT_KEY,
-          JSON.stringify({ cavalos, savedAt: new Date().toISOString() })
+          JSON.stringify({ cavalos, customWeights, savedAt: new Date().toISOString() })
         );
       } catch {}
     }, 800);
     return () => {
       if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     };
-  }, [cavalos, step, showAnalise]);
+  }, [cavalos, customWeights, step, showAnalise]);
 
   // Load history
   useEffect(() => {
@@ -227,6 +228,18 @@ export default function ComparadorCavalosPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showAnalise]);
 
+  // Close history dialog on outside click
+  useEffect(() => {
+    if (!showHistory) return;
+    const handler = (e: MouseEvent) => {
+      if (historyDialogRef.current && !historyDialogRef.current.contains(e.target as Node)) {
+        setShowHistory(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showHistory]);
+
   // ============================================
   // HANDLERS
   // ============================================
@@ -235,8 +248,11 @@ export default function ComparadorCavalosPage() {
     try {
       const saved = localStorage.getItem(DRAFT_KEY);
       if (saved) {
-        const { cavalos: savedCavalos } = JSON.parse(saved) as { cavalos: Cavalo[] };
-        setCavalos(savedCavalos);
+        const { cavalos: savedCavalos, customWeights: savedWeights } = JSON.parse(saved) as { cavalos: Cavalo[]; customWeights?: CategoryWeights };
+        setCavalos(
+          savedCavalos.map((h: Cavalo) => ({ ...criarCavalo(h.id, h.nome), ...h }))
+        );
+        if (savedWeights) setCustomWeights(savedWeights);
         setStep(1);
         setHasDraft(false);
       }
@@ -291,7 +307,7 @@ export default function ComparadorCavalosPage() {
     try {
       exportarCSV(cavalos, tr, weights);
     } catch {
-      showToast("error", t.errors.error_export_pdf);
+      showToast("error", tr("Erro ao exportar CSV", "Error exporting CSV", "Error al exportar CSV"));
     }
   };
 
@@ -343,11 +359,11 @@ export default function ComparadorCavalosPage() {
     setCalculandoStep(0);
     const vencedorNome =
       cavalos.length > 0
-        ? cavalos.reduce((a, b) => (calcularScoreWeighted(a, customWeights) > calcularScoreWeighted(b, customWeights) ? a : b)).nome
+        ? findVencedor(cavalos, (c) => calcularScoreWeighted(c, customWeights)).nome
         : "";
     const vencedorScore =
       cavalos.length > 0
-        ? calcularScoreWeighted(cavalos.reduce((a, b) => (calcularScoreWeighted(a, customWeights) > calcularScoreWeighted(b, customWeights) ? a : b)), customWeights)
+        ? calcularScoreWeighted(findVencedor(cavalos, (c) => calcularScoreWeighted(c, customWeights)), customWeights)
         : 0;
 
     // Server-side validation + recording BEFORE showing results
@@ -461,7 +477,7 @@ export default function ComparadorCavalosPage() {
                   <span className="hidden sm:inline">{tr("Editar", "Edit", "Editar")}</span>
                 </button>
                 {history.length > 0 && (
-                  <div className="relative">
+                  <div className="relative" ref={historyDialogRef}>
                     <button
                       onClick={() => setShowHistory((v) => !v)}
                       className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"

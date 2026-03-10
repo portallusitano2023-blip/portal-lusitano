@@ -129,9 +129,9 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
               text={
                 t.verificador.tooltip_altura ??
                 tr(
-                  "Estimativa baseada na média dos progenitores ±2cm. Factores ambientais podem causar variações significativas.",
-                  "Estimate based on parent average ±2cm. Environmental factors may cause significant variations.",
-                  "Estimación basada en el promedio de los progenitores ±2cm. Factores ambientales pueden causar variaciones significativas."
+                  "Estimativa baseada na média dos progenitores ±4cm. Factores ambientais podem causar variações significativas.",
+                  "Estimate based on parent average ±4cm. Environmental factors may cause significant variations.",
+                  "Estimación basada en el promedio de los progenitores ±4cm. Factores ambientales pueden causar variaciones significativas."
                 )
               }
             />
@@ -146,7 +146,7 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
           <div className="mt-3 h-2 bg-[var(--background-card)] rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-pink-500 to-pink-400"
-              style={{ width: `${((resultado.altura.max - 140) / 30) * 100}%` }}
+              style={{ width: `${Math.min(100, ((resultado.altura.max - 140) / 30) * 100)}%` }}
             />
           </div>
         </div>

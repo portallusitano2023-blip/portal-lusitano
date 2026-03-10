@@ -66,17 +66,30 @@ function detectRedFlags(
     (cavaleiro.experiencia === "iniciante" || cavaleiro.nivelFitness === "sedentario") &&
     !isHighEnergy(garanhao.temperamento)
   ) {
+    const isBeginner = cavaleiro.experiencia === "iniciante";
     flags.push({
-      title: tr(
-        "Cavaleiro iniciante com garanhão",
-        "Beginner rider with stallion",
-        "Jinete principiante con semental"
-      ),
-      description: tr(
-        "Garanhões são naturalmente mais difíceis de manejar do que éguas ou cavalos castrados. Cavaleiros com pouca experiência devem iniciar com cavalos mais dóceis.",
-        "Stallions are naturally harder to handle than mares or geldings. Riders with little experience should start with more docile horses.",
-        "Los sementales son naturalmente más difíciles de manejar que las yeguas o los caballos castrados. Jinetes con poca experiencia deben empezar con caballos más dóciles."
-      ),
+      title: isBeginner
+        ? tr(
+            "Cavaleiro iniciante com garanhão",
+            "Beginner rider with stallion",
+            "Jinete principiante con semental"
+          )
+        : tr(
+            "Cavaleiro sedentário com garanhão",
+            "Sedentary rider with stallion",
+            "Jinete sedentario con semental"
+          ),
+      description: isBeginner
+        ? tr(
+            "Garanhões são naturalmente mais difíceis de manejar do que éguas ou cavalos castrados. Cavaleiros com pouca experiência devem iniciar com cavalos mais dóceis.",
+            "Stallions are naturally harder to handle than mares or geldings. Riders with little experience should start with more docile horses.",
+            "Los sementales son naturalmente más difíciles de manejar que las yeguas o los caballos castrados. Jinetes con poca experiencia deben empezar con caballos más dóciles."
+          )
+        : tr(
+            "Garanhões são naturalmente mais difíceis de manejar do que éguas ou cavalos castrados. Cavaleiros com baixa condição física devem iniciar com cavalos mais dóceis.",
+            "Stallions are naturally harder to handle than mares or geldings. Riders with low physical condition should start with more docile horses.",
+            "Los sementales son naturalmente más difíciles de manejar que las yeguas o los caballos castrados. Jinetes con baja condición física deben empezar con caballos más dóciles."
+          ),
       severity: "warning",
     });
   }
@@ -103,21 +116,36 @@ function detectRedFlags(
   }
 
   // 1. CRITICAL: Beginner/sedentary rider + Stallion + energetic temperament
+  // Skip if already covered by flag #0b above (iniciante + moderado + Nervoso)
   if (
     (cavaleiro.experiencia === "iniciante" || cavaleiro.nivelFitness === "sedentario") &&
-    isHighEnergy(garanhao.temperamento)
+    isHighEnergy(garanhao.temperamento) &&
+    !(cavaleiro.experiencia === "iniciante" && cavaleiro.nivelFitness === "moderado" && garanhao.temperamento === "Nervoso")
   ) {
+    const isBeginner = cavaleiro.experiencia === "iniciante";
     flags.push({
-      title: tr(
-        "Cavaleiro sedentário com garanhão enérgico",
-        "Sedentary rider with energetic stallion",
-        "Jinete sedentario con semental enérgico"
-      ),
-      description: tr(
-        "Cavaleiros com baixa condição física não devem manejar garanhões com temperamento energético ou nervoso. Risco elevado de acidentes.",
-        "Riders with low physical condition should not handle stallions with energetic or nervous temperament. High risk of accidents.",
-        "Jinetes con baja condición física no deben manejar sementales con temperamento enérgico o nervioso. Riesgo elevado de accidentes."
-      ),
+      title: isBeginner
+        ? tr(
+            "Cavaleiro iniciante com garanhão enérgico",
+            "Beginner rider with energetic stallion",
+            "Jinete principiante con semental enérgico"
+          )
+        : tr(
+            "Cavaleiro sedentário com garanhão enérgico",
+            "Sedentary rider with energetic stallion",
+            "Jinete sedentario con semental enérgico"
+          ),
+      description: isBeginner
+        ? tr(
+            "Cavaleiros iniciantes não devem manejar garanhões com temperamento energético ou nervoso. Risco elevado de acidentes.",
+            "Beginner riders should not handle stallions with energetic or nervous temperament. High risk of accidents.",
+            "Jinetes principiantes no deben manejar sementales con temperamento enérgico o nervioso. Riesgo elevado de accidentes."
+          )
+        : tr(
+            "Cavaleiros com baixa condição física não devem manejar garanhões com temperamento energético ou nervoso. Risco elevado de acidentes.",
+            "Riders with low physical condition should not handle stallions with energetic or nervous temperament. High risk of accidents.",
+            "Jinetes con baja condición física no deben manejar sementales con temperamento enérgico o nervioso. Riesgo elevado de accidentes."
+          ),
       severity: "critical",
     });
   }
@@ -234,9 +262,6 @@ export function calcularCompatibilidade(
   let total = 0;
 
   // 1. Idade Reprodutiva (15pts) — graduated scoring (M-15)
-  const idadeGaranhaoOk = garanhao.idade >= 4 && garanhao.idade <= 20;
-  const idadeEguaOk = egua.idade >= 4 && egua.idade <= 18;
-
   const graduatedAge = (idade: number, min: number, max: number): number => {
     if (idade >= min && idade <= max) return 15; // within range
     const dist = idade < min ? min - idade : idade - max;
@@ -392,7 +417,7 @@ export function calcularCompatibilidade(
     Energético: { Calmo: 7, Equilibrado: 8, Energético: 7, Nervoso: 4 },
     Nervoso: { Calmo: 6, Equilibrado: 6, Energético: 4, Nervoso: 3 },
   };
-  let tempScore = tempCompat[garanhao.temperamento]?.[egua.temperamento] || 5;
+  let tempScore = tempCompat[garanhao.temperamento]?.[egua.temperamento] ?? 5;
 
   // Rider fitness adjustments on temperament compatibility
   if (cavaleiro) {
@@ -470,22 +495,23 @@ export function calcularCompatibilidade(
   total += fertScore;
 
   // 9. Aprovação como reprodutores (5pts bónus)
-  const aprovacaoScore = garanhao.aprovado && egua.aprovado ? 5 : 0;
-  if (aprovacaoScore > 0) {
+  const aprovacaoScore = garanhao.aprovado && egua.aprovado ? 5 : (garanhao.aprovado || egua.aprovado) ? 3 : 0;
+  if (aprovacaoScore === 5) {
     fortes.push(tr("Ambos aprovados oficialmente como reprodutores", "Both officially approved as breeders", "Ambos aprobados oficialmente como reproductores"));
-  } else if (!garanhao.aprovado) {
-    fracos.push(tr("Garanhão não aprovado como reprodutor", "Stallion not approved as breeder", "Semental no aprobado como reproductor"));
-  } else if (!egua.aprovado) {
-    fracos.push(tr("Égua não aprovada como reprodutora", "Mare not approved as breeding stock", "Yegua no aprobada como reproductora"));
+  } else {
+    if (!garanhao.aprovado) fracos.push(tr("Garanhão não aprovado como reprodutor", "Stallion not approved as breeder", "Semental no aprobado como reproductor"));
+    if (!egua.aprovado) fracos.push(tr("Égua não aprovada como reprodutora", "Mare not approved as breeding stock", "Yegua no aprobada como reproductora"));
   }
   factores.push({
     nome: tr("Aprovação APSL", "APSL Approval", "Aprobación APSL"),
     score: aprovacaoScore,
     max: 5,
-    tipo: aprovacaoScore >= 5 ? "excelente" : "neutro",
+    tipo: aprovacaoScore >= 5 ? "excelente" : aprovacaoScore >= 3 ? "bom" : "neutro",
     descricao: aprovacaoScore >= 5
       ? tr("Ambos aprovados como reprodutores", "Both approved as breeders", "Ambos aprobados como reproductores")
-      : tr("Bónus requer aprovação de ambos os progenitores", "Bonus requires approval of both parents", "Bonificación requiere aprobación de ambos progenitores"),
+      : aprovacaoScore >= 3
+        ? tr("Um dos progenitores aprovado como reprodutor", "One parent approved as breeder", "Uno de los progenitores aprobado como reproductor")
+        : tr("Bónus requer aprovação de ambos os progenitores", "Bonus requires approval of both parents", "Bonificación requiere aprobación de ambos progenitores"),
   });
   total += aprovacaoScore;
 
@@ -568,8 +594,9 @@ export function calcularCompatibilidade(
 
   // BLUP min/max prediction based on parent average
   const parentBlupAvg = (garanhao.blup + egua.blup) / 2;
-  const blupMin = Math.max(70, Math.round(parentBlupAvg - 15));
-  const blupMax = Math.min(150, Math.round(parentBlupAvg + 15));
+  const blupMin = Math.min(blupPrevisto, Math.max(50, Math.round(parentBlupAvg - 15)));
+  let blupMax = Math.min(150, Math.round(parentBlupAvg + 15));
+  blupMax = Math.max(blupMin, blupMax);
 
   if (coiPrevisto > 6.25) {
     riscos.push({
@@ -727,6 +754,14 @@ export function calcularCompatibilidade(
         .filter((p) => p.prob >= 2)
         .sort((a, b) => b.prob - a.prob)
     : [];
+
+  // Largest-remainder adjustment so percentages sum to 100
+  const roundedSum = pelagens.reduce((s, c) => s + c.prob, 0);
+  if (roundedSum !== 100 && pelagens.length > 0) {
+    const diff = 100 - roundedSum;
+    const maxIdx = pelagens.reduce((mi, c, i, arr) => c.prob > arr[mi].prob ? i : mi, 0);
+    pelagens[maxIdx].prob += diff;
+  }
 
   // Altura prevista do potro — Galton regression to mean (M-16)
   const parentMean = (garanhao.altura + egua.altura) / 2;

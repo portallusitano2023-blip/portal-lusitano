@@ -70,7 +70,9 @@ export default function CostsTab({ result }: CostsTabProps) {
           {t.analise_perfil.profile_comparison}
         </h3>
         <div className="space-y-4">
-          {Object.entries(results).map(([k, r]) => (
+          {(() => {
+            const maxCost = Math.max(...Object.values(results).map(r => r.annualCosts.max));
+            return Object.entries(results).map(([k, r]) => (
             <div key={k} className="flex items-center gap-4">
               <div
                 className={`w-32 text-sm ${k === result.profile ? "text-[var(--gold)] font-medium" : "text-[var(--foreground-muted)]"}`}
@@ -81,7 +83,7 @@ export default function CostsTab({ result }: CostsTabProps) {
                 <div className="h-3 bg-[var(--background-card)] rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${k === result.profile ? "bg-[var(--gold)]" : "bg-zinc-600"}`}
-                    style={{ width: `${(r.annualCosts.max / 50000) * 100}%` }}
+                    style={{ width: `${(r.annualCosts.max / maxCost) * 100}%` }}
                   />
                 </div>
               </div>
@@ -91,7 +93,8 @@ export default function CostsTab({ result }: CostsTabProps) {
                 {r.annualCosts.min.toLocaleString(locale)} - {r.annualCosts.max.toLocaleString(locale)}
               </div>
             </div>
-          ))}
+            ));
+          })()}
         </div>
       </div>
     </div>

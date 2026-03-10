@@ -99,7 +99,14 @@ export default function AnalysisTab({
           {t.analise_perfil.question_analysis}
         </h3>
         <div className="space-y-4">
-          {answerDetails.map((detail, i) => {
+          {answerDetails.length === 0 ? (
+            <p className="text-sm text-center text-[var(--foreground-muted)] py-8">
+              {tr("Detalhes de resposta não disponíveis para resultados partilhados.",
+                  "Answer details not available for shared results.",
+                  "Detalles de respuesta no disponibles para resultados compartidos.")}
+            </p>
+          ) : (
+          answerDetails.map((detail, i) => {
             const maxProfile = Object.entries(detail.points).reduce(
               (a, b) => (b[1] > a[1] ? b : a),
               ["", 0]
@@ -137,7 +144,8 @@ export default function AnalysisTab({
                 </div>
               </div>
             );
-          })}
+          })
+          )}
         </div>
       </div>
       <div className="bg-[var(--background-secondary)]/30 border border-[var(--border)] p-8">

@@ -74,6 +74,8 @@ export default function CalculadoraValorPage() {
     setShowCalcHistory,
     progress,
     resultRef,
+    touchedFields,
+    warnings,
     PROFILE_LABELS,
     SUBPROFILE_LABELS,
     TOTAL_STEPS,
@@ -355,21 +357,9 @@ export default function CalculadoraValorPage() {
 
                   {/* Form Completeness Indicator */}
                   {(() => {
-                    const camposImportantes = [
-                      (form.nome?.trim().length ?? 0) > 0,
-                      form.treino != null,
-                      form.idade != null && form.idade > 0,
-                      form.linhagem != null,
-                      form.saude != null,
-                      form.morfologia != null,
-                      form.andamentos != null,
-                      form.competicoes != null,
-                      form.mercado != null,
-                      form.registoAPSL != null,
-                    ];
-                    const preenchidos = camposImportantes.filter(Boolean).length;
-                    const total = camposImportantes.length;
-                    const pct = Math.round((preenchidos / total) * 100);
+                    const totalExpected = 10; // key fields the user should review
+                    const preenchidos = Math.min(touchedFields.size, totalExpected);
+                    const pct = Math.round((preenchidos / totalExpected) * 100);
 
                     return (
                       <div className="flex items-center gap-3 mb-5">
@@ -380,7 +370,7 @@ export default function CalculadoraValorPage() {
                           />
                         </div>
                         <span className="text-[10px] text-[var(--foreground-muted)] whitespace-nowrap">
-                          {preenchidos}/{total} {tr("campos", "fields", "campos")} — {pct}% {tr("completo", "complete", "completo")}
+                          {preenchidos}/{totalExpected} {tr("campos", "fields", "campos")} — {pct}% {tr("completo", "complete", "completo")}
                         </span>
                       </div>
                     );
@@ -389,15 +379,16 @@ export default function CalculadoraValorPage() {
                   {/* Confidence Indicator — last step */}
                   {step === TOTAL_STEPS &&
                     (() => {
-                      const hasRegistoAPSL = form.registoAPSL;
-                      const hasRaioX = form.raioX;
-                      const hasExame = form.exameVeterinario;
-                      const hasComp = form.competicoes && form.competicoes !== "nenhuma";
-                      const confidenceBoosts = [hasRegistoAPSL, hasRaioX, hasExame, hasComp].filter(
-                        Boolean
-                      ).length;
-                      const baseConf = 65;
-                      const conf = Math.min(95, baseConf + confidenceBoosts * 8);
+                      const morfMedia = (form.morfologia + form.garupa + form.espádua + form.cabeca + form.membros) / 5;
+                      const andMedia = (form.andamentos + form.elevacao + form.suspensao + form.regularidade) / 4;
+                      const conf = Math.min(95,
+                        45
+                        + (form.registoAPSL ? 15 : 0)
+                        + (form.raioX ? 8 : 0)
+                        + (form.exameVeterinario ? 8 : 0)
+                        + Math.round(morfMedia * 1.2)
+                        + Math.round(andMedia * 0.8)
+                      );
 
                       return (
                         <div
@@ -435,6 +426,16 @@ export default function CalculadoraValorPage() {
                   {step === 3 && <StepAndamentosTemperamento form={form} update={update} />}
                   {step === 4 && <StepTreinoSaude form={form} update={update} />}
                   {step === 5 && <StepReproducaoMercado form={form} update={update} />}
+
+                  {warnings.length > 0 && (
+                    <div className="space-y-2 mt-4">
+                      {warnings.filter(w => w.severity === "warning").map((w, i) => (
+                        <div key={i} className="text-xs px-3 py-2 rounded-lg border bg-amber-500/10 border-amber-500/30 text-amber-400">
+                          {w.message}
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Dica contextual do perfil */}
                   {profileContext &&
@@ -576,6 +577,7 @@ export default function CalculadoraValorPage() {
               <button
                 onClick={handleClosePdfPreview}
                 className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                aria-label={tr("Fechar", "Close", "Cerrar")}
               >
                 <X size={18} />
               </button>

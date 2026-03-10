@@ -98,8 +98,8 @@ export default function ResultsSection({
   const calcScore = (c: Cavalo) => calcularScoreWeighted(c, customWeights);
   const calcValorPorPonto = (c: Cavalo): number | null => {
     const score = calcScore(c);
-    if (c.preco === 0) return null;
-    return score > 0 ? Math.round(c.preco / score) : 0;
+    if (c.preco === 0 || score === 0) return null;
+    return Math.round(c.preco / score);
   };
 
   const vencedor = cavalos.length > 0
@@ -215,13 +215,7 @@ export default function ResultsSection({
           isExporting={isExporting}
         />
         <button
-          onClick={() => {
-            try {
-              exportarCSV(cavalos, tr, customWeights);
-            } catch {
-              onExportCSV(customWeights);
-            }
-          }}
+          onClick={() => onExportCSV(customWeights)}
           disabled={isExporting}
           className="w-full py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
@@ -284,8 +278,12 @@ export default function ResultsSection({
       {/* Recomendação hero card */}
       {(() => {
         const vencedorScore = calcScore(vencedor);
-        const fatores = getScoreFactors(vencedor, tr);
-        const melhorFator = fatores.reduce((a, b) => (a.score / a.max > b.score / b.max ? a : b));
+        const fatores = getScoreFactors(vencedor, tr, customWeights);
+        const melhorFator = fatores.reduce((a, b) => {
+          const ra = a.max > 0 ? a.score / a.max : 0;
+          const rb = b.max > 0 ? b.score / b.max : 0;
+          return ra > rb ? a : b;
+        });
         const vencedorIndex = cavalos.findIndex((cv) => cv.id === vencedor.id);
         const corVencedor = CORES[vencedorIndex] || "#C5A059";
         return (
@@ -330,8 +328,8 @@ export default function ResultsSection({
                   <span className="text-emerald-400 font-medium">{tr("Melhor custo-benefício:", "Best cost-benefit:", "Mejor costo-beneficio:")}</span>{" "}
                   <span className="font-medium text-[var(--foreground)]">{melhorValor.nome}</span>{" "}
                   <span className="text-[var(--foreground-muted)]">
-                    ({calcValorPorPonto(melhorValor)?.toLocaleString(locale) ?? "N/A"} €/pt vs.{" "}
-                    {calcValorPorPonto(vencedor)?.toLocaleString(locale) ?? "N/A"} €/pt)
+                    ({calcValorPorPonto(melhorValor) != null ? `${calcValorPorPonto(melhorValor)!.toLocaleString(locale)} €` : "N/A"}/pt vs.{" "}
+                    {calcValorPorPonto(vencedor) != null ? `${calcValorPorPonto(vencedor)!.toLocaleString(locale)} €` : "N/A"}/pt)
                   </span>
                 </p>
               </div>
@@ -584,7 +582,7 @@ export default function ResultsSection({
                 tr("Regular.", "Regular.", "Regular."),
                 tr("Temper.", "Temper.", "Temper."),
                 tr("Saúde", "Health", "Salud"),
-                "Pedigree",
+                tr("Mérito Genético", "Genetic Merit", "Mérito Genético"),
                 tr("Treino", "Training", "Entren."),
               ]}
               language={language}
@@ -618,15 +616,20 @@ export default function ResultsSection({
             "temperamento",
             "saude",
             "blup",
+            "premios",
           ];
           const vitorias = cavalos.map((c) => {
             let v = 0;
             CAMPOS.forEach((campo) => {
-              const melhor = Math.max(...cavalos.map((x) => x[campo] as number));
-              if ((c[campo] as number) === melhor) v++;
+              const values = cavalos.map((x) => x[campo] as number);
+              const melhor = Math.max(...values);
+              const countAtMax = values.filter(val => val === melhor).length;
+              if ((c[campo] as number) === melhor && countAtMax < cavalos.length) v++;
             });
-            const maxScore = Math.max(...cavalos.map(calcScore));
-            if (calcScore(c) === maxScore) v++;
+            const scores = cavalos.map(calcScore);
+            const maxScore = Math.max(...scores);
+            const countAtMaxScore = scores.filter(s => s === maxScore).length;
+            if (calcScore(c) === maxScore && countAtMaxScore < cavalos.length) v++;
             return { id: c.id, nome: c.nome, vitorias: v };
           });
           const total = CAMPOS.length + 1;
@@ -820,34 +823,34 @@ export default function ResultsSection({
               </thead>
               <tbody>
                 {[
-                  { label: comp.param_age, campo: "idade" as const, maior: false, suffix: " anos" },
+                  { label: comp.param_age, campo: "idade" as const, maior: null as boolean | null, suffix: " anos" },
                   {
                     label: comp.param_height,
                     campo: "altura" as const,
-                    maior: false,
+                    maior: null as boolean | null,
                     suffix: " cm",
                   },
                   {
                     label: comp.param_conformation,
                     campo: "conformacao" as const,
-                    maior: true,
+                    maior: true as boolean | null,
                     suffix: "/10",
                   },
                   {
                     label: comp.param_gaits,
                     campo: "andamentos" as const,
-                    maior: true,
+                    maior: true as boolean | null,
                     suffix: "/10",
                   },
                   {
                     label: comp.param_temperament,
                     campo: "temperamento" as const,
-                    maior: true,
+                    maior: true as boolean | null,
                     suffix: "/10",
                   },
-                  { label: comp.param_health, campo: "saude" as const, maior: true, suffix: "/10" },
-                  { label: "BLUP", campo: "blup" as const, maior: true, suffix: "" },
-                  { label: comp.param_price, campo: "preco" as const, maior: false, suffix: "€" },
+                  { label: comp.param_health, campo: "saude" as const, maior: true as boolean | null, suffix: "/10" },
+                  { label: "BLUP", campo: "blup" as const, maior: true as boolean | null, suffix: "" },
+                  { label: comp.param_price, campo: "preco" as const, maior: false as boolean | null, suffix: "€" },
                 ].map(({ label, campo, maior, suffix }) => (
                   <tr key={campo} className="border-b border-[var(--border)]/50">
                     <td className="py-3 px-3 text-[var(--foreground-secondary)] sticky left-0 bg-[var(--background-secondary)]">
@@ -856,7 +859,7 @@ export default function ResultsSection({
                     {cavalos.map((c) => (
                       <td
                         key={c.id}
-                        className={`text-center py-3 px-3 ${getClasseCor(c[campo] as number, getMelhor(cavalos, campo, maior), maior)}`}
+                        className={`text-center py-3 px-3 ${maior === null ? "text-[var(--foreground-secondary)]" : getClasseCor(c[campo] as number, getMelhor(cavalos, campo, maior), maior)}`}
                       >
                         {campo === "preco"
                           ? `${(c[campo] as number).toLocaleString(locale)}${suffix}`
@@ -883,11 +886,11 @@ export default function ResultsSection({
                       <div className="flex items-center justify-center gap-1 mt-1">
                         <TrendingUp size={11} className="text-emerald-400" />
                         <span className="text-xs text-emerald-400 font-medium">
-                          {tr("Potencial", "Potential", "Potencial")}: {calcularPotencial(c)}
+                          {tr("Potencial", "Potential", "Potencial")}: {calcularPotencial(c, customWeights)}
                         </span>
                       </div>
                       <div className="mt-2 text-left">
-                        <ScoreBreakdown factors={getScoreFactors(c, tr)} total={calcScore(c)} />
+                        <ScoreBreakdown factors={getScoreFactors(c, tr, customWeights)} total={calcScore(c)} />
                       </div>
                     </td>
                   ))}
@@ -901,7 +904,7 @@ export default function ResultsSection({
                       key={c.id}
                       className={`text-center py-3 px-3 ${c.id === melhorValor.id ? "text-emerald-400 font-semibold" : "text-[var(--foreground-secondary)]"}`}
                     >
-                      {calcValorPorPonto(c)?.toLocaleString(locale) ?? "—"}€
+                      {calcValorPorPonto(c) != null ? `${calcValorPorPonto(c)!.toLocaleString(locale)}€` : "—"}
                     </td>
                   ))}
                 </tr>
@@ -958,7 +961,7 @@ export default function ResultsSection({
             <div>
               <p className="text-xl font-bold text-emerald-400">{melhorValor.nome}</p>
               <p className="text-sm text-[var(--foreground-secondary)]">
-                {calcValorPorPonto(melhorValor)?.toLocaleString(locale) ?? "—"}€ {comp.per_point}
+                {calcValorPorPonto(melhorValor) != null ? `${calcValorPorPonto(melhorValor)!.toLocaleString(locale)}€` : "—"} {comp.per_point}
               </p>
               <p className="text-xs text-[var(--foreground-muted)] mt-1">
                 {melhorValor.preco.toLocaleString(locale)}€ • Score {calcScore(melhorValor)}
@@ -977,7 +980,7 @@ export default function ResultsSection({
           <p className="text-xs text-[var(--foreground-muted)] mb-4">{comp.verdict_desc}</p>
           <div className="grid md:grid-cols-2 gap-4">
             {cavalos.map((c) => {
-              const v = gerarVeredicto(c, tr, language);
+              const v = gerarVeredicto(c, tr, language, customWeights);
               return (
                 <HorseVerdictCard
                   key={c.id}

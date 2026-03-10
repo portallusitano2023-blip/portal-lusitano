@@ -66,9 +66,24 @@ export default function NextStepsTab({ result, subProfile }: NextStepsTabProps) 
             tr("Ferramentas Recomendadas", "Recommended Tools", "Herramientas Recomendadas")}
         </h3>
         <p className="text-sm text-[var(--foreground-muted)] mb-6">
-          {subProfile
-            ? `${ap.next_tools_subtitle_with_profile ?? tr("Usa as ferramentas certas para o teu perfil de", "Use the right tools for your profile of", "Usa las herramientas correctas para tu perfil de")} ${subProfile.replace(/_/g, " ")}.`
-            : `${ap.next_tools_subtitle ?? tr("Usa as ferramentas certas para o teu perfil", "Use the right tools for your profile", "Usa las herramientas correctas para tu perfil")}.`}
+          {(() => {
+            const SUB_PROFILE_LABELS: Record<string, string> = {
+              competidor_elite: tr("Alta Competição FEI", "FEI High Competition", "Alta Competición FEI"),
+              competidor_nacional: tr("Competição Nacional", "National Competition", "Competición Nacional"),
+              competidor_trabalho: tr("Equitação de Trabalho", "Working Equitation", "Equitación de Trabajo"),
+              amador_projeto: tr("Projecto Jovem", "Young Horse Project", "Proyecto Joven"),
+              aprendiz_iniciante: tr("Cavaleiro Iniciante", "Beginner Rider", "Jinete Principiante"),
+              aprendiz_transicao: tr("Cavaleiro em Transição", "Transitioning Rider", "Jinete en Transición"),
+              tradicional_campeiro: tr("Tradição Campeira", "Campo Tradition", "Tradición Campera"),
+              tradicional_classico: tr("Escola Clássica", "Classical School", "Escuela Clásica"),
+              criador_selecao: tr("Criação Selectiva", "Selective Breeding", "Cría Selectiva"),
+              criador_conservacao: tr("Conservação da Raça", "Breed Conservation", "Conservación de la Raza"),
+            };
+            const label = subProfile ? (SUB_PROFILE_LABELS[subProfile] ?? subProfile.replace(/_/g, " ")) : null;
+            return subProfile
+              ? `${ap.next_tools_subtitle_with_profile ?? tr("Usa as ferramentas certas para o teu perfil de", "Use the right tools for your profile of", "Usa las herramientas correctas para tu perfil de")} ${label}.`
+              : `${ap.next_tools_subtitle ?? tr("Usa as ferramentas certas para o teu perfil", "Use the right tools for your profile", "Usa las herramientas correctas para tu perfil")}.`;
+          })()}
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Calculadora de Valor */}

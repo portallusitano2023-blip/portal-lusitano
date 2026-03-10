@@ -3,7 +3,7 @@ import type { Result } from "./types";
 type TranslatorFn = (pt: string, en: string, es?: string) => string;
 
 function escXml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 }
 
 export async function generateBadge(
@@ -50,5 +50,5 @@ export function generateBadgeSVGFallback(
   link.download = `perfil-${result.profile}.svg`;
   link.href = url;
   link.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

@@ -12,7 +12,7 @@ export function getShareUrl(
   const data: Record<string, unknown> = { profile: result.profile, scores };
   if (subProfile) data.subProfile = subProfile;
   if (typeof confidence === "number") data.confidence = confidence;
-  const encoded = btoa(JSON.stringify(data));
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
   return `${typeof window !== "undefined" ? window.location.origin : ""}/analise-perfil?r=${encodeURIComponent(encoded)}`;
 }
 
@@ -20,13 +20,14 @@ export function shareWhatsApp(
   result: Result | null,
   scores: Record<string, number>,
   subProfile: string | null,
-  tr: TranslatorFn
+  tr: TranslatorFn,
+  confidence?: number
 ): void {
   if (!result) return;
   const totalS = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
   const pct = Math.round((scores[result.profile] / totalS) * 100);
 
-  const shareUrl = getShareUrl(result, scores, subProfile);
+  const shareUrl = getShareUrl(result, scores, subProfile, confidence);
 
   const SUB_PROFILE_LABELS: Record<string, string> = {
     competidor_elite: tr("Alta Competição FEI", "FEI High Competition", "Alta Competición FEI"),
@@ -79,6 +80,6 @@ export function shareInstagram(
       alert(alertText);
     }
   }).catch(() => {
-    // Clipboard write failed silently
+    if (onCopied) onCopied(tr("Erro ao copiar. Copie manualmente.", "Copy failed. Copy manually.", "Error al copiar. Copie manualmente."));
   });
 }

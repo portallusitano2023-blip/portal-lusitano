@@ -34,9 +34,9 @@ function applyDiminishingReturns(totalMult: number): number {
   // Até 3x — multiplicação linear (sem ajuste)
   if (totalMult <= 3.0) return totalMult;
   // 3x-6x — crescimento reduzido (raiz quadrada do excesso)
-  if (totalMult <= 6.0) return 3.0 + Math.sqrt(totalMult - 3.0) * 1.5;
+  if (totalMult <= 6.0) return 3.0 + Math.sqrt(totalMult - 3.0);
   // 6x+ — crescimento logarítmico (protege contra valores absurdos)
-  return 3.0 + Math.sqrt(3.0) * 1.5 + Math.log(totalMult - 5.0) * 1.2;
+  return 3.0 + Math.sqrt(3.0) + Math.log(totalMult - 5.0) * 1.2;
 }
 
 // Validação lógica: detecta combinações impossíveis/improváveis e ajusta
@@ -50,7 +50,7 @@ export function validateFormLogic(
   const warnings: ValidationWarning[] = [];
 
   // Potro (0-2 anos) com treino avançado (desbravado/iniciado are the only valid levels for this age)
-  if (form.idade <= 2 && !["desbravado", "iniciado"].includes(form.treino)) {
+  if (form.idade <= 2 && !["potro", "desbravado", "iniciado"].includes(form.treino)) {
     warnings.push({
       field: "treino",
       message: tr(
@@ -369,7 +369,7 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
     {
       nome: t("Palmarés Desportivo", "Competition Record", "Palmarés Deportivo"),
       impacto: Math.round((multComp - 1) * base),
-      score: Math.min(10, multComp * 6),
+      score: Math.min(10, multComp * 5),
       descricao: t("Resultados em competição oficial", "Results in official competition", "Resultados en competición oficial"),
     },
     {
