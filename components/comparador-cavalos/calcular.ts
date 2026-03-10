@@ -1,4 +1,4 @@
-import type { Cavalo, ScoreFactor } from "./types";
+import type { Cavalo, ScoreFactor, CategoryWeights } from "./types";
 import { TREINOS, COMPETICOES, LINHAGENS, localizedLabel } from "./data";
 
 type TrFn = (pt: string, en: string, es: string) => string;

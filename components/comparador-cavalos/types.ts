@@ -33,3 +33,19 @@ export interface ScoreFactor {
   score: number;
   max: number;
 }
+
+export interface CategoryWeights {
+  linhagem: number;
+  treino: number;
+  conformacao: number;
+  andamentos: number;
+  idade: number;
+  competicoes: number;
+  altura: number;
+  temperamento: number;
+  saude: number;
+  blup: number;
+  elevacao: number;
+  regularidade: number;
+  registoAPSL: number;
+}
