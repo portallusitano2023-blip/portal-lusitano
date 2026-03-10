@@ -174,6 +174,7 @@ export function useQuizLogic() {
   const [sharedConfidence, setSharedConfidence] = useState<number | null>(null);
   const quizRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
+  const isProcessingAnswer = useRef(false);
   const searchParams = useSearchParams();
   const {
     canUse,
@@ -555,39 +556,44 @@ export function useQuizLogic() {
 
   const handleAnswer = useCallback(
     async (option: QuestionOption) => {
-      if (isPending || showResult) return;
-      const q = questions[currentQuestion];
-      const w = q.weight;
-      const newAnswers = [...answers, option.value];
-      const newScores = { ...scores };
-      Object.entries(option.points).forEach(([p, pts]) => {
-        newScores[p] = (newScores[p] || 0) + pts * w;
-      });
+      if (isPending || showResult || isProcessingAnswer.current) return;
+      isProcessingAnswer.current = true;
+      try {
+        const q = questions[currentQuestion];
+        const w = q.weight;
+        const newAnswers = [...answers, option.value];
+        const newScores = { ...scores };
+        Object.entries(option.points).forEach(([p, pts]) => {
+          newScores[p] = (newScores[p] || 0) + pts * w;
+        });
 
-      const newDetail: AnswerDetail = {
-        questionId: q.id,
-        questionText: q.question,
-        answerText: option.text,
-        answerValue: option.value,
-        points: option.points,
-        weight: w,
-      };
-      const newDetails = [...answerDetails, newDetail];
+        const newDetail: AnswerDetail = {
+          questionId: q.id,
+          questionText: q.question,
+          answerText: option.text,
+          answerValue: option.value,
+          points: option.points,
+          weight: w,
+        };
+        const newDetails = [...answerDetails, newDetail];
 
-      setAnswers(newAnswers);
-      setAnswerDetails(newDetails);
-      setScores(newScores);
-      // Reset dismissal so a newly-triggered warning becomes visible
-      setCrossWarningDismissed(false);
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion(currentQuestion + 1);
-        // Save progress to localStorage
-        saveProgressToStorage(newAnswers, currentQuestion + 1);
-        // Scroll to quiz top so the next question is visible
-        setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
-      } else {
-        // Finalization handled by shared function (Issue 8)
-        finalizeQuiz(newScores, newAnswers, newDetails);
+        setAnswers(newAnswers);
+        setAnswerDetails(newDetails);
+        setScores(newScores);
+        // Reset dismissal so a newly-triggered warning becomes visible
+        setCrossWarningDismissed(false);
+        if (currentQuestion < questions.length - 1) {
+          setCurrentQuestion(currentQuestion + 1);
+          // Save progress to localStorage
+          saveProgressToStorage(newAnswers, currentQuestion + 1);
+          // Scroll to quiz top so the next question is visible
+          setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+        } else {
+          // Finalization handled by shared function (Issue 8)
+          finalizeQuiz(newScores, newAnswers, newDetails);
+        }
+      } finally {
+        setTimeout(() => { isProcessingAnswer.current = false; }, 0);
       }
     },
     [isPending, showResult, currentQuestion, answers, scores, answerDetails, questions, finalizeQuiz, saveProgressToStorage]

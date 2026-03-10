@@ -369,11 +369,13 @@ export function findMelhorValor(
 ): Cavalo {
   if (cavalos.length === 0) return {} as Cavalo;
   return cavalos.reduce((a, b) => {
-    const va = scoreFn(a) > 0 && a.preco > 0 ? a.preco / scoreFn(a) : Infinity;
-    const vb = scoreFn(b) > 0 && b.preco > 0 ? b.preco / scoreFn(b) : Infinity;
+    const sa = scoreFn(a);
+    const sb = scoreFn(b);
+    const va = sa > 0 && a.preco > 0 ? a.preco / sa : Infinity;
+    const vb = sb > 0 && b.preco > 0 ? b.preco / sb : Infinity;
     if (va !== vb) return va < vb ? a : b;
     // Tie-breaker: higher score
-    return scoreFn(a) >= scoreFn(b) ? a : b;
+    return sa >= sb ? a : b;
   });
 }
 

@@ -271,7 +271,16 @@ export function useCalculadoraState() {
       return next;
     });
     // H-05: Update live validation warnings on form change
-    const updatedForm = { ...(formStep.data as FormData), [key]: value };
+    let updatedForm = { ...(formStep.data as FormData), [key]: value };
+    if (key === "sexo" && value === "castrado") {
+      updatedForm = { ...updatedForm, reproducao: false, descendentes: 0, descendentesAprovados: 0 };
+    }
+    if (key === "descendentes") {
+      const newDesc = value as number;
+      if (updatedForm.descendentesAprovados > newDesc) {
+        updatedForm = { ...updatedForm, descendentesAprovados: newDesc };
+      }
+    }
     setWarnings(validateFormLogic(updatedForm, tr));
   };
 

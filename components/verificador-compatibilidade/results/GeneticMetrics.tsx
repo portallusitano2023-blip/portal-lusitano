@@ -247,7 +247,17 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
         if (egua.idade > 15) prob -= 10;
         else if (egua.idade < 5) prob -= 5;
         if (garanhao.aprovado && egua.aprovado) prob += 3;
-        prob = Math.min(85, Math.max(30, prob));
+
+        // Stallion health
+        if (garanhao.saude >= 8) prob += 3;
+        else if (garanhao.saude < 6) prob -= 5;
+
+        // Fertility adjustments
+        const fertNiveis: Record<string, number> = { "Muito Alta": 8, "Alta": 3, "Normal": 0, "Baixa": -12 };
+        prob += fertNiveis[egua.fertilidade] ?? 0;
+        prob += Math.round((fertNiveis[garanhao.fertilidade] ?? 0) / 2);
+
+        prob = Math.max(10, Math.min(95, prob));
 
         const progColor =
           prob >= 70 ? "bg-emerald-500" : prob >= 55 ? "bg-amber-500" : "bg-red-500";

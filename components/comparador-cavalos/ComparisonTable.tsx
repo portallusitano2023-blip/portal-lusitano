@@ -54,10 +54,8 @@ function buildCategories(
           label: tr("Idade", "Age", "Edad"),
           getValue: (c) =>
             `${c.idade} ${tr("anos", "years", "anos")}`,
-          getRaw: (c) => c.idade,
-          mode: "range",
-          idealMin: 6,
-          idealMax: 12,
+          getRaw: (c) => -Math.abs(c.idade - 9),
+          mode: "higher" as const,
         },
         {
           label: tr("Sexo", "Sex", "Sexo"),
@@ -78,10 +76,8 @@ function buildCategories(
         {
           label: tr("Altura (cm)", "Height (cm)", "Altura (cm)"),
           getValue: (c) => `${c.altura} cm`,
-          getRaw: (c) => c.altura,
-          mode: "range",
-          idealMin: 158,
-          idealMax: 168,
+          getRaw: (c) => -Math.abs(c.altura - 163),
+          mode: "higher" as const,
         },
         {
           label: tr("Registo APSL", "APSL Registration", "Registro APSL"),

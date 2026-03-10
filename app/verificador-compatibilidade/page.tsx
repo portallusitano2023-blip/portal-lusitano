@@ -146,11 +146,11 @@ export default function VerificadorCompatibilidadePage() {
           pelagem: g.pelagem || prev.pelagem,
           linhagem: g.linhagem || prev.linhagem,
           linhagemFamosa: g.linhagemFamosa || prev.linhagemFamosa,
-          conformacao: g.conformacao ?? prev.conformacao,
-          andamentos: g.andamentos ?? prev.andamentos,
+          conformacao: (typeof g.conformacao === "number" && g.conformacao >= 1 && g.conformacao <= 10) ? g.conformacao : prev.conformacao,
+          andamentos: (typeof g.andamentos === "number" && g.andamentos >= 1 && g.andamentos <= 10) ? g.andamentos : prev.andamentos,
           temperamento: g.temperamento ? mapTemperamentScore(g.temperamento) : prev.temperamento,
-          saude: g.saude ?? prev.saude,
-          blup: g.blup ?? prev.blup,
+          saude: (typeof g.saude === "number" && g.saude >= 1 && g.saude <= 10) ? g.saude : prev.saude,
+          blup: (typeof g.blup === "number" && g.blup >= 50 && g.blup <= 150) ? g.blup : prev.blup,
         }));
       }
       if (hasEgua) {
@@ -162,11 +162,11 @@ export default function VerificadorCompatibilidadePage() {
           pelagem: e.pelagem || prev.pelagem,
           linhagem: e.linhagem || prev.linhagem,
           linhagemFamosa: e.linhagemFamosa || prev.linhagemFamosa,
-          conformacao: e.conformacao ?? prev.conformacao,
-          andamentos: e.andamentos ?? prev.andamentos,
+          conformacao: (typeof e.conformacao === "number" && e.conformacao >= 1 && e.conformacao <= 10) ? e.conformacao : prev.conformacao,
+          andamentos: (typeof e.andamentos === "number" && e.andamentos >= 1 && e.andamentos <= 10) ? e.andamentos : prev.andamentos,
           temperamento: e.temperamento ? mapTemperamentScore(e.temperamento) : prev.temperamento,
-          saude: e.saude ?? prev.saude,
-          blup: e.blup ?? prev.blup,
+          saude: (typeof e.saude === "number" && e.saude >= 1 && e.saude <= 10) ? e.saude : prev.saude,
+          blup: (typeof e.blup === "number" && e.blup >= 50 && e.blup <= 150) ? e.blup : prev.blup,
         }));
       }
       setStep(1);

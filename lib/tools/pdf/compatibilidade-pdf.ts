@@ -70,6 +70,7 @@ function nivelColor(score: number): [number, number, number] {
   if (score >= 85) return GREEN;
   if (score >= 70) return GOLD;
   if (score >= 55) return AMBER;
+  if (score >= 40) return [249, 115, 22];
   return RED;
 }
 
@@ -561,7 +562,11 @@ export async function generateCompatibilidadePDF(
       const rBulletType = r.severidade === "alto" ? "fraco" : "recomendacao";
 
       // Severity badge
-      const sevLabel = `${r.severidade.toUpperCase()}`;
+      const sevLabel = r.severidade === "alto"
+        ? L("ALTO", "HIGH", "ALTO")
+        : r.severidade === "medio"
+          ? L("MEDIO", "MEDIUM", "MEDIO")
+          : L("BAIXO", "LOW", "BAJO");
       y = addBulletItem(doc, `[${sevLabel}] ${r.texto}`, rBulletType, y);
     }
     y += 4;

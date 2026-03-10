@@ -35,7 +35,7 @@ import {
   CONTENT_W,
 } from "./base-premium";
 
-import { MERCADOS } from "@/components/calculadora-valor/data";
+import { MERCADOS, VALORES_BASE } from "@/components/calculadora-valor/data";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -111,7 +111,7 @@ const TREINO_KEYS = [
 
 // TREINO_LABELS built inside generateCalculadoraPDF after L() is defined
 
-const TREINO_BASE_VALUES = [8000, 15000, 25000, 40000, 65000, 100000, 150000, 250000];
+const TREINO_BASE_VALUES = TREINO_KEYS.map(k => VALORES_BASE[k]);
 
 // ─── Market multipliers — derived from data.ts single source of truth ─────────
 const MARKET_MULT: Record<string, number> = Object.fromEntries(
@@ -307,9 +307,7 @@ export async function generateCalculadoraPDF(
       {
         label: L("Liquidez", "Liquidity", "Liquidez"),
         value: resultado.liquidez
-          ? safe(language === "en"
-              ? resultado.liquidez.label.split(" ")[0]
-              : resultado.liquidez.label.split(" ").pop()!)
+          ? safe(resultado.liquidez.label.split(" ")[0])
           : `${resultado.multiplicador}x`,
       },
     ],
@@ -600,8 +598,10 @@ export async function generateCalculadoraPDF(
       scoreItems.push({ key: "regularidade", label: L("Regularidade", "Regularity", "Regularidad"), score: form.regularidade });
     if (form.temperamento !== undefined)
       scoreItems.push({ key: "temperamento", label: L("Temperamento", "Temperament", "Temperamento"), score: form.temperamento });
-    if (form.sensibilidade !== undefined)
-      scoreItems.push({ key: "sensibilidade", label: L("Sensibilidade (5=ideal)", "Sensitivity (5=ideal)", "Sensibilidad (5=ideal)"), score: form.sensibilidade });
+    if (form.sensibilidade !== undefined) {
+      const sensQuality = Math.max(1, Math.min(10, Math.round(10 - Math.abs(form.sensibilidade - 5) * 1.5)));
+      scoreItems.push({ key: "sensibilidade", label: L("Sensibilidade (5=ideal)", "Sensitivity (5=ideal)", "Sensibilidad (5=ideal)"), score: sensQuality });
+    }
     if (form.vontadeTrabalho !== undefined)
       scoreItems.push({ key: "vontade_trabalho", label: L("Vont. Trabalho", "Work Ethic", "Vol. Trabajo"), score: form.vontadeTrabalho });
 

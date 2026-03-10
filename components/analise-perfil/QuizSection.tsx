@@ -56,6 +56,11 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
   const question = questions[currentQuestion];
   const optionsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
+  // Clear stale DOM refs when question changes
+  useEffect(() => {
+    optionsRef.current = [];
+  }, [question?.id]);
+
   // Issue 35: Restart confirmation when > 3 questions answered
   const handleReset = useCallback(() => {
     if (currentQuestion > 3) {

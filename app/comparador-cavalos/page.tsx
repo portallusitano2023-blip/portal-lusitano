@@ -317,10 +317,10 @@ export default function ComparadorCavalosPage() {
     try {
       const scoreFn = (c: Cavalo) => calcularScoreWeighted(c, customWeights);
       const scores = cavalos.map((c) => scoreFn(c));
-      const vencedorNome = findVencedor(cavalos, scoreFn).nome;
-      const melhorValorNome = findMelhorValor(cavalos, scoreFn).nome;
+      const vencedor = findVencedor(cavalos, scoreFn);
+      const melhorValor = findMelhorValor(cavalos, scoreFn);
       const { generateComparadorPDF } = await import("@/lib/tools/pdf/comparador-pdf");
-      generateComparadorPDF(cavalos, scores, vencedorNome, melhorValorNome, language, isSubscribed);
+      await generateComparadorPDF(cavalos, scores, vencedor.id, melhorValor.id, language, isSubscribed);
     } catch (error) {
       if (process.env.NODE_ENV === "development") console.error("[Comparador]", error);
       showToast("error", t.errors.error_export_pdf);

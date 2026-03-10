@@ -224,8 +224,8 @@ function addMiniBar(
 export async function generateComparadorPDF(
   cavalos: CavaloComp[],
   scores: number[],
-  vencedorNome: string,
-  melhorValorNome: string,
+  vencedorId: string,
+  melhorValorId: string,
   language?: string,
   isPremium = false
 ): Promise<void> {
@@ -320,8 +320,8 @@ export async function generateComparadorPDF(
   cavalos.slice(0, n).forEach((cavalo, i) => {
     const score = scores[i] ?? 0;
     const cx = MARGIN + i * (colW + colGap);
-    const isVencedor = cavalo.nome === vencedorNome;
-    const isMelhorValor = !isVencedor && cavalo.nome === melhorValorNome;
+    const isVencedor = cavalo.id === vencedorId;
+    const isMelhorValor = !isVencedor && cavalo.id === melhorValorId;
     const color = scoreColor(score, 100);
 
     // Card background
@@ -507,7 +507,7 @@ export async function generateComparadorPDF(
 
   cavalos.slice(0, n).forEach((cavalo, i) => {
     const cellX = MARGIN + LABEL_COL_W + i * DATA_COL_W;
-    const isWinner = cavalo.nome === vencedorNome;
+    const isWinner = cavalo.id === vencedorId;
     doc.setTextColor(
       isWinner ? GOLD[0] : WHITE[0],
       isWinner ? GOLD[1] : WHITE[1],
@@ -581,7 +581,7 @@ export async function generateComparadorPDF(
     cavalos.slice(0, n).forEach((cavalo, i) => {
       const cellX = MARGIN + LABEL_COL_W + i * DATA_COL_W;
       const value = row.getValue(cavalo, i);
-      const isWinner = cavalo.nome === vencedorNome;
+      const isWinner = cavalo.id === vencedorId;
       const isScoreRow = rowIdx === 0;
 
       // Highlight winner's score cell
@@ -620,12 +620,15 @@ export async function generateComparadorPDF(
     doc.setFillColor(...GOLD);
     doc.roundedRect(MARGIN, summaryY, 3, summaryH, 1.5, 1.5, "F");
 
+    const vencedorNome = cavalos.find((c) => c.id === vencedorId)?.nome ?? "";
+    const melhorValorNome = cavalos.find((c) => c.id === melhorValorId)?.nome ?? "";
+
     doc.setTextColor(...GOLD);
     doc.setFontSize(7.5);
     doc.setFont("helvetica", "bold");
     doc.text(safe(L("VENCEDOR", "WINNER", "GANADOR") + "  \u2014  " + vencedorNome), MARGIN + 8, summaryY + 6);
 
-    const winnerIdx = cavalos.findIndex((c) => c.nome === vencedorNome);
+    const winnerIdx = cavalos.findIndex((c) => c.id === vencedorId);
     const winner = winnerIdx >= 0 ? cavalos[winnerIdx] : null;
     const winnerScore = winnerIdx >= 0 ? (scores[winnerIdx] ?? 0) : 0;
 
