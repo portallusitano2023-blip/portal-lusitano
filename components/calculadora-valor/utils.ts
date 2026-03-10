@@ -13,13 +13,143 @@ import {
   DISCIPLINA_PREMIUMS,
 } from "./data";
 
+// Cap global: nenhum cavalo Lusitano ultrapassa este valor (recorde mondial ~4M EUR)
+const MAX_HORSE_VALUE = 5_000_000;
+
 // Helper: age multiplier — shared between calcularValor and estimarValorParcial
+// Curva mais realista com pico em 8-10 e declínio gradual
 function calcMultIdade(idade: number): number {
-  if (idade >= 7 && idade <= 12) return 1.15; // Ideal age window
+  if (idade >= 8 && idade <= 10) return 1.15; // Sweet spot
+  if (idade >= 7 || (idade >= 11 && idade <= 12)) return 1.10; // Very good
   if (idade >= 5 && idade <= 6) return 1.05; // Young adult, developing
-  if (idade > 15) return 0.75; // Senior
-  if (idade > 12) return 0.9; // Mature
+  if (idade >= 13 && idade <= 15) return 0.95; // Starting decline
+  if (idade >= 16 && idade <= 18) return 0.85; // Mature, declining
+  if (idade > 18) return 0.70; // Senior
   return 1.0; // Under 5 — potro
+}
+
+// Retornos decrescentes: quando o multiplicador total é muito alto,
+// aplica uma curva logarítmica que modera os valores extremos
+function applyDiminishingReturns(totalMult: number): number {
+  // Até 3x — multiplicação linear (sem ajuste)
+  if (totalMult <= 3.0) return totalMult;
+  // 3x-6x — crescimento reduzido (raiz quadrada do excesso)
+  if (totalMult <= 6.0) return 3.0 + Math.sqrt(totalMult - 3.0) * 1.5;
+  // 6x+ — crescimento logarítmico (protege contra valores absurdos)
+  return 3.0 + Math.sqrt(3.0) * 1.5 + Math.log(totalMult - 5.0) * 1.2;
+}
+
+// Validação lógica: detecta combinações impossíveis/improváveis e ajusta
+export interface ValidationWarning {
+  field: string;
+  message: string;
+  severity: "error" | "warning";
+}
+
+export function validateFormLogic(
+  form: FormData,
+  tr: (pt: string, en: string, es: string) => string
+): ValidationWarning[] {
+  const warnings: ValidationWarning[] = [];
+
+  // Potro (0-2 anos) com treino avançado
+  if (form.idade <= 2 && ["medio", "avancado", "alta_escola", "grand_prix"].includes(form.treino)) {
+    warnings.push({
+      field: "treino",
+      message: tr(
+        "Um potro de 0-2 anos não pode ter este nível de treino",
+        "A foal aged 0-2 cannot have this training level",
+        "Un potro de 0-2 años no puede tener este nivel de entrenamiento"
+      ),
+      severity: "error",
+    });
+  }
+
+  // Cavalo jovem (3-4 anos) com treino de alta escola ou grand prix
+  if (form.idade <= 4 && ["alta_escola", "grand_prix"].includes(form.treino)) {
+    warnings.push({
+      field: "treino",
+      message: tr(
+        "Um cavalo de 3-4 anos raramente atinge Alta Escola ou Grand Prix",
+        "A 3-4 year old horse rarely reaches High School or Grand Prix",
+        "Un caballo de 3-4 años raramente alcanza Alta Escuela o Grand Prix"
+      ),
+      severity: "warning",
+    });
+  }
+
+  // Potro com competições
+  if (form.idade <= 3 && form.competicoes !== "nenhuma") {
+    warnings.push({
+      field: "competicoes",
+      message: tr(
+        "Cavalos com 3 anos ou menos não competem em provas oficiais",
+        "Horses aged 3 or under do not compete in official events",
+        "Caballos de 3 años o menos no compiten en pruebas oficiales"
+      ),
+      severity: "error",
+    });
+  }
+
+  // Treino potro/desbravado com competições CDI
+  if (
+    ["potro", "desbravado"].includes(form.treino) &&
+    ["cdi1", "cdi3", "cdi5", "campeonato_mundo"].includes(form.competicoes)
+  ) {
+    warnings.push({
+      field: "competicoes",
+      message: tr(
+        "Cavalos com este nível de treino não participam em CDI",
+        "Horses at this training level do not participate in CDI",
+        "Caballos con este nivel de entrenamiento no participan en CDI"
+      ),
+      severity: "error",
+    });
+  }
+
+  // Castrado marcado como reprodutor
+  if (form.sexo === "castrado" && form.reproducao) {
+    warnings.push({
+      field: "reproducao",
+      message: tr(
+        "Cavalos castrados não podem ser reprodutores",
+        "Geldings cannot be used for breeding",
+        "Caballos castrados no pueden ser reproductores"
+      ),
+      severity: "error",
+    });
+  }
+
+  // Descendentes aprovados > descendentes totais
+  if (form.descendentesAprovados > form.descendentes) {
+    warnings.push({
+      field: "descendentesAprovados",
+      message: tr(
+        "O número de descendentes aprovados não pode exceder o total",
+        "Number of approved offspring cannot exceed total",
+        "El número de descendientes aprobados no puede exceder el total"
+      ),
+      severity: "error",
+    });
+  }
+
+  // Treino iniciado/elementar mas competições CDI3+
+  if (
+    ["iniciado", "elementar"].includes(form.treino) &&
+    ["cdi3", "cdi5", "campeonato_mundo"].includes(form.competicoes)
+  ) {
+    warnings.push({
+      field: "competicoes",
+      message: tr(
+        "Nível de treino insuficiente para competições CDI3 ou superior",
+        "Training level insufficient for CDI3+ competitions",
+        "Nivel de entrenamiento insuficiente para competiciones CDI3 o superior"
+      ),
+      severity: "warning",
+    });
+  }
+
+  return warnings;
 }
 
 export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: string) => string): Resultado {
@@ -134,7 +264,13 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
     multExport *
     multPropAnter;
 
-  const rawValor = base * totalMult;
+  // Aplicar retornos decrescentes para evitar valores irrealistas
+  const adjustedMult = applyDiminishingReturns(totalMult);
+
+  let rawValor = base * adjustedMult;
+  // Cap global: nenhum cavalo vale mais que MAX_HORSE_VALUE
+  rawValor = Math.min(rawValor, MAX_HORSE_VALUE);
+
   if (!isFinite(rawValor)) {
     throw new Error(t("Cálculo resultou em valor inválido — verifique os dados de entrada", "Calculation produced an invalid value — check input data", "El cálculo produjo un valor inválido — revisa los datos"));
   }
@@ -368,6 +504,7 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
       tempoDias: liquidezTempoDias,
       label: liquidezLabel,
     },
+    warnings: validateFormLogic(form, t),
   };
 }
 

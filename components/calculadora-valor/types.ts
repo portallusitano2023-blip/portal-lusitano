@@ -47,6 +47,12 @@ export interface FormData {
   proprietariosAnteriores: number; // 0, 1, 2, 3+
 }
 
+export interface ValidationWarning {
+  field: string;
+  message: string;
+  severity: "error" | "warning";
+}
+
 export interface Resultado {
   valorFinal: number;
   valorMin: number;
@@ -60,6 +66,7 @@ export interface Resultado {
   comparacao: { tipo: string; valorMedio: number; diferenca: number }[];
   pontosForteseFracos: { fortes: string[]; fracos: string[] };
   liquidez: { score: number; tempoDias: number; label: string };
+  warnings?: ValidationWarning[];
 }
 
 export interface StepProps {

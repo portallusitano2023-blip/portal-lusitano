@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useMemo, useRef, useEffect } from "react";
-import { Scale } from "lucide-react";
+import { Scale, AlertTriangle, AlertCircle } from "lucide-react";
 import dynamic from "next/dynamic";
 import LiquidityScore from "@/components/tools/LiquidityScore";
 import { useLanguage } from "@/context/LanguageContext";
@@ -66,6 +66,29 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         <div className="relative">
           <Confetti trigger={!hasShownConfetti.current} particleCount={50} duration={2800} />
         </div>
+
+        {/* Validation Warnings */}
+        {resultado.warnings && resultado.warnings.length > 0 && (
+          <div className="space-y-2">
+            {resultado.warnings.map((w, i) => (
+              <div
+                key={i}
+                className={`flex items-start gap-3 px-4 py-3 rounded-lg border ${
+                  w.severity === "error"
+                    ? "bg-red-500/8 border-red-500/30 text-red-300"
+                    : "bg-amber-500/8 border-amber-500/30 text-amber-300"
+                }`}
+              >
+                {w.severity === "error" ? (
+                  <AlertCircle size={16} className="shrink-0 mt-0.5 text-red-400" />
+                ) : (
+                  <AlertTriangle size={16} className="shrink-0 mt-0.5 text-amber-400" />
+                )}
+                <p className="text-sm leading-snug">{w.message}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         <ValorHero resultado={resultado} form={form} t={t} />
 
