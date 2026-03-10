@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Send, Paperclip, Smile, MoreVertical, Search, Users, Hash } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
+import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 
 interface Message {
   id: string;
@@ -22,10 +22,7 @@ export default function ChatContent() {
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = createSupabaseBrowserClient();
 
   const loadMessages = useCallback(async () => {
     setLoading(true);

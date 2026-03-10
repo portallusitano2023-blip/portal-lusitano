@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Check,
   Mail,
@@ -11,21 +9,11 @@ import {
 } from "lucide-react";
 import { IconFacebook, IconX, IconLinkedIn, IconWhatsApp } from "@/components/icons/SocialIcons";
 import LocalizedLink from "@/components/LocalizedLink";
-import { useEffect } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import { trackEbookFunnel } from "@/lib/analytics";
+import { getServerLanguage } from "@/lib/get-server-language";
+import { DownloadTracker, ViewEbookButton } from "@/components/ebook/DownloadClientParts";
 
-export default function DownloadPage() {
-  const { t } = useLanguage();
-
-  // Track download page view
-  useEffect(() => {
-    trackEbookFunnel("download_pdf");
-  }, []);
-
-  const handleViewEbook = () => {
-    window.open("/downloads/introducao-lusitano.html", "_blank");
-  };
+export default async function DownloadPage() {
+  const { t } = await getServerLanguage();
 
   const nextSteps = [
     {
@@ -95,6 +83,8 @@ export default function DownloadPage() {
 
   return (
     <main className="min-h-screen bg-[var(--background)] pt-32 pb-20">
+      <DownloadTracker />
+
       {/* Success Hero */}
       <section className="max-w-4xl mx-auto px-6 text-center mb-20">
         <div className="opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
@@ -115,13 +105,7 @@ export default function DownloadPage() {
           </p>
 
           {/* View Ebook Button */}
-          <button
-            onClick={handleViewEbook}
-            className="inline-flex items-center gap-3 bg-[var(--gold)] text-black px-10 py-5 text-sm font-bold uppercase tracking-widest hover:bg-[var(--gold-hover)] hover:scale-[1.05] active:scale-[0.95] transition-all mb-4"
-          >
-            <BookOpen size={20} />
-            {t.ebook_download.read_now}
-          </button>
+          <ViewEbookButton label={t.ebook_download.read_now} />
 
           <p className="text-[var(--foreground-muted)] text-sm">
             {t.ebook_download.browser_version}

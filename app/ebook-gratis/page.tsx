@@ -1,10 +1,9 @@
-"use client";
-
-import { useEffect } from "react";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-import { useLanguage } from "@/context/LanguageContext";
-import { trackEbookFunnel } from "@/lib/analytics";
+import { getServerLanguage } from "@/lib/get-server-language";
+import {
+  EbookTracker,
+  EbookFormWrapper,
+} from "@/components/ebook/EbookClientParts";
 import {
   BookOpen,
   Download,
@@ -19,46 +18,31 @@ import {
   Heart,
 } from "lucide-react";
 
-const EbookForm = dynamic(() => import("@/components/ebook/EbookForm"), {
-  ssr: false,
-  loading: () => (
-    <div className="space-y-3 max-w-lg">
-      <div className="h-[56px] animate-pulse bg-[var(--surface-hover)] border border-[var(--border)]" />
-      <div className="h-[56px] animate-pulse bg-[var(--surface-hover)] border border-[var(--border)]" />
-      <div className="h-[56px] animate-pulse bg-[var(--gold)]/20" />
-    </div>
-  ),
-});
-
-export default function EbookGratisPage() {
-  const { t } = useLanguage();
-
-  useEffect(() => {
-    trackEbookFunnel("view_landing");
-  }, []);
+export default async function EbookGratisPage() {
+  const { t } = await getServerLanguage();
 
   const chapters = [
     {
       number: "01",
-      title: "O Que É o Cavalo Lusitano?",
-      description: "Definição, história e características únicas que distinguem esta raça",
+      title: "O Que \u00c9 o Cavalo Lusitano?",
+      description: "Defini\u00e7\u00e3o, hist\u00f3ria e caracter\u00edsticas \u00fanicas que distinguem esta ra\u00e7a",
       pages: 8,
     },
     {
       number: "02",
-      title: "História em 10 Minutos",
-      description: "Da Idade do Gelo à modernidade — uma jornada épica",
+      title: "Hist\u00f3ria em 10 Minutos",
+      description: "Da Idade do Gelo \u00e0 modernidade \u2014 uma jornada \u00e9pica",
       pages: 8,
     },
     {
       number: "03",
-      title: "Características Únicas",
-      description: "Morfologia, andamentos, temperamento e aptidões naturais",
+      title: "Caracter\u00edsticas \u00danicas",
+      description: "Morfologia, andamentos, temperamento e aptid\u00f5es naturais",
       pages: 10,
     },
     {
       number: "04",
-      title: "Próximos Passos",
+      title: "Pr\u00f3ximos Passos",
       description: "Recursos, comunidade e como continuar a aprender",
       pages: 4,
     },
@@ -68,14 +52,14 @@ export default function EbookGratisPage() {
     {
       name: "Ana Costa",
       role: "Cavaleira Amadora",
-      text: "Incrível! Aprendi mais neste ebook gratuito do que em horas de pesquisa online.",
+      text: "Incr\u00edvel! Aprendi mais neste ebook gratuito do que em horas de pesquisa online.",
       avatar: "AC",
       rating: 5,
     },
     {
       name: "Rui Mendes",
-      role: "Estudante de Veterinária",
-      text: "Conteúdo de qualidade profissional. Perfeito para quem está a começar.",
+      role: "Estudante de Veterin\u00e1ria",
+      text: "Conte\u00fado de qualidade profissional. Perfeito para quem est\u00e1 a come\u00e7ar.",
       avatar: "RM",
       rating: 5,
     },
@@ -90,6 +74,8 @@ export default function EbookGratisPage() {
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
+      <EbookTracker />
+
       {/* ===== HERO ===== */}
       <section className="relative pt-20 sm:pt-36 pb-12 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
@@ -109,13 +95,13 @@ export default function EbookGratisPage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-[var(--foreground)] mb-6 leading-[1.08]">
-                Introdução ao <span className="text-[var(--gold)]">Cavalo Lusitano</span>
+                Introdu\u00e7\u00e3o ao <span className="text-[var(--gold)]">Cavalo Lusitano</span>
               </h1>
 
               <p className="hidden sm:block text-lg sm:text-xl text-[var(--foreground-secondary)] mb-8 leading-relaxed max-w-xl">
-                O guia essencial para conhecer a raça mais nobre da Península Ibérica.{" "}
+                O guia essencial para conhecer a ra\u00e7a mais nobre da Pen\u00ednsula Ib\u00e9rica.{" "}
                 <span className="text-[var(--foreground)] font-medium">
-                  30 páginas de puro conhecimento.
+                  30 p\u00e1ginas de puro conhecimento.
                 </span>
               </p>
 
@@ -136,7 +122,7 @@ export default function EbookGratisPage() {
                 ))}
               </div>
 
-              <EbookForm variant="hero" />
+              <EbookFormWrapper variant="hero" />
             </div>
 
             {/* Right - Book Cover */}
@@ -168,7 +154,7 @@ export default function EbookGratisPage() {
                       <rect width="100%" height="100%" fill="url(#ebook-grain)"/>
                     </svg>
 
-                    {/* Barras douradas — topo */}
+                    {/* Barras douradas \u2014 topo */}
                     <div className="absolute top-0 left-0 right-0 z-10">
                       <div className="h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
                       <div className="h-px mt-[3px] bg-gradient-to-r from-transparent via-[var(--gold)]/25 to-transparent" />
@@ -193,10 +179,10 @@ export default function EbookGratisPage() {
                       <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"><path d="M0 22 L22 22 L22 0" fill="none" stroke="var(--gold)" strokeWidth="1.2" strokeOpacity="0.45"/><path d="M0 17 L17 17 L17 0" fill="none" stroke="var(--gold)" strokeWidth="0.6" strokeOpacity="0.2"/><circle cx="17" cy="17" r="1.5" fill="var(--gold)" fillOpacity="0.4"/></svg>
                     </div>
 
-                    {/* Conteúdo interior */}
+                    {/* Conte\u00fado interior */}
                     <div className="relative z-10 flex flex-col items-center justify-between flex-1 py-8 px-7 text-center">
 
-                      {/* ZONA A — Subtítulo topo */}
+                      {/* ZONA A \u2014 Subt\u00edtulo topo */}
                       <div className="flex flex-col items-center gap-2">
                         <p className="text-[var(--gold)]/50 text-[8px] uppercase tracking-[0.4em]">Portal Lusitano</p>
                         <div className="flex items-center gap-2">
@@ -208,12 +194,12 @@ export default function EbookGratisPage() {
                         </div>
                       </div>
 
-                      {/* ZONA B — Logo central */}
+                      {/* ZONA B \u2014 Logo central */}
                       <div className="flex items-center justify-center flex-1 py-2">
                         <div className="relative flex flex-col items-center">
                           {/* Halo radial */}
                           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(197,160,89,0.12)_0%,transparent_65%)] scale-[2.5]" />
-                          {/* Círculo tracejado */}
+                          {/* C\u00edrculo tracejado */}
                           <svg className="absolute inset-[-40%] w-[180%] h-[180%]" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="50" cy="50" r="44" fill="none" stroke="var(--gold)" strokeWidth="0.5" strokeOpacity="0.15" strokeDasharray="2 3"/>
                           </svg>
@@ -227,7 +213,7 @@ export default function EbookGratisPage() {
                         </div>
                       </div>
 
-                      {/* ZONA C — Título */}
+                      {/* ZONA C \u2014 T\u00edtulo */}
                       <div className="flex flex-col items-center">
                         {/* Divisor com losango */}
                         <div className="flex items-center gap-2.5 mb-3">
@@ -239,7 +225,7 @@ export default function EbookGratisPage() {
                         </div>
 
                         <p className="text-[var(--foreground-secondary)]/65 text-[8px] tracking-[0.45em] uppercase mb-2">
-                          Introdução ao
+                          Introdu\u00e7\u00e3o ao
                         </p>
                         <h3 className="font-serif text-[var(--gold)] text-[1.35rem] sm:text-[1.55rem] tracking-[0.12em] leading-none uppercase">
                           Cavalo
@@ -260,7 +246,7 @@ export default function EbookGratisPage() {
                       </div>
                     </div>
 
-                    {/* Barras douradas — fundo */}
+                    {/* Barras douradas \u2014 fundo */}
                     <div className="absolute bottom-0 left-0 right-0 z-10">
                       <div className="h-px mb-[3px] bg-gradient-to-r from-transparent via-[var(--gold)]/25 to-transparent" />
                       <div className="h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
@@ -272,7 +258,7 @@ export default function EbookGratisPage() {
                   className="absolute -top-3 -right-3 sm:-top-5 sm:-right-5 bg-[var(--gold)] text-black px-3 sm:px-5 py-1.5 sm:py-2.5 text-[10px] sm:text-xs font-bold shadow-lg opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
                   style={{ animationDelay: "0.4s" }}
                 >
-                  GRÁTIS
+                  GR\u00c1TIS
                 </div>
 
                 <div
@@ -304,7 +290,7 @@ export default function EbookGratisPage() {
               {t.ebook_page.what_learn}
             </h2>
             <p className="text-[var(--foreground-muted)] max-w-xl mx-auto">
-              4 capítulos essenciais para compreender o Lusitano
+              4 cap\u00edtulos essenciais para compreender o Lusitano
             </p>
           </div>
 
@@ -439,10 +425,10 @@ export default function EbookGratisPage() {
             Descarrega o Teu Guia <span className="text-[var(--gold)]">Gratuito</span>
           </h2>
           <p className="text-[var(--foreground-secondary)] text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-            Recebe imediatamente o ebook + acesso à newsletter semanal com dicas exclusivas.
+            Recebe imediatamente o ebook + acesso \u00e0 newsletter semanal com dicas exclusivas.
           </p>
 
-          <EbookForm variant="cta" />
+          <EbookFormWrapper variant="cta" />
 
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mt-8 text-sm text-[var(--foreground-muted)]">
             <div className="flex items-center gap-2">
@@ -455,7 +441,7 @@ export default function EbookGratisPage() {
             </div>
             <div className="flex items-center gap-2">
               <Heart className="text-[var(--foreground-muted)]" size={14} />
-              <span>100% grátis para sempre</span>
+              <span>100% gr\u00e1tis para sempre</span>
             </div>
           </div>
         </div>
