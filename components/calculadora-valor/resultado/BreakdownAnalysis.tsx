@@ -366,7 +366,7 @@ export default function BreakdownAnalysis({
                             <span className="text-sm font-medium text-[var(--foreground-secondary)] truncate">
                               {f.nome}
                             </span>
-                            <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[var(--gold)]/10 text-[var(--gold)] border border-[var(--gold)]/20">
+                            <span className="shrink-0 px-1.5 py-0.5 rounded text-[11px] font-semibold bg-[var(--gold)]/10 text-[var(--gold)] border border-[var(--gold)]/20">
                               {f.peso}%
                             </span>
                           </div>
@@ -380,7 +380,7 @@ export default function BreakdownAnalysis({
                           >
                             +{contribuicao.toLocaleString(locale)} €
                           </span>
-                          <p className="text-[10px] text-[var(--foreground-muted)] mt-0.5">
+                          <p className="text-[11px] text-[var(--foreground-muted)] mt-0.5">
                             {f.score.toFixed(1)}/10
                           </p>
                         </div>
@@ -411,7 +411,7 @@ export default function BreakdownAnalysis({
                     {resultado.valorFinal.toLocaleString(locale)} €
                   </span>
                 </div>
-                <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-1 leading-relaxed">
+                <p className="text-[11px] text-[var(--foreground-muted)]/60 mt-1 leading-relaxed">
                   {tr(
                     "Estimativa baseada em pesos sectoriais do mercado equestre lusitano. Não substitui avaliação presencial.",
                     "Estimate based on sector weights of the Lusitano equestrian market. Does not replace in-person evaluation.",
@@ -600,7 +600,7 @@ export default function BreakdownAnalysis({
               </div>
 
               <div className="px-6 py-3 bg-[var(--background-card)] border-t border-[var(--border)]">
-                <p className="text-[10px] text-[var(--foreground-muted)]/60 leading-relaxed">
+                <p className="text-[11px] text-[var(--foreground-muted)]/60 leading-relaxed">
                   {tr(
                     "Estimativas de valorização baseadas em médias do sector equestre. Os resultados podem variar conforme o perfil do comprador e o contexto de mercado.",
                     "Value estimates based on equestrian sector averages. Results may vary depending on buyer profile and market context.",

@@ -6,5 +6,5 @@ export { default as StepTreinoSaude } from "./StepTreinoSaude";
 export { default as StepReproducaoMercado } from "./StepReproducaoMercado";
 export { default as StepNavigation } from "./StepNavigation";
 export { default as ResultadoDisplay } from "./ResultadoDisplay";
-export { calcularValor, validateFormLogic } from "./utils";
+export { calcularValor, validateFormLogic, calcMultIdade } from "./utils";
 export type { FormData, Resultado, StepProps, ValidationWarning } from "./types";

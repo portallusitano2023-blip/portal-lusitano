@@ -3,28 +3,11 @@
 // ============================================
 
 import { VALORES_BASE } from "./data";
+import { calcMultIdade } from "./utils";
 import type { FormData } from "./types";
 
-// Curva de depreciação/apreciação por idade
-// Modelo estimativo - valores pico entre 7-12 anos
-function getAgeFactor(age: number): number {
-  if (age <= 0) return 0.5;
-  if (age === 1) return 0.55;
-  if (age === 2) return 0.65;
-  if (age === 3) return 0.75;
-  if (age === 4) return 0.85;
-  if (age === 5) return 0.95;
-  if (age === 6) return 1.05;
-  if (age >= 7 && age <= 12) return 1.15;
-  if (age === 13) return 1.05;
-  if (age === 14) return 0.95;
-  if (age === 15) return 0.85;
-  if (age === 16) return 0.75;
-  if (age === 17) return 0.65;
-  if (age === 18) return 0.58;
-  if (age === 19) return 0.52;
-  return Math.max(0.4, 0.52 - (age - 19) * 0.04);
-}
+// Use the shared age factor from utils.ts (single source of truth)
+// calcMultIdade handles: peak at 8-10, gradual decline, potro default
 
 export interface InvestmentProjection {
   year: number;
@@ -37,13 +20,13 @@ export function calcularProjecaoValor(
   idadeActual: number,
   labels?: string[]
 ): InvestmentProjection[] {
-  const currentFactor = getAgeFactor(idadeActual);
+  const currentFactor = calcMultIdade(idadeActual);
   const offsets = [0, 1, 2, 3, 5];
   const effectiveLabels = labels ?? ["Agora", "+1 ano", "+2 anos", "+3 anos", "+5 anos"];
 
   return offsets.map((offset, i) => {
     const futureAge = idadeActual + offset;
-    const futureFactor = getAgeFactor(futureAge);
+    const futureFactor = calcMultIdade(futureAge);
     const ratio = currentFactor > 0 ? futureFactor / currentFactor : 1;
     return {
       year: offset,

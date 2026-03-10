@@ -10,7 +10,7 @@ export const criarCavalo = (sexo: "Garanhão" | "Égua"): Cavalo => ({
   idade: sexo === "Garanhão" ? 8 : 7,
   altura: sexo === "Garanhão" ? 163 : 158,
   pelagem: "Ruço",
-  genetica: { extension: "Ee", agouti: "Aa", grey: "Gg", cream: "NN", dun: "dd" },
+  genetica: { extension: "Ee", agouti: "Aa", grey: "Gg", cream: "NN", dun: "dd", pearl: "NN" },
   linhagem: "Certificada",
   linhagemFamosa: "veiga",
   coudelaria: "Particular",
@@ -31,6 +31,7 @@ export const criarCavaleiro = (): Cavaleiro => ({
   pesoCavaleiro: 70,
   alturaCavaleiro: 170,
   nivelFitness: "moderado",
+  experiencia: "intermedio",
 });
 
 export const COUDELARIAS = [

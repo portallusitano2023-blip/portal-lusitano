@@ -49,7 +49,7 @@ export default function ProcessingOverlay({ step }: ProcessingOverlayProps) {
       </div>
 
       {/* Animated steps */}
-      <div className="flex flex-col gap-3 w-full max-w-xs">
+      <div className="flex flex-col gap-3 w-full max-w-xs" aria-live="polite" role="status">
         {[
           tr("Analisando pontuações...", "Analysing scores...", "Analizando puntuaciones..."),
           tr("Calculando diferenças...", "Calculating differences...", "Calculando diferencias..."),

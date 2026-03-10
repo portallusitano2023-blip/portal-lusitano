@@ -102,14 +102,14 @@ export default function ImprovementActions({
             key={i}
             className="flex items-start gap-3 p-3 bg-[var(--background-card)]/50 rounded-lg border border-[var(--border)]/60"
           >
-            <span className="w-5 h-5 rounded-full bg-[#C5A059]/20 border border-[#C5A059]/40 text-[10px] font-bold text-[#C5A059] flex items-center justify-center shrink-0 mt-0.5">
+            <span className="w-5 h-5 rounded-full bg-[#C5A059]/20 border border-[#C5A059]/40 text-[11px] font-bold text-[#C5A059] flex items-center justify-center shrink-0 mt-0.5">
               {i + 1}
             </span>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-0.5">
                 <p className="text-sm font-semibold text-[var(--foreground)]">{acao.titulo}</p>
                 <span
-                  className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${acao.badgeColor}`}
+                  className={`text-[11px] px-1.5 py-0.5 rounded-full font-medium ${acao.badgeColor}`}
                 >
                   {acao.badge}
                 </span>
@@ -122,14 +122,14 @@ export default function ImprovementActions({
               <p className="text-sm font-bold text-emerald-400">
                 +{acao.ganhoEstimado.toLocaleString(locale)}€
               </p>
-              <p className="text-[10px] text-[var(--foreground-muted)]">
+              <p className="text-[11px] text-[var(--foreground-muted)]">
                 {acao.prazoMeses === 1 ? tr("1 mês", "1 month", "1 mes") : `${acao.prazoMeses} ${tr("meses", "months", "meses")}`}
               </p>
             </div>
           </div>
         ))}
       </div>
-      <p className="text-[10px] text-[var(--foreground-muted)]/50 mt-3">
+      <p className="text-[11px] text-[var(--foreground-muted)]/50 mt-3">
         {tr(
           "Estimativas baseadas no modelo de valorização — não constituem garantia de mercado.",
           "Estimates based on the valuation model — do not constitute a market guarantee.",

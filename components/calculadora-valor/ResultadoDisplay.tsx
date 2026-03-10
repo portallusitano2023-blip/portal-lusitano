@@ -62,9 +62,9 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         ref={ref}
         className="space-y-6 pt-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
       >
-        {/* Confetti celebration — fires only once per mount */}
+        {/* Confetti celebration — disabled */}
         <div className="relative">
-          <Confetti trigger={!hasShownConfetti.current} particleCount={50} duration={2800} />
+          <Confetti trigger={false} particleCount={50} duration={2800} />
         </div>
 
         {/* Validation Warnings */}

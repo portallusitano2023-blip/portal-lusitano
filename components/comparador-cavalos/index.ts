@@ -35,6 +35,8 @@ export {
   calcularScoreWeighted,
   calcularValorPorPontoWeighted,
   DEFAULT_WEIGHTS,
+  findVencedor,
+  findMelhorValor,
 } from "./calcular";
 
 export { default as RadarChart } from "./RadarChart";

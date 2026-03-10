@@ -2,16 +2,6 @@
 // DADOS PROFISSIONAIS - Calculadora de Valor
 // ============================================
 
-export const PELAGENS = [
-  { value: "Ruço", label: "Ruço", labelEn: "Grey", labelEs: "Ruano", desc: "Pelagem mais valorizada", descEn: "Most valued coat", descEs: "Pelaje más valorado" },
-  { value: "Castanho", label: "Castanho", labelEn: "Bay", labelEs: "Castaño", desc: "Clássica e tradicional", descEn: "Classic and traditional", descEs: "Clásico y tradicional" },
-  { value: "Preto", label: "Preto", labelEn: "Black", labelEs: "Negro", desc: "Elegante e rara", descEn: "Elegant and rare", descEs: "Elegante y raro" },
-  { value: "Baio", label: "Baio", labelEn: "Dun", labelEs: "Bayo", desc: "Tonalidade dourada", descEn: "Golden shade", descEs: "Tonalidad dorada" },
-  { value: "Tordilho", label: "Tordilho", labelEn: "Dapple Grey", labelEs: "Tordillo", desc: "Progressiva para branco", descEn: "Progressive to white", descEs: "Progresivo a blanco" },
-  { value: "Isabela", label: "Isabela", labelEn: "Buckskin", labelEs: "Isabela", desc: "Rara e distinta", descEn: "Rare and distinct", descEs: "Rara y distinta" },
-  { value: "Palomino", label: "Palomino", labelEn: "Palomino", labelEs: "Palomino", desc: "Dourado excepcional", descEn: "Exceptional golden", descEs: "Dorado excepcional" },
-];
-
 export const LINHAGENS_FAMOSAS = [
   { value: "veiga", label: "Veiga", labelEn: "Veiga", labelEs: "Veiga", desc: "Alta Escola, piaffé natural", descEn: "Haute Ecole, natural piaffe", descEs: "Alta Escuela, piaffé natural" },
   { value: "andrade", label: "Andrade", labelEn: "Andrade", labelEs: "Andrade", desc: "Força e trabalho de campo", descEn: "Strength and fieldwork", descEs: "Fuerza y trabajo de campo" },
@@ -26,6 +16,8 @@ export const LINHAGENS_FAMOSAS = [
     descEs: "Versatilidad y equilibrio",
   },
   { value: "infante_da_camara", label: "Infante da Câmara", labelEn: "Infante da Câmara", labelEs: "Infante da Câmara", desc: "Refinamento e elegância", descEn: "Refinement and elegance", descEs: "Refinamiento y elegancia" },
+  { value: "lagoalva", label: "Lagoalva", labelEn: "Lagoalva", labelEs: "Lagoalva", desc: "Tradição e funcionalidade", descEn: "Tradition and functionality", descEs: "Tradición y funcionalidad" },
+  { value: "interagro", label: "Interagro", labelEn: "Interagro", labelEs: "Interagro", desc: "Referência internacional, criação brasileira", descEn: "International reference, Brazilian breeding", descEs: "Referencia internacional, cría brasileña" },
   { value: "outra", label: "Outra / Mista", labelEn: "Other / Mixed", labelEs: "Otra / Mixta", desc: "Linhagem não listada", descEn: "Unlisted lineage", descEs: "Linaje no listado" },
 ];
 
@@ -95,6 +87,22 @@ export const DISCIPLINAS_DETAILED: DisciplinaOption[] = [
     impact: "−15%",
     impactValue: 0.85,
   },
+  {
+    value: "TREC",
+    labelPt: "TREC",
+    labelEn: "TREC",
+    labelEs: "TREC",
+    impact: "0%",
+    impactValue: 1.0,
+  },
+  {
+    value: "Horseball",
+    labelPt: "Horseball",
+    labelEn: "Horseball",
+    labelEs: "Horseball",
+    impact: "0%",
+    impactValue: 1.0,
+  },
 ];
 
 export const MERCADOS = [
@@ -109,6 +117,8 @@ export const MERCADOS = [
   { value: "Brasil", label: "Brasil", labelEn: "Brazil", labelEs: "Brasil", mult: 0.85 },
   { value: "EUA", label: "EUA", labelEn: "USA", labelEs: "EE.UU.", mult: 1.35 },
   { value: "México", label: "México", labelEn: "Mexico", labelEs: "México", mult: 0.9 },
+  { value: "Itália", label: "Itália", labelEn: "Italy", labelEs: "Italia", mult: 1.15 },
+  { value: "Escandinávia", label: "Escandinávia", labelEn: "Scandinavia", labelEs: "Escandinavia", mult: 1.2 },
 ];
 
 export const VALORES_BASE: Record<string, number> = {
@@ -157,6 +167,8 @@ export const DISCIPLINA_PREMIUMS: Record<string, number> = {
   Atrelagem: 1.0,
   "Ensino / Equitação": 0.95,
   "Lazer / Passeio": 0.85,
+  TREC: 1.0,
+  Horseball: 1.0,
 };
 
 export const MULT_LIVRO: Record<string, number> = {

@@ -216,7 +216,7 @@ export default function MethodologyFooter({
             {t.calculadora.disclaimer_title}
           </strong>{" "}
           {t.calculadora.disclaimer_text}
-          <span className="block mt-1 text-[10px] text-[var(--foreground-muted)]/40 font-mono">
+          <span className="block mt-1 text-[11px] text-[var(--foreground-muted)]/40 font-mono">
             {(t.calculadora as Record<string, string>).methodology_version ?? tr("v2.1 — Fev 2026", "v2.1 — Feb 2026", "v2.1 — Feb 2026")}
           </span>
         </p>

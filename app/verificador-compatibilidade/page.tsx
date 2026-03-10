@@ -267,6 +267,33 @@ export default function VerificadorCompatibilidadePage() {
     // FIX C: guard against double-click while a calculation is already in progress
     if (isCalculating) return;
     if (!canUse) return;
+
+    // C-04: Empty form validation — require horse names
+    const nomeGaranhao = garanhao.nome.trim();
+    const nomeEgua = egua.nome.trim();
+    if (!nomeGaranhao || !nomeEgua) {
+      showError(
+        tr(
+          "Preencha os nomes de ambos os cavalos antes de calcular.",
+          "Please fill in both horse names before calculating.",
+          "Rellena los nombres de ambos caballos antes de calcular."
+        )
+      );
+      return;
+    }
+
+    // C-03: Self-comparison guard — prevent comparing the same horse
+    if (nomeGaranhao.toLowerCase() === nomeEgua.toLowerCase()) {
+      showError(
+        tr(
+          "O garanhão e a égua não podem ter o mesmo nome (auto-comparação).",
+          "The stallion and mare cannot have the same name (self-comparison).",
+          "El semental y la yegua no pueden tener el mismo nombre (auto-comparación)."
+        )
+      );
+      return;
+    }
+
     setIsCalculating(true);
 
     try {
@@ -470,8 +497,8 @@ export default function VerificadorCompatibilidadePage() {
           </div>
         )}
 
-        {/* Chain imported banner — blue info variant */}
-        {chainImported && (
+        {/* Chain imported banner — blue info variant (H-13: hide after results) */}
+        {chainImported && !resultado && (
           <div className="max-w-4xl mx-auto px-4 mb-4 mt-4">
             <div className="flex items-center gap-2 px-4 py-2.5 bg-blue-900/20 border border-blue-500/30 rounded-xl text-sm text-blue-300">
               <ArrowRight size={15} className="shrink-0" />

@@ -8,7 +8,7 @@ import SourceBadge from "@/components/tools/SourceBadge";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import type { Cavalo } from "./types";
-import { CORES, PELAGENS, LINHAGENS, TREINOS, SEXOS, COMPETICOES, PRESETS, localizedLabel } from "./data";
+import { CORES, PELAGENS, LINHAGENS, TREINOS, SEXOS, COMPETICOES, PRESETS, PESOS_DISC, DISC_LABELS, LINHAGENS_FAMOSAS, localizedLabel } from "./data";
 import {
   calcularScore,
   calcularPotencial,
@@ -26,6 +26,7 @@ interface HorseFormProps {
   vencedorId: string;
   melhorValorId: string;
   filtroDisciplina: string;
+  duplicateName?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t: Record<string, any>;
   onUpdate: (id: string, campo: keyof Cavalo, valor: Cavalo[keyof Cavalo]) => void;
@@ -41,6 +42,7 @@ export default function HorseForm({
   vencedorId,
   melhorValorId,
   filtroDisciplina,
+  duplicateName,
   t,
   onUpdate,
   onRemove,
@@ -50,19 +52,6 @@ export default function HorseForm({
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
-
-  const PESOS_DISC: Record<string, Record<string, number>> = {
-    dressage: { conformacao: 0.2, andamentos: 0.3, elevacao: 0.25, temperamento: 0.15, saude: 0.1 },
-    trabalho: { conformacao: 0.25, andamentos: 0.2, temperamento: 0.3, saude: 0.15, blupNorm: 0.1 },
-    reproducao: { blupNorm: 0.35, conformacao: 0.25, saude: 0.25, andamentos: 0.15 },
-    lazer: { temperamento: 0.4, saude: 0.35, conformacao: 0.15, andamentos: 0.1 },
-  };
-  const DISC_LABELS: Record<string, string> = {
-    dressage: "Dressage FEI",
-    trabalho: tr("Equit. Trabalho", "Working Equit.", "Equit. Trabajo"),
-    reproducao: tr("Reprodução", "Breeding", "Reproducción"),
-    lazer: tr("Lazer", "Leisure", "Ocio"),
-  };
 
   return (
     <div
@@ -94,19 +83,30 @@ export default function HorseForm({
             type="text"
             value={c.nome}
             onChange={(e) => onUpdate(c.id, "nome", e.target.value)}
-            className="bg-transparent text-lg font-semibold outline-none flex-1 text-[var(--foreground)]"
+            className="bg-transparent text-lg font-semibold outline-none flex-1 text-[var(--foreground)] focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded px-1"
             placeholder={comp.placeholder_horse_name}
+            aria-label={tr("Nome do cavalo", "Horse name", "Nombre del caballo")}
           />
           {totalCavalos > 2 && (
             <button
               onClick={() => onRemove(c.id)}
-              className="text-[var(--foreground-muted)] hover:text-red-400 transition-colors"
+              className="text-[var(--foreground-muted)] hover:text-red-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/50 rounded p-1"
               aria-label={tr("Remover cavalo", "Remove horse", "Eliminar caballo")}
             >
               <X size={18} />
             </button>
           )}
         </div>
+        {/* Duplicate name warning (Issue 22) */}
+        {duplicateName && c.nome.trim() !== "" && (
+          <p className="text-[10px] text-amber-400 mt-1 flex items-center gap-1" role="alert">
+            {tr(
+              "Aviso: outro cavalo tem o mesmo nome",
+              "Warning: another horse has the same name",
+              "Aviso: otro caballo tiene el mismo nombre"
+            )}
+          </p>
+        )}
         {/* Preset */}
         <select
           className="mt-2 w-full text-xs bg-[var(--background-card)]/40 border border-[var(--border)] text-[var(--foreground-muted)] rounded px-2 py-1 cursor-pointer hover:border-[var(--gold)]/40 transition-colors"
@@ -152,11 +152,12 @@ export default function HorseForm({
             </label>
             <input
               type="number"
-              min="1"
-              max="30"
+              min="0"
+              max="35"
               value={c.idade}
-              onChange={(e) => onUpdate(c.id, "idade", +e.target.value || 1)}
+              onChange={(e) => onUpdate(c.id, "idade", Math.max(0, Math.min(35, +e.target.value || 0)))}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+              aria-label={comp.label_age}
             />
           </div>
           <div>
@@ -165,11 +166,12 @@ export default function HorseForm({
             </label>
             <input
               type="number"
-              min="140"
-              max="180"
+              min="100"
+              max="200"
               value={c.altura}
-              onChange={(e) => onUpdate(c.id, "altura", +e.target.value || 160)}
+              onChange={(e) => onUpdate(c.id, "altura", Math.max(100, Math.min(200, +e.target.value || 160)))}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+              aria-label={comp.label_height}
             />
           </div>
         </div>
@@ -247,6 +249,8 @@ export default function HorseForm({
         {[
           { field: "conformacao" as const, label: comp.label_conformation },
           { field: "andamentos" as const, label: comp.label_gaits },
+          { field: "elevacao" as const, label: tr("Elevação", "Elevation", "Elevación") },
+          { field: "regularidade" as const, label: tr("Regularidade", "Regularity", "Regularidad") },
           { field: "temperamento" as const, label: comp.label_temperament },
           { field: "saude" as const, label: comp.label_health },
         ].map(({ field, label }) => (
@@ -295,12 +299,35 @@ export default function HorseForm({
             <label className="text-xs text-[var(--foreground-muted)] block mb-1">BLUP</label>
             <input
               type="number"
-              min="50"
-              max="150"
+              min="70"
+              max="160"
               value={c.blup}
-              onChange={(e) => onUpdate(c.id, "blup", +e.target.value || 100)}
+              onChange={(e) => onUpdate(c.id, "blup", Math.max(70, Math.min(160, +e.target.value || 100)))}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+              aria-label="BLUP"
             />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-[var(--foreground-muted)] block mb-1">
+              {tr("Prémios / Awards", "Awards", "Premios")}
+            </label>
+            <input
+              type="number"
+              min="0"
+              max="10"
+              value={c.premios}
+              onChange={(e) => onUpdate(c.id, "premios", Math.max(0, Math.min(10, +e.target.value || 0)))}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+              aria-label={tr("Prémios", "Awards", "Premios")}
+            />
+          </div>
+          <div className="flex items-end">
+            <span className="text-[10px] text-[var(--foreground-muted)] pb-2.5">
+              {tr("0-10 prémios", "0-10 awards", "0-10 premios")}
+            </span>
           </div>
         </div>
 
@@ -331,15 +358,16 @@ export default function HorseForm({
             min="0"
             step="1000"
             value={c.preco}
-            onChange={(e) => onUpdate(c.id, "preco", +e.target.value || 0)}
+            onChange={(e) => onUpdate(c.id, "preco", Math.max(0, +e.target.value || 0))}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+            aria-label={comp.label_price}
           />
         </div>
 
         <button
           onClick={() => onUpdate(c.id, "registoAPSL", !c.registoAPSL)}
           aria-pressed={c.registoAPSL}
-          className={`w-full py-2 px-3 rounded-lg border text-xs font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`w-full py-2 px-3 rounded-lg border text-xs font-medium transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 ${
             c.registoAPSL
               ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
               : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--border)]"
@@ -412,7 +440,7 @@ export default function HorseForm({
               return (
                 <div className="mt-1.5 text-xs text-[var(--foreground-muted)]">
                   <span className="text-[#C5A059]/70">{Math.round(discScore)} pts</span> {tr("para", "for", "para")}{" "}
-                  {DISC_LABELS[filtroDisciplina] ?? filtroDisciplina}
+                  {DISC_LABELS[filtroDisciplina] ? localizedLabel(DISC_LABELS[filtroDisciplina], language) : filtroDisciplina}
                 </div>
               );
             })()}

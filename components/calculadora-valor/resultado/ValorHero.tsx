@@ -33,7 +33,7 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
         <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--gold)]/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-[var(--gold)]/5 rounded-full blur-3xl" />
         {/* Badges — in-flow on mobile, absolute on sm+ */}
-        <div className="relative z-10 flex flex-wrap justify-center gap-2 mb-4 sm:hidden">
+        <div className="relative z-10 flex flex-wrap justify-center gap-2 mb-4 sm:hidden" aria-hidden="true">
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--gold)]/10 rounded-full border border-[var(--gold)]/30">
             <Crown size={12} className="text-[var(--gold)]" />
             <span className="text-xs text-[var(--gold)] font-medium">
@@ -57,7 +57,7 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
             </div>
           )}
         </div>
-        <div className="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
+        <div className="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2" aria-hidden="true">
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--gold)]/10 rounded-full border border-[var(--gold)]/30">
             <Crown size={12} className="text-[var(--gold)]" />
             <span className="text-xs text-[var(--gold)] font-medium">
@@ -90,6 +90,15 @@ export default function ValorHero({ resultado, form, t }: ValorHeroProps) {
           )}
           <p className="text-[var(--gold)] text-xs font-medium uppercase tracking-[0.1em] sm:tracking-[0.2em] mb-6 px-2">
             {t.calculadora.market_value}
+            {resultado.dataAvaliacao && (
+              <span className="block text-[11px] text-[var(--foreground-muted)] mt-1 font-normal normal-case tracking-normal">
+                {tr("Avaliação de", "Evaluation from", "Evaluación de")}{" "}
+                {new Date(resultado.dataAvaliacao).toLocaleDateString(
+                  language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT",
+                  { day: "numeric", month: "long", year: "numeric" }
+                )}
+              </span>
+            )}
           </p>
 
           <div className="flex items-baseline justify-center gap-2">

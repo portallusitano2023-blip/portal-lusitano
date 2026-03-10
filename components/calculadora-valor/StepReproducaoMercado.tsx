@@ -105,7 +105,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_target_market}
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label={t.calculadora.label_target_market}>
             {MERCADOS.map((m) => {
               const pct = Math.round((m.mult - 1) * 100);
               const badgeLabel = pct > 0 ? `+${pct}%` : pct < 0 ? `${pct}%` : "base";
@@ -123,7 +123,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                 >
                   <span>{localizedLabel(m, language)}</span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                    className={`text-[11px] px-1.5 py-0.5 rounded-full font-medium ${
                       badgeType === "pos"
                         ? "bg-emerald-500/15 text-emerald-400"
                         : badgeType === "neg"
@@ -146,7 +146,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_market_trend}
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label={t.calculadora.label_market_trend}>
             {trendOptions.map((opt) => (
               <button
                 key={opt.value}
@@ -185,7 +185,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                 )}
                 position="top"
               />
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium bg-emerald-500/15 text-emerald-400">
+              <span className="text-[11px] px-1.5 py-0.5 rounded-full font-medium bg-emerald-500/15 text-emerald-400">
                 +6%
               </span>
             </div>
@@ -230,7 +230,7 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                 position="top"
               />
             </div>
-            <div className="grid grid-cols-4 gap-1">
+            <div className="grid grid-cols-4 gap-1" role="radiogroup" aria-label={tr("Proprietários anteriores", "Previous owners", "Propietarios anteriores")}>
               {[0, 1, 2, 3].map((n) => {
                 const ownerBadge = n === 0 ? "+5%" : n === 1 ? "base" : n === 2 ? "−5%" : "−12%";
                 const ownerType = n === 0 ? "pos" : n === 1 ? "base" : "neg";

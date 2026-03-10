@@ -15,6 +15,7 @@ const COAT_IMPACT: Record<string, { label: string; type: "pos" | "neg" | "base" 
   Tordilho: { label: "base", type: "base" },
   Isabela: { label: "+4%", type: "pos" },
   Palomino: { label: "+5%", type: "pos" },
+  Alazão: { label: "base", type: "base" },
 };
 
 export default function StepIdentificacao({ form, update }: StepProps) {
@@ -46,8 +47,13 @@ export default function StepIdentificacao({ form, update }: StepProps) {
         label: t.calculadora.coat_palomino,
         desc: t.calculadora.coat_palomino_desc,
       },
+      {
+        value: "Alazão",
+        label: tr("Alazão", "Chestnut", "Alazán"),
+        desc: tr("Tons avermelhados, clássico", "Reddish tones, classic", "Tonos rojizos, clásico"),
+      },
     ],
-    [t]
+    [t, tr]
   );
 
   const sexOptions = useMemo(
@@ -131,7 +137,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                 id="campo-altura"
                 type="number"
                 value={form.altura}
-                onChange={(e) => update("altura", Number(e.target.value))}
+                onChange={(e) => update("altura", Math.max(100, Math.min(220, Number(e.target.value) || 162)))}
                 min={140}
                 max={180}
                 className="w-full bg-transparent border-b border-[var(--border)] py-3 text-lg focus:border-[var(--gold)] outline-none transition-colors"
@@ -174,7 +180,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_sex}
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label={t.calculadora.label_sex}>
             {sexOptions.map((opt) => (
               <button
                 key={opt.value}
@@ -197,7 +203,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
           <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
             {t.calculadora.label_coat}
           </label>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t.calculadora.label_coat}>
             {pelagens.map((p) => (
               <button
                 key={p.value}
@@ -217,7 +223,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                   </span>
                   {COAT_IMPACT[p.value] && (
                     <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
+                      className={`text-[11px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
                         COAT_IMPACT[p.value].type === "pos"
                           ? "bg-emerald-500/15 text-emerald-400"
                           : "bg-white/10 text-white/50"
@@ -231,7 +237,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               </button>
             ))}
           </div>
-          <p className="text-[10px] text-[var(--foreground-muted)] mt-2 italic">
+          <p className="text-[11px] text-[var(--foreground-muted)] mt-2 italic">
             {tr(
               "*Ruço: bonus aplicável nos mercados Brasil/EUA. Preto: bonus em mercados internacionais.",
               "*Ruco: bonus applicable in Brazil/USA markets. Black: bonus in international markets.",
@@ -253,11 +259,11 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               )}
               position="top"
             />
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium bg-emerald-500/15 text-emerald-400">
+            <span className="text-[11px] px-1.5 py-0.5 rounded-full font-medium bg-emerald-500/15 text-emerald-400">
               +20%
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t.calculadora.label_apsl_reg}>
             <button
               onClick={() => update("registoAPSL", true)}
               aria-pressed={form.registoAPSL === true}
@@ -288,7 +294,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
               <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
                 {t.calculadora.label_book_type}
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label={t.calculadora.label_book_type}>
                 {bookOptions.map((opt) => (
                   <button
                     key={opt.value}

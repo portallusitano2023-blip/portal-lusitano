@@ -30,7 +30,11 @@ export default function MorphologyGenetics({ form, resultado, t }: MorphologyGen
             source="APSL"
             tooltip={
               (t.calculadora as Record<string, string>).source_conformacao ??
-              "Critérios de conformação segundo o padrão da raça Lusitana"
+              tr(
+                "Critérios de conformação segundo o padrão da raça Lusitana",
+                "Conformation criteria according to Lusitano breed standard",
+                "Criterios de conformación según el estándar de la raza Lusitana"
+              )
             }
           />
         </h3>
@@ -56,7 +60,11 @@ export default function MorphologyGenetics({ form, resultado, t }: MorphologyGen
               <Tooltip
                 text={
                   (t.calculadora as Record<string, string>).tooltip_blup ??
-                  "Índice de mérito genético estimado com base nos dados fornecidos. Esta é uma estimativa simplificada, NÃO um BLUP oficial APSL."
+                  tr(
+                    "Índice de mérito genético estimado com base nos dados fornecidos. Esta é uma estimativa simplificada, NÃO um BLUP oficial APSL.",
+                    "Estimated genetic merit index based on provided data. This is a simplified estimate, NOT an official APSL BLUP.",
+                    "Índice de mérito genético estimado basado en los datos proporcionados. Esta es una estimación simplificada, NO un BLUP oficial APSL."
+                  )
                 }
               />
             </span>
@@ -67,7 +75,7 @@ export default function MorphologyGenetics({ form, resultado, t }: MorphologyGen
           <div className="text-xs text-[var(--foreground-muted)] mt-1">
             {t.calculadora.blup_avg}
           </div>
-          <p className="text-[10px] text-[var(--foreground-muted)]/60 mt-1.5 italic">
+          <p className="text-[11px] text-[var(--foreground-muted)]/60 mt-1.5 italic">
             {tr(
               "Estimativa baseada nos dados fornecidos",
               "Estimate based on provided data",
@@ -90,14 +98,22 @@ export default function MorphologyGenetics({ form, resultado, t }: MorphologyGen
               <Tooltip
                 text={
                   (t.calculadora as Record<string, string>).tooltip_percentile_card ??
-                  "Baseado em faixas de valor do mercado equestre português para cavalos PSL."
+                  tr(
+                    "Baseado em faixas de valor do mercado equestre português para cavalos PSL.",
+                    "Based on value ranges of the Portuguese equestrian market for PSL horses.",
+                    "Basado en rangos de valor del mercado ecuestre portugués para caballos PSL."
+                  )
                 }
               />
               <SourceBadge
                 source="mercado"
                 tooltip={
                   (t.calculadora as Record<string, string>).source_mercado ??
-                  "Faixas baseadas em médias do sector equestre português"
+                  tr(
+                    "Faixas baseadas em médias do sector equestre português",
+                    "Ranges based on averages of the Portuguese equestrian sector",
+                    "Rangos basados en promedios del sector ecuestre portugués"
+                  )
                 }
               />
             </span>

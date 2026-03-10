@@ -48,7 +48,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "dressage_comp",
           traits: ["competicao", "elegancia", "treino_avancado"],
-          points: { competidor: 10, tradicional: 2, criador: 4, amador: 1 },
+          points: { competidor: 10, tradicional: 2, criador: 4, amador: 1, aprendiz: 0 },
         },
         {
           text: tr("Equitação de Trabalho / Toureio", "Working Equitation / Rejoneo", "Equitación de Trabajo / Rejoneo"),
@@ -59,7 +59,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "trabalho",
           traits: ["tradicao", "versatilidade", "robustez"],
-          points: { competidor: 3, tradicional: 10, criador: 3, amador: 2 },
+          points: { competidor: 3, tradicional: 10, criador: 3, amador: 2, aprendiz: 1 },
         },
         {
           text: tr("Alta Escola Clássica / Lazer", "Classical Haute École / Leisure", "Alta Escuela Clásica / Ocio"),
@@ -70,7 +70,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "escola",
           traits: ["aprendizagem", "progressao", "escola"],
-          points: { competidor: 4, tradicional: 3, criador: 2, amador: 8 },
+          points: { competidor: 4, tradicional: 3, criador: 2, amador: 8, aprendiz: 3 },
         },
         {
           text: tr("Reprodução e Melhoramento Genético", "Breeding and Genetic Improvement", "Reproducción y Mejora Genética"),
@@ -81,7 +81,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "criacao",
           traits: ["genetica", "linhagem", "morfologia"],
-          points: { competidor: 2, tradicional: 3, criador: 10, amador: 1 },
+          points: { competidor: 2, tradicional: 3, criador: 10, amador: 1, aprendiz: 0 },
         },
       ],
     },
@@ -110,7 +110,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "iniciante",
           traits: ["calmo", "seguro", "docil"],
-          points: { competidor: 0, tradicional: 3, criador: 1, amador: 10 },
+          points: { competidor: 0, tradicional: 3, criador: 1, amador: 10, aprendiz: 4 },
         },
         {
           text: tr("Intermédio (2 a 5 anos)", "Intermediate (2 to 5 years)", "Intermedio (2 a 5 años)"),
@@ -121,7 +121,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "intermedio",
           traits: ["versatil", "equilibrado"],
-          points: { competidor: 4, tradicional: 6, criador: 3, amador: 7 },
+          points: { competidor: 4, tradicional: 6, criador: 3, amador: 7, aprendiz: 2 },
         },
         {
           text: tr("Avançado (5 a 10 anos)", "Advanced (5 to 10 years)", "Avanzado (5 a 10 años)"),
@@ -132,7 +132,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "avancado",
           traits: ["desafiante", "sensivel"],
-          points: { competidor: 8, tradicional: 7, criador: 5, amador: 4 },
+          points: { competidor: 8, tradicional: 7, criador: 5, amador: 4, aprendiz: 0 },
         },
         {
           text: tr("Profissional / Cavaleiro de Competição", "Professional / Competition Rider", "Profesional / Jinete de Competición"),
@@ -143,7 +143,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "profissional",
           traits: ["competicao", "alto_nivel", "elite"],
-          points: { competidor: 10, tradicional: 5, criador: 6, amador: 1 },
+          points: { competidor: 10, tradicional: 5, criador: 6, amador: 1, aprendiz: 0 },
         },
       ],
     },
@@ -172,7 +172,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "muito_calmo",
           traits: ["calmo", "docil", "seguro"],
-          points: { competidor: 1, tradicional: 5, criador: 2, amador: 10 },
+          points: { competidor: 1, tradicional: 5, criador: 2, amador: 10, aprendiz: 3 },
         },
         {
           text: tr("Equilibrado e cooperativo", "Balanced and cooperative", "Equilibrado y cooperativo"),
@@ -183,7 +183,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "equilibrado",
           traits: ["equilibrado", "cooperativo"],
-          points: { competidor: 6, tradicional: 8, criador: 5, amador: 7 },
+          points: { competidor: 6, tradicional: 8, criador: 5, amador: 7, aprendiz: 2 },
         },
         {
           text: tr("Sensível e reactivo às ajudas", "Sensitive and responsive to aids", "Sensible y reactivo a las ayudas"),
@@ -194,7 +194,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "sensivel",
           traits: ["sensivel", "reactivo", "expressivo"],
-          points: { competidor: 9, tradicional: 4, criador: 6, amador: 2 },
+          points: { competidor: 9, tradicional: 4, criador: 6, amador: 2, aprendiz: 0 },
         },
         {
           text: tr("Com brio marcado — presença e vivacidade", "With marked brio — presence and vivacity", "Con brio marcado — presencia y vivacidad"),
@@ -205,7 +205,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "quente",
           traits: ["quente", "brio", "presenca"],
-          points: { competidor: 10, tradicional: 3, criador: 4, amador: 1 },
+          points: { competidor: 10, tradicional: 3, criador: 4, amador: 1, aprendiz: 0 },
         },
       ],
     },
@@ -234,7 +234,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "movimentos",
           traits: ["movimentos", "elegancia", "dressage"],
-          points: { competidor: 10, tradicional: 2, criador: 6, amador: 3 },
+          points: { competidor: 10, tradicional: 2, criador: 6, amador: 3, aprendiz: 1 },
         },
         {
           text: tr("Estrutura sólida e aptidão funcional", "Solid structure and functional aptitude", "Estructura sólida y aptitud funcional"),
@@ -245,7 +245,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "robusto",
           traits: ["robusto", "forte", "resistente"],
-          points: { competidor: 3, tradicional: 10, criador: 5, amador: 4 },
+          points: { competidor: 3, tradicional: 10, criador: 5, amador: 4, aprendiz: 2 },
         },
         {
           text: tr("Tipicidade racial e beleza clássica ibérica", "Breed typicality and classical Iberian beauty", "Tipicidad racial y belleza clásica ibérica"),
@@ -256,7 +256,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "beleza",
           traits: ["beleza", "tipicidade", "morfologia"],
-          points: { competidor: 5, tradicional: 5, criador: 10, amador: 5 },
+          points: { competidor: 5, tradicional: 5, criador: 10, amador: 5, aprendiz: 1 },
         },
         {
           text: tr("Conforto e acessibilidade para o cavaleiro", "Comfort and accessibility for the rider", "Comodidad y accesibilidad para el jinete"),
@@ -267,7 +267,7 @@ export function getQuestions(tr: Tr): Question[] {
           ),
           value: "conforto",
           traits: ["confortavel", "facil", "lazer"],
-          points: { competidor: 2, tradicional: 4, criador: 2, amador: 10 },
+          points: { competidor: 2, tradicional: 4, criador: 2, amador: 10, aprendiz: 3 },
         },
       ],
     },

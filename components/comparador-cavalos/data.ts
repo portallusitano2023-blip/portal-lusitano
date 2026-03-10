@@ -95,6 +95,37 @@ export const DISCIPLINE_MATRIX = [
 ] as const;
 
 // ============================================
+// DISCIPLINE FILTER WEIGHTS (single source of truth)
+// ============================================
+
+export const PESOS_DISC: Record<string, Record<string, number>> = {
+  dressage: { conformacao: 0.2, andamentos: 0.3, elevacao: 0.25, temperamento: 0.15, saude: 0.1 },
+  trabalho: { conformacao: 0.25, andamentos: 0.2, temperamento: 0.3, saude: 0.15, blupNorm: 0.1 },
+  reproducao: { blupNorm: 0.35, conformacao: 0.25, saude: 0.25, andamentos: 0.15 },
+  lazer: { temperamento: 0.4, saude: 0.35, conformacao: 0.15, andamentos: 0.1 },
+};
+
+export const DISC_LABELS: Record<string, { label: string; labelEn: string; labelEs: string }> = {
+  dressage: { label: "Dressage FEI", labelEn: "Dressage FEI", labelEs: "Dressage FEI" },
+  trabalho: { label: "Equit. Trabalho", labelEn: "Working Equit.", labelEs: "Equit. Trabajo" },
+  reproducao: { label: "Reprodução", labelEn: "Breeding", labelEs: "Reproducción" },
+  lazer: { label: "Lazer", labelEn: "Leisure", labelEs: "Ocio" },
+};
+
+// ============================================
+// FAMOUS BLOODLINES
+// ============================================
+
+export const LINHAGENS_FAMOSAS = [
+  { value: "", label: "---", labelEn: "---", labelEs: "---" },
+  { value: "veiga", label: "Veiga", labelEn: "Veiga", labelEs: "Veiga" },
+  { value: "andrade", label: "Andrade", labelEn: "Andrade", labelEs: "Andrade" },
+  { value: "alter_real", label: "Alter Real", labelEn: "Alter Real", labelEs: "Alter Real" },
+  { value: "coudelaria_nacional", label: "Coudelaria Nacional", labelEn: "Coudelaria Nacional", labelEs: "Coudelaria Nacional" },
+  { value: "outro", label: "Outro", labelEn: "Other", labelEs: "Otro" },
+];
+
+// ============================================
 // HELPERS
 // ============================================
 

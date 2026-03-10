@@ -8,7 +8,7 @@ import { shareNative, copyToClipboard } from "@/lib/tools/share-utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { useToast } from "@/context/ToastContext";
-import { calcularValor, estimarValorParcial } from "./utils";
+import { calcularValor, estimarValorParcial, validateFormLogic } from "./utils";
 import { PROFILE_LABELS, SUBPROFILE_LABELS, PROFILE_CONTEXT_KEY } from "@/lib/tools/shared-data";
 import type { FormData, Resultado } from "./types";
 import { chainCalcToVerificador } from "@/lib/tools/tool-chain";
@@ -34,24 +34,24 @@ export const INITIAL_FORM: FormData = {
   livroAPSL: "definitivo",
   linhagem: "certificada",
   linhagemPrincipal: "veiga",
-  morfologia: 7,
-  garupa: 7,
-  espádua: 7,
-  cabeca: 7,
-  membros: 7,
-  andamentos: 7,
-  elevacao: 7,
-  suspensao: 7,
-  regularidade: 7,
+  morfologia: 5,
+  garupa: 5,
+  espádua: 5,
+  cabeca: 5,
+  membros: 5,
+  andamentos: 5,
+  elevacao: 5,
+  suspensao: 5,
+  regularidade: 5,
   treino: "elementar",
   competicoes: "nenhuma",
   disciplina: "Dressage Clássica",
   saude: "muito_bom",
   raioX: true,
   exameVeterinario: true,
-  temperamento: 8,
-  sensibilidade: 7,
-  vontadeTrabalho: 8,
+  temperamento: 5,
+  sensibilidade: 5,
+  vontadeTrabalho: 5,
   reproducao: false,
   descendentes: 0,
   descendentesAprovados: 0,
@@ -94,6 +94,10 @@ export function useCalculadoraState() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [calcHistory, setCalcHistory] = useState<CalcHistoryEntry[]>([]);
   const [showCalcHistory, setShowCalcHistory] = useState(false);
+  // C-05: Track which fields the user explicitly changed from defaults
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+  // H-05: Live validation warnings shown inline during form editing
+  const [warnings, setWarnings] = useState<import("./types").ValidationWarning[]>([]);
 
   // ── Refs ───────────────────────────────────────────
   const resultRef = useRef<HTMLDivElement>(null);
@@ -183,7 +187,7 @@ export function useCalculadoraState() {
           });
         }
       }
-    } catch {}
+    } catch (e) { if (process.env.NODE_ENV === "development") console.warn("Storage error:", e); }
   }, []);
 
   // Load history on mount
@@ -194,7 +198,7 @@ export function useCalculadoraState() {
         const parsed = JSON.parse(saved) as CalcHistoryEntry[];
         if (Array.isArray(parsed)) setCalcHistory(parsed);
       }
-    } catch {}
+    } catch (e) { if (process.env.NODE_ENV === "development") console.warn("Storage error:", e); }
   }, []);
 
   // Save history entry when resultado changes
@@ -209,13 +213,13 @@ export function useCalculadoraState() {
         treino: (formStep.data as FormData).treino,
       };
       setCalcHistory((prev) => {
-        const updated = [entry, ...prev].slice(0, 5);
+        const updated = [entry, ...prev].slice(0, 20);
         try {
           localStorage.setItem(CALC_HISTORY_KEY, JSON.stringify(updated));
-        } catch {}
+        } catch (e) { if (process.env.NODE_ENV === "development") console.warn("Storage error:", e); }
         return updated;
       });
-    } catch {}
+    } catch (e) { if (process.env.NODE_ENV === "development") console.warn("Storage error:", e); }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resultado, formStep.data, tr]);
 
@@ -245,10 +249,31 @@ export function useCalculadoraState() {
 
   const update = <K extends keyof FormData>(key: K, value: FormData[K]) => {
     formStep.updateData(key, value);
+    // C-05: Track fields the user explicitly modified
+    setTouchedFields((prev) => {
+      if (prev.has(key)) return prev;
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+    // H-05: Update live validation warnings on form change
+    const updatedForm = { ...(formStep.data as FormData), [key]: value };
+    setWarnings(validateFormLogic(updatedForm, tr));
   };
 
   const calcular = async () => {
     if (!canUse || isCalculating) return;
+
+    // C-05: Warn if fewer than 3 key fields were explicitly changed from defaults
+    const keyFields = ["treino", "idade", "sexo", "linhagem", "saude"];
+    const touchedKeyFields = keyFields.filter((f) => touchedFields.has(f));
+    if (touchedKeyFields.length < 3) {
+      showToast("warning", tr(
+        "Poucos campos alterados — os resultados podem não reflectir o cavalo real. Reveja treino, idade, sexo, linhagem e saúde.",
+        "Few fields changed — results may not reflect the actual horse. Review training, age, sex, lineage and health.",
+        "Pocos campos modificados — los resultados pueden no reflejar el caballo real. Revise entrenamiento, edad, sexo, linaje y salud."
+      ));
+    }
 
     const formMeta = {
       treino: (formStep.data as FormData).treino,
@@ -302,6 +327,7 @@ export function useCalculadoraState() {
 
   const editarResultado = () => {
     setResultado(null);
+    formStep.goToStep(0);
   };
 
   const restaurarDraft = () => {
@@ -337,7 +363,7 @@ export function useCalculadoraState() {
     if (!pdfPreviewUrl) return;
     const a = document.createElement("a");
     a.href = pdfPreviewUrl;
-    a.download = `avaliacao-lusitano-${Date.now()}.pdf`;
+    a.download = `${tr("avaliacao-lusitano", "lusitano-valuation", "evaluacion-lusitano")}-${Date.now()}.pdf`;
     a.click();
   };
 
@@ -373,8 +399,9 @@ export function useCalculadoraState() {
         body: JSON.stringify({ toolName: "calculadora", resultSummary: summary }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    } catch {
-      // silent fail - user can retry
+    } catch (e) {
+      if (process.env.NODE_ENV === "development") console.warn("Send email error:", e);
+      showToast("error", tr("Erro ao enviar email. Tente novamente.", "Error sending email. Please try again.", "Error al enviar email. Inténtelo de nuevo."));
     }
   };
 

@@ -102,7 +102,7 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
               position="bottom"
             />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2" role="radiogroup" aria-label={t.calculadora.label_lineage_quality}>
             {lineageOptions.map((opt) => (
               <button
                 key={opt.value}
@@ -122,7 +122,7 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
                   </span>
                   {LINEAGE_IMPACT[opt.value] && (
                     <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
+                      className={`text-[11px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
                         LINEAGE_IMPACT[opt.value].type === "pos"
                           ? "bg-emerald-500/15 text-emerald-400"
                           : LINEAGE_IMPACT[opt.value].type === "neg"
@@ -145,7 +145,7 @@ export default function StepGeneticaMorfologia({ form, update }: StepProps) {
             <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-3">
               {t.calculadora.label_main_lineage}
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t.calculadora.label_main_lineage}>
               {LINHAGENS_FAMOSAS.map((lin) => (
                 <button
                   key={lin.value}

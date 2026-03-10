@@ -33,16 +33,17 @@ export default function WeightsPanel({ weights, onChange }: WeightsPanelProps) {
     () => [
       { key: "linhagem", label: tr("Linhagem", "Lineage", "Linaje") },
       { key: "treino", label: tr("Treino", "Training", "Entrenamiento") },
-      { key: "conformacao", label: tr("Conformacao", "Conformation", "Conformacion") },
+      { key: "conformacao", label: tr("Conformação", "Conformation", "Conformación") },
       { key: "andamentos", label: tr("Andamentos", "Gaits", "Aires") },
       { key: "idade", label: tr("Idade", "Age", "Edad") },
-      { key: "competicoes", label: tr("Competicoes", "Competitions", "Competiciones") },
+      { key: "competicoes", label: tr("Competições", "Competitions", "Competiciones") },
       { key: "altura", label: tr("Altura", "Height", "Altura") },
       { key: "temperamento", label: tr("Temperamento", "Temperament", "Temperamento") },
-      { key: "saude", label: tr("Saude", "Health", "Salud") },
+      { key: "saude", label: tr("Saúde", "Health", "Salud") },
       { key: "blup", label: "BLUP" },
-      { key: "elevacao", label: tr("Elevacao", "Elevation", "Elevacion") },
+      { key: "elevacao", label: tr("Elevação", "Elevation", "Elevación") },
       { key: "regularidade", label: tr("Regularidade", "Regularity", "Regularidad") },
+      { key: "premios", label: tr("Prémios", "Awards", "Premios") },
       { key: "registoAPSL", label: tr("Registo APSL", "APSL Registration", "Registro APSL") },
     ],
     [tr]
@@ -76,9 +77,9 @@ export default function WeightsPanel({ weights, onChange }: WeightsPanelProps) {
           )}
           <Tooltip
             text={tr(
-              "Ajuste a importancia de cada categoria no score global. Os pesos sao normalizados para somar 100%.",
+              "Ajuste a importância de cada categoria no score global. Os pesos são normalizados para somar 100%.",
               "Adjust the importance of each category in the global score. Weights are normalised to sum 100%.",
-              "Ajuste la importancia de cada categoria en el score global. Los pesos se normalizan para sumar 100%."
+              "Ajuste la importancia de cada categoría en el score global. Los pesos se normalizan para sumar 100%."
             )}
           />
         </span>
@@ -93,9 +94,9 @@ export default function WeightsPanel({ weights, onChange }: WeightsPanelProps) {
         <div className="px-5 pb-5 pt-1 border-t border-[var(--border)]/50 animate-[fadeSlideIn_0.25s_ease-out_forwards]">
           <p className="text-xs text-[var(--foreground-muted)] mb-4 leading-relaxed">
             {tr(
-              "Mova os cursores para alterar o peso relativo de cada categoria. Os scores sao recalculados em tempo real.",
+              "Mova os cursores para alterar o peso relativo de cada categoria. Os scores são recalculados em tempo real.",
               "Move the sliders to change the relative weight of each category. Scores are recalculated in real time.",
-              "Mueva los deslizadores para cambiar el peso relativo de cada categoria. Los scores se recalculan en tiempo real."
+              "Mueva los deslizadores para cambiar el peso relativo de cada categoría. Los scores se recalculan en tiempo real."
             )}
           </p>
 

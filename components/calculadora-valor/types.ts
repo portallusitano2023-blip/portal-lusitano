@@ -67,6 +67,7 @@ export interface Resultado {
   pontosForteseFracos: { fortes: string[]; fracos: string[] };
   liquidez: { score: number; tempoDias: number; label: string };
   warnings?: ValidationWarning[];
+  dataAvaliacao?: string;
 }
 
 export interface StepProps {

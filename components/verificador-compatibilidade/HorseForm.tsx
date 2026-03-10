@@ -7,6 +7,7 @@ import Tooltip from "@/components/tools/Tooltip";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import type { Cavalo, GeneticaPelagem, Cavaleiro } from "@/components/verificador-compatibilidade/types";
+import { estimarCOI } from "@/components/verificador-compatibilidade/calcular";
 import {
   COUDELARIAS,
   LINHAGENS,
@@ -62,7 +63,7 @@ export default function HorseForm({
     if (c.linhagem && c.linhagem !== "Certificada") filled++;
     if (c.linhagemFamosa && c.linhagemFamosa !== "veiga") filled++;
     if (c.blup !== 100) filled++;
-    if (c.saude !== 7) filled++;
+    if (c.saude !== 8) filled++;
     if (c.conformacao !== 7 || c.andamentos !== 7) filled++;
     return Math.round((filled / total) * 100);
   };
@@ -88,10 +89,12 @@ export default function HorseForm({
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
       {/* Tabs */}
-      <div className="flex gap-2 mb-8">
+      <div className="flex gap-2 mb-8" role="tablist">
         <button
           onClick={() => setTab("garanhao")}
           aria-pressed={tab === "garanhao"}
+          role="tab"
+          aria-selected={tab === "garanhao"}
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
             tab === "garanhao"
               ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/20"
@@ -120,6 +123,8 @@ export default function HorseForm({
         <button
           onClick={() => setTab("egua")}
           aria-pressed={tab === "egua"}
+          role="tab"
+          aria-selected={tab === "egua"}
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
             tab === "egua"
               ? "bg-gradient-to-r from-pink-600 to-pink-500 text-white shadow-lg shadow-pink-500/20"
@@ -188,7 +193,7 @@ export default function HorseForm({
           )}
           <div>
             <h2 className="text-xl font-serif text-[var(--foreground)]">
-              {t.verificador.horse_data} {cavalo.sexo}
+              {t.verificador.horse_data} {cavalo.sexo === "Garanhão" ? tr("Garanhão", "Stallion", "Semental") : tr("Égua", "Mare", "Yegua")}
             </h2>
             <p className="text-sm text-[var(--foreground-muted)]">{t.verificador.form_desc}</p>
           </div>
@@ -197,10 +202,11 @@ export default function HorseForm({
         {/* Identificação */}
         <div className="grid sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="horse-name" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_name}
             </label>
             <input
+              id="horse-name"
               type="text"
               value={cavalo.nome}
               onChange={(e) => update("nome", e.target.value)}
@@ -209,16 +215,17 @@ export default function HorseForm({
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="horse-age" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_age}
             </label>
             <div className="relative">
               <input
+                id="horse-age"
                 type="number"
                 min="1"
                 max="30"
                 value={cavalo.idade}
-                onChange={(e) => update("idade", +e.target.value || 1)}
+                onChange={(e) => update("idade", Math.max(1, Math.min(30, +e.target.value || 1)))}
                 className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-sm">
@@ -227,16 +234,17 @@ export default function HorseForm({
             </div>
           </div>
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="horse-height" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_height}
             </label>
             <div className="relative">
               <input
+                id="horse-height"
                 type="number"
                 min="140"
                 max="180"
                 value={cavalo.altura}
-                onChange={(e) => update("altura", +e.target.value || 160)}
+                onChange={(e) => update("altura", Math.max(140, Math.min(180, +e.target.value || 160)))}
                 className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-sm">
@@ -249,10 +257,11 @@ export default function HorseForm({
         {/* Origem e Linhagem */}
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="horse-origin" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_origin}
             </label>
             <select
+              id="horse-origin"
               value={cavalo.coudelaria}
               onChange={(e) => update("coudelaria", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
@@ -265,10 +274,11 @@ export default function HorseForm({
             </select>
           </div>
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="horse-lineage" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_lineage_quality}
             </label>
             <select
+              id="horse-lineage"
               value={cavalo.linhagem}
               onChange={(e) => update("linhagem", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none transition-colors"
@@ -419,7 +429,7 @@ export default function HorseForm({
               min="50"
               max="150"
               value={cavalo.blup}
-              onChange={(e) => update("blup", +e.target.value || 100)}
+              onChange={(e) => update("blup", Math.max(50, Math.min(150, +e.target.value || 100)))}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
             />
             <p className="text-xs text-[var(--foreground-muted)] mt-1">{t.verificador.blup_avg}</p>
@@ -767,72 +777,7 @@ export default function HorseForm({
       {canUse && garanhao.linhagemFamosa &&
         egua.linhagemFamosa &&
         (() => {
-          const COI_ESTIMADOS: Record<string, Record<string, number>> = {
-            veiga: {
-              veiga: 6.25,
-              andrade: 1.5,
-              alter: 1.5,
-              coudelaria_nacional: 2.0,
-              infante_camara: 1.5,
-              interagro: 1.0,
-              outra: 1.0,
-            },
-            andrade: {
-              veiga: 1.5,
-              andrade: 4.0,
-              alter: 1.5,
-              coudelaria_nacional: 2.0,
-              infante_camara: 1.5,
-              interagro: 1.0,
-              outra: 1.0,
-            },
-            alter: {
-              veiga: 1.5,
-              andrade: 1.5,
-              alter: 5.0,
-              coudelaria_nacional: 2.5,
-              infante_camara: 2.0,
-              interagro: 1.0,
-              outra: 1.0,
-            },
-            coudelaria_nacional: {
-              veiga: 2.0,
-              andrade: 2.0,
-              alter: 2.5,
-              coudelaria_nacional: 5.0,
-              infante_camara: 2.0,
-              interagro: 1.5,
-              outra: 1.0,
-            },
-            infante_camara: {
-              veiga: 1.5,
-              andrade: 1.5,
-              alter: 2.0,
-              coudelaria_nacional: 2.0,
-              infante_camara: 4.5,
-              interagro: 1.0,
-              outra: 1.0,
-            },
-            interagro: {
-              veiga: 1.0,
-              andrade: 1.0,
-              alter: 1.0,
-              coudelaria_nacional: 1.5,
-              infante_camara: 1.0,
-              interagro: 3.0,
-              outra: 0.8,
-            },
-            outra: {
-              veiga: 1.0,
-              andrade: 1.0,
-              alter: 1.0,
-              coudelaria_nacional: 1.0,
-              infante_camara: 1.0,
-              interagro: 0.8,
-              outra: 2.0,
-            },
-          };
-          const coi = COI_ESTIMADOS[garanhao.linhagemFamosa]?.[egua.linhagemFamosa] ?? 2.0;
+          const coi = estimarCOI(garanhao.linhagemFamosa, egua.linhagemFamosa);
           const nivel =
             coi <= 3
               ? tr("Baixo", "Low", "Bajo")

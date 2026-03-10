@@ -11,11 +11,13 @@ const defaultTr: TrFn = (pt) => pt;
 export function calcularScore(c: Cavalo): number {
   let score = 0;
 
-  // Idade (ideal 6-12) - 10pts
-  score += c.idade >= 6 && c.idade <= 12 ? 10 : c.idade >= 4 && c.idade <= 15 ? 7 : 4;
+  // Idade (ideal ~9) - 10pts (continuous)
+  const ageDist = Math.abs(c.idade - 9);
+  score += Math.max(4, 10 - ageDist);
 
-  // Altura (ideal 158-168) - 8pts
-  score += c.altura >= 158 && c.altura <= 168 ? 8 : c.altura >= 155 && c.altura <= 170 ? 6 : 4;
+  // Altura (ideal ~163) - 8pts (continuous)
+  const htDist = Math.abs(c.altura - 163);
+  score += Math.max(4, 8 - Math.floor(htDist / 2));
 
   // Linhagem - 15pts
   const linPoints: Record<string, number> = {
@@ -29,7 +31,7 @@ export function calcularScore(c: Cavalo): number {
 
   // Treino - 15pts
   const treino = TREINOS.find((t) => t.value === c.treino);
-  score += treino ? Math.round(treino.nivel * 1.9) : 5;
+  score += treino ? Math.round((treino.nivel / 8) * 15) : 5;
 
   // Conformação - 10pts
   score += c.conformacao;
@@ -47,17 +49,20 @@ export function calcularScore(c: Cavalo): number {
   // Saúde - 7pts
   score += Math.round(c.saude * 0.7);
 
-  // Competições - 8pts
+  // Competições - 15pts
   const comp = COMPETICOES.find((co) => co.value === c.competicoes);
   score += comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
 
-  // BLUP bónus - 5pts
-  score += c.blup > 110 ? 5 : c.blup > 100 ? 3 : 1;
+  // BLUP bónus - 5pts (continuous)
+  score += Math.min(5, Math.max(1, Math.round((c.blup - 80) / 8)));
+
+  // Prémios bónus - 5pts
+  score += Math.min(5, c.premios);
 
   // Registo APSL bónus
   if (c.registoAPSL) score += 3;
 
-  return Math.min(score, 100);
+  return Math.min(Math.round(score), 100);
 }
 
 // ============================================
@@ -77,6 +82,7 @@ export const DEFAULT_WEIGHTS: CategoryWeights = {
   blup: 5,
   elevacao: 5,
   regularidade: 5,
+  premios: 5,
   registoAPSL: 3,
 };
 
@@ -99,11 +105,13 @@ export function calcularScoreWeighted(c: Cavalo, weights: CategoryWeights): numb
 
   let score = 0;
 
-  // Idade (ideal 6-12) — base 10 pts
-  score += (c.idade >= 6 && c.idade <= 12 ? 10 : c.idade >= 4 && c.idade <= 15 ? 7 : 4) * w("idade");
+  // Idade (ideal ~9) — base 10 pts (continuous)
+  const ageDist = Math.abs(c.idade - 9);
+  score += Math.max(4, 10 - ageDist) * w("idade");
 
-  // Altura (ideal 158-168) — base 8 pts
-  score += (c.altura >= 158 && c.altura <= 168 ? 8 : c.altura >= 155 && c.altura <= 170 ? 6 : 4) * w("altura");
+  // Altura (ideal ~163) — base 8 pts (continuous)
+  const htDist = Math.abs(c.altura - 163);
+  score += Math.max(4, 8 - Math.floor(htDist / 2)) * w("altura");
 
   // Linhagem — base 15 pts
   const linPoints: Record<string, number> = { Desconhecida: 3, Registada: 8, Certificada: 11, Premium: 13, Elite: 15 };
@@ -111,7 +119,7 @@ export function calcularScoreWeighted(c: Cavalo, weights: CategoryWeights): numb
 
   // Treino — base 15 pts
   const treino = TREINOS.find((t) => t.value === c.treino);
-  score += (treino ? Math.round(treino.nivel * 1.9) : 5) * w("treino");
+  score += (treino ? Math.round((treino.nivel / 8) * 15) : 5) * w("treino");
 
   // Conformacao — base 10 pts
   score += c.conformacao * w("conformacao");
@@ -135,8 +143,11 @@ export function calcularScoreWeighted(c: Cavalo, weights: CategoryWeights): numb
   const comp = COMPETICOES.find((co) => co.value === c.competicoes);
   score += (comp ? Math.round((comp.mult - 1) * 20 + 5) : 5) * w("competicoes");
 
-  // BLUP bonus — base 5 pts
-  score += (c.blup > 110 ? 5 : c.blup > 100 ? 3 : 1) * w("blup");
+  // BLUP bonus — base 5 pts (continuous)
+  score += Math.min(5, Math.max(1, Math.round((c.blup - 80) / 8))) * w("blup");
+
+  // Premios bonus — base 5 pts
+  score += Math.min(5, c.premios) * w("premios");
 
   // Registo APSL bonus
   if (c.registoAPSL) score += 3 * w("registoAPSL");
@@ -146,12 +157,14 @@ export function calcularScoreWeighted(c: Cavalo, weights: CategoryWeights): numb
 
 export function calcularValorPorPontoWeighted(c: Cavalo, weights: CategoryWeights): number {
   const score = calcularScoreWeighted(c, weights);
-  return score > 0 ? Math.round(c.preco / score) : 0;
+  if (score === 0 || c.preco === 0) return Infinity;
+  return Math.round(c.preco / score);
 }
 
 export function calcularValorPorPonto(c: Cavalo): number {
   const score = calcularScore(c);
-  return score > 0 ? Math.round(c.preco / score) : 0;
+  if (score === 0 || c.preco === 0) return Infinity;
+  return Math.round(c.preco / score);
 }
 
 // Score de potencial: score máximo atingível dado idade e treino atual
@@ -164,8 +177,8 @@ export function calcularPotencial(c: Cavalo): number {
   // Cavalos mais jovens têm mais margem de progressão
   const ageFactor = c.idade <= 5 ? 1.0 : c.idade <= 8 ? 0.75 : c.idade <= 11 ? 0.45 : 0.15;
 
-  // Margem de treino: cada nível vale ~1.9 pts no scoring
-  const treinoHeadroom = (nivelMax - nivel) * 1.9;
+  // Margem de treino: cada nível vale ~(nivel/8)*15 pts no scoring
+  const treinoHeadroom = ((nivelMax - nivel) / 8) * 15;
 
   // Margem de competição: máximo (Internacional) = ~15pts
   const comp = COMPETICOES.find((co) => co.value === c.competicoes);
@@ -216,12 +229,20 @@ export function calcularROI(c: Cavalo, tr: TrFn = defaultTr): { roi5yr: number; 
 }
 
 // ============================================
+// BLUP NORMALIZATION
+// ============================================
+
+export function normalizeBlup(b: number): number {
+  return Math.min(10, Math.max(0, (b - 70) / 6));
+}
+
+// ============================================
 // DISCIPLINE SCORING
 // ============================================
 
 export function calcDisciplineScore(c: Cavalo, weights: Record<string, number>): number {
   const treinoNorm = ((TREINOS.find((t) => t.value === c.treino)?.nivel ?? 4) / 7) * 10;
-  const blupNorm = Math.min(c.blup / 15, 10);
+  const blupNorm = normalizeBlup(c.blup);
   const fieldMap: Record<string, number> = {
     elevacao: c.elevacao,
     andamentos: c.andamentos,
@@ -244,9 +265,10 @@ export function calcDisciplineScore(c: Cavalo, weights: Record<string, number>):
 // ============================================
 
 export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr): ScoreFactor[] {
-  const idadeScore = c.idade >= 6 && c.idade <= 12 ? 10 : c.idade >= 4 && c.idade <= 15 ? 7 : 4;
-  const alturaScore =
-    c.altura >= 158 && c.altura <= 168 ? 8 : c.altura >= 155 && c.altura <= 170 ? 6 : 4;
+  const ageDist = Math.abs(c.idade - 9);
+  const idadeScore = Math.max(4, 10 - ageDist);
+  const htDist = Math.abs(c.altura - 163);
+  const alturaScore = Math.max(4, 8 - Math.floor(htDist / 2));
   const linPoints: Record<string, number> = {
     Desconhecida: 3,
     Registada: 8,
@@ -256,14 +278,15 @@ export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr): ScoreFactor[] 
   };
   const linhagemScore = linPoints[c.linhagem] || 8;
   const treinoObj = TREINOS.find((t) => t.value === c.treino);
-  const treinoScore = treinoObj ? Math.round(treinoObj.nivel * 1.9) : 5;
+  const treinoScore = treinoObj ? Math.round((treinoObj.nivel / 8) * 15) : 5;
   const elevacaoScore = Math.round(c.elevacao / 2);
   const regularidadeScore = Math.round(c.regularidade / 2);
   const temperamentoScore = Math.round(c.temperamento * 0.7);
   const saudeScore = Math.round(c.saude * 0.7);
   const comp = COMPETICOES.find((co) => co.value === c.competicoes);
   const compScore = comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
-  const blupScore = c.blup > 110 ? 5 : c.blup > 100 ? 3 : 1;
+  const blupScore = Math.min(5, Math.max(1, Math.round((c.blup - 80) / 8)));
+  const premiosScore = Math.min(5, c.premios);
   const apslScore = c.registoAPSL ? 3 : 0;
 
   return [
@@ -279,8 +302,47 @@ export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr): ScoreFactor[] 
     { name: "BLUP", weight: "5%", score: blupScore, max: 5 },
     { name: tr("Elevação", "Elevation", "Elevación"), weight: "5%", score: elevacaoScore, max: 5 },
     { name: tr("Regularidade", "Regularity", "Regularidad"), weight: "5%", score: regularidadeScore, max: 5 },
+    { name: tr("Prémios", "Awards", "Premios"), weight: "5%", score: premiosScore, max: 5 },
     { name: tr("Registo APSL", "APSL Registration", "Registro APSL"), weight: "3%", score: apslScore, max: 3 },
   ];
+}
+
+// ============================================
+// TIE-BREAKING WINNER HELPERS
+// ============================================
+
+/**
+ * Find the overall winner among horses.
+ * When scores are tied, lower price wins (better value).
+ */
+export function findVencedor(
+  cavalos: Cavalo[],
+  scoreFn: (c: Cavalo) => number = calcularScore
+): Cavalo {
+  return cavalos.reduce((a, b) => {
+    const sa = scoreFn(a);
+    const sb = scoreFn(b);
+    if (sa !== sb) return sa > sb ? a : b;
+    // Tie-breaker: lower price = better value
+    return a.preco <= b.preco ? a : b;
+  });
+}
+
+/**
+ * Find the horse with best cost-benefit (lowest price per point).
+ * Ties broken by higher score.
+ */
+export function findMelhorValor(
+  cavalos: Cavalo[],
+  scoreFn: (c: Cavalo) => number = calcularScore
+): Cavalo {
+  return cavalos.reduce((a, b) => {
+    const va = scoreFn(a) > 0 && a.preco > 0 ? a.preco / scoreFn(a) : Infinity;
+    const vb = scoreFn(b) > 0 && b.preco > 0 ? b.preco / scoreFn(b) : Infinity;
+    if (va !== vb) return va < vb ? a : b;
+    // Tie-breaker: higher score
+    return scoreFn(a) >= scoreFn(b) ? a : b;
+  });
 }
 
 // ============================================
@@ -293,17 +355,20 @@ export function getMelhor(cavalos: Cavalo[], campo: keyof Cavalo, maior = true):
   return maior ? Math.max(...vals) : Math.min(...vals);
 }
 
+const GOOD_THRESHOLD = 0.8;
+const EXCELLENT_THRESHOLD = 1.2;
+
 export function getClasseCor(val: number, melhor: number, maior = true): string {
   if (maior) {
     return val === melhor
       ? "text-emerald-400 font-semibold"
-      : val < melhor * 0.8
+      : val < melhor * GOOD_THRESHOLD
         ? "text-red-400"
         : "text-[var(--foreground-secondary)]";
   }
   return val === melhor
     ? "text-emerald-400 font-semibold"
-    : val > melhor * 1.2
+    : val > melhor * EXCELLENT_THRESHOLD
       ? "text-red-400"
       : "text-[var(--foreground-secondary)]";
 }
@@ -407,7 +472,7 @@ export function gerarCustos(c: Cavalo) {
 // CSV EXPORT
 // ============================================
 
-export function exportarCSV(cavalos: Cavalo[], tr: TrFn = defaultTr) {
+export function exportarCSV(cavalos: Cavalo[], tr: TrFn = defaultTr, weights?: CategoryWeights) {
   const headers = [
     tr("Nome", "Name", "Nombre"),
     tr("Idade", "Age", "Edad"),
@@ -432,8 +497,8 @@ export function exportarCSV(cavalos: Cavalo[], tr: TrFn = defaultTr) {
   ];
 
   const rows = cavalos.map((c) => {
-    const score = calcularScore(c);
-    const valorPorPonto = score > 0 ? Math.round(c.preco / score) : "N/A";
+    const score = weights ? calcularScoreWeighted(c, weights) : calcularScore(c);
+    const valorPorPonto = score > 0 && c.preco > 0 ? Math.round(c.preco / score) : "N/A";
     return [
       c.nome || "—",
       c.idade,
@@ -458,7 +523,19 @@ export function exportarCSV(cavalos: Cavalo[], tr: TrFn = defaultTr) {
     ];
   });
 
-  const csvContent = [headers, ...rows]
+  // Include weight configuration when custom weights are provided
+  const weightRows: (string | number)[][] = [];
+  if (weights) {
+    weightRows.push([]);
+    weightRows.push([tr("Configuração de Pesos", "Weight Configuration", "Configuración de Pesos")]);
+    const totalW = Object.values(weights).reduce((a, b) => a + b, 0);
+    for (const [key, value] of Object.entries(weights)) {
+      const pct = totalW > 0 ? Math.round((value / totalW) * 100) : 0;
+      weightRows.push([key, `${pct}%`]);
+    }
+  }
+
+  const csvContent = [headers, ...rows, ...weightRows]
     .map((row) =>
       row
         .map((cell) => {

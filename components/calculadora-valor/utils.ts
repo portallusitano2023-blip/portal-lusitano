@@ -18,7 +18,7 @@ const MAX_HORSE_VALUE = 5_000_000;
 
 // Helper: age multiplier — shared between calcularValor and estimarValorParcial
 // Curva mais realista com pico em 8-10 e declínio gradual
-function calcMultIdade(idade: number): number {
+export function calcMultIdade(idade: number): number {
   if (idade >= 8 && idade <= 10) return 1.15; // Sweet spot
   if (idade === 7 || (idade >= 11 && idade <= 12)) return 1.10; // Very good
   if (idade >= 5 && idade <= 6) return 1.05; // Young adult, developing
@@ -40,11 +40,8 @@ function applyDiminishingReturns(totalMult: number): number {
 }
 
 // Validação lógica: detecta combinações impossíveis/improváveis e ajusta
-export interface ValidationWarning {
-  field: string;
-  message: string;
-  severity: "error" | "warning";
-}
+// ValidationWarning type imported from types.ts — single source of truth
+import type { ValidationWarning } from "./types";
 
 export function validateFormLogic(
   form: FormData,
@@ -149,6 +146,54 @@ export function validateFormLogic(
     });
   }
 
+  // H-03: Grand Prix / Alta Escola training with Leisure discipline
+  if (
+    (form.treino === "grand_prix" || form.treino === "alta_escola") &&
+    form.disciplina === "Lazer / Passeio"
+  ) {
+    warnings.push({
+      field: "disciplina",
+      message: tr(
+        "Treino de Alta Escola/Grand Prix é contraditório com disciplina de Lazer",
+        "Haute Ecole/Grand Prix training contradicts Leisure discipline",
+        "Entrenamiento de Alta Escuela/Grand Prix es contradictorio con disciplina de Ocio"
+      ),
+      severity: "warning",
+    });
+  }
+
+  // H-03: Foal/broken training with discipline that requires advanced training
+  if (
+    ["potro", "desbravado"].includes(form.treino) &&
+    (form.disciplina === "Alta Escola" || form.disciplina === "Equitação de Trabalho")
+  ) {
+    warnings.push({
+      field: "disciplina",
+      message: tr(
+        "Este nível de treino é insuficiente para esta disciplina especializada",
+        "This training level is insufficient for this specialized discipline",
+        "Este nivel de entrenamiento es insuficiente para esta disciplina especializada"
+      ),
+      severity: "warning",
+    });
+  }
+
+  // M-02: International market without export certificate
+  if (
+    !form.certificadoExportacao &&
+    ["EUA", "Alemanha", "França", "Holanda", "Bélgica", "Suíça", "Reino Unido", "Itália", "Escandinávia"].includes(form.mercado)
+  ) {
+    warnings.push({
+      field: "certificadoExportacao",
+      message: tr(
+        "Mercado internacional seleccionado sem certificado de exportação. Considere obter o certificado para facilitar a venda.",
+        "International market selected without export certificate. Consider obtaining the certificate to facilitate the sale.",
+        "Mercado internacional seleccionado sin certificado de exportación. Considere obtener el certificado para facilitar la venta."
+      ),
+      severity: "warning",
+    });
+  }
+
   return warnings;
 }
 
@@ -177,6 +222,8 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
       alter_real: 1.05,
       coudelaria_nacional: 1.04,
       infante_da_camara: 1.04,
+      lagoalva: 1.03,
+      interagro: 1.03,
     };
     multLinhagemFamosa = LINEAGE_BONUSES[form.linhagemPrincipal] ?? 1.0;
   }
@@ -193,7 +240,11 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
   const multAnd = 0.65 + (andMedia / 10) * 0.7;
 
   // Temperamento
-  const tempMedia = (form.temperamento + form.sensibilidade + form.vontadeTrabalho) / 3;
+  // Sensibilidade: 5 is balanced/ideal, extremes (1 or 10) are defects.
+  // Transform to a 1-10 quality score where 5→10 (best), 1→4, 10→4
+  const sensScore = 10 - Math.abs(form.sensibilidade - 6) * 1.5;
+  const adjSens = Math.max(1, Math.min(10, Math.round(sensScore)));
+  const tempMedia = (form.temperamento + adjSens + form.vontadeTrabalho) / 3;
   const multTemp = 0.75 + (tempMedia / 10) * 0.5;
 
   // Disciplina premium
@@ -333,6 +384,16 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
       descricao: t("Adequação à disciplina e mercado-alvo", "Suitability for discipline and target market", "Adecuación a la disciplina y mercado objetivo"),
     },
   ].sort((a, b) => b.impacto - a.impacto);
+
+  // C-06: Adjust category impacts to reflect diminishing returns.
+  // Each category shows linear contribution, but the actual value uses applyDiminishingReturns.
+  // Proportionally reduce each category's displayed impact to match the actual diminished value.
+  const diminishingRatio = totalMult > 0 ? adjustedMult / totalMult : 1;
+  if (diminishingRatio < 1) {
+    for (const cat of categorias) {
+      cat.impacto = Math.round(cat.impacto * diminishingRatio);
+    }
+  }
 
   // Pontos fortes e fracos
   const fortes: string[] = [];
@@ -489,11 +550,10 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
         Math.round(morfMedia * 1.2) +
         Math.round(andMedia * 0.8)
     ),
-    blup: Math.max(
-      50,
-      Math.round(100 + (multLinhagem - 1) * 60 + (morfMedia - 5) * 8 + (andMedia - 5) * 6)
-    ),
-    percentil: Math.min(99, Math.round(totalMult * 45)),
+    blup: Math.max(50, Math.min(150, Math.round(
+      100 + (multLinhagem - 1) * 60 + (morfMedia - 5) * 8 + (andMedia - 5) * 6
+    ))),
+    percentil: Math.min(99, Math.max(1, Math.round(100 / (1 + Math.exp(-1.5 * (totalMult - 1.8)))))),
     multiplicador: Math.round(totalMult * 100) / 100,
     categorias,
     recomendacoes,
@@ -505,6 +565,7 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
       label: liquidezLabel,
     },
     warnings: validateFormLogic(form, t),
+    dataAvaliacao: new Date().toISOString(),
   };
 }
 
@@ -526,7 +587,9 @@ export function estimarValorParcial(form: Partial<FormData>): { min: number; max
   const multSaude = form.saude ? MULT_SAUDE[form.saude] || 1.0 : 1.0;
   const multComp = form.competicoes ? MULT_COMP[form.competicoes] || 1.0 : 1.0;
 
-  const estimate = base * multIdade * multLinhagem * multSaude * multComp;
+  const partialMult = multIdade * multLinhagem * multSaude * multComp;
+  const adjustedPartialMult = applyDiminishingReturns(partialMult);
+  const estimate = base * adjustedPartialMult;
 
   // Margem ampla para indicar que são dados parciais
   return {

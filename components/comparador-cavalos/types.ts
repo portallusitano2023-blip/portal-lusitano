@@ -47,5 +47,6 @@ export interface CategoryWeights {
   blup: number;
   elevacao: number;
   regularidade: number;
+  premios: number;
   registoAPSL: number;
 }

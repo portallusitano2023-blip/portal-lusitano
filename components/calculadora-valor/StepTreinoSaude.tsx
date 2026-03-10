@@ -401,7 +401,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
           </div>
 
           {/* Training level cards */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t.calculadora.label_training}>
             {trainingOptions.map((opt) => (
               <button
                 key={opt.value}
@@ -419,16 +419,16 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                   >
                     {opt.label}
                   </span>
-                  <span className="text-[10px] text-[var(--foreground-muted)] shrink-0 mt-0.5">
+                  <span className="text-[11px] text-[var(--foreground-muted)] shrink-0 mt-0.5">
                     {opt.price}
                   </span>
                 </div>
                 {opt.fei && (
-                  <span className="text-[10px] text-[var(--foreground-muted)]/60 block mt-0.5">
+                  <span className="text-[11px] text-[var(--foreground-muted)]/60 block mt-0.5">
                     {opt.fei}
                   </span>
                 )}
-                <span className="text-[10px] sm:text-xs text-[var(--foreground-muted)] mt-0.5 block leading-snug">
+                <span className="text-[11px] sm:text-xs text-[var(--foreground-muted)] mt-0.5 block leading-snug">
                   {opt.desc}
                 </span>
               </button>
@@ -444,7 +444,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
               {selectedTags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[var(--gold)]/10 text-[var(--gold)] border border-[var(--gold)]/20"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--gold)]/10 text-[var(--gold)] border border-[var(--gold)]/20"
                 >
                   <Sparkles size={8} />
                   {tag}
@@ -472,7 +472,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
               position="bottom"
             />
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t.calculadora.label_discipline}>
             {disciplineOptions.map((d, i) => {
               const isPositive = d.impactValue > 1;
               const isNegative = d.impactValue < 1;
@@ -495,7 +495,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                       {d.label}
                     </span>
                     <span
-                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
+                      className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
                         isPositive
                           ? "bg-emerald-500/10 text-emerald-400"
                           : isNegative
@@ -527,7 +527,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
               position="bottom"
             />
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t.calculadora.label_competition_history}>
             {competitionOptions.map((opt) => {
               const impact = COMP_IMPACT[opt.value];
               return (
@@ -544,7 +544,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                   {opt.icon && <opt.icon size={14} className="shrink-0" />}
                   <span className="leading-tight flex-1">{opt.label}</span>
                   {impact && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 shrink-0">
+                    <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 shrink-0">
                       {impact}
                     </span>
                   )}
@@ -569,7 +569,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
               position="bottom"
             />
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t.calculadora.label_health}>
             {healthOptions.map((opt) => {
               const impact = HEALTH_IMPACT[opt.value];
               const isPositive = impact?.startsWith("+");
@@ -592,7 +592,7 @@ export default function StepTreinoSaude({ form, update }: StepProps) {
                       {opt.label}
                     </span>
                     <span
-                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
+                      className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
                         isPositive
                           ? "bg-emerald-500/10 text-emerald-400"
                           : isNegative

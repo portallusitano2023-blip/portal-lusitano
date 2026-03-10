@@ -2,6 +2,47 @@ import type { Cavalo, Cavaleiro, RedFlag, ResultadoCompatibilidade } from "./typ
 import { DEFEITOS_GENETICOS } from "./data";
 
 // ============================================
+// SHARED COI ESTIMATION (H-10)
+// ============================================
+
+/** COI estimation matrix by lineage pair — shared between form preview and final calc */
+export const COI_ESTIMADOS: Record<string, Record<string, number>> = {
+  veiga: {
+    veiga: 6.25, andrade: 1.5, alter: 1.5, coudelaria_nacional: 2.0,
+    infante_camara: 1.5, interagro: 1.0, outra: 1.0,
+  },
+  andrade: {
+    veiga: 1.5, andrade: 4.0, alter: 1.5, coudelaria_nacional: 2.0,
+    infante_camara: 1.5, interagro: 1.0, outra: 1.0,
+  },
+  alter: {
+    veiga: 1.5, andrade: 1.5, alter: 5.0, coudelaria_nacional: 2.5,
+    infante_camara: 2.0, interagro: 1.0, outra: 1.0,
+  },
+  coudelaria_nacional: {
+    veiga: 2.0, andrade: 2.0, alter: 2.5, coudelaria_nacional: 5.0,
+    infante_camara: 2.0, interagro: 1.5, outra: 1.0,
+  },
+  infante_camara: {
+    veiga: 1.5, andrade: 1.5, alter: 2.0, coudelaria_nacional: 2.0,
+    infante_camara: 4.5, interagro: 1.0, outra: 1.0,
+  },
+  interagro: {
+    veiga: 1.0, andrade: 1.0, alter: 1.0, coudelaria_nacional: 1.5,
+    infante_camara: 1.0, interagro: 3.0, outra: 0.8,
+  },
+  outra: {
+    veiga: 1.0, andrade: 1.0, alter: 1.0, coudelaria_nacional: 1.0,
+    infante_camara: 1.0, interagro: 0.8, outra: 2.0,
+  },
+};
+
+/** Estimate COI from lineage pair — used in both HorseForm preview and final calculation */
+export function estimarCOI(linhagemGaranhao: string, linhagemEgua: string): number {
+  return COI_ESTIMADOS[linhagemGaranhao]?.[linhagemEgua] ?? 2.0;
+}
+
+// ============================================
 // LÓGICA DE CÁLCULO - Verificador de Compatibilidade
 // ============================================
 
@@ -20,9 +61,9 @@ function detectRedFlags(
   const isHighEnergy = (t: string) => t === "Energético" || t === "Nervoso";
   const minHorseHeight = Math.min(garanhao.altura, egua.altura);
 
-  // 0. WARNING: Sedentary/beginner rider + stallion (inherently harder to handle)
+  // 0. WARNING: Beginner rider + stallion (inherently harder to handle)
   if (
-    cavaleiro.nivelFitness === "sedentario" &&
+    (cavaleiro.experiencia === "iniciante" || cavaleiro.nivelFitness === "sedentario") &&
     !isHighEnergy(garanhao.temperamento)
   ) {
     flags.push({
@@ -40,9 +81,9 @@ function detectRedFlags(
     });
   }
 
-  // 1. CRITICAL: Sedentary rider + Stallion + energetic temperament
+  // 1. CRITICAL: Beginner/sedentary rider + Stallion + energetic temperament
   if (
-    cavaleiro.nivelFitness === "sedentario" &&
+    (cavaleiro.experiencia === "iniciante" || cavaleiro.nivelFitness === "sedentario") &&
     isHighEnergy(garanhao.temperamento)
   ) {
     flags.push({
@@ -171,10 +212,20 @@ export function calcularCompatibilidade(
   const fracos: string[] = [];
   let total = 0;
 
-  // 1. Idade Reprodutiva (15pts)
+  // 1. Idade Reprodutiva (15pts) — graduated scoring (M-15)
   const idadeGaranhaoOk = garanhao.idade >= 4 && garanhao.idade <= 20;
   const idadeEguaOk = egua.idade >= 4 && egua.idade <= 18;
-  const idadeScore = idadeGaranhaoOk && idadeEguaOk ? 15 : idadeGaranhaoOk || idadeEguaOk ? 10 : 5;
+
+  const graduatedAge = (idade: number, min: number, max: number): number => {
+    if (idade >= min && idade <= max) return 15; // within range
+    const dist = idade < min ? min - idade : idade - max;
+    if (dist <= 2) return 12; // 1-2 years outside
+    if (dist <= 5) return 8;  // 3-5 years outside
+    return 3;                  // 5+ years outside
+  };
+  const idadeScoreGar = graduatedAge(garanhao.idade, 4, 20);
+  const idadeScoreEgu = graduatedAge(egua.idade, 4, 18);
+  const idadeScore = Math.round((idadeScoreGar + idadeScoreEgu) / 2);
   factores.push({
     nome: tr("Idade Reprodutiva", "Reproductive Age", "Edad Reproductiva"),
     score: idadeScore,
@@ -217,6 +268,32 @@ export function calcularCompatibilidade(
         severidade: "medio",
       });
     }
+
+    // C-01: Rider-horse height ratio check
+    if (cavaleiro.alturaCavaleiro) {
+      const avgHorseHeight = (garanhao.altura + egua.altura) / 2;
+      const ratio = cavaleiro.alturaCavaleiro / avgHorseHeight;
+      if (ratio > 1.15) {
+        tamanhoScore = Math.max(0, tamanhoScore - 3);
+        riscos.push({
+          texto: tr(
+            `Cavaleiro demasiado alto (${cavaleiro.alturaCavaleiro}cm) para a média dos cavalos (${Math.round(avgHorseHeight)}cm) — ratio ${ratio.toFixed(2)}`,
+            `Rider too tall (${cavaleiro.alturaCavaleiro}cm) for the average horse height (${Math.round(avgHorseHeight)}cm) — ratio ${ratio.toFixed(2)}`,
+            `Jinete demasiado alto (${cavaleiro.alturaCavaleiro}cm) para la media de los caballos (${Math.round(avgHorseHeight)}cm) — ratio ${ratio.toFixed(2)}`
+          ),
+          severidade: "baixo",
+        });
+      } else if (ratio < 0.85) {
+        riscos.push({
+          texto: tr(
+            `Cavaleiro baixo (${cavaleiro.alturaCavaleiro}cm) relativamente à média dos cavalos (${Math.round(avgHorseHeight)}cm) — ratio ${ratio.toFixed(2)}`,
+            `Rider short (${cavaleiro.alturaCavaleiro}cm) relative to average horse height (${Math.round(avgHorseHeight)}cm) — ratio ${ratio.toFixed(2)}`,
+            `Jinete bajo (${cavaleiro.alturaCavaleiro}cm) en relación a la media de los caballos (${Math.round(avgHorseHeight)}cm) — ratio ${ratio.toFixed(2)}`
+          ),
+          severidade: "baixo",
+        });
+      }
+    }
   }
 
   factores.push({
@@ -224,7 +301,7 @@ export function calcularCompatibilidade(
     score: tamanhoScore,
     max: 10,
     tipo: tamanhoScore >= 8 ? "excelente" : tamanhoScore >= 5 ? "bom" : "aviso",
-    descricao: cavaleiro && (cavaleiro.pesoCavaleiro > 90 || cavaleiro.pesoCavaleiro > 100)
+    descricao: cavaleiro && cavaleiro.pesoCavaleiro > 90
       ? tr(
           `Diferença de altura: ${difAltura}cm | Peso cavaleiro: ${cavaleiro.pesoCavaleiro}kg`,
           `Height difference: ${difAltura}cm | Rider weight: ${cavaleiro.pesoCavaleiro}kg`,
@@ -287,9 +364,9 @@ export function calcularCompatibilidade(
   if (andMedia >= 8) fortes.push(tr("Andamentos de qualidade superior em ambos", "Superior quality gaits in both", "Movimientos de calidad superior en ambos"));
   total += andScore;
 
-  // 6. Temperamento (10pts)
+  // 6. Temperamento (10pts) — H-05: verified symmetric matrix
   const tempCompat: Record<string, Record<string, number>> = {
-    Calmo: { Calmo: 10, Equilibrado: 9, Energético: 7, Nervoso: 5 },
+    Calmo: { Calmo: 10, Equilibrado: 9, Energético: 7, Nervoso: 6 },
     Equilibrado: { Calmo: 9, Equilibrado: 10, Energético: 8, Nervoso: 6 },
     Energético: { Calmo: 7, Equilibrado: 8, Energético: 7, Nervoso: 4 },
     Nervoso: { Calmo: 6, Equilibrado: 6, Energético: 4, Nervoso: 3 },
@@ -303,7 +380,7 @@ export function calcularCompatibilidade(
       cavaleiro.nivelFitness === "sedentario" &&
       (isHighEnergy(garanhao.temperamento) || isHighEnergy(egua.temperamento))
     ) {
-      tempScore = Math.max(0, tempScore - 8);
+      tempScore = Math.max(0, tempScore - 3);
       fracos.push(tr(
         "Fitness sedentário incompatível com cavalos energéticos",
         "Sedentary fitness incompatible with energetic horses",
@@ -388,6 +465,18 @@ export function calcularCompatibilidade(
   if (matGar > 0 || matEgu > 0) historialScore += 2;
   if (potGar > 3 || potEgu > 2) historialScore += 2;
   if (potGar > 10 || potEgu > 5) historialScore += 1;
+
+  // L-38: Reproductive success rate bonus/penalty
+  if (matGar > 0) {
+    const successRateGar = potGar / matGar;
+    if (successRateGar >= 0.7) historialScore = Math.min(5, historialScore + 1);
+    else if (successRateGar < 0.3 && matGar >= 3) historialScore = Math.max(0, historialScore - 1);
+  }
+  if (matEgu > 0) {
+    const successRateEgu = potEgu / matEgu;
+    if (successRateEgu >= 0.7) historialScore = Math.min(5, historialScore + 1);
+    else if (successRateEgu < 0.3 && matEgu >= 3) historialScore = Math.max(0, historialScore - 1);
+  }
   factores.push({
     nome: tr("Historial Reprodutivo", "Reproductive History", "Historial Reproductivo"),
     score: historialScore,
@@ -424,6 +513,11 @@ export function calcularCompatibilidade(
   }
   const blupPrevisto = Math.round((garanhao.blup + egua.blup) / 2);
 
+  // BLUP min/max prediction based on parent average
+  const parentBlupAvg = (garanhao.blup + egua.blup) / 2;
+  const blupMin = Math.max(70, Math.round(parentBlupAvg - 15));
+  const blupMax = Math.min(150, Math.round(parentBlupAvg + 15));
+
   if (coiPrevisto > 6.25) {
     riscos.push({
       texto: tr(`COI elevado previsto: ${coiPrevisto.toFixed(1)}%`, `High predicted COI: ${coiPrevisto.toFixed(1)}%`, `COI elevado previsto: ${coiPrevisto.toFixed(1)}%`),
@@ -436,11 +530,15 @@ export function calcularCompatibilidade(
 
   if (blupPrevisto > 110) fortes.push(tr(`BLUP previsto elevado: ${blupPrevisto}`, `High predicted BLUP: ${blupPrevisto}`, `BLUP previsto elevado: ${blupPrevisto}`));
 
-  // Defeitos genéticos comuns
+  // Defeitos genéticos comuns — severity-based penalty (H-11)
   const defeitosComuns = garanhao.defeitos.filter((d) => egua.defeitos.includes(d));
   if (defeitosComuns.length > 0) {
+    const RISCO_PENALTY: Record<string, number> = { alto: 15, medio: 10, baixo: 5 };
+    let totalDefectPenalty = 0;
     defeitosComuns.forEach((d) => {
       const defeito = DEFEITOS_GENETICOS.find((def) => def.value === d);
+      const penalty = RISCO_PENALTY[defeito?.risco ?? "medio"] ?? 10;
+      totalDefectPenalty += penalty;
       riscos.push({
         texto: tr(
           `Ambos portadores de ${defeito?.label || d} - risco para descendência`,
@@ -450,11 +548,11 @@ export function calcularCompatibilidade(
         severidade: "alto",
       });
     });
-    total -= defeitosComuns.length * 10;
+    total -= totalDefectPenalty;
     factores.push({
       nome: tr("Saúde Genética", "Genetic Health", "Salud Genética"),
       score: 0,
-      max: defeitosComuns.length * 10,
+      max: totalDefectPenalty,
       tipo: "aviso",
       descricao: tr(
         `Penalização: defeitos genéticos em comum (${defeitosComuns.join(", ")})`,
@@ -559,10 +657,11 @@ export function calcularCompatibilidade(
         .sort((a, b) => b.prob - a.prob)
     : [];
 
-  // Altura prevista do potro
-  const alturaMedia = (garanhao.altura + egua.altura) / 2;
-  const alturaMin = Math.round(alturaMedia - 4);
-  const alturaMax = Math.round(alturaMedia + 4);
+  // Altura prevista do potro — Galton regression to mean (M-16)
+  const parentMean = (garanhao.altura + egua.altura) / 2;
+  const alturaMedia = Math.round(160 + 0.5 * (parentMean - 160));
+  const alturaMin = alturaMedia - 4;
+  const alturaMax = alturaMedia + 4;
 
   // Nível de compatibilidade
   const nivel =
@@ -637,8 +736,10 @@ export function calcularCompatibilidade(
     nivel,
     coi: coiPrevisto,
     blup: blupPrevisto,
+    blupMin,
+    blupMax,
     altura: { min: alturaMin, max: alturaMax },
-    pelagens: pelagens.filter((p) => p.prob > 0).sort((a, b) => b.prob - a.prob),
+    pelagens,
     riscos,
     factores: factores.sort((a, b) => b.score - a.score),
     recomendacoes,

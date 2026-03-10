@@ -8,6 +8,7 @@ export interface GeneticaPelagem {
   grey: "GG" | "Gg" | "gg";
   cream: "CrCr" | "CrN" | "NN";
   dun: "DD" | "Dd" | "dd";
+  pearl: "PrlPrl" | "PrlN" | "NN";
 }
 
 export interface Cavalo {
@@ -37,6 +38,7 @@ export interface Cavaleiro {
   pesoCavaleiro: number;       // kg, range 40-120
   alturaCavaleiro: number;     // cm, range 140-200
   nivelFitness: "sedentario" | "moderado" | "ativo" | "atleta";
+  experiencia: "iniciante" | "intermedio" | "avancado" | "profissional";
 }
 
 export interface RedFlag {
@@ -50,6 +52,8 @@ export interface ResultadoCompatibilidade {
   nivel: string;
   coi: number;
   blup: number;
+  blupMin?: number;
+  blupMax?: number;
   altura: { min: number; max: number };
   pelagens: { cor: string; prob: number; genetica: string }[];
   riscos: { texto: string; severidade: "alto" | "medio" | "baixo" }[];

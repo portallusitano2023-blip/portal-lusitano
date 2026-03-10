@@ -130,7 +130,8 @@ export default function SensitivityPanel({ form, resultado }: SensitivityPanelPr
   const scenarios = useMemo(() => {
     try {
       return buildScenarios(form, resultado, tr, language);
-    } catch {
+    } catch (e) {
+      if (process.env.NODE_ENV === "development") console.warn("SensitivityPanel build error:", e);
       return [];
     }
   }, [form, resultado, tr, language]);
@@ -161,13 +162,13 @@ export default function SensitivityPanel({ form, resultado }: SensitivityPanelPr
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs font-medium text-[var(--foreground)] truncate">{s.label}</p>
-              <p className="text-[10px] text-[var(--foreground-muted)]">{s.description}</p>
+              <p className="text-[11px] text-[var(--foreground-muted)]">{s.description}</p>
             </div>
             <div className="text-right shrink-0">
               <span className="text-sm font-bold text-emerald-400">
                 +{s.delta.toLocaleString(locale)}€
               </span>
-              <span className="block text-[10px] text-emerald-400/70">+{s.percentage}%</span>
+              <span className="block text-[11px] text-emerald-400/70">+{s.percentage}%</span>
             </div>
           </div>
         ))}

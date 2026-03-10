@@ -130,10 +130,11 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
   }
 
       return cenarios.sort((a, b) => b.delta - a.delta).slice(0, 4);
-    } catch {
+    } catch (e) {
+      if (process.env.NODE_ENV === "development") console.warn("ScenarioSimulator build error:", e);
       return [];
     }
-  }, [form, resultado, tr]);
+  }, [form, resultado, tr, language]);
 
   if (top.length === 0) return null;
 
@@ -160,18 +161,18 @@ export default function ScenarioSimulator({ form, resultado }: ScenarioSimulator
             <span className="text-xl shrink-0">{c.emoji}</span>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-[var(--foreground)] truncate">{c.titulo}</p>
-              <p className="text-[10px] text-[var(--foreground-muted)]">{c.descricao}</p>
+              <p className="text-[11px] text-[var(--foreground-muted)]">{c.descricao}</p>
             </div>
             <div className="text-right shrink-0">
               <p className="text-sm font-bold text-emerald-400">
                 +{c.delta.toLocaleString(locale)}€
               </p>
-              <p className="text-[10px] text-emerald-500/70">+{c.deltaPercent}%</p>
+              <p className="text-[11px] text-emerald-500/70">+{c.deltaPercent}%</p>
             </div>
           </div>
         ))}
       </div>
-      <p className="text-[10px] text-[var(--foreground-muted)]/40 mt-3">
+      <p className="text-[11px] text-[var(--foreground-muted)]/40 mt-3">
         {tr(
           "Simulações baseadas no modelo interno — valores ilustrativos, não constituem garantia.",
           "Simulations based on internal model — illustrative values, not a guarantee.",

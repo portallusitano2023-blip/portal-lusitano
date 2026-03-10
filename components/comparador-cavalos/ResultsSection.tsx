@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import {
   ArrowLeft,
@@ -23,7 +23,7 @@ import RadarChart from "./RadarChart";
 import ComparisonTable from "./ComparisonTable";
 import WeightsPanel from "./WeightsPanel";
 import type { Cavalo, CategoryWeights } from "./types";
-import { CORES, TREINOS, COMPETICOES, DISCIPLINE_MATRIX, BREEDING_CHAIN_KEY, localizedLabel } from "./data";
+import { CORES, TREINOS, LINHAGENS, COMPETICOES, DISCIPLINE_MATRIX, BREEDING_CHAIN_KEY, localizedLabel } from "./data";
 import {
   calcularPotencial,
   calcularROI,
@@ -35,6 +35,9 @@ import {
   getClasseCor,
   gerarVeredicto,
   gerarCustos,
+  exportarCSV,
+  findVencedor,
+  findMelhorValor,
 } from "./calcular";
 
 // Lazy-load heavy PRO components
@@ -84,6 +87,11 @@ export default function ResultsSection({
   // Customizable category weights (Task 2)
   const [customWeights, setCustomWeights] = useState<CategoryWeights>({ ...DEFAULT_WEIGHTS });
 
+  // Confetti should fire once per result set (Issue 33)
+  const confettiFired = useRef(false);
+  const shouldFireConfetti = !confettiFired.current;
+  if (shouldFireConfetti) confettiFired.current = true;
+
   // Weighted scoring helpers — identical to calcularScore when weights are default
   const calcScore = (c: Cavalo) => calcularScoreWeighted(c, customWeights);
   const calcValorPorPonto = (c: Cavalo) => {
@@ -92,10 +100,10 @@ export default function ResultsSection({
   };
 
   const vencedor = cavalos.length > 0
-    ? cavalos.reduce((a, b) => (calcScore(a) > calcScore(b) ? a : b))
+    ? findVencedor(cavalos, calcScore)
     : cavalos[0];
   const melhorValor = cavalos.length > 0
-    ? cavalos.reduce((a, b) => calcValorPorPonto(a) < calcValorPorPonto(b) ? a : b)
+    ? findMelhorValor(cavalos, calcScore)
     : cavalos[0];
 
   // ============================================
@@ -201,7 +209,7 @@ export default function ResultsSection({
       </button>
 
       <div className="relative">
-        <Confetti trigger={true} particleCount={50} duration={2800} />
+        <Confetti trigger={shouldFireConfetti} particleCount={50} duration={2800} />
       </div>
 
       {/* Actions */}
@@ -213,7 +221,13 @@ export default function ResultsSection({
           isExporting={isExporting}
         />
         <button
-          onClick={onExportCSV}
+          onClick={() => {
+            try {
+              exportarCSV(cavalos, tr, customWeights);
+            } catch {
+              onExportCSV();
+            }
+          }}
           disabled={isExporting}
           className="w-full py-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
@@ -624,7 +638,7 @@ export default function ResultsSection({
                 {tr("Categorias Vencidas", "Categories Won", "Categorías Ganadas")} ({total} {tr("categorias", "categories", "categorías")})
               </h3>
               <div
-                className={`grid gap-3 ${cavalos.length === 2 ? "grid-cols-2" : cavalos.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-4"}`}
+                className={`grid gap-3 ${cavalos.length === 2 ? "grid-cols-2" : cavalos.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2 lg:grid-cols-4"}`}
               >
                 {vitorias.map((v, i) => (
                   <div
@@ -659,12 +673,13 @@ export default function ResultsSection({
           <table className="w-full text-sm" style={{ minWidth: "320px" }}>
             <thead>
               <tr className="border-b border-[var(--border)]">
-                <th className="text-left text-xs text-[var(--foreground-muted)] pb-3 pr-4 min-w-[100px]">
+                <th scope="col" className="text-left text-xs text-[var(--foreground-muted)] pb-3 pr-4 min-w-[100px]">
                   {tr("Disciplina", "Discipline", "Disciplina")}
                 </th>
                 {cavalos.map((c, i) => (
                   <th
                     key={i}
+                    scope="col"
                     className="text-center text-xs pb-3 px-2 min-w-[60px]"
                     style={{ color: CORES[i] }}
                   >
@@ -721,12 +736,13 @@ export default function ResultsSection({
           <table className="w-full text-sm" style={{ minWidth: "360px" }}>
             <thead>
               <tr>
-                <th className="text-left text-xs text-[var(--foreground-muted)] font-medium pb-3 pr-4 min-w-[160px]">
+                <th scope="col" className="text-left text-xs text-[var(--foreground-muted)] font-medium pb-3 pr-4 min-w-[160px]">
                   {tr("Disciplina", "Discipline", "Disciplina")}
                 </th>
                 {cavalos.map((c, i) => (
                   <th
                     key={c.id}
+                    scope="col"
                     className="text-center text-xs font-semibold pb-3 px-2 min-w-[80px]"
                     style={{ color: CORES[i] }}
                   >
@@ -789,12 +805,13 @@ export default function ResultsSection({
             <table className="w-full text-sm" style={{ minWidth: "480px" }}>
               <thead>
                 <tr className="text-[var(--foreground-secondary)] border-b border-[var(--border)]">
-                  <th className="text-left py-3 px-3 min-w-[110px] sticky left-0 bg-[var(--background-secondary)]">
+                  <th scope="col" className="text-left py-3 px-3 min-w-[110px] sticky left-0 bg-[var(--background-secondary)]">
                     {comp.param_header}
                   </th>
                   {cavalos.map((c, i) => (
                     <th
                       key={c.id}
+                      scope="col"
                       className="text-center py-3 px-3 min-w-[90px]"
                       style={{ color: CORES[i] }}
                     >
@@ -923,7 +940,7 @@ export default function ResultsSection({
                 Score: {calcScore(vencedor)} {comp.points}
               </p>
               <p className="text-xs text-[var(--foreground-muted)] mt-1">
-                {vencedor.treino} • {vencedor.linhagem}
+                {localizedLabel(TREINOS.find((t) => t.value === vencedor.treino) ?? { label: vencedor.treino }, language)} • {localizedLabel(LINHAGENS.find((l) => l.value === vencedor.linhagem) ?? { label: vencedor.linhagem }, language)}
               </p>
             </div>
           </div>
@@ -989,7 +1006,7 @@ export default function ResultsSection({
           <p className="text-xs text-[var(--foreground-muted)] mb-4">{comp.cost_projection_desc}</p>
           <CostProjectionTable horses={cavalos.map(gerarCustos)} />
           <div
-            className={`mt-4 grid gap-3 ${cavalos.length === 2 ? "grid-cols-2" : cavalos.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-4"}`}
+            className={`mt-4 grid gap-3 ${cavalos.length === 2 ? "grid-cols-2" : cavalos.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2 lg:grid-cols-4"}`}
           >
             {cavalos.map((c, i) => {
               const roi = calcularROI(c, tr);

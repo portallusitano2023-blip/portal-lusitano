@@ -88,9 +88,9 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             requiresAuth={requiresAuth}
             proFeatures={[
               tr(
-                "Análise completa com 14 perguntas e 4 perfis",
-                "Full analysis with 14 questions and 4 profiles",
-                "Análisis completo con 14 preguntas y 4 perfiles"
+                "Análise completa com 17 perguntas e 5 perfis",
+                "Full analysis with 17 questions and 5 profiles",
+                "Análisis completo con 17 preguntas y 5 perfiles"
               ),
               tr(
                 "Sub-perfil especializado (Elite FEI, Trabalho, etc.)",
@@ -257,14 +257,12 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             {/* Answer options — only rendered when user can use the tool */}
             {canUse && (
               <>
-              <div className="space-y-2.5" role="radiogroup" aria-label={question.question}>
+              <div className="space-y-2.5" aria-label={question.question}>
                 {question.options.map((opt, idx) => (
                   <button
                     key={opt.value}
                     onClick={() => onAnswer(opt)}
                     disabled={isPending}
-                    role="radio"
-                    aria-checked={false}
                     className="w-full text-left p-5 bg-[var(--background-card)]/30 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/50 hover:bg-[var(--gold)]/5 transition-all group hover:translate-x-1 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:border-[var(--border)] disabled:hover:bg-transparent"
                     style={{ animationDelay: `${idx * 0.08}s` }}
                   >

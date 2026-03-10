@@ -106,6 +106,34 @@ function getCrossValidationWarning(
     };
   }
 
+  // Issues 10/11: Cross-validation for aprendiz — iniciante with high budget
+  const orcamento = answers[6];
+  if (experiencia === "iniciante" && orcamento && (orcamento === "alto" || orcamento === "premium")) {
+    return {
+      message: tr(
+        "Como cavaleiro iniciante, ter um bom orçamento é positivo, mas o mais importante é investir em aulas de qualidade e num cavalo schoolmaster bem treinado. Um cavalo caro não substitui a experiência — comece gradualmente.",
+        "As a beginner rider, having a good budget is positive, but the most important thing is to invest in quality lessons and a well-trained schoolmaster. An expensive horse doesn't replace experience — start gradually.",
+        "Como jinete principiante, tener un buen presupuesto es positivo, pero lo más importante es invertir en clases de calidad y en un caballo schoolmaster bien entrenado. Un caballo caro no sustituye la experiencia — empiece gradualmente."
+      ),
+      severity: "info",
+    };
+  }
+
+  // Issues 10/11: experienced rider with weekend-only dedication
+  if (
+    (experiencia === "avancado" || experiencia === "profissional") &&
+    dedicacao === "weekend"
+  ) {
+    return {
+      message: tr(
+        "Com a sua experiência avançada, dedicação apenas ao fim de semana pode limitar o progresso e o bem-estar do cavalo. Considere se consegue aumentar a frequência de trabalho ou opte por um regime de pensão completa com treino incluído.",
+        "With your advanced experience, weekend-only dedication may limit progress and the horse's welfare. Consider whether you can increase your training frequency or opt for a full-board regime with training included.",
+        "Con su experiencia avanzada, dedicación solo los fines de semana puede limitar el progreso y el bienestar del caballo. Considere si puede aumentar la frecuencia de trabajo u opte por un régimen de pensión completa con entrenamiento incluido."
+      ),
+      severity: "info",
+    };
+  }
+
   return null;
 }
 
@@ -325,6 +353,185 @@ export function useQuizLogic() {
     }
   }, [questions, clearSavedProgress]);
 
+  // ---------------------------------------------------------------------------
+  // Shared finalization logic (Issue 8: single source of truth)
+  // ---------------------------------------------------------------------------
+  const finalizeQuiz = useCallback(
+    async (
+      finalScores: Record<string, number>,
+      finalAnswers: string[],
+      finalDetails: AnswerDetail[]
+    ) => {
+      // Issue 3: Require at least 3 answered questions
+      const answeredCount = finalAnswers.filter((a) => a !== "__skip__").length;
+      if (answeredCount < 3) {
+        showError(
+          tr(
+            "Responda a pelo menos 3 perguntas para obter um resultado fiável.",
+            "Answer at least 3 questions to get a reliable result.",
+            "Responda al menos 3 preguntas para obtener un resultado fiable."
+          )
+        );
+        return;
+      }
+
+      if (!canUse) {
+        showError(
+          tr(
+            "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
+            "Free usage limit reached. Subscribe to PRO to continue.",
+            "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
+          )
+        );
+        return;
+      }
+
+      // Issue 2: Determine main profile with tiebreaker
+      let mp = "amador";
+      let ms = 0;
+
+      // Find the maximum score
+      Object.values(finalScores).forEach((s) => {
+        if (s > ms) ms = s;
+      });
+
+      // Collect all profiles with the max score
+      const tiedProfiles = Object.entries(finalScores)
+        .filter(([, s]) => s === ms && ms > 0)
+        .map(([p]) => p);
+
+      if (tiedProfiles.length === 1) {
+        mp = tiedProfiles[0];
+      } else if (tiedProfiles.length > 1) {
+        // Tiebreaker 1: profile with highest single-question weighted score
+        const maxSingleScore: Record<string, number> = {};
+        tiedProfiles.forEach((p) => {
+          maxSingleScore[p] = 0;
+        });
+
+        finalDetails.forEach((detail) => {
+          tiedProfiles.forEach((profile) => {
+            const pts = (detail.points[profile] || 0) * detail.weight;
+            if (pts > (maxSingleScore[profile] || 0)) {
+              maxSingleScore[profile] = pts;
+            }
+          });
+        });
+
+        let bestSingle = 0;
+        tiedProfiles.forEach((p) => {
+          if ((maxSingleScore[p] || 0) > bestSingle)
+            bestSingle = maxSingleScore[p] || 0;
+        });
+
+        const singleWinners = tiedProfiles.filter(
+          (p) => (maxSingleScore[p] || 0) === bestSingle
+        );
+
+        if (singleWinners.length === 1) {
+          mp = singleWinners[0];
+        } else {
+          // Tiebreaker 2: alphabetical order
+          mp = singleWinners.sort()[0];
+        }
+      }
+
+      // Determine sub-profile (Issue 5: includes aprendiz sub-profiles)
+      const q1 = finalAnswers[0]; // Objectivo (Q1)
+      const q2 = finalAnswers[1]; // Experiência (Q2)
+      const q6 = finalAnswers[5]; // Nível de treino desejado (Q6)
+      const q7 = finalAnswers[6]; // Orçamento (Q7)
+      let sp: string | null = null;
+      if (mp === "competidor") {
+        if (q1 === "trabalho") sp = "competidor_trabalho";
+        else if (q7 === "premium" || q7 === "alto") sp = "competidor_elite";
+        else sp = "competidor_nacional";
+      } else if (mp === "amador") {
+        if (q6 === "desbravado" || q6 === "basico") sp = "amador_projeto";
+      } else if (mp === "aprendiz") {
+        if (q2 === "iniciante") sp = "aprendiz_iniciante";
+        else sp = "aprendiz_transicao";
+      }
+
+      // Issue 4: Confidence adjusted for skipped questions
+      const sortedScores = Object.values(finalScores).sort(
+        (a: number, b: number) => b - a
+      );
+      const rawConfidence =
+        sortedScores.length >= 2 && sortedScores[0] + sortedScores[1] > 0
+          ? Math.round(
+              (sortedScores[0] / (sortedScores[0] + sortedScores[1])) * 100
+            )
+          : 100;
+      const answeredRatio = answeredCount / finalAnswers.length;
+      const inlineConfidence = Math.round(rawConfidence * answeredRatio);
+
+      // Compute score percentages for rich metadata
+      const totalScoreForMeta =
+        Object.values(finalScores).reduce(
+          (a: number, b: number) => a + b,
+          0
+        ) || 1;
+      const scorePercentagesMeta = Object.entries(finalScores).map(
+        ([p, s]) => ({
+          profile: p,
+          percentage: Math.round((s / totalScoreForMeta) * 100),
+        })
+      );
+
+      setIsPending(true);
+      let allowed = false;
+      try {
+        allowed = await validateAndRecord(finalScores, {
+          profile: mp,
+          subProfile: sp ?? null,
+          confidence: inlineConfidence,
+          scorePercentages: scorePercentagesMeta,
+        });
+      } catch {
+        showError(
+          tr(
+            "Erro de ligação. Verifica a tua ligação à internet.",
+            "Connection error. Please check your internet connection.",
+            "Error de conexión. Verifica tu conexión a internet."
+          )
+        );
+        return;
+      } finally {
+        setIsPending(false);
+      }
+
+      if (!allowed) {
+        setError(
+          tr(
+            "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
+            "Free usage limit reached. Subscribe to PRO to continue.",
+            "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
+          )
+        );
+        return;
+      }
+
+      setResult(results[mp]);
+      setShowResult(true);
+      setSubProfile(sp);
+      clearSavedProgress();
+      setTimeout(
+        () => window.scrollTo({ top: 0, behavior: "smooth" }),
+        100
+      );
+    },
+    [
+      canUse,
+      validateAndRecord,
+      setError,
+      showError,
+      tr,
+      results,
+      clearSavedProgress,
+    ]
+  );
+
   const handleAnswer = useCallback(
     async (option: QuestionOption) => {
       if (isPending) return;
@@ -357,95 +564,11 @@ export function useQuizLogic() {
         // Scroll to quiz top so the next question is visible
         setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
       } else {
-        if (!canUse) {
-          showError(
-            tr(
-              "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
-              "Free usage limit reached. Subscribe to PRO to continue.",
-              "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
-            )
-          );
-          return;
-        }
-
-        let mp = "amador";
-        let ms = 0;
-        Object.entries(newScores).forEach(([p, s]) => {
-          if (s > ms) {
-            ms = s;
-            mp = p;
-          }
-        });
-        // Determinar sub-perfil
-        const q1 = newAnswers[0]; // Objectivo (Q1)
-        const q6 = newAnswers[5]; // Nível de treino desejado (Q6)
-        const q7 = newAnswers[6]; // Orçamento (Q7)
-        let sp: string | null = null;
-        if (mp === "competidor") {
-          if (q1 === "trabalho") sp = "competidor_trabalho";
-          else if (q7 === "premium" || q7 === "alto") sp = "competidor_elite";
-          else sp = "competidor_nacional";
-        } else if (mp === "amador") {
-          if (q6 === "desbravado" || q6 === "basico") sp = "amador_projeto";
-        }
-        // Confidence inline: ratio of top score vs 2nd score
-        const sortedScores = Object.values(newScores).sort((a: number, b: number) => b - a);
-        const inlineConfidence =
-          sortedScores.length >= 2 && sortedScores[0] + sortedScores[1] > 0
-            ? Math.round((sortedScores[0] / (sortedScores[0] + sortedScores[1])) * 100)
-            : 100;
-        // Compute score percentages for rich metadata
-        const totalScoreForMeta =
-          Object.values(newScores).reduce((a: number, b: number) => a + b, 0) || 1;
-        const scorePercentagesMeta = Object.entries(newScores).map(([p, s]) => ({
-          profile: p,
-          percentage: Math.round((s / totalScoreForMeta) * 100),
-        }));
-
-        setIsPending(true);
-        let allowed = false;
-        try {
-          // Server-side validation + recording BEFORE showing results
-          allowed = await validateAndRecord(newScores, {
-            profile: mp,
-            subProfile: sp ?? null,
-            confidence: inlineConfidence,
-            scorePercentages: scorePercentagesMeta,
-          });
-        } catch {
-          showError(
-            tr(
-              "Erro de ligação. Verifica a tua ligação à internet.",
-              "Connection error. Please check your internet connection.",
-              "Error de conexión. Verifica tu conexión a internet."
-            )
-          );
-          return;
-        } finally {
-          setIsPending(false);
-        }
-
-        if (!allowed) {
-          setError(
-            tr(
-              "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
-              "Free usage limit reached. Subscribe to PRO to continue.",
-              "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
-            )
-          );
-          return;
-        }
-
-        setResult(results[mp]);
-        setShowResult(true);
-        setSubProfile(sp);
-        // Clear saved progress on completion
-        clearSavedProgress();
-        // Scroll to top so the user sees the result
-        setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
+        // Finalization handled by shared function (Issue 8)
+        finalizeQuiz(newScores, newAnswers, newDetails);
       }
     },
-    [isPending, currentQuestion, answers, scores, answerDetails, canUse, validateAndRecord, setError, showError, tr, results, saveProgressToStorage, clearSavedProgress]
+    [isPending, currentQuestion, answers, scores, answerDetails, questions, finalizeQuiz, saveProgressToStorage]
   );
 
   const calculateConfidence = useCallback((): number => {
@@ -461,8 +584,16 @@ export function useQuizLogic() {
       if (maxProfile[0] === result.profile)
         alignedPoints += detail.points[result.profile] * detail.weight;
     });
-    return totalPoints > 0 ? Math.round((alignedPoints / totalPoints) * 100) : 0;
-  }, [answerDetails, result]);
+    const rawConfidence = totalPoints > 0 ? Math.round((alignedPoints / totalPoints) * 100) : 0;
+    // Issue 4: Lower confidence when questions were skipped
+    const skippedCount = answers.filter((a) => a === "__skip__").length;
+    const totalQuestions = answers.length;
+    if (skippedCount > 0 && totalQuestions > 0) {
+      const answeredRatio = (totalQuestions - skippedCount) / totalQuestions;
+      return Math.round(rawConfidence * answeredRatio);
+    }
+    return rawConfidence;
+  }, [answerDetails, result, answers]);
 
   const saveResult = useCallback(() => {
     if (result) {
@@ -581,92 +712,10 @@ export function useQuizLogic() {
       saveProgressToStorage(newAnswers, currentQuestion + 1);
       setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
     } else {
-      // Last question was skipped — trigger the same completion logic as handleAnswer
-      // but without adding points. We need to determine the profile from existing scores.
-      if (!canUse) {
-        showError(
-          tr(
-            "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
-            "Free usage limit reached. Subscribe to PRO to continue.",
-            "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
-          )
-        );
-        return;
-      }
-
-      let mp = "amador";
-      let ms = 0;
-      Object.entries(scores).forEach(([p, s]) => {
-        if (s > ms) {
-          ms = s;
-          mp = p;
-        }
-      });
-      const q1 = newAnswers[0];
-      const q6 = newAnswers[5];
-      const q7 = newAnswers[6];
-      let sp: string | null = null;
-      if (mp === "competidor") {
-        if (q1 === "trabalho") sp = "competidor_trabalho";
-        else if (q7 === "premium" || q7 === "alto") sp = "competidor_elite";
-        else sp = "competidor_nacional";
-      } else if (mp === "amador") {
-        if (q6 === "desbravado" || q6 === "basico") sp = "amador_projeto";
-      }
-      const sortedScores = Object.values(scores).sort((a: number, b: number) => b - a);
-      const inlineConfidence =
-        sortedScores.length >= 2 && sortedScores[0] + sortedScores[1] > 0
-          ? Math.round((sortedScores[0] / (sortedScores[0] + sortedScores[1])) * 100)
-          : 100;
-      const totalScoreForMeta =
-        Object.values(scores).reduce((a: number, b: number) => a + b, 0) || 1;
-      const scorePercentagesMeta = Object.entries(scores).map(([p, s]) => ({
-        profile: p,
-        percentage: Math.round((s / totalScoreForMeta) * 100),
-      }));
-
-      setIsPending(true);
-      (async () => {
-        let allowed = false;
-        try {
-          allowed = await validateAndRecord(scores, {
-            profile: mp,
-            subProfile: sp ?? null,
-            confidence: inlineConfidence,
-            scorePercentages: scorePercentagesMeta,
-          });
-        } catch {
-          showError(
-            tr(
-              "Erro de ligação. Verifica a tua ligação à internet.",
-              "Connection error. Please check your internet connection.",
-              "Error de conexión. Verifica tu conexión a internet."
-            )
-          );
-          return;
-        } finally {
-          setIsPending(false);
-        }
-
-        if (!allowed) {
-          setError(
-            tr(
-              "Limite de uso gratuito atingido. Subscreva PRO para continuar.",
-              "Free usage limit reached. Subscribe to PRO to continue.",
-              "Límite de uso gratuito alcanzado. Suscríbase a PRO para continuar."
-            )
-          );
-          return;
-        }
-
-        setResult(results[mp]);
-        setShowResult(true);
-        setSubProfile(sp);
-        clearSavedProgress();
-        setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
-      })();
+      // Finalization handled by shared function (Issue 8)
+      finalizeQuiz(scores, newAnswers, answerDetails);
     }
-  }, [isPending, currentQuestion, answers, scores, questions.length, canUse, validateAndRecord, setError, showError, tr, results, saveProgressToStorage, clearSavedProgress]);
+  }, [isPending, currentQuestion, answers, scores, answerDetails, questions.length, finalizeQuiz, saveProgressToStorage]);
 
   const goBack = useCallback(() => {
     if (currentQuestion > 0) {
@@ -744,7 +793,17 @@ export function useQuizLogic() {
       tradicao: (scores.tradicional / totalScore) * 100,
       criacao: (scores.criador / totalScore) * 100,
       lazer: (scores.amador / totalScore) * 100,
-      investimento: scorePercentages[0]?.percentage || 0,
+      investimento: (() => {
+        // Issue 20: Use Q7 budget data for investment axis
+        const q7 = answers[6];
+        const INVESTIMENTO_SCORES: Record<string, number> = {
+          economico: 25,
+          medio: 50,
+          alto: 75,
+          premium: 100,
+        };
+        return INVESTIMENTO_SCORES[q7] ?? 0;
+      })(),
       dedicacao: (() => {
         // Q8 (answers[7]) — "Quanto tempo pode dedicar ao cavalo semanalmente?"
         const q8 = answers[7];

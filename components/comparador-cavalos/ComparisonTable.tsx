@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Table2, Check, X as XIcon } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -41,7 +41,7 @@ function buildCategories(
 ): CategoryDef[] {
   return [
     {
-      title: tr("Identificacao", "Identification", "Identificacion"),
+      title: tr("Identificação", "Identification", "Identificación"),
       rows: [
         {
           label: tr("Nome", "Name", "Nombre"),
@@ -85,15 +85,15 @@ function buildCategories(
           label: tr("Registo APSL", "APSL Registration", "Registro APSL"),
           getValue: (c) =>
             c.registoAPSL
-              ? tr("Sim", "Yes", "Si")
-              : tr("Nao", "No", "No"),
+              ? tr("Sim", "Yes", "Sí")
+              : tr("Não", "No", "No"),
           getRaw: (c) => (c.registoAPSL ? 1 : 0),
           mode: "boolean",
         },
       ],
     },
     {
-      title: tr("Genetica", "Genetics", "Genetica"),
+      title: tr("Genética", "Genetics", "Genética"),
       rows: [
         {
           label: tr("Linhagem", "Lineage", "Linaje"),
@@ -130,7 +130,7 @@ function buildCategories(
       title: tr("Morfologia", "Morphology", "Morfologia"),
       rows: [
         {
-          label: tr("Conformacao Geral", "Overall Conformation", "Conformacion General"),
+          label: tr("Conformação Geral", "Overall Conformation", "Conformación General"),
           getValue: (c) => `${c.conformacao}/10`,
           getRaw: (c) => c.conformacao,
           mode: "higher",
@@ -147,7 +147,7 @@ function buildCategories(
           mode: "higher",
         },
         {
-          label: tr("Elevacao", "Elevation", "Elevacion"),
+          label: tr("Elevação", "Elevation", "Elevación"),
           getValue: (c) => `${c.elevacao}/10`,
           getRaw: (c) => c.elevacao,
           mode: "higher",
@@ -164,7 +164,7 @@ function buildCategories(
       title: tr("Temperamento", "Temperament", "Temperamento"),
       rows: [
         {
-          label: tr("Avaliacao Geral", "Overall Rating", "Evaluacion General"),
+          label: tr("Avaliação Geral", "Overall Rating", "Evaluación General"),
           getValue: (c) => `${c.temperamento}/10`,
           getRaw: (c) => c.temperamento,
           mode: "higher",
@@ -172,7 +172,7 @@ function buildCategories(
       ],
     },
     {
-      title: tr("Treino e Competicao", "Training & Competition", "Entrenamiento y Competicion"),
+      title: tr("Treino e Competição", "Training & Competition", "Entrenamiento y Competición"),
       rows: [
         {
           label: tr("Nivel de Treino", "Training Level", "Nivel de Entrenamiento"),
@@ -204,7 +204,7 @@ function buildCategories(
           mode: "tier",
         },
         {
-          label: tr("Premios", "Awards", "Premios"),
+          label: tr("Prémios", "Awards", "Premios"),
           getValue: (c) => String(c.premios),
           getRaw: (c) => c.premios,
           mode: "higher",
@@ -212,7 +212,7 @@ function buildCategories(
       ],
     },
     {
-      title: tr("Saude", "Health", "Salud"),
+      title: tr("Saúde", "Health", "Salud"),
       rows: [
         {
           label: tr("Estado Geral", "Overall Status", "Estado General"),
@@ -226,7 +226,7 @@ function buildCategories(
       title: tr("Mercado", "Market", "Mercado"),
       rows: [
         {
-          label: tr("Preco", "Price", "Precio"),
+          label: tr("Preço", "Price", "Precio"),
           getValue: (c) => `${c.preco.toLocaleString()} \u20AC`,
           getRaw: (c) => c.preco,
           mode: "lower",
@@ -289,8 +289,7 @@ function getWinnerIndices(
 
 function getCellClass(
   index: number,
-  winners: Set<number>,
-  total: number
+  winners: Set<number>
 ): string {
   if (winners.size === 0) return "text-[var(--foreground)]";
   if (winners.has(index)) return "text-emerald-400 font-semibold";
@@ -316,14 +315,14 @@ export default function ComparisonTable({ cavalos }: ComparisonTableProps) {
         <h3 className="text-sm font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider flex items-center gap-2">
           <Table2 size={16} className="text-blue-400" />
           {tr(
-            "Comparacao Detalhada",
+            "Comparação Detalhada",
             "Detailed Comparison",
-            "Comparacion Detallada"
+            "Comparación Detallada"
           )}
         </h3>
         <p className="text-xs text-[var(--foreground-muted)] mt-1">
           {tr(
-            "Todas as especificacoes lado a lado. Verde = melhor, vermelho = inferior.",
+            "Todas as especificações lado a lado. Verde = melhor, vermelho = inferior.",
             "All specs side by side. Green = better, red = worse.",
             "Todas las especificaciones lado a lado. Verde = mejor, rojo = inferior."
           )}
@@ -335,12 +334,13 @@ export default function ComparisonTable({ cavalos }: ComparisonTableProps) {
         <table className="w-full text-sm" style={{ minWidth: "540px" }}>
           <thead>
             <tr className="border-b border-[var(--border)]">
-              <th className="text-left py-3 px-4 text-xs text-[var(--foreground-muted)] font-medium uppercase tracking-wider min-w-[180px] sticky left-0 bg-[var(--background-secondary)]">
-                {tr("Parametro", "Parameter", "Parametro")}
+              <th className="text-left py-3 px-4 text-xs text-[var(--foreground-muted)] font-medium uppercase tracking-wider min-w-[180px] sticky left-0 bg-[var(--background-secondary)]" scope="col">
+                {tr("Parâmetro", "Parameter", "Parámetro")}
               </th>
               {cavalos.map((c, i) => (
                 <th
                   key={c.id}
+                  scope="col"
                   className="text-center py-3 px-3 text-xs font-semibold min-w-[110px]"
                   style={{ color: CORES[i] }}
                 >
@@ -351,9 +351,9 @@ export default function ComparisonTable({ cavalos }: ComparisonTableProps) {
           </thead>
           <tbody>
             {categories.map((cat) => (
-              <>
+              <React.Fragment key={`cat-group-${cat.title}`}>
                 {/* Category header row */}
-                <tr key={`cat-${cat.title}`}>
+                <tr>
                   <td
                     colSpan={cavalos.length + 1}
                     className="py-2.5 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[#C5A059]/80 bg-[#C5A059]/5 border-t border-[var(--border)]/30"
@@ -375,7 +375,7 @@ export default function ComparisonTable({ cavalos }: ComparisonTableProps) {
                       {cavalos.map((c, i) => (
                         <td
                           key={c.id}
-                          className={`text-center py-2.5 px-3 text-sm ${getCellClass(i, winners, cavalos.length)}`}
+                          className={`text-center py-2.5 px-3 text-sm ${getCellClass(i, winners)}`}
                         >
                           <span className="inline-flex items-center gap-1.5 justify-center">
                             {row.getValue(c, language)}
@@ -390,7 +390,7 @@ export default function ComparisonTable({ cavalos }: ComparisonTableProps) {
                     </tr>
                   );
                 })}
-              </>
+              </React.Fragment>
             ))}
           </tbody>
         </table>
@@ -432,7 +432,7 @@ export default function ComparisonTable({ cavalos }: ComparisonTableProps) {
                             {c.nome || String.fromCharCode(65 + i)}
                           </p>
                           <p
-                            className={`text-sm font-medium truncate ${getCellClass(i, winners, cavalos.length)}`}
+                            className={`text-sm font-medium truncate ${getCellClass(i, winners)}`}
                           >
                             {row.getValue(c, language)}
                             {row.mode === "boolean" && row.getRaw && (
@@ -466,7 +466,7 @@ export default function ComparisonTable({ cavalos }: ComparisonTableProps) {
         </span>
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-[var(--foreground-muted)]" />
-          {tr("Sem comparacao", "Not comparable", "Sin comparacion")}
+          {tr("Sem comparação", "Not comparable", "Sin comparación")}
         </span>
       </div>
     </div>

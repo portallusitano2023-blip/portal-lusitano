@@ -39,7 +39,12 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
         <span className="hidden sm:inline">{tr("Histórico", "History", "Historial")} ({history.length})</span>
       </button>
       {show && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-[var(--background-card)] border border-[var(--border)] rounded-xl shadow-2xl z-50 overflow-hidden">
+        <div
+          className="absolute right-0 top-full mt-2 w-[min(20rem,calc(100vw-2rem))] bg-[var(--background-card)] border border-[var(--border)] rounded-xl shadow-2xl z-50 overflow-hidden"
+          role="dialog"
+          aria-label={tr("Histórico de avaliações", "Evaluation history", "Historial de evaluaciones")}
+          onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+        >
           <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
             <span className="text-xs font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider">
               {tr("Últimas Avaliações", "Recent Evaluations", "Últimas Evaluaciones")}
@@ -59,7 +64,7 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
                   <span className="text-xs text-[#C5A059] font-semibold truncate max-w-[140px]">
                     {entry.nome || tr("Sem nome", "Unnamed", "Sin nombre")}
                   </span>
-                  <span className="text-[10px] text-[var(--foreground-muted)] shrink-0 ml-2">
+                  <span className="text-[11px] text-[var(--foreground-muted)] shrink-0 ml-2">
                     {new Date(entry.timestamp).toLocaleDateString(locale, {
                       day: "numeric",
                       month: "short",
@@ -72,10 +77,10 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
                   <span className="text-sm font-bold text-[var(--foreground)]">
                     {entry.valorFinal.toLocaleString(locale)}€
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--background-secondary)] text-[var(--foreground-secondary)]">
+                  <span className="text-[11px] px-1.5 py-0.5 rounded bg-[var(--background-secondary)] text-[var(--foreground-secondary)]">
                     {getSharedLabel(TREINO_LABELS, entry.treino, language)}
                   </span>
-                  <span className="text-[10px] flex items-center gap-0.5 ml-auto">
+                  <span className="text-[11px] flex items-center gap-0.5 ml-auto">
                     <TrendingUp size={9} className="text-emerald-400" />
                     <span className="text-emerald-400">{entry.confianca}%</span>
                   </span>

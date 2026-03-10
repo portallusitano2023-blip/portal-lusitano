@@ -15,7 +15,7 @@ import { createTranslator } from "@/lib/tr";
 import { getSharedLabel } from "@/lib/tools/shared-data";
 import { useToast } from "@/context/ToastContext";
 
-import type { Cavalo, HistoryEntry } from "@/components/comparador-cavalos/types";
+import type { Cavalo, HistoryEntry, CategoryWeights } from "@/components/comparador-cavalos/types";
 import {
   criarCavalo,
   DRAFT_KEY,
@@ -29,6 +29,8 @@ import {
   calcularScore,
   calcularValorPorPonto,
   exportarCSV,
+  findVencedor,
+  findMelhorValor,
 } from "@/components/comparador-cavalos/calcular";
 import IntroSection from "@/components/comparador-cavalos/IntroSection";
 import HorseForm from "@/components/comparador-cavalos/HorseForm";
@@ -70,6 +72,7 @@ export default function ComparadorCavalosPage() {
   const [showHistory, setShowHistory] = useState(false);
   const [filtroDisciplina, setFiltroDisciplina] = useState("geral");
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const {
     canUse,
@@ -255,6 +258,14 @@ export default function ComparadorCavalosPage() {
   };
 
   const resetar = () => {
+    if (showAnalise) {
+      const msg = tr(
+        "Tem a certeza que deseja iniciar uma nova comparação? Os resultados atuais serão perdidos.",
+        "Are you sure you want to start a new comparison? Current results will be lost.",
+        "¿Está seguro de que desea iniciar una nueva comparación? Los resultados actuales se perderán."
+      );
+      if (!window.confirm(msg)) return;
+    }
     setStep(0);
     setShowAnalise(false);
     setCavalos([criarCavalo("1", tr("Cavalo A", "Horse A", "Caballo A")), criarCavalo("2", tr("Cavalo B", "Horse B", "Caballo B"))]);
@@ -264,9 +275,9 @@ export default function ComparadorCavalosPage() {
     setHasDraft(false);
   };
 
-  const handleExportCSV = () => {
+  const handleExportCSV = (weights?: CategoryWeights) => {
     try {
-      exportarCSV(cavalos, tr);
+      exportarCSV(cavalos, tr, weights);
     } catch {
       showToast("error", t.errors.error_export_pdf);
     }
@@ -375,8 +386,14 @@ export default function ComparadorCavalosPage() {
     setTimeout(() => {
       setCalculando(false);
       setShowAnalise(true);
-      // Scroll to top so the user sees the results
-      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
+      // Scroll to results section
+      setTimeout(() => {
+        if (resultsRef.current) {
+          resultsRef.current.scrollIntoView({ behavior: "smooth" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }, 100);
     }, 2000);
   };
 
@@ -385,11 +402,23 @@ export default function ComparadorCavalosPage() {
   // ============================================
 
   const vencedor = cavalos.length > 0
-    ? cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b))
+    ? findVencedor(cavalos)
     : null;
   const melhorValor = cavalos.length > 0
-    ? cavalos.reduce((a, b) => calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b)
+    ? findMelhorValor(cavalos)
     : null;
+
+  // Duplicate name detection (Issue 22)
+  const duplicateNames = useMemo(() => {
+    const names = cavalos.map((c) => c.nome.trim().toLowerCase()).filter(Boolean);
+    const seen = new Set<string>();
+    const dupes = new Set<string>();
+    for (const n of names) {
+      if (seen.has(n)) dupes.add(n);
+      seen.add(n);
+    }
+    return dupes;
+  }, [cavalos]);
 
   // ============================================
   // RENDER
@@ -426,13 +455,23 @@ export default function ComparadorCavalosPage() {
                   <div className="relative">
                     <button
                       onClick={() => setShowHistory((v) => !v)}
-                      className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)]"
+                      className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
                     >
                       <History size={13} />
                       <span className="hidden sm:inline">{tr("Histórico", "History", "Historial")} ({history.length})</span>
                     </button>
                     {showHistory && (
-                      <div className="absolute right-0 top-full mt-2 w-72 bg-[var(--background-card)] border border-[var(--border)] rounded-xl shadow-2xl z-50 overflow-hidden">
+                      <div
+                        className="absolute right-0 top-full mt-2 w-72 bg-[var(--background-card)] border border-[var(--border)] rounded-xl shadow-2xl z-50 overflow-hidden"
+                        role="dialog"
+                        aria-label={tr("Histórico de comparações", "Comparison history", "Historial de comparaciones")}
+                        onKeyDown={(e) => {
+                          if (e.key === "Escape") {
+                            setShowHistory(false);
+                            e.stopPropagation();
+                          }
+                        }}
+                      >
                         <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
                           <span className="text-xs font-semibold text-[var(--foreground-secondary)] uppercase tracking-wider">
                             {tr("Últimas Comparações", "Recent Comparisons", "Últimas Comparaciones")}
@@ -536,7 +575,7 @@ export default function ComparadorCavalosPage() {
                   ? "grid-cols-1 md:grid-cols-2"
                   : cavalos.length === 3
                     ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
-                    : "grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
+                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
               }`}
             >
               {cavalos.map((c, i) => (
@@ -549,6 +588,7 @@ export default function ComparadorCavalosPage() {
                   vencedorId={vencedor?.id ?? ""}
                   melhorValorId={melhorValor?.id ?? ""}
                   filtroDisciplina={filtroDisciplina}
+                  duplicateName={duplicateNames.has(c.nome.trim().toLowerCase())}
                   t={t}
                   onUpdate={update}
                   onRemove={remover}
@@ -643,18 +683,20 @@ export default function ComparadorCavalosPage() {
 
             {/* Results */}
             {showAnalise && (
-              <ResultsSection
-                cavalos={cavalos}
-                isSubscribed={isSubscribed}
-                isExporting={isExporting}
-                filtroDisciplina={filtroDisciplina}
-                t={t}
-                onSetFiltroDisciplina={setFiltroDisciplina}
-                onExportPDF={handleExportPDF}
-                onExportCSV={handleExportCSV}
-                onShare={handleShare}
-                onGoBack={() => setShowAnalise(false)}
+              <div ref={resultsRef}>
+                <ResultsSection
+                  cavalos={cavalos}
+                  isSubscribed={isSubscribed}
+                  isExporting={isExporting}
+                  filtroDisciplina={filtroDisciplina}
+                  t={t}
+                  onSetFiltroDisciplina={setFiltroDisciplina}
+                  onExportPDF={handleExportPDF}
+                  onExportCSV={handleExportCSV}
+                  onShare={handleShare}
+                  onGoBack={() => setShowAnalise(false)}
               />
+              </div>
             )}
           </div>
         )}
