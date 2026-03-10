@@ -25,8 +25,8 @@ import SourcesList from "@/components/journal/SourcesList";
 import Newsletter from "@/components/Newsletter";
 import AdUnit from "@/components/ads/AdUnit";
 
-// Fallback para dados locais
-import { articlesDataPT, articlesDataEN } from "@/data/articlesData";
+// Fallback para dados locais — lazy loaded para não pesar no bundle de artigos Sanity
+// articlesData (~5000 linhas) só é carregado quando article===null && legacyId exists
 import "../journal.css";
 
 interface ArticlePageClientProps {
@@ -394,6 +394,20 @@ export default function ArticlePageClient({
   const { t, language } = useLanguage();
   const tr = createTranslator(language);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [localData, setLocalData] = useState<Record<string, any> | null>(null);
+  const [localDataLoading, setLocalDataLoading] = useState(false);
+
+  // Lazy-load articlesData only when we need the local fallback
+  useEffect(() => {
+    if (!article && legacyId && !localData && !localDataLoading) {
+      setLocalDataLoading(true);
+      import("@/data/articlesData").then((mod) => {
+        setLocalData(language === "pt" ? mod.articlesDataPT : mod.articlesDataEN);
+        setLocalDataLoading(false);
+      });
+    }
+  }, [article, legacyId, language, localData, localDataLoading]);
 
   useEffect(() => {
     let ticking = false;
@@ -435,8 +449,15 @@ export default function ArticlePageClient({
 
   /* ── LOCAL ARTICLE FALLBACK ──────────────────────────────────── */
   if (!article && legacyId) {
-    const articlesData = language === "pt" ? articlesDataPT : articlesDataEN;
-    const localArticle = articlesData[legacyId];
+    // Still loading articlesData chunk
+    if (!localData) {
+      return (
+        <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-[var(--gold)]/30 border-t-[var(--gold)] rounded-full animate-spin" />
+        </div>
+      );
+    }
+    const localArticle = localData[legacyId];
 
     if (!localArticle) {
       return (

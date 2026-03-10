@@ -467,6 +467,7 @@ export default function MapaClient({ coudelarias }: MapaClientProps) {
                   src={selectedCoudelaria.foto_capa || placeholderImages[0]}
                   alt={selectedCoudelaria.nome}
                   fill
+                  sizes="(max-width: 448px) 100vw, 448px"
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />

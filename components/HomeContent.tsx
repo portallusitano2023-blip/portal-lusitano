@@ -209,32 +209,33 @@ export default function HomeContent({
     <>
       {/* ===== HERO — Full Screen with Parallax ===== */}
       <section className="relative min-h-[100svh] sm:min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden noise-overlay">
-        {/* Background Image — native picture element for art direction */}
+        {/* Background Image — art direction via CSS + next/image optimization */}
         {/* Mobile: portrait hero  |  Desktop (≥1024px): landscape hero  */}
-        <picture
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0 }}
+        <div
+          className="absolute inset-0 z-0"
           aria-hidden="true"
         >
-          <source
-            media="(min-width: 1024px)"
-            srcSet="/images/home/desktop/hero.png"
-          />
-          <img
+          {/* Mobile hero (hidden on lg+) */}
+          <Image
             src="/images/home/mobile/hero.png"
             alt=""
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 20%",
-              opacity: 0.65,
-            }}
-            fetchPriority="high"
-            loading="eager"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover lg:hidden"
+            style={{ objectPosition: "center 20%", opacity: 0.65 }}
           />
-        </picture>
+          {/* Desktop hero (hidden below lg) */}
+          <Image
+            src="/images/home/desktop/hero.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover hidden lg:block"
+            style={{ objectPosition: "center 20%", opacity: 0.65 }}
+          />
+        </div>
 
         {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/50 to-black/40 z-[1]" />

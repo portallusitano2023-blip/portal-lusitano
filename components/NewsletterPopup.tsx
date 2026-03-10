@@ -173,7 +173,7 @@ export default function NewsletterPopup() {
                   fill
                   className="object-cover object-center"
                   sizes="320px"
-                  priority
+                  loading="lazy"
                 />
                 {/* Dark cinematic overlay */}
                 <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.55) 50%, rgba(197,160,89,0.15) 100%)" }} />

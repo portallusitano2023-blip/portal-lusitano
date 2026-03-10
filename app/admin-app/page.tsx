@@ -49,8 +49,8 @@ const UsersContent = lazy(() => import("@/components/admin-app/UsersContent"));
 const GeoAnalyticsContent = lazy(() => import("@/components/admin-app/GeoAnalyticsContent"));
 const ForecastingContent = lazy(() => import("@/components/admin-app/ForecastingContent"));
 const AutomationsContent = lazy(() => import("@/components/admin-app/AutomationsContent"));
-import GlobalSearch from "@/components/admin-app/GlobalSearch";
-import NotificationCenter from "@/components/admin-app/NotificationCenter";
+const GlobalSearch = lazy(() => import("@/components/admin-app/GlobalSearch"));
+const NotificationCenter = lazy(() => import("@/components/admin-app/NotificationCenter"));
 
 interface MenuItem {
   id: string;
@@ -474,8 +474,8 @@ export default function AdminAppPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Search Bar Global + Notifications */}
         <div className="bg-gradient-to-r from-[#0A0A0A] to-[#0F0F0F] border-b border-white/5 px-6 py-4 flex items-center gap-4">
-          <GlobalSearch />
-          <NotificationCenter />
+          <Suspense fallback={null}><GlobalSearch /></Suspense>
+          <Suspense fallback={null}><NotificationCenter /></Suspense>
         </div>
 
         {/* Top Bar com Tabs - Design melhorado */}
