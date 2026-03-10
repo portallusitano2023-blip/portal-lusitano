@@ -365,6 +365,30 @@ export function useQuizLogic() {
     }
   }, [questions, clearSavedProgress]);
 
+  const calculateConfidence = useCallback((): number => {
+    if (answerDetails.length === 0 || !result) return 0;
+    let alignedPoints = 0;
+    let totalPoints = 0;
+    answerDetails.forEach((detail) => {
+      const maxProfile = Object.entries(detail.points).reduce(
+        (a, b) => (b[1] > a[1] ? b : a),
+        ["", 0]
+      );
+      totalPoints += (maxProfile[1] as number) * detail.weight;
+      if (maxProfile[0] === result.profile)
+        alignedPoints += detail.points[result.profile] * detail.weight;
+    });
+    const rawConfidence = totalPoints > 0 ? Math.round((alignedPoints / totalPoints) * 100) : 0;
+    // Issue 4: Lower confidence when questions were skipped
+    const skippedCount = answers.filter((a) => a === "__skip__").length;
+    const totalQuestions = answers.length;
+    if (skippedCount > 0 && totalQuestions > 0) {
+      const answeredRatio = (totalQuestions - skippedCount) / totalQuestions;
+      return Math.round(rawConfidence * answeredRatio);
+    }
+    return rawConfidence;
+  }, [answerDetails, result, answers]);
+
   // ---------------------------------------------------------------------------
   // Shared finalization logic (Issue 8: single source of truth)
   // ---------------------------------------------------------------------------
@@ -475,18 +499,8 @@ export function useQuizLogic() {
         else sp = "criador_conservacao";
       }
 
-      // Issue 4: Confidence adjusted for skipped questions
-      const sortedScores = Object.values(finalScores).sort(
-        (a: number, b: number) => b - a
-      );
-      const rawConfidence =
-        sortedScores.length >= 2 && sortedScores[0] + sortedScores[1] > 0
-          ? Math.round(
-              (sortedScores[0] / (sortedScores[0] + sortedScores[1])) * 100
-            )
-          : 100;
-      const answeredRatio = answeredCount / finalAnswers.length;
-      const inlineConfidence = Math.round(rawConfidence * answeredRatio);
+      // Issue 4: Confidence — use single source of truth
+      const confidence = calculateConfidence();
 
       // Compute score percentages for rich metadata
       const totalScoreForMeta =
@@ -507,7 +521,7 @@ export function useQuizLogic() {
         allowed = await validateAndRecord(finalScores, {
           profile: mp,
           subProfile: sp ?? null,
-          confidence: inlineConfidence,
+          confidence: confidence,
           scorePercentages: scorePercentagesMeta,
         });
       } catch {
@@ -551,6 +565,7 @@ export function useQuizLogic() {
       tr,
       results,
       clearSavedProgress,
+      calculateConfidence,
     ]
   );
 
@@ -598,30 +613,6 @@ export function useQuizLogic() {
     },
     [isPending, showResult, currentQuestion, answers, scores, answerDetails, questions, finalizeQuiz, saveProgressToStorage]
   );
-
-  const calculateConfidence = useCallback((): number => {
-    if (answerDetails.length === 0 || !result) return 0;
-    let alignedPoints = 0;
-    let totalPoints = 0;
-    answerDetails.forEach((detail) => {
-      const maxProfile = Object.entries(detail.points).reduce(
-        (a, b) => (b[1] > a[1] ? b : a),
-        ["", 0]
-      );
-      totalPoints += (maxProfile[1] as number) * detail.weight;
-      if (maxProfile[0] === result.profile)
-        alignedPoints += detail.points[result.profile] * detail.weight;
-    });
-    const rawConfidence = totalPoints > 0 ? Math.round((alignedPoints / totalPoints) * 100) : 0;
-    // Issue 4: Lower confidence when questions were skipped
-    const skippedCount = answers.filter((a) => a === "__skip__").length;
-    const totalQuestions = answers.length;
-    if (skippedCount > 0 && totalQuestions > 0) {
-      const answeredRatio = (totalQuestions - skippedCount) / totalQuestions;
-      return Math.round(rawConfidence * answeredRatio);
-    }
-    return rawConfidence;
-  }, [answerDetails, result, answers]);
 
   const saveResult = useCallback(() => {
     if (result) {

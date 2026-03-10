@@ -80,6 +80,7 @@ export function shareInstagram(
       alert(alertText);
     }
   }).catch(() => {
-    if (onCopied) onCopied(tr("Erro ao copiar. Copie manualmente.", "Copy failed. Copy manually.", "Error al copiar. Copie manualmente."));
+    // Don't call onCopied for errors - use alert as fallback
+    alert(tr("Erro ao copiar. Copie manualmente.", "Error copying. Copy manually.", "Error al copiar. Copie manualmente."));
   });
 }
