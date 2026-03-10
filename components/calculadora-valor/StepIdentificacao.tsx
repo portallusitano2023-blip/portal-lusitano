@@ -137,7 +137,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                 id="campo-altura"
                 type="number"
                 value={form.altura}
-                onChange={(e) => update("altura", Math.max(100, Math.min(220, Number(e.target.value) || 162)))}
+                onChange={(e) => update("altura", Math.max(140, Math.min(180, Number(e.target.value) || 162)))}
                 min={140}
                 max={180}
                 className="w-full bg-transparent border-b border-[var(--border)] py-3 text-lg focus:border-[var(--gold)] outline-none transition-colors"
@@ -239,9 +239,9 @@ export default function StepIdentificacao({ form, update }: StepProps) {
           </div>
           <p className="text-[11px] text-[var(--foreground-muted)] mt-2 italic">
             {tr(
-              "*Ruço: bonus aplicável nos mercados Brasil/EUA. Preto: bonus em mercados internacionais.",
-              "*Ruco: bonus applicable in Brazil/USA markets. Black: bonus in international markets.",
-              "*Ruço: bonus aplicable en los mercados Brasil/EE.UU. Negro: bonus en mercados internacionales."
+              "*Ruço: +8% apenas nos mercados Brasil/EUA. Preto: +6% em mercados internacionais (excl. Portugal). Isabela e Palomino aplicam-se em todos os mercados.",
+              "*Ruco: +8% only in Brazil/USA markets. Black: +6% in international markets (excl. Portugal). Isabela and Palomino apply in all markets.",
+              "*Ruço: +8% solo en los mercados Brasil/EE.UU. Negro: +6% en mercados internacionales (excl. Portugal). Isabela y Palomino se aplican en todos los mercados."
             )}
           </p>
         </div>

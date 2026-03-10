@@ -27,10 +27,12 @@ import {
 } from "@/components/comparador-cavalos/data";
 import {
   calcularScore,
+  calcularScoreWeighted,
   calcularValorPorPonto,
   exportarCSV,
   findVencedor,
   findMelhorValor,
+  DEFAULT_WEIGHTS,
 } from "@/components/comparador-cavalos/calcular";
 import IntroSection from "@/components/comparador-cavalos/IntroSection";
 import HorseForm from "@/components/comparador-cavalos/HorseForm";
@@ -71,6 +73,7 @@ export default function ComparadorCavalosPage() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [filtroDisciplina, setFiltroDisciplina] = useState("geral");
+  const [customWeights, setCustomWeights] = useState<CategoryWeights>({ ...DEFAULT_WEIGHTS });
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -196,8 +199,9 @@ export default function ComparadorCavalosPage() {
   useEffect(() => {
     if (!showAnalise) return;
     try {
+      const scoreFn = (c: Cavalo) => calcularScoreWeighted(c, customWeights);
       const sorted = [...cavalos]
-        .map((c) => ({ c, score: calcularScore(c) }))
+        .map((c) => ({ c, score: scoreFn(c) }))
         .sort((a, b) => b.score - a.score);
       const entry: HistoryEntry = {
         timestamp: Date.now(),
@@ -287,13 +291,10 @@ export default function ComparadorCavalosPage() {
     if (isExporting) return;
     setIsExporting(true);
     try {
-      const scores = cavalos.map((c) => calcularScore(c));
-      const vencedorNome = cavalos.reduce((a, b) =>
-        calcularScore(a) > calcularScore(b) ? a : b
-      ).nome;
-      const melhorValorNome = cavalos.reduce((a, b) =>
-        calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b
-      ).nome;
+      const scoreFn = (c: Cavalo) => calcularScoreWeighted(c, customWeights);
+      const scores = cavalos.map((c) => scoreFn(c));
+      const vencedorNome = findVencedor(cavalos, scoreFn).nome;
+      const melhorValorNome = findMelhorValor(cavalos, scoreFn).nome;
       const { generateComparadorPDF } = await import("@/lib/tools/pdf/comparador-pdf");
       generateComparadorPDF(cavalos, scores, vencedorNome, melhorValorNome, language, isSubscribed);
     } catch (error) {
@@ -689,12 +690,14 @@ export default function ComparadorCavalosPage() {
                   isSubscribed={isSubscribed}
                   isExporting={isExporting}
                   filtroDisciplina={filtroDisciplina}
+                  customWeights={customWeights}
                   t={t}
                   onSetFiltroDisciplina={setFiltroDisciplina}
                   onExportPDF={handleExportPDF}
                   onExportCSV={handleExportCSV}
                   onShare={handleShare}
                   onGoBack={() => setShowAnalise(false)}
+                  onWeightsChange={setCustomWeights}
               />
               </div>
             )}

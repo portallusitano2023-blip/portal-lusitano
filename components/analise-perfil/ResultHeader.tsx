@@ -61,6 +61,12 @@ export default function ResultHeader({
     competidor_nacional: tr("Competição Nacional", "National Competition", "Competición Nacional"),
     competidor_trabalho: tr("Equitação de Trabalho", "Working Equitation", "Equitación de Trabajo"),
     amador_projeto: tr("Projecto Jovem", "Young Horse Project", "Proyecto Joven"),
+    aprendiz_iniciante: tr("Cavaleiro Iniciante", "Beginner Rider", "Jinete Principiante"),
+    aprendiz_transicao: tr("Cavaleiro em Transição", "Transitioning Rider", "Jinete en Transición"),
+    tradicional_campeiro: tr("Tradição Campeira", "Campo Tradition", "Tradición Campera"),
+    tradicional_classico: tr("Escola Clássica", "Classical School", "Escuela Clásica"),
+    criador_selecao: tr("Criação Selectiva", "Selective Breeding", "Cría Selectiva"),
+    criador_conservacao: tr("Conservação da Raça", "Breed Conservation", "Conservación de la Raza"),
   };
 
   return (

@@ -124,6 +124,8 @@ const MARKET_MULT: Record<string, number> = {
   Brasil: 0.85,
   EUA: 1.35,
   México: 0.9,
+  Itália: 1.15,
+  Escandinávia: 1.2,
 };
 
 // ─── Main Export ─────────────────────────────────────────────────────────────
@@ -541,7 +543,9 @@ export async function generateCalculadoraPDF(
     colW
   );
 
-  yR = addKV(doc, L("Treino", "Training", "Entrenamiento"), safe(form.treino.replace("_", " ")), colRX, yR, colW);
+  const treinoIdx = Array.from(TREINO_KEYS).indexOf(form.treino as (typeof TREINO_KEYS)[number]);
+  const treinoLabel = treinoIdx >= 0 ? TREINO_LABELS[treinoIdx] : safe(form.treino.replace("_", " "));
+  yR = addKV(doc, L("Treino", "Training", "Entrenamiento"), treinoLabel, colRX, yR, colW);
   yR = addKV(doc, L("Disciplina", "Discipline", "Disciplina"), safe(form.disciplina), colRX, yR, colW);
   if (form.competicoes !== undefined) {
     const compLabels: Record<string, string> = {

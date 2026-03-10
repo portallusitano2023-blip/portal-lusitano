@@ -54,7 +54,7 @@ export function calcularScore(c: Cavalo): number {
   score += comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
 
   // BLUP bónus - 5pts (continuous)
-  score += Math.min(5, Math.max(1, Math.round((c.blup - 80) / 8)));
+  score += Math.min(5, Math.round(normalizeBlup(c.blup) / 2));
 
   // Prémios bónus - 5pts
   score += Math.min(5, c.premios);
@@ -144,7 +144,7 @@ export function calcularScoreWeighted(c: Cavalo, weights: CategoryWeights): numb
   score += (comp ? Math.round((comp.mult - 1) * 20 + 5) : 5) * w("competicoes");
 
   // BLUP bonus — base 5 pts (continuous)
-  score += Math.min(5, Math.max(1, Math.round((c.blup - 80) / 8))) * w("blup");
+  score += Math.min(5, Math.round(normalizeBlup(c.blup) / 2)) * w("blup");
 
   // Premios bonus — base 5 pts
   score += Math.min(5, c.premios) * w("premios");
@@ -285,7 +285,7 @@ export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr): ScoreFactor[] 
   const saudeScore = Math.round(c.saude * 0.7);
   const comp = COMPETICOES.find((co) => co.value === c.competicoes);
   const compScore = comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
-  const blupScore = Math.min(5, Math.max(1, Math.round((c.blup - 80) / 8)));
+  const blupScore = Math.min(5, Math.round(normalizeBlup(c.blup) / 2));
   const premiosScore = Math.min(5, c.premios);
   const apslScore = c.registoAPSL ? 3 : 0;
 

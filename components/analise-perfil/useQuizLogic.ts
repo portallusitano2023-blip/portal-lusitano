@@ -439,6 +439,7 @@ export function useQuizLogic() {
       // Determine sub-profile (Issue 5: includes aprendiz sub-profiles)
       const q1 = finalAnswers[0]; // Objectivo (Q1)
       const q2 = finalAnswers[1]; // Experiência (Q2)
+      const q5 = finalAnswers[4]; // Genética (Q5)
       const q6 = finalAnswers[5]; // Nível de treino desejado (Q6)
       const q7 = finalAnswers[6]; // Orçamento (Q7)
       let sp: string | null = null;
@@ -451,6 +452,14 @@ export function useQuizLogic() {
       } else if (mp === "aprendiz") {
         if (q2 === "iniciante") sp = "aprendiz_iniciante";
         else sp = "aprendiz_transicao";
+      } else if (mp === "tradicional") {
+        // q1 = primary discipline answer
+        if (q1 === "trabalho") sp = "tradicional_campeiro";
+        else sp = "tradicional_classico";
+      } else if (mp === "criador") {
+        // q5 = genetics importance
+        if (q5 === "elite") sp = "criador_selecao";
+        else sp = "criador_conservacao";
       }
 
       // Issue 4: Confidence adjusted for skipped questions
@@ -780,7 +789,8 @@ export function useQuizLogic() {
     }),
     [tr]
   );
-  const currentDominant = Object.entries(scores).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  const maxScore = Math.max(...Object.values(scores));
+  const currentDominant = maxScore > 0 ? Object.entries(scores).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null : null;
   const dominantProfile = currentDominant;
   const calculatingLabel = tr("A calcular...", "Calculating...", "Calculando...");
   const dominantProfileLabel = currentDominant
@@ -816,7 +826,7 @@ export function useQuizLogic() {
         return DEDICACAO_SCORES[q8] ?? 0;
       })(),
     }),
-    [scores, totalScore, scorePercentages, answers]
+    [scores, totalScore, answers]
   );
 
   // Computed cross-validation warning (null when both key questions not yet answered or dismissed)

@@ -25,7 +25,7 @@ export function calcMultIdade(idade: number): number {
   if (idade >= 13 && idade <= 15) return 0.95; // Starting decline
   if (idade >= 16 && idade <= 18) return 0.85; // Mature, declining
   if (idade > 18) return 0.70; // Senior
-  return 1.0; // Under 5 — potro
+  return 1.0; // Under 5 — young / developing
 }
 
 // Retornos decrescentes: quando o multiplicador total é muito alto,

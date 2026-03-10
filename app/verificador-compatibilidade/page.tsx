@@ -367,6 +367,7 @@ export default function VerificadorCompatibilidadePage() {
     setGaranhao(criarCavalo("Garanhão"));
     setEgua(criarCavalo("Égua"));
     setCavaleiro(criarCavaleiro());
+    setChainImported(false);
     try {
       localStorage.removeItem(DRAFT_KEY);
     } catch {}

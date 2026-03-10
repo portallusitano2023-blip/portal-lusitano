@@ -187,7 +187,7 @@ function buildCategories(
           mode: "tier",
         },
         {
-          label: tr("Competicoes", "Competitions", "Competiciones"),
+          label: tr("Competições", "Competitions", "Competiciones"),
           getValue: (c, lang) => {
             const co = COMPETICOES.find((x) => x.value === c.competicoes);
             return co ? localizedLabel(co, lang) : c.competicoes;

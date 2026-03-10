@@ -92,7 +92,6 @@ export default function HorseForm({
       <div className="flex gap-2 mb-8" role="tablist">
         <button
           onClick={() => setTab("garanhao")}
-          aria-pressed={tab === "garanhao"}
           role="tab"
           aria-selected={tab === "garanhao"}
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
@@ -122,7 +121,6 @@ export default function HorseForm({
         </button>
         <button
           onClick={() => setTab("egua")}
-          aria-pressed={tab === "egua"}
           role="tab"
           aria-selected={tab === "egua"}
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
@@ -412,7 +410,7 @@ export default function HorseForm({
 
           <div>
             <div className="flex items-center gap-1.5 mb-2">
-              <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+              <label htmlFor="verif-blup" className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
                 {t.verificador.label_blup}
               </label>
               <Tooltip
@@ -425,6 +423,7 @@ export default function HorseForm({
               />
             </div>
             <input
+              id="verif-blup"
               type="number"
               min="50"
               max="150"
@@ -439,10 +438,11 @@ export default function HorseForm({
         {/* Temperamento e Fertilidade */}
         <div className="grid sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="verif-temperamento" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {t.verificador.label_temperament}
             </label>
             <select
+              id="verif-temperamento"
               value={cavalo.temperamento}
               onChange={(e) => update("temperamento", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 min-h-[44px] focus:border-pink-500 outline-none"
@@ -456,7 +456,7 @@ export default function HorseForm({
           </div>
           <div>
             <div className="flex items-center gap-1.5 mb-2">
-              <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+              <label htmlFor="verif-fertilidade" className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
                 {t.verificador.label_fertility}
               </label>
               <Tooltip
@@ -469,6 +469,7 @@ export default function HorseForm({
               />
             </div>
             <select
+              id="verif-fertilidade"
               value={cavalo.fertilidade}
               onChange={(e) => update("fertilidade", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 min-h-[44px] focus:border-pink-500 outline-none"
@@ -482,7 +483,7 @@ export default function HorseForm({
           </div>
           <div>
             <div className="flex items-center gap-1.5 mb-2">
-              <label className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+              <label htmlFor="verif-coi" className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
                 {t.verificador.label_coi}
               </label>
               <Tooltip
@@ -495,12 +496,13 @@ export default function HorseForm({
               />
             </div>
             <input
+              id="verif-coi"
               type="number"
               min="0"
               max="25"
               step="0.5"
               value={cavalo.coi}
-              onChange={(e) => update("coi", +e.target.value || 0)}
+              onChange={(e) => update("coi", Math.max(0, Math.min(25, +e.target.value || 0)))}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 focus:border-pink-500 outline-none"
             />
           </div>
@@ -509,10 +511,11 @@ export default function HorseForm({
         {/* Historial Reprodutivo */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="verif-cobricoes" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {tr("Coberturas Realizadas", "Breedings Performed", "Cubriciones Realizadas")}
             </label>
             <input
+              id="verif-cobricoes"
               type="number"
               min={0}
               value={cavalo.matingsRealizados ?? 0}
@@ -521,10 +524,11 @@ export default function HorseForm({
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+            <label htmlFor="verif-potros" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
               {tr("Potros Nascidos Vivos", "Live Foals Born", "Potros Nacidos Vivos")}
             </label>
             <input
+              id="verif-potros"
               type="number"
               min={0}
               value={cavalo.potradasNascidos ?? 0}
@@ -771,6 +775,35 @@ export default function HorseForm({
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Experiencia do Cavaleiro */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-3">
+              <Activity className="text-emerald-400" size={16} />
+              <label htmlFor="verif-experiencia" className="text-xs text-[var(--foreground-muted)] uppercase tracking-wider">
+                {tr("Nível de Experiência", "Experience Level", "Nivel de Experiencia")}
+              </label>
+              <Tooltip
+                text={tr(
+                  "Experiência equestre do cavaleiro — afecta a compatibilidade com cavalos mais difíceis e influencia os alertas de segurança.",
+                  "Rider's equestrian experience — affects compatibility with more difficult horses and influences safety alerts.",
+                  "Experiencia ecuestre del jinete — afecta la compatibilidad con caballos más difíciles e influye en las alertas de seguridad."
+                )}
+                position="top"
+              />
+            </div>
+            <select
+              id="verif-experiencia"
+              value={cavaleiro.experiencia}
+              onChange={(e) => setCavaleiro((prev) => ({ ...prev, experiencia: e.target.value as Cavaleiro["experiencia"] }))}
+              className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-4 py-3 min-h-[44px] focus:border-emerald-500 outline-none transition-colors"
+            >
+              <option value="iniciante">{tr("Iniciante", "Beginner", "Principiante")}</option>
+              <option value="intermedio">{tr("Intermédio", "Intermediate", "Intermedio")}</option>
+              <option value="avancado">{tr("Avançado", "Advanced", "Avanzado")}</option>
+              <option value="profissional">{tr("Profissional", "Professional", "Profesional")}</option>
+            </select>
           </div>
         </div>
       )}

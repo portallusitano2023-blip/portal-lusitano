@@ -8,7 +8,6 @@ export interface GeneticaPelagem {
   grey: "GG" | "Gg" | "gg";
   cream: "CrCr" | "CrN" | "NN";
   dun: "DD" | "Dd" | "dd";
-  pearl: "PrlPrl" | "PrlN" | "NN";
 }
 
 export interface Cavalo {

@@ -180,7 +180,7 @@ export default function MethodologyFooter({
             weight: "5%",
             description:
               (t.calculadora as Record<string, string>).factor_idade_desc ??
-              tr("Faixa etária ideal: 6-12 anos", "Ideal age range: 6-12 years", "Rango de edad ideal: 6-12 años"),
+              tr("Faixa etária ideal: 8-10 anos (pico), 5-12 bom", "Ideal age range: 8-10 years (peak), 5-12 good", "Rango de edad ideal: 8-10 años (pico), 5-12 bueno"),
           },
           {
             name: (t.calculadora as Record<string, string>).factor_mercado ?? tr("Mercado", "Market", "Mercado"),

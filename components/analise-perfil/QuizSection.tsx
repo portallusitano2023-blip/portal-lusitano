@@ -295,7 +295,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             {/* Answer options — only rendered when user can use the tool */}
             {canUse && (
               <>
-              <div className="space-y-2.5" aria-label={question.question}>
+              <div className="space-y-2.5" role="radiogroup" aria-label={question.question}>
                 {question.options.map((opt, idx) => (
                   <button
                     key={opt.value}
@@ -326,7 +326,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
                 <button
                   onClick={onSkip}
                   disabled={isPending}
-                  className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-colors px-4 py-2 min-h-[36px] rounded-lg hover:bg-[var(--background-secondary)]/40 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-colors px-4 py-2 min-h-[44px] rounded-lg hover:bg-[var(--background-secondary)]/40 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {tr("Não sei / Passar", "Not sure / Skip", "No sé / Pasar")}
                 </button>

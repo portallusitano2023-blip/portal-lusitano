@@ -76,7 +76,7 @@ export default function CompatibilityHero({
 
       {/* Confetti celebration */}
       <div className="relative">
-        <Confetti trigger={true} particleCount={50} duration={2800} />
+        <Confetti trigger={resultado.score >= 70} particleCount={50} duration={2800} />
       </div>
 
       {/* Score Principal */}

@@ -36,6 +36,10 @@ function getProfileLabels(L: (pt: string, en: string, es?: string) => string): R
     criador: L("Criador / Produtor", "Breeder / Producer", "Criador / Productor"),
     amador: L("Cavaleiro Amador", "Amateur Rider", "Jinete Amateur"),
     aprendiz: L("Cavaleiro Aprendiz", "Apprentice Rider", "Jinete Aprendiz"),
+    tradicional_campeiro: L("Tradição Campeira", "Campo Tradition", "Tradición Campera"),
+    tradicional_classico: L("Escola Clássica", "Classical School", "Escuela Clásica"),
+    criador_selecao: L("Criação Selectiva", "Selective Breeding", "Cría Selectiva"),
+    criador_conservacao: L("Conservação da Raça", "Breed Conservation", "Conservación de la Raza"),
   };
 }
 
@@ -154,7 +158,7 @@ export async function generateProfilePDF(
   y += descShown.length * 5 + 6;
 
   // ── Profile match hero card ───────────────────────────────────────────────
-  const heroH = 42;
+  const heroH = 50;
   doc.setFillColor(...CARD_BG);
   doc.roundedRect(MARGIN, y, CONTENT_W, heroH, 3, 3, "F");
   doc.setDrawColor(...profileColor);
@@ -188,7 +192,7 @@ export async function generateProfilePDF(
   doc.setFont("helvetica", "bold");
   doc.text(L("DISTRIBUIÇÃO DE PERFIL", "PROFILE DISTRIBUTION", "DISTRIBUCIÓN DE PERFIL"), rightStartX, y + 8);
 
-  allProfiles.slice(0, 4).forEach((p, i) => {
+  allProfiles.slice(0, 5).forEach((p, i) => {
     const barY = y + 12 + i * 7.5;
     const barW = rightBarW * (p.pct / 100);
 

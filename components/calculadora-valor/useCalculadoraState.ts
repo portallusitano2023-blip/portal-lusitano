@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useFormStep } from "@/hooks/useFormStep";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -319,11 +319,11 @@ export function useCalculadoraState() {
     }
   };
 
-  const resetar = useCallback(() => {
+  const resetar = () => {
     setShowResetConfirm(false);
     setResultado(null);
     formStep.reset();
-  }, [formStep]);
+  };
 
   const editarResultado = () => {
     setResultado(null);

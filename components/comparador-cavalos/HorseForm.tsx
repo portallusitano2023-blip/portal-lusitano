@@ -14,6 +14,7 @@ import {
   calcularPotencial,
   calcularValorPorPonto,
   getScoreFactors,
+  normalizeBlup,
 } from "./calcular";
 
 const ScoreBreakdown = dynamic(() => import("@/components/tools/ScoreBreakdown"));
@@ -177,10 +178,11 @@ export default function HorseForm({
         </div>
 
         <div>
-          <label className="text-xs text-[var(--foreground-muted)] block mb-1">
+          <label htmlFor={`select-sexo-${c.id}`} className="text-xs text-[var(--foreground-muted)] block mb-1">
             {comp.label_sex}
           </label>
           <select
+            id={`select-sexo-${c.id}`}
             value={c.sexo}
             onChange={(e) => onUpdate(c.id, "sexo", e.target.value)}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
@@ -195,10 +197,11 @@ export default function HorseForm({
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs text-[var(--foreground-muted)] block mb-1">
+            <label htmlFor={`select-pelagem-${c.id}`} className="text-xs text-[var(--foreground-muted)] block mb-1">
               {comp.label_coat}
             </label>
             <select
+              id={`select-pelagem-${c.id}`}
               value={c.pelagem}
               onChange={(e) => onUpdate(c.id, "pelagem", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
@@ -211,10 +214,11 @@ export default function HorseForm({
             </select>
           </div>
           <div>
-            <label className="text-xs text-[var(--foreground-muted)] block mb-1">
+            <label htmlFor={`select-linhagem-${c.id}`} className="text-xs text-[var(--foreground-muted)] block mb-1">
               {comp.label_lineage}
             </label>
             <select
+              id={`select-linhagem-${c.id}`}
               value={c.linhagem}
               onChange={(e) => onUpdate(c.id, "linhagem", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
@@ -229,10 +233,11 @@ export default function HorseForm({
         </div>
 
         <div>
-          <label className="text-xs text-[var(--foreground-muted)] block mb-1">
+          <label htmlFor={`select-treino-${c.id}`} className="text-xs text-[var(--foreground-muted)] block mb-1">
             {comp.label_training}
           </label>
           <select
+            id={`select-treino-${c.id}`}
             value={c.treino}
             onChange={(e) => onUpdate(c.id, "treino", e.target.value)}
             className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
@@ -280,10 +285,11 @@ export default function HorseForm({
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs text-[var(--foreground-muted)] block mb-1">
+            <label htmlFor={`select-competicoes-${c.id}`} className="text-xs text-[var(--foreground-muted)] block mb-1">
               {comp.label_competitions}
             </label>
             <select
+              id={`select-competicoes-${c.id}`}
               value={c.competicoes}
               onChange={(e) => onUpdate(c.id, "competicoes", e.target.value)}
               className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
@@ -436,7 +442,7 @@ export default function HorseForm({
               if (pesos.elevacao) discScore += (c.elevacao / 10) * 100 * (pesos.elevacao ?? 0);
               if (pesos.temperamento) discScore += (c.temperamento / 10) * 100 * pesos.temperamento;
               if (pesos.saude) discScore += (c.saude / 10) * 100 * pesos.saude;
-              if (pesos.blupNorm) discScore += Math.min((c.blup / 130) * 100, 100) * pesos.blupNorm;
+              if (pesos.blupNorm) discScore += normalizeBlup(c.blup) * 10 * pesos.blupNorm;
               return (
                 <div className="mt-1.5 text-xs text-[var(--foreground-muted)]">
                   <span className="text-[#C5A059]/70">{Math.round(discScore)} pts</span> {tr("para", "for", "para")}{" "}

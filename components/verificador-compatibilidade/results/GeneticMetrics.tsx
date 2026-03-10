@@ -102,7 +102,14 @@ export default function GeneticMetrics({ resultado, garanhao, egua, t }: Genetic
               }
             />
           </div>
-          <div className="text-3xl font-light text-blue-400">{resultado.blup}</div>
+          <div className="text-3xl font-light text-blue-400">
+            {resultado.blup}
+            {resultado.blupMin != null && resultado.blupMax != null && (
+              <span className="text-sm text-[var(--foreground-muted)] ml-2">
+                ({resultado.blupMin}–{resultado.blupMax})
+              </span>
+            )}
+          </div>
           <div className="text-xs text-[var(--foreground-muted)] mt-1">
             {t.verificador.blup_breed_avg}
           </div>

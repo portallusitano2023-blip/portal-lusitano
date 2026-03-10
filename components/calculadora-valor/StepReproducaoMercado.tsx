@@ -90,9 +90,10 @@ export default function StepReproducaoMercado({ form, update }: StepProps) {
                     type="number"
                     value={form.descendentesAprovados}
                     onChange={(e) =>
-                      update("descendentesAprovados", Math.max(0, Number(e.target.value)))
+                      update("descendentesAprovados", Math.max(0, Math.min(form.descendentes, Number(e.target.value))))
                     }
                     min={0}
+                    max={form.descendentes}
                     className="w-full bg-transparent border border-[var(--border)] rounded-lg py-2 px-3 focus:border-[var(--gold)] outline-none transition-colors"
                   />
                 </div>

@@ -24,6 +24,12 @@ export function shareWhatsApp(
     competidor_nacional: tr("Competição Nacional", "National Competition", "Competición Nacional"),
     competidor_trabalho: tr("Equitação de Trabalho", "Working Equitation", "Equitación de Trabajo"),
     amador_projeto: tr("Projecto Jovem", "Young Horse Project", "Proyecto Joven"),
+    aprendiz_iniciante: tr("Cavaleiro Iniciante", "Beginner Rider", "Jinete Principiante"),
+    aprendiz_transicao: tr("Cavaleiro em Transição", "Transitioning Rider", "Jinete en Transición"),
+    tradicional_campeiro: tr("Tradição Campeira", "Campo Tradition", "Tradición Campera"),
+    tradicional_classico: tr("Escola Clássica", "Classical School", "Escuela Clásica"),
+    criador_selecao: tr("Criação Selectiva", "Selective Breeding", "Cría Selectiva"),
+    criador_conservacao: tr("Conservação da Raça", "Breed Conservation", "Conservación de la Raza"),
   };
 
   const subProfileLabel = subProfile ? ` (${SUB_PROFILE_LABELS[subProfile] ?? ""})` : "";
@@ -46,7 +52,8 @@ export function shareInstagram(
   result: Result | null,
   scores: Record<string, number>,
   alertText: string,
-  tr: TranslatorFn
+  tr: TranslatorFn,
+  onCopied?: (text: string) => void
 ): void {
   if (!result) return;
   const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
@@ -56,6 +63,13 @@ export function shareInstagram(
     `I took the Rider Profile Analysis!\n\nMy profile: ${result.title} (${p}%)\n"${result.subtitle}"\n\nDiscover your profile at:\nportallusitano.pt/analise-perfil\n\n#Lusitano #LusitanoHorse #Equestrian #PortalLusitano`,
     `¡Hice el Análisis de Perfil del Jinete!\n\nMi perfil: ${result.title} (${p}%)\n"${result.subtitle}"\n\nDescubre tu perfil en:\nportallusitano.pt/analise-perfil\n\n#Lusitano #CaballoLusitano #Equitacion #PortalLusitano`
   );
-  navigator.clipboard.writeText(text);
-  alert(alertText);
+  navigator.clipboard.writeText(text).then(() => {
+    if (onCopied) {
+      onCopied(alertText);
+    } else {
+      alert(alertText);
+    }
+  }).catch(() => {
+    // Clipboard write failed silently
+  });
 }

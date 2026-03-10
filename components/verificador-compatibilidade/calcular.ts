@@ -449,12 +449,22 @@ export function calcularCompatibilidade(
   total += fertScore;
 
   // 9. Aprovação como reprodutores (5pts bónus)
-  if (garanhao.aprovado && egua.aprovado) {
-    total += 5;
+  const aprovacaoScore = garanhao.aprovado && egua.aprovado ? 5 : 0;
+  if (aprovacaoScore > 0) {
     fortes.push(tr("Ambos aprovados oficialmente como reprodutores", "Both officially approved as breeders", "Ambos aprobados oficialmente como reproductores"));
   } else if (!garanhao.aprovado) {
     fracos.push(tr("Garanhão não aprovado como reprodutor", "Stallion not approved as breeder", "Semental no aprobado como reproductor"));
   }
+  factores.push({
+    nome: tr("Aprovação APSL", "APSL Approval", "Aprobación APSL"),
+    score: aprovacaoScore,
+    max: 5,
+    tipo: aprovacaoScore >= 5 ? "excelente" : "neutro",
+    descricao: aprovacaoScore >= 5
+      ? tr("Ambos aprovados como reprodutores", "Both approved as breeders", "Ambos aprobados como reproductores")
+      : tr("Bónus requer aprovação de ambos os progenitores", "Bonus requires approval of both parents", "Bonificación requiere aprobación de ambos progenitores"),
+  });
+  total += aprovacaoScore;
 
   // 10. Historial Reprodutivo (0-5 pts)
   const matGar = garanhao.matingsRealizados ?? 0;

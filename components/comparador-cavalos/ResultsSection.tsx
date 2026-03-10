@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import {
   ArrowLeft,
@@ -23,7 +23,7 @@ import RadarChart from "./RadarChart";
 import ComparisonTable from "./ComparisonTable";
 import WeightsPanel from "./WeightsPanel";
 import type { Cavalo, CategoryWeights } from "./types";
-import { CORES, TREINOS, LINHAGENS, COMPETICOES, DISCIPLINE_MATRIX, BREEDING_CHAIN_KEY, localizedLabel } from "./data";
+import { CORES, TREINOS, LINHAGENS, COMPETICOES, DISCIPLINE_MATRIX, BREEDING_CHAIN_KEY, PESOS_DISC, DISC_LABELS, localizedLabel } from "./data";
 import {
   calcularPotencial,
   calcularROI,
@@ -38,6 +38,7 @@ import {
   exportarCSV,
   findVencedor,
   findMelhorValor,
+  normalizeBlup,
 } from "./calcular";
 
 // Lazy-load heavy PRO components
@@ -58,13 +59,15 @@ interface ResultsSectionProps {
   isSubscribed: boolean;
   isExporting: boolean;
   filtroDisciplina: string;
+  customWeights: CategoryWeights;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t: Record<string, any>;
   onSetFiltroDisciplina: (d: string) => void;
   onExportPDF: () => void;
-  onExportCSV: () => void;
+  onExportCSV: (weights?: CategoryWeights) => void;
   onShare: () => void;
   onGoBack: () => void;
+  onWeightsChange: (w: CategoryWeights) => void;
 }
 
 export default function ResultsSection({
@@ -72,20 +75,19 @@ export default function ResultsSection({
   isSubscribed,
   isExporting,
   filtroDisciplina,
+  customWeights,
   t,
   onSetFiltroDisciplina,
   onExportPDF,
   onExportCSV,
   onShare,
   onGoBack,
+  onWeightsChange,
 }: ResultsSectionProps) {
   const comp = t.comparador as Record<string, string>;
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
-
-  // Customizable category weights (Task 2)
-  const [customWeights, setCustomWeights] = useState<CategoryWeights>({ ...DEFAULT_WEIGHTS });
 
   // Confetti should fire once per result set (Issue 33)
   const confettiFired = useRef(false);
@@ -94,8 +96,9 @@ export default function ResultsSection({
 
   // Weighted scoring helpers — identical to calcularScore when weights are default
   const calcScore = (c: Cavalo) => calcularScoreWeighted(c, customWeights);
-  const calcValorPorPonto = (c: Cavalo) => {
+  const calcValorPorPonto = (c: Cavalo): number | null => {
     const score = calcScore(c);
+    if (c.preco === 0) return null;
     return score > 0 ? Math.round(c.preco / score) : 0;
   };
 
@@ -138,24 +141,15 @@ export default function ResultsSection({
       totalPeso += pesos.saude;
     }
     if (pesos.blupNorm) {
-      total += Math.min((c.blup / 130) * 100, 100) * pesos.blupNorm;
+      total += normalizeBlup(c.blup) * 10 * pesos.blupNorm;
       totalPeso += pesos.blupNorm;
     }
+    if (pesos.treino) {
+      const treinoNivel = TREINOS.find((t) => t.value === c.treino)?.nivel ?? 4;
+      total += (treinoNivel / 8) * 100 * pesos.treino;
+      totalPeso += pesos.treino;
+    }
     return totalPeso > 0 ? Math.round(total / totalPeso) : 0;
-  };
-
-  const PESOS_DISC: Record<string, Record<string, number>> = {
-    dressage: { conformacao: 0.2, andamentos: 0.3, elevacao: 0.25, temperamento: 0.15, saude: 0.1 },
-    trabalho: { conformacao: 0.25, andamentos: 0.2, temperamento: 0.3, saude: 0.15, blupNorm: 0.1 },
-    reproducao: { blupNorm: 0.35, conformacao: 0.25, saude: 0.25, andamentos: 0.15 },
-    lazer: { temperamento: 0.4, saude: 0.35, conformacao: 0.15, andamentos: 0.1 },
-  };
-
-  const DISC_LABELS: Record<string, string> = {
-    dressage: "Dressage FEI",
-    trabalho: tr("Equit. Trabalho", "Working Equit.", "Equit. Trabajo"),
-    reproducao: tr("Reprodução", "Breeding", "Reproducción"),
-    lazer: tr("Lazer", "Leisure", "Ocio"),
   };
 
   const disciplinasAptidao: { nome: string; pesos: Record<string, number> }[] = [
@@ -225,7 +219,7 @@ export default function ResultsSection({
             try {
               exportarCSV(cavalos, tr, customWeights);
             } catch {
-              onExportCSV();
+              onExportCSV(customWeights);
             }
           }}
           disabled={isExporting}
@@ -237,7 +231,7 @@ export default function ResultsSection({
       </div>
 
       {/* Customizable Category Weights */}
-      <WeightsPanel weights={customWeights} onChange={setCustomWeights} />
+      <WeightsPanel weights={customWeights} onChange={onWeightsChange} />
 
       {/* Filtro por Disciplina */}
       <div className="flex flex-wrap gap-2 mb-5">
@@ -277,7 +271,7 @@ export default function ResultsSection({
               <p className="text-sm text-[var(--foreground-secondary)]">
                 {tr("Para", "For", "Para")}{" "}
                 <strong className="text-[var(--foreground)]">
-                  {DISC_LABELS[filtroDisciplina]}
+                  {DISC_LABELS[filtroDisciplina] ? localizedLabel(DISC_LABELS[filtroDisciplina], language) : filtroDisciplina}
                 </strong>
                 : <strong className="text-[#C5A059]">{melhor?.nome || tr("Cavalo A", "Horse A", "Caballo A")}</strong> {tr("tem melhor aptidão", "has the best aptitude", "tiene mejor aptitud")} ({melhor?.score ?? 0} pts)
               </p>
@@ -334,8 +328,8 @@ export default function ResultsSection({
                   <span className="text-emerald-400 font-medium">{tr("Melhor custo-benefício:", "Best cost-benefit:", "Mejor costo-beneficio:")}</span>{" "}
                   <span className="font-medium text-[var(--foreground)]">{melhorValor.nome}</span>{" "}
                   <span className="text-[var(--foreground-muted)]">
-                    ({calcValorPorPonto(melhorValor).toLocaleString(locale)} €/pt vs.{" "}
-                    {calcValorPorPonto(vencedor).toLocaleString(locale)} €/pt)
+                    ({calcValorPorPonto(melhorValor)?.toLocaleString(locale) ?? "N/A"} €/pt vs.{" "}
+                    {calcValorPorPonto(vencedor)?.toLocaleString(locale) ?? "N/A"} €/pt)
                   </span>
                 </p>
               </div>
@@ -574,7 +568,7 @@ export default function ResultsSection({
                   c.regularidade,
                   c.temperamento,
                   c.saude,
-                  Math.min(c.blup / 13, 10),
+                  normalizeBlup(c.blup),
                   TREINOS.find((t) => t.value === c.treino)?.nivel || 4,
                 ],
                 cor: CORES[i],
@@ -903,7 +897,7 @@ export default function ResultsSection({
                       key={c.id}
                       className={`text-center py-3 px-3 ${c.id === melhorValor.id ? "text-emerald-400 font-semibold" : "text-[var(--foreground-secondary)]"}`}
                     >
-                      {calcValorPorPonto(c).toLocaleString(locale)}€
+                      {calcValorPorPonto(c)?.toLocaleString(locale) ?? "—"}€
                     </td>
                   ))}
                 </tr>
@@ -960,7 +954,7 @@ export default function ResultsSection({
             <div>
               <p className="text-xl font-bold text-emerald-400">{melhorValor.nome}</p>
               <p className="text-sm text-[var(--foreground-secondary)]">
-                {calcValorPorPonto(melhorValor).toLocaleString(locale)}€ {comp.per_point}
+                {calcValorPorPonto(melhorValor)?.toLocaleString(locale) ?? "—"}€ {comp.per_point}
               </p>
               <p className="text-xs text-[var(--foreground-muted)] mt-1">
                 {melhorValor.preco.toLocaleString(locale)}€ • Score {calcScore(melhorValor)}
