@@ -38,6 +38,13 @@ export default function Confetti({ trigger, duration = 3000, particleCount = 60 
 
   useEffect(() => {
     if (!trigger || hasTriggered.current) return;
+
+    // Respect prefers-reduced-motion
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      hasTriggered.current = true;
+      return;
+    }
+
     hasTriggered.current = true;
 
     const canvas = canvasRef.current;

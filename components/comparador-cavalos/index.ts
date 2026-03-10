@@ -1,4 +1,4 @@
-export type { Cavalo, HistoryEntry, ScoreFactor } from "./types";
+export type { Cavalo, HistoryEntry, ScoreFactor, CategoryWeights } from "./types";
 
 export {
   CORES,
@@ -32,6 +32,9 @@ export {
   gerarVeredicto,
   gerarCustos,
   exportarCSV,
+  calcularScoreWeighted,
+  calcularValorPorPontoWeighted,
+  DEFAULT_WEIGHTS,
 } from "./calcular";
 
 export { default as RadarChart } from "./RadarChart";
@@ -39,3 +42,5 @@ export { default as ProcessingOverlay } from "./ProcessingOverlay";
 export { default as IntroSection } from "./IntroSection";
 export { default as HorseForm } from "./HorseForm";
 export { default as ResultsSection } from "./ResultsSection";
+export { default as ComparisonTable } from "./ComparisonTable";
+export { default as WeightsPanel } from "./WeightsPanel";

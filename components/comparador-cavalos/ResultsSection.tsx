@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import {
   ArrowLeft,
@@ -20,14 +20,16 @@ import ToolCrossCTA from "@/components/tools/ToolCrossCTA";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import RadarChart from "./RadarChart";
-import type { Cavalo } from "./types";
+import ComparisonTable from "./ComparisonTable";
+import WeightsPanel from "./WeightsPanel";
+import type { Cavalo, CategoryWeights } from "./types";
 import { CORES, TREINOS, COMPETICOES, DISCIPLINE_MATRIX, BREEDING_CHAIN_KEY, localizedLabel } from "./data";
 import {
-  calcularScore,
   calcularPotencial,
-  calcularValorPorPonto,
   calcularROI,
   calcDisciplineScore,
+  calcularScoreWeighted,
+  DEFAULT_WEIGHTS,
   getScoreFactors,
   getMelhor,
   getClasseCor,
@@ -78,11 +80,22 @@ export default function ResultsSection({
   const { language } = useLanguage();
   const tr = useMemo(() => createTranslator(language), [language]);
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
+
+  // Customizable category weights (Task 2)
+  const [customWeights, setCustomWeights] = useState<CategoryWeights>({ ...DEFAULT_WEIGHTS });
+
+  // Weighted scoring helpers — identical to calcularScore when weights are default
+  const calcScore = (c: Cavalo) => calcularScoreWeighted(c, customWeights);
+  const calcValorPorPonto = (c: Cavalo) => {
+    const score = calcScore(c);
+    return score > 0 ? Math.round(c.preco / score) : 0;
+  };
+
   const vencedor = cavalos.length > 0
-    ? cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b))
+    ? cavalos.reduce((a, b) => (calcScore(a) > calcScore(b) ? a : b))
     : cavalos[0];
   const melhorValor = cavalos.length > 0
-    ? cavalos.reduce((a, b) => calcularValorPorPonto(a) < calcularValorPorPonto(b) ? a : b)
+    ? cavalos.reduce((a, b) => calcValorPorPonto(a) < calcValorPorPonto(b) ? a : b)
     : cavalos[0];
 
   // ============================================
@@ -209,6 +222,9 @@ export default function ResultsSection({
         </button>
       </div>
 
+      {/* Customizable Category Weights */}
+      <WeightsPanel weights={customWeights} onChange={setCustomWeights} />
+
       {/* Filtro por Disciplina */}
       <div className="flex flex-wrap gap-2 mb-5">
         <span className="text-xs text-[var(--foreground-muted)] self-center mr-1">
@@ -257,7 +273,7 @@ export default function ResultsSection({
 
       {/* Recomendação hero card */}
       {(() => {
-        const vencedorScore = calcularScore(vencedor);
+        const vencedorScore = calcScore(vencedor);
         const fatores = getScoreFactors(vencedor, tr);
         const melhorFator = fatores.reduce((a, b) => (a.score / a.max > b.score / b.max ? a : b));
         const vencedorIndex = cavalos.findIndex((cv) => cv.id === vencedor.id);
@@ -304,8 +320,8 @@ export default function ResultsSection({
                   <span className="text-emerald-400 font-medium">{tr("Melhor custo-benefício:", "Best cost-benefit:", "Mejor costo-beneficio:")}</span>{" "}
                   <span className="font-medium text-[var(--foreground)]">{melhorValor.nome}</span>{" "}
                   <span className="text-[var(--foreground-muted)]">
-                    ({calcularValorPorPonto(melhorValor).toLocaleString(locale)} €/pt vs.{" "}
-                    {calcularValorPorPonto(vencedor).toLocaleString(locale)} €/pt)
+                    ({calcValorPorPonto(melhorValor).toLocaleString(locale)} €/pt vs.{" "}
+                    {calcValorPorPonto(vencedor).toLocaleString(locale)} €/pt)
                   </span>
                 </p>
               </div>
@@ -319,7 +335,7 @@ export default function ResultsSection({
 
       {/* Escolha Óbvia banner */}
       {(() => {
-        const scores = cavalos.map((c) => calcularScore(c)).sort((a, b) => b - a);
+        const scores = cavalos.map((c) => calcScore(c)).sort((a, b) => b - a);
         const gap = scores.length >= 2 ? scores[0] - scores[1] : 0;
         const vencedorIdx = cavalos.findIndex((c) => c.id === vencedor.id);
         const cor = CORES[vencedorIdx] || "#C5A059";
@@ -349,7 +365,7 @@ export default function ResultsSection({
       {cavalos.length >= 2 &&
         (() => {
           const sorted = [...cavalos]
-            .map((c) => ({ c, score: calcularScore(c) }))
+            .map((c) => ({ c, score: calcScore(c) }))
             .sort((a, b) => b.score - a.score);
           const best = sorted[0];
           const second = sorted[1];
@@ -573,6 +589,9 @@ export default function ResultsSection({
         </div>
       </div>
 
+      {/* Side-by-side Comparison Table */}
+      <ComparisonTable cavalos={cavalos} />
+
       {/* Category Ranking */}
       <CategoryRanking cavalos={cavalos} cores={CORES} />
 
@@ -594,8 +613,8 @@ export default function ResultsSection({
               const melhor = Math.max(...cavalos.map((x) => x[campo] as number));
               if ((c[campo] as number) === melhor) v++;
             });
-            const maxScore = Math.max(...cavalos.map(calcularScore));
-            if (calcularScore(c) === maxScore) v++;
+            const maxScore = Math.max(...cavalos.map(calcScore));
+            if (calcScore(c) === maxScore) v++;
             return { id: c.id, nome: c.nome, vitorias: v };
           });
           const total = CAMPOS.length + 1;
@@ -839,7 +858,7 @@ export default function ResultsSection({
                     <td key={c.id} className="text-center py-4 px-3">
                       <div className="flex items-center justify-center gap-2">
                         <span className="text-2xl font-bold" style={{ color: CORES[i] }}>
-                          {calcularScore(c)}
+                          {calcScore(c)}
                         </span>
                         <SourceBadge source="modelo" />
                         {c.id === vencedor.id && (
@@ -853,7 +872,7 @@ export default function ResultsSection({
                         </span>
                       </div>
                       <div className="mt-2 text-left">
-                        <ScoreBreakdown factors={getScoreFactors(c, tr)} total={calcularScore(c)} />
+                        <ScoreBreakdown factors={getScoreFactors(c, tr)} total={calcScore(c)} />
                       </div>
                     </td>
                   ))}
@@ -867,7 +886,7 @@ export default function ResultsSection({
                       key={c.id}
                       className={`text-center py-3 px-3 ${c.id === melhorValor.id ? "text-emerald-400 font-semibold" : "text-[var(--foreground-secondary)]"}`}
                     >
-                      {calcularValorPorPonto(c).toLocaleString(locale)}€
+                      {calcValorPorPonto(c).toLocaleString(locale)}€
                     </td>
                   ))}
                 </tr>
@@ -901,7 +920,7 @@ export default function ResultsSection({
             <div>
               <p className="text-xl font-bold text-amber-400">{vencedor.nome}</p>
               <p className="text-sm text-[var(--foreground-secondary)]">
-                Score: {calcularScore(vencedor)} {comp.points}
+                Score: {calcScore(vencedor)} {comp.points}
               </p>
               <p className="text-xs text-[var(--foreground-muted)] mt-1">
                 {vencedor.treino} • {vencedor.linhagem}
@@ -924,10 +943,10 @@ export default function ResultsSection({
             <div>
               <p className="text-xl font-bold text-emerald-400">{melhorValor.nome}</p>
               <p className="text-sm text-[var(--foreground-secondary)]">
-                {calcularValorPorPonto(melhorValor).toLocaleString(locale)}€ {comp.per_point}
+                {calcValorPorPonto(melhorValor).toLocaleString(locale)}€ {comp.per_point}
               </p>
               <p className="text-xs text-[var(--foreground-muted)] mt-1">
-                {melhorValor.preco.toLocaleString(locale)}€ • Score {calcularScore(melhorValor)}
+                {melhorValor.preco.toLocaleString(locale)}€ • Score {calcScore(melhorValor)}
               </p>
             </div>
           </div>
@@ -948,7 +967,7 @@ export default function ResultsSection({
                 <HorseVerdictCard
                   key={c.id}
                   nome={c.nome}
-                  score={calcularScore(c)}
+                  score={calcScore(c)}
                   strengths={v.strengths}
                   weaknesses={v.weaknesses}
                   bestUse={v.bestUse}
@@ -1015,7 +1034,7 @@ export default function ResultsSection({
         <GapAnalysis
           cavalos={cavalos}
           cores={CORES}
-          calcularScore={(c) => calcularScore(c as Cavalo)}
+          calcularScore={(c) => calcScore(c as Cavalo)}
         />
       </BlurredProSection>
 
@@ -1034,7 +1053,7 @@ export default function ResultsSection({
         <PurchaseConfidence
           cavalos={cavalos}
           vencedorId={vencedor.id}
-          calcularScore={(c) => calcularScore(c as Cavalo)}
+          calcularScore={(c) => calcScore(c as Cavalo)}
         />
       </BlurredProSection>
 

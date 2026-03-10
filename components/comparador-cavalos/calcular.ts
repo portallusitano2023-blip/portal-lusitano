@@ -60,6 +60,95 @@ export function calcularScore(c: Cavalo): number {
   return Math.min(score, 100);
 }
 
+// ============================================
+// DEFAULT WEIGHTS & WEIGHTED SCORING
+// ============================================
+
+export const DEFAULT_WEIGHTS: CategoryWeights = {
+  linhagem: 15,
+  treino: 15,
+  conformacao: 10,
+  andamentos: 10,
+  idade: 10,
+  competicoes: 15,
+  altura: 8,
+  temperamento: 7,
+  saude: 7,
+  blup: 5,
+  elevacao: 5,
+  regularidade: 5,
+  registoAPSL: 3,
+};
+
+/**
+ * Weighted version of calcularScore.
+ * With DEFAULT_WEIGHTS the result is identical to calcularScore.
+ * Weights are normalised so that shifting emphasis does not inflate/deflate
+ * the 0-100 scale.
+ */
+export function calcularScoreWeighted(c: Cavalo, weights: CategoryWeights): number {
+  const defaultTotal = Object.values(DEFAULT_WEIGHTS).reduce((a, b) => a + b, 0);
+  const currentTotal = Object.values(weights).reduce((a, b) => a + b, 0);
+  if (currentTotal === 0) return 0;
+
+  const scale = defaultTotal / currentTotal;
+  const w = (key: keyof CategoryWeights): number => {
+    const dw = DEFAULT_WEIGHTS[key];
+    return dw > 0 ? (weights[key] * scale) / dw : 0;
+  };
+
+  let score = 0;
+
+  // Idade (ideal 6-12) — base 10 pts
+  score += (c.idade >= 6 && c.idade <= 12 ? 10 : c.idade >= 4 && c.idade <= 15 ? 7 : 4) * w("idade");
+
+  // Altura (ideal 158-168) — base 8 pts
+  score += (c.altura >= 158 && c.altura <= 168 ? 8 : c.altura >= 155 && c.altura <= 170 ? 6 : 4) * w("altura");
+
+  // Linhagem — base 15 pts
+  const linPoints: Record<string, number> = { Desconhecida: 3, Registada: 8, Certificada: 11, Premium: 13, Elite: 15 };
+  score += (linPoints[c.linhagem] || 8) * w("linhagem");
+
+  // Treino — base 15 pts
+  const treino = TREINOS.find((t) => t.value === c.treino);
+  score += (treino ? Math.round(treino.nivel * 1.9) : 5) * w("treino");
+
+  // Conformacao — base 10 pts
+  score += c.conformacao * w("conformacao");
+
+  // Andamentos — base 10 pts
+  score += c.andamentos * w("andamentos");
+
+  // Elevacao — base 5 pts
+  score += Math.round(c.elevacao / 2) * w("elevacao");
+
+  // Regularidade — base 5 pts
+  score += Math.round(c.regularidade / 2) * w("regularidade");
+
+  // Temperamento — base 7 pts
+  score += Math.round(c.temperamento * 0.7) * w("temperamento");
+
+  // Saude — base 7 pts
+  score += Math.round(c.saude * 0.7) * w("saude");
+
+  // Competicoes
+  const comp = COMPETICOES.find((co) => co.value === c.competicoes);
+  score += (comp ? Math.round((comp.mult - 1) * 20 + 5) : 5) * w("competicoes");
+
+  // BLUP bonus — base 5 pts
+  score += (c.blup > 110 ? 5 : c.blup > 100 ? 3 : 1) * w("blup");
+
+  // Registo APSL bonus
+  if (c.registoAPSL) score += 3 * w("registoAPSL");
+
+  return Math.min(Math.round(score), 100);
+}
+
+export function calcularValorPorPontoWeighted(c: Cavalo, weights: CategoryWeights): number {
+  const score = calcularScoreWeighted(c, weights);
+  return score > 0 ? Math.round(c.preco / score) : 0;
+}
+
 export function calcularValorPorPonto(c: Cavalo): number {
   const score = calcularScore(c);
   return score > 0 ? Math.round(c.preco / score) : 0;
