@@ -19,8 +19,9 @@ import {
   CompatibilityResults,
   calcularCompatibilidade,
   criarCavalo,
+  criarCavaleiro,
 } from "@/components/verificador-compatibilidade";
-import type { Cavalo, ResultadoCompatibilidade } from "@/components/verificador-compatibilidade";
+import type { Cavalo, Cavaleiro, ResultadoCompatibilidade } from "@/components/verificador-compatibilidade";
 
 const DRAFT_KEY = "verificador_draft_v1";
 const BREEDING_CHAIN_KEY = "tool_chain_breeding";
@@ -53,6 +54,7 @@ export default function VerificadorCompatibilidadePage() {
   const tr = useMemo(() => createTranslator(language), [language]);
   const [garanhao, setGaranhao] = useState<Cavalo>(criarCavalo("Garanhão"));
   const [egua, setEgua] = useState<Cavalo>(criarCavalo("Égua"));
+  const [cavaleiro, setCavaleiro] = useState<Cavaleiro>(criarCavaleiro());
   const [tab, setTab] = useState<"garanhao" | "egua">("garanhao");
   const [step, setStep] = useState(0);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -185,22 +187,27 @@ export default function VerificadorCompatibilidadePage() {
       try {
         localStorage.setItem(
           DRAFT_KEY,
-          JSON.stringify({ garanhao, egua, savedAt: new Date().toISOString() })
+          JSON.stringify({ garanhao, egua, cavaleiro, savedAt: new Date().toISOString() })
         );
       } catch {}
     }, 800);
     return () => {
       if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     };
-  }, [garanhao, egua, step, resultado]);
+  }, [garanhao, egua, cavaleiro, step, resultado]);
 
   const restaurarDraft = () => {
     try {
       const saved = localStorage.getItem(DRAFT_KEY);
       if (saved) {
-        const { garanhao: g, egua: e } = JSON.parse(saved) as { garanhao: Cavalo; egua: Cavalo };
+        const { garanhao: g, egua: e, cavaleiro: c } = JSON.parse(saved) as {
+          garanhao: Cavalo;
+          egua: Cavalo;
+          cavaleiro?: Cavaleiro;
+        };
         setGaranhao(g);
         setEgua(e);
+        if (c) setCavaleiro(c);
         setStep(1);
         setHasDraft(false);
       }
@@ -263,7 +270,7 @@ export default function VerificadorCompatibilidadePage() {
     setIsCalculating(true);
 
     try {
-      const resultadoFinal = calcularCompatibilidade(garanhao, egua, tr);
+      const resultadoFinal = calcularCompatibilidade(garanhao, egua, tr, cavaleiro, objetivo);
 
       // Server-side validation + recording BEFORE showing results
       const allowed = await validateAndRecord(
@@ -332,6 +339,7 @@ export default function VerificadorCompatibilidadePage() {
     setStep(0);
     setGaranhao(criarCavalo("Garanhão"));
     setEgua(criarCavalo("Égua"));
+    setCavaleiro(criarCavaleiro());
     try {
       localStorage.removeItem(DRAFT_KEY);
     } catch {}
@@ -483,6 +491,8 @@ export default function VerificadorCompatibilidadePage() {
             egua={egua}
             setGaranhao={setGaranhao}
             setEgua={setEgua}
+            cavaleiro={cavaleiro}
+            setCavaleiro={setCavaleiro}
             tab={tab}
             setTab={setTab}
             canUse={canUse}

@@ -1,4 +1,4 @@
-import type { Cavalo, ResultadoCompatibilidade } from "./types";
+import type { Cavalo, Cavaleiro, RedFlag, ResultadoCompatibilidade } from "./types";
 import { DEFEITOS_GENETICOS } from "./data";
 
 // ============================================
@@ -8,7 +8,163 @@ import { DEFEITOS_GENETICOS } from "./data";
 type TranslatorFn = (pt: string, en: string, es?: string) => string;
 const defaultTr: TranslatorFn = (pt) => pt;
 
-export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: TranslatorFn = defaultTr): ResultadoCompatibilidade {
+/** Detects dangerous rider-horse combinations and returns red flags */
+function detectRedFlags(
+  cavaleiro: Cavaleiro,
+  garanhao: Cavalo,
+  egua: Cavalo,
+  objetivo: string,
+  tr: TranslatorFn
+): RedFlag[] {
+  const flags: RedFlag[] = [];
+  const isHighEnergy = (t: string) => t === "Energético" || t === "Nervoso";
+  const minHorseHeight = Math.min(garanhao.altura, egua.altura);
+
+  // 0. WARNING: Sedentary/beginner rider + stallion (inherently harder to handle)
+  if (
+    cavaleiro.nivelFitness === "sedentario" &&
+    !isHighEnergy(garanhao.temperamento)
+  ) {
+    flags.push({
+      title: tr(
+        "Cavaleiro iniciante com garanhão",
+        "Beginner rider with stallion",
+        "Jinete principiante con semental"
+      ),
+      description: tr(
+        "Garanhões são naturalmente mais difíceis de manejar do que éguas ou cavalos castrados. Cavaleiros com pouca experiência devem iniciar com cavalos mais dóceis.",
+        "Stallions are naturally harder to handle than mares or geldings. Riders with little experience should start with more docile horses.",
+        "Los sementales son naturalmente más difíciles de manejar que las yeguas o los caballos castrados. Jinetes con poca experiencia deben empezar con caballos más dóciles."
+      ),
+      severity: "warning",
+    });
+  }
+
+  // 1. CRITICAL: Sedentary rider + Stallion + energetic temperament
+  if (
+    cavaleiro.nivelFitness === "sedentario" &&
+    isHighEnergy(garanhao.temperamento)
+  ) {
+    flags.push({
+      title: tr(
+        "Cavaleiro sedentário com garanhão enérgico",
+        "Sedentary rider with energetic stallion",
+        "Jinete sedentario con semental enérgico"
+      ),
+      description: tr(
+        "Cavaleiros com baixa condição física não devem manejar garanhões com temperamento energético ou nervoso. Risco elevado de acidentes.",
+        "Riders with low physical condition should not handle stallions with energetic or nervous temperament. High risk of accidents.",
+        "Jinetes con baja condición física no deben manejar sementales con temperamento enérgico o nervioso. Riesgo elevado de accidentes."
+      ),
+      severity: "critical",
+    });
+  }
+
+  // 2. CRITICAL: Sedentary rider + young horse (< 5 years)
+  if (
+    cavaleiro.nivelFitness === "sedentario" &&
+    (garanhao.idade < 5 || egua.idade < 5)
+  ) {
+    flags.push({
+      title: tr(
+        "Cavaleiro sedentário com cavalo jovem (< 5 anos)",
+        "Sedentary rider with young horse (< 5 years)",
+        "Jinete sedentario con caballo joven (< 5 años)"
+      ),
+      description: tr(
+        "Cavalos com menos de 5 anos ainda estão em formação e requerem cavaleiros experientes e fisicamente preparados.",
+        "Horses under 5 years are still in training and require experienced, physically prepared riders.",
+        "Caballos con menos de 5 años aún están en formación y requieren jinetes experimentados y físicamente preparados."
+      ),
+      severity: "critical",
+    });
+  }
+
+  // 3. CRITICAL: Rider weight > 100kg + horse height < 155cm
+  if (cavaleiro.pesoCavaleiro > 100 && minHorseHeight < 155) {
+    flags.push({
+      title: tr(
+        "Peso excessivo para cavalo de pequeno porte",
+        "Excessive weight for small horse",
+        "Peso excesivo para caballo de pequeño porte"
+      ),
+      description: tr(
+        `Cavaleiro com ${cavaleiro.pesoCavaleiro}kg em cavalo(s) com menos de 155cm. Risco de lesões nas costas e articulações do cavalo.`,
+        `Rider at ${cavaleiro.pesoCavaleiro}kg on horse(s) under 155cm. Risk of back and joint injuries to the horse.`,
+        `Jinete con ${cavaleiro.pesoCavaleiro}kg en caballo(s) con menos de 155cm. Riesgo de lesiones en la espalda y articulaciones del caballo.`
+      ),
+      severity: "critical",
+    });
+  }
+
+  // 4. WARNING: Moderate fitness + high-energy horse
+  if (
+    cavaleiro.nivelFitness === "moderado" &&
+    (isHighEnergy(garanhao.temperamento) || isHighEnergy(egua.temperamento))
+  ) {
+    flags.push({
+      title: tr(
+        "Fitness moderado com cavalo de alta energia",
+        "Moderate fitness with high-energy horse",
+        "Fitness moderado con caballo de alta energía"
+      ),
+      description: tr(
+        "Cavalos energéticos ou nervosos exigem maior preparação física. Considere aumentar o nível de fitness antes de trabalhar com estes cavalos.",
+        "Energetic or nervous horses require greater physical preparation. Consider increasing fitness level before working with these horses.",
+        "Caballos enérgicos o nerviosos exigen mayor preparación física. Considere aumentar el nivel de fitness antes de trabajar con estos caballos."
+      ),
+      severity: "warning",
+    });
+  }
+
+  // 5. WARNING: Sedentary rider + competition goals
+  if (cavaleiro.nivelFitness === "sedentario" && objetivo === "competicao") {
+    flags.push({
+      title: tr(
+        "Fitness sedentário com objectivos de competição",
+        "Sedentary fitness with competition goals",
+        "Fitness sedentario con objetivos de competición"
+      ),
+      description: tr(
+        "Alta competição (Dressage CDI, etc.) exige excelente condição física do cavaleiro. Recomenda-se programa de preparação física.",
+        "High competition (Dressage CDI, etc.) requires excellent rider fitness. A physical preparation programme is recommended.",
+        "Alta competición (Dressage CDI, etc.) exige excelente condición física del jinete. Se recomienda un programa de preparación física."
+      ),
+      severity: "warning",
+    });
+  }
+
+  // 6. WARNING: Sedentary fitness + demanding discipline (energetic horses or non-leisure goal)
+  if (
+    cavaleiro.nivelFitness === "sedentario" &&
+    objetivo !== "lazer" &&
+    (isHighEnergy(garanhao.temperamento) || isHighEnergy(egua.temperamento))
+  ) {
+    flags.push({
+      title: tr(
+        "Fitness sedentário com disciplina exigente",
+        "Sedentary fitness with demanding discipline",
+        "Fitness sedentario con disciplina exigente"
+      ),
+      description: tr(
+        "A combinação de baixo fitness com cavalos energéticos em disciplinas exigentes aumenta significativamente o risco de fadiga e lesão.",
+        "The combination of low fitness with energetic horses in demanding disciplines significantly increases the risk of fatigue and injury.",
+        "La combinación de bajo fitness con caballos enérgicos en disciplinas exigentes aumenta significativamente el riesgo de fatiga y lesión."
+      ),
+      severity: "warning",
+    });
+  }
+
+  return flags;
+}
+
+export function calcularCompatibilidade(
+  garanhao: Cavalo,
+  egua: Cavalo,
+  tr: TranslatorFn = defaultTr,
+  cavaleiro?: Cavaleiro,
+  objetivo?: string
+): ResultadoCompatibilidade {
   const factores: ResultadoCompatibilidade["factores"] = [];
   const riscos: ResultadoCompatibilidade["riscos"] = [];
   const fortes: string[] = [];
@@ -35,13 +191,46 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
 
   // 2. Compatibilidade Física (10pts)
   const difAltura = Math.abs(garanhao.altura - egua.altura);
-  const tamanhoScore = difAltura <= 5 ? 10 : difAltura <= 8 ? 8 : difAltura <= 12 ? 5 : 3;
+  let tamanhoScore = difAltura <= 5 ? 10 : difAltura <= 8 ? 8 : difAltura <= 12 ? 5 : 3;
+
+  // Rider weight/height adjustments on physical compatibility
+  if (cavaleiro) {
+    const minHorseHeight = Math.min(garanhao.altura, egua.altura);
+    if (cavaleiro.pesoCavaleiro > 100 && minHorseHeight < 162) {
+      tamanhoScore = Math.max(0, tamanhoScore - 15);
+      riscos.push({
+        texto: tr(
+          `Peso do cavaleiro (${cavaleiro.pesoCavaleiro}kg) excessivo para cavalos < 162cm`,
+          `Rider weight (${cavaleiro.pesoCavaleiro}kg) excessive for horses < 162cm`,
+          `Peso del jinete (${cavaleiro.pesoCavaleiro}kg) excesivo para caballos < 162cm`
+        ),
+        severidade: "alto",
+      });
+    } else if (cavaleiro.pesoCavaleiro > 90 && minHorseHeight < 158) {
+      tamanhoScore = Math.max(0, tamanhoScore - 10);
+      riscos.push({
+        texto: tr(
+          `Peso do cavaleiro (${cavaleiro.pesoCavaleiro}kg) elevado para cavalos < 158cm`,
+          `Rider weight (${cavaleiro.pesoCavaleiro}kg) high for horses < 158cm`,
+          `Peso del jinete (${cavaleiro.pesoCavaleiro}kg) elevado para caballos < 158cm`
+        ),
+        severidade: "medio",
+      });
+    }
+  }
+
   factores.push({
     nome: tr("Compatibilidade Física", "Physical Compatibility", "Compatibilidad Física"),
     score: tamanhoScore,
     max: 10,
     tipo: tamanhoScore >= 8 ? "excelente" : tamanhoScore >= 5 ? "bom" : "aviso",
-    descricao: tr(`Diferença de altura: ${difAltura}cm`, `Height difference: ${difAltura}cm`, `Diferencia de altura: ${difAltura}cm`),
+    descricao: cavaleiro && (cavaleiro.pesoCavaleiro > 90 || cavaleiro.pesoCavaleiro > 100)
+      ? tr(
+          `Diferença de altura: ${difAltura}cm | Peso cavaleiro: ${cavaleiro.pesoCavaleiro}kg`,
+          `Height difference: ${difAltura}cm | Rider weight: ${cavaleiro.pesoCavaleiro}kg`,
+          `Diferencia de altura: ${difAltura}cm | Peso jinete: ${cavaleiro.pesoCavaleiro}kg`
+        )
+      : tr(`Diferença de altura: ${difAltura}cm`, `Height difference: ${difAltura}cm`, `Diferencia de altura: ${difAltura}cm`),
   });
   if (difAltura > 10)
     riscos.push({
@@ -105,14 +294,48 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
     Energético: { Calmo: 7, Equilibrado: 8, Energético: 7, Nervoso: 4 },
     Nervoso: { Calmo: 6, Equilibrado: 6, Energético: 4, Nervoso: 3 },
   };
-  const tempScore = tempCompat[garanhao.temperamento]?.[egua.temperamento] || 5;
+  let tempScore = tempCompat[garanhao.temperamento]?.[egua.temperamento] || 5;
+
+  // Rider fitness adjustments on temperament compatibility
+  if (cavaleiro) {
+    const isHighEnergy = (t: string) => t === "Energético" || t === "Nervoso";
+    if (
+      cavaleiro.nivelFitness === "sedentario" &&
+      (isHighEnergy(garanhao.temperamento) || isHighEnergy(egua.temperamento))
+    ) {
+      tempScore = Math.max(0, tempScore - 8);
+      fracos.push(tr(
+        "Fitness sedentário incompatível com cavalos energéticos",
+        "Sedentary fitness incompatible with energetic horses",
+        "Fitness sedentario incompatible con caballos enérgicos"
+      ));
+    }
+    if (
+      cavaleiro.nivelFitness === "atleta" &&
+      (garanhao.temperamento === "Calmo" || egua.temperamento === "Calmo")
+    ) {
+      tempScore = Math.min(10, tempScore + 3);
+      fortes.push(tr(
+        "Cavaleiro atleta complementa bem cavalo calmo",
+        "Athlete rider complements calm horse well",
+        "Jinete atleta complementa bien caballo calmado"
+      ));
+    }
+  }
+
   factores.push({
     nome: tr("Compatibilidade Temperamento", "Temperament Compatibility", "Compatibilidad de Temperamento"),
     score: tempScore,
     max: 10,
     tipo:
       tempScore >= 8 ? "excelente" : tempScore >= 6 ? "bom" : tempScore >= 4 ? "aviso" : "risco",
-    descricao: tr("Combinação dos temperamentos dos progenitores", "Combination of the parents' temperaments", "Combinación de los temperamentos de los progenitores"),
+    descricao: cavaleiro
+      ? tr(
+          "Combinação dos temperamentos (ajustado ao fitness do cavaleiro)",
+          "Temperament combination (adjusted for rider fitness)",
+          "Combinación de temperamentos (ajustado al fitness del jinete)"
+        )
+      : tr("Combinação dos temperamentos dos progenitores", "Combination of the parents' temperaments", "Combinación de los temperamentos de los progenitores"),
   });
   if (tempScore <= 4)
     riscos.push({ texto: tr("Temperamentos potencialmente incompatíveis", "Potentially incompatible temperaments", "Temperamentos potencialmente incompatibles"), severidade: "medio" });
@@ -382,6 +605,33 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
     );
   }
 
+  // Rider-specific recommendations
+  if (cavaleiro) {
+    if (cavaleiro.nivelFitness === "sedentario") {
+      recomendacoes.push(
+        tr(
+          "Recomenda-se programa de preparação física antes de montar regularmente",
+          "A physical preparation programme is recommended before riding regularly",
+          "Se recomienda un programa de preparación física antes de montar regularmente"
+        )
+      );
+    }
+    if (cavaleiro.pesoCavaleiro > 90) {
+      recomendacoes.push(
+        tr(
+          "Considere cavalos com altura mínima de 160cm para o peso do cavaleiro",
+          "Consider horses with a minimum height of 160cm for the rider's weight",
+          "Considere caballos con altura mínima de 160cm para el peso del jinete"
+        )
+      );
+    }
+  }
+
+  // Detect red flags
+  const redFlags = cavaleiro
+    ? detectRedFlags(cavaleiro, garanhao, egua, objetivo || "lazer", tr)
+    : [];
+
   return {
     score: Math.min(100, Math.max(total, 0)),
     nivel,
@@ -393,5 +643,6 @@ export function calcularCompatibilidade(garanhao: Cavalo, egua: Cavalo, tr: Tran
     factores: factores.sort((a, b) => b.score - a.score),
     recomendacoes,
     pontosForteseFracos: { fortes, fracos },
+    redFlags,
   };
 }
