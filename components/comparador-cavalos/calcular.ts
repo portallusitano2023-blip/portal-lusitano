@@ -177,14 +177,18 @@ export function calcularPotencial(c: Cavalo, weights?: CategoryWeights): number 
   // Cavalos mais jovens têm mais margem de progressão
   const ageFactor = c.idade <= 5 ? 1.0 : c.idade <= 8 ? 0.75 : c.idade <= 11 ? 0.45 : 0.15;
 
-  // Margem de treino: cada nível vale ~(nivel/8)*15 pts no scoring
-  const treinoHeadroom = ((nivelMax - nivel) / 8) * 15;
+  // Scale headroom by weight ratio when custom weights are provided
+  const totalW = weights ? Object.values(weights).reduce((a, b) => a + b, 0) : Object.values(DEFAULT_WEIGHTS).reduce((a, b) => a + b, 0);
+  const wTreino = weights ? (weights.treino / totalW) * 120 : 15;
+  const wComp = weights ? (weights.competicoes / totalW) * 120 : 15;
 
-  // Margem de competição: máximo (Internacional) = ~15pts
+  // Margem de treino: cada nível vale ~(nivel/8)*wTreino pts no scoring
+  const treinoHeadroom = ((nivelMax - nivel) / 8) * wTreino;
+
+  // Margem de competição: máximo (Internacional) = ~wComp pts
   const comp = COMPETICOES.find((co) => co.value === c.competicoes);
   const compScore = comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
-  const compMax = 15;
-  const compHeadroom = Math.max(0, compMax - compScore);
+  const compHeadroom = Math.max(0, wComp - compScore);
 
   const potencialBonus = Math.round((treinoHeadroom + compHeadroom) * ageFactor);
   return Math.min(100, scoreAtual + potencialBonus);
@@ -199,6 +203,7 @@ export function calcularROI(c: Cavalo, tr: TrFn = defaultTr): { roi5yr: number; 
   if (c.idade <= 5 && nivel <= 3) annualRate = 0.16;
   else if (c.idade <= 7 && nivel <= 4) annualRate = 0.1;
   else if (c.idade >= 8 && c.idade <= 12 && nivel >= 5) annualRate = 0.05;
+  else if (c.idade >= 13 && c.idade <= 14) annualRate = -0.01;
   else if (c.idade > 14) annualRate = -0.04;
 
   const estimatedValue5yr = Math.round(c.preco * Math.pow(1 + annualRate, 5));

@@ -429,8 +429,12 @@ export default function CalculadoraValorPage() {
 
                   {warnings.length > 0 && (
                     <div className="space-y-2 mt-4">
-                      {warnings.filter(w => w.severity === "warning").map((w, i) => (
-                        <div key={i} className="text-xs px-3 py-2 rounded-lg border bg-amber-500/10 border-amber-500/30 text-amber-400">
+                      {warnings.filter(w => w.severity === "warning" || w.severity === "error").map((w, i) => (
+                        <div key={i} className={`text-xs px-3 py-2 rounded-lg border ${
+                          w.severity === "error"
+                            ? "bg-red-500/10 border-red-500/30 text-red-400"
+                            : "bg-amber-500/10 border-amber-500/30 text-amber-400"
+                        }`}>
                           {w.message}
                         </div>
                       ))}

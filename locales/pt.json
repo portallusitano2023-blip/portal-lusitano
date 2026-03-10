@@ -906,7 +906,7 @@
     "confidence_moderate": "Confianca moderada. Considere analisar mais parametros.",
     "confidence_low": "Confianca baixa. Os cavalos sao muito semelhantes ou existem riscos.",
     "tooltip_radar": "Cada eixo representa uma dimensão avaliada de 0 a 10. A área total reflecte o perfil global do cavalo.",
-    "tooltip_score": "Score composto (0-100) que pondera: Linhagem (15%), Treino (15%), Conformação (10%), Andamentos (10%), Idade (10%), Altura (8%), Temperamento (7%), Saúde (7%), BLUP (5%), Competições (8%), APSL (3%), Elevação+Regularidade (5%).",
+    "tooltip_score": "Score composto (0-100) que pondera: Linhagem (12.5%), Treino (12.5%), Competições (12.5%), Conformação (8.3%), Andamentos (8.3%), Idade (8.3%), Altura (6.7%), Temperamento (5.8%), Saúde (5.8%), BLUP (4.2%), Elevação (4.2%), Regularidade (4.2%), Prémios (4.2%), APSL (2.5%).",
     "tooltip_valor_ponto": "Preço dividido pelo score total. Quanto menor, melhor a relação custo-benefício.",
     "tooltip_melhor_score": "O cavalo com maior score total no conjunto de factores avaliados.",
     "tooltip_melhor_valor": "O cavalo com menor custo por ponto de score.",

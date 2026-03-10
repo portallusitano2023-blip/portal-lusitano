@@ -33,10 +33,13 @@ export function calcMultIdade(idade: number): number {
 function applyDiminishingReturns(totalMult: number): number {
   // Até 3x — multiplicação linear (sem ajuste)
   if (totalMult <= 3.0) return totalMult;
-  // 3x-6x — crescimento reduzido (raiz quadrada do excesso)
-  if (totalMult <= 6.0) return 3.0 + Math.sqrt(totalMult - 3.0);
+  // 3x-6x — crescimento reduzido (excess²/(excess+1) always < excess for excess > 0)
+  if (totalMult <= 6.0) {
+    const excess = totalMult - 3.0;
+    return 3.0 + (excess * excess) / (excess + 1);
+  }
   // 6x+ — crescimento logarítmico (protege contra valores absurdos)
-  return 3.0 + Math.sqrt(3.0) + Math.log(totalMult - 5.0) * 1.2;
+  return 3.0 + (9 / 4) + Math.log(totalMult - 5.0) * 1.2;
 }
 
 // Validação lógica: detecta combinações impossíveis/improváveis e ajusta

@@ -241,9 +241,11 @@ export default function VerificadorCompatibilidadePage() {
             coudelaria: typeof draft.coudelaria === "string" ? draft.coudelaria : defaults.coudelaria,
             conformacao: typeof draft.conformacao === "number" && draft.conformacao >= 1 && draft.conformacao <= 10 ? draft.conformacao : defaults.conformacao,
             andamentos: typeof draft.andamentos === "number" && draft.andamentos >= 1 && draft.andamentos <= 10 ? draft.andamentos : defaults.andamentos,
-            temperamento: typeof draft.temperamento === "string" ? draft.temperamento : defaults.temperamento,
+            temperamento: (typeof draft.temperamento === "string" && ["Calmo", "Equilibrado", "Energético", "Nervoso"].includes(draft.temperamento))
+              ? draft.temperamento : defaults.temperamento,
             saude: typeof draft.saude === "number" && draft.saude >= 1 && draft.saude <= 10 ? draft.saude : defaults.saude,
-            fertilidade: typeof draft.fertilidade === "string" ? draft.fertilidade : defaults.fertilidade,
+            fertilidade: (typeof draft.fertilidade === "string" && ["Muito Alta", "Alta", "Normal", "Baixa"].includes(draft.fertilidade))
+              ? draft.fertilidade : defaults.fertilidade,
             blup: typeof draft.blup === "number" && draft.blup >= 50 && draft.blup <= 150 ? draft.blup : defaults.blup,
             coi: typeof draft.coi === "number" && draft.coi >= 0 && draft.coi <= 25 ? draft.coi : defaults.coi,
             defeitos: Array.isArray(draft.defeitos) ? draft.defeitos.filter((d): d is string => typeof d === "string") : defaults.defeitos,

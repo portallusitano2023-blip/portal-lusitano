@@ -47,18 +47,6 @@ function getCrossValidationWarning(
   // Ambas as perguntas fundamentais têm de estar respondidas para validação cruzada
   if (!objectivo || !experiencia) return null;
 
-  // Iniciante + Alta Competição de Dressage
-  if (objectivo === "dressage_comp" && experiencia === "iniciante") {
-    return {
-      message: tr(
-        "Dressage de competição requer normalmente 5 ou mais anos de experiência equestre consolidada. Considera começar com Alta Escola Clássica e progredir gradualmente — o PSL responde excepcionalmente bem a cavaleiros que crescem com ele.",
-        "Competition dressage typically requires 5 or more years of consolidated equestrian experience. Consider starting with Classical High School and progressing gradually — the PSL responds exceptionally well to riders who grow with it.",
-        "El dressage de competición normalmente requiere 5 o más años de experiencia ecuestre consolidada. Considera empezar con Alta Escuela Clásica y progresar gradualmente — el PSL responde excepcionalmente bien a jinetes que crecen con él."
-      ),
-      severity: "warning",
-    };
-  }
-
   // Pouca dedicação + Alta Competição de Dressage (só avalia quando Q8 foi respondida)
   if (objectivo === "dressage_comp" && dedicacao === "weekend") {
     return {
@@ -66,6 +54,18 @@ function getCrossValidationWarning(
         "Cavalos de competição de dressage requerem treino regular de 5 a 7 dias por semana para manter a forma de prova. Com disponibilidade apenas ao fim de semana, um PSL de Alta Escola Clássica ou lazer será mais adequado e mais justo para o cavalo.",
         "Competition dressage horses require regular training of 5 to 7 days per week to stay in show form. With only weekend availability, a Classical High School or leisure PSL would be more suitable and fairer to the horse.",
         "Los caballos de dressage de competición requieren entrenamiento regular de 5 a 7 días por semana para mantenerse en forma de concurso. Con disponibilidad solo los fines de semana, un PSL de Alta Escuela Clásica o de ocio sería más adecuado y más justo para el caballo."
+      ),
+      severity: "warning",
+    };
+  }
+
+  // Iniciante + Alta Competição de Dressage
+  if (objectivo === "dressage_comp" && experiencia === "iniciante") {
+    return {
+      message: tr(
+        "Dressage de competição requer normalmente 5 ou mais anos de experiência equestre consolidada. Considera começar com Alta Escola Clássica e progredir gradualmente — o PSL responde excepcionalmente bem a cavaleiros que crescem com ele.",
+        "Competition dressage typically requires 5 or more years of consolidated equestrian experience. Consider starting with Classical High School and progressing gradually — the PSL responds exceptionally well to riders who grow with it.",
+        "El dressage de competición normalmente requiere 5 o más años de experiencia ecuestre consolidada. Considera empezar con Alta Escuela Clásica y progresar gradualmente — el PSL responde excepcionalmente bien a jinetes que crecen con él."
       ),
       severity: "warning",
     };
@@ -607,10 +607,10 @@ export function useQuizLogic() {
           setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
         } else {
           // Finalization handled by shared function (Issue 8)
-          finalizeQuiz(newScores, newAnswers, newDetails);
+          await finalizeQuiz(newScores, newAnswers, newDetails);
         }
       } finally {
-        setTimeout(() => { isProcessingAnswer.current = false; }, 0);
+        isProcessingAnswer.current = false;
       }
     },
     [isPending, showResult, currentQuestion, answers, scores, answerDetails, questions, finalizeQuiz, saveProgressToStorage]
@@ -728,8 +728,10 @@ export function useQuizLogic() {
     clearSavedProgress();
   }, [clearSavedProgress]);
 
-  const skipQuestion = useCallback(() => {
-    if (isPending) return;
+  const skipQuestion = useCallback(async () => {
+    if (isPending || isProcessingAnswer.current) return;
+    isProcessingAnswer.current = true;
+    try {
     const newAnswers = [...answers, "__skip__"];
     // No points added for a skip
     setAnswers(newAnswers);
@@ -740,7 +742,10 @@ export function useQuizLogic() {
       setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
     } else {
       // Finalization handled by shared function (Issue 8)
-      finalizeQuiz(scores, newAnswers, answerDetails);
+      await finalizeQuiz(scores, newAnswers, answerDetails);
+    }
+    } finally {
+      isProcessingAnswer.current = false;
     }
   }, [isPending, currentQuestion, answers, scores, answerDetails, questions.length, finalizeQuiz, saveProgressToStorage]);
 

@@ -42,7 +42,8 @@ export function shareWhatsApp(
     criador_conservacao: tr("Conservação da Raça", "Breed Conservation", "Conservación de la Raza"),
   };
 
-  const subProfileLabel = subProfile ? ` (${SUB_PROFILE_LABELS[subProfile] ?? ""})` : "";
+  const subLabel = subProfile ? SUB_PROFILE_LABELS[subProfile] : undefined;
+  const subProfileLabel = subLabel ? ` (${subLabel})` : "";
   const text = encodeURIComponent(
     tr(
       `\u{1F434} Descobri o meu Perfil Equestre no Portal Lusitano!\n\nSou *${result.title}*${subProfileLabel} com ${pct}% de afinidade.\n\nDescobre o teu perfil em: ${shareUrl}`,

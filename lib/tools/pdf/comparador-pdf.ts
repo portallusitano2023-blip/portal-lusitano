@@ -321,7 +321,7 @@ export async function generateComparadorPDF(
     const score = scores[i] ?? 0;
     const cx = MARGIN + i * (colW + colGap);
     const isVencedor = cavalo.id === vencedorId;
-    const isMelhorValor = !isVencedor && cavalo.id === melhorValorId;
+    const isMelhorValor = cavalo.id === melhorValorId;
     const color = scoreColor(score, 100);
 
     // Card background

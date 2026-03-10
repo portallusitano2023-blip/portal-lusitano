@@ -906,7 +906,7 @@
     "confidence_moderate": "Moderate confidence. Consider analysing more parameters.",
     "confidence_low": "Low confidence. The horses are very similar or there are risks.",
     "tooltip_radar": "Each axis represents a dimension rated 0 to 10. The total area reflects the horse's overall profile.",
-    "tooltip_score": "Composite score (0-100) weighting: Lineage (15%), Training (15%), Conformation (10%), Gaits (10%), Age (10%), Height (8%), Temperament (7%), Health (7%), BLUP (5%), Competitions (8%), APSL (3%), Elevation+Regularity (5%).",
+    "tooltip_score": "Composite score (0-100) weighted: Lineage (12.5%), Training (12.5%), Competitions (12.5%), Conformation (8.3%), Gaits (8.3%), Age (8.3%), Height (6.7%), Temperament (5.8%), Health (5.8%), BLUP (4.2%), Elevation (4.2%), Regularity (4.2%), Awards (4.2%), APSL (2.5%).",
     "tooltip_valor_ponto": "Price divided by total score. The lower, the better the cost-benefit ratio.",
     "tooltip_melhor_score": "The horse with the highest total score across all evaluated factors.",
     "tooltip_melhor_valor": "The horse with the lowest cost per score point.",

@@ -906,7 +906,7 @@
     "confidence_moderate": "Confianza moderada. Considere analizar mas parametros.",
     "confidence_low": "Confianza baja. Los caballos son muy similares o existen riesgos.",
     "tooltip_radar": "Cada eje representa una dimension evaluada de 0 a 10. El area total refleja el perfil global del caballo.",
-    "tooltip_score": "Puntuacion compuesta (0-100) que pondera: Linaje (15%), Entrenamiento (15%), Conformacion (10%), Aires (10%), Edad (10%), Altura (8%), Temperamento (7%), Salud (7%), BLUP (5%), Competiciones (8%), APSL (3%), Elevacion+Regularidad (5%).",
+    "tooltip_score": "Puntuación compuesta (0-100) ponderada: Linaje (12.5%), Entrenamiento (12.5%), Competiciones (12.5%), Conformación (8.3%), Movimientos (8.3%), Edad (8.3%), Altura (6.7%), Temperamento (5.8%), Salud (5.8%), BLUP (4.2%), Elevación (4.2%), Regularidad (4.2%), Premios (4.2%), APSL (2.5%).",
     "tooltip_valor_ponto": "Precio dividido por la puntuacion total. Cuanto menor, mejor la relacion coste-beneficio.",
     "tooltip_melhor_score": "El caballo con la mayor puntuacion total en el conjunto de factores evaluados.",
     "tooltip_melhor_valor": "El caballo con el menor coste por punto de puntuacion.",

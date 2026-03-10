@@ -261,13 +261,13 @@ export function calcularCompatibilidade(
   const fracos: string[] = [];
   let total = 0;
 
-  // 1. Idade Reprodutiva (15pts) — graduated scoring (M-15)
+  // 1. Idade Reprodutiva (10pts) — graduated scoring (M-15)
   const graduatedAge = (idade: number, min: number, max: number): number => {
-    if (idade >= min && idade <= max) return 15; // within range
+    if (idade >= min && idade <= max) return 10; // within range
     const dist = idade < min ? min - idade : idade - max;
-    if (dist <= 2) return 12; // 1-2 years outside
-    if (dist <= 5) return 8;  // 3-5 years outside
-    return 3;                  // 5+ years outside
+    if (dist <= 2) return 8;  // 1-2 years outside
+    if (dist <= 5) return 5;  // 3-5 years outside
+    return 2;                  // 5+ years outside
   };
   const idadeScoreGar = graduatedAge(garanhao.idade, 4, 20);
   const idadeScoreEgu = graduatedAge(egua.idade, 4, 18);
@@ -275,8 +275,8 @@ export function calcularCompatibilidade(
   factores.push({
     nome: tr("Idade Reprodutiva", "Reproductive Age", "Edad Reproductiva"),
     score: idadeScore,
-    max: 15,
-    tipo: idadeScore >= 12 ? "excelente" : idadeScore >= 8 ? "bom" : "aviso",
+    max: 10,
+    tipo: idadeScore >= 8 ? "excelente" : idadeScore >= 5 ? "bom" : "aviso",
     descricao: tr("Idade ideal: Garanhão 4-20, Égua 4-18 anos", "Ideal age: Stallion 4-20, Mare 4-18 years", "Edad ideal: Semental 4-20, Yegua 4-18 años"),
   });
   if (egua.idade > 16)

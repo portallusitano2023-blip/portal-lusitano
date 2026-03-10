@@ -85,9 +85,7 @@ export default function BreakdownAnalysis({
       {/* Value Waterfall - Decomposicao do Valor */}
       <ValueWaterfall
         categorias={resultado.categorias}
-        valorBase={
-          resultado.valorFinal - resultado.categorias.reduce((sum, c) => sum + c.impacto, 0)
-        }
+        valorBase={Math.max(0, resultado.valorFinal - resultado.categorias.reduce((sum, c) => sum + c.impacto, 0))}
         valorFinal={resultado.valorFinal}
       />
 
