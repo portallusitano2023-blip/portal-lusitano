@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useMemo, useCallback, useEffect, useRef } from "react";
 import { ChevronRight, ChevronLeft, Sparkles, AlertTriangle, Info, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -54,6 +54,44 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
   const tr = useMemo(() => createTranslator(language), [language]);
   const progressCompleted = Math.round((currentQuestion / questions.length) * 100);
   const question = questions[currentQuestion];
+  const optionsRef = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Issue 35: Restart confirmation when > 3 questions answered
+  const handleReset = useCallback(() => {
+    if (currentQuestion > 3) {
+      const msg = tr(
+        "Tem a certeza que deseja recomeçar o quiz? O progresso será perdido.",
+        "Are you sure you want to restart the quiz? Progress will be lost.",
+        "¿Está seguro de que desea reiniciar el cuestionario? El progreso se perderá."
+      );
+      if (!window.confirm(msg)) return;
+    }
+    onReset();
+  }, [currentQuestion, onReset, tr]);
+
+  // Issue 31: Keyboard navigation — Arrow keys move focus, Enter selects
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!question || !canUse) return;
+      const opts = optionsRef.current.filter(Boolean) as HTMLButtonElement[];
+      if (opts.length === 0) return;
+
+      const focusedIdx = opts.findIndex((el) => el === document.activeElement);
+
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        e.preventDefault();
+        const next = focusedIdx < opts.length - 1 ? focusedIdx + 1 : 0;
+        opts[next]?.focus();
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        const prev = focusedIdx > 0 ? focusedIdx - 1 : opts.length - 1;
+        opts[prev]?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [question, canUse]);
 
   return (
     <div
@@ -216,7 +254,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             <button
               onClick={onDismissCrossWarning}
               aria-label={tr("Dispensar aviso", "Dismiss warning", "Descartar aviso")}
-              className={`shrink-0 p-0.5 rounded transition-colors ${
+              className={`shrink-0 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded transition-colors ${
                 crossValidationWarning.severity === "warning"
                   ? "text-amber-400/60 hover:text-amber-300"
                   : "text-blue-400/60 hover:text-blue-300"
@@ -261,6 +299,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
                 {question.options.map((opt, idx) => (
                   <button
                     key={opt.value}
+                    ref={(el) => { optionsRef.current[idx] = el; }}
                     onClick={() => onAnswer(opt)}
                     disabled={isPending}
                     className="w-full text-left p-5 bg-[var(--background-card)]/30 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/50 hover:bg-[var(--gold)]/5 transition-all group hover:translate-x-1 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:border-[var(--border)] disabled:hover:bg-transparent"
@@ -308,7 +347,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
               <div />
             )}
             <button
-              onClick={onReset}
+              onClick={handleReset}
               className="text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] text-sm px-3 py-2.5 min-h-[44px] rounded-lg hover:bg-[var(--background-secondary)]/50 transition-all"
             >
               {t.analise_perfil.restart}

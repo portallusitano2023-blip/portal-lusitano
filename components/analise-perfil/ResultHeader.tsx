@@ -208,7 +208,7 @@ export default function ResultHeader({
                 className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-sm rounded-lg border border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-muted)]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Download size={15} />
-                {isBadgeLoading ? "..." : "Badge"}
+                {isBadgeLoading ? "..." : tr("Crachá", "Badge", "Insignia")}
               </button>
               <button
                 onClick={onCopyLink}

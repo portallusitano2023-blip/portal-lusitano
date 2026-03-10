@@ -33,7 +33,7 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
     <div className="relative">
       <button
         onClick={onToggle}
-        className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)]"
+        className="text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5 px-2 py-1 min-h-[44px] rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)]"
       >
         <History size={13} />
         <span className="hidden sm:inline">{tr("Histórico", "History", "Historial")} ({history.length})</span>
@@ -51,7 +51,7 @@ export default function HistoryPanel({ history, show, onToggle, onClose }: Histo
             </span>
             <button
               onClick={onClose}
-              className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+              className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors rounded-lg"
               aria-label={tr("Fechar histórico", "Close history", "Cerrar historial")}
             >
               <X size={13} />

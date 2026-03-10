@@ -107,13 +107,13 @@ export default function IntroSection({
               <div className="flex gap-2">
                 <button
                   onClick={onRestoreDraft}
-                  className="px-3 py-1.5 bg-[var(--gold)] text-black text-xs font-bold rounded-lg hover:bg-[#D4B068] transition-colors"
+                  className="px-3 py-1.5 min-h-[44px] bg-[var(--gold)] text-black text-xs font-bold rounded-lg hover:bg-[#D4B068] transition-colors"
                 >
                   {tr("Continuar", "Continue", "Continuar")}
                 </button>
                 <button
                   onClick={onDiscardDraft}
-                  className="px-3 py-1.5 bg-transparent border border-[var(--gold)]/40 text-[var(--gold)] text-xs rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
+                  className="px-3 py-1.5 min-h-[44px] bg-transparent border border-[var(--gold)]/40 text-[var(--gold)] text-xs rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
                 >
                   {tr("Descartar", "Discard", "Descartar")}
                 </button>
@@ -144,7 +144,7 @@ export default function IntroSection({
               </p>
               <button
                 onClick={onDismissProfile}
-                className="text-[var(--gold)]/50 hover:text-[var(--gold)] transition-colors shrink-0"
+                className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-[var(--gold)]/50 hover:text-[var(--gold)] transition-colors shrink-0 rounded-lg"
                 aria-label={tr("Fechar", "Close", "Cerrar")}
               >
                 <X size={14} />

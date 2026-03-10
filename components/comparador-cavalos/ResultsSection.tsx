@@ -202,7 +202,7 @@ export default function ResultsSection({
     <div className="space-y-6 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]">
       <button
         onClick={onGoBack}
-        className="flex items-center gap-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors mb-4"
+        className="flex items-center gap-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors mb-4 py-2 min-h-[44px]"
       >
         <ArrowLeft size={16} />
         {tr("Editar dados dos cavalos", "Edit horse data", "Editar datos de los caballos")}
@@ -246,7 +246,7 @@ export default function ResultsSection({
         </span>
         {[
           { id: "geral", label: tr("Geral", "General", "General") },
-          { id: "dressage", label: "Dressage FEI" },
+          { id: "dressage", label: tr("Dressage FEI", "FEI Dressage", "Dressage FEI") },
           { id: "trabalho", label: tr("Equit. Trabalho", "Working Equit.", "Equit. Trabajo") },
           { id: "reproducao", label: tr("Reprodução", "Breeding", "Reproducción") },
           { id: "lazer", label: tr("Lazer", "Leisure", "Ocio") },
@@ -254,7 +254,7 @@ export default function ResultsSection({
           <button
             key={d.id}
             onClick={() => onSetFiltroDisciplina(d.id)}
-            className={`text-xs px-3 py-2 min-h-[36px] rounded-full border transition-all ${
+            className={`text-xs px-3 py-2 min-h-[44px] rounded-full border transition-all ${
               filtroDisciplina === d.id
                 ? "border-[#C5A059] bg-[#C5A059]/10 text-[#C5A059] font-semibold"
                 : "border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--border)]/70"

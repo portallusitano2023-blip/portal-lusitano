@@ -90,7 +90,7 @@ export default function HorseForm({
           {totalCavalos > 2 && (
             <button
               onClick={() => onRemove(c.id)}
-              className="text-[var(--foreground-muted)] hover:text-red-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/50 rounded p-1"
+              className="text-[var(--foreground-muted)] hover:text-red-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/50 rounded p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label={tr("Remover cavalo", "Remove horse", "Eliminar caballo")}
             >
               <X size={18} />
@@ -109,7 +109,7 @@ export default function HorseForm({
         )}
         {/* Preset */}
         <select
-          className="mt-2 w-full text-xs bg-[var(--background-card)]/40 border border-[var(--border)] text-[var(--foreground-muted)] rounded px-2 py-1 cursor-pointer hover:border-[var(--gold)]/40 transition-colors"
+          className="mt-2 w-full text-xs bg-[var(--background-card)]/40 border border-[var(--border)] text-[var(--foreground-muted)] rounded px-2 py-1 min-h-[44px] cursor-pointer hover:border-[var(--gold)]/40 transition-colors"
           value=""
           onChange={(e) => {
             if (e.target.value && PRESETS[e.target.value])
@@ -312,7 +312,7 @@ export default function HorseForm({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-xs text-[var(--foreground-muted)] block mb-1">
-              {tr("Prémios / Awards", "Awards", "Premios")}
+              {tr("Prémios", "Awards", "Premios")}
             </label>
             <input
               type="number"

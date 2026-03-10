@@ -154,7 +154,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
             </div>
             <button
               onClick={onComparar}
-              className={`shrink-0 text-xs font-semibold px-3 py-2 rounded-lg transition-colors ${
+              className={`shrink-0 text-xs font-semibold px-3 py-2 min-h-[44px] rounded-lg transition-colors ${
                 resultado.percentil >= 65
                   ? "bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
                   : resultado.percentil >= 40

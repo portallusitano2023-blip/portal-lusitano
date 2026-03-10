@@ -172,7 +172,7 @@ export default function WeightsPanel({ weights, onChange }: WeightsPanelProps) {
             {!isDefault && (
               <button
                 onClick={handleReset}
-                className="flex items-center gap-1.5 text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors px-2.5 py-1.5 rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)]"
+                className="flex items-center gap-1.5 text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors px-2.5 py-1.5 min-h-[44px] rounded-lg border border-[var(--border)] hover:border-[var(--foreground-muted)]"
               >
                 <RotateCcw size={12} />
                 {tr("Repor Defeito", "Reset Defaults", "Restablecer")}

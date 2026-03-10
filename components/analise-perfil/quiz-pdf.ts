@@ -35,6 +35,7 @@ function getProfileLabels(L: (pt: string, en: string, es?: string) => string): R
     tradicional: L("Cavaleiro Tradicional", "Traditional Rider", "Jinete Tradicional"),
     criador: L("Criador / Produtor", "Breeder / Producer", "Criador / Productor"),
     amador: L("Cavaleiro Amador", "Amateur Rider", "Jinete Amateur"),
+    aprendiz: L("Cavaleiro Aprendiz", "Apprentice Rider", "Jinete Aprendiz"),
   };
 }
 
@@ -43,6 +44,7 @@ const PROFILE_COLORS: Record<string, [number, number, number]> = {
   tradicional: [197, 160, 89],   // #C5A059 (gold)
   criador: [236, 72, 153],       // #ec4899 (pink)
   amador: [34, 197, 94],         // #22c55e (green)
+  aprendiz: [139, 92, 246],      // #8b5cf6 (violet)
 };
 
 // ─── Main Export ──────────────────────────────────────────────────────────────

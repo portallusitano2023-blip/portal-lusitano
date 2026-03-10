@@ -399,6 +399,7 @@ export function useCalculadoraState() {
         body: JSON.stringify({ toolName: "calculadora", resultSummary: summary }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      showToast("success", tr("Email enviado com sucesso!", "Email sent successfully!", "¡Email enviado con éxito!"));
     } catch (e) {
       if (process.env.NODE_ENV === "development") console.warn("Send email error:", e);
       showToast("error", tr("Erro ao enviar email. Tente novamente.", "Error sending email. Please try again.", "Error al enviar email. Inténtelo de nuevo."));
@@ -565,6 +566,8 @@ export function useCalculadoraState() {
     // Derived
     progress,
     resultRef,
+    warnings,
+    touchedFields,
 
     // Constants (re-exported for JSX)
     PROFILE_LABELS,

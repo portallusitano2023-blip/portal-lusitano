@@ -241,8 +241,8 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
 
   // Temperamento
   // Sensibilidade: 5 is balanced/ideal, extremes (1 or 10) are defects.
-  // Transform to a 1-10 quality score where 5→10 (best), 1→4, 10→4
-  const sensScore = 10 - Math.abs(form.sensibilidade - 6) * 1.5;
+  // Transform to a 1-10 quality score where 5→10 (best), 1→4, 10→2.5
+  const sensScore = 10 - Math.abs(form.sensibilidade - 5) * 1.5;
   const adjSens = Math.max(1, Math.min(10, Math.round(sensScore)));
   const tempMedia = (form.temperamento + adjSens + form.vontadeTrabalho) / 3;
   const multTemp = 0.75 + (tempMedia / 10) * 0.5;

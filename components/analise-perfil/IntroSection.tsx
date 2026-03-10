@@ -17,7 +17,8 @@ interface IntroSectionProps {
 }
 
 export default function IntroSection({ onStart }: IntroSectionProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const altText = language === "en" ? "Lusitano Horse" : language === "es" ? "Caballo Lusitano" : "Cavalo Lusitano";
 
   return (
     <div className="animate-[fadeSlideIn_0.4s_ease-out_forwards]">
@@ -25,7 +26,7 @@ export default function IntroSection({ onStart }: IntroSectionProps) {
         <div className="absolute inset-0">
           <Image
             src="/images/analise-perfil/capa.png"
-            alt="Cavalo Lusitano"
+            alt={altText}
             fill
             sizes="100vw"
             className="object-cover opacity-40"
