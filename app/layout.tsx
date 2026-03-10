@@ -1,17 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Montserrat } from "next/font/google";
 import "./globals.css";
-import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Providers } from "./providers";
 import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
 import SkipLinks from "@/components/SkipLinks";
-
-const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
-const SmoothScroll = dynamic(() => import("@/components/SmoothScroll"), { ssr: false });
-const RouteProgressBar = dynamic(() => import("@/components/RouteProgressBar"), { ssr: false });
-const BottomNav = dynamic(() => import("@/components/BottomNav"), { ssr: false });
+import ClientShell from "@/components/ClientShell";
 
 // Apenas pesos necessários - reduz tamanho do bundle de fontes
 const playfair = Playfair_Display({
@@ -172,13 +167,10 @@ export default function RootLayout({
       <body className="bg-[var(--background)] text-[var(--foreground)] antialiased">
         <Providers>
           <SkipLinks />
-          <RouteProgressBar />
-          <CustomCursor />
-          <SmoothScroll />
+          <ClientShell />
           <Navbar />
           <main id="main-content">{children}</main>
           <Footer />
-          <BottomNav />
         </Providers>
       </body>
     </html>
