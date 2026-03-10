@@ -234,7 +234,7 @@ export default function ResultsSection({
       <WeightsPanel weights={customWeights} onChange={onWeightsChange} />
 
       {/* Filtro por Disciplina */}
-      <div className="flex flex-wrap gap-2 mb-5">
+      <div className="flex flex-wrap gap-2 mb-5" role="radiogroup" aria-label={tr("Contexto de disciplina", "Discipline context", "Contexto de disciplina")}>
         <span className="text-xs text-[var(--foreground-muted)] self-center mr-1">
           {tr("Contexto", "Context", "Contexto")}:
         </span>
@@ -247,6 +247,8 @@ export default function ResultsSection({
         ].map((d) => (
           <button
             key={d.id}
+            role="radio"
+            aria-checked={filtroDisciplina === d.id}
             onClick={() => onSetFiltroDisciplina(d.id)}
             className={`text-xs px-3 py-2 min-h-[44px] rounded-full border transition-all ${
               filtroDisciplina === d.id

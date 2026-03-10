@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useToolAccess } from "@/hooks/useToolAccess";
 import { useLanguage } from "@/context/LanguageContext";
+import { useToast } from "@/context/ToastContext";
 import { createTranslator } from "@/lib/tr";
 import { getQuestions } from "@/components/analise-perfil/data/questions";
 import { getResults } from "@/components/analise-perfil/data/results";
@@ -142,6 +143,7 @@ const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 
 export function useQuizLogic() {
   const { t, language } = useLanguage();
+  const { showToast } = useToast();
   const tr = useMemo(() => createTranslator(language), [language]);
   const results = useMemo(() => getResults(tr), [tr]);
   const questions = useMemo(() => getQuestions(tr), [tr]);
@@ -169,6 +171,7 @@ export function useQuizLogic() {
   const [isPdfLoading, setIsPdfLoading] = useState(false);
   const [isBadgeLoading, setIsBadgeLoading] = useState(false);
   const [hasSavedProgress, setHasSavedProgress] = useState(false);
+  const [sharedConfidence, setSharedConfidence] = useState<number | null>(null);
   const quizRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
@@ -233,7 +236,7 @@ export function useQuizLogic() {
     const sharedResult = searchParams.get("r");
     if (sharedResult) {
       try {
-        const decoded = JSON.parse(atob(sharedResult));
+        const decoded = JSON.parse(atob(decodeURIComponent(sharedResult)));
         if (decoded.profile && results[decoded.profile]) {
           const PROFILE_KEYS = ["competidor", "tradicional", "criador", "amador", "aprendiz"] as const;
           const raw = decoded.scores;
@@ -248,6 +251,13 @@ export function useQuizLogic() {
           setResult(results[decoded.profile]);
           setShowIntro(false);
           setShowResult(true);
+          // Restore sub-profile and confidence from shared URL if present
+          if (typeof decoded.subProfile === "string") {
+            setSubProfile(decoded.subProfile);
+          }
+          if (typeof decoded.confidence === "number") {
+            setSharedConfidence(decoded.confidence);
+          }
         }
       } catch {
         // Invalid shared result - silenced
@@ -543,7 +553,7 @@ export function useQuizLogic() {
 
   const handleAnswer = useCallback(
     async (option: QuestionOption) => {
-      if (isPending) return;
+      if (isPending || showResult) return;
       const q = questions[currentQuestion];
       const w = q.weight;
       const newAnswers = [...answers, option.value];
@@ -577,7 +587,7 @@ export function useQuizLogic() {
         finalizeQuiz(newScores, newAnswers, newDetails);
       }
     },
-    [isPending, currentQuestion, answers, scores, answerDetails, questions, finalizeQuiz, saveProgressToStorage]
+    [isPending, showResult, currentQuestion, answers, scores, answerDetails, questions, finalizeQuiz, saveProgressToStorage]
   );
 
   const calculateConfidence = useCallback((): number => {
@@ -625,7 +635,10 @@ export function useQuizLogic() {
     }
   }, [result, scores, showError, tr]);
 
-  const getShareUrl = useCallback((): string => buildShareUrl(result, scores), [result, scores]);
+  const getShareUrl = useCallback(
+    (): string => buildShareUrl(result, scores, subProfile, calculateConfidence()),
+    [result, scores, subProfile, calculateConfidence]
+  );
 
   const copyShareLink = useCallback(() => {
     navigator.clipboard
@@ -653,8 +666,11 @@ export function useQuizLogic() {
   const shareFacebook = useCallback(() => doShareFacebook(getShareUrl()), [getShareUrl]);
 
   const shareInstagram = useCallback(
-    () => doShareInstagram(result, scores, t.analise_perfil.instagram_copied, tr),
-    [result, scores, t, tr]
+    () =>
+      doShareInstagram(result, scores, t.analise_perfil.instagram_copied, tr, (text) =>
+        showToast("success", text)
+      ),
+    [result, scores, t, tr, showToast]
   );
 
   const downloadPDF = useCallback(async () => {

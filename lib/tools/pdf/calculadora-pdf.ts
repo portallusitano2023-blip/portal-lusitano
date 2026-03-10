@@ -35,6 +35,8 @@ import {
   CONTENT_W,
 } from "./base-premium";
 
+import { MERCADOS } from "@/components/calculadora-valor/data";
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface CalcForm {
@@ -69,6 +71,7 @@ interface CalcForm {
   exameVeterinario?: boolean;
   reproducao?: boolean;
   descendentes?: number;
+  descendentesAprovados?: number;
   tendencia?: string;
   certificadoExportacao?: boolean;
   proprietariosAnteriores?: number;
@@ -110,23 +113,10 @@ const TREINO_KEYS = [
 
 const TREINO_BASE_VALUES = [8000, 15000, 25000, 40000, 65000, 100000, 150000, 250000];
 
-// ─── Market multipliers (shared between cover section and page 4) ─────────────
-
-const MARKET_MULT: Record<string, number> = {
-  Portugal: 1.0,
-  Espanha: 1.05,
-  França: 1.15,
-  Alemanha: 1.25,
-  Holanda: 1.2,
-  Bélgica: 1.15,
-  Suíça: 1.3,
-  "Reino Unido": 1.2,
-  Brasil: 0.85,
-  EUA: 1.35,
-  México: 0.9,
-  Itália: 1.15,
-  Escandinávia: 1.2,
-};
+// ─── Market multipliers — derived from data.ts single source of truth ─────────
+const MARKET_MULT: Record<string, number> = Object.fromEntries(
+  MERCADOS.map((m) => [m.value, m.mult])
+);
 
 // ─── Main Export ─────────────────────────────────────────────────────────────
 
@@ -510,7 +500,7 @@ export async function generateCalculadoraPDF(
   if (form.reproducao) {
     const repVal =
       form.descendentes && form.descendentes > 0
-        ? `${L("Aprovado", "Approved", "Aprobado")} (${form.descendentes} ${L("desc.", "off.", "desc.")})`
+        ? `${L("Aprovado", "Approved", "Aprobado")} (${form.descendentes} ${L("desc.", "off.", "desc.")}${form.descendentesAprovados ? `, ${form.descendentesAprovados} ${L("aprov.", "appr.", "aprov.")}` : ""})`
         : L("Aprovado", "Approved", "Aprobado");
     yL = addKV(doc, L("Reprodu\u00E7\u00E3o", "Breeding", "Reproducci\u00F3n"), repVal, colLX, yL, colW);
   }
@@ -931,13 +921,17 @@ export async function generateCalculadoraPDF(
     y += 9;
     y = addSectionTitle(doc, L("Estratégia de Mercado", "Market Strategy", "Estrategia de Mercado"), y);
 
+    // Divide out the user's current market multiplier first, then re-apply each market's mult
+    const currentMult = MARKET_MULT[form.mercado] ?? 1.0;
+    const baseValue = resultado.valorFinal / currentMult;
+
     const topMarkets = Object.entries(MARKET_MULT)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
       .map(([name, mult]) => ({
         name,
         mult,
-        value: Math.round(resultado.valorFinal * mult),
+        value: Math.round(baseValue * mult),
         isCurrentMarket: name === form.mercado,
       }));
 
@@ -945,7 +939,6 @@ export async function generateCalculadoraPDF(
     const pillH = 14;
     const gapBetween = 3;
     const mktW = (CONTENT_W - gapBetween * 2) / 3;
-    const currentMult = MARKET_MULT[form.mercado] ?? 1.0;
 
     topMarkets.forEach((mkt, i) => {
       const mx = MARGIN + i * (mktW + gapBetween);

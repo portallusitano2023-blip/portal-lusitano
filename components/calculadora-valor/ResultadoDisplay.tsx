@@ -61,6 +61,9 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
       <div
         ref={ref}
         className="space-y-6 pt-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
+        role="region"
+        aria-live="polite"
+        aria-label="Resultado da avaliação"
       >
         {/* Confetti celebration — disabled */}
         <div className="relative">

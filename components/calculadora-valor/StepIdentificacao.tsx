@@ -114,7 +114,7 @@ export default function StepIdentificacao({ form, update }: StepProps) {
                 id="campo-idade"
                 type="number"
                 value={form.idade}
-                onChange={(e) => update("idade", Math.max(0, Math.min(30, Number(e.target.value))))}
+                onChange={(e) => update("idade", Math.max(0, Math.min(30, Number(e.target.value) || 0)))}
                 min={0}
                 max={30}
                 className="w-full bg-transparent border-b border-[var(--border)] py-3 text-lg focus:border-[var(--gold)] outline-none transition-colors"

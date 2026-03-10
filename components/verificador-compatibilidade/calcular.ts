@@ -81,6 +81,27 @@ function detectRedFlags(
     });
   }
 
+  // 0b. CRITICAL: Beginner rider + moderate fitness + nervous stallion (safety gap)
+  if (
+    cavaleiro.experiencia === "iniciante" &&
+    cavaleiro.nivelFitness === "moderado" &&
+    garanhao.temperamento === "Nervoso"
+  ) {
+    flags.push({
+      title: tr(
+        "Cavaleiro iniciante com garanhão nervoso",
+        "Beginner rider with nervous stallion",
+        "Jinete principiante con semental nervioso"
+      ),
+      description: tr(
+        "Garanhões nervosos são extremamente exigentes e imprevisíveis. Cavaleiros iniciantes, mesmo com fitness moderado, não têm a experiência necessária para manejar este tipo de cavalo em segurança. Risco elevado de acidentes.",
+        "Nervous stallions are extremely demanding and unpredictable. Beginner riders, even with moderate fitness, lack the experience needed to handle this type of horse safely. High risk of accidents.",
+        "Los sementales nerviosos son extremadamente exigentes e impredecibles. Jinetes principiantes, incluso con fitness moderado, carecen de la experiencia necesaria para manejar este tipo de caballo con seguridad. Riesgo elevado de accidentes."
+      ),
+      severity: "critical",
+    });
+  }
+
   // 1. CRITICAL: Beginner/sedentary rider + Stallion + energetic temperament
   if (
     (cavaleiro.experiencia === "iniciante" || cavaleiro.nivelFitness === "sedentario") &&
@@ -616,11 +637,11 @@ export function calcularCompatibilidade(
     const p_al = ng * p_ee * p_NN * p_nodun;
     if (p_al > 0.01) rawPelagens.push({ cor: tr("Alazão", "Chestnut", "Alazán"), prob: p_al, genetica: "ee" });
 
-    const p_palomino = ng * p_ee * p_CrN;
+    const p_palomino = ng * p_ee * p_CrN * p_nodun;
     if (p_palomino > 0.01)
       rawPelagens.push({ cor: "Palomino", prob: p_palomino, genetica: "ee CrN" });
 
-    const p_cremello = ng * p_ee * p_CrCr;
+    const p_cremello = ng * p_ee * p_CrCr * p_nodun;
     if (p_cremello > 0.01)
       rawPelagens.push({ cor: "Cremello", prob: p_cremello, genetica: "ee CrCr" });
 
@@ -631,11 +652,11 @@ export function calcularCompatibilidade(
     const p_cast = ng * p_E_ * p_A_ * p_NN * p_nodun;
     if (p_cast > 0.01) rawPelagens.push({ cor: tr("Castanho/Baio", "Bay", "Castaño/Bayo"), prob: p_cast, genetica: "E_A_" });
 
-    const p_buckskin = ng * p_E_ * p_A_ * p_CrN;
+    const p_buckskin = ng * p_E_ * p_A_ * p_CrN * p_nodun;
     if (p_buckskin > 0.01)
       rawPelagens.push({ cor: "Buckskin", prob: p_buckskin, genetica: "E_A_ CrN" });
 
-    const p_perlino = ng * p_E_ * p_A_ * p_CrCr;
+    const p_perlino = ng * p_E_ * p_A_ * p_CrCr * p_nodun;
     if (p_perlino > 0.01)
       rawPelagens.push({ cor: "Perlino", prob: p_perlino, genetica: "E_A_ CrCr" });
 
@@ -646,11 +667,11 @@ export function calcularCompatibilidade(
     const p_preto = ng * p_E_ * p_aa * p_NN * p_nodun;
     if (p_preto > 0.01) rawPelagens.push({ cor: tr("Preto", "Black", "Negro"), prob: p_preto, genetica: "E_aa" });
 
-    const p_smoky = ng * p_E_ * p_aa * p_CrN;
+    const p_smoky = ng * p_E_ * p_aa * p_CrN * p_nodun;
     if (p_smoky > 0.01)
       rawPelagens.push({ cor: "Smoky Black", prob: p_smoky, genetica: "E_aa CrN" });
 
-    const p_smokyCream = ng * p_E_ * p_aa * p_CrCr;
+    const p_smokyCream = ng * p_E_ * p_aa * p_CrCr * p_nodun;
     if (p_smokyCream > 0.01)
       rawPelagens.push({ cor: "Smoky Cream", prob: p_smokyCream, genetica: "E_aa CrCr" });
 

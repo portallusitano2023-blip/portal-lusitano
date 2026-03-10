@@ -7,12 +7,14 @@ import Tooltip from "@/components/tools/Tooltip";
 import SourceBadge from "@/components/tools/SourceBadge";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import type { Cavalo } from "./types";
+import type { Cavalo, CategoryWeights } from "./types";
 import { CORES, PELAGENS, LINHAGENS, TREINOS, SEXOS, COMPETICOES, PRESETS, PESOS_DISC, DISC_LABELS, LINHAGENS_FAMOSAS, localizedLabel } from "./data";
 import {
   calcularScore,
+  calcularScoreWeighted,
   calcularPotencial,
   calcularValorPorPonto,
+  DEFAULT_WEIGHTS,
   getScoreFactors,
   normalizeBlup,
 } from "./calcular";
@@ -28,6 +30,7 @@ interface HorseFormProps {
   melhorValorId: string;
   filtroDisciplina: string;
   duplicateName?: boolean;
+  customWeights?: CategoryWeights;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t: Record<string, any>;
   onUpdate: (id: string, campo: keyof Cavalo, valor: Cavalo[keyof Cavalo]) => void;
@@ -44,6 +47,7 @@ export default function HorseForm({
   melhorValorId,
   filtroDisciplina,
   duplicateName,
+  customWeights,
   t,
   onUpdate,
   onRemove,
@@ -66,7 +70,7 @@ export default function HorseForm({
       >
         {/* Live score badge */}
         {(() => {
-          const liveScore = calcularScore(c);
+          const liveScore = customWeights ? calcularScoreWeighted(c, customWeights) : calcularScore(c);
           const badgeColor = liveScore >= 70 ? "#22c55e" : liveScore >= 50 ? "#f59e0b" : "#ef4444";
           return (
             <div
@@ -261,12 +265,13 @@ export default function HorseForm({
         ].map(({ field, label }) => (
           <div key={field}>
             <div className="flex justify-between mb-1">
-              <label className="text-xs text-[var(--foreground-muted)]">{label}</label>
+              <label htmlFor={`slider-${field}-${c.id}`} className="text-xs text-[var(--foreground-muted)]">{label}</label>
               <span className="text-xs font-medium" style={{ color: CORES[i] }}>
                 {c[field]}/10
               </span>
             </div>
             <input
+              id={`slider-${field}-${c.id}`}
               type="range"
               min="1"
               max="10"
@@ -402,25 +407,36 @@ export default function HorseForm({
               />
             </span>
             <span className="flex items-center gap-2 flex-wrap justify-end">
-              <span className="text-2xl font-bold" style={{ color: CORES[i] }}>
-                {calcularScore(c)}
-              </span>
-              <span className="text-xs text-[var(--foreground-muted)] flex items-center gap-0.5">
-                <TrendingUp size={11} className="text-emerald-400" />
-                <span className="text-emerald-400 font-medium">{calcularPotencial(c)} pts</span>
-              </span>
-              {calcularPotencial(c) > calcularScore(c) + 10 && (
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[10px] font-semibold rounded-full">
-                  {tr("Alto Potencial", "High Potential", "Alto Potencial")}
-                </span>
-              )}
+              {(() => {
+                const previewScore = customWeights ? calcularScoreWeighted(c, customWeights) : calcularScore(c);
+                const potencial = calcularPotencial(c);
+                return (
+                  <>
+                    <span className="text-2xl font-bold" style={{ color: CORES[i] }}>
+                      {previewScore}
+                    </span>
+                    <span className="text-xs text-[var(--foreground-muted)] flex items-center gap-0.5">
+                      <TrendingUp size={11} className="text-emerald-400" />
+                      <span className="text-emerald-400 font-medium">{potencial} pts</span>
+                    </span>
+                    {potencial > previewScore + 10 && (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[10px] font-semibold rounded-full">
+                        {tr("Alto Potencial", "High Potential", "Alto Potencial")}
+                      </span>
+                    )}
+                  </>
+                );
+              })()}
               <SourceBadge source="modelo" />
             </span>
           </div>
           <div className="text-xs text-[var(--foreground-muted)] flex items-center gap-1.5">
             {comp.value_per_point}{" "}
             <span className="text-[var(--foreground-secondary)]">
-              {calcularValorPorPonto(c).toLocaleString(locale)}€
+              {(() => {
+                const vpp = calcularValorPorPonto(c);
+                return (!isFinite(vpp) || c.preco === 0) ? "—" : `${vpp.toLocaleString(locale)}€`;
+              })()}
             </span>
             <Tooltip
               text={
@@ -451,7 +467,7 @@ export default function HorseForm({
               );
             })()}
           <div className="mt-3">
-            <ScoreBreakdown factors={getScoreFactors(c, tr)} total={calcularScore(c)} />
+            <ScoreBreakdown factors={getScoreFactors(c, tr)} total={customWeights ? calcularScoreWeighted(c, customWeights) : calcularScore(c)} />
           </div>
         </div>
       )}

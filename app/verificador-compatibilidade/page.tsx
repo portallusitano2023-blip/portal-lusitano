@@ -68,6 +68,15 @@ export default function VerificadorCompatibilidadePage() {
   const [hasDraft, setHasDraft] = useState(false);
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
 
+  // Re-run calculation when objective changes post-results (re-evaluates red flags)
+  useEffect(() => {
+    if (!resultado) return;
+    const updated = calcularCompatibilidade(garanhao, egua, tr, cavaleiro, objetivo);
+    setResultado(updated);
+  // Only re-run when objetivo changes while results are shown
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [objetivo]);
+
   const draftDate = useMemo(() => {
     if (!draftSavedAt) return "";
     return new Date(draftSavedAt).toLocaleDateString(
@@ -200,14 +209,64 @@ export default function VerificadorCompatibilidadePage() {
     try {
       const saved = localStorage.getItem(DRAFT_KEY);
       if (saved) {
-        const { garanhao: g, egua: e, cavaleiro: c } = JSON.parse(saved) as {
-          garanhao: Cavalo;
-          egua: Cavalo;
-          cavaleiro?: Cavaleiro;
+        const parsed = JSON.parse(saved) as {
+          garanhao?: Partial<Cavalo>;
+          egua?: Partial<Cavalo>;
+          cavaleiro?: Partial<Cavaleiro>;
         };
-        setGaranhao(g);
-        setEgua(e);
-        if (c) setCavaleiro(c);
+
+        // Validate and merge with defaults, falling back for missing/invalid fields
+        const defaultG = criarCavalo("Garanhão");
+        const defaultE = criarCavalo("Égua");
+        const defaultC = criarCavaleiro();
+
+        const validateCavalo = (draft: Partial<Cavalo> | undefined, defaults: Cavalo): Cavalo => {
+          if (!draft || typeof draft !== "object") return defaults;
+          return {
+            nome: typeof draft.nome === "string" ? draft.nome : defaults.nome,
+            sexo: draft.sexo === "Garanhão" || draft.sexo === "Égua" ? draft.sexo : defaults.sexo,
+            idade: typeof draft.idade === "number" && draft.idade >= 1 && draft.idade <= 30 ? draft.idade : defaults.idade,
+            altura: typeof draft.altura === "number" && draft.altura >= 140 && draft.altura <= 180 ? draft.altura : defaults.altura,
+            pelagem: typeof draft.pelagem === "string" ? draft.pelagem : defaults.pelagem,
+            genetica: draft.genetica && typeof draft.genetica === "object"
+              ? {
+                  extension: ["EE", "Ee", "ee"].includes(draft.genetica.extension as string) ? draft.genetica.extension : defaults.genetica.extension,
+                  agouti: ["AA", "Aa", "aa"].includes(draft.genetica.agouti as string) ? draft.genetica.agouti : defaults.genetica.agouti,
+                  grey: ["GG", "Gg", "gg"].includes(draft.genetica.grey as string) ? draft.genetica.grey : defaults.genetica.grey,
+                  cream: ["CrCr", "CrN", "NN"].includes(draft.genetica.cream as string) ? draft.genetica.cream : defaults.genetica.cream,
+                  dun: ["DD", "Dd", "dd"].includes(draft.genetica.dun as string) ? draft.genetica.dun : defaults.genetica.dun,
+                }
+              : defaults.genetica,
+            linhagem: typeof draft.linhagem === "string" ? draft.linhagem : defaults.linhagem,
+            linhagemFamosa: typeof draft.linhagemFamosa === "string" ? draft.linhagemFamosa : defaults.linhagemFamosa,
+            coudelaria: typeof draft.coudelaria === "string" ? draft.coudelaria : defaults.coudelaria,
+            conformacao: typeof draft.conformacao === "number" && draft.conformacao >= 1 && draft.conformacao <= 10 ? draft.conformacao : defaults.conformacao,
+            andamentos: typeof draft.andamentos === "number" && draft.andamentos >= 1 && draft.andamentos <= 10 ? draft.andamentos : defaults.andamentos,
+            temperamento: typeof draft.temperamento === "string" ? draft.temperamento : defaults.temperamento,
+            saude: typeof draft.saude === "number" && draft.saude >= 1 && draft.saude <= 10 ? draft.saude : defaults.saude,
+            fertilidade: typeof draft.fertilidade === "string" ? draft.fertilidade : defaults.fertilidade,
+            blup: typeof draft.blup === "number" && draft.blup >= 50 && draft.blup <= 150 ? draft.blup : defaults.blup,
+            coi: typeof draft.coi === "number" && draft.coi >= 0 && draft.coi <= 25 ? draft.coi : defaults.coi,
+            defeitos: Array.isArray(draft.defeitos) ? draft.defeitos.filter((d): d is string => typeof d === "string") : defaults.defeitos,
+            aprovado: typeof draft.aprovado === "boolean" ? draft.aprovado : defaults.aprovado,
+            matingsRealizados: typeof draft.matingsRealizados === "number" && draft.matingsRealizados >= 0 ? draft.matingsRealizados : defaults.matingsRealizados,
+            potradasNascidos: typeof draft.potradasNascidos === "number" && draft.potradasNascidos >= 0 ? draft.potradasNascidos : defaults.potradasNascidos,
+          };
+        };
+
+        const validateCavaleiro = (draft: Partial<Cavaleiro> | undefined, defaults: Cavaleiro): Cavaleiro => {
+          if (!draft || typeof draft !== "object") return defaults;
+          return {
+            pesoCavaleiro: typeof draft.pesoCavaleiro === "number" && draft.pesoCavaleiro >= 40 && draft.pesoCavaleiro <= 120 ? draft.pesoCavaleiro : defaults.pesoCavaleiro,
+            alturaCavaleiro: typeof draft.alturaCavaleiro === "number" && draft.alturaCavaleiro >= 140 && draft.alturaCavaleiro <= 200 ? draft.alturaCavaleiro : defaults.alturaCavaleiro,
+            nivelFitness: ["sedentario", "moderado", "ativo", "atleta"].includes(draft.nivelFitness as string) ? draft.nivelFitness as Cavaleiro["nivelFitness"] : defaults.nivelFitness,
+            experiencia: ["iniciante", "intermedio", "avancado", "profissional"].includes(draft.experiencia as string) ? draft.experiencia as Cavaleiro["experiencia"] : defaults.experiencia,
+          };
+        };
+
+        setGaranhao(validateCavalo(parsed.garanhao, defaultG));
+        setEgua(validateCavalo(parsed.egua, defaultE));
+        setCavaleiro(validateCavaleiro(parsed.cavaleiro, defaultC));
         setStep(1);
         setHasDraft(false);
       }

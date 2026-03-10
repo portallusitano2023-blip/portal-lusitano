@@ -5,6 +5,7 @@ interface CoatColorSwatchesProps {
 }
 
 const COAT_GRADIENTS: Record<string, string> = {
+  // Portuguese
   Ruço: "linear-gradient(135deg, #d4d4d4, #9ca3af)",
   "Castanho/Baio": "linear-gradient(135deg, #92400e, #78350f)",
   Castanho: "linear-gradient(135deg, #92400e, #78350f)",
@@ -21,6 +22,20 @@ const COAT_GRADIENTS: Record<string, string> = {
   "Alazão Dun": "linear-gradient(135deg, #dc6720, #b45309)",
   "Baio Dun": "linear-gradient(135deg, #ca8a04, #92400e)",
   Grullo: "linear-gradient(135deg, #71717a, #52525b)",
+  // English
+  Grey: "linear-gradient(135deg, #d4d4d4, #9ca3af)",
+  Bay: "linear-gradient(135deg, #92400e, #78350f)",
+  Black: "linear-gradient(135deg, #27272a, #18181b)",
+  Chestnut: "linear-gradient(135deg, #c2410c, #9a3412)",
+  "Red Dun": "linear-gradient(135deg, #dc6720, #b45309)",
+  "Bay Dun": "linear-gradient(135deg, #ca8a04, #92400e)",
+  // Spanish
+  Tordo: "linear-gradient(135deg, #d4d4d4, #9ca3af)",
+  "Castaño/Bayo": "linear-gradient(135deg, #92400e, #78350f)",
+  Negro: "linear-gradient(135deg, #27272a, #18181b)",
+  Alazán: "linear-gradient(135deg, #c2410c, #9a3412)",
+  "Alazán Dun": "linear-gradient(135deg, #dc6720, #b45309)",
+  "Bayo Dun": "linear-gradient(135deg, #ca8a04, #92400e)",
 };
 
 export default function CoatColorSwatches({ pelagens }: CoatColorSwatchesProps) {
@@ -30,7 +45,7 @@ export default function CoatColorSwatches({ pelagens }: CoatColorSwatchesProps) 
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {pelagens.map((p, i) => {
         const gradient = COAT_GRADIENTS[p.cor] ?? "linear-gradient(135deg, #71717a, #52525b)";
-        const needsBorder = p.cor === "Preto" || p.cor === "Smoky Black";
+        const needsBorder = p.cor === "Preto" || p.cor === "Black" || p.cor === "Negro" || p.cor === "Smoky Black";
 
         return (
           <div

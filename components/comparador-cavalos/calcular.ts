@@ -241,7 +241,7 @@ export function normalizeBlup(b: number): number {
 // ============================================
 
 export function calcDisciplineScore(c: Cavalo, weights: Record<string, number>): number {
-  const treinoNorm = ((TREINOS.find((t) => t.value === c.treino)?.nivel ?? 4) / 7) * 10;
+  const treinoNorm = ((TREINOS.find((t) => t.value === c.treino)?.nivel ?? 4) / 8) * 10;
   const blupNorm = normalizeBlup(c.blup);
   const fieldMap: Record<string, number> = {
     elevacao: c.elevacao,
@@ -319,6 +319,7 @@ export function findVencedor(
   cavalos: Cavalo[],
   scoreFn: (c: Cavalo) => number = calcularScore
 ): Cavalo {
+  if (cavalos.length === 0) return {} as Cavalo;
   return cavalos.reduce((a, b) => {
     const sa = scoreFn(a);
     const sb = scoreFn(b);
@@ -336,6 +337,7 @@ export function findMelhorValor(
   cavalos: Cavalo[],
   scoreFn: (c: Cavalo) => number = calcularScore
 ): Cavalo {
+  if (cavalos.length === 0) return {} as Cavalo;
   return cavalos.reduce((a, b) => {
     const va = scoreFn(a) > 0 && a.preco > 0 ? a.preco / scoreFn(a) : Infinity;
     const vb = scoreFn(b) > 0 && b.preco > 0 ? b.preco / scoreFn(b) : Infinity;
@@ -359,6 +361,7 @@ const GOOD_THRESHOLD = 0.8;
 const EXCELLENT_THRESHOLD = 1.2;
 
 export function getClasseCor(val: number, melhor: number, maior = true): string {
+  if (melhor === 0) return "text-[var(--foreground-secondary)]";
   if (maior) {
     return val === melhor
       ? "text-emerald-400 font-semibold"
@@ -480,6 +483,7 @@ export function exportarCSV(cavalos: Cavalo[], tr: TrFn = defaultTr, weights?: C
     tr("Altura (cm)", "Height (cm)", "Altura (cm)"),
     tr("Pelagem", "Coat", "Capa"),
     tr("Linhagem", "Lineage", "Linaje"),
+    tr("Linhagem Famosa", "Famous Lineage", "Linaje Famoso"),
     tr("Treino", "Training", "Entrenamiento"),
     tr("Conformação", "Conformation", "Conformación"),
     tr("Andamentos", "Gaits", "Aires"),
@@ -506,6 +510,7 @@ export function exportarCSV(cavalos: Cavalo[], tr: TrFn = defaultTr, weights?: C
       c.altura,
       c.pelagem || "—",
       c.linhagem || "—",
+      c.linhagemFamosa || "—",
       c.treino || "—",
       c.conformacao,
       c.andamentos,

@@ -49,8 +49,8 @@ export function validateFormLogic(
 ): ValidationWarning[] {
   const warnings: ValidationWarning[] = [];
 
-  // Potro (0-2 anos) com treino avançado
-  if (form.idade <= 2 && ["medio", "avancado", "alta_escola", "grand_prix"].includes(form.treino)) {
+  // Potro (0-2 anos) com treino avançado (desbravado/iniciado are the only valid levels for this age)
+  if (form.idade <= 2 && !["desbravado", "iniciado"].includes(form.treino)) {
     warnings.push({
       field: "treino",
       message: tr(
@@ -207,7 +207,7 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
   const multLinhagem = MULT_LINHAGEM[form.linhagem] ?? 1.0;
   const multSaude = MULT_SAUDE[form.saude] ?? 1.0;
   const multComp = MULT_COMP[form.competicoes] ?? 1.0;
-  const multLivro = MULT_LIVRO[form.livroAPSL] ?? 1.0;
+  const multLivro = form.registoAPSL ? (MULT_LIVRO[form.livroAPSL] ?? 1.0) : 1.0;
 
   // Linhagem famosa — bonus when a recognised lineage is paired with premium/elite quality
   let multLinhagemFamosa = 1.0;
@@ -269,7 +269,8 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
   const multDoc = (form.raioX ? 1.05 : 1.0) * (form.exameVeterinario ? 1.05 : 1.0);
 
   // Reproducao — capped at 2.5x to prevent absurd values with high offspring counts
-  const multRepro = form.reproducao
+  // Castrado (gelding) cannot reproduce — force 1.0 regardless of form.reproducao
+  const multRepro = form.reproducao && form.sexo !== "castrado"
     ? Math.min(2.5, 1.15 + form.descendentes * 0.02 + form.descendentesAprovados * 0.05)
     : 1.0;
 
@@ -581,7 +582,7 @@ export function estimarValorParcial(form: Partial<FormData>): { min: number; max
   const base = VALORES_BASE[form.treino];
 
   // Multiplicadores básicos com os dados disponíveis
-  const multIdade = form.idade ? calcMultIdade(form.idade) : 1.0;
+  const multIdade = form.idade != null ? calcMultIdade(form.idade) : 1.0;
 
   const multLinhagem = form.linhagem ? MULT_LINHAGEM[form.linhagem] || 1.0 : 1.0;
   const multSaude = form.saude ? MULT_SAUDE[form.saude] || 1.0 : 1.0;

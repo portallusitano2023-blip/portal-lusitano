@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo } from "react";
+import { Suspense, useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
 import LocalizedLink from "@/components/LocalizedLink";
 import {
@@ -164,6 +164,19 @@ function AnalisePerfilContent() {
     [scorePercentages]
   );
 
+  // Issue #4: ToolNavBar reset should show confirmation when quiz is in progress
+  const handleNavBarReset = useCallback(() => {
+    if (!showResult && currentQuestion > 3) {
+      const msg = tr(
+        "Tem a certeza que deseja recomeçar o quiz? O progresso será perdido.",
+        "Are you sure you want to restart the quiz? Progress will be lost.",
+        "¿Está seguro de que desea reiniciar el cuestionario? El progreso se perderá."
+      );
+      if (!window.confirm(msg)) return;
+    }
+    resetQuiz();
+  }, [showResult, currentQuestion, tr, resetQuiz]);
+
   return (
     <>
       <ToolNavBar
@@ -173,7 +186,7 @@ function AnalisePerfilContent() {
         rightSlot={
           !showIntro ? (
             <button
-              onClick={resetQuiz}
+              onClick={handleNavBarReset}
               className="flex items-center justify-center w-9 h-9 rounded-full bg-[var(--background-secondary)] hover:bg-[var(--surface-hover)] transition-colors min-w-[44px] min-h-[44px]"
               aria-label={tr("Recomeçar", "Restart", "Reiniciar")}
               title={tr("Recomeçar", "Restart", "Reiniciar")}

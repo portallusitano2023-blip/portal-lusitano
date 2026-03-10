@@ -209,6 +209,15 @@ export default function ComparadorCavalosPage() {
         vencedor: sorted[0].c.nome,
       };
       setHistory((prev) => {
+        // Prevent duplicate entries with same horses and scores
+        const isDuplicate = prev.some(
+          (existing) =>
+            existing.cavalos.length === entry.cavalos.length &&
+            existing.cavalos.every(
+              (ec, idx) => ec.nome === entry.cavalos[idx].nome && ec.score === entry.cavalos[idx].score
+            )
+        );
+        if (isDuplicate) return prev;
         const updated = [entry, ...prev].slice(0, 5);
         try {
           localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
@@ -318,7 +327,7 @@ export default function ComparadorCavalosPage() {
 
   const handleAnalyse = async () => {
     if (!canUse) return;
-    const isDefaultName = (nome: string) => ["Cavalo", "Horse", "Caballo"].some((p) => nome.startsWith(p));
+    const isDefaultName = (nome: string) => /^(Cavalo|Horse|Caballo)\s[A-Z]$/.test(nome.trim());
     const cavalosValidos = cavalos.filter((c) => c.nome.trim() && !isDefaultName(c.nome));
     if (cavalosValidos.length < 2) {
       showToast(
@@ -479,7 +488,8 @@ export default function ComparadorCavalosPage() {
                           </span>
                           <button
                             onClick={() => setShowHistory(false)}
-                            className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+                            autoFocus
+                            className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors p-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
                             aria-label={tr("Fechar histórico", "Close history", "Cerrar historial")}
                           >
                             <X size={13} />
@@ -551,7 +561,7 @@ export default function ComparadorCavalosPage() {
         {step === 1 && (
           <div className="max-w-7xl mx-auto px-4 py-8 animate-[fadeSlideIn_0.4s_ease-out_forwards]">
             {/* Hint for new users */}
-            {!showAnalise && cavalos.every((c) => ["Cavalo", "Horse", "Caballo"].some((p) => c.nome.startsWith(p))) && (
+            {!showAnalise && cavalos.every((c) => /^(Cavalo|Horse|Caballo)\s[A-Z]$/.test(c.nome.trim())) && (
               <div className="flex items-start gap-3 p-4 bg-blue-500/8 border border-blue-500/20 rounded-xl mb-4">
                 <span className="text-blue-400 text-lg leading-none mt-0.5" aria-hidden="true">
                   💡
@@ -590,6 +600,7 @@ export default function ComparadorCavalosPage() {
                   melhorValorId={melhorValor?.id ?? ""}
                   filtroDisciplina={filtroDisciplina}
                   duplicateName={duplicateNames.has(c.nome.trim().toLowerCase())}
+                  customWeights={customWeights}
                   t={t}
                   onUpdate={update}
                   onRemove={remover}

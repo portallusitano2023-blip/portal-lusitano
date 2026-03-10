@@ -93,7 +93,9 @@ export default function HorseForm({
         <button
           onClick={() => setTab("garanhao")}
           role="tab"
+          id="tab-garanhao"
           aria-selected={tab === "garanhao"}
+          aria-controls="tabpanel-horse"
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
             tab === "garanhao"
               ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/20"
@@ -122,7 +124,9 @@ export default function HorseForm({
         <button
           onClick={() => setTab("egua")}
           role="tab"
+          id="tab-egua"
           aria-selected={tab === "egua"}
+          aria-controls="tabpanel-horse"
           className={`flex-1 py-4 rounded-xl font-medium flex items-center justify-center gap-3 transition-all ${
             tab === "egua"
               ? "bg-gradient-to-r from-pink-600 to-pink-500 text-white shadow-lg shadow-pink-500/20"
@@ -182,7 +186,7 @@ export default function HorseForm({
       )}
 
       {/* Formulário do Cavalo — only shown when user can use */}
-      {canUse && <div className="bg-[var(--background-secondary)]/50 rounded-2xl p-4 sm:p-6 border border-[var(--border)] space-y-6">
+      {canUse && <div id="tabpanel-horse" role="tabpanel" aria-labelledby={`tab-${tab}`} className="bg-[var(--background-secondary)]/50 rounded-2xl p-4 sm:p-6 border border-[var(--border)] space-y-6">
         <div className="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
           {tab === "garanhao" ? (
             <Crown className="text-blue-400" size={24} />
@@ -345,8 +349,9 @@ export default function HorseForm({
               { gene: "dun" as const, label: "Dun", options: ["DD", "Dd", "dd"] },
             ].map(({ gene, label, options }) => (
               <div key={gene}>
-                <label className="block text-xs text-[var(--foreground-muted)] mb-1">{label}</label>
+                <label htmlFor={`verif-gene-${gene}`} className="block text-xs text-[var(--foreground-muted)] mb-1">{label}</label>
                 <select
+                  id={`verif-gene-${gene}`}
                   value={cavalo.genetica[gene]}
                   onChange={(e) => updateGen(gene, e.target.value)}
                   className="w-full bg-[var(--background-card)] border border-[var(--border)] rounded px-2 py-2.5 min-h-[44px] text-sm focus:border-purple-500 outline-none"

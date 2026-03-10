@@ -2,11 +2,18 @@ import type { Result } from "./types";
 
 type TranslatorFn = (pt: string, en: string, es?: string) => string;
 
-export function getShareUrl(result: Result | null, scores: Record<string, number>): string {
+export function getShareUrl(
+  result: Result | null,
+  scores: Record<string, number>,
+  subProfile?: string | null,
+  confidence?: number
+): string {
   if (!result) return "";
-  const data = { profile: result.profile, scores };
+  const data: Record<string, unknown> = { profile: result.profile, scores };
+  if (subProfile) data.subProfile = subProfile;
+  if (typeof confidence === "number") data.confidence = confidence;
   const encoded = btoa(JSON.stringify(data));
-  return `${typeof window !== "undefined" ? window.location.origin : ""}/analise-perfil?r=${encoded}`;
+  return `${typeof window !== "undefined" ? window.location.origin : ""}/analise-perfil?r=${encodeURIComponent(encoded)}`;
 }
 
 export function shareWhatsApp(

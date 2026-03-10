@@ -83,7 +83,7 @@ export default function IntroSection({
 
           <button
             onClick={onStart}
-            className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-400 hover:to-blue-500 transition-all shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
+            className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-400 hover:to-blue-500 transition-all shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:outline-none opacity-0 animate-[fadeSlideIn_0.3s_ease-out_forwards]"
             style={{ animationDelay: "0.3s" }}
           >
             <Scale size={20} />
@@ -107,13 +107,13 @@ export default function IntroSection({
               <div className="flex gap-2">
                 <button
                   onClick={onRestoreDraft}
-                  className="px-3 py-1.5 min-h-[44px] bg-[var(--gold)] text-black text-xs font-bold rounded-lg hover:bg-[#D4B068] transition-colors"
+                  className="px-3 py-1.5 min-h-[44px] bg-[var(--gold)] text-black text-xs font-bold rounded-lg hover:bg-[#D4B068] transition-colors focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:outline-none"
                 >
                   {tr("Continuar", "Continue", "Continuar")}
                 </button>
                 <button
                   onClick={onDiscardDraft}
-                  className="px-3 py-1.5 min-h-[44px] bg-transparent border border-[var(--gold)]/40 text-[var(--gold)] text-xs rounded-lg hover:bg-[var(--gold)]/10 transition-colors"
+                  className="px-3 py-1.5 min-h-[44px] bg-transparent border border-[var(--gold)]/40 text-[var(--gold)] text-xs rounded-lg hover:bg-[var(--gold)]/10 transition-colors focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:outline-none"
                 >
                   {tr("Descartar", "Discard", "Descartar")}
                 </button>

@@ -359,6 +359,7 @@ export async function generateComparadorPDF(
       { k: L("Treino", "Training", "Entrenamiento"), v: cavalo.treino },
       { k: L("Linhagem", "Lineage", "Linaje"), v: cavalo.linhagem },
       { k: L("Competições", "Competitions", "Competiciones"), v: cavalo.competicoes },
+      { k: L("Prémios", "Awards", "Premios"), v: `${cavalo.premios ?? 0}` },
       { k: L("Preço", "Price", "Precio"), v: `${cavalo.preco.toLocaleString(locale)} €` },
     ];
 
@@ -483,6 +484,7 @@ export async function generateComparadorPDF(
     { label: L("Saúde", "Health", "Salud"), getValue: (c) => `${c.saude}/10` },
     { label: L("Temperamento", "Temperament", "Temperamento"), getValue: (c) => `${c.temperamento}/10` },
     { label: "BLUP", getValue: (c) => String(c.blup) },
+    { label: L("Prémios", "Awards", "Premios"), getValue: (c) => `${c.premios ?? 0}` },
     { label: L("Registo APSL", "APSL Registration", "Registro APSL"), getValue: (c) => (c.registoAPSL ? L("Sim", "Yes", "Sí") : L("Não", "No", "No")) },
     {
       label: L("Preço", "Price", "Precio"),
