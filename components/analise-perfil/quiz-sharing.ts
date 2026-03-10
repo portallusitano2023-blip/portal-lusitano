@@ -26,6 +26,8 @@ export function shareWhatsApp(
   const totalS = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
   const pct = Math.round((scores[result.profile] / totalS) * 100);
 
+  const shareUrl = getShareUrl(result, scores, subProfile);
+
   const SUB_PROFILE_LABELS: Record<string, string> = {
     competidor_elite: tr("Alta Competição FEI", "FEI High Competition", "Alta Competición FEI"),
     competidor_nacional: tr("Competição Nacional", "National Competition", "Competición Nacional"),
@@ -42,9 +44,9 @@ export function shareWhatsApp(
   const subProfileLabel = subProfile ? ` (${SUB_PROFILE_LABELS[subProfile] ?? ""})` : "";
   const text = encodeURIComponent(
     tr(
-      `\u{1F434} Descobri o meu Perfil Equestre no Portal Lusitano!\n\nSou *${result.title}*${subProfileLabel} com ${pct}% de afinidade.\n\nDescobre o teu perfil em: portallusitano.pt/analise-perfil`,
-      `\u{1F434} I discovered my Equestrian Profile on Portal Lusitano!\n\nI am *${result.title}*${subProfileLabel} with ${pct}% affinity.\n\nDiscover your profile at: portallusitano.pt/analise-perfil`,
-      `\u{1F434} ¡Descubrí mi Perfil Ecuestre en Portal Lusitano!\n\nSoy *${result.title}*${subProfileLabel} con ${pct}% de afinidad.\n\nDescubre tu perfil en: portallusitano.pt/analise-perfil`
+      `\u{1F434} Descobri o meu Perfil Equestre no Portal Lusitano!\n\nSou *${result.title}*${subProfileLabel} com ${pct}% de afinidade.\n\nDescobre o teu perfil em: ${shareUrl}`,
+      `\u{1F434} I discovered my Equestrian Profile on Portal Lusitano!\n\nI am *${result.title}*${subProfileLabel} with ${pct}% affinity.\n\nDiscover your profile at: ${shareUrl}`,
+      `\u{1F434} ¡Descubrí mi Perfil Ecuestre en Portal Lusitano!\n\nSoy *${result.title}*${subProfileLabel} con ${pct}% de afinidad.\n\nDescubre tu perfil en: ${shareUrl}`
     )
   );
   window.open(`https://wa.me/?text=${text}`, "_blank");

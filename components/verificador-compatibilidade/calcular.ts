@@ -475,6 +475,8 @@ export function calcularCompatibilidade(
     fortes.push(tr("Ambos aprovados oficialmente como reprodutores", "Both officially approved as breeders", "Ambos aprobados oficialmente como reproductores"));
   } else if (!garanhao.aprovado) {
     fracos.push(tr("Garanhão não aprovado como reprodutor", "Stallion not approved as breeder", "Semental no aprobado como reproductor"));
+  } else if (!egua.aprovado) {
+    fracos.push(tr("Égua não aprovada como reprodutora", "Mare not approved as breeding stock", "Yegua no aprobada como reproductora"));
   }
   factores.push({
     nome: tr("Aprovação APSL", "APSL Approval", "Aprobación APSL"),
@@ -500,11 +502,31 @@ export function calcularCompatibilidade(
   // L-38: Reproductive success rate bonus/penalty
   if (matGar > 0) {
     const successRateGar = potGar / matGar;
+    if (successRateGar > 1.0) {
+      riscos.push({
+        texto: tr(
+          `Garanhão: potros nascidos (${potGar}) superior a coberturas (${matGar}) — dados inconsistentes`,
+          `Stallion: live foals (${potGar}) exceeds breedings (${matGar}) — inconsistent data`,
+          `Semental: potros nacidos (${potGar}) superior a cubriciones (${matGar}) — datos inconsistentes`
+        ),
+        severidade: "baixo",
+      });
+    }
     if (successRateGar >= 0.7) historialScore = Math.min(5, historialScore + 1);
     else if (successRateGar < 0.3 && matGar >= 3) historialScore = Math.max(0, historialScore - 1);
   }
   if (matEgu > 0) {
     const successRateEgu = potEgu / matEgu;
+    if (successRateEgu > 1.0) {
+      riscos.push({
+        texto: tr(
+          `Égua: potros nascidos (${potEgu}) superior a coberturas (${matEgu}) — dados inconsistentes`,
+          `Mare: live foals (${potEgu}) exceeds breedings (${matEgu}) — inconsistent data`,
+          `Yegua: potros nacidos (${potEgu}) superior a cubriciones (${matEgu}) — datos inconsistentes`
+        ),
+        severidade: "baixo",
+      });
+    }
     if (successRateEgu >= 0.7) historialScore = Math.min(5, historialScore + 1);
     else if (successRateEgu < 0.3 && matEgu >= 3) historialScore = Math.max(0, historialScore - 1);
   }
@@ -648,6 +670,12 @@ export function calcularCompatibilidade(
     const p_redDun = ng * p_ee * p_NN * p_dun;
     if (p_redDun > 0.01) rawPelagens.push({ cor: tr("Alazão Dun", "Red Dun", "Alazán Dun"), prob: p_redDun, genetica: "ee D_" });
 
+    const p_dunalino = ng * p_ee * p_CrN * p_dun;
+    if (p_dunalino > 0.01) rawPelagens.push({ cor: "Dunalino", prob: p_dunalino, genetica: "ee CrN D_" });
+
+    const p_cremelloDun = ng * p_ee * p_CrCr * p_dun;
+    if (p_cremelloDun > 0.01) rawPelagens.push({ cor: "Cremello Dun", prob: p_cremelloDun, genetica: "ee CrCr D_" });
+
     // Base Castanho/Baio (E_A_)
     const p_cast = ng * p_E_ * p_A_ * p_NN * p_nodun;
     if (p_cast > 0.01) rawPelagens.push({ cor: tr("Castanho/Baio", "Bay", "Castaño/Bayo"), prob: p_cast, genetica: "E_A_" });
@@ -663,6 +691,12 @@ export function calcularCompatibilidade(
     const p_bayDun = ng * p_E_ * p_A_ * p_NN * p_dun;
     if (p_bayDun > 0.01) rawPelagens.push({ cor: tr("Baio Dun", "Bay Dun", "Bayo Dun"), prob: p_bayDun, genetica: "E_A_ D_" });
 
+    const p_dunskin = ng * p_E_ * p_A_ * p_CrN * p_dun;
+    if (p_dunskin > 0.01) rawPelagens.push({ cor: "Dunskin", prob: p_dunskin, genetica: "E_A_ CrN D_" });
+
+    const p_perlinoDun = ng * p_E_ * p_A_ * p_CrCr * p_dun;
+    if (p_perlinoDun > 0.01) rawPelagens.push({ cor: "Perlino Dun", prob: p_perlinoDun, genetica: "E_A_ CrCr D_" });
+
     // Base Preto (E_aa)
     const p_preto = ng * p_E_ * p_aa * p_NN * p_nodun;
     if (p_preto > 0.01) rawPelagens.push({ cor: tr("Preto", "Black", "Negro"), prob: p_preto, genetica: "E_aa" });
@@ -677,6 +711,12 @@ export function calcularCompatibilidade(
 
     const p_grullo = ng * p_E_ * p_aa * p_NN * p_dun;
     if (p_grullo > 0.01) rawPelagens.push({ cor: "Grullo", prob: p_grullo, genetica: "E_aa D_" });
+
+    const p_smokyGrullo = ng * p_E_ * p_aa * p_CrN * p_dun;
+    if (p_smokyGrullo > 0.01) rawPelagens.push({ cor: "Smoky Grullo", prob: p_smokyGrullo, genetica: "E_aa CrN D_" });
+
+    const p_smokyCreamDun = ng * p_E_ * p_aa * p_CrCr * p_dun;
+    if (p_smokyCreamDun > 0.01) rawPelagens.push({ cor: "Smoky Cream Dun", prob: p_smokyCreamDun, genetica: "E_aa CrCr D_" });
   }
 
   // Normalizar para somar 100% e filtrar pelagens < 2%

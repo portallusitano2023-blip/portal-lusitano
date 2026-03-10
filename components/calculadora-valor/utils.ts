@@ -523,7 +523,7 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
   if (form.competicoes !== "nenhuma") liquidezScore += 7;
   if (form.disciplina === "Alta Escola" || form.disciplina === "Equitação de Trabalho")
     liquidezScore += 5;
-  if (form.livroAPSL === "definitivo") liquidezScore += 5;
+  if (form.registoAPSL && form.livroAPSL === "definitivo") liquidezScore += 5;
   if (morfMedia >= 8) liquidezScore += 5;
   liquidezScore = Math.min(100, liquidezScore);
 

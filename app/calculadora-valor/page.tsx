@@ -12,7 +12,7 @@ import ProStatusBar from "@/components/ferramentas/ProStatusBar";
 import FreeUsesCounter from "@/components/ferramentas/FreeUsesCounter";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import { getSharedLabel } from "@/lib/tools/shared-data";
+import { getSharedLabel, TREINO_LABELS } from "@/lib/tools/shared-data";
 import {
   IntroSection,
   StepIdentificacao,
@@ -297,7 +297,7 @@ export default function CalculadoraValorPage() {
                       {tr("A avaliar", "Evaluating", "Evaluando")} {form.nome ? `"${form.nome}"` : tr("o seu cavalo", "your horse", "su caballo")}...
                     </p>
                     <p className="text-white/40 text-sm">
-                      {form.treino && `${form.treino} · `}
+                      {form.treino && `${getSharedLabel(TREINO_LABELS, form.treino, language)} · `}
                       {form.mercado || "Portugal"}
                     </p>
                   </div>

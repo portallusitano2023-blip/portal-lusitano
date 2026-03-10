@@ -2,6 +2,10 @@ import type { Result } from "./types";
 
 type TranslatorFn = (pt: string, en: string, es?: string) => string;
 
+function escXml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 export async function generateBadge(
   badgeElement: HTMLDivElement,
   result: Result,
@@ -33,9 +37,9 @@ export function generateBadgeSVGFallback(
         <rect width="540" height="540" fill="#050505"/>
         <rect x="20" y="20" width="500" height="500" fill="none" stroke="#C5A059" stroke-width="4"/>
         <text x="270" y="100" text-anchor="middle" fill="#C5A059" font-size="14" letter-spacing="3">PORTAL LUSITANO</text>
-        <text x="270" y="200" text-anchor="middle" fill="#888" font-size="12" letter-spacing="2">${profileLabel}</text>
-        <text x="270" y="270" text-anchor="middle" fill="#fff" font-size="32" font-family="serif">${result.title}</text>
-        <text x="270" y="310" text-anchor="middle" fill="#C5A059" font-size="18" font-style="italic">${result.subtitle}</text>
+        <text x="270" y="200" text-anchor="middle" fill="#888" font-size="12" letter-spacing="2">${escXml(profileLabel)}</text>
+        <text x="270" y="270" text-anchor="middle" fill="#fff" font-size="32" font-family="serif">${escXml(result.title)}</text>
+        <text x="270" y="310" text-anchor="middle" fill="#C5A059" font-size="18" font-style="italic">${escXml(result.subtitle)}</text>
         <rect x="220" y="350" width="100" height="50" fill="#C5A059"/>
         <text x="270" y="385" text-anchor="middle" fill="#000" font-size="28" font-weight="bold">${percentage}%</text>
         <text x="270" y="480" text-anchor="middle" fill="#444" font-size="11">portallusitano.pt/analise-perfil</text>

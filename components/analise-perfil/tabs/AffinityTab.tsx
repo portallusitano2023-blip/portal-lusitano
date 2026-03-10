@@ -39,6 +39,11 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
       "Leisure, trail riding and pleasure of riding",
       "Ocio, paseo y placer de montar"
     ),
+    aprendiz: tr(
+      "Aprendizagem segura e progressão gradual com cavalos experientes",
+      "Safe learning and gradual progression with experienced horses",
+      "Aprendizaje seguro y progresión gradual con caballos experimentados"
+    ),
   };
 
   const PROFILE_LABELS: Record<string, string> = {
@@ -46,6 +51,7 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
     tradicional: tr("Tradicional", "Traditional", "Tradicional"),
     criador: tr("Criador", "Breeder", "Criador"),
     amador: tr("Amador", "Amateur", "Aficionado"),
+    aprendiz: tr("Aprendiz", "Learner", "Aprendiz"),
   };
 
   const HORSE_RECOMMENDATIONS: Record<string, string> = {
@@ -68,6 +74,11 @@ export default function AffinityTab({ result, scorePercentages }: AffinityTabPro
       "Cavalo calmo, entre 8-14 anos, com treino básico a elementar",
       "Calm horse, aged 8-14, with basic to elementary training",
       "Caballo tranquilo, entre 8-14 años, con entrenamiento básico a elemental"
+    ),
+    aprendiz: tr(
+      "Cavalo calmo e experiente (10+ anos), bem treinado, schoolmaster ideal para desenvolver confiança",
+      "Calm and experienced horse (10+ years), well-trained, ideal schoolmaster for building confidence",
+      "Caballo tranquilo y experimentado (10+ años), bien entrenado, schoolmaster ideal para desarrollar confianza"
     ),
   };
 

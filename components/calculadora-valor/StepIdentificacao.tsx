@@ -87,11 +87,12 @@ export default function StepIdentificacao({ form, update }: StepProps) {
 
       <div className="space-y-5">
         <div>
-          <label className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
+          <label htmlFor="campo-nome" className="block text-xs text-[var(--foreground-muted)] uppercase tracking-wider mb-2">
             {t.calculadora.label_horse_name}{" "}
             <span className="text-[var(--foreground-muted)]">{t.calculadora.label_optional}</span>
           </label>
           <input
+            id="campo-nome"
             type="text"
             value={form.nome}
             onChange={(e) => update("nome", e.target.value)}

@@ -10,7 +10,7 @@ import InvestmentSafety from "@/components/tools/InvestmentSafety";
 import DisciplineComparison from "@/components/tools/DisciplineComparison";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
-import { MERCADOS, VALORES_BASE, MULT_LINHAGEM, MULT_SAUDE, MULT_COMP } from "../data";
+import { MERCADOS, VALORES_BASE, MULT_LINHAGEM, MULT_SAUDE, MULT_COMP, DISCIPLINA_PREMIUMS } from "../data";
 import { calcularProjecaoValor, calcularTrainingROI } from "../projections";
 import type { FormData, Resultado } from "../types";
 
@@ -153,7 +153,7 @@ export default function BreakdownAnalysis({
       <BlurredProSection isSubscribed={isSubscribed} title={t.calculadora.regional_market_title}>
         <div className="bg-[var(--background-secondary)]/50 rounded-xl p-6 border border-[var(--border)]">
           <RegionalMarketMap
-            baseValue={resultado.valorFinal}
+            baseValue={resultado.valorFinal / (MERCADOS.find(m => m.value === form.mercado)?.mult ?? 1.0)}
             currentMarket={form.mercado}
             markets={MERCADOS}
           />
@@ -227,7 +227,7 @@ export default function BreakdownAnalysis({
           tr("Comparação por Disciplina", "Discipline Comparison", "Comparación por Disciplina")
         }
       >
-        <DisciplineComparison form={form} valorBase={resultado.valorFinal} />
+        <DisciplineComparison form={form} valorBase={resultado.valorFinal / (DISCIPLINA_PREMIUMS[form.disciplina] ?? 1.0)} />
       </BlurredProSection>
 
       {/* PRO: Metodologia de Valorização */}

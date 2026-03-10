@@ -408,7 +408,7 @@ export function gerarVeredicto(c: Cavalo, tr: TrFn = defaultTr, language?: strin
   const bestUse =
     c.competicoes !== "Nenhuma"
       ? tr("Competição", "Competition", "Competición")
-      : c.sexo === "Égua" && c.conformacao >= 7
+      : (c.sexo === "Égua" || c.sexo === "Garanhão") && c.conformacao >= 7
         ? tr("Criação", "Breeding", "Cría")
         : score >= 60
           ? tr("Investimento", "Investment", "Inversión")

@@ -9,7 +9,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
 import { useToast } from "@/context/ToastContext";
 import { calcularValor, estimarValorParcial, validateFormLogic } from "./utils";
-import { PROFILE_LABELS, SUBPROFILE_LABELS, PROFILE_CONTEXT_KEY } from "@/lib/tools/shared-data";
+import { PROFILE_LABELS, SUBPROFILE_LABELS, PROFILE_CONTEXT_KEY, TREINO_LABELS, getSharedLabel } from "@/lib/tools/shared-data";
 import type { FormData, Resultado } from "./types";
 import { chainCalcToVerificador } from "@/lib/tools/tool-chain";
 import { chainCalcToComparador } from "@/lib/tools/tool-chain";
@@ -386,7 +386,7 @@ export function useCalculadoraState() {
       [tr("Intervalo", "Range", "Intervalo")]: `€${resultado.valorMin.toLocaleString(locale)} – €${resultado.valorMax.toLocaleString(locale)}`,
       [tr("Confiança", "Confidence", "Confianza")]: `${resultado.confianca}%`,
       [tr("Percentil de mercado", "Market percentile", "Percentil de mercado")]: `Top ${100 - resultado.percentil}%`,
-      [tr("Nível de treino", "Training level", "Nivel de entrenamiento")]: (formStep.data as FormData).treino,
+      [tr("Nível de treino", "Training level", "Nivel de entrenamiento")]: getSharedLabel(TREINO_LABELS, (formStep.data as FormData).treino, language),
       [tr("Mercado", "Market", "Mercado")]: (formStep.data as FormData).mercado,
     };
     try {
@@ -436,7 +436,7 @@ export function useCalculadoraState() {
     };
     const linhagemMap: Record<string, string> = {
       desconhecida: "Desconhecida",
-      comum: "Registada",
+      comum: "Comum",
       registada: "Registada",
       certificada: "Certificada",
       premium: "Premium",

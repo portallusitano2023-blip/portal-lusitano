@@ -49,6 +49,7 @@ export default function ReadinessTab({
     criador: 65,
     tradicional: 55,
     amador: 80,
+    aprendiz: 85,
   };
   const timeScore = timeDemand[result.profile] || 60;
 
@@ -143,6 +144,17 @@ export default function ReadinessTab({
           "Estude genética equina e visite coudelarias de referência",
           "Study equine genetics and visit reference stud farms",
           "Estudie genética equina y visite ganaderías de referencia"
+        ),
+        met: false,
+      });
+    }
+
+    if (result.profile === "aprendiz") {
+      items.push({
+        text: tr(
+          "Invista em aulas regulares com um instrutor qualificado antes de adquirir",
+          "Invest in regular lessons with a qualified instructor before purchasing",
+          "Invierta en clases regulares con un instructor cualificado antes de adquirir"
         ),
         met: false,
       });

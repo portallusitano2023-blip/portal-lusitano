@@ -62,8 +62,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         ref={ref}
         className="space-y-6 pt-8 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards]"
         role="region"
-        aria-live="polite"
-        aria-label="Resultado da avaliação"
+        aria-label={tr("Resultado da avaliação", "Evaluation result", "Resultado de la evaluación")}
       >
         {/* Confetti celebration — disabled */}
         <div className="relative">
@@ -98,7 +97,7 @@ const ResultadoDisplay = forwardRef<HTMLDivElement, ResultadoDisplayProps>(
         <MorphologyGenetics form={form} resultado={resultado} t={t} />
 
         {/* Liquidity Score */}
-        <LiquidityScore form={form} percentil={resultado.percentil} />
+        <LiquidityScore form={form} percentil={resultado.percentil} liquidez={resultado.liquidez} />
 
         {/* Simular Venda — CTA contextual para Comparador */}
         {onComparar && (

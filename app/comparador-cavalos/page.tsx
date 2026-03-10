@@ -26,7 +26,6 @@ import {
   SUBPROFILE_LABELS,
 } from "@/components/comparador-cavalos/data";
 import {
-  calcularScore,
   calcularScoreWeighted,
   calcularValorPorPonto,
   exportarCSV,
@@ -344,11 +343,11 @@ export default function ComparadorCavalosPage() {
     setCalculandoStep(0);
     const vencedorNome =
       cavalos.length > 0
-        ? cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b)).nome
+        ? cavalos.reduce((a, b) => (calcularScoreWeighted(a, customWeights) > calcularScoreWeighted(b, customWeights) ? a : b)).nome
         : "";
     const vencedorScore =
       cavalos.length > 0
-        ? calcularScore(cavalos.reduce((a, b) => (calcularScore(a) > calcularScore(b) ? a : b)))
+        ? calcularScoreWeighted(cavalos.reduce((a, b) => (calcularScoreWeighted(a, customWeights) > calcularScoreWeighted(b, customWeights) ? a : b)), customWeights)
         : 0;
 
     // Server-side validation + recording BEFORE showing results
@@ -412,10 +411,10 @@ export default function ComparadorCavalosPage() {
   // ============================================
 
   const vencedor = cavalos.length > 0
-    ? findVencedor(cavalos)
+    ? findVencedor(cavalos, (c) => calcularScoreWeighted(c, customWeights))
     : null;
   const melhorValor = cavalos.length > 0
-    ? findMelhorValor(cavalos)
+    ? findMelhorValor(cavalos, (c) => calcularScoreWeighted(c, customWeights))
     : null;
 
   // Duplicate name detection (Issue 22)

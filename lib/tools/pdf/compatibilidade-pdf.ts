@@ -53,12 +53,15 @@ interface ResultadoCompat {
   nivel: string;
   coi: number;
   blup: number;
+  blupMin?: number;
+  blupMax?: number;
   altura: { min: number; max: number };
   pelagens: { cor: string; prob: number; genetica: string }[];
   riscos: { texto: string; severidade: "alto" | "medio" | "baixo" }[];
   factores: { nome: string; score: number; max: number; tipo: string; descricao: string }[];
   recomendacoes: string[];
   pontosForteseFracos: { fortes: string[]; fracos: string[] };
+  redFlags?: { title: string; description: string; severity: "critical" | "warning" }[];
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -84,7 +87,7 @@ export async function generateCompatibilidadePDF(
   const L = (pt: string, en: string, es?: string): string =>
     language === "en" ? en : language === "es" && es ? es : pt;
   const locale = language === "en" ? "en-GB" : language === "es" ? "es-ES" : "pt-PT";
-  const pairName = `${garanhao.nome || L("Garanhão", "Stallion", "Garañón")} × ${egua.nome || L("Égua", "Mare", "Yegua")}`;
+  const pairName = `${garanhao.nome || L("Garanhão", "Stallion", "Semental")} × ${egua.nome || L("Égua", "Mare", "Yegua")}`;
   const date = new Date().toLocaleDateString(locale, {
     day: "2-digit",
     month: "long",
@@ -222,6 +225,14 @@ export async function generateCompatibilidadePDF(
   doc.setFont("helvetica", "bold");
   doc.text(`${resultado.blup}`, rightX + rightW / 2, y + 22, { align: "center" });
 
+  // BLUP range (blupMin-blupMax)
+  if (resultado.blupMin != null && resultado.blupMax != null) {
+    doc.setTextColor(...ZINC400);
+    doc.setFontSize(6);
+    doc.setFont("helvetica", "normal");
+    doc.text(`(${resultado.blupMin}–${resultado.blupMax})`, rightX + rightW / 2, y + 27, { align: "center" });
+  }
+
   // Height range
   doc.setTextColor(...ZINC600);
   doc.setFontSize(7);
@@ -301,7 +312,7 @@ export async function generateCompatibilidadePDF(
   doc.setTextColor(...WHITE);
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
-  const garName = doc.splitTextToSize(safe(garanhao.nome || L("Garanhão", "Stallion", "Garañón")), halfW - 8);
+  const garName = doc.splitTextToSize(safe(garanhao.nome || L("Garanhão", "Stallion", "Semental")), halfW - 8);
   doc.text(garName[0], garX + halfW / 2, y + 13, { align: "center" });
   doc.setTextColor(...ZINC400);
   doc.setFontSize(7);
@@ -514,6 +525,18 @@ export async function generateCompatibilidadePDF(
 
     const coatRows = Math.ceil(Math.min(resultado.pelagens.length, 6) / 3);
     y += coatRows * (coatH + 3) + 4;
+  }
+
+  // ── Red Flags (safety alerts) ──────────────────────────────────────────────
+  if (resultado.redFlags && resultado.redFlags.length > 0) {
+    y = addSectionTitleWithCount(doc, L("Alertas de Segurança", "Safety Alerts", "Alertas de Seguridad"), resultado.redFlags.length, RED, y);
+
+    for (const flag of resultado.redFlags) {
+      if (y > 265) break;
+      const sevLabel = flag.severity === "critical" ? L("CRÍTICO", "CRITICAL", "CRÍTICO") : L("AVISO", "WARNING", "AVISO");
+      y = addBulletItem(doc, `[${sevLabel}] ${flag.title}: ${flag.description}`, "fraco", y);
+    }
+    y += 4;
   }
 
   // ── Genetic risks ──────────────────────────────────────────────────────────

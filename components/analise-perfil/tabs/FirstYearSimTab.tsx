@@ -35,6 +35,7 @@ export default function FirstYearSimTab({ result }: FirstYearSimTabProps) {
     if (result.profile === "competidor") return 1800;
     if (result.profile === "criador") return 1200;
     if (result.profile === "tradicional") return 1000;
+    if (result.profile === "aprendiz") return 700;
     return 800;
   }, [result.profile]);
 

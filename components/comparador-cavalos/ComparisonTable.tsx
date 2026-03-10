@@ -9,6 +9,7 @@ import {
   CORES,
   PELAGENS,
   LINHAGENS,
+  LINHAGENS_FAMOSAS,
   TREINOS,
   SEXOS,
   COMPETICOES,
@@ -115,7 +116,10 @@ function buildCategories(
         },
         {
           label: tr("Linhagem Famosa", "Famous Bloodline", "Linaje Famoso"),
-          getValue: (c) => c.linhagemFamosa || "---",
+          getValue: (c, lang) => {
+            const lf = LINHAGENS_FAMOSAS.find((x) => x.value === c.linhagemFamosa);
+            return lf ? localizedLabel(lf, lang) : c.linhagemFamosa || "---";
+          },
           mode: "none",
         },
         {
@@ -270,7 +274,6 @@ function getWinnerIndices(
   }
 
   if (row.mode === "range" && row.idealMin != null && row.idealMax != null) {
-    const mid = (row.idealMin + row.idealMax) / 2;
     const distances = values.map((v) => {
       if (v >= row.idealMin! && v <= row.idealMax!) return 0;
       return Math.min(Math.abs(v - row.idealMin!), Math.abs(v - row.idealMax!));

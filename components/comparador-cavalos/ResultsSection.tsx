@@ -571,7 +571,9 @@ export default function ResultsSection({
                   c.temperamento,
                   c.saude,
                   normalizeBlup(c.blup),
-                  TREINOS.find((t) => t.value === c.treino)?.nivel || 4,
+                  TREINOS.find((t) => t.value === c.treino)?.nivel
+                    ? Math.round(((TREINOS.find((t) => t.value === c.treino)?.nivel ?? 4) / 8) * 10)
+                    : 5,
                 ],
                 cor: CORES[i],
               }))}
@@ -1127,7 +1129,7 @@ export default function ResultsSection({
           },
           {
             name: tr("Competições", "Competitions", "Competiciones"),
-            weight: "8pts",
+            weight: "15pts",
             description: tr(
               "Historial competitivo e classificações",
               "Competition history and classifications",
@@ -1174,11 +1176,20 @@ export default function ResultsSection({
           },
           {
             name: tr("Elev.+Reg.", "Elev.+Reg.", "Elev.+Reg."),
-            weight: "5pts",
+            weight: "5+5pts",
             description: tr(
               "Elevação e regularidade dos andamentos",
               "Gait elevation and regularity",
               "Elevación y regularidad de los aires"
+            ),
+          },
+          {
+            name: tr("Prémios", "Awards", "Premios"),
+            weight: "5pts",
+            description: tr(
+              "Prémios e distinções em competição",
+              "Competition awards and distinctions",
+              "Premios y distinciones en competición"
             ),
           },
           {

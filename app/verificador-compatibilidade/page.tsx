@@ -455,7 +455,7 @@ export default function VerificadorCompatibilidadePage() {
       <div id="main-content" className="pt-16">
         {/* Error Toast */}
         {error && (
-          <div className="fixed bottom-4 right-4 z-50 bg-red-900/90 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg flex items-center gap-3 max-w-sm">
+          <div role="alert" className="fixed bottom-4 right-4 z-50 bg-red-900/90 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg flex items-center gap-3 max-w-sm">
             <span className="text-red-400">&#9888;</span>
             <span className="text-sm">{error}</span>
             <button
@@ -513,7 +513,7 @@ export default function VerificadorCompatibilidadePage() {
             />
             {hasDraft && (
               <div className="max-w-4xl mx-auto px-4 -mt-8 mb-8">
-                <div className="flex flex-col sm:flex-row items-center gap-3 px-5 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl">
+                <div role="status" aria-live="polite" className="flex flex-col sm:flex-row items-center gap-3 px-5 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-xl">
                   <p className="text-xs text-[var(--gold)] flex-1 text-center sm:text-left">
                     {tr("Tem uma análise guardada de", "You have a saved analysis from", "Tienes un análisis guardado de")} {draftDate}
                   </p>

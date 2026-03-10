@@ -23,6 +23,7 @@ const PROFILE_LABEL_MAP: Record<string, Record<string, string>> = {
   tradicional: { pt: "Tradicional", en: "Traditional", es: "Tradicional" },
   criador:     { pt: "Criador",     en: "Breeder",     es: "Criador" },
   amador:      { pt: "Amador",      en: "Amateur",     es: "Amateur" },
+  aprendiz:    { pt: "Aprendiz",    en: "Learner",     es: "Aprendiz" },
 };
 
 function profileLabel(key: string, language: string): string {

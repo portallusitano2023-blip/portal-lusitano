@@ -253,8 +253,8 @@ export default function ResultHeader({
               </button>
             </div>
           </div>
-          {/* Downloadable Badge (hidden, used for export) */}
-          <div className="hidden">
+          {/* Downloadable Badge (off-screen, used for export) */}
+          <div className="absolute -left-[9999px] opacity-0">
             <div
               ref={badgeRef}
               className="w-[540px] h-[540px] bg-[var(--background)] p-8 flex flex-col items-center justify-center"

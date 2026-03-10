@@ -14,6 +14,7 @@ import {
   calcularScoreWeighted,
   calcularPotencial,
   calcularValorPorPonto,
+  calcularValorPorPontoWeighted,
   DEFAULT_WEIGHTS,
   getScoreFactors,
   normalizeBlup,
@@ -347,7 +348,7 @@ export default function HorseForm({
             <label className="text-xs text-[var(--foreground-muted)]">{comp.label_price}</label>
             {c.preco > 0 &&
               (() => {
-                const s = calcularScore(c);
+                const s = customWeights ? calcularScoreWeighted(c, customWeights) : calcularScore(c);
                 const vpp = s > 0 ? c.preco / s : 0;
                 if (vpp > 700)
                   return (
@@ -399,9 +400,9 @@ export default function HorseForm({
                 text={
                   comp.tooltip_score ??
                   tr(
-                    "Score composto (0-100) que pondera: Linhagem (15%), Treino (15%), Conformação (10%), Andamentos (10%), Idade (10%), Altura (8%), Temperamento (7%), Saúde (7%), BLUP (5%), Competições (8%), APSL (3%), Elevação+Regularidade (5%).",
-                    "Composite score (0-100) weighing: Lineage (15%), Training (15%), Conformation (10%), Gaits (10%), Age (10%), Height (8%), Temperament (7%), Health (7%), BLUP (5%), Competitions (8%), APSL (3%), Elevation+Regularity (5%).",
-                    "Puntuación compuesta (0-100) que pondera: Linaje (15%), Entrenamiento (15%), Conformación (10%), Aires (10%), Edad (10%), Altura (8%), Temperamento (7%), Salud (7%), BLUP (5%), Competiciones (8%), APSL (3%), Elevación+Regularidad (5%)."
+                    "Score composto (0-100) que pondera: Linhagem (12.5%), Treino (12.5%), Conformação (8.3%), Andamentos (8.3%), Idade (8.3%), Competições (12.5%), Altura (6.7%), Temperamento (5.8%), Saúde (5.8%), BLUP (4.2%), Elevação (4.2%), Regularidade (4.2%), Prémios (4.2%), APSL (2.5%).",
+                    "Composite score (0-100) weighing: Lineage (12.5%), Training (12.5%), Conformation (8.3%), Gaits (8.3%), Age (8.3%), Competitions (12.5%), Height (6.7%), Temperament (5.8%), Health (5.8%), BLUP (4.2%), Elevation (4.2%), Regularity (4.2%), Awards (4.2%), APSL (2.5%).",
+                    "Puntuación compuesta (0-100) que pondera: Linaje (12.5%), Entrenamiento (12.5%), Conformación (8.3%), Aires (8.3%), Edad (8.3%), Competiciones (12.5%), Altura (6.7%), Temperamento (5.8%), Salud (5.8%), BLUP (4.2%), Elevación (4.2%), Regularidad (4.2%), Premios (4.2%), APSL (2.5%)."
                   )
                 }
               />
@@ -434,7 +435,7 @@ export default function HorseForm({
             {comp.value_per_point}{" "}
             <span className="text-[var(--foreground-secondary)]">
               {(() => {
-                const vpp = calcularValorPorPonto(c);
+                const vpp = customWeights ? calcularValorPorPontoWeighted(c, customWeights) : calcularValorPorPonto(c);
                 return (!isFinite(vpp) || c.preco === 0) ? "—" : `${vpp.toLocaleString(locale)}€`;
               })()}
             </span>

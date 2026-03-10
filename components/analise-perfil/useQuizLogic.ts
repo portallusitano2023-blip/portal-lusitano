@@ -771,10 +771,11 @@ export function useQuizLogic() {
       setAnswers(newAnswers);
       setAnswerDetails(newDetails);
       setCurrentQuestion(currentQuestion - 1);
+      saveProgressToStorage(newAnswers, currentQuestion - 1);
       setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
       setCrossWarningDismissed(false);
     }
-  }, [currentQuestion, answers, answerDetails, questions]);
+  }, [currentQuestion, answers, answerDetails, questions, saveProgressToStorage]);
 
   const dismissCrossWarning = useCallback(() => {
     setCrossWarningDismissed(true);
@@ -906,5 +907,7 @@ export function useQuizLogic() {
     // Chain context
     chainContext,
     setChainContext,
+    // Shared confidence (from URL)
+    sharedConfidence,
   };
 }

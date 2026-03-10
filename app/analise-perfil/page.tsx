@@ -147,6 +147,7 @@ function AnalisePerfilContent() {
     hasSavedProgress,
     resumeQuiz,
     clearSavedProgress,
+    sharedConfidence,
   } = useQuizLogic();
 
   // Progress: 0 on intro, quiz progress during quiz, 100 on result
@@ -349,7 +350,7 @@ function AnalisePerfilContent() {
                   copied={copied}
                   badgeRef={badgeRef}
                   subProfile={subProfile}
-                  confidence={calculateConfidence()}
+                  confidence={sharedConfidence ?? calculateConfidence()}
                   onSave={saveResult}
                   onDownloadPDF={downloadPDF}
                   onDownloadBadge={downloadBadge}
@@ -650,7 +651,7 @@ function AnalisePerfilContent() {
                           result={result}
                           answerDetails={answerDetails}
                           scorePercentages={scorePercentages}
-                          confidence={calculateConfidence()}
+                          confidence={sharedConfidence ?? calculateConfidence()}
                         />
                       </BlurredProSection>
                     )}
@@ -991,7 +992,7 @@ function AnalisePerfilContent() {
                         <ReadinessTab
                           result={result}
                           answerDetails={answerDetails}
-                          confidence={calculateConfidence()}
+                          confidence={sharedConfidence ?? calculateConfidence()}
                         />
                       </BlurredProSection>
                     )}
