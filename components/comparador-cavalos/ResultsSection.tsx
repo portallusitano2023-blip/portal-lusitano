@@ -823,7 +823,7 @@ export default function ResultsSection({
               </thead>
               <tbody>
                 {[
-                  { label: comp.param_age, campo: "idade" as const, maior: null as boolean | null, suffix: " anos" },
+                  { label: comp.param_age, campo: "idade" as const, maior: null as boolean | null, suffix: ` ${tr("anos", "years", "años")}` },
                   {
                     label: comp.param_height,
                     campo: "altura" as const,

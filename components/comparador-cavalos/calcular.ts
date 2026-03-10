@@ -218,11 +218,11 @@ export function calcularROI(c: Cavalo, tr: TrFn = defaultTr): { roi5yr: number; 
 
   const horizonte =
     c.idade <= 5
-      ? tr("5-10 anos", "5-10 years", "5-10 anos")
+      ? tr("5-10 anos", "5-10 years", "5-10 años")
       : c.idade <= 8
-        ? tr("3-5 anos", "3-5 years", "3-5 anos")
+        ? tr("3-5 anos", "3-5 years", "3-5 años")
         : c.idade <= 12
-          ? tr("2-3 anos", "2-3 years", "2-3 anos")
+          ? tr("2-3 anos", "2-3 years", "2-3 años")
           : tr("Curto prazo", "Short term", "Corto plazo");
 
   return { roi5yr, breakEven: Math.min(breakEven, 120), horizonte };
@@ -513,6 +513,42 @@ export function gerarCustos(c: Cavalo) {
 // ============================================
 
 export function exportarCSV(cavalos: Cavalo[], tr: TrFn = defaultTr, weights?: CategoryWeights) {
+  // Inline translation maps for categorical fields
+  const localSexo = (s: string) => s === "Garanhão" ? tr("Garanhão", "Stallion", "Semental") : s === "Égua" ? tr("Égua", "Mare", "Yegua") : tr("Castrado", "Gelding", "Castrado");
+  const localTreino = (t: string) => {
+    const map: Record<string, string> = {
+      Potro: tr("Potro","Foal","Potro"), Desbravado: tr("Desbravado","Green-broke","Desbravado"),
+      Iniciado: tr("Iniciado","Started","Iniciado"), Elementar: tr("Elementar","Elementary","Elemental"),
+      "Médio": tr("Médio","Medium","Medio"), "Avançado": tr("Avançado","Advanced","Avanzado"),
+      "Alta Escola": tr("Alta Escola","High School","Alta Escuela"), "Grand Prix": tr("Grand Prix","Grand Prix","Grand Prix")
+    };
+    return map[t] || t;
+  };
+  const localPelagem = (p: string) => {
+    const map: Record<string, string> = {
+      "Ruço": tr("Ruço","Grey","Ruano"), Castanho: tr("Castanho","Bay","Castaño"),
+      Preto: tr("Preto","Black","Negro"), "Alazão": tr("Alazão","Chestnut","Alazán"),
+      Baio: tr("Baio","Dun","Bayo"), Palomino: tr("Palomino","Palomino","Palomino"),
+      Isabelo: tr("Isabelo","Buckskin","Isabelo")
+    };
+    return map[p] || p;
+  };
+  const localLinhagem = (l: string) => {
+    const map: Record<string, string> = {
+      Desconhecida: tr("Desconhecida","Unknown","Desconocida"), Registada: tr("Registada","Registered","Registrada"),
+      Certificada: tr("Certificada","Certified","Certificada"), Premium: tr("Premium","Premium","Premium"),
+      Elite: tr("Elite","Elite","Élite")
+    };
+    return map[l] || l;
+  };
+  const localCompetições = (c: string) => {
+    const map: Record<string, string> = {
+      Nenhuma: tr("Nenhuma","None","Ninguna"), Regional: tr("Regional","Regional","Regional"),
+      Nacional: tr("Nacional","National","Nacional"), Internacional: tr("Internacional","International","Internacional")
+    };
+    return map[c] || c;
+  };
+
   const headers = [
     tr("Nome", "Name", "Nombre"),
     tr("Idade", "Age", "Edad"),
@@ -543,19 +579,19 @@ export function exportarCSV(cavalos: Cavalo[], tr: TrFn = defaultTr, weights?: C
     return [
       c.nome || "—",
       c.idade,
-      c.sexo || "—",
+      c.sexo ? localSexo(c.sexo) : "—",
       c.altura,
-      c.pelagem || "—",
-      c.linhagem || "—",
+      c.pelagem ? localPelagem(c.pelagem) : "—",
+      c.linhagem ? localLinhagem(c.linhagem) : "—",
       c.linhagemFamosa || "—",
-      c.treino || "—",
+      c.treino ? localTreino(c.treino) : "—",
       c.conformacao,
       c.andamentos,
       c.elevacao,
       c.regularidade,
       c.temperamento,
       c.saude,
-      c.competicoes || "—",
+      c.competicoes ? localCompetições(c.competicoes) : "—",
       c.premios,
       c.preco,
       c.blup,

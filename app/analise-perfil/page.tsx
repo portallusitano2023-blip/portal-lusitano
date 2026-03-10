@@ -159,7 +159,7 @@ function AnalisePerfilContent() {
     : showResult
       ? 100
       : questions.length > 0
-        ? Math.round(((currentQuestion + 1) / questions.length) * 100)
+        ? Math.round((currentQuestion / questions.length) * 100)
         : 0;
 
   // Memoised map of profile -> percentage for tabs that need a Record<string, number>
@@ -203,11 +203,12 @@ function AnalisePerfilContent() {
       <main id="main-content" className="min-h-screen bg-[var(--background)] pt-16">
         {/* Error Toast */}
         {error && (
-          <div className="fixed bottom-4 right-4 z-50 bg-red-900/90 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg flex items-center gap-3 max-w-sm">
+          <div role="alert" className="fixed bottom-4 right-4 z-50 bg-red-900/90 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg flex items-center gap-3 max-w-sm">
             <span className="text-red-400">&#9888;</span>
             <span className="text-sm">{error}</span>
             <button
               onClick={() => setError(null)}
+              aria-label={tr("Fechar", "Close", "Cerrar")}
               className="ml-auto text-red-400 hover:text-red-200"
             >
               &#10005;

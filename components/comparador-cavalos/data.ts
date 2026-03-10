@@ -99,13 +99,15 @@ export const DISCIPLINE_MATRIX = [
 // ============================================
 
 export const PESOS_DISC: Record<string, Record<string, number>> = {
-  dressage: { conformacao: 0.2, andamentos: 0.3, elevacao: 0.25, temperamento: 0.15, saude: 0.1 },
-  trabalho: { conformacao: 0.25, andamentos: 0.2, temperamento: 0.3, saude: 0.15, blupNorm: 0.1 },
+  alta_escola: { conformacao: 0.2, andamentos: 0.25, elevacao: 0.25, temperamento: 0.15, saude: 0.15 },
+  dressage: { conformacao: 0.15, andamentos: 0.25, elevacao: 0.2, regularidade: 0.2, temperamento: 0.1, saude: 0.1 },
+  trabalho: { conformacao: 0.25, andamentos: 0.2, temperamento: 0.25, saude: 0.2, blupNorm: 0.1 },
+  lazer: { temperamento: 0.35, saude: 0.3, conformacao: 0.2, andamentos: 0.15 },
   reproducao: { blupNorm: 0.35, conformacao: 0.25, saude: 0.25, andamentos: 0.15 },
-  lazer: { temperamento: 0.4, saude: 0.35, conformacao: 0.15, andamentos: 0.1 },
 };
 
 export const DISC_LABELS: Record<string, { label: string; labelEn: string; labelEs: string }> = {
+  alta_escola: { label: "Alta Escola", labelEn: "Haute Ecole", labelEs: "Alta Escuela" },
   dressage: { label: "Dressage FEI", labelEn: "Dressage FEI", labelEs: "Dressage FEI" },
   trabalho: { label: "Equit. Trabalho", labelEn: "Working Equit.", labelEs: "Equit. Trabajo" },
   reproducao: { label: "Reprodução", labelEn: "Breeding", labelEs: "Reproducción" },

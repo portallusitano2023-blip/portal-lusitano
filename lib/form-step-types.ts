@@ -30,7 +30,7 @@ export interface FormStepContextValue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- consumers cast to their own FormData type
   data: Record<string, any>;
 
-  goToStep: (step: number) => void;
+  goToStep: (step: number, allowJump?: boolean) => void;
   nextStep: () => void;
   prevStep: () => void;
   updateData: (key: string, value: unknown) => void;

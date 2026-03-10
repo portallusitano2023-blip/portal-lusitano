@@ -35,7 +35,7 @@ import {
   CONTENT_W,
 } from "./base-premium";
 
-import { MERCADOS, VALORES_BASE } from "@/components/calculadora-valor/data";
+import { MERCADOS, VALORES_BASE, LINHAGENS_FAMOSAS } from "@/components/calculadora-valor/data";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -476,7 +476,9 @@ export async function generateCalculadoraPDF(
   yL = addKV(doc, L("Pelagem", "Coat", "Capa"), safe(form.pelagem), colLX, yL, colW);
   yL = addKV(doc, L("Altura", "Height", "Alzada"), `${form.altura} cm`, colLX, yL, colW);
   if (form.linhagemPrincipal) {
-    yL = addKV(doc, L("Fam\u00EDlia", "Family", "Familia"), safe(form.linhagemPrincipal), colLX, yL, colW);
+    const linhagemEntry = LINHAGENS_FAMOSAS.find(l => l.value === form.linhagemPrincipal);
+    const linhagemDisplay = linhagemEntry ? (language === "en" ? linhagemEntry.labelEn : language === "es" ? linhagemEntry.labelEs : linhagemEntry.label) : form.linhagemPrincipal;
+    yL = addKV(doc, L("Fam\u00EDlia", "Family", "Familia"), safe(linhagemDisplay), colLX, yL, colW);
   }
   const docParts = [
     form.raioX ? L("Raio-X", "X-Ray", "Rayos-X") : "",
@@ -560,9 +562,9 @@ export async function generateCalculadoraPDF(
   }
   if (form.tendencia) {
     const tendenciaLabels: Record<string, string> = {
-      alta: L("Alta (Bullish)", "Alta (Bullish)", "Alta (Bullish)"),
+      alta: L("Alta (Bullish)", "High (Bullish)", "Alta (Bullish)"),
       estavel: L("Estável (Stable)", "Stable", "Estable"),
-      baixa: L("Baixa (Bearish)", "Baixa (Bearish)", "Baja (Bearish)"),
+      baixa: L("Baixa (Bearish)", "Low (Bearish)", "Baja (Bearish)"),
     };
     const tendenciaLabel = tendenciaLabels[form.tendencia] ?? safe(form.tendencia);
     yR = addKV(doc, L("Tendência", "Trend", "Tendencia"), tendenciaLabel, colRX, yR, colW);
@@ -941,12 +943,17 @@ export async function generateCalculadoraPDF(
     const topMarkets = Object.entries(MARKET_MULT)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
-      .map(([name, mult]) => ({
-        name,
-        mult,
-        value: Math.round(baseValue * mult),
-        isCurrentMarket: name === form.mercado,
-      }));
+      .map(([name, mult]) => {
+        const mktEntry = MERCADOS.find(m => m.value === name);
+        const displayName = mktEntry ? (language === "en" ? (mktEntry.labelEn || mktEntry.label) : language === "es" ? (mktEntry.labelEs || mktEntry.label) : mktEntry.label) : name;
+        return {
+          name,
+          displayName,
+          mult,
+          value: Math.round(baseValue * mult),
+          isCurrentMarket: name === form.mercado,
+        };
+      });
 
     // ── Improvement 9: Expand pill height and show gain % vs current market ──
     const pillH = 14;
@@ -970,7 +977,7 @@ export async function generateCalculadoraPDF(
       doc.setTextColor(...(isBest ? WHITE : ZINC400));
       doc.setFontSize(7.5);
       doc.setFont("helvetica", isBest ? "bold" : "normal");
-      doc.text(safe(mkt.name), mx + mktW / 2, y + 4, { align: "center" });
+      doc.text(safe(mkt.displayName), mx + mktW / 2, y + 4, { align: "center" });
 
       // Value at y + 8
       doc.setTextColor(...(isBest ? GOLD : ZINC600));
@@ -1003,11 +1010,13 @@ export async function generateCalculadoraPDF(
       doc.setFillColor(...GREEN);
       doc.roundedRect(MARGIN, y, 3, recCardH, 1.5, 1.5, "F");
 
+      const currentMktEntry = MERCADOS.find(m => m.value === form.mercado);
+      const currentMktDisplay = currentMktEntry ? (language === "en" ? (currentMktEntry.labelEn || currentMktEntry.label) : language === "es" ? (currentMktEntry.labelEs || currentMktEntry.label) : currentMktEntry.label) : form.mercado;
       const recText = safe(
         L(
-          "Recomendação: Mercado " + bestMarket.name + " oferece +" + bestGain + "% vs " + form.mercado + ". Para venda internacional, considere também obter Certificado de Exportação APSL.",
-          "Recommendation: " + bestMarket.name + " market offers +" + bestGain + "% vs " + form.mercado + ". For international sales, also consider obtaining APSL Export Certificate.",
-          "Recomendación: Mercado " + bestMarket.name + " ofrece +" + bestGain + "% vs " + form.mercado + ". Para venta internacional, considere también obtener Certificado de Exportación APSL."
+          "Recomendação: Mercado " + bestMarket.displayName + " oferece +" + bestGain + "% vs " + currentMktDisplay + ". Para venda internacional, considere também obter Certificado de Exportação APSL.",
+          "Recommendation: " + bestMarket.displayName + " market offers +" + bestGain + "% vs " + currentMktDisplay + ". For international sales, also consider obtaining APSL Export Certificate.",
+          "Recomendación: Mercado " + bestMarket.displayName + " ofrece +" + bestGain + "% vs " + currentMktDisplay + ". Para venta internacional, considere también obtener Certificado de Exportación APSL."
         )
       );
       doc.setTextColor(...ZINC400);

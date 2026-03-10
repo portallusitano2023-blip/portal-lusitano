@@ -53,7 +53,7 @@ function buildCategories(
         {
           label: tr("Idade", "Age", "Edad"),
           getValue: (c) =>
-            `${c.idade} ${tr("anos", "years", "anos")}`,
+            `${c.idade} ${tr("anos", "years", "años")}`,
           getRaw: (c) => -Math.abs(c.idade - 9),
           mode: "higher" as const,
         },

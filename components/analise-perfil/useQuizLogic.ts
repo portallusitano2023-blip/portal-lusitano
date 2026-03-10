@@ -256,8 +256,8 @@ export function useQuizLogic() {
           if (typeof decoded.subProfile === "string") {
             setSubProfile(decoded.subProfile);
           }
-          if (typeof decoded.confidence === "number") {
-            setSharedConfidence(decoded.confidence);
+          if (typeof decoded.confidence === "number" && decoded.confidence >= 0 && decoded.confidence <= 100) {
+            setSharedConfidence(Math.round(decoded.confidence));
           }
         }
       } catch {
@@ -499,8 +499,11 @@ export function useQuizLogic() {
         else sp = "criador_conservacao";
       }
 
-      // Issue 4: Confidence — use single source of truth
-      const confidence = calculateConfidence();
+      // Issue 4: Confidence — compute inline to avoid stale state
+      const sortedScores = Object.values(finalScores).sort((a, b) => b - a);
+      const topScore = sortedScores[0] || 1;
+      const secondScore = sortedScores[1] || 0;
+      const confidence = Math.round((topScore / (topScore + secondScore)) * 100);
 
       // Compute score percentages for rich metadata
       const totalScoreForMeta =
@@ -565,7 +568,6 @@ export function useQuizLogic() {
       tr,
       results,
       clearSavedProgress,
-      calculateConfidence,
     ]
   );
 
@@ -743,7 +745,7 @@ export function useQuizLogic() {
   }, [isPending, currentQuestion, answers, scores, answerDetails, questions.length, finalizeQuiz, saveProgressToStorage]);
 
   const goBack = useCallback(() => {
-    if (currentQuestion > 0) {
+    if (currentQuestion > 0 && !isPending) {
       const newAnswers = answers.slice(0, -1);
       // Only remove last detail if the removed answer was NOT a skip
       // (skipQuestion never adds a detail entry, so slicing would remove a prior answer's detail)
@@ -778,7 +780,7 @@ export function useQuizLogic() {
       setTimeout(() => quizRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
       setCrossWarningDismissed(false);
     }
-  }, [currentQuestion, answers, answerDetails, questions, saveProgressToStorage]);
+  }, [currentQuestion, answers, answerDetails, questions, saveProgressToStorage, isPending]);
 
   const dismissCrossWarning = useCallback(() => {
     setCrossWarningDismissed(true);

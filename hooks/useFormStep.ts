@@ -154,12 +154,12 @@ export function useFormStep(options: UseFormStepOptions): FormStepContextValue &
   // ─ Navigation ────────────────────────────────────
 
   const goToStep = useCallback(
-    (step: number) => {
-      if (!allowJumpToStep && Math.abs(currentStep - step) > 1 && step !== totalSteps - 1) {
+    (step: number, allowJump?: boolean) => {
+      if (!allowJump && !allowJumpToStep && Math.abs(currentStep - step) > 1 && step !== totalSteps - 1) {
         return; // Can only go to adjacent steps
       }
 
-      if (step < 0 || step >= totalSteps) return;
+      if (step < 0 || step > totalSteps) return;
 
       setCurrentStep(step);
       onStepChange?.(step);

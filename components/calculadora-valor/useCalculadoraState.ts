@@ -362,7 +362,7 @@ export function useCalculadoraState() {
   const editarResultado = () => {
     setResultado(null);
     setWarnings([]);
-    formStep.goToStep(1);
+    formStep.goToStep(1, true);
   };
 
   const restaurarDraft = () => {

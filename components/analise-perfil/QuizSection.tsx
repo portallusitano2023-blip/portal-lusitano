@@ -83,6 +83,8 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
 
       const focusedIdx = opts.findIndex((el) => el === document.activeElement);
 
+      if (focusedIdx < 0) return; // no option button focused, don't interfere
+
       if (e.key === "ArrowDown" || e.key === "ArrowRight") {
         e.preventDefault();
         const next = focusedIdx < opts.length - 1 ? focusedIdx + 1 : 0;
@@ -350,6 +352,7 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             {currentQuestion > 0 ? (
               <button
                 onClick={onBack}
+                disabled={isPending}
                 className="flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors px-3 py-2.5 min-h-[44px] rounded-lg hover:bg-[var(--background-secondary)]/50"
               >
                 <ChevronLeft size={18} />

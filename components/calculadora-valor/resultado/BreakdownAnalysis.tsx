@@ -260,7 +260,7 @@ export default function BreakdownAnalysis({
             "grand_prix",
           ];
           const treinoIdx = treinoKeys.indexOf(form.treino);
-          const treinoScore = Math.min(10, Math.max(1, treinoIdx + 2));
+          const treinoScore = Math.min(10, Math.max(1, treinoIdx + 3));
           const compScore = Math.round((MULT_COMP[form.competicoes] ?? 1.0) * 5.5);
 
           const fatores: {
