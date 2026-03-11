@@ -309,42 +309,62 @@ const QuizSection = forwardRef<HTMLDivElement, QuizSectionProps>(function QuizSe
             {/* Answer options — only rendered when user can use the tool */}
             {canUse && (
               <>
-              <div className="space-y-2.5" role="list" aria-label={question.question}>
-                {question.options.map((opt, idx) => (
-                  <button
-                    key={opt.value}
-                    ref={(el) => { optionsRef.current[idx] = el; }}
-                    onClick={() => onAnswer(opt)}
-                    disabled={isPending}
-                    className="w-full text-left p-5 bg-[var(--background-card)]/30 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/50 hover:bg-[var(--gold)]/5 transition-all group hover:translate-x-1 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:border-[var(--border)] disabled:hover:bg-transparent"
-                    style={{ animationDelay: `${idx * 0.08}s` }}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors font-medium">
-                          {opt.text}
-                        </span>
-                        {opt.description && (
-                          <p className="text-sm text-[var(--foreground-muted)] mt-1 leading-relaxed">
-                            {opt.description}
-                          </p>
-                        )}
+              {isPending ? (
+                /* Loading state while finalizing (API call after last question) */
+                <div className="flex flex-col items-center gap-5 py-8 animate-[fadeSlideIn_0.3s_ease-out_forwards]">
+                  <div className="relative">
+                    <div className="w-14 h-14 border-2 border-[var(--gold)]/20 rounded-full" />
+                    <div className="absolute inset-0 w-14 h-14 border-2 border-transparent border-t-[var(--gold)] rounded-full animate-spin" />
+                  </div>
+                  <div className="text-center space-y-1">
+                    <p className="text-sm font-medium text-[var(--foreground)]">
+                      {tr("A calcular o seu perfil equestre…", "Calculating your equestrian profile…", "Calculando su perfil ecuestre…")}
+                    </p>
+                    <p className="text-xs text-[var(--foreground-muted)]">
+                      {tr("Aguarde um momento", "Please wait a moment", "Por favor espere un momento")}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                <div className="space-y-2.5" role="list" aria-label={question.question}>
+                  {question.options.map((opt, idx) => (
+                    <button
+                      key={opt.value}
+                      ref={(el) => { optionsRef.current[idx] = el; }}
+                      onClick={() => onAnswer(opt)}
+                      disabled={isPending}
+                      className="w-full text-left p-5 bg-[var(--background-card)]/30 border border-[var(--border)] rounded-xl hover:border-[var(--gold)]/50 hover:bg-[var(--gold)]/5 transition-all group hover:translate-x-1 opacity-0 animate-[fadeSlideIn_0.5s_ease-out_forwards] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:border-[var(--border)] disabled:hover:bg-transparent"
+                      style={{ animationDelay: `${idx * 0.08}s` }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-[var(--foreground)] group-hover:text-[var(--gold)] transition-colors font-medium">
+                            {opt.text}
+                          </span>
+                          {opt.description && (
+                            <p className="text-sm text-[var(--foreground-muted)] mt-1 leading-relaxed">
+                              {opt.description}
+                            </p>
+                          )}
+                        </div>
+                        <ChevronRight className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
                       </div>
-                      <ChevronRight className="text-[var(--foreground-muted)] group-hover:text-[var(--gold)] group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
-                    </div>
+                    </button>
+                  ))}
+                </div>
+                {/* Skip / Don't know button */}
+                <div className="flex justify-center mt-3">
+                  <button
+                    onClick={onSkip}
+                    disabled={isPending}
+                    className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-colors px-4 py-2 min-h-[44px] rounded-lg hover:bg-[var(--background-secondary)]/40 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {tr("Não sei / Passar", "Not sure / Skip", "No sé / Pasar")}
                   </button>
-                ))}
-              </div>
-              {/* Skip / Don't know button */}
-              <div className="flex justify-center mt-3">
-                <button
-                  onClick={onSkip}
-                  disabled={isPending}
-                  className="text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground-secondary)] transition-colors px-4 py-2 min-h-[44px] rounded-lg hover:bg-[var(--background-secondary)]/40 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {tr("Não sei / Passar", "Not sure / Skip", "No sé / Pasar")}
-                </button>
-              </div>
+                </div>
+                </>
+              )}
               </>
             )}
           </div>
