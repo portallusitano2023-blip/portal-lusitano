@@ -28,6 +28,18 @@ export default function ReadinessTab({
   const tr = useMemo(() => createTranslator(language), [language]);
   const questions = useMemo(() => getQuestions(tr), [tr]);
 
+  if (answerDetails.length === 0) {
+    return (
+      <div className="py-8 text-center text-sm text-[var(--foreground-muted)]">
+        {tr(
+          "A pontuação de prontidão requer respostas completas ao questionário.",
+          "The readiness score requires full questionnaire answers.",
+          "La puntuación de preparación requiere respuestas completas al cuestionario."
+        )}
+      </div>
+    );
+  }
+
   // Helper to find the selected option index for a given question id
   const getAnswerIndex = (questionId: number): number | null => {
     const detail = answerDetails.find((d) => d.questionId === questionId);

@@ -168,7 +168,7 @@ export function useFormStep(options: UseFormStepOptions): FormStepContextValue &
   );
 
   const nextStep = useCallback(() => {
-    if (currentStep < totalSteps - 1) {
+    if (currentStep < totalSteps) {
       goToStep(currentStep + 1);
     }
   }, [currentStep, totalSteps, goToStep]);

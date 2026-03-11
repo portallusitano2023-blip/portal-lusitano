@@ -175,6 +175,7 @@ export function useQuizLogic() {
   const quizRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const isProcessingAnswer = useRef(false);
+  const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchParams = useSearchParams();
   const {
     canUse,
@@ -187,7 +188,8 @@ export function useQuizLogic() {
 
   const showError = useCallback((msg: string) => {
     setError(msg);
-    setTimeout(() => setError(null), 5000);
+    if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+    errorTimerRef.current = setTimeout(() => setError(null), 5000);
   }, []);
 
   // Check for chain context from Verificador de Compatibilidade
@@ -499,11 +501,8 @@ export function useQuizLogic() {
         else sp = "criador_conservacao";
       }
 
-      // Issue 4: Confidence — compute inline to avoid stale state
-      const sortedScores = Object.values(finalScores).sort((a, b) => b - a);
-      const topScore = sortedScores[0] || 1;
-      const secondScore = sortedScores[1] || 0;
-      const confidence = Math.round((topScore / (topScore + secondScore)) * 100);
+      // Issue 4: Confidence — use alignment algorithm from calculateConfidence
+      const confidence = calculateConfidence();
 
       // Compute score percentages for rich metadata
       const totalScoreForMeta =
@@ -750,7 +749,7 @@ export function useQuizLogic() {
   }, [isPending, currentQuestion, answers, scores, answerDetails, questions.length, finalizeQuiz, saveProgressToStorage]);
 
   const goBack = useCallback(() => {
-    if (currentQuestion > 0 && !isPending) {
+    if (currentQuestion > 0 && !isPending && !isProcessingAnswer.current) {
       const newAnswers = answers.slice(0, -1);
       // Only remove last detail if the removed answer was NOT a skip
       // (skipQuestion never adds a detail entry, so slicing would remove a prior answer's detail)
@@ -799,9 +798,10 @@ export function useQuizLogic() {
         .map(([p, s]) => ({
           profile: p,
           percentage: Math.round((s / totalScore) * 100),
+          rawScore: s,
           label: results[p]?.title || p,
         }))
-        .sort((a, b) => b.percentage - a.percentage),
+        .sort((a, b) => b.rawScore - a.rawScore || a.profile.localeCompare(b.profile)),
     [scores, totalScore, results]
   );
 

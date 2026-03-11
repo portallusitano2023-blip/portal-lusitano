@@ -32,12 +32,12 @@ export default function ObjectiveScore({
             const g = garanhao;
             const e = egua;
             if (objetivo === "competicao") {
-              return Math.round(
-                s * 0.4 +
-                  ((g.andamentos + e.andamentos) / 2) * 3.5 +
-                  ((g.conformacao + e.conformacao) / 2) * 3 +
-                  Math.min(((g.blup + e.blup) / 2 / 130) * 100, 100) * 0.15
-              );
+              return Math.min(100, Math.round(
+                s * 0.35 +
+                  ((g.andamentos + e.andamentos) / 2) * 2.8 +
+                  ((g.conformacao + e.conformacao) / 2) * 2.5 +
+                  Math.min(((g.blup + e.blup) / 2 / 130) * 100, 100) * 0.12
+              ));
             } else if (objetivo === "reproducao") {
               const coiPenalty = resultado.coi > 6.25 ? -15 : resultado.coi > 3 ? -5 : 5;
               return Math.round(
@@ -57,8 +57,17 @@ export default function ObjectiveScore({
               const tempE = TEMP_SCORES[e.temperamento] ?? 7;
               const tempMedia = (tempG + tempE) / 2;
               return Math.round(s * 0.3 + tempMedia * 5 + ((g.saude + e.saude) / 2) * 4);
+            } else if (objetivo === "show" || objetivo === "morfologia") {
+              const tempScores: Record<string, number> = { Calmo: 8, Equilibrado: 7, "Energético": 5, Nervoso: 3 };
+              const tempG = tempScores[g.temperamento] ?? 5;
+              const tempE = tempScores[e.temperamento] ?? 5;
+              return Math.min(100, Math.round(
+                s * 0.2 +
+                  ((g.conformacao + e.conformacao) / 2) * 5 +
+                  ((g.saude + e.saude) / 2) * 1.5 +
+                  ((tempG + tempE) / 2) * 1
+              ));
             } else {
-              // show: prioriza conformação
               return Math.round(s * 0.3 + ((g.conformacao + e.conformacao) / 2) * 7);
             }
           })();

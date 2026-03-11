@@ -39,7 +39,7 @@ function applyDiminishingReturns(totalMult: number): number {
     return 3.0 + (excess * excess) / (excess + 1);
   }
   // 6x+ — crescimento logarítmico (protege contra valores absurdos)
-  return 3.0 + (9 / 4) + Math.log(totalMult - 5.0) * 1.2;
+  return 3.0 + (9 / 4) + Math.log(totalMult - 5.0) * (15 / 16);
 }
 
 // Validação lógica: detecta combinações impossíveis/improváveis e ajusta
@@ -66,7 +66,7 @@ export function validateFormLogic(
   }
 
   // Cavalo jovem (3-4 anos) com treino de alta escola ou grand prix
-  if (form.idade <= 4 && ["alta_escola", "grand_prix"].includes(form.treino)) {
+  if (form.idade > 2 && form.idade <= 4 && ["alta_escola", "grand_prix"].includes(form.treino)) {
     warnings.push({
       field: "treino",
       message: tr(
@@ -274,7 +274,7 @@ export function calcularValor(form: FormData, tr?: (pt: string, en: string, es: 
   // Reproducao — capped at 2.5x to prevent absurd values with high offspring counts
   // Castrado (gelding) cannot reproduce — force 1.0 regardless of form.reproducao
   const multRepro = form.reproducao && form.sexo !== "castrado"
-    ? Math.min(2.5, 1.15 + form.descendentes * 0.02 + form.descendentesAprovados * 0.05)
+    ? Math.min(2.5, Math.max(1.0, 1.15 + form.descendentes * 0.02 + form.descendentesAprovados * 0.05))
     : 1.0;
 
   // Tendencia mercado
@@ -587,9 +587,9 @@ export function estimarValorParcial(form: Partial<FormData>): { min: number; max
   // Multiplicadores básicos com os dados disponíveis
   const multIdade = form.idade != null ? calcMultIdade(form.idade) : 1.0;
 
-  const multLinhagem = form.linhagem ? MULT_LINHAGEM[form.linhagem] || 1.0 : 1.0;
-  const multSaude = form.saude ? MULT_SAUDE[form.saude] || 1.0 : 1.0;
-  const multComp = form.competicoes ? MULT_COMP[form.competicoes] || 1.0 : 1.0;
+  const multLinhagem = form.linhagem ? (MULT_LINHAGEM[form.linhagem] ?? 1.0) : 1.0;
+  const multSaude = form.saude ? (MULT_SAUDE[form.saude] ?? 1.0) : 1.0;
+  const multComp = form.competicoes ? (MULT_COMP[form.competicoes] ?? 1.0) : 1.0;
 
   const partialMult = multIdade * multLinhagem * multSaude * multComp;
   const adjustedPartialMult = applyDiminishingReturns(partialMult);

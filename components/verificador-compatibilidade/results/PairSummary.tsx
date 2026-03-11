@@ -134,7 +134,11 @@ export default function PairSummary({
                 {
                   label: tr("BLUP médio", "Average BLUP", "BLUP medio"),
                   value: blupMedio,
-                  sub: blupMedio >= 110 ? tr("acima da média", "above average", "por encima de la media") : tr("dentro da média", "within average", "dentro de la media"),
+                  sub: blupMedio >= 110
+                    ? tr("acima da média", "above average", "por encima de la media")
+                    : blupMedio >= 90
+                      ? tr("dentro da média", "within average", "dentro de la media")
+                      : tr("abaixo da média", "below average", "por debajo de la media"),
                 },
                 {
                   label: tr("Saúde combinada", "Combined health", "Salud combinada"),

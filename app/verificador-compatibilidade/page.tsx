@@ -186,7 +186,7 @@ export default function VerificadorCompatibilidadePage() {
         console.warn("[Tool Chain] Erro ao importar dados:", err);
       }
     }
-  }, []);
+  }, [tr]);
 
   useEffect(() => {
     if (step === 0 || resultado) return;

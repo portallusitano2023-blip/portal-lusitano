@@ -90,6 +90,7 @@ export interface RadarChartData {
 export interface ScorePercentage {
   profile: string;
   percentage: number;
+  rawScore: number;
   label: string;
 }
 

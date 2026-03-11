@@ -533,6 +533,11 @@ export async function generateCompatibilidadePDF(
 
   // ── Red Flags (safety alerts) ──────────────────────────────────────────────
   if (resultado.redFlags && resultado.redFlags.length > 0) {
+    if (y > 255) {
+      doc.addPage();
+      fillPageBg(doc);
+      y = 25;
+    }
     y = addSectionTitleWithCount(doc, L("Alertas de Segurança", "Safety Alerts", "Alertas de Seguridad"), resultado.redFlags.length, RED, y);
 
     for (const flag of resultado.redFlags) {
@@ -550,6 +555,11 @@ export async function generateCompatibilidadePDF(
 
   // ── Genetic risks ──────────────────────────────────────────────────────────
   if (resultado.riscos.length > 0) {
+    if (y > 255) {
+      doc.addPage();
+      fillPageBg(doc);
+      y = 25;
+    }
     y = addSectionTitleWithCount(doc, L("Alertas e Riscos Genéticos", "Genetic Alerts and Risks", "Alertas y Riesgos Genéticos"), resultado.riscos.length, RED, y);
 
     for (const r of resultado.riscos) {
@@ -574,6 +584,11 @@ export async function generateCompatibilidadePDF(
 
   // ── Strengths ──────────────────────────────────────────────────────────────
   if (resultado.pontosForteseFracos.fortes.length > 0) {
+    if (y > 255) {
+      doc.addPage();
+      fillPageBg(doc);
+      y = 25;
+    }
     y = addSectionTitleWithCount(
       doc,
       L("Pontos Fortes da Combinação", "Combination Strengths", "Puntos Fuertes de la Combinación"),
@@ -595,6 +610,11 @@ export async function generateCompatibilidadePDF(
 
   // ── Weaknesses ─────────────────────────────────────────────────────────────
   if (resultado.pontosForteseFracos.fracos.length > 0) {
+    if (y > 255) {
+      doc.addPage();
+      fillPageBg(doc);
+      y = 25;
+    }
     y = addSectionTitleWithCount(
       doc,
       L("Áreas de Atenção", "Areas of Attention", "Áreas de Atención"),
@@ -616,6 +636,11 @@ export async function generateCompatibilidadePDF(
 
   // ── Recommendations ────────────────────────────────────────────────────────
   if (resultado.recomendacoes.length > 0) {
+    if (y > 255) {
+      doc.addPage();
+      fillPageBg(doc);
+      y = 25;
+    }
     y = addSectionTitleWithCount(
       doc,
       L("Recomendações", "Recommendations", "Recomendaciones"),

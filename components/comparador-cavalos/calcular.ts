@@ -306,21 +306,36 @@ export function getScoreFactors(c: Cavalo, tr: TrFn = defaultTr, weights?: Categ
 
     const wf = (key: keyof CategoryWeights) => w(key);
 
+    const lMax = Math.round(15 * wf("linhagem"));
+    const tMax = Math.round(15 * wf("treino"));
+    const cMax = Math.round(10 * wf("conformacao"));
+    const aMax = Math.round(10 * wf("andamentos"));
+    const iMax = Math.round(10 * wf("idade"));
+    const coMax = Math.round(15 * wf("competicoes"));
+    const hMax = Math.round(8 * wf("altura"));
+    const teMax = Math.round(7 * wf("temperamento"));
+    const sMax = Math.round(7 * wf("saude"));
+    const bMax = Math.round(5 * wf("blup"));
+    const eMax = Math.round(5 * wf("elevacao"));
+    const rMax = Math.round(5 * wf("regularidade"));
+    const pMax = Math.round(5 * wf("premios"));
+    const apMax = Math.round(3 * wf("registoAPSL"));
+
     return [
-      { name: tr("Linhagem", "Lineage", "Linaje"), weight: pct("linhagem"), score: Math.round(linhagemScore * wf("linhagem")), max: Math.round(15 * wf("linhagem")) },
-      { name: tr("Treino", "Training", "Entrenamiento"), weight: pct("treino"), score: Math.round(treinoScore * wf("treino")), max: Math.round(15 * wf("treino")) },
-      { name: tr("Conformação", "Conformation", "Conformación"), weight: pct("conformacao"), score: Math.round(c.conformacao * wf("conformacao")), max: Math.round(10 * wf("conformacao")) },
-      { name: tr("Andamentos", "Gaits", "Aires"), weight: pct("andamentos"), score: Math.round(c.andamentos * wf("andamentos")), max: Math.round(10 * wf("andamentos")) },
-      { name: tr("Idade", "Age", "Edad"), weight: pct("idade"), score: Math.round(idadeScore * wf("idade")), max: Math.round(10 * wf("idade")) },
-      { name: tr("Competições", "Competitions", "Competiciones"), weight: pct("competicoes"), score: Math.round(compScore * wf("competicoes")), max: Math.round(15 * wf("competicoes")) },
-      { name: tr("Altura", "Height", "Altura"), weight: pct("altura"), score: Math.round(alturaScore * wf("altura")), max: Math.round(8 * wf("altura")) },
-      { name: tr("Temperamento", "Temperament", "Temperamento"), weight: pct("temperamento"), score: Math.round(temperamentoScore * wf("temperamento")), max: Math.round(7 * wf("temperamento")) },
-      { name: tr("Saúde", "Health", "Salud"), weight: pct("saude"), score: Math.round(saudeScore * wf("saude")), max: Math.round(7 * wf("saude")) },
-      { name: "BLUP", weight: pct("blup"), score: Math.round(blupScore * wf("blup")), max: Math.round(5 * wf("blup")) },
-      { name: tr("Elevação", "Elevation", "Elevación"), weight: pct("elevacao"), score: Math.round(elevacaoScore * wf("elevacao")), max: Math.round(5 * wf("elevacao")) },
-      { name: tr("Regularidade", "Regularity", "Regularidad"), weight: pct("regularidade"), score: Math.round(regularidadeScore * wf("regularidade")), max: Math.round(5 * wf("regularidade")) },
-      { name: tr("Prémios", "Awards", "Premios"), weight: pct("premios"), score: Math.round(premiosScore * wf("premios")), max: Math.round(5 * wf("premios")) },
-      { name: tr("Registo APSL", "APSL Registration", "Registro APSL"), weight: pct("registoAPSL"), score: Math.round(apslScore * wf("registoAPSL")), max: Math.round(3 * wf("registoAPSL")) },
+      { name: tr("Linhagem", "Lineage", "Linaje"), weight: pct("linhagem"), score: Math.min(Math.round(linhagemScore * wf("linhagem")), lMax), max: lMax },
+      { name: tr("Treino", "Training", "Entrenamiento"), weight: pct("treino"), score: Math.min(Math.round(treinoScore * wf("treino")), tMax), max: tMax },
+      { name: tr("Conformação", "Conformation", "Conformación"), weight: pct("conformacao"), score: Math.min(Math.round(c.conformacao * wf("conformacao")), cMax), max: cMax },
+      { name: tr("Andamentos", "Gaits", "Aires"), weight: pct("andamentos"), score: Math.min(Math.round(c.andamentos * wf("andamentos")), aMax), max: aMax },
+      { name: tr("Idade", "Age", "Edad"), weight: pct("idade"), score: Math.min(Math.round(idadeScore * wf("idade")), iMax), max: iMax },
+      { name: tr("Competições", "Competitions", "Competiciones"), weight: pct("competicoes"), score: Math.min(Math.round(compScore * wf("competicoes")), coMax), max: coMax },
+      { name: tr("Altura", "Height", "Altura"), weight: pct("altura"), score: Math.min(Math.round(alturaScore * wf("altura")), hMax), max: hMax },
+      { name: tr("Temperamento", "Temperament", "Temperamento"), weight: pct("temperamento"), score: Math.min(Math.round(temperamentoScore * wf("temperamento")), teMax), max: teMax },
+      { name: tr("Saúde", "Health", "Salud"), weight: pct("saude"), score: Math.min(Math.round(saudeScore * wf("saude")), sMax), max: sMax },
+      { name: "BLUP", weight: pct("blup"), score: Math.min(Math.round(blupScore * wf("blup")), bMax), max: bMax },
+      { name: tr("Elevação", "Elevation", "Elevación"), weight: pct("elevacao"), score: Math.min(Math.round(elevacaoScore * wf("elevacao")), eMax), max: eMax },
+      { name: tr("Regularidade", "Regularity", "Regularidad"), weight: pct("regularidade"), score: Math.min(Math.round(regularidadeScore * wf("regularidade")), rMax), max: rMax },
+      { name: tr("Prémios", "Awards", "Premios"), weight: pct("premios"), score: Math.min(Math.round(premiosScore * wf("premios")), pMax), max: pMax },
+      { name: tr("Registo APSL", "APSL Registration", "Registro APSL"), weight: pct("registoAPSL"), score: Math.min(Math.round(apslScore * wf("registoAPSL")), apMax), max: apMax },
     ];
   }
 
@@ -496,6 +511,7 @@ export function gerarCustos(c: Cavalo) {
   if (c.idade <= 5 && nivel <= 3) annualRate = 0.16;
   else if (c.idade <= 7 && nivel <= 4) annualRate = 0.1;
   else if (c.idade >= 8 && c.idade <= 12 && nivel >= 5) annualRate = 0.05;
+  else if (c.idade >= 13 && c.idade <= 14) annualRate = -0.01;
   else if (c.idade > 14) annualRate = -0.04;
 
   return {
