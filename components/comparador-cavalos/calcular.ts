@@ -169,6 +169,7 @@ export function calcularValorPorPonto(c: Cavalo): number {
 
 // Score de potencial: score máximo atingível dado idade e treino atual
 export function calcularPotencial(c: Cavalo, weights?: CategoryWeights): number {
+  if (weights && Object.values(weights).reduce((a, b) => a + b, 0) === 0) return 0;
   const scoreAtual = weights ? calcularScoreWeighted(c, weights) : calcularScore(c);
   const treino = TREINOS.find((t) => t.value === c.treino);
   const nivel = treino?.nivel ?? 4;
@@ -188,7 +189,8 @@ export function calcularPotencial(c: Cavalo, weights?: CategoryWeights): number 
   // Margem de competição: máximo (Internacional) = ~wComp pts
   const comp = COMPETICOES.find((co) => co.value === c.competicoes);
   const compScore = comp ? Math.round((comp.mult - 1) * 20 + 5) : 5;
-  const compHeadroom = Math.max(0, wComp - compScore);
+  const compScoreWeighted = comp ? Math.round((comp.mult - 1) * 20 + 5) * (wComp / 15) : wComp / 3;
+  const compHeadroom = Math.max(0, wComp - compScoreWeighted);
 
   const potencialBonus = Math.round((treinoHeadroom + compHeadroom) * ageFactor);
   return Math.min(100, scoreAtual + potencialBonus);

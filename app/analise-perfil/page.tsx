@@ -91,6 +91,10 @@ const ReadinessTab = dynamic(() => import("@/components/analise-perfil/tabs/Read
   ssr: false,
   loading: TabFallback,
 });
+const RiderPhysicalTab = dynamic(
+  () => import("@/components/analise-perfil/tabs/RiderPhysicalTab"),
+  { ssr: false, loading: TabFallback }
+);
 const MethodologyPanel = dynamic(() => import("@/components/tools/MethodologyPanel"), {
   ssr: false,
   loading: TabFallback,
@@ -1067,6 +1071,11 @@ function AnalisePerfilContent() {
                           confidence={displayConfidence ?? 0}
                         />
                       </BlurredProSection>
+                    )}
+                    {selectedTab === "fisico" && (
+                      <Suspense fallback={<TabFallback />}>
+                        <RiderPhysicalTab result={result} />
+                      </Suspense>
                     )}
                   </div>
                 </section>

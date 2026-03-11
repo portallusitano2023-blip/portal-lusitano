@@ -16,6 +16,7 @@ import {
   Gauge,
   Crown,
   ChevronDown,
+  Activity,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { createTranslator } from "@/lib/tr";
@@ -54,6 +55,11 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
   const tabs: TabDef[] = [
     { id: "perfil", label: t.analise_perfil.tab_profile, icon: Users },
     { id: "cavalo", label: t.analise_perfil.tab_ideal_horse, icon: Feather },
+    {
+      id: "fisico",
+      label: tr("Perfil Físico", "Physical Profile", "Perfil Físico"),
+      icon: Activity,
+    },
     {
       id: "afinidade",
       label:
@@ -94,7 +100,7 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
   const groups: TabGroup[] = [
     {
       label: tr("Perfil", "Profile", "Perfil"),
-      tabs: tabs.filter((t) => ["perfil", "cavalo", "afinidade"].includes(t.id)),
+      tabs: tabs.filter((t) => ["perfil", "cavalo", "fisico", "afinidade"].includes(t.id)),
     },
     {
       label: tr("Planeamento", "Planning", "Planificación"),
@@ -128,8 +134,9 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
   return (
     <section className="sticky top-0 z-20 bg-[var(--background)]/95 backdrop-blur-sm border-b border-[var(--border)]">
       <div className="max-w-5xl mx-auto px-0 sm:px-6">
-        {/* Desktop: horizontal scroll (unchanged) */}
-        <div className="hidden sm:flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide" role="tablist">
+        {/* Desktop: horizontal scroll with fade indicator on the right */}
+        <div className="hidden sm:block relative">
+          <div className="flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide" role="tablist">
           {tabs.map((tab) => {
             const isPro = PRO_TABS.has(tab.id);
             const isActive = selectedTab === tab.id;
@@ -162,6 +169,9 @@ export default function ResultTabs({ selectedTab, onSelectTab }: ResultTabsProps
               </button>
             );
           })}
+          </div>
+          {/* Fade gradient to hint at more tabs on the right */}
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[var(--background)]/95 to-transparent" />
         </div>
 
         {/* Mobile: accordion groups */}

@@ -628,6 +628,7 @@ export function calcularCompatibilidade(
         severidade: "alto",
       });
     });
+    totalDefectPenalty = Math.min(totalDefectPenalty, 30); // cap accumulated penalty
     total -= totalDefectPenalty;
     factores.push({
       nome: tr("Saúde Genética", "Genetic Health", "Salud Genética"),

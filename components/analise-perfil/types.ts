@@ -106,7 +106,8 @@ export type ResultTab =
   | "checklist"
   | "budget"
   | "simulador"
-  | "preparacao";
+  | "preparacao"
+  | "fisico";
 
 /** Hex colors used in the AffinityTab bar chart and similar visualisations. */
 export const PROFILE_COLORS_HEX: Record<string, string> = {

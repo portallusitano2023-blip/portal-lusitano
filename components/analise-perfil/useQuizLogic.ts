@@ -369,6 +369,12 @@ export function useQuizLogic() {
 
   const calculateConfidence = useCallback((): number => {
     if (answerDetails.length === 0 || !result) return 0;
+    // Guard: neutral confidence when all profile scores sum to zero
+    const totalScore = answerDetails.reduce(
+      (sum, d) => sum + Object.values(d.points).reduce((s, p) => s + p * d.weight, 0),
+      0
+    );
+    if (totalScore === 0) return 50; // neutral confidence when no scores
     let alignedPoints = 0;
     let totalPoints = 0;
     answerDetails.forEach((detail) => {
@@ -380,7 +386,7 @@ export function useQuizLogic() {
       if (maxProfile[0] === result.profile)
         alignedPoints += detail.points[result.profile] * detail.weight;
     });
-    const rawConfidence = totalPoints > 0 ? Math.round((alignedPoints / totalPoints) * 100) : 0;
+    const rawConfidence = totalPoints > 0 ? Math.round((alignedPoints / totalPoints) * 100) : 50;
     // Issue 4: Lower confidence when questions were skipped
     const skippedCount = answers.filter((a) => a === "__skip__").length;
     const totalQuestions = answers.length;
@@ -423,6 +429,9 @@ export function useQuizLogic() {
         );
         return;
       }
+
+      // Recompute cross-validation warnings using the final answers array
+      setCrossWarningDismissed(false);
 
       // Issue 2: Determine main profile with tiebreaker
       let mp = "amador";
@@ -567,6 +576,7 @@ export function useQuizLogic() {
       tr,
       results,
       clearSavedProgress,
+      calculateConfidence,
     ]
   );
 

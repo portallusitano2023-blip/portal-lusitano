@@ -40,11 +40,14 @@ export default function ObjectiveScore({
               ));
             } else if (objetivo === "reproducao") {
               const coiPenalty = resultado.coi > 6.25 ? -15 : resultado.coi > 3 ? -5 : 5;
+              const fertMap: Record<string, number> = { "Muito Alta": 10, "Alta": 7, "Normal": 5, "Baixa": 2 };
+              const fertAvg = ((fertMap[g.fertilidade] ?? 5) + (fertMap[e.fertilidade] ?? 5)) / 2;
               return Math.round(
                 s * 0.5 +
                   Math.min(((g.blup + e.blup) / 2 / 130) * 100, 100) * 0.3 +
                   coiPenalty +
-                  (g.aprovado && e.aprovado ? 10 : 0)
+                  (g.aprovado && e.aprovado ? 10 : 0) +
+                  fertAvg * 1.0
               );
             } else if (objetivo === "lazer") {
               const TEMP_SCORES: Record<string, number> = {
